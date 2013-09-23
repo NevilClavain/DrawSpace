@@ -1,0 +1,21 @@
+
+float4 Color : register(c0);
+
+sampler2D Texture0;
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+   float  Fog      : FOG;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+   float4 color_res;
+   color_res.x = input.Fog;
+   color_res.y = 0.0;
+   color_res.z = 0.0;
+   color_res.w = 1.0;
+   return color_res;
+}
