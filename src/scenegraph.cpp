@@ -1,24 +1,24 @@
-/***************************************************************************
-*                                                                          *
-* DrawSpace Rendering engine                                               *
-* Emmanuel Chaumont Copyright (c) 2013-2014                                *
-*                                                                          *
-* This file is part of DrawSpace.                                          *
-*                                                                          *
-*    DrawSpace is free software: you can redistribute it and/or modify     *
-*    it under the terms of the GNU General Public License as published by  *
-*    the Free Software Foundation, either version 3 of the License, or     *
-*    (at your option) any later version.                                   *
-*                                                                          *
-*    DrawSpace is distributed in the hope that it will be useful,          *
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*    GNU General Public License for more details.                          *
-*                                                                          *
-*    You should have received a copy of the GNU General Public License     *
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    *
-*                                                                          *
-***************************************************************************/
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2014                                
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*                                                                          
+*/
 
 #include "scenegraph.h"
 
@@ -27,21 +27,17 @@ using namespace DrawSpace::Core;
 
 Scenegraph::Scenegraph( void )
 {
-
-
 }
 
 Scenegraph::~Scenegraph( void )
 {
-
-
 }
 
 void Scenegraph::RegisterPass( Pass* p_pass )
 {
-	dsstring pass_name;
-	p_pass->GetName( pass_name );
-	m_passes[pass_name] = p_pass;    
+    dsstring pass_name;
+    p_pass->GetName( pass_name );
+    m_passes[pass_name] = p_pass;    
 }
 
 bool Scenegraph::RegisterNode( ScenegraphNode* p_node )
@@ -52,14 +48,14 @@ bool Scenegraph::RegisterNode( ScenegraphNode* p_node )
     }
     p_node->OnRegister( this );
 
-	return true;
+    return true;
 }
 
 Pass* Scenegraph::GetPass( const dsstring& p_passname )
 {
-	if( m_passes.count( p_passname ) > 0 )
-	{
-		return m_passes[p_passname];
-	}
-	return NULL;
+    if( m_passes.count( p_passname ) > 0 )
+    {
+        return m_passes[p_passname];
+    }
+    return NULL;
 }

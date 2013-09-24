@@ -1,24 +1,24 @@
-/***************************************************************************
-*                                                                          *
-* DrawSpace Rendering engine                                               *
-* Emmanuel Chaumont Copyright (c) 2013-2014                                *
-*                                                                          *
-* This file is part of DrawSpace.                                          *
-*                                                                          *
-*    DrawSpace is free software: you can redistribute it and/or modify     *
-*    it under the terms of the GNU General Public License as published by  *
-*    the Free Software Foundation, either version 3 of the License, or     *
-*    (at your option) any later version.                                   *
-*                                                                          *
-*    DrawSpace is distributed in the hope that it will be useful,          *
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*    GNU General Public License for more details.                          *
-*                                                                          *
-*    You should have received a copy of the GNU General Public License     *
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    *
-*                                                                          *
-***************************************************************************/
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2014                                
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*                                                                          
+*/
 
 #include "shader.h"
 #include "file.h"
@@ -37,39 +37,39 @@ Shader::~Shader( void )
 
 bool Shader::IsCompiled( void )
 {
-	return m_compiled;
+    return m_compiled;
 }
 
 void* Shader::GetData( void )
 {
-	return m_data;
+    return m_data;
 }
 
 long Shader::GetDataSize( void )
 {
-	return m_datasize;
+    return m_datasize;
 }
 
 bool Shader::LoadFromFile( void )
 {
-	long size;
-	void* data = File::LoadAndAllocBinaryFile( m_path, &size );
-	if( !data )
-	{
-		return false;
-	}
-	m_data = data;
-	m_datasize = size;
-	return true;
+    long size;
+    void* data = File::LoadAndAllocBinaryFile( m_path, &size );
+    if( !data )
+    {
+        return false;
+    }
+    m_data = data;
+    m_datasize = size;
+    return true;
 }
 
 void Shader::ReleaseData( void )
 {
-	if( m_data )
-	{
-		_DRAWSPACE_DELETE_N_( m_data );
-		m_data = NULL;
-	}
+    if( m_data )
+    {
+        _DRAWSPACE_DELETE_N_( m_data );
+        m_data = NULL;
+    }
 }
 
 void Shader::Serialize( Factory& p_factory, Archive& p_archive  )
@@ -85,10 +85,10 @@ void Shader::Unserialize( Factory& p_factory, Archive& p_archive )
 
 void Shader::SetParam( long p_register, const Vector& p_values )
 {
-	m_params[p_register] = p_values;
+    m_params[p_register] = p_values;
 }
 
 void Shader::GetParamsTable( std::map<long, Vector>& p_table )
 {
-	p_table = m_params;
+    p_table = m_params;
 }

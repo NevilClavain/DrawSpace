@@ -1,24 +1,24 @@
-/***************************************************************************
-*                                                                          *
-* DrawSpace Rendering engine                                               *
-* Emmanuel Chaumont Copyright (c) 2013-2014                                *
-*                                                                          *
-* This file is part of DrawSpace.                                          *
-*                                                                          *
-*    DrawSpace is free software: you can redistribute it and/or modify     *
-*    it under the terms of the GNU General Public License as published by  *
-*    the Free Software Foundation, either version 3 of the License, or     *
-*    (at your option) any later version.                                   *
-*                                                                          *
-*    DrawSpace is distributed in the hope that it will be useful,          *
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*    GNU General Public License for more details.                          *
-*                                                                          *
-*    You should have received a copy of the GNU General Public License     *
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    *
-*                                                                          *
-***************************************************************************/
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2014                                
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*                                                                          
+*/
 
 #include "cbfgfontimport.h"
 
@@ -39,18 +39,18 @@ CBFGFontImport::~CBFGFontImport( void )
 
 bool CBFGFontImport::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
-	if( "Cell" == p_words[0] && "Width" == p_words[1] )
-	{
-		m_cell_width = atoi( p_words[2].c_str() );
-	}
-	if( "Cell" == p_words[0] && "Height" == p_words[1] )
-	{
-		m_cell_height = atoi( p_words[2].c_str() );
-	}
-	if( "Start" == p_words[0] && "Char" == p_words[1] )
-	{
-		m_start_char = atoi( p_words[2].c_str() );
-	}
+    if( "Cell" == p_words[0] && "Width" == p_words[1] )
+    {
+        m_cell_width = atoi( p_words[2].c_str() );
+    }
+    if( "Cell" == p_words[0] && "Height" == p_words[1] )
+    {
+        m_cell_height = atoi( p_words[2].c_str() );
+    }
+    if( "Start" == p_words[0] && "Char" == p_words[1] )
+    {
+        m_start_char = atoi( p_words[2].c_str() );
+    }
     if( "Image" == p_words[0] && "Width" == p_words[1] )
     {
         m_texture_width = atoi( p_words[2].c_str() );
@@ -91,11 +91,11 @@ bool CBFGFontImport::on_new_line( const dsstring& p_line, long p_line_num, std::
         }
     }
 
-	return true;
+    return true;
 }
 
 bool CBFGFontImport::LoadFromFile( const dsstring& p_metricsfilepath, Core::Font* p_font )
 {
     m_font = p_font;
-	return Parser::Run( p_metricsfilepath, " ," );
+    return Parser::Run( p_metricsfilepath, " ," );
 }

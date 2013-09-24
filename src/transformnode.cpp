@@ -1,24 +1,24 @@
-/***************************************************************************
-*                                                                          *
-* DrawSpace Rendering engine                                               *
-* Emmanuel Chaumont Copyright (c) 2013-2014                                *
-*                                                                          *
-* This file is part of DrawSpace.                                          *
-*                                                                          *
-*    DrawSpace is free software: you can redistribute it and/or modify     *
-*    it under the terms of the GNU General Public License as published by  *
-*    the Free Software Foundation, either version 3 of the License, or     *
-*    (at your option) any later version.                                   *
-*                                                                          *
-*    DrawSpace is distributed in the hope that it will be useful,          *
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*    GNU General Public License for more details.                          *
-*                                                                          *
-*    You should have received a copy of the GNU General Public License     *
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    *
-*                                                                          *
-***************************************************************************/
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2014                                
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*                                                                          
+*/
 
 #include "transformnode.h"
 
@@ -33,7 +33,7 @@ m_request_camera_view( p_req_view )
 {
     m_localtransformation.Identity();
     m_globaltransformation.Identity();
-	m_view.Identity();
+    m_view.Identity();
 }
 
 TransformNode::~TransformNode( void )
@@ -66,31 +66,31 @@ void TransformNode::ComputeFinalTransform( void )
 
 void TransformNode::SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
-	m_localtransformation = p_mat;
+    m_localtransformation = p_mat;
 }
 
 void TransformNode::GetName( dsstring& p_name )
 {
-	p_name = m_scenename;
+    p_name = m_scenename;
 }
 
 void TransformNode::GetSceneWorld( DrawSpace::Utils::Matrix& p_mat )
 {
-	p_mat = m_globaltransformation;
+    p_mat = m_globaltransformation;
 }
 
 void TransformNode::GetSceneView( Matrix& p_mat )
 {
-	p_mat = m_view;
+    p_mat = m_view;
 }
 
 void TransformNode::SetView( const Matrix& p_mat )
 {
-	m_view = p_mat;
+    m_view = p_mat;
 }
 
 bool TransformNode::IsCameraViewRequested( void )
 {
-	return m_request_camera_view;
+    return m_request_camera_view;
 }
 

@@ -1,24 +1,24 @@
-/***************************************************************************
-*                                                                          *
-* DrawSpace Rendering engine                                               *
-* Emmanuel Chaumont Copyright (c) 2013-2014                                *
-*                                                                          *
-* This file is part of DrawSpace.                                          *
-*                                                                          *
-*    DrawSpace is free software: you can redistribute it and/or modify     *
-*    it under the terms of the GNU General Public License as published by  *
-*    the Free Software Foundation, either version 3 of the License, or     *
-*    (at your option) any later version.                                   *
-*                                                                          *
-*    DrawSpace is distributed in the hope that it will be useful,          *
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*    GNU General Public License for more details.                          *
-*                                                                          *
-*    You should have received a copy of the GNU General Public License     *
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    *
-*                                                                          *
-***************************************************************************/
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2014                                
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*                                                                          
+*/
 
 #ifndef _MEMALLOC_H_
 #define _MEMALLOC_H_
@@ -38,40 +38,40 @@ class MemAlloc
 {
 protected:
 
-	typedef struct
-	{
-		size_t   size;
-		dsstring item;
-		dsstring func;
-		long	 linenum;
-		dsstring   file;
+    typedef struct
+    {
+        size_t      size;
+        dsstring    item;
+        dsstring    func;
+        long        linenum;
+        dsstring    file;
 
-	} entry;
+    } entry;
 
-	static MemAlloc*		m_instance;
-	std::map<void*, entry>	m_blocs;
-	size_t					m_totalsize;
+    static MemAlloc*        m_instance;
+    std::map<void*, entry>  m_blocs;
+    size_t                  m_totalsize;
 
-	MemAlloc( void );
+    MemAlloc( void );
 
     void register_bloc( void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename );
 
 public:
-	
-	~MemAlloc( void );
+    
+    ~MemAlloc( void );
 
-	static MemAlloc* GetInstance( void );
+    static MemAlloc* GetInstance( void );
 
-	void DumpContent( void );
+    void DumpContent( void );
 
-	template <typename base>
-	base* Register( base* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename )
-	{
-		base* t = p_ptr;
+    template <typename base>
+    base* Register( base* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename )
+    {
+        base* t = p_ptr;
         register_bloc( t, p_size, p_item, p_funcname, p_line, p_filename );
 
-		return t;
-	};
+        return t;
+    };
 
     void Unregister( void* p_ptr );
 };

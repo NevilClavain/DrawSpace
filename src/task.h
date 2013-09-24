@@ -1,24 +1,24 @@
-/***************************************************************************
-*                                                                          *
-* DrawSpace Rendering engine                                               *
-* ECH Copyright (c) 2013-2014                                              *
-*                                                                          *
-* This file is part of DrawSpace.                                          *
-*                                                                          *
-*    DrawSpace is free software: you can redistribute it and/or modify     *
-*    it under the terms of the GNU General Public License as published by  *
-*    the Free Software Foundation, either version 3 of the License, or     *
-*    (at your option) any later version.                                   *
-*                                                                          *
-*    DrawSpace is distributed in the hope that it will be useful,          *
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*    GNU General Public License for more details.                          *
-*                                                                          *
-*    You should have received a copy of the GNU General Public License     *
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    *
-*                                                                          *
-***************************************************************************/
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2014                                
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*                                                                          
+*/
 
 // Strongly inspired from this : http://accu.org/index.php/journals/562
 
@@ -45,10 +45,10 @@ public:
 
 protected:
 
-    HANDLE          m_thread_handle;
-    DWORD           m_thread_id;
+    HANDLE              m_thread_handle;
+    DWORD               m_thread_id;
     //int             m_suspended_count;
-    TerminateAction m_terminate_action;
+    TerminateAction     m_terminate_action;
     
 public:
 
@@ -99,15 +99,15 @@ public:
         }
 
         m_thread_handle = CreateThread(  NULL, 0, StartRun, p_instance, 0, &m_thread_id );
-		/*
+        /*
         if( NULL == m_thread_handle ) 
         {
-			
+            
         }
-		*/
+        */
     }
 
-    dsbool IsTerminated( void ) 
+    bool IsTerminated( void ) 
     {
         if( NULL == m_thread_handle ) 
         {       
@@ -135,7 +135,7 @@ public:
         if( NULL != m_thread_handle )
         {
             // nothing to suspend
-	        return;
+            return;
         }
         m_suspended_count = ::SuspendThread( m_thread_handle );
     }
@@ -155,12 +155,12 @@ public:
     {
         if (!IsTerminated() ) 
         {
-			/*
+            /*
             while( m_suspended_count > 0 )
             {
                 ResumeThread();
             }
-			*/
+            */
 
             WaitForSingleObject( m_thread_handle, INFINITE );
         }
