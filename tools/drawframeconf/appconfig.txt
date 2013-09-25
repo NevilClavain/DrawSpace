@@ -1,7 +1,0 @@
-width          512
-height         380
-fullscreen     true
-renderplugin   drawspaced3d9.dll
-dx9adapterordinal      0
-dx9fullscreen          1280 720 59 22
-dx9vertexproc     software
