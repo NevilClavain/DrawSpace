@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspace", "drawspace.vcproj", "{8E25B521-746A-4461-AE0B-C2C3A46B150F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "plugins\d3d9\d3d9.vcproj", "{C42D356E-7422-4814-87DC-FD4EE300A967}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E25B521-746A-4461-AE0B-C2C3A46B150F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8E25B521-746A-4461-AE0B-C2C3A46B150F}.Debug|Win32.Build.0 = Debug|Win32
+		{8E25B521-746A-4461-AE0B-C2C3A46B150F}.Release|Win32.ActiveCfg = Release|Win32
+		{8E25B521-746A-4461-AE0B-C2C3A46B150F}.Release|Win32.Build.0 = Release|Win32
+		{C42D356E-7422-4814-87DC-FD4EE300A967}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C42D356E-7422-4814-87DC-FD4EE300A967}.Debug|Win32.Build.0 = Debug|Win32
+		{C42D356E-7422-4814-87DC-FD4EE300A967}.Release|Win32.ActiveCfg = Release|Win32
+		{C42D356E-7422-4814-87DC-FD4EE300A967}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
