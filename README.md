@@ -6,7 +6,7 @@ DrawSpace
 Here is my tiny graphic rendering engine (Win32 platform support only for the moment ;) 
 )
 
-
+Full GPLv3 text is available in the ./licenses directory
 
 DrawSpace currently rely on some 3rd-parts libraries:
 
