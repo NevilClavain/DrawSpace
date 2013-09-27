@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./../../src;./../../thirdparts/log4cxx/Include;./../../thirdparts/dx9sdk/include"
+				AdditionalIncludeDirectories="./../../src;./../../../DrawSpace_thirdparts/log4cxx/Include;./../../../DrawSpace_thirdparts/dx9sdk/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;D3D9_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,7 +64,7 @@
 				AdditionalDependencies="d3d9.lib d3dx9.lib log4cxx.lib drawspace.lib"
 				OutputFile="$(SolutionDir)\libs\drawspaced3d9.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=".\..\..\thirdparts\dx9sdk\Lib;.\..\..\thirdparts\log4cxx\lib\msvc\release;.\..\..\libs"
+				AdditionalLibraryDirectories=".\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\..\DrawSpace_thirdparts\log4cxx\lib\msvc\release;.\..\..\libs"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
