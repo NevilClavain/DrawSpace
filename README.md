@@ -6,7 +6,6 @@ DrawSpace
 Here is my tiny graphic rendering engine (Win32 platform support only for the moment ;) 
 )
 
-Developper : NevilClavain aka Emmanuel Chaumont (emmanuel.chaumont_at_wanadoo.fr)
 
 
 DrawSpace currently rely on some 3rd-parts libraries:
