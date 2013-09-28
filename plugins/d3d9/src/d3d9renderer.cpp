@@ -339,10 +339,19 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
 
         if( !vertex_shader->IsCompiled() )
         {
+            if( vertex_shader->GetData() == NULL )
+            {
+                _DSFATAL( logger, "no data in vertex shader !" )
+                return false;
+            }
+
             hRes = D3DXCompileShader( (LPCSTR)vertex_shader->GetData(), vertex_shader->GetDataSize(), NULL, NULL, "vs_main", "vs_3_0", 0, &vbuff, &errors, NULL );
             if( D3D_OK != hRes )
             {
-                _DSFATAL( logger, "D3DXCompileShader FAIL : " << (char *)errors->GetBufferPointer() )
+                if( NULL != errors )
+                {
+                    _DSFATAL( logger, "D3DXCompileShader FAIL : " << (char *)errors->GetBufferPointer() )
+                }
                 return false;
             }
 
@@ -359,6 +368,12 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
 
         if( !pixel_shader->IsCompiled() )
         {
+            if( pixel_shader->GetData() == NULL )
+            {
+                _DSFATAL( logger, "no data in pixel shader !" )
+                return false;
+            }
+
             hRes = D3DXCompileShader( (LPCSTR)pixel_shader->GetData(), pixel_shader->GetDataSize(), NULL, NULL, "ps_main", "ps_3_0", 0, &pbuff, &errors, NULL );
             if( D3D_OK != hRes )
             {
