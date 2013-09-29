@@ -34,7 +34,7 @@ protected:
     typedef Core::CallBack<ChunkNode, void, Core::RenderingNode*>   RenderingNodeDrawCallback;
 
     Core::Meshe*                                                    m_meshe;
-    std::map<dsstring, Core::RenderingNode*>                        m_passes;
+    std::map<dsstring, Core::RenderingNode*>                        m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                         m_callbacks;
 
     void on_renderingnode_draw( Core::RenderingNode* p_rendering_node );
@@ -48,6 +48,8 @@ public:
     virtual void RegisterPassRenderingNode( const dsstring p_passname, Core::RenderingNode* p_rendering_node  );
     virtual void OnRegister( Scenegraph* p_scenegraph );
     bool LoadAssets( void );
+
+    Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
 };
 }
 

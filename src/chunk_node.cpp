@@ -51,7 +51,7 @@ Meshe* ChunkNode::GetMeshe( void )
 
 void ChunkNode::RegisterPassRenderingNode( const dsstring p_passname, Core::RenderingNode* p_rendering_node  )
 {
-    m_passes[p_passname] = p_rendering_node;
+    m_passesnodes[p_passname] = p_rendering_node;
 
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &ChunkNode::on_renderingnode_draw ) );
     p_rendering_node->RegisterHandler( cb );
@@ -60,7 +60,7 @@ void ChunkNode::RegisterPassRenderingNode( const dsstring p_passname, Core::Rend
 
 void ChunkNode::OnRegister( Scenegraph* p_scenegraph )
 {
-    for( std::map<dsstring, Core::RenderingNode*>::iterator it = m_passes.begin(); it != m_passes.end(); ++it )
+    for( std::map<dsstring, Core::RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = p_scenegraph->GetPass( (*it).first );
         if( current_pass != NULL )
@@ -74,7 +74,7 @@ bool ChunkNode::LoadAssets( void )
 {
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
-    for( std::map<dsstring, Core::RenderingNode*>::iterator it = m_passes.begin(); it != m_passes.end(); ++it )
+    for( std::map<dsstring, Core::RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         if( false == renderer->CreateRenderingNode( (*it).second ) )
         {
@@ -86,4 +86,13 @@ bool ChunkNode::LoadAssets( void )
         }
     }
     return true;		
+}
+
+Core::RenderingNode* ChunkNode::GetNodeFromPass( const dsstring& p_passname )
+{
+    if( m_passesnodes.count( p_passname ) == 0 )
+    {
+        return NULL;
+    }
+    return m_passesnodes[p_passname];
 }
