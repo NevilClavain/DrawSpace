@@ -1,32 +1,46 @@
-//////////////////////////////////////////////////////////////////
-// DrawSpace app entry point
-// ECH 06/2013
-// Copyright © 2013-2014
-//
-// 
-//
-//////////////////////////////////////////////////////////////////
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2014                                
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*                                                                          
+*/
+
 
 #include <dsappclient.h>
 
 bool LoadRendererPlugin( const dsstring& p_file )
 {
     DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Handle pihandle;
-	DrawSpace::Interface::Renderer* renderer;
-	PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::LoadPlugin( p_file.c_str(), pihandle );
-	if( pistatus != PIM_OK )
-	{
-		return false;
-	}
+    DrawSpace::Interface::Renderer* renderer;
+    PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::LoadPlugin( p_file.c_str(), pihandle );
+    if( pistatus != PIM_OK )
+    {
+        return false;
+    }
 
-	if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Instanciate( pihandle, &renderer ) != PIM_OK )
-	{
-		return false;
-	}
+    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Instanciate( pihandle, &renderer ) != PIM_OK )
+    {
+        return false;
+    }
 
     DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = renderer;
-	
-	return true;
+    
+    return true;
 }
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
@@ -45,7 +59,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
     app->GetRenderPluginName( plugin );
     if( "" == plugin )
     {
-		MessageBoxA( NULL, "No plugin specified" , "DrawSpace", MB_OK | MB_ICONSTOP );
+        MessageBoxA( NULL, "No plugin specified" , "DrawSpace", MB_OK | MB_ICONSTOP );
         return 0;
     }
 
@@ -56,11 +70,11 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
     }
 
 
-	if( app->InitRenderer() == false )
-	{
-		MessageBoxA( NULL, "InitRenderer FAILURE" , "DrawSpace", MB_OK | MB_ICONSTOP );
+    if( app->InitRenderer() == false )
+    {
+        MessageBoxA( NULL, "InitRenderer FAILURE" , "DrawSpace", MB_OK | MB_ICONSTOP );
         return 0;
-	}
+    }
 
     app->IdleApp();
 
