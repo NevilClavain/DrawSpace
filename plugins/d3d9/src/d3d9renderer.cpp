@@ -377,7 +377,10 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
             hRes = D3DXCompileShader( (LPCSTR)pixel_shader->GetData(), pixel_shader->GetDataSize(), NULL, NULL, "ps_main", "ps_3_0", 0, &pbuff, &errors, NULL );
             if( D3D_OK != hRes )
             {
-                _DSFATAL( logger, "D3DXCompileShader FAIL : " << (char *)errors->GetBufferPointer() )
+                if( NULL != errors )
+                {
+                    _DSFATAL( logger, "D3DXCompileShader FAIL : " << (char *)errors->GetBufferPointer() )
+                }
                 return false;
             }
 
