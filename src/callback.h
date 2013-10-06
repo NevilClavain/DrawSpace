@@ -35,11 +35,31 @@ public:
     virtual ReturnType Execute( Parameter p_parameter ) = 0;
 };
 
+template <typename ReturnType, typename Parameter, typename Parameter2>
+class BaseCallback2
+{
+public:
+    virtual ReturnType operator()( Parameter p_parameter, Parameter2 p_parameter2 ) = 0;
+    virtual ReturnType Execute( Parameter p_parameter, Parameter2 p_parameter2 ) = 0;
+};
+
+
+template <typename ReturnType, typename Parameter, typename Parameter2, typename Parameter3>
+class BaseCallback3
+{
+public:
+    virtual ReturnType operator()( Parameter p_parameter, Parameter2 p_parameter2, Parameter3 p_parameter3 ) = 0;
+    virtual ReturnType Execute( Parameter p_parameter, Parameter2 p_parameter2, Parameter3 p_parameter3 ) = 0;
+};
+
+
+
+
 template <class Class, typename ReturnType, typename Parameter>
 class CallBack : public BaseCallback<ReturnType, Parameter>
 {
 public:
-    typedef ReturnType (Class::*Method)(Parameter);
+    typedef ReturnType ( Class::*Method )( Parameter );
 
 protected:
     Class* m_class_instance;
@@ -52,14 +72,70 @@ public:
 
     virtual ReturnType operator()( Parameter p_parameter )
     {
-      return ( m_class_instance->*m_method )( p_parameter );
+        return ( m_class_instance->*m_method )( p_parameter );
     }
 
     virtual ReturnType Execute( Parameter p_parameter )
     {
-      return operator()( p_parameter );
+        return operator()( p_parameter );
     }
 };
+
+
+template <class Class, typename ReturnType, typename Parameter, typename Parameter2>
+class CallBack2 : public BaseCallback2<ReturnType, Parameter, Parameter2>
+{
+public:
+    typedef ReturnType ( Class::*Method )( Parameter, Parameter2 );
+
+protected:
+    Class* m_class_instance;
+    Method m_method;
+
+public:
+    CallBack2( Class* p_class_instance, Method p_method ) : m_class_instance( p_class_instance ), m_method( p_method )
+    {
+    }
+
+    virtual ReturnType operator()( Parameter p_parameter, Parameter2 p_parameter2 )
+    {
+        return ( m_class_instance->*m_method )( p_parameter, p_parameter2 );
+    }
+
+    virtual ReturnType Execute( Parameter p_parameter, Parameter2 p_parameter2 )
+    {
+        return operator()( p_parameter, p_parameter2 );
+    }
+};
+
+
+template <class Class, typename ReturnType, typename Parameter, typename Parameter2, typename Parameter3>
+class CallBack3 : public BaseCallback3<ReturnType, Parameter, Parameter2, Parameter3>
+{
+public:
+    typedef ReturnType ( Class::*Method )( Parameter, Parameter2 );
+
+protected:
+    Class* m_class_instance;
+    Method m_method;
+
+public:
+    CallBack3( Class* p_class_instance, Method p_method ) : m_class_instance( p_class_instance ), m_method( p_method )
+    {
+    }
+
+    virtual ReturnType operator()( Parameter p_parameter, Parameter2 p_parameter2, Parameter3 p_parameter3 )
+    {
+        return ( m_class_instance->*m_method )( p_parameter, p_parameter2, p_parameter3 );
+    }
+
+    virtual ReturnType Execute( Parameter p_parameter, Parameter2 p_parameter2, Parameter3 p_parameter3 )
+    {
+        return operator()( p_parameter, p_parameter2, p_parameter3 );
+    }
+};
+
+
 }
 }
 
