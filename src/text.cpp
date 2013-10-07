@@ -43,25 +43,47 @@ Text::~Text( void )
 
 void Text::OnDraw( void )
 {
+
+    if( 0 == m_text.size() )
+    {
+        return;
+    }
+
+    dsreal width = 0.0;
+
+    unsigned char curr_ch = m_text[0];
+    Font::CharMapping chmap;
+    if( false == m_font->GetCharMapping( curr_ch, chmap ) )
+    {
+        return;
+    }
+    
+    dsreal ratio = chmap.width / chmap.height;
+    width = ratio * m_height;
+
     dsreal curr_x = m_x;
+
     for( unsigned long i = 0; i < m_text.size(); i++ )
     {
-        unsigned char curr_ch = m_text[i];
-
-        Font::CharMapping chmap;
-        if( false == m_font->GetCharMapping( curr_ch, chmap ) )
-        {
-            return;
-        }
-        
-        dsreal ratio = chmap.width / chmap.height;
-        dsreal width = ratio * m_height;
-
         chmap.image->SetTranslation( curr_x, m_y );
         chmap.image->SetScale( m_height, m_height );
-
         chmap.image->OnDraw();
-        curr_x += width;
+
+        curr_x += width / 2.0;
+
+        if( i < m_text.size() - 1 )
+        {
+            unsigned char curr_ch = m_text[i + 1];            
+            if( false == m_font->GetCharMapping( curr_ch, chmap ) )
+            {
+                return;
+            }
+            
+            dsreal ratio = chmap.width / chmap.height;
+            width = ratio * m_height;
+
+            curr_x += width / 2.0;
+        }
     }
 }
 
