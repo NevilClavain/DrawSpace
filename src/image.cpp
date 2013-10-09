@@ -28,7 +28,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Utils;
 
-Image::Image( /*dsreal p_width, dsreal p_height*/ long p_virtual_width, long p_virtual_height ) : /*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 )
+Image::Image( long p_virtual_width, long p_virtual_height ) : /*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 )
 {
     Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
@@ -70,7 +70,7 @@ Image::Image( /*dsreal p_width, dsreal p_height*/ long p_virtual_width, long p_v
     m_meshe->AddTriangle( Triangle( 0, 3, 2 ) );
 }
 
-Image::Image( /*dsreal p_width, dsreal p_height,*/ long p_virtual_width, long p_virtual_height, Utils::Vector& p_uv1, Utils::Vector& p_uv2, Utils::Vector& p_uv3, Utils::Vector& p_uv4 ) : 
+Image::Image( long p_virtual_width, long p_virtual_height, Utils::Vector& p_uv1, Utils::Vector& p_uv2, Utils::Vector& p_uv3, Utils::Vector& p_uv4 ) : 
 /*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 )
 {
     Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;

@@ -24,43 +24,202 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Gui;
+using namespace DrawSpace::Interface;
 
-Widget::Widget( const dsstring& p_name ) : m_name( p_name ), m_parent( NULL )
+Widget::Widget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, Widget* p_parentwidget ) : 
+m_name( p_name ), 
+m_virtual_width( p_virtual_width ), 
+m_virtual_height( p_virtual_height ), 
+m_virtual_posx( 0 ),
+m_virtual_posy( 0 ),
+m_parent( p_parentwidget ),
+m_flag_cursor_in( false ),
+m_mousein_handler( NULL ),
+m_mouseout_handler( NULL ),
+m_mouserightbuttonup_handler( NULL ),
+m_mouserightbuttondown_handler( NULL ),
+m_mouseleftbuttonup_handler( NULL ),
+m_mouseleftbuttondown_handler( NULL )
 {
+    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    renderer->GetRenderCharacteristics( m_rc );
+
+    if( NULL == m_parent )
+    {
+        m_real_width = ( (dsreal)p_virtual_width / (dsreal)DRAWSPACE_GUI_WIDTH ) * m_rc.width_viewport;
+        m_real_height = ( (dsreal)p_virtual_height / (dsreal)DRAWSPACE_GUI_HEIGHT ) * m_rc.height_viewport;
+    }
+    else
+    {
+        m_real_width = ( (dsreal)p_virtual_width / (dsreal)DRAWSPACE_GUI_WIDTH ) * m_parent->m_real_width;
+        m_real_height = ( (dsreal)p_virtual_height / (dsreal)DRAWSPACE_GUI_HEIGHT ) * m_parent->m_real_height;
+    }
+
+    if( m_parent )
+    {
+        m_parent->m_children.push_back( this );
+    }
 }
 
 Widget::~Widget( void )
 {
 }
 
-void Widget::AddChild( Widget* p_widget )
+
+void Widget::GetName( dsstring& p_name )
 {
-    m_children.push_back( p_widget );
+    p_name = m_name;
+}
+
+void Widget::Transform( void )
+{
+    if( NULL == m_parent )
+    {
+        m_real_posx = ( ( ( (dsreal)m_virtual_posx / (dsreal)DRAWSPACE_GUI_WIDTH ) - 0.5 ) /*/ 0.5 */) * ( m_rc.width_viewport /*/ 2.0*/ );
+        m_real_posy = ( ( 0.5 - ( (dsreal)m_virtual_posy / (dsreal)DRAWSPACE_GUI_HEIGHT ) ) /*/ 0.5 */ ) * ( m_rc.height_viewport /*/ 2.0*/ );
+    }
+    else
+    {
+        m_real_posx = ( ( ( ( (dsreal)m_virtual_posx / (dsreal)DRAWSPACE_GUI_WIDTH ) - 0.5 ) /*/ 0.5 */) * ( m_parent->m_real_width /*/ 2.0*/ ) ) + m_parent->m_real_posx;
+        m_real_posy = ( ( ( 0.5 - ( (dsreal)m_virtual_posy / (dsreal)DRAWSPACE_GUI_HEIGHT ) ) /*/ 0.5 */ ) * ( m_parent->m_real_height /*/ 2.0*/ ) ) + m_parent->m_real_posy;
+    }
+
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->Transform();
+    }
+
+}
+
+void Widget::SetVirtualTranslation( long p_x, long p_y )
+{
+    m_virtual_posx = p_x;
+    m_virtual_posy = p_y;
 }
 
 void Widget::MouseMoveInput( long p_xm, long p_ym, long p_dx, long p_dy )
 {
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->MouseMoveInput( p_xm, p_ym, p_dx, p_dy );
+    }
 
+    dsreal real_x, real_y;
+    real_x = ( ( (dsreal)p_xm / m_rc.width_resol ) - 0.5 ) * m_rc.width_viewport;
+    real_y = ( 0.5 - ( (dsreal)p_ym / m_rc.height_resol ) ) * m_rc.height_viewport;
+
+    if( m_real_posx - m_real_width / 2.0 < real_x && real_x < m_real_posx + m_real_width / 2.0 &&
+        m_real_posy - m_real_height / 2.0 < real_y && real_y < m_real_posy + m_real_height / 2.0 )
+    {
+
+        if( !m_flag_cursor_in )
+        {
+            if( m_mousein_handler )
+            {
+                (*m_mousein_handler)( this );
+            }
+        }
+        m_flag_cursor_in = true;
+    }
+    else
+    {
+        if( m_flag_cursor_in )
+        {
+            if( m_mouseout_handler )
+            {
+                (*m_mouseout_handler)( this );
+            }
+        }
+        m_flag_cursor_in = false;
+    }
 }
 
 void Widget::MouseLeftButtonDownInput( long p_xm, long p_ym )
 {
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->MouseLeftButtonDownInput( p_xm, p_ym );
+    }
 
+    if( m_flag_cursor_in && m_mouseleftbuttondown_handler )
+    {
+        (*m_mouseleftbuttondown_handler)( this );
+    }
 }
 
 void Widget::MouseLeftButtonUpInput( long p_xm, long p_ym )
 {
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->MouseLeftButtonUpInput( p_xm, p_ym );
+    }
 
-
+    if( m_flag_cursor_in && m_mouseleftbuttonup_handler )
+    {
+        (*m_mouseleftbuttonup_handler)( this );
+    }
 }
 
 void Widget::MouseRightButtonDownInput( long p_xm, long p_ym )
 {
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->MouseRightButtonDownInput( p_xm, p_ym );
+    }
 
+    if( m_flag_cursor_in && m_mouserightbuttondown_handler )
+    {
+        (*m_mouserightbuttondown_handler)( this );
+    }
 }
 
 void Widget::MouseRightButtonUpInput( long p_xm, long p_ym )
 {
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->MouseRightButtonUpInput( p_xm, p_ym );
+    }
 
+    if( m_flag_cursor_in && m_mouserightbuttonup_handler )
+    {
+        (*m_mouserightbuttonup_handler)( this );
+    }
 }
 
+void Widget::Draw( void )
+{
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->Draw();
+    }
+}
+
+void Widget::RegisterMouseInEventHandler( EventHandler p_handler )
+{
+    m_mousein_handler = p_handler;
+}
+
+void Widget::RegisterMouseOutEventHandler( EventHandler p_handler )
+{
+    m_mouseout_handler = p_handler;
+}
+
+void Widget::RegisterMouseRightButtonUpEventHandler( EventHandler p_handler )
+{
+    m_mouserightbuttonup_handler = p_handler;
+}
+
+void Widget::RegisterMouseRightButtonDownEventHandler( EventHandler p_handler )
+{
+    m_mouserightbuttondown_handler = p_handler;
+}
+
+void Widget::RegisterMouseLeftButtonUpEventHandler( EventHandler p_handler )
+{
+    m_mouseleftbuttonup_handler = p_handler;
+}
+
+void Widget::RegisterMouseLeftButtonDownEventHandler( EventHandler p_handler )
+{
+    m_mouseleftbuttondown_handler = p_handler;
+}

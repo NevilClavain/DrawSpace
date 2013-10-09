@@ -456,6 +456,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\events.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\events.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\flags.h"
 			>
 		</File>

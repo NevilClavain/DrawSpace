@@ -49,7 +49,7 @@ Meshe* ChunkNode::GetMeshe( void )
     return m_meshe;
 }
 
-void ChunkNode::RegisterPassRenderingNode( const dsstring p_passname, Core::RenderingNode* p_rendering_node  )
+void ChunkNode::RegisterPassRenderingNode( const dsstring p_passname, Core::RenderingNode* p_rendering_node )
 {
     m_passesnodes[p_passname] = p_rendering_node;
 
@@ -90,7 +90,7 @@ bool ChunkNode::LoadAssets( void )
 
 Core::RenderingNode* ChunkNode::GetNodeFromPass( const dsstring& p_passname )
 {
-    if( m_passesnodes.count( p_passname ) == 0 )
+    if( 0 == m_passesnodes.count( p_passname ) )
     {
         return NULL;
     }

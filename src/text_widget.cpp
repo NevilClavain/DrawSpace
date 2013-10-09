@@ -26,11 +26,12 @@ using namespace DrawSpace;
 using namespace DrawSpace::Gui;
 using namespace DrawSpace::Core;
 
-TextWidget::TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage ) : Widget( p_name )
+TextWidget::TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage, Widget* p_parentwidget ) : 
+Widget( p_name, p_virtual_width, p_virtual_height, p_parentwidget )
 {	
     m_pass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( m_name + "/pass" ) );
 
-    m_image = _DRAWSPACE_NEW_( Image, Image( (long)p_virtual_width, (long)p_virtual_height ) );
+    m_image = _DRAWSPACE_NEW_( Image, Image( m_real_width, m_real_height ) );   
     m_image->SetTexture( m_pass->GetTargetTexture(), 0 );
 
     m_pass->GetRenderingQueue()->EnableDepthClearing( false );
@@ -57,7 +58,10 @@ TextWidget::~TextWidget( void )
 
 void TextWidget::SetVirtualTranslation( long p_x ,long p_y )
 {
-    m_image->SetVirtualTranslation( p_x, p_y );
+    Widget::SetVirtualTranslation( p_x, p_y );
+    //m_image->SetVirtualTranslation( p_x, p_y );
+    m_image->SetTranslation( m_real_posx, m_real_posy );
+
 }
 
 void TextWidget::SetBackgroundTexture( Core::Texture* p_backgroundtexture, long p_stage )
@@ -103,6 +107,8 @@ void TextWidget::SetText( long p_x, long p_y, long p_height, const dsstring& p_t
 
 void TextWidget::Draw( void )
 {
+    Widget::Draw();
+
     m_pass->GetRenderingQueue()->Draw();
 }
 

@@ -47,41 +47,43 @@ protected:
     };
 
 
-    static App*     m_base_instance;
-    dsstring        m_cmdline;
+    static App*                         m_base_instance;
+    dsstring                            m_cmdline;
 
     ///////////////////Parametrage Fenetre//////////////////
 
-    HINSTANCE       m_hinstance;
-    HWND            m_hwnd;
-    long            m_w_width;
-    long            m_w_height;
-    bool            m_w_fullscreen;
-    long            m_w_style;
-    dsstring        m_w_title;
-    Config          m_config;
-    dsstring        m_renderplugin;
+    HINSTANCE                           m_hinstance;
+    HWND                                m_hwnd;
+    long                                m_w_width;
+    long                                m_w_height;
+    bool                                m_w_fullscreen;
+    long                                m_w_style;
+    dsstring                            m_w_title;
+    Config                              m_config;
+    dsstring                            m_renderplugin;
 
     /////////////////Misc stuff////////////////////////////
 
-    bool            m_app_ready;
-    bool            m_keypress;
-    bool            m_keypulse;
-    long            m_keycode;
-    bool            m_gl_ready;
+    bool                                m_app_ready;
+    bool                                m_keypress;
+    bool                                m_keypulse;
+    long                                m_keycode;
+    bool                                m_gl_ready;
+
+    std::vector<MouseInputsProvider*>   m_mouseinputs_providers;
 
     ///////////////////Entree souris ///////////////////////
 
-    bool            m_mousemoving;
-    bool            m_mousemovingstart;
-    long            m_mousemoving_pos;
-    long            m_mousemoving_curr_x;
-    long            m_mousemoving_curr_y;
-    long            m_mousemoving_last_x;
-    long            m_mousemoving_last_y;
-    long            m_mouselclick_pos;
-    long            m_mouserclick_pos;
-    long            m_mouse_circularmode;
+    bool                                m_mousemoving;
+    bool                                m_mousemovingstart;
+    long                                m_mousemoving_pos;
+    long                                m_mousemoving_curr_x;
+    long                                m_mousemoving_curr_y;
+    long                                m_mousemoving_last_x;
+    long                                m_mousemoving_last_y;
+    long                                m_mouselclick_pos;
+    long                                m_mouserclick_pos;
+    long                                m_mouse_circularmode;
 
     App( void );
 
@@ -118,6 +120,7 @@ protected:
     virtual void OnAppEvent( WPARAM p_wParam, LPARAM p_lParam ) { };
 
 
+    virtual void RegisterMouseInputEventsProvider( MouseInputsProvider* p_provider );
 
 public:
     ~App( void );

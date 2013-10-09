@@ -63,5 +63,6 @@
 #include "scenegraph.h"
 #include "chunk_node.h"
 #include "memalloc.h"
+#include "events.h"
 
 #endif

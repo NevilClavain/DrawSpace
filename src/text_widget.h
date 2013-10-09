@@ -20,6 +20,9 @@
 *                                                                          
 */
 
+#ifndef _TEXT_WIDGET_H_
+#define _TEXT_WIDGET_H_
+
 #include "widget.h"
 #include "pass.h"
 
@@ -43,24 +46,26 @@ protected:
     
 
 public:
-    TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage = true );
+    TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage, Widget* p_parentwidget );
     virtual ~TextWidget( void );
 
-    void SetVirtualTranslation( long p_x ,long p_y );
+    virtual void SetVirtualTranslation( long p_x ,long p_y );
 
-    Core::Fx* GetImageFx( void );
-    Core::Fx* GetBackGroundImageFx( void );
-    Core::Texture* GetBackGroundImageTexture( long p_stage );
-    Core::Fx* GetTextFx( void );
+    virtual Core::Fx* GetImageFx( void );
+    virtual Core::Fx* GetBackGroundImageFx( void );
+    virtual Core::Texture* GetBackGroundImageTexture( long p_stage );
+    virtual Core::Fx* GetTextFx( void );
 
-    void SetBackgroundTexture( Core::Texture* p_backgroundtexture, long p_stage );
+    virtual void SetBackgroundTexture( Core::Texture* p_backgroundtexture, long p_stage );
 
-    void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
+    virtual void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
 
-    void Draw( void );
-    void RegisterToPass( Pass* p_pass );
-    bool LoadAssets( void );
+    virtual void Draw( void );
+    virtual void RegisterToPass( Pass* p_pass );
+    virtual bool LoadAssets( void );
 
 };
 }
 }
+
+#endif
