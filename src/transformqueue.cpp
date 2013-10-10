@@ -49,10 +49,6 @@ void TransformQueue::ComputeTransformations( void )
 
     for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        if( (*it).second->IsCameraViewRequested() )
-        {
-            (*it).second->SetView( view );
-        }
         (*it).second->ComputeFinalTransform();
     }
 }

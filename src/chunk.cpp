@@ -68,7 +68,10 @@ bool Chunk::LoadAssets( void )
 void Chunk::OnDraw( void )
 {
     Renderer* renderer = Plugin<Renderer>::GetInstance()->m_interface;
-    renderer->RenderNodeMeshe( m_globaltransformation, m_view, this, 0 );
+
+    DrawSpace::Utils::Matrix view;
+    view.Identity();
+    renderer->RenderNodeMeshe( m_globaltransformation, view, this, 0 );
 }
 
 void Chunk::Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  )

@@ -41,7 +41,9 @@ ChunkNode::~ChunkNode( void )
 void ChunkNode::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    renderer->RenderNodeMeshe( m_globaltransformation, m_view, p_rendering_node, 0 );
+    DrawSpace::Utils::Matrix view;
+    view.Identity();
+    renderer->RenderNodeMeshe( m_globaltransformation, view, p_rendering_node, 0 );
 }
 
 Meshe* ChunkNode::GetMeshe( void )

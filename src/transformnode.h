@@ -38,14 +38,14 @@ protected:
 
     Utils::Matrix                   m_localtransformation;
     Utils::Matrix                   m_globaltransformation;
-    Utils::Matrix                   m_view;
+    
 
     TransformNode*                  m_parent;
     std::vector<TransformNode*>     m_children;
     bool                            m_request_camera_view;
 
 public:
-    TransformNode( const dsstring& p_name, bool p_req_view = true );
+    TransformNode( const dsstring& p_name );
     virtual ~TransformNode( void );
 
     virtual void AddChild( TransformNode* p_node );
@@ -53,9 +53,7 @@ public:
     virtual void SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
     virtual void GetName( dsstring& p_name );
     virtual void GetSceneWorld( Utils::Matrix& p_mat );
-    virtual void GetSceneView( Utils::Matrix& p_mat );
-    virtual void SetView( const Utils::Matrix& p_mat );	
-    virtual bool IsCameraViewRequested( void );
+    
 
     friend class TransformQueue;
 };

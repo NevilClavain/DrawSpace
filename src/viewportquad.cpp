@@ -72,7 +72,9 @@ ViewportQuad::~ViewportQuad( void )
 void ViewportQuad::OnDraw( void )
 {
     Renderer* renderer = Plugin<Renderer>::GetInstance()->m_interface;
-    renderer->RenderNodeMeshe( m_globaltransformation, m_view, this, 0 );
+    DrawSpace::Utils::Matrix view;
+    view.Identity();
+    renderer->RenderNodeMeshe( m_globaltransformation, view, this, 0 );
 }
 
 bool ViewportQuad::LoadAssets( void )

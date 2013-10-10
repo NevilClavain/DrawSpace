@@ -26,14 +26,13 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-TransformNode::TransformNode( const dsstring& p_name, bool p_req_view ) : 
+TransformNode::TransformNode( const dsstring& p_name ) : 
 m_parent( NULL ), 
-m_scenename( p_name ),
-m_request_camera_view( p_req_view )
+m_scenename( p_name )
 {
     m_localtransformation.Identity();
     m_globaltransformation.Identity();
-    m_view.Identity();
+    
 }
 
 TransformNode::~TransformNode( void )
@@ -79,18 +78,4 @@ void TransformNode::GetSceneWorld( DrawSpace::Utils::Matrix& p_mat )
     p_mat = m_globaltransformation;
 }
 
-void TransformNode::GetSceneView( Matrix& p_mat )
-{
-    p_mat = m_view;
-}
-
-void TransformNode::SetView( const Matrix& p_mat )
-{
-    m_view = p_mat;
-}
-
-bool TransformNode::IsCameraViewRequested( void )
-{
-    return m_request_camera_view;
-}
 
