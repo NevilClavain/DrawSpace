@@ -42,6 +42,7 @@ public:
     virtual ~ViewportQuad( void );
 
     void OnDraw( void );
+    void OnRegister( Scenegraph* p_scenegraph ) { };
 
     bool LoadAssets( void );
 };

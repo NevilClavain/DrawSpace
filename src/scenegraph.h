@@ -27,22 +27,6 @@
 
 namespace DrawSpace
 {
-class Scenegraph;
-
-class ScenegraphNode : public Core::TransformNode
-{
-public:
-    ScenegraphNode( const dsstring& p_name ) : TransformNode( p_name )
-    {
-    }
-    virtual ~ScenegraphNode( void )
-    {
-    }
-
-    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
-};
-
-
 class Scenegraph : public Core::TransformQueue
 {
 protected:
@@ -54,7 +38,7 @@ public:
     virtual ~Scenegraph( void );
 
     void RegisterPass( Pass* p_pass );
-    bool RegisterNode( ScenegraphNode* p_node );	
+    bool RegisterNode( Core::TransformNode* p_node );	
     Pass* GetPass( const dsstring& p_passname );
 
 };

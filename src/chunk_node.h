@@ -27,7 +27,7 @@
 
 namespace DrawSpace
 {
-class ChunkNode : public ScenegraphNode
+class ChunkNode : public Core::TransformNode
 {
 protected:
 

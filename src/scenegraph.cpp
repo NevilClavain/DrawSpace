@@ -40,7 +40,7 @@ void Scenegraph::RegisterPass( Pass* p_pass )
     m_passes[pass_name] = p_pass;    
 }
 
-bool Scenegraph::RegisterNode( ScenegraphNode* p_node )
+bool Scenegraph::RegisterNode( TransformNode* p_node )
 {
     if( false == TransformQueue::Add( p_node ) )
     {

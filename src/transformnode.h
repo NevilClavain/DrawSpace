@@ -28,6 +28,7 @@
 
 namespace DrawSpace
 {
+class Scenegraph;
 namespace Core
 {
 class TransformNode
@@ -47,6 +48,8 @@ protected:
 public:
     TransformNode( const dsstring& p_name );
     virtual ~TransformNode( void );
+
+    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
 
     virtual void AddChild( TransformNode* p_node );
     virtual void ComputeFinalTransform( void );

@@ -28,7 +28,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-ChunkNode::ChunkNode( const dsstring& p_name ) : ScenegraphNode( p_name )
+ChunkNode::ChunkNode( const dsstring& p_name ) : TransformNode( p_name )
 {
     m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
 }
