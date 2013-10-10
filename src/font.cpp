@@ -58,7 +58,7 @@ bool Font::Build( const dsstring& p_texturefilepath, const dsstring& p_metricsfi
     m_texturepath = p_texturefilepath;
 
     bool status = m_importer->LoadFromFile( p_metricsfilepath, this );
-    if( status == false )
+    if( false == status )
     {
         return false;
     }
