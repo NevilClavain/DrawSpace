@@ -28,7 +28,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-ChunkNode::ChunkNode( const dsstring& p_name ) : TransformNode( p_name )
+ChunkNode::ChunkNode( const dsstring& p_name ) : TransformNode( p_name ), m_scenegraph( NULL )
 {
     m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
 }
@@ -42,7 +42,11 @@ void ChunkNode::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     DrawSpace::Utils::Matrix view;
-    view.Identity();
+
+    if( NULL == m_scenegraph->GetCurrentCamera() )
+    {
+        view.Identity();
+    }
     renderer->RenderNodeMeshe( m_globaltransformation, view, p_rendering_node, 0 );
 }
 
@@ -70,6 +74,7 @@ void ChunkNode::OnRegister( Scenegraph* p_scenegraph )
             current_pass->GetRenderingQueue()->Add( (*it).second );
         }
     }
+    m_scenegraph = p_scenegraph;
 }
 
 bool ChunkNode::LoadAssets( void )

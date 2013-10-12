@@ -43,7 +43,6 @@ protected:
 
     TransformNode*                  m_parent;
     std::vector<TransformNode*>     m_children;
-    bool                            m_request_camera_view;
 
 public:
     TransformNode( const dsstring& p_name );

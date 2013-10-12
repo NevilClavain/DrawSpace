@@ -37,6 +37,8 @@ protected:
     std::map<dsstring, Core::RenderingNode*>                        m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                         m_callbacks;
 
+    Scenegraph*                                                     m_scenegraph;
+
     void on_renderingnode_draw( Core::RenderingNode* p_rendering_node );
 
 public:

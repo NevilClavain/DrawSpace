@@ -25,7 +25,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-Scenegraph::Scenegraph( void )
+Scenegraph::Scenegraph( void ) : m_camera( NULL )
 {
 }
 
@@ -47,7 +47,6 @@ bool Scenegraph::RegisterNode( TransformNode* p_node )
         return false;
     }
     p_node->OnRegister( this );
-
     return true;
 }
 
@@ -58,4 +57,19 @@ Pass* Scenegraph::GetPass( const dsstring& p_passname )
         return m_passes[p_passname];
     }
     return NULL;
+}
+
+TransformNode* Scenegraph::GetCurrentCamera( void )
+{
+    return m_camera;
+}
+
+bool Scenegraph::SetCurrentCamera( const dsstring& p_nodename )
+{
+    if( m_nodes.count( p_nodename ) > 0 )
+    {
+        m_camera = m_nodes[p_nodename];
+        return true;
+    }
+    return false;
 }

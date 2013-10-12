@@ -30,8 +30,8 @@ namespace DrawSpace
 class Scenegraph : public Core::TransformQueue
 {
 protected:
-    std::map<dsstring, Pass*> m_passes;
-    
+    std::map<dsstring, Pass*>   m_passes;
+    Core::TransformNode*        m_camera;
 
 public:
     Scenegraph( void );
@@ -40,6 +40,9 @@ public:
     void RegisterPass( Pass* p_pass );
     bool RegisterNode( Core::TransformNode* p_node );	
     Pass* GetPass( const dsstring& p_passname );
+
+    Core::TransformNode* GetCurrentCamera( void );
+    bool SetCurrentCamera( const dsstring& p_nodename );
 
 };
 }
