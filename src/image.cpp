@@ -245,6 +245,15 @@ void Image::SetVirtualTranslation( long p_x ,long p_y )
 {
     m_x = ( ( ( (dsreal)p_x / (dsreal)DRAWSPACE_GUI_WIDTH ) - 0.5 ) /*/ 0.5 */) * ( m_rc.width_viewport /*/ 2.0*/ );
     m_y = ( ( 0.5 - ( (dsreal)p_y / (dsreal)DRAWSPACE_GUI_HEIGHT ) ) /*/ 0.5 */ ) * ( m_rc.height_viewport /*/ 2.0*/ );
+
+    m_virtual_x = p_x;
+    m_virtual_y = p_y;
+}
+
+void Image::GetVirtualTranslation( long& p_x, long& p_y )
+{
+    p_x = m_virtual_x;
+    p_y = m_virtual_y;
 }
 
 void Image::SetScale( dsreal p_sx, dsreal p_sy )

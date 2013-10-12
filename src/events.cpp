@@ -55,14 +55,11 @@ SystemMouseInputProvider::~SystemMouseInputProvider( void )
 
 }
 
-
-
-
-void SystemMouseInputProvider::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
+void SystemMouseInputProvider::OnMouseMove( long p_xm, long p_ym )
 {
     for( size_t i = 0;i < m_widgets.size(); i++ )
     {
-        m_widgets[i]->MouseMoveInput( p_xm, p_ym, p_dx, p_dy );
+        m_widgets[i]->MouseMoveInput( p_xm, p_ym );
     }
 }
 
@@ -98,8 +95,9 @@ void SystemMouseInputProvider::OnMouseRightButtonUp( long p_xm, long p_ym )
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-ImageMouseInputProvider::ImageMouseInputProvider( void )
+ImageMouseInputProvider::ImageMouseInputProvider( void ) : m_image( NULL )
 {
 
 
@@ -109,4 +107,56 @@ ImageMouseInputProvider::~ImageMouseInputProvider( void )
 {
 
 
+}
+
+void ImageMouseInputProvider::RegisterImage( Image* p_image )
+{
+    m_image = p_image;
+}
+
+void ImageMouseInputProvider::OnMouseMove( long p_xm, long p_ym )
+{
+    if( !m_image )
+    {
+        return;
+    }
+
+    long x, y;
+    m_image->GetVirtualTranslation( x, y );
+    for( size_t i = 0;i < m_widgets.size(); i++ )
+    {
+        m_widgets[i]->MouseMoveInputVirtualCoords( x, y );
+    }
+}
+
+void ImageMouseInputProvider::OnMouseLeftButtonDown( long p_xm, long p_ym )
+{
+    for( size_t i = 0;i < m_widgets.size(); i++ )
+    {
+        m_widgets[i]->MouseLeftButtonDownInput( p_xm, p_ym );
+    }
+}
+
+void ImageMouseInputProvider::OnMouseLeftButtonUp( long p_xm, long p_ym )
+{
+    for( size_t i = 0;i < m_widgets.size(); i++ )
+    {
+        m_widgets[i]->MouseLeftButtonUpInput( p_xm, p_ym );
+    }
+}
+
+void ImageMouseInputProvider::OnMouseRightButtonDown( long p_xm, long p_ym )
+{
+    for( size_t i = 0;i < m_widgets.size(); i++ )
+    {
+        m_widgets[i]->MouseRightButtonDownInput( p_xm, p_ym );
+    }
+}
+
+void ImageMouseInputProvider::OnMouseRightButtonUp( long p_xm, long p_ym )
+{
+    for( size_t i = 0;i < m_widgets.size(); i++ )
+    {
+        m_widgets[i]->MouseRightButtonUpInput( p_xm, p_ym );
+    }
 }

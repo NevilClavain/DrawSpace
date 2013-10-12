@@ -162,7 +162,7 @@ void App::process_input_events( void )
 
             for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
             {
-                m_mouseinputs_providers[i]->OnMouseMove( m_mousemoving_curr_x, m_mousemoving_curr_y, 0, 0 );
+                m_mouseinputs_providers[i]->OnMouseMove( m_mousemoving_curr_x, m_mousemoving_curr_y );
             }
 
             m_mousemovingstart = false;
@@ -182,7 +182,7 @@ void App::process_input_events( void )
 
                     for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
                     {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m, 0, m_mousemoving_curr_y - m_mousemoving_last_y );
+                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
                     }
 
                     m_mousemoving_last_x = x_m;
@@ -204,7 +204,7 @@ void App::process_input_events( void )
 
                     for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
                     {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m, 0, m_mousemoving_curr_y - m_mousemoving_last_y );
+                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
                     }
 
                     m_mousemoving_last_x = x_m;
@@ -226,7 +226,7 @@ void App::process_input_events( void )
 
                     for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
                     {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, 0 );
+                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
                     }
 
                     m_mousemoving_last_y = y_m;
@@ -248,7 +248,7 @@ void App::process_input_events( void )
 
                     for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
                     {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, 0 );
+                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
                     }
 
                     m_mousemoving_last_y = y_m;
@@ -268,7 +268,7 @@ void App::process_input_events( void )
 
                     for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
                     {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, m_mousemoving_curr_y - m_mousemoving_last_y );
+                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
                     }
 
                     m_mousemoving_last_x = m_mousemoving_curr_x;
@@ -281,7 +281,7 @@ void App::process_input_events( void )
 
                 for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
                 {
-                    m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, m_mousemoving_curr_y - m_mousemoving_last_y );
+                    m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
                 }
 
                 m_mousemoving_last_x = m_mousemoving_curr_x;

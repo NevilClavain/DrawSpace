@@ -97,21 +97,11 @@ void Widget::SetVirtualTranslation( long p_x, long p_y )
     m_virtual_posy = p_y;
 }
 
-void Widget::MouseMoveInput( long p_xm, long p_ym, long p_dx, long p_dy )
+void Widget::manage_mouse_move( dsreal p_xm, dsreal p_ym )
 {
-    for( size_t i = 0; i < m_children.size(); i++ )
+    if( m_real_posx - m_real_width / 2.0 < p_xm && p_xm < m_real_posx + m_real_width / 2.0 &&
+        m_real_posy - m_real_height / 2.0 < p_ym && p_ym < m_real_posy + m_real_height / 2.0 )
     {
-        m_children[i]->MouseMoveInput( p_xm, p_ym, p_dx, p_dy );
-    }
-
-    dsreal real_x, real_y;
-    real_x = ( ( (dsreal)p_xm / m_rc.width_resol ) - 0.5 ) * m_rc.width_viewport;
-    real_y = ( 0.5 - ( (dsreal)p_ym / m_rc.height_resol ) ) * m_rc.height_viewport;
-
-    if( m_real_posx - m_real_width / 2.0 < real_x && real_x < m_real_posx + m_real_width / 2.0 &&
-        m_real_posy - m_real_height / 2.0 < real_y && real_y < m_real_posy + m_real_height / 2.0 )
-    {
-
         if( !m_flag_cursor_in )
         {
             if( m_mousein_handler )
@@ -132,6 +122,34 @@ void Widget::MouseMoveInput( long p_xm, long p_ym, long p_dx, long p_dy )
         }
         m_flag_cursor_in = false;
     }
+}
+
+void Widget::MouseMoveInput( long p_xm, long p_ym )
+{
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->MouseMoveInput( p_xm, p_ym );
+    }
+
+    dsreal real_x, real_y;
+    real_x = ( ( (dsreal)p_xm / m_rc.width_resol ) - 0.5 ) * m_rc.width_viewport;
+    real_y = ( 0.5 - ( (dsreal)p_ym / m_rc.height_resol ) ) * m_rc.height_viewport;
+
+    manage_mouse_move( real_x, real_y );
+}
+
+void Widget::MouseMoveInputVirtualCoords( long p_xm, long p_ym )
+{
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->MouseMoveInputVirtualCoords( p_xm, p_ym );
+    }
+
+    dsreal real_x, real_y;
+    real_x = ( ( (dsreal)p_xm / DRAWSPACE_GUI_WIDTH ) - 0.5 ) * m_rc.width_viewport;
+    real_y = ( 0.5 - ( (dsreal)p_ym / DRAWSPACE_GUI_HEIGHT ) ) * m_rc.height_viewport;
+
+    manage_mouse_move( real_x, real_y );
 }
 
 void Widget::MouseLeftButtonDownInput( long p_xm, long p_ym )

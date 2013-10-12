@@ -41,6 +41,7 @@ dsApp::registerMouseInputEventSource( MouseInputEventtSource* )
 
 #include "drawspace_commons.h"
 #include "widget.h"
+#include "image.h"
 
 namespace DrawSpace
 {
@@ -56,7 +57,7 @@ public:
 
     void RegisterWidget( Gui::Widget* p_widget );
 
-    virtual void OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy ) = 0;
+    virtual void OnMouseMove( long p_xm, long p_ym ) = 0;
 
     virtual void OnMouseLeftButtonDown( long p_xm, long p_ym ) = 0;
     virtual void OnMouseLeftButtonUp( long p_xm, long p_ym ) = 0;
@@ -76,7 +77,7 @@ public:
     SystemMouseInputProvider( void );
     virtual ~SystemMouseInputProvider( void );
 
-    virtual void OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
+    virtual void OnMouseMove( long p_xm, long p_ym );
 
     virtual void OnMouseLeftButtonDown( long p_xm, long p_ym );
     virtual void OnMouseLeftButtonUp( long p_xm, long p_ym );
@@ -89,10 +90,21 @@ public:
 class ImageMouseInputProvider : public MouseInputsProvider
 {
 protected:
+    Image*          m_image;
 
 public:
     ImageMouseInputProvider( void );
     virtual ~ImageMouseInputProvider( void );
+
+    virtual void RegisterImage( Image* p_image );
+
+    virtual void OnMouseMove( long p_xm, long p_ym );
+
+    virtual void OnMouseLeftButtonDown( long p_xm, long p_ym );
+    virtual void OnMouseLeftButtonUp( long p_xm, long p_ym );
+
+    virtual void OnMouseRightButtonDown( long p_xm, long p_ym );
+    virtual void OnMouseRightButtonUp( long p_xm, long p_ym );
 
 };
 

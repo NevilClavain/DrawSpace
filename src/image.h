@@ -40,6 +40,7 @@ protected:
     dsreal                                  m_height;
     Core::Meshe*                            m_meshe;
 
+    long                                    m_virtual_x, m_virtual_y;
     dsreal                                  m_x, m_y;
     dsreal                                  m_scale_x, m_scale_y;
     Interface::Renderer::Characteristics    m_rc;
@@ -57,6 +58,7 @@ public:
     Core::Meshe* GetMeshe( void );
     void SetTranslation( dsreal p_x, dsreal p_y );
     void SetVirtualTranslation( long p_x ,long p_y );
+    void GetVirtualTranslation( long& p_x, long& p_y );
     void SetScale( dsreal p_sx, dsreal p_sy );
 };
 }

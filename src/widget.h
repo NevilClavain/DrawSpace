@@ -71,6 +71,8 @@ protected:
 
     bool                                                m_flag_cursor_in;
 
+    void                                                manage_mouse_move( dsreal p_xm, dsreal p_ym );
+
 public:
     Widget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, Widget* p_parentwidget );
     virtual ~Widget( void );
@@ -79,7 +81,8 @@ public:
     virtual void Transform( void );
     virtual void Draw( void );
 
-    virtual void MouseMoveInput( long p_xm, long p_ym, long p_dx, long p_dy );
+    virtual void MouseMoveInput( long p_xm, long p_ym );
+    virtual void MouseMoveInputVirtualCoords( long p_xm, long p_ym );
     virtual void MouseLeftButtonDownInput( long p_xm, long p_ym );
     virtual void MouseLeftButtonUpInput( long p_xm, long p_ym );
     virtual void MouseRightButtonDownInput( long p_xm, long p_ym );
