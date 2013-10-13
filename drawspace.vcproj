@@ -153,10 +153,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\camera.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\factory.cpp"
 				>
 			</File>
@@ -433,6 +429,10 @@
 		</File>
 		<File
 			RelativePath=".\src\asset.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\camera.cpp"
 			>
 		</File>
 		<File

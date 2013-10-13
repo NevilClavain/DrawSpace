@@ -33,6 +33,8 @@ protected:
     std::map<dsstring, Pass*>   m_passes;
     Core::TransformNode*        m_camera;
 
+    Utils::Matrix               m_view;
+
 public:
     Scenegraph( void );
     virtual ~Scenegraph( void );
@@ -41,9 +43,14 @@ public:
     bool RegisterNode( Core::TransformNode* p_node );	
     Pass* GetPass( const dsstring& p_passname );
 
+
     Core::TransformNode* GetCurrentCamera( void );
     bool SetCurrentCamera( const dsstring& p_nodename );
 
+    void GetCurrentCameraView( Utils::Matrix& p_view );
+
+    void ComputeTransformations( void );
+    
 };
 }
 #endif

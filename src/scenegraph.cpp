@@ -27,6 +27,7 @@ using namespace DrawSpace::Core;
 
 Scenegraph::Scenegraph( void ) : m_camera( NULL )
 {
+    m_view.Identity();
 }
 
 Scenegraph::~Scenegraph( void )
@@ -72,4 +73,20 @@ bool Scenegraph::SetCurrentCamera( const dsstring& p_nodename )
         return true;
     }
     return false;
+}
+
+void Scenegraph::ComputeTransformations( void )
+{
+    TransformQueue::ComputeTransformations();
+    m_view.Identity();
+    if( m_camera )
+    {
+        m_camera->GetSceneWorld( m_view );
+        m_view.Inverse();
+    }
+}
+
+void Scenegraph::GetCurrentCameraView( Utils::Matrix& p_view )
+{
+    p_view = m_view;
 }

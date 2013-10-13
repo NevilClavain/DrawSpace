@@ -34,7 +34,7 @@ class TransformQueue
 {
 protected:
     std::map<dsstring, TransformNode*>  m_nodes;
-    dsstring                            m_camera_node;
+
 
 public:
     TransformQueue( void );
@@ -43,7 +43,6 @@ public:
     void ComputeTransformations( void );
     bool Add( TransformNode* p_node );
     bool SetNodeLocalTransformation( const dsstring& p_nodename, const DrawSpace::Utils::Matrix& p_mat );
-    bool SetCamera( const dsstring& p_nodename );
 
 };
 }

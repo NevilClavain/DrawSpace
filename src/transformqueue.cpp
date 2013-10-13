@@ -38,15 +38,6 @@ TransformQueue::~TransformQueue( void )
 
 void TransformQueue::ComputeTransformations( void )
 {
-    Matrix view;
-    view.Identity();
-
-    if( "" != m_camera_node )
-    {
-        TransformNode* view_node = m_nodes[m_camera_node];
-        view_node->GetSceneWorld( view );
-    }
-
     for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
         (*it).second->ComputeFinalTransform();
@@ -83,17 +74,6 @@ bool TransformQueue::SetNodeLocalTransformation( const dsstring& p_nodename, con
         m_nodes[p_nodename]->SetLocalTransform( p_mat );
         return true;
     }	
-    _DSERROR( logger, "no node with this name found !" )
-    return false;
-}
-
-bool TransformQueue::SetCamera( const dsstring& p_nodename )
-{
-    if( m_nodes.count( p_nodename ) > 0 )
-    {
-        m_camera_node = p_nodename;
-        return true;
-    }
     _DSERROR( logger, "no node with this name found !" )
     return false;
 }

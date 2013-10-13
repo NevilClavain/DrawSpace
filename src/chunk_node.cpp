@@ -43,10 +43,20 @@ void ChunkNode::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     DrawSpace::Utils::Matrix view;
 
-    if( NULL == m_scenegraph->GetCurrentCamera() )
+    //view.Identity();
+    /*
+    TransformNode* camera = m_scenegraph->GetCurrentCamera();
+    if( NULL == camera )
     {
         view.Identity();
     }
+    else
+    {
+        
+    }
+    */
+
+    m_scenegraph->GetCurrentCameraView( view );
     renderer->RenderNodeMeshe( m_globaltransformation, view, p_rendering_node, 0 );
 }
 
