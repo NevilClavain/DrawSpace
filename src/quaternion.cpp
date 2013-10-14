@@ -20,51 +20,28 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
-
-#include "tracedefs.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
 #include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "transformation.h"
-#include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "fx.h"
-#include "chunk.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "ac3dmesheimport.h"
-#include "cbfgfontimport.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "chunk_node.h"
-#include "memalloc.h"
-#include "events.h"
-#include "camera.h"
-#include "fpsmovement.h"
-#endif
+
+using namespace DrawSpace::Utils;
+
+Quaternion::Quaternion(void)
+{
+    Zero();
+}
+
+Quaternion::~Quaternion(void)
+{
+}
+
+
+Quaternion operator* ( Quaternion p_qA, Quaternion p_qB )
+{
+	Quaternion res;
+
+	res[0] = p_qB[3] * p_qA[0] + p_qB[0] * p_qA[3] + p_qB[1] * p_qA[2] - p_qB[2] * p_qA[1];
+	res[1] = p_qB[3] * p_qA[1] - p_qB[0] * p_qA[2] + p_qB[1] * p_qA[3] + p_qB[2] * p_qA[0];
+	res[2] = p_qB[3] * p_qA[2] + p_qB[0] * p_qA[1] - p_qB[1] * p_qA[0] + p_qB[2] * p_qA[3];
+	res[3] = p_qB[3] * p_qA[3] - p_qB[0] * p_qA[0] - p_qB[1] * p_qA[1] - p_qB[2] * p_qA[2];
+
+	return res;
+}

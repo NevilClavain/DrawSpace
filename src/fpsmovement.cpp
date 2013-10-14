@@ -1,0 +1,111 @@
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2014                                
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*                                                                          
+*/
+
+#include "fpsmovement.h"
+
+
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+
+FPSMovement::FPSMovement( void )
+{
+
+
+}
+
+FPSMovement::~FPSMovement( void )
+{
+
+}
+
+void FPSMovement::Init( const Utils::Vector& p_init_pos, dsreal p_initial_yaw, dsreal p_initial_pitch )
+{
+	m_qyaw.Identity();
+	m_qpitch.Identity();
+	m_current_res.Identity();
+
+	m_position.Translation( p_init_pos );
+	m_orientation.Identity();
+
+	m_ayaw = p_initial_yaw;
+	m_apitch = p_initial_pitch;
+}
+
+void FPSMovement::InitRot( void )
+{
+	m_qyaw.Identity();
+	m_qpitch.Identity();
+	m_current_res.Identity();
+
+	m_orientation.Identity();
+
+	m_ayaw = 0.0;
+	m_apitch = 0.0;
+}
+
+void FPSMovement::RotateYaw( dsreal p_speed, TimeManager& p_timemanager )
+{
+    p_timemanager.AngleSpeedInc( &m_ayaw, p_speed );
+}
+
+void FPSMovement::RotatePitch( dsreal p_speed, TimeManager& p_timemanager )
+{
+    p_timemanager.AngleSpeedInc( &m_apitch, p_speed );
+}
+
+void FPSMovement::SetSpeed( dsreal p_speed )
+{
+    m_local_speed[2] = -p_speed;
+}
+
+void FPSMovement::Compute( TimeManager& p_timemanager, bool p_ymvt )
+{
+	Vector gs;
+
+	Vector yaxis( 0.0, 1.0, 0.0, 1.0 );
+	Vector xaxis( 1.0, 0.0, 0.0, 1.0 );
+
+	m_qyaw.RotationAxis( yaxis, m_ayaw );
+	m_qpitch.RotationAxis( xaxis, m_apitch );
+
+	m_current_res = m_qpitch * m_qyaw;
+	m_current_res.RotationMatFrom( m_orientation );
+
+	m_orientation.Transform( &m_local_speed, &gs );
+
+	p_timemanager.TranslationSpeedInc( &m_position( 3, 0 ), gs[0] );
+
+	if( p_ymvt )
+	{
+		// prendre aussi en compte la composante en Y (la camera peut aussi evoluer "en hauteur")
+		p_timemanager.TranslationSpeedInc( &m_position( 3, 1 ), gs[1] );
+	}
+	p_timemanager.TranslationSpeedInc( &m_position( 3, 2 ), gs[2] );
+
+    if( m_transformnode )
+    {
+        Matrix res;
+        res = m_orientation * m_position;
+        m_transformnode->SetLocalTransform( res );
+    }
+}

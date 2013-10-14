@@ -169,6 +169,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\fpsmovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\fpsmovement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\fx.cpp"
 				>
 			</File>
@@ -190,6 +198,14 @@
 			</File>
 			<File
 				RelativePath=".\src\meshe.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\movement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\movement.h"
 				>
 			</File>
 			<File
@@ -347,6 +363,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\quaternion.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\quaternion.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\timemanager.cpp"
 				>
 			</File>
@@ -489,6 +513,10 @@
 		</File>
 		<File
 			RelativePath=".\src\pass.h"
+			>
+		</File>
+		<File
+			RelativePath=".\quaternion.h"
 			>
 		</File>
 		<File

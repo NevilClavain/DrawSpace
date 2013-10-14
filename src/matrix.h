@@ -92,7 +92,7 @@ public:
         m_matrix[3][2] = p_z;	
     }
 
-    void Translation( Vector p_pos )
+    void Translation( const Vector& p_pos )
     {
         Identity();
         m_matrix[3][0] = p_pos[0];

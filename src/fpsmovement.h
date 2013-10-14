@@ -20,51 +20,53 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
+#ifndef _FPSMOVEMENT_H_
+#define _FPSMOVEMENT_H_
 
-#include "tracedefs.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
+#include "movement.h"
 #include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "transformation.h"
 #include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "fx.h"
-#include "chunk.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "ac3dmesheimport.h"
-#include "cbfgfontimport.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "chunk_node.h"
-#include "memalloc.h"
-#include "events.h"
-#include "camera.h"
-#include "fpsmovement.h"
+
+namespace DrawSpace
+{
+namespace Core
+{
+class FPSMovement : public Movement
+{
+protected:
+    Utils::Vector           m_local_speed;
+
+	// les angles
+	dsreal			        m_ayaw;
+	dsreal			        m_apitch;
+
+	// les quaternions
+    Utils::Quaternion		m_qyaw;
+	Utils::Quaternion		m_qpitch;
+
+    Utils::Quaternion		m_current_res;
+		
+	// les sorties
+    Utils::Matrix			m_position;
+    Utils::Matrix			m_orientation;
+
+
+public:
+
+    FPSMovement( void );
+    virtual ~FPSMovement( void );
+
+    virtual void Init( const Utils::Vector& p_init_pos, dsreal p_initial_yaw = 0.0, dsreal p_initial_pitch = 0.0 );
+    virtual void InitRot( void );
+
+    virtual void RotateYaw( dsreal p_speed, Utils::TimeManager& p_timemanager );
+    virtual void RotatePitch( dsreal p_speed, Utils::TimeManager& p_timemanager );
+
+    virtual void SetSpeed( dsreal p_speed );
+    virtual void Compute( Utils::TimeManager& p_timemanager, bool p_ymvt = false );
+
+};
+}
+}
+
 #endif
