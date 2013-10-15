@@ -20,52 +20,65 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
+#ifndef _QUADTREE_H_
+#define _QUADTREE_H_
 
-#include "tracedefs.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
-#include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "transformation.h"
-#include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "fx.h"
-#include "chunk.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "ac3dmesheimport.h"
-#include "cbfgfontimport.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "chunk_node.h"
-#include "memalloc.h"
-#include "events.h"
-#include "camera.h"
-#include "fpsmovement.h"
-#include "quadtree.h"
+#include "drawspace_commons.h"
+
+namespace DrawSpace
+{
+namespace Utils
+{
+class BaseQuadtreeNode
+{
+protected:
+    int                 m_id;
+    BaseQuadtreeNode*   m_children[4];
+    BaseQuadtreeNode*   m_parent;
+
+public:
+    BaseQuadtreeNode( void );
+    BaseQuadtreeNode( BaseQuadtreeNode* p_parent );
+
+    virtual ~BaseQuadtreeNode( void );
+
+    virtual void SetParent( BaseQuadtreeNode* p_parent );
+    virtual void Split( void );
+    virtual void Merge( void );
+    bool HasChildren( void );
+
+};
+
+template <typename Base>
+class QuadtreeNode : public BaseQuadtreeNode
+{
+protected:    
+    Base*       m_content;
+
+public:
+    QuadtreeNode( void )
+    {
+    }
+
+    QuadtreeNode( BaseQuadtreeNode* p_parent ) : BaseQuadtreeNode( p_parent )
+    {
+    }
+
+    virtual ~QuadtreeNode( void )
+    {
+    }
+
+    Base* GetContent( void )
+    {
+        return m_content;
+    }
+
+    void SetContent( Base* p_content )
+    {
+        m_content = p_content;
+    }
+};
+}
+}
+
 #endif

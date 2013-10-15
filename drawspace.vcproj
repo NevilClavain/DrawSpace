@@ -363,6 +363,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\quadtree.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\quadtree.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\quaternion.cpp"
 				>
 			</File>
@@ -444,6 +452,18 @@
 			</File>
 			<File
 				RelativePath=".\src\widget.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="planet"
+			>
+			<File
+				RelativePath=".\src\body.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\body.h"
 				>
 			</File>
 		</Filter>
