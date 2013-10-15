@@ -29,7 +29,7 @@ namespace DrawSpace
 {
 namespace Planet
 {
-class Body
+class Body : public Core::TransformNode
 {
 public:
 class Face
@@ -53,8 +53,10 @@ public:
 
 public:
 
-    Body( void );
+    Body( const dsstring& p_name );
     virtual ~Body( void );
+
+    virtual void OnRegister( Scenegraph* p_scenegraph );
 };
 }
 }
