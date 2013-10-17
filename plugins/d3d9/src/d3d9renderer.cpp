@@ -791,12 +791,6 @@ void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
 
     switch( p_renderstate->GetOperation() )
     {
-        case DrawSpace::Core::RenderState::SETCLEARMASK:
-            break;
-
-        case DrawSpace::Core::RenderState::SETCLEARCOLOR:
-            break;
-
         case DrawSpace::Core::RenderState::SETCULLING:
             
             if( "none" == arg )
@@ -874,18 +868,168 @@ void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
             break;
 
         case DrawSpace::Core::RenderState::ALPHABLENDENABLE:
+            {
+                if( "true" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE );
+                }
+                else if( "false" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
+                }
+            }
             break;
 
         case DrawSpace::Core::RenderState::ALPHABLENDOP:
+            {
+                if( "add" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_BLENDOP, D3DBLENDOP_ADD );
+                }
+                else if( "sub" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_BLENDOP, D3DBLENDOP_SUBTRACT );
+                }
+                else if( "revsub" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT );
+                }
+                else if( "min" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_BLENDOP, D3DBLENDOP_MIN );
+                }
+                else if( "max" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_BLENDOP, D3DBLENDOP_MAX );
+                }
+            }
             break;
 
         case DrawSpace::Core::RenderState::ALPHABLENDFUNC:
+            {
+                if( "never" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_NEVER );
+                }
+                else if( "less" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_LESS );
+                }
+                else if( "equal" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_EQUAL );
+                }
+                else if( "lessequal" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_LESSEQUAL );
+                }
+                else if( "greater" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_GREATER );
+                }
+                else if( "notequal" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_NOTEQUAL );
+                }
+                else if( "greaterequal" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL );
+                }
+                else if( "always" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_ALWAYS );
+                }
+            }
             break;
 
         case DrawSpace::Core::RenderState::ALPHABLENDDEST:
+            {
+                if( "zero" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_ZERO );
+                }
+                else if( "one" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_ONE );
+                }
+                else if( "srccolor" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_SRCCOLOR );
+                }
+                else if( "invsrccolor" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR );
+                }
+                else if( "srcalpha" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_SRCALPHA );
+                }
+                else if( "invsrcalpha" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
+                }
+                else if( "destalpha" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_DESTALPHA );
+                }
+                else if( "invdestalpha" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVDESTALPHA );
+                }
+                else if( "destcolor" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_DESTCOLOR );
+                }
+                else if( "invdestcolor" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVDESTCOLOR );
+                }
+            }
             break;
 
         case DrawSpace::Core::RenderState::ALPHABLENDSRC:
+
+                if( "zero" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_ZERO );
+                }
+                else if( "one" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_ONE );
+                }
+                else if( "srccolor" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCCOLOR );
+                }
+                else if( "invsrccolor" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_INVSRCCOLOR );
+                }
+                else if( "srcalpha" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA );
+                }
+                else if( "invsrcalpha" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_INVSRCALPHA );
+                }
+                else if( "destalpha" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_DESTALPHA );
+                }
+                else if( "invdestalpha" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_INVDESTALPHA );
+                }
+                else if( "destcolor" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_DESTCOLOR );
+                }
+                else if( "invdestcolor" == arg )
+                {
+                    m_lpd3ddevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_INVDESTCOLOR );
+                }
+
             break;
 
     }
