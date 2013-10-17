@@ -85,7 +85,7 @@ void Meshe::AddTriangle( const Triangle& p_triangle )
     m_triangles.push_back( p_triangle );
 }
 
-void Meshe::VertexAverage( DrawSpace::Utils::Vector& p_vector )
+void Meshe::GetCenter( DrawSpace::Utils::Vector& p_vector )
 {
     dsreal xsum = 0.0;
     dsreal ysum = 0.0;
@@ -99,6 +99,9 @@ void Meshe::VertexAverage( DrawSpace::Utils::Vector& p_vector )
     }
 
     p_vector[0] = xsum / m_vertices.size();
+    p_vector[1] = ysum / m_vertices.size();
+    p_vector[2] = zsum / m_vertices.size();
+    p_vector[3] = 1.0;
 }
 
 void Meshe::Serialize( Factory& p_factory, Archive& p_archive  )

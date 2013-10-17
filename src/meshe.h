@@ -64,7 +64,7 @@ public:
     void SetVertex( long p_index, const Vertex& p_vertex );
     void AddTriangle( const Triangle& p_triangle );
 
-    void VertexAverage( DrawSpace::Utils::Vector& p_vector );
+    void GetCenter( DrawSpace::Utils::Vector& p_vector );
     
     void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  );
     void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
