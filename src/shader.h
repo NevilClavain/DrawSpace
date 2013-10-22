@@ -42,7 +42,8 @@ protected:
     std::map<long, Utils::Vector>   m_params;
 
 public:
-    Shader( const dsstring& p_path, bool p_compiled = true );
+    Shader( const dsstring& p_path, bool p_compiled );
+    Shader( bool p_compiled );
     ~Shader( void );
 
     bool	IsCompiled( void );

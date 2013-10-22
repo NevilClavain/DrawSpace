@@ -31,6 +31,10 @@ Shader::Shader( const dsstring& p_path, bool p_compiled ) : m_path( p_path ), m_
 {
 }
 
+Shader::Shader( bool p_compiled ) : m_data( NULL ), m_compiled( p_compiled ), m_datasize( -1 )
+{
+}
+
 Shader::~Shader( void )
 {
 }
