@@ -45,7 +45,7 @@ void* Shader::GetData( void )
     return m_data;
 }
 
-long Shader::GetDataSize( void )
+size_t Shader::GetDataSize( void )
 {
     return m_datasize;
 }
@@ -91,4 +91,11 @@ void Shader::SetParam( long p_register, const Vector& p_values )
 void Shader::GetParamsTable( std::map<long, Vector>& p_table )
 {
     p_table = m_params;
+}
+
+void Shader::SetText( const dsstring& p_text )
+{
+    m_data = (void *)_DRAWSPACE_NEW_EXPLICIT_SIZE_( char, char[p_text.size()], p_text.size() );
+    m_datasize = p_text.size();
+    memcpy( m_data, (void *)p_text.c_str(), p_text.size() );
 }

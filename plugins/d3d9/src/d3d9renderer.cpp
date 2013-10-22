@@ -345,7 +345,7 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
                 return false;
             }
 
-            hRes = D3DXCompileShader( (LPCSTR)vertex_shader->GetData(), vertex_shader->GetDataSize(), NULL, NULL, "vs_main", "vs_3_0", 0, &vbuff, &errors, NULL );
+            hRes = D3DXCompileShader( (LPCSTR)vertex_shader->GetData(), (UINT)vertex_shader->GetDataSize(), NULL, NULL, "vs_main", "vs_3_0", 0, &vbuff, &errors, NULL );
             if( D3D_OK != hRes )
             {
                 if( NULL != errors )
@@ -374,7 +374,7 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
                 return false;
             }
 
-            hRes = D3DXCompileShader( (LPCSTR)pixel_shader->GetData(), pixel_shader->GetDataSize(), NULL, NULL, "ps_main", "ps_3_0", 0, &pbuff, &errors, NULL );
+            hRes = D3DXCompileShader( (LPCSTR)pixel_shader->GetData(), (UINT)pixel_shader->GetDataSize(), NULL, NULL, "ps_main", "ps_3_0", 0, &pbuff, &errors, NULL );
             if( D3D_OK != hRes )
             {
                 if( NULL != errors )
@@ -465,8 +465,8 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
                     _DSDEBUG( logger, "texture " << path.c_str() << " is new, loading it..." )
                     
                     void* data = current_texture->GetData();
-                    long data_size = current_texture->GetDataSize();
-                    hRes = D3DXCreateTextureFromFileInMemory( m_lpd3ddevice, data, data_size, &d3dt9 );
+                    size_t data_size = current_texture->GetDataSize();
+                    hRes = D3DXCreateTextureFromFileInMemory( m_lpd3ddevice, data, (UINT)data_size, &d3dt9 );
                     D3D9_CHECK( D3DXCreateTextureFromFileInMemory );
                     if( i < 8 )
                     {

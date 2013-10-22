@@ -36,7 +36,7 @@ class Shader : public Asset
 protected:
     dsstring                        m_path;
     void*                           m_data;
-    long                            m_datasize;
+    size_t                          m_datasize;
     bool                            m_compiled;
 
     std::map<long, Utils::Vector>   m_params;
@@ -47,7 +47,7 @@ public:
 
     bool	IsCompiled( void );
     void*	GetData( void );
-    long	GetDataSize( void );
+    size_t	GetDataSize( void );
 
     bool	LoadFromFile( void );
     void	ReleaseData( void );
@@ -57,6 +57,8 @@ public:
 
     void	SetParam( long p_register, const Utils::Vector& p_values );
     void	GetParamsTable( std::map<long, Utils::Vector>& p_table );
+
+    void    SetText( const dsstring& p_text );
 };
 }
 }
