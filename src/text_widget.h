@@ -64,6 +64,8 @@ public:
     virtual void RegisterToPass( Pass* p_pass );
     virtual bool LoadAssets( void );
 
+    virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
+
 };
 }
 }

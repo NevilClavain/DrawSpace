@@ -133,3 +133,8 @@ bool TextWidget::LoadAssets( void )
     }
     return true;
 }
+
+void TextWidget::SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b )
+{
+    m_pass->GetRenderingQueue()->SetTargetClearingColor( p_r, p_g, p_b );
+}
