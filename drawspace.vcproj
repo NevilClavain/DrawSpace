@@ -339,6 +339,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\misc_utils.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\misc_utils.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\mutex.cpp"
 				>
 			</File>
