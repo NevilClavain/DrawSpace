@@ -339,7 +339,7 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
 
         if( !vertex_shader->IsCompiled() )
         {
-            if( vertex_shader->GetData() == NULL )
+            if( NULL == vertex_shader->GetData() )
             {
                 _DSFATAL( logger, "no data in vertex shader !" )
                 return false;
@@ -368,7 +368,7 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
 
         if( !pixel_shader->IsCompiled() )
         {
-            if( pixel_shader->GetData() == NULL )
+            if( NULL == pixel_shader->GetData() )
             {
                 _DSFATAL( logger, "no data in pixel shader !" )
                 return false;
