@@ -20,48 +20,17 @@
 *                                                                          
 */
 
-#include "body.h"
+#include "planet_face.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Planet;
 
-Body::Face::Face( void )
+
+Face::Face( void )
 {
-
-
 }
 
-Body::Face::~Face( void )
+Face::~Face( void )
 {
-
-
-}
-
-Body::Patch::Patch( void )
-{
-
-}
-
-Body::Patch::~Patch( void )
-{
-
-}
-
-
-Body::Body( const dsstring& p_name ) : TransformNode( p_name )
-{
-
-}
-
-Body::~Body( void )
-{
-
-
-}
-
-void Body::OnRegister( Scenegraph* p_scenegraph )
-{
-
-
 }

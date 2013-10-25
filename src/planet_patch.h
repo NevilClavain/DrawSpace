@@ -20,29 +20,16 @@
 *                                                                          
 */
 
-#ifndef _BODY_H_
-#define _BODY_H_
+#ifndef _PLANET_PATCH_H_
+#define _PLANET_PATCH_H_
 
-#include "transformnode.h"
+#include "meshe.h"
 
 namespace DrawSpace
 {
 namespace Planet
 {
-class Body : public Core::TransformNode
-{
-public:
-class Face
-{
-protected:
-
-public:
-    Face( void );
-    virtual ~Face( void );
-
-};
-
-class Patch
+class Patch : public Core::Meshe
 {
 protected:
 
@@ -50,14 +37,7 @@ public:
     Patch( void );
     virtual ~Patch( void );
 };
-
-public:
-
-    Body( const dsstring& p_name );
-    virtual ~Body( void );
-
-    virtual void OnRegister( Scenegraph* p_scenegraph );
-};
 }
 }
+
 #endif

@@ -467,11 +467,27 @@
 			Name="planet"
 			>
 			<File
-				RelativePath=".\src\body.cpp"
+				RelativePath=".\src\planet_body.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\body.h"
+				RelativePath=".\src\planet_body.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_face.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_face.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_patch.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_patch.h"
 				>
 			</File>
 		</Filter>
