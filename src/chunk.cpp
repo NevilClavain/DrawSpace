@@ -58,7 +58,7 @@ bool Chunk::LoadAssets( void )
     {
         return false;
     }
-    if( -1 == renderer->AddMesheToNode( m_meshe, this ) )
+    if( false == renderer->AddMesheToNode( m_meshe, this, "0" ) )
     {
         return false;
     }
@@ -71,7 +71,7 @@ void Chunk::OnDraw( void )
 
     DrawSpace::Utils::Matrix view;
     view.Identity();
-    renderer->RenderNodeMeshe( m_globaltransformation, view, this, 0 );
+    renderer->RenderNodeMeshe( m_globaltransformation, view, this, "0" );
 }
 
 void Chunk::Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  )

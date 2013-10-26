@@ -89,7 +89,7 @@ bool Font::Build( const dsstring& p_texturefilepath, const dsstring& p_metricsfi
         {
             return false;
         }
-        if( -1 == renderer->AddMesheToNode( (*it).second.image->GetMeshe(), (*it).second.image ) )
+        if( false == renderer->AddMesheToNode( (*it).second.image->GetMeshe(), (*it).second.image, "0" ) )
         {
             return false;
         }

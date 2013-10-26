@@ -218,7 +218,7 @@ void Image::OnDraw( void )
     chain.GetResult( &world );
 
     Renderer* renderer = Plugin<Renderer>::GetInstance()->m_interface;
-    renderer->RenderNodeMeshe( view, world, this, 0 );
+    renderer->RenderNodeMeshe( view, world, this, "0" );
 }
 
 bool Image::LoadAssets( void )
@@ -228,7 +228,7 @@ bool Image::LoadAssets( void )
     {
         return false;
     }
-    if( -1 == renderer->AddMesheToNode( m_meshe, this ) )
+    if( false == renderer->AddMesheToNode( m_meshe, this, "0" ) )
     {
         return false;
     }

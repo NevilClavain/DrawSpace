@@ -42,22 +42,8 @@ void ChunkNode::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     DrawSpace::Utils::Matrix view;
-
-    //view.Identity();
-    /*
-    TransformNode* camera = m_scenegraph->GetCurrentCamera();
-    if( NULL == camera )
-    {
-        view.Identity();
-    }
-    else
-    {
-        
-    }
-    */
-
     m_scenegraph->GetCurrentCameraView( view );
-    renderer->RenderNodeMeshe( m_globaltransformation, view, p_rendering_node, 0 );
+    renderer->RenderNodeMeshe( m_globaltransformation, view, p_rendering_node, "0" );
 }
 
 Meshe* ChunkNode::GetMeshe( void )
@@ -97,7 +83,7 @@ bool ChunkNode::LoadAssets( void )
         {
             return false;
         }
-        if( -1 == renderer->AddMesheToNode( m_meshe, (*it).second ) )
+        if( false == renderer->AddMesheToNode( m_meshe, (*it).second, "0" ) )
         {
             return false;
         }

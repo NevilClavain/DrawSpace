@@ -89,12 +89,12 @@ protected:
 
     typedef struct
     {
-        LPDIRECT3DVERTEXSHADER9 vertex_shader;
-        LPDIRECT3DPIXELSHADER9  pixel_shader;
-        std::vector<MesheData>  meshes;
+        LPDIRECT3DVERTEXSHADER9         vertex_shader;
+        LPDIRECT3DPIXELSHADER9          pixel_shader;        
+        std::map<dsstring, MesheData>   meshes;
 
-        long                    nb_stages;
-        LPDIRECT3DTEXTURE9      textures[8];
+        long                            nb_stages;
+        LPDIRECT3DTEXTURE9              textures[8];
 
     } NodeInfos;
 
@@ -151,9 +151,10 @@ public:
 
     virtual bool BeginNodeRender( DrawSpace::Core::RenderingNode* p_node, long p_textures_set_index = 0 );
     virtual bool EndNodeRender( DrawSpace::Core::RenderingNode* p_node );
-    virtual long AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node );
 
-    virtual bool RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Core::RenderingNode* p_node, long p_index );
+    virtual bool AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id );
+    virtual void RemoveNodeMeshe( DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id );
+    virtual bool RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id );
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 

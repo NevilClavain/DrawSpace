@@ -642,11 +642,11 @@ bool D3D9Renderer::EndNodeRender( DrawSpace::Core::RenderingNode* p_node )
     return true;
 }
 
-long D3D9Renderer::AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node )
+bool D3D9Renderer::AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
 {
     if( 0 == m_nodes.count( p_node ) )
     {
-        return -1;
+        return false;
     }
     
     Core::Meshe* meshe = p_meshe;
@@ -729,14 +729,31 @@ long D3D9Renderer::AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::C
         meshe_data.triangles[i].vertex3 = triangle.vertex3;
     }
     meshe->SetRenderReady();
-    //node_infos.meshes.push_back( meshe_data );
-    //return (long)node_infos.meshes.size();
 
-    m_nodes[p_node].meshes.push_back( meshe_data );
-    return (long)m_nodes[p_node].meshes.size();
+    m_nodes[p_node].meshes[p_id] = meshe_data;
+    return true;
 }
 
-bool D3D9Renderer::RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Core::RenderingNode* p_node, long p_index )
+void D3D9Renderer::RemoveNodeMeshe( DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
+{
+    NodeInfos node_infos;
+    if( 0 == m_nodes.count( p_node ) )
+    {
+        return;
+    }
+    node_infos = m_nodes[p_node];
+    if( !node_infos.meshes.count( p_id ) )
+    {
+        return;
+    }
+
+    _DRAWSPACE_DELETE_N_( node_infos.meshes[p_id].vertices );
+    _DRAWSPACE_DELETE_N_( node_infos.meshes[p_id].triangles );
+
+    node_infos.meshes.erase( p_id );
+}
+
+bool D3D9Renderer::RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
 {
     DECLARE_D3D9ASSERT_VARS
 
@@ -778,7 +795,12 @@ bool D3D9Renderer::RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace:
 
     //////////////////////////////////////////////////////////////////////
 
-    MesheData meshe_data = node_infos.meshes[p_index];
+    if( !node_infos.meshes.count( p_id ) )
+    {
+        return false;
+    }
+
+    MesheData meshe_data = node_infos.meshes[p_id];
     hRes = m_lpd3ddevice->DrawIndexedPrimitiveUP( D3DPT_TRIANGLELIST, 0, meshe_data.nb_vertices, meshe_data.nb_triangles, meshe_data.triangles, D3DFMT_INDEX32, meshe_data.vertices, sizeof( d3d9vertex ) );
     D3D9_CHECK( DrawIndexedPrimitiveUP );
     return true;
