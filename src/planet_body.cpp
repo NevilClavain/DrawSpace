@@ -54,7 +54,12 @@ void Body::OnRegister( Scenegraph* p_scenegraph )
 
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
+    DrawSpace::Utils::Matrix view;
+    m_scenegraph->GetCurrentCameraView( view );
+
     Face* face = static_cast<Face*>( p_rendering_node );
+
+    face->Draw( m_globaltransformation, view );
 }
 
 void Body::RegisterPassFaceSet( const dsstring p_passname )

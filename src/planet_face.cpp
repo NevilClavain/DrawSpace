@@ -21,16 +21,28 @@
 */
 
 #include "planet_face.h"
+#include "memalloc.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Planet;
+using namespace DrawSpace::Utils;
 
 
 Face::Face( void )
 {
+    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs ) );
 }
 
 Face::~Face( void )
 {
+    _DRAWSPACE_DELETE_( m_rootpatch );
+}
+
+void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
+{
+    for( std::map<Utils::BaseQuadtreeNode*, Utils::BaseQuadtreeNode*>::iterator it = m_patchleafs.begin(); it != m_patchleafs.end(); ++it )
+    {
+        // rendu du patch leaf
+    }
 }

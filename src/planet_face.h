@@ -35,13 +35,15 @@ namespace Planet
 class Face : public Core::RenderingNode
 {
 protected:
-    Utils::QuadtreeNode<Patch>*    m_rootpatch;
+
+    Utils::QuadtreeNode<Patch>*                                     m_rootpatch;
+    std::map<Utils::BaseQuadtreeNode*, Utils::BaseQuadtreeNode*>    m_patchleafs;
 
 public:
     Face( void );
     virtual ~Face( void );
 
-    
+    void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );
 
 };
 }
