@@ -32,7 +32,7 @@ using namespace DrawSpace::Utils;
 Face::Face( void )
 {
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs ) );
-    m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9 ) ) );
+    m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, Patch::Front ) ) );
 }
 
 Face::~Face( void )

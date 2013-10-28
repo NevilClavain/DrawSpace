@@ -26,7 +26,10 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Planet;
 
-Patch::Patch( int p_resolution ) : m_resolution( p_resolution )
+Patch::Patch( int p_resolution, dsreal p_sidelength, Orientation p_orientation ) : 
+m_resolution( p_resolution ), 
+m_orientation( p_orientation ),
+m_sidelength( p_sidelength )
 {
     for( long i = 0; i < 8; i++ )
     {
@@ -52,4 +55,64 @@ Patch* Patch::GetNeighbour( int p_id )
 
 void Patch::build( void )
 {
+    dsreal xcurr, ycurr;
+
+    dsreal interval = m_sidelength / ( m_resolution - 1 );
+    for( long i = 0; i < m_resolution; i++ )
+    {
+        for( long j = 0; j < m_resolution; j++ )
+        {
+            
+              
+
+            Vertex vertex;
+
+            switch( m_orientation )
+            {
+                case Up:
+
+                    vertex.x = xcurr;
+                    vertex.y = m_sidelength / 2.0;
+                    vertex.z = -ycurr;
+                    break;
+
+                case Down:
+
+                    vertex.x = xcurr;
+                    vertex.y = -m_sidelength / 2.0;
+                    vertex.z = ycurr;
+                    break;
+
+                case Front:
+
+                    vertex.x = xcurr;
+                    vertex.y = ycurr;
+                    vertex.z = m_sidelength / 2.0;
+                    break;
+
+                case Rear:
+
+                    vertex.x = -xcurr;
+                    vertex.y = ycurr;
+                    vertex.z = -m_sidelength / 2.0;
+                    break;
+                    
+
+                case Left:
+
+                    vertex.x = -m_sidelength / 2.0;
+                    vertex.y = ycurr;
+                    vertex.z = -xcurr;
+                    break;
+
+                case Right:
+
+                    vertex.x = -m_sidelength / 2.0;
+                    vertex.y = ycurr;
+                    vertex.z = -xcurr;
+                    break;
+
+            }
+        }
+    }
 }

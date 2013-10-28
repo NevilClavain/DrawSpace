@@ -42,15 +42,28 @@ public:
     static const int    SouthWestNeighbour  = 6;
     static const int    SouthEastNeighbour  = 7;
 
+    typedef enum
+    {
+        Up,
+        Down,
+        Front,
+        Rear,
+        Left,
+        Right
+
+    } Orientation;
 
 protected:
+
+    dsreal          m_sidelength;
     int             m_resolution;
+    Orientation     m_orientation;
     Patch*          m_neighbours[8];
 
     void build( void );
 
 public:
-    Patch( int p_resolution );
+    Patch( int p_resolution, dsreal p_sidelength, Orientation p_orientation );
     virtual ~Patch( void );
 
     void SetNeighbour( Patch* p_patch, int p_id );
