@@ -32,6 +32,7 @@ using namespace DrawSpace::Utils;
 Face::Face( void )
 {
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs ) );
+    m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9 ) ) );
 }
 
 Face::~Face( void )
@@ -44,5 +45,8 @@ void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matr
     for( std::map<Utils::BaseQuadtreeNode*, Utils::BaseQuadtreeNode*>::iterator it = m_patchleafs.begin(); it != m_patchleafs.end(); ++it )
     {
         // rendu du patch leaf
+        QuadtreeNode<Patch>* current = static_cast<QuadtreeNode<Patch>*>( (*it).first );
+
+        
     }
 }

@@ -31,11 +31,30 @@ namespace Planet
 {
 class Patch : public Core::Meshe
 {
+public:
+
+    static const int    NorthNeighbour      = 0;
+    static const int    SouthNeighbour      = 1;
+    static const int    WestNeighbour       = 2;
+    static const int    EastNeighbour       = 3;
+    static const int    NorthWestNeighbour  = 4;
+    static const int    NorthEastNeighbour  = 5;
+    static const int    SouthWestNeighbour  = 6;
+    static const int    SouthEastNeighbour  = 7;
+
+
 protected:
+    int             m_resolution;
+    Patch*          m_neighbours[8];
+
+    void build( void );
 
 public:
-    Patch( void );
+    Patch( int p_resolution );
     virtual ~Patch( void );
+
+    void SetNeighbour( Patch* p_patch, int p_id );
+    Patch* GetNeighbour( int p_id );
 };
 }
 }

@@ -26,10 +26,30 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Planet;
 
-Patch::Patch( void )
+Patch::Patch( int p_resolution ) : m_resolution( p_resolution )
 {
+    for( long i = 0; i < 8; i++ )
+    {
+        m_neighbours[i] = NULL;
+    }
+
+    build();
 }
 
 Patch::~Patch( void )
+{
+}
+
+void Patch::SetNeighbour( Patch* p_patch, int p_id )
+{
+    m_neighbours[p_id] = p_patch;
+}
+
+Patch* Patch::GetNeighbour( int p_id )
+{
+    return m_neighbours[p_id];
+}
+
+void Patch::build( void )
 {
 }
