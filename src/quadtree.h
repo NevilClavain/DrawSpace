@@ -31,21 +31,34 @@ namespace Utils
 {
 class BaseQuadtreeNode
 {
-protected:
-    int                 m_id;
-    BaseQuadtreeNode*   m_children[4];
-    BaseQuadtreeNode*   m_parent;
-
 public:
-    BaseQuadtreeNode( void );
-    BaseQuadtreeNode( BaseQuadtreeNode* p_parent );
 
+    static const int    NorthWestNode = 0;
+    static const int    NorthEastNode = 1;
+    static const int    SouthEastNode = 2;
+    static const int    SouthWestNode = 3;
+    static const int    RootNode = 4;
+
+protected:
+    int                                             m_id;
+    BaseQuadtreeNode*                               m_children[4];
+    BaseQuadtreeNode*                               m_parent;
+
+    bool                                            m_splitted;
+    std::map<BaseQuadtreeNode*, BaseQuadtreeNode*>& m_leafs;
+
+    BaseQuadtreeNode( std::map<BaseQuadtreeNode*, BaseQuadtreeNode*>& p_leafs, BaseQuadtreeNode* p_parent, int p_id );
+public:
+
+    BaseQuadtreeNode( std::map<BaseQuadtreeNode*, BaseQuadtreeNode*>& p_leafs );    
     virtual ~BaseQuadtreeNode( void );
 
     virtual void SetParent( BaseQuadtreeNode* p_parent );
     virtual void Split( void );
     virtual void Merge( void );
     bool HasChildren( void );
+    BaseQuadtreeNode* GetChild( int p_id );
+
 
 };
 
@@ -56,11 +69,7 @@ protected:
     Base*       m_content;
 
 public:
-    QuadtreeNode( void )
-    {
-    }
-
-    QuadtreeNode( BaseQuadtreeNode* p_parent ) : BaseQuadtreeNode( p_parent )
+    QuadtreeNode( std::map<BaseQuadtreeNode*, BaseQuadtreeNode*>& p_leafs ) : BaseQuadtreeNode( p_leafs )
     {
     }
 
