@@ -33,11 +33,11 @@ class BaseQuadtreeNode
 {
 public:
 
-    static const int    NorthWestNode = 0;
-    static const int    NorthEastNode = 1;
-    static const int    SouthEastNode = 2;
-    static const int    SouthWestNode = 3;
-    static const int    RootNode = 4;
+    static const int    NorthWestNode   = 0;
+    static const int    NorthEastNode   = 1;
+    static const int    SouthEastNode   = 2;
+    static const int    SouthWestNode   = 3;
+    static const int    RootNode        = 4;
 
 protected:
     int                                             m_id;
