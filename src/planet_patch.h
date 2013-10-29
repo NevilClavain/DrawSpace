@@ -59,15 +59,18 @@ protected:
     int             m_resolution;
     Orientation     m_orientation;
     Patch*          m_neighbours[8];
+	dsstring		m_name;
 
     void build( void );
 
 public:
-    Patch( int p_resolution, dsreal p_sidelength, Orientation p_orientation );
+    Patch( int p_resolution, dsreal p_sidelength, Orientation p_orientation, const dsstring& p_name );
     virtual ~Patch( void );
 
     void SetNeighbour( Patch* p_patch, int p_id );
     Patch* GetNeighbour( int p_id );
+
+	void GetName( dsstring& p_name );
 };
 }
 }

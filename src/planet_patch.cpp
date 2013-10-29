@@ -26,10 +26,11 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Planet;
 
-Patch::Patch( int p_resolution, dsreal p_sidelength, Orientation p_orientation ) : 
+Patch::Patch( int p_resolution, dsreal p_sidelength, Orientation p_orientation, const dsstring& p_name ) : 
 m_resolution( p_resolution ), 
 m_orientation( p_orientation ),
-m_sidelength( p_sidelength )
+m_sidelength( p_sidelength ),
+m_name( p_name )
 {
     for( long i = 0; i < 8; i++ )
     {
@@ -62,9 +63,9 @@ void Patch::build( void )
     {
         for( long j = 0; j < m_resolution; j++ )
         {
+            xcurr = j * interval;
+			ycurr = i * interval;
             
-              
-
             Vertex vertex;
 
             switch( m_orientation )
@@ -113,6 +114,34 @@ void Patch::build( void )
                     break;
 
             }
+
+			AddVertex( vertex );
         }
     }
+
+	long current_index = 0;
+	for( long i = 0; i < m_resolution - 1; i++  )
+	{
+		for( long j = 0; j < m_resolution - 1; j++ )
+		{
+			Triangle triangle;
+
+			triangle.vertex1 = current_index;
+			triangle.vertex2 = current_index + 1;
+			triangle.vertex3 = current_index + m_resolution;
+			AddTriangle( triangle );
+
+			triangle.vertex1 = current_index + 1;
+			triangle.vertex2 = current_index + 1 + m_resolution;
+			triangle.vertex3 = current_index + m_resolution;
+			AddTriangle( triangle );
+
+			current_index++;
+		}
+	}
+}
+
+void Patch::GetName( dsstring& p_name )
+{
+	p_name = m_name;
 }

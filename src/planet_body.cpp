@@ -21,6 +21,8 @@
 */
 
 #include "planet_body.h"
+#include "renderer.h"
+#include "plugin.h"
 #include "memalloc.h"
 
 using namespace DrawSpace;
@@ -86,4 +88,26 @@ Fx* Body::GetPassFaceFx( const dsstring& p_passname, int p_faceid )
     FacesSet faceset = m_passesnodes[p_passname];
 
     return faceset.faces[p_faceid]->GetFx();
+}
+
+bool Body::LoadAssets( void )
+{
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+    for( std::map<dsstring, FacesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    {
+		for( long i = 0; i < 6; i++ )
+		{
+			if( false == renderer->CreateRenderingNode( (*it).second.faces[i] ) )
+			{
+				return false;
+			}
+
+			if( false == (*it).second.faces[i]->Init() )
+			{
+				return false;
+			}
+		}
+	}
+	return true;
 }

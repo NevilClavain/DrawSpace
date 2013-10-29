@@ -43,6 +43,8 @@ public:
     Face( void );
     virtual ~Face( void );
 
+	bool Init( void );
+
     void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );
 
 };

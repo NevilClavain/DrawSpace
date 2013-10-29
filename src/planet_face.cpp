@@ -21,6 +21,8 @@
 */
 
 #include "planet_face.h"
+#include "renderer.h"
+#include "plugin.h"
 #include "memalloc.h"
 
 using namespace DrawSpace;
@@ -31,8 +33,6 @@ using namespace DrawSpace::Utils;
 
 Face::Face( void )
 {
-    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs ) );
-    m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, Patch::Front ) ) );
 }
 
 Face::~Face( void )
@@ -40,13 +40,34 @@ Face::~Face( void )
     _DRAWSPACE_DELETE_( m_rootpatch );
 }
 
+// create face's root patch
+bool Face::Init( void )
+{
+    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs ) );
+    m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, Patch::Front, ".0" ) ) );
+
+	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+	Patch* patch = m_rootpatch->GetContent();
+	dsstring patch_name;
+	patch->GetName( patch_name );
+
+	if( renderer->AddMesheToNode( patch, this, patch_name ) == false )
+	{
+		return false;
+	}
+	return true;
+}
+
 void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
 {
+	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
     for( std::map<Utils::BaseQuadtreeNode*, Utils::BaseQuadtreeNode*>::iterator it = m_patchleafs.begin(); it != m_patchleafs.end(); ++it )
     {
         // rendu du patch leaf
-        QuadtreeNode<Patch>* current = static_cast<QuadtreeNode<Patch>*>( (*it).first );
 
-        
+        QuadtreeNode<Patch>* current = static_cast<QuadtreeNode<Patch>*>( (*it).first );
+        renderer->RenderNodeMeshe( p_world, p_view, this, "0" );
     }
 }

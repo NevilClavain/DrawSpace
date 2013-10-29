@@ -63,9 +63,9 @@ public:
     virtual ~Body( void );
 
     virtual void RegisterPassFaceSet( const dsstring p_passname );
-    Core::Fx* GetPassFaceFx( const dsstring& p_passname, int p_faceid );
-    
+    virtual Core::Fx* GetPassFaceFx( const dsstring& p_passname, int p_faceid );
     virtual void OnRegister( Scenegraph* p_scenegraph );
+	virtual bool LoadAssets( void );
 };
 }
 }
