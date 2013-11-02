@@ -26,7 +26,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Planet;
 
-Patch::Patch( int p_resolution, dsreal p_sidelength, Orientation p_orientation, const dsstring& p_name ) : 
+Patch::Patch( int p_resolution, dsreal p_sidelength, int p_orientation, const dsstring& p_name ) : 
 m_resolution( p_resolution ), 
 m_orientation( p_orientation ),
 m_sidelength( p_sidelength ),
@@ -63,56 +63,54 @@ void Patch::build( void )
     {
         for( long j = 0; j < m_resolution; j++ )
         {
-            xcurr = j * interval;
-			ycurr = i * interval;
+            xcurr = j * interval - m_sidelength / 2.0;
+			ycurr = i * interval - m_sidelength / 2.0;
             
             Vertex vertex;
 
             switch( m_orientation )
             {
-                case Up:
+                case TopPlanetFace:
 
                     vertex.x = xcurr;
                     vertex.y = m_sidelength / 2.0;
                     vertex.z = -ycurr;
                     break;
 
-                case Down:
+                case BottomPlanetFace:
 
                     vertex.x = xcurr;
                     vertex.y = -m_sidelength / 2.0;
                     vertex.z = ycurr;
                     break;
 
-                case Front:
+                case FrontPlanetFace:
 
                     vertex.x = xcurr;
                     vertex.y = ycurr;
                     vertex.z = m_sidelength / 2.0;
                     break;
 
-                case Rear:
+                case RearPlanetFace:
 
                     vertex.x = -xcurr;
                     vertex.y = ycurr;
                     vertex.z = -m_sidelength / 2.0;
                     break;
                     
-
-                case Left:
-
-                    vertex.x = -m_sidelength / 2.0;
-                    vertex.y = ycurr;
-                    vertex.z = -xcurr;
-                    break;
-
-                case Right:
+                case LeftPlanetFace:
 
                     vertex.x = -m_sidelength / 2.0;
                     vertex.y = ycurr;
-                    vertex.z = -xcurr;
+                    vertex.z = xcurr;
                     break;
 
+                case RightPlanetFace:
+
+                    vertex.x = m_sidelength / 2.0;
+                    vertex.y = ycurr;
+                    vertex.z = -xcurr;
+                    break;
             }
 
 			AddVertex( vertex );
@@ -120,8 +118,11 @@ void Patch::build( void )
     }
 
 	long current_index = 0;
+
 	for( long i = 0; i < m_resolution - 1; i++  )
 	{
+        current_index = i * m_resolution;
+
 		for( long j = 0; j < m_resolution - 1; j++ )
 		{
 			Triangle triangle;
@@ -131,13 +132,15 @@ void Patch::build( void )
 			triangle.vertex3 = current_index + m_resolution;
 			AddTriangle( triangle );
 
+            
 			triangle.vertex1 = current_index + 1;
 			triangle.vertex2 = current_index + 1 + m_resolution;
 			triangle.vertex3 = current_index + m_resolution;
 			AddTriangle( triangle );
+            
 
 			current_index++;
-		}
+		}        
 	}
 }
 

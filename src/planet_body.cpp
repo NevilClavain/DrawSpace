@@ -103,7 +103,7 @@ bool Body::LoadAssets( void )
 				return false;
 			}
 
-			if( false == (*it).second.faces[i]->Init() )
+			if( false == (*it).second.faces[i]->Init( i ) )
 			{
 				return false;
 			}

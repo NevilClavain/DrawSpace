@@ -33,13 +33,15 @@ namespace Planet
 class Body : public Core::TransformNode
 {
 public:
-
+/*
     static const int FrontPlanetFace    = 0;
     static const int RearPlanetFace     = 1;
     static const int LeftPlanetFace     = 2;
     static const int RightPlanetFace    = 3;
     static const int TopPlanetFace      = 4;
     static const int BottomPlanetFace   = 5;
+    */
+    static const int AllPlanetFaces     = 6;
     
 protected:
 

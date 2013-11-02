@@ -41,10 +41,10 @@ Face::~Face( void )
 }
 
 // create face's root patch
-bool Face::Init( void )
+bool Face::Init( int p_orientation )
 {
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs ) );
-    m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, Patch::Front, ".0" ) ) );
+    m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, p_orientation, ".0" ) ) );
 
 	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
@@ -68,6 +68,8 @@ void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matr
         // rendu du patch leaf
 
         QuadtreeNode<Patch>* current = static_cast<QuadtreeNode<Patch>*>( (*it).first );
-        renderer->RenderNodeMeshe( p_world, p_view, this, "0" );
+        dsstring name;
+        current->GetContent()->GetName( name );
+        renderer->RenderNodeMeshe( p_world, p_view, this, name );
     }
 }
