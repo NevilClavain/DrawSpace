@@ -44,7 +44,7 @@ void TransformQueue::ComputeTransformations( void )
     }
 }
 
-bool TransformQueue::Add( TransformNode* p_node )
+bool TransformQueue::add( TransformNode* p_node )
 {
     dsstring name;
     p_node->GetName( name );

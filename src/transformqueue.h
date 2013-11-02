@@ -35,13 +35,13 @@ class TransformQueue
 protected:
     std::map<dsstring, TransformNode*>  m_nodes;
 
+    bool add( TransformNode* p_node );
 
 public:
     TransformQueue( void );
     ~TransformQueue( void );
 
-    void ComputeTransformations( void );
-    bool Add( TransformNode* p_node );
+    void ComputeTransformations( void );    
     bool SetNodeLocalTransformation( const dsstring& p_nodename, const DrawSpace::Utils::Matrix& p_mat );
 
 };
