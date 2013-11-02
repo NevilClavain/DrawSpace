@@ -69,4 +69,5 @@
 #include "fpsmovement.h"
 #include "quadtree.h"
 #include "misc_utils.h"
+#include "planet_body.h"
 #endif
