@@ -41,7 +41,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
 
     text_widget->GetImageFx()->GetShader( 0 )->SetText( 
         
-        "float4x4 matViewProjection: register(c0);"
+        "float4x4 matWorldViewProjection: register(c0);"
         "struct VS_INPUT"
         "{"
            "float4 Position : POSITION0;"
@@ -55,7 +55,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
         "VS_OUTPUT vs_main( VS_INPUT Input )"
         "{"
            "VS_OUTPUT Output;"
-           "Output.Position = mul( Input.Position, matViewProjection );"
+           "Output.Position = mul( Input.Position, matWorldViewProjection );"
            "Output.TexCoord0 = Input.TexCoord0;"  
            "return( Output );"
         "}"     
@@ -100,7 +100,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
 
     text_widget->GetTextFx()->GetShader( 0 )->SetText( 
 
-        "float4x4 matViewProjection: register(c0);"
+        "float4x4 matWorldViewProjection: register(c0);"
 
         "struct VS_INPUT"
         "{"
@@ -118,7 +118,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
         "{"
            "VS_OUTPUT Output;"
 
-           "Output.Position = mul( Input.Position, matViewProjection );"
+           "Output.Position = mul( Input.Position, matWorldViewProjection );"
            "Output.TexCoord0 = Input.TexCoord0;"
               
            "return( Output );"
