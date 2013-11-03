@@ -36,8 +36,8 @@ class Face : public Core::RenderingNode
 {
 protected:
 
-    Utils::QuadtreeNode<Patch>*                                     m_rootpatch;
-    std::map<Utils::BaseQuadtreeNode*, Utils::BaseQuadtreeNode*>    m_patchleafs;
+    Utils::QuadtreeNode<Patch>*                     m_rootpatch;
+    std::map<dsstring, Utils::BaseQuadtreeNode*>    m_patchleafs;
 
 public:
     Face( void );

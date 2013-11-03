@@ -24,6 +24,7 @@
 #define _QUADTREE_H_
 
 #include "drawspace_commons.h"
+#include "memalloc.h"
 
 namespace DrawSpace
 {
@@ -45,21 +46,20 @@ protected:
     BaseQuadtreeNode*                               m_parent;
 
     bool                                            m_splitted;
-    std::map<BaseQuadtreeNode*, BaseQuadtreeNode*>& m_leafs;
+    std::map<dsstring, BaseQuadtreeNode*>&          m_leafs;
 
-    BaseQuadtreeNode( std::map<BaseQuadtreeNode*, BaseQuadtreeNode*>& p_leafs, BaseQuadtreeNode* p_parent, int p_id );
 public:
 
-    BaseQuadtreeNode( std::map<BaseQuadtreeNode*, BaseQuadtreeNode*>& p_leafs );    
+    BaseQuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, BaseQuadtreeNode* p_parent, int p_id );
+
     virtual ~BaseQuadtreeNode( void );
 
     virtual void SetParent( BaseQuadtreeNode* p_parent );
-    virtual void Split( void );
-    virtual void Merge( void );
-    bool HasChildren( void );
-    BaseQuadtreeNode* GetChild( int p_id );
+    virtual bool HasChildren( void );
+    virtual BaseQuadtreeNode* GetChild( int p_id );
 
-
+    virtual void Split( void ) = 0;
+    virtual void Merge( void ) = 0;
 };
 
 template <typename Base>
@@ -68,9 +68,17 @@ class QuadtreeNode : public BaseQuadtreeNode
 protected:    
     Base*       m_content;
 
-public:
-    QuadtreeNode( std::map<BaseQuadtreeNode*, BaseQuadtreeNode*>& p_leafs ) : BaseQuadtreeNode( p_leafs )
+    QuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_leafs, p_parent, p_id )
     {
+
+    }
+
+public:
+    QuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, Base* p_content ) : BaseQuadtreeNode( p_leafs, NULL, RootNode ), m_content( p_content )
+    {
+        dsstring name;
+        m_content->GetName( name );
+        m_leafs[name] = this;
     }
 
     virtual ~QuadtreeNode( void )
@@ -82,9 +90,45 @@ public:
         return m_content;
     }
 
-    void SetContent( Base* p_content )
+    virtual void Split( void )
     {
-        m_content = p_content;
+        if( m_splitted )
+        {
+            // deja splitte
+            return;
+        }
+
+        m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_leafs, this, NorthWestNode ) );
+        m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_leafs, this, NorthEastNode ) );
+        m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_leafs, this, SouthEastNode ) );
+        m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_leafs, this, SouthWestNode ) );
+
+        m_splitted = true;
+
+        // retirer celui-ci de la liste des leafs
+        dsstring thisname;
+        m_content->GetName( thisname );
+        if( m_leafs.count( thisname ) > 0 )
+        {
+            m_leafs.erase( thisname );
+        }
+
+
+        // inscrire les fils dans la liste des leafs
+        /*
+        m_leafs[m_children[NorthWestNode]] = m_children[NorthWestNode];
+        m_leafs[m_children[NorthEastNode]] = m_children[NorthEastNode];
+        m_leafs[m_children[SouthEastNode]] = m_children[SouthEastNode];
+        m_leafs[m_children[SouthWestNode]] = m_children[SouthWestNode];
+        */
+
+        m_content->Split();
+    }
+
+    virtual void Merge( void )
+    {
+
+
     }
 };
 }

@@ -43,8 +43,8 @@ Face::~Face( void )
 // create face's root patch
 bool Face::Init( int p_orientation )
 {
-    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs ) );
-    m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, p_orientation, ".0" ) ) );
+    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs, _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, p_orientation, ".0" ) ) ) );
+    //m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, p_orientation, ".0" ) ) );
 
 	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
@@ -63,11 +63,11 @@ void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matr
 {
 	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
-    for( std::map<Utils::BaseQuadtreeNode*, Utils::BaseQuadtreeNode*>::iterator it = m_patchleafs.begin(); it != m_patchleafs.end(); ++it )
+    for( std::map<dsstring, Utils::BaseQuadtreeNode*>::iterator it = m_patchleafs.begin(); it != m_patchleafs.end(); ++it )
     {
         // rendu du patch leaf
 
-        QuadtreeNode<Patch>* current = static_cast<QuadtreeNode<Patch>*>( (*it).first );
+        QuadtreeNode<Patch>* current = static_cast<QuadtreeNode<Patch>*>( (*it).second );
         dsstring name;
         current->GetContent()->GetName( name );
         renderer->RenderNodeMeshe( p_world, p_view, this, name );
