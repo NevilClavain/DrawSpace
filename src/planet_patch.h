@@ -68,8 +68,6 @@ public:
     Patch* GetNeighbour( int p_id );
 
 	void GetName( dsstring& p_name );
-    void Split( void );
-    void Merge( void );
     
 };
 }

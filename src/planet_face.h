@@ -36,8 +36,13 @@ class Face : public Core::RenderingNode
 {
 protected:
 
+    typedef Core::CallBack<Face, void, Utils::BaseQuadtreeNode*>   InstanciationCallback;
+
     Utils::QuadtreeNode<Patch>*                     m_rootpatch;
     std::map<dsstring, Utils::BaseQuadtreeNode*>    m_patchleafs;
+    int                                             m_orientation;
+
+    void on_patchinstanciation( Utils::BaseQuadtreeNode* p_node );
 
 public:
     Face( void );

@@ -31,8 +31,8 @@ using namespace DrawSpace::Planet;
 using namespace DrawSpace::Utils;
 
 
-Face::Face( void )
-{
+Face::Face( void ) : m_rootpatch( NULL )
+{    
 }
 
 Face::~Face( void )
@@ -43,8 +43,11 @@ Face::~Face( void )
 // create face's root patch
 bool Face::Init( int p_orientation )
 {
-    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs, _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, p_orientation, ".0" ) ) ) );
-    //m_rootpatch->SetContent( _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, p_orientation, ".0" ) ) );
+    m_orientation = p_orientation;
+
+    InstanciationCallback* cb = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_patchinstanciation ) );
+
+    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs, cb ) );
 
 	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
@@ -71,5 +74,20 @@ void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matr
         dsstring name;
         current->GetContent()->GetName( name );
         renderer->RenderNodeMeshe( p_world, p_view, this, name );
+    }
+}
+
+void Face::on_patchinstanciation( BaseQuadtreeNode* p_node )
+{
+    if( NULL == m_rootpatch )
+    {
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, m_orientation, ".0" ) );
+
+        QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
+        root->SetContent( patch );
+    }
+    else
+    {
+        // TODO
     }
 }

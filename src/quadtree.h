@@ -25,6 +25,7 @@
 
 #include "drawspace_commons.h"
 #include "memalloc.h"
+#include "callback.h"
 
 namespace DrawSpace
 {
@@ -65,17 +66,33 @@ public:
 template <typename Base>
 class QuadtreeNode : public BaseQuadtreeNode
 {
-protected:    
-    Base*       m_content;
+public:
+
+    typedef Core::BaseCallback<void, BaseQuadtreeNode*> InstanciationHandler;
+
+protected:
+
+    Base*                                               m_content;
+    InstanciationHandler*                               m_insthandler;
 
     QuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_leafs, p_parent, p_id )
-    {
-
+    {        
     }
 
 public:
-    QuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, Base* p_content ) : BaseQuadtreeNode( p_leafs, NULL, RootNode ), m_content( p_content )
+    /*
+    QuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, int p_orientation ) : BaseQuadtreeNode( p_leafs, NULL, RootNode )
     {
+        m_content = _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, p_orientation, ".0" ) );
+        dsstring name;
+        m_content->GetName( name );
+        m_leafs[name] = this;
+    }
+    */
+
+    QuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, InstanciationHandler* p_handler ) : BaseQuadtreeNode( p_leafs, NULL, RootNode ), m_insthandler( p_handler )
+    {
+        (*m_insthandler)( this );
         dsstring name;
         m_content->GetName( name );
         m_leafs[name] = this;
@@ -88,6 +105,11 @@ public:
     Base* GetContent( void )
     {
         return m_content;
+    }
+
+    void SetContent( Base* p_content )
+    {
+        m_content = p_content;
     }
 
     virtual void Split( void )
@@ -122,7 +144,6 @@ public:
         m_leafs[m_children[SouthWestNode]] = m_children[SouthWestNode];
         */
 
-        m_content->Split();
     }
 
     virtual void Merge( void )

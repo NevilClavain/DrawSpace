@@ -148,13 +148,3 @@ void Patch::GetName( dsstring& p_name )
 {
 	p_name = m_name;
 }
-
-void Patch::Split( void )
-{
-
-}
-
-void Patch::Merge( void )
-{
-
-}
