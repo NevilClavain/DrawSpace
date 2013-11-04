@@ -36,15 +36,25 @@ BaseQuadtreeNode::~BaseQuadtreeNode( void )
 
 void BaseQuadtreeNode::SetParent( BaseQuadtreeNode* p_parent )
 {
-    m_parent = p_parent;
+	m_parent = p_parent;
+}
+
+BaseQuadtreeNode* BaseQuadtreeNode::GetParent( void )
+{
+    return m_parent;
 }
 
 bool BaseQuadtreeNode::HasChildren( void )
 {
-    return m_splitted;
+	return m_splitted;
 }
 
 BaseQuadtreeNode* BaseQuadtreeNode::GetChild( int p_id )
 {
-    return m_children[p_id];
+	return m_children[p_id];
+}
+
+int BaseQuadtreeNode::GetId( void )
+{
+    return m_id;
 }

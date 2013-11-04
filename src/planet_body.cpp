@@ -40,62 +40,62 @@ Body::~Body( void )
 
 void Body::OnRegister( Scenegraph* p_scenegraph )
 {
-    for( std::map<dsstring, FacesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-    {
-        Pass* current_pass = p_scenegraph->GetPass( (*it).first );
-        if( current_pass != NULL )
-        {         
-            for( long i = 0; i < 6; i++ )
-            {
-                current_pass->GetRenderingQueue()->Add( (*it).second.faces[i] );
-            }
-        }
-    }
-    m_scenegraph = p_scenegraph;
+	for( std::map<dsstring, FacesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+	{
+		Pass* current_pass = p_scenegraph->GetPass( (*it).first );
+		if( current_pass != NULL )
+		{         
+			for( long i = 0; i < 6; i++ )
+			{
+				current_pass->GetRenderingQueue()->Add( (*it).second.faces[i] );
+			}
+		}
+	}
+	m_scenegraph = p_scenegraph;
 }
 
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
-    DrawSpace::Utils::Matrix view;
-    m_scenegraph->GetCurrentCameraView( view );
+	DrawSpace::Utils::Matrix view;
+	m_scenegraph->GetCurrentCameraView( view );
 
-    Face* face = static_cast<Face*>( p_rendering_node );
+	Face* face = static_cast<Face*>( p_rendering_node );
 
-    face->Draw( m_globaltransformation, view );
+	face->Draw( m_globaltransformation, view );
 }
 
 void Body::RegisterPassFaceSet( const dsstring p_passname )
 {
-    FacesSet faceset;
-    for( long i = 0; i < 6; i++ )
-    {
-        faceset.faces[i] = _DRAWSPACE_NEW_( Face, Face );
-        RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
+	FacesSet faceset;
+	for( long i = 0; i < 6; i++ )
+	{
+		faceset.faces[i] = _DRAWSPACE_NEW_( Face, Face );
+		RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
 
-        faceset.faces[i]->RegisterHandler( cb );
-        m_callbacks.push_back( cb );
-    }
+		faceset.faces[i]->RegisterHandler( cb );
+		m_callbacks.push_back( cb );
+	}
 
-    m_passesnodes[p_passname] = faceset;
+	m_passesnodes[p_passname] = faceset;
 }
 
 Fx* Body::GetPassFaceFx( const dsstring& p_passname, int p_faceid )
 {
-    if( 0 == m_passesnodes.count( p_passname ) )
-    {
-        return NULL;
-    }
-    FacesSet faceset = m_passesnodes[p_passname];
+	if( 0 == m_passesnodes.count( p_passname ) )
+	{
+		return NULL;
+	}
+	FacesSet faceset = m_passesnodes[p_passname];
 
-    return faceset.faces[p_faceid]->GetFx();
+	return faceset.faces[p_faceid]->GetFx();
 }
 
 bool Body::LoadAssets( void )
 {
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
-    for( std::map<dsstring, FacesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-    {
+	for( std::map<dsstring, FacesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+	{
 		for( long i = 0; i < 6; i++ )
 		{
 			if( false == renderer->CreateRenderingNode( (*it).second.faces[i] ) )

@@ -33,42 +33,42 @@ class Patch : public Core::Meshe
 {
 public:
 
-    static const int    NorthNeighbour      = 0;
-    static const int    SouthNeighbour      = 1;
-    static const int    WestNeighbour       = 2;
-    static const int    EastNeighbour       = 3;
-    static const int    NorthWestNeighbour  = 4;
-    static const int    NorthEastNeighbour  = 5;
-    static const int    SouthWestNeighbour  = 6;
-    static const int    SouthEastNeighbour  = 7;
+	static const int    NorthNeighbour      = 0;
+	static const int    SouthNeighbour      = 1;
+	static const int    WestNeighbour       = 2;
+	static const int    EastNeighbour       = 3;
+	static const int    NorthWestNeighbour  = 4;
+	static const int    NorthEastNeighbour  = 5;
+	static const int    SouthWestNeighbour  = 6;
+	static const int    SouthEastNeighbour  = 7;
 
-    static const int    FrontPlanetFace    = 0;
-    static const int    RearPlanetFace     = 1;
-    static const int    LeftPlanetFace     = 2;
-    static const int    RightPlanetFace    = 3;
-    static const int    TopPlanetFace      = 4;
-    static const int    BottomPlanetFace   = 5;
+	static const int    FrontPlanetFace    = 0;
+	static const int    RearPlanetFace     = 1;
+	static const int    LeftPlanetFace     = 2;
+	static const int    RightPlanetFace    = 3;
+	static const int    TopPlanetFace      = 4;
+	static const int    BottomPlanetFace   = 5;
 
 protected:
 
-    dsreal          m_sidelength;
-    int             m_resolution;
-    int             m_orientation;
+	dsreal          m_sidelength;
+	int             m_resolution;
+	int             m_orientation;
 
-    Patch*          m_neighbours[8];
+	Patch*          m_neighbours[8];
 	dsstring		m_name;
 
-    void build( void );
+	void build( void );
 
 public:
-    Patch( int p_resolution, dsreal p_sidelength, int p_orientation, const dsstring& p_name );
-    virtual ~Patch( void );
+	Patch( int p_resolution, dsreal p_sidelength, int p_orientation, const dsstring& p_name );
+	virtual ~Patch( void );
 
-    void SetNeighbour( Patch* p_patch, int p_id );
-    Patch* GetNeighbour( int p_id );
+	void SetNeighbour( Patch* p_patch, int p_id );
+	Patch* GetNeighbour( int p_id );
 
 	void GetName( dsstring& p_name );
-    
+	
 };
 }
 }

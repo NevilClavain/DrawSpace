@@ -32,12 +32,12 @@ m_orientation( p_orientation ),
 m_sidelength( p_sidelength ),
 m_name( p_name )
 {
-    for( long i = 0; i < 8; i++ )
-    {
-        m_neighbours[i] = NULL;
-    }
+	for( long i = 0; i < 8; i++ )
+	{
+		m_neighbours[i] = NULL;
+	}
 
-    build();
+	build();
 }
 
 Patch::~Patch( void )
@@ -46,82 +46,82 @@ Patch::~Patch( void )
 
 void Patch::SetNeighbour( Patch* p_patch, int p_id )
 {
-    m_neighbours[p_id] = p_patch;
+	m_neighbours[p_id] = p_patch;
 }
 
 Patch* Patch::GetNeighbour( int p_id )
 {
-    return m_neighbours[p_id];
+	return m_neighbours[p_id];
 }
 
 void Patch::build( void )
 {
-    dsreal xcurr, ycurr;
+	dsreal xcurr, ycurr;
 
-    dsreal interval = m_sidelength / ( m_resolution - 1 );
-    for( long i = 0; i < m_resolution; i++ )
-    {
-        for( long j = 0; j < m_resolution; j++ )
-        {
-            xcurr = j * interval - m_sidelength / 2.0;
+	dsreal interval = m_sidelength / ( m_resolution - 1 );
+	for( long i = 0; i < m_resolution; i++ )
+	{
+		for( long j = 0; j < m_resolution; j++ )
+		{
+			xcurr = j * interval - m_sidelength / 2.0;
 			ycurr = i * interval - m_sidelength / 2.0;
-            
-            Vertex vertex;
+			
+			Vertex vertex;
 
-            switch( m_orientation )
-            {
-                case TopPlanetFace:
+			switch( m_orientation )
+			{
+				case TopPlanetFace:
 
-                    vertex.x = xcurr;
-                    vertex.y = m_sidelength / 2.0;
-                    vertex.z = -ycurr;
-                    break;
+					vertex.x = xcurr;
+					vertex.y = m_sidelength / 2.0;
+					vertex.z = -ycurr;
+					break;
 
-                case BottomPlanetFace:
+				case BottomPlanetFace:
 
-                    vertex.x = xcurr;
-                    vertex.y = -m_sidelength / 2.0;
-                    vertex.z = ycurr;
-                    break;
+					vertex.x = xcurr;
+					vertex.y = -m_sidelength / 2.0;
+					vertex.z = ycurr;
+					break;
 
-                case FrontPlanetFace:
+				case FrontPlanetFace:
 
-                    vertex.x = xcurr;
-                    vertex.y = ycurr;
-                    vertex.z = m_sidelength / 2.0;
-                    break;
+					vertex.x = xcurr;
+					vertex.y = ycurr;
+					vertex.z = m_sidelength / 2.0;
+					break;
 
-                case RearPlanetFace:
+				case RearPlanetFace:
 
-                    vertex.x = -xcurr;
-                    vertex.y = ycurr;
-                    vertex.z = -m_sidelength / 2.0;
-                    break;
-                    
-                case LeftPlanetFace:
+					vertex.x = -xcurr;
+					vertex.y = ycurr;
+					vertex.z = -m_sidelength / 2.0;
+					break;
+					
+				case LeftPlanetFace:
 
-                    vertex.x = -m_sidelength / 2.0;
-                    vertex.y = ycurr;
-                    vertex.z = xcurr;
-                    break;
+					vertex.x = -m_sidelength / 2.0;
+					vertex.y = ycurr;
+					vertex.z = xcurr;
+					break;
 
-                case RightPlanetFace:
+				case RightPlanetFace:
 
-                    vertex.x = m_sidelength / 2.0;
-                    vertex.y = ycurr;
-                    vertex.z = -xcurr;
-                    break;
-            }
+					vertex.x = m_sidelength / 2.0;
+					vertex.y = ycurr;
+					vertex.z = -xcurr;
+					break;
+			}
 
 			AddVertex( vertex );
-        }
-    }
+		}
+	}
 
 	long current_index = 0;
 
 	for( long i = 0; i < m_resolution - 1; i++  )
 	{
-        current_index = i * m_resolution;
+		current_index = i * m_resolution;
 
 		for( long j = 0; j < m_resolution - 1; j++ )
 		{
@@ -132,12 +132,12 @@ void Patch::build( void )
 			triangle.vertex3 = current_index + m_resolution;
 			AddTriangle( triangle );
 
-            
+			
 			triangle.vertex1 = current_index + 1;
 			triangle.vertex2 = current_index + 1 + m_resolution;
 			triangle.vertex3 = current_index + m_resolution;
 			AddTriangle( triangle );
-            
+			
 
 			current_index++;
 		}        
