@@ -49,8 +49,8 @@ public:
     virtual ~Face( void );
 
     bool Init( int p_orientation );
-
     void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );
+    void Split( const dsstring& p_patchname );
 
 };
 }

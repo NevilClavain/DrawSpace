@@ -111,3 +111,14 @@ bool Body::LoadAssets( void )
 	}
 	return true;
 }
+
+Face* Body::GetFace( const dsstring& p_passname, int p_faceid )
+{
+	if( 0 == m_passesnodes.count( p_passname ) )
+	{
+		return NULL;
+	}
+	FacesSet faceset = m_passesnodes[p_passname];
+
+	return faceset.faces[p_faceid];
+}

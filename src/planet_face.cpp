@@ -49,7 +49,7 @@ bool Face::Init( int p_orientation )
 
 	m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs, cb ) );
 
-	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+	DrawSpace::Interface::Renderer* renderer = Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
 	Patch* patch = m_rootpatch->GetContent();
 	dsstring patch_name;
@@ -64,7 +64,7 @@ bool Face::Init( int p_orientation )
 
 void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
 {
-	DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+	DrawSpace::Interface::Renderer* renderer = Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
 	for( std::map<dsstring, Utils::BaseQuadtreeNode*>::iterator it = m_patchleafs.begin(); it != m_patchleafs.end(); ++it )
 	{
@@ -75,6 +75,14 @@ void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matr
 		current->GetContent()->GetName( name );
 		renderer->RenderNodeMeshe( p_world, p_view, this, name );
 	}
+}
+
+void Face::Split( const dsstring& p_patchname )
+{
+    if( m_patchleafs.count( p_patchname ) > 0 )
+    {
+        m_patchleafs[p_patchname]->Split();
+    }
 }
 
 void Face::on_patchinstanciation( BaseQuadtreeNode* p_node )
