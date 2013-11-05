@@ -508,14 +508,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\chunk.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\chunk.h"
-			>
-		</File>
-		<File
 			RelativePath=".\src\chunk_node.cpp"
 			>
 		</File>

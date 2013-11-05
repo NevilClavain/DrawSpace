@@ -51,7 +51,6 @@
 #include "renderstate.h"
 #include "renderer.h"
 #include "fx.h"
-#include "chunk.h"
 #include "viewportquad.h"
 #include "pass.h"
 #include "ac3dmesheimport.h"
