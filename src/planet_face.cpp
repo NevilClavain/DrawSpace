@@ -45,20 +45,9 @@ bool Face::Init( int p_orientation )
 {
 	m_orientation = p_orientation;
 
-	InstanciationCallback* cb = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_patchinstanciation ) );
-
+	InstanciationCallback* cb = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodeinstanciation ) );
 	m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchleafs, cb ) );
 
-	DrawSpace::Interface::Renderer* renderer = Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-
-	Patch* patch = m_rootpatch->GetContent();
-	dsstring patch_name;
-	patch->GetName( patch_name );
-
-	if( renderer->AddMesheToNode( patch, this, patch_name ) == false )
-	{
-		return false;
-	}
 	return true;
 }
 
@@ -85,14 +74,20 @@ void Face::Split( const dsstring& p_patchname )
     }
 }
 
-void Face::on_patchinstanciation( BaseQuadtreeNode* p_node )
+void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {
+    DrawSpace::Interface::Renderer* renderer = Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
 	if( NULL == m_rootpatch )
 	{
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
 		Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, m_orientation, ".0" ) );		
 		root->SetContent( patch );
+
+	    dsstring patch_name;
+	    patch->GetName( patch_name );
+	    renderer->AddMesheToNode( patch, this, patch_name );
 	}
 	else
 	{
@@ -103,9 +98,14 @@ void Face::on_patchinstanciation( BaseQuadtreeNode* p_node )
         parent->GetContent()->GetName( parent_name );
        
         dsstring node_name = parent_name + dsstring( "." );
-        node_name += dsstring( itoa( node->GetId(), NULL, 10 ) );
+        char dstbuf[32];
+        node_name += dsstring( itoa( node->GetId(), dstbuf, 10 ) );
         
 		Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, m_orientation, node_name ) );		
-		node->SetContent( patch );		
+		node->SetContent( patch );
+
+	    dsstring patch_name;
+	    patch->GetName( patch_name );
+	    renderer->AddMesheToNode( patch, this, patch_name );
 	}
 }

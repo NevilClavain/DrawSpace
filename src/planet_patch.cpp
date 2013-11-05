@@ -26,11 +26,13 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Planet;
 
-Patch::Patch( int p_resolution, dsreal p_sidelength, int p_orientation, const dsstring& p_name ) : 
+Patch::Patch( int p_resolution, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, int p_orientation, const dsstring& p_name ) : 
 m_resolution( p_resolution ), 
 m_orientation( p_orientation ),
 m_sidelength( p_sidelength ),
-m_name( p_name )
+m_name( p_name ),
+m_xpos( p_xpos ),
+m_ypos( p_ypos )
 {
 	for( long i = 0; i < 8; i++ )
 	{
@@ -147,4 +149,9 @@ void Patch::build( void )
 void Patch::GetName( dsstring& p_name )
 {
 	p_name = m_name;
+}
+
+dsreal Patch::GetSideLength( void )
+{
+    return m_sidelength;
 }

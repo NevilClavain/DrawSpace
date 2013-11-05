@@ -42,7 +42,7 @@ protected:
     std::map<dsstring, Utils::BaseQuadtreeNode*>    m_patchleafs;
     int                                             m_orientation;
 
-    void on_patchinstanciation( Utils::BaseQuadtreeNode* p_node );
+    void on_nodeinstanciation( Utils::BaseQuadtreeNode* p_node );
 
 public:
     Face( void );
