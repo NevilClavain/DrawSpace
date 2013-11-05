@@ -54,6 +54,7 @@ protected:
 	dsreal          m_sidelength;
     dsreal          m_xpos;
     dsreal          m_ypos;
+    dsreal          m_ray;
 
 	int             m_resolution;
 	int             m_orientation;
@@ -64,7 +65,7 @@ protected:
 	void build( void );
 
 public:
-	Patch( int p_resolution, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, int p_orientation, const dsstring& p_name );
+	Patch( int p_resolution, dsreal p_sidelength, dsreal p_ray, dsreal p_xpos, dsreal p_ypos, int p_orientation, const dsstring& p_name );
 	virtual ~Patch( void );
 
 	void SetNeighbour( Patch* p_patch, int p_id );
@@ -72,6 +73,8 @@ public:
 
 	void GetName( dsstring& p_name );
     dsreal GetSideLength( void );
+
+    void GetPos( dsreal& p_xpos, dsreal& p_ypos );
 	
 };
 }

@@ -26,13 +26,14 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Planet;
 
-Patch::Patch( int p_resolution, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, int p_orientation, const dsstring& p_name ) : 
+Patch::Patch( int p_resolution, dsreal p_sidelength, dsreal p_ray, dsreal p_xpos, dsreal p_ypos, int p_orientation, const dsstring& p_name ) : 
 m_resolution( p_resolution ), 
 m_orientation( p_orientation ),
 m_sidelength( p_sidelength ),
 m_name( p_name ),
 m_xpos( p_xpos ),
-m_ypos( p_ypos )
+m_ypos( p_ypos ),
+m_ray( p_ray )
 {
 	for( long i = 0; i < 8; i++ )
 	{
@@ -66,7 +67,10 @@ void Patch::build( void )
 		for( long j = 0; j < m_resolution; j++ )
 		{
 			xcurr = j * interval - m_sidelength / 2.0;
+            xcurr += m_xpos;
+
 			ycurr = i * interval - m_sidelength / 2.0;
+            ycurr += m_ypos;
 			
 			Vertex vertex;
 
@@ -75,14 +79,14 @@ void Patch::build( void )
 				case TopPlanetFace:
 
 					vertex.x = xcurr;
-					vertex.y = m_sidelength / 2.0;
+					vertex.y = m_ray;
 					vertex.z = -ycurr;
 					break;
 
 				case BottomPlanetFace:
 
 					vertex.x = xcurr;
-					vertex.y = -m_sidelength / 2.0;
+					vertex.y = -m_ray;
 					vertex.z = ycurr;
 					break;
 
@@ -90,26 +94,26 @@ void Patch::build( void )
 
 					vertex.x = xcurr;
 					vertex.y = ycurr;
-					vertex.z = m_sidelength / 2.0;
+					vertex.z = m_ray;
 					break;
 
 				case RearPlanetFace:
 
 					vertex.x = -xcurr;
 					vertex.y = ycurr;
-					vertex.z = -m_sidelength / 2.0;
+					vertex.z = -m_ray;
 					break;
 					
 				case LeftPlanetFace:
 
-					vertex.x = -m_sidelength / 2.0;
+					vertex.x = -m_ray;
 					vertex.y = ycurr;
 					vertex.z = xcurr;
 					break;
 
 				case RightPlanetFace:
 
-					vertex.x = m_sidelength / 2.0;
+					vertex.x = m_ray;
 					vertex.y = ycurr;
 					vertex.z = -xcurr;
 					break;
@@ -154,4 +158,10 @@ void Patch::GetName( dsstring& p_name )
 dsreal Patch::GetSideLength( void )
 {
     return m_sidelength;
+}
+
+void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos )
+{
+    p_xpos = m_xpos;
+    p_ypos = m_ypos;
 }
