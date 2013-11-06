@@ -42,6 +42,9 @@ public:
     virtual void SetRenderer( Renderer * p_renderer ) = 0;
     virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
     virtual bool LoadAssets( void ) = 0;
+    virtual Core::Meshe* GetMeshe( const dsstring& p_mesheid ) = 0;
+    virtual void RegisterPassSlot( const dsstring p_passname ) = 0;
+    virtual void GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid ) = 0;
 
 
 };
