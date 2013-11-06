@@ -68,44 +68,44 @@ void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matr
 
 void Face::Split( const dsstring& p_patchname )
 {
-    if( m_patchleafs.count( p_patchname ) > 0 )
-    {
-        m_patchleafs[p_patchname]->Split();
-    }
+	if( m_patchleafs.count( p_patchname ) > 0 )
+	{
+		m_patchleafs[p_patchname]->Split();
+	}
 }
 
 void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {
-    DrawSpace::Interface::Renderer* renderer = Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+	DrawSpace::Interface::Renderer* renderer = Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
 	if( NULL == m_rootpatch )
 	{
-        QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
+		QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
 		Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, 5.0, m_orientation, ".0", NULL, -1 ) );
 		root->SetContent( patch );
 
-	    dsstring patch_name;
-	    patch->GetName( patch_name );
-	    renderer->AddMesheToNode( patch, this, patch_name );
+		dsstring patch_name;
+		patch->GetName( patch_name );
+		renderer->AddMesheToNode( patch, this, patch_name );
 	}
 	else
 	{
-        QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
-        QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
+		QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
+		QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
 
-        dsstring parent_name;
-        parent->GetContent()->GetName( parent_name );
-       
-        dsstring node_name = parent_name + dsstring( "." );
-        char dstbuf[32];
-        node_name += dsstring( itoa( node->GetId(), dstbuf, 10 ) );
-        
+		dsstring parent_name;
+		parent->GetContent()->GetName( parent_name );
+	   
+		dsstring node_name = parent_name + dsstring( "." );
+		char dstbuf[32];
+		node_name += dsstring( itoa( node->GetId(), dstbuf, 10 ) );
+		
 		Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, 5.0, m_orientation, node_name, parent->GetContent(), node->GetId() ) );		
 		node->SetContent( patch );
 
-	    dsstring patch_name;
-	    patch->GetName( patch_name );
-	    renderer->AddMesheToNode( patch, this, patch_name );
+		dsstring patch_name;
+		patch->GetName( patch_name );
+		renderer->AddMesheToNode( patch, this, patch_name );
 	}
 }

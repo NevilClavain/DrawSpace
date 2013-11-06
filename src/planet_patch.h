@@ -52,9 +52,9 @@ public:
 protected:
 
 	dsreal          m_sidelength;
-    dsreal          m_xpos;
-    dsreal          m_ypos;
-    dsreal          m_ray;
+	dsreal          m_xpos;
+	dsreal          m_ypos;
+	dsreal          m_ray;
 
 	int             m_resolution;
 	int             m_orientation;
@@ -64,7 +64,7 @@ protected:
 
 	void build( void );
 
-    void cubetosphere( const Utils::Vector& p_in, Utils::Vector& p_out );
+	void cubetosphere( const Utils::Vector& p_in, Utils::Vector& p_out );
 
 public:
 	Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid );
@@ -74,9 +74,9 @@ public:
 	Patch* GetNeighbour( int p_id );
 
 	void GetName( dsstring& p_name );
-    dsreal GetSideLength( void );
+	dsreal GetSideLength( void );
 
-    void GetPos( dsreal& p_xpos, dsreal& p_ypos );
+	void GetPos( dsreal& p_xpos, dsreal& p_ypos );
 	
 };
 }

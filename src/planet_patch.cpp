@@ -39,54 +39,54 @@ m_ray( p_ray )
 		m_neighbours[i] = NULL;
 	}
 
-    if( NULL == p_parent )
-    {
-        m_xpos = m_ypos = 0.0;
-        m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
-    }
-    else
-    {
-        m_sidelength = p_parent->m_sidelength / 2.0;
+	if( NULL == p_parent )
+	{
+		m_xpos = m_ypos = 0.0;
+		m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
+	}
+	else
+	{
+		m_sidelength = p_parent->m_sidelength / 2.0;
 
-        switch( p_parentnodeid )
-        {
-            case BaseQuadtreeNode::NorthWestNode:
+		switch( p_parentnodeid )
+		{
+			case BaseQuadtreeNode::NorthWestNode:
 
-                m_xpos = -p_parent->m_sidelength / 4.0;
-                m_xpos += p_parent->m_xpos;
-                m_ypos = p_parent->m_sidelength / 4.0;
-                m_ypos += p_parent->m_ypos;
-                break;
+				m_xpos = -p_parent->m_sidelength / 4.0;
+				m_xpos += p_parent->m_xpos;
+				m_ypos = p_parent->m_sidelength / 4.0;
+				m_ypos += p_parent->m_ypos;
+				break;
 
-            case BaseQuadtreeNode::NorthEastNode:
+			case BaseQuadtreeNode::NorthEastNode:
 
-                m_xpos = p_parent->m_sidelength / 4.0;
-                m_xpos += p_parent->m_xpos;
-                m_ypos = p_parent->m_sidelength / 4.0;
-                m_ypos += p_parent->m_ypos;
-                break;
+				m_xpos = p_parent->m_sidelength / 4.0;
+				m_xpos += p_parent->m_xpos;
+				m_ypos = p_parent->m_sidelength / 4.0;
+				m_ypos += p_parent->m_ypos;
+				break;
 
-            case BaseQuadtreeNode::SouthEastNode:
+			case BaseQuadtreeNode::SouthEastNode:
 
-                m_xpos = p_parent->m_sidelength / 4.0;
-                m_xpos += p_parent->m_xpos;
-                m_ypos = -p_parent->m_sidelength / 4.0;
-                m_ypos += p_parent->m_ypos;
-                break;
+				m_xpos = p_parent->m_sidelength / 4.0;
+				m_xpos += p_parent->m_xpos;
+				m_ypos = -p_parent->m_sidelength / 4.0;
+				m_ypos += p_parent->m_ypos;
+				break;
 
-            case BaseQuadtreeNode::SouthWestNode:
+			case BaseQuadtreeNode::SouthWestNode:
 
-                m_xpos = -p_parent->m_sidelength / 4.0;
-                m_xpos += p_parent->m_xpos;
-                m_ypos = -p_parent->m_sidelength / 4.0;
-                m_ypos += p_parent->m_ypos;
-                break;
+				m_xpos = -p_parent->m_sidelength / 4.0;
+				m_xpos += p_parent->m_xpos;
+				m_ypos = -p_parent->m_sidelength / 4.0;
+				m_ypos += p_parent->m_ypos;
+				break;
 
-            default:
-                m_xpos = 0.0; m_ypos = 0.0;
-                break;
-        }       
-    }
+			default:
+				m_xpos = 0.0; m_ypos = 0.0;
+				break;
+		}       
+	}
 
 	build();
 }
@@ -126,12 +126,12 @@ void Patch::build( void )
 		for( long j = 0; j < m_resolution; j++ )
 		{
 			xcurr = j * interval - m_sidelength / 2.0;
-            xcurr += m_xpos;
+			xcurr += m_xpos;
 
 			ycurr = i * interval - m_sidelength / 2.0;
-            ycurr += m_ypos;
+			ycurr += m_ypos;
 			
-            Vector coords, coords2;
+			Vector coords, coords2;
 			Vertex vertex;
 
 			switch( m_orientation )
@@ -178,15 +178,15 @@ void Patch::build( void )
 					coords[2] = -xcurr;
 					break;
 			}
-            
-            cubetosphere( coords, coords2 );
+			
+			cubetosphere( coords, coords2 );
 
-            coords2.Scale( m_ray );
+			coords2.Scale( m_ray );
 
 
-            vertex.x = coords2[0];
-            vertex.y = coords2[1];
-            vertex.z = coords2[2];
+			vertex.x = coords2[0];
+			vertex.y = coords2[1];
+			vertex.z = coords2[2];
 			AddVertex( vertex );
 		}
 	}
@@ -225,11 +225,11 @@ void Patch::GetName( dsstring& p_name )
 
 dsreal Patch::GetSideLength( void )
 {
-    return m_sidelength;
+	return m_sidelength;
 }
 
 void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos )
 {
-    p_xpos = m_xpos;
-    p_ypos = m_ypos;
+	p_xpos = m_xpos;
+	p_ypos = m_ypos;
 }
