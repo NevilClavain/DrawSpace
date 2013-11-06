@@ -20,54 +20,32 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
+#ifndef _DRAWABLE_H_
+#define _DRAWABLE_H_
 
-#include "tracedefs.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
-#include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "transformation.h"
-#include "timemanager.h"
-#include "transformation.h"
 #include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
 #include "renderer.h"
-#include "drawable.h"
-#include "fx.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "ac3dmesheimport.h"
-#include "cbfgfontimport.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "chunk_node.h"
-#include "memalloc.h"
-#include "events.h"
-#include "camera.h"
-#include "fpsmovement.h"
-#include "quadtree.h"
-#include "misc_utils.h"
-#include "planet_body.h"
+
+namespace DrawSpace
+{
+namespace Interface
+{
+class Drawable : public Core::TransformNode
+{
+public:
+    Drawable( const dsstring& p_name ) : TransformNode( p_name )
+    {
+    };
+
+    virtual void GetDescr( dsstring& p_descr ) = 0;
+    virtual void DumpMemoryAllocs( void ) = 0;
+    virtual void SetRenderer( Renderer * p_renderer ) = 0;
+	virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
+	virtual bool LoadAssets( void ) = 0;
+
+
+};
+}
+}
+
 #endif

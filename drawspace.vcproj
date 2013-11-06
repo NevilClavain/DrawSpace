@@ -431,6 +431,10 @@
 			Name="interface"
 			>
 			<File
+				RelativePath=".\src\drawable.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\fontimport.h"
 				>
 			</File>
