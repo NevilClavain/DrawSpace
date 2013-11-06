@@ -40,8 +40,8 @@ public:
     virtual void GetDescr( dsstring& p_descr ) = 0;
     virtual void DumpMemoryAllocs( void ) = 0;
     virtual void SetRenderer( Renderer * p_renderer ) = 0;
-	virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
-	virtual bool LoadAssets( void ) = 0;
+    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
+    virtual bool LoadAssets( void ) = 0;
 
 
 };
