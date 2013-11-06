@@ -53,7 +53,7 @@ bool Face::Init( int p_orientation )
 
 void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
 {
-	DrawSpace::Interface::Renderer* renderer = Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+	DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
 	for( std::map<dsstring, Utils::BaseQuadtreeNode*>::iterator it = m_patchleafs.begin(); it != m_patchleafs.end(); ++it )
 	{
@@ -76,7 +76,7 @@ void Face::Split( const dsstring& p_patchname )
 
 void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {
-	DrawSpace::Interface::Renderer* renderer = Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+	DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
 	if( NULL == m_rootpatch )
 	{

@@ -32,7 +32,7 @@ using namespace DrawSpace::Interface;
 
 Text::Text( Core::Font* p_font ) : m_font( p_font ), m_height( 0.5 ), m_x( 0.0 ), m_y( 0.0 )
 {
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
 }
 
@@ -176,7 +176,7 @@ bool Text::LoadAssets( void )
     }
     SetTexture( texture, 0 );
 
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     if( false == renderer->CreateRenderingNode( this ) )
     {
         return false;

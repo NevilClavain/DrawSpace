@@ -38,7 +38,7 @@ bool LoadRendererPlugin( const dsstring& p_file )
         return false;
     }
 
-    DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = renderer;
+    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = renderer;
     
     return true;
 }

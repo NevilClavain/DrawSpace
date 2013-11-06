@@ -84,7 +84,7 @@ bool Font::Build( const dsstring& p_texturefilepath, const dsstring& p_metricsfi
 
         (*it).second.image = _DRAWSPACE_NEW_( Image, Image( width, height, Vector( u1, v1 ), Vector( u2, v2 ), Vector( u3, v3 ), Vector( u4, v4 ) ) );
         
-        Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
         if( false == renderer->CreateRenderingNode( (*it).second.image ) )
         {
             return false;

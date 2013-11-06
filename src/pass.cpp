@@ -54,7 +54,7 @@ RenderingQueue* Pass::GetRenderingQueue( void )
 
 void Pass::CreateViewportQuad( void )
 {
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
     renderer->GetRenderCharacteristics( renderer_characteristics );
     m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_name + dsstring( "/viewportquad" ), renderer_characteristics.width_viewport, renderer_characteristics.height_viewport ) );
@@ -90,7 +90,7 @@ FinalPass::~FinalPass( void )
 IntermediatePass::IntermediatePass( const dsstring& p_name ) : Pass( p_name )
 {
     //////// creation texture target
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
     DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
     renderer->GetRenderCharacteristics( renderer_characteristics );

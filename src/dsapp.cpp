@@ -34,10 +34,10 @@ using namespace DrawSpace::Interface;
 
 App* App::m_base_instance = NULL;
 
-DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>* 	DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::m_instance = NULL;
+DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>* 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::m_instance = NULL;
 /*
 TODO LATER
-DrawSpace::Core::Plugin<DrawSpace::Interface::Physic>* 		DrawSpace::Core::Plugin<DrawSpace::Interface::Physic>::m_instance = NULL;
+DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Physic>* 		DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Physic>::m_instance = NULL;
 */
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -417,7 +417,7 @@ void App::IdleApp( void )
 bool App::InitRenderer( void )
 {
     _DSDEBUG( logger, "begin" )
-    DrawSpace::Interface::Renderer* renderer = Plugin<Renderer>::GetInstance()->m_interface;
+    DrawSpace::Interface::Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
     if( false == renderer->Init( m_hwnd, m_w_fullscreen, m_w_width, m_w_height ) )
     {
@@ -441,7 +441,7 @@ bool App::InitRenderer( void )
 
 void App::StopRenderer( void )
 {
-    Plugin<Renderer>::GetInstance()->m_interface->Release();
+    SingletonPlugin<Renderer>::GetInstance()->m_interface->Release();
 }
 
 void App::GetRenderPluginName( dsstring& p_plugin )

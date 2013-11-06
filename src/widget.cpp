@@ -41,7 +41,7 @@ m_mouserightbuttondown_handler( NULL ),
 m_mouseleftbuttonup_handler( NULL ),
 m_mouseleftbuttondown_handler( NULL )
 {
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
 
     if( NULL == m_parent )

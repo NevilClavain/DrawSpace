@@ -58,7 +58,7 @@ RenderingQueue::~RenderingQueue( void )
 
 void RenderingQueue::Draw( void )
 {
-    Renderer* renderer = Plugin<Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
     if( m_target )
     {

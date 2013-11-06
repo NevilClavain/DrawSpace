@@ -31,27 +31,27 @@ namespace DrawSpace
 namespace Core
 {
 template<typename base>
-class Plugin
+class SingletonPlugin
 {
 protected:
-    static Plugin* m_instance;
+    static SingletonPlugin* m_instance;
 
-    Plugin() 
+    SingletonPlugin() 
     { 
     };
 
 public:
     base* m_interface;
 
-    ~Plugin()
+    ~SingletonPlugin()
     {
     }
 
-    static Plugin* GetInstance( void )
+    static SingletonPlugin* GetInstance( void )
     {
         if( NULL == m_instance )
         {
-            m_instance = _DRAWSPACE_NEW_( Plugin, Plugin );
+            m_instance = _DRAWSPACE_NEW_( SingletonPlugin, SingletonPlugin );
         }
         return m_instance;
     }

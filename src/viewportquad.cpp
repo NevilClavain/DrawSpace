@@ -71,7 +71,7 @@ ViewportQuad::~ViewportQuad( void )
 
 void ViewportQuad::OnDraw( void )
 {
-    Renderer* renderer = Plugin<Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
     DrawSpace::Utils::Matrix view;
     view.Identity();
     renderer->RenderNodeMeshe( m_globaltransformation, view, this, "0" );
@@ -79,7 +79,7 @@ void ViewportQuad::OnDraw( void )
 
 bool ViewportQuad::LoadAssets( void )
 {
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     if( false == renderer->CreateRenderingNode( this ) )
     {
         return false;

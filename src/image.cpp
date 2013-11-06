@@ -30,7 +30,7 @@ using namespace DrawSpace::Utils;
 
 Image::Image( long p_virtual_width, long p_virtual_height ) : /*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 )
 {
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
 
     m_width = ( (dsreal)p_virtual_width / (dsreal)DRAWSPACE_GUI_WIDTH ) * m_rc.width_viewport;
@@ -73,7 +73,7 @@ Image::Image( long p_virtual_width, long p_virtual_height ) : /*m_width( p_width
 Image::Image( long p_virtual_width, long p_virtual_height, Utils::Vector& p_uv1, Utils::Vector& p_uv2, Utils::Vector& p_uv3, Utils::Vector& p_uv4 ) : 
 /*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 )
 {
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
 
     m_width = ( (dsreal)p_virtual_width / (dsreal)DRAWSPACE_GUI_WIDTH ) * m_rc.width_viewport;
@@ -115,7 +115,7 @@ Image::Image( long p_virtual_width, long p_virtual_height, Utils::Vector& p_uv1,
 
 Image::Image( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 )
 {
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
 
     Vertex v1, v2, v3, v4;
@@ -155,7 +155,7 @@ Image::Image( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( 
 Image::Image( dsreal p_width, dsreal p_height, Utils::Vector& p_uv1, Utils::Vector& p_uv2, Utils::Vector& p_uv3, Utils::Vector& p_uv4 ) : 
 m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 )
 {
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
 
     Vertex v1, v2, v3, v4;
@@ -217,13 +217,13 @@ void Image::OnDraw( void )
     chain.BuildResult();
     chain.GetResult( &world );
 
-    Renderer* renderer = Plugin<Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
     renderer->RenderNodeMeshe( view, world, this, "0" );
 }
 
 bool Image::LoadAssets( void )
 {
-    Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     if( false == renderer->CreateRenderingNode( this ) )
     {
         return false;

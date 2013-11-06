@@ -40,7 +40,7 @@ ChunkNode::~ChunkNode( void )
 
 void ChunkNode::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     DrawSpace::Utils::Matrix view;
     m_scenegraph->GetCurrentCameraView( view );
     renderer->RenderNodeMeshe( m_globaltransformation, view, p_rendering_node, "0" );
@@ -75,7 +75,7 @@ void ChunkNode::OnRegister( Scenegraph* p_scenegraph )
 
 bool ChunkNode::LoadAssets( void )
 {
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::Plugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
     for( std::map<dsstring, Core::RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
