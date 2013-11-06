@@ -64,8 +64,10 @@ protected:
 
 	void build( void );
 
+    void cubetosphere( const Utils::Vector& p_in, Utils::Vector& p_out );
+
 public:
-	Patch( int p_resolution, dsreal p_sidelength, dsreal p_ray, dsreal p_xpos, dsreal p_ypos, int p_orientation, const dsstring& p_name );
+	Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid );
 	virtual ~Patch( void );
 
 	void SetNeighbour( Patch* p_patch, int p_id );

@@ -82,7 +82,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 	{
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-		Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, 10.0, 5.0, 0.0, 0.0, m_orientation, ".0" ) );		
+		Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, 5.0, m_orientation, ".0", NULL, -1 ) );
 		root->SetContent( patch );
 
 	    dsstring patch_name;
@@ -100,53 +100,8 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         dsstring node_name = parent_name + dsstring( "." );
         char dstbuf[32];
         node_name += dsstring( itoa( node->GetId(), dstbuf, 10 ) );
-
-        dsreal parent_sidelenght = parent->GetContent()->GetSideLength();
-        dsreal parent_x, parent_y;
-        parent->GetContent()->GetPos( parent_x, parent_y );
         
-
-        dsreal xpos, ypos;
-        switch( node->GetId() )
-        {
-            case BaseQuadtreeNode::NorthWestNode:
-
-                xpos = -parent_sidelenght / 4.0;
-                xpos += parent_x;
-                ypos = parent_sidelenght / 4.0;
-                ypos += parent_y;
-                break;
-
-            case BaseQuadtreeNode::NorthEastNode:
-
-                xpos = parent_sidelenght / 4.0;
-                xpos += parent_x;
-                ypos = parent_sidelenght / 4.0;
-                ypos += parent_y;
-                break;
-
-            case BaseQuadtreeNode::SouthEastNode:
-
-                xpos = parent_sidelenght / 4.0;
-                xpos += parent_x;
-                ypos = -parent_sidelenght / 4.0;
-                ypos += parent_y;
-                break;
-
-            case BaseQuadtreeNode::SouthWestNode:
-
-                xpos = -parent_sidelenght / 4.0;
-                xpos += parent_x;
-                ypos = -parent_sidelenght / 4.0;
-                ypos += parent_y;
-                break;
-
-            default:
-                xpos = 0.0; ypos = 0.0;
-                break;
-        }
-        
-		Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, parent_sidelenght / 2.0, 5.0, xpos, ypos, m_orientation, node_name ) );		
+		Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( 9, 5.0, m_orientation, node_name, parent->GetContent(), node->GetId() ) );		
 		node->SetContent( patch );
 
 	    dsstring patch_name;

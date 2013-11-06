@@ -21,24 +21,72 @@
 */
 
 #include "planet_patch.h"
+#include "quadtree.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 using namespace DrawSpace::Planet;
 
-Patch::Patch( int p_resolution, dsreal p_sidelength, dsreal p_ray, dsreal p_xpos, dsreal p_ypos, int p_orientation, const dsstring& p_name ) : 
+Patch::Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid ) : 
 m_resolution( p_resolution ), 
 m_orientation( p_orientation ),
-m_sidelength( p_sidelength ),
 m_name( p_name ),
-m_xpos( p_xpos ),
-m_ypos( p_ypos ),
 m_ray( p_ray )
 {
 	for( long i = 0; i < 8; i++ )
 	{
 		m_neighbours[i] = NULL;
 	}
+
+    if( NULL == p_parent )
+    {
+        m_xpos = m_ypos = 0.0;
+        m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
+    }
+    else
+    {
+        m_sidelength = p_parent->m_sidelength / 2.0;
+
+        switch( p_parentnodeid )
+        {
+            case BaseQuadtreeNode::NorthWestNode:
+
+                m_xpos = -p_parent->m_sidelength / 4.0;
+                m_xpos += p_parent->m_xpos;
+                m_ypos = p_parent->m_sidelength / 4.0;
+                m_ypos += p_parent->m_ypos;
+                break;
+
+            case BaseQuadtreeNode::NorthEastNode:
+
+                m_xpos = p_parent->m_sidelength / 4.0;
+                m_xpos += p_parent->m_xpos;
+                m_ypos = p_parent->m_sidelength / 4.0;
+                m_ypos += p_parent->m_ypos;
+                break;
+
+            case BaseQuadtreeNode::SouthEastNode:
+
+                m_xpos = p_parent->m_sidelength / 4.0;
+                m_xpos += p_parent->m_xpos;
+                m_ypos = -p_parent->m_sidelength / 4.0;
+                m_ypos += p_parent->m_ypos;
+                break;
+
+            case BaseQuadtreeNode::SouthWestNode:
+
+                m_xpos = -p_parent->m_sidelength / 4.0;
+                m_xpos += p_parent->m_xpos;
+                m_ypos = -p_parent->m_sidelength / 4.0;
+                m_ypos += p_parent->m_ypos;
+                break;
+
+            default:
+                m_xpos = 0.0; m_ypos = 0.0;
+                break;
+        }       
+    }
 
 	build();
 }
@@ -57,6 +105,17 @@ Patch* Patch::GetNeighbour( int p_id )
 	return m_neighbours[p_id];
 }
 
+void Patch::cubetosphere( const Vector& p_in, Vector& p_out )
+{
+	dsreal x = p_in[0];
+	dsreal y = p_in[1];
+	dsreal z = p_in[2];
+
+	p_out[0] = x * sqrt( 1.0 - y * y * 0.5 - z * z * 0.5 + y * y * z * z / 3.0 );
+	p_out[1] = y * sqrt( 1.0 - z * z * 0.5 - x * x * 0.5 + x * x * z * z / 3.0 );
+	p_out[2] = z * sqrt( 1.0 - x * x * 0.5 - y * y * 0.5 + x * x * y * y / 3.0 );
+}
+
 void Patch::build( void )
 {
 	dsreal xcurr, ycurr;
@@ -72,53 +131,62 @@ void Patch::build( void )
 			ycurr = i * interval - m_sidelength / 2.0;
             ycurr += m_ypos;
 			
+            Vector coords, coords2;
 			Vertex vertex;
 
 			switch( m_orientation )
 			{
 				case TopPlanetFace:
 
-					vertex.x = xcurr;
-					vertex.y = m_ray;
-					vertex.z = -ycurr;
+					coords[0] = xcurr;
+					coords[1] = 1.0;
+					coords[2] = -ycurr;
 					break;
 
 				case BottomPlanetFace:
 
-					vertex.x = xcurr;
-					vertex.y = -m_ray;
-					vertex.z = ycurr;
+					coords[0] = xcurr;
+					coords[1] = -1.0;
+					coords[2] = ycurr;
 					break;
 
 				case FrontPlanetFace:
 
-					vertex.x = xcurr;
-					vertex.y = ycurr;
-					vertex.z = m_ray;
+					coords[0] = xcurr;
+					coords[1] = ycurr;
+					coords[2] = 1.0;
 					break;
 
 				case RearPlanetFace:
 
-					vertex.x = -xcurr;
-					vertex.y = ycurr;
-					vertex.z = -m_ray;
+					coords[0] = -xcurr;
+					coords[1] = ycurr;
+					coords[2] = -1.0;
 					break;
 					
 				case LeftPlanetFace:
 
-					vertex.x = -m_ray;
-					vertex.y = ycurr;
-					vertex.z = xcurr;
+					coords[0] = -1.0;
+					coords[1] = ycurr;
+					coords[2] = xcurr;
 					break;
 
 				case RightPlanetFace:
 
-					vertex.x = m_ray;
-					vertex.y = ycurr;
-					vertex.z = -xcurr;
+					coords[0] = 1.0;
+					coords[1] = ycurr;
+					coords[2] = -xcurr;
 					break;
 			}
+            
+            cubetosphere( coords, coords2 );
 
+            coords2.Scale( m_ray );
+
+
+            vertex.x = coords2[0];
+            vertex.y = coords2[1];
+            vertex.z = coords2[2];
 			AddVertex( vertex );
 		}
 	}
