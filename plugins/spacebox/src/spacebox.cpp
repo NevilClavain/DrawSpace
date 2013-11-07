@@ -29,37 +29,184 @@ using namespace DrawSpace::Core;
 
 Spacebox::Spacebox( void ) : m_renderer( NULL ), m_scenegraph( NULL )
 {
+    Vertex v1, v2, v3, v4;
+
     for( long i = 0; i < 6; i++ )
     {
         m_meshes[i] = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-
-        // TODO
         switch( i )
         {
             case FrontQuad:
 
+                v1.x = -0.5;
+                v1.y = 0.5;
+                v1.z = -0.5;
+                v1.tu[0] = 0.0;
+                v1.tv[0] = 0.0;
+
+                v2.x = 0.5;
+                v2.y = 0.5;
+                v2.z = -0.5;
+                v2.tu[0] = 1.0;
+                v2.tv[0] = 0.0;
+
+                v3.x = 0.5;
+                v3.y = -0.5;
+                v3.z = -0.5;
+                v3.tu[0] = 1.0;
+                v3.tv[0] = 1.0;
+
+                v4.x = -0.5;
+                v4.y = -0.5;
+                v4.z = -0.5;
+                v4.tu[0] = 0.0;
+                v4.tv[0] = 1.0;
                 break;
 
             case RearQuad:
 
+                v1.x = 0.5;
+                v1.y = 0.5;
+                v1.z = 0.5;
+                v1.tu[0] = 0.0;
+                v1.tv[0] = 0.0;
+
+                v2.x = -0.5;
+                v2.y = 0.5;
+                v2.z = 0.5;
+                v2.tu[0] = 1.0;
+                v2.tv[0] = 0.0;
+
+                v3.x = -0.5;
+                v3.y = -0.5;
+                v3.z = 0.5;
+                v3.tu[0] = 1.0;
+                v3.tv[0] = 1.0;
+
+                v4.x = 0.5;
+                v4.y = -0.5;
+                v4.z = 0.5;
+                v4.tu[0] = 0.0;
+                v4.tv[0] = 1.0;
                 break;
 
             case LeftQuad:
+
+                v1.x = -0.5;
+                v1.y = 0.5;
+                v1.z = 0.5;
+                v1.tu[0] = 0.0;
+                v1.tv[0] = 0.0;
+
+                v2.x = -0.5;
+                v2.y = 0.5;
+                v2.z = -0.5;
+                v2.tu[0] = 1.0;
+                v2.tv[0] = 0.0;
+
+                v3.x = -0.5;
+                v3.y = -0.5;
+                v3.z = -0.5;
+                v3.tu[0] = 1.0;
+                v3.tv[0] = 1.0;
+
+                v4.x = -0.5;
+                v4.y = -0.5;
+                v4.z = 0.5;
+                v4.tu[0] = 0.0;
+                v4.tv[0] = 1.0;
 
                 break;
 
             case RightQuad:
 
+                v1.x = 0.5;
+                v1.y = 0.5;
+                v1.z = -0.5;
+                v1.tu[0] = 0.0;
+                v1.tv[0] = 0.0;
+
+                v2.x = 0.5;
+                v2.y = 0.5;
+                v2.z = 0.5;
+                v2.tu[0] = 1.0;
+                v2.tv[0] = 0.0;
+
+                v3.x = 0.5;
+                v3.y = -0.5;
+                v3.z = 0.5;
+                v3.tu[0] = 1.0;
+                v3.tv[0] = 1.0;
+
+                v4.x = 0.5;
+                v4.y = -0.5;
+                v4.z = -0.5;
+                v4.tu[0] = 0.0;
+                v4.tv[0] = 1.0;
+
                 break;
 
             case TopQuad:
+
+                v1.x = -0.5;
+                v1.y = 0.5;
+                v1.z = 0.5;
+                v1.tu[0] = 0.0;
+                v1.tv[0] = 0.0;
+
+                v2.x = 0.5;
+                v2.y = 0.5;
+                v2.z = 0.5;
+                v2.tu[0] = 1.0;
+                v2.tv[0] = 0.0;
+
+                v3.x = 0.5;
+                v3.y = 0.5;
+                v3.z = -0.5;
+                v3.tu[0] = 1.0;
+                v3.tv[0] = 1.0;
+
+                v4.x = -0.5;
+                v4.y = 0.5;
+                v4.z = -0.5;
+                v4.tu[0] = 0.0;
+                v4.tv[0] = 1.0;
 
                 break;
 
             case BottomQuad:
 
+                v1.x = -0.5;
+                v1.y = -0.5;
+                v1.z = -0.5;
+                v1.tu[0] = 0.0;
+                v1.tv[0] = 0.0;
+
+                v2.x = 0.5;
+                v2.y = -0.5;
+                v2.z = -0.5;
+                v2.tu[0] = 1.0;
+                v2.tv[0] = 0.0;
+
+                v3.x = 0.5;
+                v3.y = -0.5;
+                v3.z = 0.5;
+                v3.tu[0] = 1.0;
+                v3.tv[0] = 1.0;
+
+                v4.x = -0.5;
+                v4.y = -0.5;
+                v4.z = 0.5;
+                v4.tu[0] = 0.0;
+                v4.tv[0] = 1.0;
+
                 break;
         }
+
+        m_meshes[i]->AddVertex( v1 );
+        m_meshes[i]->AddVertex( v2 );
+        m_meshes[i]->AddVertex( v3 );
+        m_meshes[i]->AddVertex( v4 );
 
         m_meshes[i]->AddTriangle( Triangle( 0, 1, 3 ) );
         m_meshes[i]->AddTriangle( Triangle( 1, 2, 3 ) );
@@ -87,13 +234,35 @@ void Spacebox::SetRenderer( Renderer * p_renderer )
 
 void Spacebox::OnRegister( Scenegraph* p_scenegraph )
 {
-    // TODO
+    for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    {
+        Pass* current_pass = p_scenegraph->GetPass( (*it).first );
+        if( current_pass != NULL )
+        {
+            for( long i = 0; i < 6; i++ )
+            {
+                current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
+            }
+        }
+    }
 }
 
 bool Spacebox::LoadAssets( void )
 {
-    // TODO
-
+    for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    {
+        for( long i = 0; i < 6; i++ )
+        {
+		    if( false == m_renderer->CreateRenderingNode( (*it).second.nodes[i] ) )
+		    {
+			    return false;
+		    }
+            if( false == m_renderer->AddMesheToNode( m_meshes[i], (*it).second.nodes[i], m_nodes_mesheid[(*it).second.nodes[i]] ) )
+            {
+                return false;
+            }
+        }
+    }
     return false;
 }
 
@@ -186,8 +355,38 @@ void Spacebox::RegisterPassSlot( const dsstring p_passname )
     m_passesnodes[p_passname] = nodeset;
 }
 
-void Spacebox::GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid )
+DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid )
 {
-    // TODO
+    if( 0 == m_passesnodes.count( p_passname ) )
+    {
+        return NULL;
+    }
+
+    if( p_nodeid == "front" )
+    {
+        return m_passesnodes[p_passname].nodes[FrontQuad];
+    }
+    else if( p_nodeid == "rear" )
+    {
+        return m_passesnodes[p_passname].nodes[RearQuad];
+    }
+    else if( p_nodeid == "left" )
+    {
+        return m_passesnodes[p_passname].nodes[LeftQuad];
+    }
+    else if( p_nodeid == "right" )
+    {
+        return m_passesnodes[p_passname].nodes[RightQuad];
+    }
+    else if( p_nodeid == "top" )
+    {
+        return m_passesnodes[p_passname].nodes[TopQuad];
+    }
+    else if( p_nodeid == "bottom" )
+    {
+        return m_passesnodes[p_passname].nodes[BottomQuad];
+    }
+    
+    return NULL;
 }
 
