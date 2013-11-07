@@ -556,10 +556,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\quaternion.h"
-			>
-		</File>
-		<File
 			RelativePath=".\src\scenegraph.cpp"
 			>
 		</File>
