@@ -26,9 +26,34 @@
 #include <drawable.h>
 #include <scenegraph.h>
 
+
 class Spacebox : public DrawSpace::Interface::Drawable
 {
 protected:
+
+    typedef DrawSpace::Core::CallBack<Spacebox, void, DrawSpace::Core::RenderingNode*>   RenderingNodeDrawCallback;
+
+    static const int    FrontQuad    = 0;
+	static const int    RearQuad     = 1;
+	static const int    LeftQuad     = 2;
+	static const int    RightQuad    = 3;
+	static const int    TopQuad      = 4;
+	static const int    BottomQuad   = 5;
+
+	typedef struct
+	{
+        DrawSpace::Core::RenderingNode*        nodes[6];
+
+	} NodesSet;
+
+    DrawSpace::Interface::Renderer*                         m_renderer;
+    DrawSpace::Core::Meshe*                                 m_meshes[6];
+    std::map<dsstring, NodesSet>                            m_passesnodes;
+    std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
+    DrawSpace::Scenegraph*                                  m_scenegraph;
+    std::map<DrawSpace::Core::RenderingNode*, dsstring>     m_nodes_mesheid;
+
+    void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
 public:
     Spacebox( void );
