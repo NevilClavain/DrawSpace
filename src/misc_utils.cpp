@@ -22,13 +22,15 @@
 
 
 #include "misc_utils.h"
-
 #include "memalloc.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Interface;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Gui;
+
+static std::map<dsstring, PlugInManager<Drawable>::Handle> m_drawableplugins;
 
 TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_width, long p_height, const Vector& p_color, const dsstring& p_name )
 {
@@ -156,4 +158,30 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
     text_widget->SetPassTargetClearingColor( 0, 0, 0 );
 
     return text_widget;
+}
+
+bool LoadDrawablePlugin( const dsstring& p_path, const dsstring& p_pluginalias )
+{
+    PlugInManager<Drawable>::Handle pihandle;
+    PluginManagerStatus pistatus = PlugInManager<Drawable>::LoadPlugin( p_path.c_str(), pihandle );
+    if( pistatus != PIM_OK )
+    {
+        return false;
+    }
+    m_drawableplugins[p_pluginalias] = pihandle;
+    return true;
+}
+
+Interface::Drawable* InstanciateDrawableFromPlugin( const dsstring& p_pluginalias )
+{
+    Drawable* drawable;
+
+    if( m_drawableplugins.count( p_pluginalias ) > 0 )
+    {
+        if( PlugInManager<Drawable>::Instanciate( m_drawableplugins[p_pluginalias], &drawable ) != PIM_OK )
+        {
+            return drawable;
+        }        
+    }
+    return NULL;
 }

@@ -33,10 +33,6 @@ namespace Interface
 class Drawable : public Core::TransformNode
 {
 public:
-    Drawable( const dsstring& p_name ) : TransformNode( p_name )
-    {
-    };
-
     virtual void GetDescr( dsstring& p_descr ) = 0;
     virtual void DumpMemoryAllocs( void ) = 0;
     virtual void SetRenderer( Renderer * p_renderer ) = 0;
@@ -45,8 +41,6 @@ public:
     virtual Core::Meshe* GetMeshe( const dsstring& p_mesheid ) = 0;
     virtual void RegisterPassSlot( const dsstring p_passname ) = 0;
     virtual void GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid ) = 0;
-
-
 };
 }
 }

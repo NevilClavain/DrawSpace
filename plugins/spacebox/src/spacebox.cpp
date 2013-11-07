@@ -20,47 +20,60 @@
 *                                                                          
 */
 
-#ifndef _TRANFORMNODE_H_
-#define _TRANFORMNODE_H_
+#include "spacebox.h"
+#include "memalloc.h"
 
-#include "drawspace_commons.h"
-#include "matrix.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Interface;
+using namespace DrawSpace::Core;
 
-namespace DrawSpace
+Spacebox::Spacebox( void )
 {
-class Scenegraph;
-namespace Core
-{
-class TransformNode
-{
-protected:
 
-    dsstring                        m_scenename;
-
-    Utils::Matrix                   m_localtransformation;
-    Utils::Matrix                   m_globaltransformation;
-    
-
-    TransformNode*                  m_parent;
-    std::vector<TransformNode*>     m_children;
-
-public:
-    TransformNode( const dsstring& p_name );
-    TransformNode( void );
-    virtual ~TransformNode( void );
-
-    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
-
-    virtual void AddChild( TransformNode* p_node );
-    virtual void ComputeFinalTransform( void );
-    virtual void SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
-    virtual void GetName( dsstring& p_name );
-    virtual void SetName( const dsstring& p_name );
-    virtual void GetSceneWorld( Utils::Matrix& p_mat );
-    
-
-    friend class TransformQueue;
-};
 }
+
+Spacebox::~Spacebox( void )
+{
+
 }
-#endif
+
+void Spacebox::GetDescr( dsstring& p_descr )
+{
+
+}
+
+void Spacebox::DumpMemoryAllocs( void )
+{
+
+}
+
+void Spacebox::SetRenderer( Renderer * p_renderer )
+{
+
+}
+
+void Spacebox::OnRegister( Scenegraph* p_scenegraph )
+{
+
+}
+
+bool Spacebox::LoadAssets( void )
+{
+    return false;
+}
+
+Core::Meshe* Spacebox::GetMeshe( const dsstring& p_mesheid )
+{
+    return NULL;
+}
+
+void Spacebox::RegisterPassSlot( const dsstring p_passname )
+{
+
+}
+
+void Spacebox::GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid )
+{
+
+}
+

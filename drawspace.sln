@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspace", "drawspace.vcpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "plugins\d3d9\d3d9.vcproj", "{C42D356E-7422-4814-87DC-FD4EE300A967}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spacebox", "plugins\spacebox\spacebox.vcproj", "{572E3D04-EF85-444D-9DD2-46D8D3F220E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{C42D356E-7422-4814-87DC-FD4EE300A967}.Debug|Win32.Build.0 = Debug|Win32
 		{C42D356E-7422-4814-87DC-FD4EE300A967}.Release|Win32.ActiveCfg = Release|Win32
 		{C42D356E-7422-4814-87DC-FD4EE300A967}.Release|Win32.Build.0 = Release|Win32
+		{572E3D04-EF85-444D-9DD2-46D8D3F220E7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{572E3D04-EF85-444D-9DD2-46D8D3F220E7}.Debug|Win32.Build.0 = Debug|Win32
+		{572E3D04-EF85-444D-9DD2-46D8D3F220E7}.Release|Win32.ActiveCfg = Release|Win32
+		{572E3D04-EF85-444D-9DD2-46D8D3F220E7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -31,8 +31,13 @@ m_parent( NULL ),
 m_scenename( p_name )
 {
     m_localtransformation.Identity();
+    m_globaltransformation.Identity();    
+}
+
+TransformNode::TransformNode( void ) : m_parent( NULL )
+{
+    m_localtransformation.Identity();
     m_globaltransformation.Identity();
-    
 }
 
 TransformNode::~TransformNode( void )
@@ -71,6 +76,11 @@ void TransformNode::SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat )
 void TransformNode::GetName( dsstring& p_name )
 {
     p_name = m_scenename;
+}
+
+void TransformNode::SetName( const dsstring& p_name )
+{
+    m_scenename = p_name;
 }
 
 void TransformNode::GetSceneWorld( DrawSpace::Utils::Matrix& p_mat )

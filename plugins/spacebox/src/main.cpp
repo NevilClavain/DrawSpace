@@ -20,47 +20,13 @@
 *                                                                          
 */
 
-#ifndef _TRANFORMNODE_H_
-#define _TRANFORMNODE_H_
+#include "spacebox.h"
 
-#include "drawspace_commons.h"
-#include "matrix.h"
-
-namespace DrawSpace
+extern "C"
 {
-class Scenegraph;
-namespace Core
+__declspec(dllexport) DrawSpace::Interface::Drawable* PIFactory( void )
 {
-class TransformNode
-{
-protected:
-
-    dsstring                        m_scenename;
-
-    Utils::Matrix                   m_localtransformation;
-    Utils::Matrix                   m_globaltransformation;
-    
-
-    TransformNode*                  m_parent;
-    std::vector<TransformNode*>     m_children;
-
-public:
-    TransformNode( const dsstring& p_name );
-    TransformNode( void );
-    virtual ~TransformNode( void );
-
-    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
-
-    virtual void AddChild( TransformNode* p_node );
-    virtual void ComputeFinalTransform( void );
-    virtual void SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
-    virtual void GetName( dsstring& p_name );
-    virtual void SetName( const dsstring& p_name );
-    virtual void GetSceneWorld( Utils::Matrix& p_mat );
-    
-
-    friend class TransformQueue;
-};
+    return new Spacebox;
 }
 }
-#endif
+
