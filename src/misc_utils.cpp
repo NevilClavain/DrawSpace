@@ -160,7 +160,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
     return text_widget;
 }
 
-bool LoadDrawablePlugin( const dsstring& p_path, const dsstring& p_pluginalias )
+bool DrawSpace::Utils::LoadDrawablePlugin( const dsstring& p_path, const dsstring& p_pluginalias )
 {
     PlugInManager<Drawable>::Handle pihandle;
     PluginManagerStatus pistatus = PlugInManager<Drawable>::LoadPlugin( p_path.c_str(), pihandle );
@@ -172,7 +172,7 @@ bool LoadDrawablePlugin( const dsstring& p_path, const dsstring& p_pluginalias )
     return true;
 }
 
-Interface::Drawable* InstanciateDrawableFromPlugin( const dsstring& p_pluginalias )
+Interface::Drawable* DrawSpace::Utils::InstanciateDrawableFromPlugin( const dsstring& p_pluginalias )
 {
     Drawable* drawable;
 
@@ -183,5 +183,5 @@ Interface::Drawable* InstanciateDrawableFromPlugin( const dsstring& p_pluginalia
             return drawable;
         }        
     }
-    return NULL;
+    return drawable;
 }
