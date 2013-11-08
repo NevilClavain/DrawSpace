@@ -208,8 +208,8 @@ Spacebox::Spacebox( void ) : m_renderer( NULL ), m_scenegraph( NULL )
         m_meshes[i]->AddVertex( v3 );
         m_meshes[i]->AddVertex( v4 );
 
-        m_meshes[i]->AddTriangle( Triangle( 0, 1, 3 ) );
-        m_meshes[i]->AddTriangle( Triangle( 1, 2, 3 ) );
+        m_meshes[i]->AddTriangle( Triangle( 0, 3, 1 ) );
+        m_meshes[i]->AddTriangle( Triangle( 1, 3, 2 ) );
     }
 }
 
@@ -245,6 +245,7 @@ void Spacebox::OnRegister( Scenegraph* p_scenegraph )
             }
         }
     }
+    m_scenegraph = p_scenegraph;
 }
 
 bool Spacebox::LoadAssets( void )
@@ -263,7 +264,7 @@ bool Spacebox::LoadAssets( void )
             }
         }
     }
-    return false;
+    return true;
 }
 
 Core::Meshe* Spacebox::GetMeshe( const dsstring& p_mesheid )
@@ -300,7 +301,8 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
     DrawSpace::Utils::Matrix view;
     DrawSpace::Utils::Matrix world;
 
-    world.Identity();
+    world = m_globaltransformation;
+    world.ClearTranslation();
     m_scenegraph->GetCurrentCameraView( view );
     view.ClearTranslation();
 
