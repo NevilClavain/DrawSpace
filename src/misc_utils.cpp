@@ -185,3 +185,59 @@ Interface::Drawable* DrawSpace::Utils::InstanciateDrawableFromPlugin( const dsst
     }
     return drawable;
 }
+
+void DrawSpace::Utils::BuildSpaceboxFx( Interface::Drawable* p_spacebox, const dsstring& p_passname, const dsstring& p_nodeid )
+{
+    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+
+    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->GetShader( 0 )->SetText(
+
+        "float4x4 matWorldViewProjection: register(c0);"
+
+        "struct VS_INPUT"
+        "{"
+           "float4 Position : POSITION0;"
+           "float4 TexCoord0: TEXCOORD0;"              
+        "};"
+
+        "struct VS_OUTPUT"
+        "{"
+           "float4 Position : POSITION0;"
+           "float4 TexCoord0: TEXCOORD0;"
+        "};"
+
+        "VS_OUTPUT vs_main( VS_INPUT Input )"
+        "{"
+           "VS_OUTPUT Output;"
+
+           "Output.Position = mul( Input.Position, matWorldViewProjection );"
+           "Output.TexCoord0 = Input.TexCoord0;"
+              
+           "return( Output );"
+        "}"
+
+            );
+
+    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->GetShader( 1 )->SetText(
+
+        "sampler2D Texture0;"
+
+        "struct PS_INTPUT"
+        "{"
+           "float4 Position : POSITION0;"
+           "float4 TexCoord0: TEXCOORD0;"
+        "};"
+
+        "float4 ps_main( PS_INTPUT input ) : COLOR0"
+        "{"
+           "return tex2D( Texture0, input.TexCoord0 );"
+        "}"
+
+            );
+
+    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    
+}
+

@@ -38,6 +38,8 @@ Gui::TextWidget* BuildText( DrawSpace::Core::Font* p_font, long p_width, long p_
 bool LoadDrawablePlugin( const dsstring& p_path, const dsstring& p_pluginalias );
 Interface::Drawable* InstanciateDrawableFromPlugin( const dsstring& p_pluginalias );
 
+void BuildSpaceboxFx( Interface::Drawable* p_spacebox, const dsstring& p_passname, const dsstring& p_nodeid );
+
 }
 }
 
