@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spacebox", "plugins\spacebo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chunk", "plugins\chunk\chunk.vcproj", "{D2BFE9FC-07D2-458C-8A16-927D4949356F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "planetbuild", "plugins\planetbuild\planetbuild.vcproj", "{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{D2BFE9FC-07D2-458C-8A16-927D4949356F}.Debug|Win32.Build.0 = Debug|Win32
 		{D2BFE9FC-07D2-458C-8A16-927D4949356F}.Release|Win32.ActiveCfg = Release|Win32
 		{D2BFE9FC-07D2-458C-8A16-927D4949356F}.Release|Win32.Build.0 = Release|Win32
+		{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}.Debug|Win32.Build.0 = Debug|Win32
+		{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}.Release|Win32.ActiveCfg = Release|Win32
+		{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
