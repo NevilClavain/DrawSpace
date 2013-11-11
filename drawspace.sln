@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "plugins\d3d9\d3d9.v
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spacebox", "plugins\spacebox\spacebox.vcproj", "{572E3D04-EF85-444D-9DD2-46D8D3F220E7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chunk", "plugins\chunk\chunk.vcproj", "{D2BFE9FC-07D2-458C-8A16-927D4949356F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{572E3D04-EF85-444D-9DD2-46D8D3F220E7}.Debug|Win32.Build.0 = Debug|Win32
 		{572E3D04-EF85-444D-9DD2-46D8D3F220E7}.Release|Win32.ActiveCfg = Release|Win32
 		{572E3D04-EF85-444D-9DD2-46D8D3F220E7}.Release|Win32.Build.0 = Release|Win32
+		{D2BFE9FC-07D2-458C-8A16-927D4949356F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D2BFE9FC-07D2-458C-8A16-927D4949356F}.Debug|Win32.Build.0 = Debug|Win32
+		{D2BFE9FC-07D2-458C-8A16-927D4949356F}.Release|Win32.ActiveCfg = Release|Win32
+		{D2BFE9FC-07D2-458C-8A16-927D4949356F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
