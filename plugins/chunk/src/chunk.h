@@ -35,7 +35,7 @@ protected:
 
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshe;
-    std::map<dsstring, DrawSpace::Core::RenderingNode*>      m_passesnodes;
+    std::map<dsstring, DrawSpace::Core::RenderingNode*>     m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
     DrawSpace::Scenegraph*                                  m_scenegraph;
     
