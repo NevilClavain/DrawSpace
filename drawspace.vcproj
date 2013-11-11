@@ -512,14 +512,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\chunk_node.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\chunk_node.h"
-			>
-		</File>
-		<File
 			RelativePath=".\src\drawspace.h"
 			>
 		</File>

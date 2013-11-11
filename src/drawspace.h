@@ -62,7 +62,6 @@
 #include "text.h"
 #include "text_widget.h"
 #include "scenegraph.h"
-#include "chunk_node.h"
 #include "memalloc.h"
 #include "events.h"
 #include "camera.h"
