@@ -28,7 +28,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-Face::Face( DrawSpace::Interface::Renderer* p_renderer ): m_rootpatch( NULL ), m_renderer( p_renderer )
+Face::Face( PatchInstanciationHandler* p_handler ): m_rootpatch( NULL ), m_handler( p_handler )
 {
 }
 
@@ -39,7 +39,7 @@ Face::~Face( void )
 
 // create face's root patch
 bool Face::Init( int p_orientation )
-{
+{    
     m_orientation = p_orientation;
 
     InstanciationCallback* cb = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodeinstanciation ) );
@@ -48,6 +48,7 @@ bool Face::Init( int p_orientation )
     return true;
 }
 
+/*
 void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
 {
     for( std::map<dsstring, Utils::BaseQuadtreeNode*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
@@ -60,6 +61,7 @@ void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matr
         m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
     }
 }
+*/
 
 void Face::Split( const dsstring& p_patchname )
 {
@@ -80,9 +82,10 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         dsstring patch_name;
         patch->GetName( patch_name );
-        m_renderer->AddMesheToNode( patch, this, patch_name );
+        //m_renderer->AddMesheToNode( patch, this, patch_name );
 
         m_patches[patch_name] = patch;
+        (*m_handler)( m_orientation, patch );
     }
     else
     {
@@ -101,9 +104,10 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         dsstring patch_name;
         patch->GetName( patch_name );
-        m_renderer->AddMesheToNode( patch, this, patch_name );
+        //m_renderer->AddMesheToNode( patch, this, patch_name );
 
         m_patches[patch_name] = patch;
+        (*m_handler)( m_orientation, patch );
     }
 }
 

@@ -31,6 +31,12 @@ using namespace DrawSpace::Core;
 
 Body::Body( void ) : m_renderer( NULL ), m_scenegraph( NULL )
 {
+    PatchInstanciationCallback* cb = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &Body::on_patchinstanciation ) );
+
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( cb ) );
+    }
 }
 
 Body::~Body( void )
@@ -54,14 +60,14 @@ void Body::SetRenderer( DrawSpace::Interface::Renderer * p_renderer )
 
 void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
 {
-	for( std::map<dsstring, FacesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+	for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
 	{
 		Pass* current_pass = p_scenegraph->GetPass( (*it).first );
 		if( current_pass != NULL )
 		{         
 			for( long i = 0; i < 6; i++ )
 			{
-				current_pass->GetRenderingQueue()->Add( (*it).second.faces[i] );
+				current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
 			}
 		}
 	}
@@ -70,20 +76,21 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
 
 bool Body::LoadAssets( void )
 {
-	for( std::map<dsstring, FacesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+	for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
 	{
 		for( long i = 0; i < 6; i++ )
 		{
-			if( false == m_renderer->CreateRenderingNode( (*it).second.faces[i] ) )
-			{
-				return false;
-			}
-			if( false == (*it).second.faces[i]->Init( i ) )
+			if( false == m_renderer->CreateRenderingNode( (*it).second.nodes[i] ) )
 			{
 				return false;
 			}
 		}
 	}
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i]->Init( i );
+    }
+
 	return true;
 }
 
@@ -130,25 +137,37 @@ DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
 
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
+    /*
 	DrawSpace::Utils::Matrix view;
 	m_scenegraph->GetCurrentCameraView( view );
 
 	Face* face = static_cast<Face*>( p_rendering_node );
 	face->Draw( m_globaltransformation, view );
+    */
+}
+
+void Body::on_patchinstanciation( int p_orientation, Patch* p_patch )
+{
+    dsstring patch_name;
+    p_patch->GetName( patch_name );
+
+	for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+	{
+        m_renderer->AddMesheToNode( p_patch, (*it).second.nodes[p_orientation], patch_name );
+    }    
 }
 
 void Body::RegisterPassSlot( const dsstring p_passname )
 {
-	FacesSet faceset;
-	for( long i = 0; i < 6; i++ )
-	{
-		faceset.faces[i] = _DRAWSPACE_NEW_( Face, Face( m_renderer ) );
-		RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
+    NodesSet nodeset;
+    for( long i = 0; i < 6; i++ )
+    {
+        nodeset.nodes[i] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
+        RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
 
-		faceset.faces[i]->RegisterHandler( cb );
-		m_callbacks.push_back( cb );
-	}
-	m_passesnodes[p_passname] = faceset;
+        nodeset.nodes[i]->RegisterHandler( cb );
+        m_callbacks.push_back( cb );
+    }
 }
 
 DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid )
@@ -157,7 +176,7 @@ DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring p_passname
 	{
 		return NULL;
 	}
-	FacesSet faceset = m_passesnodes[p_passname];
+	NodesSet nodeset = m_passesnodes[p_passname];
 	
     int faceid;
 
@@ -185,6 +204,5 @@ DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring p_passname
     {
         faceid = Patch::RightPlanetFace;
     }
-
-    return faceset.faces[faceid];
+    return nodeset.nodes[faceid];
 }

@@ -33,18 +33,21 @@ protected:
 
 	typedef struct
 	{
-		Face*        faces[6];
+        DrawSpace::Core::RenderingNode*        nodes[6];
 
-	} FacesSet;
-
+	} NodesSet;
+       
     typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
+    typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                    PatchInstanciationCallback;    
 
-	std::map<dsstring, FacesSet>                m_passesnodes;
+	std::map<dsstring, NodesSet>                m_passesnodes;
 	std::vector<RenderingNodeDrawCallback*>     m_callbacks;
     DrawSpace::Scenegraph*                      m_scenegraph;
     DrawSpace::Interface::Renderer*             m_renderer;
+    Face*                                       m_faces[6];
 
     void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+    void                                        on_patchinstanciation( int p_orientation, Patch* p_patch );
 
 public:
 
