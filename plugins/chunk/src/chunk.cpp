@@ -114,3 +114,7 @@ DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring p_passnam
     return m_passesnodes[p_passname];
 }
 
+void Chunk::GetNodesIdsList( std::vector<dsstring>& p_ids )
+{
+    p_ids.push_back( "" );
+}

@@ -41,6 +41,7 @@ public:
     virtual Core::Meshe* GetMeshe( const dsstring& p_mesheid ) = 0;
     virtual void RegisterPassSlot( const dsstring p_passname ) = 0;
     virtual Core::RenderingNode* GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid ) = 0;
+    virtual void GetNodesIdsList( std::vector<dsstring>& p_ids ) = 0;
 };
 }
 }

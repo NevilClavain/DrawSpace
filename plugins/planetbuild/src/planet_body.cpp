@@ -258,3 +258,13 @@ DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring p_passname
     }
     return nodeset.nodes[faceid];
 }
+
+void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
+{
+    p_ids.push_back( "front" );
+    p_ids.push_back( "rear" );
+    p_ids.push_back( "top" );
+    p_ids.push_back( "bottom" );
+    p_ids.push_back( "left" );
+    p_ids.push_back( "right" );
+}

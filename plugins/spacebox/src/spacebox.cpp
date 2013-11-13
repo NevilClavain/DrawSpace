@@ -392,3 +392,12 @@ DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring p_pass
     return NULL;
 }
 
+void Spacebox::GetNodesIdsList( std::vector<dsstring>& p_ids )
+{
+    p_ids.push_back( "front" );
+    p_ids.push_back( "rear" );
+    p_ids.push_back( "top" );
+    p_ids.push_back( "bottom" );
+    p_ids.push_back( "left" );
+    p_ids.push_back( "right" );
+}
