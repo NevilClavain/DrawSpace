@@ -27,13 +27,38 @@
 #include <scenegraph.h>
 #include "planet_face.h"
 
+class FaceRenderingNode : public DrawSpace::Core::RenderingNode
+{
+    typedef DrawSpace::Core::CallBack2<FaceRenderingNode, void, int, Patch*>     PatchInstanciationCallback;
+    
+protected:
+
+    DrawSpace::Interface::Renderer* m_renderer;
+    std::map<dsstring, Patch*>      m_patchesleafs;
+    std::map<dsstring, Patch*>      m_patches;
+    PatchInstanciationCallback*     m_patchinstanciationcallback;
+
+    void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
+    void                            on_patchsplit( int p_orientation, Patch* p_patch );
+    
+public:
+    FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer );
+    virtual ~FaceRenderingNode( void );
+
+    virtual void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );
+
+    Face::PatchInstanciationHandler* GetPatchInstanciationHandler( void );
+};
+
 class Body : public DrawSpace::Interface::Drawable
 {	
 protected:
 
 	typedef struct
 	{
-        DrawSpace::Core::RenderingNode*        nodes[6];
+        //DrawSpace::Core::RenderingNode*        nodes[6];
+
+        FaceRenderingNode*        nodes[6];
 
 	} NodesSet;
        
@@ -47,8 +72,9 @@ protected:
     Face*                                       m_faces[6];
 
     void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    void                                        on_patchinstanciation( int p_orientation, Patch* p_patch );
 
+    //void                                        on_patchinstanciation( int p_orientation, Patch* p_patch );
+    
 public:
 
 	Body( void );

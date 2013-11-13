@@ -24,19 +24,68 @@
 #include "renderer.h"
 #include "plugin.h"
 #include "memalloc.h"
+#include "quadtree.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
 
+FaceRenderingNode::FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer ) : m_renderer( p_renderer )
+{
+    m_patchinstanciationcallback = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &FaceRenderingNode::on_patchinstanciation ) );
+}
+
+FaceRenderingNode::~FaceRenderingNode( void )
+{
+}
+
+void FaceRenderingNode::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
+{
+    for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
+    {
+        // rendu du patch leaf
+        dsstring name;
+        (*it).second->GetName( name );
+        m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+    }    
+}
+
+void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch )
+{
+    dsstring patch_name;
+    p_patch->GetName( patch_name );
+    m_renderer->AddMesheToNode( p_patch, this, patch_name );
+
+    m_patchesleafs[patch_name] = p_patch;
+    m_patches[patch_name] = p_patch;
+}
+
+void FaceRenderingNode::on_patchsplit( int p_orientation, Patch* p_patch )
+{
+    dsstring patch_name;
+    p_patch->GetName( patch_name );
+    if( m_patchesleafs.count( patch_name ) > 0 )
+    {
+        m_patchesleafs.erase( patch_name );
+    }
+}
+
+Face::PatchInstanciationHandler* FaceRenderingNode::GetPatchInstanciationHandler( void )
+{
+    return m_patchinstanciationcallback;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Body::Body( void ) : m_renderer( NULL ), m_scenegraph( NULL )
 {
+    /*
     PatchInstanciationCallback* cb = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &Body::on_patchinstanciation ) );
-
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i] = _DRAWSPACE_NEW_( Face, Face( cb ) );
     }
+    */
 }
 
 Body::~Body( void )
@@ -137,15 +186,14 @@ DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
 
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
-    /*
 	DrawSpace::Utils::Matrix view;
 	m_scenegraph->GetCurrentCameraView( view );
 
-	Face* face = static_cast<Face*>( p_rendering_node );
-	face->Draw( m_globaltransformation, view );
-    */
+    FaceRenderingNode* face_node = static_cast<FaceRenderingNode*>( p_rendering_node );
+    face_node->Draw( m_globaltransformation, view );
 }
 
+/*
 void Body::on_patchinstanciation( int p_orientation, Patch* p_patch )
 {
     dsstring patch_name;
@@ -156,17 +204,21 @@ void Body::on_patchinstanciation( int p_orientation, Patch* p_patch )
         m_renderer->AddMesheToNode( p_patch, (*it).second.nodes[p_orientation], patch_name );
     }    
 }
+*/
 
 void Body::RegisterPassSlot( const dsstring p_passname )
 {
     NodesSet nodeset;
     for( long i = 0; i < 6; i++ )
     {
-        nodeset.nodes[i] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
-        RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
+        //nodeset.nodes[i] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
+        nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceRenderingNode, FaceRenderingNode( m_renderer ) );
 
+        RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
+
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( nodeset.nodes[i]->GetPatchInstanciationHandler() ) );
     }
 }
 

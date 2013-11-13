@@ -28,7 +28,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-Face::Face( PatchInstanciationHandler* p_handler ): m_rootpatch( NULL ), m_handler( p_handler )
+Face::Face( PatchInstanciationHandler* p_inst_handler ): m_rootpatch( NULL ), m_inst_handler( p_inst_handler )
 {
 }
 
@@ -49,20 +49,6 @@ bool Face::Init( int p_orientation )
 }
 
 /*
-void Face::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
-{
-    for( std::map<dsstring, Utils::BaseQuadtreeNode*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
-    {
-        // rendu du patch leaf
-
-        QuadtreeNode<Patch>* current = static_cast<QuadtreeNode<Patch>*>( (*it).second );
-        dsstring name;
-        current->GetContent()->GetName( name );
-        m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
-    }
-}
-*/
-
 void Face::Split( const dsstring& p_patchname )
 {
     if( m_patchesleafs.count( p_patchname ) > 0 )
@@ -70,6 +56,7 @@ void Face::Split( const dsstring& p_patchname )
         m_patchesleafs[p_patchname]->Split();
     }
 }
+*/
 
 void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {
@@ -82,10 +69,9 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         dsstring patch_name;
         patch->GetName( patch_name );
-        //m_renderer->AddMesheToNode( patch, this, patch_name );
 
-        m_patches[patch_name] = patch;
-        (*m_handler)( m_orientation, patch );
+        //m_patches[patch_name] = patch;
+        (*m_inst_handler)( m_orientation, patch );
     }
     else
     {
@@ -104,13 +90,13 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         dsstring patch_name;
         patch->GetName( patch_name );
-        //m_renderer->AddMesheToNode( patch, this, patch_name );
 
-        m_patches[patch_name] = patch;
-        (*m_handler)( m_orientation, patch );
+        //m_patches[patch_name] = patch;
+        (*m_inst_handler)( m_orientation, patch );
     }
 }
 
+/*
 Meshe* Face::GetPatchFromName( const dsstring& p_name )
 {
     if( m_patches.count( p_name ) > 0 )
@@ -119,3 +105,4 @@ Meshe* Face::GetPatchFromName( const dsstring& p_name )
     }
     return NULL;
 }
+*/
