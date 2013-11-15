@@ -26,7 +26,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
 
-BaseQuadtreeNode::BaseQuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, BaseQuadtreeNode* p_parent, int p_id ) : m_parent( p_parent ), m_id( p_id ), m_leafs( p_leafs ), m_splitted( false )
+BaseQuadtreeNode::BaseQuadtreeNode( BaseQuadtreeNode* p_parent, int p_id ) : m_parent( p_parent ), m_id( p_id ), m_splitted( false )
 {
 }
 

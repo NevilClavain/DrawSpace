@@ -46,12 +46,11 @@ protected:
 	BaseQuadtreeNode*                               m_children[4];
 	BaseQuadtreeNode*                               m_parent;
 
-	bool                                            m_splitted;
-	std::map<dsstring, BaseQuadtreeNode*>&          m_leafs;
+	bool                                            m_splitted;	
 
 public:
 
-	BaseQuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, BaseQuadtreeNode* p_parent, int p_id );
+	BaseQuadtreeNode( BaseQuadtreeNode* p_parent, int p_id );
 
 	virtual ~BaseQuadtreeNode( void );
 
@@ -77,22 +76,20 @@ protected:
 	Base*                                               m_content;
 	InstanciationHandler*                               m_insthandler;
 
-	QuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, InstanciationHandler* p_handler, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_leafs, p_parent, p_id ), m_insthandler( p_handler )
+	QuadtreeNode( InstanciationHandler* p_handler, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_parent, p_id ), m_insthandler( p_handler )
 	{
         (*m_insthandler)( this );
 		dsstring name;
 		m_content->GetName( name );
-		m_leafs[name] = this;
 	}
 
 public:
 
-	QuadtreeNode( std::map<dsstring, BaseQuadtreeNode*>& p_leafs, InstanciationHandler* p_handler ) : BaseQuadtreeNode( p_leafs, NULL, RootNode ), m_insthandler( p_handler )
+	QuadtreeNode( InstanciationHandler* p_handler ) : BaseQuadtreeNode( NULL, RootNode ), m_insthandler( p_handler )
 	{
 		(*m_insthandler)( this );
 		dsstring name;
 		m_content->GetName( name );
-		m_leafs[name] = this;
 	}
 
 	virtual ~QuadtreeNode( void )
@@ -117,20 +114,12 @@ public:
 			return;
 		}
 
-		m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_leafs, m_insthandler, this, NorthWestNode ) );
-		m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_leafs, m_insthandler, this, NorthEastNode ) );
-		m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_leafs, m_insthandler, this, SouthEastNode ) );
-		m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_leafs, m_insthandler, this, SouthWestNode ) );
+		m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, this, NorthWestNode ) );
+		m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, this, NorthEastNode ) );
+		m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, this, SouthEastNode ) );
+		m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, this, SouthWestNode ) );
 
 		m_splitted = true;
-
-		// retirer celui-ci de la liste des leafs
-		dsstring thisname;
-		m_content->GetName( thisname );
-		if( m_leafs.count( thisname ) > 0 )
-		{
-			m_leafs.erase( thisname );
-		}
 	}
 
 	virtual void Merge( void )

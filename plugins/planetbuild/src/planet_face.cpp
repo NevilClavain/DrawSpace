@@ -43,7 +43,7 @@ bool Face::Init( int p_orientation )
     m_orientation = p_orientation;
 
     InstanciationCallback* cb = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodeinstanciation ) );
-    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( m_patchesleafs, cb ) );
+    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb ) );
 
     return true;
 }

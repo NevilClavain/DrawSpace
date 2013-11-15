@@ -467,34 +467,6 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="planet"
-			>
-			<File
-				RelativePath=".\src\planet_body.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\planet_body.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\planet_face.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\planet_face.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\planet_patch.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\planet_patch.h"
-				>
-			</File>
-		</Filter>
 		<File
 			RelativePath=".\src\asset.cpp"
 			>
