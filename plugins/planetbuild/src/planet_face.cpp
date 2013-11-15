@@ -48,15 +48,15 @@ bool Face::Init( int p_orientation )
     return true;
 }
 
-/*
-void Face::Split( const dsstring& p_patchname )
+Patch* Face::GetPatch( const dsstring& p_name )
 {
-    if( m_patchesleafs.count( p_patchname ) > 0 )
+    if( m_patches.count( p_name ) > 0 )
     {
-        m_patchesleafs[p_patchname]->Split();
+        return m_patches[p_name];
     }
+    return NULL;
 }
-*/
+
 
 void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {
@@ -69,9 +69,9 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         dsstring patch_name;
         patch->GetName( patch_name );
+        m_patches[patch_name] = patch;
 
-        //m_patches[patch_name] = patch;
-        (*m_inst_handler)( m_orientation, patch );
+        (*m_inst_handler)( m_orientation, patch );        
     }
     else
     {
@@ -90,19 +90,8 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         dsstring patch_name;
         patch->GetName( patch_name );
+        m_patches[patch_name] = patch;
 
-        //m_patches[patch_name] = patch;
         (*m_inst_handler)( m_orientation, patch );
     }
 }
-
-/*
-Meshe* Face::GetPatchFromName( const dsstring& p_name )
-{
-    if( m_patches.count( p_name ) > 0 )
-    {
-        return m_patches[p_name];
-    }
-    return NULL;
-}
-*/

@@ -79,13 +79,6 @@ Face::PatchInstanciationHandler* FaceRenderingNode::GetPatchInstanciationHandler
 
 Body::Body( void ) : m_renderer( NULL ), m_scenegraph( NULL )
 {
-    /*
-    PatchInstanciationCallback* cb = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &Body::on_patchinstanciation ) );
-    for( long i = 0; i < 6; i++ )
-    {
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( cb ) );
-    }
-    */
 }
 
 Body::~Body( void )
@@ -178,8 +171,7 @@ DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
             faceidval = Patch::RightPlanetFace;
         }
 
-        // TO BE CONTINUED .....
-
+        return m_faces[faceidval]->GetPatch( patch_name );
     }
     return NULL;
 }
@@ -193,25 +185,11 @@ void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
     face_node->Draw( m_globaltransformation, view );
 }
 
-/*
-void Body::on_patchinstanciation( int p_orientation, Patch* p_patch )
-{
-    dsstring patch_name;
-    p_patch->GetName( patch_name );
-
-	for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-	{
-        m_renderer->AddMesheToNode( p_patch, (*it).second.nodes[p_orientation], patch_name );
-    }    
-}
-*/
-
 void Body::RegisterPassSlot( const dsstring p_passname )
 {
     NodesSet nodeset;
     for( long i = 0; i < 6; i++ )
     {
-        //nodeset.nodes[i] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
         nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceRenderingNode, FaceRenderingNode( m_renderer ) );
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
@@ -220,6 +198,7 @@ void Body::RegisterPassSlot( const dsstring p_passname )
 
         m_faces[i] = _DRAWSPACE_NEW_( Face, Face( nodeset.nodes[i]->GetPatchInstanciationHandler() ) );
     }
+    m_passesnodes[p_passname] = nodeset;
 }
 
 DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid )

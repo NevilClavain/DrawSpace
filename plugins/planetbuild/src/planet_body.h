@@ -45,9 +45,9 @@ public:
     FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer );
     virtual ~FaceRenderingNode( void );
 
-    virtual void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );
+    virtual void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );    
+    virtual Face::PatchInstanciationHandler* GetPatchInstanciationHandler( void );
 
-    Face::PatchInstanciationHandler* GetPatchInstanciationHandler( void );
 };
 
 class Body : public DrawSpace::Interface::Drawable
@@ -56,8 +56,6 @@ protected:
 
 	typedef struct
 	{
-        //DrawSpace::Core::RenderingNode*        nodes[6];
-
         FaceRenderingNode*        nodes[6];
 
 	} NodesSet;
@@ -72,8 +70,6 @@ protected:
     Face*                                       m_faces[6];
 
     void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-
-    //void                                        on_patchinstanciation( int p_orientation, Patch* p_patch );
     
 public:
 

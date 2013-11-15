@@ -38,7 +38,7 @@ protected:
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;
     std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patchesleafs;
-    //std::map<dsstring, Patch*>                                  m_patches;
+    std::map<dsstring, Patch*>                                  m_patches;
     int                                                         m_orientation;
     PatchInstanciationHandler*                                  m_inst_handler;
 
@@ -48,11 +48,8 @@ public:
     Face( PatchInstanciationHandler* p_inst_handler );
     virtual ~Face( void );
 
-    bool Init( int p_orientation );    
-    //void Split( const dsstring& p_patchname );
-
-    //DrawSpace::Core::Meshe* GetPatchFromName( const dsstring& p_name );
-
+    bool Init( int p_orientation );
+    virtual Patch* GetPatch( const dsstring& p_name );
 };
 
 #endif
