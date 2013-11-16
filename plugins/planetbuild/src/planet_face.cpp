@@ -52,7 +52,8 @@ Patch* Face::GetPatch( const dsstring& p_name )
 {
     if( m_patches.count( p_name ) > 0 )
     {
-        return m_patches[p_name];
+        QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( m_patches[p_name] );
+        return node->GetContent();
     }
     return NULL;
 }
@@ -68,8 +69,8 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         root->SetContent( patch );
 
         dsstring patch_name;
-        patch->GetName( patch_name );
-        m_patches[patch_name] = patch;
+        patch->GetName( patch_name );        
+        m_patches[patch_name] = p_node;
 
         (*m_inst_handler)( m_orientation, patch );        
     }
@@ -90,7 +91,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         dsstring patch_name;
         patch->GetName( patch_name );
-        m_patches[patch_name] = patch;
+        m_patches[patch_name] = p_node;
 
         (*m_inst_handler)( m_orientation, patch );
     }

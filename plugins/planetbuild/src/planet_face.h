@@ -36,8 +36,8 @@ public:
 protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   InstanciationCallback;    
 
-    DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;
-    std::map<dsstring, Patch*>                                  m_patches;
+    DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
+    std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
     int                                                         m_orientation;
     PatchInstanciationHandler*                                  m_inst_handler;
 
