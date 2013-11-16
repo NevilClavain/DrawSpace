@@ -170,6 +170,10 @@ DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
         {
             faceidval = Patch::RightPlanetFace;
         }
+        else
+        {
+            return NULL;
+        }
 
         return m_faces[faceidval]->GetPatch( patch_name );
     }
