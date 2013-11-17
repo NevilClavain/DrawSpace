@@ -30,6 +30,7 @@
 class FaceRenderingNode : public DrawSpace::Core::RenderingNode
 {
     typedef DrawSpace::Core::CallBack2<FaceRenderingNode, void, int, Patch*>     PatchInstanciationCallback;
+    typedef DrawSpace::Core::CallBack2<FaceRenderingNode, void, int, Patch*>     PatchSplitCallback;
     
 protected:
 
@@ -37,6 +38,7 @@ protected:
     std::map<dsstring, Patch*>      m_patchesleafs;
     std::map<dsstring, Patch*>      m_patches;
     PatchInstanciationCallback*     m_patchinstanciationcallback;
+    PatchSplitCallback*             m_patchsplitcallback;
 
     void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
     void                            on_patchsplit( int p_orientation, Patch* p_patch );
@@ -47,6 +49,7 @@ public:
 
     virtual void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );    
     virtual Face::PatchInstanciationHandler* GetPatchInstanciationHandler( void );
+    virtual Face::PatchSplitHandler* GetPatchSplitHandler( void );
 
 };
 
@@ -85,5 +88,6 @@ public:
     virtual void RegisterPassSlot( const dsstring p_passname );
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid );
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );
+    virtual void ComputeSpecifics( void );
 };
 #endif

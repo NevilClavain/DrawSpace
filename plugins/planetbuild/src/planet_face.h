@@ -32,6 +32,7 @@ class Face
 {
 public:
     typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchInstanciationHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchSplitHandler;
 
 protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   InstanciationCallback;    
@@ -40,11 +41,12 @@ protected:
     std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
     int                                                         m_orientation;
     PatchInstanciationHandler*                                  m_inst_handler;
+    PatchSplitHandler*                                          m_split_handler;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
 public:
-    Face( PatchInstanciationHandler* p_inst_handler );
+    Face( PatchInstanciationHandler* p_inst_handler, PatchSplitHandler* p_split_handler );
     virtual ~Face( void );
 
     bool Init( int p_orientation );

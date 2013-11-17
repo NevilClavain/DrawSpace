@@ -401,3 +401,7 @@ void Spacebox::GetNodesIdsList( std::vector<dsstring>& p_ids )
     p_ids.push_back( "left" );
     p_ids.push_back( "right" );
 }
+
+void Spacebox::ComputeSpecifics( void )
+{
+}

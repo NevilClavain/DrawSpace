@@ -33,6 +33,7 @@ using namespace DrawSpace::Core;
 FaceRenderingNode::FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer ) : m_renderer( p_renderer )
 {
     m_patchinstanciationcallback = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &FaceRenderingNode::on_patchinstanciation ) );
+    m_patchsplitcallback = _DRAWSPACE_NEW_( PatchSplitCallback, PatchSplitCallback( this, &FaceRenderingNode::on_patchsplit ) );
 }
 
 FaceRenderingNode::~FaceRenderingNode( void )
@@ -73,6 +74,11 @@ void FaceRenderingNode::on_patchsplit( int p_orientation, Patch* p_patch )
 Face::PatchInstanciationHandler* FaceRenderingNode::GetPatchInstanciationHandler( void )
 {
     return m_patchinstanciationcallback;
+}
+
+Face::PatchSplitHandler* FaceRenderingNode::GetPatchSplitHandler( void )
+{
+    return m_patchsplitcallback;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,7 +206,7 @@ void Body::RegisterPassSlot( const dsstring p_passname )
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
 
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( nodeset.nodes[i]->GetPatchInstanciationHandler() ) );
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( nodeset.nodes[i]->GetPatchInstanciationHandler(), nodeset.nodes[i]->GetPatchSplitHandler() ) );
     }
     m_passesnodes[p_passname] = nodeset;
 }
@@ -250,4 +256,8 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
     p_ids.push_back( "bottom" );
     p_ids.push_back( "left" );
     p_ids.push_back( "right" );
+}
+
+void Body::ComputeSpecifics( void )
+{
 }

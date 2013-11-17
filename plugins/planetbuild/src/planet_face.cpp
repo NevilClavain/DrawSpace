@@ -28,7 +28,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-Face::Face( PatchInstanciationHandler* p_inst_handler ): m_rootpatch( NULL ), m_inst_handler( p_inst_handler )
+Face::Face( PatchInstanciationHandler* p_inst_handler, PatchSplitHandler* p_split_handler ): m_rootpatch( NULL ), m_inst_handler( p_inst_handler ), m_split_handler( p_split_handler )
 {
 }
 
@@ -94,5 +94,6 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         m_patches[patch_name] = p_node;
 
         (*m_inst_handler)( m_orientation, patch );
+        (*m_split_handler)( m_orientation, patch );
     }
 }
