@@ -70,13 +70,17 @@ class QuadtreeNode : public BaseQuadtreeNode
 public:
 
 	typedef Core::BaseCallback<void, BaseQuadtreeNode*> InstanciationHandler;
+    typedef Core::BaseCallback<void, BaseQuadtreeNode*> DeletionHandler;
 
 protected:
 
 	Base*                                               m_content;
 	InstanciationHandler*                               m_insthandler;
+    DeletionHandler*                                    m_delhandler;
 
-	QuadtreeNode( InstanciationHandler* p_handler, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_parent, p_id ), m_insthandler( p_handler )
+	QuadtreeNode( InstanciationHandler* p_insthandler, DeletionHandler* p_delhandler, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_parent, p_id ), 
+    m_insthandler( p_insthandler ), 
+    m_delhandler( p_delhandler )
 	{
         (*m_insthandler)( this );
 		dsstring name;
@@ -85,7 +89,9 @@ protected:
 
 public:
 
-	QuadtreeNode( InstanciationHandler* p_handler ) : BaseQuadtreeNode( NULL, RootNode ), m_insthandler( p_handler )
+	QuadtreeNode( InstanciationHandler* p_insthandler, DeletionHandler* p_delhandler ) : BaseQuadtreeNode( NULL, RootNode ), 
+    m_insthandler( p_insthandler ),
+    m_delhandler( p_delhandler )
 	{
 		(*m_insthandler)( this );
 		dsstring name;
@@ -94,6 +100,7 @@ public:
 
 	virtual ~QuadtreeNode( void )
 	{
+        (*m_delhandler)( this );
 	}
 
 	Base* GetContent( void )
@@ -114,18 +121,28 @@ public:
 			return;
 		}
 
-		m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, this, NorthWestNode ) );
-		m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, this, NorthEastNode ) );
-		m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, this, SouthEastNode ) );
-		m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, this, SouthWestNode ) );
+		m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, this, NorthWestNode ) );
+		m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, this, NorthEastNode ) );
+		m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, this, SouthEastNode ) );
+		m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, this, SouthWestNode ) );
 
 		m_splitted = true;
 	}
 
 	virtual void Merge( void )
 	{
+        if( !m_splitted )
+        {
+            // deja merge
+            return;
+        }
 
+        _DRAWSPACE_DELETE_( m_children[NorthWestNode] );
+        _DRAWSPACE_DELETE_( m_children[NorthEastNode] );
+        _DRAWSPACE_DELETE_( m_children[SouthEastNode] );
+        _DRAWSPACE_DELETE_( m_children[SouthWestNode] );
 
+        m_splitted = false;
 	}
 };
 }

@@ -43,7 +43,9 @@ bool Face::Init( int p_orientation )
     m_orientation = p_orientation;
 
     InstanciationCallback* cb = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodeinstanciation ) );
-    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb ) );
+    DeletionCallback* cb2 = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodedeletion ) );
+
+    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb, cb2 ) );
 
     return true;
 }
@@ -96,6 +98,11 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         (*m_inst_handler)( m_orientation, patch );
         (*m_split_handler)( m_orientation, parent->GetContent() );
     }
+}
+
+void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
+{
+
 }
 
 void Face::Split( const dsstring& p_name )

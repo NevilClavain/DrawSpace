@@ -35,7 +35,8 @@ public:
     typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchSplitHandler;
 
 protected:
-    typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   InstanciationCallback;    
+    typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   InstanciationCallback;
+    typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   DeletionCallback;
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
     std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
@@ -44,6 +45,7 @@ protected:
     PatchSplitHandler*                                          m_split_handler;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
+    void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
 public:
     Face( PatchInstanciationHandler* p_inst_handler, PatchSplitHandler* p_split_handler );
