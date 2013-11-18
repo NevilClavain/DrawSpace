@@ -260,4 +260,10 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
 
 void Body::ComputeSpecifics( void )
 {
+    // PROVISOIRE TESTS
+    m_faces[Patch::FrontPlanetFace]->Split( ".0" );
+    m_faces[Patch::TopPlanetFace]->Split( ".0" );
+    m_faces[Patch::TopPlanetFace]->Split( ".0.3" );
+    m_faces[Patch::TopPlanetFace]->Split( ".0.3.1" );
+    m_faces[Patch::TopPlanetFace]->Split( ".0.3.1.2" );
 }

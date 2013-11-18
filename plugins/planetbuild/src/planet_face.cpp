@@ -94,6 +94,14 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         m_patches[patch_name] = p_node;
 
         (*m_inst_handler)( m_orientation, patch );
-        (*m_split_handler)( m_orientation, patch );
+        (*m_split_handler)( m_orientation, parent->GetContent() );
+    }
+}
+
+void Face::Split( const dsstring& p_name )
+{
+    if( m_patches.count( p_name ) > 0 )
+    {
+        m_patches[p_name]->Split();
     }
 }

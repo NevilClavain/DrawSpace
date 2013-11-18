@@ -51,6 +51,7 @@ public:
 
     bool Init( int p_orientation );
     virtual Patch* GetPatch( const dsstring& p_name );
+    virtual void Split( const dsstring& p_name );
 };
 
 #endif
