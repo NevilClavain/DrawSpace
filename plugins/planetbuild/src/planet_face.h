@@ -33,19 +33,28 @@ class Face
 public:
     typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchInstanciationHandler;
     typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchSplitHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchDeletionHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchMergeHandler;
 
 protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   InstanciationCallback;
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   DeletionCallback;
+    typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   SplitCallback;
+    typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   MergeCallback;
+
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
     std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
     int                                                         m_orientation;
     PatchInstanciationHandler*                                  m_inst_handler;
     PatchSplitHandler*                                          m_split_handler;
+    PatchDeletionHandler*                                       m_del_handler;
+    PatchMergeHandler*                                          m_merge_handler;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
+    void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
+    void on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
 public:
     Face( PatchInstanciationHandler* p_inst_handler, PatchSplitHandler* p_split_handler );

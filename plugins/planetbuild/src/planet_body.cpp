@@ -48,7 +48,7 @@ void FaceRenderingNode::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace
         dsstring name;
         (*it).second->GetName( name );
         m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
-    }    
+    }
 }
 
 void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch )

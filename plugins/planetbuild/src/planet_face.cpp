@@ -42,10 +42,12 @@ bool Face::Init( int p_orientation )
 {    
     m_orientation = p_orientation;
 
-    InstanciationCallback* cb = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodeinstanciation ) );
-    DeletionCallback* cb2 = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodedeletion ) );
+    InstanciationCallback* cb_inst = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodeinstanciation ) );
+    DeletionCallback* cb_del = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodedeletion ) );
+    InstanciationCallback* cb_merge = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodemerge ) );
+    DeletionCallback* cb_split = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodesplit ) );
 
-    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb, cb2 ) );
+    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );
 
     return true;
 }
@@ -95,15 +97,38 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         patch->GetName( patch_name );
         m_patches[patch_name] = p_node;
 
-        (*m_inst_handler)( m_orientation, patch );
-        (*m_split_handler)( m_orientation, parent->GetContent() );
+        (*m_inst_handler)( m_orientation, patch );        
     }
 }
 
 void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
-{
+{    
+    QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
+    
+    Patch* patch = node->GetContent();
 
+    (*m_del_handler)( m_orientation, patch );    
+
+    dsstring patch_name;
+    patch->GetName( patch_name );   
+    m_patches.erase( patch_name );
+    _DRAWSPACE_DELETE_( patch );    
 }
+
+void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
+{
+    QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
+    Patch* patch = node->GetContent();
+    (*m_split_handler)( m_orientation, patch );
+}
+
+void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )
+{
+    QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
+    Patch* patch = node->GetContent();
+    (*m_merge_handler)( m_orientation, patch );
+}
+
 
 void Face::Split( const dsstring& p_name )
 {

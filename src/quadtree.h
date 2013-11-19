@@ -45,7 +45,6 @@ protected:
 	int                                             m_id;
 	BaseQuadtreeNode*                               m_children[4];
 	BaseQuadtreeNode*                               m_parent;
-
 	bool                                            m_splitted;	
 
 public:
@@ -71,16 +70,22 @@ public:
 
 	typedef Core::BaseCallback<void, BaseQuadtreeNode*> InstanciationHandler;
     typedef Core::BaseCallback<void, BaseQuadtreeNode*> DeletionHandler;
+    typedef Core::BaseCallback<void, BaseQuadtreeNode*> SplitHandler;
+    typedef Core::BaseCallback<void, BaseQuadtreeNode*> MergeHandler;
 
 protected:
 
 	Base*                                               m_content;
 	InstanciationHandler*                               m_insthandler;
     DeletionHandler*                                    m_delhandler;
+    SplitHandler*                                       m_splithandler;
+    MergeHandler*                                       m_mergehandler;
 
-	QuadtreeNode( InstanciationHandler* p_insthandler, DeletionHandler* p_delhandler, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_parent, p_id ), 
+	QuadtreeNode( InstanciationHandler* p_insthandler, DeletionHandler* p_delhandler, SplitHandler* p_splithandler, MergeHandler* p_mergehandler, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_parent, p_id ), 
     m_insthandler( p_insthandler ), 
-    m_delhandler( p_delhandler )
+    m_delhandler( p_delhandler ),
+    m_splithandler( p_splithandler ),
+    m_mergehandler( p_mergehandler )
 	{
         (*m_insthandler)( this );
 		dsstring name;
@@ -89,9 +94,11 @@ protected:
 
 public:
 
-	QuadtreeNode( InstanciationHandler* p_insthandler, DeletionHandler* p_delhandler ) : BaseQuadtreeNode( NULL, RootNode ), 
+	QuadtreeNode( InstanciationHandler* p_insthandler, DeletionHandler* p_delhandler, SplitHandler* p_splithandler, MergeHandler* p_mergehandler ) : BaseQuadtreeNode( NULL, RootNode ), 
     m_insthandler( p_insthandler ),
-    m_delhandler( p_delhandler )
+    m_delhandler( p_delhandler ),
+    m_splithandler( p_splithandler ),
+    m_mergehandler( p_mergehandler )
 	{
 		(*m_insthandler)( this );
 		dsstring name;
@@ -121,12 +128,14 @@ public:
 			return;
 		}
 
-		m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, this, NorthWestNode ) );
-		m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, this, NorthEastNode ) );
-		m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, this, SouthEastNode ) );
-		m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, this, SouthWestNode ) );
+		m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, NorthWestNode ) );
+		m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, NorthEastNode ) );
+		m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, SouthEastNode ) );
+		m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, SouthWestNode ) );
 
 		m_splitted = true;
+
+        (*m_splithandler)( this );
 	}
 
 	virtual void Merge( void )
@@ -137,12 +146,23 @@ public:
             return;
         }
 
+        // il ne doit pas y avoir de fils splitte, sinon annulation du split, on ne fait rien
+        if( m_children[NorthWestNode]->HasChildren() ||
+            m_children[NorthEastNode]->HasChildren() ||
+            m_children[SouthEastNode]->HasChildren() ||
+            m_children[SouthWestNode]->HasChildren() )
+        {
+            return;
+        }
+
         _DRAWSPACE_DELETE_( m_children[NorthWestNode] );
         _DRAWSPACE_DELETE_( m_children[NorthEastNode] );
         _DRAWSPACE_DELETE_( m_children[SouthEastNode] );
         _DRAWSPACE_DELETE_( m_children[SouthWestNode] );
 
         m_splitted = false;
+
+        (*m_mergehandler)( this );
 	}
 };
 }
