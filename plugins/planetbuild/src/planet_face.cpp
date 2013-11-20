@@ -28,7 +28,12 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-Face::Face( PatchInstanciationHandler* p_inst_handler, PatchSplitHandler* p_split_handler ): m_rootpatch( NULL ), m_inst_handler( p_inst_handler ), m_split_handler( p_split_handler )
+Face::Face( PatchInstanciationHandler* p_inst_handler, PatchDeletionHandler* p_del_handler, PatchSplitHandler* p_split_handler, PatchMergeHandler* p_merge_handler ) : 
+m_rootpatch( NULL ), 
+m_inst_handler( p_inst_handler ), 
+m_del_handler( p_del_handler ),
+m_split_handler( p_split_handler ),
+m_merge_handler( p_merge_handler )
 {
 }
 
@@ -135,5 +140,13 @@ void Face::Split( const dsstring& p_name )
     if( m_patches.count( p_name ) > 0 )
     {
         m_patches[p_name]->Split();
+    }
+}
+
+void Face::Merge( const dsstring& p_name )
+{
+    if( m_patches.count( p_name ) > 0 )
+    {
+        m_patches[p_name]->Merge();
     }
 }

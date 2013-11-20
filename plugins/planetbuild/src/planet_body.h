@@ -30,7 +30,9 @@
 class FaceRenderingNode : public DrawSpace::Core::RenderingNode
 {
     typedef DrawSpace::Core::CallBack2<FaceRenderingNode, void, int, Patch*>     PatchInstanciationCallback;
+    typedef DrawSpace::Core::CallBack2<FaceRenderingNode, void, int, Patch*>     PatchDelCallback;
     typedef DrawSpace::Core::CallBack2<FaceRenderingNode, void, int, Patch*>     PatchSplitCallback;
+    typedef DrawSpace::Core::CallBack2<FaceRenderingNode, void, int, Patch*>     PatchMergeCallback;
     
 protected:
 
@@ -38,10 +40,14 @@ protected:
     std::map<dsstring, Patch*>      m_patchesleafs;
     std::map<dsstring, Patch*>      m_patches;
     PatchInstanciationCallback*     m_patchinstanciationcallback;
+    PatchDelCallback*               m_patchdelcallback;
     PatchSplitCallback*             m_patchsplitcallback;
+    PatchMergeCallback*             m_patchmergecallback;
 
     void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
+    void                            on_patchdel( int p_orientation, Patch* p_patch );
     void                            on_patchsplit( int p_orientation, Patch* p_patch );
+    void                            on_patchmerge( int p_orientation, Patch* p_patch );
     
 public:
     FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer );
@@ -49,7 +55,9 @@ public:
 
     virtual void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );    
     virtual Face::PatchInstanciationHandler* GetPatchInstanciationHandler( void );
+    virtual Face::PatchDeletionHandler* GetPatchDelHandler( void );
     virtual Face::PatchSplitHandler* GetPatchSplitHandler( void );
+    virtual Face::PatchMergeHandler* GetPatchMergeHandler( void );
 
 };
 

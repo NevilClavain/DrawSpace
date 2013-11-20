@@ -57,12 +57,13 @@ protected:
     void on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
 public:
-    Face( PatchInstanciationHandler* p_inst_handler, PatchSplitHandler* p_split_handler );
+    Face( PatchInstanciationHandler* p_inst_handler, PatchDeletionHandler* p_del_handler, PatchSplitHandler* p_split_handler, PatchMergeHandler* p_merge_handler );
     virtual ~Face( void );
 
     bool Init( int p_orientation );
     virtual Patch* GetPatch( const dsstring& p_name );
     virtual void Split( const dsstring& p_name );
+    virtual void Merge( const dsstring& p_name );
 };
 
 #endif

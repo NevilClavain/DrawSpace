@@ -33,7 +33,9 @@ using namespace DrawSpace::Core;
 FaceRenderingNode::FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer ) : m_renderer( p_renderer )
 {
     m_patchinstanciationcallback = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &FaceRenderingNode::on_patchinstanciation ) );
+    m_patchdelcallback = _DRAWSPACE_NEW_( PatchDelCallback, PatchDelCallback( this, &FaceRenderingNode::on_patchdel ) );
     m_patchsplitcallback = _DRAWSPACE_NEW_( PatchSplitCallback, PatchSplitCallback( this, &FaceRenderingNode::on_patchsplit ) );
+    m_patchmergecallback = _DRAWSPACE_NEW_( PatchMergeCallback, PatchMergeCallback( this, &FaceRenderingNode::on_patchmerge ) );
 }
 
 FaceRenderingNode::~FaceRenderingNode( void )
@@ -61,6 +63,23 @@ void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch
     m_patches[patch_name] = p_patch;
 }
 
+void FaceRenderingNode::on_patchdel( int p_orientation, Patch* p_patch )
+{
+    dsstring patch_name;
+    p_patch->GetName( patch_name );
+
+    if( m_patchesleafs.count( patch_name ) > 0 )
+    {
+        m_patchesleafs.erase( patch_name );
+    }
+    if( m_patches.count( patch_name ) > 0 )
+    {
+        m_patches.erase( patch_name );
+    }
+
+    m_renderer->RemoveNodeMeshe( p_patch, this, patch_name );
+}
+
 void FaceRenderingNode::on_patchsplit( int p_orientation, Patch* p_patch )
 {
     dsstring patch_name;
@@ -71,14 +90,32 @@ void FaceRenderingNode::on_patchsplit( int p_orientation, Patch* p_patch )
     }
 }
 
+void FaceRenderingNode::on_patchmerge( int p_orientation, Patch* p_patch )
+{
+    dsstring patch_name;
+    p_patch->GetName( patch_name );
+
+    m_patchesleafs[patch_name] = p_patch;
+}
+
 Face::PatchInstanciationHandler* FaceRenderingNode::GetPatchInstanciationHandler( void )
 {
     return m_patchinstanciationcallback;
 }
 
+Face::PatchDeletionHandler* FaceRenderingNode::GetPatchDelHandler( void )
+{
+    return m_patchdelcallback;
+}
+
 Face::PatchSplitHandler* FaceRenderingNode::GetPatchSplitHandler( void )
 {
     return m_patchsplitcallback;
+}
+
+Face::PatchMergeHandler* FaceRenderingNode::GetPatchMergeHandler( void )
+{
+    return m_patchmergecallback;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,7 +243,10 @@ void Body::RegisterPassSlot( const dsstring p_passname )
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
 
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( nodeset.nodes[i]->GetPatchInstanciationHandler(), nodeset.nodes[i]->GetPatchSplitHandler() ) );
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( nodeset.nodes[i]->GetPatchInstanciationHandler(), 
+                                                    nodeset.nodes[i]->GetPatchDelHandler(),                                                    
+                                                    nodeset.nodes[i]->GetPatchSplitHandler(),
+                                                    nodeset.nodes[i]->GetPatchMergeHandler() ) );
     }
     m_passesnodes[p_passname] = nodeset;
 }
@@ -261,9 +301,21 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
 void Body::ComputeSpecifics( void )
 {
     // PROVISOIRE TESTS
-    m_faces[Patch::FrontPlanetFace]->Split( ".0" );
-    m_faces[Patch::TopPlanetFace]->Split( ".0" );
-    m_faces[Patch::TopPlanetFace]->Split( ".0.3" );
-    m_faces[Patch::TopPlanetFace]->Split( ".0.3.1" );
-    m_faces[Patch::TopPlanetFace]->Split( ".0.3.1.2" );
+
+    static int foo;
+
+    if( 0 == foo )
+    {
+        m_faces[Patch::FrontPlanetFace]->Split( ".0" );
+        m_faces[Patch::TopPlanetFace]->Split( ".0" );
+        m_faces[Patch::TopPlanetFace]->Split( ".0.3" );
+        m_faces[Patch::TopPlanetFace]->Split( ".0.3.1" );
+        m_faces[Patch::TopPlanetFace]->Split( ".0.3.1.2" );
+    }
+    else if( 1 == foo )
+    {
+        m_faces[Patch::FrontPlanetFace]->Merge( ".0" );
+    }
+
+    foo++;
 }
