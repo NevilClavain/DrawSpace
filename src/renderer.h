@@ -70,7 +70,7 @@ public:
     virtual bool EndNodeRender( DrawSpace::Core::RenderingNode* p_node ) = 0;
 
     virtual bool AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id ) = 0;
-    virtual void RemoveNodeMeshe( DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id ) = 0;
+    virtual void RemoveNodeMeshe( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id ) = 0;
     virtual bool RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id ) = 0;
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate ) = 0;

@@ -734,7 +734,7 @@ bool D3D9Renderer::AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::C
     return true;
 }
 
-void D3D9Renderer::RemoveNodeMeshe( DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
+void D3D9Renderer::RemoveNodeMeshe( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
 {
     NodeInfos node_infos;
     if( 0 == m_nodes.count( p_node ) )
@@ -750,7 +750,8 @@ void D3D9Renderer::RemoveNodeMeshe( DrawSpace::Core::RenderingNode* p_node, cons
     _DRAWSPACE_DELETE_N_( node_infos.meshes[p_id].vertices );
     _DRAWSPACE_DELETE_N_( node_infos.meshes[p_id].triangles );
 
-    node_infos.meshes.erase( p_id );
+    m_nodes[p_node].meshes.erase( p_id );
+    p_meshe->UnsetRenderReady();
 }
 
 bool D3D9Renderer::RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
