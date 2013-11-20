@@ -46,6 +46,7 @@ public:
 
     virtual void GetName( dsstring& p_name );
     virtual void SetRenderReady( void );
+    virtual void UnsetRenderReady( void );
 };
 }
 #endif

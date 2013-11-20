@@ -46,3 +46,8 @@ void Asset::SetRenderReady( void )
 {
     m_render_ready = true;
 }
+
+void Asset::UnsetRenderReady( void )
+{
+    m_render_ready = false;
+}
