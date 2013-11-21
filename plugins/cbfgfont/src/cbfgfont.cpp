@@ -20,7 +20,7 @@
 *                                                                          
 */
 
-#include "cbfgfontimport.h"
+#include "cbfgfont.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -28,13 +28,10 @@ using namespace DrawSpace::Utils;
 
 CBFGFontImport::CBFGFontImport( void ) : m_font( NULL )
 {
-
-
 }
 
 CBFGFontImport::~CBFGFontImport( void )
 {
-
 }
 
 bool CBFGFontImport::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )

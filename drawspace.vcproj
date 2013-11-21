@@ -291,27 +291,11 @@
 			Name="utils"
 			>
 			<File
-				RelativePath=".\src\ac3dmesheimport.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ac3dmesheimport.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\archive.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\archive.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\cbfgfontimport.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\cbfgfontimport.h"
 				>
 			</File>
 			<File

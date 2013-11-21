@@ -30,7 +30,9 @@ using namespace DrawSpace::Interface;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Gui;
 
-static std::map<dsstring, PlugInManager<Drawable>::Handle> m_drawableplugins;
+static std::map<dsstring, PlugInManager<Drawable>::Handle>      m_drawableplugins;
+static std::map<dsstring, PlugInManager<FontImport>::Handle>    m_fontimportplugins;
+static std::map<dsstring, PlugInManager<MesheImport>::Handle>   m_mesheimportplugins;
 
 TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_width, long p_height, const Vector& p_color, const dsstring& p_name )
 {
@@ -178,12 +180,64 @@ Interface::Drawable* DrawSpace::Utils::InstanciateDrawableFromPlugin( const dsst
 
     if( m_drawableplugins.count( p_pluginalias ) > 0 )
     {
-        if( PlugInManager<Drawable>::Instanciate( m_drawableplugins[p_pluginalias], &drawable ) != PIM_OK )
+        if( PIM_OK == PlugInManager<Drawable>::Instanciate( m_drawableplugins[p_pluginalias], &drawable ) )
         {
             return drawable;
         }        
     }
-    return drawable;
+    return NULL;
+}
+
+bool DrawSpace::Utils::LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias )
+{
+    PlugInManager<FontImport>::Handle pihandle;
+    PluginManagerStatus pistatus = PlugInManager<FontImport>::LoadPlugin( p_path.c_str(), pihandle );
+    if( pistatus != PIM_OK )
+    {
+        return false;
+    }
+    m_fontimportplugins[p_pluginalias] = pihandle;
+    return true;
+}
+
+Interface::FontImport* DrawSpace::Utils::InstanciateFontImportFromPlugin( const dsstring& p_pluginalias )
+{
+    FontImport* fontimp;
+
+    if( m_fontimportplugins.count( p_pluginalias ) > 0 )
+    {
+        if( PIM_OK == PlugInManager<FontImport>::Instanciate( m_fontimportplugins[p_pluginalias], &fontimp ) )
+        {
+            return fontimp;
+        }        
+    }
+    return NULL;
+}
+
+bool DrawSpace::Utils::LoadMesheImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias )
+{
+    PlugInManager<MesheImport>::Handle pihandle;
+    PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( p_path.c_str(), pihandle );
+    if( pistatus != PIM_OK )
+    {
+        return false;
+    }
+    m_mesheimportplugins[p_pluginalias] = pihandle;
+    return true;
+}
+
+Interface::MesheImport* DrawSpace::Utils::InstanciateMesheImportFromPlugin( const dsstring& p_pluginalias )
+{
+    MesheImport* mesheimp;
+
+    if( m_mesheimportplugins.count( p_pluginalias ) > 0 )
+    {
+        if( PIM_OK == PlugInManager<MesheImport>::Instanciate( m_mesheimportplugins[p_pluginalias], &mesheimp ) )
+        {
+            return mesheimp;
+        }        
+    }
+    return NULL;
 }
 
 void DrawSpace::Utils::BuildSpaceboxFx( Interface::Drawable* p_spacebox, const dsstring& p_passname, const dsstring& p_nodeid )

@@ -20,57 +20,30 @@
 *                                                                          
 */
 
-#ifndef _AC3DMESHEIMPORT_H_
-#define _AC3DMESHEIMPORT_H_
+#ifndef _CBFGFONT_H_
+#define _CBFGFONT_H_
 
-#include "mesheimport.h"
-#include "parser.h"
+#include <fontimport.h>
+#include <parser.h>
 
-namespace DrawSpace
-{
-namespace Utils
-{
-class AC3DMesheImport : public Interface::MesheImport, public Utils::Parser
+class CBFGFontImport : public DrawSpace::Interface::FontImport, public DrawSpace::Utils::Parser
 {
 protected:
-    
-    typedef enum
-    {
-        SEARCH_OBJECT_BEGIN,
-        //SEARCH_OBJECT_LOC,
-        SEARCH_VERT_BEGIN,
-        VERT_INPUT,
-        SEARCH_TRILIST_BEGIN,
-        SEARCH_TRI_BEGIN,
-        TRI_INPUT,
-        DONE
-    } State;
 
-    Core::Meshe*                                m_meshe;
-    State                                       m_state;
-    long                                        m_object_index;
-    long                                        m_object_count;
-    Vector                                      m_object_loc;
-    long                                        m_vertcount;
-    long                                        m_numvert;
-    long			                            m_tricount;
-    long                                        m_numtri;
-    long                                        m_trilinecount;
-    Core::Triangle                              m_triangle;
+    long                    m_texture_width;
+    long                    m_texture_height;
+    long                    m_cell_width;
+    long                    m_cell_height;
+    char                    m_start_char;
 
-
-    std::map<long, std::pair<float, float>>     m_vertices_uv_mem;
+    DrawSpace::Core::Font*  m_font;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
-    AC3DMesheImport( void );
-    virtual ~AC3DMesheImport( void );
+    CBFGFontImport( void );
+    virtual ~CBFGFontImport( void );
 
-    virtual bool LoadFromFile( const dsstring& p_filepath, long p_index, Core::Meshe* p_meshe );
-
+    virtual bool LoadFromFile( const dsstring& p_metricsfilepath, DrawSpace::Core::Font* p_font );
 };
-}
-}
 
 #endif

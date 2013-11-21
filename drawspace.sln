@@ -11,6 +11,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chunk", "plugins\chunk\chun
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "planetbuild", "plugins\planetbuild\planetbuild.vcproj", "{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cbfgfont", "plugins\cbfgfont\cbfgfont.vcproj", "{81F780D3-7A98-4250-A196-32718A2ABBC4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ac3dmeshe", "plugins\ac3dmeshe\ac3dmeshe.vcproj", "{6B948862-1B39-4934-A449-1D97893CB3D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -37,6 +41,14 @@ Global
 		{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}.Debug|Win32.Build.0 = Debug|Win32
 		{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}.Release|Win32.ActiveCfg = Release|Win32
 		{E75E80FE-C31E-4EC7-AE53-C0302ABEF73A}.Release|Win32.Build.0 = Release|Win32
+		{81F780D3-7A98-4250-A196-32718A2ABBC4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81F780D3-7A98-4250-A196-32718A2ABBC4}.Debug|Win32.Build.0 = Debug|Win32
+		{81F780D3-7A98-4250-A196-32718A2ABBC4}.Release|Win32.ActiveCfg = Release|Win32
+		{81F780D3-7A98-4250-A196-32718A2ABBC4}.Release|Win32.Build.0 = Release|Win32
+		{6B948862-1B39-4934-A449-1D97893CB3D8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6B948862-1B39-4934-A449-1D97893CB3D8}.Debug|Win32.Build.0 = Debug|Win32
+		{6B948862-1B39-4934-A449-1D97893CB3D8}.Release|Win32.ActiveCfg = Release|Win32
+		{6B948862-1B39-4934-A449-1D97893CB3D8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

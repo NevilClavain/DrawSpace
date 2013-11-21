@@ -20,9 +20,7 @@
 *                                                                          
 */
 
-#include "ac3dmesheimport.h"
-#include "tracedefs.h"
-_DECLARE_DS_LOGGER( logger, "ac3dimport" )
+#include "ac3dmeshe.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -30,7 +28,6 @@ using namespace DrawSpace::Utils;
 
 AC3DMesheImport::AC3DMesheImport( void )
 {
-
 }
 
 AC3DMesheImport::~AC3DMesheImport( void )
@@ -56,20 +53,6 @@ bool AC3DMesheImport::on_new_line( const dsstring& p_line, long p_line_num, std:
                 }
             }
             break;
-
-            /*
-        case SEARCH_OBJECT_LOC:
-
-            if( "loc" == p_words[0] )
-            {
-                m_object_loc[0] = atof( p_words[1].c_str() );
-                m_object_loc[1] = atof( p_words[2].c_str() );
-                m_object_loc[2] = atof( p_words[3].c_str() );
-
-                m_state = SEARCH_VERT_BEGIN;
-            }
-            break;
-            */
 
         case SEARCH_VERT_BEGIN:
 
@@ -134,7 +117,6 @@ bool AC3DMesheImport::on_new_line( const dsstring& p_line, long p_line_num, std:
                 float u = (float)atof( p_words[1].c_str() );
                 float v = 1.0f - (float)atof( p_words[2].c_str() );
 
-                _DSTRACE( logger, "TRI_INPUT : index = " << index << " u = " << u << " v = " << v )
                 if( 0 == m_vertices_uv_mem.count( index ) )
                 {
                     Vertex vertex;
@@ -142,7 +124,6 @@ bool AC3DMesheImport::on_new_line( const dsstring& p_line, long p_line_num, std:
                     vertex.tu[0] = u;
                     vertex.tv[0] = v;
                     m_meshe->SetVertex( index, vertex );
-                    _DSTRACE( logger, "index not memorized, updating corresponding vertex and storing it..." )
                     // memoriser les uv pour cet index
                     m_vertices_uv_mem[index].first = u;
                     m_vertices_uv_mem[index].second = v;
@@ -152,7 +133,6 @@ bool AC3DMesheImport::on_new_line( const dsstring& p_line, long p_line_num, std:
                     if( u != m_vertices_uv_mem[index].first || 
                         v != m_vertices_uv_mem[index].second )
                     {
-                        _DSTRACE( logger, "known index with different UV pair !!! -> new vertex" )
                         Vertex vertex;
                         m_meshe->GetVertex( index, vertex );
                         vertex.tu[0] = u;
@@ -160,10 +140,6 @@ bool AC3DMesheImport::on_new_line( const dsstring& p_line, long p_line_num, std:
                         m_meshe->AddVertex( vertex );
 
                         index = m_meshe->GetVertexListSize() - 1;
-                    }
-                    else
-                    {
-                        _DSTRACE( logger, "known index, same UV pair, continue..." )
                     }
                 }
         
@@ -184,8 +160,6 @@ bool AC3DMesheImport::on_new_line( const dsstring& p_line, long p_line_num, std:
                 if( 3 == m_trilinecount )
                 {
                     // storing triangle...
-                    _DSTRACE( logger, "new triangle : " << m_triangle.vertex1 
-                                        << " " << m_triangle.vertex2 << " " << m_triangle.vertex3 )
                     m_meshe->AddTriangle( m_triangle );
                     m_tricount++;
                     if( m_tricount == m_numtri )
@@ -204,10 +178,8 @@ bool AC3DMesheImport::on_new_line( const dsstring& p_line, long p_line_num, std:
     return true;
 }
 
-bool AC3DMesheImport::LoadFromFile( const dsstring& p_filepath, long p_index, Core::Meshe* p_meshe )
+bool AC3DMesheImport::LoadFromFile( const dsstring& p_filepath, long p_index, Meshe* p_meshe )
 {
-    _DSDEBUG( logger, "file = " << p_filepath.c_str() << " index = " << p_index )
-
     m_meshe = p_meshe;
     m_object_index = p_index;
     m_state = SEARCH_OBJECT_BEGIN;

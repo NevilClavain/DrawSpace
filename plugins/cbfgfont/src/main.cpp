@@ -20,36 +20,13 @@
 *                                                                          
 */
 
-#ifndef _CBFGFONTIMPORT_H_
-#define _CBFGFONTIMPORT_H_
+#include "cbfgfont.h"
 
-#include "fontimport.h"
-#include "parser.h"
-
-namespace DrawSpace
+extern "C"
 {
-namespace Utils
+__declspec(dllexport) DrawSpace::Interface::FontImport* PIFactory( void )
 {
-class CBFGFontImport : public Interface::FontImport, public Utils::Parser
-{
-protected:
-
-    long        m_texture_width;
-    long        m_texture_height;
-    long        m_cell_width;
-    long        m_cell_height;
-    char        m_start_char;
-
-    Core::Font* m_font;
-
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-public:
-    CBFGFontImport( void );
-    virtual ~CBFGFontImport( void );
-
-    virtual bool LoadFromFile( const dsstring& p_metricsfilepath, Core::Font* p_font );
-
-};
+    return new CBFGFontImport;
 }
 }
-#endif
+
