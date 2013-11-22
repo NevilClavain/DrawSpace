@@ -42,6 +42,8 @@ protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   SplitCallback;
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   MergeCallback;
 
+    static const int patchresol = 13;
+
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
     std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
