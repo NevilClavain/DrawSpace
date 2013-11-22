@@ -292,6 +292,10 @@ void DrawSpace::Utils::BuildSpaceboxFx( Interface::Drawable* p_spacebox, const d
 
     p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+
+    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+
     
 }
 
