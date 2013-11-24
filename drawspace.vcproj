@@ -177,6 +177,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\freemovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\freemovement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\fx.cpp"
 				>
 			</File>

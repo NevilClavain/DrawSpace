@@ -20,51 +20,48 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
+#ifndef _FREEMOVEMENT_H_
+#define _FREEMOVEMENT_H_
 
-#include "tracedefs.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
+#include "movement.h"
 #include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "transformation.h"
 #include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "drawable.h"
-#include "fx.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "memalloc.h"
-#include "events.h"
-#include "camera.h"
-#include "fpsmovement.h"
-#include "freemovement.h"
-#include "quadtree.h"
-#include "misc_utils.h"
+
+namespace DrawSpace
+{
+namespace Core
+{
+class FreeMovement : public Movement
+{
+protected:
+    Utils::Vector           m_local_speed;
+
+	Utils::Quaternion	    m_current_res;
+    Utils::Vector		    m_current_x_axis;
+	Utils::Vector		    m_current_y_axis;
+	Utils::Vector		    m_current_z_axis;
+	
+	// les sorties
+	Utils::Matrix		    m_position;
+	Utils::Matrix		    m_orientation;
+
+
+public:
+    FreeMovement( void );
+    virtual ~FreeMovement( void );
+
+    virtual void Init( const Utils::Vector& p_init_pos );
+
+    virtual void RotateYaw( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
+	virtual void RotatePitch( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
+	virtual void RotateRoll( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
+    virtual void RotateAxis( Utils::Vector& p_axis, dsreal p_rspeed, Utils::TimeManager& p_timemanager );
+
+    virtual void SetSpeed( dsreal p_speed );
+    virtual void Compute( Utils::TimeManager& p_timemanager );
+
+};
+}
+}
+
 #endif
