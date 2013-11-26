@@ -405,3 +405,16 @@ void Spacebox::GetNodesIdsList( std::vector<dsstring>& p_ids )
 void Spacebox::ComputeSpecifics( void )
 {
 }
+
+void Spacebox::GetPropertiesList( std::vector<dsstring&>& p_props )
+{
+}
+
+DrawSpace::Core::Property* Spacebox::GetProperty( const dsstring& p_name )
+{
+    return NULL;
+}
+
+void Spacebox::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
+{
+}

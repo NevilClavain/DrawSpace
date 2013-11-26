@@ -57,8 +57,8 @@ public:
     TypedProperty( const dsstring& p_name, base p_initval ) : m_name( p_name ), m_value( p_initval ) { };
     virtual ~TypedProperty( void ) { };
 
-    virtual void            GetName( std::string& p_name ) { p_name = m_name; };
-    virtual void            GetTypeId( std::string& p_typeid ) { p_typeid = typeid( base ).name(); };
+    virtual void            GetName( dsstring& p_name ) { p_name = m_name; };
+    virtual void            GetTypeId( dsstring& p_typeid ) { p_typeid = typeid( base ).name(); };
 };
 }
 }
