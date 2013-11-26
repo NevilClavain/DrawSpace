@@ -42,6 +42,8 @@ protected:
     unsigned char                       m_target_clear_color_g;
     unsigned char                       m_target_clear_color_b;
 
+    static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
+
 public:
     RenderingQueue( void );
     RenderingQueue( Texture* p_target );
@@ -50,8 +52,6 @@ public:
     void Add( RenderingNode* p_node );
     void Draw( void );
     
-    //void DrawMultiples( void );
-
     void EnableDepthClearing( bool p_enable );
     void EnableTargetClearing( bool p_enable );
     void SetTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );

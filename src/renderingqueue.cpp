@@ -23,6 +23,7 @@
 #include "renderingqueue.h"
 #include "renderer.h"
 #include "plugin.h"
+#include <algorithm>
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface;
@@ -54,6 +55,11 @@ m_target_clear_color_b( 0 )
 RenderingQueue::~RenderingQueue( void )
 {
 
+}
+
+bool RenderingQueue::nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 )
+{
+    return ( p_n1->GetOrderNumber() < p_n2->GetOrderNumber() );
 }
 
 void RenderingQueue::Draw( void )
@@ -98,6 +104,9 @@ void RenderingQueue::Draw( void )
 void RenderingQueue::Add( RenderingNode* p_node )
 {
     m_nodes.push_back( p_node );
+
+    // a chaque ajout, refaire un sort
+    std::sort( m_nodes.begin(), m_nodes.end(), RenderingQueue::nodes_comp );
 }
 
 void RenderingQueue::EnableDepthClearing( bool p_enable )
