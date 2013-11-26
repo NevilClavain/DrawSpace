@@ -24,6 +24,7 @@
 #define _DRAWSPACE_H_
 
 #include "tracedefs.h"
+#include "property.h"
 #include "task.h"
 #include "mutex.h"
 #include "parser.h"

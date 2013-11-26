@@ -319,3 +319,16 @@ void Body::ComputeSpecifics( void )
 
     foo++;
 }
+
+void Body::GetPropertiesList( std::vector<dsstring&>& p_props )
+{
+}
+
+DrawSpace::Core::Property* Body::GetProperty( const dsstring& p_name )
+{
+    return NULL;
+}
+
+void Body::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
+{
+}

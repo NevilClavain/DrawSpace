@@ -122,3 +122,16 @@ void Chunk::GetNodesIdsList( std::vector<dsstring>& p_ids )
 void Chunk::ComputeSpecifics( void )
 {
 }
+
+void Chunk::GetPropertiesList( std::vector<dsstring&>& p_props )
+{
+}
+
+DrawSpace::Core::Property* Chunk::GetProperty( const dsstring& p_name )
+{
+    return NULL;
+}
+
+void Chunk::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
+{
+}

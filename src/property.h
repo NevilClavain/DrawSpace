@@ -20,33 +20,45 @@
 *                                                                          
 */
 
-#ifndef _DRAWABLE_H_
-#define _DRAWABLE_H_
+#ifndef _PROPERTY_H_
+#define _PROPERTY_H_
 
-#include "transformnode.h"
-#include "renderer.h"
-#include "property.h"
+#ifdef WIN32
+#include <typeinfo.h>
+#else
+#include <typeinfo>
+#endif
+
+#include "drawspace_commons.h"
 
 namespace DrawSpace
 {
-namespace Interface
+namespace Core
 {
-class Drawable : public Core::TransformNode
+class Property
 {
 public:
-    virtual void GetDescr( dsstring& p_descr ) = 0;
-    virtual void DumpMemoryAllocs( void ) = 0;
-    virtual void SetRenderer( Renderer * p_renderer ) = 0;
-    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
-    virtual bool LoadAssets( void ) = 0;
-    virtual Core::Meshe* GetMeshe( const dsstring& p_mesheid ) = 0;
-    virtual void RegisterPassSlot( const dsstring p_passname ) = 0;
-    virtual Core::RenderingNode* GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid ) = 0;
-    virtual void GetNodesIdsList( std::vector<dsstring>& p_ids ) = 0;
-    virtual void ComputeSpecifics( void ) = 0;
-    virtual void GetPropertiesList( std::vector<dsstring&>& p_props ) = 0;
-    virtual Core::Property* GetProperty( const dsstring& p_name ) = 0;
-    virtual void SetProperty( const dsstring& p_name, Core::Property* p_prop ) = 0;
+    virtual ~Property( void ) { };
+
+    virtual void    GetName( std::string& p_name ) = 0;
+    virtual void    GetTypeId( std::string& p_typeid ) = 0;
+};
+
+template<typename base>
+class TypedProperty : public Property
+{
+protected:
+    std::string		m_name;
+
+public:
+    base            m_value;
+
+    TypedProperty( const dsstring& p_name ) : m_name( p_name ) { };
+    TypedProperty( const dsstring& p_name, base p_initval ) : m_name( p_name ), m_value( p_initval ) { };
+    virtual ~TypedProperty( void ) { };
+
+    virtual void            GetName( dsstring& p_name ) { p_name = m_name; };
+    virtual void            GetTypeId( dsstring& p_typeid ) { p_typeid = typeid( base ).name(); };
 };
 }
 }
