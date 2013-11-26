@@ -20,52 +20,47 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
+#ifndef _PROPERTY_H_
+#define _PROPERTY_H_
 
-#include "tracedefs.h"
-#include "property.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
-#include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "transformation.h"
-#include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "drawable.h"
-#include "fx.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "memalloc.h"
-#include "events.h"
-#include "camera.h"
-#include "fpsmovement.h"
-#include "freemovement.h"
-#include "quadtree.h"
-#include "misc_utils.h"
+#ifdef WIN32
+#include <typeinfo.h>
+#else
+#include <typeinfo>
+#endif
+
+#include "drawspace_commons.h"
+
+namespace DrawSpace
+{
+namespace Core
+{
+class Property
+{
+public:
+    virtual ~Property( void ) { };
+
+    virtual void    GetName( std::string& p_name ) = 0;
+    virtual void    GetTypeId( std::string& p_typeid ) = 0;
+};
+
+template<typename base>
+class TypedProperty : public Property
+{
+protected:
+    std::string		m_name;
+
+public:
+    base            m_value;
+
+    TypedProperty( const dsstring& p_name ) : m_name( p_name ) { };
+    TypedProperty( const dsstring& p_name, base p_initval ) : m_name( p_name ), m_value( p_initval ) { };
+    virtual ~TypedProperty( void ) { };
+
+    virtual void            GetName( std::string& p_name ) { p_name = m_name; };
+    virtual void            GetTypeId( std::string& p_typeid ) { p_typeid = typeid( base ).name(); };
+};
+}
+}
+
 #endif

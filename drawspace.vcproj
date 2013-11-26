@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\property.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\renderingnode.cpp"
 				>
 			</File>
