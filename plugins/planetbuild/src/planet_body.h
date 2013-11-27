@@ -25,6 +25,7 @@
 
 #include <drawable.h>
 #include <scenegraph.h>
+#include <property.h>
 #include "planet_face.h"
 
 class FaceRenderingNode : public DrawSpace::Core::RenderingNode
@@ -80,6 +81,10 @@ protected:
     DrawSpace::Interface::Renderer*             m_renderer;
     Face*                                       m_faces[6];
 
+    //// properties
+    DrawSpace::Core::TypedProperty<dsreal>      m_diameter;
+
+
     void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     
 public:
@@ -97,7 +102,7 @@ public:
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid );
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );
     virtual void ComputeSpecifics( void );
-    virtual void GetPropertiesList( std::vector<dsstring&>& p_props );
+    virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
 

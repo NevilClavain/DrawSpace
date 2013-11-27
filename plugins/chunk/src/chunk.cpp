@@ -123,7 +123,7 @@ void Chunk::ComputeSpecifics( void )
 {
 }
 
-void Chunk::GetPropertiesList( std::vector<dsstring&>& p_props )
+void Chunk::GetPropertiesList( std::vector<dsstring>& p_props )
 {
 }
 

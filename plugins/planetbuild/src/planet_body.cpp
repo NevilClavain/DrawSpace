@@ -120,8 +120,17 @@ Face::PatchMergeHandler* FaceRenderingNode::GetPatchMergeHandler( void )
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Body::Body( void ) : m_renderer( NULL ), m_scenegraph( NULL )
+Body::Body( void ) : 
+m_renderer( NULL ), 
+m_scenegraph( NULL ),
+m_diameter( "diameter" )
 {
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i] = NULL;
+    }
+
+    m_diameter.m_value = 10.0;
 }
 
 Body::~Body( void )
@@ -247,6 +256,8 @@ void Body::RegisterPassSlot( const dsstring p_passname )
                                                     nodeset.nodes[i]->GetPatchDelHandler(),                                                    
                                                     nodeset.nodes[i]->GetPatchSplitHandler(),
                                                     nodeset.nodes[i]->GetPatchMergeHandler() ) );
+
+        m_faces[i]->SetPlanetDiameter( m_diameter.m_value );
     }
     m_passesnodes[p_passname] = nodeset;
 }
@@ -320,15 +331,43 @@ void Body::ComputeSpecifics( void )
     foo++;
 }
 
-void Body::GetPropertiesList( std::vector<dsstring&>& p_props )
+void Body::GetPropertiesList( std::vector<dsstring>& p_props )
 {
+    dsstring name;
+
+    m_diameter.GetName( name );
+    p_props.push_back( name );
 }
 
-DrawSpace::Core::Property* Body::GetProperty( const dsstring& p_name )
+Property* Body::GetProperty( const dsstring& p_name )
 {
+    dsstring name;
+
+    m_diameter.GetName( name );
+    if( p_name == name )
+    {
+        return &m_diameter;
+    }
+
     return NULL;
 }
 
-void Body::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
+void Body::SetProperty( const dsstring& p_name, Property* p_prop )
 {
+    dsstring name;
+
+    m_diameter.GetName( name );
+    if( p_name == name )
+    {
+        TypedProperty<dsreal>* input_diameter = static_cast<TypedProperty<dsreal>*>( p_prop );
+        m_diameter.m_value = input_diameter->m_value;
+
+        for( long i = 0; i < 6; i++ )
+        {
+            if( m_faces[i] != NULL )
+            {
+                m_faces[i]->SetPlanetDiameter( m_diameter.m_value );
+            }
+        }
+    }
 }

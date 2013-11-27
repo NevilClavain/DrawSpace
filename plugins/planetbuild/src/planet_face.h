@@ -52,6 +52,7 @@ protected:
     PatchSplitHandler*                                          m_split_handler;
     PatchDeletionHandler*                                       m_del_handler;
     PatchMergeHandler*                                          m_merge_handler;
+    dsreal                                                      m_planet_diameter;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -66,6 +67,7 @@ public:
     virtual Patch* GetPatch( const dsstring& p_name );
     virtual void Split( const dsstring& p_name );
     virtual void Merge( const dsstring& p_name );
+    virtual void SetPlanetDiameter( dsreal p_diameter );
 };
 
 #endif

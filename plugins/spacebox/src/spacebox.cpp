@@ -406,7 +406,7 @@ void Spacebox::ComputeSpecifics( void )
 {
 }
 
-void Spacebox::GetPropertiesList( std::vector<dsstring&>& p_props )
+void Spacebox::GetPropertiesList( std::vector<dsstring>& p_props )
 {
 }
 

@@ -44,7 +44,7 @@ public:
     virtual Core::RenderingNode* GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid ) = 0;
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids ) = 0;
     virtual void ComputeSpecifics( void ) = 0;
-    virtual void GetPropertiesList( std::vector<dsstring&>& p_props ) = 0;
+    virtual void GetPropertiesList( std::vector<dsstring>& p_props ) = 0;
     virtual Core::Property* GetProperty( const dsstring& p_name ) = 0;
     virtual void SetProperty( const dsstring& p_name, Core::Property* p_prop ) = 0;
 };
