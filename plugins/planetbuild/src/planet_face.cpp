@@ -125,6 +125,28 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 {
     QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
     Patch* patch = node->GetContent();
+
+    QuadtreeNode<Patch>* nw_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::NorthWestNode ) );
+    QuadtreeNode<Patch>* ne_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::NorthEastNode ) );
+    QuadtreeNode<Patch>* se_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthEastNode ) );
+    QuadtreeNode<Patch>* sw_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthWestNode ) );
+
+    nw_child_node->GetContent()->SetNeighbour( ne_child_node->GetContent(), Patch::EastNeighbour );
+    nw_child_node->GetContent()->SetNeighbour( sw_child_node->GetContent(), Patch::SouthNeighbour );
+    nw_child_node->GetContent()->SetNeighbour( se_child_node->GetContent(), Patch::SouthEastNeighbour );
+
+    ne_child_node->GetContent()->SetNeighbour( nw_child_node->GetContent(), Patch::WestNeighbour );
+    ne_child_node->GetContent()->SetNeighbour( sw_child_node->GetContent(), Patch::SouthWestNeighbour );
+    ne_child_node->GetContent()->SetNeighbour( se_child_node->GetContent(), Patch::SouthNeighbour );
+
+    se_child_node->GetContent()->SetNeighbour( nw_child_node->GetContent(), Patch::NorthWestNeighbour );
+    se_child_node->GetContent()->SetNeighbour( ne_child_node->GetContent(), Patch::NorthNeighbour );
+    se_child_node->GetContent()->SetNeighbour( sw_child_node->GetContent(), Patch::WestNeighbour );
+
+    sw_child_node->GetContent()->SetNeighbour( nw_child_node->GetContent(), Patch::NorthNeighbour );
+    sw_child_node->GetContent()->SetNeighbour( ne_child_node->GetContent(), Patch::NorthEastNeighbour );
+    sw_child_node->GetContent()->SetNeighbour( se_child_node->GetContent(), Patch::EastNeighbour );
+
     (*m_split_handler)( m_orientation, patch );
 }
 
