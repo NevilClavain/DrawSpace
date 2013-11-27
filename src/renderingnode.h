@@ -61,6 +61,8 @@ public:
     virtual Core::Texture* GetTexture( long p_index );    
     virtual void OnDraw( void );
     virtual void RegisterHandler( BaseCallback<void, RenderingNode*>* p_handler );
+    virtual long GetOrderNumber( void );
+    virtual void SetOrderNumber( long p_order );
 
     friend class RenderingQueue;
 };

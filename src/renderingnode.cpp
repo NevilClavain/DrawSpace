@@ -40,6 +40,16 @@ RenderingNode::~RenderingNode( void )
     _DRAWSPACE_DELETE_( m_fx );
 }
 
+long RenderingNode::GetOrderNumber( void )
+{
+    return m_order;
+}
+
+void RenderingNode::SetOrderNumber( long p_order )
+{
+    m_order = p_order;
+}
+
 void RenderingNode::SetFx( Fx* p_fx )
 {
     m_fx = p_fx;
