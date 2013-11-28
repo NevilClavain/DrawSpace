@@ -147,7 +147,20 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     sw_child_node->GetContent()->SetNeighbour( ne_child_node->GetContent(), Patch::NorthEastNeighbour );
     sw_child_node->GetContent()->SetNeighbour( se_child_node->GetContent(), Patch::EastNeighbour );
 
+    set_border_neighbours( nw_child_node );
+    set_border_neighbours( ne_child_node );
+    set_border_neighbours( se_child_node );
+    set_border_neighbours( sw_child_node );
+
     (*m_split_handler)( m_orientation, patch );
+}
+
+void Face::set_border_neighbours( QuadtreeNode<Patch>* p_node )
+{
+    QuadtreeNode<Patch>* parent;
+    parent = static_cast<QuadtreeNode<Patch>*>( p_node->GetParent() );
+
+
 }
 
 void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )

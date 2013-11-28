@@ -59,6 +59,8 @@ protected:
     void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
+    void set_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node );
+
 public:
     Face( PatchInstanciationHandler* p_inst_handler, PatchDeletionHandler* p_del_handler, PatchSplitHandler* p_split_handler, PatchMergeHandler* p_merge_handler );
     virtual ~Face( void );
