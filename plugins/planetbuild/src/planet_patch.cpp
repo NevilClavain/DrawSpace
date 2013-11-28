@@ -94,12 +94,12 @@ Patch::~Patch( void )
 {
 }
 
-void Patch::SetNeighbour( Patch* p_patch, int p_id )
+void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )
 {
 	m_neighbours[p_id] = p_patch;
 }
 
-Patch* Patch::GetNeighbour( int p_id )
+DrawSpace::Utils::BaseQuadtreeNode* Patch::GetNeighbour( int p_id )
 {
 	return m_neighbours[p_id];
 }

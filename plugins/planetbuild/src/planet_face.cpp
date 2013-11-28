@@ -131,21 +131,21 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     QuadtreeNode<Patch>* se_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthEastNode ) );
     QuadtreeNode<Patch>* sw_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthWestNode ) );
 
-    nw_child_node->GetContent()->SetNeighbour( ne_child_node->GetContent(), Patch::EastNeighbour );
-    nw_child_node->GetContent()->SetNeighbour( sw_child_node->GetContent(), Patch::SouthNeighbour );
-    nw_child_node->GetContent()->SetNeighbour( se_child_node->GetContent(), Patch::SouthEastNeighbour );
+    nw_child_node->GetContent()->SetNeighbour( ne_child_node, Patch::EastNeighbour );
+    nw_child_node->GetContent()->SetNeighbour( sw_child_node, Patch::SouthNeighbour );
+    nw_child_node->GetContent()->SetNeighbour( se_child_node, Patch::SouthEastNeighbour );
 
-    ne_child_node->GetContent()->SetNeighbour( nw_child_node->GetContent(), Patch::WestNeighbour );
-    ne_child_node->GetContent()->SetNeighbour( sw_child_node->GetContent(), Patch::SouthWestNeighbour );
-    ne_child_node->GetContent()->SetNeighbour( se_child_node->GetContent(), Patch::SouthNeighbour );
+    ne_child_node->GetContent()->SetNeighbour( nw_child_node, Patch::WestNeighbour );
+    ne_child_node->GetContent()->SetNeighbour( sw_child_node, Patch::SouthWestNeighbour );
+    ne_child_node->GetContent()->SetNeighbour( se_child_node, Patch::SouthNeighbour );
 
-    se_child_node->GetContent()->SetNeighbour( nw_child_node->GetContent(), Patch::NorthWestNeighbour );
-    se_child_node->GetContent()->SetNeighbour( ne_child_node->GetContent(), Patch::NorthNeighbour );
-    se_child_node->GetContent()->SetNeighbour( sw_child_node->GetContent(), Patch::WestNeighbour );
+    se_child_node->GetContent()->SetNeighbour( nw_child_node, Patch::NorthWestNeighbour );
+    se_child_node->GetContent()->SetNeighbour( ne_child_node, Patch::NorthNeighbour );
+    se_child_node->GetContent()->SetNeighbour( sw_child_node, Patch::WestNeighbour );
 
-    sw_child_node->GetContent()->SetNeighbour( nw_child_node->GetContent(), Patch::NorthNeighbour );
-    sw_child_node->GetContent()->SetNeighbour( ne_child_node->GetContent(), Patch::NorthEastNeighbour );
-    sw_child_node->GetContent()->SetNeighbour( se_child_node->GetContent(), Patch::EastNeighbour );
+    sw_child_node->GetContent()->SetNeighbour( nw_child_node, Patch::NorthNeighbour );
+    sw_child_node->GetContent()->SetNeighbour( ne_child_node, Patch::NorthEastNeighbour );
+    sw_child_node->GetContent()->SetNeighbour( se_child_node, Patch::EastNeighbour );
 
     set_border_neighbours( nw_child_node );
     set_border_neighbours( ne_child_node );
@@ -158,9 +158,86 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 void Face::set_border_neighbours( QuadtreeNode<Patch>* p_node )
 {
     QuadtreeNode<Patch>* parent;
+    BaseQuadtreeNode* parent_neighb;
+
     parent = static_cast<QuadtreeNode<Patch>*>( p_node->GetParent() );
 
+    switch( p_node->GetId() )
+    {
+        case BaseQuadtreeNode::NorthWestNode:
+            {
+                parent_neighb = parent->GetContent()->GetNeighbour( Patch::NorthNeighbour );
+                if( parent_neighb )
+                {
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ), Patch::NorthNeighbour );
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ), Patch::NorthEastNeighbour );
 
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( p_node, Patch::SouthNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( p_node, Patch::SouthWestNeighbour );
+                }
+
+                parent_neighb = parent->GetContent()->GetNeighbour( Patch::WestNeighbour );
+                if( parent_neighb )
+                {
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ), Patch::WestNeighbour );
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ), Patch::SouthWestNeighbour );
+
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( p_node, Patch::EastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( p_node, Patch::NorthEastNeighbour );
+                }
+
+                parent_neighb = parent->GetContent()->GetNeighbour( Patch::NorthWestNeighbour );
+                if( parent_neighb )
+                {
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ), Patch::NorthWestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( p_node, Patch::SouthEastNeighbour );
+                }
+            }
+            break;
+
+        case BaseQuadtreeNode::NorthEastNode:
+            {
+                parent_neighb = parent->GetContent()->GetNeighbour( Patch::NorthNeighbour );
+                if( parent_neighb )
+                {
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ), Patch::NorthNeighbour );
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ), Patch::NorthWestNeighbour );
+
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( p_node, Patch::SouthNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( p_node, Patch::SouthEastNeighbour );
+                }
+
+                parent_neighb = parent->GetContent()->GetNeighbour( Patch::EastNeighbour );
+                if( parent_neighb )
+                {
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ), Patch::EastNeighbour );
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ), Patch::SouthEastNeighbour );
+
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( p_node, Patch::WestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( p_node, Patch::NorthWestNeighbour );
+                }
+
+                parent_neighb = parent->GetContent()->GetNeighbour( Patch::NorthEastNeighbour );
+                if( parent_neighb )
+                {
+                    p_node->GetContent()->SetNeighbour( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ), Patch::NorthEastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( p_node, Patch::SouthWestNeighbour );
+                }
+            }
+            break;
+
+        case BaseQuadtreeNode::SouthEastNode:
+            {
+
+            }
+            break;
+
+        case BaseQuadtreeNode::SouthWestNode:
+            {
+
+            }
+            break;
+    }
 }
 
 void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )

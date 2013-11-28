@@ -24,6 +24,7 @@
 #define _PLANET_PATCH_H_
 
 #include "meshe.h"
+#include "quadtree.h"
 
 class Patch : public DrawSpace::Core::Meshe
 {
@@ -47,15 +48,17 @@ public:
 
 protected:
 
-	dsreal          m_sidelength;
-	dsreal          m_xpos;
-	dsreal          m_ypos;
-	dsreal          m_ray;
+	dsreal                                  m_sidelength;
+	dsreal                                  m_xpos;
+	dsreal                                  m_ypos;
+	dsreal                                  m_ray;
 
-	int             m_resolution;
-	int             m_orientation;
+	int                                     m_resolution;
+	int                                     m_orientation;
 
-	Patch*          m_neighbours[8];
+    DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
+
+
 	dsstring		m_name;
 
 	void build( void );
@@ -66,8 +69,8 @@ public:
 	Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid );
 	virtual ~Patch( void );
 
-	void SetNeighbour( Patch* p_patch, int p_id );
-	Patch* GetNeighbour( int p_id );
+	void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );
+	DrawSpace::Utils::BaseQuadtreeNode* GetNeighbour( int p_id );
 
 	void GetName( dsstring& p_name );
 	dsreal GetSideLength( void );
