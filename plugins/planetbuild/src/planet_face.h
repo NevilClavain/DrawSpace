@@ -60,6 +60,7 @@ protected:
     void on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
     void set_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node );
+    void unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node );
 
 public:
     Face( PatchInstanciationHandler* p_inst_handler, PatchDeletionHandler* p_del_handler, PatchSplitHandler* p_split_handler, PatchMergeHandler* p_merge_handler );
