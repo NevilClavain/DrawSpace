@@ -267,7 +267,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 
     _DSDEBUG( logger, "projection : v_width = " << v_width << " v_height = " << v_height );
 
-    SetProjection( v_width, v_height, 1.0, 1000.0 );
+    SetProjection( v_width, v_height, 1.0, 100000000000.0 );
 
     m_characteristics.width_viewport = v_width;
     m_characteristics.height_viewport = v_height;
