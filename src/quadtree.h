@@ -155,14 +155,14 @@ public:
             return;
         }
 
+        (*m_mergehandler)( this );
+
         _DRAWSPACE_DELETE_( m_children[NorthWestNode] );
         _DRAWSPACE_DELETE_( m_children[NorthEastNode] );
         _DRAWSPACE_DELETE_( m_children[SouthEastNode] );
         _DRAWSPACE_DELETE_( m_children[SouthWestNode] );
 
-        m_splitted = false;
-
-        (*m_mergehandler)( this );
+        m_splitted = false;        
 	}
 };
 }
