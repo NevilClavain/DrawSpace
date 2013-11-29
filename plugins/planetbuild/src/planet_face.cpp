@@ -34,7 +34,8 @@ m_inst_handler( p_inst_handler ),
 m_del_handler( p_del_handler ),
 m_split_handler( p_split_handler ),
 m_merge_handler( p_merge_handler ),
-m_planet_diameter( 10.0 )
+m_planet_diameter( 10.0 ),
+m_currentleaf( NULL )
 {
 }
 
@@ -435,4 +436,9 @@ void Face::Merge( const dsstring& p_name )
 void Face::SetPlanetDiameter( dsreal p_diameter )
 {
     m_planet_diameter = p_diameter;
+}
+
+void Face::UpdateHotpoint( const DrawSpace::Utils::Vector& p_point )
+{
+    m_hotpoint = p_point;
 }

@@ -75,14 +75,16 @@ protected:
     typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
     typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                    PatchInstanciationCallback;    
 
-	std::map<dsstring, NodesSet>                m_passesnodes;
-	std::vector<RenderingNodeDrawCallback*>     m_callbacks;
-    DrawSpace::Scenegraph*                      m_scenegraph;
-    DrawSpace::Interface::Renderer*             m_renderer;
-    Face*                                       m_faces[6];
+	std::map<dsstring, NodesSet>                                m_passesnodes;
+	std::vector<RenderingNodeDrawCallback*>                     m_callbacks;
+    DrawSpace::Scenegraph*                                      m_scenegraph;
+    DrawSpace::Interface::Renderer*                             m_renderer;
+    Face*                                                       m_faces[6];
 
     //// properties
-    DrawSpace::Core::TypedProperty<dsreal>      m_diameter;
+    DrawSpace::Core::TypedProperty<dsreal>                      m_diameter;
+    DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_hotpoint;
+
 
 
     void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );

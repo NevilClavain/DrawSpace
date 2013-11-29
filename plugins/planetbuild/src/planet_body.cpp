@@ -28,6 +28,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 
 FaceRenderingNode::FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer ) : m_renderer( p_renderer )
@@ -123,7 +124,8 @@ Face::PatchMergeHandler* FaceRenderingNode::GetPatchMergeHandler( void )
 Body::Body( void ) : 
 m_renderer( NULL ), 
 m_scenegraph( NULL ),
-m_diameter( "diameter" )
+m_diameter( "diameter" ),
+m_hotpoint( "hotpoint" )
 {
     for( long i = 0; i < 6; i++ )
     {
@@ -337,6 +339,9 @@ void Body::GetPropertiesList( std::vector<dsstring>& p_props )
 
     m_diameter.GetName( name );
     p_props.push_back( name );
+
+    m_hotpoint.GetName( name );
+    p_props.push_back( name );
 }
 
 Property* Body::GetProperty( const dsstring& p_name )
@@ -347,6 +352,12 @@ Property* Body::GetProperty( const dsstring& p_name )
     if( p_name == name )
     {
         return &m_diameter;
+    }
+
+    m_hotpoint.GetName( name );
+    if( p_name == name )
+    {
+        return &m_hotpoint;
     }
 
     return NULL;
@@ -367,6 +378,20 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
             if( m_faces[i] != NULL )
             {
                 m_faces[i]->SetPlanetDiameter( m_diameter.m_value );
+            }
+        }
+    }
+    m_hotpoint.GetName( name );
+    if( p_name == name )
+    {
+        TypedProperty<Vector>* hotpoint = static_cast<TypedProperty<Vector>*>( p_prop );
+        m_hotpoint.m_value = hotpoint->m_value;        
+
+        for( long i = 0; i < 6; i++ )
+        {
+            if( m_faces[i] != NULL )
+            {
+                m_faces[i]->UpdateHotpoint( m_hotpoint.m_value );
             }
         }
     }
