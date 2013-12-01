@@ -1,8 +1,9 @@
 
 float4x4 matWorldViewProjection: register(c0);
-float4x4 matWorld:               register(c4);
-float4x4 matView:                register(c8);
+float4x4 matWorldView:           register(c4);
+
 float    fogDensity:             register(c12);
+
 
 struct VS_INPUT 
 {
@@ -36,9 +37,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 {
    VS_OUTPUT Output;
    Output.Position = mul( Input.Position, matWorldViewProjection );  
-   
-   float4x4 worldView = mul( matWorld, matView );
-   float4 Position = mul( Input.Position, worldView );   
+      
+   float4 Position = mul( Input.Position, matWorldView );   
    Output.Fog = clamp( 0.0, 1.0, ComputeExp2Fog( Position, fogDensity ) );       
    return( Output );   
 }
