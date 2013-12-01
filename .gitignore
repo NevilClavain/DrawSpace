@@ -79,6 +79,10 @@ _TeamCity*
 # Installshield output folder
 [Ee]xpress/
 
+#hlsl compiled shaders
+*.vso
+*.pso
+
 # DocProject is a documentation generator add-in
 DocProject/buildhelp/
 DocProject/Help/*.HxT
