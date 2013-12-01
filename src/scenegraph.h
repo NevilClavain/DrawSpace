@@ -48,6 +48,7 @@ public:
     bool SetCurrentCamera( const dsstring& p_nodename );
 
     void GetCurrentCameraView( Utils::Matrix& p_view );
+    void GetCurrentCameraTranform( Utils::Matrix& p_mat );
 
     void ComputeTransformations( void );
     

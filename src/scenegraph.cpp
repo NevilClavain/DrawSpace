@@ -90,3 +90,15 @@ void Scenegraph::GetCurrentCameraView( Utils::Matrix& p_view )
 {
     p_view = m_view;
 }
+
+void Scenegraph::GetCurrentCameraTranform( Utils::Matrix& p_mat )
+{
+    Utils::Matrix mat;
+    mat.Identity();
+
+    if( m_camera )
+    {
+        m_camera->GetSceneWorld( mat );
+    }
+    p_mat = mat;
+}

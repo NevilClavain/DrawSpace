@@ -43,6 +43,7 @@ public:
 
     void ComputeTransformations( void );    
     bool SetNodeLocalTransformation( const dsstring& p_nodename, const DrawSpace::Utils::Matrix& p_mat );
+    bool GetNodeGlobalTransform( const dsstring& p_nodename, DrawSpace::Utils::Matrix& p_mat );
 
 };
 }

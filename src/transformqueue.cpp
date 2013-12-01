@@ -77,3 +77,14 @@ bool TransformQueue::SetNodeLocalTransformation( const dsstring& p_nodename, con
     _DSERROR( logger, "no node with this name found !" )
     return false;
 }
+
+bool TransformQueue::GetNodeGlobalTransform( const dsstring& p_nodename, DrawSpace::Utils::Matrix& p_mat )
+{
+    if( m_nodes.count( p_nodename ) > 0 )
+    {
+        m_nodes[p_nodename]->GetSceneWorld( p_mat );
+        return true;
+    }	
+    _DSERROR( logger, "no node with this name found !" )
+    return false;
+}
