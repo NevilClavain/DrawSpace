@@ -57,13 +57,9 @@ protected:
 	int                                     m_orientation;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
-
-
-	dsstring		m_name;
+	dsstring		                        m_name;
 
 	void build( void );
-
-    void cubetosphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
 
 public:
 	Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid );
@@ -77,6 +73,9 @@ public:
 
 	void GetPos( dsreal& p_xpos, dsreal& p_ypos );
 	
+    static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+    static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+
 };
 
 #endif

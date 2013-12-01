@@ -84,8 +84,8 @@ protected:
     //// properties
     DrawSpace::Core::TypedProperty<dsreal>                      m_diameter;
     DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_hotpoint;
-
-
+    DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_relative_hotpoint;
+    DrawSpace::Core::TypedProperty<dsreal>                      m_altitud;
 
     void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     
@@ -106,7 +106,6 @@ public:
     virtual void ComputeSpecifics( void );
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
-    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
-
+    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );    
 };
 #endif

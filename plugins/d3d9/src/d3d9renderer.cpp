@@ -786,6 +786,7 @@ bool D3D9Renderer::RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace:
     set_vertexshader_constants( 0, result.GetArray(), 4 );
     
     //////////////////////////////////////////////////////////////////////
+    /*
     DrawSpace::Utils::Matrix world = p_world;
     DrawSpace::Utils::Matrix view = p_view;
     world.Transpose();
@@ -793,7 +794,18 @@ bool D3D9Renderer::RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace:
 
     set_vertexshader_constants( 4, world.GetArray(), 4 );
     set_vertexshader_constants( 8, view.GetArray(), 4 );
+    */
 
+    DrawSpace::Utils::Matrix world = p_world;
+    DrawSpace::Utils::Matrix view = p_view;
+    DrawSpace::Utils::Matrix worldview = world * view;
+    worldview.Transpose();
+    
+
+    set_vertexshader_constants( 4, worldview.GetArray(), 4 );
+    
+
+    
     //////////////////////////////////////////////////////////////////////
 
     if( !node_infos.meshes.count( p_id ) )

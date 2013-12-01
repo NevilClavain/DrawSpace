@@ -22,6 +22,7 @@
 
 #include "planet_face.h"
 #include "memalloc.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -438,7 +439,115 @@ void Face::SetPlanetDiameter( dsreal p_diameter )
     m_planet_diameter = p_diameter;
 }
 
-void Face::UpdateHotpoint( const DrawSpace::Utils::Vector& p_point )
+void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
 {
-    m_hotpoint = p_point;
+    m_relative_hotpoint = p_point;
+}
+
+void Face::split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
+{
+    Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
+    p_node->Split();
+
+    for( long i = 0; i < 8; i++ )
+    {
+        if( current_patch->GetNeighbour( i ) != NULL )
+        {
+            current_patch->GetNeighbour( i )->Split();
+        }
+    }
+}
+
+void Face::merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
+{
+    Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
+    p_node->Merge();
+
+    for( long i = 0; i < 8; i++ )
+    {
+        if( current_patch->GetNeighbour( i ) != NULL )
+        {
+            current_patch->GetNeighbour( i )->Merge();
+        }
+    }
+}
+
+bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
+{
+	Vector viewer;
+
+	if( m_orientation == Patch::TopPlanetFace )
+	{
+		viewer[0] = p_hotpoint[0];
+		viewer[1] = p_hotpoint[1];
+		viewer[2] = p_hotpoint[3];
+		viewer[3] = 0.0;
+	}
+    else if( m_orientation == Patch::BottomPlanetFace )
+	{
+		viewer[0] = p_hotpoint[0];
+		viewer[1] = -p_hotpoint[1];
+		viewer[2] = -p_hotpoint[3];
+		viewer[3] = 0.0;
+	}
+    else if( m_orientation == Patch::FrontPlanetFace )
+	{
+		viewer[0] = p_hotpoint[0];
+		viewer[1] = p_hotpoint[3];
+		viewer[2] = -p_hotpoint[1];
+		viewer[3] = 0.0;
+	}
+
+    else if( m_orientation == Patch::RearPlanetFace )
+	{
+		viewer[0] = -p_hotpoint[0];
+		viewer[1] = -p_hotpoint[3];
+		viewer[2] = -p_hotpoint[1];
+		viewer[3] = 0.0;
+	}
+    else if( m_orientation == Patch::RightPlanetFace )
+	{
+		viewer[0] = p_hotpoint[3];
+		viewer[1] = -p_hotpoint[0];
+		viewer[2] = -p_hotpoint[1];
+		viewer[3] = 0.0;
+	}
+    else if( m_orientation == Patch::LeftPlanetFace )
+	{
+		viewer[0] = -p_hotpoint[3];
+		viewer[1] = p_hotpoint[0];
+		viewer[2] = -p_hotpoint[1];
+		viewer[3] = 0.0;
+	}
+
+    viewer.Normalize();
+	Vector projected_viewer;
+    Patch::SphereToCube( viewer, projected_viewer );
+	projected_viewer.Scale( m_planet_diameter / 2.0 );
+
+    Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
+
+    dsreal patch_xpos, patch_ypos;
+    current_patch->GetPos( patch_xpos, patch_ypos );
+
+    dsreal patch_side_size = current_patch->GetSideLength();
+
+	if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
+		( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[2] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[2] )
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Face::check_split( Vector& p_hotpoint )
+{
+	bool status = false;
+
+    Vector sphericals;
+    Maths::CartesiantoSpherical( p_hotpoint, sphericals );
+
+    dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
+	
+	return status;
 }

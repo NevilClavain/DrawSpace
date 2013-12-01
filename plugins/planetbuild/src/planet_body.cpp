@@ -125,7 +125,9 @@ Body::Body( void ) :
 m_renderer( NULL ), 
 m_scenegraph( NULL ),
 m_diameter( "diameter" ),
-m_hotpoint( "hotpoint" )
+m_hotpoint( "hotpoint" ),
+m_relative_hotpoint( "relative_hotpoint" ),
+m_altitud( "altitud" )
 {
     for( long i = 0; i < 6; i++ )
     {
@@ -133,6 +135,7 @@ m_hotpoint( "hotpoint" )
     }
 
     m_diameter.m_value = 10.0;
+    m_altitud.m_value = -1.0;
 }
 
 Body::~Body( void )
@@ -342,6 +345,12 @@ void Body::GetPropertiesList( std::vector<dsstring>& p_props )
 
     m_hotpoint.GetName( name );
     p_props.push_back( name );
+
+    m_relative_hotpoint.GetName( name );
+    p_props.push_back( name );
+
+    m_altitud.GetName( name );
+    p_props.push_back( name );
 }
 
 Property* Body::GetProperty( const dsstring& p_name )
@@ -358,6 +367,18 @@ Property* Body::GetProperty( const dsstring& p_name )
     if( p_name == name )
     {
         return &m_hotpoint;
+    }
+
+    m_relative_hotpoint.GetName( name );
+    if( p_name == name )
+    {
+        return &m_relative_hotpoint;
+    }
+
+    m_altitud.GetName( name );
+    if( p_name == name )
+    {
+        return &m_altitud;
     }
 
     return NULL;
@@ -385,14 +406,21 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
     if( p_name == name )
     {
         TypedProperty<Vector>* hotpoint = static_cast<TypedProperty<Vector>*>( p_prop );
-        m_hotpoint.m_value = hotpoint->m_value;        
+        m_hotpoint.m_value = hotpoint->m_value;
+
+        Matrix inv = m_globaltransformation;
+        inv.Inverse();
+        inv.Transform( &m_hotpoint.m_value, &m_relative_hotpoint.m_value );
 
         for( long i = 0; i < 6; i++ )
         {
             if( m_faces[i] != NULL )
             {
-                m_faces[i]->UpdateHotpoint( m_hotpoint.m_value );
+                m_faces[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
             }
         }
+
+        // compute altitud
+        m_altitud.m_value = m_relative_hotpoint.m_value.Length() - ( m_diameter.m_value / 2.0 );
     }
 }

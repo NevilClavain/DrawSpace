@@ -53,7 +53,7 @@ protected:
     PatchDeletionHandler*                                       m_del_handler;
     PatchMergeHandler*                                          m_merge_handler;
     dsreal                                                      m_planet_diameter;
-    DrawSpace::Utils::Vector                                    m_hotpoint;
+    DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::BaseQuadtreeNode*                         m_currentleaf;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -64,6 +64,13 @@ protected:
     void set_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node );
     void unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node );
 
+    bool is_hotpoint_bound_in_node( DrawSpace::Utils::BaseQuadtreeNode* p_node, const DrawSpace::Utils::Vector& p_hotpoint );
+
+    void split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node );
+    void merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node );
+
+    bool check_split( DrawSpace::Utils::Vector& p_hotpoint );
+
 public:
     Face( PatchInstanciationHandler* p_inst_handler, PatchDeletionHandler* p_del_handler, PatchSplitHandler* p_split_handler, PatchMergeHandler* p_merge_handler );
     virtual ~Face( void );
@@ -73,7 +80,7 @@ public:
     virtual void Split( const dsstring& p_name );
     virtual void Merge( const dsstring& p_name );
     virtual void SetPlanetDiameter( dsreal p_diameter );
-    virtual void UpdateHotpoint( const DrawSpace::Utils::Vector& p_point );
+    virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
 };
 
 #endif

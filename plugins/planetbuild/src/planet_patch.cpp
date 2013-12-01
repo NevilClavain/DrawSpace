@@ -104,7 +104,7 @@ DrawSpace::Utils::BaseQuadtreeNode* Patch::GetNeighbour( int p_id )
 	return m_neighbours[p_id];
 }
 
-void Patch::cubetosphere( const Vector& p_in, Vector& p_out )
+void Patch::CubeToSphere( const Vector& p_in, Vector& p_out )
 {
 	dsreal x = p_in[0];
 	dsreal y = p_in[1];
@@ -114,6 +114,118 @@ void Patch::cubetosphere( const Vector& p_in, Vector& p_out )
 	p_out[1] = y * sqrt( 1.0 - z * z * 0.5 - x * x * 0.5 + x * x * z * z / 3.0 );
 	p_out[2] = z * sqrt( 1.0 - x * x * 0.5 - y * y * 0.5 + x * x * y * y / 3.0 );
 }
+
+void Patch::SphereToCube( const Vector& p_in, Vector& p_out )
+{
+	dsreal nx, ny, nz;
+	nx = ny = nz = 0;
+
+	dsreal x, y, z;
+
+	x = p_in[0];
+	y = p_in[1];
+	z = p_in[2];
+
+	dsreal fx, fy, fz;
+	fx = fabs( p_in[0] );
+	fy = fabs( p_in[1] );
+	fz = fabs( p_in[2] );
+
+	int nbIter = 6;
+
+	if( fy >= fx && fy >= fz )
+	{
+		if( y > 0 )
+		{
+			for( int n = 0; n < nbIter; n++ )
+			{
+				nx = x / sqrt( 1.0 - ny * ny * 0.5 - nz * nz * 0.5 + ny * ny * nz * nz / 3.0 );
+				ny = y / sqrt( 1.0 - nz * nz * 0.5 - nx * nx * 0.5 + nz * nz * nx * nx / 3.0 );
+				nz = z / sqrt( 1.0 - nx * nx * 0.5 - ny * ny * 0.5 + nx * nx * ny * ny / 3.0 );
+
+				nx = nx / ny;
+				nz = nz / ny;
+				ny = 1.0;
+			}
+		}
+		else
+		{
+			for( int n = 0; n < nbIter; n++ )
+			{
+				nx = x / sqrt( 1.0 - ny * ny * 0.5 - nz * nz * 0.5 + ny * ny * nz * nz / 3.0 );
+				ny = y / sqrt( 1.0 - nz * nz * 0.5 - nx * nx * 0.5 + nz * nz * nx * nx / 3.0 );
+				nz = z / sqrt( 1.0 - nx * nx * 0.5 - ny * ny * 0.5 + nx * nx * ny * ny / 3.0 );
+
+				nx = nx / (-ny);
+				nz = nz / (-ny);
+				ny = -1.0;
+			}
+		}
+	}
+	else if( fx >= fy && fx >= fz )
+	{
+		if( x > 0 )
+		{
+			for( int n = 0; n < nbIter; n++ )
+			{
+				nx = x / sqrt( 1.0 - ny * ny * 0.5 - nz * nz * 0.5 + ny * ny * nz * nz / 3.0 );
+				ny = y / sqrt( 1.0 - nz * nz * 0.5 - nx * nx * 0.5 + nz * nz * nx * nx / 3.0 );
+				nz = z / sqrt( 1.0 - nx * nx * 0.5 - ny * ny * 0.5 + nx * nx * ny * ny / 3.0 );
+
+				nz = nz / nx;
+				ny = ny / nx;
+				nx = 1.0;
+			}
+		}
+		else
+		{
+			for( int n = 0; n < nbIter; n++ )
+			{
+				nx = x / sqrt( 1.0 - ny * ny * 0.5 - nz * nz * 0.5 + ny * ny * nz * nz / 3.0 );
+				ny = y / sqrt( 1.0 - nz * nz * 0.5 - nx * nx * 0.5 + nz * nz * nx * nx / 3.0 );
+				nz = z / sqrt( 1.0 - nx * nx * 0.5 - ny * ny * 0.5 + nx * nx * ny * ny / 3.0 );
+
+				nz = nz / (-nx);
+				ny = ny / (-nx);
+				nx = -1.0;
+			}
+		}
+	}
+	else
+	{
+		if( z > 0 )
+		{
+			for( int n = 0; n < nbIter; n++ )
+			{
+				nx = x / sqrt( 1.0 - ny * ny * 0.5 - nz * nz * 0.5 + ny * ny * nz * nz / 3.0 );
+				ny = y / sqrt( 1.0 - nz * nz * 0.5 - nx * nx * 0.5 + nz * nz * nx * nx / 3.0 );
+				nz = z / sqrt( 1.0 - nx * nx * 0.5 - ny * ny * 0.5 + nx * nx * ny * ny / 3.0 );
+
+				nx = nx / nz;
+				ny = ny / nz;
+				nz = 1.0;
+			}
+		}
+		else
+		{
+			for( int n = 0; n < nbIter; n++ )
+			{
+				nx = x / sqrt( 1.0 - ny * ny * 0.5 - nz * nz * 0.5 + ny * ny * nz * nz / 3.0 );
+				ny = y / sqrt( 1.0 - nz * nz * 0.5 - nx * nx * 0.5 + nz * nz * nx * nx / 3.0 );
+				nz = z / sqrt( 1.0 - nx * nx * 0.5 - ny * ny * 0.5 + nx * nx * ny * ny / 3.0 );
+
+				nx = nx / (-nz);
+				ny = ny / (-nz);
+				nz = -1.0;
+			}
+		}
+	}
+
+	p_out[0] = nx;
+	p_out[1] = ny;
+	p_out[2] = nz;
+}
+
 
 void Patch::build( void )
 {
@@ -178,7 +290,7 @@ void Patch::build( void )
 					break;
 			}
 			
-			cubetosphere( coords, coords2 );
+			CubeToSphere( coords, coords2 );
 
 			coords2.Scale( m_ray );
 
