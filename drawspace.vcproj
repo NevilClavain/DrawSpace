@@ -319,6 +319,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\maths.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\maths.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\matrix.cpp"
 				>
 			</File>
