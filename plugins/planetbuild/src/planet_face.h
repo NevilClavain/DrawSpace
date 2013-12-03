@@ -85,7 +85,7 @@ public:
     virtual void Merge( const dsstring& p_name );
     virtual void SetPlanetDiameter( dsreal p_diameter );
     virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
-    virtual void Compute( void );
+    virtual bool Compute( void );
 };
 
 #endif

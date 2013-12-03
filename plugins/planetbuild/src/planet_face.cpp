@@ -480,20 +480,20 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 	{
 		viewer[0] = p_hotpoint[0];
 		viewer[1] = p_hotpoint[1];
-		viewer[2] = p_hotpoint[3];
+		viewer[2] = p_hotpoint[2];
 		viewer[3] = 0.0;
 	}
     else if( m_orientation == Patch::BottomPlanetFace )
 	{
 		viewer[0] = p_hotpoint[0];
 		viewer[1] = -p_hotpoint[1];
-		viewer[2] = -p_hotpoint[3];
+		viewer[2] = -p_hotpoint[2];
 		viewer[3] = 0.0;
 	}
     else if( m_orientation == Patch::FrontPlanetFace )
 	{
 		viewer[0] = p_hotpoint[0];
-		viewer[1] = p_hotpoint[3];
+		viewer[1] = p_hotpoint[2];
 		viewer[2] = -p_hotpoint[1];
 		viewer[3] = 0.0;
 	}
@@ -501,20 +501,20 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
     else if( m_orientation == Patch::RearPlanetFace )
 	{
 		viewer[0] = -p_hotpoint[0];
-		viewer[1] = -p_hotpoint[3];
+		viewer[1] = -p_hotpoint[2];
 		viewer[2] = -p_hotpoint[1];
 		viewer[3] = 0.0;
 	}
     else if( m_orientation == Patch::RightPlanetFace )
 	{
-		viewer[0] = p_hotpoint[3];
+		viewer[0] = p_hotpoint[2];
 		viewer[1] = -p_hotpoint[0];
 		viewer[2] = -p_hotpoint[1];
 		viewer[3] = 0.0;
 	}
     else if( m_orientation == Patch::LeftPlanetFace )
 	{
-		viewer[0] = -p_hotpoint[3];
+		viewer[0] = -p_hotpoint[2];
 		viewer[1] = p_hotpoint[0];
 		viewer[2] = -p_hotpoint[1];
 		viewer[3] = 0.0;
@@ -523,7 +523,7 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
     viewer.Normalize();
 	Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );
-	projected_viewer.Scale( m_planet_diameter / 2.0 );
+	//projected_viewer.Scale( m_planet_diameter / 2.0 );
 
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
 
@@ -542,7 +542,7 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 
 dsreal Face::alt_ratio( dsreal p_altitud )
 {
-    return p_altitud / m_currentleaf->GetContent()->GetSideLength();
+    return p_altitud / ( m_currentleaf->GetContent()->GetSideLength() * m_planet_diameter / 2.0 );
 }
 
 bool Face::check_split( Vector& p_hotpoint )
@@ -565,15 +565,15 @@ bool Face::check_split( Vector& p_hotpoint )
             {
                 m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::NorthWestNode ) );
             }
-            if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::NorthEastNode ), p_hotpoint ) )
+            else if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::NorthEastNode ), p_hotpoint ) )
             {
                 m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::NorthEastNode ) );
             }
-            if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::SouthEastNode ), p_hotpoint ) )
+            else if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::SouthEastNode ), p_hotpoint ) )
             {
                 m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::SouthEastNode ) );
             }
-            if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::SouthWestNode ), p_hotpoint ) )
+            else if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::SouthWestNode ), p_hotpoint ) )
             {
                 m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::SouthWestNode ) );
             }
@@ -648,8 +648,10 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
     return NULL;
 }
 
-void Face::Compute( void )
+bool Face::Compute( void )
 {
+    bool status = false;
+
     if( m_currentleaf == NULL )
 	{
         if( m_rootpatch )
@@ -659,6 +661,47 @@ void Face::Compute( void )
     }
     else
     {
-        // ...
+		// checker que ce leaf est toujours d'actualite
+		if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
+		{
+			// verif si split ou merge necessaire
+			if( check_split( m_relative_hotpoint ) )
+			{
+				status = true;
+			}
+			if( check_merge( m_relative_hotpoint ) )
+			{
+				status = true;
+			}
+		}
+        else
+        {
+            DrawSpace::Utils::QuadtreeNode<Patch>* bounding_parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
+
+            while( bounding_parent )
+            {
+                merge_group( bounding_parent );
+
+                if( is_hotpoint_bound_in_node( bounding_parent, m_relative_hotpoint ) )
+                {
+					// trouve un parent englobant le viewer
+					break;
+                }
+                bounding_parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( bounding_parent->GetParent() );
+
+                status = true;
+            }
+
+            if( bounding_parent )
+            {
+                m_currentleaf = bounding_parent;
+                check_split( m_relative_hotpoint );
+            }
+            else
+            {
+                m_currentleaf = NULL;
+            }
+        }
     }
+    return status;
 }

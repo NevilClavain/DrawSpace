@@ -316,24 +316,14 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
 
 void Body::ComputeSpecifics( void )
 {
-    // PROVISOIRE TESTS
-
-    static int foo;
-
-    if( 0 == foo )
+    /*
+    for( long i = 0; i < 6; i++ )
     {
-        m_faces[Patch::FrontPlanetFace]->Split( ".0" );
-        m_faces[Patch::TopPlanetFace]->Split( ".0" );
-        m_faces[Patch::TopPlanetFace]->Split( ".0.3" );
-        m_faces[Patch::TopPlanetFace]->Split( ".0.3.1" );
-        m_faces[Patch::TopPlanetFace]->Split( ".0.3.1.2" );
+        m_faces[i]->Compute();
     }
-    else if( 1 == foo )
-    {
-        m_faces[Patch::FrontPlanetFace]->Merge( ".0" );
-    }
+    */
 
-    foo++;
+    m_faces[4]->Compute();
 }
 
 void Body::GetPropertiesList( std::vector<dsstring>& p_props )
