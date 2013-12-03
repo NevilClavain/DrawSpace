@@ -540,6 +540,11 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 	return false;
 }
 
+dsreal Face::alt_ratio( dsreal p_altitud )
+{
+    return p_altitud / m_currentleaf->GetContent()->GetSideLength();
+}
+
 bool Face::check_split( Vector& p_hotpoint )
 {
 	bool status = false;
@@ -548,6 +553,112 @@ bool Face::check_split( Vector& p_hotpoint )
     Maths::CartesiantoSpherical( p_hotpoint, sphericals );
 
     dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
+
+    if( alt >= 0.0 )
+    {
+		while( alt_ratio( alt ) < 5.0 )
+		{
+            // split necessaire
+            split_group( m_currentleaf );
+
+            if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::NorthWestNode ), p_hotpoint ) )
+            {
+                m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::NorthWestNode ) );
+            }
+            if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::NorthEastNode ), p_hotpoint ) )
+            {
+                m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::NorthEastNode ) );
+            }
+            if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::SouthEastNode ), p_hotpoint ) )
+            {
+                m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::SouthEastNode ) );
+            }
+            if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::SouthWestNode ), p_hotpoint ) )
+            {
+                m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::SouthWestNode ) );
+            }
+            
+            status = true;
+        }
+    }
 	
 	return status;
+}
+
+bool Face::check_merge( Vector& p_hotpoint )
+{
+    bool status = false;
+
+    Vector sphericals;
+    Maths::CartesiantoSpherical( p_hotpoint, sphericals );
+
+    dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
+
+	while( alt_ratio( alt ) > 1.0 )
+	{
+        if( m_currentleaf->GetParent() )
+		{
+			m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
+			merge_group( m_currentleaf );
+
+			status = true;
+		}
+		else
+		{
+			break;
+		}
+	}
+    return false;
+}
+
+QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vector& p_point )
+{
+    QuadtreeNode<Patch>* child;
+
+    if( is_hotpoint_bound_in_node( p_current, p_point ) )
+    {
+        if( p_current->HasChildren() )
+        {
+            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::NorthWestNode ) ), p_point );
+            if( child )
+            {
+                return child;
+            }
+
+            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::NorthEastNode ) ), p_point );
+            if( child )
+            {
+                return child;
+            }
+
+            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::SouthEastNode ) ), p_point );
+            if( child )
+            {
+                return child;
+            }
+
+            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::SouthWestNode ) ), p_point );
+            if( child )
+            {
+                return child;
+            }
+        }
+        return p_current;
+    }
+    return NULL;
+}
+
+void Face::Compute( void )
+{
+    if( m_currentleaf == NULL )
+	{
+        if( m_rootpatch )
+        {
+            m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
+        }
+    }
+    else
+    {
+        // ...
+    }
 }
