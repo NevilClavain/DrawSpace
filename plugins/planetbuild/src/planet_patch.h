@@ -23,8 +23,8 @@
 #ifndef _PLANET_PATCH_H_
 #define _PLANET_PATCH_H_
 
-#include "meshe.h"
-#include "quadtree.h"
+#include <meshe.h>
+#include <quadtree.h>
 
 class Patch : public DrawSpace::Core::Meshe
 {

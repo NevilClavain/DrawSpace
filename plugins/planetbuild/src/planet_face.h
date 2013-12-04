@@ -23,9 +23,10 @@
 #ifndef _PLANET_FACE_H_
 #define _PLANET_FACE_H_
 
-#include "renderingnode.h"
-#include "quadtree.h"
-#include "renderer.h"
+#include <renderingnode.h>
+#include <quadtree.h>
+#include <renderer.h>
+#include <mutex.h>
 #include "planet_patch.h"
 
 class Face
@@ -42,7 +43,7 @@ protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   SplitCallback;
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   MergeCallback;
 
-    static const int patchresol = 13;
+    static const int patchresol = 9;
 
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
@@ -55,6 +56,7 @@ protected:
     dsreal                                                      m_planet_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
+    DrawSpace::Utils::Mutex*                                    m_quadtree_mutex;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -86,6 +88,8 @@ public:
     virtual void SetPlanetDiameter( dsreal p_diameter );
     virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
     virtual bool Compute( void );
+
+    virtual void SetMutex( DrawSpace::Utils::Mutex* p_mutex );
 };
 
 #endif

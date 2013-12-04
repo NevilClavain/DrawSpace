@@ -25,7 +25,9 @@
 
 #include <drawable.h>
 #include <scenegraph.h>
+#include <task.h>
 #include <property.h>
+#include <mutex.h>
 #include "planet_face.h"
 
 class FaceRenderingNode : public DrawSpace::Core::RenderingNode
@@ -44,6 +46,7 @@ protected:
     PatchDelCallback*               m_patchdelcallback;
     PatchSplitCallback*             m_patchsplitcallback;
     PatchMergeCallback*             m_patchmergecallback;
+    DrawSpace::Utils::Mutex         m_quadtree_mutex;
 
     void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
     void                            on_patchdel( int p_orientation, Patch* p_patch );
@@ -59,6 +62,8 @@ public:
     virtual Face::PatchDeletionHandler* GetPatchDelHandler( void );
     virtual Face::PatchSplitHandler* GetPatchSplitHandler( void );
     virtual Face::PatchMergeHandler* GetPatchMergeHandler( void );
+
+    virtual DrawSpace::Utils::Mutex* GetMutex( void );
 
 };
 
@@ -86,9 +91,16 @@ protected:
     DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_hotpoint;
     DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_relative_hotpoint;
     DrawSpace::Core::TypedProperty<dsreal>                      m_altitud;
+    DrawSpace::Core::TypedProperty<bool>                        m_update_state;
 
-    void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    
+    bool                                                        m_stop_thread;
+    DrawSpace::Core::Task<Body>*                                m_update_task;
+
+    void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );    
+
+    void                                        start_update( void );
+    void                                        stop_update( void );
+
 public:
 
 	Body( void );
@@ -106,6 +118,9 @@ public:
     virtual void ComputeSpecifics( void );
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
-    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );    
+    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
+
+    virtual void Run( void );
+   
 };
 #endif

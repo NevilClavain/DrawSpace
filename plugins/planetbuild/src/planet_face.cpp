@@ -21,8 +21,8 @@
 */
 
 #include "planet_face.h"
-#include "memalloc.h"
-#include "maths.h"
+#include <memalloc.h>
+#include <maths.h>
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -449,6 +449,30 @@ void Face::split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
     p_node->Split();
 
+    /*
+    if( current_patch->GetNeighbour( Patch::NorthNeighbour ) != NULL )
+    {
+        current_patch->GetNeighbour( Patch::NorthNeighbour )->Split();
+    }
+
+    if( current_patch->GetNeighbour( Patch::SouthNeighbour ) != NULL )
+    {
+        current_patch->GetNeighbour( Patch::SouthNeighbour )->Split();
+    }
+
+    if( current_patch->GetNeighbour( Patch::EastNeighbour ) != NULL )
+    {
+        current_patch->GetNeighbour( Patch::EastNeighbour )->Split();
+    }
+
+    if( current_patch->GetNeighbour( Patch::WestNeighbour ) != NULL )
+    {
+        current_patch->GetNeighbour( Patch::WestNeighbour )->Split();
+    }
+    */
+
+
+    /*
     for( long i = 0; i < 8; i++ )
     {
         if( current_patch->GetNeighbour( i ) != NULL )
@@ -456,6 +480,7 @@ void Face::split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
             current_patch->GetNeighbour( i )->Split();
         }
     }
+    */
 }
 
 void Face::merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
@@ -463,19 +488,45 @@ void Face::merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
     p_node->Merge();
 
+    /*
+    if( current_patch->GetNeighbour( Patch::NorthNeighbour ) != NULL )
+    {
+        current_patch->GetNeighbour( Patch::NorthNeighbour )->Merge();
+    }
+
+    if( current_patch->GetNeighbour( Patch::SouthNeighbour ) != NULL )
+    {
+        current_patch->GetNeighbour( Patch::SouthNeighbour )->Merge();
+    }
+
+    if( current_patch->GetNeighbour( Patch::EastNeighbour ) != NULL )
+    {
+        current_patch->GetNeighbour( Patch::EastNeighbour )->Merge();
+    }
+
+    if( current_patch->GetNeighbour( Patch::WestNeighbour ) != NULL )
+    {
+        current_patch->GetNeighbour( Patch::WestNeighbour )->Merge();
+    }
+    */
+
+
+    /*
     for( long i = 0; i < 8; i++ )
     {
         if( current_patch->GetNeighbour( i ) != NULL )
         {
             current_patch->GetNeighbour( i )->Merge();
         }
-    }
+    } 
+    */
 }
 
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
 {
 	Vector viewer;
 
+    /*
 	if( m_orientation == Patch::TopPlanetFace )
 	{
 		viewer[0] = p_hotpoint[0];
@@ -519,11 +570,22 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 		viewer[2] = -p_hotpoint[1];
 		viewer[3] = 0.0;
 	}
+    */
 
+	viewer[0] = p_hotpoint[0];
+	viewer[1] = p_hotpoint[1];
+	viewer[2] = p_hotpoint[2];
+	viewer[3] = 0.0;
+
+
+    Vector sphericals;
+    Maths::CartesiantoSpherical( viewer, sphericals );
+    
     viewer.Normalize();
 	Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );
-	//projected_viewer.Scale( m_planet_diameter / 2.0 );
+	projected_viewer.Scale( sphericals[0] );
+    
 
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
 
@@ -532,17 +594,29 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 
     dsreal patch_side_size = current_patch->GetSideLength();
 
+    /*
 	if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
 		( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[2] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[2] )
 	{
 		return true;
 	}
+    */
+
+	if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
+		( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[1] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[1] )
+	{
+		return true;
+	}
+
+
 	return false;
 }
 
 dsreal Face::alt_ratio( dsreal p_altitud )
 {
-    return p_altitud / ( m_currentleaf->GetContent()->GetSideLength() * m_planet_diameter / 2.0 );
+    dsreal side_length = m_currentleaf->GetContent()->GetSideLength();
+    dsreal ratio = p_altitud / side_length;
+    return ratio;
 }
 
 bool Face::check_split( Vector& p_hotpoint )
@@ -556,7 +630,7 @@ bool Face::check_split( Vector& p_hotpoint )
 
     if( alt >= 0.0 )
     {
-		while( alt_ratio( alt ) < 5.0 )
+		while( alt_ratio( alt ) < 1.5 )
 		{
             // split necessaire
             split_group( m_currentleaf );
@@ -594,7 +668,7 @@ bool Face::check_merge( Vector& p_hotpoint )
 
     dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
 
-	while( alt_ratio( alt ) > 1.0 )
+	while( alt_ratio( alt ) > 2.0 )
 	{
         if( m_currentleaf->GetParent() )
 		{
@@ -650,6 +724,8 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
 
 bool Face::Compute( void )
 {
+    m_quadtree_mutex->WaitInfinite();
+
     bool status = false;
 
     if( m_currentleaf == NULL )
@@ -669,11 +745,15 @@ bool Face::Compute( void )
 			{
 				status = true;
 			}
+            
+            
 			if( check_merge( m_relative_hotpoint ) )
 			{
 				status = true;
-			}
+			} 
+            
 		}
+        
         else
         {
             DrawSpace::Utils::QuadtreeNode<Patch>* bounding_parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
@@ -702,6 +782,14 @@ bool Face::Compute( void )
                 m_currentleaf = NULL;
             }
         }
+        
     }
+    m_quadtree_mutex->Release();
+
     return status;
+}
+
+void Face::SetMutex( DrawSpace::Utils::Mutex* p_mutex )
+{
+    m_quadtree_mutex = p_mutex;
 }

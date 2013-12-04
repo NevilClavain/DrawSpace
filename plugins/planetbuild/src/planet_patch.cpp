@@ -21,7 +21,6 @@
 */
 
 #include "planet_patch.h"
-#include "quadtree.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -336,11 +335,11 @@ void Patch::GetName( dsstring& p_name )
 
 dsreal Patch::GetSideLength( void )
 {
-	return m_sidelength;
+	return m_sidelength * m_ray;
 }
 
 void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos )
 {
-	p_xpos = m_xpos;
-	p_ypos = m_ypos;
+	p_xpos = m_xpos * m_ray;
+	p_ypos = m_ypos * m_ray;
 }
