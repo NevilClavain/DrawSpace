@@ -46,7 +46,7 @@ protected:
     PatchDelCallback*               m_patchdelcallback;
     PatchSplitCallback*             m_patchsplitcallback;
     PatchMergeCallback*             m_patchmergecallback;
-    DrawSpace::Utils::Mutex         m_quadtree_mutex;
+    DrawSpace::Utils::Mutex*        m_quadtree_mutex;
 
     void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
     void                            on_patchdel( int p_orientation, Patch* p_patch );
@@ -62,8 +62,7 @@ public:
     virtual Face::PatchDeletionHandler* GetPatchDelHandler( void );
     virtual Face::PatchSplitHandler* GetPatchSplitHandler( void );
     virtual Face::PatchMergeHandler* GetPatchMergeHandler( void );
-
-    virtual DrawSpace::Utils::Mutex* GetMutex( void );
+    virtual void SetMutex( DrawSpace::Utils::Mutex* p_mutex );
 
 };
 

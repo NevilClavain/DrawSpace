@@ -28,17 +28,13 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-
-Face::Face( PatchInstanciationHandler* p_inst_handler, PatchDeletionHandler* p_del_handler, PatchSplitHandler* p_split_handler, PatchMergeHandler* p_merge_handler ) : 
+Face::Face( void ) : 
 m_rootpatch( NULL ), 
-m_inst_handler( p_inst_handler ), 
-m_del_handler( p_del_handler ),
-m_split_handler( p_split_handler ),
-m_merge_handler( p_merge_handler ),
 m_planet_diameter( 10.0 ),
 m_currentleaf( NULL )
 {
 }
+
 
 Face::~Face( void )
 {
@@ -84,7 +80,10 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         patch->GetName( patch_name );        
         m_patches[patch_name] = p_node;
 
-        (*m_inst_handler)( m_orientation, patch );        
+        for( size_t i = 0; i < m_inst_handlers.size(); i++ )
+        {
+            (*( m_inst_handlers[i] ) )( m_orientation, patch );
+        }
     }
     else
     {
@@ -105,7 +104,10 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         patch->GetName( patch_name );
         m_patches[patch_name] = p_node;
 
-        (*m_inst_handler)( m_orientation, patch );        
+        for( size_t i = 0; i < m_inst_handlers.size(); i++ )
+        {
+            (*( m_inst_handlers[i] ) )( m_orientation, patch );
+        }
     }
 }
 
@@ -115,7 +117,10 @@ void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     
     Patch* patch = node->GetContent();
 
-    (*m_del_handler)( m_orientation, patch );    
+    for( size_t i = 0; i < m_del_handlers.size(); i++ )
+    {
+        (*( m_del_handlers[i] ) )( m_orientation, patch );
+    }
 
     dsstring patch_name;
     patch->GetName( patch_name );   
@@ -154,7 +159,10 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     set_border_neighbours( se_child_node );
     set_border_neighbours( sw_child_node );
 
-    (*m_split_handler)( m_orientation, patch );
+    for( size_t i = 0; i < m_split_handlers.size(); i++ )
+    {
+        (*( m_split_handlers[i] ) )( m_orientation, patch );
+    }
 }
 
 void Face::set_border_neighbours( QuadtreeNode<Patch>* p_node )
@@ -307,7 +315,10 @@ void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     unset_border_neighbours( se_child_node );
     unset_border_neighbours( sw_child_node );
 
-    (*m_merge_handler)( m_orientation, patch );
+    for( size_t i = 0; i < m_merge_handlers.size(); i++ )
+    {
+        (*( m_merge_handlers[i] ) )( m_orientation, patch );
+    }
 }
 
 void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node )
@@ -724,7 +735,7 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
 
 bool Face::Compute( void )
 {
-    m_quadtree_mutex->WaitInfinite();
+    m_quadtree_mutex.WaitInfinite();
 
     bool status = false;
 
@@ -784,12 +795,32 @@ bool Face::Compute( void )
         }
         
     }
-    m_quadtree_mutex->Release();
+    m_quadtree_mutex.Release();
 
     return status;
 }
 
-void Face::SetMutex( DrawSpace::Utils::Mutex* p_mutex )
+DrawSpace::Utils::Mutex* Face::GetMutex( void )
 {
-    m_quadtree_mutex = p_mutex;
+    return &m_quadtree_mutex;
+}
+
+void Face::AddInstHandler( Face::PatchInstanciationHandler* p_handler )
+{
+    m_inst_handlers.push_back( p_handler );
+}
+
+void Face::AddSplitHandler( Face::PatchSplitHandler* p_handler )
+{
+    m_split_handlers.push_back( p_handler );
+}
+
+void Face::AddDelHandler( Face::PatchDeletionHandler* p_handler )
+{
+    m_del_handlers.push_back( p_handler );
+}
+
+void Face::AddMergeHandler( Face::PatchMergeHandler* p_handler )
+{
+    m_merge_handlers.push_back( p_handler );
 }

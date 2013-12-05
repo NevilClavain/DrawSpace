@@ -45,7 +45,7 @@ FaceRenderingNode::~FaceRenderingNode( void )
 
 void FaceRenderingNode::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
 {
-    m_quadtree_mutex.WaitInfinite();
+    m_quadtree_mutex->WaitInfinite();
     for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
     {
         // rendu du patch leaf
@@ -53,7 +53,7 @@ void FaceRenderingNode::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace
         (*it).second->GetName( name );
         m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
     }
-    m_quadtree_mutex.Release();
+    m_quadtree_mutex->Release();
 }
 
 void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch )
@@ -121,9 +121,9 @@ Face::PatchMergeHandler* FaceRenderingNode::GetPatchMergeHandler( void )
     return m_patchmergecallback;
 }
 
-Mutex* FaceRenderingNode::GetMutex( void )
+void FaceRenderingNode::SetMutex( DrawSpace::Utils::Mutex* p_mutex )
 {
-    return &m_quadtree_mutex;
+    m_quadtree_mutex = p_mutex;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,7 +139,7 @@ m_update_state( "update_state" )
 {
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = NULL;
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face );
     }
 
     m_diameter.m_value = 10.0;
@@ -152,6 +152,11 @@ m_update_state( "update_state" )
 Body::~Body( void )
 {
     _DRAWSPACE_DELETE_( m_update_task );
+
+    for( long i = 0; i < 6; i++ )
+    {
+        _DRAWSPACE_DELETE_( m_faces[i] );
+    }
 }
 
 void Body::GetDescr( dsstring& p_descr )
@@ -269,14 +274,12 @@ void Body::RegisterPassSlot( const dsstring p_passname )
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
 
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( nodeset.nodes[i]->GetPatchInstanciationHandler(), 
-                                                    nodeset.nodes[i]->GetPatchDelHandler(),                                                    
-                                                    nodeset.nodes[i]->GetPatchSplitHandler(),
-                                                    nodeset.nodes[i]->GetPatchMergeHandler() ) );
+        m_faces[i]->AddInstHandler( nodeset.nodes[i]->GetPatchInstanciationHandler() );
+        m_faces[i]->AddDelHandler( nodeset.nodes[i]->GetPatchDelHandler() );
+        m_faces[i]->AddSplitHandler( nodeset.nodes[i]->GetPatchSplitHandler() );
+        m_faces[i]->AddMergeHandler( nodeset.nodes[i]->GetPatchMergeHandler() );
 
-        m_faces[i]->SetPlanetDiameter( m_diameter.m_value );
-
-        m_faces[i]->SetMutex( nodeset.nodes[i]->GetMutex() );
+        nodeset.nodes[i]->SetMutex( m_faces[i]->GetMutex() );
     }
     m_passesnodes[p_passname] = nodeset;
 }
@@ -330,14 +333,6 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
 
 void Body::ComputeSpecifics( void )
 {
-    /*
-    for( long i = 0; i < 6; i++ )
-    {
-        m_faces[i]->Compute();
-    }
-    */
-
-    //m_faces[0]->Compute();
 }
 
 void Body::GetPropertiesList( std::vector<dsstring>& p_props )

@@ -49,14 +49,17 @@ protected:
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
     std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
     int                                                         m_orientation;
-    PatchInstanciationHandler*                                  m_inst_handler;
-    PatchSplitHandler*                                          m_split_handler;
-    PatchDeletionHandler*                                       m_del_handler;
-    PatchMergeHandler*                                          m_merge_handler;
+
+    std::vector<PatchInstanciationHandler*>                     m_inst_handlers;
+    std::vector<PatchSplitHandler*>                             m_split_handlers;
+    std::vector<PatchDeletionHandler*>                          m_del_handlers;
+    std::vector<PatchMergeHandler*>                             m_merge_handlers;
+
+
     dsreal                                                      m_planet_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
-    DrawSpace::Utils::Mutex*                                    m_quadtree_mutex;
+    DrawSpace::Utils::Mutex                                     m_quadtree_mutex;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -78,7 +81,8 @@ protected:
     DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under( DrawSpace::Utils::QuadtreeNode<Patch>* p_current, DrawSpace::Utils::Vector& p_point );
 
 public:
-    Face( PatchInstanciationHandler* p_inst_handler, PatchDeletionHandler* p_del_handler, PatchSplitHandler* p_split_handler, PatchMergeHandler* p_merge_handler );
+
+    Face( void );
     virtual ~Face( void );
 
     bool Init( int p_orientation );
@@ -88,8 +92,11 @@ public:
     virtual void SetPlanetDiameter( dsreal p_diameter );
     virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
     virtual bool Compute( void );
-
-    virtual void SetMutex( DrawSpace::Utils::Mutex* p_mutex );
+    virtual DrawSpace::Utils::Mutex* GetMutex( void );
+    virtual void AddInstHandler( PatchInstanciationHandler* p_handler );
+    virtual void AddSplitHandler( PatchSplitHandler* p_handler );
+    virtual void AddDelHandler( PatchDeletionHandler* p_handler );
+    virtual void AddMergeHandler( PatchMergeHandler* p_handler );
 };
 
 #endif
