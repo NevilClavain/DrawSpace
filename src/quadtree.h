@@ -80,12 +80,14 @@ protected:
     DeletionHandler*                                    m_delhandler;
     SplitHandler*                                       m_splithandler;
     MergeHandler*                                       m_mergehandler;
+    long                                                m_depth_level;
 
-	QuadtreeNode( InstanciationHandler* p_insthandler, DeletionHandler* p_delhandler, SplitHandler* p_splithandler, MergeHandler* p_mergehandler, BaseQuadtreeNode* p_parent, int p_id ) : BaseQuadtreeNode( p_parent, p_id ), 
+	QuadtreeNode( InstanciationHandler* p_insthandler, DeletionHandler* p_delhandler, SplitHandler* p_splithandler, MergeHandler* p_mergehandler, BaseQuadtreeNode* p_parent, int p_id, long p_depth_level ) : BaseQuadtreeNode( p_parent, p_id ), 
     m_insthandler( p_insthandler ), 
     m_delhandler( p_delhandler ),
     m_splithandler( p_splithandler ),
-    m_mergehandler( p_mergehandler )
+    m_mergehandler( p_mergehandler ),
+    m_depth_level( p_depth_level )
 	{
         (*m_insthandler)( this );
 		dsstring name;
@@ -98,7 +100,8 @@ public:
     m_insthandler( p_insthandler ),
     m_delhandler( p_delhandler ),
     m_splithandler( p_splithandler ),
-    m_mergehandler( p_mergehandler )
+    m_mergehandler( p_mergehandler ),
+    m_depth_level( 0 )
 	{
 		(*m_insthandler)( this );
 		dsstring name;
@@ -128,10 +131,10 @@ public:
 			return;
 		}
 
-		m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, NorthWestNode ) );
-		m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, NorthEastNode ) );
-		m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, SouthEastNode ) );
-		m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, SouthWestNode ) );
+		m_children[NorthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, NorthWestNode, m_depth_level + 1 ) );
+		m_children[NorthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, NorthEastNode, m_depth_level + 1 ) );
+		m_children[SouthEastNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, SouthEastNode, m_depth_level + 1 ) );
+		m_children[SouthWestNode] = _DRAWSPACE_NEW_( QuadtreeNode<Base>, QuadtreeNode<Base>( m_insthandler, m_delhandler, m_splithandler, m_mergehandler, this, SouthWestNode, m_depth_level + 1 ) );
 
 		m_splitted = true;
 
@@ -164,6 +167,11 @@ public:
 
         m_splitted = false;        
 	}
+
+    virtual long GetDepthLevel( void )
+    {
+        return m_depth_level;
+    }
 };
 }
 }

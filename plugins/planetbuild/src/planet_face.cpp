@@ -31,7 +31,10 @@ using namespace DrawSpace::Utils;
 Face::Face( void ) : 
 m_rootpatch( NULL ), 
 m_planet_diameter( 10.0 ),
-m_currentleaf( NULL )
+m_currentleaf( NULL ),
+m_patchresol( 18 ),
+m_ratio_split_threshold( 0.03 ),
+m_ratio_merge_threshold( 0.04 )
 {
 }
 
@@ -73,7 +76,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
     {
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( patchresol, m_planet_diameter / 2.0, m_orientation, ".0", NULL, -1 ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_patchresol, m_planet_diameter / 2.0, m_orientation, ".0", NULL, -1, root ) );
         root->SetContent( patch );
 
         dsstring patch_name;
@@ -97,7 +100,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         char dstbuf[32];
         node_name += dsstring( itoa( node->GetId(), dstbuf, 10 ) );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( patchresol, m_planet_diameter / 2.0, m_orientation, node_name, parent->GetContent(), node->GetId() ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_patchresol, m_planet_diameter / 2.0, m_orientation, node_name, parent->GetContent(), node->GetId(), node ) );
         node->SetContent( patch );
 
         dsstring patch_name;
@@ -459,31 +462,7 @@ void Face::split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 {
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
     p_node->Split();
-
-    /*
-    if( current_patch->GetNeighbour( Patch::NorthNeighbour ) != NULL )
-    {
-        current_patch->GetNeighbour( Patch::NorthNeighbour )->Split();
-    }
-
-    if( current_patch->GetNeighbour( Patch::SouthNeighbour ) != NULL )
-    {
-        current_patch->GetNeighbour( Patch::SouthNeighbour )->Split();
-    }
-
-    if( current_patch->GetNeighbour( Patch::EastNeighbour ) != NULL )
-    {
-        current_patch->GetNeighbour( Patch::EastNeighbour )->Split();
-    }
-
-    if( current_patch->GetNeighbour( Patch::WestNeighbour ) != NULL )
-    {
-        current_patch->GetNeighbour( Patch::WestNeighbour )->Split();
-    }
-    */
-
-
-    /*
+    
     for( long i = 0; i < 8; i++ )
     {
         if( current_patch->GetNeighbour( i ) != NULL )
@@ -491,46 +470,21 @@ void Face::split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
             current_patch->GetNeighbour( i )->Split();
         }
     }
-    */
+    
 }
 
 void Face::merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 {
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
     p_node->Merge();
-
-    /*
-    if( current_patch->GetNeighbour( Patch::NorthNeighbour ) != NULL )
-    {
-        current_patch->GetNeighbour( Patch::NorthNeighbour )->Merge();
-    }
-
-    if( current_patch->GetNeighbour( Patch::SouthNeighbour ) != NULL )
-    {
-        current_patch->GetNeighbour( Patch::SouthNeighbour )->Merge();
-    }
-
-    if( current_patch->GetNeighbour( Patch::EastNeighbour ) != NULL )
-    {
-        current_patch->GetNeighbour( Patch::EastNeighbour )->Merge();
-    }
-
-    if( current_patch->GetNeighbour( Patch::WestNeighbour ) != NULL )
-    {
-        current_patch->GetNeighbour( Patch::WestNeighbour )->Merge();
-    }
-    */
-
-
-    /*
+    
     for( long i = 0; i < 8; i++ )
     {
         if( current_patch->GetNeighbour( i ) != NULL )
         {
             current_patch->GetNeighbour( i )->Merge();
         }
-    } 
-    */
+    }    
 }
 
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
@@ -632,6 +586,11 @@ dsreal Face::alt_ratio( dsreal p_altitud )
 
 bool Face::check_split( Vector& p_hotpoint )
 {
+    if( m_currentleaf->GetDepthLevel() >= 11 )
+    {
+        return false;
+    }
+
 	bool status = false;
 
     Vector sphericals;
@@ -641,7 +600,7 @@ bool Face::check_split( Vector& p_hotpoint )
 
     if( alt >= 0.0 )
     {
-		while( alt_ratio( alt ) < 1.5 )
+		while( alt_ratio( alt ) < m_ratio_split_threshold )
 		{
             // split necessaire
             split_group( m_currentleaf );
@@ -679,7 +638,7 @@ bool Face::check_merge( Vector& p_hotpoint )
 
     dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
 
-	while( alt_ratio( alt ) > 2.0 )
+	while( alt_ratio( alt ) > m_ratio_merge_threshold )
 	{
         if( m_currentleaf->GetParent() )
 		{
@@ -756,15 +715,12 @@ bool Face::Compute( void )
 			{
 				status = true;
 			}
-            
-            
+                        
 			if( check_merge( m_relative_hotpoint ) )
 			{
 				status = true;
-			} 
-            
-		}
-        
+			}                        
+		}               
         else
         {
             DrawSpace::Utils::QuadtreeNode<Patch>* bounding_parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
@@ -792,8 +748,7 @@ bool Face::Compute( void )
             {
                 m_currentleaf = NULL;
             }
-        }
-        
+        }                
     }
     m_quadtree_mutex.Release();
 
@@ -823,4 +778,9 @@ void Face::AddDelHandler( Face::PatchDeletionHandler* p_handler )
 void Face::AddMergeHandler( Face::PatchMergeHandler* p_handler )
 {
     m_merge_handlers.push_back( p_handler );
+}
+
+DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
+{
+    return m_currentleaf;
 }

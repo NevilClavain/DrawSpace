@@ -56,13 +56,15 @@ protected:
 	int                                     m_resolution;
 	int                                     m_orientation;
 
+    DrawSpace::Utils::BaseQuadtreeNode*     m_owner;
+
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
 	dsstring		                        m_name;
 
 	void build( void );
 
 public:
-	Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid );
+	Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
 	virtual ~Patch( void );
 
 	void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );
@@ -72,6 +74,8 @@ public:
 	dsreal GetSideLength( void );
 
 	void GetPos( dsreal& p_xpos, dsreal& p_ypos );
+
+    DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void );
 	
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

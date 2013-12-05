@@ -43,7 +43,7 @@ protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   SplitCallback;
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   MergeCallback;
 
-    static const int patchresol = 9;
+    //static const int patchresol = 11;
 
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
@@ -60,6 +60,10 @@ protected:
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     DrawSpace::Utils::Mutex                                     m_quadtree_mutex;
+
+    long                                                        m_patchresol;
+    dsreal                                                      m_ratio_split_threshold;
+    dsreal                                                      m_ratio_merge_threshold;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -97,6 +101,7 @@ public:
     virtual void AddSplitHandler( PatchSplitHandler* p_handler );
     virtual void AddDelHandler( PatchDeletionHandler* p_handler );
     virtual void AddMergeHandler( PatchMergeHandler* p_handler );
+    virtual DrawSpace::Utils::QuadtreeNode<Patch>* GetCurrentLeaf( void );
 };
 
 #endif

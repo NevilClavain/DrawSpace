@@ -47,6 +47,7 @@ protected:
     PatchSplitCallback*             m_patchsplitcallback;
     PatchMergeCallback*             m_patchmergecallback;
     DrawSpace::Utils::Mutex*        m_quadtree_mutex;
+    Face*                           m_face;
 
     void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
     void                            on_patchdel( int p_orientation, Patch* p_patch );
@@ -54,7 +55,7 @@ protected:
     void                            on_patchmerge( int p_orientation, Patch* p_patch );
     
 public:
-    FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer );
+    FaceRenderingNode( Face* p_face, DrawSpace::Interface::Renderer* p_renderer );
     virtual ~FaceRenderingNode( void );
 
     virtual void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );    
@@ -62,8 +63,7 @@ public:
     virtual Face::PatchDeletionHandler* GetPatchDelHandler( void );
     virtual Face::PatchSplitHandler* GetPatchSplitHandler( void );
     virtual Face::PatchMergeHandler* GetPatchMergeHandler( void );
-    virtual void SetMutex( DrawSpace::Utils::Mutex* p_mutex );
-
+    
 };
 
 class Body : public DrawSpace::Interface::Drawable

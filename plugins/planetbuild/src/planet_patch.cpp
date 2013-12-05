@@ -26,11 +26,12 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-Patch::Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid ) : 
+Patch::Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, BaseQuadtreeNode* p_owner ) : 
 m_resolution( p_resolution ), 
 m_orientation( p_orientation ),
 m_name( p_name ),
-m_ray( p_ray )
+m_ray( p_ray ),
+m_owner( p_owner )
 {
 	for( long i = 0; i < 8; i++ )
 	{
@@ -342,4 +343,9 @@ void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos )
 {
 	p_xpos = m_xpos * m_ray;
 	p_ypos = m_ypos * m_ray;
+}
+
+BaseQuadtreeNode* Patch::GetOwner( void )
+{
+    return m_owner;
 }

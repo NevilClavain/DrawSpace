@@ -31,28 +31,68 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-FaceRenderingNode::FaceRenderingNode( DrawSpace::Interface::Renderer* p_renderer ) : m_renderer( p_renderer )
+FaceRenderingNode::FaceRenderingNode( Face* p_face, DrawSpace::Interface::Renderer* p_renderer ) : 
+m_renderer( p_renderer ),
+m_face( p_face )
 {
     m_patchinstanciationcallback = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &FaceRenderingNode::on_patchinstanciation ) );
     m_patchdelcallback = _DRAWSPACE_NEW_( PatchDelCallback, PatchDelCallback( this, &FaceRenderingNode::on_patchdel ) );
     m_patchsplitcallback = _DRAWSPACE_NEW_( PatchSplitCallback, PatchSplitCallback( this, &FaceRenderingNode::on_patchsplit ) );
     m_patchmergecallback = _DRAWSPACE_NEW_( PatchMergeCallback, PatchMergeCallback( this, &FaceRenderingNode::on_patchmerge ) );
+
+    m_quadtree_mutex = m_face->GetMutex();
+
+    m_face->AddInstHandler( GetPatchInstanciationHandler() );
+    m_face->AddDelHandler( GetPatchDelHandler() );
+    m_face->AddSplitHandler( GetPatchSplitHandler() );
+    m_face->AddMergeHandler( GetPatchMergeHandler() );
 }
 
 FaceRenderingNode::~FaceRenderingNode( void )
 {
 }
 
-void FaceRenderingNode::Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view )
+void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
 {
     m_quadtree_mutex->WaitInfinite();
-    for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
+
+    long currentleaf_depth = -1;   
+    if( m_face->GetCurrentLeaf() )
     {
-        // rendu du patch leaf
-        dsstring name;
-        (*it).second->GetName( name );
-        m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+        currentleaf_depth = m_face->GetCurrentLeaf()->GetDepthLevel();
     }
+
+    if( -1 == currentleaf_depth || currentleaf_depth < 4 )
+    {
+        for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
+        {                                             
+            // rendu du patch leaf
+            dsstring name;
+            (*it).second->GetName( name );
+            m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+        }
+    }
+    else
+    {
+        dsstring name;
+
+        QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
+
+        current_leaf->GetContent()->GetName( name );
+        m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+
+        for( long i = 0; i < 8;i++ )
+        {
+            QuadtreeNode<Patch>* neighb = static_cast<QuadtreeNode<Patch>*>( current_leaf->GetContent()->GetNeighbour( i ) );
+
+            if( neighb )
+            {
+                neighb->GetContent()->GetName( name );
+                m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+            }
+        }
+    }
+    
     m_quadtree_mutex->Release();
 }
 
@@ -119,11 +159,6 @@ Face::PatchSplitHandler* FaceRenderingNode::GetPatchSplitHandler( void )
 Face::PatchMergeHandler* FaceRenderingNode::GetPatchMergeHandler( void )
 {
     return m_patchmergecallback;
-}
-
-void FaceRenderingNode::SetMutex( DrawSpace::Utils::Mutex* p_mutex )
-{
-    m_quadtree_mutex = p_mutex;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -268,18 +303,18 @@ void Body::RegisterPassSlot( const dsstring p_passname )
     NodesSet nodeset;
     for( long i = 0; i < 6; i++ )
     {
-        nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceRenderingNode, FaceRenderingNode( m_renderer ) );
+        nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceRenderingNode, FaceRenderingNode( m_faces[i], m_renderer ) );
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
 
+        /*
         m_faces[i]->AddInstHandler( nodeset.nodes[i]->GetPatchInstanciationHandler() );
         m_faces[i]->AddDelHandler( nodeset.nodes[i]->GetPatchDelHandler() );
         m_faces[i]->AddSplitHandler( nodeset.nodes[i]->GetPatchSplitHandler() );
         m_faces[i]->AddMergeHandler( nodeset.nodes[i]->GetPatchMergeHandler() );
-
-        nodeset.nodes[i]->SetMutex( m_faces[i]->GetMutex() );
+        */
     }
     m_passesnodes[p_passname] = nodeset;
 }
@@ -465,6 +500,6 @@ void Body::Run( void )
     while( !m_stop_thread )
     {
         m_faces[0]->Compute();
-        Sleep( 1000 );
+        Sleep( 2000 );
     }
 }
