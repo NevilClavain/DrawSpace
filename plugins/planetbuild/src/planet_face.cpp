@@ -694,8 +694,6 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
 
 bool Face::Compute( void )
 {
-    m_quadtree_mutex.WaitInfinite();
-
     bool status = false;
 
     if( m_currentleaf == NULL )
@@ -750,14 +748,8 @@ bool Face::Compute( void )
             }
         }                
     }
-    m_quadtree_mutex.Release();
 
     return status;
-}
-
-DrawSpace::Utils::Mutex* Face::GetMutex( void )
-{
-    return &m_quadtree_mutex;
 }
 
 void Face::AddInstHandler( Face::PatchInstanciationHandler* p_handler )

@@ -31,31 +31,153 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-FaceRenderingNode::FaceRenderingNode( Face* p_face, DrawSpace::Interface::Renderer* p_renderer ) : 
+FaceRenderingNode::FaceRenderingNode( Body* p_owner, Face* p_face_1, Face* p_face_2, DrawSpace::Interface::Renderer* p_renderer ) : 
 m_renderer( p_renderer ),
-m_face( p_face )
+m_face_1( p_face_1 ),
+m_face_2( p_face_2 ),
+m_owner( p_owner ),
+m_current_quadtree( NONE_QUADTREE ),
+m_last_current_quadtree( NONE_QUADTREE )
 {
     m_patchinstanciationcallback = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &FaceRenderingNode::on_patchinstanciation ) );
     m_patchdelcallback = _DRAWSPACE_NEW_( PatchDelCallback, PatchDelCallback( this, &FaceRenderingNode::on_patchdel ) );
     m_patchsplitcallback = _DRAWSPACE_NEW_( PatchSplitCallback, PatchSplitCallback( this, &FaceRenderingNode::on_patchsplit ) );
     m_patchmergecallback = _DRAWSPACE_NEW_( PatchMergeCallback, PatchMergeCallback( this, &FaceRenderingNode::on_patchmerge ) );
 
-    m_quadtree_mutex = m_face->GetMutex();
-
+    
+    /*
     m_face->AddInstHandler( GetPatchInstanciationHandler() );
     m_face->AddDelHandler( GetPatchDelHandler() );
     m_face->AddSplitHandler( GetPatchSplitHandler() );
     m_face->AddMergeHandler( GetPatchMergeHandler() );
+    */
+
+    m_face_1->AddInstHandler( GetPatchInstanciationHandler() );
+    m_face_1->AddDelHandler( GetPatchDelHandler() );
+    m_face_1->AddSplitHandler( GetPatchSplitHandler() );
+    m_face_1->AddMergeHandler( GetPatchMergeHandler() );
+
+    m_face_2->AddInstHandler( GetPatchInstanciationHandler() );
+    m_face_2->AddDelHandler( GetPatchDelHandler() );
+    m_face_2->AddSplitHandler( GetPatchSplitHandler() );
+    m_face_2->AddMergeHandler( GetPatchMergeHandler() );
 }
 
 FaceRenderingNode::~FaceRenderingNode( void )
 {
 }
 
+void FaceRenderingNode::SetWorkingQuadtree( WorkingQuadtree p_working_quadtree )
+{
+    m_current_quadtree_mutex.WaitInfinite();
+    m_current_quadtree = p_working_quadtree;
+    m_last_current_quadtree = m_current_quadtree;
+    m_current_quadtree_mutex.Release();
+}
+
 void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
 {
-    m_quadtree_mutex->WaitInfinite();
+    // get current quadtree to render
 
+    WorkingQuadtree current_quadtree;
+    Face* face;
+    std::map<dsstring, Patch*>* leafs;
+
+    if( m_current_quadtree_mutex.Wait( 0 ) )
+    {
+        current_quadtree = m_current_quadtree;
+    }
+    else
+    {
+        current_quadtree = m_last_current_quadtree;
+    }
+    m_current_quadtree_mutex.Release();
+
+    if( NONE_QUADTREE == current_quadtree )
+    {
+        return;
+    }
+    else if( QUADTREE_1 == current_quadtree )
+    {
+        face = m_face_1;
+        leafs = &m_patchesleafs_1;
+    }
+    else
+    {
+        face = m_face_2;
+        leafs = &m_patchesleafs_2;
+    }
+
+    long currentleaf_depth = -1;   
+    if( face->GetCurrentLeaf() )
+    {
+        currentleaf_depth = face->GetCurrentLeaf()->GetDepthLevel();
+    }
+
+    if( -1 == currentleaf_depth || currentleaf_depth < 4 )
+    {
+        for( std::map<dsstring, Patch*>::iterator it = leafs->begin(); it != leafs->end(); ++it )
+        {                                             
+            // rendu du patch leaf
+            dsstring name;
+            (*it).second->GetName( name );
+
+            if( QUADTREE_1 == current_quadtree )
+            {
+                name = dsstring( "QUADTREE_1/" ) + name;
+            }
+            else
+            {
+                name = dsstring( "QUADTREE_2/" ) + name;
+            }
+
+            m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+        }
+    }
+    else
+    {
+        dsstring name;
+
+        QuadtreeNode<Patch>* current_leaf = face->GetCurrentLeaf();
+
+        current_leaf->GetContent()->GetName( name );
+
+        if( QUADTREE_1 == current_quadtree )
+        {
+            name = dsstring( "QUADTREE_1/" ) + name;
+        }
+        else
+        {
+            name = dsstring( "QUADTREE_2/" ) + name;
+        }
+
+        m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+
+        for( long i = 0; i < 8;i++ )
+        {
+            QuadtreeNode<Patch>* neighb = static_cast<QuadtreeNode<Patch>*>( current_leaf->GetContent()->GetNeighbour( i ) );
+
+            if( neighb )
+            {
+                neighb->GetContent()->GetName( name );
+
+                if( QUADTREE_1 == current_quadtree )
+                {
+                    name = dsstring( "QUADTREE_1/" ) + name;
+                }
+                else
+                {
+                    name = dsstring( "QUADTREE_2/" ) + name;
+                }
+
+                m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+            }
+        }
+    }
+
+
+
+/*
     long currentleaf_depth = -1;   
     if( m_face->GetCurrentLeaf() )
     {
@@ -92,32 +214,75 @@ void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
             }
         }
     }
-    
-    m_quadtree_mutex->Release();
+    */
+}
+
+void FaceRenderingNode::complete_patchname( dsstring& p_patchname )
+{
+    if( QUADTREE_1 == m_owner->GetWorkingQuadtree() )
+    {
+        p_patchname = dsstring( "QUADTREE_1/" ) + p_patchname;
+    }
+    else
+    {
+        p_patchname = dsstring( "QUADTREE_2/" ) + p_patchname;
+    }
+}
+
+bool FaceRenderingNode::is_working_quadtree1( void )
+{
+    if( QUADTREE_1 == m_owner->GetWorkingQuadtree() )
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch )
 {
     dsstring patch_name;
     p_patch->GetName( patch_name );
+    complete_patchname( patch_name );
+
     m_renderer->AddMesheToNode( p_patch, this, patch_name );
 
-    m_patchesleafs[patch_name] = p_patch;
-    m_patches[patch_name] = p_patch;
+    if( is_working_quadtree1() )
+    {
+        m_patchesleafs_1[patch_name] = p_patch;
+    }
+    else
+    {
+        m_patchesleafs_2[patch_name] = p_patch;
+    }
 }
 
 void FaceRenderingNode::on_patchdel( int p_orientation, Patch* p_patch )
 {
     dsstring patch_name;
     p_patch->GetName( patch_name );
+    complete_patchname( patch_name );
 
+    /*
     if( m_patchesleafs.count( patch_name ) > 0 )
     {
         m_patchesleafs.erase( patch_name );
     }
-    if( m_patches.count( patch_name ) > 0 )
+    */
+
+    if( is_working_quadtree1() )
     {
-        m_patches.erase( patch_name );
+        if( m_patchesleafs_1.count( patch_name ) > 0 )
+        {
+            m_patchesleafs_1.erase( patch_name );
+        }
+    }
+    else
+    {
+        if( m_patchesleafs_2.count( patch_name ) > 0 )
+        {
+            m_patchesleafs_2.erase( patch_name );
+        }
     }
 
     m_renderer->RemoveNodeMeshe( p_patch, this, patch_name );
@@ -127,9 +292,28 @@ void FaceRenderingNode::on_patchsplit( int p_orientation, Patch* p_patch )
 {
     dsstring patch_name;
     p_patch->GetName( patch_name );
+    complete_patchname( patch_name );
+
+    /*
     if( m_patchesleafs.count( patch_name ) > 0 )
     {
         m_patchesleafs.erase( patch_name );
+    }
+    */
+
+    if( is_working_quadtree1() )
+    {
+        if( m_patchesleafs_1.count( patch_name ) > 0 )
+        {
+            m_patchesleafs_1.erase( patch_name );
+        }
+    }
+    else
+    {
+        if( m_patchesleafs_2.count( patch_name ) > 0 )
+        {
+            m_patchesleafs_2.erase( patch_name );
+        }
     }
 }
 
@@ -137,8 +321,18 @@ void FaceRenderingNode::on_patchmerge( int p_orientation, Patch* p_patch )
 {
     dsstring patch_name;
     p_patch->GetName( patch_name );
+    complete_patchname( patch_name );
 
-    m_patchesleafs[patch_name] = p_patch;
+    //m_patchesleafs[patch_name] = p_patch;
+
+    if( is_working_quadtree1() )
+    {
+        m_patchesleafs_1[patch_name] = p_patch;
+    }
+    else
+    {
+        m_patchesleafs_2[patch_name] = p_patch;
+    }
 }
 
 Face::PatchInstanciationHandler* FaceRenderingNode::GetPatchInstanciationHandler( void )
@@ -170,11 +364,15 @@ m_diameter( "diameter" ),
 m_hotpoint( "hotpoint" ),
 m_relative_hotpoint( "relative_hotpoint" ),
 m_altitud( "altitud" ),
-m_update_state( "update_state" )
+m_update_state( "update_state" ),
+m_working_quadtree( QUADTREE_1 )
 {
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face );
+        //m_faces[i] = _DRAWSPACE_NEW_( Face, Face );
+
+        m_faces_1[i] = _DRAWSPACE_NEW_( Face, Face );
+        m_faces_2[i] = _DRAWSPACE_NEW_( Face, Face );
     }
 
     m_diameter.m_value = 10.0;
@@ -190,7 +388,10 @@ Body::~Body( void )
 
     for( long i = 0; i < 6; i++ )
     {
-        _DRAWSPACE_DELETE_( m_faces[i] );
+        //_DRAWSPACE_DELETE_( m_faces[i] );
+
+        _DRAWSPACE_DELETE_( m_faces_1[i] );
+        _DRAWSPACE_DELETE_( m_faces_2[i] );
     }
 }
 
@@ -231,15 +432,22 @@ bool Body::LoadAssets( void )
 	{
 		for( long i = 0; i < 6; i++ )
 		{
+            (*it).second.nodes[i]->SetWorkingQuadtree( QUADTREE_2 );
+
 			if( false == m_renderer->CreateRenderingNode( (*it).second.nodes[i] ) )
 			{
 				return false;
 			}
 		}
 	}
+
+    m_working_quadtree = QUADTREE_1;
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i]->Init( i );
+        //m_faces[i]->Init( i );
+
+        m_faces_1[i]->Init( i );
+        m_faces_2[i]->Init( i );
     }
 
 	return true;
@@ -284,7 +492,8 @@ DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
             return NULL;
         }
 
-        return m_faces[faceidval]->GetPatch( patch_name );
+        //return m_faces[faceidval]->GetPatch( patch_name );
+        return m_faces_1[faceidval]->GetPatch( patch_name );
     }
     return NULL;
 }
@@ -303,18 +512,11 @@ void Body::RegisterPassSlot( const dsstring p_passname )
     NodesSet nodeset;
     for( long i = 0; i < 6; i++ )
     {
-        nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceRenderingNode, FaceRenderingNode( m_faces[i], m_renderer ) );
+        nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceRenderingNode, FaceRenderingNode( this, m_faces_1[i], m_faces_2[i], m_renderer ) );
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
-
-        /*
-        m_faces[i]->AddInstHandler( nodeset.nodes[i]->GetPatchInstanciationHandler() );
-        m_faces[i]->AddDelHandler( nodeset.nodes[i]->GetPatchDelHandler() );
-        m_faces[i]->AddSplitHandler( nodeset.nodes[i]->GetPatchSplitHandler() );
-        m_faces[i]->AddMergeHandler( nodeset.nodes[i]->GetPatchMergeHandler() );
-        */
     }
     m_passesnodes[p_passname] = nodeset;
 }
@@ -439,9 +641,14 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
 
         for( long i = 0; i < 6; i++ )
         {
-            if( m_faces[i] != NULL )
+            if( m_faces_1[i] != NULL )
             {
-                m_faces[i]->SetPlanetDiameter( m_diameter.m_value );
+                m_faces_1[i]->SetPlanetDiameter( m_diameter.m_value );
+            }
+
+            if( m_faces_2[i] != NULL )
+            {
+                m_faces_2[i]->SetPlanetDiameter( m_diameter.m_value );
             }
         }
     }
@@ -457,9 +664,19 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
 
         for( long i = 0; i < 6; i++ )
         {
-            if( m_faces[i] != NULL )
+            if( QUADTREE_1 == m_working_quadtree )
             {
-                m_faces[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
+                if( m_faces_1[i] != NULL )
+                {
+                    m_faces_1[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
+                }                
+            }
+            else // QUADTREE_2
+            {
+                if( m_faces_1[i] != NULL )
+                {
+                    m_faces_1[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
+                }                
             }
         }
 
@@ -496,10 +713,48 @@ void Body::stop_update( void )
 }
 
 void Body::Run( void )
-{
+{ 
     while( !m_stop_thread )
     {
-        m_faces[0]->Compute();
+        if( QUADTREE_1 == m_working_quadtree )
+        {
+            if( m_faces_1[0]->Compute() )
+            {
+                // signaler le switch
+                m_working_quadtree = QUADTREE_2;
+
+	            for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+	            {
+		            for( long i = 0; i < 6; i++ )
+		            {
+			            (*it).second.nodes[i]->SetWorkingQuadtree( QUADTREE_1 );
+		            }
+	            }
+
+            }           
+        }
+        else // QUADTREE_2
+        {
+            if( m_faces_2[0]->Compute() )
+            {
+                // signaler le switch
+                m_working_quadtree = QUADTREE_1;
+
+	            for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+	            {
+		            for( long i = 0; i < 6; i++ )
+		            {
+			            (*it).second.nodes[i]->SetWorkingQuadtree( QUADTREE_2 );
+		            }
+	            }
+            }
+        }
         Sleep( 2000 );
     }
 }
+
+WorkingQuadtree Body::GetWorkingQuadtree( void )
+{
+    return m_working_quadtree;
+}
+

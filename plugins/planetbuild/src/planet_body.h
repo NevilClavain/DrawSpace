@@ -30,6 +30,16 @@
 #include <mutex.h>
 #include "planet_face.h"
 
+typedef enum
+{
+    QUADTREE_1,
+    QUADTREE_2,
+    NONE_QUADTREE,
+
+} WorkingQuadtree;
+
+class Body;
+
 class FaceRenderingNode : public DrawSpace::Core::RenderingNode
 {
     typedef DrawSpace::Core::CallBack2<FaceRenderingNode, void, int, Patch*>     PatchInstanciationCallback;
@@ -40,22 +50,38 @@ class FaceRenderingNode : public DrawSpace::Core::RenderingNode
 protected:
 
     DrawSpace::Interface::Renderer* m_renderer;
-    std::map<dsstring, Patch*>      m_patchesleafs;
-    std::map<dsstring, Patch*>      m_patches;
+    //std::map<dsstring, Patch*>      m_patchesleafs;
+
+    std::map<dsstring, Patch*>      m_patchesleafs_1;
+    std::map<dsstring, Patch*>      m_patchesleafs_2;
+
     PatchInstanciationCallback*     m_patchinstanciationcallback;
     PatchDelCallback*               m_patchdelcallback;
     PatchSplitCallback*             m_patchsplitcallback;
     PatchMergeCallback*             m_patchmergecallback;
-    DrawSpace::Utils::Mutex*        m_quadtree_mutex;
-    Face*                           m_face;
+    
+    //Face*                           m_face;
+
+    Body*                           m_owner;
+    Face*                           m_face_1;
+    Face*                           m_face_2;
+
+    WorkingQuadtree                 m_current_quadtree;
+    DrawSpace::Utils::Mutex         m_current_quadtree_mutex;
+
+    WorkingQuadtree                 m_last_current_quadtree;
+
 
     void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
     void                            on_patchdel( int p_orientation, Patch* p_patch );
     void                            on_patchsplit( int p_orientation, Patch* p_patch );
     void                            on_patchmerge( int p_orientation, Patch* p_patch );
+
+    void                            complete_patchname( dsstring& p_patchname );
+    bool                            is_working_quadtree1( void );
     
 public:
-    FaceRenderingNode( Face* p_face, DrawSpace::Interface::Renderer* p_renderer );
+    FaceRenderingNode( Body* p_owner, Face* p_face_1, Face* p_face_2, DrawSpace::Interface::Renderer* p_renderer );
     virtual ~FaceRenderingNode( void );
 
     virtual void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );    
@@ -63,6 +89,8 @@ public:
     virtual Face::PatchDeletionHandler* GetPatchDelHandler( void );
     virtual Face::PatchSplitHandler* GetPatchSplitHandler( void );
     virtual Face::PatchMergeHandler* GetPatchMergeHandler( void );
+
+    virtual void SetWorkingQuadtree( WorkingQuadtree p_working_quadtree );
     
 };
 
@@ -83,7 +111,12 @@ protected:
 	std::vector<RenderingNodeDrawCallback*>                     m_callbacks;
     DrawSpace::Scenegraph*                                      m_scenegraph;
     DrawSpace::Interface::Renderer*                             m_renderer;
-    Face*                                                       m_faces[6];
+
+    //Face*                                                       m_faces[6];
+
+    Face*                                                       m_faces_1[6];
+    Face*                                                       m_faces_2[6];
+
 
     //// properties
     DrawSpace::Core::TypedProperty<dsreal>                      m_diameter;
@@ -94,6 +127,8 @@ protected:
 
     bool                                                        m_stop_thread;
     DrawSpace::Core::Task<Body>*                                m_update_task;
+    
+    WorkingQuadtree                                             m_working_quadtree;
 
     void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );    
 
@@ -118,6 +153,9 @@ public:
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
+
+    virtual WorkingQuadtree GetWorkingQuadtree( void );
+
 
     virtual void Run( void );
    

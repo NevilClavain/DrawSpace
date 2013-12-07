@@ -96,7 +96,6 @@ public:
     virtual void SetPlanetDiameter( dsreal p_diameter );
     virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
     virtual bool Compute( void );
-    virtual DrawSpace::Utils::Mutex* GetMutex( void );
     virtual void AddInstHandler( PatchInstanciationHandler* p_handler );
     virtual void AddSplitHandler( PatchSplitHandler* p_handler );
     virtual void AddDelHandler( PatchDeletionHandler* p_handler );
