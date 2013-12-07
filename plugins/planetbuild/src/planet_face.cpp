@@ -32,9 +32,9 @@ Face::Face( void ) :
 m_rootpatch( NULL ), 
 m_planet_diameter( 10.0 ),
 m_currentleaf( NULL ),
-m_patchresol( 18 ),
-m_ratio_split_threshold( 0.03 ),
-m_ratio_merge_threshold( 0.04 )
+m_patchresol( 11 ),
+m_ratio_split_threshold( 0.06 ),
+m_ratio_merge_threshold( 0.07 )
 {
 }
 

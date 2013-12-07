@@ -69,9 +69,6 @@ protected:
     WorkingQuadtree                 m_current_quadtree;
     DrawSpace::Utils::Mutex         m_current_quadtree_mutex;
 
-    WorkingQuadtree                 m_last_current_quadtree;
-
-
     void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
     void                            on_patchdel( int p_orientation, Patch* p_patch );
     void                            on_patchsplit( int p_orientation, Patch* p_patch );

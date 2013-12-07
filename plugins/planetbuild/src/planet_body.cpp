@@ -36,8 +36,7 @@ m_renderer( p_renderer ),
 m_face_1( p_face_1 ),
 m_face_2( p_face_2 ),
 m_owner( p_owner ),
-m_current_quadtree( NONE_QUADTREE ),
-m_last_current_quadtree( NONE_QUADTREE )
+m_current_quadtree( NONE_QUADTREE )
 {
     m_patchinstanciationcallback = _DRAWSPACE_NEW_( PatchInstanciationCallback, PatchInstanciationCallback( this, &FaceRenderingNode::on_patchinstanciation ) );
     m_patchdelcallback = _DRAWSPACE_NEW_( PatchDelCallback, PatchDelCallback( this, &FaceRenderingNode::on_patchdel ) );
@@ -71,7 +70,6 @@ void FaceRenderingNode::SetWorkingQuadtree( WorkingQuadtree p_working_quadtree )
 {
     m_current_quadtree_mutex.WaitInfinite();
     m_current_quadtree = p_working_quadtree;
-    m_last_current_quadtree = m_current_quadtree;
     m_current_quadtree_mutex.Release();
 }
 
@@ -83,14 +81,8 @@ void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
     Face* face;
     std::map<dsstring, Patch*>* leafs;
 
-    if( m_current_quadtree_mutex.Wait( 0 ) )
-    {
-        current_quadtree = m_current_quadtree;
-    }
-    else
-    {
-        current_quadtree = m_last_current_quadtree;
-    }
+    m_current_quadtree_mutex.WaitInfinite();
+    current_quadtree = m_current_quadtree;
     m_current_quadtree_mutex.Release();
 
     if( NONE_QUADTREE == current_quadtree )
@@ -441,14 +433,19 @@ bool Body::LoadAssets( void )
 		}
 	}
 
-    m_working_quadtree = QUADTREE_1;
+    
     for( long i = 0; i < 6; i++ )
     {
         //m_faces[i]->Init( i );
 
+        m_working_quadtree = QUADTREE_1;
         m_faces_1[i]->Init( i );
+
+        m_working_quadtree = QUADTREE_2;
         m_faces_2[i]->Init( i );
     }
+
+    m_working_quadtree = QUADTREE_1;
 
 	return true;
 }
@@ -664,20 +661,14 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
 
         for( long i = 0; i < 6; i++ )
         {
-            if( QUADTREE_1 == m_working_quadtree )
+            if( m_faces_1[i] != NULL )
             {
-                if( m_faces_1[i] != NULL )
-                {
-                    m_faces_1[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
-                }                
-            }
-            else // QUADTREE_2
+                m_faces_1[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
+            }                
+            if( m_faces_2[i] != NULL )
             {
-                if( m_faces_1[i] != NULL )
-                {
-                    m_faces_1[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
-                }                
-            }
+                m_faces_2[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
+            }                
         }
 
         // compute altitud
@@ -718,34 +709,31 @@ void Body::Run( void )
     {
         if( QUADTREE_1 == m_working_quadtree )
         {
-            if( m_faces_1[0]->Compute() )
+            m_faces_1[0]->Compute();
+
+            // signaler le switch
+            m_working_quadtree = QUADTREE_2;
+
+            for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
             {
-                // signaler le switch
-                m_working_quadtree = QUADTREE_2;
-
-	            for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+	            for( long i = 0; i < 6; i++ )
 	            {
-		            for( long i = 0; i < 6; i++ )
-		            {
-			            (*it).second.nodes[i]->SetWorkingQuadtree( QUADTREE_1 );
-		            }
+		            (*it).second.nodes[i]->SetWorkingQuadtree( QUADTREE_1 );
 	            }
-
-            }           
+            }
         }
         else // QUADTREE_2
         {
-            if( m_faces_2[0]->Compute() )
-            {
-                // signaler le switch
-                m_working_quadtree = QUADTREE_1;
+            m_faces_2[0]->Compute();
 
-	            for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+            // signaler le switch
+            m_working_quadtree = QUADTREE_1;
+
+            for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+            {
+	            for( long i = 0; i < 6; i++ )
 	            {
-		            for( long i = 0; i < 6; i++ )
-		            {
-			            (*it).second.nodes[i]->SetWorkingQuadtree( QUADTREE_2 );
-		            }
+		            (*it).second.nodes[i]->SetWorkingQuadtree( QUADTREE_2 );
 	            }
             }
         }
