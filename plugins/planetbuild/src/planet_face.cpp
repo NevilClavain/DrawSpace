@@ -32,7 +32,7 @@ Face::Face( void ) :
 m_rootpatch( NULL ), 
 m_planet_diameter( 10.0 ),
 m_currentleaf( NULL ),
-m_patchresol( 18 ),
+m_patchresol( 26 ),
 m_ratio_split_threshold( 0.03 ),
 m_ratio_merge_threshold( 0.04 )
 {
@@ -456,6 +456,12 @@ void Face::SetPlanetDiameter( dsreal p_diameter )
 void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
 {
     m_relative_hotpoint = p_point;
+
+    m_movement[0] = m_relative_hotpoint[0] - m_prev_relative_hotpoint[0];
+    m_movement[1] = m_relative_hotpoint[1] - m_prev_relative_hotpoint[1];
+    m_movement[2] = m_relative_hotpoint[2] - m_prev_relative_hotpoint[2];
+
+    m_prev_relative_hotpoint = m_relative_hotpoint;
 }
 
 void Face::split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
@@ -491,56 +497,54 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 {
 	Vector viewer;
 
-    /*
-	if( m_orientation == Patch::TopPlanetFace )
+    if( m_orientation == Patch::FrontPlanetFace )
 	{
-		viewer[0] = p_hotpoint[0];
-		viewer[1] = p_hotpoint[1];
-		viewer[2] = p_hotpoint[2];
-		viewer[3] = 0.0;
-	}
-    else if( m_orientation == Patch::BottomPlanetFace )
-	{
-		viewer[0] = p_hotpoint[0];
-		viewer[1] = -p_hotpoint[1];
-		viewer[2] = -p_hotpoint[2];
-		viewer[3] = 0.0;
-	}
-    else if( m_orientation == Patch::FrontPlanetFace )
-	{
-		viewer[0] = p_hotpoint[0];
-		viewer[1] = p_hotpoint[2];
-		viewer[2] = -p_hotpoint[1];
-		viewer[3] = 0.0;
-	}
+	    viewer[0] = p_hotpoint[0];
+	    viewer[1] = p_hotpoint[1];
+	    viewer[2] = p_hotpoint[2];
+	    viewer[3] = 0.0;
+    }
 
-    else if( m_orientation == Patch::RearPlanetFace )
+    if( m_orientation == Patch::RearPlanetFace )
 	{
-		viewer[0] = -p_hotpoint[0];
-		viewer[1] = -p_hotpoint[2];
-		viewer[2] = -p_hotpoint[1];
-		viewer[3] = 0.0;
-	}
-    else if( m_orientation == Patch::RightPlanetFace )
-	{
-		viewer[0] = p_hotpoint[2];
-		viewer[1] = -p_hotpoint[0];
-		viewer[2] = -p_hotpoint[1];
-		viewer[3] = 0.0;
-	}
-    else if( m_orientation == Patch::LeftPlanetFace )
-	{
-		viewer[0] = -p_hotpoint[2];
-		viewer[1] = p_hotpoint[0];
-		viewer[2] = -p_hotpoint[1];
-		viewer[3] = 0.0;
-	}
-    */
+	    viewer[0] = -p_hotpoint[0];
+	    viewer[1] = p_hotpoint[1];
+	    viewer[2] = -p_hotpoint[2];
+	    viewer[3] = 0.0;
+    }
 
-	viewer[0] = p_hotpoint[0];
-	viewer[1] = p_hotpoint[1];
-	viewer[2] = p_hotpoint[2];
-	viewer[3] = 0.0;
+    if( m_orientation == Patch::TopPlanetFace )
+	{
+	    viewer[0] = p_hotpoint[0];
+	    viewer[1] = -p_hotpoint[2];
+	    viewer[2] = p_hotpoint[1];
+	    viewer[3] = 0.0;
+    }
+
+    if( m_orientation == Patch::BottomPlanetFace )
+	{
+	    viewer[0] = p_hotpoint[0];
+	    viewer[1] = p_hotpoint[2];
+	    viewer[2] = -p_hotpoint[1];
+	    viewer[3] = 0.0;
+    }
+
+
+    if( m_orientation == Patch::RightPlanetFace )
+	{
+	    viewer[0] = -p_hotpoint[2];
+	    viewer[1] = p_hotpoint[1];
+	    viewer[2] = p_hotpoint[0];
+	    viewer[3] = 0.0;
+    }
+
+    if( m_orientation == Patch::LeftPlanetFace )
+	{
+	    viewer[0] = p_hotpoint[2];
+	    viewer[1] = p_hotpoint[1];
+	    viewer[2] = -p_hotpoint[0];
+	    viewer[3] = 0.0;
+    }
 
 
     Vector sphericals;
@@ -692,11 +696,63 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
     return NULL;
 }
 
+
 bool Face::Compute( void )
 {
+    bool status = false;
+
+    if( m_movement.LengthPow2() == 0.0 )
+    {
+        return false;
+    }
+
+    if( m_currentleaf == NULL )
+	{
+        if( m_rootpatch )
+        {
+            m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
+        }
+    }
+    else
+    {
+		if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
+		{
+            if( m_movement * m_relative_hotpoint < 0.0 ) // on descend vers la surface
+            {
+			    if( check_split( m_relative_hotpoint ) )
+			    {
+				    status = true;
+			    }
+            }
+            else if( m_movement * m_relative_hotpoint > 0.0 ) // on prend de l'altitude
+            {
+			    if( check_merge( m_relative_hotpoint ) )
+			    {
+				    status = true;
+			    }
+            }              
+        }
+        else
+        {
+            DrawSpace::Utils::QuadtreeNode<Patch>* bounding_parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
+
+            if( bounding_parent )
+            {
+                merge_group( bounding_parent );
+                m_currentleaf = bounding_parent;
+            }
+            else
+            {
+                m_currentleaf = NULL;
+            }
+
+        }
+    }
+
+    /*
     m_quadtree_mutex.WaitInfinite();
 
-    bool status = false;
+    
 
     if( m_currentleaf == NULL )
 	{
@@ -751,6 +807,7 @@ bool Face::Compute( void )
         }                
     }
     m_quadtree_mutex.Release();
+    */
 
     return status;
 }

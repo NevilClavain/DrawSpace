@@ -58,12 +58,15 @@ protected:
 
     dsreal                                                      m_planet_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
+    DrawSpace::Utils::Vector                                    m_prev_relative_hotpoint;
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     DrawSpace::Utils::Mutex                                     m_quadtree_mutex;
 
     long                                                        m_patchresol;
     dsreal                                                      m_ratio_split_threshold;
     dsreal                                                      m_ratio_merge_threshold;
+
+    DrawSpace::Utils::Vector                                    m_movement;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );

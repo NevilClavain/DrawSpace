@@ -62,7 +62,7 @@ void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
         currentleaf_depth = m_face->GetCurrentLeaf()->GetDepthLevel();
     }
 
-    if( -1 == currentleaf_depth || currentleaf_depth < 4 )
+    if( -1 == currentleaf_depth || currentleaf_depth < 3 )
     {
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {                                             
@@ -302,19 +302,13 @@ void Body::RegisterPassSlot( const dsstring p_passname )
 {
     NodesSet nodeset;
     for( long i = 0; i < 6; i++ )
-    {
+    {            
         nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceRenderingNode, FaceRenderingNode( m_faces[i], m_renderer ) );
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
 
-        /*
-        m_faces[i]->AddInstHandler( nodeset.nodes[i]->GetPatchInstanciationHandler() );
-        m_faces[i]->AddDelHandler( nodeset.nodes[i]->GetPatchDelHandler() );
-        m_faces[i]->AddSplitHandler( nodeset.nodes[i]->GetPatchSplitHandler() );
-        m_faces[i]->AddMergeHandler( nodeset.nodes[i]->GetPatchMergeHandler() );
-        */
     }
     m_passesnodes[p_passname] = nodeset;
 }
@@ -368,6 +362,12 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
 
 void Body::ComputeSpecifics( void )
 {
+    m_faces[Patch::FrontPlanetFace]->Compute();
+    m_faces[Patch::RearPlanetFace]->Compute();
+    m_faces[Patch::TopPlanetFace]->Compute();        
+    m_faces[Patch::BottomPlanetFace]->Compute();
+    m_faces[Patch::RightPlanetFace]->Compute();
+    m_faces[Patch::LeftPlanetFace]->Compute();
 }
 
 void Body::GetPropertiesList( std::vector<dsstring>& p_props )
@@ -475,11 +475,11 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
 
         if( m_update_state.m_value )
         {
-            start_update();
+            //start_update();
         }
         else
         {
-            stop_update();
+            //stop_update();
         }
     }
 }
@@ -497,9 +497,4 @@ void Body::stop_update( void )
 
 void Body::Run( void )
 {
-    while( !m_stop_thread )
-    {
-        m_faces[0]->Compute();
-        Sleep( 2000 );
-    }
 }
