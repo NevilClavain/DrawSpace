@@ -62,12 +62,13 @@ public:
     void Normalize( void );
     void Scale( dsreal p_scale );
 };
-
-dsreal operator* ( Vector p_vA, Vector p_vB );
-Vector operator+ ( Vector p_vA, Vector p_vB );
-
-Vector ProdVec( Vector p_vA, Vector p_vB );
 }
 }
+
+dsreal operator* ( DrawSpace::Utils::Vector p_vA, DrawSpace::Utils::Vector p_vB );
+DrawSpace::Utils::Vector operator+ ( DrawSpace::Utils::Vector p_vA, DrawSpace::Utils::Vector p_vB );
+
+DrawSpace::Utils::Vector ProdVec( DrawSpace::Utils::Vector p_vA, DrawSpace::Utils::Vector p_vB );
+
 
 #endif
