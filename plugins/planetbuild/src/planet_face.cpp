@@ -546,14 +546,11 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 	    viewer[3] = 0.0;
     }
 
-
-    Vector sphericals;
-    Maths::CartesiantoSpherical( viewer, sphericals );
-    
+ 
     viewer.Normalize();
 	Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );
-	projected_viewer.Scale( sphericals[0] );
+	projected_viewer.Scale( m_planet_diameter / 2.0 );
     
 
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
@@ -748,67 +745,6 @@ bool Face::Compute( void )
 
         }
     }
-
-    /*
-    m_quadtree_mutex.WaitInfinite();
-
-    
-
-    if( m_currentleaf == NULL )
-	{
-        if( m_rootpatch )
-        {
-            m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
-        }
-    }
-    else
-    {
-		// checker que ce leaf est toujours d'actualite
-		if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
-		{
-			// verif si split ou merge necessaire
-			if( check_split( m_relative_hotpoint ) )
-			{
-				status = true;
-			}
-                        
-			if( check_merge( m_relative_hotpoint ) )
-			{
-				status = true;
-			}                        
-		}               
-        else
-        {
-            DrawSpace::Utils::QuadtreeNode<Patch>* bounding_parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
-
-            while( bounding_parent )
-            {
-                merge_group( bounding_parent );
-
-                if( is_hotpoint_bound_in_node( bounding_parent, m_relative_hotpoint ) )
-                {
-					// trouve un parent englobant le viewer
-					break;
-                }
-                bounding_parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( bounding_parent->GetParent() );
-
-                status = true;
-            }
-
-            if( bounding_parent )
-            {
-                m_currentleaf = bounding_parent;
-                check_split( m_relative_hotpoint );
-            }
-            else
-            {
-                m_currentleaf = NULL;
-            }
-        }                
-    }
-    m_quadtree_mutex.Release();
-    */
-
     return status;
 }
 
