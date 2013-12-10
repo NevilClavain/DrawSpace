@@ -560,21 +560,11 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 
     dsreal patch_side_size = current_patch->GetSideLength();
 
-    /*
-	if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
-		( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[2] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[2] )
-	{
-		return true;
-	}
-    */
-
 	if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
 		( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[1] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[1] )
 	{
 		return true;
 	}
-
-
 	return false;
 }
 
@@ -697,6 +687,63 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
 bool Face::Compute( void )
 {
     bool status = false;
+
+    Vector face_dir;
+    switch( m_orientation )
+    {
+        case Patch::FrontPlanetFace:
+
+            face_dir[0] = 0.0;
+            face_dir[1] = 0.0;
+            face_dir[2] = 1.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::RearPlanetFace:
+
+            face_dir[0] = 0.0;
+            face_dir[1] = 0.0;
+            face_dir[2] = -1.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::TopPlanetFace:
+
+            face_dir[0] = 0.0;
+            face_dir[1] = 1.0;
+            face_dir[2] = 0.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::BottomPlanetFace:
+
+            face_dir[0] = 0.0;
+            face_dir[1] = -1.0;
+            face_dir[2] = 0.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::RightPlanetFace:
+
+            face_dir[0] = 1.0;
+            face_dir[1] = 0.0;
+            face_dir[2] = 0.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::LeftPlanetFace:
+
+            face_dir[0] = -1.0;
+            face_dir[1] = 0.0;
+            face_dir[2] = 0.0;
+            face_dir[3] = 1.0;
+            break;
+    }
+
+    if( m_relative_hotpoint * face_dir < 0 )
+    {
+        return false;
+    }
 
     if( m_movement.LengthPow2() == 0.0 )
     {
