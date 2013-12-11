@@ -63,6 +63,29 @@ void TimeManager::Update( void )
         m_last_tick = current_tick;
     }
     m_frame_count++;
+
+    // timers management
+    for( std::map<dsstring, timer_entry>::iterator it = m_timers.begin(); it != m_timers.end(); ++it )
+    {
+        timer_entry current = (*it).second;
+        if( current.state )
+        {
+            if( -1 == current.start_tick )
+            {                
+                current.start_tick = current_tick;
+            }
+            else
+            {
+                if( current_tick - current.start_tick >= current.period )
+                {
+                    current.start_tick = -1;
+                    ( *current.handler )( (*it).first );
+                }
+            }
+
+            (*it).second = current;
+        }
+    }
 }
 
 long TimeManager::GetFPS( void )
@@ -138,4 +161,25 @@ bool TimeManager::IsReady( void )
 long TimeManager::GetLastDeltaTime( void )
 {
     return m_last_deltatime;
+}
+
+void TimeManager::AddTimer( const dsstring& p_id, long p_period, TimerHandler* p_handler )
+{
+    timer_entry t_entry;
+
+    t_entry.state = false;
+    t_entry.period = p_period;
+    t_entry.handler = p_handler;
+
+    m_timers[p_id] = t_entry;
+}
+
+void TimeManager::SetTimerState( const dsstring& p_id, bool p_state )
+{
+    if( m_timers.count( p_id ) == 0 )
+    {
+        return;
+    }
+    m_timers[p_id].state = p_state;
+    m_timers[p_id].start_tick = -1;
 }

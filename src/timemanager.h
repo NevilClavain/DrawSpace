@@ -24,6 +24,7 @@
 #define _TIMEMANAGER_H_
 
 #include "drawspace_commons.h"
+#include "callback.h"
 
 namespace DrawSpace
 {
@@ -38,6 +39,20 @@ protected:
     long    m_fps;
     bool    m_ready;
     long    m_last_deltatime;
+
+    typedef Core::BaseCallback<void, dsstring> TimerHandler;
+
+    typedef struct
+    {
+        bool            state;
+        long            period; // ms
+        TimerHandler*   handler;
+        long            start_tick;        
+
+    } timer_entry;
+
+
+    std::map<dsstring, timer_entry> m_timers;
 
 public:
     TimeManager( void ); 
@@ -60,6 +75,9 @@ public:
 
     bool    IsReady( void );
     long    GetLastDeltaTime( void );
+
+    void    AddTimer( const dsstring& p_id, long p_period, TimerHandler* p_handler );
+    void    SetTimerState( const dsstring& p_id, bool p_state );
 };
 }
 }
