@@ -183,3 +183,8 @@ void TimeManager::SetTimerState( const dsstring& p_id, bool p_state )
     m_timers[p_id].state = p_state;
     m_timers[p_id].start_tick = -1;
 }
+
+void TimeManager::ClearAllTimers( void )
+{
+    m_timers.clear();
+}
