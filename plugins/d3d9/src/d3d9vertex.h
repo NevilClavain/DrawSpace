@@ -78,10 +78,12 @@ typedef struct
     float   tw8;
     float   ta8;
 
+    /*
     float   tu9;
     float   tv9;
     float   tw9;
     float   ta9;
+    */
 
 } d3d9vertex;
 

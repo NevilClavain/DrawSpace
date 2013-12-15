@@ -82,8 +82,14 @@ protected:
     {
         long                    nb_vertices;
         long                    nb_triangles;
+        /*
         d3d9vertex*             vertices;
         d3d9triangle*           triangles;
+        */
+
+        LPDIRECT3DVERTEXBUFFER9 vertex_buffer;
+		LPDIRECT3DINDEXBUFFER9	index_buffer;
+
 
     } MesheData;
 
