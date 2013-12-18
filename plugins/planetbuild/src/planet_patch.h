@@ -60,6 +60,7 @@ protected:
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
 	dsstring		                        m_name;
+    void*                                   m_meshe_data;
 
 	void build( void );
 
@@ -76,6 +77,9 @@ public:
 	void GetPos( dsreal& p_xpos, dsreal& p_ypos );
 
     DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void );
+
+    void SetMesheData( void* p_data );
+    void* GetMesheData( void );
 	
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

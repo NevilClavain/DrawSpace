@@ -250,18 +250,59 @@ void Spacebox::OnRegister( Scenegraph* p_scenegraph )
 
 bool Spacebox::LoadAssets( void )
 {
+    void* meshe_data;
+
+    if( false == m_renderer->CreateMeshe( m_meshes[FrontQuad], &meshe_data ) )
+    {
+        return false;
+    }
+    m_meshe_datas["front"] = meshe_data;
+
+    if( false == m_renderer->CreateMeshe( m_meshes[RearQuad], &meshe_data ) )
+    {
+        return false;
+    }
+    m_meshe_datas["rear"] = meshe_data;
+
+    if( false == m_renderer->CreateMeshe( m_meshes[LeftQuad], &meshe_data ) )
+    {
+        return false;
+    }
+    m_meshe_datas["left"] = meshe_data;
+
+    if( false == m_renderer->CreateMeshe( m_meshes[RightQuad], &meshe_data ) )
+    {
+        return false;
+    }
+    m_meshe_datas["right"] = meshe_data;
+
+    if( false == m_renderer->CreateMeshe( m_meshes[TopQuad], &meshe_data ) )
+    {
+        return false;
+    }
+    m_meshe_datas["top"] = meshe_data;
+
+    if( false == m_renderer->CreateMeshe( m_meshes[BottomQuad], &meshe_data ) )
+    {
+        return false;
+    }
+    m_meshe_datas["bottom"] = meshe_data;
+   
     for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         for( long i = 0; i < 6; i++ )
-        {
+        {            
 		    if( false == m_renderer->CreateRenderingNode( (*it).second.nodes[i] ) )
 		    {
 			    return false;
 		    }
+
+            /*
             if( false == m_renderer->AddMesheToNode( m_meshes[i], (*it).second.nodes[i], m_nodes_mesheid[(*it).second.nodes[i]] ) )
             {
                 return false;
             }
+            */
         }
     }
     return true;
@@ -306,7 +347,9 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
     m_scenegraph->GetCurrentCameraView( view );
     view.ClearTranslation();
 
-    m_renderer->RenderNodeMeshe( world, view, p_rendering_node, m_nodes_mesheid[p_rendering_node] );
+    //m_renderer->RenderNodeMeshe( world, view, p_rendering_node, m_nodes_mesheid[p_rendering_node] );
+
+    m_renderer->RenderMeshe( world, view, m_meshe_datas[m_nodes_mesheid[p_rendering_node]] );
 }
 
 void Spacebox::RegisterPassSlot( const dsstring p_passname )

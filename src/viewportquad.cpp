@@ -74,7 +74,7 @@ void ViewportQuad::OnDraw( void )
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
     DrawSpace::Utils::Matrix view;
     view.Identity();
-    renderer->RenderNodeMeshe( m_globaltransformation, view, this, "0" );
+    renderer->RenderMeshe( m_globaltransformation, view, m_renderer_meshe_data );
 }
 
 bool ViewportQuad::LoadAssets( void )
@@ -84,7 +84,7 @@ bool ViewportQuad::LoadAssets( void )
     {
         return false;
     }
-    if( false == renderer->AddMesheToNode( m_meshe, this, "0" ) )
+    if( false == renderer->CreateMeshe( m_meshe, &m_renderer_meshe_data ) )
     {
         return false;
     }

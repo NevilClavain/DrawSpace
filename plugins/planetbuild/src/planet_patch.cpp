@@ -31,7 +31,8 @@ m_resolution( p_resolution ),
 m_orientation( p_orientation ),
 m_name( p_name ),
 m_ray( p_ray ),
-m_owner( p_owner )
+m_owner( p_owner ),
+m_meshe_data( NULL )
 {
 	for( long i = 0; i < 8; i++ )
 	{
@@ -348,4 +349,14 @@ void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos )
 BaseQuadtreeNode* Patch::GetOwner( void )
 {
     return m_owner;
+}
+
+void Patch::SetMesheData( void* p_data )
+{
+    m_meshe_data = p_data;
+}
+
+void* Patch::GetMesheData( void )
+{
+    return m_meshe_data;
 }

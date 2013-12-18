@@ -82,10 +82,6 @@ protected:
     {
         long                    nb_vertices;
         long                    nb_triangles;
-        /*
-        d3d9vertex*             vertices;
-        d3d9triangle*           triangles;
-        */
 
         LPDIRECT3DVERTEXBUFFER9 vertex_buffer;
 		LPDIRECT3DINDEXBUFFER9	index_buffer;
@@ -97,7 +93,8 @@ protected:
     {
         LPDIRECT3DVERTEXSHADER9         vertex_shader;
         LPDIRECT3DPIXELSHADER9          pixel_shader;        
-        std::map<dsstring, MesheData>   meshes;
+        
+        //std::map<dsstring, MesheData>   meshes;
 
         long                            nb_stages;
         LPDIRECT3DTEXTURE9              textures[8];
@@ -158,9 +155,9 @@ public:
     virtual bool BeginNodeRender( DrawSpace::Core::RenderingNode* p_node, long p_textures_set_index = 0 );
     virtual bool EndNodeRender( DrawSpace::Core::RenderingNode* p_node );
 
-    virtual bool AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id );
-    virtual void RemoveNodeMeshe( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id );
-    virtual bool RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id );
+    virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data );
+    virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data );
+    virtual bool RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, void* p_data );
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 

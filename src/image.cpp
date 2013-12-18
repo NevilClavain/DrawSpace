@@ -218,7 +218,7 @@ void Image::OnDraw( void )
     chain.GetResult( &world );
 
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
-    renderer->RenderNodeMeshe( view, world, this, "0" );
+    renderer->RenderMeshe( view, world, m_renderer_meshe_data );
 }
 
 bool Image::LoadAssets( void )
@@ -228,7 +228,7 @@ bool Image::LoadAssets( void )
     {
         return false;
     }
-    if( false == renderer->AddMesheToNode( m_meshe, this, "0" ) )
+    if( false == renderer->CreateMeshe( m_meshe, &m_renderer_meshe_data ) )
     {
         return false;
     }
@@ -260,4 +260,9 @@ void Image::SetScale( dsreal p_sx, dsreal p_sy )
 {
     m_scale_x = p_sx;
     m_scale_y = p_sy;
+}
+
+void** Image::GetRenderMesheData( void )
+{
+    return &m_renderer_meshe_data;
 }

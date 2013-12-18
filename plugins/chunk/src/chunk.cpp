@@ -73,7 +73,7 @@ bool Chunk::LoadAssets( void )
         {
             return false;
         }
-        if( false == m_renderer->AddMesheToNode( m_meshe, (*it).second, "0" ) )
+        if( false == m_renderer->CreateMeshe( m_meshe, &m_renderer_meshe_data ) )
         {
             return false;
         }
@@ -90,7 +90,7 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
 {
     DrawSpace::Utils::Matrix view;
     m_scenegraph->GetCurrentCameraView( view );
-    m_renderer->RenderNodeMeshe( m_globaltransformation, view, p_rendering_node, "0" );
+    m_renderer->RenderMeshe( m_globaltransformation, view, m_renderer_meshe_data );
 }
 
 void Chunk::RegisterPassSlot( const dsstring p_passname )

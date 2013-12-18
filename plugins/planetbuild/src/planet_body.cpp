@@ -67,19 +67,23 @@ void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {                                             
             // rendu du patch leaf
-            dsstring name;
-            (*it).second->GetName( name );
-            m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+            //dsstring name;
+            //(*it).second->GetName( name );
+            //m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+
+            m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );
         }
     }
     else
     {
-        dsstring name;
+        //dsstring name;
 
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
-        current_leaf->GetContent()->GetName( name );
-        m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+        //current_leaf->GetContent()->GetName( name );
+        //m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+
+        m_renderer->RenderMeshe( p_world, p_view, current_leaf->GetContent()->GetMesheData() );
 
         for( long i = 0; i < 8;i++ )
         {
@@ -87,8 +91,10 @@ void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
 
             if( neighb )
             {
-                neighb->GetContent()->GetName( name );
-                m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+                //neighb->GetContent()->GetName( name );
+                //m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
+
+                m_renderer->RenderMeshe( p_world, p_view, neighb->GetContent()->GetMesheData() );
             }
         }
     }
@@ -100,7 +106,11 @@ void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch
 {
     dsstring patch_name;
     p_patch->GetName( patch_name );
-    m_renderer->AddMesheToNode( p_patch, this, patch_name );
+    //m_renderer->AddMesheToNode( p_patch, this, patch_name );
+
+    void* meshe_data;
+    m_renderer->CreateMeshe( p_patch, &meshe_data );
+    p_patch->SetMesheData( meshe_data );
 
     m_patchesleafs[patch_name] = p_patch;
     m_patches[patch_name] = p_patch;
@@ -120,7 +130,10 @@ void FaceRenderingNode::on_patchdel( int p_orientation, Patch* p_patch )
         m_patches.erase( patch_name );
     }
 
-    m_renderer->RemoveNodeMeshe( p_patch, this, patch_name );
+    void* meshe_data = p_patch->GetMesheData();
+    m_renderer->RemoveMeshe( p_patch, meshe_data );
+
+    //m_renderer->RemoveNodeMeshe( p_patch, this, patch_name );
 }
 
 void FaceRenderingNode::on_patchsplit( int p_orientation, Patch* p_patch )

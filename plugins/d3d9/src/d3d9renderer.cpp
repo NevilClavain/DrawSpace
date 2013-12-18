@@ -324,6 +324,14 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
     LPDIRECT3DVERTEXSHADER9		vs;
     LPDIRECT3DPIXELSHADER9		ps;
     
+    node_infos.nb_stages = 0;
+    node_infos.vertex_shader = NULL;
+    node_infos.pixel_shader = NULL;
+    for( long i = 0; i < 8; i++ )
+    {
+        node_infos.textures[i] = NULL;
+    }
+
     Core::Fx* fx = p_node->GetFx();
 
     if( NULL != fx && 2 == fx->GetShadersListSize() )
@@ -642,23 +650,18 @@ bool D3D9Renderer::EndNodeRender( DrawSpace::Core::RenderingNode* p_node )
     return true;
 }
 
-bool D3D9Renderer::AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
+bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
 {
     DECLARE_D3D9ASSERT_VARS
-
-    if( 0 == m_nodes.count( p_node ) )
-    {
-        return false;
-    }
     
     Core::Meshe* meshe = p_meshe;
     long nb_vertices = meshe->GetVertexListSize();
     long nb_triangles = meshe->GetTrianglesListSize();
 
-    MesheData meshe_data;
+    MesheData* meshe_data = _DRAWSPACE_NEW_( MesheData, MesheData );
 
-    meshe_data.nb_vertices = nb_vertices;
-    meshe_data.nb_triangles = nb_triangles;
+    meshe_data->nb_vertices = nb_vertices;
+    meshe_data->nb_triangles = nb_triangles;
 
     hRes = m_lpd3ddevice->CreateVertexBuffer( nb_vertices * sizeof( d3d9vertex ), 0, D3DFVF_XYZ | D3DFVF_NORMAL | 
                                                                                         D3DFVF_TEX0 | 
@@ -669,15 +672,15 @@ bool D3D9Renderer::AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::C
                                                                                         D3DFVF_TEX5 |
                                                                                         D3DFVF_TEX6 |
                                                                                         D3DFVF_TEX7 |
-                                                                                        D3DFVF_TEX8, D3DPOOL_DEFAULT, &meshe_data.vertex_buffer, NULL );
+                                                                                        D3DFVF_TEX8, D3DPOOL_DEFAULT, &meshe_data->vertex_buffer, NULL );
     D3D9_CHECK( CreateVertexBuffer );
 
-    hRes = m_lpd3ddevice->CreateIndexBuffer( nb_triangles * sizeof( d3d9triangle ), 0, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &meshe_data.index_buffer, NULL );	
+    hRes = m_lpd3ddevice->CreateIndexBuffer( nb_triangles * sizeof( d3d9triangle ), 0, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &meshe_data->index_buffer, NULL );	
 	D3D9_CHECK( CreateIndexBuffer )
 
 
     d3d9vertex* v;
-    meshe_data.vertex_buffer->Lock( 0, 0, (VOID **)&v, 0 );
+    meshe_data->vertex_buffer->Lock( 0, 0, (VOID **)&v, 0 );
 
     for( long i = 0; i < nb_vertices; i++, v++ )
     {
@@ -732,10 +735,10 @@ bool D3D9Renderer::AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::C
         v->ta7 = vertex.ta[7];
         v->ta8 = vertex.ta[8];
     }
-    meshe_data.vertex_buffer->Unlock();
+    meshe_data->vertex_buffer->Unlock();
 
     d3d9triangle *t;
-    meshe_data.index_buffer->Lock( 0, 0, (VOID **)&t, 0 );
+    meshe_data->index_buffer->Lock( 0, 0, (VOID **)&t, 0 );
 
     for( long i = 0; i < nb_triangles; i++, t++ )
     {
@@ -746,46 +749,29 @@ bool D3D9Renderer::AddMesheToNode( DrawSpace::Core::Meshe* p_meshe, DrawSpace::C
         t->vertex2 = triangle.vertex2;
         t->vertex3 = triangle.vertex3;
     }   
-    meshe_data.index_buffer->Unlock();
+    meshe_data->index_buffer->Unlock();
 
     meshe->SetRenderReady();
 
-    m_nodes[p_node].meshes[p_id] = meshe_data;
+    *p_data = (void *)meshe_data;
 
     return true;
 }
 
-void D3D9Renderer::RemoveNodeMeshe( DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
+void D3D9Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
 {
-    NodeInfos node_infos;
-    if( 0 == m_nodes.count( p_node ) )
-    {
-        return;
-    }
-    node_infos = m_nodes[p_node];
-    if( !node_infos.meshes.count( p_id ) )
-    {
-        return;
-    }
-
-    D3D9_RELEASE( node_infos.meshes[p_id].vertex_buffer );
-    D3D9_RELEASE( node_infos.meshes[p_id].index_buffer );
-
-    m_nodes[p_node].meshes.erase( p_id );
+    MesheData* meshe_data = (MesheData*)p_data;
+   
+    D3D9_RELEASE( meshe_data->vertex_buffer );
+    D3D9_RELEASE( meshe_data->index_buffer );
+    
+    _DRAWSPACE_DELETE_( meshe_data );
     p_meshe->UnsetRenderReady();
 }
 
-bool D3D9Renderer::RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Core::RenderingNode* p_node, const dsstring& p_id )
+bool D3D9Renderer::RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, void* p_data )
 {
     DECLARE_D3D9ASSERT_VARS
-
-    NodeInfos node_infos;
-    if( 0 == m_nodes.count( p_node ) )
-    {
-        return false;
-    }
-
-    node_infos = m_nodes[p_node];
 
     // setting transformation
     DrawSpace::Utils::Matrix final_view;
@@ -819,22 +805,17 @@ bool D3D9Renderer::RenderNodeMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace:
 
     
     //////////////////////////////////////////////////////////////////////
-
-    if( !node_infos.meshes.count( p_id ) )
-    {
-        return false;
-    }
-
-    MesheData meshe_data = node_infos.meshes[p_id];
+    
+    MesheData* meshe_data = (MesheData*)p_data;
 
     // vb selections
-    hRes = m_lpd3ddevice->SetStreamSource( 0, meshe_data.vertex_buffer, 0, sizeof( d3d9vertex ) );
+    hRes = m_lpd3ddevice->SetStreamSource( 0, meshe_data->vertex_buffer, 0, sizeof( d3d9vertex ) );
 	D3D9_CHECK( SetStreamSource );
 
-    hRes = m_lpd3ddevice->SetIndices( meshe_data.index_buffer );
+    hRes = m_lpd3ddevice->SetIndices( meshe_data->index_buffer );
 	D3D9_CHECK( SetIndices );
 
-    hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, meshe_data.nb_vertices, 0, meshe_data.nb_triangles );
+    hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, meshe_data->nb_vertices, 0, meshe_data->nb_triangles );
 
     return true;
 }

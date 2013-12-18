@@ -45,6 +45,8 @@ protected:
     dsreal                                  m_scale_x, m_scale_y;
     Interface::Renderer::Characteristics    m_rc;
 
+    void*                                   m_renderer_meshe_data;
+
 public:
 
     Image( dsreal p_width, dsreal p_height );
@@ -60,6 +62,8 @@ public:
     void SetVirtualTranslation( long p_x ,long p_y );
     void GetVirtualTranslation( long& p_x, long& p_y );
     void SetScale( dsreal p_sx, dsreal p_sy );
+
+    void** GetRenderMesheData( void );
 };
 }
 

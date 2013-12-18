@@ -53,6 +53,8 @@ protected:
     DrawSpace::Scenegraph*                                  m_scenegraph;
     std::map<DrawSpace::Core::RenderingNode*, dsstring>     m_nodes_mesheid;
 
+    std::map<dsstring, void*>                               m_meshe_datas;
+
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
 public:
