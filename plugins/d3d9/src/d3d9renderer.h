@@ -116,6 +116,8 @@ protected:
 
     D3DFORMAT                                                   m_depthbuffer_format;
 
+    LPD3DXFONT                                                  m_font;
+
     std::map<DrawSpace::Core::RenderingNode*, NodeInfos>        m_nodes;
     std::map<dsstring,TextureInfos>                             m_textures_base;
     std::map<DrawSpace::Core::Texture*, TargetTextureInfos>     m_targettextures_base;
@@ -162,6 +164,8 @@ public:
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 
     virtual void GetRenderCharacteristics( Characteristics& p_characteristics );
+
+    virtual void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... );
 };
 
 #endif

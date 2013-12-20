@@ -272,6 +272,9 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     m_characteristics.width_viewport = v_width;
     m_characteristics.height_viewport = v_height;
 
+
+    hRes = D3DXCreateFontA( m_lpd3ddevice, 15, 10, 0, 0, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "System", &m_font );
+
     _DSDEBUG( logger, "end : ok" )
     return true;
 }
@@ -1145,4 +1148,18 @@ bool D3D9Renderer::Config::on_new_line( const dsstring& p_line, long p_line_num,
     }
 
     return true;
+}
+
+void D3D9Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... )
+{
+    static char buffer[512];
+    RECT rect;
+
+    _vsnprintf( buffer, 512, p_format, (va_list)( &p_format + 1 ) );
+	rect.left = p_posX;
+	rect.top = p_posY;
+	rect.right = rect.left + 1;
+	rect.bottom = rect.top - 1;
+
+    m_font->DrawTextA( NULL, buffer, -1, &rect, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB( p_r, p_g, p_b ) );
 }

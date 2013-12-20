@@ -76,6 +76,8 @@ public:
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate ) = 0;
 
     virtual void GetRenderCharacteristics( Characteristics& p_characteristics ) = 0;
+
+    virtual void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... ) = 0;
     
 };
 }
