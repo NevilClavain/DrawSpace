@@ -37,6 +37,7 @@
 #include "meshe.h"
 #include "archive.h"
 #include "file.h"
+#include "md5.h"
 #include "transformation.h"
 #include "timemanager.h"
 #include "transformation.h"

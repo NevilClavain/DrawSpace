@@ -335,6 +335,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\md5.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\memalloc.cpp"
 				>
 			</File>

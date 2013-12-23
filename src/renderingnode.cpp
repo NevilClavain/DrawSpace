@@ -26,7 +26,7 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-RenderingNode::RenderingNode( void ) : m_order( 1000 ), m_handler( NULL )
+RenderingNode::RenderingNode( void ) : m_order( 10000 ), m_handler( NULL )
 {
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
     for( long i = 0; i < 32; i++ )
