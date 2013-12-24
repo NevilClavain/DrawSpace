@@ -80,8 +80,10 @@ protected:
 
     typedef struct
     {
+		/*
         long                    nb_vertices;
         long                    nb_triangles;
+		*/
 
         LPDIRECT3DVERTEXBUFFER9 vertex_buffer;
 		LPDIRECT3DINDEXBUFFER9	index_buffer;
@@ -181,9 +183,14 @@ public:
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
     virtual bool SetTexture( void* p_data, int p_stage );
+	virtual bool UnsetTexture( int p_stage );
 
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data );
     virtual bool SetFx( void* p_data );
+	virtual bool UnsetFx( void* p_data );
+	virtual bool SetFxShaderParams( int p_shader_index, std::map<long, DrawSpace::Utils::Vector>& p_params );
+
+	virtual bool DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view );
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 

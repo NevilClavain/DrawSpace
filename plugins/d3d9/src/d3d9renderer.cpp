@@ -676,8 +676,10 @@ bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
 
     MesheData* meshe_data = _DRAWSPACE_NEW_( MesheData, MesheData );
 
+	/*
     meshe_data->nb_vertices = nb_vertices;
     meshe_data->nb_triangles = nb_triangles;
+	*/
 
     hRes = m_lpd3ddevice->CreateVertexBuffer( nb_vertices * sizeof( d3d9vertex ), 0, D3DFVF_XYZ | D3DFVF_NORMAL | 
                                                                                         D3DFVF_TEX0 | 
@@ -843,7 +845,7 @@ bool D3D9Renderer::RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Uti
 	D3D9_CHECK( SetIndices );
     */
 
-    hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, meshe_data->nb_vertices, 0, meshe_data->nb_triangles );
+    //hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, meshe_data->nb_vertices, 0, meshe_data->nb_triangles );
 
     return true;
 }
@@ -941,6 +943,16 @@ bool D3D9Renderer::SetTexture( void* p_data, int p_stage )
     D3D9_CHECK( SetTexture );
 
     return true;
+}
+
+bool D3D9Renderer::UnsetTexture( int p_stage )
+{
+	DECLARE_D3D9ASSERT_VARS
+
+	hRes = m_lpd3ddevice->SetTexture( p_stage, NULL );
+	D3D9_CHECK( SetTexture );
+
+	return true;
 }
 
 bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
@@ -1046,7 +1058,104 @@ bool D3D9Renderer::SetFx( void* p_data )
 {
     DECLARE_D3D9ASSERT_VARS
 
+	FxData* fx_data = (FxData*)p_data;
+	DrawSpace::Core::Fx* fx = fx_data->fx;
+
+    long nb_rs_in = fx->GetRenderStatesInListSize();
+    for( long i = 0; i < nb_rs_in; i++ )
+    {
+        DrawSpace::Core::RenderState rs = fx->GetRenderStateIn( i );
+        SetRenderState( &rs );
+    }
+
+    hRes = m_lpd3ddevice->SetVertexShader( fx_data->vertex_shader );
+    D3D9_CHECK( SetVertexShader );
+
+    hRes = m_lpd3ddevice->SetPixelShader( fx_data->pixel_shader );
+    D3D9_CHECK( SetPixelShader );
+
     return true;
+}
+
+bool D3D9Renderer::UnsetFx( void* p_data )
+{
+	FxData* fx_data = (FxData*)p_data;
+	DrawSpace::Core::Fx* fx = fx_data->fx;
+
+    long nb_rs_in = fx->GetRenderStatesInListSize();
+    for( long i = 0; i < nb_rs_in; i++ )
+    {
+        DrawSpace::Core::RenderState rs = fx->GetRenderStateOut( i );
+        SetRenderState( &rs );
+    }
+
+	return true;
+}
+
+bool D3D9Renderer::SetFxShaderParams( int p_shader_index, std::map<long, Utils::Vector>& p_params )
+{
+	switch( p_shader_index )
+	{
+		case 0:
+
+			// vertex shader params application		
+			for( std::map<long, Utils::Vector>::iterator it = p_params.begin(); it != p_params.end(); ++it )
+			{
+				set_vertexshader_constants( (*it).first, (*it).second.GetArray(), 1 );
+			}
+			break;
+
+
+		case 1:
+
+			// pixel shader params application
+			for( std::map<long, Utils::Vector>::iterator it = p_params.begin(); it != p_params.end(); ++it )
+			{
+				set_pixelshader_constants( (*it).first, (*it).second.GetArray(), 1 );
+			}
+			break;
+	}
+
+	return true;
+}
+
+bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view )
+{
+	DECLARE_D3D9ASSERT_VARS
+
+    // setting transformation
+    DrawSpace::Utils::Matrix final_view;
+    DrawSpace::Utils::Matrix inv;
+    DrawSpace::Utils::Matrix result;
+
+    inv.Identity();
+    inv( 2, 2 ) = -1.0;
+    final_view = p_view * inv;
+
+    DrawSpace::Utils::Transformation chain;
+    chain.PushMatrix( m_projection );
+    chain.PushMatrix( final_view );
+    chain.PushMatrix( p_world );
+    chain.BuildResult();
+    chain.GetResult( &result );
+    result.Transpose();
+
+    set_vertexshader_constants( 0, result.GetArray(), 4 );
+    
+    //////////////////////////////////////////////////////////////////////
+
+    DrawSpace::Utils::Matrix world = p_world;
+    DrawSpace::Utils::Matrix view = p_view;
+    DrawSpace::Utils::Matrix worldview = world * view;
+    worldview.Transpose();
+    
+    set_vertexshader_constants( 4, worldview.GetArray(), 4 );
+
+	//////////////////////////////////////////////////////////////////////
+
+	hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, p_nbvertices, 0, p_nbtriangles );
+
+	return true;
 }
 
 void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )

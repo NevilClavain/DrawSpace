@@ -76,9 +76,14 @@ public:
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data ) = 0;
     virtual bool SetTexture( void* p_data, int p_stage ) = 0;
+	virtual bool UnsetTexture( int p_stage ) = 0;
 
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool SetFx( void* p_data ) = 0;
+	virtual bool UnsetFx( void* p_data ) = 0;
+	virtual bool SetFxShaderParams( int p_shader_index, std::map<long, DrawSpace::Utils::Vector>& p_params ) = 0;
+
+	virtual bool DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view ) = 0;
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate ) = 0;
 
