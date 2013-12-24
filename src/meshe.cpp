@@ -140,4 +140,7 @@ void Meshe::GetMD5( dsstring& p_md5 )
 
 
     p_md5 = hash_v + hash_t;
+
+    delete[] vbuff;
+    delete[] tbuff;
 }

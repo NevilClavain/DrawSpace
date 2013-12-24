@@ -64,6 +64,7 @@ public:
     void SetShaderReal( const dsstring& p_id, dsreal p_value );
     void SetShaderRealVector( const dsstring& p_id, const Utils::Vector& p_value );
     void SetShaderBool( const dsstring& p_id, bool p_value );
+    void GetMD5( dsstring& p_md5 );
 };
 }
 }

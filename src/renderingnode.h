@@ -36,6 +36,9 @@ namespace Core
 {
 class RenderingNode
 {
+public:
+    static const int NeutralOrder = 10000;
+
 protected:
     Fx*                                     m_fx;
     Texture*                                m_textures[32]; // 32 textures stages max
