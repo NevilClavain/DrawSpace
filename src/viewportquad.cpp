@@ -66,7 +66,7 @@ ViewportQuad::ViewportQuad( const dsstring& p_name, dsreal p_width, dsreal p_hei
 
 ViewportQuad::~ViewportQuad( void )
 {
-    delete m_meshe;
+    _DRAWSPACE_DELETE_( m_meshe );
 }
 
 void ViewportQuad::OnDraw( void )
@@ -74,9 +74,12 @@ void ViewportQuad::OnDraw( void )
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
     DrawSpace::Utils::Matrix view;
     view.Identity();
-    renderer->RenderMeshe( m_globaltransformation, view, m_renderer_meshe_data );
+    //renderer->RenderMeshe( m_globaltransformation, view, m_renderer_meshe_data );
+
+    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), m_globaltransformation, view );
 }
 
+/*
 bool ViewportQuad::LoadAssets( void )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -90,3 +93,4 @@ bool ViewportQuad::LoadAssets( void )
     }
     return true;
 }
+*/

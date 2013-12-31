@@ -26,9 +26,10 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-RenderingNode::RenderingNode( void ) : m_order( 10000 ), m_handler( NULL )
+RenderingNode::RenderingNode( void ) : m_order( 10000 ), m_handler( NULL ), m_meshe( NULL )
 {
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
+    
     for( long i = 0; i < 32; i++ )
     {
         m_textures[i] = NULL;
@@ -50,14 +51,11 @@ void RenderingNode::SetOrderNumber( long p_order )
     m_order = p_order;
 }
 
-void RenderingNode::SetFx( Fx* p_fx )
-{
-    m_fx = p_fx;
-}
 void RenderingNode::SetTexture( Texture* p_texture, long p_stage )
 {
     m_textures[p_stage] = p_texture;
 }
+
 
 long RenderingNode::GetTextureListSize( void )
 {
@@ -69,6 +67,7 @@ Texture* RenderingNode::GetTexture( long p_index )
     return m_textures[p_index];
 }
 
+
 void RenderingNode::OnDraw( void )
 {
     (*m_handler)( this );
@@ -77,4 +76,57 @@ void RenderingNode::OnDraw( void )
 void RenderingNode::RegisterHandler( BaseCallback<void, RenderingNode*>* p_handler )
 {
     m_handler = p_handler;
+}
+
+void RenderingNode::AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register )
+{
+    ShadersParams sp;
+
+    sp.shader_index = p_shader_index;
+    sp.param_register = p_register;
+
+    m_shader_params[p_id] = sp;
+}
+
+void RenderingNode::SetShaderReal( const dsstring& p_id, dsreal p_value )
+{
+    if( m_shader_params.count( p_id ) > 0 )
+    {
+        Vector vec;
+        vec[0] = p_value;
+        vec[1] = 0.0;
+        vec[2] = 0.0;
+        vec[3] = 1.0;
+        
+        m_shader_params[p_id].param_values = vec;
+    }
+}
+
+void RenderingNode::SetShaderRealVector( const dsstring& p_id, const Vector& p_value )
+{
+    if( m_shader_params.count( p_id ) > 0 )
+    {
+        Vector vec = p_value;
+
+        m_shader_params[p_id].param_values = vec;
+    }
+}
+
+void RenderingNode::SetShaderBool( const dsstring& p_id, bool p_value )
+{
+    if( m_shader_params.count( p_id ) > 0 )
+    {
+        Vector vec;
+        vec[0] = ( p_value ? 1.0 : 0.0 );
+        vec[1] = 0.0;
+        vec[2] = 0.0;
+        vec[3] = 1.0;
+        
+        m_shader_params[p_id].param_values = vec;
+    }
+}
+
+void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams>& p_outlist )
+{
+    p_outlist = m_shader_params;
 }

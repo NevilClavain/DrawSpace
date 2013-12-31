@@ -84,11 +84,47 @@ void RenderingQueue::Draw( void )
         renderer->ClearScreen( m_target_clear_color_r, m_target_clear_color_g, m_target_clear_color_b );
     }
 
-    for( unsigned long i = 0; i < m_nodes.size(); i++ )
-    {    
-        renderer->BeginNodeRender( m_nodes[i] );
-        m_nodes[i]->OnDraw();
-        renderer->EndNodeRender( m_nodes[i] );
+    for( size_t i = 0; i < m_outputqueue.size(); i++ )
+    {
+        Operation curr_operation = m_outputqueue[i];
+
+        switch( curr_operation.type )
+        {
+            case SET_TEXTURE:
+
+                renderer->SetTexture( curr_operation.data, curr_operation.texture_stage );
+                break;
+
+            case UNSET_TEXTURE:
+
+                renderer->UnsetTexture( curr_operation.texture_stage );
+                break;
+
+            case SET_FX:
+
+                renderer->SetFx( curr_operation.data );
+                break;
+
+            case UNSET_FX:
+
+                renderer->UnsetFx( curr_operation.data );
+                break;
+
+            case SET_MESHE:
+
+                renderer->SetMeshe( curr_operation.data );
+                break;
+
+            case SET_SHADERS_PARAMS:
+
+                renderer->SetFxShaderParams( curr_operation.shader_index, curr_operation.param_register, curr_operation.param_values );
+                break;
+
+            case DRAW_NODE:
+
+                curr_operation.node->OnDraw();
+                break;
+        }
     }
 
     if( m_target )
@@ -124,4 +160,134 @@ void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_
     m_target_clear_color_r = p_r;
     m_target_clear_color_g = p_g;
     m_target_clear_color_b = p_b;
+}
+
+void RenderingQueue::UpdateOutputQueue( void )
+{
+    // I/ classement au niveau des listes RenderingNode*
+
+    build_output_list( m_nodes );
+
+    // II/ construction liste d'operations en sortie, avec chargement des assets
+
+    // III/ elimination des doublons et operations redondantes dans la 
+    //      liste d'operations en sortie
+
+}
+
+bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_list )
+{
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+
+    void* fx_data;
+    void* tx_data;
+    void* meshe_data;
+
+    for( size_t i = 0; i < p_input_list.size(); i++ )
+    {
+        RenderingNode* node = p_input_list[i];
+
+        Fx* current_fx = node->GetFx();
+
+        if( false == renderer->CreateFx( current_fx, &fx_data ) )
+        {
+            return false;
+        }
+        m_fx_datas[node] = fx_data;
+
+        for( long j = 0; j < node->GetTextureListSize(); j++ )
+        {
+            Texture* current_tx = node->GetTexture( j );
+
+            if( NULL != current_tx )
+            {
+                if( false == renderer->CreateTexture( current_tx, &tx_data ) )
+                {
+                    return false;
+                }
+                m_tx_datas[node].push_back( tx_data );
+            }
+        }
+
+        Meshe* current_meshe = node->GetMeshe();
+
+        if( NULL != current_meshe )
+        {
+            if( false == renderer->CreateMeshe( current_meshe, &meshe_data ) )
+            {
+                return false;
+            }
+            m_meshe_datas[node] = meshe_data;
+        }
+    }
+
+    m_outputqueue.clear();
+
+    for( size_t i = 0; i < p_input_list.size(); i++ )
+    {
+        Operation operation;
+        RenderingNode* node = p_input_list[i];
+
+        if( m_fx_datas.count( node ) )
+        {
+            operation.type = SET_FX;
+            operation.data = m_fx_datas[node];
+            m_outputqueue.push_back( operation );
+        }
+
+        if( m_tx_datas.count( node ) )
+        {
+            for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
+            {
+               operation.type = SET_TEXTURE;
+               operation.data = m_tx_datas[node][j];
+               operation.texture_stage = (long)j;
+               m_outputqueue.push_back( operation );
+            }
+        }
+
+        if( m_meshe_datas.count( node ) )
+        {
+            operation.type = SET_MESHE;
+            operation.data = m_meshe_datas[node];
+            m_outputqueue.push_back( operation );
+        }
+
+        std::map<dsstring, RenderingNode::ShadersParams> node_shaders_params;
+        node->GetShadersParams( node_shaders_params );
+
+        for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
+        {
+            operation.type = SET_SHADERS_PARAMS;
+
+            operation.shader_index = (*it).second.shader_index;
+            operation.param_register = (*it).second.param_register;
+            operation.param_values = (*it).second.param_values;
+                            
+            m_outputqueue.push_back( operation );                
+        }
+
+        operation.type = DRAW_NODE;
+        operation.node = node;
+        m_outputqueue.push_back( operation );
+
+        if( m_tx_datas.count( node ) )
+        {
+            for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
+            {
+               operation.type = UNSET_TEXTURE;
+               operation.texture_stage = (long)j;
+               m_outputqueue.push_back( operation );
+            }
+        }
+
+        if( m_fx_datas.count( node ) )
+        {
+            operation.type = UNSET_FX;
+            operation.data = m_fx_datas[node];
+            m_outputqueue.push_back( operation );
+        }
+    }
+
+    return true;
 }

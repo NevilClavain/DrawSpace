@@ -44,11 +44,10 @@ protected:
 public:
     Text( Core::Font* p_font );
     virtual ~Text( void );
+
+    bool Initialize( void );
     
     void OnDraw( void );
-
-    bool LoadAssets( void );
-
     void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
 };
 }

@@ -39,8 +39,6 @@ protected:
     size_t                          m_datasize;
     bool                            m_compiled;
 
-    std::map<long, Utils::Vector>   m_params;
-
 public:
     Shader( const dsstring& p_path, bool p_compiled );
     Shader( bool p_compiled );
@@ -55,9 +53,6 @@ public:
 
     void	Serialize( Core::Factory& p_factory, Utils::Archive& p_archive );
     void	Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
-
-    void	SetParam( long p_register, const Utils::Vector& p_values );
-    void	GetParamsTable( std::map<long, Utils::Vector>& p_table );
 
     void    SetText( const dsstring& p_text );
 };

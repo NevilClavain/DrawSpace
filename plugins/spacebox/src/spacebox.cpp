@@ -248,6 +248,7 @@ void Spacebox::OnRegister( Scenegraph* p_scenegraph )
     m_scenegraph = p_scenegraph;
 }
 
+/*
 bool Spacebox::LoadAssets( void )
 {
     void* meshe_data;
@@ -296,17 +297,11 @@ bool Spacebox::LoadAssets( void )
 		    {
 			    return false;
 		    }
-
-            /*
-            if( false == m_renderer->AddMesheToNode( m_meshes[i], (*it).second.nodes[i], m_nodes_mesheid[(*it).second.nodes[i]] ) )
-            {
-                return false;
-            }
-            */
         }
     }
     return true;
 }
+*/
 
 Core::Meshe* Spacebox::GetMeshe( const dsstring& p_mesheid )
 {
@@ -346,10 +341,9 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
     world.ClearTranslation();
     m_scenegraph->GetCurrentCameraView( view );
     view.ClearTranslation();
-
-    //m_renderer->RenderNodeMeshe( world, view, p_rendering_node, m_nodes_mesheid[p_rendering_node] );
-
-    m_renderer->RenderMeshe( world, view, m_meshe_datas[m_nodes_mesheid[p_rendering_node]] );
+  
+    //m_renderer->RenderMeshe( world, view, m_meshe_datas[m_nodes_mesheid[p_rendering_node]] );    
+    m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), world, view );
 }
 
 void Spacebox::RegisterPassSlot( const dsstring p_passname )
@@ -359,6 +353,8 @@ void Spacebox::RegisterPassSlot( const dsstring p_passname )
     {
         nodeset.nodes[i] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Spacebox::on_renderingnode_draw ) );
+
+        nodeset.nodes[i]->SetMeshe( m_meshes[i] );
 
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );

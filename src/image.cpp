@@ -196,12 +196,7 @@ m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 )
 
 Image::~Image( void )
 {
-
-}
-
-Core::Meshe* Image::GetMeshe( void )
-{
-    return m_meshe;
+    _DRAWSPACE_DELETE_( m_meshe );
 }
 
 void Image::OnDraw( void )
@@ -218,21 +213,7 @@ void Image::OnDraw( void )
     chain.GetResult( &world );
 
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
-    renderer->RenderMeshe( view, world, m_renderer_meshe_data );
-}
-
-bool Image::LoadAssets( void )
-{
-    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    if( false == renderer->CreateRenderingNode( this ) )
-    {
-        return false;
-    }
-    if( false == renderer->CreateMeshe( m_meshe, &m_renderer_meshe_data ) )
-    {
-        return false;
-    }
-    return true;
+    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), view, world );
 }
 
 void Image::SetTranslation( dsreal p_x, dsreal p_y )

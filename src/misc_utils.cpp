@@ -40,6 +40,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
 
     text_widget = _DRAWSPACE_NEW_( TextWidget, TextWidget( p_name, p_width, p_height, p_font, false, NULL ) );
 
+    /*
     text_widget->GetImageFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
     text_widget->GetImageFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
 
@@ -96,8 +97,10 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
     text_widget->GetImageFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDDEST, "invsrcalpha"  ) );
     text_widget->GetImageFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDSRC, "srcalpha"  ) );
     text_widget->GetImageFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "false" ) );
-    text_widget->GetImageFx()->AddShaderRealVectorParameter( 1, "color", 0 );
-    text_widget->GetImageFx()->SetShaderRealVector( "color", p_color );
+    //text_widget->GetImageFx()->AddShaderRealVectorParameter( 1, "color", 0 );
+    //text_widget->GetImageFx()->SetShaderRealVector( "color", p_color );
+
+
 
     text_widget->GetTextFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
     text_widget->GetTextFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
@@ -158,6 +161,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
     text_widget->GetTextFx()->SetShaderRealVector( "color", Utils::Vector( 1.0, 1.0, 1.0, 0.0 ) );
 
     text_widget->SetPassTargetClearingColor( 0, 0, 0 );
+    */
 
     return text_widget;
 }

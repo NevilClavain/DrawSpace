@@ -33,7 +33,6 @@ class Asset
 {
 protected:
     dsstring    m_assetname;
-    bool        m_render_ready; // si true, chargé dans le render plugin
 
 public:
 
@@ -45,8 +44,6 @@ public:
     virtual void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive ) = 0;
 
     virtual void GetName( dsstring& p_name );
-    virtual void SetRenderReady( void );
-    virtual void UnsetRenderReady( void );
 };
 }
 #endif

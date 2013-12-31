@@ -321,6 +321,7 @@ void D3D9Renderer::SetProjection( float p_vw, float p_vh, float p_zn, float p_zf
     m_projection.Perspective( p_vw, p_vh, p_zn, p_zf );
 }
 
+/*
 bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
 {
     DECLARE_D3D9ASSERT_VARS
@@ -412,7 +413,7 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
         node_infos.pixel_shader  = ps;
 
         /////////////////// Textures loading
-/*
+
         node_infos.nb_stages = 0;
         DrawSpace::Core::Texture* current_texture;
         long nb_textures = p_node->GetTextureListSize();
@@ -506,7 +507,7 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
             }
             current_texture->SetRenderReady();
         }
-        */
+        
     }
     else
     {
@@ -515,18 +516,19 @@ bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
             _DSWARN( logger, "no associated fx" )
         }
 
-        /*
-        if( 2 != fx->GetShadersListSize() )
-        {
-            _DSWARN( logger, "fx does not have 2 shaders" )
-        }
-        */
+        
+        //if( 2 != fx->GetShadersListSize() )
+        //{
+        //    _DSWARN( logger, "fx does not have 2 shaders" )
+        //}
+        
     }
     /////////////////// final step : registering infos
     m_nodes[p_node] = node_infos;
 
     return true;
 }
+*/
 
 void D3D9Renderer::BeginScreen( void )
 {
@@ -569,7 +571,7 @@ void D3D9Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
     }
 }
 
-
+/*
 bool D3D9Renderer::BeginNodeRender( DrawSpace::Core::RenderingNode* p_node, long p_textures_set_index )
 {
     DECLARE_D3D9ASSERT_VARS
@@ -655,6 +657,7 @@ bool D3D9Renderer::EndNodeRender( DrawSpace::Core::RenderingNode* p_node )
     }
     return true;
 }
+*/
 
 bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
 {
@@ -769,8 +772,6 @@ bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
     }   
     meshe_data->index_buffer->Unlock();
 
-    meshe->SetRenderReady();
-
     *p_data = (void *)meshe_data;
 
     m_meshes_base[hash] = meshe_data;
@@ -786,7 +787,6 @@ void D3D9Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
     D3D9_RELEASE( meshe_data->index_buffer );
     
     _DRAWSPACE_DELETE_( meshe_data );
-    p_meshe->UnsetRenderReady();
 
     dsstring hash;
     p_meshe->GetMD5( hash );
@@ -797,6 +797,7 @@ void D3D9Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
     }
 }
 
+/*
 bool D3D9Renderer::RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, void* p_data )
 {
     DECLARE_D3D9ASSERT_VARS
@@ -836,19 +837,20 @@ bool D3D9Renderer::RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Uti
     
     
     MesheData* meshe_data = (MesheData*)p_data;
-    /*
+    
     // vb selections
-    hRes = m_lpd3ddevice->SetStreamSource( 0, meshe_data->vertex_buffer, 0, sizeof( d3d9vertex ) );
-	D3D9_CHECK( SetStreamSource );
+    //hRes = m_lpd3ddevice->SetStreamSource( 0, meshe_data->vertex_buffer, 0, sizeof( d3d9vertex ) );
+	//D3D9_CHECK( SetStreamSource );
 
-    hRes = m_lpd3ddevice->SetIndices( meshe_data->index_buffer );
-	D3D9_CHECK( SetIndices );
-    */
+    //hRes = m_lpd3ddevice->SetIndices( meshe_data->index_buffer );
+	//D3D9_CHECK( SetIndices );
+    
 
     //hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, meshe_data->nb_vertices, 0, meshe_data->nb_triangles );
 
     return true;
 }
+*/
 
 bool D3D9Renderer::SetMeshe( void* p_data )
 {
@@ -928,7 +930,6 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
         *p_data = (void*)texture_infos;
     }    
-    p_texture->SetRenderReady();
 
     return true;
 }
@@ -1013,7 +1014,6 @@ bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
             D3D9_CHECK( CreateVertexShader );		
         }
 
-        vertex_shader->SetRenderReady();
         fxdata->vertex_shader = vs;
 
         if( !pixel_shader->IsCompiled() )
@@ -1043,7 +1043,6 @@ bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
             D3D9_CHECK( CreatePixelShader );
         }
 
-        pixel_shader->SetRenderReady();
         fxdata->pixel_shader = ps;
     }
 
@@ -1091,7 +1090,7 @@ bool D3D9Renderer::UnsetFx( void* p_data )
 
 	return true;
 }
-
+/*
 bool D3D9Renderer::SetFxShaderParams( int p_shader_index, std::map<long, Utils::Vector>& p_params )
 {
 	switch( p_shader_index )
@@ -1117,6 +1116,31 @@ bool D3D9Renderer::SetFxShaderParams( int p_shader_index, std::map<long, Utils::
 	}
 
 	return true;
+}
+*/
+
+bool D3D9Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector )
+{
+	switch( p_shader_index )
+	{
+		case 0:
+
+			// vertex shader params application		
+			set_vertexshader_constants( p_register, p_vector.GetArray(), 1 );
+			break;
+
+
+		case 1:
+
+			// pixel shader params application
+			set_pixelshader_constants( p_register, p_vector.GetArray(), 1 );
+			break;
+
+        default:
+            return false;
+	}
+
+	return false;
 }
 
 bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view )

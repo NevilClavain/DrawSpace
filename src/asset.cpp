@@ -24,12 +24,12 @@
 
 using namespace DrawSpace;
 
-Asset::Asset( void ) : m_render_ready( false )
+Asset::Asset( void )
 {
 
 }
 
-Asset::Asset( const dsstring& p_name ) : m_assetname( p_name ), m_render_ready( false )
+Asset::Asset( const dsstring& p_name ) : m_assetname( p_name )
 {
 }
 
@@ -40,14 +40,4 @@ Asset::~Asset( void )
 void Asset::GetName( dsstring& p_name )
 {
     p_name = m_assetname;
-}
-
-void Asset::SetRenderReady( void )
-{
-    m_render_ready = true;
-}
-
-void Asset::UnsetRenderReady( void )
-{
-    m_render_ready = false;
 }

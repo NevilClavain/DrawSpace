@@ -38,7 +38,6 @@ class Image : public Core::RenderingNode
 protected:
     dsreal                                  m_width;
     dsreal                                  m_height;
-    Core::Meshe*                            m_meshe;
 
     long                                    m_virtual_x, m_virtual_y;
     dsreal                                  m_x, m_y;
@@ -56,8 +55,7 @@ public:
     virtual ~Image( void );
     
     void OnDraw( void );
-    bool LoadAssets( void );
-    Core::Meshe* GetMeshe( void );
+
     void SetTranslation( dsreal p_x, dsreal p_y );
     void SetVirtualTranslation( long p_x ,long p_y );
     void GetVirtualTranslation( long& p_x, long& p_y );

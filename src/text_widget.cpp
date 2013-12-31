@@ -49,7 +49,8 @@ Widget( p_name, p_virtual_width, p_virtual_height, p_parentwidget )
     }
 
     m_text = _DRAWSPACE_NEW_( Text, Text( p_font ) );
-    m_pass->GetRenderingQueue()->Add( m_text );
+    m_text->Initialize();
+    m_pass->GetRenderingQueue()->Add( m_text );    
 }
 
 TextWidget::~TextWidget( void )
@@ -58,12 +59,11 @@ TextWidget::~TextWidget( void )
 
 void TextWidget::SetVirtualTranslation( long p_x ,long p_y )
 {
-    Widget::SetVirtualTranslation( p_x, p_y );
-    //m_image->SetVirtualTranslation( p_x, p_y );
+    Widget::SetVirtualTranslation( p_x, p_y );    
     m_image->SetTranslation( m_real_posx, m_real_posy );
-
 }
 
+/*
 void TextWidget::SetBackgroundTexture( Core::Texture* p_backgroundtexture, long p_stage )
 {
     if( m_backgroundimage )
@@ -99,6 +99,23 @@ Core::Fx* TextWidget::GetTextFx( void )
 {
     return m_text->GetFx();
 }
+*/
+
+Image* TextWidget::GetImage( void )
+{
+    return m_image;
+}
+
+Image* TextWidget::GetBackgroundImage( void )
+{
+    return m_backgroundimage;
+}
+
+Text* TextWidget::GetText( void )
+{
+    return m_text;
+}
+
 
 void TextWidget::SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag )
 {
@@ -117,6 +134,7 @@ void TextWidget::RegisterToPass( Pass* p_pass )
     p_pass->GetRenderingQueue()->Add( m_image );
 }
 
+/*
 bool TextWidget::LoadAssets( void )
 {
     if( m_backgroundimage && false == m_backgroundimage->LoadAssets() )
@@ -133,8 +151,14 @@ bool TextWidget::LoadAssets( void )
     }
     return true;
 }
+*/
 
 void TextWidget::SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b )
 {
     m_pass->GetRenderingQueue()->SetTargetClearingColor( p_r, p_g, p_b );
+}
+
+IntermediatePass* TextWidget::GetInternalPass( void )
+{
+    return m_pass;
 }

@@ -39,33 +39,62 @@ class RenderingNode
 public:
     static const int NeutralOrder = 10000;
 
+
+    typedef struct
+    {
+        long            shader_index;
+        long            param_register;
+        Utils::Vector   param_values;
+
+    } ShadersParams;
+
 protected:
+
     Fx*                                     m_fx;
     Texture*                                m_textures[32]; // 32 textures stages max
+    Meshe*                                  m_meshe;
+
+    std::map<dsstring, ShadersParams>       m_shader_params;
 
     long                                    m_order;
 
     BaseCallback<void, RenderingNode*>*     m_handler;
 
-
 public:
     RenderingNode( void );
     virtual ~RenderingNode( void );
 
-    virtual void SetFx( Fx* p_fx );
     virtual void SetTexture( Texture* p_texture, long p_stage );
 
-    virtual Core::Fx* GetFx( void )
+    virtual void SetMeshe( Meshe* p_meshe )
+    {
+        m_meshe = p_meshe;
+    }
+
+    virtual Meshe* GetMeshe( void )
+    {
+        return m_meshe;
+    }
+
+    virtual Fx* GetFx( void )
     {
         return m_fx;
     }
 
     virtual long GetTextureListSize( void );
-    virtual Core::Texture* GetTexture( long p_index );    
+    virtual Texture* GetTexture( long p_index );
+
     virtual void OnDraw( void );
     virtual void RegisterHandler( BaseCallback<void, RenderingNode*>* p_handler );
     virtual long GetOrderNumber( void );
     virtual void SetOrderNumber( long p_order );
+
+    virtual void AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register );
+    virtual void SetShaderReal( const dsstring& p_id, dsreal p_value );
+    virtual void SetShaderRealVector( const dsstring& p_id, const Utils::Vector& p_value );
+    virtual void SetShaderBool( const dsstring& p_id, bool p_value );
+
+    virtual void GetShadersParams( std::map<dsstring, ShadersParams>& p_outlist );
 
     friend class RenderingQueue;
 };

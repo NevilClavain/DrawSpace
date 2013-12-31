@@ -34,15 +34,51 @@ class RenderingQueue
 {
 protected:
 
-    std::vector<RenderingNode*>	        m_nodes;
-    Texture*                            m_target;
-    bool                                m_clear_depth;
-    bool                                m_clear_target;
-    unsigned char                       m_target_clear_color_r;
-    unsigned char                       m_target_clear_color_g;
-    unsigned char                       m_target_clear_color_b;
+    typedef enum
+    {
+        SET_TEXTURE,
+        SET_FX,
+        SET_MESHE,
+        SET_SHADERS_PARAMS,
+        DRAW_NODE,
+        UNSET_TEXTURE,
+        UNSET_FX,
+
+    } OperationType;
+
+    typedef struct
+    {
+        OperationType                                   type;
+        void*                                           data;
+
+        long                                            shader_index;
+        long                                            param_register;
+        Utils::Vector                                   param_values;
+
+        long                                            texture_stage;
+
+        RenderingNode*                                  node;
+
+    } Operation;
+
+
+    std::vector<RenderingNode*>	                        m_nodes;
+    std::vector<Operation>                              m_outputqueue;
+
+    Texture*                                            m_target;
+    bool                                                m_clear_depth;
+    bool                                                m_clear_target;
+    unsigned char                                       m_target_clear_color_r;
+    unsigned char                                       m_target_clear_color_g;
+    unsigned char                                       m_target_clear_color_b;
+
+    std::map<RenderingNode*, void*>                     m_fx_datas;
+    std::map<RenderingNode*, std::vector<void*> >       m_tx_datas;
+    std::map<RenderingNode*, void* >                    m_meshe_datas;
 
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
+
+    bool build_output_list( std::vector<RenderingNode*>& p_input_list );
 
 public:
     RenderingQueue( void );
@@ -55,6 +91,8 @@ public:
     void EnableDepthClearing( bool p_enable );
     void EnableTargetClearing( bool p_enable );
     void SetTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
+
+    void UpdateOutputQueue( void );
 };
 }
 }

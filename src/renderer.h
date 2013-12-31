@@ -54,7 +54,7 @@ public:
     virtual void SetViewport( bool p_windowed, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz ) = 0;
     virtual void SetProjection( float p_vw, float p_vh, float p_zn, float p_zf ) = 0;
 
-    virtual bool CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node ) = 0;
+    //virtual bool CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node ) = 0;
 
     virtual void BeginScreen( void ) = 0;
     virtual void EndScreen( void ) = 0;
@@ -66,12 +66,12 @@ public:
     virtual void BeginTarget( DrawSpace::Core::Texture* p_texture ) = 0;
     virtual void EndTarget( DrawSpace::Core::Texture* p_texture ) = 0;
 
-    virtual bool BeginNodeRender( DrawSpace::Core::RenderingNode* p_node, long p_textures_set_index = 0 ) = 0;
-    virtual bool EndNodeRender( DrawSpace::Core::RenderingNode* p_node ) = 0;
+    //virtual bool BeginNodeRender( DrawSpace::Core::RenderingNode* p_node, long p_textures_set_index = 0 ) = 0;
+    //virtual bool EndNodeRender( DrawSpace::Core::RenderingNode* p_node ) = 0;
 
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data ) = 0;
     virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data ) = 0;
-    virtual bool RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, void* p_data ) = 0;
+    //virtual bool RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, void* p_data ) = 0;
     virtual bool SetMeshe( void* p_data ) = 0;
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data ) = 0;
@@ -81,7 +81,8 @@ public:
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool SetFx( void* p_data ) = 0;
 	virtual bool UnsetFx( void* p_data ) = 0;
-	virtual bool SetFxShaderParams( int p_shader_index, std::map<long, DrawSpace::Utils::Vector>& p_params ) = 0;
+	//virtual bool SetFxShaderParams( int p_shader_index, std::map<long, DrawSpace::Utils::Vector>& p_params ) = 0;
+    virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector ) = 0;
 
 	virtual bool DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view ) = 0;
 

@@ -65,6 +65,7 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
     m_scenegraph = p_scenegraph;
 }
 
+/*
 bool Chunk::LoadAssets( void )
 {
     for( std::map<dsstring, Core::RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
@@ -80,6 +81,7 @@ bool Chunk::LoadAssets( void )
     }
     return true;		
 }
+*/
 
 Core::Meshe* Chunk::GetMeshe( const dsstring& p_mesheid )
 {
@@ -90,12 +92,16 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
 {
     DrawSpace::Utils::Matrix view;
     m_scenegraph->GetCurrentCameraView( view );
-    m_renderer->RenderMeshe( m_globaltransformation, view, m_renderer_meshe_data );
+    //m_renderer->RenderMeshe( m_globaltransformation, view, m_renderer_meshe_data );
+
+    m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), m_globaltransformation, view );
 }
 
 void Chunk::RegisterPassSlot( const dsstring p_passname )
 {
     m_passesnodes[p_passname] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
+
+    m_passesnodes[p_passname]->SetMeshe( m_meshe );
 
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Chunk::on_renderingnode_draw ) );
 

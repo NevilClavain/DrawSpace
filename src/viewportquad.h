@@ -35,7 +35,7 @@ class ViewportQuad : public Core::TransformNode, public Core::RenderingNode
 protected:
     dsreal          m_width;
     dsreal          m_height;
-    Core::Meshe*    m_meshe;
+    //Core::Meshe*    m_meshe;
     void*           m_renderer_meshe_data;
 
 public:
@@ -45,7 +45,7 @@ public:
     void OnDraw( void );
     void OnRegister( Scenegraph* p_scenegraph ) { };
 
-    bool LoadAssets( void );
+    //bool LoadAssets( void );
 };
 }
 #endif

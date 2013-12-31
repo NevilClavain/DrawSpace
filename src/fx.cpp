@@ -85,60 +85,6 @@ void Fx::AddRenderStateOut( const RenderState& p_renderstate )
     m_renderstates_out.push_back( p_renderstate );
 }
 
-void Fx::AddShaderRealParameter( long p_shader_index, const dsstring& p_id, long p_register )
-{
-    m_shader_realparams[p_id].first = p_shader_index;
-    m_shader_realparams[p_id].second = p_register;
-}
-
-void Fx::AddShaderRealVectorParameter( long p_shader_index, const dsstring& p_id, long p_register )
-{
-    m_shader_realvectorparams[p_id].first = p_shader_index;
-    m_shader_realvectorparams[p_id].second = p_register;
-}
-
-void Fx::AddShaderBoolParameter( long p_shader_index, const dsstring& p_id, long p_register )
-{
-    m_shader_boolparams[p_id].first = p_shader_index;
-    m_shader_boolparams[p_id].second = p_register;
-}
-
-void Fx::SetShaderReal( const dsstring& p_id, dsreal p_value )
-{
-    if( m_shader_realparams.count( p_id ) > 0 )
-    {
-        Utils::Vector vec;
-        vec[0] = p_value;
-        vec[1] = 0.0;
-        vec[2] = 0.0;
-        vec[3] = 1.0;
-        m_shaders[m_shader_realparams[p_id].first]->SetParam( m_shader_realparams[p_id].second, vec );
-    }
-}
-
-void Fx::SetShaderRealVector( const dsstring& p_id, const Vector& p_value )
-{
-    if( m_shader_realvectorparams.count( p_id ) > 0 )
-    {
-        Utils::Vector vec = p_value;
-        m_shaders[m_shader_realvectorparams[p_id].first]->SetParam( m_shader_realvectorparams[p_id].second, vec );
-    }
-}
-
-void Fx::SetShaderBool( const dsstring& p_id, bool p_value )
-{
-    if( m_shader_boolparams.count( p_id ) > 0 )
-    {
-        Utils::Vector vec;
-        vec[0] = ( p_value ? 1.0 : 0.0 );
-        vec[1] = 0.0;
-        vec[2] = 0.0;
-        vec[3] = 1.0;
-        m_shaders[m_shader_boolparams[p_id].first]->SetParam( m_shader_boolparams[p_id].second, vec );
-    }
-}
-
-
 void Fx::Serialize( Factory& p_factory, Archive& p_archive )
 {
 

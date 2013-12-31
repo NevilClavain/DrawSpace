@@ -87,16 +87,6 @@ void Shader::Unserialize( Factory& p_factory, Archive& p_archive )
 
 }
 
-void Shader::SetParam( long p_register, const Vector& p_values )
-{
-    m_params[p_register] = p_values;
-}
-
-void Shader::GetParamsTable( std::map<long, Vector>& p_table )
-{
-    p_table = m_params;
-}
-
 void Shader::SetText( const dsstring& p_text )
 {
     m_data = (void *)_DRAWSPACE_NEW_EXPLICIT_SIZE_( char, char[p_text.size()], p_text.size() );

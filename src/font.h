@@ -52,8 +52,6 @@ protected:
     DrawSpace::Interface::FontImport*       m_importer;
     dsstring                                m_texturepath;
 
-    //DrawSpace::Core::Texture*             m_texture;
-
 public:
     Font( void );
     virtual ~Font( void );

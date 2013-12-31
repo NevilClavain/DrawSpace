@@ -53,7 +53,7 @@ protected:
     DrawSpace::Scenegraph*                                  m_scenegraph;
     std::map<DrawSpace::Core::RenderingNode*, dsstring>     m_nodes_mesheid;
 
-    std::map<dsstring, void*>                               m_meshe_datas;
+    //std::map<dsstring, void*>                               m_meshe_datas;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -65,7 +65,6 @@ public:
     virtual void DumpMemoryAllocs( void );
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
-    virtual bool LoadAssets( void );
     virtual DrawSpace::Core::Meshe* GetMeshe( const dsstring& p_mesheid );
     virtual void RegisterPassSlot( const dsstring p_passname );
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid );

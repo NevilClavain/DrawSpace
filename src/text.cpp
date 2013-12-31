@@ -34,6 +34,8 @@ Text::Text( Core::Font* p_font ) : m_font( p_font ), m_height( 0.5 ), m_x( 0.0 )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
+
+    // m_meshe reste a NULL
 }
 
 Text::~Text( void )
@@ -41,13 +43,30 @@ Text::~Text( void )
 
 }
 
+bool Text::Initialize( void )
+{
+    Texture* texture;
+    dsstring texturepath;
+
+    m_font->GetTexturePath( texturepath );
+    texture = _DRAWSPACE_NEW_( Texture, Texture( texturepath ) );
+    if( false == texture->LoadFromFile() )
+    {
+        return false;
+    }
+    SetTexture( texture, 0 );
+
+    return true;
+}
+
 void Text::OnDraw( void )
 {
-
     if( 0 == m_text.size() )
     {
         return;
     }
+
+    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
     dsreal width = 0.0;
 
@@ -66,7 +85,13 @@ void Text::OnDraw( void )
     for( unsigned long i = 0; i < m_text.size(); i++ )
     {
         chmap.image->SetTranslation( curr_x, m_y );
-        chmap.image->SetScale( m_height, m_height );
+        chmap.image->SetScale( m_height /* * ratio*/, m_height );
+
+        // ce n'est pas le pipeline de RenderingQueue qui va positionner le meshe pour nous (Text::m_meshe = NULL)
+        // on le fait nous-meme ici
+        void** image_meshe_data = chmap.image->GetRenderMesheData();
+        renderer->SetMeshe( *image_meshe_data );
+
         chmap.image->OnDraw();
 
         curr_x += width / 2.0;
@@ -158,11 +183,10 @@ void Text::SetText( long p_x, long p_y, long p_height, const dsstring& p_text, u
     {
         m_y = pos_y;
     }
-
-
 }
 
-
+// TODO ??
+/*
 bool Text::LoadAssets( void )
 {
     Texture* texture;
@@ -183,3 +207,4 @@ bool Text::LoadAssets( void )
     }
     return true;
 }
+*/
