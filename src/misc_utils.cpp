@@ -40,11 +40,11 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
 
     text_widget = _DRAWSPACE_NEW_( TextWidget, TextWidget( p_name, p_width, p_height, p_font, false, NULL ) );
 
-    /*
-    text_widget->GetImageFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
-    text_widget->GetImageFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+    
+    text_widget->GetImage()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+    text_widget->GetImage()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
 
-    text_widget->GetImageFx()->GetShader( 0 )->SetText( 
+    text_widget->GetImage()->GetFx()->GetShader( 0 )->SetText( 
         
         "float4x4 matWorldViewProjection: register(c0);"
         "struct VS_INPUT"
@@ -66,7 +66,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
         "}"     
         );
 
-    text_widget->GetImageFx()->GetShader( 1 )->SetText( 
+    text_widget->GetImage()->GetFx()->GetShader( 1 )->SetText( 
 
         "float4 text_color: register(c0);"
         "sampler2D Texture0;"
@@ -91,21 +91,22 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
         "}"        
       );
 
-    text_widget->GetImageFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "true" ) );
-    text_widget->GetImageFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDOP, "add"  ) );
-    text_widget->GetImageFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDFUNC, "always"  ) );
-    text_widget->GetImageFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDDEST, "invsrcalpha"  ) );
-    text_widget->GetImageFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDSRC, "srcalpha"  ) );
-    text_widget->GetImageFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "false" ) );
-    //text_widget->GetImageFx()->AddShaderRealVectorParameter( 1, "color", 0 );
-    //text_widget->GetImageFx()->SetShaderRealVector( "color", p_color );
+    text_widget->GetImage()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "true" ) );
+    text_widget->GetImage()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDOP, "add"  ) );
+    text_widget->GetImage()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDFUNC, "always"  ) );
+    text_widget->GetImage()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDDEST, "invsrcalpha"  ) );
+    text_widget->GetImage()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDSRC, "srcalpha"  ) );
+    text_widget->GetImage()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "false" ) );
+    
+    text_widget->GetImage()->AddShaderParameter( 1, "color", 0 );
+    text_widget->GetImage()->SetShaderRealVector( "color", p_color );
 
 
 
-    text_widget->GetTextFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
-    text_widget->GetTextFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+    text_widget->GetText()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+    text_widget->GetText()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
 
-    text_widget->GetTextFx()->GetShader( 0 )->SetText( 
+    text_widget->GetText()->GetFx()->GetShader( 0 )->SetText( 
 
         "float4x4 matWorldViewProjection: register(c0);"
 
@@ -133,7 +134,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
     );
 
 
-    text_widget->GetTextFx()->GetShader( 1 )->SetText( 
+    text_widget->GetText()->GetFx()->GetShader( 1 )->SetText( 
         
         "float4 text_color: register(c0);"
         "sampler2D Texture0;"
@@ -155,13 +156,14 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
         "}"
     );
 
-    text_widget->GetTextFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    text_widget->GetTextFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
-    text_widget->GetTextFx()->AddShaderRealVectorParameter( 1, "color", 0 );
-    text_widget->GetTextFx()->SetShaderRealVector( "color", Utils::Vector( 1.0, 1.0, 1.0, 0.0 ) );
+    text_widget->GetText()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    text_widget->GetText()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+    text_widget->GetText()->AddShaderParameter( 1, "color", 0 );
+    text_widget->GetText()->SetShaderRealVector( "color", Utils::Vector( 1.0, 1.0, 1.0, 0.0 ) );
 
     text_widget->SetPassTargetClearingColor( 0, 0, 0 );
-    */
+    
+    text_widget->GetInternalPass()->GetRenderingQueue()->UpdateOutputQueue();
 
     return text_widget;
 }
