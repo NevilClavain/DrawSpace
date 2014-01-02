@@ -34,7 +34,8 @@ m_clear_depth( false ),
 m_clear_target( false ),
 m_target_clear_color_r( 0 ),
 m_target_clear_color_g( 0 ),
-m_target_clear_color_b( 0 )
+m_target_clear_color_b( 0 ),
+m_switches_cost( 0 )
 {
 
 
@@ -46,7 +47,8 @@ m_clear_depth( false ),
 m_clear_target( false ),
 m_target_clear_color_r( 0 ),
 m_target_clear_color_g( 0 ),
-m_target_clear_color_b( 0 )
+m_target_clear_color_b( 0 ),
+m_switches_cost( 0 )
 {
 
 
@@ -64,6 +66,8 @@ bool RenderingQueue::nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 )
 
 void RenderingQueue::Draw( void )
 {
+    m_switches_cost = 0;
+
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
     if( m_target )
@@ -93,26 +97,31 @@ void RenderingQueue::Draw( void )
             case SET_TEXTURE:
 
                 renderer->SetTexture( curr_operation.data, curr_operation.texture_stage );
+                m_switches_cost++;
                 break;
 
             case UNSET_TEXTURE:
 
                 renderer->UnsetTexture( curr_operation.texture_stage );
+                m_switches_cost++;
                 break;
 
             case SET_FX:
 
                 renderer->SetFx( curr_operation.data );
+                m_switches_cost++;
                 break;
 
             case UNSET_FX:
 
                 renderer->UnsetFx( curr_operation.data );
+                m_switches_cost++;
                 break;
 
             case SET_MESHE:
 
                 renderer->SetMeshe( curr_operation.data );
+                m_switches_cost++;
                 break;
 
             case SET_SHADERS_PARAMS:
@@ -165,14 +174,10 @@ void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_
 void RenderingQueue::UpdateOutputQueue( void )
 {
     // I/ classement au niveau des listes RenderingNode*
+    
 
     build_output_list( m_nodes );
-
-    // II/ construction liste d'operations en sortie, avec chargement des assets
-
-    // III/ elimination des doublons et operations redondantes dans la 
-    //      liste d'operations en sortie
-
+    cleanup_output_list();
 }
 
 bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_list )
@@ -186,7 +191,6 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
     m_tx_datas.clear();
     m_fx_datas.clear();
     m_meshe_datas.clear();
-
 
     for( size_t i = 0; i < p_input_list.size(); i++ )
     {
@@ -293,6 +297,45 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             m_outputqueue.push_back( operation );
         }
     }
-
     return true;
+}
+
+void RenderingQueue::cleanup_output_list( void )
+{
+    
+}
+
+long RenderingQueue::GetSwitchesCost( void )
+{
+    return m_switches_cost;
+}
+
+long RenderingQueue::GetTheoricalSwitchesCost( void )
+{
+    long cost = 0;
+
+    for( size_t i = 0; i < m_nodes.size(); i++ )
+    {
+        RenderingNode* node = m_nodes[i];
+
+        if( node->GetFx() )
+        {
+            cost += 2; // SET_FX, UNSET_FX;
+        }
+
+        for( long j = 0; j < node->GetTextureListSize(); j++ )
+        {
+            Texture* current_tx = node->GetTexture( j );
+            if( NULL != current_tx )
+            {
+                cost += 2; // SET_TEX, UNSET_TEX;
+            }
+        }
+       
+        if( node->GetMeshe() )
+        {
+            cost++; //SET_MESHE
+        }
+    }
+    return cost;
 }

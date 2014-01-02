@@ -76,9 +76,13 @@ protected:
     std::map<RenderingNode*, std::vector<void*> >       m_tx_datas;
     std::map<RenderingNode*, void* >                    m_meshe_datas;
 
+    long                                                m_switches_cost;
+
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
 
     bool build_output_list( std::vector<RenderingNode*>& p_input_list );
+
+    void cleanup_output_list( void );
 
 public:
     RenderingQueue( void );
@@ -93,6 +97,9 @@ public:
     void SetTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
 
     void UpdateOutputQueue( void );
+
+    long GetTheoricalSwitchesCost( void );
+    long GetSwitchesCost( void );
 };
 }
 }
