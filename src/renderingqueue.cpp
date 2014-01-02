@@ -183,6 +183,11 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
     void* tx_data;
     void* meshe_data;
 
+    m_tx_datas.clear();
+    m_fx_datas.clear();
+    m_meshe_datas.clear();
+
+
     for( size_t i = 0; i < p_input_list.size(); i++ )
     {
         RenderingNode* node = p_input_list[i];
