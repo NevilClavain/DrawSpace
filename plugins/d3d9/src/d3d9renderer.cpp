@@ -1081,8 +1081,8 @@ bool D3D9Renderer::UnsetFx( void* p_data )
 	FxData* fx_data = (FxData*)p_data;
 	DrawSpace::Core::Fx* fx = fx_data->fx;
 
-    long nb_rs_in = fx->GetRenderStatesInListSize();
-    for( long i = 0; i < nb_rs_in; i++ )
+    long nb_rs_out = fx->GetRenderStatesOutListSize();
+    for( long i = 0; i < nb_rs_out; i++ )
     {
         DrawSpace::Core::RenderState rs = fx->GetRenderStateOut( i );
         SetRenderState( &rs );
