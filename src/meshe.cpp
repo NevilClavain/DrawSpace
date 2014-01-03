@@ -126,6 +126,7 @@ void Meshe::GetMD5( dsstring& p_md5 )
     for( size_t i = 0; i < m_vertices.size(); i++ )
     {
         *curr = m_vertices[i];
+        curr++;
     }
     dsstring hash_v = md5.digestMemory( (BYTE*)vbuff, (int)( m_vertices.size() * sizeof( Vertex ) ) );
 
@@ -135,6 +136,7 @@ void Meshe::GetMD5( dsstring& p_md5 )
     for( size_t i = 0; i < m_triangles.size(); i++ )
     {
         *curr2 = m_triangles[i];
+        curr2++;
     }
     dsstring hash_t = md5.digestMemory( (BYTE*)tbuff, (int)( m_triangles.size() * sizeof( Triangle ) ) );
 
