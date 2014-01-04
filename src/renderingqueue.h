@@ -25,6 +25,7 @@
 
 #include "drawspace_commons.h"
 #include "renderingnode.h"
+#include <list>
 
 namespace DrawSpace
 {
@@ -61,9 +62,17 @@ protected:
 
     } Operation;
 
+    typedef struct
+    {
+        std::list<RenderingQueue::Operation>::iterator  pos;
+        long                                            index;
+
+    } erase_infos;
+
 
     std::vector<RenderingNode*>	                        m_nodes;
-    std::vector<Operation>                              m_outputqueue;
+    //std::vector<Operation>                              m_outputqueue;
+    std::list<Operation>                                m_outputqueue;
 
     Texture*                                            m_target;
     bool                                                m_clear_depth;

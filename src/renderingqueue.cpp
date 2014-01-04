@@ -88,9 +88,11 @@ void RenderingQueue::Draw( void )
         renderer->ClearScreen( m_target_clear_color_r, m_target_clear_color_g, m_target_clear_color_b );
     }
 
-    for( size_t i = 0; i < m_outputqueue.size(); i++ )
+    //for( size_t i = 0; i < m_outputqueue.size(); i++ )
+    for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it )
     {
-        Operation curr_operation = m_outputqueue[i];
+        //Operation curr_operation = m_outputqueue[i];
+        Operation curr_operation = (*it);
 
         switch( curr_operation.type )
         {
@@ -285,6 +287,7 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
             {
                operation.type = UNSET_TEXTURE;
+               operation.data = m_tx_datas[node][j];
                operation.texture_stage = (long)j;
                m_outputqueue.push_back( operation );
             }
@@ -300,9 +303,153 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
     return true;
 }
 
+
+
+
 void RenderingQueue::cleanup_output_list( void )
 {
-    
+    Operation                current_setfx_ope;
+    bool                     current_setfx_ope_set = false;
+
+    Operation                current_settex_ope;
+    bool                     current_settex_ope_set = false;
+
+    Operation                current_setmeshe_ope;
+    bool                     current_setmeshe_ope_set = false;
+
+    std::vector<erase_infos> to_erase_list;
+
+    long index = 0;
+    for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
+    {
+        Operation curr_operation = (*it);
+
+        switch( curr_operation.type )
+        {
+            case SET_TEXTURE:
+
+                if( !current_settex_ope_set )
+                {
+                    current_settex_ope = curr_operation;
+                    current_settex_ope_set = true;                    
+                }
+                else
+                {
+                    if( current_settex_ope.data == curr_operation.data && current_settex_ope.texture_stage == curr_operation.texture_stage )
+                    {
+                        erase_infos ei;
+                        ei.index = index;
+                        ei.pos = it;
+
+                        to_erase_list.push_back( ei );
+
+                        // remonter pour rechercher le unset_tx precedent
+                        
+                        std::list<Operation>::iterator it2 = it;
+                        long index2 = index;
+
+                        while( it2 != m_outputqueue.begin() )
+                        {
+                            Operation curr_operation_2 = (*it2);
+
+                            if( UNSET_TEXTURE == curr_operation_2.type && current_settex_ope.data == curr_operation_2.data && current_settex_ope.texture_stage == curr_operation_2.texture_stage )
+                            {
+                                ei.index = index2;
+                                ei.pos = it2;
+                                to_erase_list.push_back( ei );  
+
+                                break;
+                            }
+                            it2--;
+                            index2--;
+                        }
+                    }
+                    else
+                    {
+                        current_settex_ope = curr_operation;
+                    }
+                }
+
+                break;
+
+            case SET_FX:
+
+                if( !current_setfx_ope_set )
+                {
+                    current_setfx_ope = curr_operation;
+                    current_setfx_ope_set = true;                    
+                }
+                else
+                {
+                    if( current_setfx_ope.data == curr_operation.data )
+                    {
+                        erase_infos ei;
+                        ei.index = index;
+                        ei.pos = it;
+
+                        to_erase_list.push_back( ei );
+
+                        // remonter pour rechercher le unset_fx precedent
+                        
+                        std::list<Operation>::iterator it2 = it;
+                        long index2 = index;
+
+                        while( it2 != m_outputqueue.begin() )
+                        {
+                            Operation curr_operation_2 = (*it2);
+
+                            if( UNSET_FX == curr_operation_2.type && current_setfx_ope.data == curr_operation_2.data )
+                            {
+                                ei.index = index2;
+                                ei.pos = it2;
+                                to_erase_list.push_back( ei );  
+
+                                break;
+                            }
+                            it2--;
+                            index2--;
+                        }
+                    }
+                    else
+                    {
+                        current_setfx_ope = curr_operation;
+                    }
+                }
+                
+                break;
+
+            case SET_MESHE:
+
+                if( !current_setmeshe_ope_set )
+                {
+                    current_setmeshe_ope = curr_operation;
+                    current_setmeshe_ope_set = true;                    
+                }
+                else
+                {
+                    if( current_setmeshe_ope.data == curr_operation.data )
+                    {
+                        erase_infos ei;
+                        ei.index = index;
+                        ei.pos = it;
+
+                        to_erase_list.push_back( ei );
+                    }
+                    else
+                    {
+                        current_setmeshe_ope = curr_operation;
+                    }
+                }
+
+                break;
+
+        }
+    }
+
+    for( size_t i = 0; i < to_erase_list.size(); i++ )
+    {
+        m_outputqueue.erase( to_erase_list[i].pos );
+    }
 }
 
 long RenderingQueue::GetSwitchesCost( void )
