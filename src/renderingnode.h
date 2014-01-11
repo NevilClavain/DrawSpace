@@ -38,6 +38,7 @@ class RenderingNode
 {
 public:
     static const int NeutralOrder = 10000;
+    static const int NbMaxTextures = 32;
 
 
     typedef struct
@@ -51,7 +52,7 @@ public:
 protected:
 
     Fx*                                     m_fx;
-    Texture*                                m_textures[32]; // 32 textures stages max
+    Texture*                                m_textures[NbMaxTextures]; // 32 textures stages max
     Meshe*                                  m_meshe;
 
     std::map<dsstring, ShadersParams>       m_shader_params;

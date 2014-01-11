@@ -30,7 +30,7 @@ RenderingNode::RenderingNode( void ) : m_order( 10000 ), m_handler( NULL ), m_me
 {
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
     
-    for( long i = 0; i < 32; i++ )
+    for( long i = 0; i < NbMaxTextures; i++ )
     {
         m_textures[i] = NULL;
     }
@@ -59,7 +59,7 @@ void RenderingNode::SetTexture( Texture* p_texture, long p_stage )
 
 long RenderingNode::GetTextureListSize( void )
 {
-    return 32;
+    return NbMaxTextures;
 }
 
 Texture* RenderingNode::GetTexture( long p_index )

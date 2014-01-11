@@ -36,6 +36,22 @@ class RenderingQueue
 protected:
 
     typedef enum
+    {        
+        FX_LIST,
+        MESHE_LIST,
+        TEXTURE_LIST
+
+    } SortedListType;
+
+
+    typedef struct
+    {
+        SortedListType  type;
+        long            stage;  // pour type TEXTURE_LIST
+
+    } SortCategory;
+
+    typedef enum
     {
         SET_TEXTURE,
         SET_FX,
@@ -46,6 +62,7 @@ protected:
         UNSET_FX,
 
     } OperationType;
+
 
     typedef struct
     {
@@ -68,10 +85,11 @@ protected:
         long                                            index;
 
     } erase_infos;
-
+ 
+    std::map<long, std::vector<RenderingNode*>>         m_renderingorder_nodes;
 
     std::vector<RenderingNode*>	                        m_nodes;
-    //std::vector<Operation>                              m_outputqueue;
+
     std::list<Operation>                                m_outputqueue;
 
     Texture*                                            m_target;
@@ -89,9 +107,15 @@ protected:
 
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
 
-    bool build_output_list( std::vector<RenderingNode*>& p_input_list );
+    void sort_list( std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list );
 
+    void sort_step( std::vector<SortCategory>& p_todo, std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list );
+    void sort_list_by( SortedListType p_type, long p_texturestage, std::vector<RenderingNode*>& p_in_list, std::map<dsstring, std::vector<RenderingNode*>>& p_out_lists );
+
+    bool build_output_list( std::vector<RenderingNode*>& p_input_list );
     void cleanup_output_list( void );
+
+    
 
 public:
     RenderingQueue( void );

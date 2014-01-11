@@ -150,10 +150,15 @@ void RenderingQueue::Draw( void )
 
 void RenderingQueue::Add( RenderingNode* p_node )
 {
-    m_nodes.push_back( p_node );
+    m_renderingorder_nodes[p_node->GetOrderNumber()].push_back( p_node );
 
+    /*
+    m_nodes.push_back( p_node );
     // a chaque ajout, refaire un sort
     std::sort( m_nodes.begin(), m_nodes.end(), RenderingQueue::nodes_comp );
+    */
+
+
 }
 
 void RenderingQueue::EnableDepthClearing( bool p_enable )
@@ -174,12 +179,262 @@ void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_
 }
 
 void RenderingQueue::UpdateOutputQueue( void )
-{
-    // I/ classement au niveau des listes RenderingNode*
-    
+{     
+    m_nodes.clear();
 
+    for( std::map<long, std::vector<RenderingNode*>>::iterator it = m_renderingorder_nodes.begin(); it != m_renderingorder_nodes.end(); ++it )
+    {
+        std::vector<RenderingNode*> sorted_list;
+        sort_list( (*it).second, sorted_list );
+
+        for( size_t i = 0; i < sorted_list.size(); i++ )
+        {
+            m_nodes.push_back( sorted_list[i] );
+
+            // a chaque ajout, refaire un sort
+            std::sort( m_nodes.begin(), m_nodes.end(), RenderingQueue::nodes_comp );            
+        }
+    }
+    
     build_output_list( m_nodes );
     cleanup_output_list();
+}
+
+void RenderingQueue::sort_list( std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list )
+{
+    p_output_list.clear();
+
+    std::vector<SortCategory> todo;
+    SortCategory category;
+
+    category.type = FX_LIST;
+    todo.push_back( category );
+
+    category.type = MESHE_LIST;
+    todo.push_back( category );
+
+    category.type = TEXTURE_LIST;
+    for( category.stage = 0; category.stage < RenderingNode::NbMaxTextures; category.stage++ )
+    {
+        todo.push_back( category );
+    }
+
+    sort_step( todo, p_input_list, p_output_list );
+}
+
+
+void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list )
+{
+    std::map<dsstring, std::vector<RenderingNode*>>     fx_lists;
+    std::map<dsstring, std::vector<RenderingNode*>>     meshe_lists;
+    std::map<dsstring, std::vector<RenderingNode*>>     texture_lists;
+
+    std::map<dsstring, std::vector<RenderingNode*>>*    sel_list = NULL;
+    SortedListType                                      sel_type;
+
+    long max_occ = 0;
+
+    for( size_t i = 0; i < p_todo.size(); i++ )
+    {
+        switch( p_todo[i].type )
+        {
+            case FX_LIST:
+                {
+                    long local_occ = 0;
+                    sort_list_by( FX_LIST, 0, p_input_list, fx_lists );
+
+                    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = fx_lists.begin(); it != fx_lists.end(); ++it )
+                    {
+                        if( (*it).second.size() > 2 )
+                        {
+                            local_occ += (long)(*it).second.size();
+                        }
+                    }
+                    if( local_occ > max_occ )
+                    {
+                        max_occ = local_occ;
+                        sel_list = &fx_lists;
+                        sel_type = FX_LIST;
+                    }
+                }
+                break;
+
+            case MESHE_LIST:
+                {
+                    long local_occ = 0;
+                    sort_list_by( MESHE_LIST, 0, p_input_list, meshe_lists );
+
+                    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = meshe_lists.begin(); it != meshe_lists.end(); ++it )
+                    {
+                        if( (*it).second.size() > 2 )
+                        {
+                            local_occ += (long)(*it).second.size();
+                        }
+                    }
+                    if( local_occ > max_occ )
+                    {
+                        max_occ = local_occ;
+                        sel_list = &meshe_lists;
+                        sel_type = MESHE_LIST;
+                    }
+                }
+                break;
+
+            case TEXTURE_LIST:
+                {
+                    long local_occ = 0;
+                    sort_list_by( TEXTURE_LIST, p_todo[i].stage, p_input_list, texture_lists );
+
+                    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = texture_lists.begin(); it != texture_lists.end(); ++it )
+                    {
+                        if( (*it).second.size() > 2 )
+                        {
+                            local_occ += (long)(*it).second.size();
+                        }
+                    }
+                    if( local_occ > max_occ )
+                    {
+                        max_occ = local_occ;
+                        sel_list = &texture_lists;
+                        sel_type = TEXTURE_LIST;
+                    }
+                }
+                break;
+        }
+    }
+
+    if( NULL == sel_list )
+    {
+        // chaque node n'a rien en commun avec les autres
+        p_output_list = p_input_list;
+        return;
+    }
+
+    std::map<dsstring, std::vector<RenderingNode*>> selected_lists = *sel_list;
+
+    // type selectionne : retirer de p_todo
+    for( std::vector<SortCategory>::iterator it = p_todo.begin(); it != p_todo.end(); ++it )
+    {
+        if( (*it).type == sel_type )
+        {
+            p_todo.erase( it );
+            break;
+        }
+    }
+
+    // appels recursifs
+    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = selected_lists.begin(); it != selected_lists.end(); ++it )
+    {
+        if( (*it).second.size() > 2 )
+        {
+            if( p_todo.size() > 0 )
+            {
+                std::vector<RenderingNode*> output_list;              
+                sort_step( p_todo, (*it).second, output_list );
+
+                for( size_t i = 0; i < output_list.size(); i++ )
+                {
+                    p_output_list.push_back( output_list[i] ); 
+                }
+            }
+            else
+            {
+                for( size_t i = 0; i < (*it).second.size(); i++ )
+                {
+                    p_output_list.push_back( (*it).second[i] ); 
+                }
+            }
+        }
+        else
+        {
+            for( size_t i = 0; i < (*it).second.size(); i++ )
+            {
+                p_output_list.push_back( (*it).second[i] );
+            }
+        }
+    }
+}
+
+void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, std::vector<RenderingNode*>& p_in_list, std::map<dsstring, std::vector<RenderingNode*>>& p_out_lists )
+{
+    std::map<dsstring, std::vector<RenderingNode*> > out_lists;
+    char buff[64];
+
+    for( size_t i = 0; i < p_in_list.size(); i++ )
+    {
+        RenderingNode* curr_node = p_in_list[i];
+
+        switch( p_type )
+        {
+            case FX_LIST:
+                {
+                    Fx* curr_fx = curr_node->GetFx();
+
+                    if( curr_fx )
+                    {
+                        dsstring curr_fx_md5;
+                        curr_fx->GetMD5( curr_fx_md5 );
+                        out_lists[curr_fx_md5].push_back( curr_node );
+                    }
+                    else
+                    {
+                        // pas de fx : ne doit pas influer sur les comptages de redondances
+                        // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
+                        sprintf( buff, "%x", (long long)curr_node );
+                        dsstring id = dsstring( "void_fx:" ) + dsstring( buff );
+                        out_lists[id].push_back( curr_node );
+                    }
+                }
+                break;
+
+            case MESHE_LIST:
+                {
+                    Meshe* curr_meshe = curr_node->GetMeshe();
+
+                    if( curr_meshe )
+                    {
+                        dsstring curr_meshe_md5;
+                        curr_meshe->GetMD5( curr_meshe_md5 );
+                        out_lists[curr_meshe_md5].push_back( curr_node );
+                    }
+                    else
+                    {
+                        // pas de meshe : ne doit pas influer sur les comptages de redondances
+                        // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
+                        sprintf( buff, "%x", (long long)curr_node );
+                        dsstring id = dsstring( "void_meshe:" ) + dsstring( buff );
+                        out_lists[id].push_back( curr_node );
+                    }
+                }
+                break;
+
+            case TEXTURE_LIST:
+                {
+                    Texture* curr_tx = curr_node->GetTexture( p_texturestage );
+                    if( curr_tx )
+                    {
+                        dsstring path;
+                        curr_tx->GetPath( path );
+
+                        char buff[64];
+                        dsstring signature = path + dsstring( ":" ) + itoa( p_texturestage, buff, 10 );
+
+                        out_lists[signature].push_back( curr_node );
+                    }
+                    else
+                    {
+                        // pas de texture pour ce stage : ne doit pas influer sur les comptages de redondances
+                        // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances                       
+                        sprintf( buff, "%d:%x", p_texturestage, (long long)curr_node );
+                        dsstring id = dsstring( "void_texture:" ) + dsstring( buff );
+                        out_lists[id].push_back( curr_node );
+                    }
+                }
+                break;
+        }
+    }
+
+    p_out_lists = out_lists;
 }
 
 bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_list )
@@ -311,13 +566,19 @@ void RenderingQueue::cleanup_output_list( void )
     Operation                current_setfx_ope;
     bool                     current_setfx_ope_set = false;
 
-    Operation                current_settex_ope;
-    bool                     current_settex_ope_set = false;
+    Operation                current_settex_ope[RenderingNode::NbMaxTextures];
+    bool                     current_settex_ope_set[RenderingNode::NbMaxTextures];
+
 
     Operation                current_setmeshe_ope;
     bool                     current_setmeshe_ope_set = false;
 
     std::vector<erase_infos> to_erase_list;
+
+    for( long i = 0; i < RenderingNode::NbMaxTextures; i++ )
+    {
+        current_settex_ope_set[i] = false;
+    }
 
     long index = 0;
     for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
@@ -328,14 +589,14 @@ void RenderingQueue::cleanup_output_list( void )
         {
             case SET_TEXTURE:
 
-                if( !current_settex_ope_set )
+                if( !current_settex_ope_set[curr_operation.texture_stage] )
                 {
-                    current_settex_ope = curr_operation;
-                    current_settex_ope_set = true;                    
+                    current_settex_ope[curr_operation.texture_stage] = curr_operation;
+                    current_settex_ope_set[curr_operation.texture_stage] = true;
                 }
                 else
                 {
-                    if( current_settex_ope.data == curr_operation.data && current_settex_ope.texture_stage == curr_operation.texture_stage )
+                    if( current_settex_ope[curr_operation.texture_stage].data == curr_operation.data )                 
                     {
                         erase_infos ei;
                         ei.index = index;
@@ -352,7 +613,7 @@ void RenderingQueue::cleanup_output_list( void )
                         {
                             Operation curr_operation_2 = (*it2);
 
-                            if( UNSET_TEXTURE == curr_operation_2.type && current_settex_ope.data == curr_operation_2.data && current_settex_ope.texture_stage == curr_operation_2.texture_stage )
+                            if( UNSET_TEXTURE == curr_operation_2.type && current_settex_ope[curr_operation_2.texture_stage].data == curr_operation_2.data )                              
                             {
                                 ei.index = index2;
                                 ei.pos = it2;
@@ -366,10 +627,9 @@ void RenderingQueue::cleanup_output_list( void )
                     }
                     else
                     {
-                        current_settex_ope = curr_operation;
+                        current_settex_ope[curr_operation.texture_stage] = curr_operation;
                     }
                 }
-
                 break;
 
             case SET_FX:
