@@ -151,14 +151,6 @@ void RenderingQueue::Draw( void )
 void RenderingQueue::Add( RenderingNode* p_node )
 {
     m_renderingorder_nodes[p_node->GetOrderNumber()].push_back( p_node );
-
-    /*
-    m_nodes.push_back( p_node );
-    // a chaque ajout, refaire un sort
-    std::sort( m_nodes.begin(), m_nodes.end(), RenderingQueue::nodes_comp );
-    */
-
-
 }
 
 void RenderingQueue::EnableDepthClearing( bool p_enable )
@@ -200,6 +192,50 @@ void RenderingQueue::UpdateOutputQueue( void )
     cleanup_output_list();
 }
 
+double RenderingQueue::lists_score( std::map<dsstring, std::vector<RenderingNode*>>& p_lists )
+{
+    long count = 0;
+    long sum = 0;
+
+    if( 0 == p_lists.size() )
+    {
+        return 0.0;
+    }
+
+    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = p_lists.begin(); it != p_lists.end(); ++it )
+    {
+        if( (*it).second.size() > 1 )
+        {
+            count++;
+            sum += (long)( (*it).second.size() );
+        }
+    }
+    
+    if( count > 0 )
+    {
+        double alpha = (double)count / (double)p_lists.size();
+
+        // moyenne
+        double avg = (double)sum / (double)count;
+
+        //compter nbre de nodes
+        long count2 = 0;
+        for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = p_lists.begin(); it != p_lists.end(); ++it )
+        {
+            count2 += (long)( (*it).second.size() );
+        }
+
+        // normaliser la moyenne
+        double beta = avg / count2;
+
+        return alpha * beta;
+    }
+    else
+    {
+        return 0.0;
+    }
+}
+
 void RenderingQueue::sort_list( std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list )
 {
     p_output_list.clear();
@@ -228,11 +264,13 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
     std::map<dsstring, std::vector<RenderingNode*>>     fx_lists;
     std::map<dsstring, std::vector<RenderingNode*>>     meshe_lists;
     std::map<dsstring, std::vector<RenderingNode*>>     texture_lists;
-
-    std::map<dsstring, std::vector<RenderingNode*>>*    sel_list = NULL;
+    
     SortedListType                                      sel_type;
+    long                                                sel_stage;
+    std::map<dsstring, std::vector<RenderingNode*>>     selected_lists;
+    bool                                                sel_flag = false;
 
-    long max_occ = 0;
+    double max_score = 0.0;
 
     for( size_t i = 0; i < p_todo.size(); i++ )
     {
@@ -240,85 +278,80 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
         {
             case FX_LIST:
                 {
-                    long local_occ = 0;
+                    //long local_occ = 0;
                     sort_list_by( FX_LIST, 0, p_input_list, fx_lists );
 
-                    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = fx_lists.begin(); it != fx_lists.end(); ++it )
+                    double local_score = lists_score( fx_lists );
+                    if( local_score > max_score )
                     {
-                        if( (*it).second.size() > 2 )
-                        {
-                            local_occ += (long)(*it).second.size();
-                        }
-                    }
-                    if( local_occ > max_occ )
-                    {
-                        max_occ = local_occ;
-                        sel_list = &fx_lists;
+                        max_score = local_score;
+                        selected_lists = fx_lists;
                         sel_type = FX_LIST;
+                        sel_flag = true;
                     }
                 }
                 break;
 
             case MESHE_LIST:
                 {
-                    long local_occ = 0;
+                    //long local_occ = 0;
                     sort_list_by( MESHE_LIST, 0, p_input_list, meshe_lists );
 
-                    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = meshe_lists.begin(); it != meshe_lists.end(); ++it )
+                    double local_score = lists_score( meshe_lists );
+                    if( local_score > max_score )
                     {
-                        if( (*it).second.size() > 2 )
-                        {
-                            local_occ += (long)(*it).second.size();
-                        }
-                    }
-                    if( local_occ > max_occ )
-                    {
-                        max_occ = local_occ;
-                        sel_list = &meshe_lists;
+                        max_score = local_score;
+                        selected_lists = meshe_lists;
                         sel_type = MESHE_LIST;
+                        sel_flag = true;
                     }
                 }
                 break;
 
             case TEXTURE_LIST:
                 {
-                    long local_occ = 0;
+                    //long local_occ = 0;
                     sort_list_by( TEXTURE_LIST, p_todo[i].stage, p_input_list, texture_lists );
 
-                    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = texture_lists.begin(); it != texture_lists.end(); ++it )
+                    double local_score = lists_score( texture_lists );
+                    if( local_score > max_score )
                     {
-                        if( (*it).second.size() > 2 )
-                        {
-                            local_occ += (long)(*it).second.size();
-                        }
-                    }
-                    if( local_occ > max_occ )
-                    {
-                        max_occ = local_occ;
-                        sel_list = &texture_lists;
+                        max_score = local_score;
+                        selected_lists = texture_lists;
                         sel_type = TEXTURE_LIST;
+                        sel_stage = p_todo[i].stage;
+                        sel_flag = true;
                     }
                 }
                 break;
         }
     }
 
-    if( NULL == sel_list )
+    if( !sel_flag )
     {
-        // chaque node n'a rien en commun avec les autres
+        // chaque node n'a rien en commun avec tout les autres
         p_output_list = p_input_list;
         return;
     }
 
-    std::map<dsstring, std::vector<RenderingNode*>> selected_lists = *sel_list;
-
     // type selectionne : retirer de p_todo
     for( std::vector<SortCategory>::iterator it = p_todo.begin(); it != p_todo.end(); ++it )
     {
-        if( (*it).type == sel_type )
+        if( TEXTURE_LIST == sel_type )
         {
-            p_todo.erase( it );
-            break;
+            if( (*it).type == sel_type && (*it).stage == sel_stage )
+            {
+                p_todo.erase( it );
+                break;
+            }
+        }
+        else
+        {
+            if( (*it).type == sel_type )
+            {
+                p_todo.erase( it );
+                break;
+            }
         }
     }
 

@@ -115,6 +115,8 @@ protected:
     bool build_output_list( std::vector<RenderingNode*>& p_input_list );
     void cleanup_output_list( void );
 
+    double lists_score( std::map<dsstring, std::vector<RenderingNode*>>& p_lists );
+
     
 
 public:
