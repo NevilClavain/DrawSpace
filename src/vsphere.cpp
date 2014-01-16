@@ -20,49 +20,55 @@
 *                                                                          
 */
 
-#ifndef _TRANFORMNODE_H_
-#define _TRANFORMNODE_H_
+#include "vsphere.h"
 
-#include "drawspace_commons.h"
-#include "matrix.h"
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
-namespace DrawSpace
+VSphere::VSphere( const dsstring& p_name ) : m_name( p_name ), m_ray( 1.0 )
 {
-class Scenegraph;
-namespace Core
-{
-class TransformNode
-{
-protected:
-
-    dsstring                        m_scenename;
-
-    Utils::Matrix                   m_localtransformation;
-    Utils::Matrix                   m_globaltransformation;
-    
-
-    TransformNode*                  m_parent;
-    std::vector<TransformNode*>     m_children;
-
-public:
-    TransformNode( const dsstring& p_name );
-    TransformNode( void );
-    virtual ~TransformNode( void );
-
-    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
-
-    virtual void AddChild( TransformNode* p_node );
-    virtual void ComputeFinalTransform( void );
-    virtual void SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
-    virtual void GetName( dsstring& p_name );
-    virtual void SetName( const dsstring& p_name );
-    virtual void GetSceneWorld( Utils::Matrix& p_mat );
-    virtual long GetVSphereNumber( void );
-    virtual void GetVSphere( long p_index );
-    
-
-    friend class TransformQueue;
-};
 }
+
+VSphere::VSphere( const dsstring& p_name, const Vector& p_point, dsreal p_ray ) : m_name( p_name ), m_ray( p_ray ), m_point( p_point )
+{
+
 }
-#endif
+
+VSphere::~VSphere( void )
+{
+}
+
+void VSphere::Transform( Matrix& p_mat )
+{
+    m_mutex.WaitInfinite();
+    p_mat.Transform( &m_point, &m_transformed_point );
+    m_mutex.Release();
+}
+
+bool VSphere::Collide( const Vector& p_testpoint )
+{
+    Vector delta;
+
+    m_mutex.WaitInfinite();
+    delta[0] = p_testpoint[0] - m_transformed_point[0];
+    delta[1] = p_testpoint[1] - m_transformed_point[1];
+    delta[2] = p_testpoint[2] - m_transformed_point[2];
+    m_mutex.Release();
+
+    delta[3] = 1.0;
+    if( delta.Length() < m_ray )
+    {
+        return true;
+    }
+    return false;
+}
+
+void VSphere::SetRay( dsreal p_ray )
+{
+    m_ray = p_ray;
+}
+
+void VSphere::SetPoint( const Vector& p_point )
+{
+    m_point = p_point;
+}

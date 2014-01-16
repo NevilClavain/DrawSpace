@@ -88,4 +88,12 @@ void TransformNode::GetSceneWorld( DrawSpace::Utils::Matrix& p_mat )
     p_mat = m_globaltransformation;
 }
 
+long TransformNode::GetVSphereNumber( void )
+{
+    return 0;
+}
+
+void TransformNode::GetVSphere( long p_index )
+{    
+}
 

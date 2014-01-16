@@ -38,6 +38,7 @@
 #include "archive.h"
 #include "file.h"
 #include "md5.h"
+#include "vsphere.h"
 #include "transformation.h"
 #include "timemanager.h"
 #include "transformation.h"

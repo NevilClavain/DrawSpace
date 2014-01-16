@@ -292,6 +292,14 @@
 				RelativePath=".\src\vertex.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\vsphere.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\vsphere.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

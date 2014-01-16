@@ -20,49 +20,43 @@
 *                                                                          
 */
 
-#ifndef _TRANFORMNODE_H_
-#define _TRANFORMNODE_H_
+#ifndef _VSPHERE_H_
+#define _VSPHERE_H_
 
 #include "drawspace_commons.h"
+#include "asset.h"
+#include "vector.h"
 #include "matrix.h"
+#include "mutex.h"
 
 namespace DrawSpace
 {
-class Scenegraph;
 namespace Core
 {
-class TransformNode
+class VSphere
 {
 protected:
 
-    dsstring                        m_scenename;
+    Utils::Vector       m_point;
+    Utils::Vector       m_transformed_point;
+    dsreal              m_ray;
 
-    Utils::Matrix                   m_localtransformation;
-    Utils::Matrix                   m_globaltransformation;
-    
-
-    TransformNode*                  m_parent;
-    std::vector<TransformNode*>     m_children;
+    dsstring            m_name;
+    Utils::Mutex        m_mutex;
 
 public:
-    TransformNode( const dsstring& p_name );
-    TransformNode( void );
-    virtual ~TransformNode( void );
+    VSphere( const dsstring& p_name );
+    VSphere( const dsstring& p_name, const Utils::Vector& p_point, dsreal p_ray );
 
-    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
+    virtual ~VSphere( void );
 
-    virtual void AddChild( TransformNode* p_node );
-    virtual void ComputeFinalTransform( void );
-    virtual void SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
-    virtual void GetName( dsstring& p_name );
-    virtual void SetName( const dsstring& p_name );
-    virtual void GetSceneWorld( Utils::Matrix& p_mat );
-    virtual long GetVSphereNumber( void );
-    virtual void GetVSphere( long p_index );
-    
+    void Transform( Utils::Matrix& p_mat );
+    bool Collide( const Utils::Vector& p_testpoint );
 
-    friend class TransformQueue;
+    void SetRay( dsreal p_ray );
+    void SetPoint( const Utils::Vector& p_point );
 };
 }
 }
+
 #endif
