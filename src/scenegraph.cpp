@@ -24,6 +24,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 Scenegraph::Scenegraph( void ) : m_camera( NULL )
 {
@@ -86,6 +87,23 @@ void Scenegraph::ComputeTransformations( void )
     }
 }
 
+void Scenegraph::ComputeVSpheres( void )
+{
+    Matrix view;
+
+    view.Identity();
+    if( m_camera )
+    {
+        m_camera->GetSceneWorld( view );
+        view.Inverse();
+    }
+
+    for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    {
+        (*it).second->ComputeVSpheres( view );
+    }
+}
+
 void Scenegraph::GetCurrentCameraView( Utils::Matrix& p_view )
 {
     p_view = m_view;
@@ -93,7 +111,7 @@ void Scenegraph::GetCurrentCameraView( Utils::Matrix& p_view )
 
 void Scenegraph::GetCurrentCameraTranform( Utils::Matrix& p_mat )
 {
-    Utils::Matrix mat;
+    Matrix mat;
     mat.Identity();
 
     if( m_camera )

@@ -86,7 +86,7 @@ void Meshe::AddTriangle( const Triangle& p_triangle )
     m_triangles.push_back( p_triangle );
 }
 
-void Meshe::GetCenter( DrawSpace::Utils::Vector& p_vector )
+void Meshe::GetCenter( Vector& p_vector )
 {
     dsreal xsum = 0.0;
     dsreal ysum = 0.0;
@@ -103,6 +103,64 @@ void Meshe::GetCenter( DrawSpace::Utils::Vector& p_vector )
     p_vector[1] = ysum / m_vertices.size();
     p_vector[2] = zsum / m_vertices.size();
     p_vector[3] = 1.0;
+}
+
+void Meshe::GetAABB( Vector& p_min, Vector& p_max )
+{
+    if( m_vertices.size() > 0 )
+    {
+        dsreal minx, maxx;
+        maxx = minx = m_vertices[0].x;
+
+        dsreal miny, maxy;
+        maxy = miny = m_vertices[0].y;
+
+        dsreal minz, maxz;
+        maxz = minz = m_vertices[0].z;
+
+        for( long i = 1; i < m_vertices.size(); i++ )
+        {
+            if( m_vertices[i].x < minx )
+            {
+                minx = m_vertices[i].x;
+            }
+
+            if( m_vertices[i].x > maxx )
+            {
+                maxx = m_vertices[i].x;
+            }
+
+            if( m_vertices[i].y < miny )
+            {
+                miny = m_vertices[i].y;
+            }
+
+            if( m_vertices[i].y > maxy )
+            {
+                maxy = m_vertices[i].y;
+            }
+
+            if( m_vertices[i].z < minz )
+            {
+                minz = m_vertices[i].z;
+            }
+
+            if( m_vertices[i].z > maxz )
+            {
+                maxz = m_vertices[i].z;
+            }
+        }
+
+        p_min[0] = minx;
+        p_min[1] = miny;
+        p_min[2] = minz;
+        p_min[3] = 1.0;
+
+        p_max[0] = maxx;
+        p_max[1] = maxy;
+        p_max[2] = maxz;
+        p_max[3] = 1.0;
+    }
 }
 
 void Meshe::Serialize( Factory& p_factory, Archive& p_archive  )

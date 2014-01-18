@@ -25,6 +25,7 @@
 
 #include "drawspace_commons.h"
 #include "matrix.h"
+#include "vsphere.h"
 
 namespace DrawSpace
 {
@@ -40,25 +41,32 @@ protected:
     Utils::Matrix                   m_localtransformation;
     Utils::Matrix                   m_globaltransformation;
     
+    std::vector<VSphere*>           m_vspheres;
 
     TransformNode*                  m_parent;
     std::vector<TransformNode*>     m_children;
+    
 
 public:
     TransformNode( const dsstring& p_name );
     TransformNode( void );
     virtual ~TransformNode( void );
 
-    virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
+    virtual void        OnRegister( Scenegraph* p_scenegraph ) = 0;
 
-    virtual void AddChild( TransformNode* p_node );
-    virtual void ComputeFinalTransform( void );
-    virtual void SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
-    virtual void GetName( dsstring& p_name );
-    virtual void SetName( const dsstring& p_name );
-    virtual void GetSceneWorld( Utils::Matrix& p_mat );
-    virtual long GetVSphereNumber( void );
-    virtual void GetVSphere( long p_index );
+    virtual void        AddChild( TransformNode* p_node );
+    virtual void        ComputeFinalTransform( void );
+    virtual void        SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
+    virtual void        GetName( dsstring& p_name );
+    virtual void        SetName( const dsstring& p_name );
+    virtual void        GetSceneWorld( Utils::Matrix& p_mat );
+
+    /*
+    virtual long        GetVSphereListSize( void );
+    virtual VSphere*    GetVSphere( long p_index );
+    */
+
+    virtual void        ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat );
     
 
     friend class TransformQueue;

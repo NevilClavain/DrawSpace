@@ -55,6 +55,7 @@ public:
 
     void SetRay( dsreal p_ray );
     void SetPoint( const Utils::Vector& p_point );
+    void GetTransformedPoint( Utils::Vector& p_point );
 };
 }
 }

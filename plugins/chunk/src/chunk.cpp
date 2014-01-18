@@ -29,7 +29,7 @@ using namespace DrawSpace::Core;
 
 Chunk::Chunk( void ) : m_renderer( NULL ), m_scenegraph( NULL )
 {
-    m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );    
 }
 
 Chunk::~Chunk( void )
@@ -63,25 +63,65 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
         }
     }
     m_scenegraph = p_scenegraph;
-}
 
-/*
-bool Chunk::LoadAssets( void )
-{
-    for( std::map<dsstring, Core::RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+
+    dsstring vsphere_name = m_scenename + dsstring( "/vsphere" );
+    VSphere* vsphere = _DRAWSPACE_NEW_( VSphere, VSphere( vsphere_name ) );
+
+    // virtual sphere characteristics
+    dsreal vsphere_ray;
+    Utils::Vector vsphere_point;
+
+    Utils::Vector vmin, vmax;
+    m_meshe->GetAABB( vmin, vmax );
+
+    Utils::Vector delta;
+    delta[0] = vmax[0] - vmin[0];
+    delta[1] = vmax[1] - vmin[1];
+    delta[2] = vmax[2] - vmin[2];
+
+    vsphere_point[0] = ( delta[0] / 2.0 ) + vmin[0];
+    vsphere_point[1] = ( delta[1] / 2.0 ) + vmin[1];
+    vsphere_point[2] = ( delta[2] / 2.0 ) + vmin[2];
+
+    long index_max = 0;
+    double max_delta = delta[0];
+
+    if( max_delta < delta[1] )
     {
-        if( false == m_renderer->CreateRenderingNode( (*it).second ) )
-        {
-            return false;
-        }
-        if( false == m_renderer->CreateMeshe( m_meshe, &m_renderer_meshe_data ) )
-        {
-            return false;
-        }
+        max_delta = delta[1];
+        index_max = 1;
     }
-    return true;		
+    if( max_delta < delta[2] )
+    {
+        max_delta = delta[2];
+        index_max = 2;
+    }
+   
+    switch( index_max )
+    {
+        case 0:
+
+            vsphere_ray = delta[0] / 2.0;
+            break;
+
+        case 1:
+
+            vsphere_ray = delta[1] / 2.0;
+            break;
+
+        case 2:
+
+            vsphere_ray = delta[2] / 2.0;
+            break;
+
+    }
+
+    vsphere->SetRay( vsphere_ray );
+    vsphere->SetPoint( vsphere_point );
+
+    m_vspheres.push_back( vsphere );
 }
-*/
 
 Core::Meshe* Chunk::GetMeshe( const dsstring& p_mesheid )
 {
@@ -90,11 +130,28 @@ Core::Meshe* Chunk::GetMeshe( const dsstring& p_mesheid )
 
 void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
-    DrawSpace::Utils::Matrix view;
-    m_scenegraph->GetCurrentCameraView( view );
-    //m_renderer->RenderMeshe( m_globaltransformation, view, m_renderer_meshe_data );
+    bool draw = false;
+    Utils::Vector transformed_vsphere_point;
+    m_vspheres[0]->GetTransformedPoint( transformed_vsphere_point );
+    
+    if( m_vspheres[0]->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
+    {
+        draw = true;
+    }
+    else
+    {
+        if( transformed_vsphere_point[2] <= 0.0 )
+        {
+            draw = true;
+        }
+    }
 
-    m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), m_globaltransformation, view );
+    if( draw )
+    {
+        DrawSpace::Utils::Matrix view;
+        m_scenegraph->GetCurrentCameraView( view );  
+        m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), m_globaltransformation, view );
+    }
 }
 
 void Chunk::RegisterPassSlot( const dsstring p_passname )

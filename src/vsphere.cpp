@@ -31,7 +31,6 @@ VSphere::VSphere( const dsstring& p_name ) : m_name( p_name ), m_ray( 1.0 )
 
 VSphere::VSphere( const dsstring& p_name, const Vector& p_point, dsreal p_ray ) : m_name( p_name ), m_ray( p_ray ), m_point( p_point )
 {
-
 }
 
 VSphere::~VSphere( void )
@@ -71,4 +70,9 @@ void VSphere::SetRay( dsreal p_ray )
 void VSphere::SetPoint( const Vector& p_point )
 {
     m_point = p_point;
+}
+
+void VSphere::GetTransformedPoint( Vector& p_point )
+{
+    p_point = m_transformed_point;
 }
