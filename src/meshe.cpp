@@ -118,7 +118,7 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
         dsreal minz, maxz;
         maxz = minz = m_vertices[0].z;
 
-        for( long i = 1; i < m_vertices.size(); i++ )
+        for( size_t i = 1; i < m_vertices.size(); i++ )
         {
             if( m_vertices[i].x < minx )
             {

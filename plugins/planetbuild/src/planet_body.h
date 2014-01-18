@@ -112,7 +112,7 @@ public:
     virtual bool LoadAssets( void );
     virtual DrawSpace::Core::Meshe* GetMeshe( const dsstring& p_mesheid );
     virtual void RegisterPassSlot( const dsstring p_passname );
-    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid );
+    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid );
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );
     virtual void ComputeSpecifics( void );
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );

@@ -396,7 +396,7 @@ void Spacebox::RegisterPassSlot( const dsstring p_passname )
     m_passesnodes[p_passname] = nodeset;
 }
 
-DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid )
+DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
     {

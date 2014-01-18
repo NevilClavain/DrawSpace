@@ -167,7 +167,7 @@ void Chunk::RegisterPassSlot( const dsstring p_passname )
 
 }
 
-DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid )
+DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
     {

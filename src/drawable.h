@@ -40,7 +40,7 @@ public:
     virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
     virtual Core::Meshe* GetMeshe( const dsstring& p_mesheid ) = 0;
     virtual void RegisterPassSlot( const dsstring p_passname ) = 0;
-    virtual Core::RenderingNode* GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid ) = 0;
+    virtual Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid ) = 0;
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids ) = 0;
     virtual void ComputeSpecifics( void ) = 0;
     virtual void GetPropertiesList( std::vector<dsstring>& p_props ) = 0;

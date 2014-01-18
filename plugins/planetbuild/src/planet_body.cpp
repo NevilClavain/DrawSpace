@@ -326,7 +326,7 @@ void Body::RegisterPassSlot( const dsstring p_passname )
     m_passesnodes[p_passname] = nodeset;
 }
 
-DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring p_passname, const dsstring& p_nodeid )
+DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid )
 {
 	if( 0 == m_passesnodes.count( p_passname ) )
 	{
