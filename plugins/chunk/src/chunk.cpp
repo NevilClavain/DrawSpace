@@ -186,6 +186,10 @@ void Chunk::ComputeSpecifics( void )
 {
 }
 
+void Chunk::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
+{
+}
+
 void Chunk::GetPropertiesList( std::vector<dsstring>& p_props )
 {
 }

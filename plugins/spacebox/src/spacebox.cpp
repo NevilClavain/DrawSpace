@@ -445,6 +445,10 @@ void Spacebox::ComputeSpecifics( void )
 {
 }
 
+void Spacebox::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
+{
+}
+
 void Spacebox::GetPropertiesList( std::vector<dsstring>& p_props )
 {
 }
