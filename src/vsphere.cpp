@@ -67,6 +67,11 @@ void VSphere::SetRay( dsreal p_ray )
     m_ray = p_ray;
 }
 
+dsreal VSphere::GetRay( void )
+{
+    return m_ray;
+}
+
 void VSphere::SetPoint( const Vector& p_point )
 {
     m_point = p_point;

@@ -50,12 +50,13 @@ public:
 
     virtual ~VSphere( void );
 
-    void Transform( Utils::Matrix& p_mat );
-    bool Collide( const Utils::Vector& p_testpoint );
+    void    Transform( Utils::Matrix& p_mat );
+    bool    Collide( const Utils::Vector& p_testpoint );
 
-    void SetRay( dsreal p_ray );
-    void SetPoint( const Utils::Vector& p_point );
-    void GetTransformedPoint( Utils::Vector& p_point );
+    void    SetRay( dsreal p_ray );
+    dsreal  GetRay( void );
+    void    SetPoint( const Utils::Vector& p_point );
+    void    GetTransformedPoint( Utils::Vector& p_point );
 };
 }
 }

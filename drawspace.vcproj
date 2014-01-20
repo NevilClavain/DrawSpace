@@ -201,6 +201,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\lod.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lod.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\meshe.cpp"
 				>
 			</File>
