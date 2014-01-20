@@ -103,3 +103,21 @@ void TransformNode::GetSceneWorld( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_globaltransformation;
 }
+
+void TransformNode::ComputeLod( void )
+{
+    for( size_t i = 0; i < m_lodsteps.size(); i++ )
+    {
+        m_lodsteps[i]->Run();
+    }
+}
+
+void TransformNode::ClearLodStepsList( void )
+{
+    m_lodsteps.clear();
+}
+
+void TransformNode::AddLodStep( LodStep* p_step )
+{
+    m_lodsteps.push_back( p_step );
+}

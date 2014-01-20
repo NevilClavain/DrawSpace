@@ -26,6 +26,7 @@
 #include "drawspace_commons.h"
 #include "matrix.h"
 #include "vsphere.h"
+#include "lod.h"
 
 namespace DrawSpace
 {
@@ -42,11 +43,11 @@ protected:
     Utils::Matrix                   m_globaltransformation;
     
     std::vector<VSphere*>           m_vspheres;
+    std::vector<LodStep*>           m_lodsteps;
 
     TransformNode*                  m_parent;
     std::vector<TransformNode*>     m_children;
     
-
 public:
     TransformNode( const dsstring& p_name );
     TransformNode( void );
@@ -60,15 +61,11 @@ public:
     virtual void        GetName( dsstring& p_name );
     virtual void        SetName( const dsstring& p_name );
     virtual void        GetSceneWorld( Utils::Matrix& p_mat );
-
-    /*
-    virtual long        GetVSphereListSize( void );
-    virtual VSphere*    GetVSphere( long p_index );
-    */
-
     virtual void        ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat );
+    virtual void        ComputeLod( void );
+    virtual void        ClearLodStepsList( void );
+    virtual void        AddLodStep( LodStep* p_step );
     
-
     friend class TransformQueue;
 };
 }

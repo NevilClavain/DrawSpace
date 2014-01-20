@@ -29,7 +29,8 @@ LodStep::LodStep( dsreal p_kinf, dsreal p_ksup, VSphere* p_vsphere ) :
 m_kinf( p_kinf ),
 m_ksup( p_ksup ),
 m_vsphere( p_vsphere ),
-m_in( false )
+m_in( false ),
+m_handler( NULL )
 {
 }
 
@@ -70,4 +71,14 @@ void LodStep::Run( void )
 void LodStep::RegisterHandler( BaseCallback2<void, LodStep*, Event>* p_handler )
 {
     m_handler = p_handler;
+}
+
+void LodStep::SetKInf( dsreal p_kinf )
+{
+    m_kinf = p_kinf;
+}
+
+void LodStep::SetKSup( dsreal p_ksup )
+{
+    m_ksup = p_ksup;
 }

@@ -55,7 +55,8 @@ public:
     virtual ~LodStep( void );
 
     virtual void RegisterHandler( BaseCallback2<void, LodStep*, Event>* p_handler );
-
+    virtual void SetKInf( dsreal p_kinf );
+    virtual void SetKSup( dsreal p_ksup );
     virtual void Run( void );
 
 };
