@@ -30,7 +30,9 @@ m_kinf( p_kinf ),
 m_ksup( p_ksup ),
 m_vsphere( p_vsphere ),
 m_in( false ),
-m_handler( NULL )
+m_handler( NULL ),
+m_ordinal( 0 ),
+m_firstshot( true )
 {
 }
 
@@ -46,7 +48,7 @@ void LodStep::Run( void )
     if( - transformed_point[2] < m_ksup * m_vsphere->GetRay() &&
         - transformed_point[2] > m_kinf * m_vsphere->GetRay() )
     {
-        if( !m_in )
+        if( !m_in || m_firstshot )
         {
             if( m_handler )
             {
@@ -57,7 +59,7 @@ void LodStep::Run( void )
     }
     else
     {
-        if( m_in )
+        if( m_in || m_firstshot )
         {
             if( m_handler )
             {
@@ -65,6 +67,11 @@ void LodStep::Run( void )
             }
             m_in = false;
         }
+    }
+
+    if( m_firstshot )
+    {
+        m_firstshot = false;
     }
 }
 
@@ -82,3 +89,14 @@ void LodStep::SetKSup( dsreal p_ksup )
 {
     m_ksup = p_ksup;
 }
+
+void LodStep::SetOrdinal( long p_ordinal )
+{
+    m_ordinal = p_ordinal;
+}
+
+long LodStep::GetOrdinal( void )
+{
+    return m_ordinal;
+}
+

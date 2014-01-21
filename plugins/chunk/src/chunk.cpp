@@ -27,14 +27,16 @@ using namespace DrawSpace;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Core;
 
-Chunk::Chunk( void ) : m_renderer( NULL ), m_scenegraph( NULL )
+Chunk::Chunk( void ) : m_renderer( NULL ), m_scenegraph( NULL ), m_lod_draw( true )
 {
-    m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );    
+    m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    m_lod_callback = _DRAWSPACE_NEW_( LodCallback, LodCallback( this, &Chunk::on_lod_event ) );
 }
 
 Chunk::~Chunk( void )
 {
     _DRAWSPACE_DELETE_( m_meshe );
+    _DRAWSPACE_DELETE_( m_lod_callback );
 }
 
 void Chunk::GetDescr( dsstring& p_descr )
@@ -121,6 +123,10 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
     vsphere->SetPoint( vsphere_point );
 
     m_vspheres.push_back( vsphere );
+
+    // LOD default settings
+    LodStep* lodstep = _DRAWSPACE_NEW_( LodStep, LodStep( 0.0, 1000.0, vsphere ) );
+    lodstep->RegisterHandler( m_lod_callback );
 }
 
 Core::Meshe* Chunk::GetMeshe( const dsstring& p_mesheid )
@@ -130,6 +136,11 @@ Core::Meshe* Chunk::GetMeshe( const dsstring& p_mesheid )
 
 void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
+    if( false == m_lod_draw )
+    {
+        return;
+    }
+
     bool draw = false;
     Utils::Vector transformed_vsphere_point;
     m_vspheres[0]->GetTransformedPoint( transformed_vsphere_point );
@@ -151,6 +162,22 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
         DrawSpace::Utils::Matrix view;
         m_scenegraph->GetCurrentCameraView( view );  
         m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), m_globaltransformation, view );
+    }
+}
+
+void Chunk::on_lod_event( LodStep*, LodStep::Event p_event )
+{
+    switch( p_event )
+    {
+        case LodStep::IN_LODSTEP:
+
+            m_lod_draw = true;
+            break;
+
+        case LodStep::OUT_LODSTEP:
+
+            m_lod_draw = false;
+            break;
     }
 }
 

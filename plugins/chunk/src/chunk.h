@@ -31,16 +31,19 @@ class Chunk : public DrawSpace::Interface::Drawable
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack<Chunk, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
+    typedef DrawSpace::Core::CallBack<Chunk, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
+    typedef DrawSpace::Core::CallBack2<Chunk, void, DrawSpace::Core::LodStep*, DrawSpace::Core::LodStep::Event>     LodCallback;
 
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshe;
     std::map<dsstring, DrawSpace::Core::RenderingNode*>     m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
-    DrawSpace::Scenegraph*                                  m_scenegraph;
-
+    LodCallback*                                            m_lod_callback;
+    bool                                                    m_lod_draw;
+    DrawSpace::Scenegraph*                                  m_scenegraph;   
    
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+    void on_lod_event( DrawSpace::Core::LodStep*, DrawSpace::Core::LodStep::Event p_event );
 
 public:
     Chunk( void );

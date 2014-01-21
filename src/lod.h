@@ -47,8 +47,10 @@ protected:
     VSphere*                                m_vsphere;
     dsreal                                  m_kinf;
     dsreal                                  m_ksup;
+    long                                    m_ordinal;
     bool                                    m_in;
     BaseCallback2<void, LodStep*, Event>*   m_handler;
+    bool                                    m_firstshot;
 
 public:
     LodStep( dsreal p_kinf, dsreal p_ksup, VSphere* p_vsphere );
@@ -57,6 +59,8 @@ public:
     virtual void RegisterHandler( BaseCallback2<void, LodStep*, Event>* p_handler );
     virtual void SetKInf( dsreal p_kinf );
     virtual void SetKSup( dsreal p_ksup );
+    virtual void SetOrdinal( long p_ordinal );
+    virtual long GetOrdinal( void );
     virtual void Run( void );
 
 };
