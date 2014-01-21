@@ -125,7 +125,7 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
     m_vspheres.push_back( vsphere );
 
     // LOD default settings
-    LodStep* lodstep = _DRAWSPACE_NEW_( LodStep, LodStep( 0.0, 1000.0, vsphere ) );
+    LodStep* lodstep = _DRAWSPACE_NEW_( LodStep, LodStep( -1000.0, 1000.0, vsphere ) );
     lodstep->RegisterHandler( m_lod_callback );
     m_lodsteps.push_back( lodstep );
 }
