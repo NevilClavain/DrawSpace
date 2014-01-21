@@ -104,6 +104,14 @@ void Scenegraph::ComputeVSpheres( void )
     }
 }
 
+void Scenegraph::ComputeLods( void )
+{
+    for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    {
+        (*it).second->ComputeLod();
+    }
+}
+
 void Scenegraph::GetCurrentCameraView( Utils::Matrix& p_view )
 {
     p_view = m_view;

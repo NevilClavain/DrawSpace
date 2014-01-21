@@ -52,6 +52,7 @@ public:
 
     void ComputeVSpheres( void );
     void ComputeTransformations( void );
+    void ComputeLods( void );
     
 };
 }
