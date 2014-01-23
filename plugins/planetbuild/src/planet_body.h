@@ -46,7 +46,7 @@ protected:
     PatchDelCallback*               m_patchdelcallback;
     PatchSplitCallback*             m_patchsplitcallback;
     PatchMergeCallback*             m_patchmergecallback;
-    DrawSpace::Utils::Mutex*        m_quadtree_mutex;
+
     Face*                           m_face;
 
     void                            on_patchinstanciation( int p_orientation, Patch* p_patch );
@@ -84,6 +84,7 @@ protected:
     DrawSpace::Scenegraph*                                      m_scenegraph;
     DrawSpace::Interface::Renderer*                             m_renderer;
     Face*                                                       m_faces[6];
+    DrawSpace::Core::Meshe*                                     m_patchmeshe;
 
     //// properties
     DrawSpace::Core::TypedProperty<dsreal>                      m_diameter;
@@ -92,13 +93,10 @@ protected:
     DrawSpace::Core::TypedProperty<dsreal>                      m_altitud;
     DrawSpace::Core::TypedProperty<bool>                        m_update_state;
 
-    bool                                                        m_stop_thread;
-    DrawSpace::Core::Task<Body>*                                m_update_task;
+    void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+    void build_patch( void );
 
-    void                                        on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );    
 
-    void                                        start_update( void );
-    void                                        stop_update( void );
 
 public:
 
@@ -109,12 +107,12 @@ public:
     virtual void DumpMemoryAllocs( void );
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
-    virtual bool LoadAssets( void );
     virtual DrawSpace::Core::Meshe* GetMeshe( const dsstring& p_mesheid );
     virtual void RegisterPassSlot( const dsstring p_passname );
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid );
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );
     virtual void ComputeSpecifics( void );
+    virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname );
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );

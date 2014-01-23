@@ -40,12 +40,10 @@ m_face( p_face )
     m_patchsplitcallback = _DRAWSPACE_NEW_( PatchSplitCallback, PatchSplitCallback( this, &FaceRenderingNode::on_patchsplit ) );
     m_patchmergecallback = _DRAWSPACE_NEW_( PatchMergeCallback, PatchMergeCallback( this, &FaceRenderingNode::on_patchmerge ) );
 
-    m_quadtree_mutex = m_face->GetMutex();
-
     m_face->AddInstHandler( GetPatchInstanciationHandler() );
     m_face->AddDelHandler( GetPatchDelHandler() );
     m_face->AddSplitHandler( GetPatchSplitHandler() );
-    m_face->AddMergeHandler( GetPatchMergeHandler() );
+    m_face->AddMergeHandler( GetPatchMergeHandler() );    
 }
 
 FaceRenderingNode::~FaceRenderingNode( void )
@@ -54,8 +52,6 @@ FaceRenderingNode::~FaceRenderingNode( void )
 
 void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
 {
-    m_quadtree_mutex->WaitInfinite();
-
     long currentleaf_depth = -1;   
     if( m_face->GetCurrentLeaf() )
     {
@@ -67,23 +63,14 @@ void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {                                             
             // rendu du patch leaf
-            //dsstring name;
-            //(*it).second->GetName( name );
-            //m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
-
-            m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );
+            //m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );
         }
     }
     else
     {
-        //dsstring name;
-
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
-        //current_leaf->GetContent()->GetName( name );
-        //m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
-
-        m_renderer->RenderMeshe( p_world, p_view, current_leaf->GetContent()->GetMesheData() );
+        //m_renderer->RenderMeshe( p_world, p_view, current_leaf->GetContent()->GetMesheData() );
 
         for( long i = 0; i < 8;i++ )
         {
@@ -91,26 +78,22 @@ void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
 
             if( neighb )
             {
-                //neighb->GetContent()->GetName( name );
-                //m_renderer->RenderNodeMeshe( p_world, p_view, this, name );
-
-                m_renderer->RenderMeshe( p_world, p_view, neighb->GetContent()->GetMesheData() );
+                //m_renderer->RenderMeshe( p_world, p_view, neighb->GetContent()->GetMesheData() );
             }
         }
-    }
-    
-    m_quadtree_mutex->Release();
+    }   
 }
 
 void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch )
 {
     dsstring patch_name;
     p_patch->GetName( patch_name );
-    //m_renderer->AddMesheToNode( p_patch, this, patch_name );
 
+    /*
     void* meshe_data;
     m_renderer->CreateMeshe( p_patch, &meshe_data );
     p_patch->SetMesheData( meshe_data );
+    */
 
     m_patchesleafs[patch_name] = p_patch;
     m_patches[patch_name] = p_patch;
@@ -130,10 +113,10 @@ void FaceRenderingNode::on_patchdel( int p_orientation, Patch* p_patch )
         m_patches.erase( patch_name );
     }
 
+    /*
     void* meshe_data = p_patch->GetMesheData();
     m_renderer->RemoveMeshe( p_patch, meshe_data );
-
-    //m_renderer->RemoveNodeMeshe( p_patch, this, patch_name );
+    */
 }
 
 void FaceRenderingNode::on_patchsplit( int p_orientation, Patch* p_patch )
@@ -185,6 +168,9 @@ m_relative_hotpoint( "relative_hotpoint" ),
 m_altitud( "altitud" ),
 m_update_state( "update_state" )
 {
+    m_patchmeshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    build_patch();
+
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i] = _DRAWSPACE_NEW_( Face, Face );
@@ -192,14 +178,12 @@ m_update_state( "update_state" )
 
     m_diameter.m_value = 10.0;
     m_altitud.m_value = -1.0;
-    m_update_state.m_value = false;
-
-    m_update_task = _DRAWSPACE_NEW_( Task<Body>, Task<Body>( Task<Body>::Block ) );
+    m_update_state.m_value = false;    
 }
 
 Body::~Body( void )
 {
-    _DRAWSPACE_DELETE_( m_update_task );
+    _DRAWSPACE_DELETE_( m_patchmeshe );
 
     for( long i = 0; i < 6; i++ )
     {
@@ -238,28 +222,9 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
 	m_scenegraph = p_scenegraph;
 }
 
-bool Body::LoadAssets( void )
-{
-	for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-	{
-		for( long i = 0; i < 6; i++ )
-		{
-			if( false == m_renderer->CreateRenderingNode( (*it).second.nodes[i] ) )
-			{
-				return false;
-			}
-		}
-	}
-    for( long i = 0; i < 6; i++ )
-    {
-        m_faces[i]->Init( i );
-    }
-
-	return true;
-}
-
 DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
 {
+    /*
     size_t sep = p_mesheid.find_first_of( ":" );
     if( sep != dsstring::npos && sep > 0 && sep < p_mesheid.length() - 2 )
     {
@@ -299,6 +264,7 @@ DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
 
         return m_faces[faceidval]->GetPatch( patch_name );
     }
+    */
     return NULL;
 }
 
@@ -317,6 +283,8 @@ void Body::RegisterPassSlot( const dsstring p_passname )
     for( long i = 0; i < 6; i++ )
     {            
         nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceRenderingNode, FaceRenderingNode( m_faces[i], m_renderer ) );
+
+        nodeset.nodes[i]->SetMeshe( m_patchmeshe );
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Body::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
@@ -375,12 +343,19 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
 
 void Body::ComputeSpecifics( void )
 {
+    /*
     m_faces[Patch::FrontPlanetFace]->Compute();
     m_faces[Patch::RearPlanetFace]->Compute();
     m_faces[Patch::TopPlanetFace]->Compute();        
     m_faces[Patch::BottomPlanetFace]->Compute();
     m_faces[Patch::RightPlanetFace]->Compute();
     m_faces[Patch::LeftPlanetFace]->Compute();
+    */
+}
+
+void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
+{
+
 }
 
 void Body::GetPropertiesList( std::vector<dsstring>& p_props )
@@ -497,17 +472,53 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
     }
 }
 
-void Body::start_update( void )
-{
-    m_stop_thread = false;
-    m_update_task->Startup( this );
-}
-
-void Body::stop_update( void )
-{
-    m_stop_thread = true;
-}
-
 void Body::Run( void )
 {
+}
+
+void Body::build_patch( void )
+{
+	dsreal xcurr, ycurr;
+    long patch_resolution = 11;
+
+    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
+	dsreal interval = 2.0 / ( patch_resolution - 1 );
+	for( long i = 0; i < patch_resolution; i++ )
+	{
+		for( long j = 0; j < patch_resolution; j++ )
+		{
+			xcurr = j * interval - 1.0;
+			ycurr = i * interval - 1.0;
+						
+			Vertex vertex;
+			vertex.x = xcurr;
+			vertex.y = 1.0;
+			vertex.z = -ycurr;
+			m_patchmeshe->AddVertex( vertex );
+		}
+	}
+
+	long current_index = 0;
+
+	for( long i = 0; i < patch_resolution - 1; i++  )
+	{
+		current_index = i * patch_resolution;
+
+		for( long j = 0; j < patch_resolution - 1; j++ )
+		{
+			Triangle triangle;
+
+			triangle.vertex1 = current_index;
+			triangle.vertex2 = current_index + 1;
+			triangle.vertex3 = current_index + patch_resolution;
+			m_patchmeshe->AddTriangle( triangle );
+			
+			triangle.vertex1 = current_index + 1;
+			triangle.vertex2 = current_index + 1 + patch_resolution;
+			triangle.vertex3 = current_index + patch_resolution;
+			m_patchmeshe->AddTriangle( triangle );
+			
+			current_index++;
+		}        
+	}
 }

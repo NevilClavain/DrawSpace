@@ -60,9 +60,7 @@ protected:
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::Vector                                    m_prev_relative_hotpoint;
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
-    DrawSpace::Utils::Mutex                                     m_quadtree_mutex;
 
-    long                                                        m_patchresol;
     dsreal                                                      m_ratio_split_threshold;
     dsreal                                                      m_ratio_merge_threshold;
 
@@ -98,8 +96,8 @@ public:
     virtual void Merge( const dsstring& p_name );
     virtual void SetPlanetDiameter( dsreal p_diameter );
     virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
-    virtual bool Compute( void );
-    virtual DrawSpace::Utils::Mutex* GetMutex( void );
+    //virtual bool Compute( void );
+
     virtual void AddInstHandler( PatchInstanciationHandler* p_handler );
     virtual void AddSplitHandler( PatchSplitHandler* p_handler );
     virtual void AddDelHandler( PatchDeletionHandler* p_handler );

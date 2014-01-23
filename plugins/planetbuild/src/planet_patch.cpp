@@ -26,13 +26,11 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-Patch::Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, BaseQuadtreeNode* p_owner ) : 
-m_resolution( p_resolution ), 
+Patch::Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, BaseQuadtreeNode* p_owner ) : 
 m_orientation( p_orientation ),
 m_name( p_name ),
 m_ray( p_ray ),
-m_owner( p_owner ),
-m_meshe_data( NULL )
+m_owner( p_owner )
 {
 	for( long i = 0; i < 8; i++ )
 	{
@@ -88,7 +86,7 @@ m_meshe_data( NULL )
 		}       
 	}
 
-	build();
+	//build();
 }
 
 Patch::~Patch( void )
@@ -227,7 +225,7 @@ void Patch::SphereToCube( const Vector& p_in, Vector& p_out )
 	p_out[2] = nz;
 }
 
-
+/*
 void Patch::build( void )
 {
 	dsreal xcurr, ycurr;
@@ -329,6 +327,7 @@ void Patch::build( void )
 		}        
 	}
 }
+*/
 
 void Patch::GetName( dsstring& p_name )
 {
@@ -351,6 +350,7 @@ BaseQuadtreeNode* Patch::GetOwner( void )
     return m_owner;
 }
 
+/*
 void Patch::SetMesheData( void* p_data )
 {
     m_meshe_data = p_data;
@@ -360,3 +360,4 @@ void* Patch::GetMesheData( void )
 {
     return m_meshe_data;
 }
+*/

@@ -32,7 +32,6 @@ Face::Face( void ) :
 m_rootpatch( NULL ), 
 m_planet_diameter( 10.0 ),
 m_currentleaf( NULL ),
-m_patchresol( 26 ),
 m_ratio_split_threshold( 0.03 ),
 m_ratio_merge_threshold( 0.04 )
 {
@@ -76,7 +75,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
     {
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_patchresol, m_planet_diameter / 2.0, m_orientation, ".0", NULL, -1, root ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, ".0", NULL, -1, root ) );
         root->SetContent( patch );
 
         dsstring patch_name;
@@ -100,7 +99,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         char dstbuf[32];
         node_name += dsstring( itoa( node->GetId(), dstbuf, 10 ) );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_patchresol, m_planet_diameter / 2.0, m_orientation, node_name, parent->GetContent(), node->GetId(), node ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, node_name, parent->GetContent(), node->GetId(), node ) );
         node->SetContent( patch );
 
         dsstring patch_name;
@@ -683,7 +682,7 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
     return NULL;
 }
 
-
+/*
 bool Face::Compute( void )
 {
     bool status = false;
@@ -794,11 +793,8 @@ bool Face::Compute( void )
     }
     return status;
 }
+*/
 
-DrawSpace::Utils::Mutex* Face::GetMutex( void )
-{
-    return &m_quadtree_mutex;
-}
 
 void Face::AddInstHandler( Face::PatchInstanciationHandler* p_handler )
 {

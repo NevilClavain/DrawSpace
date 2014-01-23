@@ -23,10 +23,10 @@
 #ifndef _PLANET_PATCH_H_
 #define _PLANET_PATCH_H_
 
-#include <meshe.h>
+#include <vector.h>
 #include <quadtree.h>
 
-class Patch : public DrawSpace::Core::Meshe
+class Patch
 {
 public:
 
@@ -53,19 +53,18 @@ protected:
 	dsreal                                  m_ypos;
 	dsreal                                  m_ray;
 
-	int                                     m_resolution;
 	int                                     m_orientation;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_owner;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
 	dsstring		                        m_name;
-    void*                                   m_meshe_data;
+    //void*                                   m_meshe_data;
 
-	void build( void );
+	//void build( void );
 
 public:
-	Patch( int p_resolution, dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
+	Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
 	virtual ~Patch( void );
 
 	void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );
@@ -78,8 +77,10 @@ public:
 
     DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void );
 
+    /*
     void SetMesheData( void* p_data );
     void* GetMesheData( void );
+    */
 	
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
