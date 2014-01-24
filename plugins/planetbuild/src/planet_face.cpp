@@ -492,6 +492,7 @@ void Face::merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     }    
 }
 
+/*
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
 {
 	Vector viewer;
@@ -573,7 +574,9 @@ dsreal Face::alt_ratio( dsreal p_altitud )
     dsreal ratio = p_altitud / side_length;
     return ratio;
 }
+*/
 
+/*
 bool Face::check_split( Vector& p_hotpoint )
 {
     if( m_currentleaf->GetDepthLevel() >= 11 )
@@ -644,7 +647,9 @@ bool Face::check_merge( Vector& p_hotpoint )
 	}
     return false;
 }
+*/
 
+/*
 QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vector& p_point )
 {
     QuadtreeNode<Patch>* child;
@@ -681,6 +686,7 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
     }
     return NULL;
 }
+*/
 
 /*
 bool Face::Compute( void )
