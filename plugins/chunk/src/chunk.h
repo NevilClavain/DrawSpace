@@ -62,7 +62,8 @@ public:
     virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname );
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
-    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );    
+    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
+    virtual void Initialize( void );
 };
 
 #endif

@@ -350,6 +350,11 @@ BaseQuadtreeNode* Patch::GetOwner( void )
     return m_owner;
 }
 
+int Patch::GetOrientation( void )
+{
+    return m_orientation;
+}
+
 /*
 void Patch::SetMesheData( void* p_data )
 {

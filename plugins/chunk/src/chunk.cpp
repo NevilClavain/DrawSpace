@@ -39,6 +39,10 @@ Chunk::~Chunk( void )
     _DRAWSPACE_DELETE_( m_lod_callback );
 }
 
+void Chunk::Initialize( void )
+{
+}
+
 void Chunk::GetDescr( dsstring& p_descr )
 {
     p_descr = "Chunk";

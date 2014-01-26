@@ -58,7 +58,7 @@ public:
     FaceRenderingNode( Face* p_face, DrawSpace::Interface::Renderer* p_renderer );
     virtual ~FaceRenderingNode( void );
 
-    virtual void Draw( const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );    
+    virtual void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );    
     virtual Face::PatchInstanciationHandler* GetPatchInstanciationHandler( void );
     virtual Face::PatchDeletionHandler* GetPatchDelHandler( void );
     virtual Face::PatchSplitHandler* GetPatchSplitHandler( void );
@@ -85,6 +85,8 @@ protected:
     DrawSpace::Interface::Renderer*                             m_renderer;
     Face*                                                       m_faces[6];
     DrawSpace::Core::Meshe*                                     m_patchmeshe;
+
+    DrawSpace::Core::Fx*                                        m_fx;
 
     //// properties
     DrawSpace::Core::TypedProperty<dsreal>                      m_diameter;
@@ -116,8 +118,6 @@ public:
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
-
-    virtual void Run( void );
-   
+    virtual void Initialize( void );  
 };
 #endif

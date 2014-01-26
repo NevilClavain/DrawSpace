@@ -217,6 +217,10 @@ Spacebox::~Spacebox( void )
 {
 }
 
+void Spacebox::Initialize( void )
+{
+}
+
 void Spacebox::GetDescr( dsstring& p_descr )
 {
     p_descr = "Spacebox";

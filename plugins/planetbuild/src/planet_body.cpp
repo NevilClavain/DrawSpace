@@ -50,7 +50,7 @@ FaceRenderingNode::~FaceRenderingNode( void )
 {
 }
 
-void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
+void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view )
 {
     long currentleaf_depth = -1;   
     if( m_face->GetCurrentLeaf() )
@@ -63,7 +63,15 @@ void FaceRenderingNode::Draw( const Matrix& p_world, Matrix& p_view )
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {                                             
             // rendu du patch leaf
-            //m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );
+            //m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );            
+
+            Vector flag0;
+            flag0[0] = (*it).second->GetOrientation();
+            flag0[1] = (*it).second->GetSideLength() / p_ray;
+            flag0[2] = p_ray;
+            SetShaderRealVector( "flag0", flag0 );
+
+            m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
         }
     }
     else
@@ -178,16 +186,39 @@ m_update_state( "update_state" )
 
     m_diameter.m_value = 10.0;
     m_altitud.m_value = -1.0;
-    m_update_state.m_value = false;    
+    m_update_state.m_value = false;
+
+    m_fx = _DRAWSPACE_NEW_( Fx, Fx );
+
+    // prepare Fx
+
+    m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+
+    m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet.vsh", false ) ) );
+    m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet.psh", false ) ) );
+
+    m_fx->GetShader( 0 )->LoadFromFile();
+    m_fx->GetShader( 1 )->LoadFromFile();
+
 }
 
 Body::~Body( void )
 {
     _DRAWSPACE_DELETE_( m_patchmeshe );
+    _DRAWSPACE_DELETE_( m_fx );
 
     for( long i = 0; i < 6; i++ )
     {
         _DRAWSPACE_DELETE_( m_faces[i] );
+    }
+}
+
+void Body::Initialize( void )
+{
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i]->Init( i );
     }
 }
 
@@ -274,7 +305,7 @@ void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 	m_scenegraph->GetCurrentCameraView( view );
 
     FaceRenderingNode* face_node = static_cast<FaceRenderingNode*>( p_rendering_node );
-    face_node->Draw( m_globaltransformation, view );
+    face_node->Draw( m_patchmeshe->GetVertexListSize(), m_patchmeshe->GetTrianglesListSize(), m_diameter.m_value / 2.0, m_globaltransformation, view );
 }
 
 void Body::RegisterPassSlot( const dsstring p_passname )
@@ -355,7 +386,50 @@ void Body::ComputeSpecifics( void )
 
 void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
 {
+	if( 0 == m_passesnodes.count( p_passname ) )
+	{
+		return;
+	}
+	NodesSet nodeset = m_passesnodes[p_passname];
+	
+    int faceid;
 
+    if( "front" == p_nodeid )
+    {
+        faceid = Patch::FrontPlanetFace;
+    }
+    else if( "rear" == p_nodeid )
+    {
+        faceid = Patch::RearPlanetFace;
+    }
+    else if( "top" == p_nodeid )
+    {
+        faceid = Patch::TopPlanetFace;
+    }
+    else if( "bottom" == p_nodeid )
+    {
+        faceid = Patch::BottomPlanetFace;
+    }
+    else if( "left" == p_nodeid )
+    {
+        faceid = Patch::LeftPlanetFace;
+    }
+    else if( "right" == p_nodeid )
+    {
+        faceid = Patch::RightPlanetFace;
+    }
+
+    if( "main_fx" == p_fxname )
+    {
+        Fx* fx = nodeset.nodes[faceid]->GetFx();
+        *fx = *m_fx; 
+
+        nodeset.nodes[faceid]->AddShaderParameter( 0, "flag0", 8 );
+        nodeset.nodes[faceid]->AddShaderParameter( 0, "patch_translation", 9 );
+
+        nodeset.nodes[faceid]->AddShaderParameter( 1, "color", 0 );
+        nodeset.nodes[faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
+    }
 }
 
 void Body::GetPropertiesList( std::vector<dsstring>& p_props )
@@ -472,14 +546,10 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
     }
 }
 
-void Body::Run( void )
-{
-}
-
 void Body::build_patch( void )
 {
 	dsreal xcurr, ycurr;
-    long patch_resolution = 11;
+    long patch_resolution = 33;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
 	dsreal interval = 2.0 / ( patch_resolution - 1 );
@@ -492,8 +562,8 @@ void Body::build_patch( void )
 						
 			Vertex vertex;
 			vertex.x = xcurr;
-			vertex.y = 1.0;
-			vertex.z = -ycurr;
+			vertex.y = ycurr;
+			vertex.z = 0.0;
 			m_patchmeshe->AddVertex( vertex );
 		}
 	}
