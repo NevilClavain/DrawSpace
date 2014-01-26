@@ -80,10 +80,10 @@ void RenderingNode::RegisterHandler( BaseCallback<void, RenderingNode*>* p_handl
 
 void RenderingNode::AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register )
 {
-    ShadersParams sp;
+    ShadersParams* sp = _DRAWSPACE_NEW_( ShadersParams, ShadersParams );
 
-    sp.shader_index = p_shader_index;
-    sp.param_register = p_register;
+    sp->shader_index = p_shader_index;
+    sp->param_register = p_register;
 
     m_shader_params[p_id] = sp;
 }
@@ -98,7 +98,7 @@ void RenderingNode::SetShaderReal( const dsstring& p_id, dsreal p_value )
         vec[2] = 0.0;
         vec[3] = 1.0;
         
-        m_shader_params[p_id].param_values = vec;
+        m_shader_params[p_id]->param_values = vec;
     }
 }
 
@@ -108,7 +108,7 @@ void RenderingNode::SetShaderRealVector( const dsstring& p_id, const Vector& p_v
     {
         Vector vec = p_value;
 
-        m_shader_params[p_id].param_values = vec;
+        m_shader_params[p_id]->param_values = vec;
     }
 }
 
@@ -122,11 +122,11 @@ void RenderingNode::SetShaderBool( const dsstring& p_id, bool p_value )
         vec[2] = 0.0;
         vec[3] = 1.0;
         
-        m_shader_params[p_id].param_values = vec;
+        m_shader_params[p_id]->param_values = vec;
     }
 }
 
-void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams>& p_outlist )
+void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist )
 {
     p_outlist = m_shader_params;
 }

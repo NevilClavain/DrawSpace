@@ -127,8 +127,8 @@ void RenderingQueue::Draw( void )
                 break;
 
             case SET_SHADERS_PARAMS:
-
-                renderer->SetFxShaderParams( curr_operation.shader_index, curr_operation.param_register, curr_operation.param_values );
+               
+                renderer->SetFxShaderParams( curr_operation.shader_params->shader_index, curr_operation.shader_params->param_register, curr_operation.shader_params->param_values );
                 break;
 
             case DRAW_NODE:
@@ -552,19 +552,33 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             m_outputqueue.push_back( operation );
         }
 
+        /*
         std::map<dsstring, RenderingNode::ShadersParams> node_shaders_params;
         node->GetShadersParams( node_shaders_params );
 
         for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
         {
             operation.type = SET_SHADERS_PARAMS;
-
+            
             operation.shader_index = (*it).second.shader_index;
             operation.param_register = (*it).second.param_register;
             operation.param_values = (*it).second.param_values;
-                            
+            
             m_outputqueue.push_back( operation );                
         }
+        */
+
+        std::map<dsstring, RenderingNode::ShadersParams*> node_shaders_params;
+        node->GetShadersParams( node_shaders_params );
+
+        for( std::map<dsstring, RenderingNode::ShadersParams*>::iterator it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
+        {
+            operation.type = SET_SHADERS_PARAMS;
+            
+            operation.shader_params = (*it).second;
+            m_outputqueue.push_back( operation );                
+        }
+
 
         operation.type = DRAW_NODE;
         operation.node = node;

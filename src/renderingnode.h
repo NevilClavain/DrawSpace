@@ -55,7 +55,7 @@ protected:
     Texture*                                m_textures[NbMaxTextures]; // 32 textures stages max
     Meshe*                                  m_meshe;
 
-    std::map<dsstring, ShadersParams>       m_shader_params;
+    std::map<dsstring, ShadersParams*>      m_shader_params;
 
     long                                    m_order;
 
@@ -95,7 +95,7 @@ public:
     virtual void SetShaderRealVector( const dsstring& p_id, const Utils::Vector& p_value );
     virtual void SetShaderBool( const dsstring& p_id, bool p_value );
 
-    virtual void GetShadersParams( std::map<dsstring, ShadersParams>& p_outlist );
+    virtual void GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist );
 
     friend class RenderingQueue;
 };

@@ -69,9 +69,13 @@ protected:
         OperationType                                   type;
         void*                                           data;
 
+        /*
         long                                            shader_index;
         long                                            param_register;
         Utils::Vector                                   param_values;
+        */
+        RenderingNode::ShadersParams*                   shader_params;
+
 
         long                                            texture_stage;
 
