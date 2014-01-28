@@ -58,10 +58,12 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
         currentleaf_depth = m_face->GetCurrentLeaf()->GetDepthLevel();
     }
 
+    /*
     if( -1 == currentleaf_depth || currentleaf_depth < 3 )
     {
+    */
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
-        {                                             
+        {           
             // rendu du patch leaf
             //m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );            
 
@@ -71,8 +73,21 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
             flag0[2] = p_ray;
             SetShaderRealVector( "flag0", flag0 );
 
+            Vector patch_pos;
+            dsreal xp, yp;
+            (*it).second->GetPos( xp, yp );
+
+            patch_pos[0] = xp / p_ray;
+            patch_pos[1] = yp / p_ray;
+            patch_pos[2] = 0.0;
+            SetShaderRealVector( "patch_translation", patch_pos );
+
+            m_renderer->SetFxShaderParams( 0, 8, flag0 );
+            m_renderer->SetFxShaderParams( 0, 9, patch_pos );
+
             m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
         }
+        /*
     }
     else
     {
@@ -90,6 +105,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
             }
         }
     }   
+    */
 }
 
 void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch )
@@ -174,7 +190,7 @@ m_diameter( "diameter" ),
 m_hotpoint( "hotpoint" ),
 m_relative_hotpoint( "relative_hotpoint" ),
 m_altitud( "altitud" ),
-m_update_state( "update_state" )
+m_split( "split" )
 {
     m_patchmeshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     build_patch();
@@ -186,7 +202,6 @@ m_update_state( "update_state" )
 
     m_diameter.m_value = 10.0;
     m_altitud.m_value = -1.0;
-    m_update_state.m_value = false;
 
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
@@ -424,8 +439,10 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring
         Fx* fx = nodeset.nodes[faceid]->GetFx();
         *fx = *m_fx; 
 
+        /*
         nodeset.nodes[faceid]->AddShaderParameter( 0, "flag0", 8 );
         nodeset.nodes[faceid]->AddShaderParameter( 0, "patch_translation", 9 );
+        */
 
         nodeset.nodes[faceid]->AddShaderParameter( 1, "color", 0 );
         nodeset.nodes[faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
@@ -446,9 +463,6 @@ void Body::GetPropertiesList( std::vector<dsstring>& p_props )
     p_props.push_back( name );
 
     m_altitud.GetName( name );
-    p_props.push_back( name );
-
-    m_update_state.GetName( name );
     p_props.push_back( name );
 }
 
@@ -478,12 +492,6 @@ Property* Body::GetProperty( const dsstring& p_name )
     if( p_name == name )
     {
         return &m_altitud;
-    }
-
-    m_update_state.GetName( name );
-    if( p_name == name )
-    {
-        return &m_update_state;
     }
 
     return NULL;
@@ -529,27 +537,19 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
         m_altitud.m_value = m_relative_hotpoint.m_value.Length() - ( m_diameter.m_value / 2.0 );
     }
 
-    m_update_state.GetName( name );
+    m_split.GetName( name );
     if( p_name == name )
     {
-        TypedProperty<bool>* state = static_cast<TypedProperty<bool>*>( p_prop );
-        m_update_state.m_value = state->m_value;
+        TypedProperty<dsstring>* patchname = static_cast<TypedProperty<dsstring>*>( p_prop );
 
-        if( m_update_state.m_value )
-        {
-            //start_update();
-        }
-        else
-        {
-            //stop_update();
-        }
+        m_faces[Patch::FrontPlanetFace]->Split( patchname->m_value );
     }
 }
 
 void Body::build_patch( void )
 {
 	dsreal xcurr, ycurr;
-    long patch_resolution = 33;
+    long patch_resolution = 11;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
 	dsreal interval = 2.0 / ( patch_resolution - 1 );

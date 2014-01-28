@@ -23,11 +23,6 @@ struct VS_OUTPUT
    float4 TexCoord0: TEXCOORD0;
 };
 
-void CubeToSphere( float4 p_in, float4 p_out )
-{
-
-}
-
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -36,9 +31,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float4 v_position; // = Input.Position;
 
 	// sidelenght scaling
-	v_position.x = Input.Position.x * flag0.y / 2.0;
-	v_position.y = Input.Position.y * flag0.y / 2.0;
-	v_position.z = Input.Position.z * flag0.y / 2.0;
+
+	v_position = Input.Position * flag0.y / 2.0;
+	v_position = v_position + patch_translation;
+		
 	v_position.w = 1.0;
 
 	float4 v_position2;
@@ -92,11 +88,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    
    
 	// final scaling
-	float4 v_position3;
-	
-	v_position3.x = v_position2.x * flag0.z;
-	v_position3.y = v_position2.y * flag0.z;   
-	v_position3.z = v_position2.z * flag0.z;
+	float4 v_position3;	
+	v_position3 = v_position2 * flag0.z;	
 	v_position3.w = 1.0;
 	
 

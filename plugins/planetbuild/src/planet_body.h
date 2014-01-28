@@ -93,7 +93,9 @@ protected:
     DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_hotpoint;
     DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_relative_hotpoint;
     DrawSpace::Core::TypedProperty<dsreal>                      m_altitud;
-    DrawSpace::Core::TypedProperty<bool>                        m_update_state;
+
+    DrawSpace::Core::TypedProperty<dsstring>                    m_split;
+    
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void build_patch( void );
