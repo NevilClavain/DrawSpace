@@ -40,7 +40,8 @@ protected:
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
     LodCallback*                                            m_lod_callback;
     bool                                                    m_lod_draw;
-    DrawSpace::Scenegraph*                                  m_scenegraph;   
+    DrawSpace::Scenegraph*                                  m_scenegraph; 
+    DrawSpace::Core::VSphere*                               m_vsphere;
    
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_lod_event( DrawSpace::Core::LodStep*, DrawSpace::Core::LodStep::Event p_event );
@@ -64,6 +65,7 @@ public:
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
     virtual void Initialize( void );
+    virtual void ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat );
 };
 
 #endif

@@ -70,14 +70,6 @@ void TransformNode::ComputeFinalTransform( void )
 
 void TransformNode::ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat )
 {
-    Matrix res;
-    res = m_globaltransformation * p_view_mat;
-
-    for( size_t i = 0; i < m_vspheres.size(); i++ )
-    {
-        m_vspheres[i]->Transform( res );
-    }
-
     for( unsigned long i = 0; i < m_children.size(); i++ )
     {
         ComputeVSpheres( p_view_mat );

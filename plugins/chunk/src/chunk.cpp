@@ -72,7 +72,7 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
 
 
     dsstring vsphere_name = m_scenename + dsstring( "/vsphere" );
-    VSphere* vsphere = _DRAWSPACE_NEW_( VSphere, VSphere( vsphere_name ) );
+    m_vsphere = _DRAWSPACE_NEW_( VSphere, VSphere( vsphere_name ) );
 
     // virtual sphere characteristics
     dsreal vsphere_ray;
@@ -123,13 +123,12 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
 
     }
 
-    vsphere->SetRay( vsphere_ray );
-    vsphere->SetPoint( vsphere_point );
+    m_vsphere->SetRay( vsphere_ray );
+    m_vsphere->SetPoint( vsphere_point );
 
-    m_vspheres.push_back( vsphere );
 
     // LOD default settings
-    LodStep* lodstep = _DRAWSPACE_NEW_( LodStep, LodStep( -1000.0, 1000.0, vsphere ) );
+    LodStep* lodstep = _DRAWSPACE_NEW_( LodStep, LodStep( -1000.0, 1000.0, m_vsphere ) );
     lodstep->RegisterHandler( m_lod_callback );
     m_lodsteps.push_back( lodstep );
 }
@@ -148,9 +147,11 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
 
     bool draw = false;
     Utils::Vector transformed_vsphere_point;
-    m_vspheres[0]->GetTransformedPoint( transformed_vsphere_point );
+    //m_vspheres[0]->GetTransformedPoint( transformed_vsphere_point );
+    m_vsphere->GetTransformedPoint( transformed_vsphere_point );
     
-    if( m_vspheres[0]->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
+    //if( m_vspheres[0]->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
+    if( m_vsphere->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
     {
         draw = true;
     }
@@ -233,4 +234,14 @@ DrawSpace::Core::Property* Chunk::GetProperty( const dsstring& p_name )
 
 void Chunk::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
 {
+}
+
+void Chunk::ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat )
+{
+    DrawSpace::Utils::Matrix res;
+    res = m_globaltransformation * p_view_mat;
+
+    m_vsphere->Transform( res );
+
+    TransformNode::ComputeVSpheres( p_view_mat );
 }
