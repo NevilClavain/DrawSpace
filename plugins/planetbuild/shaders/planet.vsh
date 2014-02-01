@@ -3,7 +3,7 @@ float4x4 matViewProjection: register(c0);
 float4   flag0:				register(c8);
 
 	// .x -> patch orientation enum integer
-	// .ytemp -> patch sidelenght
+	// .y -> patch sidelenght
 	// .z -> planet ray
 
 float4   patch_translation:	register(c9);

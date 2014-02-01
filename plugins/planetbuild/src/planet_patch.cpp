@@ -366,3 +366,11 @@ void* Patch::GetMesheData( void )
     return m_meshe_data;
 }
 */
+
+void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientation, dsreal p_sidelength, dsreal p_ray, dsreal p_posx, dsreal p_posy, DrawSpace::Utils::Vector& p_out )
+{
+    // effectue la meme transfo que le vertex shader
+
+
+
+}
