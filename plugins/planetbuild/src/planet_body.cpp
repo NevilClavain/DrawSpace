@@ -58,36 +58,64 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
         currentleaf_depth = m_face->GetCurrentLeaf()->GetDepthLevel();
     }
 
-    
+    /*
     if( -1 == currentleaf_depth || currentleaf_depth < 3 )
     {
-    
+    */
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
-        {           
-            // rendu du patch leaf
-            //m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );            
+        {
 
-            Vector flag0;
-            flag0[0] = (*it).second->GetOrientation();
-            flag0[1] = (*it).second->GetSideLength() / p_ray;
-            flag0[2] = p_ray;
-            SetShaderRealVector( "flag0", flag0 );
+            VSphere* vsphere = (*it).second->GetVSphere();
 
-            Vector patch_pos;
-            dsreal xp, yp;
-            (*it).second->GetPos( xp, yp );
+            DrawSpace::Utils::Matrix res;
+            res = p_world * p_view;
+            vsphere->Transform( res );
 
-            patch_pos[0] = xp / p_ray;
-            patch_pos[1] = yp / p_ray;
-            patch_pos[2] = 0.0;
-            SetShaderRealVector( "patch_translation", patch_pos );
+            Utils::Vector transformed_vsphere_point;
+            vsphere->GetTransformedPoint( transformed_vsphere_point );
+            
+            bool draw = false;
+            if( vsphere->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
+            {
+                draw = true;
+            }
+            else
+            {
+                if( transformed_vsphere_point[2] <= 0.0 )
+                {
+                    draw = true;
+                }
+            }
+            
+            if( draw )
+            {
 
-            m_renderer->SetFxShaderParams( 0, 8, flag0 );
-            m_renderer->SetFxShaderParams( 0, 9, patch_pos );
+                // rendu du patch leaf
+                //m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );            
 
-            m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
+                Vector flag0;
+                flag0[0] = (*it).second->GetOrientation();
+                flag0[1] = (*it).second->GetSideLength() / p_ray;
+                flag0[2] = p_ray;
+                SetShaderRealVector( "flag0", flag0 );
+
+                Vector patch_pos;
+                dsreal xp, yp;
+                (*it).second->GetPos( xp, yp );
+
+                patch_pos[0] = xp / p_ray;
+                patch_pos[1] = yp / p_ray;
+                patch_pos[2] = 0.0;
+                SetShaderRealVector( "patch_translation", patch_pos );
+
+                m_renderer->SetFxShaderParams( 0, 8, flag0 );
+                m_renderer->SetFxShaderParams( 0, 9, patch_pos );
+
+                m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
+
+            }
         }
-        
+    /*    
     }
     else
     {
@@ -148,7 +176,8 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
 
             }
         }
-    }   
+    } 
+    */
     
 }
 
@@ -587,7 +616,7 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
 void Body::build_patch( void )
 {
 	dsreal xcurr, ycurr;
-    long patch_resolution = 11;
+    long patch_resolution = 33;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
 	dsreal interval = 2.0 / ( patch_resolution - 1 );
@@ -629,4 +658,8 @@ void Body::build_patch( void )
 			current_index++;
 		}        
 	}
+}
+
+void Body::ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat )
+{
 }

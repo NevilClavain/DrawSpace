@@ -33,10 +33,15 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	// sidelenght scaling
 
 	v_position = Input.Position * flag0.y / 2.0;
+	
+	// patch positionning
+	
 	v_position = v_position + patch_translation;
 		
 	v_position.w = 1.0;
 
+	// patch reorientation
+	
 	float4 v_position2;
 
 	if( 0.0 == flag0.x ) // front

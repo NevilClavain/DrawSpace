@@ -25,6 +25,7 @@
 
 #include <vector.h>
 #include <quadtree.h>
+#include <vsphere.h>
 
 class Patch
 {
@@ -60,6 +61,8 @@ protected:
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
 	dsstring		                        m_name;
 
+    DrawSpace::Core::VSphere*               m_vsphere;
+
 public:
 	Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
 	virtual ~Patch( void );
@@ -74,6 +77,8 @@ public:
 	void GetPos( dsreal& p_xpos, dsreal& p_ypos );
 
     DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void );
+
+    DrawSpace::Core::VSphere* GetVSphere( void );
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

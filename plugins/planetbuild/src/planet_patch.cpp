@@ -86,11 +86,19 @@ m_owner( p_owner )
 		}       
 	}
 
-	//build();
+    // build vsphere characteristics
+
+    Vector center( 0.0, 0.0, 0.0, 1.0 );
+    Vector center_out;
+    ConvertVertex( center, p_orientation, m_sidelength, p_ray, m_xpos, m_ypos, center_out );
+
+    m_vsphere = _DRAWSPACE_NEW_( DrawSpace::Core::VSphere, DrawSpace::Core::VSphere( m_name, center_out, 1.41 * m_sidelength * m_ray / 2.0 ) );
+
 }
 
 Patch::~Patch( void )
 {
+    _DRAWSPACE_DELETE_( m_vsphere );
 }
 
 void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )
@@ -225,109 +233,6 @@ void Patch::SphereToCube( const Vector& p_in, Vector& p_out )
 	p_out[2] = nz;
 }
 
-/*
-void Patch::build( void )
-{
-	dsreal xcurr, ycurr;
-
-	dsreal interval = m_sidelength / ( m_resolution - 1 );
-	for( long i = 0; i < m_resolution; i++ )
-	{
-		for( long j = 0; j < m_resolution; j++ )
-		{
-			xcurr = j * interval - m_sidelength / 2.0;
-			xcurr += m_xpos;
-
-			ycurr = i * interval - m_sidelength / 2.0;
-			ycurr += m_ypos;
-			
-			Vector coords, coords2;
-			Vertex vertex;
-
-			switch( m_orientation )
-			{
-				case TopPlanetFace:
-
-					coords[0] = xcurr;
-					coords[1] = 1.0;
-					coords[2] = -ycurr;
-					break;
-
-				case BottomPlanetFace:
-
-					coords[0] = xcurr;
-					coords[1] = -1.0;
-					coords[2] = ycurr;
-					break;
-
-				case FrontPlanetFace:
-
-					coords[0] = xcurr;
-					coords[1] = ycurr;
-					coords[2] = 1.0;
-					break;
-
-				case RearPlanetFace:
-
-					coords[0] = -xcurr;
-					coords[1] = ycurr;
-					coords[2] = -1.0;
-					break;
-					
-				case LeftPlanetFace:
-
-					coords[0] = -1.0;
-					coords[1] = ycurr;
-					coords[2] = xcurr;
-					break;
-
-				case RightPlanetFace:
-
-					coords[0] = 1.0;
-					coords[1] = ycurr;
-					coords[2] = -xcurr;
-					break;
-			}
-			
-			CubeToSphere( coords, coords2 );
-
-			coords2.Scale( m_ray );
-
-
-			vertex.x = coords2[0];
-			vertex.y = coords2[1];
-			vertex.z = coords2[2];
-			AddVertex( vertex );
-		}
-	}
-
-	long current_index = 0;
-
-	for( long i = 0; i < m_resolution - 1; i++  )
-	{
-		current_index = i * m_resolution;
-
-		for( long j = 0; j < m_resolution - 1; j++ )
-		{
-			Triangle triangle;
-
-			triangle.vertex1 = current_index;
-			triangle.vertex2 = current_index + 1;
-			triangle.vertex3 = current_index + m_resolution;
-			AddTriangle( triangle );
-
-			
-			triangle.vertex1 = current_index + 1;
-			triangle.vertex2 = current_index + 1 + m_resolution;
-			triangle.vertex3 = current_index + m_resolution;
-			AddTriangle( triangle );
-			
-
-			current_index++;
-		}        
-	}
-}
-*/
 
 void Patch::GetName( dsstring& p_name )
 {
@@ -355,22 +260,81 @@ int Patch::GetOrientation( void )
     return m_orientation;
 }
 
-/*
-void Patch::SetMesheData( void* p_data )
+DrawSpace::Core::VSphere* Patch::GetVSphere( void )
 {
-    m_meshe_data = p_data;
+    return m_vsphere;
 }
-
-void* Patch::GetMesheData( void )
-{
-    return m_meshe_data;
-}
-*/
 
 void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientation, dsreal p_sidelength, dsreal p_ray, dsreal p_posx, dsreal p_posy, DrawSpace::Utils::Vector& p_out )
 {
     // effectue la meme transfo que le vertex shader
 
+    DrawSpace::Utils::Vector in = p_in;
+    DrawSpace::Utils::Vector v2, v3;
 
+    // sidelenght scaling
+    in.Scale( p_sidelength / 2.0 );
 
+    // patch positionning
+    in[0] = in[0] + p_posx;
+    in[1] = in[1] + p_posy;
+    in[2] = 0.0;
+    in[3] = 1.0;
+
+    // patch reorientation
+
+    switch( p_orientation )
+    {
+        case FrontPlanetFace:
+
+		    v2[0] = in[0];
+		    v2[1] = in[1];
+		    v2[2] = 1.0;
+            break;
+
+        case RearPlanetFace:
+
+		    v2[0] = -in[0];
+		    v2[1] = in[1];
+		    v2[2] = -1.0;
+            break;
+
+        case LeftPlanetFace:
+
+		    v2[0] = -1.0;
+		    v2[1] = in[1];
+		    v2[2] = in[0];
+            break;
+
+        case RightPlanetFace:
+
+		    v2[0] = 1.0;
+		    v2[1] = in[1];
+		    v2[2] = -in[0];
+            break;
+
+        case TopPlanetFace:
+
+		    v2[0] = in[0];
+		    v2[1] = 1.0;
+		    v2[2] = -in[1];
+            break;
+
+        case BottomPlanetFace:
+
+		    v2[0] = in[0];
+		    v2[1] = -1.0;
+		    v2[2] = in[1];
+            break;
+    }
+
+    v2[3] = 1.0;
+
+    CubeToSphere( v2, v3 );
+
+    // final scaling
+    v3.Scale( p_ray );
+    v3[3] = 1.0;
+
+    p_out = v3;
 }
