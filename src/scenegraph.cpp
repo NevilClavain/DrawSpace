@@ -57,6 +57,7 @@ Pass* Scenegraph::GetPass( const dsstring& p_passname )
     if( m_passes.count( p_passname ) > 0 )
     {
         return m_passes[p_passname];
+ 
     }
     return NULL;
 }
@@ -79,19 +80,17 @@ bool Scenegraph::SetCurrentCamera( const dsstring& p_nodename )
 void Scenegraph::ComputeTransformations( void )
 {
     TransformQueue::ComputeTransformations();
+
+    for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    {
+        (*it).second->ComputeLod();
+    }
+
     m_view.Identity();
     if( m_camera )
     {
         m_camera->GetSceneWorld( m_view );
         m_view.Inverse();
-    }
-}
-
-void Scenegraph::ComputeLods( void )
-{
-    for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
-    {
-        (*it).second->ComputeLod();
     }
 }
 
