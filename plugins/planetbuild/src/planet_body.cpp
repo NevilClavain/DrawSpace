@@ -113,58 +113,6 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {
             draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view );
-
-            /*
-            VSphere* vsphere = (*it).second->GetVSphere();
-
-            DrawSpace::Utils::Matrix res;
-            res = p_world * p_view;
-            vsphere->Transform( res );
-
-            Utils::Vector transformed_vsphere_point;
-            vsphere->GetTransformedPoint( transformed_vsphere_point );
-            
-            bool draw = false;
-            if( vsphere->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
-            {
-                draw = true;
-            }
-            else
-            {
-                if( transformed_vsphere_point[2] <= 0.0 )
-                {
-                    draw = true;
-                }
-            }
-            
-            if( draw )
-            {
-
-                // rendu du patch leaf
-                //m_renderer->RenderMeshe( p_world, p_view, (*it).second->GetMesheData() );            
-
-                Vector flag0;
-                flag0[0] = (*it).second->GetOrientation();
-                flag0[1] = (*it).second->GetSideLength() / p_ray;
-                flag0[2] = p_ray;
-                SetShaderRealVector( "flag0", flag0 );
-
-                Vector patch_pos;
-                dsreal xp, yp;
-                (*it).second->GetPos( xp, yp );
-
-                patch_pos[0] = xp / p_ray;
-                patch_pos[1] = yp / p_ray;
-                patch_pos[2] = 0.0;
-                SetShaderRealVector( "patch_translation", patch_pos );
-
-                m_renderer->SetFxShaderParams( 0, 8, flag0 );
-                m_renderer->SetFxShaderParams( 0, 9, patch_pos );
-
-                m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
-
-            }
-            */
         }
       
     }
@@ -174,64 +122,13 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
 
         draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
 
-        //m_renderer->RenderMeshe( p_world, p_view, current_leaf->GetContent()->GetMesheData() );
-
-        /*
-            Vector flag0;
-            flag0[0] = current_leaf->GetContent()->GetOrientation();
-            flag0[1] = current_leaf->GetContent()->GetSideLength() / p_ray;
-            flag0[2] = p_ray;
-            SetShaderRealVector( "flag0", flag0 );
-
-            Vector patch_pos;
-            dsreal xp, yp;
-            current_leaf->GetContent()->GetPos( xp, yp );
-
-            patch_pos[0] = xp / p_ray;
-            patch_pos[1] = yp / p_ray;
-            patch_pos[2] = 0.0;
-            SetShaderRealVector( "patch_translation", patch_pos );
-
-            m_renderer->SetFxShaderParams( 0, 8, flag0 );
-            m_renderer->SetFxShaderParams( 0, 9, patch_pos );
-
-            m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
-            */
-
-
         for( long i = 0; i < 8;i++ )
         {
             QuadtreeNode<Patch>* neighb = static_cast<QuadtreeNode<Patch>*>( current_leaf->GetContent()->GetNeighbour( i ) );
 
             if( neighb )
             {
-
                 draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
-
-                //m_renderer->RenderMeshe( p_world, p_view, neighb->GetContent()->GetMesheData() );
-
-/*
-                Vector flag0;
-                flag0[0] = neighb->GetContent()->GetOrientation();
-                flag0[1] = neighb->GetContent()->GetSideLength() / p_ray;
-                flag0[2] = p_ray;
-                SetShaderRealVector( "flag0", flag0 );
-
-                Vector patch_pos;
-                dsreal xp, yp;
-                neighb->GetContent()->GetPos( xp, yp );
-
-                patch_pos[0] = xp / p_ray;
-                patch_pos[1] = yp / p_ray;
-                patch_pos[2] = 0.0;
-                SetShaderRealVector( "patch_translation", patch_pos );
-
-                m_renderer->SetFxShaderParams( 0, 8, flag0 );
-                m_renderer->SetFxShaderParams( 0, 9, patch_pos );
-
-                m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
-*/
-
             }
         }
     }
@@ -241,12 +138,6 @@ void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch
 {
     dsstring patch_name;
     p_patch->GetName( patch_name );
-
-    /*
-    void* meshe_data;
-    m_renderer->CreateMeshe( p_patch, &meshe_data );
-    p_patch->SetMesheData( meshe_data );
-    */
 
     m_patchesleafs[patch_name] = p_patch;
     m_patches[patch_name] = p_patch;
@@ -265,11 +156,6 @@ void FaceRenderingNode::on_patchdel( int p_orientation, Patch* p_patch )
     {
         m_patches.erase( patch_name );
     }
-
-    /*
-    void* meshe_data = p_patch->GetMesheData();
-    m_renderer->RemoveMeshe( p_patch, meshe_data );
-    */
 }
 
 void FaceRenderingNode::on_patchsplit( int p_orientation, Patch* p_patch )
@@ -399,47 +285,6 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
 
 DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
 {
-    /*
-    size_t sep = p_mesheid.find_first_of( ":" );
-    if( sep != dsstring::npos && sep > 0 && sep < p_mesheid.length() - 2 )
-    {
-        dsstring face_id = p_mesheid.substr( 0, sep );
-        dsstring patch_name = p_mesheid.substr( sep + 1, p_mesheid.length() - ( sep + 1 ) );
-
-        int faceidval;
-
-        if( "front" == face_id )
-        {
-            faceidval = Patch::FrontPlanetFace;
-        }
-        else if( "rear" == face_id )
-        {
-            faceidval = Patch::RearPlanetFace;
-        }
-        else if( "top" == face_id )
-        {
-            faceidval = Patch::TopPlanetFace;
-        }
-        else if( "bottom" == face_id )
-        {
-            faceidval = Patch::BottomPlanetFace;
-        }
-        else if( "left" == face_id )
-        {
-            faceidval = Patch::LeftPlanetFace;
-        }
-        else if( "right" == face_id )
-        {
-            faceidval = Patch::RightPlanetFace;
-        }
-        else
-        {
-            return NULL;
-        }
-
-        return m_faces[faceidval]->GetPatch( patch_name );
-    }
-    */
     return NULL;
 }
 
