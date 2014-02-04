@@ -65,7 +65,6 @@ public:
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
     virtual void Initialize( void );
-    virtual void ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat );
 };
 
 #endif

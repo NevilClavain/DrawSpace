@@ -68,14 +68,6 @@ void TransformNode::ComputeFinalTransform( void )
     }
 }
 
-void TransformNode::ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat )
-{
-    for( unsigned long i = 0; i < m_children.size(); i++ )
-    {
-        ComputeVSpheres( p_view_mat );
-    }
-}
-
 void TransformNode::SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
     m_localtransformation = p_mat;

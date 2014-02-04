@@ -145,12 +145,17 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
         return;
     }
 
+    DrawSpace::Utils::Matrix view;
+    m_scenegraph->GetCurrentCameraView( view );
+
+    DrawSpace::Utils::Matrix res;
+    res = m_globaltransformation * view;
+    m_vsphere->Transform( res );
+
     bool draw = false;
     Utils::Vector transformed_vsphere_point;
-    //m_vspheres[0]->GetTransformedPoint( transformed_vsphere_point );
     m_vsphere->GetTransformedPoint( transformed_vsphere_point );
     
-    //if( m_vspheres[0]->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
     if( m_vsphere->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
     {
         draw = true;
@@ -165,8 +170,6 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
 
     if( draw )
     {
-        DrawSpace::Utils::Matrix view;
-        m_scenegraph->GetCurrentCameraView( view );  
         m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), m_globaltransformation, view );
     }
 }
@@ -234,14 +237,4 @@ DrawSpace::Core::Property* Chunk::GetProperty( const dsstring& p_name )
 
 void Chunk::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
 {
-}
-
-void Chunk::ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat )
-{
-    DrawSpace::Utils::Matrix res;
-    res = m_globaltransformation * p_view_mat;
-
-    m_vsphere->Transform( res );
-
-    TransformNode::ComputeVSpheres( p_view_mat );
 }

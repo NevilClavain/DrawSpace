@@ -87,23 +87,6 @@ void Scenegraph::ComputeTransformations( void )
     }
 }
 
-void Scenegraph::ComputeVSpheres( void )
-{
-    Matrix view;
-
-    view.Identity();
-    if( m_camera )
-    {
-        m_camera->GetSceneWorld( view );
-        view.Inverse();
-    }
-
-    for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
-    {
-        (*it).second->ComputeVSpheres( view );
-    }
-}
-
 void Scenegraph::ComputeLods( void )
 {
     for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )

@@ -60,8 +60,7 @@ public:
     virtual void        SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
     virtual void        GetName( dsstring& p_name );
     virtual void        SetName( const dsstring& p_name );
-    virtual void        GetSceneWorld( Utils::Matrix& p_mat );
-    virtual void        ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat );
+    virtual void        GetSceneWorld( Utils::Matrix& p_mat );    
     virtual void        ComputeLod( void );
     virtual void        ClearLodStepsList( void );
     virtual void        AddLodStep( LodStep* p_step );

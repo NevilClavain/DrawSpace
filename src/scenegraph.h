@@ -50,7 +50,7 @@ public:
     void GetCurrentCameraView( Utils::Matrix& p_view );
     void GetCurrentCameraTranform( Utils::Matrix& p_mat );
 
-    void ComputeVSpheres( void );
+    //void ComputeVSpheres( void );
     void ComputeTransformations( void );
     void ComputeLods( void );
     
