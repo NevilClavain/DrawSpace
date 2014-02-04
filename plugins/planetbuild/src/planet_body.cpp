@@ -50,6 +50,54 @@ FaceRenderingNode::~FaceRenderingNode( void )
 {
 }
 
+void FaceRenderingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view )
+{
+    VSphere* vsphere = p_patch->GetVSphere();
+
+    DrawSpace::Utils::Matrix res;
+    res = p_world * p_view;
+    vsphere->Transform( res );
+
+    Utils::Vector transformed_vsphere_point;
+    vsphere->GetTransformedPoint( transformed_vsphere_point );
+    
+    bool draw = false;
+    if( vsphere->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
+    {
+        draw = true;
+    }
+    else
+    {
+        if( transformed_vsphere_point[2] <= 0.0 )
+        {
+            draw = true;
+        }
+    }
+    
+    if( draw )
+    {
+        Vector flag0;
+        flag0[0] = p_patch->GetOrientation();
+        flag0[1] = p_patch->GetSideLength() / p_ray;
+        flag0[2] = p_ray;
+        SetShaderRealVector( "flag0", flag0 );
+
+        Vector patch_pos;
+        dsreal xp, yp;
+        p_patch->GetPos( xp, yp );
+
+        patch_pos[0] = xp / p_ray;
+        patch_pos[1] = yp / p_ray;
+        patch_pos[2] = 0.0;
+        SetShaderRealVector( "patch_translation", patch_pos );
+
+        m_renderer->SetFxShaderParams( 0, 8, flag0 );
+        m_renderer->SetFxShaderParams( 0, 9, patch_pos );
+
+        m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
+    }   
+}
+
 void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view )
 {
     long currentleaf_depth = -1;   
@@ -58,13 +106,15 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
         currentleaf_depth = m_face->GetCurrentLeaf()->GetDepthLevel();
     }
 
-    /*
+    
     if( -1 == currentleaf_depth || currentleaf_depth < 3 )
     {
-    */
+    
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {
+            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view );
 
+            /*
             VSphere* vsphere = (*it).second->GetVSphere();
 
             DrawSpace::Utils::Matrix res;
@@ -114,16 +164,19 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
                 m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
 
             }
+            */
         }
-    /*    
+      
     }
     else
     {
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
+        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
+
         //m_renderer->RenderMeshe( p_world, p_view, current_leaf->GetContent()->GetMesheData() );
 
-
+        /*
             Vector flag0;
             flag0[0] = current_leaf->GetContent()->GetOrientation();
             flag0[1] = current_leaf->GetContent()->GetSideLength() / p_ray;
@@ -143,6 +196,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
             m_renderer->SetFxShaderParams( 0, 9, patch_pos );
 
             m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
+            */
 
 
         for( long i = 0; i < 8;i++ )
@@ -151,9 +205,12 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
 
             if( neighb )
             {
+
+                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
+
                 //m_renderer->RenderMeshe( p_world, p_view, neighb->GetContent()->GetMesheData() );
 
-
+/*
                 Vector flag0;
                 flag0[0] = neighb->GetContent()->GetOrientation();
                 flag0[1] = neighb->GetContent()->GetSideLength() / p_ray;
@@ -173,12 +230,11 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
                 m_renderer->SetFxShaderParams( 0, 9, patch_pos );
 
                 m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
+*/
 
             }
         }
-    } 
-    */
-    
+    }
 }
 
 void FaceRenderingNode::on_patchinstanciation( int p_orientation, Patch* p_patch )
