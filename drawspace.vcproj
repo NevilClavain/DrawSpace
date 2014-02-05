@@ -467,6 +467,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\physic.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\renderer.h"
 				>
 			</File>
