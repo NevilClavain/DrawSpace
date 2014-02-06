@@ -508,6 +508,14 @@
 				RelativePath=".\src\inertbody.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\world.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\world.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\src\asset.cpp"
