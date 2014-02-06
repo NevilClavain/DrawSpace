@@ -23,7 +23,10 @@
 #ifndef _WORLD_H_
 #define _WORLD_H_
 
+#include <btBulletCollisionCommon.h>
+#include <btBulletDynamicsCommon.h>
 #include "drawspace_commons.h"
+#include "memalloc.h"
 
 namespace DrawSpace
 {
@@ -33,9 +36,17 @@ class World
 {
 protected:
 
+    btDefaultCollisionConfiguration*            m_collisionConfiguration;
+    btCollisionDispatcher*                      m_collisionDispatcher;
+    btBroadphaseInterface*                      m_broadphase;
+
+    btDiscreteDynamicsWorld*                    m_world;
+
 public:
     World( void );
     virtual ~World( void );
+
+    bool Initialize( void );
 
 };
 }

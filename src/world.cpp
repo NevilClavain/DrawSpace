@@ -23,15 +23,24 @@
 #include "world.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 World::World( void )
 {
-
+    m_collisionConfiguration    = _DRAWSPACE_NEW_( btDefaultCollisionConfiguration, btDefaultCollisionConfiguration );
+    m_collisionDispatcher       = _DRAWSPACE_NEW_( btCollisionDispatcher, btCollisionDispatcher( m_collisionConfiguration ) );
+    m_broadphase                = _DRAWSPACE_NEW_( btDbvtBroadphase, btDbvtBroadphase );
 }
 
 World::~World( void )
 {
+    _DRAWSPACE_DELETE_( m_collisionConfiguration );
+    _DRAWSPACE_DELETE_( m_collisionDispatcher );
+    _DRAWSPACE_DELETE_( m_broadphase );
+}
 
-
+bool World::Initialize( void )
+{
+    return true;
 }
