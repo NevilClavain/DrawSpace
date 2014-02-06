@@ -310,12 +310,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
-		</Filter>
-		<Filter
 			Name="utils"
 			>
 			<File
@@ -492,6 +486,26 @@
 			</File>
 			<File
 				RelativePath=".\src\widget.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="dynamics"
+			>
+			<File
+				RelativePath=".\src\body.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\body.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\inertbody.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\inertbody.h"
 				>
 			</File>
 		</Filter>

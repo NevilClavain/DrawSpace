@@ -20,58 +20,36 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
-
-#include "tracedefs.h"
-#include "maths.h"
-#include "property.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
-#include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "md5.h"
-#include "vsphere.h"
-#include "lod.h"
-#include "transformation.h"
-#include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "drawable.h"
-#include "fx.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "memalloc.h"
-#include "events.h"
-#include "camera.h"
-#include "fpsmovement.h"
-#include "freemovement.h"
-#include "quadtree.h"
-#include "misc_utils.h"
-#include "physic.h"
 #include "inertbody.h"
-#endif
+
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::Dynamics;
+
+InertBody::InertBody( void ) : Body()
+{
+}
+
+InertBody::InertBody( DrawSpace::Interface::Drawable* p_drawable ) : Body( p_drawable )
+{
+}
+
+InertBody::~InertBody( void )
+{
+}
+
+void InertBody::SetParameters( const Parameters& p_parameters )
+{
+    m_parameters = p_parameters;
+}
+
+void InertBody::GetParameters( Parameters& p_parameters )
+{
+    p_parameters = m_parameters;
+}
+
+void InertBody::SetInitialPos( const DrawSpace::Utils::Vector& p_pos )
+{
+
+}
