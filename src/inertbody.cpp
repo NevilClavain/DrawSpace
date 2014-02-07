@@ -28,7 +28,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-InertBody::InertBody( Body* p_body, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters ) : Body( p_body, p_drawable )
+InertBody::InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters ) : Body( p_world, p_drawable )
 {
     btTransform bt_transform;
 
@@ -51,7 +51,10 @@ InertBody::InertBody( Body* p_body, DrawSpace::Interface::Drawable* p_drawable, 
     }
 
     btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( p_parameters.mass, m_motionState, m_collisionShape, localInertia );
-    btRigidBody* body = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
+    m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
+
+    m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+
 }
 
 InertBody::~InertBody( void )

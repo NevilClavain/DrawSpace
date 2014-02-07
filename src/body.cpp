@@ -28,9 +28,9 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-Body::Body( Body* p_body, DrawSpace::Interface::Drawable* p_drawable ) : 
+Body::Body( World* p_world, DrawSpace::Interface::Drawable* p_drawable ) : 
 m_drawable( p_drawable ), 
-m_body( p_body )
+m_world( p_world )
 {
 }
 

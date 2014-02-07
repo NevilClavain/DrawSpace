@@ -73,3 +73,7 @@ bool World::StepSimulation( long p_fps )
     return false;
 }
 
+btDynamicsWorld* World::getBulletWorld( void )
+{
+    return m_world;
+}

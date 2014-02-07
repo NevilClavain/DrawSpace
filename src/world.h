@@ -53,6 +53,8 @@ public:
 
     bool StepSimulation( long p_fps );
 
+    btDynamicsWorld* getBulletWorld( void );
+
 };
 }
 }

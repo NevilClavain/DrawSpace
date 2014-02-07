@@ -43,10 +43,10 @@ public:
 
 protected:
     DrawSpace::Interface::Drawable* m_drawable;
-    Body*                           m_body;
+    World*                          m_world;
 
 public:
-    Body( Body* p_body, DrawSpace::Interface::Drawable* p_drawable );
+    Body( World* p_world, DrawSpace::Interface::Drawable* p_drawable );
     virtual ~Body( void );
 
     DrawSpace::Interface::Drawable* GetDrawable( void );
