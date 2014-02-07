@@ -24,6 +24,7 @@
 #define _BODY_H_
 
 #include "drawable.h"
+#include "world.h"
 
 namespace DrawSpace
 {
@@ -31,15 +32,23 @@ namespace Dynamics
 {
 class Body
 {
+public:
+
+    typedef enum
+    {
+        BOX_SHAPE,
+        SPHERE_SHAPE,
+
+    } Shape;
+
 protected:
     DrawSpace::Interface::Drawable* m_drawable;
+    Body*                           m_body;
 
 public:
-    Body( void );
-    Body( DrawSpace::Interface::Drawable* p_drawable );
+    Body( Body* p_body, DrawSpace::Interface::Drawable* p_drawable );
     virtual ~Body( void );
 
-    void SetDrawable( DrawSpace::Interface::Drawable* p_drawable );
     DrawSpace::Interface::Drawable* GetDrawable( void );
 
 };

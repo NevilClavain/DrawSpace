@@ -26,21 +26,50 @@ using namespace DrawSpace;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
-World::World( void )
+World::World( void ) : m_world( NULL )
 {
-    m_collisionConfiguration    = _DRAWSPACE_NEW_( btDefaultCollisionConfiguration, btDefaultCollisionConfiguration );
-    m_collisionDispatcher       = _DRAWSPACE_NEW_( btCollisionDispatcher, btCollisionDispatcher( m_collisionConfiguration ) );
-    m_broadphase                = _DRAWSPACE_NEW_( btDbvtBroadphase, btDbvtBroadphase );
+    m_collisionConfiguration            = _DRAWSPACE_NEW_( btDefaultCollisionConfiguration, btDefaultCollisionConfiguration );
+    m_collisionDispatcher               = _DRAWSPACE_NEW_( btCollisionDispatcher, btCollisionDispatcher( m_collisionConfiguration ) );
+    m_broadphase                        = _DRAWSPACE_NEW_( btDbvtBroadphase, btDbvtBroadphase );
+    m_sequentialImpulseConstraintSolver = _DRAWSPACE_NEW_( btSequentialImpulseConstraintSolver, btSequentialImpulseConstraintSolver );
 }
 
 World::~World( void )
 {
+    if( m_world )
+    {
+        _DRAWSPACE_DELETE_( m_world );
+    }
+
     _DRAWSPACE_DELETE_( m_collisionConfiguration );
     _DRAWSPACE_DELETE_( m_collisionDispatcher );
     _DRAWSPACE_DELETE_( m_broadphase );
+    _DRAWSPACE_DELETE_( m_sequentialImpulseConstraintSolver );
 }
 
 bool World::Initialize( void )
 {
+    m_world = _DRAWSPACE_NEW_( btDiscreteDynamicsWorld, btDiscreteDynamicsWorld( m_collisionDispatcher, m_broadphase, m_sequentialImpulseConstraintSolver, m_collisionConfiguration ) ); 
     return true;
 }
+
+bool World::SetGravity( const DrawSpace::Utils::Vector p_gravity )
+{
+    if( m_world )
+    {
+        m_world->setGravity( btVector3( p_gravity[0], p_gravity[1], p_gravity[2] ) );
+        return true;
+    }
+    return false;
+}
+
+bool World::StepSimulation( long p_fps )
+{
+    if( m_world )
+    {
+        m_world->stepSimulation( 1.0 / (dsreal)p_fps );
+        return true;
+    }
+    return false;
+}
+

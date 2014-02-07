@@ -27,21 +27,15 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
-Body::Body( void ) : m_drawable( NULL )
-{
-}
 
-Body::Body( DrawSpace::Interface::Drawable* p_drawable ) : m_drawable( p_drawable )
+Body::Body( Body* p_body, DrawSpace::Interface::Drawable* p_drawable ) : 
+m_drawable( p_drawable ), 
+m_body( p_body )
 {
 }
 
 Body::~Body( void )
 {
-}
-
-void Body::SetDrawable( DrawSpace::Interface::Drawable* p_drawable )
-{
-    m_drawable = p_drawable;
 }
 
 DrawSpace::Interface::Drawable* Body::GetDrawable( void )

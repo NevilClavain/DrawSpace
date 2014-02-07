@@ -27,29 +27,41 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
-InertBody::InertBody( void ) : Body()
-{
-}
 
-InertBody::InertBody( DrawSpace::Interface::Drawable* p_drawable ) : Body( p_drawable )
+InertBody::InertBody( Body* p_body, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters ) : Body( p_body, p_drawable )
 {
+    btTransform bt_transform;
+
+    bt_transform.setIdentity();
+    bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0], p_parameters.initial_pos[1], p_parameters.initial_pos[2] ) );
+
+    switch( p_parameters.shape )
+    {
+        case Body::BOX_SHAPE:
+            m_collisionShape = _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( p_parameters.box_dims[0], p_parameters.box_dims[1], p_parameters.box_dims[2] ) ) );
+            break;
+    }
+
+    m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
+
+    btVector3 localInertia( 0, 0, 0 );
+    if( p_parameters.mass > 0.0 )
+    {        
+        m_collisionShape->calculateLocalInertia( p_parameters.mass, localInertia );
+    }
+
+    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( p_parameters.mass, m_motionState, m_collisionShape, localInertia );
+    btRigidBody* body = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 }
 
 InertBody::~InertBody( void )
 {
-}
-
-void InertBody::SetParameters( const Parameters& p_parameters )
-{
-    m_parameters = p_parameters;
+    _DRAWSPACE_DELETE_( m_rigidBody );
+    _DRAWSPACE_DELETE_( m_collisionShape );
+    _DRAWSPACE_DELETE_( m_motionState );
 }
 
 void InertBody::GetParameters( Parameters& p_parameters )
 {
     p_parameters = m_parameters;
-}
-
-void InertBody::SetInitialPos( const DrawSpace::Utils::Vector& p_pos )
-{
-
 }

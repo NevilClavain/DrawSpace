@@ -42,7 +42,6 @@ protected:
     Utils::Matrix                   m_localtransformation;
     Utils::Matrix                   m_globaltransformation;
     
-    //std::vector<VSphere*>           m_vspheres;
     std::vector<LodStep*>           m_lodsteps;
 
     TransformNode*                  m_parent;

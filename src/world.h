@@ -25,8 +25,9 @@
 
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-#include "drawspace_commons.h"
+
 #include "memalloc.h"
+#include "vector.h"
 
 namespace DrawSpace
 {
@@ -39,6 +40,7 @@ protected:
     btDefaultCollisionConfiguration*            m_collisionConfiguration;
     btCollisionDispatcher*                      m_collisionDispatcher;
     btBroadphaseInterface*                      m_broadphase;
+    btSequentialImpulseConstraintSolver*        m_sequentialImpulseConstraintSolver;
 
     btDiscreteDynamicsWorld*                    m_world;
 
@@ -47,8 +49,12 @@ public:
     virtual ~World( void );
 
     bool Initialize( void );
+    bool SetGravity( const DrawSpace::Utils::Vector p_gravity );
+
+    bool StepSimulation( long p_fps );
 
 };
 }
 }
+
 #endif

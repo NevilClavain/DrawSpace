@@ -25,6 +25,7 @@
 
 #include "body.h"
 #include "vector.h"
+#include "matrix.h"
 
 namespace DrawSpace
 {
@@ -35,28 +36,33 @@ class InertBody : public Body
 public:
 
     typedef struct
-    {
-        bool with_physic;
+    {       
+        DrawSpace::Utils::Vector    initial_pos;
+        DrawSpace::Utils::Matrix    inital_rot;
 
-        
+        dsreal                      mass;
+        Body::Shape                 shape;
+
+        DrawSpace::Utils::Vector    box_dims;
 
     } Parameters;
 
 protected:
 
-    Parameters m_parameters;
+    Parameters                      m_parameters;
+
+    btRigidBody*                    m_rigidBody;
+    btCollisionShape*               m_collisionShape;
+    btDefaultMotionState*           m_motionState;
+
 
 public:
 
-    InertBody( void );
-    InertBody( DrawSpace::Interface::Drawable* p_drawable );
+    InertBody( Body* p_body, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters );
     virtual ~InertBody( void );
 
-    void SetParameters( const Parameters& p_parameters );
     void GetParameters( Parameters& p_parameters );
     
-    void SetInitialPos( const DrawSpace::Utils::Vector& p_pos );
-
 };
 }
 }
