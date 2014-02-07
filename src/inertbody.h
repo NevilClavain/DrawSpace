@@ -62,6 +62,8 @@ public:
     virtual ~InertBody( void );
 
     void GetParameters( Parameters& p_parameters );
+
+    void Update( void );
     
 };
 }
