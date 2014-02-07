@@ -21,7 +21,7 @@
 */
 
 #include "d3d9renderer.h"
-#include "memalloc.h"
+#include <memalloc.h>
 
 using namespace DrawSpace;
 extern void TranslateD3DD9Error( HRESULT p_hRes, dsstring &p_str );

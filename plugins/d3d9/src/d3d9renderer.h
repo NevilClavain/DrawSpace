@@ -23,10 +23,23 @@
 #ifndef _D3D9RENDERER_H_
 #define _D3D9RENDERER_H_
 
-#include <drawspace.h>
+//#include <drawspace.h>
+#include <memalloc.h>
+#include <tracedefs.h>
+#include <renderer.h>
+#include <parser.h>
+#include <fx.h>
+#include <vector.h>
+#include <matrix.h>
+#include <transformqueue.h>
+#include <transformation.h>
+
+
 #include <d3dx9.h>
 #include "d3d9vertex.h"
 #include "d3d9triangle.h"
+
+
 
 #define D3D9_RELEASE( p_Obj ) { if( p_Obj ) { p_Obj->Release(); p_Obj = NULL; } }
 
