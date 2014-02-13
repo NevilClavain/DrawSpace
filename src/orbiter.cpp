@@ -79,3 +79,8 @@ bool Orbiter::UnsetKinematic( void )
 
     return true;
 }
+
+void Orbiter::SetTractorPoint( const DrawSpace::Utils::Vector& p_tractorpoint )
+{
+    m_tractorpoint = p_tractorpoint;
+}

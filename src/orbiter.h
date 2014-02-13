@@ -50,6 +50,10 @@ protected:
     btCollisionShape*               m_collisionShape;
     btDefaultMotionState*           m_motionState;
 
+    DrawSpace::Utils::Vector        m_tractorpoint;
+
+    dsreal                          m_angle;
+
 
 public:
 
@@ -58,6 +62,8 @@ public:
 
     bool SetKinematic( const Parameters& p_parameters );
     bool UnsetKinematic( void );
+
+    void SetTractorPoint( const DrawSpace::Utils::Vector& p_tractorpoint );
 
 };
 }
