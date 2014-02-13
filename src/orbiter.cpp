@@ -20,15 +20,26 @@
 *                                                                          
 */
 
-#include "inertbody.h"
+#include "orbiter.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
+Orbiter::Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable ) : Body( p_world, p_drawable ),
+m_rigidBody( NULL ),
+m_collisionShape( NULL ),
+m_motionState( NULL )
+{
 
-InertBody::InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters ) : Body( p_world, p_drawable )
+}
+
+Orbiter::~Orbiter( void )
+{
+}
+
+bool Orbiter::SetKinematic( const Parameters& p_parameters )
 {
     btTransform bt_transform;
 
@@ -45,55 +56,26 @@ InertBody::InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
 
     btVector3 localInertia( 0, 0, 0 );
-    if( p_parameters.mass > 0.0 )
-    {        
-        m_collisionShape->calculateLocalInertia( p_parameters.mass, localInertia );
-    }
 
-    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( p_parameters.mass, m_motionState, m_collisionShape, localInertia );
+    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( 0.0, m_motionState, m_collisionShape, localInertia );
     m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 
+    // switch the body to kinematic mode
+    m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+    m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
+
     m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+
+    return true;
 }
 
-InertBody::~InertBody( void )
+bool Orbiter::UnsetKinematic( void )
 {
+    m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+
     _DRAWSPACE_DELETE_( m_rigidBody );
     _DRAWSPACE_DELETE_( m_collisionShape );
     _DRAWSPACE_DELETE_( m_motionState );
-}
 
-void InertBody::GetParameters( Parameters& p_parameters )
-{
-    p_parameters = m_parameters;
-}
-
-void InertBody::Update( void )
-{
-    btScalar                 bt_matrix[16];
-    DrawSpace::Utils::Matrix updated_matrix;
-
-    m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
-   
-    updated_matrix( 0, 0 ) = bt_matrix[0];
-    updated_matrix( 0, 1 ) = bt_matrix[1];
-    updated_matrix( 0, 2 ) = bt_matrix[2];
-    updated_matrix( 0, 3 ) = bt_matrix[3];
-
-    updated_matrix( 1, 0 ) = bt_matrix[4];
-    updated_matrix( 1, 1 ) = bt_matrix[5];
-    updated_matrix( 1, 2 ) = bt_matrix[6];
-    updated_matrix( 1, 3 ) = bt_matrix[7];
-
-    updated_matrix( 2, 0 ) = bt_matrix[8];
-    updated_matrix( 2, 1 ) = bt_matrix[9];
-    updated_matrix( 2, 2 ) = bt_matrix[10];
-    updated_matrix( 2, 3 ) = bt_matrix[11];
-
-    updated_matrix( 3, 0 ) = bt_matrix[12];
-    updated_matrix( 3, 1 ) = bt_matrix[13];
-    updated_matrix( 3, 2 ) = bt_matrix[14];
-    updated_matrix( 3, 3 ) = bt_matrix[15];
-
-    m_drawable->SetLocalTransform( updated_matrix );    
+    return true;
 }

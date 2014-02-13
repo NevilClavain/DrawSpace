@@ -509,6 +509,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\orbiter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\orbiter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\world.cpp"
 				>
 			</File>
