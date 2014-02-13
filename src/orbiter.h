@@ -20,60 +20,47 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
+#ifndef _ORBITER_H_
+#define _ORBITER_H_
 
-#include "tracedefs.h"
-#include "maths.h"
-#include "property.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
-#include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "md5.h"
-#include "vsphere.h"
-#include "lod.h"
-#include "transformation.h"
-#include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "drawable.h"
-#include "fx.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "memalloc.h"
-#include "events.h"
-#include "camera.h"
-#include "fpsmovement.h"
-#include "freemovement.h"
-#include "quadtree.h"
-#include "misc_utils.h"
-#include "physic.h"
-#include "world.h"
-#include "inertbody.h"
-#include "orbiter.h"
+#include "body.h"
+
+namespace DrawSpace
+{
+namespace Dynamics
+{
+class Orbiter : public Body
+{
+public:
+
+    typedef struct
+    {       
+        DrawSpace::Utils::Vector    initial_pos;
+        DrawSpace::Utils::Matrix    inital_rot;
+
+        Body::Shape                 shape;
+
+        DrawSpace::Utils::Vector    box_dims;
+
+    } Parameters;
+
+protected:
+
+    btRigidBody*                    m_rigidBody;
+    btCollisionShape*               m_collisionShape;
+    btDefaultMotionState*           m_motionState;
+
+
+public:
+
+    Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable );
+    virtual ~Orbiter( void );
+
+    bool SetKinematic( const Parameters& p_parameters );
+    bool UnsetKinematic( void );
+
+};
+}
+}
+
 #endif
