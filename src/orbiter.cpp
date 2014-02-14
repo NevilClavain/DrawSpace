@@ -21,16 +21,36 @@
 */
 
 #include "orbiter.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
+
+void Orbiter::Orbit::Compute( dsreal p_angle, DrawSpace::Utils::Vector& p_respoint )
+{
+    dsreal a = 1.0;
+    dsreal b = m_excentricity * a;
+
+    dsreal rad_ang = Maths::DegToRad( p_angle );
+
+    dsreal x = a * cos( rad_ang );
+    dsreal y = b * sin( rad_ang );
+
+    x = ( x * m_ray ) + m_offset_plane_x;
+    y = ( y * m_ray ) + m_offset_plane_y;
+
+    
+
+}
+
 Orbiter::Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable ) : Body( p_world, p_drawable ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
-m_motionState( NULL )
+m_motionState( NULL ),
+m_parent( NULL )
 {
 
 }
@@ -80,7 +100,21 @@ bool Orbiter::UnsetKinematic( void )
     return true;
 }
 
-void Orbiter::SetTractorPoint( const DrawSpace::Utils::Vector& p_tractorpoint )
+void Orbiter::Update( const DrawSpace::Utils::Vector& p_centroid )
 {
-    m_tractorpoint = p_tractorpoint;
+
+
+
+
+    
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+
+    }
+}
+
+void Orbiter::AddChild( Orbiter* p_orbiter )
+{
+    m_children.push_back( p_orbiter );
+    p_orbiter->m_parent = this;
 }

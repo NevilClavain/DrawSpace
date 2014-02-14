@@ -44,16 +44,48 @@ public:
 
     } Parameters;
 
+    class Orbit
+    {
+    protected:
+
+        // orbit parameters
+        dsreal                      m_ray; 
+        dsreal                      m_excentricity;
+        dsreal                      m_offset_angle;
+        dsreal                      m_tilt_angle;
+        dsreal                      m_offset_plane_x;
+        dsreal                      m_offset_plane_y;
+
+    public:
+
+        Orbit::Orbit( void ) :
+        m_ray( 0.0 ),
+        m_excentricity( 0.0 ),
+        m_offset_angle( 0.0 ),
+        m_tilt_angle( 0.0 ),
+        m_offset_plane_x( 0.0 ),
+        m_offset_plane_y( 0.0 )
+        {
+        };
+
+        void Compute( dsreal p_angle, DrawSpace::Utils::Vector& p_respoint );
+    };
+
 protected:
 
     btRigidBody*                    m_rigidBody;
     btCollisionShape*               m_collisionShape;
     btDefaultMotionState*           m_motionState;
 
-    DrawSpace::Utils::Vector        m_tractorpoint;
+    DrawSpace::Utils::Vector        m_centroid;
 
     dsreal                          m_angle;
 
+    Orbiter*                        m_parent;
+    std::vector<Orbiter*>           m_children;
+
+    Orbit                           m_orbit_1;
+    Orbit                           m_orbit_2;
 
 public:
 
@@ -63,7 +95,10 @@ public:
     bool SetKinematic( const Parameters& p_parameters );
     bool UnsetKinematic( void );
 
-    void SetTractorPoint( const DrawSpace::Utils::Vector& p_tractorpoint );
+
+    void Update( const DrawSpace::Utils::Vector& p_centroid );
+
+    void AddChild( Orbiter* p_orbiter );
 
 };
 }
