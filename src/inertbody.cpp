@@ -95,5 +95,5 @@ void InertBody::Update( void )
     updated_matrix( 3, 2 ) = bt_matrix[14];
     updated_matrix( 3, 3 ) = bt_matrix[15];
 
-    m_drawable->SetLocalTransform( updated_matrix );    
+    m_drawable->SetLocalTransform( updated_matrix );
 }

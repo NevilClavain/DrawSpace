@@ -42,8 +42,9 @@ void Orbiter::Orbit::Compute( dsreal p_angle, DrawSpace::Utils::Vector& p_respoi
     x = ( x * m_ray ) + m_offset_plane_x;
     y = ( y * m_ray ) + m_offset_plane_y;
 
-    
-
+    p_respoint[0] = x;
+    p_respoint[1] = 0.0;
+    p_respoint[2] = y;
 }
 
 Orbiter::Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable ) : Body( p_world, p_drawable ),
@@ -100,16 +101,51 @@ bool Orbiter::UnsetKinematic( void )
     return true;
 }
 
-void Orbiter::Update( const DrawSpace::Utils::Vector& p_centroid )
+void Orbiter::Update( dsreal p_angle, const Vector& p_centroid )
 {
 
+    Vector orbit1_point;
+    m_orbit_1.Compute( p_angle, orbit1_point );
 
+    
+    
+    Matrix orbiter_trans;
+    orbiter_trans.Translation( orbit1_point[0] + p_centroid[0], 
+                                orbit1_point[1] + p_centroid[1],
+                                orbit1_point[2] + p_centroid[2] );
 
+    btScalar kmat[16];    
+    btTransform ktf;
+
+    kmat[0] = orbiter_trans( 0, 0 );
+    kmat[1] = orbiter_trans( 0, 1 );
+    kmat[2] = orbiter_trans( 0, 2 );
+    kmat[3] = orbiter_trans( 0, 3 );
+
+    kmat[4] = orbiter_trans( 1, 0 );
+    kmat[5] = orbiter_trans( 1, 1 );
+    kmat[6] = orbiter_trans( 1, 2 );
+    kmat[7] = orbiter_trans( 1, 3 );
+
+    kmat[8] = orbiter_trans( 2, 0 );
+    kmat[9] = orbiter_trans( 2, 1 );
+    kmat[10] = orbiter_trans( 2, 2 );
+    kmat[11] = orbiter_trans( 2, 3 );
+
+    kmat[12] = orbiter_trans( 3, 0 );
+    kmat[13] = orbiter_trans( 3, 1 );
+    kmat[14] = orbiter_trans( 3, 2 );
+    kmat[15] = orbiter_trans( 3, 3 );
+
+    ktf.setFromOpenGLMatrix( kmat );
+    m_motionState->setWorldTransform( ktf );
+
+    m_drawable->SetLocalTransform( orbiter_trans );
 
     
     for( size_t i = 0; i < m_children.size(); i++ )
     {
-
+        m_children[i]->Update( p_angle, orbit1_point );
     }
 }
 

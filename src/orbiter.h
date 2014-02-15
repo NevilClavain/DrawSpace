@@ -96,7 +96,7 @@ public:
     bool UnsetKinematic( void );
 
 
-    void Update( const DrawSpace::Utils::Vector& p_centroid );
+    void Update( dsreal p_angle, const DrawSpace::Utils::Vector& p_centroid );
 
     void AddChild( Orbiter* p_orbiter );
 
