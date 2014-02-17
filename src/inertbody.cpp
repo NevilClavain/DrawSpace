@@ -35,12 +35,7 @@ InertBody::InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable
     bt_transform.setIdentity();
     bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0], p_parameters.initial_pos[1], p_parameters.initial_pos[2] ) );
 
-    switch( p_parameters.shape )
-    {
-        case Body::BOX_SHAPE:
-            m_collisionShape = _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( p_parameters.box_dims[0], p_parameters.box_dims[1], p_parameters.box_dims[2] ) ) );
-            break;
-    }
+    m_collisionShape = instanciate_collision_shape( p_parameters.shape_descr );
 
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
 

@@ -41,9 +41,19 @@ public:
 
     } Shape;
 
+    typedef struct
+    {
+        Shape shape;
+        DrawSpace::Utils::Vector    box_dims;
+        dsreal                      sphere_radius;
+
+    } ShapeDescr;
+
 protected:
     DrawSpace::Interface::Drawable* m_drawable;
     World*                          m_world;
+
+    btCollisionShape*               instanciate_collision_shape( const ShapeDescr& p_shapedescr );
 
 public:
     Body( World* p_world, DrawSpace::Interface::Drawable* p_drawable );

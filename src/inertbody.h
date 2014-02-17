@@ -41,9 +41,14 @@ public:
         DrawSpace::Utils::Matrix    inital_rot;
 
         dsreal                      mass;
+
+        /*
         Body::Shape                 shape;
 
         DrawSpace::Utils::Vector    box_dims;
+        */
+
+        Body::ShapeDescr            shape_descr;
 
     } Parameters;
 

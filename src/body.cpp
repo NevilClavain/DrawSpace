@@ -38,6 +38,21 @@ Body::~Body( void )
 {
 }
 
+btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapedescr )
+{
+    switch( p_shapedescr.shape )
+    {
+        case Body::BOX_SHAPE:
+            return _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( p_shapedescr.box_dims[0], p_shapedescr.box_dims[1], p_shapedescr.box_dims[2] ) ) );
+            
+        case Body::SPHERE_SHAPE:
+            return _DRAWSPACE_NEW_( btSphereShape, btSphereShape( p_shapedescr.sphere_radius ) );
+
+        default:
+            return NULL;
+    }
+}
+
 DrawSpace::Interface::Drawable* Body::GetDrawable( void )
 {
     return m_drawable;

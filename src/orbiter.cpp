@@ -67,12 +67,7 @@ bool Orbiter::SetKinematic( const Parameters& p_parameters )
     bt_transform.setIdentity();
     bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0], p_parameters.initial_pos[1], p_parameters.initial_pos[2] ) );
 
-    switch( p_parameters.shape )
-    {
-        case Body::BOX_SHAPE:
-            m_collisionShape = _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( p_parameters.box_dims[0], p_parameters.box_dims[1], p_parameters.box_dims[2] ) ) );
-            break;
-    }
+    m_collisionShape = instanciate_collision_shape( p_parameters.shape_descr );
 
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
 
@@ -153,4 +148,14 @@ void Orbiter::AddChild( Orbiter* p_orbiter )
 {
     m_children.push_back( p_orbiter );
     p_orbiter->m_parent = this;
+}
+
+void Orbiter::SetOrbit1( const Orbit& p_orbit )
+{
+    m_orbit_1 = p_orbit;
+}
+
+void Orbiter::SetOrbit2( const Orbit& p_orbit )
+{
+    m_orbit_2 = p_orbit;
 }

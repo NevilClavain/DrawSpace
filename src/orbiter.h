@@ -38,15 +38,18 @@ public:
         DrawSpace::Utils::Vector    initial_pos;
         DrawSpace::Utils::Matrix    inital_rot;
 
+        /*
         Body::Shape                 shape;
-
         DrawSpace::Utils::Vector    box_dims;
+        */
+
+        Body::ShapeDescr            shape_descr;
 
     } Parameters;
 
     class Orbit
     {
-    protected:
+    public:
 
         // orbit parameters
         dsreal                      m_ray; 
@@ -95,10 +98,11 @@ public:
     bool SetKinematic( const Parameters& p_parameters );
     bool UnsetKinematic( void );
 
-
     void Update( dsreal p_angle, const DrawSpace::Utils::Vector& p_centroid );
-
     void AddChild( Orbiter* p_orbiter );
+
+    void SetOrbit1( const Orbit& p_orbit );
+    void SetOrbit2( const Orbit& p_orbit );
 
 };
 }
