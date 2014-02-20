@@ -31,50 +31,50 @@ class Patch
 {
 public:
 
-	static const int    NorthNeighbour      = 0;
-	static const int    SouthNeighbour      = 1;
-	static const int    WestNeighbour       = 2;
-	static const int    EastNeighbour       = 3;
-	static const int    NorthWestNeighbour  = 4;
-	static const int    NorthEastNeighbour  = 5;
-	static const int    SouthWestNeighbour  = 6;
-	static const int    SouthEastNeighbour  = 7;
+    static const int    NorthNeighbour      = 0;
+    static const int    SouthNeighbour      = 1;
+    static const int    WestNeighbour       = 2;
+    static const int    EastNeighbour       = 3;
+    static const int    NorthWestNeighbour  = 4;
+    static const int    NorthEastNeighbour  = 5;
+    static const int    SouthWestNeighbour  = 6;
+    static const int    SouthEastNeighbour  = 7;
 
-	static const int    FrontPlanetFace    = 0;
-	static const int    RearPlanetFace     = 1;
-	static const int    LeftPlanetFace     = 2;
-	static const int    RightPlanetFace    = 3;
-	static const int    TopPlanetFace      = 4;
-	static const int    BottomPlanetFace   = 5;
+    static const int    FrontPlanetFace    = 0;
+    static const int    RearPlanetFace     = 1;
+    static const int    LeftPlanetFace     = 2;
+    static const int    RightPlanetFace    = 3;
+    static const int    TopPlanetFace      = 4;
+    static const int    BottomPlanetFace   = 5;
 
 protected:
 
-	dsreal                                  m_sidelength;
-	dsreal                                  m_xpos;
-	dsreal                                  m_ypos;
-	dsreal                                  m_ray;
+    dsreal                                  m_sidelength;
+    dsreal                                  m_xpos;
+    dsreal                                  m_ypos;
+    dsreal                                  m_ray;
 
-	int                                     m_orientation;
+    int                                     m_orientation;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_owner;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
-	dsstring		                        m_name;
+    dsstring		                        m_name;
 
     DrawSpace::Core::VSphere*               m_vsphere;
 
 public:
-	Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
-	virtual ~Patch( void );
+    Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
+    virtual ~Patch( void );
 
-	void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );
-	DrawSpace::Utils::BaseQuadtreeNode* GetNeighbour( int p_id );
+    void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );
+    DrawSpace::Utils::BaseQuadtreeNode* GetNeighbour( int p_id );
 
-	void GetName( dsstring& p_name );
-	dsreal GetSideLength( void );
+    void GetName( dsstring& p_name );
+    dsreal GetSideLength( void );
     int GetOrientation( void );
 
-	void GetPos( dsreal& p_xpos, dsreal& p_ypos );
+    void GetPos( dsreal& p_xpos, dsreal& p_ypos );
 
     DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void );
 

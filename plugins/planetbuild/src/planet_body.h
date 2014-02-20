@@ -72,17 +72,17 @@ class Body : public DrawSpace::Interface::Drawable
 {	
 protected:
 
-	typedef struct
-	{
+    typedef struct
+    {
         FaceRenderingNode*        nodes[6];
 
-	} NodesSet;
+    } NodesSet;
        
     typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
     typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                    PatchInstanciationCallback;    
 
-	std::map<dsstring, NodesSet>                                m_passesnodes;
-	std::vector<RenderingNodeDrawCallback*>                     m_callbacks;
+    std::map<dsstring, NodesSet>                                m_passesnodes;
+    std::vector<RenderingNodeDrawCallback*>                     m_callbacks;
     DrawSpace::Scenegraph*                                      m_scenegraph;
     DrawSpace::Interface::Renderer*                             m_renderer;
     Face*                                                       m_faces[6];
@@ -106,8 +106,8 @@ protected:
 
 public:
 
-	Body( void );
-	virtual ~Body( void );
+    Body( void );
+    virtual ~Body( void );
 
     virtual void GetDescr( dsstring& p_descr );
     virtual void DumpMemoryAllocs( void );

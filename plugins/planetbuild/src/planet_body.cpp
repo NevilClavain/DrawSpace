@@ -269,18 +269,18 @@ void Body::SetRenderer( DrawSpace::Interface::Renderer * p_renderer )
 
 void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
 {
-	for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-	{
-		Pass* current_pass = p_scenegraph->GetPass( (*it).first );
-		if( current_pass != NULL )
-		{         
-			for( long i = 0; i < 6; i++ )
-			{
-				current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
-			}
-		}
-	}
-	m_scenegraph = p_scenegraph;
+    for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    {
+        Pass* current_pass = p_scenegraph->GetPass( (*it).first );
+        if( current_pass != NULL )
+        {         
+            for( long i = 0; i < 6; i++ )
+            {
+                current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
+            }
+        }
+    }
+    m_scenegraph = p_scenegraph;
 }
 
 DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
@@ -290,8 +290,8 @@ DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
 
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
-	DrawSpace::Utils::Matrix view;
-	m_scenegraph->GetCurrentCameraView( view );
+    DrawSpace::Utils::Matrix view;
+    m_scenegraph->GetCurrentCameraView( view );
 
     FaceRenderingNode* face_node = static_cast<FaceRenderingNode*>( p_rendering_node );
     face_node->Draw( m_patchmeshe->GetVertexListSize(), m_patchmeshe->GetTrianglesListSize(), m_diameter.m_value / 2.0, m_globaltransformation, view );
@@ -316,12 +316,12 @@ void Body::RegisterPassSlot( const dsstring p_passname )
 
 DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid )
 {
-	if( 0 == m_passesnodes.count( p_passname ) )
-	{
-		return NULL;
-	}
-	NodesSet nodeset = m_passesnodes[p_passname];
-	
+    if( 0 == m_passesnodes.count( p_passname ) )
+    {
+        return NULL;
+    }
+    NodesSet nodeset = m_passesnodes[p_passname];
+    
     int faceid;
 
     if( "front" == p_nodeid )
@@ -374,12 +374,12 @@ void Body::ComputeSpecifics( void )
 
 void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
 {
-	if( 0 == m_passesnodes.count( p_passname ) )
-	{
-		return;
-	}
-	NodesSet nodeset = m_passesnodes[p_passname];
-	
+    if( 0 == m_passesnodes.count( p_passname ) )
+    {
+        return;
+    }
+    NodesSet nodeset = m_passesnodes[p_passname];
+    
     int faceid;
 
     if( "front" == p_nodeid )
@@ -516,49 +516,49 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
 
 void Body::build_patch( void )
 {
-	dsreal xcurr, ycurr;
+    dsreal xcurr, ycurr;
     long patch_resolution = 33;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
-	dsreal interval = 2.0 / ( patch_resolution - 1 );
-	for( long i = 0; i < patch_resolution; i++ )
-	{
-		for( long j = 0; j < patch_resolution; j++ )
-		{
-			xcurr = j * interval - 1.0;
-			ycurr = i * interval - 1.0;
-						
-			Vertex vertex;
-			vertex.x = xcurr;
-			vertex.y = ycurr;
-			vertex.z = 0.0;
-			m_patchmeshe->AddVertex( vertex );
-		}
-	}
+    dsreal interval = 2.0 / ( patch_resolution - 1 );
+    for( long i = 0; i < patch_resolution; i++ )
+    {
+        for( long j = 0; j < patch_resolution; j++ )
+        {
+            xcurr = j * interval - 1.0;
+            ycurr = i * interval - 1.0;
+                        
+            Vertex vertex;
+            vertex.x = xcurr;
+            vertex.y = ycurr;
+            vertex.z = 0.0;
+            m_patchmeshe->AddVertex( vertex );
+        }
+    }
 
-	long current_index = 0;
+    long current_index = 0;
 
-	for( long i = 0; i < patch_resolution - 1; i++  )
-	{
-		current_index = i * patch_resolution;
+    for( long i = 0; i < patch_resolution - 1; i++  )
+    {
+        current_index = i * patch_resolution;
 
-		for( long j = 0; j < patch_resolution - 1; j++ )
-		{
-			Triangle triangle;
+        for( long j = 0; j < patch_resolution - 1; j++ )
+        {
+            Triangle triangle;
 
-			triangle.vertex1 = current_index;
-			triangle.vertex2 = current_index + 1;
-			triangle.vertex3 = current_index + patch_resolution;
-			m_patchmeshe->AddTriangle( triangle );
-			
-			triangle.vertex1 = current_index + 1;
-			triangle.vertex2 = current_index + 1 + patch_resolution;
-			triangle.vertex3 = current_index + patch_resolution;
-			m_patchmeshe->AddTriangle( triangle );
-			
-			current_index++;
-		}        
-	}
+            triangle.vertex1 = current_index;
+            triangle.vertex2 = current_index + 1;
+            triangle.vertex3 = current_index + patch_resolution;
+            m_patchmeshe->AddTriangle( triangle );
+            
+            triangle.vertex1 = current_index + 1;
+            triangle.vertex2 = current_index + 1 + patch_resolution;
+            triangle.vertex3 = current_index + patch_resolution;
+            m_patchmeshe->AddTriangle( triangle );
+            
+            current_index++;
+        }        
+    }
 }
 
 void Body::ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat )

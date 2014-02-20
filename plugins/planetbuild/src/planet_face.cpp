@@ -495,62 +495,62 @@ void Face::merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
 {
-	Vector viewer;
+    Vector viewer;
 
     if( m_orientation == Patch::FrontPlanetFace )
-	{
-	    viewer[0] = p_hotpoint[0];
-	    viewer[1] = p_hotpoint[1];
-	    viewer[2] = p_hotpoint[2];
-	    viewer[3] = 0.0;
+    {
+        viewer[0] = p_hotpoint[0];
+        viewer[1] = p_hotpoint[1];
+        viewer[2] = p_hotpoint[2];
+        viewer[3] = 0.0;
     }
 
     if( m_orientation == Patch::RearPlanetFace )
-	{
-	    viewer[0] = -p_hotpoint[0];
-	    viewer[1] = p_hotpoint[1];
-	    viewer[2] = -p_hotpoint[2];
-	    viewer[3] = 0.0;
+    {
+        viewer[0] = -p_hotpoint[0];
+        viewer[1] = p_hotpoint[1];
+        viewer[2] = -p_hotpoint[2];
+        viewer[3] = 0.0;
     }
 
     if( m_orientation == Patch::TopPlanetFace )
-	{
-	    viewer[0] = p_hotpoint[0];
-	    viewer[1] = -p_hotpoint[2];
-	    viewer[2] = p_hotpoint[1];
-	    viewer[3] = 0.0;
+    {
+        viewer[0] = p_hotpoint[0];
+        viewer[1] = -p_hotpoint[2];
+        viewer[2] = p_hotpoint[1];
+        viewer[3] = 0.0;
     }
 
     if( m_orientation == Patch::BottomPlanetFace )
-	{
-	    viewer[0] = p_hotpoint[0];
-	    viewer[1] = p_hotpoint[2];
-	    viewer[2] = -p_hotpoint[1];
-	    viewer[3] = 0.0;
+    {
+        viewer[0] = p_hotpoint[0];
+        viewer[1] = p_hotpoint[2];
+        viewer[2] = -p_hotpoint[1];
+        viewer[3] = 0.0;
     }
 
 
     if( m_orientation == Patch::RightPlanetFace )
-	{
-	    viewer[0] = -p_hotpoint[2];
-	    viewer[1] = p_hotpoint[1];
-	    viewer[2] = p_hotpoint[0];
-	    viewer[3] = 0.0;
+    {
+        viewer[0] = -p_hotpoint[2];
+        viewer[1] = p_hotpoint[1];
+        viewer[2] = p_hotpoint[0];
+        viewer[3] = 0.0;
     }
 
     if( m_orientation == Patch::LeftPlanetFace )
-	{
-	    viewer[0] = p_hotpoint[2];
-	    viewer[1] = p_hotpoint[1];
-	    viewer[2] = -p_hotpoint[0];
-	    viewer[3] = 0.0;
+    {
+        viewer[0] = p_hotpoint[2];
+        viewer[1] = p_hotpoint[1];
+        viewer[2] = -p_hotpoint[0];
+        viewer[3] = 0.0;
     }
 
  
     viewer.Normalize();
-	Vector projected_viewer;
+    Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );
-	projected_viewer.Scale( m_planet_diameter / 2.0 );
+    projected_viewer.Scale( m_planet_diameter / 2.0 );
     
 
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
@@ -560,12 +560,12 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 
     dsreal patch_side_size = current_patch->GetSideLength();
 
-	if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
-		( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[1] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[1] )
-	{
-		return true;
-	}
-	return false;
+    if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
+        ( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[1] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[1] )
+    {
+        return true;
+    }
+    return false;
 }
 
 dsreal Face::alt_ratio( dsreal p_altitud )
@@ -582,7 +582,7 @@ bool Face::check_split( Vector& p_hotpoint )
         return false;
     }
 
-	bool status = false;
+    bool status = false;
 
     Vector sphericals;
     Maths::CartesiantoSpherical( p_hotpoint, sphericals );
@@ -591,8 +591,8 @@ bool Face::check_split( Vector& p_hotpoint )
 
     if( alt >= 0.0 )
     {
-		while( alt_ratio( alt ) < m_ratio_split_threshold )
-		{
+        while( alt_ratio( alt ) < m_ratio_split_threshold )
+        {
             // split necessaire
             split_group( m_currentleaf );
 
@@ -616,8 +616,8 @@ bool Face::check_split( Vector& p_hotpoint )
             status = true;
         }
     }
-	
-	return status;
+    
+    return status;
 }
 
 bool Face::check_merge( Vector& p_hotpoint )
@@ -629,20 +629,20 @@ bool Face::check_merge( Vector& p_hotpoint )
 
     dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
 
-	while( alt_ratio( alt ) > m_ratio_merge_threshold )
-	{
+    while( alt_ratio( alt ) > m_ratio_merge_threshold )
+    {
         if( m_currentleaf->GetParent() )
-		{
-			m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
-			merge_group( m_currentleaf );
+        {
+            m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
+            merge_group( m_currentleaf );
 
-			status = true;
-		}
-		else
-		{
-			break;
-		}
-	}
+            status = true;
+        }
+        else
+        {
+            break;
+        }
+    }
     return false;
 }
 
@@ -754,7 +754,7 @@ bool Face::Compute( void )
     }
 
     if( m_currentleaf == NULL )
-	{
+    {
         if( m_rootpatch )
         {
             m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
@@ -762,21 +762,21 @@ bool Face::Compute( void )
     }
     else
     {
-		if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
-		{
+        if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
+        {
             if( m_movement * m_relative_hotpoint < 0.0 ) // on descend vers la surface
             {
-			    if( check_split( m_relative_hotpoint ) )
-			    {
-				    status = true;
-			    }
+                if( check_split( m_relative_hotpoint ) )
+                {
+                    status = true;
+                }
             }
             else if( m_movement * m_relative_hotpoint > 0.0 ) // on prend de l'altitude
             {
-			    if( check_merge( m_relative_hotpoint ) )
-			    {
-				    status = true;
-			    }
+                if( check_merge( m_relative_hotpoint ) )
+                {
+                    status = true;
+                }
             }              
         }
         else
