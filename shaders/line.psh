@@ -1,0 +1,16 @@
+
+float4 Color : register(c0);
+float  Thickness : register(c1);
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+   float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{	
+	clip( input.TexCoord0.x - ( 1.0 - Thickness ) );  
+	return Color;
+}
