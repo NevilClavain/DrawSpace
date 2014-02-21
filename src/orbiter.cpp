@@ -159,3 +159,34 @@ void Orbiter::SetOrbit2( const Orbit& p_orbit )
 {
     m_orbit_2 = p_orbit;
 }
+
+void Orbiter::BuildOrbit1Meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe )
+{
+    build_orbit_meshe( p_anglestep, m_orbit_1, p_meshe );
+}
+
+void Orbiter::BuildOrbit2Meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe )
+{
+    build_orbit_meshe( p_anglestep, m_orbit_2, p_meshe );
+}
+
+void Orbiter::build_orbit_meshe( dsreal p_anglestep, Orbit& p_orbit, DrawSpace::Core::Meshe* p_meshe )
+{
+    dsreal nb_steps = 360.0 / p_anglestep;
+
+    for( long i = 0; i < nb_steps; i++ )
+    {
+        Vector orbit_point;
+        p_orbit.Compute( i * p_anglestep, orbit_point );
+        p_meshe->AddVertex( Vertex( orbit_point[0], orbit_point[1], orbit_point[2] ) );
+
+        if( i < nb_steps - 1 )
+        {
+            p_meshe->AddTriangle( Triangle( i, i + 1, i + 1 ) );
+        }
+        else
+        {
+            p_meshe->AddTriangle( Triangle( i, 0, 0 ) );
+        }
+    }
+}

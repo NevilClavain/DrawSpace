@@ -90,6 +90,8 @@ protected:
     Orbit                           m_orbit_1;
     Orbit                           m_orbit_2;
 
+    void build_orbit_meshe( dsreal p_anglestep, Orbit& p_orbit, DrawSpace::Core::Meshe* p_meshe );
+
 public:
 
     Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable );
@@ -103,6 +105,9 @@ public:
 
     void SetOrbit1( const Orbit& p_orbit );
     void SetOrbit2( const Orbit& p_orbit );
+
+    void BuildOrbit1Meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
+    void BuildOrbit2Meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
 
 };
 }
