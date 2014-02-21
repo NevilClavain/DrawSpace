@@ -174,19 +174,32 @@ void Orbiter::build_orbit_meshe( dsreal p_anglestep, Orbit& p_orbit, DrawSpace::
 {
     dsreal nb_steps = 360.0 / p_anglestep;
 
+    Vertex center;
+    center.x = center.y = center.z = 0.0;
+    center.tu[0] = 0.0;
+
+    p_meshe->AddVertex( Vertex( 0.0, 0.0, 0.0 ) );
+
     for( long i = 0; i < nb_steps; i++ )
     {
         Vector orbit_point;
         p_orbit.Compute( i * p_anglestep, orbit_point );
-        p_meshe->AddVertex( Vertex( orbit_point[0], orbit_point[1], orbit_point[2] ) );
+
+        Vertex v;
+        v.x = orbit_point[0];
+        v.y = orbit_point[1];
+        v.z = orbit_point[2];
+        v.tu[0] = 1.0;
+
+        p_meshe->AddVertex( v );
 
         if( i < nb_steps - 1 )
         {
-            p_meshe->AddTriangle( Triangle( i, i + 1, i + 1 ) );
+            p_meshe->AddTriangle( Triangle( i + 1, i + 2, 0 ) );
         }
         else
         {
-            p_meshe->AddTriangle( Triangle( i, 0, 0 ) );
+            p_meshe->AddTriangle( Triangle( i + 1, 1, 0 ) );
         }
     }
 }
