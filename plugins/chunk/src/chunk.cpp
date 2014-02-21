@@ -140,17 +140,17 @@ Core::Meshe* Chunk::GetMeshe( const dsstring& p_mesheid )
 
 void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
-    if( false == m_lod_draw )
-    {
-        return;
-    }
-
     DrawSpace::Utils::Matrix view;
     m_scenegraph->GetCurrentCameraView( view );
 
     DrawSpace::Utils::Matrix res;
     res = m_globaltransformation * view;
     m_vsphere->Transform( res );
+
+    if( false == m_lod_draw )
+    {
+        return;
+    }
 
     bool draw = false;
     Utils::Vector transformed_vsphere_point;
