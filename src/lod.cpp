@@ -45,8 +45,12 @@ void LodStep::Run( void )
     Vector transformed_point;   
     m_vsphere->GetTransformedPoint( transformed_point );
 
-    if( - transformed_point[2] < m_ksup * m_vsphere->GetRay() &&
-        - transformed_point[2] > m_kinf * m_vsphere->GetRay() )
+    dsreal z = - transformed_point[2];
+
+    dsreal sup = m_ksup * 2.0 * m_vsphere->GetRay();
+    dsreal inf = m_kinf * 2.0 * m_vsphere->GetRay();
+
+    if( z < sup && z > inf )
     {
         if( !m_in || m_firstshot )
         {
