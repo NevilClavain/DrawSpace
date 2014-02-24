@@ -49,7 +49,8 @@ World::~World( void )
 
 bool World::Initialize( void )
 {
-    m_world = _DRAWSPACE_NEW_( btDiscreteDynamicsWorld, btDiscreteDynamicsWorld( m_collisionDispatcher, m_broadphase, m_sequentialImpulseConstraintSolver, m_collisionConfiguration ) ); 
+    m_world = _DRAWSPACE_NEW_( btDiscreteDynamicsWorld, btDiscreteDynamicsWorld( m_collisionDispatcher, m_broadphase, m_sequentialImpulseConstraintSolver, m_collisionConfiguration ) );
+    m_world->setGravity( btVector3( 0.0, 0.0, 0.0 ) );
     return true;
 }
 
