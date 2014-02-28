@@ -22,6 +22,7 @@
 
 #include "orbiter.h"
 #include "maths.h"
+#include "transformation.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -29,38 +30,123 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-void Orbiter::Orbit::Compute( dsreal p_angle, DrawSpace::Utils::Vector& p_respoint )
+void Orbit::orbit_step( dsreal p_angle, Matrix& p_mat )
 {
     dsreal a = 1.0;
-    dsreal b = m_excentricity * a;
+    dsreal b = m_excentricity;
 
     dsreal rad_ang = Maths::DegToRad( p_angle );
-
     dsreal x = a * cos( rad_ang );
-    dsreal y = b * sin( rad_ang );
+    dsreal z = b * sin( rad_ang );
 
-    x = ( x * m_ray ) + m_offset_plane_x;
-    y = ( y * m_ray ) + m_offset_plane_y;
+    x = ( x * m_ray );
+    z = ( z * m_ray );
 
-    p_respoint[0] = x;
-    p_respoint[1] = 0.0;
-    p_respoint[2] = y;
+    Transformation transformation;
+    Matrix result;
+
+    Matrix orbit;
+    orbit.Translation( x, 0.0, z );
+
+    Matrix orbit2;
+    orbit2.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( 360.0 - p_angle ) );
+
+    Matrix tilt;
+    tilt.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), Maths::DegToRad( m_tilt_angle ) );
+
+    Matrix offset_rot;
+    offset_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( m_offset_angle ) );
+
+    Matrix orb_trans;
+    orb_trans.Translation( m_offset_plane_x, 0.0, m_offset_plane_y );
+
+    transformation.PushMatrix( offset_rot );
+    transformation.PushMatrix( tilt );
+    transformation.PushMatrix( orb_trans );
+    transformation.PushMatrix( orbit );
+    transformation.PushMatrix( orbit2 );    
+
+    transformation.BuildResult();
+    transformation.GetResult( &result );
+
+    p_mat = result;
 }
 
-Orbiter::Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable ) : Body( p_world, p_drawable ),
+
+void Orbit::OrbitStep( const Matrix& p_centroidbase )
+{
+    Matrix local_orbit;
+    orbit_step( m_orbit_angle, local_orbit );
+
+    if( m_drawable )
+    {
+        m_drawable->SetLocalTransform( p_centroidbase );
+    }
+    m_centroid->Update( p_centroidbase, local_orbit );
+}
+
+void Orbit::SetOrbitAngle( dsreal p_angle )
+{
+    m_orbit_angle = p_angle;
+}
+
+void Orbit::build_orbit_meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe )
+{
+    dsreal nb_steps = 360.0 / p_anglestep;
+
+    Vertex center;
+    center.x = center.y = center.z = 0.0;
+    center.tu[0] = 0.0;
+
+    p_meshe->AddVertex( Vertex( 0.0, 0.0, 0.0 ) );
+
+    for( long i = 0; i < nb_steps; i++ )
+    {       
+        Matrix mat;        
+        orbit_step( i * p_anglestep, mat );
+        
+        Vector orbit_point( 0.0, 0.0, 0.0, 1.0 );
+        Vector orbit_point_res;
+
+        mat.Transform( &orbit_point, &orbit_point_res );
+
+        Vertex v;
+        v.x = orbit_point_res[0];
+        v.y = orbit_point_res[1];
+        v.z = orbit_point_res[2];
+
+        v.tu[0] = 1.0;
+
+        p_meshe->AddVertex( v );
+
+        if( i < nb_steps - 1 )
+        {
+            p_meshe->AddTriangle( Triangle( i + 1, i + 2, 0 ) );
+        }
+        else
+        {
+            p_meshe->AddTriangle( Triangle( i + 1, 1, 0 ) );
+        }
+    }
+}
+
+
+void Orbit::BuildMeshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe )
+{
+    build_orbit_meshe( p_anglestep, p_meshe );
+}
+
+void Orbit::RegisterDrawable( DrawSpace::Interface::Drawable* p_drawable )
+{
+    m_drawable = p_drawable;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Orbiter::Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters ) : Body( p_world, p_drawable ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
-m_motionState( NULL ),
-m_parent( NULL )
-{
-
-}
-
-Orbiter::~Orbiter( void )
-{
-}
-
-bool Orbiter::SetKinematic( const Parameters& p_parameters )
+m_motionState( NULL )
 {
     btTransform bt_transform;
 
@@ -82,124 +168,75 @@ bool Orbiter::SetKinematic( const Parameters& p_parameters )
 
     m_world->getBulletWorld()->addRigidBody( m_rigidBody );
 
-    return true;
 }
 
-bool Orbiter::UnsetKinematic( void )
+Orbiter::~Orbiter( void )
 {
-    m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
-
-    _DRAWSPACE_DELETE_( m_rigidBody );
-    _DRAWSPACE_DELETE_( m_collisionShape );
-    _DRAWSPACE_DELETE_( m_motionState );
-
-    return true;
 }
 
-void Orbiter::Update( dsreal p_angle, const Vector& p_centroid )
+void Orbiter::Update( const Matrix& p_mat )
 {
+    Matrix orbiter_transform = p_mat;
 
-    Vector orbit1_point;
-    m_orbit_1.Compute( p_angle, orbit1_point );
-
+    m_drawable->SetLocalTransform( orbiter_transform );
     
-    
-    Matrix orbiter_trans;
-    orbiter_trans.Translation( orbit1_point[0] + p_centroid[0], 
-                                orbit1_point[1] + p_centroid[1],
-                                orbit1_point[2] + p_centroid[2] );
+    /////////////////////////////////////////////////////////
 
     btScalar kmat[16];    
     btTransform ktf;
 
-    kmat[0] = orbiter_trans( 0, 0 );
-    kmat[1] = orbiter_trans( 0, 1 );
-    kmat[2] = orbiter_trans( 0, 2 );
-    kmat[3] = orbiter_trans( 0, 3 );
+    kmat[0] = orbiter_transform( 0, 0 );
+    kmat[1] = orbiter_transform( 0, 1 );
+    kmat[2] = orbiter_transform( 0, 2 );
+    kmat[3] = orbiter_transform( 0, 3 );
 
-    kmat[4] = orbiter_trans( 1, 0 );
-    kmat[5] = orbiter_trans( 1, 1 );
-    kmat[6] = orbiter_trans( 1, 2 );
-    kmat[7] = orbiter_trans( 1, 3 );
+    kmat[4] = orbiter_transform( 1, 0 );
+    kmat[5] = orbiter_transform( 1, 1 );
+    kmat[6] = orbiter_transform( 1, 2 );
+    kmat[7] = orbiter_transform( 1, 3 );
 
-    kmat[8] = orbiter_trans( 2, 0 );
-    kmat[9] = orbiter_trans( 2, 1 );
-    kmat[10] = orbiter_trans( 2, 2 );
-    kmat[11] = orbiter_trans( 2, 3 );
+    kmat[8] = orbiter_transform( 2, 0 );
+    kmat[9] = orbiter_transform( 2, 1 );
+    kmat[10] = orbiter_transform( 2, 2 );
+    kmat[11] = orbiter_transform( 2, 3 );
 
-    kmat[12] = orbiter_trans( 3, 0 );
-    kmat[13] = orbiter_trans( 3, 1 );
-    kmat[14] = orbiter_trans( 3, 2 );
-    kmat[15] = orbiter_trans( 3, 3 );
+    kmat[12] = orbiter_transform( 3, 0 );
+    kmat[13] = orbiter_transform( 3, 1 );
+    kmat[14] = orbiter_transform( 3, 2 );
+    kmat[15] = orbiter_transform( 3, 3 );
 
     ktf.setFromOpenGLMatrix( kmat );
     m_motionState->setWorldTransform( ktf );
-
-    m_drawable->SetLocalTransform( orbiter_trans );
-
     
-    for( size_t i = 0; i < m_children.size(); i++ )
+    ////////////////////////////////////////////////////////////
+}
+
+Centroid::Centroid( void ) : m_orbiter( NULL )
+{
+}
+
+void Centroid::RegisterSubOrbit( Orbit* p_orbit )
+{
+    m_sub_orbits.push_back( p_orbit );
+}
+
+void Centroid::Update( const Matrix& p_prevcentroidbase, const Matrix& p_localorbitmat )
+{
+    //m_transformation = p_prevcentroidbase * p_localorbitmat;
+
+    m_transformation = p_localorbitmat * p_prevcentroidbase;
+    for( size_t i = 0; i < m_sub_orbits.size(); i++ )
+    {       
+        m_sub_orbits[i]->OrbitStep( m_transformation );
+    }
+
+    if( m_orbiter )
     {
-        m_children[i]->Update( p_angle, orbit1_point );
+        m_orbiter->Update( m_transformation );
     }
 }
 
-void Orbiter::AddChild( Orbiter* p_orbiter )
+void Centroid::SetOrbiter( Orbiter* p_orbiter )
 {
-    m_children.push_back( p_orbiter );
-    p_orbiter->m_parent = this;
-}
-
-void Orbiter::SetOrbit1( const Orbit& p_orbit )
-{
-    m_orbit_1 = p_orbit;
-}
-
-void Orbiter::SetOrbit2( const Orbit& p_orbit )
-{
-    m_orbit_2 = p_orbit;
-}
-
-void Orbiter::BuildOrbit1Meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe )
-{
-    build_orbit_meshe( p_anglestep, m_orbit_1, p_meshe );
-}
-
-void Orbiter::BuildOrbit2Meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe )
-{
-    build_orbit_meshe( p_anglestep, m_orbit_2, p_meshe );
-}
-
-void Orbiter::build_orbit_meshe( dsreal p_anglestep, Orbit& p_orbit, DrawSpace::Core::Meshe* p_meshe )
-{
-    dsreal nb_steps = 360.0 / p_anglestep;
-
-    Vertex center;
-    center.x = center.y = center.z = 0.0;
-    center.tu[0] = 0.0;
-
-    p_meshe->AddVertex( Vertex( 0.0, 0.0, 0.0 ) );
-
-    for( long i = 0; i < nb_steps; i++ )
-    {
-        Vector orbit_point;
-        p_orbit.Compute( i * p_anglestep, orbit_point );
-
-        Vertex v;
-        v.x = orbit_point[0];
-        v.y = orbit_point[1];
-        v.z = orbit_point[2];
-        v.tu[0] = 1.0;
-
-        p_meshe->AddVertex( v );
-
-        if( i < nb_steps - 1 )
-        {
-            p_meshe->AddTriangle( Triangle( i + 1, i + 2, 0 ) );
-        }
-        else
-        {
-            p_meshe->AddTriangle( Triangle( i + 1, 1, 0 ) );
-        }
-    }
+    m_orbiter = p_orbiter;
 }

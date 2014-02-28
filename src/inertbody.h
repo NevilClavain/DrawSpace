@@ -38,7 +38,7 @@ public:
     typedef struct
     {       
         DrawSpace::Utils::Vector    initial_pos;
-        DrawSpace::Utils::Matrix    inital_rot;
+        DrawSpace::Utils::Matrix    initial_rot;
 
         dsreal                      mass;
 

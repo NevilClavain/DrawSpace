@@ -29,6 +29,54 @@ namespace DrawSpace
 {
 namespace Dynamics
 {
+
+class Centroid;
+
+class Orbit
+{
+protected:
+
+    dsreal                              m_orbit_angle;
+
+    // orbit parameters
+    dsreal                              m_ray; 
+    dsreal                              m_excentricity;
+    dsreal                              m_offset_angle;
+    dsreal                              m_tilt_angle;
+    dsreal                              m_offset_plane_x;
+    dsreal                              m_offset_plane_y;
+    Centroid*                           m_centroid;
+    
+    DrawSpace::Interface::Drawable*     m_drawable; // drawable representant la trajectoire orbite
+
+    void orbit_step( dsreal p_angle, DrawSpace::Utils::Matrix& p_mat );
+
+    void build_orbit_meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
+
+public:
+
+    Orbit::Orbit( dsreal p_ray, dsreal p_excentricity, dsreal p_offset_angle, 
+                    dsreal p_tilt_angle, dsreal p_offset_plane_x, dsreal p_offset_plane_y,
+                    Centroid* p_centroid ) :
+    m_ray( p_ray ),
+    m_excentricity( p_excentricity ),
+    m_offset_angle( p_offset_angle ),
+    m_tilt_angle( p_tilt_angle ),
+    m_offset_plane_x( p_offset_plane_x ),
+    m_offset_plane_y( p_offset_plane_y ),
+    m_drawable( NULL ),
+    m_centroid( p_centroid ),
+    m_orbit_angle( 0.0 )
+    {
+    };
+
+    void OrbitStep( const DrawSpace::Utils::Matrix& p_centroidbase );
+    void BuildMeshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
+    void RegisterDrawable( DrawSpace::Interface::Drawable* p_drawable );
+    void SetOrbitAngle( dsreal p_angle );
+};
+
+
 class Orbiter : public Body
 {
 public:
@@ -36,43 +84,12 @@ public:
     typedef struct
     {       
         DrawSpace::Utils::Vector    initial_pos;
-        DrawSpace::Utils::Matrix    inital_rot;
-
-        /*
-        Body::Shape                 shape;
-        DrawSpace::Utils::Vector    box_dims;
-        */
+        DrawSpace::Utils::Matrix    initial_rot;
 
         Body::ShapeDescr            shape_descr;
 
     } Parameters;
 
-    class Orbit
-    {
-    public:
-
-        // orbit parameters
-        dsreal                      m_ray; 
-        dsreal                      m_excentricity;
-        dsreal                      m_offset_angle;
-        dsreal                      m_tilt_angle;
-        dsreal                      m_offset_plane_x;
-        dsreal                      m_offset_plane_y;
-
-    public:
-
-        Orbit::Orbit( void ) :
-        m_ray( 0.0 ),
-        m_excentricity( 0.0 ),
-        m_offset_angle( 0.0 ),
-        m_tilt_angle( 0.0 ),
-        m_offset_plane_x( 0.0 ),
-        m_offset_plane_y( 0.0 )
-        {
-        };
-
-        void Compute( dsreal p_angle, DrawSpace::Utils::Vector& p_respoint );
-    };
 
 protected:
 
@@ -80,37 +97,32 @@ protected:
     btCollisionShape*               m_collisionShape;
     btDefaultMotionState*           m_motionState;
 
-    DrawSpace::Utils::Vector        m_centroid;
-
-    dsreal                          m_angle;
-
-    Orbiter*                        m_parent;
-    std::vector<Orbiter*>           m_children;
-
-    Orbit                           m_orbit_1;
-    Orbit                           m_orbit_2;
-
-    void build_orbit_meshe( dsreal p_anglestep, Orbit& p_orbit, DrawSpace::Core::Meshe* p_meshe );
-
 public:
 
-    Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable );
+    Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters );
     virtual ~Orbiter( void );
 
-    bool SetKinematic( const Parameters& p_parameters );
-    bool UnsetKinematic( void );
-
-    void Update( dsreal p_angle, const DrawSpace::Utils::Vector& p_centroid );
-    void AddChild( Orbiter* p_orbiter );
-
-    void SetOrbit1( const Orbit& p_orbit );
-    void SetOrbit2( const Orbit& p_orbit );
-
-    void BuildOrbit1Meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
-    void BuildOrbit2Meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
-
+    void Update( const DrawSpace::Utils::Matrix& p_mat );
 };
-}
-}
 
+
+class Centroid
+{
+protected:
+
+    Orbiter*                    m_orbiter;
+    std::vector<Orbit*>         m_sub_orbits;
+    DrawSpace::Utils::Matrix    m_transformation;
+ 
+public:
+
+    Centroid( void );
+    void RegisterSubOrbit( Orbit* p_orbit );
+    void Update( const DrawSpace::Utils::Matrix& p_prevcentroidbase, const DrawSpace::Utils::Matrix& p_localorbitmat );
+    void SetOrbiter( Orbiter* p_orbiter );
+};
+
+
+}
+}
 #endif
