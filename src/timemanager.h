@@ -78,6 +78,7 @@ public:
 
     void    AddTimer( const dsstring& p_id, long p_period, TimerHandler* p_handler );
     void    SetTimerState( const dsstring& p_id, bool p_state );
+    void    SetTimerPeriod( const dsstring& p_id, long p_period );
     void    ClearAllTimers( void );
 };
 }

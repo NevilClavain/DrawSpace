@@ -55,7 +55,7 @@ void Orbit::orbit_step( dsreal p_angle, Matrix& p_mat )
     tilt.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), Maths::DegToRad( m_tilt_angle ) );
 
     Matrix offset_rot;
-    offset_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( m_offset_angle ) );
+    offset_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( 360.0 - m_offset_angle ) );
 
     Matrix orb_trans;
     orb_trans.Translation( m_offset_plane_x, 0.0, m_offset_plane_y );
@@ -72,7 +72,6 @@ void Orbit::orbit_step( dsreal p_angle, Matrix& p_mat )
     p_mat = result;
 }
 
-
 void Orbit::OrbitStep( const Matrix& p_centroidbase )
 {
     Matrix local_orbit;
@@ -85,10 +84,6 @@ void Orbit::OrbitStep( const Matrix& p_centroidbase )
     m_centroid->Update( p_centroidbase, local_orbit );
 }
 
-void Orbit::SetOrbitAngle( dsreal p_angle )
-{
-    m_orbit_angle = p_angle;
-}
 
 void Orbit::build_orbit_meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe )
 {
@@ -141,33 +136,18 @@ void Orbit::RegisterDrawable( DrawSpace::Interface::Drawable* p_drawable )
     m_drawable = p_drawable;
 }
 
+void Orbit::Progress( TimeManager& p_timer )
+{
+    
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Orbiter::Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters ) : Body( p_world, p_drawable ),
+Orbiter::Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable ) : Body( p_world, p_drawable ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL )
 {
-    btTransform bt_transform;
-
-    bt_transform.setIdentity();
-    bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0], p_parameters.initial_pos[1], p_parameters.initial_pos[2] ) );
-
-    m_collisionShape = instanciate_collision_shape( p_parameters.shape_descr );
-
-    m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
-
-    btVector3 localInertia( 0, 0, 0 );
-
-    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( 0.0, m_motionState, m_collisionShape, localInertia );
-    m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
-
-    // switch the body to kinematic mode
-    m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
-    m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
-
-    m_world->getBulletWorld()->addRigidBody( m_rigidBody );
-
 }
 
 Orbiter::~Orbiter( void )
@@ -211,6 +191,40 @@ void Orbiter::Update( const Matrix& p_mat )
     ////////////////////////////////////////////////////////////
 }
 
+
+void Orbiter::SetKinematic( const Parameters& p_parameters )
+{
+    btTransform bt_transform;
+
+    bt_transform.setIdentity();
+    bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0], p_parameters.initial_pos[1], p_parameters.initial_pos[2] ) );
+
+    m_collisionShape = instanciate_collision_shape( p_parameters.shape_descr );
+
+    m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
+
+    btVector3 localInertia( 0, 0, 0 );
+
+    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( 0.0, m_motionState, m_collisionShape, localInertia );
+    m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
+
+    // switch the body to kinematic mode
+    m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+    m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
+
+    m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+}
+
+void Orbiter::UnsetKinematic( void )
+{
+    m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+    _DRAWSPACE_DELETE_( m_rigidBody );
+    _DRAWSPACE_DELETE_( m_collisionShape );
+    _DRAWSPACE_DELETE_( m_motionState );
+}
+
+////////////////////////////////////////////////////////////////////////////
+
 Centroid::Centroid( void ) : m_orbiter( NULL )
 {
 }
@@ -221,15 +235,12 @@ void Centroid::RegisterSubOrbit( Orbit* p_orbit )
 }
 
 void Centroid::Update( const Matrix& p_prevcentroidbase, const Matrix& p_localorbitmat )
-{
-    //m_transformation = p_prevcentroidbase * p_localorbitmat;
-
+{   
     m_transformation = p_localorbitmat * p_prevcentroidbase;
     for( size_t i = 0; i < m_sub_orbits.size(); i++ )
     {       
         m_sub_orbits[i]->OrbitStep( m_transformation );
     }
-
     if( m_orbiter )
     {
         m_orbiter->Update( m_transformation );
@@ -240,3 +251,5 @@ void Centroid::SetOrbiter( Orbiter* p_orbiter )
 {
     m_orbiter = p_orbiter;
 }
+
+

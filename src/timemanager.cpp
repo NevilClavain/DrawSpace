@@ -64,26 +64,29 @@ void TimeManager::Update( void )
     }
     m_frame_count++;
 
-    // timers management
-    for( std::map<dsstring, timer_entry>::iterator it = m_timers.begin(); it != m_timers.end(); ++it )
+    if( m_ready )
     {
-        timer_entry current = (*it).second;
-        if( current.state )
+        // timers management
+        for( std::map<dsstring, timer_entry>::iterator it = m_timers.begin(); it != m_timers.end(); ++it )
         {
-            if( -1 == current.start_tick )
-            {                
-                current.start_tick = current_tick;
-            }
-            else
+            timer_entry current = (*it).second;
+            if( current.state )
             {
-                if( current_tick - current.start_tick >= current.period )
-                {
-                    current.start_tick = -1;
-                    ( *current.handler )( (*it).first );
+                if( -1 == current.start_tick )
+                {                
+                    current.start_tick = current_tick;
                 }
-            }
+                else
+                {
+                    if( current_tick - current.start_tick >= current.period )
+                    {
+                        current.start_tick = -1;
+                        ( *current.handler )( (*it).first );
+                    }
+                }
 
-            (*it).second = current;
+                (*it).second = current;
+            }
         }
     }
 }
@@ -182,6 +185,15 @@ void TimeManager::SetTimerState( const dsstring& p_id, bool p_state )
     }
     m_timers[p_id].state = p_state;
     m_timers[p_id].start_tick = -1;
+}
+
+void TimeManager::SetTimerPeriod( const dsstring& p_id, long p_period )
+{
+    if( m_timers.count( p_id ) == 0 )
+    {
+        return;
+    }
+    m_timers[p_id].period = p_period;
 }
 
 void TimeManager::ClearAllTimers( void )

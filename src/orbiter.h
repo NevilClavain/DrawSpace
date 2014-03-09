@@ -24,6 +24,7 @@
 #define _ORBITER_H_
 
 #include "body.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
@@ -46,6 +47,8 @@ protected:
     dsreal                              m_offset_plane_x;
     dsreal                              m_offset_plane_y;
     Centroid*                           m_centroid;
+
+    dsreal                              m_orbit_duration;
     
     DrawSpace::Interface::Drawable*     m_drawable; // drawable representant la trajectoire orbite
 
@@ -56,7 +59,7 @@ protected:
 public:
 
     Orbit::Orbit( dsreal p_ray, dsreal p_excentricity, dsreal p_offset_angle, 
-                    dsreal p_tilt_angle, dsreal p_offset_plane_x, dsreal p_offset_plane_y,
+                    dsreal p_tilt_angle, dsreal p_offset_plane_x, dsreal p_offset_plane_y, dsreal p_orbit_duration,
                     Centroid* p_centroid ) :
     m_ray( p_ray ),
     m_excentricity( p_excentricity ),
@@ -66,14 +69,18 @@ public:
     m_offset_plane_y( p_offset_plane_y ),
     m_drawable( NULL ),
     m_centroid( p_centroid ),
-    m_orbit_angle( 0.0 )
+    m_orbit_angle( 0.0 ),
+    m_orbit_duration( p_orbit_duration )
     {
     };
 
-    void OrbitStep( const DrawSpace::Utils::Matrix& p_centroidbase );
-    void BuildMeshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
-    void RegisterDrawable( DrawSpace::Interface::Drawable* p_drawable );
-    void SetOrbitAngle( dsreal p_angle );
+    void    OrbitStep( const DrawSpace::Utils::Matrix& p_centroidbase );
+    void    BuildMeshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
+    void    RegisterDrawable( DrawSpace::Interface::Drawable* p_drawable );
+
+    void    Progress( DrawSpace::Utils::TimeManager& p_timer );
+
+    friend class Calendar;
 };
 
 
@@ -99,10 +106,13 @@ protected:
 
 public:
 
-    Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters );
+    Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable );
     virtual ~Orbiter( void );
 
     void Update( const DrawSpace::Utils::Matrix& p_mat );
+
+    void SetKinematic( const Parameters& p_parameters );
+    void UnsetKinematic( void );
 };
 
 

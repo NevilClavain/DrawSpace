@@ -33,6 +33,8 @@
 
 #define dsstring    std::string
 #define dsreal      double
+#define dslonglong  long long
+#define dstime      __time64_t
 
 #define DRAWSPACE_GUI_WIDTH 200
 #define DRAWSPACE_GUI_HEIGHT 150

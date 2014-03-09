@@ -501,6 +501,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\calendar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\calendar.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\inertbody.cpp"
 				>
 			</File>
