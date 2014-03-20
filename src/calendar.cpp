@@ -36,7 +36,9 @@ m_time_factor( 1 ),
 m_current_time_increment( 1 ),
 m_time_manager( p_tm ),
 m_active( false ),
-m_world( p_world )
+m_world( p_world ),
+m_sub_sec_count( 0 ),
+m_sub_sec_count_lim( 0 )
 {
     m_current_time = m_offset_time;
     m_timercb = _DRAWSPACE_NEW_( CalendarTimer, CalendarTimer( this, &Calendar::on_timer ) );
@@ -54,24 +56,24 @@ dstime Calendar::GetOffsetTime( void )
     return m_offset_time;
 }
 
-Calendar::TimeFactor Calendar::GetCurrentTimeFactor( void )
+Calendar::TimeMode Calendar::GetCurrentTimeFactor( void )
 {
     return m_time_mode;
 }
 
-void Calendar::SetTimeFactor( Calendar::TimeFactor p_time_factor )
+void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
 {
-    TimeFactor previous_time_factor = m_time_mode;
+    m_time_mode = p_time_mode;
 
-    m_time_mode = p_time_factor;
-
-    switch( m_time_mode )
+    switch( p_time_mode )
     {
         case NORMAL_TIME:
 
             m_time_period = 1000;
             m_time_factor = 1;
             m_current_time_increment = 1;
+
+            m_sub_sec_count_lim = 0;
             break;
 
         case MUL2_TIME:
@@ -79,6 +81,8 @@ void Calendar::SetTimeFactor( Calendar::TimeFactor p_time_factor )
             m_time_period = 500;
             m_time_factor = 2;
             m_current_time_increment = 1;
+
+            m_sub_sec_count_lim = 0;
             break;
 
         case MUL4_TIME:
@@ -86,6 +90,8 @@ void Calendar::SetTimeFactor( Calendar::TimeFactor p_time_factor )
             m_time_period = 250;
             m_time_factor = 4;
             m_current_time_increment = 1;
+
+            m_sub_sec_count_lim = 0;
             break;
 
         case MUL10_TIME:
@@ -93,27 +99,74 @@ void Calendar::SetTimeFactor( Calendar::TimeFactor p_time_factor )
             m_time_period = 100;
             m_time_factor = 10;
             m_current_time_increment = 1;
+
+            m_sub_sec_count_lim = 0;
             break;
 
         case SEC_1HOUR_TIME:
 
             m_time_period = 100;
-            m_time_factor = 3600;
+            m_time_factor = 3600.0;
             m_current_time_increment = 360;
+
+            m_sub_sec_count_lim = 0;
             break;
 
         case SEC_1DAY_TIME:
 
             m_time_period = 100;
-            m_time_factor = 86400;
+            m_time_factor = 86400.0;
             m_current_time_increment = 8640;
+
+            m_sub_sec_count_lim = 0;
             break;
 
         case SEC_30DAYS_TIME:
 
             m_time_period = 100;
-            m_time_factor = 2592000;
+            m_time_factor = 2592000.0;
             m_current_time_increment = 259200;
+
+            m_sub_sec_count_lim = 0;
+            break;
+
+        case SEC_1YEAR_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 86400.0 * 365.0;
+            m_current_time_increment = 86400 * 365;
+
+            m_sub_sec_count_lim = 0;
+            break;
+
+        case DIV2_TIME:
+
+            m_time_period = 1000;
+            m_time_factor = 0.5;
+            m_sub_sec_count_lim = 2;
+            m_sub_sec_count = 0;
+
+            m_current_time_increment = 0;             
+            break;
+
+        case DIV4_TIME:
+
+            m_time_period = 1000;
+            m_time_factor = 0.25;
+            m_sub_sec_count_lim = 4;
+            m_sub_sec_count = 0;
+
+            m_current_time_increment = 0;
+            break;
+
+        case DIV10_TIME:
+
+            m_time_period = 1000;
+            m_time_factor = 0.1;
+            m_sub_sec_count_lim = 10;
+            m_sub_sec_count = 0;
+
+            m_current_time_increment = 0;
             break;
 
         case PAUSE_TIME:
@@ -121,6 +174,8 @@ void Calendar::SetTimeFactor( Calendar::TimeFactor p_time_factor )
             m_time_period = -1;
             break;
     }
+
+    m_time_mode = p_time_mode;
 
     if( m_active )
     {    
@@ -131,6 +186,11 @@ void Calendar::SetTimeFactor( Calendar::TimeFactor p_time_factor )
             m_time_manager->SetTimerState( "calendar_timer", true );
         }
     }
+}
+
+long Calendar::GetSubSecCount( void )
+{
+    return m_sub_sec_count;
 }
 
 void Calendar::GetFormatedDate( dsstring& p_date )
@@ -153,18 +213,27 @@ void Calendar::RegisterOrbit( Orbit* p_orbit )
     m_orbits.push_back( p_orbit );
 }
 
-bool Calendar::Startup( int p_sec, int p_min, int p_hour, int p_day, int p_month, int p_year )
+void Calendar::set_orbit_angle( Orbit* p_orbit, dstime p_currtime )
 {
-    struct tm mytime;
-    mytime.tm_hour = p_hour;
-    mytime.tm_min = p_min;
-    mytime.tm_sec = p_sec;
-    mytime.tm_year = p_year;
-    mytime.tm_mon = p_month;
-    mytime.tm_mday = p_day;
-    mytime.tm_wday = mytime.tm_yday = 0;
+    dsreal orbit_duration = p_orbit->m_orbit_duration;
+    
+    long year_sec = 3600 * 24 * 365;
 
-    return Startup( _mktime64( &mytime ) );
+    dsreal delta_time = ( (double) ( p_currtime - m_offset_time ) ) / year_sec;
+    dsreal num_orbits = delta_time / orbit_duration;
+
+    dsreal angle_orbits = num_orbits * 360;
+
+    double angle_orbit_i, angle_orbit_f;
+    long angle_orbit_i_2;
+
+    angle_orbit_f = modf( angle_orbits, &angle_orbit_i );
+
+    angle_orbit_i_2 = (long)angle_orbit_i;
+
+    double final_angle = (angle_orbit_i_2 % 360) + angle_orbit_f;       
+    
+    p_orbit->m_orbit_angle = final_angle;
 }
 
 bool Calendar::Startup( dstime p_start_time )
@@ -180,25 +249,7 @@ bool Calendar::Startup( dstime p_start_time )
     {
         Orbit* curr_orbit = m_orbits[i];
 
-        dsreal orbit_duration = curr_orbit->m_orbit_duration;
-        
-        long year_sec = 3600 * 24 * 365;
-
-        dsreal delta_time = ( (double) ( p_start_time - m_offset_time ) ) / year_sec;
-        dsreal num_orbits = delta_time / orbit_duration;
-
-        dsreal angle_orbits = num_orbits * 360;
-
-        double angle_orbit_i, angle_orbit_f;
-        long angle_orbit_i_2;
-
-        angle_orbit_f = modf( angle_orbits, &angle_orbit_i );
-
-        angle_orbit_i_2 = (long)angle_orbit_i;
-
-        double final_angle = (angle_orbit_i_2 % 360) + angle_orbit_f;       
-        
-        curr_orbit->m_orbit_angle = final_angle;
+        set_orbit_angle( curr_orbit, p_start_time );
     }
 
     // demarre le timer...
@@ -230,7 +281,21 @@ void Calendar::on_timer( dsstring p_timername )
         return;
     }
 
-    m_current_time += m_current_time_increment;
+    if( 0 == m_sub_sec_count_lim )
+    {
+        m_current_time += m_current_time_increment;
+    }
+    else
+    {
+        m_sub_sec_count++;
+
+        if( m_sub_sec_count == m_sub_sec_count_lim )
+        {
+            m_sub_sec_count = 0;
+            m_current_time++;
+        }
+    }
+    
 }
 
 void Calendar::Run( void )
@@ -251,21 +316,18 @@ void Calendar::Run( void )
         {
             Orbit* curr_orbit = m_orbits[i];
         
-            // TO BE CONTINUED... HERE
-            /*
-            // calcul vitesse angulaire
-            dsreal p = year_sec * curr_orbit->m_orbit_duration;
-            dsreal va =  360.0 / p;
-
-            m_time_manager->AngleSpeedInc( &curr_orbit->m_orbit_angle, va * m_time_factor );
-            */
-
+            set_orbit_angle( curr_orbit, m_current_time );
         }
-        m_world->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
+        m_world->StepSimulation( (long)( m_time_manager->GetFPS() / m_time_factor ) ); 
     }
 }
 
 bool Calendar::IsTimerReady( void )
 {
     return m_time_manager->IsReady();
+}
+
+dstime Calendar::GetCurrentInstant( void )
+{
+    return m_current_time;
 }
