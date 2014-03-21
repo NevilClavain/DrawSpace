@@ -79,9 +79,7 @@ public:
 
         DIV2_TIME,
         DIV4_TIME,
-        DIV10_TIME,
-
-        PAUSE_TIME
+        DIV10_TIME
 
     } TimeMode;
 
@@ -96,6 +94,8 @@ protected:
     TimeMode                        m_time_mode;
     long                            m_time_period;
     dsreal                          m_time_factor;
+
+    bool                            m_freeze;
 
     long                            m_sub_sec_count;
     long                            m_sub_sec_count_lim;
@@ -133,6 +133,8 @@ public:
     dstime      GetCurrentInstant( void );
 
     long        GetSubSecCount( void );
+
+    void        Suspend( bool p_suspend );
         
 };
 }

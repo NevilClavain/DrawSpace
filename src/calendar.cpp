@@ -38,7 +38,8 @@ m_time_manager( p_tm ),
 m_active( false ),
 m_world( p_world ),
 m_sub_sec_count( 0 ),
-m_sub_sec_count_lim( 0 )
+m_sub_sec_count_lim( 0 ),
+m_freeze( false )
 {
     m_current_time = m_offset_time;
     m_timercb = _DRAWSPACE_NEW_( CalendarTimer, CalendarTimer( this, &Calendar::on_timer ) );
@@ -168,23 +169,16 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
 
             m_current_time_increment = 0;
             break;
-
-        case PAUSE_TIME:
-
-            m_time_period = -1;
-            break;
     }
 
     m_time_mode = p_time_mode;
 
-    if( m_active )
+    if( m_active && !m_freeze )
     {    
-        if( m_time_period != -1 )
-        {
-            m_time_manager->SetTimerState( "calendar_timer", false );
-            m_time_manager->SetTimerPeriod( "calendar_timer", m_time_period );
-            m_time_manager->SetTimerState( "calendar_timer", true );
-        }
+        m_time_manager->SetTimerState( "calendar_timer", false );
+        m_time_manager->SetTimerPeriod( "calendar_timer", m_time_period );
+        m_time_manager->SetTimerState( "calendar_timer", true );
+
     }
 }
 
@@ -276,11 +270,6 @@ void Calendar::Shutdown( void )
 
 void Calendar::on_timer( dsstring p_timername )
 {
-    if( PAUSE_TIME == m_time_mode )
-    {
-        return;
-    }
-
     if( 0 == m_sub_sec_count_lim )
     {
         m_current_time += m_current_time_increment;
@@ -302,7 +291,7 @@ void Calendar::Run( void )
 {
     m_time_manager->Update();
 
-    if( PAUSE_TIME == m_time_mode )
+    if( m_freeze )
     {
         return;
     }
@@ -318,7 +307,17 @@ void Calendar::Run( void )
         
             set_orbit_angle( curr_orbit, m_current_time );
         }
-        m_world->StepSimulation( (long)( m_time_manager->GetFPS() / m_time_factor ) ); 
+
+        // looks like bullet hates very high timestep...
+        if( m_time_factor <= 10.0 )
+        {
+            m_world->StepSimulation( (long)( m_time_manager->GetFPS() / m_time_factor ) ); 
+        }
+        else
+        {
+            // a revoir...
+            m_world->StepSimulation( (long)( m_time_manager->GetFPS() / 55.0 ) ); 
+        }
     }
 }
 
@@ -330,4 +329,11 @@ bool Calendar::IsTimerReady( void )
 dstime Calendar::GetCurrentInstant( void )
 {
     return m_current_time;
+}
+
+void Calendar::Suspend( bool p_suspend )
+{
+    m_freeze = p_suspend;
+
+    m_time_manager->SuspendTimer( "calendar_timer", p_suspend );
 }

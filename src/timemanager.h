@@ -47,7 +47,10 @@ protected:
         bool            state;
         long            period; // ms
         TimerHandler*   handler;
-        long            start_tick;        
+        //long            start_tick;
+        long            tick_count;
+        long            prev_tick;
+        bool            freeze;
 
     } timer_entry;
 
@@ -78,6 +81,7 @@ public:
 
     void    AddTimer( const dsstring& p_id, long p_period, TimerHandler* p_handler );
     void    SetTimerState( const dsstring& p_id, bool p_state );
+    void    SuspendTimer( const dsstring& p_id, bool p_suspend );
     void    SetTimerPeriod( const dsstring& p_id, long p_period );
     void    ClearAllTimers( void );
 };

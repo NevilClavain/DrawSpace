@@ -70,19 +70,24 @@ void TimeManager::Update( void )
         for( std::map<dsstring, timer_entry>::iterator it = m_timers.begin(); it != m_timers.end(); ++it )
         {
             timer_entry current = (*it).second;
-            if( current.state )
+
+            if( current.state && !current.freeze )
             {
-                if( -1 == current.start_tick )
+                if( -1 == current.prev_tick )
                 {                
-                    current.start_tick = current_tick;
+                    current.prev_tick = current_tick;
                 }
                 else
                 {
-                    if( current_tick - current.start_tick >= current.period )
+                    current.tick_count += current_tick - current.prev_tick;
+
+                    if( current.tick_count >= current.period )
                     {
-                        current.start_tick = -1;
+                        current.tick_count = 0;                        
                         ( *current.handler )( (*it).first );
                     }
+
+                    current.prev_tick = current_tick;
                 }
 
                 (*it).second = current;
@@ -173,6 +178,7 @@ void TimeManager::AddTimer( const dsstring& p_id, long p_period, TimerHandler* p
     t_entry.state = false;
     t_entry.period = p_period;
     t_entry.handler = p_handler;
+    t_entry.freeze = false;
 
     m_timers[p_id] = t_entry;
 }
@@ -184,7 +190,10 @@ void TimeManager::SetTimerState( const dsstring& p_id, bool p_state )
         return;
     }
     m_timers[p_id].state = p_state;
-    m_timers[p_id].start_tick = -1;
+    m_timers[p_id].prev_tick = -1;
+    m_timers[p_id].tick_count = 0;
+    m_timers[p_id].freeze = false;
+
 }
 
 void TimeManager::SetTimerPeriod( const dsstring& p_id, long p_period )
@@ -194,6 +203,20 @@ void TimeManager::SetTimerPeriod( const dsstring& p_id, long p_period )
         return;
     }
     m_timers[p_id].period = p_period;
+}
+
+void TimeManager::SuspendTimer( const dsstring& p_id, bool p_suspend )
+{
+    if( m_timers.count( p_id ) == 0 )
+    {
+        return;
+    }
+    m_timers[p_id].freeze = p_suspend;
+
+    if( p_suspend )
+    {
+        m_timers[p_id].prev_tick = -1;
+    }
 }
 
 void TimeManager::ClearAllTimers( void )
