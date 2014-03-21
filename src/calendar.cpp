@@ -308,16 +308,16 @@ void Calendar::Run( void )
             set_orbit_angle( curr_orbit, m_current_time );
         }
 
-        // looks like bullet hates very high timestep...
+        // avoid very high timestep...
+        
         if( m_time_factor <= 10.0 )
-        {
-            m_world->StepSimulation( (long)( m_time_manager->GetFPS() / m_time_factor ) ); 
+        {        
+            m_world->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
         }
         else
-        {
-            // a revoir...
-            m_world->StepSimulation( (long)( m_time_manager->GetFPS() / 55.0 ) ); 
-        }
+        {            
+            m_world->StepSimulation( (long)( m_time_manager->GetFPS() / 50.0 ) ); 
+        }       
     }
 }
 
