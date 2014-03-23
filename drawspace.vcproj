@@ -529,6 +529,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\rocket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\rocket.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\world.cpp"
 				>
 			</File>
