@@ -24,6 +24,7 @@
 
 dsAppClient* dsAppClient::m_instance = NULL;
 
+_DECLARE_DS_LOGGER( logger, "AppClient" )
 
 dsAppClient::dsAppClient( void )
 {    

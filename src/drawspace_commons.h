@@ -28,6 +28,7 @@
 #include <map>
 #include <vector>
 #include <queue>
+#include <exception>
 
 #include "flags.h"
 
@@ -35,6 +36,7 @@
 #define dsreal      double
 #define dslonglong  long long
 #define dstime      __time64_t
+#define dsexception std::exception
 
 #define DRAWSPACE_GUI_WIDTH 200
 #define DRAWSPACE_GUI_HEIGHT 150

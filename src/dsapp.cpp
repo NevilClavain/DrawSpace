@@ -35,10 +35,7 @@ using namespace DrawSpace::Interface;
 App* App::m_base_instance = NULL;
 
 DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>* 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::m_instance = NULL;
-/*
-TODO LATER
-DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Physic>* 		DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Physic>::m_instance = NULL;
-*/
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 LRESULT CALLBACK DrawSpaceAppWinProc( HWND pHwnd, UINT pMsg, WPARAM pWParam, LPARAM pLParam )

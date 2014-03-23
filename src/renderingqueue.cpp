@@ -23,6 +23,7 @@
 #include "renderingqueue.h"
 #include "renderer.h"
 #include "plugin.h"
+#include "exceptions.h"
 #include <algorithm>
 
 using namespace DrawSpace::Core;
@@ -470,7 +471,7 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
     p_out_lists = out_lists;
 }
 
-bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_list )
+void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_list )
 {
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
@@ -490,7 +491,7 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
         if( false == renderer->CreateFx( current_fx, &fx_data ) )
         {
-            return false;
+            _DSEXCEPTION( "Cannot create FX" )
         }
         m_fx_datas[node] = fx_data;
 
@@ -502,7 +503,12 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             {
                 if( false == renderer->CreateTexture( current_tx, &tx_data ) )
                 {
-                    return false;
+                    dsstring path;
+                    current_tx->GetPath( path );
+
+                    dsstring excp_msg = "Cannot create Texture ";
+                    excp_msg += path;
+                    _DSEXCEPTION( excp_msg  )
                 }
                 m_tx_datas[node].push_back( tx_data );
             }
@@ -514,7 +520,7 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             if( false == renderer->CreateMeshe( current_meshe, &meshe_data ) )
             {
-                return false;
+                _DSEXCEPTION( "Cannot create Meshe" )
             }
             m_meshe_datas[node] = meshe_data;
         }
@@ -552,22 +558,6 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             m_outputqueue.push_back( operation );
         }
 
-        /*
-        std::map<dsstring, RenderingNode::ShadersParams> node_shaders_params;
-        node->GetShadersParams( node_shaders_params );
-
-        for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
-        {
-            operation.type = SET_SHADERS_PARAMS;
-            
-            operation.shader_index = (*it).second.shader_index;
-            operation.param_register = (*it).second.param_register;
-            operation.param_values = (*it).second.param_values;
-            
-            m_outputqueue.push_back( operation );                
-        }
-        */
-
         std::map<dsstring, RenderingNode::ShadersParams*> node_shaders_params;
         node->GetShadersParams( node_shaders_params );
 
@@ -602,7 +592,6 @@ bool RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             m_outputqueue.push_back( operation );
         }
     }
-    return true;
 }
 
 

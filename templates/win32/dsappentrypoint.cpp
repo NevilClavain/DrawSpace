@@ -44,41 +44,49 @@ bool LoadRendererPlugin( const dsstring& p_file )
 }
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
-{	
-    dsAppClient* app = dsAppClient::GetInstance();
-    app->SetCmdLine( lpCmdLine );
-
-    if( app->InitApp( hInstance ) == false )
+{
+    try
     {
-        MessageBox( NULL, "InitApp FAILURE" , "DrawSpace", MB_OK | MB_ICONSTOP );
-        return 0;
-    }
+        dsAppClient* app = dsAppClient::GetInstance();
+        app->SetCmdLine( lpCmdLine );
 
-    // get plugin name
-    dsstring plugin;
-    app->GetRenderPluginName( plugin );
-    if( "" == plugin )
+        if( app->InitApp( hInstance ) == false )
+        {
+            MessageBox( NULL, "InitApp FAILURE" , "DrawSpace", MB_OK | MB_ICONSTOP );
+            return 0;
+        }
+
+        // get plugin name
+        dsstring plugin;
+        app->GetRenderPluginName( plugin );
+        if( "" == plugin )
+        {
+            MessageBoxA( NULL, "No plugin specified" , "DrawSpace", MB_OK | MB_ICONSTOP );
+            return 0;
+        }
+
+        if( !LoadRendererPlugin( plugin ) )
+        {
+            MessageBoxA( NULL, "Cannot load specified plugin" , "DrawSpace", MB_OK | MB_ICONSTOP );
+            return 0;
+        }
+
+
+        if( app->InitRenderer() == false )
+        {
+            MessageBoxA( NULL, "InitRenderer FAILURE" , "DrawSpace", MB_OK | MB_ICONSTOP );
+            return 0;
+        }
+
+        app->IdleApp();
+
+        app->StopRenderer();
+    }
+    catch( dsexception& p_exception )
     {
-        MessageBoxA( NULL, "No plugin specified" , "DrawSpace", MB_OK | MB_ICONSTOP );
-        return 0;
+        const char* what = p_exception.what();        
+        MessageBoxA( NULL, what , "DrawSpace Exception", MB_OK | MB_ICONERROR );
     }
-
-    if( !LoadRendererPlugin( plugin ) )
-    {
-        MessageBoxA( NULL, "Cannot load specified plugin" , "DrawSpace", MB_OK | MB_ICONSTOP );
-        return 0;
-    }
-
-
-    if( app->InitRenderer() == false )
-    {
-        MessageBoxA( NULL, "InitRenderer FAILURE" , "DrawSpace", MB_OK | MB_ICONSTOP );
-        return 0;
-    }
-
-    app->IdleApp();
-
-    app->StopRenderer();
 
     return 0;
 }

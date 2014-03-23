@@ -321,6 +321,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\exceptions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\file.cpp"
 				>
 			</File>

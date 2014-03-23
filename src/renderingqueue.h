@@ -116,7 +116,7 @@ protected:
     void sort_step( std::vector<SortCategory>& p_todo, std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list );
     void sort_list_by( SortedListType p_type, long p_texturestage, std::vector<RenderingNode*>& p_in_list, std::map<dsstring, std::vector<RenderingNode*>>& p_out_lists );
 
-    bool build_output_list( std::vector<RenderingNode*>& p_input_list );
+    void build_output_list( std::vector<RenderingNode*>& p_input_list );
     void cleanup_output_list( void );
 
     double lists_score( std::map<dsstring, std::vector<RenderingNode*>>& p_lists );
