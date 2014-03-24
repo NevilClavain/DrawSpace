@@ -73,7 +73,7 @@ bool World::StepSimulation( dsreal p_fps )
         
         dsreal timestep = 1.0 / p_fps;
         dsreal fixedtimestep = timestep / 5.0;
-        fixedtimestep *= 1.2;
+        fixedtimestep *= 1.1;
 
         m_world->stepSimulation( timestep, 5, fixedtimestep );
 

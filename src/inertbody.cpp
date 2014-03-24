@@ -29,7 +29,8 @@ using namespace DrawSpace::Dynamics;
 
 
 InertBody::InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world, p_drawable ),
-m_refbody( NULL )
+m_refbody( NULL ),
+m_parameters( p_parameters )
 {
     m_global_world_mem = m_world;
     btTransform bt_transform;
