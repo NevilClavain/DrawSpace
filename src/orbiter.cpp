@@ -156,8 +156,9 @@ Orbiter::~Orbiter( void )
 
 void Orbiter::Update( const Matrix& p_mat )
 {
-    Matrix orbiter_transform = p_mat;
+    m_lastworldtrans = p_mat;
 
+    Matrix orbiter_transform = p_mat;
     m_drawable->SetLocalTransform( orbiter_transform );
     
     /////////////////////////////////////////////////////////

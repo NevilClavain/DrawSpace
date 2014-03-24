@@ -33,24 +33,6 @@ namespace Dynamics
 {
 class InertBody : public Body
 {
-public:
-
-    typedef struct
-    {       
-        DrawSpace::Utils::Vector    initial_pos;
-        DrawSpace::Utils::Matrix    initial_rot;
-
-        dsreal                      mass;
-
-        /*
-        Body::Shape                 shape;
-
-        DrawSpace::Utils::Vector    box_dims;
-        */
-
-        Body::ShapeDescr            shape_descr;
-
-    } Parameters;
 
 protected:
 
@@ -60,15 +42,22 @@ protected:
     btCollisionShape*               m_collisionShape;
     btDefaultMotionState*           m_motionState;
 
+    Body*                           m_refbody;
+    World*                          m_global_world_mem;
+
+    void                            create_body( const btTransform& p_transform );
+    void                            destroy_body( void );
 
 public:
 
-    InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters );
+    InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Body::Parameters& p_parameters );
     virtual ~InertBody( void );
 
     void GetParameters( Parameters& p_parameters );
-
     void Update( void );
+
+    void Attach( Body* p_body );
+    void Detach( void );
     
 };
 }

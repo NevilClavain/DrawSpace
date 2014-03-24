@@ -49,17 +49,35 @@ public:
 
     } ShapeDescr;
 
+    typedef struct
+    {       
+        DrawSpace::Utils::Vector    initial_pos;
+        DrawSpace::Utils::Matrix    initial_rot;
+
+        dsreal                      mass;
+
+        Body::ShapeDescr            shape_descr;
+
+    } Parameters;
+
+
 protected:
     DrawSpace::Interface::Drawable* m_drawable;
     World*                          m_world;
 
+    DrawSpace::Utils::Matrix        m_lastworldtrans;
+
     btCollisionShape*               instanciate_collision_shape( const ShapeDescr& p_shapedescr );
+
+
 
 public:
     Body( World* p_world, DrawSpace::Interface::Drawable* p_drawable );
     virtual ~Body( void );
 
     DrawSpace::Interface::Drawable* GetDrawable( void );
+    void GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo );
+    World* GetWorld( void );
 
 };
 }

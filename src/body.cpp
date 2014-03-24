@@ -32,6 +32,7 @@ Body::Body( World* p_world, DrawSpace::Interface::Drawable* p_drawable ) :
 m_drawable( p_drawable ), 
 m_world( p_world )
 {
+    m_lastworldtrans.Identity();
 }
 
 Body::~Body( void )
@@ -56,4 +57,14 @@ btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapede
 DrawSpace::Interface::Drawable* Body::GetDrawable( void )
 {
     return m_drawable;
+}
+
+void Body::GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo )
+{
+    p_transfo = m_lastworldtrans;
+}
+
+World* Body::GetWorld( void )
+{
+    return m_world;
 }

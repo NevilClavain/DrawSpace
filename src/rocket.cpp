@@ -27,7 +27,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
-Rocket::Rocket( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters ) : Body( p_world, p_drawable )
+Rocket::Rocket( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Body::Parameters& p_parameters ) : InertBody( p_world, p_drawable, p_parameters )
 {
 }
 

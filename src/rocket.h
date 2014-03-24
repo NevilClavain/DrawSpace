@@ -23,7 +23,7 @@
 #ifndef _ROCKET_H_
 #define _ROCKET_H_
 
-#include "body.h"
+#include "inertbody.h"
 #include "vector.h"
 #include "matrix.h"
 
@@ -31,33 +31,11 @@ namespace DrawSpace
 {
 namespace Dynamics
 {
-class Rocket : public Body
+class Rocket : public InertBody
 {
 public:
 
-    typedef struct
-    {       
-        DrawSpace::Utils::Vector    initial_pos;
-        DrawSpace::Utils::Matrix    initial_rot;
-
-        dsreal                      mass;
-
-        Body::ShapeDescr            shape_descr;
-
-    } Parameters;
-
-protected:
-
-    Parameters                      m_parameters;
-
-    btRigidBody*                    m_rigidBody;
-    btCollisionShape*               m_collisionShape;
-    btDefaultMotionState*           m_motionState;
-
-
-public:
-
-    Rocket( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Parameters& p_parameters );
+    Rocket( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Body::Parameters& p_parameters );
     virtual ~Rocket( void );
     
 };
