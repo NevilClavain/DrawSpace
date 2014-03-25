@@ -35,6 +35,8 @@ m_parameters( p_parameters )
     m_global_world_mem = m_world;
     btTransform bt_transform;
 
+    m_lastlocalworldtrans.Identity();
+
     bt_transform.setIdentity();
     bt_transform.setOrigin( btVector3( m_parameters.initial_pos[0], m_parameters.initial_pos[1], m_parameters.initial_pos[2] ) );
 
@@ -107,6 +109,8 @@ void InertBody::Update( void )
     updated_matrix( 3, 1 ) = bt_matrix[13];
     updated_matrix( 3, 2 ) = bt_matrix[14];
     updated_matrix( 3, 3 ) = bt_matrix[15];
+
+    m_lastlocalworldtrans = updated_matrix;
 
     if( NULL == m_refbody )
     {
