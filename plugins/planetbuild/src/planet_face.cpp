@@ -748,7 +748,7 @@ bool Face::Compute( void )
         return false;
     }
 
-    if( m_movement.LengthPow2() == 0.0 )
+    if( 0.0 == m_movement.LengthPow2() )
     {
         return false;
     }

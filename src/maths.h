@@ -58,14 +58,14 @@ public:
 	static inline void		CartesiantoSpherical( Vector& p_in, Vector& p_out )
 	{
 		// cas particulier
-		if( p_in[1] > 0.0 && p_in[0] == 0.0 && p_in[2] == 0.0 )
+		if( p_in[1] > 0.0 && 0.0 == p_in[0] && 0.0 == p_in[2] )
 		{
 			p_out[0] = p_in[1];
 			p_out[2] = PI / 2.0;
 			p_out[1] = 0.0;
 			return;
 		}
-		else if( p_in[1] < 0.0 && p_in[0] == 0.0 && p_in[2] == 0.0 )
+		else if( p_in[1] < 0.0 && 0.0 == p_in[0] && 0.0 == p_in[2] )
 		{
 			p_out[0] = -p_in[1];
 			p_out[2] = -PI / 2.0;

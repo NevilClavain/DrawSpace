@@ -185,7 +185,7 @@ void TimeManager::AddTimer( const dsstring& p_id, long p_period, TimerHandler* p
 
 void TimeManager::SetTimerState( const dsstring& p_id, bool p_state )
 {
-    if( m_timers.count( p_id ) == 0 )
+    if( 0 == m_timers.count( p_id ) )
     {
         return;
     }
@@ -198,7 +198,7 @@ void TimeManager::SetTimerState( const dsstring& p_id, bool p_state )
 
 void TimeManager::SetTimerPeriod( const dsstring& p_id, long p_period )
 {
-    if( m_timers.count( p_id ) == 0 )
+    if( 0 == m_timers.count( p_id ) )
     {
         return;
     }
@@ -207,7 +207,7 @@ void TimeManager::SetTimerPeriod( const dsstring& p_id, long p_period )
 
 void TimeManager::SuspendTimer( const dsstring& p_id, bool p_suspend )
 {
-    if( m_timers.count( p_id ) == 0 )
+    if( 0 == m_timers.count( p_id ) )
     {
         return;
     }
