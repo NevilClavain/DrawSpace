@@ -33,11 +33,41 @@ namespace Dynamics
 {
 class Rocket : public InertBody
 {
+protected:
+
+    DrawSpace::Utils::Vector        m_fwd;
+    DrawSpace::Utils::Vector        m_rev;
+    DrawSpace::Utils::Vector        m_right;
+    DrawSpace::Utils::Vector        m_left;
+    DrawSpace::Utils::Vector        m_up;
+    DrawSpace::Utils::Vector        m_down;
+
+    DrawSpace::Utils::Vector        m_transformed_fwd;
+    DrawSpace::Utils::Vector        m_transformed_rev;
+    DrawSpace::Utils::Vector        m_transformed_left;
+    DrawSpace::Utils::Vector        m_transformed_right;
+    DrawSpace::Utils::Vector        m_transformed_up;
+    DrawSpace::Utils::Vector        m_transformed_down;
+
+
 public:
 
     Rocket( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Body::Parameters& p_parameters );
     virtual ~Rocket( void );
     
+    void Update( void );
+
+    void ApplyFwdForce( dsreal p_norm );
+    void ApplyRevForce( dsreal p_norm );
+
+    void ApplyLeftYaw( dsreal p_norm );
+    void ApplyRightYaw( dsreal p_norm );
+
+    void ApplyUpPitch( dsreal p_norm );
+    void ApplyDownPitch( dsreal p_norm );
+
+    void ApplyLeftRoll( dsreal p_norm );
+    void ApplyRightRoll( dsreal p_norm );
 };
 }
 }

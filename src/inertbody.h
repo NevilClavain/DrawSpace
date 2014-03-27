@@ -45,6 +45,8 @@ protected:
     Body*                           m_refbody;
     World*                          m_global_world_mem;
 
+    DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
+
     void                            create_body( const btTransform& p_transform );
     void                            destroy_body( void );
 
