@@ -193,7 +193,7 @@ void Orbiter::Update( const Matrix& p_mat )
 }
 
 
-void Orbiter::SetKinematic( const Parameters& p_parameters )
+void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
 {
     btTransform bt_transform;
 

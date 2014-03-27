@@ -86,18 +86,6 @@ public:
 
 class Orbiter : public Body
 {
-public:
-
-    typedef struct
-    {       
-        DrawSpace::Utils::Vector    initial_pos;
-        DrawSpace::Utils::Matrix    initial_rot;
-
-        Body::ShapeDescr            shape_descr;
-
-    } Parameters;
-
-
 protected:
 
     btRigidBody*                    m_rigidBody;
@@ -111,7 +99,7 @@ public:
 
     void Update( const DrawSpace::Utils::Matrix& p_mat );
 
-    void SetKinematic( const Parameters& p_parameters );
+    void SetKinematic( const Body::Parameters& p_parameters );
     void UnsetKinematic( void );
 };
 
