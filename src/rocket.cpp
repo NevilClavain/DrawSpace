@@ -114,10 +114,16 @@ void Rocket::ApplyDownPitch( dsreal p_norm )
 
 void Rocket::ApplyLeftRoll( dsreal p_norm )
 {
-    m_rigidBody->applyTorque( btVector3( m_transformed_fwd[0] * p_norm, m_transformed_fwd[1] * p_norm, m_transformed_fwd[2] * p_norm ) );
+    m_rigidBody->applyTorque( btVector3( m_transformed_rev[0] * p_norm, m_transformed_rev[1] * p_norm, m_transformed_rev[2] * p_norm ) );   
 }
 
 void Rocket::ApplyRightRoll( dsreal p_norm )
 {
-    m_rigidBody->applyTorque( btVector3( m_transformed_rev[0] * p_norm, m_transformed_rev[1] * p_norm, m_transformed_rev[2] * p_norm ) );
+    m_rigidBody->applyTorque( btVector3( m_transformed_fwd[0] * p_norm, m_transformed_fwd[1] * p_norm, m_transformed_fwd[2] * p_norm ) );
+}
+
+void Rocket::ZeroSpeed( void )
+{
+    m_rigidBody->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+    m_rigidBody->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
 }

@@ -68,6 +68,8 @@ public:
 
     void ApplyLeftRoll( dsreal p_norm );
     void ApplyRightRoll( dsreal p_norm );
+
+    void ZeroSpeed( void );
 };
 }
 }

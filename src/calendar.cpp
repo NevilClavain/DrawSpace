@@ -104,6 +104,25 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_sub_sec_count_lim = 0;
             break;
 
+        case MUL100_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 100.0;
+            m_current_time_increment = 10;
+
+            m_sub_sec_count_lim = 0;
+            break;
+
+        case MUL500_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 500.0;
+            m_current_time_increment = 50;
+
+            m_sub_sec_count_lim = 0;
+            break;
+
+
         case SEC_1HOUR_TIME:
 
             m_time_period = 100;
@@ -308,16 +327,7 @@ void Calendar::Run( void )
             set_orbit_angle( curr_orbit, m_current_time );
         }
 
-        // avoid very high timestep...
-        
-        if( m_time_factor <= 10.0 )
-        {        
-            m_world->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
-        }
-        else
-        {            
-            m_world->StepSimulation( (long)( m_time_manager->GetFPS() / 50.0 ) ); 
-        }       
+        m_world->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
     }
 }
 

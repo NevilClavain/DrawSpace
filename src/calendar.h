@@ -67,6 +67,8 @@ public:
         MUL2_TIME,
         MUL4_TIME,
         MUL10_TIME,
+        MUL100_TIME,
+        MUL500_TIME,
 
         SEC_1HOUR_TIME, // 1 sec = 1 hour -> x 3600
         
