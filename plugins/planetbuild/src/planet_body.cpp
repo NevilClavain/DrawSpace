@@ -24,6 +24,7 @@
 #include <plugin.h>
 #include <memalloc.h>
 #include <quadtree.h>
+#include <exceptions.h>
 #include "planet_body.h"
 
 using namespace DrawSpace;
@@ -272,6 +273,23 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
     for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = p_scenegraph->GetPass( (*it).first );
+
+        if( NULL == current_pass )
+        {
+            dsstring msg = "PlanetBuild : pass '";
+            msg += (*it).first;
+            msg += "' does not exists in scenegraph";
+
+            _DSEXCEPTION( msg )
+        }
+
+        for( long i = 0; i < 6; i++ )
+        {
+            current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
+        }
+
+
+        /*
         if( current_pass != NULL )
         {         
             for( long i = 0; i < 6; i++ )
@@ -279,6 +297,7 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
                 current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
             }
         }
+        */
     }
     m_scenegraph = p_scenegraph;
 }

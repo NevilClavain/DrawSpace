@@ -20,8 +20,9 @@
 *                                                                          
 */
 
+#include <exceptions.h>
 #include "chunk.h"
-#include "memalloc.h"
+#include <memalloc.h>
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
@@ -63,10 +64,24 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
     for( std::map<dsstring, RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = p_scenegraph->GetPass( (*it).first );
+
+        if( NULL == current_pass )
+        {
+            dsstring msg = "Chunk : pass '";
+            msg += (*it).first;
+            msg += "' does not exists in scenegraph";
+
+            _DSEXCEPTION( msg )
+        }
+
+        current_pass->GetRenderingQueue()->Add( (*it).second );
+
+        /*
         if( current_pass != NULL )
         {
             current_pass->GetRenderingQueue()->Add( (*it).second );
         }
+        */
     }
     m_scenegraph = p_scenegraph;
 
