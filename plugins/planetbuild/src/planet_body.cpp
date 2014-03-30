@@ -506,11 +506,18 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
     if( p_name == name )
     {
         TypedProperty<Vector>* hotpoint = static_cast<TypedProperty<Vector>*>( p_prop );
-        m_hotpoint.m_value = hotpoint->m_value;
 
+
+        m_relative_hotpoint.m_value = hotpoint->m_value;;
+
+        //m_hotpoint.m_value = hotpoint->m_value;
+        /*
         Matrix inv = m_globaltransformation;
         inv.Inverse();
         inv.Transform( &m_hotpoint.m_value, &m_relative_hotpoint.m_value );
+        */
+
+
 
         for( long i = 0; i < 6; i++ )
         {

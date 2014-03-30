@@ -342,3 +342,8 @@ void InertBody::Detach( void )
 
     m_refbody = NULL;
 }
+
+void InertBody::GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_lastlocalworldtrans;
+}

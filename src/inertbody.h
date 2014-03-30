@@ -60,6 +60,8 @@ public:
 
     void Attach( Body* p_body );
     void Detach( void );
+
+    void GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat );
     
 };
 }
