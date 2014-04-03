@@ -97,11 +97,10 @@ protected:
     DrawSpace::Core::TypedProperty<dsreal>                      m_altitud;
 
     DrawSpace::Core::TypedProperty<dsstring>                    m_split;
-    
+
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void build_patch( void );
-
 
 
 public:
@@ -123,6 +122,6 @@ public:
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
     virtual void Initialize( void );
-    virtual void ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat );
+    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
 };
 #endif

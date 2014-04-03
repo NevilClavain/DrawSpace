@@ -26,6 +26,7 @@
 #include "transformnode.h"
 #include "renderer.h"
 #include "property.h"
+#include "callback.h"
 
 namespace DrawSpace
 {
@@ -48,6 +49,7 @@ public:
     virtual Core::Property* GetProperty( const dsstring& p_name ) = 0;
     virtual void SetProperty( const dsstring& p_name, Core::Property* p_prop ) = 0;
     virtual void Initialize( void ) = 0;
+    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler ) = 0;
 };
 }
 }

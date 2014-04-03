@@ -65,6 +65,7 @@ public:
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
     virtual void Initialize( void );
+    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
 };
 
 #endif

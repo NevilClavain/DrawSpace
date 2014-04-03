@@ -587,6 +587,10 @@ void Body::build_patch( void )
     }
 }
 
-void Body::ComputeVSpheres( const DrawSpace::Utils::Matrix& p_view_mat )
+void Body::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
 {
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i]->SetEvtHandler( p_handler );
+    }
 }

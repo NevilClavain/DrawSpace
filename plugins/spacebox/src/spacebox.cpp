@@ -483,3 +483,7 @@ DrawSpace::Core::Property* Spacebox::GetProperty( const dsstring& p_name )
 void Spacebox::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
 {
 }
+
+void Spacebox::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
+{
+}

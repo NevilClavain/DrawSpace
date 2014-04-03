@@ -253,3 +253,7 @@ DrawSpace::Core::Property* Chunk::GetProperty( const dsstring& p_name )
 void Chunk::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
 {
 }
+
+void Chunk::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
+{
+}
