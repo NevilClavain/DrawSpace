@@ -160,42 +160,9 @@ void Orbiter::Update( const Matrix& p_mat )
 
     Matrix orbiter_transform = p_mat;
     m_drawable->SetLocalTransform( orbiter_transform );
-    
-    /////////////////////////////////////////////////////////
-
-    if( m_motionState )
-    {
-        btScalar kmat[16];    
-        btTransform ktf;
-
-        kmat[0] = orbiter_transform( 0, 0 );
-        kmat[1] = orbiter_transform( 0, 1 );
-        kmat[2] = orbiter_transform( 0, 2 );
-        kmat[3] = orbiter_transform( 0, 3 );
-
-        kmat[4] = orbiter_transform( 1, 0 );
-        kmat[5] = orbiter_transform( 1, 1 );
-        kmat[6] = orbiter_transform( 1, 2 );
-        kmat[7] = orbiter_transform( 1, 3 );
-
-        kmat[8] = orbiter_transform( 2, 0 );
-        kmat[9] = orbiter_transform( 2, 1 );
-        kmat[10] = orbiter_transform( 2, 2 );
-        kmat[11] = orbiter_transform( 2, 3 );
-
-        kmat[12] = orbiter_transform( 3, 0 );
-        kmat[13] = orbiter_transform( 3, 1 );
-        kmat[14] = orbiter_transform( 3, 2 );
-        kmat[15] = orbiter_transform( 3, 3 );
-
-        ktf.setFromOpenGLMatrix( kmat );
-        m_motionState->setWorldTransform( ktf );
-    }
-    
-    ////////////////////////////////////////////////////////////
 }
 
-
+/* a supprimer ?? */
 void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
 {
     btTransform bt_transform;
@@ -219,6 +186,7 @@ void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
     m_world->getBulletWorld()->addRigidBody( m_rigidBody );
 }
 
+/* a supprimer ?? */
 void Orbiter::UnsetKinematic( void )
 {
     m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
