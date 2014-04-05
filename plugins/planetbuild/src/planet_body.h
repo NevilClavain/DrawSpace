@@ -98,6 +98,7 @@ protected:
 
     DrawSpace::Core::TypedProperty<dsstring>                    m_split;
 
+    DrawSpace::Core::BaseCallback<void, const dsstring&>*       m_evt_handler;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void build_patch( void );

@@ -206,7 +206,8 @@ m_diameter( "diameter" ),
 m_hotpoint( "hotpoint" ),
 m_relative_hotpoint( "relative_hotpoint" ),
 m_altitud( "altitud" ),
-m_split( "split" )
+m_split( "split" ),
+m_evt_handler( NULL )
 {
     m_patchmeshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     build_patch();
@@ -382,13 +383,19 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
 
 void Body::ComputeSpecifics( void )
 {
-    
-    m_faces[Patch::FrontPlanetFace]->Compute();
-    m_faces[Patch::RearPlanetFace]->Compute();
-    m_faces[Patch::TopPlanetFace]->Compute();        
-    m_faces[Patch::BottomPlanetFace]->Compute();
-    m_faces[Patch::RightPlanetFace]->Compute();
-    m_faces[Patch::LeftPlanetFace]->Compute();
+    bool status = 0;
+
+    status = m_faces[Patch::FrontPlanetFace]->Compute() | status;
+    status = m_faces[Patch::RearPlanetFace]->Compute() | status;
+    status = m_faces[Patch::TopPlanetFace]->Compute() | status; 
+    status = m_faces[Patch::BottomPlanetFace]->Compute() | status;
+    status = m_faces[Patch::RightPlanetFace]->Compute() | status;
+    status = m_faces[Patch::LeftPlanetFace]->Compute() | status;
+
+    if( status && m_evt_handler )
+    {
+        (*m_evt_handler)( "" );
+    }
 }
 
 void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
@@ -589,8 +596,5 @@ void Body::build_patch( void )
 
 void Body::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
 {
-    for( long i = 0; i < 6; i++ )
-    {
-        m_faces[i]->SetEvtHandler( p_handler );
-    }
+    m_evt_handler = p_handler;
 }

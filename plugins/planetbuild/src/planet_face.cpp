@@ -33,8 +33,7 @@ m_rootpatch( NULL ),
 m_planet_diameter( 10.0 ),
 m_currentleaf( NULL ),
 m_ratio_split_threshold( 0.03 ),
-m_ratio_merge_threshold( 0.04 ),
-m_evt_handler( NULL )
+m_ratio_merge_threshold( 0.04 )
 {
 }
 
@@ -165,11 +164,6 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     for( size_t i = 0; i < m_split_handlers.size(); i++ )
     {
         (*( m_split_handlers[i] ) )( m_orientation, patch );
-    }
-
-    if( m_evt_handler )
-    {
-        (*m_evt_handler)( "split_event" );
     }
 }
 
@@ -326,11 +320,6 @@ void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     for( size_t i = 0; i < m_merge_handlers.size(); i++ )
     {
         (*( m_merge_handlers[i] ) )( m_orientation, patch );
-    }
-
-    if( m_evt_handler )
-    {
-        (*m_evt_handler)( "merge_event" );
     }
 }
 
@@ -654,7 +643,7 @@ bool Face::check_merge( Vector& p_hotpoint )
             break;
         }
     }
-    return false;
+    return status;
 }
 
 
@@ -798,6 +787,7 @@ bool Face::Compute( void )
             {
                 merge_group( bounding_parent );
                 m_currentleaf = bounding_parent;
+                status = true;
             }
             else
             {
@@ -832,9 +822,4 @@ void Face::AddMergeHandler( Face::PatchMergeHandler* p_handler )
 DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
 {
     return m_currentleaf;
-}
-
-void Face::SetEvtHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
-{
-    m_evt_handler = p_handler;
 }
