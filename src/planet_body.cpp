@@ -377,7 +377,7 @@ void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
     p_ids.push_back( "right" );
 }
 
-void Body::ComputeSpecifics( void )
+void Body::Compute( void )
 {
     bool status = 0;
 

@@ -458,9 +458,6 @@ void Spacebox::GetNodesIdsList( std::vector<dsstring>& p_ids )
     p_ids.push_back( "right" );
 }
 
-void Spacebox::ComputeSpecifics( void )
-{
-}
 
 void Spacebox::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
 {

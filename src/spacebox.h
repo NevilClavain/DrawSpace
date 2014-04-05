@@ -69,7 +69,6 @@ public:
     virtual void RegisterPassSlot( const dsstring p_passname );
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid );
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );
-    virtual void ComputeSpecifics( void );
     virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname );
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );

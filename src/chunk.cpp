@@ -230,9 +230,6 @@ void Chunk::GetNodesIdsList( std::vector<dsstring>& p_ids )
     p_ids.push_back( "" );
 }
 
-void Chunk::ComputeSpecifics( void )
-{
-}
 
 void Chunk::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
 {
