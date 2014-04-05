@@ -180,20 +180,6 @@ bool DrawSpace::Utils::LoadDrawablePlugin( const dsstring& p_path, const dsstrin
     return true;
 }
 
-Interface::Drawable* DrawSpace::Utils::InstanciateDrawableFromPlugin( const dsstring& p_pluginalias )
-{
-    Drawable* drawable;
-
-    if( m_drawableplugins.count( p_pluginalias ) > 0 )
-    {
-        if( PIM_OK == PlugInManager<Drawable>::Instanciate( m_drawableplugins[p_pluginalias], &drawable ) )
-        {
-            return drawable;
-        }        
-    }
-    return NULL;
-}
-
 bool DrawSpace::Utils::LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias )
 {
     PlugInManager<FontImport>::Handle pihandle;
@@ -246,7 +232,7 @@ Interface::MesheImport* DrawSpace::Utils::InstanciateMesheImportFromPlugin( cons
     return NULL;
 }
 
-void DrawSpace::Utils::BuildSpaceboxFx( Interface::Drawable* p_spacebox, const dsstring& p_passname, const dsstring& p_nodeid )
+void DrawSpace::Utils::BuildSpaceboxFx( Drawable* p_spacebox, const dsstring& p_passname, const dsstring& p_nodeid )
 {
     p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
     p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );

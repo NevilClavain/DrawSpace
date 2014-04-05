@@ -20,16 +20,17 @@
 *                                                                          
 */
 
-#include <renderer.h>
-#include <plugin.h>
-#include <memalloc.h>
-#include <quadtree.h>
-#include <exceptions.h>
+#include "renderer.h"
+#include "plugin.h"
+#include "memalloc.h"
+#include "quadtree.h"
+#include "exceptions.h"
 #include "planet_body.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Planet;
 
 
 FaceRenderingNode::FaceRenderingNode( Face* p_face, DrawSpace::Interface::Renderer* p_renderer ) : 
@@ -257,11 +258,6 @@ void Body::Initialize( void )
 void Body::GetDescr( dsstring& p_descr )
 {
     p_descr = "planet build";
-}
-
-void Body::DumpMemoryAllocs( void )
-{
-    DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
 }
 
 void Body::SetRenderer( DrawSpace::Interface::Renderer * p_renderer )

@@ -30,14 +30,11 @@
 
 namespace DrawSpace
 {
-namespace Interface
-{
 class Drawable : public Core::TransformNode
 {
 public:
-    virtual void GetDescr( dsstring& p_descr ) = 0;
-    virtual void DumpMemoryAllocs( void ) = 0;
-    virtual void SetRenderer( Renderer * p_renderer ) = 0;
+    virtual void GetDescr( dsstring& p_descr ) = 0;    
+    virtual void SetRenderer( Interface::Renderer * p_renderer ) = 0;
     virtual void OnRegister( Scenegraph* p_scenegraph ) = 0;
     virtual Core::Meshe* GetMeshe( const dsstring& p_mesheid ) = 0;
     virtual void RegisterPassSlot( const dsstring p_passname ) = 0;
@@ -51,7 +48,6 @@ public:
     virtual void Initialize( void ) = 0;
     virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler ) = 0;
 };
-}
 }
 
 #endif

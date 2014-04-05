@@ -21,12 +21,13 @@
 */
 
 #include "planet_face.h"
-#include <memalloc.h>
-#include <maths.h>
+#include "memalloc.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Planet;
 
 Face::Face( void ) : 
 m_rootpatch( NULL ), 

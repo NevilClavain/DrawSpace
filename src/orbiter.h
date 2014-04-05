@@ -50,7 +50,7 @@ protected:
 
     dsreal                              m_orbit_duration;
     
-    DrawSpace::Interface::Drawable*     m_drawable; // drawable representant la trajectoire orbite
+    DrawSpace::Drawable*                m_drawable; // drawable representant la trajectoire orbite
 
     void orbit_step( dsreal p_angle, DrawSpace::Utils::Matrix& p_mat );
 
@@ -76,7 +76,7 @@ public:
 
     void    OrbitStep( const DrawSpace::Utils::Matrix& p_centroidbase );
     void    BuildMeshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
-    void    RegisterDrawable( DrawSpace::Interface::Drawable* p_drawable );
+    void    RegisterDrawable( DrawSpace::Drawable* p_drawable );
 
     void    Progress( DrawSpace::Utils::TimeManager& p_timer );
 
@@ -94,7 +94,7 @@ protected:
 
 public:
 
-    Orbiter( World* p_world, DrawSpace::Interface::Drawable* p_drawable );
+    Orbiter( World* p_world, DrawSpace::Drawable* p_drawable );
     virtual ~Orbiter( void );
 
     void Update( const DrawSpace::Utils::Matrix& p_mat );

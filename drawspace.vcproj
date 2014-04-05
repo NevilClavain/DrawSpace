@@ -453,19 +453,11 @@
 			Name="interface"
 			>
 			<File
-				RelativePath=".\src\drawable.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\fontimport.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\mesheimport.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\physic.h"
 				>
 			</File>
 			<File
@@ -545,6 +537,34 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="planet"
+			>
+			<File
+				RelativePath=".\src\planet_body.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_body.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_face.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_face.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_patch.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_patch.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\asset.cpp"
 			>
@@ -559,6 +579,18 @@
 		</File>
 		<File
 			RelativePath=".\src\camera.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\chunk.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\chunk.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\drawable.h"
 			>
 		</File>
 		<File
@@ -603,6 +635,14 @@
 		</File>
 		<File
 			RelativePath=".\src\scenegraph.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\spacebox.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\spacebox.h"
 			>
 		</File>
 		<File

@@ -28,7 +28,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-InertBody::InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world, p_drawable ),
+InertBody::InertBody( World* p_world, DrawSpace::Drawable* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world, p_drawable ),
 m_refbody( NULL ),
 m_parameters( p_parameters )
 {

@@ -23,11 +23,12 @@
 #ifndef _CHUNK_H_
 #define _CHUNK_H_
 
-#include <drawable.h>
-#include <scenegraph.h>
+#include "drawable.h"
+#include "scenegraph.h"
 
-
-class Chunk : public DrawSpace::Interface::Drawable
+namespace DrawSpace
+{
+class Chunk : public DrawSpace::Drawable
 {
 protected:
 
@@ -51,10 +52,8 @@ public:
     virtual ~Chunk( void );
 
     virtual void GetDescr( dsstring& p_descr );
-    virtual void DumpMemoryAllocs( void );
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
-    virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
-    //virtual bool LoadAssets( void );
+    virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );    
     virtual DrawSpace::Core::Meshe* GetMeshe( const dsstring& p_mesheid );
     virtual void RegisterPassSlot( const dsstring p_passname );
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid );
@@ -67,5 +66,6 @@ public:
     virtual void Initialize( void );
     virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
 };
+}
 
 #endif

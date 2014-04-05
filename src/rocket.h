@@ -52,7 +52,7 @@ protected:
 
 public:
 
-    Rocket( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Body::Parameters& p_parameters );
+    Rocket( World* p_world, DrawSpace::Drawable* p_drawable, const Body::Parameters& p_parameters );
     virtual ~Rocket( void );
     
     void Update( void );

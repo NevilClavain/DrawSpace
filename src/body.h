@@ -62,7 +62,7 @@ public:
 
 
 protected:
-    DrawSpace::Interface::Drawable* m_drawable;
+    DrawSpace::Drawable*            m_drawable;
     World*                          m_world;
 
     DrawSpace::Utils::Matrix        m_lastworldtrans;
@@ -72,10 +72,10 @@ protected:
 
 
 public:
-    Body( World* p_world, DrawSpace::Interface::Drawable* p_drawable );
+    Body( World* p_world, DrawSpace::Drawable* p_drawable );
     virtual ~Body( void );
 
-    DrawSpace::Interface::Drawable* GetDrawable( void );
+    DrawSpace::Drawable* GetDrawable( void );
     void GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo );
     World* GetWorld( void );
 

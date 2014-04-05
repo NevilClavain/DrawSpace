@@ -52,7 +52,7 @@ protected:
 
 public:
 
-    InertBody( World* p_world, DrawSpace::Interface::Drawable* p_drawable, const Body::Parameters& p_parameters );
+    InertBody( World* p_world, DrawSpace::Drawable* p_drawable, const Body::Parameters& p_parameters );
     virtual ~InertBody( void );
 
     void GetParameters( Parameters& p_parameters );

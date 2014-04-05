@@ -20,9 +20,10 @@
 *                                                                          
 */
 
-#include <exceptions.h>
+#include "exceptions.h"
+#include "memalloc.h"
 #include "chunk.h"
-#include <memalloc.h>
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
@@ -49,10 +50,6 @@ void Chunk::GetDescr( dsstring& p_descr )
     p_descr = "Chunk";
 }
 
-void Chunk::DumpMemoryAllocs( void )
-{
-    DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
-}
 
 void Chunk::SetRenderer( Renderer * p_renderer )
 {

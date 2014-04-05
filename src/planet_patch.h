@@ -23,10 +23,14 @@
 #ifndef _PLANET_PATCH_H_
 #define _PLANET_PATCH_H_
 
-#include <vector.h>
-#include <quadtree.h>
-#include <vsphere.h>
+#include "vector.h"
+#include "quadtree.h"
+#include "vsphere.h"
 
+namespace DrawSpace
+{
+namespace Planet
+{
 class Patch
 {
 public:
@@ -86,5 +90,7 @@ public:
     static void ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientation, dsreal p_sidelength, dsreal p_ray, dsreal p_posx, dsreal p_posy, DrawSpace::Utils::Vector& p_out );
 
 };
+}
+}
 
 #endif

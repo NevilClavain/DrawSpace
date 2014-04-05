@@ -23,12 +23,17 @@
 #ifndef _PLANET_BODY_H_
 #define _PLANET_BODY_H_
 
-#include <drawable.h>
-#include <scenegraph.h>
-#include <task.h>
-#include <property.h>
-#include <mutex.h>
+#include "drawable.h"
+#include "scenegraph.h"
+#include "task.h"
+#include "property.h"
+#include "mutex.h"
 #include "planet_face.h"
+
+namespace DrawSpace
+{
+namespace Planet
+{
 
 class FaceRenderingNode : public DrawSpace::Core::RenderingNode
 {
@@ -68,7 +73,7 @@ public:
     
 };
 
-class Body : public DrawSpace::Interface::Drawable
+class Body : public DrawSpace::Drawable
 {	
 protected:
 
@@ -110,7 +115,6 @@ public:
     virtual ~Body( void );
 
     virtual void GetDescr( dsstring& p_descr );
-    virtual void DumpMemoryAllocs( void );
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
     virtual DrawSpace::Core::Meshe* GetMeshe( const dsstring& p_mesheid );
@@ -125,4 +129,6 @@ public:
     virtual void Initialize( void );
     virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
 };
+}
+}
 #endif

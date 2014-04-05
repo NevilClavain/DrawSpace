@@ -21,8 +21,8 @@
 */
 
 #include "spacebox.h"
-#include <memalloc.h>
-#include <exceptions.h>
+#include "memalloc.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
@@ -225,11 +225,6 @@ void Spacebox::Initialize( void )
 void Spacebox::GetDescr( dsstring& p_descr )
 {
     p_descr = "Spacebox";
-}
-
-void Spacebox::DumpMemoryAllocs( void )
-{
-    DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
 }
 
 void Spacebox::SetRenderer( Renderer * p_renderer )

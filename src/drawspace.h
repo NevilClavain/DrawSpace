@@ -73,10 +73,12 @@
 #include "freemovement.h"
 #include "quadtree.h"
 #include "misc_utils.h"
-#include "physic.h"
 #include "world.h"
 #include "inertbody.h"
 #include "orbiter.h"
 #include "rocket.h"
 #include "calendar.h"
+#include "spacebox.h"
+#include "planet_body.h"
+#include "chunk.h"
 #endif

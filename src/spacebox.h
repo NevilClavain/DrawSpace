@@ -23,11 +23,12 @@
 #ifndef _SPACEBOX_H_
 #define _SPACEBOX_H_
 
-#include <drawable.h>
-#include <scenegraph.h>
+#include "drawable.h"
+#include "scenegraph.h"
 
-
-class Spacebox : public DrawSpace::Interface::Drawable
+namespace DrawSpace
+{
+class Spacebox : public DrawSpace::Drawable
 {
 protected:
 
@@ -62,7 +63,6 @@ public:
     virtual ~Spacebox( void );
 
     virtual void GetDescr( dsstring& p_descr );
-    virtual void DumpMemoryAllocs( void );
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
     virtual DrawSpace::Core::Meshe* GetMeshe( const dsstring& p_mesheid );
@@ -77,5 +77,6 @@ public:
     virtual void Initialize( void );
     virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
 };
+}
 
 #endif

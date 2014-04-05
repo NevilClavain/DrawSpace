@@ -23,11 +23,15 @@
 #ifndef _PLANET_FACE_H_
 #define _PLANET_FACE_H_
 
-#include <renderingnode.h>
-#include <quadtree.h>
-#include <renderer.h>
-#include <mutex.h>
+#include "renderingnode.h"
+#include "quadtree.h"
+#include "renderer.h"
 #include "planet_patch.h"
+
+namespace DrawSpace
+{
+namespace Planet
+{
 
 class Face
 {
@@ -106,5 +110,7 @@ public:
     virtual void AddMergeHandler( PatchMergeHandler* p_handler );
     virtual DrawSpace::Utils::QuadtreeNode<Patch>* GetCurrentLeaf( void );
 };
+}
+}
 
 #endif
