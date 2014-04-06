@@ -255,11 +255,6 @@ void Body::Initialize( void )
     }
 }
 
-void Body::GetDescr( dsstring& p_descr )
-{
-    p_descr = "planet build";
-}
-
 void Body::SetRenderer( DrawSpace::Interface::Renderer * p_renderer )
 {
     m_renderer = p_renderer;
@@ -299,10 +294,6 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
     m_scenegraph = p_scenegraph;
 }
 
-DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
-{
-    return NULL;
-}
 
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {

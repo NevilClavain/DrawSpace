@@ -51,19 +51,20 @@ public:
     Chunk( void );
     virtual ~Chunk( void );
 
-    virtual void GetDescr( dsstring& p_descr );
+    
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
-    virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );    
-    virtual DrawSpace::Core::Meshe* GetMeshe( const dsstring& p_mesheid );
+    virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
+
+    virtual DrawSpace::Core::Meshe* GetMeshe( void );
+
+
     virtual void RegisterPassSlot( const dsstring p_passname );
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid );
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );    
     virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname );
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
-    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
-    virtual void Initialize( void );
-    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
+    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );        
 };
 }
 

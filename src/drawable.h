@@ -33,19 +33,23 @@ namespace DrawSpace
 class Drawable : public Core::TransformNode
 {
 public:
-    virtual void GetDescr( dsstring& p_descr ) = 0;    
+       
     virtual void SetRenderer( Interface::Renderer * p_renderer ) = 0;
-    
-    virtual Core::Meshe* GetMeshe( const dsstring& p_mesheid ) = 0;
     virtual void RegisterPassSlot( const dsstring p_passname ) = 0;
-    virtual Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid ) = 0;
-    virtual void GetNodesIdsList( std::vector<dsstring>& p_ids ) = 0;
-    virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname ) = 0;
-    virtual void GetPropertiesList( std::vector<dsstring>& p_props ) = 0;
-    virtual Core::Property* GetProperty( const dsstring& p_name ) = 0;
-    virtual void SetProperty( const dsstring& p_name, Core::Property* p_prop ) = 0;
-    virtual void Initialize( void ) = 0;
-    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler ) = 0;
+
+
+    virtual Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid ) = 0; // specifique pour chaque sous-type de drawable
+    virtual void GetNodesIdsList( std::vector<dsstring>& p_ids ) = 0; // virer
+
+
+    virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname ) = 0; // specifique planet
+    
+    virtual void GetPropertiesList( std::vector<dsstring>& p_props ) = 0; // virer
+
+    virtual Core::Property* GetProperty( const dsstring& p_name ) = 0; // virer
+    virtual void SetProperty( const dsstring& p_name, Core::Property* p_prop ) = 0; // virer
+
+   
 };
 }
 

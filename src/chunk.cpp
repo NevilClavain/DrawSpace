@@ -41,15 +41,6 @@ Chunk::~Chunk( void )
     _DRAWSPACE_DELETE_( m_lod_callback );
 }
 
-void Chunk::Initialize( void )
-{
-}
-
-void Chunk::GetDescr( dsstring& p_descr )
-{
-    p_descr = "Chunk";
-}
-
 
 void Chunk::SetRenderer( Renderer * p_renderer )
 {
@@ -145,7 +136,7 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
     m_lodsteps.push_back( lodstep );
 }
 
-Core::Meshe* Chunk::GetMeshe( const dsstring& p_mesheid )
+Core::Meshe* Chunk::GetMeshe( void )
 {
     return m_meshe;
 }
@@ -245,9 +236,5 @@ DrawSpace::Core::Property* Chunk::GetProperty( const dsstring& p_name )
 }
 
 void Chunk::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
-{
-}
-
-void Chunk::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
 {
 }

@@ -218,14 +218,7 @@ Spacebox::~Spacebox( void )
 {
 }
 
-void Spacebox::Initialize( void )
-{
-}
 
-void Spacebox::GetDescr( dsstring& p_descr )
-{
-    p_descr = "Spacebox";
-}
 
 void Spacebox::SetRenderer( Renderer * p_renderer )
 {
@@ -320,33 +313,9 @@ bool Spacebox::LoadAssets( void )
 }
 */
 
-Core::Meshe* Spacebox::GetMeshe( const dsstring& p_mesheid )
+Core::Meshe* Spacebox::GetMeshe( int p_mesheid )
 {
-    if( "front" == p_mesheid )
-    {
-        return m_meshes[FrontQuad];
-    }
-    else if( "rear" == p_mesheid )
-    {
-        return m_meshes[RearQuad];
-    }
-    else if( "left" == p_mesheid )
-    {
-        return m_meshes[LeftQuad];
-    }
-    else if( "right" == p_mesheid )
-    {
-        return m_meshes[RightQuad];
-    }
-    else if( "top" == p_mesheid )
-    {
-        return m_meshes[TopQuad];
-    }
-    else if( "bottom" == p_mesheid )
-    {
-        return m_meshes[BottomQuad];
-    }
-    return NULL;
+    return m_meshes[p_mesheid];
 }
 
 void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
@@ -476,6 +445,3 @@ void Spacebox::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p
 {
 }
 
-void Spacebox::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
-{
-}

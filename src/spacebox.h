@@ -30,9 +30,7 @@ namespace DrawSpace
 {
 class Spacebox : public DrawSpace::Drawable
 {
-protected:
-
-    typedef DrawSpace::Core::CallBack<Spacebox, void, DrawSpace::Core::RenderingNode*>   RenderingNodeDrawCallback;
+public:
 
     static const int    FrontQuad    = 0;
 	static const int    RearQuad     = 1;
@@ -40,6 +38,11 @@ protected:
 	static const int    RightQuad    = 3;
 	static const int    TopQuad      = 4;
 	static const int    BottomQuad   = 5;
+
+
+protected:
+
+    typedef DrawSpace::Core::CallBack<Spacebox, void, DrawSpace::Core::RenderingNode*>   RenderingNodeDrawCallback;
 
 	typedef struct
 	{
@@ -62,10 +65,12 @@ public:
     Spacebox( void );
     virtual ~Spacebox( void );
 
-    virtual void GetDescr( dsstring& p_descr );
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
-    virtual DrawSpace::Core::Meshe* GetMeshe( const dsstring& p_mesheid );
+
+    virtual DrawSpace::Core::Meshe* GetMeshe( int p_mesheid );
+
+
     virtual void RegisterPassSlot( const dsstring p_passname );
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid );
     virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );
@@ -73,8 +78,6 @@ public:
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
-    virtual void Initialize( void );
-    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
 };
 }
 
