@@ -23,12 +23,13 @@
 #ifndef _CHUNK_H_
 #define _CHUNK_H_
 
-#include "drawable.h"
+#include "transformnode.h"
 #include "scenegraph.h"
+#include "renderer.h"
 
 namespace DrawSpace
 {
-class Chunk : public DrawSpace::Drawable
+class Chunk : public Core::TransformNode
 {
 protected:
 
@@ -57,14 +58,9 @@ public:
 
     virtual DrawSpace::Core::Meshe* GetMeshe( void );
 
-
     virtual void RegisterPassSlot( const dsstring p_passname );
-    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid );
-    virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );    
-    virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname );
-    virtual void GetPropertiesList( std::vector<dsstring>& p_props );
-    virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
-    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );        
+    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
+    
 };
 }
 

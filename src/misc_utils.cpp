@@ -30,7 +30,6 @@ using namespace DrawSpace::Interface;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Gui;
 
-static std::map<dsstring, PlugInManager<Drawable>::Handle>      m_drawableplugins;
 static std::map<dsstring, PlugInManager<FontImport>::Handle>    m_fontimportplugins;
 static std::map<dsstring, PlugInManager<MesheImport>::Handle>   m_mesheimportplugins;
 
@@ -168,18 +167,6 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
     return text_widget;
 }
 
-bool DrawSpace::Utils::LoadDrawablePlugin( const dsstring& p_path, const dsstring& p_pluginalias )
-{
-    PlugInManager<Drawable>::Handle pihandle;
-    PluginManagerStatus pistatus = PlugInManager<Drawable>::LoadPlugin( p_path.c_str(), pihandle );
-    if( pistatus != PIM_OK )
-    {
-        return false;
-    }
-    m_drawableplugins[p_pluginalias] = pihandle;
-    return true;
-}
-
 bool DrawSpace::Utils::LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias )
 {
     PlugInManager<FontImport>::Handle pihandle;
@@ -232,62 +219,65 @@ Interface::MesheImport* DrawSpace::Utils::InstanciateMesheImportFromPlugin( cons
     return NULL;
 }
 
-void DrawSpace::Utils::BuildSpaceboxFx( Drawable* p_spacebox, const dsstring& p_passname, const dsstring& p_nodeid )
+void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, const dsstring& p_passname )
 {
-    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
-    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+    for( long i = 0; i < 6; i++ )
+    {
 
-    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->GetShader( 0 )->SetText(
+        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
 
-        "float4x4 matWorldViewProjection: register(c0);"
+        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->GetShader( 0 )->SetText(
 
-        "struct VS_INPUT"
-        "{"
-           "float4 Position : POSITION0;"
-           "float4 TexCoord0: TEXCOORD0;"              
-        "};"
+            "float4x4 matWorldViewProjection: register(c0);"
 
-        "struct VS_OUTPUT"
-        "{"
-           "float4 Position : POSITION0;"
-           "float4 TexCoord0: TEXCOORD0;"
-        "};"
+            "struct VS_INPUT"
+            "{"
+               "float4 Position : POSITION0;"
+               "float4 TexCoord0: TEXCOORD0;"              
+            "};"
 
-        "VS_OUTPUT vs_main( VS_INPUT Input )"
-        "{"
-           "VS_OUTPUT Output;"
+            "struct VS_OUTPUT"
+            "{"
+               "float4 Position : POSITION0;"
+               "float4 TexCoord0: TEXCOORD0;"
+            "};"
 
-           "Output.Position = mul( Input.Position, matWorldViewProjection );"
-           "Output.TexCoord0 = Input.TexCoord0;"
-              
-           "return( Output );"
-        "}"
+            "VS_OUTPUT vs_main( VS_INPUT Input )"
+            "{"
+               "VS_OUTPUT Output;"
 
-            );
+               "Output.Position = mul( Input.Position, matWorldViewProjection );"
+               "Output.TexCoord0 = Input.TexCoord0;"
+                  
+               "return( Output );"
+            "}"
 
-    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->GetShader( 1 )->SetText(
+                );
 
-        "sampler2D Texture0;"
+        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->GetShader( 1 )->SetText(
 
-        "struct PS_INTPUT"
-        "{"
-           "float4 Position : POSITION0;"
-           "float4 TexCoord0: TEXCOORD0;"
-        "};"
+            "sampler2D Texture0;"
 
-        "float4 ps_main( PS_INTPUT input ) : COLOR0"
-        "{"
-           "return tex2D( Texture0, input.TexCoord0 );"
-        "}"
+            "struct PS_INTPUT"
+            "{"
+               "float4 Position : POSITION0;"
+               "float4 TexCoord0: TEXCOORD0;"
+            "};"
 
-            );
+            "float4 ps_main( PS_INTPUT input ) : COLOR0"
+            "{"
+               "return tex2D( Texture0, input.TexCoord0 );"
+            "}"
 
-    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+                );
 
-    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    p_spacebox->GetNodeFromPass( p_passname, p_nodeid )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
 
-    
+        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+
+    }    
 }
 

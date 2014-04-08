@@ -23,7 +23,7 @@
 #ifndef _BODY_H_
 #define _BODY_H_
 
-#include "drawable.h"
+#include "transformnode.h"
 #include "world.h"
 
 namespace DrawSpace
@@ -62,20 +62,20 @@ public:
 
 
 protected:
-    DrawSpace::Drawable*            m_drawable;
-    World*                          m_world;
+    DrawSpace::Core::TransformNode*     m_drawable;
+    World*                              m_world;
 
-    DrawSpace::Utils::Matrix        m_lastworldtrans;
+    DrawSpace::Utils::Matrix            m_lastworldtrans;
 
-    btCollisionShape*               instanciate_collision_shape( const ShapeDescr& p_shapedescr );
+    btCollisionShape*                   instanciate_collision_shape( const ShapeDescr& p_shapedescr );
 
 
 
 public:
-    Body( World* p_world, DrawSpace::Drawable* p_drawable );
+    Body( World* p_world, DrawSpace::Core::TransformNode* p_drawable );
     virtual ~Body( void );
 
-    DrawSpace::Drawable* GetDrawable( void );
+    DrawSpace::Core::TransformNode* GetDrawable( void );
     void GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo );
     World* GetWorld( void );
 

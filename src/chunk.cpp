@@ -63,13 +63,6 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
         }
 
         current_pass->GetRenderingQueue()->Add( (*it).second );
-
-        /*
-        if( current_pass != NULL )
-        {
-            current_pass->GetRenderingQueue()->Add( (*it).second );
-        }
-        */
     }
     m_scenegraph = p_scenegraph;
 
@@ -206,7 +199,7 @@ void Chunk::RegisterPassSlot( const dsstring p_passname )
 
 }
 
-DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid )
+DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring& p_passname )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
     {
@@ -214,27 +207,4 @@ DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring& p_passna
     }
 
     return m_passesnodes[p_passname];
-}
-
-void Chunk::GetNodesIdsList( std::vector<dsstring>& p_ids )
-{
-    p_ids.push_back( "" );
-}
-
-
-void Chunk::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
-{
-}
-
-void Chunk::GetPropertiesList( std::vector<dsstring>& p_props )
-{
-}
-
-DrawSpace::Core::Property* Chunk::GetProperty( const dsstring& p_name )
-{
-    return NULL;
-}
-
-void Chunk::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
-{
 }

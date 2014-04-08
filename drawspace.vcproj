@@ -229,10 +229,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\property.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\renderingnode.cpp"
 				>
 			</File>
@@ -587,10 +583,6 @@
 		</File>
 		<File
 			RelativePath=".\src\chunk.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\drawable.h"
 			>
 		</File>
 		<File

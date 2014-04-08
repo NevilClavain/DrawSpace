@@ -23,11 +23,9 @@
 #ifndef _PLANET_BODY_H_
 #define _PLANET_BODY_H_
 
-#include "drawable.h"
+#include "transformnode.h"
 #include "scenegraph.h"
-#include "task.h"
-#include "property.h"
-#include "mutex.h"
+#include "renderer.h"
 #include "planet_face.h"
 
 namespace DrawSpace
@@ -73,7 +71,7 @@ public:
     
 };
 
-class Body : public DrawSpace::Drawable
+class Body : public DrawSpace::Core::TransformNode
 {	
 protected:
 
@@ -95,13 +93,18 @@ protected:
 
     DrawSpace::Core::Fx*                                        m_fx;
 
+    /*
     //// properties
     DrawSpace::Core::TypedProperty<dsreal>                      m_diameter;
     DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_hotpoint;
     DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_relative_hotpoint;
     DrawSpace::Core::TypedProperty<dsreal>                      m_altitud;
-
     DrawSpace::Core::TypedProperty<dsstring>                    m_split;
+    */
+
+    dsreal                                                      m_diameter;
+    DrawSpace::Utils::Vector                                    m_hotpoint;
+    dsreal                                                      m_altitud;
 
     DrawSpace::Core::BaseCallback<void, const dsstring&>*       m_evt_handler;
 
@@ -111,7 +114,7 @@ protected:
 
 public:
 
-    Body( void );
+    Body( dsreal p_diameter );
     virtual ~Body( void );
 
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
@@ -119,17 +122,21 @@ public:
 
     virtual void RegisterPassSlot( const dsstring p_passname );
     
-    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid );
-    virtual void GetNodesIdsList( std::vector<dsstring>& p_ids );
-    virtual void Compute( void );
-    virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname );
+    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_faceid );
     
+    virtual void Compute( void );
+    virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
+
+    /*
     virtual void GetPropertiesList( std::vector<dsstring>& p_props );
     virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
     virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
-
+*/
     virtual void Initialize( void );
     virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
+
+    virtual void UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
+
 };
 }
 }

@@ -200,15 +200,18 @@ Face::PatchMergeHandler* FaceRenderingNode::GetPatchMergeHandler( void )
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Body::Body( void ) : 
+Body::Body( dsreal p_diameter ) : 
 m_renderer( NULL ), 
 m_scenegraph( NULL ),
+/*
 m_diameter( "diameter" ),
 m_hotpoint( "hotpoint" ),
 m_relative_hotpoint( "relative_hotpoint" ),
 m_altitud( "altitud" ),
 m_split( "split" ),
-m_evt_handler( NULL )
+*/
+m_evt_handler( NULL ),
+m_diameter( p_diameter )
 {
     m_patchmeshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     build_patch();
@@ -216,10 +219,13 @@ m_evt_handler( NULL )
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i] = _DRAWSPACE_NEW_( Face, Face );
+        m_faces[i]->SetPlanetDiameter( m_diameter );
     }
 
+    /*
     m_diameter.m_value = 10.0;
     m_altitud.m_value = -1.0;
+    */
 
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
@@ -279,17 +285,6 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
         {
             current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
         }
-
-
-        /*
-        if( current_pass != NULL )
-        {         
-            for( long i = 0; i < 6; i++ )
-            {
-                current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
-            }
-        }
-        */
     }
     m_scenegraph = p_scenegraph;
 }
@@ -301,7 +296,7 @@ void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
     m_scenegraph->GetCurrentCameraView( view );
 
     FaceRenderingNode* face_node = static_cast<FaceRenderingNode*>( p_rendering_node );
-    face_node->Draw( m_patchmeshe->GetVertexListSize(), m_patchmeshe->GetTrianglesListSize(), m_diameter.m_value / 2.0, m_globaltransformation, view );
+    face_node->Draw( m_patchmeshe->GetVertexListSize(), m_patchmeshe->GetTrianglesListSize(), m_diameter / 2.0, m_globaltransformation, view );
 }
 
 void Body::RegisterPassSlot( const dsstring p_passname )
@@ -321,7 +316,7 @@ void Body::RegisterPassSlot( const dsstring p_passname )
     m_passesnodes[p_passname] = nodeset;
 }
 
-DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid )
+DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passname, int p_faceid )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
     {
@@ -329,43 +324,7 @@ DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passnam
     }
     NodesSet nodeset = m_passesnodes[p_passname];
     
-    int faceid;
-
-    if( "front" == p_nodeid )
-    {
-        faceid = Patch::FrontPlanetFace;
-    }
-    else if( "rear" == p_nodeid )
-    {
-        faceid = Patch::RearPlanetFace;
-    }
-    else if( "top" == p_nodeid )
-    {
-        faceid = Patch::TopPlanetFace;
-    }
-    else if( "bottom" == p_nodeid )
-    {
-        faceid = Patch::BottomPlanetFace;
-    }
-    else if( "left" == p_nodeid )
-    {
-        faceid = Patch::LeftPlanetFace;
-    }
-    else if( "right" == p_nodeid )
-    {
-        faceid = Patch::RightPlanetFace;
-    }
-    return nodeset.nodes[faceid];
-}
-
-void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
-{
-    p_ids.push_back( "front" );
-    p_ids.push_back( "rear" );
-    p_ids.push_back( "top" );
-    p_ids.push_back( "bottom" );
-    p_ids.push_back( "left" );
-    p_ids.push_back( "right" );
+    return nodeset.nodes[p_faceid];
 }
 
 void Body::Compute( void )
@@ -385,7 +344,7 @@ void Body::Compute( void )
     }
 }
 
-void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
+void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
     {
@@ -393,43 +352,16 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring
     }
     NodesSet nodeset = m_passesnodes[p_passname];
     
-    int faceid;
-
-    if( "front" == p_nodeid )
-    {
-        faceid = Patch::FrontPlanetFace;
-    }
-    else if( "rear" == p_nodeid )
-    {
-        faceid = Patch::RearPlanetFace;
-    }
-    else if( "top" == p_nodeid )
-    {
-        faceid = Patch::TopPlanetFace;
-    }
-    else if( "bottom" == p_nodeid )
-    {
-        faceid = Patch::BottomPlanetFace;
-    }
-    else if( "left" == p_nodeid )
-    {
-        faceid = Patch::LeftPlanetFace;
-    }
-    else if( "right" == p_nodeid )
-    {
-        faceid = Patch::RightPlanetFace;
-    }
-
     if( "main_fx" == p_fxname )
     {
-        Fx* fx = nodeset.nodes[faceid]->GetFx();
+        Fx* fx = nodeset.nodes[p_faceid]->GetFx();
         *fx = *m_fx; 
 
-        nodeset.nodes[faceid]->AddShaderParameter( 1, "color", 0 );
-        nodeset.nodes[faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
+        nodeset.nodes[p_faceid]->AddShaderParameter( 1, "color", 0 );
+        nodeset.nodes[p_faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
     }
 }
-
+/*
 void Body::GetPropertiesList( std::vector<dsstring>& p_props )
 {
     dsstring name;
@@ -446,7 +378,8 @@ void Body::GetPropertiesList( std::vector<dsstring>& p_props )
     m_altitud.GetName( name );
     p_props.push_back( name );
 }
-
+*/
+/*
 Property* Body::GetProperty( const dsstring& p_name )
 {
     dsstring name;
@@ -504,15 +437,6 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
 
         m_relative_hotpoint.m_value = hotpoint->m_value;;
 
-        //m_hotpoint.m_value = hotpoint->m_value;
-        /*
-        Matrix inv = m_globaltransformation;
-        inv.Inverse();
-        inv.Transform( &m_hotpoint.m_value, &m_relative_hotpoint.m_value );
-        */
-
-
-
         for( long i = 0; i < 6; i++ )
         {
             if( m_faces[i] != NULL )
@@ -533,7 +457,7 @@ void Body::SetProperty( const dsstring& p_name, Property* p_prop )
         m_faces[Patch::FrontPlanetFace]->Split( patchname->m_value );
     }
 }
-
+*/
 void Body::build_patch( void )
 {
     dsreal xcurr, ycurr;
@@ -584,4 +508,17 @@ void Body::build_patch( void )
 void Body::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
 {
     m_evt_handler = p_handler;
+}
+
+void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
+{
+    m_hotpoint = p_hotpoint;
+
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i]->UpdateRelativeHotpoint( m_hotpoint );
+    }
+
+    // compute altitud
+    m_altitud = m_hotpoint.Length() - ( m_diameter / 2.0 );
 }

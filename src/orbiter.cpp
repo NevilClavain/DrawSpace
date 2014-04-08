@@ -131,7 +131,7 @@ void Orbit::BuildMeshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe )
     build_orbit_meshe( p_anglestep, p_meshe );
 }
 
-void Orbit::RegisterDrawable( DrawSpace::Drawable* p_drawable )
+void Orbit::RegisterChunk( DrawSpace::Chunk* p_drawable )
 {
     m_drawable = p_drawable;
 }
@@ -143,7 +143,7 @@ void Orbit::Progress( TimeManager& p_timer )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Orbiter::Orbiter( World* p_world, DrawSpace::Drawable* p_drawable ) : Body( p_world, p_drawable ),
+Orbiter::Orbiter( World* p_world, TransformNode* p_drawable ) : Body( p_world, p_drawable ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL )
