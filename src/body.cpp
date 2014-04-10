@@ -39,7 +39,7 @@ Body::~Body( void )
 {
 }
 
-btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapedescr )
+btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe )
 {
     switch( p_shapedescr.shape )
     {
@@ -48,6 +48,38 @@ btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapede
             
         case Body::SPHERE_SHAPE:
             return _DRAWSPACE_NEW_( btSphereShape, btSphereShape( p_shapedescr.sphere_radius ) );
+
+            
+        case Body::MESHE_SHAPE:
+            {
+                btTriangleMesh* data = _DRAWSPACE_NEW_( btTriangleMesh, btTriangleMesh );
+                Meshe meshe = p_shapedescr.meshe;
+
+                for( long i = 0; i < meshe.GetTrianglesListSize(); i++ )
+                {
+                    Triangle curr_triangle;
+                    meshe.GetTriangles( i, curr_triangle );
+
+                    Vertex v1, v2, v3;
+
+                    meshe.GetVertex( curr_triangle.vertex1, v1 );
+                    meshe.GetVertex( curr_triangle.vertex2, v2 );
+                    meshe.GetVertex( curr_triangle.vertex3, v3 );
+
+                    btVector3 a( v1.x, v1.y, v1.z );
+                    btVector3 b( v2.x, v2.y, v2.z );
+                    btVector3 c( v3.x, v3.y, v3.z );
+
+                    data->addTriangle( a, b, c, false );
+                }
+
+                if( p_btmeshe )
+                {
+                    *p_btmeshe = data;
+                }
+
+                return _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( data, true, true ) );
+            } 
 
         default:
             return NULL;

@@ -91,6 +91,7 @@ protected:
 
     btRigidBody*                    m_rigidBody;
     btCollisionShape*               m_collisionShape;
+    btTriangleMesh*                 m_meshe_data;
     btDefaultMotionState*           m_motionState;
 
 public:

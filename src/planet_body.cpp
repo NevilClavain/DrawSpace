@@ -108,15 +108,12 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
         currentleaf_depth = m_face->GetCurrentLeaf()->GetDepthLevel();
     }
 
-    
     if( -1 == currentleaf_depth || currentleaf_depth < 3 )
     {
-    
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {
             draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view );
         }
-      
     }
     else
     {
@@ -124,7 +121,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
 
         draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
 
-        for( long i = 0; i < 8;i++ )
+        for( long i = 0; i < 8; i++ )
         {
             QuadtreeNode<Patch>* neighb = static_cast<QuadtreeNode<Patch>*>( current_leaf->GetContent()->GetNeighbour( i ) );
 
@@ -521,4 +518,20 @@ void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
 
     // compute altitud
     m_altitud = m_hotpoint.Length() - ( m_diameter / 2.0 );
+}
+
+DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void )
+{
+    return m_patchmeshe;
+}
+
+Patch* Body::GetFaceCurrentLeaf( int p_faceid )
+{
+    QuadtreeNode<Patch>* current_leaf = m_faces[p_faceid]->GetCurrentLeaf();
+    return current_leaf->GetContent();
+}
+
+dsreal Body::GetAltitud( void )
+{
+    return m_altitud;
 }

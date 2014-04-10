@@ -93,15 +93,6 @@ protected:
 
     DrawSpace::Core::Fx*                                        m_fx;
 
-    /*
-    //// properties
-    DrawSpace::Core::TypedProperty<dsreal>                      m_diameter;
-    DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_hotpoint;
-    DrawSpace::Core::TypedProperty<DrawSpace::Utils::Vector>    m_relative_hotpoint;
-    DrawSpace::Core::TypedProperty<dsreal>                      m_altitud;
-    DrawSpace::Core::TypedProperty<dsstring>                    m_split;
-    */
-
     dsreal                                                      m_diameter;
     DrawSpace::Utils::Vector                                    m_hotpoint;
     dsreal                                                      m_altitud;
@@ -127,15 +118,16 @@ public:
     virtual void Compute( void );
     virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
 
-    /*
-    virtual void GetPropertiesList( std::vector<dsstring>& p_props );
-    virtual DrawSpace::Core::Property* GetProperty( const dsstring& p_name );
-    virtual void SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop );
-*/
     virtual void Initialize( void );
     virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
 
     virtual void UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
+
+    virtual DrawSpace::Core::Meshe* GetPatcheMeshe( void );
+
+    virtual Patch* GetFaceCurrentLeaf( int p_faceid );
+
+    virtual dsreal GetAltitud( void );
 
 };
 }

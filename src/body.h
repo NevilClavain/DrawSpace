@@ -24,6 +24,7 @@
 #define _BODY_H_
 
 #include "transformnode.h"
+#include "meshe.h"
 #include "world.h"
 
 namespace DrawSpace
@@ -38,14 +39,16 @@ public:
     {
         BOX_SHAPE,
         SPHERE_SHAPE,
+        MESHE_SHAPE,
 
     } Shape;
 
     typedef struct
     {
-        Shape shape;
+        Shape                       shape;
         DrawSpace::Utils::Vector    box_dims;
         dsreal                      sphere_radius;
+        DrawSpace::Core::Meshe      meshe;
 
     } ShapeDescr;
 
@@ -67,7 +70,7 @@ protected:
 
     DrawSpace::Utils::Matrix            m_lastworldtrans;
 
-    btCollisionShape*                   instanciate_collision_shape( const ShapeDescr& p_shapedescr );
+    btCollisionShape*                   instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe = NULL );
 
 
 

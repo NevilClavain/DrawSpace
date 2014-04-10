@@ -30,7 +30,11 @@ using namespace DrawSpace::Dynamics;
 
 InertBody::InertBody( World* p_world, TransformNode* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world, p_drawable ),
 m_refbody( NULL ),
-m_parameters( p_parameters )
+m_parameters( p_parameters ),
+m_rigidBody( NULL ),
+m_collisionShape( NULL ),
+m_motionState( NULL ),
+m_meshe_data( NULL )
 {
     m_global_world_mem = m_world;
     btTransform bt_transform;
@@ -51,7 +55,7 @@ InertBody::~InertBody( void )
 
 void InertBody::create_body( const btTransform& p_transform )
 {
-    m_collisionShape = instanciate_collision_shape( m_parameters.shape_descr );
+    m_collisionShape = instanciate_collision_shape( m_parameters.shape_descr, &m_meshe_data );
 
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( p_transform ) );
 

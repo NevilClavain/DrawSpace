@@ -146,7 +146,8 @@ void Orbit::Progress( TimeManager& p_timer )
 Orbiter::Orbiter( World* p_world, TransformNode* p_drawable ) : Body( p_world, p_drawable ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
-m_motionState( NULL )
+m_motionState( NULL ),
+m_meshe_data( NULL )
 {
 }
 
@@ -162,7 +163,7 @@ void Orbiter::Update( const Matrix& p_mat )
     m_drawable->SetLocalTransform( orbiter_transform );
 }
 
-/* a supprimer ?? */
+
 void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
 {
     btTransform bt_transform;
@@ -170,7 +171,7 @@ void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
     bt_transform.setIdentity();
     bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0], p_parameters.initial_pos[1], p_parameters.initial_pos[2] ) );
 
-    m_collisionShape = instanciate_collision_shape( p_parameters.shape_descr );
+    m_collisionShape = instanciate_collision_shape( p_parameters.shape_descr, &m_meshe_data );
 
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
 
@@ -186,7 +187,7 @@ void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
     m_world->getBulletWorld()->addRigidBody( m_rigidBody );
 }
 
-/* a supprimer ?? */
+
 void Orbiter::UnsetKinematic( void )
 {
     m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
