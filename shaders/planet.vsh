@@ -1,5 +1,5 @@
 
-float4x4 matViewProjection: register(c0);
+float4x4 matWorldViewProjection: register(c0);
 float4   flag0:				register(c8);
 
 	// .x -> patch orientation enum integer
@@ -93,7 +93,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position3.w = 1.0;
 	
 
-	Output.Position = mul( v_position3, matViewProjection );
+	Output.Position = mul( v_position3, matWorldViewProjection );
 	Output.TexCoord0 = Input.TexCoord0;
 	  
 	return( Output );   
