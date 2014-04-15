@@ -194,6 +194,11 @@ void Orbiter::UnsetKinematic( void )
     _DRAWSPACE_DELETE_( m_rigidBody );
     _DRAWSPACE_DELETE_( m_collisionShape );
     _DRAWSPACE_DELETE_( m_motionState );
+
+    if( m_meshe_data )
+    {
+        _DRAWSPACE_DELETE_( m_meshe_data );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////
