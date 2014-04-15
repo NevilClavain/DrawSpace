@@ -84,20 +84,22 @@ protected:
     typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
     typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                    PatchInstanciationCallback;    
 
-    std::map<dsstring, NodesSet>                                m_passesnodes;
-    std::vector<RenderingNodeDrawCallback*>                     m_callbacks;
-    DrawSpace::Scenegraph*                                      m_scenegraph;
-    DrawSpace::Interface::Renderer*                             m_renderer;
-    Face*                                                       m_faces[6];
-    DrawSpace::Core::Meshe*                                     m_patchmeshe;
+    std::map<dsstring, NodesSet>                                                m_passesnodes;
+    std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
+    DrawSpace::Scenegraph*                                                      m_scenegraph;
+    DrawSpace::Interface::Renderer*                                             m_renderer;
+    Face*                                                                       m_faces[6];
+    DrawSpace::Core::Meshe*                                                     m_patchmeshe;
 
-    DrawSpace::Core::Fx*                                        m_fx;
+    DrawSpace::Core::Fx*                                                        m_fx;
 
-    dsreal                                                      m_diameter;
-    DrawSpace::Utils::Vector                                    m_hotpoint;
-    dsreal                                                      m_altitud;
+    dsreal                                                                      m_diameter;
+    DrawSpace::Utils::Vector                                                    m_hotpoint;
+    dsreal                                                                      m_altitud;
 
-    DrawSpace::Core::BaseCallback<void, const dsstring&>*       m_evt_handler;
+    DrawSpace::Core::BaseCallback<void, int>*                                   m_evt_handler;
+
+    int                                                                         m_current_face;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void build_patch( void );
@@ -119,7 +121,7 @@ public:
     virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
 
     virtual void Initialize( void );
-    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
+    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, int>* p_handler );
 
     virtual void UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
 
@@ -128,7 +130,6 @@ public:
     virtual Patch* GetFaceCurrentLeaf( int p_faceid );
 
     virtual dsreal GetAltitud( void );
-
 };
 }
 }

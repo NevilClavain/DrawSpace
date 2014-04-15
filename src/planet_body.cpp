@@ -108,6 +108,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
         currentleaf_depth = m_face->GetCurrentLeaf()->GetDepthLevel();
     }
 
+    
     if( -1 == currentleaf_depth || currentleaf_depth < 3 )
     {
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
@@ -117,10 +118,12 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
     }
     else
     {
+    
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
         draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
 
+        
         for( long i = 0; i < 8; i++ )
         {
             QuadtreeNode<Patch>* neighb = static_cast<QuadtreeNode<Patch>*>( current_leaf->GetContent()->GetNeighbour( i ) );
@@ -130,6 +133,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
                 draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
             }
         }
+        
     }
 }
 
@@ -326,6 +330,24 @@ DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passnam
 
 void Body::Compute( void )
 {
+    // determiner la "face courante";
+
+    int curr_face = 0;
+    dsreal af = m_faces[0]->GetAlignmentFactor();
+
+    for( long i = 1; i < 6; i++ )
+    {
+        if( m_faces[i]->GetAlignmentFactor() > af )
+        {
+            curr_face = i;
+            af = m_faces[i]->GetAlignmentFactor();
+        }
+    }
+
+    m_current_face = curr_face;
+
+    //////////////////////////////////////
+
     bool status = 0;
 
     status = m_faces[Patch::FrontPlanetFace]->Compute() | status;
@@ -337,7 +359,7 @@ void Body::Compute( void )
 
     if( status && m_evt_handler )
     {
-        (*m_evt_handler)( "" );
+        (*m_evt_handler)( m_current_face );
     }
 }
 
@@ -358,107 +380,11 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, 
         nodeset.nodes[p_faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
     }
 }
-/*
-void Body::GetPropertiesList( std::vector<dsstring>& p_props )
-{
-    dsstring name;
 
-    m_diameter.GetName( name );
-    p_props.push_back( name );
-
-    m_hotpoint.GetName( name );
-    p_props.push_back( name );
-
-    m_relative_hotpoint.GetName( name );
-    p_props.push_back( name );
-
-    m_altitud.GetName( name );
-    p_props.push_back( name );
-}
-*/
-/*
-Property* Body::GetProperty( const dsstring& p_name )
-{
-    dsstring name;
-
-    m_diameter.GetName( name );
-    if( p_name == name )
-    {
-        return &m_diameter;
-    }
-
-    m_hotpoint.GetName( name );
-    if( p_name == name )
-    {
-        return &m_hotpoint;
-    }
-
-    m_relative_hotpoint.GetName( name );
-    if( p_name == name )
-    {
-        return &m_relative_hotpoint;
-    }
-
-    m_altitud.GetName( name );
-    if( p_name == name )
-    {
-        return &m_altitud;
-    }
-
-    return NULL;
-}
-
-void Body::SetProperty( const dsstring& p_name, Property* p_prop )
-{
-    dsstring name;
-
-    m_diameter.GetName( name );
-    if( p_name == name )
-    {
-        TypedProperty<dsreal>* input_diameter = static_cast<TypedProperty<dsreal>*>( p_prop );
-        m_diameter.m_value = input_diameter->m_value;
-
-        for( long i = 0; i < 6; i++ )
-        {
-            if( m_faces[i] != NULL )
-            {
-                m_faces[i]->SetPlanetDiameter( m_diameter.m_value );
-            }
-        }
-    }
-    m_hotpoint.GetName( name );
-    if( p_name == name )
-    {
-        TypedProperty<Vector>* hotpoint = static_cast<TypedProperty<Vector>*>( p_prop );
-
-
-        m_relative_hotpoint.m_value = hotpoint->m_value;;
-
-        for( long i = 0; i < 6; i++ )
-        {
-            if( m_faces[i] != NULL )
-            {
-                m_faces[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
-            }
-        }
-
-        // compute altitud
-        m_altitud.m_value = m_relative_hotpoint.m_value.Length() - ( m_diameter.m_value / 2.0 );
-    }
-
-    m_split.GetName( name );
-    if( p_name == name )
-    {
-        TypedProperty<dsstring>* patchname = static_cast<TypedProperty<dsstring>*>( p_prop );
-
-        m_faces[Patch::FrontPlanetFace]->Split( patchname->m_value );
-    }
-}
-*/
 void Body::build_patch( void )
 {
     dsreal xcurr, ycurr;
-    long patch_resolution = 33;
+    long patch_resolution = 9;//33;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );
@@ -502,7 +428,7 @@ void Body::build_patch( void )
     }
 }
 
-void Body::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
+void Body::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, int>* p_handler )
 {
     m_evt_handler = p_handler;
 }
