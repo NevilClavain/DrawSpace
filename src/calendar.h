@@ -89,25 +89,27 @@ protected:
 
     typedef DrawSpace::Core::CallBack<Calendar, void, dsstring> CalendarTimer;
 
-    dstime                          m_offset_time;
-    dstime                          m_current_time;
-    long                            m_current_time_increment;
+    dstime                                      m_offset_time;
+    dstime                                      m_current_time;
+    long                                        m_current_time_increment;
 
-    TimeMode                        m_time_mode;
-    long                            m_time_period;
-    dsreal                          m_time_factor;
+    TimeMode                                    m_time_mode;
+    long                                        m_time_period;
+    dsreal                                      m_time_factor;
 
-    bool                            m_freeze;
+    bool                                        m_freeze;
 
-    long                            m_sub_sec_count;
-    long                            m_sub_sec_count_lim;
+    long                                        m_sub_sec_count;
+    long                                        m_sub_sec_count_lim;
 
-    DrawSpace::Utils::TimeManager*  m_time_manager;
+    DrawSpace::Utils::TimeManager*              m_time_manager;
 
-    std::vector<Orbit*>             m_orbits;
-    CalendarTimer*                  m_timercb;
-    bool                            m_active;
-    DrawSpace::Dynamics::World*     m_world;
+    std::vector<Orbit*>                         m_orbits;
+    CalendarTimer*                              m_timercb;
+    bool                                        m_active;
+    //DrawSpace::Dynamics::World*     m_world;
+
+    std::vector<DrawSpace::Dynamics::World*>    m_worlds;
 
     void on_timer( dsstring p_timername );
 
@@ -115,7 +117,7 @@ protected:
 
 public:
     
-    Calendar( dstime p_offset_time, DrawSpace::Utils::TimeManager* p_tm, DrawSpace::Dynamics::World* p_world );
+    Calendar( dstime p_offset_time, DrawSpace::Utils::TimeManager* p_tm );
     virtual ~Calendar( void );
 
     dstime      GetOffsetTime( void );
@@ -137,6 +139,8 @@ public:
     long        GetSubSecCount( void );
 
     void        Suspend( bool p_suspend );
+
+    void        RegisterWorld( DrawSpace::Dynamics::World* p_world );
         
 };
 }

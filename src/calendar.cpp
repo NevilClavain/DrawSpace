@@ -28,7 +28,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-Calendar::Calendar( dstime p_offset_time, DrawSpace::Utils::TimeManager* p_tm, DrawSpace::Dynamics::World* p_world ) : 
+Calendar::Calendar( dstime p_offset_time, DrawSpace::Utils::TimeManager* p_tm ) : 
 m_offset_time( p_offset_time ), 
 m_time_mode( NORMAL_TIME ),
 m_time_period( 1000 ),
@@ -36,7 +36,7 @@ m_time_factor( 1 ),
 m_current_time_increment( 1 ),
 m_time_manager( p_tm ),
 m_active( false ),
-m_world( p_world ),
+//m_world( p_world ),
 m_sub_sec_count( 0 ),
 m_sub_sec_count_lim( 0 ),
 m_freeze( false )
@@ -327,7 +327,10 @@ void Calendar::Run( void )
             set_orbit_angle( curr_orbit, m_current_time );
         }
 
-        m_world->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
+        for( size_t i = 0; i < m_worlds.size(); i++ )
+        {
+            m_worlds[i]->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
+        }
     }
 }
 
@@ -346,4 +349,9 @@ void Calendar::Suspend( bool p_suspend )
     m_freeze = p_suspend;
 
     m_time_manager->SuspendTimer( "calendar_timer", p_suspend );
+}
+
+void Calendar::RegisterWorld( DrawSpace::Dynamics::World* p_world )
+{
+    m_worlds.push_back( p_world );
 }
