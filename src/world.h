@@ -44,6 +44,12 @@ protected:
 
     btDiscreteDynamicsWorld*                    m_world;
 
+    //dsreal                                      m_scale;
+
+
+public:
+    static dsreal                               m_scale;
+
 public:
     World( void );
     virtual ~World( void );
@@ -54,6 +60,9 @@ public:
     bool StepSimulation( dsreal p_fps );
 
     btDynamicsWorld* getBulletWorld( void );
+
+    //dsreal GetScale( void );
+    void SetScale( dsreal p_scale );
 
 };
 }

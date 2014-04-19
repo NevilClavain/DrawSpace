@@ -41,13 +41,15 @@ Body::~Body( void )
 
 btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe )
 {
+    dsreal world_scale = World::m_scale;
+
     switch( p_shapedescr.shape )
     {
         case Body::BOX_SHAPE:
-            return _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( p_shapedescr.box_dims[0], p_shapedescr.box_dims[1], p_shapedescr.box_dims[2] ) ) );
+            return _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( p_shapedescr.box_dims[0] * world_scale, p_shapedescr.box_dims[1] * world_scale, p_shapedescr.box_dims[2] * world_scale ) ) );
             
         case Body::SPHERE_SHAPE:
-            return _DRAWSPACE_NEW_( btSphereShape, btSphereShape( p_shapedescr.sphere_radius ) );
+            return _DRAWSPACE_NEW_( btSphereShape, btSphereShape( p_shapedescr.sphere_radius * world_scale ) );
 
             
         case Body::MESHE_SHAPE:
@@ -66,9 +68,9 @@ btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapede
                     meshe.GetVertex( curr_triangle.vertex2, v2 );
                     meshe.GetVertex( curr_triangle.vertex3, v3 );
 
-                    btVector3 a( v1.x, v1.y, v1.z );
-                    btVector3 b( v2.x, v2.y, v2.z );
-                    btVector3 c( v3.x, v3.y, v3.z );
+                    btVector3 a( v1.x * world_scale, v1.y * world_scale, v1.z * world_scale );
+                    btVector3 b( v2.x * world_scale, v2.y * world_scale, v2.z * world_scale );
+                    btVector3 c( v3.x * world_scale, v3.y * world_scale, v3.z * world_scale );
 
                     data->addTriangle( a, b, c, false );
                 }

@@ -166,10 +166,12 @@ void Orbiter::Update( const Matrix& p_mat )
 
 void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
 {
+    dsreal world_scale = World::m_scale;
+
     btTransform bt_transform;
 
     bt_transform.setIdentity();
-    bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0], p_parameters.initial_pos[1], p_parameters.initial_pos[2] ) );
+    bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0] * world_scale, p_parameters.initial_pos[1] * world_scale, p_parameters.initial_pos[2] * world_scale ) );
 
     m_collisionShape = instanciate_collision_shape( p_parameters.shape_descr, &m_meshe_data );
 
@@ -178,7 +180,7 @@ void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
     btVector3 localInertia( 0, 0, 0 );
 
     btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( 0.0, m_motionState, m_collisionShape, localInertia );
-    m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
+    m_rigidBody = _DRAWSPACE_NEW_( btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 
     // switch the body to kinematic mode
     m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );

@@ -26,7 +26,10 @@ using namespace DrawSpace;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
-World::World( void ) : m_world( NULL )
+dsreal World::m_scale = 1.0;
+
+World::World( void ) : 
+m_world( NULL )
 {
     m_collisionConfiguration            = _DRAWSPACE_NEW_( btDefaultCollisionConfiguration, btDefaultCollisionConfiguration );
     m_collisionDispatcher               = _DRAWSPACE_NEW_( btCollisionDispatcher, btCollisionDispatcher( m_collisionConfiguration ) );
@@ -58,7 +61,7 @@ bool World::SetGravity( const DrawSpace::Utils::Vector p_gravity )
 {
     if( m_world )
     {
-        m_world->setGravity( btVector3( p_gravity[0], p_gravity[1], p_gravity[2] ) );
+        m_world->setGravity( btVector3( p_gravity[0] * m_scale, p_gravity[1] * m_scale, p_gravity[2] * m_scale ) );
         return true;
     }
     return false;

@@ -37,12 +37,14 @@ m_motionState( NULL ),
 m_meshe_data( NULL )
 {
     m_global_world_mem = m_world;
+
+    dsreal world_scale = World::m_scale;
     btTransform bt_transform;
 
     m_lastlocalworldtrans.Identity();
 
     bt_transform.setIdentity();
-    bt_transform.setOrigin( btVector3( m_parameters.initial_pos[0], m_parameters.initial_pos[1], m_parameters.initial_pos[2] ) );
+    bt_transform.setOrigin( btVector3( m_parameters.initial_pos[0] * world_scale, m_parameters.initial_pos[1] * world_scale, m_parameters.initial_pos[2] * world_scale ) );
 
     create_body( bt_transform );
 }
@@ -55,6 +57,8 @@ InertBody::~InertBody( void )
 
 void InertBody::create_body( const btTransform& p_transform )
 {
+    dsreal world_scale = World::m_scale;
+
     m_collisionShape = instanciate_collision_shape( m_parameters.shape_descr, &m_meshe_data );
 
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( p_transform ) );
@@ -62,10 +66,10 @@ void InertBody::create_body( const btTransform& p_transform )
     btVector3 localInertia( 0, 0, 0 );
     if( m_parameters.mass > 0.0 )
     {        
-        m_collisionShape->calculateLocalInertia( m_parameters.mass, localInertia );
+        m_collisionShape->calculateLocalInertia( m_parameters.mass * world_scale, localInertia );
     }
 
-    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( m_parameters.mass, m_motionState, m_collisionShape, localInertia );
+    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( m_parameters.mass * world_scale, m_motionState, m_collisionShape, localInertia );
     m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 
     m_world->getBulletWorld()->addRigidBody( m_rigidBody );
@@ -89,6 +93,8 @@ void InertBody::GetParameters( Parameters& p_parameters )
 
 void InertBody::Update( void )
 {
+    dsreal world_scale = World::m_scale;
+
     btScalar                 bt_matrix[16];
     DrawSpace::Utils::Matrix updated_matrix;
 
@@ -109,9 +115,9 @@ void InertBody::Update( void )
     updated_matrix( 2, 2 ) = bt_matrix[10];
     updated_matrix( 2, 3 ) = bt_matrix[11];
 
-    updated_matrix( 3, 0 ) = bt_matrix[12];
-    updated_matrix( 3, 1 ) = bt_matrix[13];
-    updated_matrix( 3, 2 ) = bt_matrix[14];
+    updated_matrix( 3, 0 ) = bt_matrix[12] / world_scale;
+    updated_matrix( 3, 1 ) = bt_matrix[13] / world_scale;
+    updated_matrix( 3, 2 ) = bt_matrix[14] / world_scale;
     updated_matrix( 3, 3 ) = bt_matrix[15];
 
     m_lastlocalworldtrans = updated_matrix;
@@ -139,7 +145,7 @@ void InertBody::Update( void )
 /*
 
 mat_a => matrice du body a attacher (exemple : ship)
-mat_b => matrice du body auxquel on s'attache (exemple : ship)
+mat_b => matrice du body auxquel on s'attache (exemple : planete)
 
    1/ attachement :
     
@@ -174,6 +180,8 @@ void InertBody::Attach( Body* p_body )
         return;
     }
 
+    dsreal world_scale = World::m_scale;
+
     // recup derniere transfo body auquel on s'attache
     Matrix mat_b;
     p_body->GetLastWorldTransformation( mat_b );
@@ -200,17 +208,17 @@ void InertBody::Attach( Body* p_body )
     kmat[10] = mat_a2( 2, 2 );
     kmat[11] = mat_a2( 2, 3 );
 
-    kmat[12] = mat_a2( 3, 0 );
-    kmat[13] = mat_a2( 3, 1 );
-    kmat[14] = mat_a2( 3, 2 );
+    kmat[12] = mat_a2( 3, 0 ) * world_scale;
+    kmat[13] = mat_a2( 3, 1 ) * world_scale;
+    kmat[14] = mat_a2( 3, 2 ) * world_scale;
     kmat[15] = mat_a2( 3, 3 );
 
     tf_a2.setFromOpenGLMatrix( kmat );
 
     ///////////////////////////////////////////////////////
 
-    btVector3  bt_linearspeed_mem;
-    btVector3  bt_angularspeed_mem;
+    btVector3 bt_linearspeed_mem;
+    btVector3 bt_angularspeed_mem;
 
     bt_linearspeed_mem = m_rigidBody->getLinearVelocity();
     bt_angularspeed_mem = m_rigidBody->getAngularVelocity();
@@ -263,6 +271,8 @@ void InertBody::Detach( void )
         return;
     }
 
+    dsreal world_scale = World::m_scale;
+
     // recup derniere transfo body auquel on s'attache
     Matrix mat_b;
     m_refbody->GetLastWorldTransformation( mat_b );
@@ -289,9 +299,9 @@ void InertBody::Detach( void )
     kmat[10] = mat_a3( 2, 2 );
     kmat[11] = mat_a3( 2, 3 );
 
-    kmat[12] = mat_a3( 3, 0 );
-    kmat[13] = mat_a3( 3, 1 );
-    kmat[14] = mat_a3( 3, 2 );
+    kmat[12] = mat_a3( 3, 0 ) * world_scale;
+    kmat[13] = mat_a3( 3, 1 ) * world_scale;
+    kmat[14] = mat_a3( 3, 2 ) * world_scale;
     kmat[15] = mat_a3( 3, 3 );
 
     tf_a3.setFromOpenGLMatrix( kmat );
