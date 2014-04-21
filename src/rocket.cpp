@@ -83,7 +83,8 @@ void Rocket::ApplyFwdForce( dsreal p_norm )
     dsreal world_scale = World::m_scale;
 
     m_rigidBody->applyForce( btVector3( m_transformed_fwd[0] * p_norm, 
-                                m_transformed_fwd[1] * p_norm, m_transformed_fwd[2] * p_norm ), 
+                                m_transformed_fwd[1] * p_norm, 
+                                m_transformed_fwd[2] * p_norm ), 
                                 btVector3( 0.0, 0.0, 0.0 ) );
 }
 
@@ -91,9 +92,21 @@ void Rocket::ApplyRevForce( dsreal p_norm )
 {
     dsreal world_scale = World::m_scale;
 
-    m_rigidBody->applyForce( btVector3( m_rev[0] * p_norm * world_scale, 
-                                m_rev[1] * p_norm * world_scale, m_rev[2] * p_norm * world_scale ), 
+    m_rigidBody->applyForce( btVector3( m_transformed_rev[0] * p_norm * world_scale, 
+                                m_transformed_rev[1] * p_norm * world_scale, 
+                                m_transformed_rev[2] * p_norm * world_scale ), 
                                 btVector3( 0.0, 0.0, 0.0 ) );
+}
+
+void Rocket::ApplyDownForce( dsreal p_norm )
+{
+    dsreal world_scale = World::m_scale;
+
+    m_rigidBody->applyForce( btVector3( m_transformed_down[0] * p_norm * world_scale, 
+                                m_transformed_down[1] * p_norm * world_scale, 
+                                m_transformed_down[2] * p_norm * world_scale ), 
+                                btVector3( 0.0, 0.0, 0.0 ) );
+
 }
 
 void Rocket::ApplyLeftYaw( dsreal p_norm )

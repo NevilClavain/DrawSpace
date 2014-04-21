@@ -63,6 +63,8 @@ public:
     void Detach( void );
 
     void GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat );
+
+    void ApplyForce( const DrawSpace::Utils::Vector p_force );
     
 };
 }

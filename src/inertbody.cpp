@@ -361,3 +361,13 @@ void InertBody::GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_lastlocalworldtrans;
 }
+
+void InertBody::ApplyForce( const DrawSpace::Utils::Vector p_force )
+{
+    dsreal world_scale = World::m_scale;
+
+    m_rigidBody->applyForce( btVector3( p_force[0] * world_scale, 
+                                p_force[1] * world_scale, 
+                                p_force[2] * world_scale ), 
+                                btVector3( 0.0, 0.0, 0.0 ) );
+}
