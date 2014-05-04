@@ -103,6 +103,9 @@ public:
 
     void SetKinematic( const Body::Parameters& p_parameters );
     void UnsetKinematic( void );
+
+    void AddToWorld( void );
+    void RemoveFromWorld( void );
 };
 
 

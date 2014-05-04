@@ -186,13 +186,17 @@ void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
     m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
-    m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+    // see AddToWorld()
+    //m_world->getBulletWorld()->addRigidBody( m_rigidBody );
 }
 
 
 void Orbiter::UnsetKinematic( void )
 {
-    m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+    // see RemoveFromWorld()
+    //m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+
+
     _DRAWSPACE_DELETE_( m_rigidBody );
     _DRAWSPACE_DELETE_( m_collisionShape );
     _DRAWSPACE_DELETE_( m_motionState );
@@ -202,6 +206,18 @@ void Orbiter::UnsetKinematic( void )
         _DRAWSPACE_DELETE_( m_meshe_data );
     }
 }
+
+
+void Orbiter::AddToWorld( void )
+{
+    m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+}
+
+void Orbiter::RemoveFromWorld( void )
+{
+    m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+}
+
 
 ////////////////////////////////////////////////////////////////////////////
 
