@@ -371,3 +371,11 @@ void InertBody::ApplyForce( const DrawSpace::Utils::Vector p_force )
                                 p_force[2] * world_scale ), 
                                 btVector3( 0.0, 0.0, 0.0 ) );
 }
+
+dsreal InertBody::GetLinearSpeedMagnitude( void )
+{
+    btVector3 speed = m_rigidBody->getLinearVelocity();
+    Vector speed2( speed.x(), speed.y(), speed.z(), 1.0 );
+
+    return speed2.Length() * World::m_scale;
+}
