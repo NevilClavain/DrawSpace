@@ -106,6 +106,8 @@ public:
 
     void AddToWorld( void );
     void RemoveFromWorld( void );
+
+    virtual btRigidBody* GetRigidBody( void );
 };
 
 

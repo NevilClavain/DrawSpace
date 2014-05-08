@@ -33,6 +33,9 @@ namespace DrawSpace
 {
 namespace Dynamics
 {
+
+class Body;
+
 class World
 {
 protected:
@@ -44,9 +47,10 @@ protected:
 
     btDiscreteDynamicsWorld*                    m_world;
 
-    //dsreal                                      m_scale;
+    //std::vector<Body*>                          m_bodies;
+    std::map<btRigidBody*, Body*>               m_bodies;
 
-
+   
 public:
     static dsreal                               m_scale;
 
@@ -63,6 +67,9 @@ public:
 
     //dsreal GetScale( void );
     void SetScale( dsreal p_scale );
+
+    void AddBody( Body* p_body );
+    void RemoveBody( Body* p_body );
 
 };
 }

@@ -67,6 +67,9 @@ public:
     void ApplyForce( const DrawSpace::Utils::Vector p_force );
 
     dsreal GetLinearSpeedMagnitude( void );
+    dsreal GetAngularSpeedMagnitude( void );
+
+    virtual btRigidBody* GetRigidBody( void );
     
 };
 }

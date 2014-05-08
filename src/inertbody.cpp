@@ -72,14 +72,16 @@ void InertBody::create_body( const btTransform& p_transform )
     btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( m_parameters.mass * world_scale, m_motionState, m_collisionShape, localInertia );
     m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 
-    m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+    //m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+    m_world->AddBody( this );
 
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
 }
 
 void InertBody::destroy_body( void )
 {
-    m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+    //m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+    m_world->RemoveBody( this );
     _DRAWSPACE_DELETE_( m_motionState );
     _DRAWSPACE_DELETE_( m_collisionShape );
     _DRAWSPACE_DELETE_( m_rigidBody );
@@ -378,4 +380,17 @@ dsreal InertBody::GetLinearSpeedMagnitude( void )
     Vector speed2( speed.x(), speed.y(), speed.z(), 1.0 );
 
     return speed2.Length() * World::m_scale;
+}
+
+dsreal InertBody::GetAngularSpeedMagnitude( void )
+{
+    btVector3 speed = m_rigidBody->getAngularVelocity();
+    Vector speed2( speed.x(), speed.y(), speed.z(), 1.0 );
+
+    return speed2.Length();
+}
+
+btRigidBody* InertBody::GetRigidBody( void )
+{
+    return m_rigidBody;
 }

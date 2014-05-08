@@ -185,17 +185,11 @@ void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
     // switch the body to kinematic mode
     m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
-
-    // see AddToWorld()
-    //m_world->getBulletWorld()->addRigidBody( m_rigidBody );
 }
 
 
 void Orbiter::UnsetKinematic( void )
 {
-    // see RemoveFromWorld()
-    //m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
-
 
     _DRAWSPACE_DELETE_( m_rigidBody );
     _DRAWSPACE_DELETE_( m_collisionShape );
@@ -210,14 +204,21 @@ void Orbiter::UnsetKinematic( void )
 
 void Orbiter::AddToWorld( void )
 {
-    m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+    //m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+    m_world->AddBody( this );
 }
 
 void Orbiter::RemoveFromWorld( void )
 {
-    m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+    //m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+    m_world->RemoveBody( this );
 }
 
+
+btRigidBody* Orbiter::GetRigidBody( void )
+{
+    return m_rigidBody;
+}
 
 ////////////////////////////////////////////////////////////////////////////
 

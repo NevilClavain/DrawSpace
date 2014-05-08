@@ -384,7 +384,7 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, 
 void Body::build_patch( void )
 {
     dsreal xcurr, ycurr;
-    long patch_resolution = 27;//33;
+    long patch_resolution = 33;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );

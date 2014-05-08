@@ -30,7 +30,8 @@ using namespace DrawSpace::Dynamics;
 
 Body::Body( World* p_world, TransformNode* p_drawable ) : 
 m_drawable( p_drawable ), 
-m_world( p_world )
+m_world( p_world ),
+m_contact_state( false )
 {
     m_lastworldtrans.Identity();
 }
@@ -101,4 +102,14 @@ void Body::GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo )
 World* Body::GetWorld( void )
 {
     return m_world;
+}
+
+bool Body::GetContactState( void )
+{
+    return m_contact_state;
+}
+
+void Body::SetContactState( bool p_state )
+{
+    m_contact_state = p_state;
 }

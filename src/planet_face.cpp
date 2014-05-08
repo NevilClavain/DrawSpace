@@ -579,7 +579,7 @@ dsreal Face::alt_ratio( dsreal p_altitud )
 
 bool Face::check_split( Vector& p_hotpoint )
 {
-    if( m_currentleaf->GetDepthLevel() >= 11 )
+    if( m_currentleaf->GetDepthLevel() >= 8 )
     {
         return false;
     }

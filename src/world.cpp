@@ -21,6 +21,7 @@
 */
 
 #include "world.h"
+#include "body.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
@@ -80,6 +81,45 @@ bool World::StepSimulation( dsreal p_fps )
 
         m_world->stepSimulation( timestep, 5, fixedtimestep );
 
+
+        // check for collisions
+
+
+        for( std::map<btRigidBody*, Body*>::iterator it = m_bodies.begin(); it != m_bodies.end(); ++it )
+        {
+            (*it).second->SetContactState( false );
+        }
+
+        int numManifolds = m_world->getDispatcher()->getNumManifolds();
+
+	    for (int i = 0; i < numManifolds; i++ )
+	    {
+		    btPersistentManifold* contactManifold =  m_world->getDispatcher()->getManifoldByIndexInternal(i);
+
+            //btRigidBody* obA = static_cast<btRigidBody*>( contactManifold->getBody0() );
+
+            btRigidBody* obA = (btRigidBody*)( contactManifold->getBody0() );
+            btRigidBody* obB = (btRigidBody*)( contactManifold->getBody1() );
+
+            int numContacts = contactManifold->getNumContacts();
+
+            if( m_bodies.count( obA ) > 0 )
+            {
+                if( numContacts > 0 )
+                {
+                    m_bodies[obA]->SetContactState( true );
+                }
+            }
+            else if( m_bodies.count( obB ) > 0 )
+            {
+                if( numContacts > 0 )
+                {
+                    m_bodies[obB]->SetContactState( true );
+                }
+            }
+	    }
+        
+
         return true;
     }
     return false;
@@ -89,3 +129,26 @@ btDynamicsWorld* World::getBulletWorld( void )
 {
     return m_world;
 }
+
+void World::AddBody( Body* p_body )
+{
+    //m_bodies.push_back( p_body );
+    m_bodies[p_body->GetRigidBody()] = p_body;
+
+    m_world->addRigidBody( p_body->GetRigidBody() );
+}
+
+
+void World::RemoveBody( Body* p_body )
+{
+    m_world->removeRigidBody( p_body->GetRigidBody() );
+    for( std::map<btRigidBody*, Body*>::iterator it = m_bodies.begin(); it != m_bodies.end(); ++it )
+    {
+        if( (*it).second == p_body )
+        {
+            m_bodies.erase( it );
+            break;
+        }
+    }
+}
+
