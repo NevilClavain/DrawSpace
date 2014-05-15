@@ -70,6 +70,9 @@ public:
     dsreal GetAngularSpeedMagnitude( void );
 
     virtual btRigidBody* GetRigidBody( void );
+
+    void GetTotalForce( DrawSpace::Utils::Vector& p_force );
+    void GetTotalTorque( DrawSpace::Utils::Vector& p_torque );
     
 };
 }

@@ -122,8 +122,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
         draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
-
-        
+ 
         for( long i = 0; i < 8; i++ )
         {
             QuadtreeNode<Patch>* neighb = static_cast<QuadtreeNode<Patch>*>( current_leaf->GetContent()->GetNeighbour( i ) );
@@ -132,8 +131,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
             {
                 draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
             }
-        }
-        
+        }  
     }
 }
 
@@ -384,7 +382,7 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, 
 void Body::build_patch( void )
 {
     dsreal xcurr, ycurr;
-    long patch_resolution = 33;
+    long patch_resolution = 35;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );

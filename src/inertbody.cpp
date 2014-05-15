@@ -394,3 +394,23 @@ btRigidBody* InertBody::GetRigidBody( void )
 {
     return m_rigidBody;
 }
+
+void InertBody::GetTotalForce( DrawSpace::Utils::Vector& p_force )
+{
+    btVector3 force = m_rigidBody->getTotalForce();
+
+    p_force[0] = force.x();
+    p_force[1] = force.y();
+    p_force[2] = force.z();
+    p_force[3] = 1.0;
+}
+
+void InertBody::GetTotalTorque( DrawSpace::Utils::Vector& p_torque )
+{
+    btVector3 torque = m_rigidBody->getTotalTorque();
+
+    p_torque[0] = torque.x();
+    p_torque[1] = torque.y();
+    p_torque[2] = torque.z();
+    p_torque[3] = 1.0;
+}
