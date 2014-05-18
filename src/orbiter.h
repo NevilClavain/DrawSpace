@@ -40,20 +40,26 @@ protected:
 
     dsreal                              m_orbit_angle;
 
+    dsreal                              m_revolution_angle; // orbiter self rotation
+
     // orbit parameters
     dsreal                              m_ray; 
     dsreal                              m_excentricity;
     dsreal                              m_offset_angle;
-    dsreal                              m_tilt_angle;
+    dsreal                              m_tilt_angle;       // inclinaison orbite
     dsreal                              m_offset_plane_x;
     dsreal                              m_offset_plane_y;
-    Centroid*                           m_centroid;
 
-    dsreal                              m_orbit_duration;
-    
+    dsreal                              m_revolution_tilt_angle; // inclinaison axe de rotation planete
+
+    dsreal                              m_orbit_duration; // unité : 1.0 = annee terrestre (365 jours)
+
+    dsreal                              m_revolution_duration; // unite : 1.0 jour terrestre (24h)
+
+    Centroid*                           m_centroid;
     DrawSpace::Chunk*                   m_drawable; // drawable representant la trajectoire orbite
 
-    void orbit_step( dsreal p_angle, DrawSpace::Utils::Matrix& p_mat );
+    void orbit_step( dsreal p_angle, DrawSpace::Utils::Matrix& p_orbit_mat, DrawSpace::Utils::Matrix& p_planet_mat );
 
     void build_orbit_meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
 
@@ -61,6 +67,7 @@ public:
 
     Orbit::Orbit( dsreal p_ray, dsreal p_excentricity, dsreal p_offset_angle, 
                     dsreal p_tilt_angle, dsreal p_offset_plane_x, dsreal p_offset_plane_y, dsreal p_orbit_duration,
+                    dsreal p_revolution_tilt_angle, dsreal p_revolution_duration,
                     Centroid* p_centroid ) :
     m_ray( p_ray ),
     m_excentricity( p_excentricity ),
@@ -71,7 +78,9 @@ public:
     m_drawable( NULL ),
     m_centroid( p_centroid ),
     m_orbit_angle( 0.0 ),
-    m_orbit_duration( p_orbit_duration )
+    m_orbit_duration( p_orbit_duration ),
+    m_revolution_tilt_angle( p_revolution_tilt_angle ),
+    m_revolution_duration( p_revolution_duration )
     {
     };
 
@@ -123,7 +132,7 @@ public:
 
     Centroid( void );
     void RegisterSubOrbit( Orbit* p_orbit );
-    void Update( const DrawSpace::Utils::Matrix& p_prevcentroidbase, const DrawSpace::Utils::Matrix& p_localorbitmat );
+    void Update( const DrawSpace::Utils::Matrix& p_prevcentroidbase, const DrawSpace::Utils::Matrix& p_localorbitmat, const DrawSpace::Utils::Matrix& p_localplanetmat );
     void SetOrbiter( Orbiter* p_orbiter );
 };
 

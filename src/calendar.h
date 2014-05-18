@@ -114,6 +114,7 @@ protected:
     void on_timer( dsstring p_timername );
 
     void set_orbit_angle( Orbit* p_orbit, dstime p_currtime );
+    void set_orbiter_rotation_angle( Orbit* p_orbit, dstime p_currtime );
 
 public:
     

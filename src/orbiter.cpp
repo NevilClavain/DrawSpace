@@ -30,7 +30,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-void Orbit::orbit_step( dsreal p_angle, Matrix& p_mat )
+void Orbit::orbit_step( dsreal p_angle, DrawSpace::Utils::Matrix& p_orbit_mat, DrawSpace::Utils::Matrix& p_planet_mat )
 {
     dsreal a = 1.0;
     dsreal b = m_excentricity;
@@ -43,13 +43,18 @@ void Orbit::orbit_step( dsreal p_angle, Matrix& p_mat )
     z = ( z * m_ray );
 
     Transformation transformation;
+    Transformation transformation_planet;
     Matrix result;
 
-    Matrix orbit;
-    orbit.Translation( x, 0.0, z );
+    Matrix orbit_translation;
+    orbit_translation.Translation( x, 0.0, z );
 
     Matrix orbit2;
     orbit2.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( 360.0 - p_angle ) );
+
+    Matrix revolution;
+    revolution.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( m_revolution_angle ) );
+
 
     Matrix tilt;
     tilt.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), Maths::DegToRad( m_tilt_angle ) );
@@ -57,31 +62,54 @@ void Orbit::orbit_step( dsreal p_angle, Matrix& p_mat )
     Matrix offset_rot;
     offset_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( 360.0 - m_offset_angle ) );
 
-    Matrix orb_trans;
-    orb_trans.Translation( m_offset_plane_x, 0.0, m_offset_plane_y );
+    Matrix orbit_offset;
+    orbit_offset.Translation( m_offset_plane_x, 0.0, m_offset_plane_y );
+
+
+    Matrix revolution_tilt;
+    revolution_tilt.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), Maths::DegToRad( m_revolution_tilt_angle ) );
+
 
     transformation.PushMatrix( offset_rot );
     transformation.PushMatrix( tilt );
-    transformation.PushMatrix( orb_trans );
-    transformation.PushMatrix( orbit );
-    transformation.PushMatrix( orbit2 );    
+    transformation.PushMatrix( orbit_offset );
+    transformation.PushMatrix( orbit_translation );
+    //transformation.PushMatrix( revolution_tilt );
+    transformation.PushMatrix( orbit2 );  
+    
 
     transformation.BuildResult();
     transformation.GetResult( &result );
 
-    p_mat = result;
+    p_orbit_mat = result;
+
+
+    transformation.ClearAll();
+    transformation.PushMatrix( offset_rot );
+    transformation.PushMatrix( tilt );
+    transformation.PushMatrix( orbit_offset );
+    transformation.PushMatrix( orbit_translation );
+    transformation.PushMatrix( revolution_tilt );
+    transformation.PushMatrix( revolution );
+    transformation.PushMatrix( orbit2 );
+    
+    transformation.BuildResult();
+    transformation.GetResult( &result );
+
+    p_planet_mat = result;
 }
 
 void Orbit::OrbitStep( const Matrix& p_centroidbase )
 {
     Matrix local_orbit;
-    orbit_step( m_orbit_angle, local_orbit );
+    Matrix local_planet;
+    orbit_step( m_orbit_angle, local_orbit, local_planet );
 
     if( m_drawable )
     {
         m_drawable->SetLocalTransform( p_centroidbase );
     }
-    m_centroid->Update( p_centroidbase, local_orbit );
+    m_centroid->Update( p_centroidbase, local_orbit, local_planet );
 }
 
 
@@ -97,8 +125,9 @@ void Orbit::build_orbit_meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_mes
 
     for( long i = 0; i < nb_steps; i++ )
     {       
-        Matrix mat;        
-        orbit_step( i * p_anglestep, mat );
+        Matrix mat;
+        Matrix local_planet;
+        orbit_step( i * p_anglestep, mat, local_planet );
         
         Vector orbit_point( 0.0, 0.0, 0.0, 1.0 );
         Vector orbit_point_res;
@@ -231,16 +260,18 @@ void Centroid::RegisterSubOrbit( Orbit* p_orbit )
     m_sub_orbits.push_back( p_orbit );
 }
 
-void Centroid::Update( const Matrix& p_prevcentroidbase, const Matrix& p_localorbitmat )
+void Centroid::Update( const Matrix& p_prevcentroidbase, const Matrix& p_localorbitmat, const Matrix& p_localplanetmat )
 {   
     m_transformation = p_localorbitmat * p_prevcentroidbase;
+    Matrix transformation2 = p_localplanetmat * p_prevcentroidbase;
+
     for( size_t i = 0; i < m_sub_orbits.size(); i++ )
     {       
         m_sub_orbits[i]->OrbitStep( m_transformation );
     }
     if( m_orbiter )
     {
-        m_orbiter->Update( m_transformation );
+        m_orbiter->Update( transformation2 );
     }
 }
 
