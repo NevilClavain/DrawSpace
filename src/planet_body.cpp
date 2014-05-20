@@ -52,8 +52,13 @@ FaceRenderingNode::~FaceRenderingNode( void )
 {
 }
 
-void FaceRenderingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view )
+void FaceRenderingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view, Vector& p_color )
 {
+    //SetShaderRealVector( "color", Vector( 1.0, 0.0, 0.0, 0.0 ) );
+    //SetShaderRealVector( "color", p_color );
+
+    m_renderer->SetFxShaderParams( 1, 0, p_color );
+
     VSphere* vsphere = p_patch->GetVSphere();
 
     DrawSpace::Utils::Matrix res;
@@ -113,7 +118,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
     {
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {
-            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view );
+            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 1.0, 1.0, 1.0, 0.0 ) );
         }
     }
     else
@@ -121,7 +126,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
     
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
-        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
+        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 1.0, 1.0, 1.0, 0.0 ) );
  
         for( long i = 0; i < 8; i++ )
         {
@@ -129,7 +134,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
 
             if( neighb )
             {
-                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
+                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 0.0, 0.0, 1.0, 0.0 ) );
             }
         }  
     }
@@ -374,15 +379,15 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, 
         Fx* fx = nodeset.nodes[p_faceid]->GetFx();
         *fx = *m_fx; 
 
-        nodeset.nodes[p_faceid]->AddShaderParameter( 1, "color", 0 );
-        nodeset.nodes[p_faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
+        //nodeset.nodes[p_faceid]->AddShaderParameter( 1, "color", 0 );
+        //nodeset.nodes[p_faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
     }
 }
 
 void Body::build_patch( void )
 {
     dsreal xcurr, ycurr;
-    long patch_resolution = 35;
+    long patch_resolution = 55;//35;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );

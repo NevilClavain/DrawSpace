@@ -57,7 +57,7 @@ protected:
     void                            on_patchsplit( int p_orientation, Patch* p_patch );
     void                            on_patchmerge( int p_orientation, Patch* p_patch );
 
-    void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view );
+    void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Vector& p_color );
     
 public:
     FaceRenderingNode( Face* p_face, DrawSpace::Interface::Renderer* p_renderer );
