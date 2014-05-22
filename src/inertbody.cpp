@@ -279,7 +279,7 @@ void InertBody::Detach( void )
     Matrix mat_b;
     m_refbody->GetLastWorldTransformation( mat_b );
     
-    DrawSpace::Utils::Matrix mat_a3 = m_lastworldtrans * mat_b;
+    DrawSpace::Utils::Matrix mat_a3 = /*m_lastworldtrans*/ m_lastlocalworldtrans * mat_b;
 
 
     // memoriser mat_a3, pour le reinjecter en transfo initiale pour le nouveau body
