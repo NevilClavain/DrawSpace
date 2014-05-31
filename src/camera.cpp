@@ -40,5 +40,6 @@ Camera::~Camera( void )
 
 void Camera::OnRegister( Scenegraph* p_scenegraph )
 {
-    
+    std::map<dsstring, Core::TransformNode*>& camera_list = p_scenegraph->GetCamerasList();
+    camera_list[m_scenename] = this;
 }

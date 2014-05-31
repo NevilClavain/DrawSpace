@@ -76,6 +76,7 @@
 #include "orbiter.h"
 #include "rocket.h"
 #include "calendar.h"
+#include "camerapoint.h"
 #include "spacebox.h"
 #include "planet_body.h"
 #include "chunk.h"

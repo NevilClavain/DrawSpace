@@ -20,33 +20,53 @@
 *                                                                          
 */
 
-#ifndef _TRANSFORMQUEUE_H_
-#define _TRANSFORMQUEUE_H_
 
-#include "drawspace_commons.h"
-#include "transformnode.h"
+#include "camerapoint.h"
 
-namespace DrawSpace
+using namespace DrawSpace;
+using namespace DrawSpace::Dynamics;
+using namespace DrawSpace::Utils;
+
+CameraPoint::CameraPoint( const dsstring& p_name, Body* p_body ) : TransformNode( p_name ), m_attached_body( p_body ), m_movement( NULL )
 {
-namespace Core
-{
-class TransformQueue
-{
-protected:
-    std::map<dsstring, TransformNode*>  m_nodes;
-
-    bool add( TransformNode* p_node );
-
-public:
-    TransformQueue( void );
-    ~TransformQueue( void );
-
-    void ComputeTransformations( Utils::TimeManager& p_timemanager );    
-    bool SetNodeLocalTransformation( const dsstring& p_nodename, const DrawSpace::Utils::Matrix& p_mat );
-    bool GetNodeGlobalTransform( const dsstring& p_nodename, DrawSpace::Utils::Matrix& p_mat );
-
-};
-}
 }
 
-#endif
+
+CameraPoint::~CameraPoint( void )
+{
+
+}
+
+
+void CameraPoint::OnRegister( Scenegraph* p_scenegraph )
+{
+    std::map<dsstring, Core::TransformNode*>& camera_list = p_scenegraph->GetCamerasList();
+    camera_list[m_scenename] = this; 
+}
+
+
+void CameraPoint::RegisterMovement( DrawSpace::Core::Movement* p_movement )
+{
+    m_movement = p_movement;
+}
+
+void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
+{
+    if( m_movement )
+    {
+        m_movement->Compute( p_timemanager );
+        m_movement->GetResult( m_localtransformation );
+    }
+
+    if( m_attached_body )
+    {
+        Matrix body_trans;
+        m_attached_body->GetLastWorldTransformation( body_trans );
+
+        m_globaltransformation = m_localtransformation * body_trans;
+    }
+    else
+    {
+        m_globaltransformation = m_localtransformation;
+    }
+}

@@ -27,6 +27,7 @@
 #include "matrix.h"
 #include "vsphere.h"
 #include "lod.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
@@ -44,8 +45,10 @@ protected:
     
     std::vector<LodStep*>           m_lodsteps;
 
+    /*
     TransformNode*                  m_parent;
     std::vector<TransformNode*>     m_children;
+    */
     
 public:
     TransformNode( const dsstring& p_name );
@@ -54,8 +57,8 @@ public:
 
     virtual void        OnRegister( Scenegraph* p_scenegraph ) = 0;
 
-    virtual void        AddChild( TransformNode* p_node );
-    virtual void        ComputeFinalTransform( void );
+    //virtual void        AddChild( TransformNode* p_node );
+    virtual void        ComputeFinalTransform( Utils::TimeManager& p_timemanager );
     virtual void        SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
     virtual void        GetName( dsstring& p_name );
     virtual void        SetName( const dsstring& p_name );

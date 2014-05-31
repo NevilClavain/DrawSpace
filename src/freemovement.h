@@ -25,7 +25,6 @@
 
 #include "movement.h"
 #include "quaternion.h"
-#include "timemanager.h"
 
 namespace DrawSpace
 {

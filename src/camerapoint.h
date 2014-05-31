@@ -20,33 +20,38 @@
 *                                                                          
 */
 
-#ifndef _TRANSFORMQUEUE_H_
-#define _TRANSFORMQUEUE_H_
+#ifndef _CAMERAPOINT_H_
+#define _CAMERAPOINT_H_
 
-#include "drawspace_commons.h"
-#include "transformnode.h"
+#include "scenegraph.h"
+#include "body.h"
+#include "movement.h"
 
 namespace DrawSpace
 {
-namespace Core
+namespace Dynamics
 {
-class TransformQueue
+class CameraPoint : public Core::TransformNode
 {
 protected:
-    std::map<dsstring, TransformNode*>  m_nodes;
 
-    bool add( TransformNode* p_node );
+    Body*                       m_attached_body;    
+    DrawSpace::Core::Movement*  m_movement;
+
 
 public:
-    TransformQueue( void );
-    ~TransformQueue( void );
 
-    void ComputeTransformations( Utils::TimeManager& p_timemanager );    
-    bool SetNodeLocalTransformation( const dsstring& p_nodename, const DrawSpace::Utils::Matrix& p_mat );
-    bool GetNodeGlobalTransform( const dsstring& p_nodename, DrawSpace::Utils::Matrix& p_mat );
+    CameraPoint( const dsstring& p_name, Body* p_body = NULL );
+    virtual ~CameraPoint( void );
 
+    virtual void OnRegister( Scenegraph* p_scenegraph );
+    
+    virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
+
+    virtual void ComputeFinalTransform( Utils::TimeManager& p_timemanager );
 };
 }
 }
+
 
 #endif

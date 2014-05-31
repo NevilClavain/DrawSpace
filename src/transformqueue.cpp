@@ -36,11 +36,11 @@ TransformQueue::~TransformQueue( void )
 
 }
 
-void TransformQueue::ComputeTransformations( void )
+void TransformQueue::ComputeTransformations( TimeManager& p_timemanager )
 {
     for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        (*it).second->ComputeFinalTransform();
+        (*it).second->ComputeFinalTransform( p_timemanager );
     }
 }
 

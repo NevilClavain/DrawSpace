@@ -25,7 +25,6 @@
 
 #include "movement.h"
 #include "quaternion.h"
-#include "timemanager.h"
 
 namespace DrawSpace
 {
@@ -50,10 +49,12 @@ protected:
     Utils::Matrix			m_position;
     Utils::Matrix			m_orientation;
 
+    bool                    m_ymvt;
+
 
 public:
 
-    FPSMovement( void );
+    FPSMovement( bool p_ymvt = false );
     virtual ~FPSMovement( void );
 
     virtual void Init( const Utils::Vector& p_init_pos, dsreal p_initial_yaw = 0.0, dsreal p_initial_pitch = 0.0 );
@@ -63,7 +64,7 @@ public:
     virtual void RotatePitch( dsreal p_speed, Utils::TimeManager& p_timemanager );
 
     virtual void SetSpeed( dsreal p_speed );
-    virtual void Compute( Utils::TimeManager& p_timemanager, bool p_ymvt = false );
+    virtual void Compute( Utils::TimeManager& p_timemanager /*, bool p_ymvt = false */ );
 
 };
 }

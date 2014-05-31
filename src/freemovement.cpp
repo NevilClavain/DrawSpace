@@ -159,10 +159,14 @@ void FreeMovement::Compute( Utils::TimeManager& p_timemanager )
 	m_position( 3, 1 ) = y;
 	m_position( 3, 2 ) = z;   
 
+    /*
     if( m_transformnode )
     {
         Matrix res;
         res = m_orientation * m_position;
         m_transformnode->SetLocalTransform( res );
     }
+    */
+
+    m_result = m_orientation * m_position;
 }

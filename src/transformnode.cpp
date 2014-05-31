@@ -27,14 +27,14 @@ using namespace DrawSpace::Utils;
 
 
 TransformNode::TransformNode( const dsstring& p_name ) : 
-m_parent( NULL ), 
+/*m_parent( NULL ), */
 m_scenename( p_name )
 {
     m_localtransformation.Identity();
     m_globaltransformation.Identity();    
 }
 
-TransformNode::TransformNode( void ) : m_parent( NULL )
+TransformNode::TransformNode( void ) /*: m_parent( NULL )*/
 {
     m_localtransformation.Identity();
     m_globaltransformation.Identity();
@@ -44,15 +44,17 @@ TransformNode::~TransformNode( void )
 {
 
 }
-
+/*
 void TransformNode::AddChild( TransformNode* p_node )
 {
     m_children.push_back( p_node );
     p_node->m_parent = this;
 }
+*/
 
-void TransformNode::ComputeFinalTransform( void )
+void TransformNode::ComputeFinalTransform( TimeManager& p_timemanager )
 {
+    /*
     if( m_parent )
     {
         m_globaltransformation = m_localtransformation * m_parent->m_globaltransformation;
@@ -64,8 +66,11 @@ void TransformNode::ComputeFinalTransform( void )
 
     for( unsigned long i = 0; i < m_children.size(); i++ )
     {
-        m_children[i]->ComputeFinalTransform();
+        m_children[i]->ComputeFinalTransform( p_timemanager );
     }
+    */
+
+    m_globaltransformation = m_localtransformation;
 }
 
 void TransformNode::SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat )

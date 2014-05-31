@@ -501,6 +501,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\camerapoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\camerapoint.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\inertbody.cpp"
 				>
 			</File>
