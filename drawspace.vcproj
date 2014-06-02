@@ -578,14 +578,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\camera.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\camera.h"
-			>
-		</File>
-		<File
 			RelativePath=".\src\chunk.cpp"
 			>
 		</File>

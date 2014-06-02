@@ -35,9 +35,11 @@ class CameraPoint : public Core::TransformNode
 {
 protected:
 
-    Body*                       m_attached_body;    
+    Body*                       m_attached_body;
+    Body*                       m_locked_body;
     DrawSpace::Core::Movement*  m_movement;
 
+    DrawSpace::Utils::Vector    m_locked_body_center;
 
 public:
 
@@ -45,10 +47,14 @@ public:
     virtual ~CameraPoint( void );
 
     virtual void OnRegister( Scenegraph* p_scenegraph );
-    
+   
     virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
-
     virtual void ComputeFinalTransform( Utils::TimeManager& p_timemanager );
+
+    virtual void LockOnBody( Body* p_locked_body );
+
+
+    virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );
 };
 }
 }

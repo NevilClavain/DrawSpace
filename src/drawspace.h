@@ -66,7 +66,6 @@
 #include "scenegraph.h"
 #include "memalloc.h"
 #include "events.h"
-#include "camera.h"
 #include "fpsmovement.h"
 #include "freemovement.h"
 #include "quadtree.h"

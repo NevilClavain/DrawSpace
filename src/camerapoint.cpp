@@ -22,12 +22,16 @@
 
 
 #include "camerapoint.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
-CameraPoint::CameraPoint( const dsstring& p_name, Body* p_body ) : TransformNode( p_name ), m_attached_body( p_body ), m_movement( NULL )
+CameraPoint::CameraPoint( const dsstring& p_name, Body* p_body ) : TransformNode( p_name ), 
+m_attached_body( p_body ), 
+m_movement( NULL ),
+m_locked_body( NULL )
 {
 }
 
@@ -69,4 +73,62 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
     {
         m_globaltransformation = m_localtransformation;
     }
+
+    if( m_locked_body )
+    {
+        Matrix body_transf;
+
+        m_locked_body->GetLastWorldTransformation( body_transf );
+
+        Matrix camera_transf = m_globaltransformation;
+        camera_transf.Inverse();
+
+        Matrix res = body_transf * camera_transf;
+
+        // point (0,0,0) local au body, exprimé dans le repere de la camera
+
+        Vector body_center( 0.0, 0.0, 0.0, 1.0 );
+        Vector body_center_2;
+
+        res.Transform( &body_center, &body_center_2 );
+
+        m_locked_body_center = body_center_2;
+
+
+        body_center_2.Normalize();
+
+        dsreal theta = atan2( body_center_2[0], body_center_2[2] );        
+        theta = 3.1415927 + theta;
+ 
+        Matrix roty;
+        roty.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), theta );
+
+        Vector theta_dir( body_center_2[0], 0.0, body_center_2[2], 1.0 );
+
+        dsreal phi = atan2( body_center_2[1], theta_dir.Length() );
+        
+        Matrix rotx;
+        rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), phi );
+
+
+
+        Matrix final_lock;
+
+
+        final_lock = rotx * roty;
+
+        Matrix final_res = final_lock * m_globaltransformation;
+        m_globaltransformation = final_res;
+
+    }
+}
+
+void CameraPoint::LockOnBody( Body* p_locked_body )
+{
+    m_locked_body = p_locked_body;
+}
+
+void CameraPoint::GetLockedBodyCenter( Vector& p_vector )
+{
+    p_vector = m_locked_body_center;
 }
