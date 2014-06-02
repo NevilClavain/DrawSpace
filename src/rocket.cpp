@@ -27,7 +27,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
-Rocket::Rocket( World* p_world, DrawSpace::Drawable* p_drawable, const Body::Parameters& p_parameters ) : InertBody( p_world, p_drawable, p_parameters )
+Rocket::Rocket( World* p_world, TransformNode* p_drawable, const Body::Parameters& p_parameters ) : InertBody( p_world, p_drawable, p_parameters )
 {
     m_fwd[0] = 0.0;
     m_fwd[1] = 0.0;
@@ -80,46 +80,81 @@ void Rocket::Update( void )
 
 void Rocket::ApplyFwdForce( dsreal p_norm )
 {
+    dsreal world_scale = World::m_scale;
+
     m_rigidBody->applyForce( btVector3( m_transformed_fwd[0] * p_norm, 
-                                m_transformed_fwd[1] * p_norm, m_transformed_fwd[2] * p_norm ), 
+                                m_transformed_fwd[1] * p_norm, 
+                                m_transformed_fwd[2] * p_norm ), 
                                 btVector3( 0.0, 0.0, 0.0 ) );
 }
 
 void Rocket::ApplyRevForce( dsreal p_norm )
 {
-    m_rigidBody->applyForce( btVector3( m_rev[0] * p_norm, 
-                                m_rev[1] * p_norm, m_rev[2] * p_norm ), 
+    dsreal world_scale = World::m_scale;
+
+    m_rigidBody->applyForce( btVector3( m_transformed_rev[0] * p_norm * world_scale, 
+                                m_transformed_rev[1] * p_norm * world_scale, 
+                                m_transformed_rev[2] * p_norm * world_scale ), 
                                 btVector3( 0.0, 0.0, 0.0 ) );
+}
+
+void Rocket::ApplyDownForce( dsreal p_norm )
+{
+    dsreal world_scale = World::m_scale;
+
+    m_rigidBody->applyForce( btVector3( m_transformed_down[0] * p_norm * world_scale, 
+                                m_transformed_down[1] * p_norm * world_scale, 
+                                m_transformed_down[2] * p_norm * world_scale ), 
+                                btVector3( 0.0, 0.0, 0.0 ) );
+
 }
 
 void Rocket::ApplyLeftYaw( dsreal p_norm )
 {
-    m_rigidBody->applyTorque( btVector3( m_transformed_up[0] * p_norm, m_transformed_up[1] * p_norm, m_transformed_up[2] * p_norm ) );
+    dsreal world_scale = World::m_scale;
+    dsreal world_scale_2 = world_scale * world_scale;
+
+    m_rigidBody->applyTorque( btVector3( m_transformed_up[0] * p_norm * world_scale_2, m_transformed_up[1] * p_norm * world_scale_2, m_transformed_up[2] * p_norm * world_scale_2 ) );
 }
 
 void Rocket::ApplyRightYaw( dsreal p_norm )
 {
-    m_rigidBody->applyTorque( btVector3( m_transformed_down[0] * p_norm, m_transformed_down[1] * p_norm, m_transformed_down[2] * p_norm ) );
+    dsreal world_scale = World::m_scale;
+    dsreal world_scale_2 = world_scale * world_scale;
+
+    m_rigidBody->applyTorque( btVector3( m_transformed_down[0] * p_norm * world_scale_2, m_transformed_down[1] * p_norm * world_scale_2, m_transformed_down[2] * p_norm * world_scale_2 ) );
 }
 
 void Rocket::ApplyUpPitch( dsreal p_norm )
 {
-    m_rigidBody->applyTorque( btVector3( m_transformed_left[0] * p_norm, m_transformed_left[1] * p_norm, m_transformed_left[2] * p_norm ) );
+    dsreal world_scale = World::m_scale;
+    dsreal world_scale_2 = world_scale * world_scale;
+
+    m_rigidBody->applyTorque( btVector3( m_transformed_left[0] * p_norm * world_scale_2, m_transformed_left[1] * p_norm * world_scale_2, m_transformed_left[2] * p_norm * world_scale_2 ) );
 }
 
 void Rocket::ApplyDownPitch( dsreal p_norm )
 {
-    m_rigidBody->applyTorque( btVector3( m_transformed_right[0] * p_norm, m_transformed_right[1] * p_norm, m_transformed_right[2] * p_norm ) );
+    dsreal world_scale = World::m_scale;
+    dsreal world_scale_2 = world_scale * world_scale;
+
+    m_rigidBody->applyTorque( btVector3( m_transformed_right[0] * p_norm * world_scale_2, m_transformed_right[1] * p_norm * world_scale_2, m_transformed_right[2] * p_norm * world_scale_2 ) );
 }
 
 void Rocket::ApplyLeftRoll( dsreal p_norm )
 {
-    m_rigidBody->applyTorque( btVector3( m_transformed_rev[0] * p_norm, m_transformed_rev[1] * p_norm, m_transformed_rev[2] * p_norm ) );   
+    dsreal world_scale = World::m_scale;
+    dsreal world_scale_2 = world_scale * world_scale;
+
+    m_rigidBody->applyTorque( btVector3( m_transformed_rev[0] * p_norm * world_scale_2, m_transformed_rev[1] * p_norm * world_scale_2, m_transformed_rev[2] * p_norm * world_scale_2 ) );   
 }
 
 void Rocket::ApplyRightRoll( dsreal p_norm )
 {
-    m_rigidBody->applyTorque( btVector3( m_transformed_fwd[0] * p_norm, m_transformed_fwd[1] * p_norm, m_transformed_fwd[2] * p_norm ) );
+    dsreal world_scale = World::m_scale;
+    dsreal world_scale_2 = world_scale * world_scale;
+
+    m_rigidBody->applyTorque( btVector3( m_transformed_fwd[0] * p_norm * world_scale_2, m_transformed_fwd[1] * p_norm * world_scale_2, m_transformed_fwd[2] * p_norm * world_scale_2 ) );
 }
 
 void Rocket::ZeroSpeed( void )

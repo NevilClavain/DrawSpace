@@ -229,10 +229,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\property.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\renderingnode.cpp"
 				>
 			</File>
@@ -505,6 +501,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\camerapoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\camerapoint.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\inertbody.cpp"
 				>
 			</File>
@@ -574,23 +578,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\camera.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\camera.h"
-			>
-		</File>
-		<File
 			RelativePath=".\src\chunk.cpp"
 			>
 		</File>
 		<File
 			RelativePath=".\src\chunk.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\drawable.h"
 			>
 		</File>
 		<File

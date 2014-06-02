@@ -41,7 +41,7 @@ public:
     TransformQueue( void );
     ~TransformQueue( void );
 
-    void ComputeTransformations( void );    
+    void ComputeTransformations( Utils::TimeManager& p_timemanager );    
     bool SetNodeLocalTransformation( const dsstring& p_nodename, const DrawSpace::Utils::Matrix& p_mat );
     bool GetNodeGlobalTransform( const dsstring& p_nodename, DrawSpace::Utils::Matrix& p_mat );
 

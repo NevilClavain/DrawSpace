@@ -52,13 +52,15 @@ protected:
 
 public:
 
-    Rocket( World* p_world, DrawSpace::Drawable* p_drawable, const Body::Parameters& p_parameters );
+    Rocket( World* p_world, DrawSpace::Core::TransformNode* p_drawable, const Body::Parameters& p_parameters );
     virtual ~Rocket( void );
     
     void Update( void );
 
     void ApplyFwdForce( dsreal p_norm );
     void ApplyRevForce( dsreal p_norm );
+
+    void ApplyDownForce( dsreal p_norm );
 
     void ApplyLeftYaw( dsreal p_norm );
     void ApplyRightYaw( dsreal p_norm );

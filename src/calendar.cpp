@@ -28,7 +28,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-Calendar::Calendar( dstime p_offset_time, DrawSpace::Utils::TimeManager* p_tm, DrawSpace::Dynamics::World* p_world ) : 
+Calendar::Calendar( dstime p_offset_time, DrawSpace::Utils::TimeManager* p_tm ) : 
 m_offset_time( p_offset_time ), 
 m_time_mode( NORMAL_TIME ),
 m_time_period( 1000 ),
@@ -36,7 +36,7 @@ m_time_factor( 1 ),
 m_current_time_increment( 1 ),
 m_time_manager( p_tm ),
 m_active( false ),
-m_world( p_world ),
+//m_world( p_world ),
 m_sub_sec_count( 0 ),
 m_sub_sec_count_lim( 0 ),
 m_freeze( false )
@@ -249,6 +249,34 @@ void Calendar::set_orbit_angle( Orbit* p_orbit, dstime p_currtime )
     p_orbit->m_orbit_angle = final_angle;
 }
 
+void Calendar::set_orbiter_rotation_angle( Orbit* p_orbit, dstime p_currtime )
+{
+    if( p_orbit->m_revolution_duration == 0.0 )
+    {
+        return;
+    }
+
+    dsreal revolution_duration = p_orbit->m_revolution_duration;
+
+    long day_sec = 3600 * 24;
+
+    dsreal delta_time = ( (double) ( p_currtime - m_offset_time ) ) / day_sec;
+    dsreal num_revs = delta_time / revolution_duration;
+
+    dsreal angle_revs = num_revs * 360;
+
+    double angle_rev_i, angle_rev_f;
+    long angle_rev_i_2;
+
+    angle_rev_f = modf( angle_revs, &angle_rev_i );
+
+    angle_rev_i_2 = (long)angle_rev_i;
+
+    double final_angle = (angle_rev_i_2 % 360) + angle_rev_f;       
+
+    p_orbit->m_revolution_angle = final_angle;
+}
+
 bool Calendar::Startup( dstime p_start_time )
 { 
     if( p_start_time < m_offset_time )
@@ -263,6 +291,7 @@ bool Calendar::Startup( dstime p_start_time )
         Orbit* curr_orbit = m_orbits[i];
 
         set_orbit_angle( curr_orbit, p_start_time );
+        set_orbiter_rotation_angle( curr_orbit, p_start_time );
     }
 
     // demarre le timer...
@@ -325,9 +354,13 @@ void Calendar::Run( void )
             Orbit* curr_orbit = m_orbits[i];
         
             set_orbit_angle( curr_orbit, m_current_time );
+            set_orbiter_rotation_angle( curr_orbit, m_current_time );
         }
 
-        m_world->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
+        for( size_t i = 0; i < m_worlds.size(); i++ )
+        {
+            m_worlds[i]->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
+        }
     }
 }
 
@@ -346,4 +379,9 @@ void Calendar::Suspend( bool p_suspend )
     m_freeze = p_suspend;
 
     m_time_manager->SuspendTimer( "calendar_timer", p_suspend );
+}
+
+void Calendar::RegisterWorld( DrawSpace::Dynamics::World* p_world )
+{
+    m_worlds.push_back( p_world );
 }

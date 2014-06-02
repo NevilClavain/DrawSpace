@@ -40,6 +40,7 @@ protected:
 
     btRigidBody*                    m_rigidBody;
     btCollisionShape*               m_collisionShape;
+    btTriangleMesh*                 m_meshe_data;
     btDefaultMotionState*           m_motionState;
 
     Body*                           m_refbody;
@@ -52,7 +53,7 @@ protected:
 
 public:
 
-    InertBody( World* p_world, DrawSpace::Drawable* p_drawable, const Body::Parameters& p_parameters );
+    InertBody( World* p_world, DrawSpace::Core::TransformNode* p_drawable, const Body::Parameters& p_parameters );
     virtual ~InertBody( void );
 
     void GetParameters( Parameters& p_parameters );
@@ -62,6 +63,16 @@ public:
     void Detach( void );
 
     void GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat );
+
+    void ApplyForce( const DrawSpace::Utils::Vector p_force );
+
+    dsreal GetLinearSpeedMagnitude( void );
+    dsreal GetAngularSpeedMagnitude( void );
+
+    virtual btRigidBody* GetRigidBody( void );
+
+    void GetTotalForce( DrawSpace::Utils::Vector& p_force );
+    void GetTotalTorque( DrawSpace::Utils::Vector& p_torque );
     
 };
 }

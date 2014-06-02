@@ -27,7 +27,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-FPSMovement::FPSMovement( void )
+FPSMovement::FPSMovement( bool p_ymvt ) : m_ymvt( p_ymvt )
 {
 
 
@@ -78,7 +78,7 @@ void FPSMovement::SetSpeed( dsreal p_speed )
     m_local_speed[2] = -p_speed;
 }
 
-void FPSMovement::Compute( TimeManager& p_timemanager, bool p_ymvt )
+void FPSMovement::Compute( TimeManager& p_timemanager/*, bool p_ymvt */ )
 {
 	Vector gs;
 
@@ -95,17 +95,15 @@ void FPSMovement::Compute( TimeManager& p_timemanager, bool p_ymvt )
 
 	p_timemanager.TranslationSpeedInc( &m_position( 3, 0 ), gs[0] );
 
-	if( p_ymvt )
+    
+	if( m_ymvt )
 	{
 		// prendre aussi en compte la composante en Y (la camera peut aussi evoluer "en hauteur")
 		p_timemanager.TranslationSpeedInc( &m_position( 3, 1 ), gs[1] );
 	}
+    
+
 	p_timemanager.TranslationSpeedInc( &m_position( 3, 2 ), gs[2] );
 
-    if( m_transformnode )
-    {
-        Matrix res;
-        res = m_orientation * m_position;
-        m_transformnode->SetLocalTransform( res );
-    }
+    m_result = m_orientation * m_position;
 }
