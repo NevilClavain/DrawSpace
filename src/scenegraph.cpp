@@ -26,7 +26,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-Scenegraph::Scenegraph( void ) : m_camera( NULL )
+Scenegraph::Scenegraph( void ) /*: m_camera( NULL )*/
 {
     m_view.Identity();
 }
@@ -57,29 +57,37 @@ Pass* Scenegraph::GetPass( const dsstring& p_passname )
     if( m_passes.count( p_passname ) > 0 )
     {
         return m_passes[p_passname];
- 
     }
     return NULL;
 }
 
 TransformNode* Scenegraph::GetCurrentCamera( void )
 {
-    return m_camera;
+    //return m_camera;
+
+    if( m_current_camera != "" )
+    {
+        return m_cameras_list[m_current_camera];
+    }
+    return NULL;
 }
 
 bool Scenegraph::SetCurrentCamera( const dsstring& p_nodename )
 {
-    if( m_nodes.count( p_nodename ) > 0 )
+    //if( m_nodes.count( p_nodename ) > 0 )
+    if( m_cameras_list.count( p_nodename ) > 0 )
     {
-        m_camera = m_nodes[p_nodename];
+        //m_camera = m_nodes[p_nodename];
+
+        m_current_camera = p_nodename;
         return true;
     }
     return false;
 }
 
-void Scenegraph::ComputeTransformations( void )
+void Scenegraph::ComputeTransformations( Utils::TimeManager& p_timemanager )
 {
-    TransformQueue::ComputeTransformations();
+    TransformQueue::ComputeTransformations( p_timemanager );
 
     for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
@@ -87,9 +95,13 @@ void Scenegraph::ComputeTransformations( void )
     }
 
     m_view.Identity();
-    if( m_camera )
+    //if( m_camera )
+
+    if( m_current_camera != "" )
     {
-        m_camera->GetSceneWorld( m_view );
+        //m_camera->GetSceneWorld( m_view );
+
+        m_cameras_list[m_current_camera]->GetSceneWorld( m_view );
         m_view.Inverse();
     }
 }
@@ -104,9 +116,21 @@ void Scenegraph::GetCurrentCameraTranform( Utils::Matrix& p_mat )
     Matrix mat;
     mat.Identity();
 
+    /*
     if( m_camera )
     {
         m_camera->GetSceneWorld( mat );
     }
+    */
+
+    if( m_current_camera != "" )
+    {
+        m_cameras_list[m_current_camera]->GetSceneWorld( mat );
+    }
     p_mat = mat;
+}
+
+std::map<dsstring, Core::TransformNode*>& Scenegraph::GetCamerasList( void )
+{
+    return m_cameras_list;
 }

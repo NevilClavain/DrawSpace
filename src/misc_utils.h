@@ -25,7 +25,7 @@
 
 #include "font.h"
 #include "text_widget.h"
-#include "drawable.h"
+#include "spacebox.h"
 #include "pimanager.h"
 
 namespace DrawSpace
@@ -35,15 +35,13 @@ namespace Utils
 
 Gui::TextWidget* BuildText( DrawSpace::Core::Font* p_font, long p_width, long p_height, const Vector& p_color, const dsstring& p_name );
 
-bool LoadDrawablePlugin( const dsstring& p_path, const dsstring& p_pluginalias );
-
 bool LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias );
 Interface::FontImport* InstanciateFontImportFromPlugin( const dsstring& p_pluginalias );
 
 bool LoadMesheImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias );
 Interface::MesheImport* InstanciateMesheImportFromPlugin( const dsstring& p_pluginalias );
 
-void BuildSpaceboxFx( Drawable* p_spacebox, const dsstring& p_passname, const dsstring& p_nodeid );
+void BuildSpaceboxFx( DrawSpace::Spacebox* p_spacebox, const dsstring& p_passname );
 
 }
 }

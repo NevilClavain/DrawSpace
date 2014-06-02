@@ -218,14 +218,7 @@ Spacebox::~Spacebox( void )
 {
 }
 
-void Spacebox::Initialize( void )
-{
-}
 
-void Spacebox::GetDescr( dsstring& p_descr )
-{
-    p_descr = "Spacebox";
-}
 
 void Spacebox::SetRenderer( Renderer * p_renderer )
 {
@@ -320,33 +313,9 @@ bool Spacebox::LoadAssets( void )
 }
 */
 
-Core::Meshe* Spacebox::GetMeshe( const dsstring& p_mesheid )
+Core::Meshe* Spacebox::GetMeshe( int p_mesheid )
 {
-    if( "front" == p_mesheid )
-    {
-        return m_meshes[FrontQuad];
-    }
-    else if( "rear" == p_mesheid )
-    {
-        return m_meshes[RearQuad];
-    }
-    else if( "left" == p_mesheid )
-    {
-        return m_meshes[LeftQuad];
-    }
-    else if( "right" == p_mesheid )
-    {
-        return m_meshes[RightQuad];
-    }
-    else if( "top" == p_mesheid )
-    {
-        return m_meshes[TopQuad];
-    }
-    else if( "bottom" == p_mesheid )
-    {
-        return m_meshes[BottomQuad];
-    }
-    return NULL;
+    return m_meshes[p_mesheid];
 }
 
 void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
@@ -413,72 +382,15 @@ void Spacebox::RegisterPassSlot( const dsstring p_passname )
     m_passesnodes[p_passname] = nodeset;
 }
 
-DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid )
+DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring& p_passname, int p_quadid )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
     {
         return NULL;
     }
 
-    if( p_nodeid == "front" )
-    {
-        return m_passesnodes[p_passname].nodes[FrontQuad];
-    }
-    else if( p_nodeid == "rear" )
-    {
-        return m_passesnodes[p_passname].nodes[RearQuad];
-    }
-    else if( p_nodeid == "left" )
-    {
-        return m_passesnodes[p_passname].nodes[LeftQuad];
-    }
-    else if( p_nodeid == "right" )
-    {
-        return m_passesnodes[p_passname].nodes[RightQuad];
-    }
-    else if( p_nodeid == "top" )
-    {
-        return m_passesnodes[p_passname].nodes[TopQuad];
-    }
-    else if( p_nodeid == "bottom" )
-    {
-        return m_passesnodes[p_passname].nodes[BottomQuad];
-    }
-    
-    return NULL;
+    return m_passesnodes[p_passname].nodes[p_quadid];
 }
 
-void Spacebox::GetNodesIdsList( std::vector<dsstring>& p_ids )
-{
-    p_ids.push_back( "front" );
-    p_ids.push_back( "rear" );
-    p_ids.push_back( "top" );
-    p_ids.push_back( "bottom" );
-    p_ids.push_back( "left" );
-    p_ids.push_back( "right" );
-}
 
-void Spacebox::ComputeSpecifics( void )
-{
-}
 
-void Spacebox::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
-{
-}
-
-void Spacebox::GetPropertiesList( std::vector<dsstring>& p_props )
-{
-}
-
-DrawSpace::Core::Property* Spacebox::GetProperty( const dsstring& p_name )
-{
-    return NULL;
-}
-
-void Spacebox::SetProperty( const dsstring& p_name, DrawSpace::Core::Property* p_prop )
-{
-}
-
-void Spacebox::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
-{
-}

@@ -551,8 +551,9 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
     viewer.Normalize();
     Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );
+    //projected_viewer = viewer;
     projected_viewer.Scale( m_planet_diameter / 2.0 );
-    
+   
 
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
 
@@ -690,6 +691,7 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
 
 bool Face::Compute( void )
 {
+
     bool status = false;
 
     Vector face_dir;
@@ -744,7 +746,11 @@ bool Face::Compute( void )
             break;
     }
 
-    if( m_relative_hotpoint * face_dir < 0 )
+    Vector norm_hp = m_relative_hotpoint;
+    norm_hp.Normalize();
+    m_alignment_factor = norm_hp * face_dir;
+
+    if( m_alignment_factor < 0 )
     {
         return false;
     }
@@ -823,4 +829,9 @@ void Face::AddMergeHandler( Face::PatchMergeHandler* p_handler )
 DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
 {
     return m_currentleaf;
+}
+
+dsreal Face::GetAlignmentFactor( void )
+{
+    return m_alignment_factor;
 }

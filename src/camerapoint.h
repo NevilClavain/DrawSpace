@@ -20,47 +20,44 @@
 *                                                                          
 */
 
-#ifndef _PROPERTY_H_
-#define _PROPERTY_H_
+#ifndef _CAMERAPOINT_H_
+#define _CAMERAPOINT_H_
 
-#ifdef WIN32
-#include <typeinfo.h>
-#else
-#include <typeinfo>
-#endif
-
-#include "drawspace_commons.h"
+#include "scenegraph.h"
+#include "body.h"
+#include "movement.h"
 
 namespace DrawSpace
 {
-namespace Core
+namespace Dynamics
 {
-class Property
-{
-public:
-    virtual ~Property( void ) { };
-
-    virtual void    GetName( std::string& p_name ) = 0;
-    virtual void    GetTypeId( std::string& p_typeid ) = 0;
-};
-
-template<typename base>
-class TypedProperty : public Property
+class CameraPoint : public Core::TransformNode
 {
 protected:
-    std::string		m_name;
+
+    Body*                       m_attached_body;
+    Body*                       m_locked_body;
+    DrawSpace::Core::Movement*  m_movement;
+
+    DrawSpace::Utils::Vector    m_locked_body_center;
 
 public:
-    base            m_value;
 
-    TypedProperty( const dsstring& p_name ) : m_name( p_name ) { };
-    TypedProperty( const dsstring& p_name, base p_initval ) : m_name( p_name ), m_value( p_initval ) { };
-    virtual ~TypedProperty( void ) { };
+    CameraPoint( const dsstring& p_name, Body* p_body = NULL );
+    virtual ~CameraPoint( void );
 
-    virtual void            GetName( dsstring& p_name ) { p_name = m_name; };
-    virtual void            GetTypeId( dsstring& p_typeid ) { p_typeid = typeid( base ).name(); };
+    virtual void OnRegister( Scenegraph* p_scenegraph );
+   
+    virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
+    virtual void ComputeFinalTransform( Utils::TimeManager& p_timemanager );
+
+    virtual void LockOnBody( Body* p_locked_body );
+
+
+    virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );
 };
 }
 }
+
 
 #endif

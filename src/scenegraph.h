@@ -30,10 +30,13 @@ namespace DrawSpace
 class Scenegraph : public Core::TransformQueue
 {
 protected:
-    std::map<dsstring, Pass*>   m_passes;
-    Core::TransformNode*        m_camera;
+    std::map<dsstring, Pass*>                   m_passes;
+    //Core::TransformNode*                      m_camera;
 
-    Utils::Matrix               m_view;
+    dsstring                                    m_current_camera;
+    std::map<dsstring, Core::TransformNode*>    m_cameras_list;
+
+    Utils::Matrix                               m_view;
 
 public:
     Scenegraph( void );
@@ -50,7 +53,10 @@ public:
     void GetCurrentCameraView( Utils::Matrix& p_view );
     void GetCurrentCameraTranform( Utils::Matrix& p_mat );
 
-    void ComputeTransformations( void );    
+    void ComputeTransformations( Utils::TimeManager& p_timemanager );
+
+    std::map<dsstring, Core::TransformNode*>& GetCamerasList( void );
+
 };
 }
 #endif

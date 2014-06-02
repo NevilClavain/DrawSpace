@@ -24,6 +24,7 @@
 #define _MOVEMENT_H_
 
 #include "transformnode.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
@@ -33,14 +34,15 @@ class Movement
 {
 protected:
 
-    TransformNode*      m_transformnode;
+    DrawSpace::Utils::Matrix          m_result;
     
 public:
     Movement( void );
-    Movement( TransformNode* p_node );
     virtual ~Movement( void );
 
-    void SetTransformNode( TransformNode* p_node );
+    void GetResult( DrawSpace::Utils::Matrix& p_result ) { p_result = m_result; };
+
+    virtual void Compute( Utils::TimeManager& p_timemanager ) = 0;
 };
 }
 }

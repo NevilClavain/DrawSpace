@@ -1,5 +1,5 @@
 
-float4x4 matViewProjection: register(c0);
+float4x4 matWorldViewProjection: register(c0);
 
 struct VS_INPUT 
 {
@@ -18,7 +18,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 {
    VS_OUTPUT Output;
 
-   Output.Position = mul( Input.Position, matViewProjection );
+   Output.Position = mul( Input.Position, matWorldViewProjection );
    Output.TexCoord0 = Input.TexCoord0;
       
    return( Output );   

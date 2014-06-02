@@ -52,8 +52,13 @@ FaceRenderingNode::~FaceRenderingNode( void )
 {
 }
 
-void FaceRenderingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view )
+void FaceRenderingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view, Vector& p_color )
 {
+    //SetShaderRealVector( "color", Vector( 1.0, 0.0, 0.0, 0.0 ) );
+    //SetShaderRealVector( "color", p_color );
+
+    m_renderer->SetFxShaderParams( 1, 0, p_color );
+
     VSphere* vsphere = p_patch->GetVSphere();
 
     DrawSpace::Utils::Matrix res;
@@ -111,28 +116,27 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
     
     if( -1 == currentleaf_depth || currentleaf_depth < 3 )
     {
-    
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {
-            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view );
+            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 1.0, 1.0, 1.0, 0.0 ) );
         }
-      
     }
     else
     {
+    
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
-        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
-
-        for( long i = 0; i < 8;i++ )
+        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 1.0, 1.0, 1.0, 0.0 ) );
+ 
+        for( long i = 0; i < 8; i++ )
         {
             QuadtreeNode<Patch>* neighb = static_cast<QuadtreeNode<Patch>*>( current_leaf->GetContent()->GetNeighbour( i ) );
 
             if( neighb )
             {
-                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view );
+                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 0.0, 0.0, 1.0, 0.0 ) );
             }
-        }
+        }  
     }
 }
 
@@ -200,15 +204,18 @@ Face::PatchMergeHandler* FaceRenderingNode::GetPatchMergeHandler( void )
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Body::Body( void ) : 
+Body::Body( dsreal p_diameter ) : 
 m_renderer( NULL ), 
 m_scenegraph( NULL ),
+/*
 m_diameter( "diameter" ),
 m_hotpoint( "hotpoint" ),
 m_relative_hotpoint( "relative_hotpoint" ),
 m_altitud( "altitud" ),
 m_split( "split" ),
-m_evt_handler( NULL )
+*/
+m_evt_handler( NULL ),
+m_diameter( p_diameter )
 {
     m_patchmeshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     build_patch();
@@ -216,10 +223,13 @@ m_evt_handler( NULL )
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i] = _DRAWSPACE_NEW_( Face, Face );
+        m_faces[i]->SetPlanetDiameter( m_diameter );
     }
 
+    /*
     m_diameter.m_value = 10.0;
     m_altitud.m_value = -1.0;
+    */
 
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
@@ -255,11 +265,6 @@ void Body::Initialize( void )
     }
 }
 
-void Body::GetDescr( dsstring& p_descr )
-{
-    p_descr = "planet build";
-}
-
 void Body::SetRenderer( DrawSpace::Interface::Renderer * p_renderer )
 {
     m_renderer = p_renderer;
@@ -284,25 +289,10 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
         {
             current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
         }
-
-
-        /*
-        if( current_pass != NULL )
-        {         
-            for( long i = 0; i < 6; i++ )
-            {
-                current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
-            }
-        }
-        */
     }
     m_scenegraph = p_scenegraph;
 }
 
-DrawSpace::Core::Meshe* Body::GetMeshe( const dsstring& p_mesheid )
-{
-    return NULL;
-}
 
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
@@ -310,7 +300,7 @@ void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
     m_scenegraph->GetCurrentCameraView( view );
 
     FaceRenderingNode* face_node = static_cast<FaceRenderingNode*>( p_rendering_node );
-    face_node->Draw( m_patchmeshe->GetVertexListSize(), m_patchmeshe->GetTrianglesListSize(), m_diameter.m_value / 2.0, m_globaltransformation, view );
+    face_node->Draw( m_patchmeshe->GetVertexListSize(), m_patchmeshe->GetTrianglesListSize(), m_diameter / 2.0, m_globaltransformation, view );
 }
 
 void Body::RegisterPassSlot( const dsstring p_passname )
@@ -330,7 +320,7 @@ void Body::RegisterPassSlot( const dsstring p_passname )
     m_passesnodes[p_passname] = nodeset;
 }
 
-DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passname, const dsstring& p_nodeid )
+DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passname, int p_faceid )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
     {
@@ -338,47 +328,29 @@ DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passnam
     }
     NodesSet nodeset = m_passesnodes[p_passname];
     
-    int faceid;
-
-    if( "front" == p_nodeid )
-    {
-        faceid = Patch::FrontPlanetFace;
-    }
-    else if( "rear" == p_nodeid )
-    {
-        faceid = Patch::RearPlanetFace;
-    }
-    else if( "top" == p_nodeid )
-    {
-        faceid = Patch::TopPlanetFace;
-    }
-    else if( "bottom" == p_nodeid )
-    {
-        faceid = Patch::BottomPlanetFace;
-    }
-    else if( "left" == p_nodeid )
-    {
-        faceid = Patch::LeftPlanetFace;
-    }
-    else if( "right" == p_nodeid )
-    {
-        faceid = Patch::RightPlanetFace;
-    }
-    return nodeset.nodes[faceid];
+    return nodeset.nodes[p_faceid];
 }
 
-void Body::GetNodesIdsList( std::vector<dsstring>& p_ids )
+void Body::Compute( void )
 {
-    p_ids.push_back( "front" );
-    p_ids.push_back( "rear" );
-    p_ids.push_back( "top" );
-    p_ids.push_back( "bottom" );
-    p_ids.push_back( "left" );
-    p_ids.push_back( "right" );
-}
+    // determiner la "face courante";
 
-void Body::ComputeSpecifics( void )
-{
+    int curr_face = 0;
+    dsreal af = m_faces[0]->GetAlignmentFactor();
+
+    for( long i = 1; i < 6; i++ )
+    {
+        if( m_faces[i]->GetAlignmentFactor() > af )
+        {
+            curr_face = i;
+            af = m_faces[i]->GetAlignmentFactor();
+        }
+    }
+
+    m_current_face = curr_face;
+
+    //////////////////////////////////////
+
     bool status = 0;
 
     status = m_faces[Patch::FrontPlanetFace]->Compute() | status;
@@ -390,11 +362,11 @@ void Body::ComputeSpecifics( void )
 
     if( status && m_evt_handler )
     {
-        (*m_evt_handler)( "" );
+        (*m_evt_handler)( m_current_face );
     }
 }
 
-void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring& p_nodeid, const dsstring& p_fxname )
+void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
     {
@@ -402,151 +374,20 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, const dsstring
     }
     NodesSet nodeset = m_passesnodes[p_passname];
     
-    int faceid;
-
-    if( "front" == p_nodeid )
-    {
-        faceid = Patch::FrontPlanetFace;
-    }
-    else if( "rear" == p_nodeid )
-    {
-        faceid = Patch::RearPlanetFace;
-    }
-    else if( "top" == p_nodeid )
-    {
-        faceid = Patch::TopPlanetFace;
-    }
-    else if( "bottom" == p_nodeid )
-    {
-        faceid = Patch::BottomPlanetFace;
-    }
-    else if( "left" == p_nodeid )
-    {
-        faceid = Patch::LeftPlanetFace;
-    }
-    else if( "right" == p_nodeid )
-    {
-        faceid = Patch::RightPlanetFace;
-    }
-
     if( "main_fx" == p_fxname )
     {
-        Fx* fx = nodeset.nodes[faceid]->GetFx();
+        Fx* fx = nodeset.nodes[p_faceid]->GetFx();
         *fx = *m_fx; 
 
-        nodeset.nodes[faceid]->AddShaderParameter( 1, "color", 0 );
-        nodeset.nodes[faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
-    }
-}
-
-void Body::GetPropertiesList( std::vector<dsstring>& p_props )
-{
-    dsstring name;
-
-    m_diameter.GetName( name );
-    p_props.push_back( name );
-
-    m_hotpoint.GetName( name );
-    p_props.push_back( name );
-
-    m_relative_hotpoint.GetName( name );
-    p_props.push_back( name );
-
-    m_altitud.GetName( name );
-    p_props.push_back( name );
-}
-
-Property* Body::GetProperty( const dsstring& p_name )
-{
-    dsstring name;
-
-    m_diameter.GetName( name );
-    if( p_name == name )
-    {
-        return &m_diameter;
-    }
-
-    m_hotpoint.GetName( name );
-    if( p_name == name )
-    {
-        return &m_hotpoint;
-    }
-
-    m_relative_hotpoint.GetName( name );
-    if( p_name == name )
-    {
-        return &m_relative_hotpoint;
-    }
-
-    m_altitud.GetName( name );
-    if( p_name == name )
-    {
-        return &m_altitud;
-    }
-
-    return NULL;
-}
-
-void Body::SetProperty( const dsstring& p_name, Property* p_prop )
-{
-    dsstring name;
-
-    m_diameter.GetName( name );
-    if( p_name == name )
-    {
-        TypedProperty<dsreal>* input_diameter = static_cast<TypedProperty<dsreal>*>( p_prop );
-        m_diameter.m_value = input_diameter->m_value;
-
-        for( long i = 0; i < 6; i++ )
-        {
-            if( m_faces[i] != NULL )
-            {
-                m_faces[i]->SetPlanetDiameter( m_diameter.m_value );
-            }
-        }
-    }
-    m_hotpoint.GetName( name );
-    if( p_name == name )
-    {
-        TypedProperty<Vector>* hotpoint = static_cast<TypedProperty<Vector>*>( p_prop );
-
-
-        m_relative_hotpoint.m_value = hotpoint->m_value;;
-
-        //m_hotpoint.m_value = hotpoint->m_value;
-        /*
-        Matrix inv = m_globaltransformation;
-        inv.Inverse();
-        inv.Transform( &m_hotpoint.m_value, &m_relative_hotpoint.m_value );
-        */
-
-
-
-        for( long i = 0; i < 6; i++ )
-        {
-            if( m_faces[i] != NULL )
-            {
-                m_faces[i]->UpdateRelativeHotpoint( m_relative_hotpoint.m_value );
-            }
-        }
-
-        // compute altitud
-        m_altitud.m_value = m_relative_hotpoint.m_value.Length() - ( m_diameter.m_value / 2.0 );
-    }
-
-    m_split.GetName( name );
-    if( p_name == name )
-    {
-        TypedProperty<dsstring>* patchname = static_cast<TypedProperty<dsstring>*>( p_prop );
-
-        m_faces[Patch::FrontPlanetFace]->Split( patchname->m_value );
+        //nodeset.nodes[p_faceid]->AddShaderParameter( 1, "color", 0 );
+        //nodeset.nodes[p_faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
     }
 }
 
 void Body::build_patch( void )
 {
     dsreal xcurr, ycurr;
-    long patch_resolution = 33;
+    long patch_resolution = 55;//35;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );
@@ -590,7 +431,36 @@ void Body::build_patch( void )
     }
 }
 
-void Body::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
+void Body::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, int>* p_handler )
 {
     m_evt_handler = p_handler;
+}
+
+void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
+{
+    m_hotpoint = p_hotpoint;
+
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i]->UpdateRelativeHotpoint( m_hotpoint );
+    }
+
+    // compute altitud
+    m_altitud = m_hotpoint.Length() - ( m_diameter / 2.0 );
+}
+
+DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void )
+{
+    return m_patchmeshe;
+}
+
+Patch* Body::GetFaceCurrentLeaf( int p_faceid )
+{
+    QuadtreeNode<Patch>* current_leaf = m_faces[p_faceid]->GetCurrentLeaf();
+    return current_leaf->GetContent();
+}
+
+dsreal Body::GetAltitud( void )
+{
+    return m_altitud;
 }

@@ -23,7 +23,8 @@
 #ifndef _BODY_H_
 #define _BODY_H_
 
-#include "drawable.h"
+#include "transformnode.h"
+#include "meshe.h"
 #include "world.h"
 
 namespace DrawSpace
@@ -38,14 +39,16 @@ public:
     {
         BOX_SHAPE,
         SPHERE_SHAPE,
+        MESHE_SHAPE,
 
     } Shape;
 
     typedef struct
     {
-        Shape shape;
+        Shape                       shape;
         DrawSpace::Utils::Vector    box_dims;
         dsreal                      sphere_radius;
+        DrawSpace::Core::Meshe      meshe;
 
     } ShapeDescr;
 
@@ -62,22 +65,28 @@ public:
 
 
 protected:
-    DrawSpace::Drawable*            m_drawable;
-    World*                          m_world;
+    DrawSpace::Core::TransformNode*     m_drawable;
+    World*                              m_world;
+    bool                                m_contact_state;
 
-    DrawSpace::Utils::Matrix        m_lastworldtrans;
+    DrawSpace::Utils::Matrix            m_lastworldtrans;
 
-    btCollisionShape*               instanciate_collision_shape( const ShapeDescr& p_shapedescr );
+    btCollisionShape*                   instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe = NULL );
 
 
 
 public:
-    Body( World* p_world, DrawSpace::Drawable* p_drawable );
+    Body( World* p_world, DrawSpace::Core::TransformNode* p_drawable );
     virtual ~Body( void );
 
-    DrawSpace::Drawable* GetDrawable( void );
+    DrawSpace::Core::TransformNode* GetDrawable( void );
     void GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo );
     World* GetWorld( void );
+
+    virtual btRigidBody* GetRigidBody( void ) = 0;
+
+    virtual bool GetContactState( void );
+    virtual void SetContactState( bool p_state );
 
 };
 }

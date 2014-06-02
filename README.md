@@ -11,3 +11,4 @@ DrawSpace currently rely on some 3rd-parts libraries:
 	** log4cxx : 		http://logging.apache.org/log4cxx/
 	** wxWidgets v2.8.12	http://www.wxwidgets.org/
 	** Shiny C/C++/Lua profiler : http://sourceforge.net/projects/shinyprofiler/
+        ** Bullet physics 2.82 : http://bulletphysics.org/wordpress/

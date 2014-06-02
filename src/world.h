@@ -33,6 +33,9 @@ namespace DrawSpace
 {
 namespace Dynamics
 {
+
+class Body;
+
 class World
 {
 protected:
@@ -44,6 +47,13 @@ protected:
 
     btDiscreteDynamicsWorld*                    m_world;
 
+    //std::vector<Body*>                          m_bodies;
+    std::map<btRigidBody*, Body*>               m_bodies;
+
+   
+public:
+    static dsreal                               m_scale;
+
 public:
     World( void );
     virtual ~World( void );
@@ -54,6 +64,12 @@ public:
     bool StepSimulation( dsreal p_fps );
 
     btDynamicsWorld* getBulletWorld( void );
+
+    //dsreal GetScale( void );
+    void SetScale( dsreal p_scale );
+
+    void AddBody( Body* p_body );
+    void RemoveBody( Body* p_body );
 
 };
 }

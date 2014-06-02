@@ -28,17 +28,23 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-InertBody::InertBody( World* p_world, DrawSpace::Drawable* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world, p_drawable ),
+InertBody::InertBody( World* p_world, TransformNode* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world, p_drawable ),
 m_refbody( NULL ),
-m_parameters( p_parameters )
+m_parameters( p_parameters ),
+m_rigidBody( NULL ),
+m_collisionShape( NULL ),
+m_motionState( NULL ),
+m_meshe_data( NULL )
 {
     m_global_world_mem = m_world;
+
+    dsreal world_scale = World::m_scale;
     btTransform bt_transform;
 
     m_lastlocalworldtrans.Identity();
 
     bt_transform.setIdentity();
-    bt_transform.setOrigin( btVector3( m_parameters.initial_pos[0], m_parameters.initial_pos[1], m_parameters.initial_pos[2] ) );
+    bt_transform.setOrigin( btVector3( m_parameters.initial_pos[0] * world_scale, m_parameters.initial_pos[1] * world_scale, m_parameters.initial_pos[2] * world_scale ) );
 
     create_body( bt_transform );
 }
@@ -51,27 +57,31 @@ InertBody::~InertBody( void )
 
 void InertBody::create_body( const btTransform& p_transform )
 {
-    m_collisionShape = instanciate_collision_shape( m_parameters.shape_descr );
+    dsreal world_scale = World::m_scale;
+
+    m_collisionShape = instanciate_collision_shape( m_parameters.shape_descr, &m_meshe_data );
 
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( p_transform ) );
 
     btVector3 localInertia( 0, 0, 0 );
     if( m_parameters.mass > 0.0 )
     {        
-        m_collisionShape->calculateLocalInertia( m_parameters.mass, localInertia );
+        m_collisionShape->calculateLocalInertia( m_parameters.mass * world_scale, localInertia );
     }
 
-    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( m_parameters.mass, m_motionState, m_collisionShape, localInertia );
+    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( m_parameters.mass * world_scale, m_motionState, m_collisionShape, localInertia );
     m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 
-    m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+    //m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+    m_world->AddBody( this );
 
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
 }
 
 void InertBody::destroy_body( void )
 {
-    m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+    //m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
+    m_world->RemoveBody( this );
     _DRAWSPACE_DELETE_( m_motionState );
     _DRAWSPACE_DELETE_( m_collisionShape );
     _DRAWSPACE_DELETE_( m_rigidBody );
@@ -85,6 +95,8 @@ void InertBody::GetParameters( Parameters& p_parameters )
 
 void InertBody::Update( void )
 {
+    dsreal world_scale = World::m_scale;
+
     btScalar                 bt_matrix[16];
     DrawSpace::Utils::Matrix updated_matrix;
 
@@ -105,9 +117,9 @@ void InertBody::Update( void )
     updated_matrix( 2, 2 ) = bt_matrix[10];
     updated_matrix( 2, 3 ) = bt_matrix[11];
 
-    updated_matrix( 3, 0 ) = bt_matrix[12];
-    updated_matrix( 3, 1 ) = bt_matrix[13];
-    updated_matrix( 3, 2 ) = bt_matrix[14];
+    updated_matrix( 3, 0 ) = bt_matrix[12] / world_scale;
+    updated_matrix( 3, 1 ) = bt_matrix[13] / world_scale;
+    updated_matrix( 3, 2 ) = bt_matrix[14] / world_scale;
     updated_matrix( 3, 3 ) = bt_matrix[15];
 
     m_lastlocalworldtrans = updated_matrix;
@@ -135,7 +147,7 @@ void InertBody::Update( void )
 /*
 
 mat_a => matrice du body a attacher (exemple : ship)
-mat_b => matrice du body auxquel on s'attache (exemple : ship)
+mat_b => matrice du body auxquel on s'attache (exemple : planete)
 
    1/ attachement :
     
@@ -170,6 +182,8 @@ void InertBody::Attach( Body* p_body )
         return;
     }
 
+    dsreal world_scale = World::m_scale;
+
     // recup derniere transfo body auquel on s'attache
     Matrix mat_b;
     p_body->GetLastWorldTransformation( mat_b );
@@ -196,17 +210,17 @@ void InertBody::Attach( Body* p_body )
     kmat[10] = mat_a2( 2, 2 );
     kmat[11] = mat_a2( 2, 3 );
 
-    kmat[12] = mat_a2( 3, 0 );
-    kmat[13] = mat_a2( 3, 1 );
-    kmat[14] = mat_a2( 3, 2 );
+    kmat[12] = mat_a2( 3, 0 ) * world_scale;
+    kmat[13] = mat_a2( 3, 1 ) * world_scale;
+    kmat[14] = mat_a2( 3, 2 ) * world_scale;
     kmat[15] = mat_a2( 3, 3 );
 
     tf_a2.setFromOpenGLMatrix( kmat );
 
     ///////////////////////////////////////////////////////
 
-    btVector3  bt_linearspeed_mem;
-    btVector3  bt_angularspeed_mem;
+    btVector3 bt_linearspeed_mem;
+    btVector3 bt_angularspeed_mem;
 
     bt_linearspeed_mem = m_rigidBody->getLinearVelocity();
     bt_angularspeed_mem = m_rigidBody->getAngularVelocity();
@@ -259,11 +273,13 @@ void InertBody::Detach( void )
         return;
     }
 
+    dsreal world_scale = World::m_scale;
+
     // recup derniere transfo body auquel on s'attache
     Matrix mat_b;
     m_refbody->GetLastWorldTransformation( mat_b );
     
-    DrawSpace::Utils::Matrix mat_a3 = m_lastworldtrans * mat_b;
+    DrawSpace::Utils::Matrix mat_a3 = /*m_lastworldtrans*/ m_lastlocalworldtrans * mat_b;
 
 
     // memoriser mat_a3, pour le reinjecter en transfo initiale pour le nouveau body
@@ -285,9 +301,9 @@ void InertBody::Detach( void )
     kmat[10] = mat_a3( 2, 2 );
     kmat[11] = mat_a3( 2, 3 );
 
-    kmat[12] = mat_a3( 3, 0 );
-    kmat[13] = mat_a3( 3, 1 );
-    kmat[14] = mat_a3( 3, 2 );
+    kmat[12] = mat_a3( 3, 0 ) * world_scale;
+    kmat[13] = mat_a3( 3, 1 ) * world_scale;
+    kmat[14] = mat_a3( 3, 2 ) * world_scale;
     kmat[15] = mat_a3( 3, 3 );
 
     tf_a3.setFromOpenGLMatrix( kmat );
@@ -346,4 +362,55 @@ void InertBody::Detach( void )
 void InertBody::GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_lastlocalworldtrans;
+}
+
+void InertBody::ApplyForce( const DrawSpace::Utils::Vector p_force )
+{
+    dsreal world_scale = World::m_scale;
+
+    m_rigidBody->applyForce( btVector3( p_force[0] * world_scale, 
+                                p_force[1] * world_scale, 
+                                p_force[2] * world_scale ), 
+                                btVector3( 0.0, 0.0, 0.0 ) );
+}
+
+dsreal InertBody::GetLinearSpeedMagnitude( void )
+{
+    btVector3 speed = m_rigidBody->getLinearVelocity();
+    Vector speed2( speed.x(), speed.y(), speed.z(), 1.0 );
+
+    return speed2.Length() * World::m_scale;
+}
+
+dsreal InertBody::GetAngularSpeedMagnitude( void )
+{
+    btVector3 speed = m_rigidBody->getAngularVelocity();
+    Vector speed2( speed.x(), speed.y(), speed.z(), 1.0 );
+
+    return speed2.Length();
+}
+
+btRigidBody* InertBody::GetRigidBody( void )
+{
+    return m_rigidBody;
+}
+
+void InertBody::GetTotalForce( DrawSpace::Utils::Vector& p_force )
+{
+    btVector3 force = m_rigidBody->getTotalForce();
+
+    p_force[0] = force.x();
+    p_force[1] = force.y();
+    p_force[2] = force.z();
+    p_force[3] = 1.0;
+}
+
+void InertBody::GetTotalTorque( DrawSpace::Utils::Vector& p_torque )
+{
+    btVector3 torque = m_rigidBody->getTotalTorque();
+
+    p_torque[0] = torque.x();
+    p_torque[1] = torque.y();
+    p_torque[2] = torque.z();
+    p_torque[3] = 1.0;
 }
