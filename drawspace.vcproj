@@ -153,6 +153,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\circularmovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\circularmovement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\factory.cpp"
 				>
 			</File>
@@ -201,11 +209,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\linearmovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\linearmovement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\lod.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\lod.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\longlatmovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\longlatmovement.h"
 				>
 			</File>
 			<File
