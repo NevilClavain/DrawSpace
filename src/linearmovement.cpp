@@ -50,7 +50,7 @@ void LinearMovement::Init( const Utils::Vector& p_init_pos, const Utils::Vector&
 	m_qpitch.Identity();
 	m_rot_res.Identity();
 
-    ResetPos();
+    Reset();
     SetTheta( p_theta );
     SetPhi( p_phi );
 }
@@ -98,7 +98,7 @@ void LinearMovement::SetSpeed( dsreal p_speed )
     m_speed = p_speed;
 }
 
-void LinearMovement::ResetPos( void )
+void LinearMovement::Reset( void )
 {
     m_current_pos[0] = 0.0;
     m_current_pos[1] = 0.0;

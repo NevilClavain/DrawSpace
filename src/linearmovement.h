@@ -40,14 +40,13 @@ protected:
     DrawSpace::Utils::Vector    m_init_pos;
     DrawSpace::Utils::Vector    m_current_pos;
 
+    // camera orientation control
     dsreal                      m_current_theta;
     dsreal                      m_current_phi;
-    
+   
     Utils::Quaternion		    m_qyaw;
 	Utils::Quaternion		    m_qpitch;
     Utils::Quaternion		    m_rot_res;
-
-
 
 public:
 
@@ -61,7 +60,7 @@ public:
     void SetTheta( dsreal p_theta );
     void SetPhi( dsreal p_phi );
 
-    void ResetPos( void );
+    void Reset( void );
 
     dsreal GetTranslationLength( void );
 

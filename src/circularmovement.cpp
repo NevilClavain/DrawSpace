@@ -21,14 +21,16 @@
 */
 
 #include "circularmovement.h"
+#include "maths.h"
+#include "transformation.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-CircularMovement::CircularMovement( void )
+CircularMovement::CircularMovement( void ) :
+m_angular_speed( 0.0 )
 {
-
 }
 
 CircularMovement::~CircularMovement( void )
@@ -37,12 +39,90 @@ CircularMovement::~CircularMovement( void )
 
 }
 
-void CircularMovement::Init( const Utils::Vector& p_center_pos, dsreal p_ray, dsreal p_theta, dsreal p_phi, dsreal p_orbit_tilt, dsreal p_orbit_theta )
+void CircularMovement::Init( const Utils::Vector& p_center_pos, dsreal p_ray, Vector p_rotaxis, dsreal p_init_angle, dsreal p_theta, dsreal p_phi )
 {
+    m_rotaxis = p_rotaxis;
+    m_center_pos = p_center_pos;
+    m_ray = p_ray;
 
+    m_qyaw.Identity();
+	m_qpitch.Identity();
+	m_rot_res.Identity();
+
+    m_init_angle = p_init_angle;
+
+    Reset();
+    SetTheta( p_theta );
+    SetPhi( p_phi );
 }
 
 void CircularMovement::Compute( Utils::TimeManager& p_timemanager )
 {
+    Transformation transformation;
 
+    /////////////////////////////////////////////////
+
+    Matrix orientation;
+
+	Vector yaxis( 0.0, 1.0, 0.0, 1.0 );
+	Vector xaxis( 1.0, 0.0, 0.0, 1.0 );
+
+	m_qyaw.RotationAxis( yaxis, m_current_theta );
+	m_qpitch.RotationAxis( xaxis, m_current_phi );
+
+	m_rot_res = m_qpitch * m_qyaw;
+	m_rot_res.RotationMatFrom( orientation );
+
+    /////////////////////////////////////////////////
+
+    p_timemanager.AngleSpeedInc( &m_current_angle, m_angular_speed );
+
+    dsreal final_angle = m_current_angle + m_init_angle;
+    if( final_angle >= 360.0 )
+    {
+        final_angle -= 360.0;
+    }
+    else if( final_angle < 0.0 )
+    {
+        final_angle = 360.0 + final_angle;
+    }
+
+
+    Matrix ray_pos;
+    ray_pos.Translation( m_ray, 0.0, 0.0 );
+
+    Matrix rotation;
+    rotation.Rotation( m_rotaxis, DrawSpace::Utils::Maths::DegToRad( final_angle ) );
+
+    Matrix position;
+    position.Translation( m_center_pos );
+
+
+    transformation.PushMatrix( position );
+    transformation.PushMatrix( rotation );
+    transformation.PushMatrix( ray_pos );
+    transformation.PushMatrix( orientation );
+    transformation.BuildResult();
+    transformation.GetResult( &m_result );    
 }
+
+void CircularMovement::SetAngularSpeed( dsreal p_angular_speed )
+{
+    m_angular_speed = p_angular_speed;
+}
+
+void CircularMovement::SetTheta( dsreal p_theta )
+{
+    m_current_theta = DrawSpace::Utils::Maths::DegToRad( p_theta );
+}
+
+void CircularMovement::SetPhi( dsreal p_phi )
+{
+    m_current_phi = DrawSpace::Utils::Maths::DegToRad( p_phi );
+}
+
+void CircularMovement::Reset( void )
+{
+    m_current_angle = 0.0;
+}
+
