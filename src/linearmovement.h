@@ -24,6 +24,7 @@
 #define _LINEARMOVEMENT_H_
 
 #include "movement.h"
+#include "quaternion.h"
 
 namespace DrawSpace
 {
@@ -33,13 +34,36 @@ class LinearMovement : public Movement
 {
 protected:
 
+    dsreal                      m_speed;
+    DrawSpace::Utils::Vector    m_direction;
+
+    DrawSpace::Utils::Vector    m_init_pos;
+    DrawSpace::Utils::Vector    m_current_pos;
+
+    dsreal                      m_current_theta;
+    dsreal                      m_current_phi;
+    
+    Utils::Quaternion		    m_qyaw;
+	Utils::Quaternion		    m_qpitch;
+    Utils::Quaternion		    m_rot_res;
+
+
+
 public:
 
     LinearMovement( void );
     virtual ~LinearMovement( void );
 
-    virtual void Init( const Utils::Vector& p_init_pos, const Utils::Vector& p_direction, dsreal p_theta, dsreal p_phi );
+    void Init( const Utils::Vector& p_init_pos, const Utils::Vector& p_direction, dsreal p_theta, dsreal p_phi );
     virtual void Compute( Utils::TimeManager& p_timemanager );
+
+    void SetSpeed( dsreal p_speed );
+    void SetTheta( dsreal p_theta );
+    void SetPhi( dsreal p_phi );
+
+    void ResetPos( void );
+
+    dsreal GetTranslationLength( void );
 
 };
 }
