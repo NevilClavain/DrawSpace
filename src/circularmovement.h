@@ -36,8 +36,9 @@ protected:
 
     dsreal                      m_angular_speed;
     Utils::Vector               m_rotaxis;
-    dsreal                      m_ray;
+    
     Utils::Vector               m_center_pos;
+    Utils::Vector               m_delta_center;    
 
     dsreal                      m_init_angle;
     dsreal                      m_current_angle;
@@ -56,7 +57,7 @@ public:
     CircularMovement( void );
     virtual ~CircularMovement( void );
 
-    virtual void Init( const Utils::Vector& p_center_pos, dsreal p_ray, DrawSpace::Utils::Vector p_rotaxis, dsreal p_init_angle, dsreal p_theta, dsreal p_phi );
+    virtual void Init( const Utils::Vector& p_center_pos, const Utils::Vector& p_delta_center, const Utils::Vector& p_rotaxis, dsreal p_init_angle, dsreal p_theta, dsreal p_phi );
     virtual void Compute( Utils::TimeManager& p_timemanager );
 
     void SetAngularSpeed( dsreal p_angular_speed );

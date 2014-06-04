@@ -39,11 +39,11 @@ CircularMovement::~CircularMovement( void )
 
 }
 
-void CircularMovement::Init( const Utils::Vector& p_center_pos, dsreal p_ray, Vector p_rotaxis, dsreal p_init_angle, dsreal p_theta, dsreal p_phi )
+void CircularMovement::Init( const Vector& p_center_pos, const Vector& p_delta_center, const Vector& p_rotaxis, dsreal p_init_angle, dsreal p_theta, dsreal p_phi )
 {
     m_rotaxis = p_rotaxis;
     m_center_pos = p_center_pos;
-    m_ray = p_ray;
+    m_delta_center = p_delta_center;
 
     m_qyaw.Identity();
 	m_qpitch.Identity();
@@ -88,8 +88,8 @@ void CircularMovement::Compute( Utils::TimeManager& p_timemanager )
     }
 
 
-    Matrix ray_pos;
-    ray_pos.Translation( m_ray, 0.0, 0.0 );
+    Matrix delta_center;
+    delta_center.Translation( m_delta_center );
 
     Matrix rotation;
     rotation.Rotation( m_rotaxis, DrawSpace::Utils::Maths::DegToRad( final_angle ) );
@@ -98,9 +98,10 @@ void CircularMovement::Compute( Utils::TimeManager& p_timemanager )
     position.Translation( m_center_pos );
 
 
+
     transformation.PushMatrix( position );
     transformation.PushMatrix( rotation );
-    transformation.PushMatrix( ray_pos );
+    transformation.PushMatrix( delta_center );
     transformation.PushMatrix( orientation );
     transformation.BuildResult();
     transformation.GetResult( &m_result );    
