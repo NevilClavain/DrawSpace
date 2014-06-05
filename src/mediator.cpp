@@ -76,3 +76,12 @@ bool Mediator::Wait( dsstring& p_eventname )
     return true;
 }
 
+PropertyPool* Mediator::GetEventPropertyPool( const dsstring& p_eventname )
+{
+    if( m_events_by_name.count( p_eventname ) > 0 )
+    {
+        return m_events_by_name[p_eventname].args;
+    }
+    return NULL;
+}
+

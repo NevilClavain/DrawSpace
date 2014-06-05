@@ -66,6 +66,9 @@ public:
 class PropertyPool
 {
 private:
+
+    DrawSpace::Utils::Mutex m_mutex;
+
     std::vector<IProperty*> m_props;
 public:
     ~PropertyPool( void )
@@ -80,26 +83,40 @@ public:
 
     size_t Size( void )
     {
-        return m_props.size();
+        m_mutex.WaitInfinite();
+        size_t nbp = m_props.size();
+        m_mutex.Release();
+
+        return nbp;
     };
 
     void Clear( void )
     {
+        m_mutex.WaitInfinite();
         m_props.clear();
+        m_mutex.Release();
     };
 
     template<typename base>
     void AddPropValue( const char* p_name, base p_propvalue )
-    {        
+    {
+        m_mutex.WaitInfinite();
+
         TypedProperty<base>* prop = new TypedProperty<base>( p_name, p_propvalue );
         m_props.push_back( prop );
+
+        m_mutex.Release();
     };
 
     template<typename base>
     void AddProp( const char* p_name )
-    {        
+    {
+        m_mutex.WaitInfinite();
+
         TypedProperty<base>* prop = new TypedProperty<base>( p_name );
         m_props.push_back( prop );
+
+        m_mutex.Release();
     };
 
 
@@ -109,6 +126,7 @@ public:
         base dummy;
         std::vector<IProperty*>::iterator it;
 
+        m_mutex.WaitInfinite();
         for( it = m_props.begin(); it != m_props.end(); ++it )
         {
             TypedProperty<base>* prop = dynamic_cast<TypedProperty<base>*>( (*it) );
@@ -120,11 +138,12 @@ public:
 
                 if( name == p_name )
                 {
-                    return prop->m_value;
+                    dummy = prop->m_value;
+                    break;
                 }
             }            
         }
-    
+        m_mutex.Release();
         return dummy;
     };
 
@@ -134,6 +153,7 @@ public:
     {
         std::vector<IModuleProperty*>::iterator it;
 
+        m_mutex.WaitInfinite();
         for( it = m_props.begin(); it != m_props.end(); ++it )
         {
             TypedProperty<base>* prop = dynamic_cast<TypedProperty<base>*>( (*it) );
@@ -146,12 +166,12 @@ public:
                 if( name == p_name )
                 {
                     prop->m_value = p_propvalue;
+                    break;
                 }
             }            
         }
+        m_mutex.Release();
     };
-
-
 };
 
 class Mediator
@@ -162,8 +182,7 @@ protected:
     typedef struct
     {
         dsstring                    name;
-        HANDLE                      system_event;
-        DrawSpace::Utils::Mutex     args_mutex;
+        HANDLE                      system_event;        
         PropertyPool*               args;        
 
     } Event;
@@ -193,6 +212,8 @@ public:
 
     void Notify( const dsstring& p_eventname );
     bool Wait( dsstring& p_eventname );
+    PropertyPool* GetEventPropertyPool( const dsstring& p_eventname );
+
 };
 }
 }
