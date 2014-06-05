@@ -233,6 +233,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\mediator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\mediator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\meshe.cpp"
 				>
 			</File>

@@ -20,67 +20,59 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
-
-#include "tracedefs.h"
-#include "exceptions.h"
-#include "maths.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
-#include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "md5.h"
-#include "vsphere.h"
-#include "lod.h"
-#include "transformation.h"
-#include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "fx.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "memalloc.h"
-#include "events.h"
-#include "fpsmovement.h"
-#include "freemovement.h"
-#include "linearmovement.h"
-#include "circularmovement.h"
-#include "longlatmovement.h"
-#include "quadtree.h"
-#include "misc_utils.h"
-#include "world.h"
-#include "inertbody.h"
-#include "orbiter.h"
-#include "rocket.h"
-#include "calendar.h"
-#include "camerapoint.h"
-#include "spacebox.h"
-#include "planet_body.h"
-#include "chunk.h"
 #include "mediator.h"
-#endif
+
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+
+Mediator* Mediator::m_instance = NULL;
+
+
+Mediator::Mediator( void ) : m_nb_handles( 0 )
+{
+}
+
+
+Mediator::~Mediator( void )
+{
+
+}
+
+bool Mediator::CreateEvent( const dsstring& p_eventname )
+{
+    Event evt;
+    evt.system_event = ::CreateEventA( NULL, TRUE, FALSE, p_eventname.c_str() );
+    evt.args = _DRAWSPACE_NEW_( PropertyPool, PropertyPool );
+    evt.name = p_eventname;
+
+    m_events_by_name[p_eventname] = evt;
+    m_events_by_handle[evt.system_event] = evt;
+
+    m_handles[m_nb_handles] = evt.system_event;
+    return true;
+}
+
+void Mediator::Notify( const dsstring& p_eventname )
+{
+    if( m_events_by_name.count( p_eventname ) > 0 )
+    {
+        SetEvent( m_events_by_name[p_eventname].system_event );
+    }
+}
+
+bool Mediator::Wait( dsstring& p_eventname )
+{
+    DWORD wait = WaitForMultipleObjects( m_nb_handles, m_handles, false, INFINITE );
+    if( WAIT_FAILED == wait )
+    {
+        return false;
+    }
+    wait -= WAIT_OBJECT_0;
+
+    ResetEvent( m_events_by_handle[m_handles[wait]].system_event );
+    p_eventname = m_events_by_handle[m_handles[wait]].name;
+
+    return true;
+}
+
