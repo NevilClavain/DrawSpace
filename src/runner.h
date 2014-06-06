@@ -20,68 +20,40 @@
 *                                                                          
 */
 
-#ifndef _DRAWSPACE_H_
-#define _DRAWSPACE_H_
+#ifndef _RUNNER_H_
+#define _RUNNER_H_
 
-#include "tracedefs.h"
-#include "exceptions.h"
-#include "maths.h"
-#include "task.h"
-#include "mutex.h"
-#include "parser.h"
-#include "vector.h"
-#include "matrix.h"
-#include "quaternion.h"
-#include "vertex.h"
-#include "triangle.h"
-#include "meshe.h"
-#include "archive.h"
-#include "file.h"
-#include "md5.h"
-#include "vsphere.h"
-#include "lod.h"
-#include "transformation.h"
-#include "timemanager.h"
-#include "transformation.h"
-#include "transformnode.h"
-#include "transformqueue.h"
-#include "renderingnode.h"
-#include "renderingqueue.h"
-#include "asset.h"
-#include "factory.h"
-#include "texture.h"
-#include "shader.h"
-#include "plugin.h"
-#include "pimanager.h"
-#include "renderstate.h"
-#include "renderer.h"
-#include "fx.h"
-#include "viewportquad.h"
-#include "pass.h"
-#include "grbfile.h"
-#include "image.h"
-#include "font.h"
-#include "text.h"
-#include "text_widget.h"
-#include "scenegraph.h"
-#include "memalloc.h"
-#include "events.h"
-#include "fpsmovement.h"
-#include "freemovement.h"
-#include "linearmovement.h"
-#include "circularmovement.h"
-#include "longlatmovement.h"
-#include "quadtree.h"
-#include "misc_utils.h"
-#include "world.h"
-#include "inertbody.h"
-#include "orbiter.h"
-#include "rocket.h"
-#include "calendar.h"
-#include "camerapoint.h"
-#include "spacebox.h"
-#include "planet_body.h"
-#include "chunk.h"
 #include "mediator.h"
-#include "runner.h"
+#include "callback.h"
+
+namespace DrawSpace
+{
+namespace Core
+{
+class Runner
+{
+public:
+
+    typedef DrawSpace::Core::BaseCallback<void, PropertyPool*>      MediatorEventHandler;
+
+protected:
+
+    std::map<dsstring, MediatorEventHandler*>                       m_handlers;
+
+    PropertyPool                                                    m_propertypool;
+
+public:
+    
+    Runner( void );
+    virtual ~Runner( void );
+
+    void Run( void );
+    void RegisterEventHandler( const dsstring& p_event_name, MediatorEventHandler* p_handler );
+
+    PropertyPool* GetPropertyPool( void );
+
+};
+}
+}
+
 #endif

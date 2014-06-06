@@ -285,6 +285,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\runner.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\runner.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\shader.cpp"
 				>
 			</File>
