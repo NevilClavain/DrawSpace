@@ -151,7 +151,7 @@ public:
     template<typename base>
     void SetPropValue( const char* p_name, base p_propvalue )
     {
-        std::vector<IModuleProperty*>::iterator it;
+        std::vector<IProperty*>::iterator it;
 
         m_mutex.WaitInfinite();
         for( it = m_props.begin(); it != m_props.end(); ++it )
@@ -176,16 +176,25 @@ public:
 
 class Mediator
 {
-protected:
-    static Mediator* m_instance;
+public:
 
     typedef struct
     {
+    public:
         dsstring                    name;
         HANDLE                      system_event;        
-        PropertyPool*               args;        
+        PropertyPool*               args;
+
+        void Notify( void )
+        {
+            SetEvent( system_event );
+        }
 
     } Event;
+
+
+protected:
+    static Mediator* m_instance;
 
     std::map<dsstring, Event>       m_events_by_name;
     std::map<HANDLE, Event>         m_events_by_handle;
@@ -208,10 +217,13 @@ public:
         return m_instance;
     }
 
-    bool CreateEvent( const dsstring& p_eventname );
+    Event* CreateEvent( const dsstring& p_eventname );
 
     void Notify( const dsstring& p_eventname );
-    bool Wait( dsstring& p_eventname );
+    //bool Wait( dsstring& p_eventname );
+
+    Event* Wait( void );
+
     PropertyPool* GetEventPropertyPool( const dsstring& p_eventname );
 
 };

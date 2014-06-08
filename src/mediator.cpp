@@ -39,7 +39,7 @@ Mediator::~Mediator( void )
 
 }
 
-bool Mediator::CreateEvent( const dsstring& p_eventname )
+Mediator::Event* Mediator::CreateEvent( const dsstring& p_eventname )
 {
     Event evt;
     evt.system_event = ::CreateEventA( NULL, TRUE, FALSE, p_eventname.c_str() );
@@ -50,7 +50,9 @@ bool Mediator::CreateEvent( const dsstring& p_eventname )
     m_events_by_handle[evt.system_event] = evt;
 
     m_handles[m_nb_handles] = evt.system_event;
-    return true;
+    m_nb_handles++;
+
+    return &m_events_by_name[p_eventname];
 }
 
 void Mediator::Notify( const dsstring& p_eventname )
@@ -61,6 +63,7 @@ void Mediator::Notify( const dsstring& p_eventname )
     }
 }
 
+/*
 bool Mediator::Wait( dsstring& p_eventname )
 {
     DWORD wait = WaitForMultipleObjects( m_nb_handles, m_handles, false, INFINITE );
@@ -75,6 +78,22 @@ bool Mediator::Wait( dsstring& p_eventname )
 
     return true;
 }
+*/
+
+Mediator::Event* Mediator::Wait( void )
+{
+    DWORD wait = WaitForMultipleObjects( m_nb_handles, m_handles, false, INFINITE );
+    if( WAIT_FAILED == wait || WAIT_TIMEOUT == wait )
+    {
+        return NULL;
+    }
+    wait -= WAIT_OBJECT_0;
+
+    ResetEvent( m_events_by_handle[m_handles[wait]].system_event );
+
+    return &m_events_by_handle[m_handles[wait]];
+}
+
 
 PropertyPool* Mediator::GetEventPropertyPool( const dsstring& p_eventname )
 {
