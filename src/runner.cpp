@@ -34,20 +34,29 @@ Runner::Runner( void )
 
 Runner::~Runner( void )
 {
-    std::vector<std::pair<DrawSpace::Utils::Mutex*,IProperty*>>::iterator it;
+    
 }
 
 void Runner::Run( void )
 {
+    Mediator* mediator = Mediator::GetInstance();
 
+    while( 1 )
+    {
+        Mediator::Event* evt = mediator->Wait();
+
+        if( evt )
+        {
+            if( m_handlers.count( evt->name ) > 0 )
+            {
+                MediatorEventHandler* handler = m_handlers[evt->name];
+                (*handler)( evt->args );
+            }
+        }
+    }
 }
 
-void Runner::RegisterEventHandler( const dsstring& p_event_name, MediatorEventHandler* p_handler )
+void Runner::RegisterEventHandler( Mediator::Event* p_event, MediatorEventHandler* p_handler )
 {
-    m_handlers[p_event_name] = p_handler;
-}
-
-PropertyPool* Runner::GetPropertyPool( void )
-{
-    return &m_propertypool;
+    m_handlers[p_event->name] = p_handler;
 }

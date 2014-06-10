@@ -33,14 +33,11 @@ namespace Core
 class Runner
 {
 public:
-
     typedef DrawSpace::Core::BaseCallback<void, PropertyPool*>      MediatorEventHandler;
 
 protected:
 
-    std::map<dsstring, MediatorEventHandler*>                       m_handlers;
-
-    PropertyPool                                                    m_propertypool;
+    std::map<dsstring,MediatorEventHandler*>                        m_handlers; 
 
 public:
     
@@ -48,10 +45,7 @@ public:
     virtual ~Runner( void );
 
     void Run( void );
-    void RegisterEventHandler( const dsstring& p_event_name, MediatorEventHandler* p_handler );
-
-    PropertyPool* GetPropertyPool( void );
-
+    void RegisterEventHandler( DrawSpace::Core::Mediator::Event* p_event, MediatorEventHandler* p_handler );
 };
 }
 }
