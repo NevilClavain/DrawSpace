@@ -31,7 +31,8 @@ using namespace DrawSpace::Utils;
 CameraPoint::CameraPoint( const dsstring& p_name, Body* p_body ) : TransformNode( p_name ), 
 m_attached_body( p_body ), 
 m_movement( NULL ),
-m_locked_body( NULL )
+m_locked_body( NULL ),
+m_locked_node( NULL )
 {
 }
 
@@ -74,11 +75,18 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
         m_globaltransformation = m_localtransformation;
     }
 
-    if( m_locked_body )
+    if( m_locked_body || m_locked_node )
     {
         Matrix body_transf;
 
-        m_locked_body->GetLastWorldTransformation( body_transf );
+        if( m_locked_body )
+        {
+            m_locked_body->GetLastWorldTransformation( body_transf );
+        }
+        else if( m_locked_node )
+        {
+            m_locked_node->GetSceneWorld( body_transf );
+        }
 
         Matrix camera_transf = m_globaltransformation;
         camera_transf.Inverse();
@@ -126,6 +134,11 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
 void CameraPoint::LockOnBody( Body* p_locked_body )
 {
     m_locked_body = p_locked_body;
+}
+
+void CameraPoint::LockOnTransformNode( TransformNode* p_locked_node )
+{
+    m_locked_node = p_locked_node;
 }
 
 void CameraPoint::GetLockedBodyCenter( Vector& p_vector )

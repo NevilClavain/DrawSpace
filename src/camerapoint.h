@@ -35,11 +35,14 @@ class CameraPoint : public Core::TransformNode
 {
 protected:
 
-    Body*                       m_attached_body;
-    Body*                       m_locked_body;
-    DrawSpace::Core::Movement*  m_movement;
+    Body*                               m_attached_body;
 
-    DrawSpace::Utils::Vector    m_locked_body_center;
+    Body*                               m_locked_body;
+    DrawSpace::Core::TransformNode*     m_locked_node;
+
+    DrawSpace::Core::Movement*          m_movement;
+
+    DrawSpace::Utils::Vector            m_locked_body_center;
 
 public:
 
@@ -52,6 +55,7 @@ public:
     virtual void ComputeFinalTransform( Utils::TimeManager& p_timemanager );
 
     virtual void LockOnBody( Body* p_locked_body );
+    virtual void LockOnTransformNode( DrawSpace::Core::TransformNode* p_locked_node );
 
 
     virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );
