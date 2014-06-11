@@ -134,3 +134,11 @@ std::map<dsstring, Core::TransformNode*>& Scenegraph::GetCamerasList( void )
 {
     return m_cameras_list;
 }
+
+void Scenegraph::GetCamerasList( std::vector<dsstring>& p_list )
+{    
+    for( std::map<dsstring, Core::TransformNode*>::iterator it = m_cameras_list.begin(); it != m_cameras_list.end(); ++it )
+    {
+        p_list.push_back( it->first );
+    }
+}

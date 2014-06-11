@@ -31,7 +31,6 @@ class Scenegraph : public Core::TransformQueue
 {
 protected:
     std::map<dsstring, Pass*>                   m_passes;
-    //Core::TransformNode*                      m_camera;
 
     dsstring                                    m_current_camera;
     std::map<dsstring, Core::TransformNode*>    m_cameras_list;
@@ -56,6 +55,8 @@ public:
     void ComputeTransformations( Utils::TimeManager& p_timemanager );
 
     std::map<dsstring, Core::TransformNode*>& GetCamerasList( void );
+
+    void GetCamerasList( std::vector<dsstring>& p_list );
 
 };
 }
