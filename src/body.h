@@ -53,9 +53,13 @@ public:
     } ShapeDescr;
 
     typedef struct
-    {       
+    {
+        /*
         DrawSpace::Utils::Vector    initial_pos;
         DrawSpace::Utils::Matrix    initial_rot;
+        */
+
+        DrawSpace::Utils::Matrix    initial_attitude;
 
         dsreal                      mass;
 

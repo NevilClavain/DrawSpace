@@ -43,9 +43,35 @@ m_meshe_data( NULL )
 
     m_lastlocalworldtrans.Identity();
 
+    /*
     bt_transform.setIdentity();
     bt_transform.setOrigin( btVector3( m_parameters.initial_pos[0] * world_scale, m_parameters.initial_pos[1] * world_scale, m_parameters.initial_pos[2] * world_scale ) );
+    */
 
+    btScalar btmat[16];
+
+    btmat[0] = m_parameters.initial_attitude( 0, 0 );
+    btmat[1] = m_parameters.initial_attitude( 0, 1 );
+    btmat[2] = m_parameters.initial_attitude( 0, 2 );
+    btmat[3] = m_parameters.initial_attitude( 0, 3 );
+
+    btmat[4] = m_parameters.initial_attitude( 1, 0 );
+    btmat[5] = m_parameters.initial_attitude( 1, 1 );
+    btmat[6] = m_parameters.initial_attitude( 1, 2 );
+    btmat[7] = m_parameters.initial_attitude( 1, 3 );
+
+    btmat[8] = m_parameters.initial_attitude( 2, 0 );
+    btmat[9] = m_parameters.initial_attitude( 2, 1 );
+    btmat[10] = m_parameters.initial_attitude( 2, 2 );
+    btmat[11] = m_parameters.initial_attitude( 2, 3 );
+
+    btmat[12] = m_parameters.initial_attitude( 3, 0 );
+    btmat[13] = m_parameters.initial_attitude( 3, 1 );
+    btmat[14] = m_parameters.initial_attitude( 3, 2 );
+    btmat[15] = m_parameters.initial_attitude( 3, 3 );
+
+    bt_transform.setFromOpenGLMatrix( btmat ); 
+   
     create_body( bt_transform );
 }
 
