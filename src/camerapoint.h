@@ -59,6 +59,7 @@ public:
 
 
     virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );
+    virtual void GetLocalTransform( DrawSpace::Utils::Matrix& p_localtransf );
 };
 }
 }

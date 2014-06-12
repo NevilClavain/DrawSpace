@@ -63,21 +63,22 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
         m_movement->GetResult( m_localtransformation );
     }
 
-    if( m_attached_body )
-    {
-        Matrix body_trans;
-        m_attached_body->GetLastWorldTransformation( body_trans );
-
-        m_globaltransformation = m_localtransformation * body_trans;
-    }
-    else
-    {
-        m_globaltransformation = m_localtransformation;
-    }
-
     if( m_locked_body || m_locked_node )
     {
+        Matrix temp_global;
+
         Matrix body_transf;
+
+        if( m_attached_body )
+        {
+            
+            m_attached_body->GetLastWorldTransformation( body_transf );
+            temp_global = m_localtransformation * body_transf;
+        }
+        else
+        {
+            temp_global = m_localtransformation;
+        }
 
         if( m_locked_body )
         {
@@ -88,7 +89,7 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
             m_locked_node->GetSceneWorld( body_transf );
         }
 
-        Matrix camera_transf = m_globaltransformation;
+        Matrix camera_transf = temp_global;
         camera_transf.Inverse();
 
         Matrix res = body_transf * camera_transf;
@@ -125,10 +126,22 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
 
         final_lock = rotx * roty;
 
-        Matrix final_res = final_lock * m_globaltransformation;
-        m_globaltransformation = final_res;
-
+        Matrix final_res = final_lock * m_localtransformation;
+        m_localtransformation = final_res;        
     }
+
+
+    if( m_attached_body )
+    {
+        Matrix body_trans;            
+        m_attached_body->GetLastWorldTransformation( body_trans );
+        m_globaltransformation = m_localtransformation * body_trans;
+    }
+    else
+    {
+        m_globaltransformation = m_localtransformation;
+    }
+
 }
 
 void CameraPoint::LockOnBody( Body* p_locked_body )
@@ -144,4 +157,9 @@ void CameraPoint::LockOnTransformNode( TransformNode* p_locked_node )
 void CameraPoint::GetLockedBodyCenter( Vector& p_vector )
 {
     p_vector = m_locked_body_center;
+}
+
+void CameraPoint::GetLocalTransform( DrawSpace::Utils::Matrix& p_localtransf )
+{
+    p_localtransf = m_localtransformation;
 }
