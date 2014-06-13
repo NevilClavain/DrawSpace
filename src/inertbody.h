@@ -33,7 +33,6 @@ namespace Dynamics
 {
 class InertBody : public Body
 {
-
 protected:
 
     Parameters                      m_parameters;
@@ -73,7 +72,8 @@ public:
 
     void GetTotalForce( DrawSpace::Utils::Vector& p_force );
     void GetTotalTorque( DrawSpace::Utils::Vector& p_torque );
-    
+
+    void RegisterEvtHandler( EventHandler* p_handler );
 };
 }
 }

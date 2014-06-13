@@ -74,12 +74,14 @@ TransformNode* Scenegraph::GetCurrentCamera( void )
 
 bool Scenegraph::SetCurrentCamera( const dsstring& p_nodename )
 {
-    //if( m_nodes.count( p_nodename ) > 0 )
     if( m_cameras_list.count( p_nodename ) > 0 )
     {
-        //m_camera = m_nodes[p_nodename];
-
         m_current_camera = p_nodename;
+
+        for( std::vector<CameraEventHandler*>::iterator it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
+        {
+            ( **it )( ACTIVE, m_cameras_list[m_current_camera] );
+        }
         return true;
     }
     return false;
@@ -91,16 +93,13 @@ void Scenegraph::ComputeTransformations( Utils::TimeManager& p_timemanager )
 
     for( std::map<dsstring, TransformNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        (*it).second->ComputeLod();
+        it->second->ComputeLod();
     }
 
     m_view.Identity();
-    //if( m_camera )
 
     if( m_current_camera != "" )
     {
-        //m_camera->GetSceneWorld( m_view );
-
         m_cameras_list[m_current_camera]->GetSceneWorld( m_view );
         m_view.Inverse();
     }
@@ -115,13 +114,6 @@ void Scenegraph::GetCurrentCameraTranform( Utils::Matrix& p_mat )
 {
     Matrix mat;
     mat.Identity();
-
-    /*
-    if( m_camera )
-    {
-        m_camera->GetSceneWorld( mat );
-    }
-    */
 
     if( m_current_camera != "" )
     {
@@ -140,5 +132,18 @@ void Scenegraph::GetCamerasList( std::vector<dsstring>& p_list )
     for( std::map<dsstring, Core::TransformNode*>::iterator it = m_cameras_list.begin(); it != m_cameras_list.end(); ++it )
     {
         p_list.push_back( it->first );
+    }
+}
+
+void Scenegraph::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
+{
+    m_cameraevt_handlers.push_back( p_handler );
+    if( m_current_camera != "" )
+    {
+        (*p_handler)( ACTIVE, m_cameras_list[m_current_camera] );
+    }
+    else
+    {
+        (*p_handler)( ACTIVE, NULL );
     }
 }

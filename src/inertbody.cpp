@@ -290,6 +290,11 @@ void InertBody::Attach( Body* p_body )
     ////////
 
     m_refbody = p_body;
+
+    for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
+    {
+        ( **it )( ATTACHED );
+    }
 }
 
 void InertBody::Detach( void )
@@ -383,6 +388,11 @@ void InertBody::Detach( void )
     //////////////////////////////////////
 
     m_refbody = NULL;
+
+    for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
+    {
+        ( **it )( DETACHED );
+    }
 }
 
 void InertBody::GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat )
@@ -439,4 +449,12 @@ void InertBody::GetTotalTorque( DrawSpace::Utils::Vector& p_torque )
     p_torque[1] = torque.y();
     p_torque[2] = torque.z();
     p_torque[3] = 1.0;
+}
+
+void InertBody::RegisterEvtHandler( EventHandler* p_handler )
+{
+    m_evt_handlers.push_back( p_handler );
+
+    Body::Event evt = ( NULL == m_refbody ? DETACHED : ATTACHED );
+    (*p_handler)( evt );
 }

@@ -24,18 +24,29 @@
 #define _SCENEGRAPH_H_
 
 #include "pass.h"
+#include "callback.h"
 
 namespace DrawSpace
 {
 class Scenegraph : public Core::TransformQueue
 {
+public:
+
+    typedef enum
+    {
+        ACTIVE,
+
+    } CameraEvent;
+
+    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::TransformNode*>  CameraEventHandler;
+
 protected:
     std::map<dsstring, Pass*>                   m_passes;
-
     dsstring                                    m_current_camera;
     std::map<dsstring, Core::TransformNode*>    m_cameras_list;
-
     Utils::Matrix                               m_view;
+
+    std::vector<CameraEventHandler*>            m_cameraevt_handlers;
 
 public:
     Scenegraph( void );
@@ -57,6 +68,8 @@ public:
     std::map<dsstring, Core::TransformNode*>& GetCamerasList( void );
 
     void GetCamerasList( std::vector<dsstring>& p_list );
+
+    void RegisterCameraEvtHandler( CameraEventHandler* p_handler );
 
 };
 }

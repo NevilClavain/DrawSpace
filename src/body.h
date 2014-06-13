@@ -37,6 +37,16 @@ public:
 
     typedef enum
     {
+        ATTACHED,
+        DETACHED
+        
+    } Event;
+
+    typedef DrawSpace::Core::BaseCallback<void, Event> EventHandler;
+
+
+    typedef enum
+    {
         BOX_SHAPE,
         SPHERE_SHAPE,
         MESHE_SHAPE,
@@ -75,6 +85,8 @@ protected:
 
     DrawSpace::Utils::Matrix            m_lastworldtrans;
 
+    std::vector<EventHandler*>          m_evt_handlers;
+
     btCollisionShape*                   instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe = NULL );
 
 
@@ -91,7 +103,6 @@ public:
 
     virtual bool GetContactState( void );
     virtual void SetContactState( bool p_state );
-
 };
 }
 }
