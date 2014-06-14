@@ -42,7 +42,7 @@ public:
         
     } Event;
 
-    typedef DrawSpace::Core::BaseCallback<void, Event> EventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, Event, Body*> EventHandler;
 
 
     typedef enum

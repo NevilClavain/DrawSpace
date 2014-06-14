@@ -293,7 +293,7 @@ void InertBody::Attach( Body* p_body )
 
     for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
-        ( **it )( ATTACHED );
+        ( **it )( ATTACHED, m_refbody );
     }
 }
 
@@ -391,7 +391,7 @@ void InertBody::Detach( void )
 
     for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
-        ( **it )( DETACHED );
+        ( **it )( DETACHED, NULL );
     }
 }
 
@@ -456,5 +456,5 @@ void InertBody::RegisterEvtHandler( EventHandler* p_handler )
     m_evt_handlers.push_back( p_handler );
 
     Body::Event evt = ( NULL == m_refbody ? DETACHED : ATTACHED );
-    (*p_handler)( evt );
+    (*p_handler)( evt, m_refbody );
 }
