@@ -72,7 +72,11 @@ public:
 };
 
 class Body : public DrawSpace::Core::TransformNode
-{	
+{
+public:
+
+    typedef DrawSpace::Core::BaseCallback2<void, Body*, int> EventHandler;
+
 protected:
 
     typedef struct
@@ -97,7 +101,8 @@ protected:
     DrawSpace::Utils::Vector                                                    m_hotpoint;
     dsreal                                                                      m_altitud;
 
-    DrawSpace::Core::BaseCallback<void, int>*                                   m_evt_handler;
+    //DrawSpace::Core::BaseCallback<void, int>*                                   m_evt_handler;
+    std::vector<EventHandler*>                                                  m_evt_handlers;
 
     int                                                                         m_current_face;
 
@@ -121,7 +126,7 @@ public:
     virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
 
     virtual void Initialize( void );
-    virtual void RegisterEventHandler( DrawSpace::Core::BaseCallback<void, int>* p_handler );
+    virtual void RegisterEventHandler( EventHandler* p_handler );
 
     virtual void UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
 

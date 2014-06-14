@@ -214,7 +214,7 @@ m_relative_hotpoint( "relative_hotpoint" ),
 m_altitud( "altitud" ),
 m_split( "split" ),
 */
-m_evt_handler( NULL ),
+//m_evt_handler( NULL ),
 m_diameter( p_diameter )
 {
     m_patchmeshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
@@ -360,9 +360,19 @@ void Body::Compute( void )
     status = m_faces[Patch::RightPlanetFace]->Compute() | status;
     status = m_faces[Patch::LeftPlanetFace]->Compute() | status;
 
+    /*
     if( status && m_evt_handler )
     {
         (*m_evt_handler)( m_current_face );
+    }
+    */
+
+    if( status )
+    {
+        for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
+        {
+            ( **it )( this, m_current_face );
+        }
     }
 }
 
@@ -431,9 +441,10 @@ void Body::build_patch( void )
     }
 }
 
-void Body::RegisterEventHandler( DrawSpace::Core::BaseCallback<void, int>* p_handler )
+void Body::RegisterEventHandler( EventHandler* p_handler )
 {
-    m_evt_handler = p_handler;
+    //m_evt_handler = p_handler;
+    m_evt_handlers.push_back( p_handler );
 }
 
 void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
