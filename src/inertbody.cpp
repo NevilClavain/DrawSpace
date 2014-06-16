@@ -458,3 +458,8 @@ void InertBody::RegisterEvtHandler( EventHandler* p_handler )
     Body::Event evt = ( NULL == m_refbody ? DETACHED : ATTACHED );
     (*p_handler)( evt, m_refbody );
 }
+
+Body* InertBody::GetRefBody( void )
+{
+    return m_refbody;
+}

@@ -74,6 +74,8 @@ public:
     void GetTotalTorque( DrawSpace::Utils::Vector& p_torque );
 
     void RegisterEvtHandler( EventHandler* p_handler );
+
+    Body* GetRefBody( void );
 };
 }
 }

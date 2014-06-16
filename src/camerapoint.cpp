@@ -163,3 +163,8 @@ void CameraPoint::GetLocalTransform( DrawSpace::Utils::Matrix& p_localtransf )
 {
     p_localtransf = m_localtransformation;
 }
+
+Body* CameraPoint::GetAttachedBody( void )
+{
+    return m_attached_body;
+}
