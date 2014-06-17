@@ -32,7 +32,8 @@ CameraPoint::CameraPoint( const dsstring& p_name, Body* p_body ) : TransformNode
 m_attached_body( p_body ), 
 m_movement( NULL ),
 m_locked_body( NULL ),
-m_locked_node( NULL )
+m_locked_node( NULL ),
+m_longlatmovement( NULL )
 {
 }
 
@@ -55,12 +56,28 @@ void CameraPoint::RegisterMovement( DrawSpace::Core::Movement* p_movement )
     m_movement = p_movement;
 }
 
+void CameraPoint::RegisterLongLatMovement( DrawSpace::Core::LongLatMovement* p_longlatmovement )
+{
+    m_longlatmovement = p_longlatmovement;
+}
+
 void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
 {
     if( m_movement )
     {
         m_movement->Compute( p_timemanager );
         m_movement->GetResult( m_localtransformation );
+    }
+
+    if( m_longlatmovement )
+    {
+        m_longlatmovement->Compute( p_timemanager );
+
+        Matrix longlatmvtres;
+        m_longlatmovement->GetResult( longlatmvtres );
+
+        Matrix res = m_localtransformation * longlatmvtres;
+        m_localtransformation = res;
     }
 
     if( m_locked_body || m_locked_node )
@@ -119,11 +136,7 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
         Matrix rotx;
         rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), phi );
 
-
-
         Matrix final_lock;
-
-
         final_lock = rotx * roty;
 
         Matrix final_res = final_lock * m_localtransformation;

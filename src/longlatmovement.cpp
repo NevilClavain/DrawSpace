@@ -21,6 +21,8 @@
 */
 
 #include "longlatmovement.h"
+#include "maths.h"
+#include "transformation.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -35,10 +37,60 @@ LongLatMovement::~LongLatMovement( void )
 {
 }
 
-void LongLatMovement::Init( dsreal p_init_theta, dsreal p_init_phi, dsreal p_ray, dsreal p_heading )
+void LongLatMovement::Init( dsreal p_init_longitud_theta, dsreal p_init_latitud_phi, dsreal p_init_alt, dsreal p_init_theta, dsreal p_init_phi )
 {
+    m_longitud_theta = DrawSpace::Utils::Maths::DegToRad( p_init_longitud_theta );
+    m_latitud_phi = DrawSpace::Utils::Maths::DegToRad( p_init_latitud_phi );
+    m_alt = p_init_alt;
+
 }
 
 void LongLatMovement::Compute( Utils::TimeManager& p_timemanager )
 {
+    Transformation transformation;
+
+    /////////////////////////////////////////////////
+
+    Matrix orientation;
+
+	Vector yaxis( 0.0, 1.0, 0.0, 1.0 );
+	Vector xaxis( 1.0, 0.0, 0.0, 1.0 );
+
+	m_qyaw.RotationAxis( yaxis, m_current_theta );
+	m_qpitch.RotationAxis( xaxis, m_current_phi );
+
+	m_rot_res = m_qpitch * m_qyaw;
+	m_rot_res.RotationMatFrom( orientation );
+
+    /////////////////////////////////////////////////
+
+    Matrix init_rot;
+    init_rot.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), PI / 2.0 );
+
+    Matrix altitude;
+    altitude.Translation( 0.0, 0.0, m_alt );
+
+    Matrix longitud;
+    longitud.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), m_longitud_theta );
+
+    Matrix latitud;
+    latitud.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), m_latitud_phi );
+
+    transformation.PushMatrix( latitud );
+    transformation.PushMatrix( longitud );
+    transformation.PushMatrix( altitude );
+    transformation.PushMatrix( init_rot );
+    transformation.PushMatrix( orientation );
+    transformation.BuildResult();
+    transformation.GetResult( &m_result );
+}
+
+void LongLatMovement::SetTheta( dsreal p_theta )
+{
+    m_current_theta = DrawSpace::Utils::Maths::DegToRad( p_theta );
+}
+
+void LongLatMovement::SetPhi( dsreal p_phi )
+{
+    m_current_phi = DrawSpace::Utils::Maths::DegToRad( p_phi );
 }

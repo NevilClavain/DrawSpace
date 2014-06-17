@@ -24,6 +24,7 @@
 #define _LONGLATMOVEMENT_H_
 
 #include "movement.h"
+#include "quaternion.h"
 
 namespace DrawSpace
 {
@@ -33,13 +34,31 @@ class LongLatMovement : public Movement
 {
 protected:
 
+    dsreal                      m_longitud_theta;
+    dsreal                      m_latitud_phi;
+    dsreal                      m_alt;
+
+    // camera orientation control
+    dsreal                      m_current_theta;
+    dsreal                      m_current_phi;
+   
+    Utils::Quaternion		    m_qyaw;
+	Utils::Quaternion		    m_qpitch;
+    Utils::Quaternion		    m_rot_res;
+
+
+
 public:
 
     LongLatMovement( void );
     virtual ~LongLatMovement( void );
 
-    virtual void Init( dsreal p_init_theta, dsreal p_init_phi, dsreal p_ray, dsreal p_heading );
+    void Init( dsreal p_init_longitud_theta, dsreal p_init_latitud_phi, dsreal p_init_alt, dsreal p_init_theta, dsreal p_init_phi );
     virtual void Compute( Utils::TimeManager& p_timemanager );
+
+    void SetTheta( dsreal p_theta );
+    void SetPhi( dsreal p_phi );
+
 
 };
 }

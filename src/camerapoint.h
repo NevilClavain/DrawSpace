@@ -25,7 +25,7 @@
 
 #include "scenegraph.h"
 #include "body.h"
-#include "movement.h"
+#include "longlatmovement.h"
 
 namespace DrawSpace
 {
@@ -41,6 +41,7 @@ protected:
     DrawSpace::Core::TransformNode*     m_locked_node;
 
     DrawSpace::Core::Movement*          m_movement;
+    DrawSpace::Core::LongLatMovement*   m_longlatmovement;
 
     DrawSpace::Utils::Vector            m_locked_body_center;
 
@@ -52,6 +53,7 @@ public:
     virtual void OnRegister( Scenegraph* p_scenegraph );
    
     virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
+    virtual void RegisterLongLatMovement( DrawSpace::Core::LongLatMovement* p_longlatmovement );
     virtual void ComputeFinalTransform( Utils::TimeManager& p_timemanager );
 
     virtual void LockOnBody( Body* p_locked_body );
