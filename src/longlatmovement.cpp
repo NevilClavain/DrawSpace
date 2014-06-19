@@ -43,6 +43,9 @@ void LongLatMovement::Init( dsreal p_init_longitud_theta, dsreal p_init_latitud_
     m_latitud_phi = DrawSpace::Utils::Maths::DegToRad( p_init_latitud_phi );
     m_alt = p_init_alt;
 
+    SetTheta( p_init_theta );
+    SetPhi( p_init_phi );
+
 }
 
 void LongLatMovement::Compute( Utils::TimeManager& p_timemanager )

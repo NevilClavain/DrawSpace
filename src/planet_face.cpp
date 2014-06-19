@@ -755,10 +755,12 @@ bool Face::Compute( void )
         return false;
     }
 
+    /*
     if( 0.0 == m_movement.LengthPow2() )
     {
         return false;
     }
+    */
 
     if( m_currentleaf == NULL )
     {
