@@ -35,6 +35,8 @@ class Patch
 {
 public:
 
+    static const int    Resolution          = 55;
+
     static const int    NorthNeighbour      = 0;
     static const int    SouthNeighbour      = 1;
     static const int    WestNeighbour       = 2;
@@ -77,6 +79,8 @@ public:
     void GetName( dsstring& p_name );
     dsreal GetSideLength( void );
     int GetOrientation( void );
+
+    dsreal GetTriangleSideLength( void );
 
     void GetPos( dsreal& p_xpos, dsreal& p_ypos );
 

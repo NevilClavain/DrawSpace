@@ -112,6 +112,8 @@ public:
     virtual void AddMergeHandler( PatchMergeHandler* p_handler );
     virtual DrawSpace::Utils::QuadtreeNode<Patch>* GetCurrentLeaf( void );
     virtual dsreal GetAlignmentFactor( void );
+
+    virtual void ResetMeshe( void );
 };
 }
 }

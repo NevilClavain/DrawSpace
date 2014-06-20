@@ -245,6 +245,11 @@ dsreal Patch::GetSideLength( void )
     return m_sidelength * m_ray;
 }
 
+dsreal Patch::GetTriangleSideLength( void )
+{
+    return ( ( m_sidelength * m_ray ) / ( Patch::Resolution - 1 ) );
+}
+
 void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos )
 {
     p_xpos = m_xpos * m_ray;

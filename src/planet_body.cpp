@@ -397,7 +397,7 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, 
 void Body::build_patch( void )
 {
     dsreal xcurr, ycurr;
-    long patch_resolution = 55;//35;
+    long patch_resolution = Planet::Patch::Resolution;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );
@@ -474,4 +474,12 @@ Patch* Body::GetFaceCurrentLeaf( int p_faceid )
 dsreal Body::GetAltitud( void )
 {
     return m_altitud;
+}
+
+void Body::ResetMeshes( void )
+{
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i]->ResetMeshe();
+    }
 }

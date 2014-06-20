@@ -771,6 +771,7 @@ bool Face::Compute( void )
     }
     else
     {
+        /*
         if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
         {
             if( m_movement * m_relative_hotpoint < 0.0 ) // on descend vers la surface
@@ -787,6 +788,27 @@ bool Face::Compute( void )
                     status = true;
                 }
             }              
+        }
+        */
+       
+        if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
+        {
+            dsreal lod = m_currentleaf->GetContent()->GetTriangleSideLength() / ( m_relative_hotpoint.Length() - ( m_planet_diameter / 2.0 ) );
+
+            if( lod > 0.5 )
+            {
+                if( check_split( m_relative_hotpoint ) )
+                {
+                    status = true;
+                }
+            }
+            else if( lod < 0.1 )
+            {
+                if( check_merge( m_relative_hotpoint ) )
+                {
+                    status = true;
+                }
+            }
         }
         else
         {
@@ -836,4 +858,24 @@ DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
 dsreal Face::GetAlignmentFactor( void )
 {
     return m_alignment_factor;
+}
+
+void Face::ResetMeshe( void )
+{
+    if( !m_currentleaf )
+    {
+        return;
+    }
+
+    DrawSpace::Utils::QuadtreeNode<Patch>* parent; 
+    do
+    {
+        parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
+        if( parent )
+        {
+            merge_group( parent );
+            m_currentleaf = parent;
+        }
+
+    } while( parent );  
 }

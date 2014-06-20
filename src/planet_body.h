@@ -135,6 +135,8 @@ public:
     virtual Patch* GetFaceCurrentLeaf( int p_faceid );
 
     virtual dsreal GetAltitud( void );
+
+    virtual void ResetMeshes( void );
 };
 }
 }
