@@ -305,3 +305,8 @@ void CameraPoint::SetRelativeAltitude( dsreal p_relative_altitud )
 {
     m_relative_altitud = p_relative_altitud;
 }
+
+void CameraPoint::GetProjection( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_projection;
+}

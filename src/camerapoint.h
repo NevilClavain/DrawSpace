@@ -66,6 +66,8 @@ protected:
 
     DrawSpace::Utils::Vector            m_locked_body_center;
 
+    DrawSpace::Utils::Matrix            m_projection;
+
     ////
     DrawSpace::Dynamics::Orbiter*       m_relative_orbiter;
     dsreal                              m_relative_altitud;         // only if relative_planet != NULL
@@ -95,6 +97,8 @@ public:
 
     virtual void SetRelativeOrbiter( DrawSpace::Dynamics::Orbiter* p_relative_orbiter );
     virtual void SetRelativeAltitude( dsreal p_relative_altitud );
+
+    virtual void GetProjection( DrawSpace::Utils::Matrix& p_mat );
 };
 }
 }
