@@ -22,13 +22,14 @@
 
 #include "image.h"
 #include "transformation.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Utils;
 
-Image::Image( long p_virtual_width, long p_virtual_height ) : /*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 )
+Image::Image( long p_virtual_width, long p_virtual_height ) : /*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 ), m_rotation_angle( 0.0 )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
@@ -71,7 +72,7 @@ Image::Image( long p_virtual_width, long p_virtual_height ) : /*m_width( p_width
 }
 
 Image::Image( long p_virtual_width, long p_virtual_height, Utils::Vector& p_uv1, Utils::Vector& p_uv2, Utils::Vector& p_uv3, Utils::Vector& p_uv4 ) : 
-/*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 )
+/*m_width( p_width ), m_height( p_height ),*/ m_x( 0.0 ), m_y( 0.0 ), m_rotation_angle( 0.0 )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
@@ -113,7 +114,7 @@ Image::Image( long p_virtual_width, long p_virtual_height, Utils::Vector& p_uv1,
     m_meshe->AddTriangle( Triangle( 0, 3, 2 ) );
 }
 
-Image::Image( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 )
+Image::Image( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 ), m_rotation_angle( 0.0 )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
@@ -153,7 +154,7 @@ Image::Image( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( 
 }
 
 Image::Image( dsreal p_width, dsreal p_height, Utils::Vector& p_uv1, Utils::Vector& p_uv2, Utils::Vector& p_uv3, Utils::Vector& p_uv4 ) : 
-m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 )
+m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 ), m_rotation_angle( 0.0 )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
@@ -201,13 +202,15 @@ Image::~Image( void )
 
 void Image::OnDraw( void )
 {
-    Matrix view, trans, world, scale;
+    Matrix view, trans, world, scale, rot;
     view.Identity();
     trans.Translation( m_x, m_y, 0.0 );
     scale.Scale( m_scale_x, m_scale_y, 1.0 );
+    rot.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), m_rotation_angle );
     Transformation chain;
 
     chain.PushMatrix( trans );
+    chain.PushMatrix( rot );
     chain.PushMatrix( scale );
     chain.BuildResult();
     chain.GetResult( &world );
@@ -246,4 +249,9 @@ void Image::SetScale( dsreal p_sx, dsreal p_sy )
 void** Image::GetRenderMesheData( void )
 {
     return &m_renderer_meshe_data;
+}
+
+void Image::SetRotationAngle( dsreal p_angle )
+{
+    m_rotation_angle = Maths::DegToRad( p_angle );
 }
