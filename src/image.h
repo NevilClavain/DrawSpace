@@ -45,6 +45,8 @@ protected:
     dsreal                                  m_rotation_angle;
     Interface::Renderer::Characteristics    m_rc;
 
+    DrawSpace::Utils::Matrix                m_projection;
+
     void*                                   m_renderer_meshe_data;
 
 public:

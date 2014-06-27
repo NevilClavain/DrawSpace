@@ -28,6 +28,8 @@
 #include "freemovement.h"
 #include "linearmovement.h"
 #include "circularmovement.h"
+#include "plugin.h"
+#include "renderer.h"
 
 
 using namespace DrawSpace;
@@ -42,8 +44,13 @@ m_locked_body( NULL ),
 m_locked_node( NULL ),
 m_longlatmovement( NULL ),
 m_relative_orbiter( NULL ),
-m_relative_altitud( 0.0 )
+m_relative_altitud( 0.0 ),
+m_znear( 1.0 )
 {
+    // prepare projection matrix    
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    renderer->GetRenderCharacteristics( m_rendercharacteristics );
+    m_projection.Perspective( m_rendercharacteristics.width_viewport, m_rendercharacteristics.height_viewport, m_znear, 100000000000.0 );
 }
 
 
@@ -309,4 +316,10 @@ void CameraPoint::SetRelativeAltitude( dsreal p_relative_altitud )
 void CameraPoint::GetProjection( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_projection;
+}
+
+void CameraPoint::UpdateProjectionZNear( dsreal p_znear )
+{
+    m_znear = p_znear;
+    m_projection.Perspective( m_rendercharacteristics.width_viewport, m_rendercharacteristics.height_viewport, m_znear, 100000000000.0 );
 }

@@ -23,7 +23,6 @@
 #ifndef _D3D9RENDERER_H_
 #define _D3D9RENDERER_H_
 
-//#include <drawspace.h>
 #include <memalloc.h>
 #include <tracedefs.h>
 #include <renderer.h>
@@ -93,10 +92,6 @@ protected:
 
     typedef struct
     {
-		/*
-        long                    nb_vertices;
-        long                    nb_triangles;
-		*/
 
         LPDIRECT3DVERTEXBUFFER9 vertex_buffer;
 		LPDIRECT3DINDEXBUFFER9	index_buffer;
@@ -118,8 +113,6 @@ protected:
         LPDIRECT3DVERTEXSHADER9         vertex_shader;
         LPDIRECT3DPIXELSHADER9          pixel_shader;        
         
-        //std::map<dsstring, MesheData>   meshes;
-
         long                            nb_stages;
         LPDIRECT3DTEXTURE9              textures[8];
 
@@ -137,7 +130,7 @@ protected:
     LPDIRECT3DDEVICE9                                           m_lpd3ddevice;
 
     D3DVIEWPORT9                                                m_viewport;
-    DrawSpace::Utils::Matrix                                    m_projection;
+    //DrawSpace::Utils::Matrix                                    m_projection;
     LPDIRECT3DVERTEXDECLARATION9                                m_vertexdeclaration;
 
     D3DFORMAT                                                   m_depthbuffer_format;
@@ -172,9 +165,7 @@ public:
     virtual void Release( void );
 
     virtual void SetViewport( bool p_windowed, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz );
-    virtual void SetProjection( float p_vw, float p_vh, float p_zn, float p_zf );
-
-    //virtual bool CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node );
+    //virtual void SetProjection( float p_vw, float p_vh, float p_zn, float p_zf );
 
     virtual void BeginScreen( void );
     virtual void EndScreen( void );
@@ -186,12 +177,8 @@ public:
     virtual void BeginTarget( DrawSpace::Core::Texture* p_texture );
     virtual void EndTarget( DrawSpace::Core::Texture* p_texture );
 
-    //virtual bool BeginNodeRender( DrawSpace::Core::RenderingNode* p_node, long p_textures_set_index = 0 );
-    //virtual bool EndNodeRender( DrawSpace::Core::RenderingNode* p_node );
-
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data );
     virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data );
-    //virtual bool RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, void* p_data );
     virtual bool SetMeshe( void* p_data );
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
@@ -201,10 +188,9 @@ public:
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data );
     virtual bool SetFx( void* p_data );
 	virtual bool UnsetFx( void* p_data );
-	//virtual bool SetFxShaderParams( int p_shader_index, std::map<long, DrawSpace::Utils::Vector>& p_params );
     virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector );
 
-	virtual bool DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view );
+	virtual bool DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj );
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 

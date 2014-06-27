@@ -52,11 +52,8 @@ FaceRenderingNode::~FaceRenderingNode( void )
 {
 }
 
-void FaceRenderingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view, Vector& p_color )
+void FaceRenderingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, const Matrix& p_view, const Matrix& p_proj, Vector& p_color )
 {
-    //SetShaderRealVector( "color", Vector( 1.0, 0.0, 0.0, 0.0 ) );
-    //SetShaderRealVector( "color", p_color );
-
     m_renderer->SetFxShaderParams( 1, 0, p_color );
 
     VSphere* vsphere = p_patch->GetVSphere();
@@ -101,11 +98,11 @@ void FaceRenderingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nb
         m_renderer->SetFxShaderParams( 0, 8, flag0 );
         m_renderer->SetFxShaderParams( 0, 9, patch_pos );
 
-        m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view );
+        m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view, p_proj );
     }   
 }
 
-void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, Matrix& p_view )
+void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, const Matrix& p_view, const Matrix& p_proj )
 {
     long currentleaf_depth = -1;   
     if( m_face->GetCurrentLeaf() )
@@ -118,7 +115,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
     {
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {
-            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 1.0, 1.0, 1.0, 0.0 ) );
+            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 1.0, 1.0, 1.0, 0.0 ) );
         }
     }
     else
@@ -126,7 +123,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
     
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
-        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 1.0, 1.0, 1.0, 0.0 ) );
+        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 1.0, 1.0, 1.0, 0.0 ) );
  
         for( long i = 0; i < 8; i++ )
         {
@@ -134,7 +131,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
 
             if( neighb )
             {
-                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, Vector( 0.0, 0.0, 1.0, 0.0 ) );
+                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 0.0, 0.0, 1.0, 0.0 ) );
             }
         }  
     }
@@ -297,10 +294,13 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
     DrawSpace::Utils::Matrix view;
+    DrawSpace::Utils::Matrix proj;
+
     m_scenegraph->GetCurrentCameraView( view );
+    m_scenegraph->GetCurrentCameraProj( proj );
 
     FaceRenderingNode* face_node = static_cast<FaceRenderingNode*>( p_rendering_node );
-    face_node->Draw( m_patchmeshe->GetVertexListSize(), m_patchmeshe->GetTrianglesListSize(), m_diameter / 2.0, m_globaltransformation, view );
+    face_node->Draw( m_patchmeshe->GetVertexListSize(), m_patchmeshe->GetTrianglesListSize(), m_diameter / 2.0, m_globaltransformation, view, proj );
 }
 
 void Body::RegisterPassSlot( const dsstring p_passname )

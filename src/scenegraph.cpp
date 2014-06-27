@@ -21,6 +21,10 @@
 */
 
 #include "scenegraph.h"
+#include "camerapoint.h"
+#include "plugin.h"
+#include "renderer.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -122,17 +126,26 @@ void Scenegraph::GetCurrentCameraTranform( Utils::Matrix& p_mat )
     p_mat = mat;
 }
 
+void Scenegraph::GetCurrentCameraProj( Utils::Matrix& p_proj )
+{
+    if( m_current_camera != "" )
+    {       
+        DrawSpace::Dynamics::CameraPoint* camera = static_cast<DrawSpace::Dynamics::CameraPoint*>( m_cameras_list[m_current_camera] );
+        camera->GetProjection( p_proj );        
+    }
+    else
+    {
+        // prepare default projection matrix
+        DrawSpace::Interface::Renderer::Characteristics characteristics;
+        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        renderer->GetRenderCharacteristics( characteristics );
+        p_proj.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000000000.0 );        
+    }
+}
+
 std::map<dsstring, Core::TransformNode*>& Scenegraph::GetCamerasList( void )
 {
     return m_cameras_list;
-}
-
-void Scenegraph::GetCamerasList( std::vector<dsstring>& p_list )
-{    
-    for( std::map<dsstring, Core::TransformNode*>::iterator it = m_cameras_list.begin(); it != m_cameras_list.end(); ++it )
-    {
-        p_list.push_back( it->first );
-    }
 }
 
 void Scenegraph::RegisterCameraEvtHandler( CameraEventHandler* p_handler )

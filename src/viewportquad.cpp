@@ -62,6 +62,12 @@ ViewportQuad::ViewportQuad( const dsstring& p_name, dsreal p_width, dsreal p_hei
     m_meshe->AddVertex( v4 );
     m_meshe->AddTriangle( Triangle( 0, 2, 1 ) );
     m_meshe->AddTriangle( Triangle( 0, 3, 2 ) );
+
+    // prepare projection matrix
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    renderer->GetRenderCharacteristics( characteristics );
+    m_projection.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 10.0 );
 }
 
 ViewportQuad::~ViewportQuad( void )
@@ -74,23 +80,6 @@ void ViewportQuad::OnDraw( void )
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
     DrawSpace::Utils::Matrix view;
     view.Identity();
-    //renderer->RenderMeshe( m_globaltransformation, view, m_renderer_meshe_data );
 
-    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), m_globaltransformation, view );
+    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), m_globaltransformation, view, m_projection );
 }
-
-/*
-bool ViewportQuad::LoadAssets( void )
-{
-    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    if( false == renderer->CreateRenderingNode( this ) )
-    {
-        return false;
-    }
-    if( false == renderer->CreateMeshe( m_meshe, &m_renderer_meshe_data ) )
-    {
-        return false;
-    }
-    return true;
-}
-*/

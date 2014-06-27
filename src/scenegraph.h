@@ -62,12 +62,11 @@ public:
 
     void GetCurrentCameraView( Utils::Matrix& p_view );
     void GetCurrentCameraTranform( Utils::Matrix& p_mat );
+    void GetCurrentCameraProj( Utils::Matrix& p_proj );
 
     void ComputeTransformations( Utils::TimeManager& p_timemanager );
 
     std::map<dsstring, Core::TransformNode*>& GetCamerasList( void );
-
-    void GetCamerasList( std::vector<dsstring>& p_list );
 
     void RegisterCameraEvtHandler( CameraEventHandler* p_handler );
 

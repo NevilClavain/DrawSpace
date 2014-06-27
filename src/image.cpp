@@ -69,6 +69,11 @@ Image::Image( long p_virtual_width, long p_virtual_height ) : /*m_width( p_width
     m_meshe->AddVertex( v4 );
     m_meshe->AddTriangle( Triangle( 0, 2, 1 ) );
     m_meshe->AddTriangle( Triangle( 0, 3, 2 ) );
+
+    // prepare projection matrix
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    renderer->GetRenderCharacteristics( characteristics );
+    m_projection.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000000000.0 );
 }
 
 Image::Image( long p_virtual_width, long p_virtual_height, Utils::Vector& p_uv1, Utils::Vector& p_uv2, Utils::Vector& p_uv3, Utils::Vector& p_uv4 ) : 
@@ -112,6 +117,12 @@ Image::Image( long p_virtual_width, long p_virtual_height, Utils::Vector& p_uv1,
     m_meshe->AddVertex( v4 );
     m_meshe->AddTriangle( Triangle( 0, 2, 1 ) );
     m_meshe->AddTriangle( Triangle( 0, 3, 2 ) );
+
+    // prepare projection matrix
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    renderer->GetRenderCharacteristics( characteristics );
+    m_projection.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000000000.0 );
+
 }
 
 Image::Image( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 ), m_scale_x( 1.0 ), m_scale_y( 1.0 ), m_rotation_angle( 0.0 )
@@ -151,6 +162,12 @@ Image::Image( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( 
     m_meshe->AddVertex( v4 );
     m_meshe->AddTriangle( Triangle( 0, 2, 1 ) );
     m_meshe->AddTriangle( Triangle( 0, 3, 2 ) );
+
+    // prepare projection matrix
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    renderer->GetRenderCharacteristics( characteristics );
+    m_projection.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000000000.0 );
+
 }
 
 Image::Image( dsreal p_width, dsreal p_height, Utils::Vector& p_uv1, Utils::Vector& p_uv2, Utils::Vector& p_uv3, Utils::Vector& p_uv4 ) : 
@@ -191,6 +208,12 @@ m_width( p_width ), m_height( p_height ), m_x( 0.0 ), m_y( 0.0 ), m_rotation_ang
     m_meshe->AddVertex( v4 );
     m_meshe->AddTriangle( Triangle( 0, 2, 1 ) );
     m_meshe->AddTriangle( Triangle( 0, 3, 2 ) );
+
+    // prepare projection matrix
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    renderer->GetRenderCharacteristics( characteristics );
+    m_projection.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000000000.0 );
+
 }
 
 
@@ -216,7 +239,7 @@ void Image::OnDraw( void )
     chain.GetResult( &world );
 
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
-    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), view, world );
+    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), view, world, m_projection );
 }
 
 void Image::SetTranslation( dsreal p_x, dsreal p_y )

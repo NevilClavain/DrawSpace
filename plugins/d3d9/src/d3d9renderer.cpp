@@ -269,7 +269,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 
     _DSDEBUG( logger, "projection : v_width = " << v_width << " v_height = " << v_height );
 
-    SetProjection( (float)v_width, (float)v_height, 1.0f, 100000000000.0f );
+    //SetProjection( (float)v_width, (float)v_height, 1.0f, 100000000000.0f );
 
     m_characteristics.width_viewport = v_width;
     m_characteristics.height_viewport = v_height;
@@ -316,219 +316,13 @@ void D3D9Renderer::SetViewport( bool p_windowed, long p_vpx, long p_vpy, long p_
     m_lpd3ddevice->SetViewport( &m_viewport );
 }
 
+/*
 void D3D9Renderer::SetProjection( float p_vw, float p_vh, float p_zn, float p_zf )
 {
     m_projection.Perspective( p_vw, p_vh, p_zn, p_zf );
 }
-
-/*
-bool D3D9Renderer::CreateRenderingNode( DrawSpace::Core::RenderingNode* p_node )
-{
-    DECLARE_D3D9ASSERT_VARS
-
-    NodeInfos					node_infos;
-    LPDIRECT3DVERTEXSHADER9		vs;
-    LPDIRECT3DPIXELSHADER9		ps;
-    
-    node_infos.nb_stages = 0;
-    node_infos.vertex_shader = NULL;
-    node_infos.pixel_shader = NULL;
-    for( long i = 0; i < 8; i++ )
-    {
-        node_infos.textures[i] = NULL;
-    }
-
-    Core::Fx* fx = p_node->GetFx();
-
-    if( NULL != fx && 2 == fx->GetShadersListSize() )
-    {
-        /////////////////// Shaders loading
-
-        Core::Shader* vertex_shader = fx->GetShader( 0 );
-        Core::Shader* pixel_shader = fx->GetShader( 1 );
-
-        LPD3DXBUFFER vbuff;
-        LPD3DXBUFFER pbuff;
-        LPD3DXBUFFER errors; 
-
-        if( !vertex_shader->IsCompiled() )
-        {
-            if( NULL == vertex_shader->GetData() )
-            {
-                _DSFATAL( logger, "no data in vertex shader !" )
-                return false;
-            }
-
-            hRes = D3DXCompileShader( (LPCSTR)vertex_shader->GetData(), (UINT)vertex_shader->GetDataSize(), NULL, NULL, "vs_main", "vs_3_0", 0, &vbuff, &errors, NULL );
-            if( D3D_OK != hRes )
-            {
-                if( NULL != errors )
-                {
-                    _DSFATAL( logger, "D3DXCompileShader FAIL : " << (char *)errors->GetBufferPointer() )
-                }
-                return false;
-            }
-
-            hRes = m_lpd3ddevice->CreateVertexShader( (DWORD *)vbuff->GetBufferPointer(), &vs );
-            D3D9_CHECK( CreateVertexShader );
-        }
-        else
-        {
-            hRes = m_lpd3ddevice->CreateVertexShader( (DWORD *)vertex_shader->GetData(), &vs );
-            D3D9_CHECK( CreateVertexShader );		
-        }
-
-        vertex_shader->SetRenderReady();
-
-        if( !pixel_shader->IsCompiled() )
-        {
-            if( NULL == pixel_shader->GetData() )
-            {
-                _DSFATAL( logger, "no data in pixel shader !" )
-                return false;
-            }
-
-            hRes = D3DXCompileShader( (LPCSTR)pixel_shader->GetData(), (UINT)pixel_shader->GetDataSize(), NULL, NULL, "ps_main", "ps_3_0", 0, &pbuff, &errors, NULL );
-            if( D3D_OK != hRes )
-            {
-                if( NULL != errors )
-                {
-                    _DSFATAL( logger, "D3DXCompileShader FAIL : " << (char *)errors->GetBufferPointer() )
-                }
-                return false;
-            }
-
-            hRes = m_lpd3ddevice->CreatePixelShader( (DWORD *)pbuff->GetBufferPointer(), &ps );
-            D3D9_CHECK( CreatePixelShader );
-        }
-        else
-        {
-            hRes = m_lpd3ddevice->CreatePixelShader( (DWORD *)pixel_shader->GetData(), &ps );
-            D3D9_CHECK( CreatePixelShader );
-        }
-
-        pixel_shader->SetRenderReady();
-
-        node_infos.vertex_shader = vs;
-        node_infos.pixel_shader  = ps;
-
-        /////////////////// Textures loading
-
-        node_infos.nb_stages = 0;
-        DrawSpace::Core::Texture* current_texture;
-        long nb_textures = p_node->GetTextureListSize();
-
-        for( long i = 0; i < nb_textures; i++ )
-        {
-            LPDIRECT3DTEXTURE9	d3dt9;
-            // fait office d'id
-            dsstring path;
-            current_texture = p_node->GetTexture( i );
-            if( NULL == current_texture )
-            {
-                continue;
-            }
-            current_texture->GetPath( path );
-
-            if( 0 == m_textures_base.count( path ) )
-            {
-                if( current_texture->IsRenderTarget() )
-                {
-                    LPDIRECT3DSURFACE9		surface;
-                    LPD3DXRENDERTOSURFACE	render_to_surface;
-                    D3DSURFACE_DESC			desc;
-
-                    unsigned long rw, rh;
-                    current_texture->GetRenderTargetDims( rw, rh );
-
-                    hRes = m_lpd3ddevice->CreateTexture( rw, rh, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &d3dt9, NULL );
-                    D3D9_CHECK( CreateTexture )
-
-                    d3dt9->GetSurfaceLevel( 0, &surface );
-                    surface->GetDesc( &desc );
-
-                    hRes = D3DXCreateRenderToSurface( m_lpd3ddevice, desc.Width, desc.Height, desc.Format, TRUE, m_depthbuffer_format, &render_to_surface );
-                    D3D9_CHECK( D3DXCreateRenderToSurface )
-
-                    if( i < 8 )
-                    {
-                        node_infos.textures[i] = d3dt9;						
-                        node_infos.nb_stages++;
-
-                        TargetTextureInfos targettexture_infos;
-
-                        targettexture_infos.render_to_surface = render_to_surface;
-                        targettexture_infos.surface = surface;
-
-                        m_targettextures_base[current_texture] = targettexture_infos;
-
-                        TextureInfos texture_infos;
-                        texture_infos.texture = d3dt9;
-                        texture_infos.descr = desc;
-
-                        m_textures_base[path] = texture_infos;
-
-                    }
-                    else
-                    {
-                        _DSWARN( logger, "Max D3D9 texture stage reached" ) 
-                    }
-                }
-                else
-                {
-                    _DSDEBUG( logger, "texture " << path.c_str() << " is new, loading it..." )
-                    
-                    void* data = current_texture->GetData();
-                    size_t data_size = current_texture->GetDataSize();
-                    hRes = D3DXCreateTextureFromFileInMemory( m_lpd3ddevice, data, (UINT)data_size, &d3dt9 );
-                    D3D9_CHECK( D3DXCreateTextureFromFileInMemory );
-                    if( i < 8 )
-                    {
-                        node_infos.textures[i] = d3dt9;
-                        node_infos.nb_stages++;
-
-                        TextureInfos texture_infos;
-                        texture_infos.texture = d3dt9;
-                        d3dt9->GetLevelDesc( 0, &texture_infos.descr );
-
-                        m_textures_base[path] = texture_infos;
-                    }
-                    else
-                    {
-                        _DSWARN( logger, "Max D3D9 texture stage reached" ) 
-                    }
-                }			
-            }
-            else
-            {
-                _DSDEBUG( logger, "texture " << path.c_str() << " exists..." )
-                node_infos.textures[i] = m_textures_base[path].texture;
-                node_infos.nb_stages++;
-            }
-            current_texture->SetRenderReady();
-        }
-        
-    }
-    else
-    {
-        if( NULL == fx )
-        {
-            _DSWARN( logger, "no associated fx" )
-        }
-
-        
-        //if( 2 != fx->GetShadersListSize() )
-        //{
-        //    _DSWARN( logger, "fx does not have 2 shaders" )
-        //}
-        
-    }
-    /////////////////// final step : registering infos
-    m_nodes[p_node] = node_infos;
-
-    return true;
-}
 */
+
 
 void D3D9Renderer::BeginScreen( void )
 {
@@ -571,93 +365,6 @@ void D3D9Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
     }
 }
 
-/*
-bool D3D9Renderer::BeginNodeRender( DrawSpace::Core::RenderingNode* p_node, long p_textures_set_index )
-{
-    DECLARE_D3D9ASSERT_VARS
-
-    NodeInfos node_infos;
-
-    if( 0 == m_nodes.count( p_node ) )
-    {
-        return false;
-    }
-    node_infos = m_nodes[p_node];
-
-    // setting textures
-    for( long i = 0; i < node_infos.nb_stages; i++ )
-    {
-        hRes = m_lpd3ddevice->SetTexture( i, node_infos.textures[i] );
-        D3D9_CHECK( SetTexture );
-    }
-
-    // apply fx
-    DrawSpace::Core::Fx* fx = p_node->GetFx();
-
-    long nb_rs_in = fx->GetRenderStatesInListSize();
-    for( long i = 0; i < nb_rs_in; i++ )
-    {
-        DrawSpace::Core::RenderState rs = fx->GetRenderStateIn( i );
-        SetRenderState( &rs );
-    }
-
-    DrawSpace::Core::Shader* vertex_shader;
-    DrawSpace::Core::Shader* pixel_shader;
-
-    vertex_shader = fx->GetShader( 0 );
-    pixel_shader = fx->GetShader( 1 );
-
-    // vertex shader params application
-    std::map<long, Utils::Vector> vertexshader_table;
-    vertex_shader->GetParamsTable( vertexshader_table );
-    for( std::map<long, Utils::Vector>::iterator it = vertexshader_table.begin(); it != vertexshader_table.end(); ++it )
-    {
-        set_vertexshader_constants( (*it).first, (*it).second.GetArray(), 1 );
-    }
-
-    hRes = m_lpd3ddevice->SetVertexShader( node_infos.vertex_shader );
-    D3D9_CHECK( SetVertexShader );
-    m_lpd3ddevice->SetVertexDeclaration( m_vertexdeclaration );
-
-    // pixel shader params application
-    std::map<long, Utils::Vector> pixelshader_table;
-    pixel_shader->GetParamsTable( pixelshader_table );
-    for( std::map<long, Utils::Vector>::iterator it = pixelshader_table.begin(); it != pixelshader_table.end(); ++it )
-    {
-        set_pixelshader_constants( (*it).first, (*it).second.GetArray(), 1 );
-    }
-
-    hRes = m_lpd3ddevice->SetPixelShader( node_infos.pixel_shader );
-    D3D9_CHECK( SetPixelShader );
-
-    return true;
-}
-
-bool D3D9Renderer::EndNodeRender( DrawSpace::Core::RenderingNode* p_node )
-{
-    m_lpd3ddevice->SetVertexShader( NULL );
-    m_lpd3ddevice->SetPixelShader( NULL );
-
-    m_lpd3ddevice->SetTexture( 0, NULL );
-    m_lpd3ddevice->SetTexture( 1, NULL );
-    m_lpd3ddevice->SetTexture( 2, NULL );
-    m_lpd3ddevice->SetTexture( 3, NULL );
-    m_lpd3ddevice->SetTexture( 4, NULL );
-    m_lpd3ddevice->SetTexture( 5, NULL );
-    m_lpd3ddevice->SetTexture( 6, NULL );
-    m_lpd3ddevice->SetTexture( 7, NULL );
-
-    // unapply fx
-    DrawSpace::Core::Fx* fx = p_node->GetFx();
-    long nb_rs_out = fx->GetRenderStatesOutListSize();
-    for( long i = 0; i < nb_rs_out; i++ )
-    {
-        DrawSpace::Core::RenderState rs = fx->GetRenderStateOut( i );
-        SetRenderState( &rs );
-    }
-    return true;
-}
-*/
 
 bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
 {
@@ -678,11 +385,6 @@ bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
     long nb_triangles = meshe->GetTrianglesListSize();
 
     MesheData* meshe_data = _DRAWSPACE_NEW_( MesheData, MesheData );
-
-	/*
-    meshe_data->nb_vertices = nb_vertices;
-    meshe_data->nb_triangles = nb_triangles;
-	*/
 
     hRes = m_lpd3ddevice->CreateVertexBuffer( nb_vertices * sizeof( d3d9vertex ), 0, D3DFVF_XYZ | D3DFVF_NORMAL | 
                                                                                         D3DFVF_TEX0 | 
@@ -797,60 +499,6 @@ void D3D9Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
     }
 }
 
-/*
-bool D3D9Renderer::RenderMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, void* p_data )
-{
-    DECLARE_D3D9ASSERT_VARS
-
-    // setting transformation
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    DrawSpace::Utils::Matrix result;
-
-    inv.Identity();
-    inv( 2, 2 ) = -1.0;
-    final_view = p_view * inv;
-
-    DrawSpace::Utils::Transformation chain;
-    chain.PushMatrix( m_projection );
-    chain.PushMatrix( final_view );
-    chain.PushMatrix( p_world );
-    chain.BuildResult();
-    chain.GetResult( &result );
-    result.Transpose();
-
-    set_vertexshader_constants( 0, result.GetArray(), 4 );
-    
-    //////////////////////////////////////////////////////////////////////
-
-    DrawSpace::Utils::Matrix world = p_world;
-    DrawSpace::Utils::Matrix view = p_view;
-    DrawSpace::Utils::Matrix worldview = world * view;
-    worldview.Transpose();
-    
-
-    set_vertexshader_constants( 4, worldview.GetArray(), 4 );
-    
-
-    
-    //////////////////////////////////////////////////////////////////////
-    
-    
-    MesheData* meshe_data = (MesheData*)p_data;
-    
-    // vb selections
-    //hRes = m_lpd3ddevice->SetStreamSource( 0, meshe_data->vertex_buffer, 0, sizeof( d3d9vertex ) );
-	//D3D9_CHECK( SetStreamSource );
-
-    //hRes = m_lpd3ddevice->SetIndices( meshe_data->index_buffer );
-	//D3D9_CHECK( SetIndices );
-    
-
-    //hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, meshe_data->nb_vertices, 0, meshe_data->nb_triangles );
-
-    return true;
-}
-*/
 
 bool D3D9Renderer::SetMeshe( void* p_data )
 {
@@ -1090,34 +738,6 @@ bool D3D9Renderer::UnsetFx( void* p_data )
 
 	return true;
 }
-/*
-bool D3D9Renderer::SetFxShaderParams( int p_shader_index, std::map<long, Utils::Vector>& p_params )
-{
-	switch( p_shader_index )
-	{
-		case 0:
-
-			// vertex shader params application		
-			for( std::map<long, Utils::Vector>::iterator it = p_params.begin(); it != p_params.end(); ++it )
-			{
-				set_vertexshader_constants( (*it).first, (*it).second.GetArray(), 1 );
-			}
-			break;
-
-
-		case 1:
-
-			// pixel shader params application
-			for( std::map<long, Utils::Vector>::iterator it = p_params.begin(); it != p_params.end(); ++it )
-			{
-				set_pixelshader_constants( (*it).first, (*it).second.GetArray(), 1 );
-			}
-			break;
-	}
-
-	return true;
-}
-*/
 
 bool D3D9Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector )
 {
@@ -1143,7 +763,7 @@ bool D3D9Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawS
 	return false;
 }
 
-bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view )
+bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
 {
 	DECLARE_D3D9ASSERT_VARS
 
@@ -1157,7 +777,8 @@ bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::
     final_view = p_view * inv;
 
     DrawSpace::Utils::Transformation chain;
-    chain.PushMatrix( m_projection );
+    //chain.PushMatrix( m_projection );
+    chain.PushMatrix( p_proj );
     chain.PushMatrix( final_view );
     chain.PushMatrix( p_world );
     chain.BuildResult();

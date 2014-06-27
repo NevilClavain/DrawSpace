@@ -56,17 +56,19 @@ public:
 
 protected:
 
-    Body*                               m_attached_body;
+    Body*                                           m_attached_body;
 
-    Body*                               m_locked_body;
-    DrawSpace::Core::TransformNode*     m_locked_node;
+    Body*                                           m_locked_body;
+    DrawSpace::Core::TransformNode*                 m_locked_node;
 
-    DrawSpace::Core::Movement*          m_movement;
-    DrawSpace::Core::LongLatMovement*   m_longlatmovement;
+    DrawSpace::Core::Movement*                      m_movement;
+    DrawSpace::Core::LongLatMovement*               m_longlatmovement;
 
-    DrawSpace::Utils::Vector            m_locked_body_center;
+    DrawSpace::Utils::Vector                        m_locked_body_center;
 
-    DrawSpace::Utils::Matrix            m_projection;
+    DrawSpace::Utils::Matrix                        m_projection;
+    DrawSpace::Interface::Renderer::Characteristics m_rendercharacteristics;
+    dsreal                                          m_znear;
 
     ////
     DrawSpace::Dynamics::Orbiter*       m_relative_orbiter;
@@ -99,6 +101,8 @@ public:
     virtual void SetRelativeAltitude( dsreal p_relative_altitud );
 
     virtual void GetProjection( DrawSpace::Utils::Matrix& p_mat );
+
+    virtual void UpdateProjectionZNear( dsreal p_znear );
 };
 }
 }

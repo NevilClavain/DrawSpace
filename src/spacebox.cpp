@@ -327,9 +327,11 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
     world.ClearTranslation();
     m_scenegraph->GetCurrentCameraView( view );
     view.ClearTranslation();
-  
-    //m_renderer->RenderMeshe( world, view, m_meshe_datas[m_nodes_mesheid[p_rendering_node]] );    
-    m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), world, view );
+
+    DrawSpace::Utils::Matrix proj;
+    m_scenegraph->GetCurrentCameraProj( proj );
+
+    m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), world, view, proj );
 }
 
 void Spacebox::RegisterPassSlot( const dsstring p_passname )
