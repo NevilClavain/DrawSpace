@@ -160,3 +160,40 @@ void Scenegraph::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
         (*p_handler)( ACTIVE, NULL );
     }
 }
+
+void Scenegraph::PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy )
+{
+    /*
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    renderer->GetRenderCharacteristics( characteristics );
+
+    Matrix final_view;
+    Matrix inv;
+    Matrix proj;
+    Matrix final;
+
+    Vector res;
+    Vector point = p_point;
+
+    inv.Identity();
+    inv( 2, 2 ) = -1.0;
+    final_view = m_view * inv;
+
+    GetCurrentCameraProj( proj );
+
+    final = final_view * proj;
+
+    final.Transform( &point, &res );
+    
+    p_outx = 0.5 * characteristics.width_viewport * ( res[0] / final( 3, 3 ) );
+    p_outy = 0.5 * characteristics.height_viewport * ( res[1] / final( 3, 3 ) );
+    */
+
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    Matrix proj;
+    Vector point = p_point;
+
+    GetCurrentCameraProj( proj );
+    renderer->PointProjection( m_view, proj, point, p_outx, p_outy );       
+}
