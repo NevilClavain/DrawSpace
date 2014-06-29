@@ -505,6 +505,14 @@
 			Name="gui"
 			>
 			<File
+				RelativePath=".\src\reticle_widget.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\reticle_widget.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\text_widget.cpp"
 				>
 			</File>

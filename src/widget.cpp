@@ -88,7 +88,6 @@ void Widget::Transform( void )
     {
         m_children[i]->Transform();
     }
-
 }
 
 void Widget::SetVirtualTranslation( long p_x, long p_y )

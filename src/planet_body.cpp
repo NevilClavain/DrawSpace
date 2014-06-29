@@ -115,7 +115,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
     {
         for( std::map<dsstring, Patch*>::iterator it = m_patchesleafs.begin(); it != m_patchesleafs.end(); ++it )
         {
-            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 1.0, 1.0, 1.0, 0.0 ) );
+            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 0.0, 0.0, 1.0, 0.0 ) );
         }
     }
     else
@@ -123,7 +123,7 @@ void FaceRenderingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix
     
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
-        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 1.0, 1.0, 1.0, 0.0 ) );
+        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 0.0, 0.0, 1.0, 0.0 ) );
  
         for( long i = 0; i < 8; i++ )
         {
