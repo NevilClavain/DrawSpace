@@ -59,6 +59,7 @@ public:
     void Update( void );
 
     void Attach( Body* p_body );
+    void IncludeTo( Body* p_body, const DrawSpace::Utils::Matrix& p_initmat );
     void Detach( void );
 
     void GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat );

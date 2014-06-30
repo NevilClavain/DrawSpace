@@ -579,22 +579,25 @@ dsreal Face::alt_ratio( dsreal p_altitud )
 
 bool Face::check_split( Vector& p_hotpoint )
 {
-    if( m_currentleaf->GetDepthLevel() >= 11 )
-    {
-        return false;
-    }
-
     bool status = false;
 
     Vector sphericals;
     Maths::CartesiantoSpherical( p_hotpoint, sphericals );
 
     dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
-
+    
     if( alt >= 0.0 )
     {
         while( alt_ratio( alt ) < m_ratio_split_threshold )
         {
+
+            long depth_level = m_currentleaf->GetDepthLevel();
+
+            if( depth_level >= 11 )
+            {
+                break;
+            }
+        
             // split necessaire
             split_group( m_currentleaf );
 
@@ -615,10 +618,10 @@ bool Face::check_split( Vector& p_hotpoint )
                 m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::SouthWestNode ) );
             }
             
-            status = true;
+            status = true;    
         }
     }
-    
+        
     return status;
 }
 
@@ -630,9 +633,10 @@ bool Face::check_merge( Vector& p_hotpoint )
     Maths::CartesiantoSpherical( p_hotpoint, sphericals );
 
     dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
-
+    
     while( alt_ratio( alt ) > m_ratio_merge_threshold )
     {
+    
         if( m_currentleaf->GetParent() )
         {
             m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
@@ -640,10 +644,12 @@ bool Face::check_merge( Vector& p_hotpoint )
 
             status = true;
         }
+        
         else
         {
             break;
         }
+        
     }
     return status;
 }

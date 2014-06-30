@@ -297,6 +297,108 @@ void InertBody::Attach( Body* p_body )
     }
 }
 
+/*
+
+ Identique a Attach, sauf qu'ici mat_a2 = matrice 'initiale' fournit en argument
+
+*/
+
+void InertBody::IncludeTo( Body* p_body, const Matrix& p_initmat )
+{
+    if( m_refbody )
+    {
+        return;
+    }
+
+    dsreal world_scale = World::m_scale;
+
+    // recup derniere transfo body auquel on s'attache
+    Matrix mat_b;
+    p_body->GetLastWorldTransformation( mat_b );
+    mat_b.Inverse();
+
+    DrawSpace::Utils::Matrix mat_a2 = p_initmat;
+    
+    // memoriser mat_a2, pour le reinjecter en transfo initiale pour le nouveau body
+    btScalar kmat[16];    
+    btTransform tf_a2;
+
+    kmat[0] = mat_a2( 0, 0 );
+    kmat[1] = mat_a2( 0, 1 );
+    kmat[2] = mat_a2( 0, 2 );
+    kmat[3] = mat_a2( 0, 3 );
+
+    kmat[4] = mat_a2( 1, 0 );
+    kmat[5] = mat_a2( 1, 1 );
+    kmat[6] = mat_a2( 1, 2 );
+    kmat[7] = mat_a2( 1, 3 );
+
+    kmat[8] = mat_a2( 2, 0 );
+    kmat[9] = mat_a2( 2, 1 );
+    kmat[10] = mat_a2( 2, 2 );
+    kmat[11] = mat_a2( 2, 3 );
+
+    kmat[12] = mat_a2( 3, 0 ) * world_scale;
+    kmat[13] = mat_a2( 3, 1 ) * world_scale;
+    kmat[14] = mat_a2( 3, 2 ) * world_scale;
+    kmat[15] = mat_a2( 3, 3 );
+
+    tf_a2.setFromOpenGLMatrix( kmat );
+
+    ///////////////////////////////////////////////////////
+
+    btVector3 bt_linearspeed_mem;
+    btVector3 bt_angularspeed_mem;
+
+    bt_linearspeed_mem = m_rigidBody->getLinearVelocity();
+    bt_angularspeed_mem = m_rigidBody->getAngularVelocity();
+
+    ///////////////////////////////////////////////////////
+
+    // detruire le body...
+    destroy_body();
+
+    // on passe dans le 'monde' bullet local de p_body
+    m_world = p_body->GetWorld();
+
+    // recreer le body...
+    create_body( tf_a2 );
+
+
+    // bt_angularspeed_mem & bt_linearspeed_mem a passer dans le repere body auquel on s'attache
+
+    Vector angularspeed_mem, linearspeed_mem;
+    Vector angularspeed_mem_2, linearspeed_mem_2;
+
+    angularspeed_mem[0] = bt_angularspeed_mem.x();
+    angularspeed_mem[1] = bt_angularspeed_mem.y();
+    angularspeed_mem[2] = bt_angularspeed_mem.z();
+    angularspeed_mem[3] = 1.0;
+
+
+    linearspeed_mem[0] = bt_linearspeed_mem.x();
+    linearspeed_mem[1] = bt_linearspeed_mem.y();
+    linearspeed_mem[2] = bt_linearspeed_mem.z();
+    linearspeed_mem[3] = 1.0;
+
+    mat_b.ClearTranslation();
+
+    mat_b.Transform( &angularspeed_mem, &angularspeed_mem_2 );
+    mat_b.Transform( &linearspeed_mem, &linearspeed_mem_2 );
+   
+    m_rigidBody->setAngularVelocity( btVector3( angularspeed_mem_2[0], angularspeed_mem_2[1], angularspeed_mem_2[2] ) );
+    m_rigidBody->setLinearVelocity( btVector3( linearspeed_mem_2[0], linearspeed_mem_2[1], linearspeed_mem_2[2] ) );
+
+    ////////
+
+    m_refbody = p_body;
+
+    for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
+    {
+        ( **it )( ATTACHED, m_refbody );
+    }
+}
+
 void InertBody::Detach( void )
 {
     if( !m_refbody )

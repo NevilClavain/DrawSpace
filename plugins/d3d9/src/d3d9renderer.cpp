@@ -1161,6 +1161,6 @@ void D3D9Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::
 
     final.Transform( &point, &res );
     
-    p_outx = 0.5 * m_characteristics.width_viewport * ( res[0] / final( 3, 3 ) );
-    p_outy = 0.5 * m_characteristics.height_viewport * ( res[1] / final( 3, 3 ) );
+    p_outx = 0.5 * m_characteristics.width_viewport * ( res[0] / ( res[2] + 1.0 ) );
+    p_outy = 0.5 * m_characteristics.height_viewport * ( res[1] / ( res[2] + 1.0 ) );
 }

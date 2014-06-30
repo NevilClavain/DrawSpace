@@ -77,10 +77,10 @@ void LongLatMovement::Compute( Utils::TimeManager& p_timemanager )
     longitud.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), m_longitud_theta );
 
     Matrix latitud;
-    latitud.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), m_latitud_phi );
-
-    transformation.PushMatrix( latitud );
+    latitud.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), m_latitud_phi );
+    
     transformation.PushMatrix( longitud );
+    transformation.PushMatrix( latitud );
     transformation.PushMatrix( altitude );
     transformation.PushMatrix( init_rot );
     transformation.PushMatrix( orientation );
