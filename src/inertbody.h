@@ -76,6 +76,10 @@ public:
 
     void RegisterEvtHandler( EventHandler* p_handler );
 
+    bool HasLanded( void );
+
+    bool IsActive( void );
+
     Body* GetRefBody( void );
 };
 }

@@ -565,3 +565,28 @@ Body* InertBody::GetRefBody( void )
 {
     return m_refbody;
 }
+
+bool InertBody::HasLanded( void )
+{
+    btVector3 lv = m_rigidBody->getLinearVelocity();
+    btVector3 av = m_rigidBody->getAngularVelocity();
+
+    bool status = GetContactState() && lv.length() < 0.001 && av.length() < 0.001;
+
+    // PROVISOIRE, pour tests
+    if( status )
+    {
+        m_rigidBody->activate( false );
+    }
+    else
+    {
+        m_rigidBody->activate( true );
+    }
+
+    return status;
+}
+
+bool InertBody::IsActive( void )
+{
+    return m_rigidBody->isActive();
+}
