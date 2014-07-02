@@ -83,6 +83,7 @@
 #include "camerapoint.h"
 #include "spacebox.h"
 #include "planet_body.h"
+#include "planet_drawing.h"
 #include "chunk.h"
 #include "mediator.h"
 #include "runner.h"

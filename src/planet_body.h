@@ -138,6 +138,8 @@ public:
     virtual dsreal GetAltitud( void );
 
     virtual void ResetMeshes( void );
+
+    friend class Drawing;
 };
 }
 }

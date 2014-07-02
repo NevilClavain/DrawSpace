@@ -87,6 +87,8 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         {
             (*( m_inst_handlers[i] ) )( m_orientation, patch );
         }
+
+        m_patchesleafs[patch_name] = patch;
     }
     else
     {
@@ -111,6 +113,8 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         {
             (*( m_inst_handlers[i] ) )( m_orientation, patch );
         }
+
+        m_patchesleafs[patch_name] = patch;
     }
 }
 
@@ -128,7 +132,12 @@ void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     dsstring patch_name;
     patch->GetName( patch_name );   
     m_patches.erase( patch_name );
-    _DRAWSPACE_DELETE_( patch );    
+    _DRAWSPACE_DELETE_( patch );
+
+    if( m_patchesleafs.count( patch_name ) > 0 )
+    {
+        m_patchesleafs.erase( patch_name );
+    }
 }
 
 void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
@@ -165,6 +174,13 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     for( size_t i = 0; i < m_split_handlers.size(); i++ )
     {
         (*( m_split_handlers[i] ) )( m_orientation, patch );
+    }
+
+    dsstring patch_name;
+    patch->GetName( patch_name );   
+    if( m_patchesleafs.count( patch_name ) > 0 )
+    {
+        m_patchesleafs.erase( patch_name );
     }
 }
 
@@ -322,6 +338,10 @@ void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     {
         (*( m_merge_handlers[i] ) )( m_orientation, patch );
     }
+
+    dsstring patch_name;
+    patch->GetName( patch_name );
+    m_patchesleafs[patch_name] = patch;
 }
 
 void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node )
@@ -884,4 +904,9 @@ void Face::ResetMeshe( void )
         }
 
     } while( parent );  
+}
+
+void Face::GetLeafs( std::map<dsstring, Patch*>& p_list )
+{
+    p_list = m_patchesleafs;
 }

@@ -609,6 +609,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\planet_drawing.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_drawing.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\planet_face.cpp"
 				>
 			</File>
