@@ -103,6 +103,8 @@ protected:
     btTriangleMesh*                 m_meshe_data;
     btDefaultMotionState*           m_motionState;
 
+    DrawSpace::Core::TransformNode* m_drawable;
+
 public:
 
     Orbiter( World* p_world, DrawSpace::Core::TransformNode* p_drawable );
@@ -117,6 +119,8 @@ public:
     void RemoveFromWorld( void );
 
     virtual btRigidBody* GetRigidBody( void );
+
+    DrawSpace::Core::TransformNode* GetDrawable( void );
 };
 
 

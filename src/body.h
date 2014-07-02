@@ -79,7 +79,7 @@ public:
 
 
 protected:
-    DrawSpace::Core::TransformNode*     m_drawable;
+    
     World*                              m_world;
     bool                                m_contact_state;
 
@@ -92,10 +92,9 @@ protected:
 
 
 public:
-    Body( World* p_world, DrawSpace::Core::TransformNode* p_drawable );
+    Body( World* p_world );
     virtual ~Body( void );
 
-    DrawSpace::Core::TransformNode* GetDrawable( void );
     void GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo );
     World* GetWorld( void );
 

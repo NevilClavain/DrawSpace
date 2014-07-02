@@ -78,6 +78,7 @@
 #include "inertbody.h"
 #include "orbiter.h"
 #include "rocket.h"
+#include "collider.h"
 #include "calendar.h"
 #include "camerapoint.h"
 #include "spacebox.h"

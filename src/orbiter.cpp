@@ -172,11 +172,12 @@ void Orbit::Progress( TimeManager& p_timer )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Orbiter::Orbiter( World* p_world, TransformNode* p_drawable ) : Body( p_world, p_drawable ),
+Orbiter::Orbiter( World* p_world, TransformNode* p_drawable ) : Body( p_world ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
-m_meshe_data( NULL )
+m_meshe_data( NULL ),
+m_drawable( p_drawable )
 {
 }
 
@@ -274,6 +275,11 @@ void Orbiter::RemoveFromWorld( void )
 btRigidBody* Orbiter::GetRigidBody( void )
 {
     return m_rigidBody;
+}
+
+TransformNode* Orbiter::GetDrawable( void )
+{
+    return m_drawable;
 }
 
 ////////////////////////////////////////////////////////////////////////////

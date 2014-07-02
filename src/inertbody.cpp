@@ -28,13 +28,14 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-InertBody::InertBody( World* p_world, TransformNode* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world, p_drawable ),
+InertBody::InertBody( World* p_world, TransformNode* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world ),
 m_refbody( NULL ),
 m_parameters( p_parameters ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
-m_meshe_data( NULL )
+m_meshe_data( NULL ),
+m_drawable( p_drawable )
 {
     m_global_world_mem = m_world;
 
@@ -169,6 +170,10 @@ void InertBody::Update( void )
     }
 }
 
+TransformNode* InertBody::GetDrawable( void )
+{
+    return m_drawable;
+}
 
 /*
 

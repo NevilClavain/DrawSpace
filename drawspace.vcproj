@@ -557,6 +557,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\collider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\collider.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\inertbody.cpp"
 				>
 			</File>

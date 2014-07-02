@@ -28,8 +28,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
-Body::Body( World* p_world, TransformNode* p_drawable ) : 
-m_drawable( p_drawable ), 
+Body::Body( World* p_world ) :
 m_world( p_world ),
 m_contact_state( false )
 {
@@ -88,11 +87,8 @@ btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapede
             return NULL;
     }
 }
-
-DrawSpace::Core::TransformNode* Body::GetDrawable( void )
-{
-    return m_drawable;
-}
+/*
+*/
 
 void Body::GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo )
 {
