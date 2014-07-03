@@ -204,8 +204,10 @@ Face::PatchMergeHandler* FaceRenderingNode::GetPatchMergeHandler( void )
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Body::Body( dsreal p_diameter ) : 
+/*
 m_renderer( NULL ), 
 m_scenegraph( NULL ),
+*/
 /*
 m_diameter( "diameter" ),
 m_hotpoint( "hotpoint" ),
@@ -216,8 +218,10 @@ m_split( "split" ),
 //m_evt_handler( NULL ),
 m_diameter( p_diameter )
 {
+    /*
     m_patchmeshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     build_patch();
+    */
 
     for( long i = 0; i < 6; i++ )
     {
@@ -230,6 +234,7 @@ m_diameter( p_diameter )
     m_altitud.m_value = -1.0;
     */
 
+    /*
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
     // prepare Fx
@@ -242,13 +247,15 @@ m_diameter( p_diameter )
 
     m_fx->GetShader( 0 )->LoadFromFile();
     m_fx->GetShader( 1 )->LoadFromFile();
-
+    */
 }
 
 Body::~Body( void )
 {
+    /*
     _DRAWSPACE_DELETE_( m_patchmeshe );
     _DRAWSPACE_DELETE_( m_fx );
+    */
 
     for( long i = 0; i < 6; i++ )
     {
@@ -264,11 +271,14 @@ void Body::Initialize( void )
     }
 }
 
+/*
 void Body::SetRenderer( DrawSpace::Interface::Renderer * p_renderer )
 {
     m_renderer = p_renderer;
 }
+*/
 
+/*
 void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
 {
     for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
@@ -291,8 +301,9 @@ void Body::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
     }
     m_scenegraph = p_scenegraph;
 }
+*/
 
-
+/*
 void Body::on_renderingnode_draw( Core::RenderingNode* p_rendering_node )
 {
     DrawSpace::Utils::Matrix view;
@@ -321,7 +332,9 @@ void Body::RegisterPassSlot( const dsstring p_passname )
     }
     m_passesnodes[p_passname] = nodeset;
 }
+*/
 
+/*
 DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passname, int p_faceid )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
@@ -332,6 +345,7 @@ DrawSpace::Core::RenderingNode* Body::GetNodeFromPass( const dsstring& p_passnam
     
     return nodeset.nodes[p_faceid];
 }
+*/
 
 void Body::Compute( void )
 {
@@ -378,6 +392,7 @@ void Body::Compute( void )
     }
 }
 
+/*
 void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
@@ -390,12 +405,11 @@ void Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, 
     {
         Fx* fx = nodeset.nodes[p_faceid]->GetFx();
         *fx = *m_fx; 
-
-        //nodeset.nodes[p_faceid]->AddShaderParameter( 1, "color", 0 );
-        //nodeset.nodes[p_faceid]->SetShaderRealVector( "color", Vector( 0.0, 0.0, 1.0, 0.0 ) );
     }
 }
+*/
 
+/*
 void Body::build_patch( void )
 {
     dsreal xcurr, ycurr;
@@ -444,6 +458,8 @@ void Body::build_patch( void )
 }
 
 // va remplacer build_patch()
+*/
+
 void Body::BuildPlanetMeshe( void )
 {
     m_planetpatch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
@@ -495,7 +511,6 @@ void Body::BuildPlanetMeshe( void )
 
 void Body::RegisterEventHandler( EventHandler* p_handler )
 {
-    //m_evt_handler = p_handler;
     m_evt_handlers.push_back( p_handler );
 }
 
@@ -512,10 +527,12 @@ void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
     m_altitud = m_hotpoint.Length() - ( m_diameter / 2.0 );
 }
 
+
 DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void )
 {
-    return m_patchmeshe;
+    return m_planetpatch_meshe;
 }
+
 
 Patch* Body::GetFaceCurrentLeaf( int p_faceid )
 {

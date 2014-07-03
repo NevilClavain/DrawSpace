@@ -72,7 +72,7 @@ public:
     
 };
 
-class Body : public DrawSpace::Core::TransformNode
+class Body
 {
 public:
 
@@ -80,36 +80,18 @@ public:
 
 protected:
 
-    typedef struct
-    {
-        FaceRenderingNode*        nodes[6];
+    typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                PatchInstanciationCallback;    
 
-    } NodesSet;
-       
-    typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
-    typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                    PatchInstanciationCallback;    
-
-    std::map<dsstring, NodesSet>                                                m_passesnodes;
-    std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
-    DrawSpace::Scenegraph*                                                      m_scenegraph;
-    DrawSpace::Interface::Renderer*                                             m_renderer;
     Face*                                                                       m_faces[6];
-    DrawSpace::Core::Meshe*                                                     m_patchmeshe;
-    static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe; // va remplacer m_patchmeshe
-
-    DrawSpace::Core::Fx*                                                        m_fx;
+    static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
 
     dsreal                                                                      m_diameter;
     DrawSpace::Utils::Vector                                                    m_hotpoint;
     dsreal                                                                      m_altitud;
 
-    //DrawSpace::Core::BaseCallback<void, int>*                                   m_evt_handler;
     std::vector<EventHandler*>                                                  m_evt_handlers;
 
     int                                                                         m_current_face;
-
-    void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    void build_patch( void );
 
 
 public:
@@ -118,16 +100,8 @@ public:
     virtual ~Body( void );
 
     static void BuildPlanetMeshe( void );
-
-    virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
-    virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
-
-    virtual void RegisterPassSlot( const dsstring p_passname );
-    
-    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_faceid );
     
     virtual void Compute( void );
-    virtual void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
 
     virtual void Initialize( void );
     virtual void RegisterEventHandler( EventHandler* p_handler );
