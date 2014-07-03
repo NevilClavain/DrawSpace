@@ -50,7 +50,8 @@ public:
     virtual ~FaceDrawingNode( void );
 
     virtual void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
-    
+    virtual void SetFace( Face* p_face );
+
 };
 
 
@@ -64,12 +65,16 @@ protected:
 
     } NodesSet;
 
+    typedef DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
+
     Body*                                                                       m_planetbody;
 
 
     std::map<dsstring, NodesSet>                                                m_passesnodes;
+    std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
     DrawSpace::Interface::Renderer*                                             m_renderer;
     DrawSpace::Scenegraph*                                                      m_scenegraph;
+    DrawSpace::Core::Fx*                                                        m_fx;
 
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
@@ -85,6 +90,8 @@ public:
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
 
     virtual void RegisterPassSlot( const dsstring p_passname );
+    DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_faceid );
+    void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
 
 };
 }

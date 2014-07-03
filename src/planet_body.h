@@ -95,6 +95,7 @@ protected:
     DrawSpace::Interface::Renderer*                                             m_renderer;
     Face*                                                                       m_faces[6];
     DrawSpace::Core::Meshe*                                                     m_patchmeshe;
+    static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe; // va remplacer m_patchmeshe
 
     DrawSpace::Core::Fx*                                                        m_fx;
 
@@ -115,6 +116,8 @@ public:
 
     Body( dsreal p_diameter );
     virtual ~Body( void );
+
+    static void BuildPlanetMeshe( void );
 
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );

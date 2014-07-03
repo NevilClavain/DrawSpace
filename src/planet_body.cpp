@@ -32,6 +32,8 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Planet;
 
+Meshe* Body::m_planetpatch_meshe = NULL;
+
 
 FaceRenderingNode::FaceRenderingNode( Face* p_face, DrawSpace::Interface::Renderer* p_renderer ) : 
 m_renderer( p_renderer ),
@@ -435,6 +437,56 @@ void Body::build_patch( void )
             triangle.vertex2 = current_index + 1 + patch_resolution;
             triangle.vertex3 = current_index + patch_resolution;
             m_patchmeshe->AddTriangle( triangle );
+            
+            current_index++;
+        }        
+    }
+}
+
+// va remplacer build_patch()
+void Body::BuildPlanetMeshe( void )
+{
+    m_planetpatch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+
+    dsreal xcurr, ycurr;
+    long patch_resolution = Planet::Patch::Resolution;
+
+    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
+    dsreal interval = 2.0 / ( patch_resolution - 1 );
+    for( long i = 0; i < patch_resolution; i++ )
+    {
+        for( long j = 0; j < patch_resolution; j++ )
+        {
+            xcurr = j * interval - 1.0;
+            ycurr = i * interval - 1.0;
+                        
+            Vertex vertex;
+            vertex.x = xcurr;
+            vertex.y = ycurr;
+            vertex.z = 0.0;
+            m_planetpatch_meshe->AddVertex( vertex );
+        }
+    }
+
+    long current_index = 0;
+
+    for( long i = 0; i < patch_resolution - 1; i++  )
+    {
+        current_index = i * patch_resolution;
+
+        for( long j = 0; j < patch_resolution - 1; j++ )
+        {
+            Triangle triangle;
+
+            triangle.vertex1 = current_index;
+            triangle.vertex2 = current_index + 1;
+            triangle.vertex3 = current_index + patch_resolution;
+            m_planetpatch_meshe->AddTriangle( triangle );
+            
+            triangle.vertex1 = current_index + 1;
+            triangle.vertex2 = current_index + 1 + patch_resolution;
+            triangle.vertex3 = current_index + patch_resolution;
+            m_planetpatch_meshe->AddTriangle( triangle );
             
             current_index++;
         }        
