@@ -221,8 +221,13 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     m_scenegraph->GetCurrentCameraView( view );
     m_scenegraph->GetCurrentCameraProj( proj );
 
+    /*
     FaceRenderingNode* face_node = static_cast<FaceRenderingNode*>( p_rendering_node );
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );    
+    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );
+    */
+
+    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
+    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );
 }
 
 void Drawing::RegisterPassSlot( const dsstring p_passname )
