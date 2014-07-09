@@ -36,6 +36,14 @@ m_scenegraph( p_scenegraph ),
 m_locked_node( NULL ),
 m_locked_body( NULL )
 {
+    // default clipping params
+
+    m_clipping_params.clipping_policy = CLIPPING_CUT;
+    m_clipping_params.xmin = -0.6;
+    m_clipping_params.xmax = 0.6;
+    m_clipping_params.ymin = -0.5;
+    m_clipping_params.ymax = 0.5;
+
 }
 
 ReticleWidget::~ReticleWidget( void )
@@ -87,6 +95,9 @@ void ReticleWidget::Transform( void )
 
         m_scenegraph->PointProjection( pos, center_x, center_y, z_proj );
 
+        //
+
+        /*
         if( z_proj < 0.0 )
         {
             if( m_drawingstate )
@@ -101,6 +112,9 @@ void ReticleWidget::Transform( void )
                 SetDrawingState( true );
             }
         }
+        */
+
+        //
 
         SetTranslation( center_x, center_y );
     }
@@ -109,4 +123,9 @@ void ReticleWidget::Transform( void )
     {
         m_children[i]->Transform();
     }
+}
+
+void ReticleWidget::SetClippingParams( const ClippingParams& p_params )
+{
+    m_clipping_params = p_params;
 }

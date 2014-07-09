@@ -33,11 +33,33 @@ namespace Gui
 {
 class ReticleWidget : public Widget
 {
+public:
+
+    typedef enum
+    {
+        NO_CLIPPING,
+        CLIPPING_CUT,
+        CLIPPING_HOLD,
+
+    } ClippingPolicy;
+
+
+    typedef struct
+    {
+        ClippingPolicy clipping_policy;
+
+        dsreal xmin, ymin;
+        dsreal xmax, ymax;
+
+    } ClippingParams;
+
 protected:
 
     DrawSpace::Dynamics::Body*                      m_locked_body;
     DrawSpace::Core::TransformNode*                 m_locked_node;
     DrawSpace::Scenegraph*                          m_scenegraph;
+
+    ClippingParams                                  m_clipping_params;
 
 
 public:
@@ -47,6 +69,9 @@ public:
     virtual void LockOnBody( DrawSpace::Dynamics::Body* p_locked_body );
     virtual void LockOnTransformNode( DrawSpace::Core::TransformNode* p_locked_node );
     virtual void SetTranslation( dsreal p_x, dsreal p_y );
+    virtual void SetClippingParams( const ClippingParams& p_params );
+
+    
 
     virtual void Transform( void );
 
