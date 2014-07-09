@@ -49,6 +49,8 @@ protected:
 
     void*                                   m_renderer_meshe_data;
 
+    bool                                    m_drawingstate;
+
 public:
 
     Image( dsreal p_width, dsreal p_height );
@@ -66,6 +68,8 @@ public:
     void SetRotationAngle( dsreal p_angle );
 
     void** GetRenderMesheData( void );
+
+    void SetDrawingState( bool p_state );
 };
 }
 

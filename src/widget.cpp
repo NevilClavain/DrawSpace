@@ -39,7 +39,8 @@ m_mouseout_handler( NULL ),
 m_mouserightbuttonup_handler( NULL ),
 m_mouserightbuttondown_handler( NULL ),
 m_mouseleftbuttonup_handler( NULL ),
-m_mouseleftbuttondown_handler( NULL )
+m_mouseleftbuttondown_handler( NULL ),
+m_drawingstate( true )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
@@ -239,4 +240,14 @@ void Widget::RegisterMouseLeftButtonUpEventHandler( EventHandler p_handler )
 void Widget::RegisterMouseLeftButtonDownEventHandler( EventHandler p_handler )
 {
     m_mouseleftbuttondown_handler = p_handler;
+}
+
+void Widget::SetDrawingState( bool p_state )
+{
+    m_drawingstate = p_state;
+
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->SetDrawingState( p_state );
+    }
 }

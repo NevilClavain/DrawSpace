@@ -51,29 +51,21 @@ public:
 
     virtual void SetVirtualTranslation( long p_x ,long p_y );
 
-    /*
-    virtual Core::Fx* GetImageFx( void );
-    virtual Core::Fx* GetBackGroundImageFx( void );
-    virtual Core::Texture* GetBackGroundImageTexture( long p_stage );
-    virtual Core::Fx* GetTextFx( void );
-    */
-
     virtual Image* GetImage( void );
     virtual Image* GetBackgroundImage( void );
     virtual Text*  GetText( void );
-
-
-    //virtual void SetBackgroundTexture( Core::Texture* p_backgroundtexture, long p_stage );
 
     virtual void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
 
     virtual void Draw( void );
     virtual void RegisterToPass( Pass* p_pass );
-    //virtual bool LoadAssets( void );
+
 
     virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
 
     virtual IntermediatePass* GetInternalPass( void );
+
+    virtual void SetDrawingState( bool p_state );
 
 };
 }

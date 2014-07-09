@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
-Text::Text( Core::Font* p_font ) : m_font( p_font ), m_height( 0.5 ), m_x( 0.0 ), m_y( 0.0 )
+Text::Text( Core::Font* p_font ) : m_font( p_font ), m_height( 0.5 ), m_x( 0.0 ), m_y( 0.0 ), m_drawingstate( true )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
@@ -61,7 +61,7 @@ bool Text::Initialize( void )
 
 void Text::OnDraw( void )
 {
-    if( 0 == m_text.size() )
+    if( 0 == m_text.size() || false == m_drawingstate )
     {
         return;
     }
@@ -185,26 +185,7 @@ void Text::SetText( long p_x, long p_y, long p_height, const dsstring& p_text, u
     }
 }
 
-// TODO ??
-/*
-bool Text::LoadAssets( void )
+void Text::SetDrawingState( bool p_state )
 {
-    Texture* texture;
-    dsstring texturepath;
-
-    m_font->GetTexturePath( texturepath );
-    texture = _DRAWSPACE_NEW_( Texture, Texture( texturepath ) );
-    if( false == texture->LoadFromFile() )
-    {
-        return false;
-    }
-    SetTexture( texture, 0 );
-
-    Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    if( false == renderer->CreateRenderingNode( this ) )
-    {
-        return false;
-    }
-    return true;
+    m_drawingstate = p_state;
 }
-*/

@@ -63,44 +63,6 @@ void TextWidget::SetVirtualTranslation( long p_x ,long p_y )
     m_image->SetTranslation( m_real_posx, m_real_posy );
 }
 
-/*
-void TextWidget::SetBackgroundTexture( Core::Texture* p_backgroundtexture, long p_stage )
-{
-    if( m_backgroundimage )
-    {
-        m_backgroundimage->SetTexture( p_backgroundtexture, p_stage );
-    }
-}
-
-Core::Fx* TextWidget::GetImageFx( void )
-{
-    return m_image->GetFx();
-}
-
-Core::Fx* TextWidget::GetBackGroundImageFx( void )
-{
-    if( m_backgroundimage )
-    {
-        return m_backgroundimage->GetFx();
-    }
-    return NULL;
-}
-
-Core::Texture* TextWidget::GetBackGroundImageTexture( long p_stage )
-{
-    if( m_backgroundimage )
-    {
-        return m_backgroundimage->GetTexture( p_stage );
-    }
-    return NULL;
-}
-
-Core::Fx* TextWidget::GetTextFx( void )
-{
-    return m_text->GetFx();
-}
-*/
-
 Image* TextWidget::GetImage( void )
 {
     return m_image;
@@ -124,6 +86,11 @@ void TextWidget::SetText( long p_x, long p_y, long p_height, const dsstring& p_t
 
 void TextWidget::Draw( void )
 {
+    if( false == m_drawingstate )
+    {
+        return;
+    }
+
     Widget::Draw();
 
     m_pass->GetRenderingQueue()->Draw();
@@ -134,25 +101,6 @@ void TextWidget::RegisterToPass( Pass* p_pass )
     p_pass->GetRenderingQueue()->Add( m_image );
 }
 
-/*
-bool TextWidget::LoadAssets( void )
-{
-    if( m_backgroundimage && false == m_backgroundimage->LoadAssets() )
-    {
-        return false;
-    }
-    if( false == m_image->LoadAssets() )
-    {
-        return false;
-    }
-    if( false == m_text->LoadAssets() )
-    {
-        return false;
-    }
-    return true;
-}
-*/
-
 void TextWidget::SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b )
 {
     m_pass->GetRenderingQueue()->SetTargetClearingColor( p_r, p_g, p_b );
@@ -161,4 +109,12 @@ void TextWidget::SetPassTargetClearingColor( unsigned char p_r, unsigned char p_
 IntermediatePass* TextWidget::GetInternalPass( void )
 {
     return m_pass;
+}
+
+void TextWidget::SetDrawingState( bool p_state )
+{
+    Widget::SetDrawingState( p_state );
+
+    m_image->SetDrawingState( p_state );
+    m_text->SetDrawingState( p_state );
 }

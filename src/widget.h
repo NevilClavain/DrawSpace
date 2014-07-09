@@ -71,6 +71,8 @@ protected:
 
     bool                                                m_flag_cursor_in;
 
+    bool                                                m_drawingstate;
+
     void                                                manage_mouse_move( dsreal p_xm, dsreal p_ym );
 
 public:
@@ -96,6 +98,8 @@ public:
     virtual void RegisterMouseRightButtonDownEventHandler( EventHandler p_handler );
     virtual void RegisterMouseLeftButtonUpEventHandler( EventHandler p_handler );
     virtual void RegisterMouseLeftButtonDownEventHandler( EventHandler p_handler );
+
+    virtual void SetDrawingState( bool p_state );
 
 
 };
