@@ -1144,7 +1144,7 @@ void D3D9Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_pos
     m_font->DrawTextA( NULL, buffer, -1, &rect, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB( p_r, p_g, p_b ) );
 }
 
-void D3D9Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy )
+void D3D9Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
 {
     DrawSpace::Utils::Matrix final_view;
     DrawSpace::Utils::Matrix inv;
@@ -1163,4 +1163,6 @@ void D3D9Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::
     
     p_outx = 0.5 * m_characteristics.width_viewport * ( res[0] / ( res[2] + 1.0 ) );
     p_outy = 0.5 * m_characteristics.height_viewport * ( res[1] / ( res[2] + 1.0 ) );
+
+    p_outz = res[2];
 }

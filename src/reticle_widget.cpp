@@ -63,6 +63,7 @@ void ReticleWidget::Transform( void )
     Matrix target_mat;
     Vector pos;
     dsreal center_x, center_y;
+    dsreal z_proj;
 
     bool project = false;
 
@@ -84,7 +85,22 @@ void ReticleWidget::Transform( void )
         pos[2] = target_mat( 3, 2 );
         pos[3] = 1.0;
 
-        m_scenegraph->PointProjection( pos, center_x, center_y );
+        m_scenegraph->PointProjection( pos, center_x, center_y, z_proj );
+
+        if( z_proj < 0.0 )
+        {
+            if( m_drawingstate )
+            {
+                SetDrawingState( false );
+            }
+        }
+        else
+        {
+            if( !m_drawingstate )
+            {
+                SetDrawingState( true );
+            }
+        }
 
         SetTranslation( center_x, center_y );
     }

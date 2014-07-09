@@ -70,7 +70,7 @@ public:
 
     void RegisterCameraEvtHandler( CameraEventHandler* p_handler );
    
-    void PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy );
+    void PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
 };
 }

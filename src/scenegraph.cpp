@@ -161,12 +161,12 @@ void Scenegraph::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
     }
 }
 
-void Scenegraph::PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy )
+void Scenegraph::PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
 {
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     Matrix proj;
     Vector point = p_point;
 
     GetCurrentCameraProj( proj );
-    renderer->PointProjection( m_view, proj, point, p_outx, p_outy );       
+    renderer->PointProjection( m_view, proj, point, p_outx, p_outy, p_outz );       
 }
