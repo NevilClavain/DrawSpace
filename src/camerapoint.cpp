@@ -45,7 +45,8 @@ m_locked_node( NULL ),
 m_longlatmovement( NULL ),
 m_relative_orbiter( NULL ),
 m_relative_altitud( 0.0 ),
-m_znear( 1.0 )
+m_znear( 1.0 ),
+m_lockedobject_distance( 0.0 )
 {
     // prepare projection matrix    
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -185,6 +186,8 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
 
 void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
 {
+    Matrix body_transf;
+
     if( m_movement )
     {
         m_movement->Compute( p_timemanager );
@@ -205,12 +208,9 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
     if( m_locked_body || m_locked_node )
     {
         Matrix temp_global;
-
-        Matrix body_transf;
-
+       
         if( m_attached_body )
-        {
-            
+        {            
             m_attached_body->GetLastWorldTransformation( body_transf );
             temp_global = m_localtransformation * body_transf;
         }
@@ -276,6 +276,22 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
         m_globaltransformation = m_localtransformation;
     }
 
+    // calcul de la distance de l'objet suivi
+    if( m_locked_body || m_locked_node )
+    {
+        Vector body_center( 0.0, 0.0, 0.0, 1.0 );
+        Vector body_center_2;
+
+        Matrix view = m_globaltransformation;
+        view.Inverse();
+        Matrix final = body_transf * view;
+        final.Transform( &body_center, &body_center_2 );
+        m_lockedobject_distance = body_center_2.Length();
+    }
+    else
+    {
+        m_lockedobject_distance = 0.0;
+    }
 }
 
 void CameraPoint::LockOnBody( Body* p_locked_body )
@@ -322,4 +338,9 @@ void CameraPoint::UpdateProjectionZNear( dsreal p_znear )
 {
     m_znear = p_znear;
     m_projection.Perspective( m_rendercharacteristics.width_viewport, m_rendercharacteristics.height_viewport, m_znear, 100000000000.0 );
+}
+
+dsreal CameraPoint::GetLockedObjectDistance( void )
+{
+    return m_lockedobject_distance;
 }

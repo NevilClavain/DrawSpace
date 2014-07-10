@@ -71,8 +71,10 @@ protected:
     dsreal                                          m_znear;
 
     ////
-    DrawSpace::Dynamics::Orbiter*       m_relative_orbiter;
-    dsreal                              m_relative_altitud;         // only if relative_planet != NULL
+    DrawSpace::Dynamics::Orbiter*                   m_relative_orbiter;
+    dsreal                                          m_relative_altitud;         // only if relative_planet != NULL
+
+    dsreal                                          m_lockedobject_distance;
 
 
 public:
@@ -103,6 +105,8 @@ public:
     virtual void GetProjection( DrawSpace::Utils::Matrix& p_mat );
 
     virtual void UpdateProjectionZNear( dsreal p_znear );
+
+    virtual dsreal GetLockedObjectDistance( void );
 };
 }
 }
