@@ -36,7 +36,7 @@ Widget( p_name, p_virtual_width, p_virtual_height, p_parentwidget ),
 m_scenegraph( p_scenegraph ),
 m_locked_node( NULL ),
 m_locked_body( NULL ),
-m_zdepth( 0.0 )
+m_distance( 0.0 )
 {
     // default clipping params
 
@@ -102,10 +102,8 @@ void ReticleWidget::Transform( void )
         m_scenegraph->GetCurrentCameraView( view );
 
         view.Transform( &pos, &view_pos );
-        m_zdepth = view_pos.Length();
+        m_distance = view_pos.Length();
         
-
-
         //////////////////////
 
         m_scenegraph->PointProjection( pos, center_x, center_y, z_proj );
@@ -182,7 +180,7 @@ void ReticleWidget::SetClippingParams( const ClippingParams& p_params )
     m_clipping_params = p_params;
 }
 
-dsreal ReticleWidget::GetLastZDepth( void )
+dsreal ReticleWidget::GetLastDistance( void )
 {
-    return abs( m_zdepth );
+    return m_distance;
 }

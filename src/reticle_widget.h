@@ -61,7 +61,7 @@ protected:
 
     ClippingParams                                  m_clipping_params;
 
-    dsreal                                          m_zdepth;
+    dsreal                                          m_distance;
 
 
 public:
@@ -73,7 +73,7 @@ public:
     virtual void SetTranslation( dsreal p_x, dsreal p_y );
     virtual void SetClippingParams( const ClippingParams& p_params );
     virtual void Transform( void );
-    virtual dsreal GetLastZDepth( void );
+    virtual dsreal GetLastDistance( void );
 };
 }
 }
