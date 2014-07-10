@@ -61,6 +61,8 @@ protected:
 
     ClippingParams                                  m_clipping_params;
 
+    dsreal                                          m_zdepth;
+
 
 public:
     ReticleWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Scenegraph* p_scenegraph, Widget* p_parentwidget );
@@ -71,6 +73,7 @@ public:
     virtual void SetTranslation( dsreal p_x, dsreal p_y );
     virtual void SetClippingParams( const ClippingParams& p_params );
     virtual void Transform( void );
+    virtual dsreal GetLastZDepth( void );
 };
 }
 }
