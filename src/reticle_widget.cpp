@@ -21,6 +21,7 @@
 */
 
 #include "reticle_widget.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Gui;
@@ -97,22 +98,59 @@ void ReticleWidget::Transform( void )
 
         //
 
-        /*
-        if( z_proj < 0.0 )
+        switch( m_clipping_params.clipping_policy )
         {
-            if( m_drawingstate )
-            {
-                SetDrawingState( false );
-            }
+            case CLIPPING_CUT:
+
+                if( center_x > m_clipping_params.xmax || center_x < m_clipping_params.xmin ||
+                    center_y > m_clipping_params.ymax || center_y < m_clipping_params.ymin ||
+                    z_proj < 0.0 )
+                {
+                    if( m_drawingstate )
+                    {
+                        SetDrawingState( false );
+                    }
+                }
+                else
+                {
+                    if( !m_drawingstate )
+                    {
+                        SetDrawingState( true );
+                    }
+                }
+
+                break;
+
+            case NO_CLIPPING:
+
+                if( z_proj < 0.0 )
+                {
+                    if( m_drawingstate )
+                    {
+                        SetDrawingState( false );
+                    }
+                }
+                else
+                {
+                    if( !m_drawingstate )
+                    {
+                        SetDrawingState( true );
+                    }
+                }
+                break;
+
+
+            case CLIPPING_HOLD:
+
+                if( !m_drawingstate )
+                {
+                    SetDrawingState( true );
+                }
+
+                center_x = Maths::Clamp( m_clipping_params.xmin, m_clipping_params.xmax, center_x );
+                center_y = Maths::Clamp( m_clipping_params.ymin, m_clipping_params.ymax, center_y );
+                break;
         }
-        else
-        {
-            if( !m_drawingstate )
-            {
-                SetDrawingState( true );
-            }
-        }
-        */
 
         //
 

@@ -1149,20 +1149,39 @@ void D3D9Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::
     DrawSpace::Utils::Matrix final_view;
     DrawSpace::Utils::Matrix inv;
     DrawSpace::Utils::Matrix proj;
-    DrawSpace::Utils::Matrix final;
+    //DrawSpace::Utils::Matrix final;
 
     DrawSpace::Utils::Vector res;
     DrawSpace::Utils::Vector point = p_point;
 
     inv.Identity();
     inv( 2, 2 ) = -1.0;
+
+
+    /*
+
     final_view = p_view * inv;
     final = final_view * p_proj;
-
     final.Transform( &point, &res );
-    
+
+    */
+
+    final_view = p_view * inv;
+
+    DrawSpace::Utils::Vector point2;
+    final_view.Transform( &point, &point2 );
+
+    p_outz = point2[2];
+
+    if( point2[2] < 1.0 )
+    {
+        point2[2] = 1.0;
+    }
+
+    p_proj.Transform( &point2, &res );
+
     p_outx = 0.5 * m_characteristics.width_viewport * ( res[0] / ( res[2] + 1.0 ) );
     p_outy = 0.5 * m_characteristics.height_viewport * ( res[1] / ( res[2] + 1.0 ) );
 
-    p_outz = res[2];
+    //p_outz = res[2];
 }

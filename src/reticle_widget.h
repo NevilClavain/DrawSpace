@@ -70,11 +70,7 @@ public:
     virtual void LockOnTransformNode( DrawSpace::Core::TransformNode* p_locked_node );
     virtual void SetTranslation( dsreal p_x, dsreal p_y );
     virtual void SetClippingParams( const ClippingParams& p_params );
-
-    
-
     virtual void Transform( void );
-
 };
 }
 }
