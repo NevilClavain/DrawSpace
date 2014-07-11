@@ -101,6 +101,8 @@ public:
 
     virtual void SetDrawingState( bool p_state );
 
+    virtual void GetScreenPos( int& p_outx, int& p_outy );
+
 
 };
 }
