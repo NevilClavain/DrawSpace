@@ -316,7 +316,7 @@ void Calendar::Shutdown( void )
     m_active = false;
 }
 
-void Calendar::on_timer( dsstring p_timername )
+void Calendar::on_timer( const dsstring& p_timername )
 {
     if( 0 == m_sub_sec_count_lim )
     {

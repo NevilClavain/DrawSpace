@@ -301,6 +301,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\spectatormovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\spectatormovement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\task.h"
 				>
 			</File>

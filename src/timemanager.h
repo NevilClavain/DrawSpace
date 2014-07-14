@@ -40,7 +40,7 @@ protected:
     bool    m_ready;
     long    m_last_deltatime;
 
-    typedef Core::BaseCallback<void, dsstring> TimerHandler;
+    typedef Core::BaseCallback<void, const dsstring&> TimerHandler;
 
     typedef struct
     {

@@ -72,6 +72,7 @@
 #include "linearmovement.h"
 #include "circularmovement.h"
 #include "longlatmovement.h"
+#include "spectatormovement.h"
 #include "quadtree.h"
 #include "misc_utils.h"
 #include "world.h"
