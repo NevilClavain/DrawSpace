@@ -28,6 +28,7 @@
 #include "freemovement.h"
 #include "linearmovement.h"
 #include "circularmovement.h"
+#include "spectatormovement.h"
 #include "plugin.h"
 #include "renderer.h"
 
@@ -159,6 +160,10 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
         else if( dynamic_cast<LongLatMovement*>( m_movement ) )
         {
             p_infos.movement_classname = "longlat movement";
+        }
+        else if( dynamic_cast<SpectatorMovement*>( m_movement ) )
+        {
+            p_infos.movement_classname = "spectator movement";
         }
         else
         {

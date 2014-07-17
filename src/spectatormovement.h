@@ -40,6 +40,8 @@ protected:
     dsreal                          m_scalepos;
     long                            m_posperiod;
 
+    bool                            m_linked_to_orbiter;
+
     DrawSpace::Dynamics::InertBody* m_attachedbody;
 
     bool                            m_compute;
@@ -56,7 +58,9 @@ public:
     virtual ~SpectatorMovement( void );
 
 
-    virtual void Init( DrawSpace::Dynamics::InertBody* p_attachedbody, dsreal p_scalepos, long p_posperiod, DrawSpace::Utils::TimeManager& p_timemanager, const dsstring& p_timername );
+    virtual void Init( DrawSpace::Dynamics::InertBody* p_attachedbody, dsreal p_scalepos, 
+                       long p_posperiod, DrawSpace::Utils::TimeManager& p_timemanager, const dsstring& p_timername, bool p_orbiterlink );
+
     virtual void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
 
 

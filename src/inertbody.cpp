@@ -533,6 +533,25 @@ dsreal InertBody::GetAngularSpeedMagnitude( void )
     return speed2.Length();
 }
 
+void InertBody::GetLinearSpeed( DrawSpace::Utils::Vector& p_speed )
+{
+    btVector3 speed = m_rigidBody->getLinearVelocity();
+
+    p_speed[0] = speed.x();
+    p_speed[1] = speed.y();
+    p_speed[2] = speed.z();
+    p_speed[3] = 1.0;
+}
+
+dsreal InertBody::GetBoundingSphereRay( void )
+{
+    btVector3 pos;
+    btScalar  ray;
+    m_collisionShape->getBoundingSphere( pos, ray );
+
+    return ray;
+}
+
 btRigidBody* InertBody::GetRigidBody( void )
 {
     return m_rigidBody;

@@ -71,6 +71,10 @@ public:
     dsreal GetLinearSpeedMagnitude( void );
     dsreal GetAngularSpeedMagnitude( void );
 
+    void GetLinearSpeed( DrawSpace::Utils::Vector& p_speed );
+
+    dsreal GetBoundingSphereRay( void );
+
     virtual btRigidBody* GetRigidBody( void );
 
     void GetTotalForce( DrawSpace::Utils::Vector& p_force );
