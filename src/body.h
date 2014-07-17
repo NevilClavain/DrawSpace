@@ -37,6 +37,16 @@ public:
 
     typedef enum
     {
+        ATTACHED,
+        DETACHED
+        
+    } Event;
+
+    typedef DrawSpace::Core::BaseCallback2<void, Event, Body*> EventHandler;
+
+
+    typedef enum
+    {
         BOX_SHAPE,
         SPHERE_SHAPE,
         MESHE_SHAPE,
@@ -53,9 +63,13 @@ public:
     } ShapeDescr;
 
     typedef struct
-    {       
+    {
+        /*
         DrawSpace::Utils::Vector    initial_pos;
         DrawSpace::Utils::Matrix    initial_rot;
+        */
+
+        DrawSpace::Utils::Matrix    initial_attitude;
 
         dsreal                      mass;
 
@@ -65,21 +79,22 @@ public:
 
 
 protected:
-    DrawSpace::Core::TransformNode*     m_drawable;
+    
     World*                              m_world;
     bool                                m_contact_state;
 
     DrawSpace::Utils::Matrix            m_lastworldtrans;
+
+    std::vector<EventHandler*>          m_evt_handlers;
 
     btCollisionShape*                   instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe = NULL );
 
 
 
 public:
-    Body( World* p_world, DrawSpace::Core::TransformNode* p_drawable );
+    Body( World* p_world );
     virtual ~Body( void );
 
-    DrawSpace::Core::TransformNode* GetDrawable( void );
     void GetLastWorldTransformation( DrawSpace::Utils::Matrix& p_transfo );
     World* GetWorld( void );
 
@@ -87,7 +102,6 @@ public:
 
     virtual bool GetContactState( void );
     virtual void SetContactState( bool p_state );
-
 };
 }
 }

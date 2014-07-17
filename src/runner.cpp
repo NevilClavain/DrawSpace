@@ -20,55 +20,43 @@
 *                                                                          
 */
 
-#ifndef _TEXT_WIDGET_H_
-#define _TEXT_WIDGET_H_
+#include "runner.h"
 
-#include "widget.h"
-#include "pass.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
-namespace DrawSpace
+
+Runner::Runner( void )
 {
-namespace Gui
+
+}
+
+Runner::~Runner( void )
 {
-class TextWidget : public Widget
-{
-protected:
-
-    // image de fond
-    Image*              m_backgroundimage;
-
-    // texte
-    DrawSpace::Text*    m_text;
-
-    // image finale (representation concrete du widget)
-    IntermediatePass*   m_pass;
-    Image*              m_image;
     
-
-public:
-    TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage, Widget* p_parentwidget );
-    virtual ~TextWidget( void );
-
-    virtual void SetVirtualTranslation( long p_x ,long p_y );
-
-    virtual Image* GetImage( void );
-    virtual Image* GetBackgroundImage( void );
-    virtual Text*  GetText( void );
-
-    virtual void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
-
-    virtual void Draw( void );
-    virtual void RegisterToPass( Pass* p_pass );
-
-
-    virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
-
-    virtual IntermediatePass* GetInternalPass( void );
-
-    virtual void SetDrawingState( bool p_state );
-
-};
-}
 }
 
-#endif
+void Runner::Run( void )
+{
+    Mediator* mediator = Mediator::GetInstance();
+
+    while( 1 )
+    {
+        Mediator::Event* evt = mediator->Wait();
+
+        if( evt )
+        {
+            if( m_handlers.count( evt->name ) > 0 )
+            {
+                MediatorEventHandler* handler = m_handlers[evt->name];
+                (*handler)( evt->args );
+            }
+        }
+    }
+}
+
+void Runner::RegisterEventHandler( Mediator::Event* p_event, MediatorEventHandler* p_handler )
+{
+    m_handlers[p_event->name] = p_handler;
+}

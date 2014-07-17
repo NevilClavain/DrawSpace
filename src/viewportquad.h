@@ -33,10 +33,12 @@ namespace DrawSpace
 class ViewportQuad : public Core::TransformNode, public Core::RenderingNode
 {
 protected:
-    dsreal          m_width;
-    dsreal          m_height;
-    //Core::Meshe*    m_meshe;
-    void*           m_renderer_meshe_data;
+    dsreal                                  m_width;
+    dsreal                                  m_height;
+
+    void*                                   m_renderer_meshe_data;
+
+    DrawSpace::Utils::Matrix                m_projection;
 
 public:
     ViewportQuad( const dsstring& p_name, dsreal p_width, dsreal p_height );
@@ -44,8 +46,6 @@ public:
 
     void OnDraw( void );
     void OnRegister( Scenegraph* p_scenegraph ) { };
-
-    //bool LoadAssets( void );
 };
 }
 #endif

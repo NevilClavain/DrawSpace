@@ -172,11 +172,12 @@ void Orbit::Progress( TimeManager& p_timer )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Orbiter::Orbiter( World* p_world, TransformNode* p_drawable ) : Body( p_world, p_drawable ),
+Orbiter::Orbiter( World* p_world, TransformNode* p_drawable ) : Body( p_world ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
-m_meshe_data( NULL )
+m_meshe_data( NULL ),
+m_drawable( p_drawable )
 {
 }
 
@@ -199,8 +200,35 @@ void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
 
     btTransform bt_transform;
 
+    /*
     bt_transform.setIdentity();
     bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0] * world_scale, p_parameters.initial_pos[1] * world_scale, p_parameters.initial_pos[2] * world_scale ) );
+    */
+
+    btScalar btmat[16];
+
+    btmat[0] = p_parameters.initial_attitude( 0, 0 );
+    btmat[1] = p_parameters.initial_attitude( 0, 1 );
+    btmat[2] = p_parameters.initial_attitude( 0, 2 );
+    btmat[3] = p_parameters.initial_attitude( 0, 3 );
+
+    btmat[4] = p_parameters.initial_attitude( 1, 0 );
+    btmat[5] = p_parameters.initial_attitude( 1, 1 );
+    btmat[6] = p_parameters.initial_attitude( 1, 2 );
+    btmat[7] = p_parameters.initial_attitude( 1, 3 );
+
+    btmat[8] = p_parameters.initial_attitude( 2, 0 );
+    btmat[9] = p_parameters.initial_attitude( 2, 1 );
+    btmat[10] = p_parameters.initial_attitude( 2, 2 );
+    btmat[11] = p_parameters.initial_attitude( 2, 3 );
+
+    btmat[12] = p_parameters.initial_attitude( 3, 0 );
+    btmat[13] = p_parameters.initial_attitude( 3, 1 );
+    btmat[14] = p_parameters.initial_attitude( 3, 2 );
+    btmat[15] = p_parameters.initial_attitude( 3, 3 );
+
+    bt_transform.setFromOpenGLMatrix( btmat ); 
+
 
     m_collisionShape = instanciate_collision_shape( p_parameters.shape_descr, &m_meshe_data );
 
@@ -247,6 +275,11 @@ void Orbiter::RemoveFromWorld( void )
 btRigidBody* Orbiter::GetRigidBody( void )
 {
     return m_rigidBody;
+}
+
+TransformNode* Orbiter::GetDrawable( void )
+{
+    return m_drawable;
 }
 
 ////////////////////////////////////////////////////////////////////////////

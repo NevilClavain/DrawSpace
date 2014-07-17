@@ -139,6 +139,9 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
     DrawSpace::Utils::Matrix view;
     m_scenegraph->GetCurrentCameraView( view );
 
+    DrawSpace::Utils::Matrix proj;
+    m_scenegraph->GetCurrentCameraProj( proj );
+
     DrawSpace::Utils::Matrix res;
     res = m_globaltransformation * view;
     m_vsphere->Transform( res );
@@ -166,7 +169,7 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
 
     if( draw )
     {
-        m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), m_globaltransformation, view );
+        m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), m_globaltransformation, view, proj );
     }
 }
 

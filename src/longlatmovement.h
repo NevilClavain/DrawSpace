@@ -20,55 +20,49 @@
 *                                                                          
 */
 
-#ifndef _TEXT_WIDGET_H_
-#define _TEXT_WIDGET_H_
+#ifndef _LONGLATMOVEMENT_H_
+#define _LONGLATMOVEMENT_H_
 
-#include "widget.h"
-#include "pass.h"
+#include "movement.h"
+#include "quaternion.h"
 
 namespace DrawSpace
 {
-namespace Gui
+namespace Core
 {
-class TextWidget : public Widget
+class LongLatMovement : public Movement
 {
 protected:
 
-    // image de fond
-    Image*              m_backgroundimage;
+    dsreal                      m_longitud_theta;
+    dsreal                      m_latitud_phi;
+    dsreal                      m_alt;
 
-    // texte
-    DrawSpace::Text*    m_text;
+    // camera orientation control
+    dsreal                      m_current_theta;
+    dsreal                      m_current_phi;
+   
+    Utils::Quaternion		    m_qyaw;
+	Utils::Quaternion		    m_qpitch;
+    Utils::Quaternion		    m_rot_res;
 
-    // image finale (representation concrete du widget)
-    IntermediatePass*   m_pass;
-    Image*              m_image;
-    
+
 
 public:
-    TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage, Widget* p_parentwidget );
-    virtual ~TextWidget( void );
 
-    virtual void SetVirtualTranslation( long p_x ,long p_y );
+    LongLatMovement( void );
+    virtual ~LongLatMovement( void );
 
-    virtual Image* GetImage( void );
-    virtual Image* GetBackgroundImage( void );
-    virtual Text*  GetText( void );
+    void Init( dsreal p_init_longitud_theta, dsreal p_init_latitud_phi, dsreal p_init_alt, dsreal p_init_theta, dsreal p_init_phi );
+    virtual void Compute( Utils::TimeManager& p_timemanager );
 
-    virtual void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
+    void SetTheta( dsreal p_theta );
+    void SetPhi( dsreal p_phi );
 
-    virtual void Draw( void );
-    virtual void RegisterToPass( Pass* p_pass );
-
-
-    virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
-
-    virtual IntermediatePass* GetInternalPass( void );
-
-    virtual void SetDrawingState( bool p_state );
 
 };
 }
 }
+
 
 #endif

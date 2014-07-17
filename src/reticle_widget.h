@@ -20,53 +20,60 @@
 *                                                                          
 */
 
-#ifndef _TEXT_WIDGET_H_
-#define _TEXT_WIDGET_H_
+#ifndef _RETICLE_WIDGET_H_
+#define _RETICLE_WIDGET_H_
 
 #include "widget.h"
-#include "pass.h"
+#include "body.h"
+#include "scenegraph.h"
 
 namespace DrawSpace
 {
 namespace Gui
 {
-class TextWidget : public Widget
+class ReticleWidget : public Widget
 {
+public:
+
+    typedef enum
+    {
+        NO_CLIPPING,
+        CLIPPING_CUT,
+        CLIPPING_HOLD,
+
+    } ClippingPolicy;
+
+
+    typedef struct
+    {
+        ClippingPolicy clipping_policy;
+
+        dsreal xmin, ymin;
+        dsreal xmax, ymax;
+
+    } ClippingParams;
+
 protected:
 
-    // image de fond
-    Image*              m_backgroundimage;
+    DrawSpace::Dynamics::Body*                      m_locked_body;
+    DrawSpace::Core::TransformNode*                 m_locked_node;
+    DrawSpace::Scenegraph*                          m_scenegraph;
 
-    // texte
-    DrawSpace::Text*    m_text;
+    ClippingParams                                  m_clipping_params;
 
-    // image finale (representation concrete du widget)
-    IntermediatePass*   m_pass;
-    Image*              m_image;
-    
+    dsreal                                          m_distance;
+
 
 public:
-    TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage, Widget* p_parentwidget );
-    virtual ~TextWidget( void );
+    ReticleWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Scenegraph* p_scenegraph, Widget* p_parentwidget );
+    virtual ~ReticleWidget( void );
 
-    virtual void SetVirtualTranslation( long p_x ,long p_y );
-
-    virtual Image* GetImage( void );
-    virtual Image* GetBackgroundImage( void );
-    virtual Text*  GetText( void );
-
-    virtual void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
-
-    virtual void Draw( void );
-    virtual void RegisterToPass( Pass* p_pass );
-
-
-    virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
-
-    virtual IntermediatePass* GetInternalPass( void );
-
-    virtual void SetDrawingState( bool p_state );
-
+    virtual void LockOnBody( DrawSpace::Dynamics::Body* p_locked_body );
+    virtual void LockOnTransformNode( DrawSpace::Core::TransformNode* p_locked_node );
+    virtual void SetTranslation( dsreal p_x, dsreal p_y );
+    virtual void SetClippingParams( const ClippingParams& p_params );
+    virtual void Transform( void );
+    virtual dsreal GetLastDistance( void );
 };
 }
 }

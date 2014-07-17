@@ -20,52 +20,40 @@
 *                                                                          
 */
 
-#ifndef _TEXT_WIDGET_H_
-#define _TEXT_WIDGET_H_
+#ifndef _COLLIDER_H_
+#define _COLLIDER_H_
 
-#include "widget.h"
-#include "pass.h"
+#include "body.h"
 
 namespace DrawSpace
 {
-namespace Gui
+namespace Dynamics
 {
-class TextWidget : public Widget
+class Collider : public Body
 {
 protected:
 
-    // image de fond
-    Image*              m_backgroundimage;
+    btRigidBody*                    m_rigidBody;
+    btCollisionShape*               m_collisionShape;
+    btTriangleMesh*                 m_meshe_data;
+    btDefaultMotionState*           m_motionState;
 
-    // texte
-    DrawSpace::Text*    m_text;
-
-    // image finale (representation concrete du widget)
-    IntermediatePass*   m_pass;
-    Image*              m_image;
-    
 
 public:
-    TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage, Widget* p_parentwidget );
-    virtual ~TextWidget( void );
 
-    virtual void SetVirtualTranslation( long p_x ,long p_y );
+    Collider( World* p_world );
+    virtual ~Collider( void );
 
-    virtual Image* GetImage( void );
-    virtual Image* GetBackgroundImage( void );
-    virtual Text*  GetText( void );
+    void Update( const DrawSpace::Utils::Matrix& p_mat );
 
-    virtual void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
+    void SetKinematic( const Body::Parameters& p_parameters );
+    void UnsetKinematic( void );
 
-    virtual void Draw( void );
-    virtual void RegisterToPass( Pass* p_pass );
+    void AddToWorld( void );
+    void RemoveFromWorld( void );
 
 
-    virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
-
-    virtual IntermediatePass* GetInternalPass( void );
-
-    virtual void SetDrawingState( bool p_state );
+    virtual btRigidBody* GetRigidBody( void );
 
 };
 }

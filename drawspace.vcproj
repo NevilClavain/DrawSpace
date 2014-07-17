@@ -153,6 +153,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\circularmovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\circularmovement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\factory.cpp"
 				>
 			</File>
@@ -201,11 +209,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\linearmovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\linearmovement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\lod.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\lod.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\longlatmovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\longlatmovement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\mediator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\mediator.h"
 				>
 			</File>
 			<File
@@ -253,11 +285,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\runner.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\runner.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\shader.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\shader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\spectatormovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\spectatormovement.h"
 				>
 			</File>
 			<File
@@ -465,6 +513,14 @@
 			Name="gui"
 			>
 			<File
+				RelativePath=".\src\reticle_widget.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\reticle_widget.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\text_widget.cpp"
 				>
 			</File>
@@ -509,6 +565,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\collider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\collider.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\inertbody.cpp"
 				>
 			</File>
@@ -550,6 +614,14 @@
 			</File>
 			<File
 				RelativePath=".\src\planet_body.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_drawing.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planet_drawing.h"
 				>
 			</File>
 			<File

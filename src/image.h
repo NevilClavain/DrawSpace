@@ -42,9 +42,14 @@ protected:
     long                                    m_virtual_x, m_virtual_y;
     dsreal                                  m_x, m_y;
     dsreal                                  m_scale_x, m_scale_y;
+    dsreal                                  m_rotation_angle;
     Interface::Renderer::Characteristics    m_rc;
 
+    DrawSpace::Utils::Matrix                m_projection;
+
     void*                                   m_renderer_meshe_data;
+
+    bool                                    m_drawingstate;
 
 public:
 
@@ -60,8 +65,11 @@ public:
     void SetVirtualTranslation( long p_x ,long p_y );
     void GetVirtualTranslation( long& p_x, long& p_y );
     void SetScale( dsreal p_sx, dsreal p_sy );
+    void SetRotationAngle( dsreal p_angle );
 
     void** GetRenderMesheData( void );
+
+    void SetDrawingState( bool p_state );
 };
 }
 

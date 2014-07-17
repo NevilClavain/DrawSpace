@@ -39,7 +39,8 @@ m_mouseout_handler( NULL ),
 m_mouserightbuttonup_handler( NULL ),
 m_mouserightbuttondown_handler( NULL ),
 m_mouseleftbuttonup_handler( NULL ),
-m_mouseleftbuttondown_handler( NULL )
+m_mouseleftbuttondown_handler( NULL ),
+m_drawingstate( true )
 {
     Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rc );
@@ -88,7 +89,6 @@ void Widget::Transform( void )
     {
         m_children[i]->Transform();
     }
-
 }
 
 void Widget::SetVirtualTranslation( long p_x, long p_y )
@@ -240,4 +240,31 @@ void Widget::RegisterMouseLeftButtonUpEventHandler( EventHandler p_handler )
 void Widget::RegisterMouseLeftButtonDownEventHandler( EventHandler p_handler )
 {
     m_mouseleftbuttondown_handler = p_handler;
+}
+
+void Widget::SetDrawingState( bool p_state )
+{
+    m_drawingstate = p_state;
+
+    for( size_t i = 0; i < m_children.size(); i++ )
+    {
+        m_children[i]->SetDrawingState( p_state );
+    }
+}
+
+void Widget::GetScreenPos( int& p_outx, int& p_outy )
+{
+    /*
+    dsreal outx = (int)( m_real_posx + ( m_rc.width_viewport / 2.0 ) ) * m_rc.width_resol;
+    dsreal outy = (int)( m_real_posy + ( m_rc.height_viewport / 2.0 ) ) * m_rc.height_resol;
+    */
+
+    dsreal t_x = m_real_posx + ( m_rc.width_viewport / 2.0 );
+    dsreal t_y = m_rc.height_viewport - ( m_real_posy + ( m_rc.height_viewport / 2.0 ) );
+
+    dsreal resol_x = ( t_x / m_rc.width_viewport ) * m_rc.width_resol;
+    dsreal resol_y = ( t_y / m_rc.height_viewport ) * m_rc.height_resol;
+
+    p_outx = (int)resol_x;
+    p_outy = (int)resol_y;
 }

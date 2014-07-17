@@ -41,6 +41,8 @@ protected:
     dsreal                                  m_x, m_y;
     Interface::Renderer::Characteristics    m_rc;
 
+    bool                                    m_drawingstate;
+
 public:
     Text( Core::Font* p_font );
     virtual ~Text( void );
@@ -49,6 +51,8 @@ public:
     
     void OnDraw( void );
     void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
+
+    void SetDrawingState( bool p_state );
 };
 }
 

@@ -20,54 +20,52 @@
 *                                                                          
 */
 
-#ifndef _TEXT_WIDGET_H_
-#define _TEXT_WIDGET_H_
+#ifndef _SPECTATORMOVEMENT_H_
+#define _SPECTATORMOVEMENT_H_
 
-#include "widget.h"
-#include "pass.h"
+#include "movement.h"
+#include "inertbody.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
-namespace Gui
+namespace Core
 {
-class TextWidget : public Widget
+class SpectatorMovement : public Movement
 {
 protected:
 
-    // image de fond
-    Image*              m_backgroundimage;
+    typedef DrawSpace::Core::CallBack<SpectatorMovement, void, const dsstring&> SpectatorTimer;
 
-    // texte
-    DrawSpace::Text*    m_text;
+    dsreal                          m_scalepos;
+    long                            m_posperiod;
 
-    // image finale (representation concrete du widget)
-    IntermediatePass*   m_pass;
-    Image*              m_image;
-    
+    bool                            m_linked_to_orbiter;
+
+    DrawSpace::Dynamics::InertBody* m_attachedbody;
+
+    bool                            m_compute;
+
+    SpectatorTimer*                 m_timercb;
+
+    void compute_pos( void );
+
+    void on_timer( const dsstring& p_timername );
 
 public:
-    TextWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::Font* p_font, bool p_backgroundimage, Widget* p_parentwidget );
-    virtual ~TextWidget( void );
 
-    virtual void SetVirtualTranslation( long p_x ,long p_y );
-
-    virtual Image* GetImage( void );
-    virtual Image* GetBackgroundImage( void );
-    virtual Text*  GetText( void );
-
-    virtual void SetText( long p_x, long p_y, long p_height, const dsstring& p_text, unsigned char p_flag = 0 );
-
-    virtual void Draw( void );
-    virtual void RegisterToPass( Pass* p_pass );
+    SpectatorMovement( void );
+    virtual ~SpectatorMovement( void );
 
 
-    virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
+    virtual void Init( DrawSpace::Dynamics::InertBody* p_attachedbody, dsreal p_scalepos, 
+                       long p_posperiod, DrawSpace::Utils::TimeManager& p_timemanager, const dsstring& p_timername, bool p_orbiterlink );
 
-    virtual IntermediatePass* GetInternalPass( void );
+    virtual void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
 
-    virtual void SetDrawingState( bool p_state );
 
 };
+
 }
 }
 

@@ -33,7 +33,6 @@ namespace Dynamics
 {
 class InertBody : public Body
 {
-
 protected:
 
     Parameters                      m_parameters;
@@ -48,6 +47,8 @@ protected:
 
     DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
 
+    DrawSpace::Core::TransformNode* m_drawable;
+
     void                            create_body( const btTransform& p_transform );
     void                            destroy_body( void );
 
@@ -60,6 +61,7 @@ public:
     void Update( void );
 
     void Attach( Body* p_body );
+    void IncludeTo( Body* p_body, const DrawSpace::Utils::Matrix& p_initmat );
     void Detach( void );
 
     void GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat );
@@ -69,11 +71,24 @@ public:
     dsreal GetLinearSpeedMagnitude( void );
     dsreal GetAngularSpeedMagnitude( void );
 
+    void GetLinearSpeed( DrawSpace::Utils::Vector& p_speed );
+
+    dsreal GetBoundingSphereRay( void );
+
     virtual btRigidBody* GetRigidBody( void );
 
     void GetTotalForce( DrawSpace::Utils::Vector& p_force );
     void GetTotalTorque( DrawSpace::Utils::Vector& p_torque );
-    
+
+    void RegisterEvtHandler( EventHandler* p_handler );
+
+    bool HasLanded( void );
+
+    bool IsActive( void );
+
+    Body* GetRefBody( void );
+
+    DrawSpace::Core::TransformNode* GetDrawable( void );
 };
 }
 }

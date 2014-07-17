@@ -72,6 +72,8 @@ protected:
 
     dsreal                                                      m_alignment_factor;
 
+    std::map<dsstring, Patch*>                                  m_patchesleafs;
+
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -112,6 +114,10 @@ public:
     virtual void AddMergeHandler( PatchMergeHandler* p_handler );
     virtual DrawSpace::Utils::QuadtreeNode<Patch>* GetCurrentLeaf( void );
     virtual dsreal GetAlignmentFactor( void );
+
+    virtual void ResetMeshe( void );
+
+    virtual void GetLeafs( std::map<dsstring, Patch*>& p_list );
 };
 }
 }
