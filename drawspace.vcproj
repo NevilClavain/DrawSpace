@@ -209,6 +209,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\headmovement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\headmovement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\linearmovement.cpp"
 				>
 			</File>

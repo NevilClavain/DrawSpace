@@ -29,6 +29,7 @@
 #include "linearmovement.h"
 #include "circularmovement.h"
 #include "spectatormovement.h"
+#include "headmovement.h"
 #include "plugin.h"
 #include "renderer.h"
 
@@ -164,6 +165,10 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
         else if( dynamic_cast<SpectatorMovement*>( m_movement ) )
         {
             p_infos.movement_classname = "spectator movement";
+        }
+        else if( dynamic_cast<HeadMovement*>( m_movement ) )
+        {
+            p_infos.movement_classname = "head movement";
         }
         else
         {
