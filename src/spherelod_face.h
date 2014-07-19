@@ -20,17 +20,17 @@
 *                                                                          
 */
 
-#ifndef _PLANET_FACE_H_
-#define _PLANET_FACE_H_
+#ifndef _SPHERELOD_FACE_H_
+#define _SPHERELOD_FACE_H_
 
 #include "renderingnode.h"
 #include "quadtree.h"
 #include "renderer.h"
-#include "planet_patch.h"
+#include "spherelod_patch.h"
 
 namespace DrawSpace
 {
-namespace Planet
+namespace SphericalLOD
 {
 
 class Face

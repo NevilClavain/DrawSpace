@@ -24,12 +24,12 @@
 #include "plugin.h"
 #include "memalloc.h"
 #include "exceptions.h"
-#include "planet_drawing.h"
+#include "spherelod_drawing.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
-using namespace DrawSpace::Planet;
+using namespace DrawSpace::SphericalLOD;
 
 
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer ) :

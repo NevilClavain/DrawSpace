@@ -614,38 +614,38 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="planet"
+			Name="sphericalLOD"
 			>
 			<File
-				RelativePath=".\src\planet_body.cpp"
+				RelativePath=".\src\spherelod_body.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\planet_body.h"
+				RelativePath=".\src\spherelod_body.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\planet_drawing.cpp"
+				RelativePath=".\src\spherelod_drawing.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\planet_drawing.h"
+				RelativePath=".\src\spherelod_drawing.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\planet_face.cpp"
+				RelativePath=".\src\spherelod_face.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\planet_face.h"
+				RelativePath=".\src\spherelod_face.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\planet_patch.cpp"
+				RelativePath=".\src\spherelod_patch.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\planet_patch.h"
+				RelativePath=".\src\spherelod_patch.h"
 				>
 			</File>
 		</Filter>
