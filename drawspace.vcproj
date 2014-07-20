@@ -649,6 +649,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="planetoid"
+			>
+			<File
+				RelativePath=".\src\planetoid_body.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planetoid_body.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planetoid_fragment.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\planetoid_fragment.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\asset.cpp"
 			>

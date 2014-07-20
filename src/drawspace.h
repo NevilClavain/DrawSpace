@@ -88,4 +88,5 @@
 #include "chunk.h"
 #include "mediator.h"
 #include "runner.h"
+#include "planetoid_body.h"
 #endif
