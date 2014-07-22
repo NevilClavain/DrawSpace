@@ -29,7 +29,16 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Planetoid;
 using namespace DrawSpace::Dynamics;
 
-Fragment::Fragment( const dsstring& p_name, DrawSpace::SphericalLOD::Body* p_planetbody, Collider* p_collider, dsreal p_planetray, bool p_collisions )
+Fragment::Fragment( const dsstring& p_name, DrawSpace::SphericalLOD::Body* p_planetbody, Collider* p_collider, dsreal p_planetray, bool p_collisions ) :
+m_planetbody( p_planetbody ), 
+m_collider( p_collider ),
+m_suspend_update( false ),
+m_collision_state( false ),
+m_planetray( p_planetray ),
+m_hot( false ),
+m_camera( NULL ),
+m_inertbody( NULL ),
+m_collisions( p_collisions )
 {
     m_name = p_name;
 

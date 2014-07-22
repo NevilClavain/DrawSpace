@@ -108,6 +108,14 @@ public:
 
     void                                ApplyGravity( void );
 
+    void                                ManageBodies( void );
+    void                                Update( void );
+
+    void                                RegisterInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body );
+    void                                RegisterIncludedInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body, const DrawSpace::Utils::Matrix& p_initmat );
+    bool                                RegisterCameraPoint( DrawSpace::Dynamics::CameraPoint* p_camera );
+
+    void                                GetName( dsstring& p_name );
     
     void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
 
