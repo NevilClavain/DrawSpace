@@ -25,12 +25,12 @@
 #include "memalloc.h"
 #include "quadtree.h"
 #include "exceptions.h"
-#include "planet_body.h"
+#include "spherelod_body.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
-using namespace DrawSpace::Planet;
+using namespace DrawSpace::SphericalLOD;
 
 Meshe* Body::m_planetpatch_meshe = NULL;
 
@@ -101,12 +101,12 @@ void Body::Compute( void )
 }
 
 
-void Body::BuildPlanetMeshe( void )
+void Body::BuildMeshe( void )
 {
     m_planetpatch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
 
     dsreal xcurr, ycurr;
-    long patch_resolution = Planet::Patch::Resolution;
+    long patch_resolution = SphericalLOD::Patch::Resolution;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );

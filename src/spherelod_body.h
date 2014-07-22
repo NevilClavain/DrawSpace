@@ -20,17 +20,17 @@
 *                                                                          
 */
 
-#ifndef _PLANET_BODY_H_
-#define _PLANET_BODY_H_
+#ifndef _SPHERELOD_BODY_H_
+#define _SPHERELOD_BODY_H_
 
 #include "transformnode.h"
 #include "scenegraph.h"
 #include "renderer.h"
-#include "planet_face.h"
+#include "spherelod_face.h"
 
 namespace DrawSpace
 {
-namespace Planet
+namespace SphericalLOD
 {
 class Body
 {
@@ -59,7 +59,7 @@ public:
     Body( dsreal p_diameter );
     virtual ~Body( void );
 
-    static void BuildPlanetMeshe( void );
+    static void BuildMeshe( void );
     
     virtual void Compute( void );
 

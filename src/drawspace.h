@@ -84,9 +84,9 @@
 #include "calendar.h"
 #include "camerapoint.h"
 #include "spacebox.h"
-#include "planet_body.h"
-#include "planet_drawing.h"
+#include "spherelod_drawing.h"
 #include "chunk.h"
 #include "mediator.h"
 #include "runner.h"
+#include "planetoid_body.h"
 #endif

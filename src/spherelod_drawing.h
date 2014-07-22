@@ -20,18 +20,18 @@
 *                                                                          
 */
 
-#ifndef _PLANET_DRAWING_H_
-#define _PLANET_DRAWING_H_
+#ifndef _SPHERELOD_DRAWING_H_
+#define _SPHERELOD_DRAWING_H_
 
 #include "transformnode.h"
 #include "scenegraph.h"
 #include "renderer.h"
 
-#include "planet_body.h"
+#include "spherelod_body.h"
 
 namespace DrawSpace
 {
-namespace Planet
+namespace SphericalLOD
 {
 
 class FaceDrawingNode : public DrawSpace::Core::RenderingNode

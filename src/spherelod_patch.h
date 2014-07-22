@@ -20,8 +20,8 @@
 *                                                                          
 */
 
-#ifndef _PLANET_PATCH_H_
-#define _PLANET_PATCH_H_
+#ifndef _SPHERELOD_PATCH_H_
+#define _SPHERELOD_PATCH_H_
 
 #include "vector.h"
 #include "quadtree.h"
@@ -29,7 +29,7 @@
 
 namespace DrawSpace
 {
-namespace Planet
+namespace SphericalLOD
 {
 class Patch
 {
