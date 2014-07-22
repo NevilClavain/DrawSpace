@@ -39,7 +39,8 @@ m_active( false ),
 //m_world( p_world ),
 m_sub_sec_count( 0 ),
 m_sub_sec_count_lim( 0 ),
-m_freeze( false )
+m_freeze( false ),
+m_world_nbsteps( 5 )
 {
     m_current_time = m_offset_time;
     m_timercb = _DRAWSPACE_NEW_( CalendarTimer, CalendarTimer( this, &Calendar::on_timer ) );
@@ -75,6 +76,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 1;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP;
             break;
 
         case MUL2_TIME:
@@ -84,6 +87,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 1;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP * 2;
             break;
 
         case MUL4_TIME:
@@ -93,6 +98,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 1;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP * 4;
             break;
 
         case MUL10_TIME:
@@ -102,6 +109,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 1;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP * 10;
             break;
 
         case MUL100_TIME:
@@ -111,6 +120,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 10;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP * 10;
             break;
 
         case MUL500_TIME:
@@ -120,6 +131,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 50;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP * 10;
             break;
 
 
@@ -130,6 +143,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 360;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP * 10;
             break;
 
         case SEC_1DAY_TIME:
@@ -139,6 +154,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 8640;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP * 10;
             break;
 
         case SEC_30DAYS_TIME:
@@ -148,6 +165,10 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 259200;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = 200;
+
+            m_world_nbsteps = BASE_TIMESTEP * 10;
             break;
 
         case SEC_1YEAR_TIME:
@@ -157,6 +178,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_current_time_increment = 86400 * 365;
 
             m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP * 10;
             break;
 
         case DIV2_TIME:
@@ -166,7 +189,9 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_sub_sec_count_lim = 2;
             m_sub_sec_count = 0;
 
-            m_current_time_increment = 0;             
+            m_current_time_increment = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP;
             break;
 
         case DIV4_TIME:
@@ -177,6 +202,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_sub_sec_count = 0;
 
             m_current_time_increment = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP;
             break;
 
         case DIV10_TIME:
@@ -187,6 +214,8 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
             m_sub_sec_count = 0;
 
             m_current_time_increment = 0;
+
+            m_world_nbsteps = BASE_TIMESTEP;
             break;
     }
 
@@ -359,7 +388,7 @@ void Calendar::Run( void )
 
         for( size_t i = 0; i < m_worlds.size(); i++ )
         {
-            m_worlds[i]->StepSimulation( m_time_manager->GetFPS() / m_time_factor ); 
+            m_worlds[i]->StepSimulation( m_time_manager->GetFPS() / m_time_factor, m_world_nbsteps ); 
         }
     }
 }

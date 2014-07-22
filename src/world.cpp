@@ -68,19 +68,22 @@ bool World::SetGravity( const DrawSpace::Utils::Vector p_gravity )
     return false;
 }
 
-bool World::StepSimulation( dsreal p_fps )
+bool World::StepSimulation( dsreal p_fps, int p_nbsteps )
 {
     if( m_world )
     {
 
+        /*
         // doing timestep < fixedtimestep * 5 (see http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World )
         
         dsreal timestep = 1.0 / p_fps;
         dsreal fixedtimestep = timestep / 5.0;
         fixedtimestep *= 1.1;
 
-        m_world->stepSimulation( timestep, 5, fixedtimestep );
+        m_world->stepSimulation( timestep, 5 );
+        */
 
+        m_world->stepSimulation( 1.0 / p_fps, p_nbsteps );
 
         // check for collisions
 

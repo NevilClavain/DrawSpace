@@ -61,7 +61,7 @@ public:
     bool Initialize( void );
     bool SetGravity( const DrawSpace::Utils::Vector p_gravity );
 
-    bool StepSimulation( dsreal p_fps );
+    bool StepSimulation( dsreal p_fps, int p_nbsteps );
 
     btDynamicsWorld* getBulletWorld( void );
 

@@ -53,6 +53,8 @@ nb annees calendaires (365j) pour une revolution
 
 */
 
+#define BASE_TIMESTEP 8
+
 namespace DrawSpace
 {
 namespace Dynamics
@@ -96,6 +98,8 @@ protected:
     TimeMode                                    m_time_mode;
     long                                        m_time_period;
     dsreal                                      m_time_factor;
+
+    int                                         m_world_nbsteps;
 
     bool                                        m_freeze;
 
