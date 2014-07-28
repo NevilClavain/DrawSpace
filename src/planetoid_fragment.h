@@ -83,7 +83,7 @@ public:
     Fragment( const dsstring& p_name, DrawSpace::SphericalLOD::Body* p_planetbody, DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions );
     virtual ~Fragment( void );
 
-    void Update( DrawSpace::Planetoid::Body* p_owner );
+    void Update( DrawSpace::Dynamics::World* p_world, DrawSpace::Planetoid::Body* p_owner );
 
     void SetHotState( bool p_hotstate );
     void SetCamera( DrawSpace::Dynamics::CameraPoint* p_camera );

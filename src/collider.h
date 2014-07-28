@@ -24,6 +24,8 @@
 #define _COLLIDER_H_
 
 #include "body.h"
+#include "orbiter.h"
+#include "movement.h"
 
 namespace DrawSpace
 {
@@ -38,20 +40,28 @@ protected:
     btTriangleMesh*                 m_meshe_data;
     btDefaultMotionState*           m_motionState;
 
+    DrawSpace::Core::TransformNode* m_drawable;
+
+    Orbiter*                        m_orbiter;
+
+    DrawSpace::Core::Movement*      m_movement;
 
 public:
 
-    Collider( World* p_world );
+    Collider( /*World* p_world,*/ DrawSpace::Core::TransformNode* p_drawable );
     virtual ~Collider( void );
 
-    void Update( const DrawSpace::Utils::Matrix& p_mat );
+    virtual void Update( Utils::TimeManager& p_timemanager, const DrawSpace::Utils::Matrix& p_mat );
 
-    void SetKinematic( const Body::Parameters& p_parameters );
-    void UnsetKinematic( void );
+    virtual void SetRootOrbiter( Orbiter* p_orbiter );
+    virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
 
-    void AddToWorld( void );
-    void RemoveFromWorld( void );
 
+    virtual void SetKinematic( const Body::Parameters& p_parameters );
+    virtual void UnsetKinematic( void );
+
+    virtual void AddToWorld( World* p_world );
+    virtual void RemoveFromWorld( void );
 
     virtual btRigidBody* GetRigidBody( void );
 

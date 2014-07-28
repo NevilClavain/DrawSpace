@@ -27,7 +27,10 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
-Collider::Collider( World* p_world ) : Body( p_world )
+Collider::Collider( DrawSpace::Core::TransformNode* p_drawable ) : Body( /*p_world*/ NULL ),
+m_drawable( p_drawable ),
+m_orbiter( NULL ),
+m_movement( NULL )
 {
 
 }
@@ -95,23 +98,108 @@ void Collider::UnsetKinematic( void )
     }
 }
 
-void Collider::Update( const Matrix& p_mat )
+void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
 {
-    m_lastworldtrans = p_mat;
-}
+    Matrix body_transf;
 
+    if( m_movement )
+    {
+        m_movement->Compute( p_timemanager );
+        m_movement->GetResult( body_transf );
+    }
+    else
+    {
+        body_transf = p_mat;
+    }
+   
+    // update meshe bullet
+
+    btScalar btmat[16];
+    btTransform bt_transform;
+
+    btmat[0] = body_transf( 0, 0 );
+    btmat[1] = body_transf( 0, 1 );
+    btmat[2] = body_transf( 0, 2 );
+    btmat[3] = body_transf( 0, 3 );
+
+    btmat[4] = body_transf( 1, 0 );
+    btmat[5] = body_transf( 1, 1 );
+    btmat[6] = body_transf( 1, 2 );
+    btmat[7] = body_transf( 1, 3 );
+
+    btmat[8] = body_transf( 2, 0 );
+    btmat[9] = body_transf( 2, 1 );
+    btmat[10] = body_transf( 2, 2 );
+    btmat[11] = body_transf( 2, 3 );
+
+    btmat[12] = body_transf( 3, 0 );
+    btmat[13] = body_transf( 3, 1 );
+    btmat[14] = body_transf( 3, 2 );
+    btmat[15] = body_transf( 3, 3 );
+
+    bt_transform.setFromOpenGLMatrix( btmat ); 
+
+    m_motionState->setWorldTransform( bt_transform );
+
+    if( m_orbiter )
+    {
+        Matrix root_mat;
+        m_orbiter->GetLastWorldTransformation( root_mat );
+
+        m_lastworldtrans = body_transf * root_mat;
+    }
+    else
+    {
+        m_lastworldtrans = body_transf;
+    }
+
+    if( m_drawable )
+    {
+         m_drawable->SetLocalTransform( m_lastworldtrans );
+    }
+
+    // update position drawable
+    /*
+    if( m_drawable )
+    {
+        if( m_orbiter )
+        {
+            Matrix root_mat;
+            m_orbiter->GetLastWorldTransformation( root_mat );
+
+            Matrix res = m_lastworldtrans * root_mat;
+            m_drawable->SetLocalTransform( res );            
+        }
+        else
+        {
+            m_drawable->SetLocalTransform( m_lastworldtrans );
+        }
+    }
+    */
+}
 
 btRigidBody* Collider::GetRigidBody( void )
 {
     return m_rigidBody;
 }
 
-void Collider::AddToWorld( void )
+void Collider::AddToWorld( World* p_world )
 {
+    m_world = p_world;
     m_world->AddBody( this );
 }
 
 void Collider::RemoveFromWorld( void )
 {
     m_world->RemoveBody( this );
+}
+
+void Collider::SetRootOrbiter( Orbiter* p_orbiter )
+{
+    m_orbiter = p_orbiter;
+}
+
+void Collider::RegisterMovement( DrawSpace::Core::Movement* p_movement )
+{
+    m_movement = p_movement;
 }

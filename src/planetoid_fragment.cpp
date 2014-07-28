@@ -270,7 +270,7 @@ void Fragment::build_meshe( Meshe& p_patchmeshe, int p_patch_orientation, dsreal
     }
 }
 
-void Fragment::Update( DrawSpace::Planetoid::Body* p_owner )
+void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
 {
     if( m_suspend_update )
     {
@@ -284,7 +284,7 @@ void Fragment::Update( DrawSpace::Planetoid::Body* p_owner )
             if( meshe_ready )
             {
                 // bullet meshe build done
-                m_collider->AddToWorld();
+                m_collider->AddToWorld( p_world );
                 m_collision_state = true;
                 m_suspend_update = false;                
             }

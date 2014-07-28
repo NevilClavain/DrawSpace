@@ -25,6 +25,7 @@
 
 #include "planetoid_fragment.h"
 
+
 namespace DrawSpace
 {
 namespace Planetoid
@@ -112,6 +113,7 @@ public:
     void                                Update( void );
 
     void                                RegisterInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body );
+    void                                RegisterCollider( DrawSpace::Dynamics::Collider* p_collider );
     void                                RegisterIncludedInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body, const DrawSpace::Utils::Matrix& p_initmat );
     bool                                RegisterCameraPoint( DrawSpace::Dynamics::CameraPoint* p_camera );
 
