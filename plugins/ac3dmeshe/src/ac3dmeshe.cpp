@@ -187,5 +187,6 @@ bool AC3DMesheImport::LoadFromFile( const dsstring& p_filepath, long p_index, Me
     m_vertcount = 0;
     m_tricount = 0;
     m_vertices_uv_mem.clear();
+    m_object_loc[0] = m_object_loc[1] = m_object_loc[2] = m_object_loc[3] = 0.0;
     return Parser::Run( p_filepath, " " );
 }
