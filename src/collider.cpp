@@ -32,7 +32,7 @@ m_drawable( p_drawable ),
 m_orbiter( NULL ),
 m_movement( NULL )
 {
-
+    m_lastlocalworldtrans.Identity();
 }
 
 Collider::~Collider( void )
@@ -138,8 +138,9 @@ void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
     btmat[15] = body_transf( 3, 3 );
 
     bt_transform.setFromOpenGLMatrix( btmat ); 
-
     m_motionState->setWorldTransform( bt_transform );
+
+    m_lastlocalworldtrans = body_transf;
 
     if( m_orbiter )
     {
@@ -157,25 +158,6 @@ void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
     {
          m_drawable->SetLocalTransform( m_lastworldtrans );
     }
-
-    // update position drawable
-    /*
-    if( m_drawable )
-    {
-        if( m_orbiter )
-        {
-            Matrix root_mat;
-            m_orbiter->GetLastWorldTransformation( root_mat );
-
-            Matrix res = m_lastworldtrans * root_mat;
-            m_drawable->SetLocalTransform( res );            
-        }
-        else
-        {
-            m_drawable->SetLocalTransform( m_lastworldtrans );
-        }
-    }
-    */
 }
 
 btRigidBody* Collider::GetRigidBody( void )
@@ -202,4 +184,9 @@ void Collider::SetRootOrbiter( Orbiter* p_orbiter )
 void Collider::RegisterMovement( DrawSpace::Core::Movement* p_movement )
 {
     m_movement = p_movement;
+}
+
+void Collider::GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_lastlocalworldtrans;
 }

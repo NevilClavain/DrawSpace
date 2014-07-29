@@ -30,6 +30,7 @@
 #include "circularmovement.h"
 #include "spectatormovement.h"
 #include "headmovement.h"
+#include "collider.h"
 #include "plugin.h"
 #include "renderer.h"
 
@@ -110,8 +111,18 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
                 }
                 else
                 {
-                    p_infos.attached_to_body = true;
-                    p_infos.attached_body_classname = "<Unknown body class>";
+                    Collider* collider = dynamic_cast<Collider*>( m_attached_body );
+
+                    if( collider )
+                    {
+                        p_infos.attached_body_classname = "Collider";
+                        p_infos.attached_to_body = true;
+                    }
+                    else
+                    {
+                        p_infos.attached_to_body = true;
+                        p_infos.attached_body_classname = "<Unknown body class>";
+                    }
                 }
             }
         }

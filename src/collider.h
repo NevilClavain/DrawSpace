@@ -46,6 +46,8 @@ protected:
 
     DrawSpace::Core::Movement*      m_movement;
 
+    DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
+
 public:
 
     Collider( /*World* p_world,*/ DrawSpace::Core::TransformNode* p_drawable );
@@ -64,6 +66,8 @@ public:
     virtual void RemoveFromWorld( void );
 
     virtual btRigidBody* GetRigidBody( void );
+
+    virtual void GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat );
 
 };
 }

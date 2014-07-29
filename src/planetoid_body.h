@@ -56,6 +56,7 @@ protected:
         FREE,
         FREE_ON_PLANET,
         INERTBODY_LINKED,
+        COLLIDER_LINKED
 
     } CameraType;
 
@@ -65,6 +66,7 @@ protected:
 
         CameraType                          type;
         DrawSpace::Dynamics::InertBody*     attached_body;
+        DrawSpace::Dynamics::Collider*      attached_collider;
 
         DrawSpace::Dynamics::CameraPoint*   camera;
 
@@ -90,10 +92,14 @@ protected:
 
     std::vector<Fragment*>                                      m_planetfragments_list;
 
+    std::map<dsstring, DrawSpace::SphericalLOD::Body*>          m_sphericallod_body_list;
+
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
     void body_find_attached_camera( DrawSpace::Dynamics::InertBody* p_body, std::vector<dsstring>& p_name );
     void on_camera_event( DrawSpace::Scenegraph::CameraEvent p_event, DrawSpace::Core::TransformNode* p_node );
+
+    void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr );
 
 
 public:
