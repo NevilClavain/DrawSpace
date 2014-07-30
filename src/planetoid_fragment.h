@@ -54,6 +54,10 @@ protected:
     DrawSpace::Core::Runner*                                    m_runner;
     DrawSpace::Core::Task<DrawSpace::Core::Runner>*             m_task;
 
+    long                                                        m_nb_collisionmeshebuild_req;
+    long                                                        m_nb_collisionmeshebuild_done;
+
+
     SphereLODEvtCb*                                             m_spherelod_evt_cb;
     RunnerEvtCb*                                                m_runner_evt_cb;
 
@@ -94,6 +98,8 @@ public:
 
     void RemoveColliderFromWorld( void );
     DrawSpace::SphericalLOD::Body* GetPlanetBody( void );
+
+    void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done );
 
 };
 

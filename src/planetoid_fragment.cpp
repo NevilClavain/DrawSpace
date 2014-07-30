@@ -38,7 +38,9 @@ m_planetray( p_planetray ),
 m_hot( false ),
 m_camera( NULL ),
 m_inertbody( NULL ),
-m_collisions( p_collisions )
+m_collisions( p_collisions ),
+m_nb_collisionmeshebuild_req( 0 ),
+m_nb_collisionmeshebuild_done( 0 )
 {
     m_name = p_name;
 
@@ -106,6 +108,8 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     Meshe final_meshe;
     build_meshe( patchmeshe, patch_orientation, sidelength, xpos, ypos, final_meshe );
 
+    m_nb_collisionmeshebuild_done++;
+
 
     Dynamics::InertBody::Body::Parameters params;
 
@@ -167,7 +171,9 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
             m_buildmeshe_event->args->SetPropValue<dsreal>( "ypos", ypos / m_planetray );
             m_buildmeshe_event->args->SetPropValue<int>( "orientation", curr_patch->GetOrientation() );
 
-            m_buildmeshe_event->Notify();            
+            m_buildmeshe_event->Notify(); 
+
+            m_nb_collisionmeshebuild_req++;
 
             ////////////////////////////////////////////////
         }
@@ -368,4 +374,11 @@ void Fragment::RemoveColliderFromWorld( void )
 DrawSpace::SphericalLOD::Body* Fragment::GetPlanetBody( void )
 {
     return m_planetbody;
+}
+
+
+void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done )
+{
+    p_nb_collisionmeshebuild_req = m_nb_collisionmeshebuild_req;
+    p_nb_collisionmeshebuild_done = m_nb_collisionmeshebuild_done;
 }

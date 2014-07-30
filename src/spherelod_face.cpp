@@ -613,7 +613,7 @@ bool Face::check_split( Vector& p_hotpoint )
 
             long depth_level = m_currentleaf->GetDepthLevel();
 
-            if( depth_level >= 11 )
+            if( depth_level >= /*11*/ 7 )
             {
                 break;
             }

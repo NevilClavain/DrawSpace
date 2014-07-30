@@ -483,3 +483,12 @@ void DrawSpace::Planetoid::Body::RegisterCollider( DrawSpace::Dynamics::Collider
     p_collider->AddToWorld( &m_world );
     p_collider->SetRootOrbiter( m_orbiter );
 }
+
+Fragment* DrawSpace::Planetoid::Body::GetRegisteredBodyPlanetFragment( DrawSpace::Dynamics::InertBody* p_body )
+{
+    if( 0 == m_registered_bodies.count( p_body ) )
+    {
+        return NULL;
+    }    
+    return m_registered_bodies[p_body].fragment;
+}
