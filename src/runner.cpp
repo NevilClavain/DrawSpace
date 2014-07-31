@@ -43,6 +43,7 @@ void Runner::Run( void )
 
     while( 1 )
     {
+        /*
         Mediator::Event* evt = mediator->Wait();
 
         if( evt )
@@ -53,10 +54,34 @@ void Runner::Run( void )
                 (*handler)( evt->args );
             }
         }
+        */
+
+        Mediator::MessageQueue* queue = mediator->Wait();
+        if( queue )
+        {
+            if( m_handlers.count( queue->m_name ) > 0 )
+            {
+                MediatorEventHandler* handler = m_handlers[queue->m_name];
+
+                PropertyPool props;
+
+                while( queue->GetNextMessage( props ) )
+                {
+                    (*handler)( &props );
+                }
+            }
+        }
     }
 }
 
+/*
 void Runner::RegisterEventHandler( Mediator::Event* p_event, MediatorEventHandler* p_handler )
 {
     m_handlers[p_event->name] = p_handler;
+}
+*/
+
+void Runner::RegisterMsgHandler( Mediator::MessageQueue* p_queue, MediatorEventHandler* p_handler )
+{
+    m_handlers[p_queue->m_name] = p_handler;
 }

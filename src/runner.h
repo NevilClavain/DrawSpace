@@ -45,7 +45,9 @@ public:
     virtual ~Runner( void );
 
     void Run( void );
-    void RegisterEventHandler( DrawSpace::Core::Mediator::Event* p_event, MediatorEventHandler* p_handler );
+    //void RegisterEventHandler( DrawSpace::Core::Mediator::Event* p_event, MediatorEventHandler* p_handler );
+
+    void RegisterMsgHandler( DrawSpace::Core::Mediator::MessageQueue* p_queue, MediatorEventHandler* p_handler );
 };
 }
 }

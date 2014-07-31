@@ -39,6 +39,7 @@ Mediator::~Mediator( void )
 
 }
 
+/*
 Mediator::Event* Mediator::CreateEvent( const dsstring& p_eventname )
 {
     Event evt;
@@ -62,23 +63,6 @@ void Mediator::Notify( const dsstring& p_eventname )
         SetEvent( m_events_by_name[p_eventname].system_event );
     }
 }
-
-/*
-bool Mediator::Wait( dsstring& p_eventname )
-{
-    DWORD wait = WaitForMultipleObjects( m_nb_handles, m_handles, false, INFINITE );
-    if( WAIT_FAILED == wait )
-    {
-        return false;
-    }
-    wait -= WAIT_OBJECT_0;
-
-    ResetEvent( m_events_by_handle[m_handles[wait]].system_event );
-    p_eventname = m_events_by_handle[m_handles[wait]].name;
-
-    return true;
-}
-*/
 
 Mediator::Event* Mediator::Wait( void )
 {
@@ -104,3 +88,32 @@ PropertyPool* Mediator::GetEventPropertyPool( const dsstring& p_eventname )
     return NULL;
 }
 
+*/
+
+Mediator::MessageQueue* Mediator::CreateMessageQueue( const dsstring& p_messagequeueid )
+{
+    HANDLE evt = ::CreateEventA( NULL, TRUE, FALSE, p_messagequeueid.c_str() );
+    Mediator::MessageQueue* mq = _DRAWSPACE_NEW_( Mediator::MessageQueue, Mediator::MessageQueue( p_messagequeueid, evt ) );
+
+    m_messages_by_name[p_messagequeueid] = mq;
+    m_messages_by_handle[evt] = mq;
+
+    m_handles[m_nb_handles] = evt;
+    m_nb_handles++;
+
+    return mq;
+}
+
+Mediator::MessageQueue* Mediator::Wait( void )
+{
+    DWORD wait = WaitForMultipleObjects( m_nb_handles, m_handles, false, INFINITE );
+    if( WAIT_FAILED == wait || WAIT_TIMEOUT == wait )
+    {
+        return NULL;
+    }
+    wait -= WAIT_OBJECT_0;
+
+    ResetEvent( m_messages_by_handle[m_handles[wait]]->m_system_event );
+
+    return m_messages_by_handle[m_handles[wait]];
+}

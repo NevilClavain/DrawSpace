@@ -27,7 +27,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <queue>
 #include <exception>
 
 #include "flags.h"

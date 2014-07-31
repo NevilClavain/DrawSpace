@@ -54,20 +54,27 @@ m_nb_collisionmeshebuild_done( 0 )
         m_spherelod_evt_cb = _DRAWSPACE_NEW_( SphereLODEvtCb, SphereLODEvtCb( this, &Fragment::on_spherelod_event ) );
         m_planetbody->RegisterEventHandler( m_spherelod_evt_cb );
 
-        m_runner_evt_cb = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Fragment::on_meshebuild_request ) );
+        //m_runner_evt_cb = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Fragment::on_meshebuild_request ) );
+        m_runner_msg_cb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Fragment::on_meshebuild_request ) );
        
-        dsstring reqevtname = p_name + dsstring( "_ReqBuildMesheEvent" );
-        dsstring doneevtname = p_name + dsstring( "_DoneBuildMesheEvent" );
+        //dsstring reqevtname = p_name + dsstring( "_ReqBuildMesheEvent" );
+        dsstring reqname = p_name + dsstring( "_ReqBuildMesheEvent" );
 
-        m_buildmeshe_event = mediator->CreateEvent( reqevtname );
+        //m_buildmeshe_event = mediator->CreateEvent( reqevtname );
+
+        m_buildmeshereq_msg = mediator->CreateMessageQueue( reqname );
         
+        /*
         m_buildmeshe_event->args->AddProp<Meshe*>( "patchmeshe" );
         m_buildmeshe_event->args->AddProp<dsreal>( "sidelength" );
         m_buildmeshe_event->args->AddProp<dsreal>( "xpos" );
         m_buildmeshe_event->args->AddProp<dsreal>( "ypos" );
         m_buildmeshe_event->args->AddProp<int>( "orientation" );
+        */
 
-        m_runner->RegisterEventHandler( m_buildmeshe_event, m_runner_evt_cb );
+        //m_runner->RegisterEventHandler( m_buildmeshe_event, m_runner_evt_cb );
+
+        m_runner->RegisterMsgHandler( m_buildmeshereq_msg, m_runner_msg_cb );
 
         m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
         m_task->Startup( m_runner );
@@ -165,6 +172,7 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
             m_meshe_ready_mutex.Release();
 
 
+            /*
             m_buildmeshe_event->args->SetPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
             m_buildmeshe_event->args->SetPropValue<dsreal>( "sidelength", curr_patch->GetSideLength() / m_planetray );
             m_buildmeshe_event->args->SetPropValue<dsreal>( "xpos", xpos / m_planetray );
@@ -172,6 +180,17 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
             m_buildmeshe_event->args->SetPropValue<int>( "orientation", curr_patch->GetOrientation() );
 
             m_buildmeshe_event->Notify(); 
+            */
+
+            PropertyPool props;
+
+            props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
+            props.AddPropValue<dsreal>( "sidelength", curr_patch->GetSideLength() / m_planetray );
+            props.AddPropValue<dsreal>( "xpos", xpos / m_planetray );
+            props.AddPropValue<dsreal>( "ypos", ypos / m_planetray );
+            props.AddPropValue<int>( "orientation", curr_patch->GetOrientation() );
+
+            m_buildmeshereq_msg->PushMessage( props );
 
             m_nb_collisionmeshebuild_req++;
 

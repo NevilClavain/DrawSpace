@@ -29,6 +29,7 @@
 #include <typeinfo>
 #endif
 
+#include <list>
 #include "drawspace_commons.h"
 #include "memalloc.h"
 #include "mutex.h"
@@ -45,6 +46,8 @@ public:
 
     virtual void    GetName( std::string& p_name ) = 0;
     virtual void    GetTypeId( std::string& p_typeid ) = 0;
+
+    virtual IProperty*   CloneMe( void ) = 0;
 };
 
 template<typename base>
@@ -60,6 +63,13 @@ public:
     TypedProperty( const dsstring &p_name, base p_initval ) : m_name( p_name ), m_value( p_initval ) { };
     virtual void            GetName( dsstring& p_name ) { p_name = m_name; };
     virtual void            GetTypeId( dsstring& p_typeid ) { p_typeid = typeid( base ).name(); };
+
+    virtual IProperty*  CloneMe( void ) 
+                        {
+                            TypedProperty<base>* elt;
+                            elt = new TypedProperty<base>( m_name, m_value );
+                            return elt;
+                        };
 };
 
 
@@ -67,10 +77,23 @@ class PropertyPool
 {
 private:
 
-    DrawSpace::Utils::Mutex m_mutex;
-
+    //DrawSpace::Utils::Mutex m_mutex;
     std::vector<IProperty*> m_props;
+
 public:
+
+    PropertyPool( void ) { };
+
+    // copy constructor
+    PropertyPool( const PropertyPool& p_other )
+    {
+        for( size_t i = 0; i < p_other.m_props.size(); i++ )
+        {
+            m_props.push_back( p_other.m_props[i]->CloneMe() );
+        }
+    }
+    
+
     ~PropertyPool( void )
     {
         std::vector<IProperty*>::iterator it;
@@ -83,40 +106,40 @@ public:
 
     size_t Size( void )
     {
-        m_mutex.WaitInfinite();
+        //m_mutex.WaitInfinite();
         size_t nbp = m_props.size();
-        m_mutex.Release();
+        //m_mutex.Release();
 
         return nbp;
     };
 
     void Clear( void )
     {
-        m_mutex.WaitInfinite();
+        //m_mutex.WaitInfinite();
         m_props.clear();
-        m_mutex.Release();
+        //m_mutex.Release();
     };
 
     template<typename base>
     void AddPropValue( const char* p_name, base p_propvalue )
     {
-        m_mutex.WaitInfinite();
+        //m_mutex.WaitInfinite();
 
         TypedProperty<base>* prop = new TypedProperty<base>( p_name, p_propvalue );
         m_props.push_back( prop );
 
-        m_mutex.Release();
+        //m_mutex.Release();
     };
 
     template<typename base>
     void AddProp( const char* p_name )
     {
-        m_mutex.WaitInfinite();
+        //m_mutex.WaitInfinite();
 
         TypedProperty<base>* prop = new TypedProperty<base>( p_name );
         m_props.push_back( prop );
 
-        m_mutex.Release();
+        //m_mutex.Release();
     };
 
 
@@ -126,7 +149,7 @@ public:
         base dummy;
         std::vector<IProperty*>::iterator it;
 
-        m_mutex.WaitInfinite();
+        //m_mutex.WaitInfinite();
         for( it = m_props.begin(); it != m_props.end(); ++it )
         {
             TypedProperty<base>* prop = dynamic_cast<TypedProperty<base>*>( (*it) );
@@ -143,7 +166,7 @@ public:
                 }
             }            
         }
-        m_mutex.Release();
+        //m_mutex.Release();
         return dummy;
     };
 
@@ -172,17 +195,28 @@ public:
         }
         m_mutex.Release();
     };
+
+    PropertyPool& operator=( const PropertyPool& p_other ) 
+    {
+        for( size_t i = 0; i < p_other.m_props.size(); i++ )
+        {
+            m_props.push_back( p_other.m_props[i]->CloneMe() );
+        }
+        return *this;
+  }
+   
 };
 
 class Mediator
 {
 public:
 
+    /*
     typedef struct
     {
     public:
         dsstring                    name;
-        HANDLE                      system_event;        
+        HANDLE                      system_event;
         PropertyPool*               args;
 
         void Notify( void )
@@ -191,16 +225,74 @@ public:
         }
 
     } Event;
+    */
 
+    class MessageQueue
+    {
+    public:
+        dsstring                    m_name;
+
+    protected:
+        HANDLE                      m_system_event;
+        DrawSpace::Utils::Mutex     m_mutex;
+        std::list<PropertyPool>     m_queue;
+
+    public:
+
+        MessageQueue( const dsstring& p_name, HANDLE p_handle ) :
+        m_name( p_name ),
+        m_system_event( p_handle )
+        {
+        }
+
+        void PushMessage( const PropertyPool& p_msg )
+        {
+            m_mutex.WaitInfinite();
+
+            m_queue.push_front( p_msg );
+            SetEvent( m_system_event );
+
+            m_mutex.Release();
+        }
+
+        bool GetNextMessage( PropertyPool& p_msg )
+        {
+            bool next = false;
+
+            if( m_queue.size() > 0 )
+            {
+                m_mutex.WaitInfinite();
+
+                p_msg = m_queue.back();
+                m_queue.pop_back();
+
+                m_mutex.Release();
+
+                next = true;
+            }
+            else
+            {
+                next = false;
+            }
+
+            return next;
+        }
+
+        friend class Mediator;
+    };
 
 protected:
     static Mediator* m_instance;
 
+    /*
     std::map<dsstring, Event>       m_events_by_name;
     std::map<HANDLE, Event>         m_events_by_handle;
+    */
 
-    int                             m_nb_handles;
-    HANDLE                          m_handles[512];
+    int                                     m_nb_handles;
+    HANDLE                                  m_handles[512];
+    std::map<dsstring, MessageQueue*>       m_messages_by_name;
+    std::map<HANDLE, MessageQueue*>         m_messages_by_handle;
     
 
     Mediator( void );
@@ -217,14 +309,22 @@ public:
         return m_instance;
     }
 
+    /*
+
     Event* CreateEvent( const dsstring& p_eventname );
 
     void Notify( const dsstring& p_eventname );
-    //bool Wait( dsstring& p_eventname );
 
     Event* Wait( void );
 
     PropertyPool* GetEventPropertyPool( const dsstring& p_eventname );
+
+    */
+
+
+    MessageQueue* CreateMessageQueue( const dsstring& p_messagequeueid );
+
+    MessageQueue* Wait( void );
 
 };
 }
