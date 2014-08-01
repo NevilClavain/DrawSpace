@@ -82,6 +82,7 @@ void Body::Compute( void )
 
     //////////////////////////////////////
 
+    /*
     bool status = 0;
 
     status = m_faces[Patch::FrontPlanetFace]->Compute() | status;
@@ -96,6 +97,20 @@ void Body::Compute( void )
         for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
         {
             ( **it )( this, m_current_face );
+        }
+    }
+    */
+
+    for( long i = 0; i < 6; i++ )
+    {
+        bool status = m_faces[i]->Compute();
+
+        if( status && i == m_current_face )
+        {
+            for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
+            {
+                ( **it )( this, m_current_face );
+            }            
         }
     }
 }

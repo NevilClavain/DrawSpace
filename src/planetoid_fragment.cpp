@@ -40,7 +40,8 @@ m_camera( NULL ),
 m_inertbody( NULL ),
 m_collisions( p_collisions ),
 m_nb_collisionmeshebuild_req( 0 ),
-m_nb_collisionmeshebuild_done( 0 )
+m_nb_collisionmeshebuild_done( 0 ),
+m_nb_collisionmeshebuild_added( 0 )
 {
     m_name = p_name;
 
@@ -311,7 +312,9 @@ void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
                 // bullet meshe build done
                 m_collider->AddToWorld( p_world );
                 m_collision_state = true;
-                m_suspend_update = false;                
+                m_suspend_update = false;
+
+                m_nb_collisionmeshebuild_added++;
             }
         }
     }
@@ -396,8 +399,9 @@ DrawSpace::SphericalLOD::Body* Fragment::GetPlanetBody( void )
 }
 
 
-void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done )
+void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done, long& p_nb_collisionmeshebuild_added )
 {
     p_nb_collisionmeshebuild_req = m_nb_collisionmeshebuild_req;
     p_nb_collisionmeshebuild_done = m_nb_collisionmeshebuild_done;
+    p_nb_collisionmeshebuild_added = m_nb_collisionmeshebuild_added;
 }

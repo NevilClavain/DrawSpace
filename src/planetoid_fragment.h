@@ -57,6 +57,7 @@ protected:
 
     long                                                        m_nb_collisionmeshebuild_req;
     long                                                        m_nb_collisionmeshebuild_done;
+    long                                                        m_nb_collisionmeshebuild_added;
 
 
     SphereLODEvtCb*                                             m_spherelod_evt_cb;
@@ -101,7 +102,7 @@ public:
     void RemoveColliderFromWorld( void );
     DrawSpace::SphericalLOD::Body* GetPlanetBody( void );
 
-    void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done );
+    void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done, long& p_nb_collisionmeshebuild_added );
 
 };
 
