@@ -121,7 +121,6 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
 
     Dynamics::InertBody::Body::Parameters params;
 
-
     params.mass = 0.0;
 
     params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
@@ -129,11 +128,12 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
     params.shape_descr.meshe = final_meshe;
 
-    m_collider->SetKinematic( params );
+    
 
     ////////////////////////////////////////////
 
     m_meshe_ready_mutex.WaitInfinite();
+    m_params = params;
     m_meshe_ready = true;
     m_meshe_ready_mutex.Release();
 
@@ -150,8 +150,9 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
     long tri_index = 0;
     dsreal alt = p_body->GetAltitud();
 
-    if( alt < 1000.0 )
+    if( alt < 9000.0 )
     {
+        /*
         if( !m_suspend_update )
         {
             SphericalLOD::Patch* curr_patch = p_body->GetFaceCurrentLeaf( p_currentface );
@@ -172,17 +173,6 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
             m_meshe_ready = false;
             m_meshe_ready_mutex.Release();
 
-
-            /*
-            m_buildmeshe_event->args->SetPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
-            m_buildmeshe_event->args->SetPropValue<dsreal>( "sidelength", curr_patch->GetSideLength() / m_planetray );
-            m_buildmeshe_event->args->SetPropValue<dsreal>( "xpos", xpos / m_planetray );
-            m_buildmeshe_event->args->SetPropValue<dsreal>( "ypos", ypos / m_planetray );
-            m_buildmeshe_event->args->SetPropValue<int>( "orientation", curr_patch->GetOrientation() );
-
-            m_buildmeshe_event->Notify(); 
-            */
-
             PropertyPool props;
 
             props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
@@ -197,6 +187,31 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
 
             ////////////////////////////////////////////////
         }
+        */
+
+        m_suspend_update = true;
+
+        m_meshe_ready_mutex.WaitInfinite();
+        m_meshe_ready = false;
+        m_meshe_ready_mutex.Release();
+
+
+        SphericalLOD::Patch* curr_patch = p_body->GetFaceCurrentLeaf( p_currentface );
+
+        dsreal xpos, ypos;
+        curr_patch->GetPos( xpos, ypos );
+
+        PropertyPool props;
+
+        props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
+        props.AddPropValue<dsreal>( "sidelength", curr_patch->GetSideLength() / m_planetray );
+        props.AddPropValue<dsreal>( "xpos", xpos / m_planetray );
+        props.AddPropValue<dsreal>( "ypos", ypos / m_planetray );
+        props.AddPropValue<int>( "orientation", curr_patch->GetOrientation() );
+
+        m_buildmeshereq_msg->PushMessage( props );
+
+        m_nb_collisionmeshebuild_req++;
     }
     else
     {
@@ -298,6 +313,7 @@ void Fragment::build_meshe( Meshe& p_patchmeshe, int p_patch_orientation, dsreal
 
 void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
 {
+    /*
     if( m_suspend_update )
     {
         bool read_status = m_meshe_ready_mutex.Wait( 0 );
@@ -318,6 +334,42 @@ void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
             }
         }
     }
+    */
+
+
+    if( m_suspend_update )
+    {
+        bool read_status = m_meshe_ready_mutex.Wait( 0 );
+
+        if( read_status )
+        {
+            bool meshe_ready = m_meshe_ready;
+
+            Dynamics::InertBody::Body::Parameters params = m_params;
+            m_meshe_ready_mutex.Release();
+
+            if( meshe_ready )
+            {
+                
+                if( m_collision_state )
+                {
+                    m_collider->RemoveFromWorld();
+                    m_collider->UnsetKinematic();
+                }
+                
+
+                // bullet meshe build done
+
+                m_collider->SetKinematic( params );
+                m_collider->AddToWorld( p_world );
+                m_collision_state = true;
+                m_suspend_update = false;
+
+                m_nb_collisionmeshebuild_added++;
+            }
+        }
+    }
+
 
     if( m_hot )
     {

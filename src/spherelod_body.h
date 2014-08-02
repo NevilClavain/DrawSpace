@@ -40,7 +40,7 @@ public:
 
 protected:
 
-    typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                PatchInstanciationCallback;    
+    typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                 PatchInstanciationCallback;    
 
     Face*                                                                       m_faces[6];
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
