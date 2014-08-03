@@ -512,6 +512,10 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
                 }
                 m_tx_datas[node].push_back( tx_data );
             }
+            else
+            {
+                m_tx_datas[node].push_back( NULL );
+            }
         }
 
         Meshe* current_meshe = node->GetMeshe();
@@ -544,10 +548,14 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
             {
-               operation.type = SET_TEXTURE;
-               operation.data = m_tx_datas[node][j];
-               operation.texture_stage = (long)j;
-               m_outputqueue.push_back( operation );
+                operation.type = SET_TEXTURE;
+                operation.data = m_tx_datas[node][j];
+                operation.texture_stage = (long)j;
+
+                if( operation.data != NULL )
+                {
+                    m_outputqueue.push_back( operation );
+                }
             }
         }
 
@@ -578,10 +586,14 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
             {
-               operation.type = UNSET_TEXTURE;
-               operation.data = m_tx_datas[node][j];
-               operation.texture_stage = (long)j;
-               m_outputqueue.push_back( operation );
+                operation.type = UNSET_TEXTURE;
+                operation.data = m_tx_datas[node][j];
+                operation.texture_stage = (long)j;
+
+                if( operation.data != NULL )
+                {
+                    m_outputqueue.push_back( operation );
+                }
             }
         }
 
@@ -649,7 +661,7 @@ void RenderingQueue::cleanup_output_list( void )
                         {
                             Operation curr_operation_2 = (*it2);
 
-                            if( UNSET_TEXTURE == curr_operation_2.type && current_settex_ope[curr_operation_2.texture_stage].data == curr_operation_2.data )                              
+                            if( UNSET_TEXTURE == curr_operation_2.type && current_settex_ope[curr_operation.texture_stage].data == curr_operation_2.data )                              
                             {
                                 ei.index = index2;
                                 ei.pos = it2;
