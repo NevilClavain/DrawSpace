@@ -151,8 +151,13 @@ m_planetbody( NULL )
 
     // prepare Fx
 
-    m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
-    m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+    //m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    //m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+
+    m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
 
     m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet.vsh", false ) ) );
     m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet.psh", false ) ) );
@@ -267,7 +272,6 @@ void Drawing::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_facei
     if( "main_fx" == p_fxname )
     {
         Fx* fx = nodeset.nodes[p_faceid]->GetFx();
-        *fx = *m_fx; 
+        *fx = *m_fx;
     }
 }
-

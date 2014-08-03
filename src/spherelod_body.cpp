@@ -125,6 +125,12 @@ void Body::BuildMeshe( void )
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );
+
+    float delta_uv0 = 1.0f / ( patch_resolution - 1 );
+    float current_u0 = 0.0f;
+    float current_v0 = 0.0f;
+
+
     for( long i = 0; i < patch_resolution; i++ )
     {
         for( long j = 0; j < patch_resolution; j++ )
@@ -136,8 +142,20 @@ void Body::BuildMeshe( void )
             vertex.x = xcurr;
             vertex.y = ycurr;
             vertex.z = 0.0;
+
+            vertex.tu[0] = current_u0;
+            vertex.tv[0] = current_v0;
+
+            vertex.tu[1] = current_u0;
+            vertex.tv[1] = current_v0;
+
             m_planetpatch_meshe->AddVertex( vertex );
+
+            current_u0 += delta_uv0;
         }
+
+        current_v0 += delta_uv0;
+        current_u0 = 0.0;
     }
 
     long current_index = 0;
