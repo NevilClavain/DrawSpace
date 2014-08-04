@@ -33,6 +33,7 @@ RenderingNode::RenderingNode( void ) : m_order( 10000 ), m_handler( NULL ), m_me
     for( long i = 0; i < NbMaxTextures; i++ )
     {
         m_textures[i] = NULL;
+        m_vertextextures[i] = NULL;
     }
 }
 
@@ -56,6 +57,10 @@ void RenderingNode::SetTexture( Texture* p_texture, long p_stage )
     m_textures[p_stage] = p_texture;
 }
 
+void RenderingNode::SetVertexTexture( Texture* p_texture, long p_stage )
+{
+    m_vertextextures[p_stage] = p_texture;
+}
 
 long RenderingNode::GetTextureListSize( void )
 {
@@ -67,6 +72,10 @@ Texture* RenderingNode::GetTexture( long p_index )
     return m_textures[p_index];
 }
 
+Texture* RenderingNode::GetVertexTexture( long p_index )
+{
+    return m_vertextextures[p_index];
+}
 
 void RenderingNode::OnDraw( void )
 {

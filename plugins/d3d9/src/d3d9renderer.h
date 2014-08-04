@@ -183,7 +183,9 @@ public:
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
     virtual bool SetTexture( void* p_data, int p_stage );
+    virtual bool SetVertexTexture( void* p_data, int p_stage );
 	virtual bool UnsetTexture( int p_stage );
+    virtual bool UnsetVertexTexture( int p_stage );
 
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data );
     virtual bool SetFx( void* p_data );

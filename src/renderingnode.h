@@ -53,6 +53,7 @@ protected:
 
     Fx*                                     m_fx;
     Texture*                                m_textures[NbMaxTextures]; // 32 textures stages max
+    Texture*                                m_vertextextures[NbMaxTextures];
     Meshe*                                  m_meshe;
 
     std::map<dsstring, ShadersParams*>      m_shader_params;
@@ -66,6 +67,7 @@ public:
     virtual ~RenderingNode( void );
 
     virtual void SetTexture( Texture* p_texture, long p_stage );
+    virtual void SetVertexTexture( Texture* p_texture, long p_stage );
 
     virtual void SetMeshe( Meshe* p_meshe )
     {
@@ -84,6 +86,7 @@ public:
 
     virtual long GetTextureListSize( void );
     virtual Texture* GetTexture( long p_index );
+    virtual Texture* GetVertexTexture( long p_index );
 
     virtual void OnDraw( void );
     virtual void RegisterHandler( BaseCallback<void, RenderingNode*>* p_handler );

@@ -54,11 +54,13 @@ protected:
     typedef enum
     {
         SET_TEXTURE,
+        SET_VERTEXTEXTURE,
         SET_FX,
         SET_MESHE,
         SET_SHADERS_PARAMS,
         DRAW_NODE,
         UNSET_TEXTURE,
+        UNSET_VERTEXTEXTURE,
         UNSET_FX,
 
     } OperationType;
@@ -105,6 +107,7 @@ protected:
 
     std::map<RenderingNode*, void*>                     m_fx_datas;
     std::map<RenderingNode*, std::vector<void*> >       m_tx_datas;
+    std::map<RenderingNode*, std::vector<void*> >       m_vtx_datas;
     std::map<RenderingNode*, void* >                    m_meshe_datas;
 
     long                                                m_switches_cost;

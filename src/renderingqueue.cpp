@@ -109,6 +109,20 @@ void RenderingQueue::Draw( void )
                 m_switches_cost++;
                 break;
 
+
+            case SET_VERTEXTEXTURE:
+
+                renderer->SetVertexTexture( curr_operation.data, curr_operation.texture_stage );
+                m_switches_cost++;
+                break;
+
+            case UNSET_VERTEXTEXTURE:
+
+                renderer->UnsetVertexTexture( curr_operation.texture_stage );
+                m_switches_cost++;
+                break;
+
+
             case SET_FX:
 
                 renderer->SetFx( curr_operation.data );
@@ -480,6 +494,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
     void* meshe_data;
 
     m_tx_datas.clear();
+    m_vtx_datas.clear();
     m_fx_datas.clear();
     m_meshe_datas.clear();
 
@@ -515,6 +530,29 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             else
             {
                 m_tx_datas[node].push_back( NULL );
+            }
+
+
+            /// vertex textures
+
+            current_tx = node->GetVertexTexture( j );
+
+            if( NULL != current_tx )
+            {
+                if( false == renderer->CreateTexture( current_tx, &tx_data ) )
+                {
+                    dsstring path;
+                    current_tx->GetPath( path );
+
+                    dsstring excp_msg = "Cannot create Vertex Texture ";
+                    excp_msg += path;
+                    _DSEXCEPTION( excp_msg  )
+                }
+                m_vtx_datas[node].push_back( tx_data );
+            }
+            else
+            {
+                m_vtx_datas[node].push_back( NULL );
             }
         }
 
@@ -559,6 +597,22 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             }
         }
 
+        if( m_vtx_datas.count( node ) )
+        {
+            for( size_t j = 0; j < m_vtx_datas[node].size(); j++ )
+            {
+                operation.type = SET_VERTEXTEXTURE;
+                operation.data = m_vtx_datas[node][j];
+                operation.texture_stage = (long)j;
+
+                if( operation.data != NULL )
+                {
+                    m_outputqueue.push_back( operation );
+                }
+            }
+        }
+
+
         if( m_meshe_datas.count( node ) )
         {
             operation.type = SET_MESHE;
@@ -596,6 +650,22 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
                 }
             }
         }
+
+        if( m_vtx_datas.count( node ) )
+        {
+            for( size_t j = 0; j < m_vtx_datas[node].size(); j++ )
+            {
+                operation.type = UNSET_VERTEXTEXTURE;
+                operation.data = m_vtx_datas[node][j];
+                operation.texture_stage = (long)j;
+
+                if( operation.data != NULL )
+                {
+                    m_outputqueue.push_back( operation );
+                }
+            }
+        }
+
 
         if( m_fx_datas.count( node ) )
         {

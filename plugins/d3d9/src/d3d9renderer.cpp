@@ -604,6 +604,28 @@ bool D3D9Renderer::UnsetTexture( int p_stage )
 	return true;
 }
 
+bool D3D9Renderer::SetVertexTexture( void* p_data, int p_stage )
+{
+    DECLARE_D3D9ASSERT_VARS
+
+    TextureInfos* ti = (TextureInfos*)p_data;
+
+    hRes = m_lpd3ddevice->SetTexture( p_stage + D3DVERTEXTEXTURESAMPLER0, ti->texture );
+    D3D9_CHECK( SetTexture );
+
+    return true;
+}
+
+bool D3D9Renderer::UnsetVertexTexture( int p_stage )
+{
+    DECLARE_D3D9ASSERT_VARS
+
+    hRes = m_lpd3ddevice->SetTexture( p_stage + D3DVERTEXTEXTURESAMPLER0, NULL );
+    D3D9_CHECK( SetTexture );
+
+    return true;
+}
+
 bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
 {
     DECLARE_D3D9ASSERT_VARS
