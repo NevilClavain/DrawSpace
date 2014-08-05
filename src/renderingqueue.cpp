@@ -687,6 +687,9 @@ void RenderingQueue::cleanup_output_list( void )
     Operation                current_settex_ope[RenderingNode::NbMaxTextures];
     bool                     current_settex_ope_set[RenderingNode::NbMaxTextures];
 
+    Operation                current_setvtex_ope[RenderingNode::NbMaxTextures];
+    bool                     current_setvtex_ope_set[RenderingNode::NbMaxTextures];
+
 
     Operation                current_setmeshe_ope;
     bool                     current_setmeshe_ope_set = false;
@@ -696,6 +699,7 @@ void RenderingQueue::cleanup_output_list( void )
     for( long i = 0; i < RenderingNode::NbMaxTextures; i++ )
     {
         current_settex_ope_set[i] = false;
+        current_setvtex_ope_set[i] = false;
     }
 
     long index = 0;
@@ -705,6 +709,52 @@ void RenderingQueue::cleanup_output_list( void )
 
         switch( curr_operation.type )
         {
+            case SET_VERTEXTEXTURE:
+
+                if( !current_setvtex_ope_set[curr_operation.texture_stage] )
+                {
+                    current_setvtex_ope[curr_operation.texture_stage] = curr_operation;
+                    current_setvtex_ope_set[curr_operation.texture_stage] = true;
+                }
+                else
+                {
+                    if( current_setvtex_ope[curr_operation.texture_stage].data == curr_operation.data )                 
+                    {
+                        erase_infos ei;
+                        ei.index = index;
+                        ei.pos = it;
+
+                        to_erase_list.push_back( ei );
+
+                        // remonter pour rechercher le unset_tx precedent
+                        
+                        std::list<Operation>::iterator it2 = it;
+                        long index2 = index;
+
+                        while( it2 != m_outputqueue.begin() )
+                        {
+                            Operation curr_operation_2 = (*it2);
+
+                            if( UNSET_VERTEXTEXTURE == curr_operation_2.type && current_setvtex_ope[curr_operation.texture_stage].data == curr_operation_2.data )                              
+                            {
+                                ei.index = index2;
+                                ei.pos = it2;
+                                to_erase_list.push_back( ei );  
+
+                                break;
+                            }
+                            it2--;
+                            index2--;
+                        }
+                    }
+                    else
+                    {
+                        current_setvtex_ope[curr_operation.texture_stage] = curr_operation;
+                    }
+                }
+                break;
+
+
             case SET_TEXTURE:
 
                 if( !current_settex_ope_set[curr_operation.texture_stage] )
