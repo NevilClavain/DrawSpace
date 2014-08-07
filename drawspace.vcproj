@@ -641,6 +641,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\spherelod_maps.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\spherelod_maps.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\spherelod_patch.cpp"
 				>
 			</File>

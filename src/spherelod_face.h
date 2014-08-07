@@ -27,6 +27,7 @@
 #include "quadtree.h"
 #include "renderer.h"
 #include "spherelod_patch.h"
+#include "spherelod_maps.h"
 
 namespace DrawSpace
 {
@@ -73,6 +74,8 @@ protected:
     dsreal                                                      m_alignment_factor;
 
     std::map<dsstring, Patch*>                                  m_patchesleafs;
+
+    Maps                                                        m_maps_factory;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );

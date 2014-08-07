@@ -46,7 +46,9 @@ Face::~Face( void )
 
 // create face's root patch
 bool Face::Init( int p_orientation )
-{    
+{
+    m_maps_factory.Initialize();
+
     m_orientation = p_orientation;
 
     InstanciationCallback* cb_inst = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodeinstanciation ) );
@@ -89,6 +91,18 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         }
 
         m_patchesleafs[patch_name] = patch;
+
+        // request texture from maps factory
+
+        void* color_texture;
+        void* elevation_texture;
+        
+        color_texture = m_maps_factory.RequestTexture( Maps::COLOR_TEXTURE, patch );
+        elevation_texture = m_maps_factory.RequestTexture( Maps::ELEVATION_TEXTURE, patch );
+
+        patch->SetTexture( Maps::COLOR_TEXTURE, color_texture );
+        patch->SetTexture( Maps::ELEVATION_TEXTURE, elevation_texture );
+
     }
     else
     {
@@ -115,6 +129,18 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         }
 
         m_patchesleafs[patch_name] = patch;
+
+        // request texture from maps factory
+
+        void* color_texture;
+        void* elevation_texture;
+        
+        color_texture = m_maps_factory.RequestTexture( Maps::COLOR_TEXTURE, patch );
+        elevation_texture = m_maps_factory.RequestTexture( Maps::ELEVATION_TEXTURE, patch );
+
+        patch->SetTexture( Maps::COLOR_TEXTURE, color_texture );
+        patch->SetTexture( Maps::ELEVATION_TEXTURE, elevation_texture );
+
     }
 }
 

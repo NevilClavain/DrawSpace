@@ -96,7 +96,16 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
         m_renderer->SetFxShaderParams( 0, 8, flag0 );
         m_renderer->SetFxShaderParams( 0, 9, patch_pos );
 
+              
+        m_renderer->SetTexture( p_patch->GetTexture( Maps::COLOR_TEXTURE ), 0 );
+        m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
+
+
         m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view, p_proj );
+
+
+        m_renderer->UnsetTexture( 0 );
+        m_renderer->UnsetVertexTexture( 0 );
     }       
 }
 

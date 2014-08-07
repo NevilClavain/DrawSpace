@@ -26,6 +26,8 @@
 #include "vector.h"
 #include "quadtree.h"
 #include "vsphere.h"
+#include "spherelod_maps.h"
+#include "texture.h"
 
 namespace DrawSpace
 {
@@ -69,6 +71,9 @@ protected:
 
     DrawSpace::Core::VSphere*               m_vsphere;
 
+
+    void*                                   m_textures_data[Maps::NB_TEXTURETYPE];
+
 public:
     Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
     virtual ~Patch( void );
@@ -87,6 +92,10 @@ public:
     DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void );
 
     DrawSpace::Core::VSphere* GetVSphere( void );
+
+    void SetTexture( Maps::TextureType p_type, void* p_texturedata );
+
+    void* GetTexture( Maps::TextureType p_type );
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

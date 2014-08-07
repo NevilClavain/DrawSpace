@@ -85,6 +85,7 @@
 #include "camerapoint.h"
 #include "spacebox.h"
 #include "spherelod_drawing.h"
+#include "spherelod_maps.h"
 #include "chunk.h"
 #include "mediator.h"
 #include "runner.h"

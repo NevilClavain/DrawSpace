@@ -38,6 +38,11 @@ m_owner( p_owner )
         m_neighbours[i] = NULL;
     }
 
+    for( long i = 0; i < Maps::NB_TEXTURETYPE; i++ )
+    {
+        m_textures_data[i] = NULL;
+    }
+
     if( NULL == p_parent )
     {
         m_xpos = m_ypos = 0.0;
@@ -343,4 +348,14 @@ void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientati
     v3[3] = 1.0;
 
     p_out = v3;
+}
+
+void Patch::SetTexture( Maps::TextureType p_type, void* p_texturedata )
+{
+    m_textures_data[p_type] = p_texturedata;
+}
+
+void* Patch::GetTexture( Maps::TextureType p_type )
+{
+    return m_textures_data[p_type];
 }
