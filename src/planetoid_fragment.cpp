@@ -54,27 +54,13 @@ m_nb_collisionmeshebuild_added( 0 )
 
         m_spherelod_evt_cb = _DRAWSPACE_NEW_( SphereLODEvtCb, SphereLODEvtCb( this, &Fragment::on_spherelod_event ) );
         m_planetbody->RegisterEventHandler( m_spherelod_evt_cb );
-
-        //m_runner_evt_cb = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Fragment::on_meshebuild_request ) );
+       
         m_runner_msg_cb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Fragment::on_meshebuild_request ) );
        
-        //dsstring reqevtname = p_name + dsstring( "_ReqBuildMesheEvent" );
         dsstring reqname = p_name + dsstring( "_ReqBuildMesheEvent" );
-
-        //m_buildmeshe_event = mediator->CreateEvent( reqevtname );
 
         m_buildmeshereq_msg = mediator->CreateMessageQueue( reqname );
         
-        /*
-        m_buildmeshe_event->args->AddProp<Meshe*>( "patchmeshe" );
-        m_buildmeshe_event->args->AddProp<dsreal>( "sidelength" );
-        m_buildmeshe_event->args->AddProp<dsreal>( "xpos" );
-        m_buildmeshe_event->args->AddProp<dsreal>( "ypos" );
-        m_buildmeshe_event->args->AddProp<int>( "orientation" );
-        */
-
-        //m_runner->RegisterEventHandler( m_buildmeshe_event, m_runner_evt_cb );
-
         m_runner->RegisterMsgHandler( m_buildmeshereq_msg, m_runner_msg_cb );
 
         m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
@@ -109,12 +95,13 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     sidelength = p_args->GetPropValue<dsreal>( "sidelength" );
     xpos = p_args->GetPropValue<dsreal>( "xpos" );
     ypos = p_args->GetPropValue<dsreal>( "ypos" );
+    SphericalLOD::Maps* maps = p_args->GetPropValue<SphericalLOD::Maps*>( "maps" );
 
 
     ////////////////////////////// do the work
 
     Meshe final_meshe;
-    build_meshe( patchmeshe, patch_orientation, sidelength, xpos, ypos, final_meshe );
+    build_meshe( maps, patchmeshe, patch_orientation, sidelength, xpos, ypos, final_meshe );
 
     m_nb_collisionmeshebuild_done++;
 
@@ -152,42 +139,6 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
 
     if( alt < 9000.0 )
     {
-        /*
-        if( !m_suspend_update )
-        {
-            SphericalLOD::Patch* curr_patch = p_body->GetFaceCurrentLeaf( p_currentface );
-
-            dsreal xpos, ypos;
-            curr_patch->GetPos( xpos, ypos );
-
-
-            if( m_collision_state )
-            {
-                m_collider->RemoveFromWorld();
-                m_collider->UnsetKinematic();
-            }
-
-            m_suspend_update = true;
-
-            m_meshe_ready_mutex.WaitInfinite();
-            m_meshe_ready = false;
-            m_meshe_ready_mutex.Release();
-
-            PropertyPool props;
-
-            props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
-            props.AddPropValue<dsreal>( "sidelength", curr_patch->GetSideLength() / m_planetray );
-            props.AddPropValue<dsreal>( "xpos", xpos / m_planetray );
-            props.AddPropValue<dsreal>( "ypos", ypos / m_planetray );
-            props.AddPropValue<int>( "orientation", curr_patch->GetOrientation() );
-
-            m_buildmeshereq_msg->PushMessage( props );
-
-            m_nb_collisionmeshebuild_req++;
-
-            ////////////////////////////////////////////////
-        }
-        */
 
         m_suspend_update = true;
 
@@ -197,6 +148,7 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
 
 
         SphericalLOD::Patch* curr_patch = p_body->GetFaceCurrentLeaf( p_currentface );
+        SphericalLOD::Maps* maps_factory = p_body->GetFaceMapsFactory( p_currentface );
 
         dsreal xpos, ypos;
         curr_patch->GetPos( xpos, ypos );
@@ -208,6 +160,7 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
         props.AddPropValue<dsreal>( "xpos", xpos / m_planetray );
         props.AddPropValue<dsreal>( "ypos", ypos / m_planetray );
         props.AddPropValue<int>( "orientation", curr_patch->GetOrientation() );
+        props.AddPropValue<SphericalLOD::Maps*>( "maps", maps_factory );
 
         m_buildmeshereq_msg->PushMessage( props );
 
@@ -228,13 +181,18 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
 
 }
 
-void Fragment::build_meshe( Meshe& p_patchmeshe, int p_patch_orientation, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, Meshe& p_outmeshe )
+void Fragment::build_meshe( SphericalLOD::Maps* p_maps, Meshe& p_patchmeshe, int p_patch_orientation, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, Meshe& p_outmeshe )
 {
     for( long i = 0; i < p_patchmeshe.GetVertexListSize(); i++ )
     {                
 
         Vertex v, v2, v3;
         p_patchmeshe.GetVertex( i, v );
+
+
+        dsreal alt = p_maps->GetAltFromLocalPoint( Vector( v.x, v.y, 0.0, 1.0 ) );
+
+        ////////////////////////////////////
 
         v.x = v.x * p_sidelength / 2.0;
         v.y = v.y * p_sidelength / 2.0;
@@ -296,6 +254,10 @@ void Fragment::build_meshe( Meshe& p_patchmeshe, int p_patch_orientation, dsreal
         v2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
         v2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
 
+        v2.x = v2.x * ( 1.0 + ( alt * 0.001 ) );
+        v2.y = v2.y * ( 1.0 + ( alt * 0.001 ) );
+        v2.z = v2.z * ( 1.0 + ( alt * 0.001 ) );
+
         v3.x = v2.x * m_planetray;
         v3.y = v2.y * m_planetray;
         v3.z = v2.z * m_planetray;
@@ -313,30 +275,6 @@ void Fragment::build_meshe( Meshe& p_patchmeshe, int p_patch_orientation, dsreal
 
 void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
 {
-    /*
-    if( m_suspend_update )
-    {
-        bool read_status = m_meshe_ready_mutex.Wait( 0 );
-
-        if( read_status )
-        {
-            bool meshe_ready = m_meshe_ready;
-            m_meshe_ready_mutex.Release();
-
-            if( meshe_ready )
-            {
-                // bullet meshe build done
-                m_collider->AddToWorld( p_world );
-                m_collision_state = true;
-                m_suspend_update = false;
-
-                m_nb_collisionmeshebuild_added++;
-            }
-        }
-    }
-    */
-
-
     if( m_suspend_update )
     {
         bool read_status = m_meshe_ready_mutex.Wait( 0 );

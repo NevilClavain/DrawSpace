@@ -37,8 +37,10 @@ protected:
     dsstring        m_path;
     long            m_width;
     long            m_height;
-    void*           m_data;
-    long            m_datasize;
+    long            m_bpp;
+
+    void*           m_filedata;
+    long            m_filedatasize;
 
     bool            m_render_target;
     unsigned long   m_render_targer_width;
@@ -62,6 +64,8 @@ public:
     bool IsRenderTarget( void );
     void GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h );
 
+    void SetFormat( long p_width, long p_height, long p_bpp );
+    void GetFormat( long& p_width, long& p_height, long& p_bpp );
 
 };
 }

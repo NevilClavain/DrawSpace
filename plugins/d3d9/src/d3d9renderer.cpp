@@ -523,10 +523,33 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
     dsstring path;
     p_texture->GetPath( path );
     LPDIRECT3DTEXTURE9	d3dt9;
+    TextureInfos* texture_infos;
 
     if( m_textures_base.count( path ) > 0 )
     {
         *p_data = (void*)m_textures_base[path];
+
+        long width = m_textures_base[path]->descr.Width;
+        long height = m_textures_base[path]->descr.Height;
+        long bpp;
+
+        switch( m_textures_base[path]->descr.Format )
+        {
+            case D3DFMT_A8R8G8B8:
+            case D3DFMT_X8R8G8B8:
+                bpp = 4;
+                break;
+
+            case D3DFMT_R8G8B8:
+                bpp = 3;
+                break;
+
+            default:
+                bpp = -1;
+                break;
+        }
+
+        p_texture->SetFormat( width, height, bpp );
 
         return true;
     }
@@ -556,9 +579,11 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
         m_targettextures_base[p_texture] = targettexture_infos;
 
-        TextureInfos* texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+        texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
         texture_infos->texture = d3dt9;
         texture_infos->descr = desc;
+        texture_infos->render_texture = true;
+        texture_infos->bits = NULL;
         m_textures_base[path] = texture_infos;
 
         *p_data = (void*)texture_infos;
@@ -570,14 +595,38 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         hRes = D3DXCreateTextureFromFileInMemory( m_lpd3ddevice, data, (UINT)data_size, &d3dt9 );
         D3D9_CHECK( D3DXCreateTextureFromFileInMemory );
 
-        TextureInfos* texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+        texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
         texture_infos->texture = d3dt9;
+        texture_infos->render_texture = false;
+        texture_infos->bits = NULL;
         d3dt9->GetLevelDesc( 0, &texture_infos->descr );
 
         m_textures_base[path] = texture_infos;
 
         *p_data = (void*)texture_infos;
-    }    
+    }
+
+    long width = texture_infos->descr.Width;
+    long height = texture_infos->descr.Height;
+    long bpp;
+
+    switch( texture_infos->descr.Format )
+    {
+        case D3DFMT_A8R8G8B8:
+        case D3DFMT_X8R8G8B8:
+            bpp = 4;
+            break;
+
+        case D3DFMT_R8G8B8:
+            bpp = 3;
+            break;
+
+        default:
+            bpp = -1;
+            break;
+    }
+
+    p_texture->SetFormat( width, height, bpp );
 
     return true;
 }
@@ -624,6 +673,79 @@ bool D3D9Renderer::UnsetVertexTexture( int p_stage )
     D3D9_CHECK( SetTexture );
 
     return true;
+}
+
+bool D3D9Renderer::AllocTextureContent( void* p_texturedata )
+{
+    DECLARE_D3D9ASSERT_VARS
+
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
+
+    if( ti->render_texture )
+    {
+        // LockRect ne fonctionne pas pour des textures creees avec D3DUSAGE_RENDERTARGET
+
+        //LockRect cannot retrieve data from a texture resource created with D3DUSAGE_RENDERTARGET 
+        //because such a texture must be assigned to D3DPOOL_DEFAULT memory and is therefore not lockable. 
+        //In this case, use instead IDirect3DDevice9::GetRenderTargetData to copy texture data from device memory to system memory.
+
+        return false;
+    }
+
+    // si pas deja alloue
+    if( NULL == ti->bits )
+    {
+        D3DLOCKED_RECT dr;
+
+        hRes = ti->texture->LockRect( 0, &dr, NULL, D3DLOCK_NOSYSLOCK | D3DLOCK_READONLY );
+        D3D9_CHECK( LockRect );
+
+        int bpp;
+        switch( ti->descr.Format )
+        {
+            case D3DFMT_A8R8G8B8:
+            case D3DFMT_X8R8G8B8:
+                bpp = 4;
+                break;
+
+            case D3DFMT_R8G8B8:
+                bpp = 3;
+                break;
+
+            default:
+                bpp = -1;
+                break;
+        }
+
+        if( bpp != -1 )
+        {
+            long blocsize = bpp * ti->descr.Width * ti->descr.Height;
+
+            ti->bits = _DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char, blocsize );
+            memcpy( ti->bits, dr.pBits, blocsize );
+        }
+        
+        hRes = ti->texture->UnlockRect( 0 );       
+    }    
+    return true;
+}
+
+void D3D9Renderer::RemoveTextureContent( void* p_texturedata )
+{
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
+
+    if( ti->bits )
+    {
+        _DRAWSPACE_DELETE_N_( ti->bits );
+        ti->bits = NULL;
+    }
+}
+
+void* D3D9Renderer::GetTextureContent( void* p_texturedata )
+{
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
+
+    return ti->bits;
 }
 
 bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )

@@ -226,3 +226,8 @@ void Body::ResetMeshes( void )
         m_faces[i]->ResetMeshe();
     }
 }
+
+Maps* Body::GetFaceMapsFactory( int p_faceid )
+{
+    return m_faces[p_faceid]->GetMapsFactory();
+}

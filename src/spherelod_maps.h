@@ -56,6 +56,8 @@ protected:
     void*                       m_elevation_texture_data;
     void*                       m_color_texture_data;
 
+    unsigned char*              m_elevation_texture_bits;
+
 
 public:
     Maps( void );

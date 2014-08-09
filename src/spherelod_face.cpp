@@ -71,6 +71,10 @@ Patch* Face::GetPatch( const dsstring& p_name )
     return NULL;
 }
 
+Maps* Face::GetMapsFactory( void )
+{
+    return &m_maps_factory;
+}
 
 void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {

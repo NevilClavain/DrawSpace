@@ -284,3 +284,8 @@ void Drawing::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_facei
         *fx = *m_fx;
     }
 }
+
+DrawSpace::SphericalLOD::Body* Drawing::GetBody( void )
+{
+    return m_planetbody;
+}

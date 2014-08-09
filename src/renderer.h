@@ -52,8 +52,7 @@ public:
     virtual void Release( void ) = 0;
 
     virtual void SetViewport( bool p_windowed, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz ) = 0;
-    //virtual void SetProjection( float p_vw, float p_vh, float p_zn, float p_zf ) = 0;
-
+    
     virtual void BeginScreen( void ) = 0;
     virtual void EndScreen( void ) = 0;
     virtual void FlipScreen( void ) = 0;
@@ -74,6 +73,10 @@ public:
     virtual bool SetVertexTexture( void* p_data, int p_stage ) = 0;
 	virtual bool UnsetTexture( int p_stage ) = 0;
     virtual bool UnsetVertexTexture( int p_stage ) = 0;
+    virtual bool AllocTextureContent( void* p_texturedata ) = 0;
+    virtual void RemoveTextureContent( void* p_texturedata ) = 0;
+    virtual void* GetTextureContent( void* p_texturedata ) = 0;
+
 
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool SetFx( void* p_data ) = 0;
@@ -89,6 +92,7 @@ public:
     virtual void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... ) = 0;
 
     virtual void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz ) = 0;
+
     
 };
 }

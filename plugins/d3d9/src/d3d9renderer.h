@@ -80,6 +80,8 @@ protected:
     {
         LPDIRECT3DTEXTURE9  texture;
         D3DSURFACE_DESC     descr;
+        bool                render_texture;
+        void*               bits;
 
     } TextureInfos;
 
@@ -92,10 +94,8 @@ protected:
 
     typedef struct
     {
-
         LPDIRECT3DVERTEXBUFFER9 vertex_buffer;
 		LPDIRECT3DINDEXBUFFER9	index_buffer;
-
 
     } MesheData;
 
@@ -165,8 +165,7 @@ public:
     virtual void Release( void );
 
     virtual void SetViewport( bool p_windowed, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz );
-    //virtual void SetProjection( float p_vw, float p_vh, float p_zn, float p_zf );
-
+    
     virtual void BeginScreen( void );
     virtual void EndScreen( void );
     virtual void FlipScreen( void );
@@ -186,6 +185,10 @@ public:
     virtual bool SetVertexTexture( void* p_data, int p_stage );
 	virtual bool UnsetTexture( int p_stage );
     virtual bool UnsetVertexTexture( int p_stage );
+    virtual bool AllocTextureContent( void* p_texturedata );
+    virtual void RemoveTextureContent( void* p_texturedata );
+    virtual void* GetTextureContent( void* p_texturedata );
+
 
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data );
     virtual bool SetFx( void* p_data );

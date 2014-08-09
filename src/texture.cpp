@@ -23,14 +23,15 @@
 #include "texture.h"
 #include "file.h"
 #include "memalloc.h"
+#include "exceptions.h"
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_targer_width, unsigned long p_render_targer_height ) : 
 m_path( p_path ), 
-m_data( NULL ), 
-m_datasize( -1 ), 
+m_filedata( NULL ), 
+m_filedatasize( -1 ), 
 m_render_target( p_render_target ),
 m_render_targer_width( p_render_targer_width ),
 m_render_targer_height( p_render_targer_height )
@@ -44,33 +45,33 @@ Texture::~Texture( void )
 bool Texture::LoadFromFile( void )
 {
     long size;
-    void* data = File::LoadAndAllocBinaryFile( m_path, &size );
+    void* data = Utils::File::LoadAndAllocBinaryFile( m_path, &size );
     if( !data )
     {
         return false;
     }
-    m_data = data;
-    m_datasize = size;
+    m_filedata = data;
+    m_filedatasize = size;
     return true;
 }
 
 void Texture::ReleaseData( void )
 {
-    if( m_data )
+    if( m_filedata )
     {
-        _DRAWSPACE_DELETE_N_( m_data );
-        m_data = NULL;
+        _DRAWSPACE_DELETE_N_( m_filedata );
+        m_filedata = NULL;
     }
 }
 
 void* Texture::GetData( void )
 {
-    return m_data;
+    return m_filedata;
 }
 
 long Texture::GetDataSize( void )
 {
-    return m_datasize;
+    return m_filedatasize;
 }
 
 void Texture::GetPath( dsstring& p_path )
@@ -99,3 +100,22 @@ void Texture::Unserialize( Factory& p_factory, Archive& p_archive )
 
 }
 
+void Texture::SetFormat( long p_width, long p_height, long p_bpp )
+{
+    m_width = p_width;
+    m_height = p_height;
+
+    if( -1 == p_bpp )
+    {
+        _DSEXCEPTION( "Unsupported pixel format for texture" );
+    }
+
+    m_bpp = p_bpp;
+}
+
+void Texture::GetFormat( long& p_width, long& p_height, long& p_bpp )
+{
+    p_width = m_width;
+    p_height = m_height;
+    p_bpp = m_bpp;
+}

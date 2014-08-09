@@ -76,6 +76,8 @@ public:
 
     virtual void ResetMeshes( void );
 
+    virtual Maps* GetFaceMapsFactory( int p_faceid );
+
     friend class Drawing;
 };
 }

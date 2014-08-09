@@ -121,6 +121,8 @@ public:
     virtual void ResetMeshe( void );
 
     virtual void GetLeafs( std::map<dsstring, Patch*>& p_list );
+
+    virtual Maps* GetMapsFactory( void );
 };
 }
 }

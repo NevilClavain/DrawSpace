@@ -93,6 +93,8 @@ public:
     DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_faceid );
     void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
 
+    Body* GetBody( void );
+
 };
 }
 }
