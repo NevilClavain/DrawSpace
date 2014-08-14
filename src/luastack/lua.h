@@ -12,6 +12,8 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+// Drawspace specific modification :-p
+#include ".\..\flags.h"
 
 #include "luaconf.h"
 
