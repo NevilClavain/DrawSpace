@@ -149,6 +149,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\assetsbase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\assetsbase.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\callback.h"
 				>
 			</File>
