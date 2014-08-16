@@ -20,16 +20,33 @@
 *                                                                          
 */
 
-#ifndef _SCENE_H_
-#define _SCENE_H_
+#ifndef _DEFAULTSCENE_H_
+#define _DEFAULTSCENE_H_
 
-class IScene
+#include "drawspace.h"
+
+class Scene
 {
-public:
+protected:
+    bool                                m_showfps;
+    dsstring                            m_name;
 
-    virtual void Draw( void ) = 0;
-    virtual bool IsBrowsable( void ) = 0;
-    virtual bool IsLuaScriptRecipient( void ) = 0;
+    DrawSpace::Utils::TimeManager       m_timer;
+
+public:
+    Scene( lua_State* p_L );
+    virtual ~Scene( void );
+
+    int Lua_ShowFps( lua_State* p_L );
+
+    
+    virtual void Draw( void );
+
+    void GetName( dsstring& p_name );
+    void SetName( const dsstring& p_name );
+
+    static const char className[];
+    static const DrawSpace::Luna<Scene>::RegType Register[];
 
 };
 

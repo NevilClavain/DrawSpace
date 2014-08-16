@@ -96,6 +96,10 @@ void LuaContext::RegisterErrorHandler( BaseCallback<void, const dsstring&>* p_ha
     m_errorhandler = p_handler;
 }
 
+lua_State* LuaContext::GetLuaState( void )
+{
+    return m_L;
+}
 
 ///////////////////////////////////////////////
 

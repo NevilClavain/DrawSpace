@@ -31,9 +31,9 @@ do not know who exactly is the author of this; for more details, visit http://lu
 
 
 extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+#include ".\luastack\lua.h"
+#include ".\luastack\lualib.h"
+#include ".\luastack\lauxlib.h"
 };
 
 namespace DrawSpace
@@ -116,7 +116,7 @@ static int __functionname__( lua_State *p_L )\
 	{\
 		lua_pushstring(p_L, __class__::Register[i].name);\
 		lua_pushnumber(p_L, i);\
-		lua_pushcclosure(p_L, &Luna<__class__>::thunk, 1);\
+        lua_pushcclosure(p_L, &DrawSpace::Luna<__class__>::thunk, 1);\
 		lua_settable(p_L, -3);\
 	}\
 	return 1;\

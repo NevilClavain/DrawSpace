@@ -23,4 +23,8 @@
 #ifndef _RESOURCES_H_
 #define _RESOURCES_H_
 
+#define wxID_CONSOLETEXTCTRL					wxID_HIGHEST + 2
+#define wxID_SENDCMDBUTTON					    wxID_HIGHEST + 3
+#define wxID_CLEARCMDBUTTON					    wxID_HIGHEST + 4
+
 #endif

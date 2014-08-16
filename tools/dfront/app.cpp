@@ -22,6 +22,9 @@
 
 
 #include "app.h"
+#include "lua_renderframe.h"
+#include "scene.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -44,7 +47,13 @@ DFrontApp::~DFrontApp( void )
 
 bool DFrontApp::OnInit( void )
 {
-    m_w_title = "DrawSpace - Front";
+    m_w_title = "DrawFront";
+
+    m_luacontext.Startup();
+    Luna<LuaRenderFrame>::Register( m_luacontext.GetLuaState() );
+    Luna<Scene>::Register( m_luacontext.GetLuaState() );
+
+
 
     bool parser_status = m_config.Run( "appconfig.txt", "    " );
 
@@ -56,11 +65,14 @@ bool DFrontApp::OnInit( void )
 
     if( m_w_fullscreen )
     {
-        wxMessageBox( wxT("Fullscreen mode not allowed. Exiting now"), wxT("DrawSpace Front error"), wxICON_ERROR );
+        wxMessageBox( wxT("Fullscreen mode not allowed. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );
         return false;
     }
 
-	m_frame = new RenderFrame( m_w_title, wxSize( m_w_width, m_w_height ) );
+    RenderFrame::m_caption = m_w_title;
+    RenderFrame::m_size = wxSize( m_w_width, m_w_height );
+    m_frame = RenderFrame::GetInstance();
+    m_frame->SetLuaContext( &m_luacontext );
     m_hwnd = (HWND)m_frame->GetHWND();
 
 	m_frame->Show();
@@ -69,19 +81,19 @@ bool DFrontApp::OnInit( void )
 
     if( false == load_renderer_plugin( m_renderplugin ) )
     {
-        wxMessageBox( wxT("Unable to load specified plugin. Exiting now"), wxT("DrawSpace Front error"), wxICON_ERROR );
+        wxMessageBox( wxT("Unable to load specified plugin. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );
         return false;
     }
 
     if( false == init_renderer() )
     {
-        wxMessageBox( wxT("Renderer init FAILURE. Exiting now"), wxT("DrawSpace Front error"), wxICON_ERROR );
+        wxMessageBox( wxT("Renderer init FAILURE. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );
         return false;
     }
 
     if( false == parser_status )
     {
-        wxMessageBox( wxT("Unable to load appconfig.txt\nBack to default values"), wxT("DrawSpace Front warning"), wxICON_WARNING );
+        wxMessageBox( wxT("Unable to load appconfig.txt\nBack to default values"), wxT("DrawFront warning"), wxICON_WARNING );
     }
 
 	return true;
@@ -90,6 +102,8 @@ bool DFrontApp::OnInit( void )
 int DFrontApp::OnExit( void )
 {
     SingletonPlugin<Renderer>::GetInstance()->m_interface->Release();
+
+    m_luacontext.Stop();
     return 0;
 }
 
@@ -127,6 +141,19 @@ bool DFrontApp::init_renderer( void )
     m_frame->SetGlReady( true );
     return true;
 }
+
+/*
+int DFrontApp::FilterEvent( wxEvent& p_event )
+{
+    const wxEventType t = p_event.GetEventType();
+    if( t == wxEVT_KEY_DOWN )
+    {
+        return 1;
+    }
+
+    return -1;
+}
+*/
 
 
 DFrontApp::Config::Config( long p_width, long p_height, bool p_fullscreen ) :

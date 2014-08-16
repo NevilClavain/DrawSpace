@@ -47,6 +47,7 @@ protected:
         Config( long p_width, long p_height, bool p_fullscreen );
     };
 
+    DrawSpace::LuaContext               m_luacontext;
 
     RenderFrame*                        m_frame;
 
@@ -75,6 +76,8 @@ public:
 
 	virtual bool OnInit( void );
     virtual int OnExit( void );
+
+    //virtual int FilterEvent( wxEvent& p_event );
 };
 
 DECLARE_APP( DFrontApp )

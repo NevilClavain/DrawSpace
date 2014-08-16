@@ -63,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw28d_core.lib wxbase28d.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib wsock32.lib wxpngd.lib wxzlibd.lib wxjpegd.lib wxtiffd.lib drawspace.lib log4cxx.lib BulletDynamics_vs2005_debug.lib BulletCollision_vs2005_debug.lib LinearMath_vs2005_debug.lib"
-				OutputFile="./../../../DrawSpace_Samples/bin/dfrontd.exe"
+				OutputFile="./../../../DrawSpace_Samples/bin/dfront.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;./../../../DrawSpace_thirdparts/wxWidgets-2.8.12/lib/vc_lib&quot;;./../../libs;./../../../DrawSpace_thirdparts/log4cxx/lib/msvc/release;&quot;./../../../DrawSpace_thirdparts/bullet-2.82/lib&quot;"
 				GenerateDebugInformation="true"
@@ -196,19 +196,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\defaultscene.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\defaultscene.h"
-				>
-			</File>
-			<File
 				RelativePath=".\dialog.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\dialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_renderframe.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_renderframe.h"
 				>
 			</File>
 			<File
@@ -221,6 +221,10 @@
 			</File>
 			<File
 				RelativePath=".\resources.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scene.cpp"
 				>
 			</File>
 			<File

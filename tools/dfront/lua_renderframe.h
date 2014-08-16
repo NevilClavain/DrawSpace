@@ -20,40 +20,28 @@
 *                                                                          
 */
 
-#include "defaultscene.h"
+#ifndef _LUA_RENDERFRAME_H_
+#define _LUA_RENDERFRAME_H_
 
-DefaultScene::DefaultScene( void )
+#include "luna.h"
+#include "renderframe.h"
+
+class LuaRenderFrame
 {
-}
+protected:
 
-DefaultScene::~DefaultScene( void )
-{
-}
+    RenderFrame* m_instance;
 
-void DefaultScene::Draw( void )
-{
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    renderer->ClearScreen( 0, 0, 0 );
+public:
+    LuaRenderFrame( lua_State* p_L );
+    ~LuaRenderFrame( void );
+  
+    int Lua_GetScene( lua_State* p_L );
+    int Lua_InstanciateScene( lua_State* p_L );
+    int Lua_SetCurrentScene( lua_State* p_L );
 
-    renderer->BeginScreen();
+    static const char className[];
+    static const DrawSpace::Luna<LuaRenderFrame>::RegType Register[];
+};
 
-    renderer->DrawText( 0, 255, 0, 10, 10, "Default scene" );
-
-    renderer->DrawText( 255, 0, 0, 10, 40, "%d fps", m_timer.GetFPS() );
-
-    renderer->EndScreen();
-    renderer->FlipScreen();
-
-    m_timer.Update();
-}
-
-bool DefaultScene::IsBrowsable( void )
-{
-    return false;
-}
-
-bool DefaultScene::IsLuaScriptRecipient( void )
-{
-    return false;
-}
-
+#endif

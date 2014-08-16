@@ -25,14 +25,18 @@
 
 #include <wx/wx.h>
 
+class RenderFrame;
+
 class Dialog : public wxDialog
 {
 protected:
 	DECLARE_EVENT_TABLE()
 
+    RenderFrame* m_owner;
+
 public:
 
-    Dialog( wxWindow* p_parent, const wxString& p_title );
+    Dialog( wxWindow* p_parent, const wxString& p_title, RenderFrame* p_owner );
     ~Dialog( void );
 
 	void OnIdle( wxIdleEvent& p_event );

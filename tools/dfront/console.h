@@ -24,18 +24,32 @@
 #define _CONSOLE_H_
 
 #include <wx/wx.h>
+#include "lua_context.h"
+#include "callback.h"
 
 class ConsoleDialog : public wxFrame
 {
 protected:
 	DECLARE_EVENT_TABLE()
 
+    typedef DrawSpace::Core::CallBack<ConsoleDialog, void, const dsstring&> LuaErrorHandler;
+
     wxBoxSizer*             m_topsizer;
+    wxBoxSizer*             m_buttonssizer;
 
     wxTextCtrl*             m_textCtrl;
+    wxTextCtrl*             m_textoutputsCtrl;
+    wxButton*               m_sendcmdButton;
+    wxButton*               m_clearcmdButton;
 
     wxFont                  m_consoleFont;
     wxTextAttr              m_default_style;
+
+    DrawSpace::LuaContext*  m_luacontext;
+
+    LuaErrorHandler*        m_luaerrorhandler;
+
+    void on_luaerror( const dsstring& p_errstr );
 
 public:
 
@@ -44,6 +58,12 @@ public:
 
 	void OnIdle( wxIdleEvent& p_event );
 	void OnClose( wxCloseEvent& p_event );
+    void OnButtonSendCmd( wxCommandEvent& p_event );
+    void OnButtonClearCmd( wxCommandEvent& p_event );
+
+    void SetLuaContext( DrawSpace::LuaContext* p_luacontext );
+
+    void SetOutputText( const dsstring& p_text );
 
 };
 

@@ -21,6 +21,7 @@
 */
 
 #include "dialog.h"
+#include "renderframe.h"
 
 BEGIN_EVENT_TABLE( Dialog, wxDialog )
     EVT_IDLE( Dialog::OnIdle )
@@ -28,8 +29,9 @@ BEGIN_EVENT_TABLE( Dialog, wxDialog )
 END_EVENT_TABLE()
 
 
-Dialog::Dialog( wxWindow* p_parent, const wxString& p_title ) :
-wxDialog( p_parent, wxID_ANY, p_title, wxPoint( 860, 50 ), wxSize( 200, 400 ), wxCAPTION )
+Dialog::Dialog( wxWindow* p_parent, const wxString& p_title, RenderFrame* p_owner ) :
+wxDialog( p_parent, wxID_ANY, p_title, wxPoint( 860, 50 ), wxSize( 200, 400 ), wxCAPTION ),
+m_owner( p_owner )
 {
 
 }

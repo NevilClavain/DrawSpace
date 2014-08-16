@@ -28,30 +28,56 @@
 
 #include "dialog.h"
 #include "console.h"
-
 #include "scene.h"
+#include "lua_context.h"
 
 class RenderFrame : public wxFrame
 {
+public:
+    static wxString                     m_caption;
+    static wxSize                       m_size;
+
 protected:
 	DECLARE_EVENT_TABLE()
+
+    static RenderFrame*                 m_instance;
 
     Dialog*                             m_dialog;
     ConsoleDialog*                      m_console_dialog;
     bool                                m_gl_ready;
 
-    std::vector<IScene*>                m_scenes;
+    std::map<dsstring, Scene*>          m_scenes_list;
 
+    Scene*                              m_current_rendered_scene;
+
+    DrawSpace::LuaContext*              m_luacontext;
+    
     void                                on_render_frame( void );
+    
+    RenderFrame( void );
 
 public:
-
-	RenderFrame( const wxString& p_caption, const wxSize& p_size );
 	virtual ~RenderFrame( void );
+
+    static RenderFrame* GetInstance( void )
+    {
+        if( !m_instance )
+        {
+            m_instance = new RenderFrame(); 
+        }
+        return m_instance;
+    }
 
     void SetGlReady( bool p_ready );
 	void OnIdle( wxIdleEvent& p_event );
 	void OnClose( wxCloseEvent& p_event );
+    void SetLuaContext( DrawSpace::LuaContext* p_luacontext );
+
+    void InstanciateScene( const dsstring& p_name );
+
+    Scene* GetScene( const dsstring& p_name );
+
+    bool SetCurrentScene( const dsstring& p_name );
 };
 
 

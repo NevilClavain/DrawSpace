@@ -91,5 +91,6 @@
 #include "runner.h"
 #include "planetoid_body.h"
 #include "lua_context.h"
+#include "luna.h"
 #include "assetsbase.h"
 #endif

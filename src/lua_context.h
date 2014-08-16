@@ -64,6 +64,8 @@ public:
 
     void GetLastError( dsstring& p_str );
     void RegisterErrorHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
+
+    lua_State* GetLuaState( void );
 };
 }
 
