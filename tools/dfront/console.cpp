@@ -163,22 +163,7 @@ void ConsoleDialog::OnButtonLoadCmd( wxCommandEvent& p_event )
     {
         return;
     }
-
-    DrawSpace::Utils::File file( openFileDialog.GetPath().c_str(), DrawSpace::Utils::File::OPENEXISTING );
-    DrawSpace::Utils::Archive arc;
-
-    file.LoadArchive( arc );
-
-    m_textCtrl->Clear();
-
-    char* arc_content = new char[arc.GetTotalLength() + 1];
-    memcpy( arc_content, arc.GetCurrentPtr(), arc.GetTotalLength() );
-
-    arc_content[arc.GetTotalLength()] = 0;
-    
-    wxString content( arc_content );
-    m_textCtrl->SetValue( content );
-    
+    load_commandfile( (char *)openFileDialog.GetPath().c_str() );    
 }
 
 void ConsoleDialog::OnButtonClearOutput( wxCommandEvent& p_event )
@@ -200,3 +185,28 @@ void ConsoleDialog::Print( const dsstring& p_text )
     m_textoutputsCtrl->AppendText( wxString( p_text.c_str() ) );
     m_textoutputsCtrl->AppendText( wxString( "\n" ) );    
 }
+
+void ConsoleDialog::load_commandfile( char* p_path )
+{
+    DrawSpace::Utils::File file( p_path, DrawSpace::Utils::File::OPENEXISTING );
+    DrawSpace::Utils::Archive arc;
+
+    file.LoadArchive( arc );
+
+    m_textCtrl->Clear();
+
+    char* arc_content = new char[arc.GetTotalLength() + 1];
+    memcpy( arc_content, arc.GetCurrentPtr(), arc.GetTotalLength() );
+
+    arc_content[arc.GetTotalLength()] = 0;
+    
+    wxString content( arc_content );
+    m_textCtrl->SetValue( content );
+}
+
+void ConsoleDialog::LoadAndExecuteCmd( char* p_path )
+{
+    load_commandfile( p_path );
+    m_luacontext->Exec( m_textCtrl->GetValue().c_str() );
+}
+

@@ -75,6 +75,7 @@ public:
     bool SetCurrentScene( Scene* p_scene );
 
     void PrintConsole( const dsstring& p_text );
+    void ExecScriptFile( char* p_path );
 };
 
 

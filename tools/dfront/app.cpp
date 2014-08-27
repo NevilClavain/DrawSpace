@@ -96,6 +96,8 @@ bool DFrontApp::OnInit( void )
         wxMessageBox( wxT("Unable to load appconfig.txt\nBack to default values"), wxT("DrawFront warning"), wxICON_WARNING );
     }
 
+    m_frame->ExecScriptFile( "test.lua" );
+
 	return true;
 }
 

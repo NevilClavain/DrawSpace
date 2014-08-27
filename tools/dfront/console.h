@@ -55,7 +55,8 @@ protected:
     dsstring                m_output_text;
 
     void on_luaerror( const dsstring& p_errstr );
-
+    void load_commandfile( char* p_path );
+   
 public:
 
     ConsoleDialog( wxWindow* p_parent, const wxString& p_title );
@@ -71,6 +72,8 @@ public:
     void SetLuaContext( DrawSpace::LuaContext* p_luacontext );
 
     void Print( const dsstring& p_text );
+
+    void LoadAndExecuteCmd( char* p_path );
 
 };
 
