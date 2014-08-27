@@ -36,11 +36,14 @@ protected:
 
     wxBoxSizer*             m_topsizer;
     wxBoxSizer*             m_buttonssizer;
+    wxBoxSizer*             m_buttonssizer2;
 
     wxTextCtrl*             m_textCtrl;
     wxTextCtrl*             m_textoutputsCtrl;
     wxButton*               m_sendcmdButton;
     wxButton*               m_clearcmdButton;
+    wxButton*               m_loadcmdButton;
+    wxButton*               m_clearoutputButton;
 
     wxFont                  m_consoleFont;
     wxTextAttr              m_default_style;
@@ -62,6 +65,8 @@ public:
 	void OnClose( wxCloseEvent& p_event );
     void OnButtonSendCmd( wxCommandEvent& p_event );
     void OnButtonClearCmd( wxCommandEvent& p_event );
+    void OnButtonLoadCmd( wxCommandEvent& p_event );
+    void OnButtonClearOutput( wxCommandEvent& p_event );
 
     void SetLuaContext( DrawSpace::LuaContext* p_luacontext );
 

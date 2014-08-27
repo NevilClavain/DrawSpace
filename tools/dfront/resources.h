@@ -26,5 +26,7 @@
 #define wxID_CONSOLETEXTCTRL					wxID_HIGHEST + 2
 #define wxID_SENDCMDBUTTON					    wxID_HIGHEST + 3
 #define wxID_CLEARCMDBUTTON					    wxID_HIGHEST + 4
+#define wxID_LOADCMDBUTTON					    wxID_HIGHEST + 5
+#define wxID_CLEAROUTPUTBUTTON					wxID_HIGHEST + 6
 
 #endif
