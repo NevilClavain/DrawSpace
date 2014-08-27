@@ -27,6 +27,7 @@
 
 #include "renderframe.h"
 #include "drawspace.h"
+#include "frontluacontext.h"
 
 
 class DFrontApp : public wxApp
@@ -47,7 +48,7 @@ protected:
         Config( long p_width, long p_height, bool p_fullscreen );
     };
 
-    DrawSpace::LuaContext               m_luacontext;
+    FrontLuaContext                     m_luacontext;
 
     RenderFrame*                        m_frame;
 

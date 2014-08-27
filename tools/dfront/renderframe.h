@@ -46,7 +46,6 @@ protected:
     ConsoleDialog*                      m_console_dialog;
     bool                                m_gl_ready;
 
-    std::map<dsstring, Scene*>          m_scenes_list;
 
     Scene*                              m_current_rendered_scene;
 
@@ -73,11 +72,9 @@ public:
 	void OnClose( wxCloseEvent& p_event );
     void SetLuaContext( DrawSpace::LuaContext* p_luacontext );
 
-    void InstanciateScene( const dsstring& p_name );
+    bool SetCurrentScene( Scene* p_scene );
 
-    Scene* GetScene( const dsstring& p_name );
-
-    bool SetCurrentScene( const dsstring& p_name );
+    void PrintConsole( const dsstring& p_text );
 };
 
 

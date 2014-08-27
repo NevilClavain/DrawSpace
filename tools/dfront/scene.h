@@ -38,6 +38,8 @@ public:
     virtual ~Scene( void );
 
     int Lua_ShowFps( lua_State* p_L );
+    int Lua_SetName( lua_State* p_L );
+    int Lua_GetObject( lua_State* p_L );
 
     
     virtual void Draw( void );

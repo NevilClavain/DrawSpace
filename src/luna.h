@@ -101,28 +101,4 @@ public:
 };
 }
 
-
-#define LUNA_INSTANCE_ACCESSOR( __functionname__, __class__, __instance_ptr__ )\
-static int __functionname__( lua_State *p_L )\
-{\
-	lua_newtable(p_L);\
-	lua_pushnumber(p_L, 0);\
-	__class__** a = (__class__**)lua_newuserdata(p_L, sizeof(__class__*));\
-	*a = __instance_ptr__;\
-	luaL_getmetatable(p_L, __class__::className);\
-	lua_setmetatable(p_L, -2);\
-	lua_settable(p_L, -3);\
-	for ( int i = 0; __class__::Register[i].name; i++ )\
-	{\
-		lua_pushstring(p_L, __class__::Register[i].name);\
-		lua_pushnumber(p_L, i);\
-        lua_pushcclosure(p_L, &DrawSpace::Luna<__class__>::thunk, 1);\
-		lua_settable(p_L, -3);\
-	}\
-	return 1;\
-}
-
-#define LUNA_REGISTER_INSTANCE_ACCESSOR( __luafunctionname__, __functionname__ ) lua_register( L, __luafunctionname__, __functionname__ );
-
-
 #endif

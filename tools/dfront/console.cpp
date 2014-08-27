@@ -99,7 +99,12 @@ ConsoleDialog::~ConsoleDialog( void )
 
 void ConsoleDialog::on_luaerror( const dsstring& p_errstr )
 {
+    /*
+    m_textoutputsCtrl->Clear();
     m_textoutputsCtrl->SetValue( wxString( p_errstr.c_str() ) );
+    */
+
+    Print( p_errstr );
 }
 
 void ConsoleDialog::OnIdle( wxIdleEvent& p_event )
@@ -112,7 +117,7 @@ void ConsoleDialog::OnClose( wxCloseEvent& p_event )
 
 void ConsoleDialog::OnButtonSendCmd( wxCommandEvent& p_event )
 {
-    m_textoutputsCtrl->Clear();
+    Print( "Command submitted" );
     m_luacontext->Exec( m_textCtrl->GetValue().c_str() );
 }
 
@@ -131,7 +136,17 @@ void ConsoleDialog::SetLuaContext( DrawSpace::LuaContext* p_luacontext )
     m_luacontext->RegisterErrorHandler( m_luaerrorhandler );
 }
 
-void ConsoleDialog::SetOutputText( const dsstring& p_text )
+void ConsoleDialog::Print( const dsstring& p_text )
 {
-    m_textoutputsCtrl->SetValue( wxString( p_text.c_str() ) );
+    //m_textoutputsCtrl->SetValue( wxString( p_text.c_str() ) );
+
+    m_output_text = m_output_text + p_text;
+    m_output_text = m_output_text + dsstring( "\n" );
+
+    //m_textoutputsCtrl->SetValue( wxString( m_output_text.c_str() ) );
+
+    m_textoutputsCtrl->AppendText( wxString( p_text.c_str() ) );
+    m_textoutputsCtrl->AppendText( wxString( "\n" ) );
+
+    
 }

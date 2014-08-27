@@ -27,6 +27,8 @@ const char Scene::className[] = "Scene";
 const DrawSpace::Luna<Scene>::RegType Scene::Register[] =
 {
   { "ShowFps", &Scene::Lua_ShowFps },
+  { "SetName", &Scene::Lua_SetName },
+  { "GetObject", &Scene::Lua_GetObject },
   { 0 }
 };
 
@@ -73,6 +75,29 @@ int Scene::Lua_ShowFps( lua_State* p_L )
 
     return 0;
 }
+
+int Scene::Lua_SetName( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetName : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    const char* scene_name = luaL_checkstring( p_L, 2 );
+
+    SetName( dsstring( scene_name ) );
+
+    return 0;
+}
+
+int Scene::Lua_GetObject( lua_State* p_L )
+{
+    lua_pushunsigned( p_L, (lua_Unsigned)this );
+    return 1;
+}
+
 
 void Scene::GetName( dsstring& p_name )
 {

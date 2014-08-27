@@ -1,3 +1,4 @@
+
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -20,55 +21,28 @@
 *                                                                          
 */
 
-#include "lua_renderframe.h"
+#ifndef _FRONTLUACONTEXT_H_
+#define _FRONTLUACONTEXT_H_
 
+#include "lua_context.h"
 
-const char LuaRenderFrame::className[] = "RenderFrame";
-const DrawSpace::Luna<LuaRenderFrame>::RegType LuaRenderFrame::Register[] =
+#define REGISTER_FUNC( __alias__, __func__ ) lua_register( m_L, __alias__, __func__ ); m_func_list.push_back( __alias__ );
+
+class FrontLuaContext : public DrawSpace::LuaContext
 {
-  { "SetCurrentScene", &LuaRenderFrame::Lua_SetCurrentScene },
-  { 0 }
+protected:
+    std::vector<std::string> m_func_list;
+
+    static int lua_print( lua_State* p_L );
+
+public:
+    FrontLuaContext( void );
+    virtual ~FrontLuaContext( void );
+
+    void Startup( void );
+
+
 };
 
 
-LuaRenderFrame::LuaRenderFrame( lua_State* p_L ) 
-{
-    m_instance = RenderFrame::GetInstance();    
-}
-
-LuaRenderFrame::~LuaRenderFrame( void ) 
-{
-}
-
-int LuaRenderFrame::Lua_SetCurrentScene( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 2 )
-	{
-		lua_pushstring( p_L, "SetCurrentScene : bad number of args" );
-		lua_error( p_L );		
-	}
-
-    Scene* scene = (Scene*)luaL_checkinteger( p_L, 2 );
-
-    bool status = m_instance->SetCurrentScene( scene );
-
-    if( false == status )
-    {
-		lua_pushstring( p_L, "SetCurrentScene : refused because specified scene has non name" );
-		lua_error( p_L );
-    }
-
-    /*
-    const char* scene_name = luaL_checklstring( p_L, 2, NULL );
-    bool status = m_instance->SetCurrentScene( dsstring( scene_name ) );
-    if( false == status )
-    {
-		lua_pushstring( p_L, "SetCurrentScene : unknown scene" );
-		lua_error( p_L );
-    }
-    */
-
-    return 0;
-}
-
+#endif

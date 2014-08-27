@@ -89,37 +89,20 @@ void RenderFrame::SetLuaContext( DrawSpace::LuaContext* p_luacontext )
     m_luacontext = p_luacontext;
 }
 
-void RenderFrame::InstanciateScene( const dsstring& p_name )
+bool RenderFrame::SetCurrentScene( Scene* p_scene )
 {
-    Scene* scene = _DRAWSPACE_NEW_( Scene, Scene( m_luacontext->GetLuaState() ) );
-    scene->SetName( p_name );
-    m_scenes_list[p_name] = scene;
+    dsstring scene_name;
+    p_scene->GetName( scene_name );
 
-    dsstring output = dsstring( "Instanciate scene : '" ) + p_name + dsstring( "' : SUCCESS" );
-
-    m_console_dialog->SetOutputText( output );
+    if( scene_name == "" )
+    {
+        return false;
+    }
+    m_current_rendered_scene = p_scene;
+    return true;
 }
 
-Scene* RenderFrame::GetScene( const dsstring& p_name )
+void RenderFrame::PrintConsole( const dsstring& p_text )
 {
-    if( m_scenes_list.count( p_name ) > 0 )
-    {
-        return m_scenes_list[p_name];
-    }
-    return NULL;
-}
-
-bool RenderFrame::SetCurrentScene( const dsstring& p_name )
-{
-    if( "" == p_name )
-    {
-        m_current_rendered_scene = NULL;
-        return true;
-    }
-    if( m_scenes_list.count( p_name ) > 0 )
-    {
-        m_current_rendered_scene = m_scenes_list[p_name];
-        return true;
-    }
-    return false;
+    m_console_dialog->Print( p_text );
 }

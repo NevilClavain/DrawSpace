@@ -204,6 +204,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\frontluacontext.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\frontluacontext.h"
+				>
+			</File>
+			<File
 				RelativePath=".\lua_renderframe.cpp"
 				>
 			</File>

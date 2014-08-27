@@ -49,6 +49,8 @@ protected:
 
     LuaErrorHandler*        m_luaerrorhandler;
 
+    dsstring                m_output_text;
+
     void on_luaerror( const dsstring& p_errstr );
 
 public:
@@ -63,7 +65,7 @@ public:
 
     void SetLuaContext( DrawSpace::LuaContext* p_luacontext );
 
-    void SetOutputText( const dsstring& p_text );
+    void Print( const dsstring& p_text );
 
 };
 
