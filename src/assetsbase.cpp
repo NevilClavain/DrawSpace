@@ -37,7 +37,10 @@ AssetsBase::~AssetsBase( void )
 void AssetsBase::RegisterAsset( const dsstring& p_id, DrawSpace::Asset* p_asset )
 {
     m_assets[p_id] = p_asset;
-    (*m_assetreg_handler)( p_asset );
+    if( m_assetreg_handler )
+    {
+        (*m_assetreg_handler)( p_asset );
+    }
 }
 
 DrawSpace::Asset* AssetsBase::GetAsset( const dsstring& p_id )

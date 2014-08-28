@@ -1,4 +1,3 @@
-
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -21,29 +20,35 @@
 *                                                                          
 */
 
-#ifndef _LUAASSETSBASE_H_
-#define _LUAASSETSBASE_H_
+#ifndef _LUA_TEXTURE_H_
+#define _LUA_TEXTURE_H_
 
 #include "luna.h"
-#include "assetsbase.h"
+#include "texture.h"
 
 namespace DrawSpace
 {
-class LuaAssetsBase
+class LuaTexture
 {
 protected:
 
-    DrawSpace::Core::AssetsBase*     m_assetsbase;
+    bool                        m_release_object;
+    DrawSpace::Core::Texture*   m_texture;
+
+    void                        cleanup( void );
 
 public:
-    LuaAssetsBase( lua_State* p_L );
-    ~LuaAssetsBase( void );
+    LuaTexture( lua_State* p_L );
+    ~LuaTexture( void );
 
-    int Lua_RegisterAssetObject( lua_State* p_L );
-    int Lua_GetAssetObject( lua_State* p_L );
-  
+    int Lua_SetObject( lua_State* p_L );
+    int Lua_GetObject( lua_State* p_L );
+
+    int Lua_InstanciateObject( lua_State* p_L );
+    int Lua_LoadFromFile( lua_State* p_L );
+
     static const char className[];
-    static const DrawSpace::Luna<LuaAssetsBase>::RegType Register[];
+    static const DrawSpace::Luna<LuaTexture>::RegType Register[];
 };
 }
 

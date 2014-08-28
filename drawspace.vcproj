@@ -960,6 +960,30 @@
 				RelativePath=".\src\lua_assetsbase.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\lua_meshe.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_meshe.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_shader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_shader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_texture.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_texture.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\src\asset.cpp"

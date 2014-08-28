@@ -23,10 +23,14 @@
 
 #include "bindingsinit.h"
 #include "lua_assetsbase.h"
+#include "lua_texture.h"
+#include "lua_meshe.h"
 
 using namespace DrawSpace;
 
 void DrawSpaceLuaBindingInit( lua_State* p_L )
 {
     Luna<LuaAssetsBase>::Register( p_L );
+    Luna<LuaTexture>::Register( p_L );
+    Luna<LuaMeshe>::Register( p_L );
 }

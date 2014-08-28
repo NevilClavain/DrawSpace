@@ -93,5 +93,8 @@
 #include "lua_context.h"
 #include "luna.h"
 #include "lua_assetsbase.h"
+#include "lua_texture.h"
+#include "lua_meshe.h"
+#include "lua_shader.h"
 #include "bindingsinit.h"
 #endif

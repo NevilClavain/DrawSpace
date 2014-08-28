@@ -28,13 +28,13 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_targer_width, unsigned long p_render_targer_height ) : 
+Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_target_width, unsigned long p_render_target_height ) : 
 m_path( p_path ), 
 m_filedata( NULL ), 
 m_filedatasize( -1 ), 
 m_render_target( p_render_target ),
-m_render_targer_width( p_render_targer_width ),
-m_render_targer_height( p_render_targer_height )
+m_render_target_width( p_render_target_width ),
+m_render_target_height( p_render_target_height )
 {
 }
 
@@ -86,8 +86,8 @@ bool Texture::IsRenderTarget( void )
 
 void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h )
 {
-    p_w = m_render_targer_width;
-    p_h = m_render_targer_height;
+    p_w = m_render_target_width;
+    p_h = m_render_target_height;
 }
 
 void Texture::Serialize( Factory& p_factory, Archive& p_archive )
