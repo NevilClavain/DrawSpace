@@ -54,7 +54,7 @@ bool DFrontApp::OnInit( void )
     Luna<LuaRenderFrame>::Register( m_luacontext.GetLuaState() );
     Luna<Scene>::Register( m_luacontext.GetLuaState() );
 
-    DrawSpaceLuaBindingInit( m_luacontext.GetLuaState() );
+    DrawSpaceLuaBindingsInit( m_luacontext.GetLuaState() );
 
 
     bool parser_status = m_config.Run( "appconfig.txt", "    " );

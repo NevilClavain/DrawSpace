@@ -26,7 +26,7 @@
 
 #include "luna.h"
 
-void DrawSpaceLuaBindingInit( lua_State* p_L );
+void DrawSpaceLuaBindingsInit( lua_State* p_L );
 
 
 #endif

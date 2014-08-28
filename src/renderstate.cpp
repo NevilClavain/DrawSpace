@@ -28,6 +28,10 @@ RenderState::RenderState( Operation p_operation, const dsstring& p_arg ) : m_ope
 {
 }
 
+RenderState::RenderState( void ) : m_operation( NONE )
+{
+}
+
 RenderState::~RenderState( void )
 {
 }

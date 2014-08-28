@@ -96,5 +96,6 @@
 #include "lua_texture.h"
 #include "lua_meshe.h"
 #include "lua_shader.h"
+#include "lua_renderstate.h"
 #include "bindingsinit.h"
 #endif

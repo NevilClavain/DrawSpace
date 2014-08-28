@@ -1,4 +1,3 @@
-
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -21,20 +20,34 @@
 *                                                                          
 */
 
-#include "bindingsinit.h"
-#include "lua_assetsbase.h"
-#include "lua_texture.h"
-#include "lua_meshe.h"
-#include "lua_shader.h"
-#include "lua_renderstate.h"
+#ifndef _LUA_RENDERSTATE_H_
+#define _LUA_RENDERSTATE_H_
 
-using namespace DrawSpace;
+#include "luna.h"
+#include "renderstate.h"
 
-void DrawSpaceLuaBindingsInit( lua_State* p_L )
+
+namespace DrawSpace
 {
-    Luna<LuaAssetsBase>::Register( p_L );
-    Luna<LuaTexture>::Register( p_L );
-    Luna<LuaMeshe>::Register( p_L );
-    Luna<LuaShader>::Register( p_L );
-    Luna<LuaRenderState>::Register( p_L );
+class LuaRenderState
+{
+protected:
+
+    DrawSpace::Core::RenderState    m_renderstate;
+
+public:
+    LuaRenderState( lua_State* p_L );
+    ~LuaRenderState( void );
+
+    int Lua_GetObject( lua_State* p_L );
+
+    int Lua_SetOperation( lua_State* p_L );
+    int Lua_SetArg( lua_State* p_L );
+
+    static const char className[];
+    static const DrawSpace::Luna<LuaRenderState>::RegType Register[];
+};
 }
+
+
+#endif

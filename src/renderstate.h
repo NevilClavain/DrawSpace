@@ -57,6 +57,7 @@ protected:
 
 public:
 
+    RenderState( void );
     RenderState( Operation p_operation, const dsstring& p_arg );
     ~RenderState( void );
 
@@ -65,8 +66,6 @@ public:
 
     Operation GetOperation( void );
     void GetArg( dsstring& p_arg );
-
-    void Apply( void );
 };
 
 }

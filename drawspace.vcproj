@@ -969,6 +969,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\lua_renderstate.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_renderstate.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\lua_shader.cpp"
 				>
 			</File>
