@@ -75,6 +75,8 @@ public:
 
     void LoadAndExecuteCmd( char* p_path );
 
+    void ClearCommandText( void );
+
 };
 
 

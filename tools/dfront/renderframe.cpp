@@ -110,4 +110,5 @@ void RenderFrame::PrintConsole( const dsstring& p_text )
 void RenderFrame::ExecScriptFile( char* p_path )
 {
     m_console_dialog->LoadAndExecuteCmd( p_path );
+    m_console_dialog->ClearCommandText();
 }

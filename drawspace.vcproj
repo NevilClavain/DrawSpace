@@ -941,6 +941,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="luabindings"
+			>
+			<File
+				RelativePath=".\src\bindingsinit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\bindingsinit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_assetsbase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_assetsbase.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\asset.cpp"
 			>

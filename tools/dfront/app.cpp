@@ -50,9 +50,11 @@ bool DFrontApp::OnInit( void )
     m_w_title = "DrawFront";
 
     m_luacontext.Startup();
+
     Luna<LuaRenderFrame>::Register( m_luacontext.GetLuaState() );
     Luna<Scene>::Register( m_luacontext.GetLuaState() );
 
+    DrawSpaceLuaBindingInit( m_luacontext.GetLuaState() );
 
 
     bool parser_status = m_config.Run( "appconfig.txt", "    " );
@@ -96,7 +98,7 @@ bool DFrontApp::OnInit( void )
         wxMessageBox( wxT("Unable to load appconfig.txt\nBack to default values"), wxT("DrawFront warning"), wxICON_WARNING );
     }
 
-    m_frame->ExecScriptFile( "test.lua" );
+    m_frame->ExecScriptFile( "drawfront.lua" );
 
 	return true;
 }
@@ -143,20 +145,6 @@ bool DFrontApp::init_renderer( void )
     m_frame->SetGlReady( true );
     return true;
 }
-
-/*
-int DFrontApp::FilterEvent( wxEvent& p_event )
-{
-    const wxEventType t = p_event.GetEventType();
-    if( t == wxEVT_KEY_DOWN )
-    {
-        return 1;
-    }
-
-    return -1;
-}
-*/
-
 
 DFrontApp::Config::Config( long p_width, long p_height, bool p_fullscreen ) :
 m_width( p_width ),

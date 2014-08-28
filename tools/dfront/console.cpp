@@ -104,7 +104,7 @@ m_consoleFont( 10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     m_topsizer->Add(
 
         m_textoutputsCtrl,                       
-        0,            // make NOT vertically stretchable
+        1,            // make vertically stretchable
         wxEXPAND |    // make horizontally stretchable
         wxALL,        //   and make border all around
         10 );         // set border width to 10
@@ -210,3 +210,7 @@ void ConsoleDialog::LoadAndExecuteCmd( char* p_path )
     m_luacontext->Exec( m_textCtrl->GetValue().c_str() );
 }
 
+void ConsoleDialog::ClearCommandText( void )
+{
+    m_textCtrl->Clear();
+}
