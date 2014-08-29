@@ -50,6 +50,7 @@ protected:
     Scene*                              m_current_rendered_scene;
 
     DrawSpace::LuaContext*              m_luacontext;
+    DrawSpace::Interface::MesheImport*  m_meshe_import;
     
     void                                on_render_frame( void );
     
@@ -71,11 +72,14 @@ public:
 	void OnIdle( wxIdleEvent& p_event );
 	void OnClose( wxCloseEvent& p_event );
     void SetLuaContext( DrawSpace::LuaContext* p_luacontext );
+    void SetMesheImport( DrawSpace::Interface::MesheImport* p_import );
 
     bool SetCurrentScene( Scene* p_scene );
 
     void PrintConsole( const dsstring& p_text );
     void ExecScriptFile( char* p_path );
+
+    friend class LuaRenderFrame;
 };
 
 

@@ -68,6 +68,9 @@ protected:
 
     bool                                m_app_ready;
 
+
+    DrawSpace::Interface::MesheImport*  m_meshe_import;
+
     bool                                init_renderer( void );
     bool                                load_renderer_plugin( const dsstring& p_file );
 

@@ -39,9 +39,9 @@ END_EVENT_TABLE()
 RenderFrame::RenderFrame( void ) : 
 wxFrame( NULL, wxID_ANY, m_caption, wxPoint( 50, 50 ), m_size, wxMINIMIZE_BOX | wxCLOSE_BOX | wxSYSTEM_MENU | wxCAPTION ),
 m_gl_ready( false ),
-m_current_rendered_scene( NULL )
+m_current_rendered_scene( NULL ),
+m_meshe_import( NULL )
 {
-
     m_dialog = _DRAWSPACE_NEW_( Dialog, Dialog( this, _( "Tools" ), this ) );
     m_dialog->Show();
 
@@ -87,6 +87,11 @@ void RenderFrame::SetLuaContext( DrawSpace::LuaContext* p_luacontext )
 {
     m_console_dialog->SetLuaContext( p_luacontext );
     m_luacontext = p_luacontext;
+}
+
+void RenderFrame::SetMesheImport( DrawSpace::Interface::MesheImport* p_import )
+{
+    m_meshe_import = p_import;  
 }
 
 bool RenderFrame::SetCurrentScene( Scene* p_scene )

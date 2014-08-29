@@ -961,6 +961,38 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\lua_chunk.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_chunk.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_finalpass.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_finalpass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_fx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_fx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_intermediatepass.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_intermediatepass.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\lua_meshe.cpp"
 				>
 			</File>
@@ -969,11 +1001,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\lua_renderingnode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_renderingnode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_renderingqueue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_renderingqueue.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\lua_renderstate.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\lua_renderstate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_scenegraph.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_scenegraph.h"
 				>
 			</File>
 			<File
@@ -990,6 +1046,14 @@
 			</File>
 			<File
 				RelativePath=".\src\lua_texture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_viewportquad.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_viewportquad.h"
 				>
 			</File>
 		</Filter>

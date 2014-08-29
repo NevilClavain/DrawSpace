@@ -1,4 +1,3 @@
-
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -21,36 +20,71 @@
 *                                                                          
 */
 
-#include "bindingsinit.h"
-#include "lua_assetsbase.h"
-#include "lua_texture.h"
-#include "lua_meshe.h"
-#include "lua_shader.h"
-#include "lua_renderstate.h"
-#include "lua_fx.h"
-#include "lua_renderingnode.h"
-#include "lua_renderingqueue.h"
-#include "lua_intermediatepass.h"
-#include "lua_finalpass.h"
-#include "lua_viewportquad.h"
-#include "lua_scenegraph.h"
-#include "lua_chunk.h"
+#include "lua_xxx.h"
+#include "memalloc.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
-void DrawSpaceLuaBindingsInit( lua_State* p_L )
+const char LuaXXX::className[] = "XXX";
+const DrawSpace::Luna<LuaXXX>::RegType LuaXXX::Register[] =
 {
-    Luna<LuaAssetsBase>::Register( p_L );
-    Luna<LuaTexture>::Register( p_L );
-    Luna<LuaMeshe>::Register( p_L );
-    Luna<LuaShader>::Register( p_L );
-    Luna<LuaRenderState>::Register( p_L );
-    Luna<LuaFx>::Register( p_L );
-    Luna<LuaRenderingNode>::Register( p_L );
-    Luna<LuaRenderingQueue>::Register( p_L );
-    Luna<LuaIntermediatePass>::Register( p_L );
-    Luna<LuaFinalPass>::Register( p_L );
-    Luna<LuaViewportQuad>::Register( p_L );
-    Luna<LuaScenegraph>::Register( p_L );
-    Luna<LuaChunk>::Register( p_L );
+    { "SetObject", &LuaXXX::Lua_SetObject },
+    { "GetObject", &LuaXXX::Lua_GetObject },
+    { "InstanciateObject", &LuaXXX::Lua_InstanciateObject },
+    { 0 }
+};
+
+
+LuaXXX::LuaXXX( lua_State* p_L ) : 
+m_XXX( NULL ),
+m_release_object( false )
+{
+
 }
+
+LuaXXX::~LuaXXX( void ) 
+{
+    cleanup();
+}
+
+void LuaXXX::cleanup( void )
+{
+    if( m_XXX && m_release_object )
+    {
+        _DRAWSPACE_DELETE_( m_xxx );
+    }
+}
+
+int LuaXXX::Lua_SetObject( lua_State* p_L )
+{   
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetObject : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    cleanup();
+    m_XXX = (XXX*)luaL_checkinteger( p_L, 2 );
+    m_release_object = false;
+
+    return 0;
+}
+
+int LuaXXX::Lua_GetObject( lua_State* p_L )
+{
+    lua_pushunsigned( p_L, (lua_Unsigned)m_xxx );
+    return 1;
+}
+
+int LuaXXX::Lua_InstanciateObject( lua_State* p_L )
+{
+
+    cleanup();
+    m_XXX = _DRAWSPACE_NEW_( XXX, XXX );
+    m_release_object = true;
+
+    return 0;
+}
+

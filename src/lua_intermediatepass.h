@@ -1,4 +1,3 @@
-
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -21,36 +20,37 @@
 *                                                                          
 */
 
-#include "bindingsinit.h"
-#include "lua_assetsbase.h"
-#include "lua_texture.h"
-#include "lua_meshe.h"
-#include "lua_shader.h"
-#include "lua_renderstate.h"
-#include "lua_fx.h"
-#include "lua_renderingnode.h"
-#include "lua_renderingqueue.h"
-#include "lua_intermediatepass.h"
-#include "lua_finalpass.h"
-#include "lua_viewportquad.h"
-#include "lua_scenegraph.h"
-#include "lua_chunk.h"
+#ifndef _LUA_INTERMEDIATEPASS_H_
+#define _LUA_INTERMEDIATEPASS_H_
 
-using namespace DrawSpace;
+#include "luna.h"
+#include "pass.h"
 
-void DrawSpaceLuaBindingsInit( lua_State* p_L )
+namespace DrawSpace
 {
-    Luna<LuaAssetsBase>::Register( p_L );
-    Luna<LuaTexture>::Register( p_L );
-    Luna<LuaMeshe>::Register( p_L );
-    Luna<LuaShader>::Register( p_L );
-    Luna<LuaRenderState>::Register( p_L );
-    Luna<LuaFx>::Register( p_L );
-    Luna<LuaRenderingNode>::Register( p_L );
-    Luna<LuaRenderingQueue>::Register( p_L );
-    Luna<LuaIntermediatePass>::Register( p_L );
-    Luna<LuaFinalPass>::Register( p_L );
-    Luna<LuaViewportQuad>::Register( p_L );
-    Luna<LuaScenegraph>::Register( p_L );
-    Luna<LuaChunk>::Register( p_L );
+class LuaIntermediatePass
+{
+protected:
+
+    bool                                m_release_object;
+    DrawSpace::IntermediatePass*        m_intermediatepass;
+
+    void                                cleanup( void );
+
+public:
+    LuaIntermediatePass( lua_State* p_L );
+    ~LuaIntermediatePass( void );
+
+    int Lua_SetObject( lua_State* p_L );
+    int Lua_GetObject( lua_State* p_L );
+
+    int Lua_InstanciateObject( lua_State* p_L );
+    int Lua_InstanciateObjectWithDims( lua_State* p_L );
+
+    static const char className[];
+    static const DrawSpace::Luna<LuaIntermediatePass>::RegType Register[];
+};
 }
+
+
+#endif

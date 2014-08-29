@@ -97,5 +97,13 @@
 #include "lua_meshe.h"
 #include "lua_shader.h"
 #include "lua_renderstate.h"
+#include "lua_fx.h"
+#include "lua_renderingnode.h"
+#include "lua_renderingqueue.h"
+#include "lua_intermediatepass.h"
+#include "lua_finalpass.h"
+#include "lua_viewportquad.h"
+#include "lua_scenegraph.h"
+#include "lua_chunk.h"
 #include "bindingsinit.h"
 #endif

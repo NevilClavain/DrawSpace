@@ -81,6 +81,14 @@ bool DFrontApp::OnInit( void )
 
     m_app_ready = true;
 
+    if( false == DrawSpace::Utils::LoadMesheImportPlugin( "ac3dmeshe.dll", "ac3dmeshe_plugin" ) )
+    {
+        wxMessageBox( wxT("Unable to load ac3d plugin. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );
+        return false;
+    }
+    m_meshe_import = DrawSpace::Utils::InstanciateMesheImportFromPlugin( "ac3dmeshe_plugin" );
+    m_frame->SetMesheImport( m_meshe_import );
+
     if( false == load_renderer_plugin( m_renderplugin ) )
     {
         wxMessageBox( wxT("Unable to load specified plugin. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );

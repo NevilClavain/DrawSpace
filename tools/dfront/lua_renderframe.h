@@ -40,6 +40,8 @@ public:
     int Lua_InstanciateScene( lua_State* p_L );
     int Lua_SetCurrentScene( lua_State* p_L );
 
+    int Lua_GetMesheImportObject( lua_State* p_L );
+
     static const char className[];
     static const DrawSpace::Luna<LuaRenderFrame>::RegType Register[];
 };

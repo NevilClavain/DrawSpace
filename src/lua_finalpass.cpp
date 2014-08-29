@@ -20,49 +20,78 @@
 *                                                                          
 */
 
-#include "lua_renderframe.h"
+#include "lua_finalpass.h"
+#include "memalloc.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
-const char LuaRenderFrame::className[] = "RenderFrame";
-const DrawSpace::Luna<LuaRenderFrame>::RegType LuaRenderFrame::Register[] =
+const char LuaFinalPass::className[] = "FinalPass";
+const DrawSpace::Luna<LuaFinalPass>::RegType LuaFinalPass::Register[] =
 {
-  { "SetCurrentScene", &LuaRenderFrame::Lua_SetCurrentScene },
-  { "GetMesheImportObject", &LuaRenderFrame::Lua_GetMesheImportObject },
-  { 0 }
+    { "SetObject", &LuaFinalPass::Lua_SetObject },
+    { "GetObject", &LuaFinalPass::Lua_GetObject },
+    { "InstanciateObject", &LuaFinalPass::Lua_InstanciateObject },
+    { 0 }
 };
 
 
-LuaRenderFrame::LuaRenderFrame( lua_State* p_L ) 
+LuaFinalPass::LuaFinalPass( lua_State* p_L ) : 
+m_finalpass( NULL ),
+m_release_object( false )
 {
-    m_instance = RenderFrame::GetInstance();    
+
 }
 
-LuaRenderFrame::~LuaRenderFrame( void ) 
+LuaFinalPass::~LuaFinalPass( void ) 
 {
+    cleanup();
 }
 
-int LuaRenderFrame::Lua_SetCurrentScene( lua_State* p_L )
+void LuaFinalPass::cleanup( void )
+{
+    if( m_finalpass && m_release_object )
+    {
+        _DRAWSPACE_DELETE_( m_finalpass );
+    }
+}
+
+int LuaFinalPass::Lua_SetObject( lua_State* p_L )
+{   
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetObject : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    cleanup();
+    m_finalpass = (FinalPass*)luaL_checkinteger( p_L, 2 );
+    m_release_object = false;
+
+    return 0;
+}
+
+int LuaFinalPass::Lua_GetObject( lua_State* p_L )
+{
+    lua_pushunsigned( p_L, (lua_Unsigned)m_finalpass );
+    return 1;
+}
+
+int LuaFinalPass::Lua_InstanciateObject( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
 	{
-		lua_pushstring( p_L, "SetCurrentScene : bad number of args" );
+		lua_pushstring( p_L, "InstanciateObject : bad number of args" );
 		lua_error( p_L );		
 	}
+    
+    const char* name = luaL_checkstring( p_L, 2 );
 
-    Scene* scene = (Scene*)luaL_checkinteger( p_L, 2 );
+    cleanup();
+    m_finalpass = _DRAWSPACE_NEW_( FinalPass, FinalPass( name ) );
+    m_release_object = true;
 
-    bool status = m_instance->SetCurrentScene( scene );
-    if( false == status )
-    {
-		lua_pushstring( p_L, "SetCurrentScene : refused because specified scene has non name" );
-		lua_error( p_L );
-    }
-    return 0;
-}
-
-int LuaRenderFrame::Lua_GetMesheImportObject( lua_State* p_L )
-{
-    lua_pushunsigned( p_L, (lua_Unsigned)m_instance->m_meshe_import );
     return 0;
 }
