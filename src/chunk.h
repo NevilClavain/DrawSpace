@@ -57,6 +57,7 @@ public:
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
 
     virtual DrawSpace::Core::Meshe* GetMeshe( void );
+    virtual void SetMeshe( DrawSpace::Core::Meshe* p_meshe );
 
     virtual void RegisterPassSlot( const dsstring p_passname );
     virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );

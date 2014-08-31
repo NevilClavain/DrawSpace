@@ -29,15 +29,19 @@ using namespace DrawSpace;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Core;
 
-Chunk::Chunk( void ) : m_renderer( NULL ), m_scenegraph( NULL ), m_lod_draw( true )
+Chunk::Chunk( void ) : 
+m_renderer( NULL ), 
+m_scenegraph( NULL ), 
+m_lod_draw( true ),
+m_meshe( NULL )
 {
-    m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    //m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     m_lod_callback = _DRAWSPACE_NEW_( LodCallback, LodCallback( this, &Chunk::on_lod_event ) );
 }
 
 Chunk::~Chunk( void )
 {
-    _DRAWSPACE_DELETE_( m_meshe );
+    //_DRAWSPACE_DELETE_( m_meshe );
     _DRAWSPACE_DELETE_( m_lod_callback );
 }
 
@@ -49,6 +53,11 @@ void Chunk::SetRenderer( Renderer * p_renderer )
 
 void Chunk::OnRegister( Scenegraph* p_scenegraph )
 {
+    if( NULL == m_meshe )
+    {
+        _DSEXCEPTION( "NULL meshe ; please allocate a meshe object for chunk prior to other operations" );
+    }
+
     for( std::map<dsstring, RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = p_scenegraph->GetPass( (*it).first );
@@ -134,6 +143,12 @@ Core::Meshe* Chunk::GetMeshe( void )
     return m_meshe;
 }
 
+void Chunk::SetMeshe( DrawSpace::Core::Meshe* p_meshe )
+{
+    m_meshe = p_meshe;
+}
+
+
 void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
     DrawSpace::Utils::Matrix view;
@@ -192,6 +207,11 @@ void Chunk::on_lod_event( LodStep*, LodStep::Event p_event )
 void Chunk::RegisterPassSlot( const dsstring p_passname )
 {
     m_passesnodes[p_passname] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
+
+    if( NULL == m_meshe )
+    {
+        _DSEXCEPTION( "NULL meshe ; please allocate a meshe object for chunk prior to other operations" );
+    }
 
     m_passesnodes[p_passname]->SetMeshe( m_meshe );
 
