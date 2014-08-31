@@ -23,12 +23,12 @@
 #ifndef _LUA_RENDERINGNODE_H_
 #define _LUA_RENDERINGNODE_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "renderingnode.h"
 
 namespace DrawSpace
 {
-class LuaRenderingNode
+class LuaRenderingNode : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaRenderingNode( lua_State* p_L );
     ~LuaRenderingNode( void );
+
+    DrawSpace::Core::RenderingNode* GetObject( void ) { return m_renderingnode; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );

@@ -23,12 +23,12 @@
 #ifndef _LUA_INTERMEDIATEPASS_H_
 #define _LUA_INTERMEDIATEPASS_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "pass.h"
 
 namespace DrawSpace
 {
-class LuaIntermediatePass
+class LuaIntermediatePass : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaIntermediatePass( lua_State* p_L );
     ~LuaIntermediatePass( void );
+
+    DrawSpace::IntermediatePass* GetObject( void ) { return m_intermediatepass; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );

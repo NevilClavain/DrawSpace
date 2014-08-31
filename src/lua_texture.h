@@ -23,12 +23,12 @@
 #ifndef _LUA_TEXTURE_H_
 #define _LUA_TEXTURE_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "texture.h"
 
 namespace DrawSpace
 {
-class LuaTexture
+class LuaTexture : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaTexture( lua_State* p_L );
     ~LuaTexture( void );
+
+    DrawSpace::Core::Texture* GetObject( void ) { return m_texture; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );

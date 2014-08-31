@@ -23,12 +23,12 @@
 #ifndef _LUA_MESHE_H_
 #define _LUA_MESHE_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "meshe.h"
 
 namespace DrawSpace
 {
-class LuaMeshe
+class LuaMeshe : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaMeshe( lua_State* p_L );
     ~LuaMeshe( void );
+
+    DrawSpace::Core::Meshe* GetObject( void ) { return m_meshe; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );

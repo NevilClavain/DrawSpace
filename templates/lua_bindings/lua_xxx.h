@@ -23,12 +23,12 @@
 #ifndef _LUA_XXX_H_
 #define _LUA_XXX_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "xxx.h"
 
 namespace DrawSpace
 {
-class LuaXXX
+class LuaXXX : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaXXX( lua_State* p_L );
     ~LuaXXX( void );
+
+    XXX* GetInstance( void ) { return m_XXX; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );

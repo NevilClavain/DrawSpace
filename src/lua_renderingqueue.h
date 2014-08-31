@@ -23,12 +23,12 @@
 #ifndef _LUA_RENDERINGQUEUE_H_
 #define _LUA_RENDERINGQUEUE_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "renderingqueue.h"
 
 namespace DrawSpace
 {
-class LuaRenderingQueue
+class LuaRenderingQueue : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaRenderingQueue( lua_State* p_L );
     ~LuaRenderingQueue( void );
+
+    DrawSpace::Core::RenderingQueue* GetObject( void ) { return m_renderingqueue; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );

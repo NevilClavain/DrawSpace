@@ -961,6 +961,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\lua_binding.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_binding.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\lua_chunk.cpp"
 				>
 			</File>
@@ -990,6 +998,14 @@
 			</File>
 			<File
 				RelativePath=".\src\lua_intermediatepass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_matrix.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_matrix.h"
 				>
 			</File>
 			<File
@@ -1046,6 +1062,14 @@
 			</File>
 			<File
 				RelativePath=".\src\lua_texture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_vector.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_vector.h"
 				>
 			</File>
 			<File

@@ -23,12 +23,12 @@
 #ifndef _LUA_FINALPASS_H_
 #define _LUA_FINALPASS_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "pass.h"
 
 namespace DrawSpace
 {
-class LuaFinalPass
+class LuaFinalPass : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaFinalPass( lua_State* p_L );
     ~LuaFinalPass( void );
+
+    DrawSpace::FinalPass* GetObject( void ) { return m_finalpass; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );

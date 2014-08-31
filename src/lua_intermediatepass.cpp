@@ -82,39 +82,43 @@ int LuaIntermediatePass::Lua_GetObject( lua_State* p_L )
 int LuaIntermediatePass::Lua_InstanciateObject( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc != 2 )
+	if( argc != 3 )
 	{
 		lua_pushstring( p_L, "InstanciateObject : bad number of args" );
 		lua_error( p_L );		
 	}
     
-    const char* name = luaL_checkstring( p_L, 2 );
+    const char* id = luaL_checkstring( p_L, 2 );
+    const char* name = luaL_checkstring( p_L, 3 );
 
     cleanup();
     m_intermediatepass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( name ) );
     m_release_object = true;
 
+    LuaBindingsDirectory::GetInstance()->Register( id, this );
     return 0;
 }
 
 int LuaIntermediatePass::Lua_InstanciateObjectWithDims( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc != 4 )
+	if( argc != 5 )
 	{
 		lua_pushstring( p_L, "InstanciateObjectWithDims : bad number of args" );
 		lua_error( p_L );		
 	}
     
-    const char* name = luaL_checkstring( p_L, 2 );
+    const char* id = luaL_checkstring( p_L, 2 );
+    const char* name = luaL_checkstring( p_L, 3 );
 
-    long target_width = (unsigned long)luaL_checkinteger( p_L, 3 );
-    long target_height = (unsigned long)luaL_checkinteger( p_L, 4 );
+    long target_width = (unsigned long)luaL_checkinteger( p_L, 4 );
+    long target_height = (unsigned long)luaL_checkinteger( p_L, 5 );
 
     cleanup();
     m_intermediatepass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( name, target_width, target_height ) );
     m_release_object = true;
 
+    LuaBindingsDirectory::GetInstance()->Register( id, this );
     return 0;
 }
 

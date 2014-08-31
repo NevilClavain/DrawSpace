@@ -80,6 +80,14 @@ int LuaScenegraph::Lua_GetObject( lua_State* p_L )
 
 int LuaScenegraph::Lua_InstanciateObject( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "InstanciateObject : bad number of args" );
+		lua_error( p_L );		
+	}
+    
+    const char* id = luaL_checkstring( p_L, 2 );
 
     cleanup();
     m_scenegraph = _DRAWSPACE_NEW_( Scenegraph, Scenegraph );

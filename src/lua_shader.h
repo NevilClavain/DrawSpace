@@ -23,12 +23,12 @@
 #ifndef _LUA_SHADER_H_
 #define _LUA_SHADER_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "shader.h"
 
 namespace DrawSpace
 {
-class LuaShader
+class LuaShader : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaShader( lua_State* p_L );
     ~LuaShader( void );
+
+    DrawSpace::Core::Shader* GetObject( void ) { return m_shader; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );

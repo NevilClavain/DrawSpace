@@ -80,10 +80,20 @@ int LuaRenderingNode::Lua_GetObject( lua_State* p_L )
 
 int LuaRenderingNode::Lua_InstanciateObject( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "InstanciateObject : bad number of args" );
+		lua_error( p_L );		
+	}
+    
+    const char* id = luaL_checkstring( p_L, 2 );
+
     cleanup();
     m_renderingnode = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
     m_release_object = true;
 
+    LuaBindingsDirectory::GetInstance()->Register( id, this );
     return 0;
 }
 

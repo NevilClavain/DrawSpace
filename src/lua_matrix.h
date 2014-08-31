@@ -20,36 +20,28 @@
 *                                                                          
 */
 
-#ifndef _LUA_SCENEGRAPH_H_
-#define _LUA_SCENEGRAPH_H_
+#ifndef _LUA_MATRIX_H_
+#define _LUA_MATRIX_H_
 
 #include "lua_binding.h"
-#include "scenegraph.h"
+#include "matrix.h"
 
 namespace DrawSpace
 {
-class LuaScenegraph : public LuaBinding
+class LuaMatrix : public LuaBinding
 {
 protected:
-
-    bool                            m_release_object;
-    DrawSpace::Scenegraph*          m_scenegraph;
-
-    void                            cleanup( void );
-
+    
+    DrawSpace::Utils::Matrix      m_matrix;
+   
 public:
-    LuaScenegraph( lua_State* p_L );
-    ~LuaScenegraph( void );
-
-    DrawSpace::Scenegraph* GetObject( void ) { return m_scenegraph; };
-
-    int Lua_SetObject( lua_State* p_L );
+    LuaMatrix( lua_State* p_L );
+    ~LuaMatrix( void );
+   
     int Lua_GetObject( lua_State* p_L );
 
-    int Lua_InstanciateObject( lua_State* p_L );
-
     static const char className[];
-    static const DrawSpace::Luna<LuaScenegraph>::RegType Register[];
+    static const DrawSpace::Luna<LuaMatrix>::RegType Register[];
 };
 }
 

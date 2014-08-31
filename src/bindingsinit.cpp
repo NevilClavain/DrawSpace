@@ -35,6 +35,8 @@
 #include "lua_viewportquad.h"
 #include "lua_scenegraph.h"
 #include "lua_chunk.h"
+#include "lua_vector.h"
+#include "lua_matrix.h"
 
 using namespace DrawSpace;
 
@@ -53,4 +55,6 @@ void DrawSpaceLuaBindingsInit( lua_State* p_L )
     Luna<LuaViewportQuad>::Register( p_L );
     Luna<LuaScenegraph>::Register( p_L );
     Luna<LuaChunk>::Register( p_L );
+    Luna<LuaVector>::Register( p_L );
+    Luna<LuaMatrix>::Register( p_L );
 }

@@ -23,12 +23,12 @@
 #ifndef _LUA_FX_H_
 #define _LUA_FX_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "fx.h"
 
 namespace DrawSpace
 {
-class LuaFx
+class LuaFx : public LuaBinding
 {
 protected:
 
@@ -41,6 +41,8 @@ protected:
 public:
     LuaFx( lua_State* p_L );
     ~LuaFx( void );
+
+    DrawSpace::Core::Fx* GetObject( void ) { return m_fx; };
 
     int Lua_GetObject( lua_State* p_L );
     int Lua_SetObject( lua_State* p_L );

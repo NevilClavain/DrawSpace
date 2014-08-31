@@ -23,12 +23,12 @@
 #ifndef _LUA_VIEWPORTQUAD_H_
 #define _LUA_VIEWPORTQUAD_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "viewportquad.h"
 
 namespace DrawSpace
 {
-class LuaViewportQuad
+class LuaViewportQuad : public LuaBinding
 {
 protected:
 

@@ -23,23 +23,30 @@
 #ifndef _LUA_RENDERSTATE_H_
 #define _LUA_RENDERSTATE_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "renderstate.h"
-
 
 namespace DrawSpace
 {
-class LuaRenderState
+class LuaRenderState : public LuaBinding
 {
 protected:
 
-    DrawSpace::Core::RenderState    m_renderstate;
+    bool                            m_release_object;
+    DrawSpace::Core::RenderState*   m_renderstate;
+
+    void                        cleanup( void );
 
 public:
     LuaRenderState( lua_State* p_L );
     ~LuaRenderState( void );
 
+    DrawSpace::Core::RenderState* GetObject( void ) { return m_renderstate; };
+   
+    int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );
+
+    int Lua_InstanciateObject( lua_State* p_L );
 
     int Lua_SetOperation( lua_State* p_L );
     int Lua_SetArg( lua_State* p_L );

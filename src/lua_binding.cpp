@@ -20,38 +20,40 @@
 *                                                                          
 */
 
-#ifndef _LUA_SCENEGRAPH_H_
-#define _LUA_SCENEGRAPH_H_
-
 #include "lua_binding.h"
-#include "scenegraph.h"
 
-namespace DrawSpace
+using namespace DrawSpace;
+
+LuaBindingsDirectory* LuaBindingsDirectory::m_instance = NULL;
+
+LuaBindingsDirectory::LuaBindingsDirectory( void )
 {
-class LuaScenegraph : public LuaBinding
-{
-protected:
-
-    bool                            m_release_object;
-    DrawSpace::Scenegraph*          m_scenegraph;
-
-    void                            cleanup( void );
-
-public:
-    LuaScenegraph( lua_State* p_L );
-    ~LuaScenegraph( void );
-
-    DrawSpace::Scenegraph* GetObject( void ) { return m_scenegraph; };
-
-    int Lua_SetObject( lua_State* p_L );
-    int Lua_GetObject( lua_State* p_L );
-
-    int Lua_InstanciateObject( lua_State* p_L );
-
-    static const char className[];
-    static const DrawSpace::Luna<LuaScenegraph>::RegType Register[];
-};
 }
 
+LuaBindingsDirectory::~LuaBindingsDirectory( void )
+{
+}
 
-#endif
+void LuaBindingsDirectory::Register( const dsstring& p_id, LuaBinding* p_binding )
+{
+    m_bindings[p_id] = p_binding;
+}
+
+LuaBinding* LuaBindingsDirectory::Get(  const dsstring& p_id )
+{
+    if( m_bindings.count( p_id ) > 0 )
+    {
+        return m_bindings[p_id];
+    }
+    return NULL;
+}
+
+LuaBinding::LuaBinding( void )
+{
+}
+
+LuaBinding::~LuaBinding( void )
+{
+
+}
+

@@ -83,19 +83,22 @@ int LuaShader::Lua_GetObject( lua_State* p_L )
 int LuaShader::Lua_InstanciateObject( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc != 3 )
+	if( argc != 4 )
 	{
 		lua_pushstring( p_L, "InstanciateObject : bad number of args" );
 		lua_error( p_L );		
 	}
+
+    const char* id = luaL_checkstring( p_L, 2 );
     
-    const char* path = luaL_checkstring( p_L, 2 );
-    bool is_compiled = (bool)luaL_checkinteger( p_L, 3 );
+    const char* path = luaL_checkstring( p_L, 3 );
+    bool is_compiled = (bool)luaL_checkinteger( p_L, 4 );
 
     cleanup();
     m_shader = _DRAWSPACE_NEW_( Shader, Shader( path, is_compiled ) );
     m_release_object = true;
 
+    LuaBindingsDirectory::GetInstance()->Register( id, this );
     return 0;
 }
 

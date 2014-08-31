@@ -23,12 +23,12 @@
 #ifndef _LUA_CHUNK_H_
 #define _LUA_CHUNK_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "chunk.h"
 
 namespace DrawSpace
 {
-class LuaChunk
+class LuaChunk : public LuaBinding
 {
 protected:
 
@@ -40,6 +40,8 @@ protected:
 public:
     LuaChunk( lua_State* p_L );
     ~LuaChunk( void );
+
+    DrawSpace::Chunk* GetObject( void ) { return m_chunk; };
 
     int Lua_SetObject( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );
