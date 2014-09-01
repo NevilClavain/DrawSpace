@@ -39,6 +39,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
 
     text_widget = _DRAWSPACE_NEW_( TextWidget, TextWidget( p_name, p_width, p_height, p_font, false, NULL ) );
 
+    text_widget->GetImage()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
     
     text_widget->GetImage()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
     text_widget->GetImage()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
@@ -101,6 +102,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
     text_widget->GetImage()->SetShaderRealVector( "color", p_color );
 
 
+    text_widget->GetText()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
     text_widget->GetText()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
     text_widget->GetText()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
@@ -155,6 +157,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
         "}"
     );
 
+    
     text_widget->GetText()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     text_widget->GetText()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
     text_widget->GetText()->AddShaderParameter( 1, "color", 0 );
@@ -224,6 +227,7 @@ void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, const dsstring& p_
     for( long i = 0; i < 6; i++ )
     {
 
+        p_spacebox->GetNodeFromPass( p_passname, i )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
         p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
         p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
 

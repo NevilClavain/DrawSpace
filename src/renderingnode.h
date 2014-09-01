@@ -84,6 +84,12 @@ public:
         return m_fx;
     }
 
+    virtual void SetFx( Fx* p_fx )
+    {
+        m_fx = p_fx;
+    }
+
+
     virtual long GetTextureListSize( void );
     virtual Texture* GetTexture( long p_index );
     virtual Texture* GetVertexTexture( long p_index );

@@ -26,9 +26,13 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-RenderingNode::RenderingNode( void ) : m_order( 10000 ), m_handler( NULL ), m_meshe( NULL )
+RenderingNode::RenderingNode( void ) : 
+m_order( 10000 ), 
+m_handler( NULL ), 
+m_meshe( NULL ),
+m_fx( NULL )
 {
-    m_fx = _DRAWSPACE_NEW_( Fx, Fx );
+    //m_fx = _DRAWSPACE_NEW_( Fx, Fx );
     
     for( long i = 0; i < NbMaxTextures; i++ )
     {
@@ -39,7 +43,7 @@ RenderingNode::RenderingNode( void ) : m_order( 10000 ), m_handler( NULL ), m_me
 
 RenderingNode::~RenderingNode( void )
 {
-    _DRAWSPACE_DELETE_( m_fx );
+    //_DRAWSPACE_DELETE_( m_fx );
 }
 
 long RenderingNode::GetOrderNumber( void )
