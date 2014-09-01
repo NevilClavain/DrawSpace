@@ -721,7 +721,7 @@ bool D3D9Renderer::AllocTextureContent( void* p_texturedata )
         {
             long blocsize = bpp * ti->descr.Width * ti->descr.Height;
 
-            ti->bits = _DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char, blocsize );
+            ti->bits = _DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char[blocsize], blocsize );
             memcpy( ti->bits, dr.pBits, blocsize );
         }
         
