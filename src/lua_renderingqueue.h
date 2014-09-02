@@ -48,6 +48,15 @@ public:
 
     int Lua_InstanciateObject( lua_State* p_L );
 
+    int Lua_AddRenderingNodeObject( lua_State* p_L );
+    int Lua_Draw( lua_State* p_L );
+
+    int Lua_EnableDepthClearing( lua_State* p_L );
+    int Lua_EnableTargetClearing( lua_State* p_L );
+    int Lua_SetTargetClearingColor( lua_State* p_L );
+
+    int Lua_UpdateOuputQueue( lua_State* p_L );
+
     static const char className[];
     static const DrawSpace::Luna<LuaRenderingQueue>::RegType Register[];
 };

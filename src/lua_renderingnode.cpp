@@ -96,4 +96,3 @@ int LuaRenderingNode::Lua_InstanciateObject( lua_State* p_L )
     LuaBindingsDirectory::GetInstance()->Register( id, this );
     return 0;
 }
-

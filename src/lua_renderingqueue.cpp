@@ -32,6 +32,12 @@ const DrawSpace::Luna<LuaRenderingQueue>::RegType LuaRenderingQueue::Register[] 
     { "SetObject", &LuaRenderingQueue::Lua_SetObject },
     { "GetObject", &LuaRenderingQueue::Lua_GetObject },
     { "InstanciateObject", &LuaRenderingQueue::Lua_InstanciateObject },
+    { "InstanciateObject", &LuaRenderingQueue::Lua_AddRenderingNodeObject },
+    { "InstanciateObject", &LuaRenderingQueue::Lua_Draw },
+    { "InstanciateObject", &LuaRenderingQueue::Lua_EnableDepthClearing },
+    { "InstanciateObject", &LuaRenderingQueue::Lua_EnableTargetClearing },
+    { "InstanciateObject", &LuaRenderingQueue::Lua_SetTargetClearingColor },
+    { "InstanciateObject", &LuaRenderingQueue::Lua_UpdateOuputQueue },
     { 0 }
 };
 
@@ -99,3 +105,112 @@ int LuaRenderingQueue::Lua_InstanciateObject( lua_State* p_L )
     return 0;
 }
 
+int LuaRenderingQueue::Lua_AddRenderingNodeObject( lua_State* p_L )
+{
+    if( !m_renderingqueue )
+    {
+		lua_pushstring( p_L, "AddRenderingNodeObject : refused, no associated rendering queue object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "AddRenderingNodeObject : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    RenderingNode* node = (RenderingNode *)luaL_checkinteger( p_L, 2 );
+    m_renderingqueue->Add( node );
+
+    return 0;
+}
+
+int LuaRenderingQueue::Lua_Draw( lua_State* p_L )
+{
+    if( !m_renderingqueue )
+    {
+		lua_pushstring( p_L, "Draw : refused, no associated rendering queue object" );
+		lua_error( p_L );
+    }
+    m_renderingqueue->Draw();
+
+    return 0;
+}
+
+int LuaRenderingQueue::Lua_EnableDepthClearing( lua_State* p_L )
+{
+    if( !m_renderingqueue )
+    {
+		lua_pushstring( p_L, "EnableDepthClearing : refused, no associated rendering queue object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "EnableDepthClearing : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    bool enable = (bool)luaL_checkinteger( p_L, 2 );
+    m_renderingqueue->EnableDepthClearing( enable );
+
+    return 0;
+}
+
+int LuaRenderingQueue::Lua_EnableTargetClearing( lua_State* p_L )
+{
+    if( !m_renderingqueue )
+    {
+		lua_pushstring( p_L, "EnableTargetClearing : refused, no associated rendering queue object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "EnableTargetClearing : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    bool enable = (bool)luaL_checkinteger( p_L, 2 );
+    m_renderingqueue->EnableTargetClearing( enable );
+
+    return 0;
+}
+
+int LuaRenderingQueue::Lua_SetTargetClearingColor( lua_State* p_L )
+{
+    if( !m_renderingqueue )
+    {
+		lua_pushstring( p_L, "SetTargetClearingColor : refused, no associated rendering queue object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 4 )
+	{
+		lua_pushstring( p_L, "SetTargetClearingColor : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    unsigned char r = (unsigned char)luaL_checkinteger( p_L, 2 );
+    unsigned char g = (unsigned char)luaL_checkinteger( p_L, 3 );
+    unsigned char b = (unsigned char)luaL_checkinteger( p_L, 4 );
+    m_renderingqueue->SetTargetClearingColor( r, g, b );
+
+    return 0;
+}
+
+int LuaRenderingQueue::Lua_UpdateOuputQueue( lua_State* p_L )
+{
+    if( !m_renderingqueue )
+    {
+		lua_pushstring( p_L, "UpdateOuputQueue : refused, no associated rendering queue object" );
+		lua_error( p_L );
+    }
+    m_renderingqueue->UpdateOutputQueue();
+
+    return 0;
+}
