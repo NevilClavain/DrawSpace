@@ -1017,6 +1017,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\lua_pass.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_pass.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\lua_renderingnode.cpp"
 				>
 			</File>
@@ -1062,6 +1070,14 @@
 			</File>
 			<File
 				RelativePath=".\src\lua_texture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_transformnode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lua_transformnode.h"
 				>
 			</File>
 			<File

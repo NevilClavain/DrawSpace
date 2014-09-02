@@ -33,6 +33,9 @@ protected:
 
     DrawSpace::Utils::TimeManager       m_timer;
 
+    DrawSpace::Scenegraph*              m_scenegraph;
+    std::vector<DrawSpace::Pass*>       m_passes;
+
 public:
     Scene( lua_State* p_L );
     virtual ~Scene( void );
@@ -40,12 +43,18 @@ public:
     int Lua_ShowFps( lua_State* p_L );
     int Lua_SetName( lua_State* p_L );
     int Lua_GetObject( lua_State* p_L );
+    int Lua_RegisterPass( lua_State* p_L );
+    int Lua_SetScenegraphObject( lua_State* p_L );
 
     
     virtual void Draw( void );
 
     void GetName( dsstring& p_name );
     void SetName( const dsstring& p_name );
+
+    void RegisterPass( DrawSpace::Pass* p_pass );
+
+    void SetScenegraph( DrawSpace::Scenegraph* p_scenegraph );
 
     static const char className[];
     static const DrawSpace::Luna<Scene>::RegType Register[];

@@ -30,8 +30,6 @@
 
 namespace DrawSpace
 {
-// fwd declaration
-class IntermediatePass;
 
 class Pass
 {

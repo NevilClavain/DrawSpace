@@ -1,4 +1,3 @@
-
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -21,44 +20,34 @@
 *                                                                          
 */
 
-#include "bindingsinit.h"
-#include "lua_assetsbase.h"
-#include "lua_texture.h"
-#include "lua_meshe.h"
-#include "lua_shader.h"
-#include "lua_renderstate.h"
-#include "lua_fx.h"
-#include "lua_renderingnode.h"
-#include "lua_renderingqueue.h"
-#include "lua_pass.h"
-#include "lua_intermediatepass.h"
-#include "lua_finalpass.h"
-#include "lua_viewportquad.h"
-#include "lua_scenegraph.h"
-#include "lua_chunk.h"
-#include "lua_vector.h"
-#include "lua_matrix.h"
-#include "lua_transformnode.h"
+#ifndef _LUA_PASS_H_
+#define _LUA_PASS_H_
 
-using namespace DrawSpace;
+#include "lua_binding.h"
+#include "pass.h"
 
-void DrawSpaceLuaBindingsInit( lua_State* p_L )
+namespace DrawSpace
 {
-    Luna<LuaAssetsBase>::Register( p_L );
-    Luna<LuaTexture>::Register( p_L );
-    Luna<LuaMeshe>::Register( p_L );
-    Luna<LuaShader>::Register( p_L );
-    Luna<LuaRenderState>::Register( p_L );
-    Luna<LuaFx>::Register( p_L );
-    Luna<LuaRenderingNode>::Register( p_L );
-    Luna<LuaRenderingQueue>::Register( p_L );
-    Luna<LuaPass>::Register( p_L );
-    Luna<LuaIntermediatePass>::Register( p_L );
-    Luna<LuaFinalPass>::Register( p_L );
-    Luna<LuaViewportQuad>::Register( p_L );
-    Luna<LuaScenegraph>::Register( p_L );
-    Luna<LuaChunk>::Register( p_L );
-    Luna<LuaVector>::Register( p_L );
-    Luna<LuaMatrix>::Register( p_L );
-    Luna<LuaTransformNode>::Register( p_L );
+class LuaPass : public LuaBinding
+{
+protected:
+
+    DrawSpace::Pass*                    m_pass;
+
+public:
+    LuaPass( lua_State* p_L );
+    ~LuaPass( void );
+
+    int Lua_SetObject( lua_State* p_L );
+    int Lua_GetRenderingQueueObject( lua_State* p_L );
+    int Lua_CreateViewportQuad( lua_State* p_L );
+    int Lua_GetViewportQuadObject( lua_State* p_L );
+    int Lua_GetName( lua_State* p_L );
+
+    static const char className[];
+    static const DrawSpace::Luna<LuaPass>::RegType Register[];
+};
 }
+
+
+#endif
