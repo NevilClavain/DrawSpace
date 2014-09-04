@@ -40,6 +40,10 @@ public:
 
     int Lua_SetObject( lua_State* p_L );
 
+    int Lua_SetName( lua_State* p_L );
+    int Lua_GetName( lua_State* p_L );
+    int Lua_SetLocalTransform( lua_State* p_L );
+
     static const char className[];
     static const DrawSpace::Luna<LuaTransformNode>::RegType Register[];
 };

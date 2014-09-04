@@ -25,6 +25,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 const char LuaRenderingNode::className[] = "RenderingNode";
 const DrawSpace::Luna<LuaRenderingNode>::RegType LuaRenderingNode::Register[] =
@@ -305,11 +306,17 @@ int LuaRenderingNode::Lua_AddShaderParameter( lua_State* p_L )
     }
 
 	int argc = lua_gettop( p_L );
-	if( argc != 2 )
+	if( argc != 4 )
 	{
 		lua_pushstring( p_L, "AddShaderParameter : bad number of args" );
 		lua_error( p_L );		
 	}
+
+    long shader_index = luaL_checkinteger( p_L, 2 );
+    dsstring id = luaL_checkstring( p_L, 3 );
+    long shader_register = luaL_checkinteger( p_L, 4 );
+
+    m_renderingnode->AddShaderParameter( shader_index, id, shader_register );
 
     return 0;
 }
@@ -322,6 +329,18 @@ int LuaRenderingNode::Lua_SetShaderReal( lua_State* p_L )
 		lua_error( p_L );
     }
 
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "SetShaderReal : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsstring id = luaL_checkstring( p_L, 2 );
+    dsreal val = luaL_checknumber( p_L, 3 );
+
+    m_renderingnode->SetShaderReal( id, val );
+
     return 0;
 }
 
@@ -330,6 +349,30 @@ int LuaRenderingNode::Lua_SetShaderRealVector( lua_State* p_L )
     if( !m_renderingnode )
     {
 		lua_pushstring( p_L, "SetShaderRealVector : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+
+    if( 5 == argc )
+    {
+        dsstring id = luaL_checkstring( p_L, 2 );
+        dsreal val0 = luaL_checknumber( p_L, 3 );
+        dsreal val1 = luaL_checknumber( p_L, 4 );
+        dsreal val2 = luaL_checknumber( p_L, 5 );
+
+        m_renderingnode->SetShaderRealVector( id, Vector( val0, val1, val2, 1.0 ) );
+    }
+    else if( 3 == argc )
+    {
+        dsstring id = luaL_checkstring( p_L, 2 );
+        Vector* vec = (Vector*)luaL_checkinteger( p_L, 3 );
+
+        m_renderingnode->SetShaderRealVector( id, *vec );
+    }
+    else
+    {
+		lua_pushstring( p_L, "SetShaderRealVector : bad number of args" );
 		lua_error( p_L );
     }
 
@@ -343,6 +386,18 @@ int LuaRenderingNode::Lua_SetShaderBool( lua_State* p_L )
 		lua_pushstring( p_L, "SetShaderBool : refused, no associated rendering node object" );
 		lua_error( p_L );
     }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "SetShaderBool : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsstring id = luaL_checkstring( p_L, 2 );
+    bool val = (bool)luaL_checkinteger( p_L, 3 );
+
+    m_renderingnode->SetShaderBool( id, val );
 
     return 0;
 }
