@@ -32,6 +32,20 @@ const DrawSpace::Luna<LuaRenderingNode>::RegType LuaRenderingNode::Register[] =
     { "SetObject", &LuaRenderingNode::Lua_SetObject },
     { "GetObject", &LuaRenderingNode::Lua_GetObject },
     { "InstanciateObject", &LuaRenderingNode::Lua_InstanciateObject },
+    { "SetTextureObject", &LuaRenderingNode::Lua_SetTextureObject },
+    { "SetVertexTextureObject", &LuaRenderingNode::Lua_SetVertexTextureObject },
+    { "GetTextureObject", &LuaRenderingNode::Lua_GetTextureObject },
+    { "GetVertexTextureObject", &LuaRenderingNode::Lua_GetVertexTextureObject },
+    { "SetMesheObject", &LuaRenderingNode::Lua_SetMesheObject },
+    { "GetMesheObject", &LuaRenderingNode::Lua_GetMesheObject },
+    { "SetFxObject", &LuaRenderingNode::Lua_SetFxObject },
+    { "GetFxObject", &LuaRenderingNode::Lua_GetFxObject },
+    { "SetOrderNumber", &LuaRenderingNode::Lua_SetFxObject },
+    { "GetOrderNumber", &LuaRenderingNode::Lua_GetFxObject },
+    { "AddShaderParameter", &LuaRenderingNode::Lua_AddShaderParameter },
+    { "SetShaderReal", &LuaRenderingNode::Lua_SetShaderReal },
+    { "SetShaderRealVector", &LuaRenderingNode::Lua_SetShaderRealVector },
+    { "SetShaderBool", &LuaRenderingNode::Lua_SetShaderBool },
     { 0 }
 };
 
@@ -96,3 +110,240 @@ int LuaRenderingNode::Lua_InstanciateObject( lua_State* p_L )
     LuaBindingsDirectory::GetInstance()->Register( id, this );
     return 0;
 }
+
+int LuaRenderingNode::Lua_SetTextureObject( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "SetTexture : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "SetTexture : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    Texture* texture = (Texture*)luaL_checkinteger( p_L, 2 );
+    long stage = luaL_checkinteger( p_L, 3 );
+    m_renderingnode->SetTexture( texture, stage );
+
+    return 0;
+}
+
+int LuaRenderingNode::Lua_SetVertexTextureObject( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "SetVertexTexture : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "SetVertexTexture : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    Texture* texture = (Texture*)luaL_checkinteger( p_L, 2 );
+    long stage = luaL_checkinteger( p_L, 3 );
+    m_renderingnode->SetVertexTexture( texture, stage );
+
+    return 0;
+}
+
+int LuaRenderingNode::Lua_SetMesheObject( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "SetMesheObject : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetMesheObject : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    Meshe* meshe = (Meshe*)luaL_checkinteger( p_L, 2 );
+    m_renderingnode->SetMeshe( meshe );
+
+    return 0;
+}
+
+int LuaRenderingNode::Lua_GetMesheObject( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "GetMesheObject : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+    lua_pushunsigned( p_L, (lua_Unsigned)( m_renderingnode->GetMeshe() ) );
+    return 1;
+}
+
+int LuaRenderingNode::Lua_SetFxObject( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "SetFxObject : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetFxObject : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    Fx* fx = (Fx*)luaL_checkinteger( p_L, 2 );
+    m_renderingnode->SetFx( fx );
+
+    return 0;
+}
+
+int LuaRenderingNode::Lua_GetFxObject( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "GetFxObject : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+    lua_pushunsigned( p_L, (lua_Unsigned)( m_renderingnode->GetMeshe() ) );
+    return 1;
+}
+
+int LuaRenderingNode::Lua_GetTextureObject( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "GetTextureObject : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "GetTextureObject : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    long stage = luaL_checkinteger( p_L, 2 );
+    lua_pushunsigned( p_L, (lua_Unsigned)( m_renderingnode->GetTexture( stage ) ) );
+
+    return 1;
+}
+
+int LuaRenderingNode::Lua_GetVertexTextureObject( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "GetVertexTextureObject : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "GetVertexTextureObject : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    long stage = luaL_checkinteger( p_L, 2 );
+    lua_pushunsigned( p_L, (lua_Unsigned)( m_renderingnode->GetVertexTexture( stage ) ) );
+
+    return 1;
+}
+
+int LuaRenderingNode::Lua_SetOrderNumber( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "SetOrderNumber : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetOrderNumber : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    long order_value = luaL_checkinteger( p_L, 2 );
+    m_renderingnode->SetOrderNumber( order_value );
+
+    return 0;
+}
+
+int LuaRenderingNode::Lua_GetOrderNumber( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "GetOrderNumber : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+    lua_pushunsigned( p_L, (lua_Unsigned)( m_renderingnode->GetOrderNumber() ) );
+    return 1;
+}
+
+int LuaRenderingNode::Lua_AddShaderParameter( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "AddShaderParameter : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "AddShaderParameter : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    return 0;
+}
+
+int LuaRenderingNode::Lua_SetShaderReal( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "SetShaderReal : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+    return 0;
+}
+
+int LuaRenderingNode::Lua_SetShaderRealVector( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "SetShaderRealVector : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+    return 0;
+}
+
+int LuaRenderingNode::Lua_SetShaderBool( lua_State* p_L )
+{
+    if( !m_renderingnode )
+    {
+		lua_pushstring( p_L, "SetShaderBool : refused, no associated rendering node object" );
+		lua_error( p_L );
+    }
+
+    return 0;
+}
+

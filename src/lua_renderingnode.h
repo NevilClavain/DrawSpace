@@ -48,6 +48,27 @@ public:
 
     int Lua_InstanciateObject( lua_State* p_L );
 
+    int Lua_SetTextureObject( lua_State* p_L );
+    int Lua_SetVertexTextureObject( lua_State* p_L );
+
+    int Lua_GetTextureObject( lua_State* p_L );
+    int Lua_GetVertexTextureObject( lua_State* p_L );
+
+    int Lua_SetMesheObject( lua_State* p_L );
+    int Lua_GetMesheObject( lua_State* p_L );
+
+    int Lua_SetFxObject( lua_State* p_L );
+    int Lua_GetFxObject( lua_State* p_L );
+
+    int Lua_SetOrderNumber( lua_State* p_L );
+    int Lua_GetOrderNumber( lua_State* p_L );
+
+    int Lua_AddShaderParameter( lua_State* p_L );
+    int Lua_SetShaderReal( lua_State* p_L );
+    int Lua_SetShaderRealVector( lua_State* p_L );
+    int Lua_SetShaderBool( lua_State* p_L );
+
+
     static const char className[];
     static const DrawSpace::Luna<LuaRenderingNode>::RegType Register[];
 };
