@@ -56,8 +56,7 @@ public:
     virtual ~TransformNode( void );
 
     virtual void        OnRegister( Scenegraph* p_scenegraph ) = 0;
-
-    //virtual void        AddChild( TransformNode* p_node );
+    
     virtual void        ComputeFinalTransform( Utils::TimeManager& p_timemanager );
     virtual void        SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
     virtual void        GetName( dsstring& p_name );
