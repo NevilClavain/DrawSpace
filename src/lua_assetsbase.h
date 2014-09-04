@@ -24,20 +24,30 @@
 #ifndef _LUAASSETSBASE_H_
 #define _LUAASSETSBASE_H_
 
-#include "luna.h"
+#include "lua_binding.h"
 #include "assetsbase.h"
 
 namespace DrawSpace
 {
-class LuaAssetsBase
+class LuaAssetsBase : public LuaBinding
 {
 protected:
 
+    bool                             m_release_object;
     DrawSpace::Core::AssetsBase*     m_assetsbase;
+
+    void                             cleanup( void );
 
 public:
     LuaAssetsBase( lua_State* p_L );
     ~LuaAssetsBase( void );
+
+    DrawSpace::Core::AssetsBase* GetObject( void ) { return m_assetsbase; };
+
+    int Lua_SetObject( lua_State* p_L );
+    int Lua_GetObject( lua_State* p_L );
+
+    int Lua_InstanciateObject( lua_State* p_L );
 
     int Lua_RegisterAssetObject( lua_State* p_L );
     int Lua_GetAssetObject( lua_State* p_L );

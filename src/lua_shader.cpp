@@ -99,6 +99,7 @@ int LuaShader::Lua_InstanciateObject( lua_State* p_L )
     m_release_object = true;
 
     LuaBindingsDirectory::GetInstance()->Register( id, this );
+    m_shader->SetName( id );
     return 0;
 }
 

@@ -47,7 +47,7 @@ public:
     int Lua_GetObject( lua_State* p_L );
 
     int Lua_InstanciateObject( lua_State* p_L );
-    //int Lua_InstanciateObjectWithDims( lua_State* p_L );
+
 
     static const char className[];
     static const DrawSpace::Luna<LuaIntermediatePass>::RegType Register[];

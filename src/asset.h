@@ -37,13 +37,12 @@ protected:
 public:
 
     Asset( void );
-    Asset( const dsstring& p_name );
     virtual ~Asset( void );
 
     virtual void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  ) = 0;
     virtual void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive ) = 0;
 
-    virtual void GetName( dsstring& p_name );
+    virtual void SetName( const dsstring& p_name );
 };
 }
 #endif

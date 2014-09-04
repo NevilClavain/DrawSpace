@@ -29,15 +29,11 @@ Asset::Asset( void )
 
 }
 
-Asset::Asset( const dsstring& p_name ) : m_assetname( p_name )
-{
-}
-
 Asset::~Asset( void )
 {
 }
 
-void Asset::GetName( dsstring& p_name )
+void Asset::SetName( const dsstring& p_name )
 {
-    p_name = m_assetname;
+    m_assetname = p_name;
 }
