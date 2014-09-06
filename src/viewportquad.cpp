@@ -72,7 +72,7 @@ ViewportQuad::ViewportQuad( const dsstring& p_name, dsreal p_width, dsreal p_hei
 
 ViewportQuad::~ViewportQuad( void )
 {
-    _DRAWSPACE_DELETE_( m_meshe );
+    //_DRAWSPACE_DELETE_( m_meshe );
 }
 
 void ViewportQuad::OnDraw( void )
