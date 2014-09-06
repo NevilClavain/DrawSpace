@@ -32,12 +32,13 @@ const DrawSpace::Luna<LuaRenderingQueue>::RegType LuaRenderingQueue::Register[] 
     { "SetObject", &LuaRenderingQueue::Lua_SetObject },
     { "GetObject", &LuaRenderingQueue::Lua_GetObject },
     { "InstanciateObject", &LuaRenderingQueue::Lua_InstanciateObject },
-    { "InstanciateObject", &LuaRenderingQueue::Lua_AddRenderingNodeObject },
-    { "InstanciateObject", &LuaRenderingQueue::Lua_Draw },
-    { "InstanciateObject", &LuaRenderingQueue::Lua_EnableDepthClearing },
-    { "InstanciateObject", &LuaRenderingQueue::Lua_EnableTargetClearing },
-    { "InstanciateObject", &LuaRenderingQueue::Lua_SetTargetClearingColor },
-    { "InstanciateObject", &LuaRenderingQueue::Lua_UpdateOuputQueue },
+    { "AddRenderingNodeObject", &LuaRenderingQueue::Lua_AddRenderingNodeObject },
+    { "EnableDepthClearing", &LuaRenderingQueue::Lua_EnableDepthClearing },
+    { "EnableTargetClearing", &LuaRenderingQueue::Lua_EnableTargetClearing },
+    { "Draw", &LuaRenderingQueue::Lua_Draw },
+    { "SetTargetClearingColor", &LuaRenderingQueue::Lua_SetTargetClearingColor },
+    { "UpdateOuputQueue", &LuaRenderingQueue::Lua_UpdateOuputQueue },
+
     { 0 }
 };
 
