@@ -31,13 +31,11 @@ do not know who exactly is the author of this; for more details, visit http://lu
 
 
 extern "C" {
-#include ".\luastack\lua.h"
-#include ".\luastack\lualib.h"
-#include ".\luastack\lauxlib.h"
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 };
 
-namespace DrawSpace
-{
 template<class T> 
 class Luna 
 {
@@ -99,6 +97,5 @@ public:
         int(T::*mfunc)(lua_State*);
     };
 };
-}
 
 #endif
