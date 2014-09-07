@@ -24,7 +24,7 @@
 
 
 const char Scene::className[] = "Scene";
-const DrawSpace::Luna<Scene>::RegType Scene::Register[] =
+const Luna<Scene>::RegType Scene::Register[] =
 {
   { "ShowFps", &Scene::Lua_ShowFps },
   { "SetName", &Scene::Lua_SetName },

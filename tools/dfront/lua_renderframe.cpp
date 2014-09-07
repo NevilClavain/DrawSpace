@@ -24,7 +24,7 @@
 
 
 const char LuaRenderFrame::className[] = "RenderFrame";
-const DrawSpace::Luna<LuaRenderFrame>::RegType LuaRenderFrame::Register[] =
+const Luna<LuaRenderFrame>::RegType LuaRenderFrame::Register[] =
 {
   { "SetCurrentScene", &LuaRenderFrame::Lua_SetCurrentScene },
   { "GetMesheImportObject", &LuaRenderFrame::Lua_GetMesheImportObject },

@@ -83,7 +83,7 @@ void RenderFrame::on_render_frame( void )
     }
 }
 
-void RenderFrame::SetLuaContext( DrawSpace::LuaContext* p_luacontext )
+void RenderFrame::SetLuaContext( FrontLuaContext* p_luacontext )
 {
     m_console_dialog->SetLuaContext( p_luacontext );
     m_luacontext = p_luacontext;

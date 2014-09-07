@@ -171,7 +171,7 @@ void ConsoleDialog::OnButtonClearOutput( wxCommandEvent& p_event )
     m_textoutputsCtrl->Clear();
 }
 
-void ConsoleDialog::SetLuaContext( DrawSpace::LuaContext* p_luacontext )
+void ConsoleDialog::SetLuaContext( FrontLuaContext* p_luacontext )
 {
     m_luacontext = p_luacontext;
     m_luacontext->RegisterErrorHandler( m_luaerrorhandler );

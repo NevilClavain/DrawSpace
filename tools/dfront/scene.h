@@ -23,6 +23,8 @@
 #ifndef _DEFAULTSCENE_H_
 #define _DEFAULTSCENE_H_
 
+
+#include "luna.h"
 #include "drawspace.h"
 
 class Scene
@@ -57,7 +59,7 @@ public:
     void SetScenegraph( DrawSpace::Scenegraph* p_scenegraph );
 
     static const char className[];
-    static const DrawSpace::Luna<Scene>::RegType Register[];
+    static const Luna<Scene>::RegType Register[];
 
 };
 

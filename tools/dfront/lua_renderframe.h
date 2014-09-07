@@ -43,7 +43,7 @@ public:
     int Lua_GetMesheImportObject( lua_State* p_L );
 
     static const char className[];
-    static const DrawSpace::Luna<LuaRenderFrame>::RegType Register[];
+    static const Luna<LuaRenderFrame>::RegType Register[];
 };
 
 #endif

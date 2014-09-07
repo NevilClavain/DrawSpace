@@ -24,7 +24,7 @@
 #define _CONSOLE_H_
 
 #include <wx/wx.h>
-#include "lua_context.h"
+#include "frontluacontext.h"
 #include "callback.h"
 
 class ConsoleDialog : public wxFrame
@@ -48,7 +48,7 @@ protected:
     wxFont                  m_consoleFont;
     wxTextAttr              m_default_style;
 
-    DrawSpace::LuaContext*  m_luacontext;
+    FrontLuaContext*        m_luacontext;
 
     LuaErrorHandler*        m_luaerrorhandler;
 
@@ -69,7 +69,7 @@ public:
     void OnButtonLoadCmd( wxCommandEvent& p_event );
     void OnButtonClearOutput( wxCommandEvent& p_event );
 
-    void SetLuaContext( DrawSpace::LuaContext* p_luacontext );
+    void SetLuaContext( FrontLuaContext* p_luacontext );
 
     void Print( const dsstring& p_text );
 
