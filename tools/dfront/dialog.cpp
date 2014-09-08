@@ -32,18 +32,27 @@ END_EVENT_TABLE()
 
 
 Dialog::Dialog( wxWindow* p_parent, const wxString& p_title, RenderFrame* p_owner ) :
-wxDialog( p_parent, wxID_ANY, p_title, wxPoint( 860, 50 ), wxSize( 400, 400 ), wxCAPTION ),
+wxDialog( p_parent, wxID_ANY, p_title, wxPoint( 860, 50 ), wxSize( 400, 600 ), wxCAPTION ),
 m_owner( p_owner )
 {
-    m_notebook = new wxNotebook( this, wxID_NOTEBOOK, wxPoint( 0, 0 ), wxSize( 400, 350 ), wxNB_TOP | wxNB_FIXEDWIDTH );
+    m_notebook = new wxNotebook( this, wxID_NOTEBOOK, wxPoint( 0, 0 ), wxSize( 400, 600 ), wxNB_TOP | wxNB_FIXEDWIDTH );
 
     m_topsizer = new wxBoxSizer( wxVERTICAL );
+
+    ///////////////////////////////////////////////////////////////////////////
 
 	m_scenes_tab = new wxWindow( m_notebook, wxID_TAB_SCENES );
 
     m_scenes_listbox = new wxListBox( m_scenes_tab, wxID_SCENESLISTBOX, wxPoint( 0, 0 ), wxSize( 200, 200 ) );
     m_newscene_button = new wxButton( m_scenes_tab, wxID_NEWSCENEBUTTON, "New scene", wxPoint( 210, 0 ) );
- 
+
+
+    m_passes_listbox = new wxListBox( m_scenes_tab, wxID_PASSESLISTBOX, wxPoint( 0, 240 ), wxSize( 200, 200 ) );
+    m_newpass_button = new wxButton( m_scenes_tab, wxID_NEWPASSBUTTON, "New pass", wxPoint( 210, 240 ) );
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
 	m_scenegraph_tab = new wxWindow( m_notebook, wxID_TAB_SCENEGRAPH );
 
 

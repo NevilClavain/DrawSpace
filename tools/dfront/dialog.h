@@ -43,7 +43,12 @@ protected:
     
     wxListBox*								m_scenes_listbox;
     wxButton*                               m_newscene_button;
-   
+
+    wxListBox*								m_passes_listbox;
+    wxButton*                               m_newpass_button;
+
+
+
 	wxWindow*								m_scenegraph_tab;
 
 

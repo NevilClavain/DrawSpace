@@ -33,5 +33,7 @@
 #define wxID_TAB_SCENEGRAPH                     wxID_HIGHEST + 9
 #define wxID_SCENESLISTBOX                      wxID_HIGHEST + 10
 #define wxID_NEWSCENEBUTTON                     wxID_HIGHEST + 11
+#define wxID_PASSESLISTBOX                      wxID_HIGHEST + 12
+#define wxID_NEWPASSBUTTON                      wxID_HIGHEST + 13
 
 #endif
