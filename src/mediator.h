@@ -203,7 +203,17 @@ public:
             m_props.push_back( p_other.m_props[i]->CloneMe() );
         }
         return *this;
-  }
+    };
+
+    void GetPropertiesNamesList( std::vector<dsstring>& p_outlist )
+    {
+        for( size_t i = 0; i < m_props.size(); i++ )
+        {
+            dsstring pname;
+            m_props[i]->GetName( pname );
+            p_outlist.push_back( pname );
+        }
+    }
    
 };
 

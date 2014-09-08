@@ -169,6 +169,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\configurable.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\configurable.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\factory.cpp"
 				>
 			</File>

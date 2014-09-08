@@ -27,11 +27,12 @@
 #include "transformqueue.h"
 #include "renderingqueue.h"
 #include "viewportquad.h"
+#include "configurable.h"
 
 namespace DrawSpace
 {
 
-class Pass
+class Pass : public Core::Configurable
 {
 protected:	
     Core::RenderingQueue*   m_renderingqueue;
@@ -59,6 +60,12 @@ class FinalPass : public Pass
 public:
     FinalPass( const dsstring& p_name );
     virtual ~FinalPass( void );
+
+    virtual void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  );
+    virtual void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
+
+    virtual void ApplyConfiguration( void );
+
 };
 
 class IntermediatePass : public Pass
@@ -72,6 +79,12 @@ public:
     virtual ~IntermediatePass( void );
 
     Core::Texture* GetTargetTexture( void );
+
+    virtual void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  );
+    virtual void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
+
+    virtual void ApplyConfiguration( void );
+
 };
 }
 
