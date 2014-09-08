@@ -24,6 +24,7 @@
 #define _DIALOG_H_
 
 #include <wx/wx.h>
+#include <wx/notebook.h>
 
 class RenderFrame;
 
@@ -33,6 +34,18 @@ protected:
 	DECLARE_EVENT_TABLE()
 
     RenderFrame* m_owner;
+
+    wxNotebook*								m_notebook;
+
+    wxBoxSizer*								m_topsizer;
+
+	wxWindow*								m_scenes_tab;
+    
+    wxListBox*								m_scenes_listbox;
+    wxButton*                               m_newscene_button;
+   
+	wxWindow*								m_scenegraph_tab;
+
 
 public:
 
