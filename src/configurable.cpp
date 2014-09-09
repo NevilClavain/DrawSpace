@@ -35,7 +35,9 @@ Configurable::~Configurable( void )
 
 }
 
+/*
 PropertyPool& Configurable::GetPropertyPool( void )
 {
     return m_properties;
 }
+*/

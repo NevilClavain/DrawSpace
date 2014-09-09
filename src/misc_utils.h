@@ -43,6 +43,9 @@ Interface::MesheImport* InstanciateMesheImportFromPlugin( const dsstring& p_plug
 
 void BuildSpaceboxFx( DrawSpace::Spacebox* p_spacebox, const dsstring& p_passname );
 
+long StringToInt( const dsstring& p_value );
+dsreal StringToReal( const dsstring& p_value );
+
 }
 }
 

@@ -23,7 +23,6 @@
 #ifndef _CONFIGURABLE_H_
 #define _CONFIGURABLE_H_
 
-#include "mediator.h"
 #include "factory.h"
 #include "archive.h"
 
@@ -35,13 +34,13 @@ class Configurable
 {
 protected:
 
-    PropertyPool        m_properties;
+    std::map<dsstring, std::vector<dsstring>> m_properties;
 
 public:
     Configurable( void );
     virtual ~Configurable( void );
 
-    PropertyPool& GetPropertyPool( void );
+    //PropertyPool& GetPropertyPool( void );
 
 
     virtual void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  ) = 0;

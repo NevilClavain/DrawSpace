@@ -285,3 +285,12 @@ void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, const dsstring& p_
     }    
 }
 
+long StringToInt( const dsstring& p_value )
+{
+    return atoi( p_value.c_str() );
+}
+
+dsreal StringToReal( const dsstring& p_value )
+{
+    return atof( p_value.c_str() );
+}

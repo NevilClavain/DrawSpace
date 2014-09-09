@@ -23,6 +23,7 @@
 #include "pass.h"
 #include "renderer.h"
 #include "plugin.h"
+#include "misc_utils.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -32,6 +33,7 @@ Pass::Pass( const dsstring& p_name ) :
 m_name( p_name ),
 m_viewportquad( NULL )
 {
+    /*
     m_properties.AddPropValue<bool>( "viewportquad", false );
 
     m_properties.AddPropValue<dsstring>( "viewportquad_fxname", "" );
@@ -40,6 +42,7 @@ m_viewportquad( NULL )
     m_properties.AddPropValue<bool>( "renderingqueue_depthclearing_state", false );
     m_properties.AddPropValue<bool>( "renderingqueue_targetclearing_state", false );
     m_properties.AddPropValue<Vector>( "renderingqueue_targetclearing_color", Vector( 0, 0, 0, 1.0 ) );
+    */
 
 }
 
@@ -159,11 +162,21 @@ void IntermediatePass::Unserialize( Core::Factory& p_factory, Utils::Archive& p_
 
 void IntermediatePass::ApplyConfiguration( void )
 {
-    std::vector<dsstring> names_list;
-    m_properties.GetPropertiesNamesList( names_list );
-
-    for( long i = 0; i < names_list.size(); i++ )
+    for( std::map<dsstring, std::vector<dsstring>>::iterator it = m_properties.begin(); it != m_properties.end(); ++it )
     {
-        dsstring curr_name = names_list[i];
+        dsstring config_object_name = it->first;
+
+
+        if( "viewportquad" == config_object_name )
+        {
+
+
+        }
+        else if( "viewportquad_fxname" == config_object_name )
+        {
+
+
+        }
+
     }
 }
