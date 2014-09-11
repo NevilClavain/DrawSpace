@@ -90,12 +90,12 @@ void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h )
     p_h = m_render_target_height;
 }
 
-void Texture::Serialize( Factory& p_factory, Archive& p_archive )
+void Texture::Serialize( Archive& p_archive )
 {
 
 }
 
-void Texture::Unserialize( Factory& p_factory, Archive& p_archive )
+void Texture::Unserialize( Archive& p_archive )
 {
 
 }

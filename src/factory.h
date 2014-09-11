@@ -27,22 +27,28 @@
 #include "archive.h"
 namespace DrawSpace
 {
-class Asset;
-
 namespace Core
 {
-
 class Factory
 {
 protected:
-    std::map<dsstring, Asset*> m_assets;
 
-public:
+    static Factory* m_instance;
+
     Factory( void );
+public:
+
+    static Factory* GetInstance( void )
+    {
+        if( NULL == m_instance )
+        {
+            m_instance = new Factory();
+        }
+
+        return m_instance;
+    }
+
     ~Factory( void );
-
-    void SerializeAll( DrawSpace::Utils::Archive& p_archive );
-
 };
 }
 }

@@ -85,11 +85,11 @@ void Fx::AddRenderStateOut( const RenderState& p_renderstate )
     m_renderstates_out.push_back( p_renderstate );
 }
 
-void Fx::Serialize( Factory& p_factory, Archive& p_archive )
+void Fx::Serialize( Archive& p_archive )
 {
 
 }
-void Fx::Unserialize( Factory& p_factory, Archive& p_archive )
+void Fx::Unserialize( Archive& p_archive )
 {
 
 }

@@ -98,12 +98,12 @@ FinalPass::~FinalPass( void )
     _DRAWSPACE_DELETE_( m_renderingqueue );
 }
 
-void FinalPass::Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  )
+void FinalPass::Serialize( Utils::Archive& p_archive  )
 {
 
 }
 
-void FinalPass::Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive )
+void FinalPass::Unserialize( Utils::Archive& p_archive )
 {
 
 
@@ -149,12 +149,12 @@ Core::Texture* IntermediatePass::GetTargetTexture( void )
     return m_targettexture;
 }
 
-void IntermediatePass::Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  )
+void IntermediatePass::Serialize( Utils::Archive& p_archive  )
 {
 
 }
 
-void IntermediatePass::Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive )
+void IntermediatePass::Unserialize( Utils::Archive& p_archive )
 {
 
 

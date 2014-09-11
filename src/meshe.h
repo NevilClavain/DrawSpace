@@ -67,8 +67,8 @@ public:
     void GetCenter( DrawSpace::Utils::Vector& p_vector );
     void GetAABB( Utils::Vector& p_min, Utils::Vector& p_max );
     
-    void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  );
-    void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
+    void Serialize( Utils::Archive& p_archive  );
+    void Unserialize( Utils::Archive& p_archive );
 
     void GetMD5( dsstring& p_md5 );
 };

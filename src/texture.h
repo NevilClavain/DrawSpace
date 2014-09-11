@@ -58,8 +58,8 @@ public:
 
     void GetPath( dsstring& p_path );
 
-    void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive );
-    void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
+    void Serialize( Utils::Archive& p_archive );
+    void Unserialize( Utils::Archive& p_archive );
 
     bool IsRenderTarget( void );
     void GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h );

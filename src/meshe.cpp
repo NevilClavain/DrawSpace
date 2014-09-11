@@ -163,12 +163,12 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
     }
 }
 
-void Meshe::Serialize( Factory& p_factory, Archive& p_archive  )
+void Meshe::Serialize( Archive& p_archive  )
 {
 
 }
 
-void Meshe::Unserialize( Factory& p_factory, Archive& p_archive )
+void Meshe::Unserialize( Archive& p_archive )
 {
 
 

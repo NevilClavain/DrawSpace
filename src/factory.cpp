@@ -23,6 +23,8 @@
 #include "factory.h"
 #include "asset.h"
 
+DrawSpace::Core::Factory* DrawSpace::Core::Factory::m_instance = NULL;
+
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
@@ -37,10 +39,3 @@ Factory::~Factory( void )
 
 }
 
-void Factory::SerializeAll( Archive& p_archive )
-{
-    for( std::map<dsstring, Asset*>::iterator it = m_assets.begin(); it != m_assets.end(); ++it )
-    {
-        (*it).second->Serialize( (*this), p_archive );
-    }
-}

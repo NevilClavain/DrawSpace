@@ -76,13 +76,13 @@ void Shader::ReleaseData( void )
     }
 }
 
-void Shader::Serialize( Factory& p_factory, Archive& p_archive  )
+void Shader::Serialize( Archive& p_archive  )
 {
 
 
 }
 
-void Shader::Unserialize( Factory& p_factory, Archive& p_archive )
+void Shader::Unserialize( Archive& p_archive )
 {
 
 }

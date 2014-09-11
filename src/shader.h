@@ -51,8 +51,8 @@ public:
     bool	LoadFromFile( void );
     void	ReleaseData( void );
 
-    void	Serialize( Core::Factory& p_factory, Utils::Archive& p_archive );
-    void	Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
+    void	Serialize( Utils::Archive& p_archive );
+    void	Unserialize( Utils::Archive& p_archive );
 
     void    SetText( const dsstring& p_text );
 };

@@ -217,14 +217,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\grbfile.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\grbfile.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\headmovement.cpp"
 				>
 			</File>

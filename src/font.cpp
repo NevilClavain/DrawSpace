@@ -118,12 +118,12 @@ void Font::GetTexturePath( dsstring& p_texturepath )
     p_texturepath = m_texturepath;
 }
 
-void Font::Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  )
+void Font::Serialize( Utils::Archive& p_archive  )
 {
 
 }
 
-void Font::Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive )
+void Font::Unserialize( Utils::Archive& p_archive )
 {
 
 }

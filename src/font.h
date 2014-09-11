@@ -64,8 +64,8 @@ public:
 
     void GetTexturePath( dsstring& p_texturepath );
 
-    virtual void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  );
-    virtual void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
+    virtual void Serialize( Utils::Archive& p_archive  );
+    virtual void Unserialize( Utils::Archive& p_archive );
 
     
 };

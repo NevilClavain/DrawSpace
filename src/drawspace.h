@@ -58,7 +58,6 @@
 #include "fx.h"
 #include "viewportquad.h"
 #include "pass.h"
-#include "grbfile.h"
 #include "image.h"
 #include "font.h"
 #include "text.h"

@@ -23,7 +23,7 @@
 #ifndef _CONFIGURABLE_H_
 #define _CONFIGURABLE_H_
 
-#include "factory.h"
+
 #include "archive.h"
 
 namespace DrawSpace
@@ -42,9 +42,8 @@ public:
 
     //PropertyPool& GetPropertyPool( void );
 
-
-    virtual void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  ) = 0;
-    virtual void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive ) = 0;
+    virtual void Serialize( Utils::Archive& p_archive  ) = 0;
+    virtual void Unserialize( Utils::Archive& p_archive ) = 0;
 
     virtual void ApplyConfiguration( void ) = 0;
 

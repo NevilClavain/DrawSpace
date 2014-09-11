@@ -23,7 +23,6 @@
 #ifndef _ASSET_H_
 #define _ASSET_H_
 
-#include "factory.h"
 #include "archive.h"
 
 namespace DrawSpace
@@ -39,8 +38,8 @@ public:
     Asset( void );
     virtual ~Asset( void );
 
-    virtual void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  ) = 0;
-    virtual void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive ) = 0;
+    virtual void Serialize( Utils::Archive& p_archive  ) = 0;
+    virtual void Unserialize( Utils::Archive& p_archive ) = 0;
 
     virtual void SetName( const dsstring& p_name );
 };

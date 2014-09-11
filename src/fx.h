@@ -53,8 +53,8 @@ public:
     void AddShader( Shader* p_shader );
     void AddRenderStateIn( const RenderState& p_renderstate );
     void AddRenderStateOut( const RenderState& p_renderstate );
-    void Serialize( Core::Factory& p_factory, Utils::Archive& p_archive  );
-    void Unserialize( Core::Factory& p_factory, Utils::Archive& p_archive );
+    void Serialize( Utils::Archive& p_archive  );
+    void Unserialize( Utils::Archive& p_archive );
     void GetMD5( dsstring& p_md5 );
 };
 }
