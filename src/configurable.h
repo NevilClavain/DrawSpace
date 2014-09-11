@@ -42,8 +42,6 @@ public:
     Configurable( void );
     virtual ~Configurable( void );
 
-    //PropertyPool& GetPropertyPool( void );
-
     virtual void Serialize( Utils::Archive& p_archive  ) = 0;
     virtual void Unserialize( Utils::Archive& p_archive ) = 0;
 

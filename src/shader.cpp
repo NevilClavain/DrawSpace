@@ -76,6 +76,11 @@ void Shader::ReleaseData( void )
     }
 }
 
+bool Shader::Load( void )
+{
+    return false;
+}
+
 void Shader::Serialize( Archive& p_archive  )
 {
 

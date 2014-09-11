@@ -66,6 +66,8 @@ public:
 
     void GetCenter( DrawSpace::Utils::Vector& p_vector );
     void GetAABB( Utils::Vector& p_min, Utils::Vector& p_max );
+
+    bool Load( void );
     
     void Serialize( Utils::Archive& p_archive  );
     void Unserialize( Utils::Archive& p_archive );

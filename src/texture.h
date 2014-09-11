@@ -58,6 +58,8 @@ public:
 
     void GetPath( dsstring& p_path );
 
+    virtual bool Load( void );
+
     void Serialize( Utils::Archive& p_archive );
     void Unserialize( Utils::Archive& p_archive );
 

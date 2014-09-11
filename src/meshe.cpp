@@ -163,6 +163,11 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
     }
 }
 
+bool Meshe::Load( void )
+{
+    return false;
+}
+
 void Meshe::Serialize( Archive& p_archive  )
 {
 

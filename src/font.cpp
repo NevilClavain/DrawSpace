@@ -118,6 +118,11 @@ void Font::GetTexturePath( dsstring& p_texturepath )
     p_texturepath = m_texturepath;
 }
 
+bool Font::Load( void )
+{
+    return false;
+}
+
 void Font::Serialize( Utils::Archive& p_archive  )
 {
 

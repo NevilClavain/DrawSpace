@@ -33,6 +33,8 @@ class Asset
 protected:
     dsstring    m_assetname;
 
+    std::map<dsstring, std::vector<dsstring>>   m_properties;
+
 public:
 
     Asset( void );
@@ -40,6 +42,8 @@ public:
 
     virtual void Serialize( Utils::Archive& p_archive  ) = 0;
     virtual void Unserialize( Utils::Archive& p_archive ) = 0;
+
+    virtual bool Load( void ) = 0;
 
     virtual void SetName( const dsstring& p_name );
 };

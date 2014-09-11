@@ -32,7 +32,7 @@ namespace DrawSpace
 {
 namespace Core
 {
-class Fx : public Asset
+class Fx
 {
 protected:
     std::vector<Shader*>                        m_shaders;

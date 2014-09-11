@@ -51,6 +51,8 @@ public:
     bool	LoadFromFile( void );
     void	ReleaseData( void );
 
+    virtual bool Load( void );
+
     void	Serialize( Utils::Archive& p_archive );
     void	Unserialize( Utils::Archive& p_archive );
 
