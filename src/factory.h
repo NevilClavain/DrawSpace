@@ -49,6 +49,13 @@ public:
     }
 
     ~Factory( void );
+
+    bool ExecuteFromTextFile( const dsstring& p_path );
+    bool ExecuteFromBinaryFile( const dsstring& p_path );
+
+    bool ExecuteFromArchiveChunk( const DrawSpace::Utils::Archive& p_arc );
+    bool ExecuteFromTextChunk( const dsstring& p_text );
+
 };
 }
 }

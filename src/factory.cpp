@@ -39,3 +39,22 @@ Factory::~Factory( void )
 
 }
 
+bool Factory::ExecuteFromTextFile( const dsstring& p_path )
+{
+    return false;
+}
+
+bool Factory::ExecuteFromBinaryFile( const dsstring& p_path )
+{
+    return false;
+}
+
+bool Factory::ExecuteFromArchiveChunk( const DrawSpace::Utils::Archive& p_arc )
+{
+    return false;
+}
+
+bool Factory::ExecuteFromTextChunk( const dsstring& p_text )
+{
+    return false;
+}
