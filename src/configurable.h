@@ -34,7 +34,9 @@ class Configurable
 {
 protected:
 
-    std::map<dsstring, std::vector<dsstring>> m_properties;
+    dsstring                                    m_configname;
+
+    std::map<dsstring, std::vector<dsstring>>   m_properties;
 
 public:
     Configurable( void );
@@ -46,6 +48,8 @@ public:
     virtual void Unserialize( Utils::Archive& p_archive ) = 0;
 
     virtual void ApplyConfiguration( void ) = 0;
+
+    virtual void SetName( const dsstring& p_name );
 
 };
 

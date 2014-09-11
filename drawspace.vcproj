@@ -169,6 +169,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\configsbase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\configsbase.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\configurable.cpp"
 				>
 			</File>

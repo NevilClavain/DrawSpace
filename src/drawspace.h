@@ -47,6 +47,8 @@
 #include "transformqueue.h"
 #include "renderingnode.h"
 #include "renderingqueue.h"
+#include "assetsbase.h"
+#include "configsbase.h"
 #include "asset.h"
 #include "factory.h"
 #include "texture.h"

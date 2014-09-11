@@ -20,37 +20,39 @@
 *                                                                          
 */
 
-#ifndef _ASSETSBASE_H_
-#define _ASSETSBASE_H_
+#include "configsbase.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
-#include "asset.h"
-#include "callback.h"
-
-namespace DrawSpace
+ConfigsBase::ConfigsBase( void ) : m_configreg_handler( NULL )
 {
-namespace Core
-{
-class AssetsBase
-{
-public:
-
-    typedef BaseCallback<void, DrawSpace::Asset*> AssetRegistrationHandler;
-
-protected:
-
-    std::map<dsstring, DrawSpace::Asset*>   m_assets;
-    AssetRegistrationHandler*               m_assetreg_handler;
-
-public:
-    AssetsBase( void );
-    virtual ~AssetsBase( void );
-
-    void RegisterAsset( const dsstring& p_id, DrawSpace::Asset* p_asset );
-    DrawSpace::Asset* GetAsset( const dsstring& p_id );
-
-    void RegisterAssetRegistrationHandler( AssetRegistrationHandler* p_handler );
-};
 }
+
+ConfigsBase::~ConfigsBase( void )
+{
 }
-#endif
+
+void ConfigsBase::RegisterConfigurable( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf )
+{
+    m_configurables[p_id] = p_conf;
+    p_conf->SetName( p_id );
+    if( m_configreg_handler )
+    {
+        (*m_configreg_handler)( p_conf );
+    }
+}
+
+DrawSpace::Core::Configurable* ConfigsBase::GetConfigurable( const dsstring& p_id )
+{
+    if( m_configurables.count( p_id ) > 0 )
+    {
+        return m_configurables[p_id];
+    }
+    return NULL;
+}
+
+void ConfigsBase::RegisterConfigurableRegistrationHandler( ConfigurableRegistrationHandler* p_handler )
+{
+    m_configreg_handler = p_handler;
+}

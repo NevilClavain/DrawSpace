@@ -41,3 +41,9 @@ PropertyPool& Configurable::GetPropertyPool( void )
     return m_properties;
 }
 */
+
+
+void Configurable::SetName( const dsstring& p_name )
+{
+    m_configname = p_name;
+}

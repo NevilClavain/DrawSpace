@@ -20,36 +20,35 @@
 *                                                                          
 */
 
-#ifndef _ASSETSBASE_H_
-#define _ASSETSBASE_H_
+#ifndef _CONFIGSBASE_H_
+#define _CONFIGSBASE_H_
 
-
-#include "asset.h"
+#include "configurable.h"
 #include "callback.h"
 
 namespace DrawSpace
 {
 namespace Core
 {
-class AssetsBase
+class ConfigsBase
 {
 public:
 
-    typedef BaseCallback<void, DrawSpace::Asset*> AssetRegistrationHandler;
+    typedef BaseCallback<void, DrawSpace::Core::Configurable*> ConfigurableRegistrationHandler;
 
 protected:
 
-    std::map<dsstring, DrawSpace::Asset*>   m_assets;
-    AssetRegistrationHandler*               m_assetreg_handler;
+    std::map<dsstring, DrawSpace::Core::Configurable*>      m_configurables;
+    ConfigurableRegistrationHandler*                        m_configreg_handler;
 
 public:
-    AssetsBase( void );
-    virtual ~AssetsBase( void );
+    ConfigsBase( void );
+    virtual ~ConfigsBase( void );
 
-    void RegisterAsset( const dsstring& p_id, DrawSpace::Asset* p_asset );
-    DrawSpace::Asset* GetAsset( const dsstring& p_id );
+    void RegisterConfigurable( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf );
+    DrawSpace::Core::Configurable* GetConfigurable( const dsstring& p_id );
 
-    void RegisterAssetRegistrationHandler( AssetRegistrationHandler* p_handler );
+    void RegisterConfigurableRegistrationHandler( ConfigurableRegistrationHandler* p_handler );
 };
 }
 }
