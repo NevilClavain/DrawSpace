@@ -46,6 +46,9 @@ void BuildSpaceboxFx( DrawSpace::Spacebox* p_spacebox, const dsstring& p_passnam
 long StringToInt( const dsstring& p_value );
 dsreal StringToReal( const dsstring& p_value );
 
+void IntToString( long p_value, dsstring& p_str );
+void RealToString( dsreal p_value, dsstring& p_str );
+
 }
 }
 
