@@ -47,6 +47,7 @@ protected:
     unsigned long   m_render_target_height;
     
 public:
+    Texture( void );
     Texture( const dsstring& p_path, bool p_render_target = false, unsigned long p_render_target_width = 256, unsigned long p_render_target_height = 256 );
     ~Texture( void );
 

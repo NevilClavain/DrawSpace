@@ -24,9 +24,26 @@
 #include "file.h"
 #include "memalloc.h"
 #include "exceptions.h"
+#include "misc_utils.h"
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+
+
+Texture::Texture( void ) :
+m_filedata( NULL ), 
+m_filedatasize( -1 ), 
+m_render_target( false ),
+m_render_target_width( 256 ),
+m_render_target_height( 256 )
+{
+    // properties array creation
+    m_properties["filepath"].AddPropValue<dsstring>( m_path );
+    m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
+    m_properties["rendertarget"].AddPropValue<bool>( m_render_target );
+    m_properties["rendertarget_size"].AddPropValue<unsigned long>( "width", m_render_target_width );
+    m_properties["rendertarget_size"].AddPropValue<unsigned long>( "height", m_render_target_height );
+}
 
 Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_target_width, unsigned long p_render_target_height ) : 
 m_path( p_path ), 
@@ -36,6 +53,12 @@ m_render_target( p_render_target ),
 m_render_target_width( p_render_target_width ),
 m_render_target_height( p_render_target_height )
 {
+    // properties array creation
+    m_properties["filepath"].AddPropValue<dsstring>( m_path );
+    m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
+    m_properties["rendertarget"].AddPropValue<bool>( m_render_target );
+    m_properties["rendertarget_size"].AddPropValue<unsigned long>( "width", m_render_target_width );
+    m_properties["rendertarget_size"].AddPropValue<unsigned long>( "height", m_render_target_height );
 }
 
 Texture::~Texture( void )
@@ -90,10 +113,20 @@ void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h )
     p_h = m_render_target_height;
 }
 
-
 bool Texture::ApplyProperties( void )
 {
-    return false;
+    m_path = m_properties["filepath"].GetPropValue<dsstring>();
+    if( false == LoadFromFile() )
+    {
+        return false;
+    }
+    m_assetname = m_properties["assetname"].GetPropValue<dsstring>();
+
+    m_render_target = m_properties["rendertarget"].GetPropValue<bool>();
+    m_render_target_width = m_properties["rendertarget_size"].GetPropValue<unsigned long>( "width" );
+    m_render_target_height = m_properties["rendertarget_size"].GetPropValue<unsigned long>( "height" );
+
+    return true;
 }
 
 void Texture::Serialize( Archive& p_archive )
@@ -108,7 +141,43 @@ bool Texture::Unserialize( Archive& p_archive )
 
 void Texture::DumpProperties( dsstring& p_text )
 {
+    dsstring text_value;
 
+    p_text = "declare_texture\n";
+
+    p_text += "assetname ";
+    p_text += m_properties["assetname"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+    p_text += "filepath ";
+    p_text += m_properties["filepath"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+    p_text += "rendertarget ";
+
+    if( m_properties["rendertarget"].GetPropValue<bool>() )
+    {
+        p_text += "true";
+    }
+    else
+    {
+        p_text += "false";
+    }
+    p_text += "\n";
+
+    p_text += "rendertarget_size ";
+
+    IntToString( m_properties["rendertarget_size"].GetPropValue<unsigned long>( "width" ), text_value );
+    p_text += "width ";
+    p_text += text_value;
+
+    IntToString( m_properties["rendertarget_size"].GetPropValue<unsigned long>( "height" ), text_value );
+    p_text += "height ";
+    p_text += text_value;
+
+    p_text += "\n";
+
+    p_text += "end_texture\n";
 }
 
 bool Texture::ParseProperties( const dsstring& p_text )

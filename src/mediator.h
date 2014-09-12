@@ -131,6 +131,15 @@ public:
         //m_mutex.Release();
     };
 
+    // when specifying a name is annoying and useless...
+    template<typename base>
+    void AddPropValue( base p_propvalue )
+    {
+        TypedProperty<base>* prop = new TypedProperty<base>( "", p_propvalue );
+        m_props.push_back( prop );
+    };
+
+
     template<typename base>
     void AddProp( const char* p_name )
     {
@@ -141,6 +150,30 @@ public:
 
         //m_mutex.Release();
     };
+
+
+    // when specifying a name is annoying and useless...
+    template<typename base>
+    base GetPropValue( void )
+    {
+        base dummy;
+        std::vector<IProperty*>::iterator it;
+
+        //m_mutex.WaitInfinite();
+        for( it = m_props.begin(); it != m_props.end(); ++it )
+        {
+            TypedProperty<base>* prop = dynamic_cast<TypedProperty<base>*>( (*it) );
+
+            if( prop )
+            {
+                dummy = prop->m_value;
+                break;
+            }            
+        }
+        //m_mutex.Release();
+        return dummy;
+    };
+
 
 
     template<typename base>
@@ -170,13 +203,33 @@ public:
         return dummy;
     };
 
+    // when specifying a name is annoying and useless...
+    template<typename base>
+    void SetPropValue( base p_propvalue )
+    {
+        std::vector<IProperty*>::iterator it;
+
+        
+        for( it = m_props.begin(); it != m_props.end(); ++it )
+        {
+            TypedProperty<base>* prop = dynamic_cast<TypedProperty<base>*>( (*it) );
+
+            if( prop )
+            {
+                prop->m_value = p_propvalue;
+                break;
+            }            
+        }
+        m_mutex.Release();
+    };
+
 
     template<typename base>
     void SetPropValue( const char* p_name, base p_propvalue )
     {
         std::vector<IProperty*>::iterator it;
 
-        m_mutex.WaitInfinite();
+        //m_mutex.WaitInfinite();
         for( it = m_props.begin(); it != m_props.end(); ++it )
         {
             TypedProperty<base>* prop = dynamic_cast<TypedProperty<base>*>( (*it) );
@@ -193,7 +246,7 @@ public:
                 }
             }            
         }
-        m_mutex.Release();
+        //m_mutex.Release();
     };
 
     PropertyPool& operator=( const PropertyPool& p_other ) 

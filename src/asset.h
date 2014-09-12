@@ -24,6 +24,7 @@
 #define _ASSET_H_
 
 #include "archive.h"
+#include "mediator.h"
 
 namespace DrawSpace
 {
@@ -33,7 +34,9 @@ class Asset
 protected:
     dsstring    m_assetname;
 
-    std::map<dsstring, std::vector<dsstring>>   m_properties;
+    //std::map<dsstring, std::vector<dsstring>>   m_properties;
+
+    std::map<dsstring, DrawSpace::Core::PropertyPool>    m_properties;
 
 public:
 
@@ -41,7 +44,7 @@ public:
     virtual ~Asset( void );
 
     // binary files load/save methods
-    virtual void Serialize( Utils::Archive& p_archive  ) = 0;
+    virtual void Serialize( Utils::Archive& p_archive ) = 0;
     virtual bool Unserialize( Utils::Archive& p_archive ) = 0;
 
     // text file load/save methods
