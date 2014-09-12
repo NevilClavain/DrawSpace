@@ -40,10 +40,15 @@ public:
     Asset( void );
     virtual ~Asset( void );
 
+    // binary files load/save methods
     virtual void Serialize( Utils::Archive& p_archive  ) = 0;
-    virtual void Unserialize( Utils::Archive& p_archive ) = 0;
+    virtual bool Unserialize( Utils::Archive& p_archive ) = 0;
 
-    virtual bool Load( void ) = 0;
+    // text file load/save methods
+    virtual void DumpProperties( dsstring& p_text ) = 0;
+    virtual bool ParseProperties( const dsstring& p_text ) = 0;
+
+    virtual bool ApplyProperties( void ) = 0;
 
     virtual void SetName( const dsstring& p_name );
 };

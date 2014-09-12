@@ -103,13 +103,22 @@ void FinalPass::Serialize( Utils::Archive& p_archive  )
 
 }
 
-void FinalPass::Unserialize( Utils::Archive& p_archive )
+bool FinalPass::Unserialize( Utils::Archive& p_archive )
 {
-
-
+    return false;
 }
 
-void FinalPass::ApplyConfiguration( void )
+void FinalPass::DumpProperties( dsstring& p_text )
+{
+}
+
+bool FinalPass::ParseProperties( const dsstring& p_text )
+{
+    return false;
+}
+
+
+void FinalPass::ApplyProperties( void )
 {
 
 }
@@ -154,13 +163,21 @@ void IntermediatePass::Serialize( Utils::Archive& p_archive  )
 
 }
 
-void IntermediatePass::Unserialize( Utils::Archive& p_archive )
+bool IntermediatePass::Unserialize( Utils::Archive& p_archive )
 {
-
-
+    return false;
 }
 
-void IntermediatePass::ApplyConfiguration( void )
+void IntermediatePass::DumpProperties( dsstring& p_text )
+{
+}
+
+bool IntermediatePass::ParseProperties( const dsstring& p_text )
+{
+    return false;
+}
+
+void IntermediatePass::ApplyProperties( void )
 {
     for( std::map<dsstring, std::vector<dsstring>>::iterator it = m_properties.begin(); it != m_properties.end(); ++it )
     {

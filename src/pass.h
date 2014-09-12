@@ -62,9 +62,13 @@ public:
     virtual ~FinalPass( void );
 
     virtual void Serialize( Utils::Archive& p_archive  );
-    virtual void Unserialize( Utils::Archive& p_archive );
+    virtual bool Unserialize( Utils::Archive& p_archive );
 
-    virtual void ApplyConfiguration( void );
+    virtual void DumpProperties( dsstring& p_text );
+    virtual bool ParseProperties( const dsstring& p_text );
+
+
+    virtual void ApplyProperties( void );
 
 };
 
@@ -81,9 +85,13 @@ public:
     Core::Texture* GetTargetTexture( void );
 
     virtual void Serialize( Utils::Archive& p_archive  );
-    virtual void Unserialize( Utils::Archive& p_archive );
+    virtual bool Unserialize( Utils::Archive& p_archive );
 
-    virtual void ApplyConfiguration( void );
+    virtual void DumpProperties( dsstring& p_text );
+    virtual bool ParseProperties( const dsstring& p_text );
+
+
+    virtual void ApplyProperties( void );
 
 };
 }

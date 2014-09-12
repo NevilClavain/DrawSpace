@@ -58,10 +58,13 @@ public:
 
     void GetPath( dsstring& p_path );
 
-    virtual bool Load( void );
+    virtual bool ApplyProperties( void );
 
     void Serialize( Utils::Archive& p_archive );
-    void Unserialize( Utils::Archive& p_archive );
+    bool Unserialize( Utils::Archive& p_archive );
+
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
 
     bool IsRenderTarget( void );
     void GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h );

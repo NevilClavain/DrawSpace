@@ -163,7 +163,7 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
     }
 }
 
-bool Meshe::Load( void )
+bool Meshe::ApplyProperties( void )
 {
     return false;
 }
@@ -173,11 +173,21 @@ void Meshe::Serialize( Archive& p_archive  )
 
 }
 
-void Meshe::Unserialize( Archive& p_archive )
+bool Meshe::Unserialize( Archive& p_archive )
+{
+    return false;
+}
+
+void Meshe::DumpProperties( dsstring& p_text )
 {
 
-
 }
+
+bool Meshe::ParseProperties( const dsstring& p_text )
+{
+    return true;
+}
+
 
 void Meshe::GetMD5( dsstring& p_md5 )
 {

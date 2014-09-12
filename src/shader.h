@@ -51,10 +51,14 @@ public:
     bool	LoadFromFile( void );
     void	ReleaseData( void );
 
-    virtual bool Load( void );
+    virtual bool ApplyProperties( void );
 
     void	Serialize( Utils::Archive& p_archive );
-    void	Unserialize( Utils::Archive& p_archive );
+    bool	Unserialize( Utils::Archive& p_archive );
+
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
+
 
     void    SetText( const dsstring& p_text );
 };

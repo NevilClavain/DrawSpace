@@ -76,7 +76,7 @@ void Shader::ReleaseData( void )
     }
 }
 
-bool Shader::Load( void )
+bool Shader::ApplyProperties( void )
 {
     return false;
 }
@@ -87,9 +87,19 @@ void Shader::Serialize( Archive& p_archive  )
 
 }
 
-void Shader::Unserialize( Archive& p_archive )
+bool Shader::Unserialize( Archive& p_archive )
+{
+    return false;
+}
+
+void Shader::DumpProperties( dsstring& p_text )
 {
 
+}
+
+bool Shader::ParseProperties( const dsstring& p_text )
+{
+    return true;
 }
 
 void Shader::SetText( const dsstring& p_text )

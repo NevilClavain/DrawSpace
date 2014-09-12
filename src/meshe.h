@@ -67,10 +67,13 @@ public:
     void GetCenter( DrawSpace::Utils::Vector& p_vector );
     void GetAABB( Utils::Vector& p_min, Utils::Vector& p_max );
 
-    bool Load( void );
+    bool ApplyProperties( void );
     
     void Serialize( Utils::Archive& p_archive  );
-    void Unserialize( Utils::Archive& p_archive );
+    bool Unserialize( Utils::Archive& p_archive );
+
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
 
     void GetMD5( dsstring& p_md5 );
 };

@@ -64,12 +64,14 @@ public:
 
     void GetTexturePath( dsstring& p_texturepath );
 
-    virtual bool Load( void );
+    virtual bool ApplyProperties( void );
 
     virtual void Serialize( Utils::Archive& p_archive  );
-    virtual void Unserialize( Utils::Archive& p_archive );
+    virtual bool Unserialize( Utils::Archive& p_archive );
 
-    
+    virtual void DumpProperties( dsstring& p_text );
+    virtual bool ParseProperties( const dsstring& p_text );
+
 };
 }
 }

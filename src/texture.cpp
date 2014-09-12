@@ -91,7 +91,7 @@ void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h )
 }
 
 
-bool Texture::Load( void )
+bool Texture::ApplyProperties( void )
 {
     return false;
 }
@@ -101,9 +101,19 @@ void Texture::Serialize( Archive& p_archive )
 
 }
 
-void Texture::Unserialize( Archive& p_archive )
+bool Texture::Unserialize( Archive& p_archive )
+{
+    return false;
+}
+
+void Texture::DumpProperties( dsstring& p_text )
 {
 
+}
+
+bool Texture::ParseProperties( const dsstring& p_text )
+{
+    return true;
 }
 
 void Texture::SetFormat( long p_width, long p_height, long p_bpp )

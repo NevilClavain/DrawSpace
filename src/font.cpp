@@ -118,7 +118,7 @@ void Font::GetTexturePath( dsstring& p_texturepath )
     p_texturepath = m_texturepath;
 }
 
-bool Font::Load( void )
+bool Font::ApplyProperties( void )
 {
     return false;
 }
@@ -128,7 +128,17 @@ void Font::Serialize( Utils::Archive& p_archive  )
 
 }
 
-void Font::Unserialize( Utils::Archive& p_archive )
+bool Font::Unserialize( Utils::Archive& p_archive )
+{
+    return false;
+}
+
+void Font::DumpProperties( dsstring& p_text )
 {
 
+}
+
+bool Font::ParseProperties( const dsstring& p_text )
+{
+    return true;
 }
