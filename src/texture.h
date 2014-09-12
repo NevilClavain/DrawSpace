@@ -25,13 +25,14 @@
 
 #include "drawspace_commons.h"
 #include "asset.h"
+#include "parser.h"
 
 namespace DrawSpace
 {
 namespace Core
 {
 
-class Texture : public Asset
+class Texture : public Asset, public DrawSpace::Utils::Parser
 {
 protected:
     dsstring        m_path;
@@ -45,6 +46,10 @@ protected:
     bool            m_render_target;
     unsigned long   m_render_target_width;
     unsigned long   m_render_target_height;
+
+    bool            m_parse_trigger;
+
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
     
 public:
     Texture( void );

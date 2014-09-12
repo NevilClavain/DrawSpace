@@ -182,6 +182,43 @@ void Texture::DumpProperties( dsstring& p_text )
 
 bool Texture::ParseProperties( const dsstring& p_text )
 {
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    m_parse_trigger = false;
+    return RunOnTextChunk( p_text, seps );
+}
+
+bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    if( "declare_texture" == p_words[0] )
+    {
+        m_parse_trigger = true;
+        return true;
+    }
+    else if( m_parse_trigger )
+    {
+        if( "end_texture" == p_words[0] )
+        {
+            m_parse_trigger = true;
+            return true;
+        }
+        else if( "filepath" == p_words[0] )
+        {
+            
+        }
+        else if( "assetname" == p_words[0] )
+        {
+
+        }
+        else if( "rendertarget" == p_words[0] )
+        {
+
+        }
+        else if( "rendertarget_size" == p_words[0] )
+        {
+
+        }
+    }
     return true;
 }
 
