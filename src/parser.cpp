@@ -35,6 +35,31 @@ Parser::~Parser( void )
 
 }
 
+void Parser::split_text( const dsstring& p_text, std::vector<dsstring>& p_lines )
+{
+    char* pch;
+    char* text = new char[p_text.size() + 1];
+    strcpy( text, p_text.c_str() );
+
+    char seps[] = { 0xd, 0xa, 0x00 };
+
+    pch = strtok( text, seps );
+    if( pch )
+    {
+        p_lines.push_back( pch );
+    }
+    while( pch != NULL )
+    {
+        pch = strtok( NULL, seps );
+        if( pch )
+        {
+            p_lines.push_back( pch );
+        }
+    }
+
+    delete[] text;
+}
+
 void Parser::split_line( const dsstring& p_line, const dsstring& p_separators, std::vector<dsstring>& p_words )
 {
     char* pch;
@@ -93,5 +118,26 @@ bool Parser::Run( const dsstring& p_filepath, const dsstring& p_separators )
         status = false;
     }
 
+    return status;
+}
+
+bool Parser::RunOnTextChunk( const dsstring& p_text, const dsstring& p_separators )
+{
+    long line_count = 0;
+    bool status = true;
+
+    std::vector<dsstring> lines;
+    split_text( p_text, lines );
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        line_count++;
+        std::vector<dsstring> words;
+        split_line( lines[i], p_separators, words );
+
+        if( !on_new_line( lines[i], line_count, words ) )
+        {
+            break;
+        }        
+    }
     return status;
 }

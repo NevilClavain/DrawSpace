@@ -34,12 +34,15 @@ class Parser
 protected:
 
     void split_line( const dsstring& p_line, const dsstring& p_separators, std::vector<dsstring>& p_words );
+    void split_text( const dsstring& p_text, std::vector<dsstring>& p_lines );
+
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words ) = 0;
 public:
 
     Parser( void );
     virtual ~Parser( void );
     bool Run( const dsstring& p_filepath, const dsstring& p_separators );
+    bool RunOnTextChunk( const dsstring& p_text, const dsstring& p_separators );
 };
 }
 }
