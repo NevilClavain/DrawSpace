@@ -25,6 +25,9 @@
 
 #include "drawspace_commons.h"
 
+#define _PARSER_UNEXPECTED_KEYWORD_ error_message( p_line_num, "unexpected keyword" );
+#define _PARSER_MISSING_ARG__ error_message( p_line_num, "missing argument" );
+
 namespace DrawSpace
 {
 namespace Utils
@@ -33,16 +36,23 @@ class Parser
 {
 protected:
 
+    dsstring m_lasterror;
+
     void split_line( const dsstring& p_line, const dsstring& p_separators, std::vector<dsstring>& p_words );
     void split_text( const dsstring& p_text, std::vector<dsstring>& p_lines );
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words ) = 0;
+
+
+    virtual void error_message( long p_line_num, const dsstring& p_msg );
 public:
 
     Parser( void );
     virtual ~Parser( void );
     bool Run( const dsstring& p_filepath, const dsstring& p_separators );
     bool RunOnTextChunk( const dsstring& p_text, const dsstring& p_separators );
+
+    void GetLastError( dsstring& p_lasterror );
 };
 }
 }

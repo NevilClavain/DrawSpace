@@ -49,6 +49,8 @@ bool DFrontApp::OnInit( void )
 {
     m_w_title = "DrawFront";
 
+    DrawSpace::Initialize();
+
     m_luacontext.Startup();
 
     Luna<LuaRenderFrame>::Register( m_luacontext.GetLuaState() );

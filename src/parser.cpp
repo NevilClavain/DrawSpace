@@ -21,6 +21,7 @@
 */
 
 #include "parser.h"
+#include "misc_utils.h"
 
 using namespace DrawSpace::Utils;
 
@@ -82,6 +83,7 @@ void Parser::split_line( const dsstring& p_line, const dsstring& p_separators, s
 
 bool Parser::Run( const dsstring& p_filepath, const dsstring& p_separators )
 {
+    m_lasterror = "";
     bool status = true;
     long line_count = 0;
 
@@ -123,6 +125,7 @@ bool Parser::Run( const dsstring& p_filepath, const dsstring& p_separators )
 
 bool Parser::RunOnTextChunk( const dsstring& p_text, const dsstring& p_separators )
 {
+    m_lasterror = "";
     long line_count = 0;
     bool status = true;
 
@@ -140,4 +143,19 @@ bool Parser::RunOnTextChunk( const dsstring& p_text, const dsstring& p_separator
         }        
     }
     return status;
+}
+
+void Parser::GetLastError( dsstring& p_lasterror )
+{
+    p_lasterror = m_lasterror;
+}
+
+void Parser::error_message( long p_line_num, const dsstring& p_msg )
+{
+    dsstring line_num;
+
+    IntToString( p_line_num, line_num );
+
+    m_lasterror = "line " + line_num;
+    m_lasterror += ": " + p_msg;
 }

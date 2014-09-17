@@ -25,17 +25,31 @@
 
 #include "drawspace_commons.h"
 #include "archive.h"
+#include "parser.h"
+#include "asset.h"
+
 namespace DrawSpace
 {
 namespace Core
 {
-class Factory
+class Factory : public DrawSpace::Utils::Parser
 {
 protected:
+
+    std::map<dsstring, Asset::InstanciateFunc>      m_instanciationfuncs_bytext;
+    std::map<long, Asset::InstanciateFunc>          m_instanciationfuncs_byarc;
+
+    std::vector<dsstring>                           m_text_properties;
+
+    bool                                            m_capture_texture_props;
+    dsstring                                        m_texture_text_properties;
 
     static Factory* m_instance;
 
     Factory( void );
+
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
 public:
 
     static Factory* GetInstance( void )
@@ -55,6 +69,8 @@ public:
 
     bool ExecuteFromArchiveChunk( const DrawSpace::Utils::Archive& p_arc );
     bool ExecuteFromTextChunk( const dsstring& p_text );
+
+    void RegisterInstanciationFuncByText( const dsstring& p_keyword, Asset::InstanciateFunc p_func );
 
 };
 }

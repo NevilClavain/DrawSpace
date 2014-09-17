@@ -91,4 +91,5 @@
 #include "mediator.h"
 #include "runner.h"
 #include "planetoid_body.h"
+#include "inits.h"
 #endif

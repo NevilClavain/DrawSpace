@@ -26,6 +26,7 @@
 #include "exceptions.h"
 #include "misc_utils.h"
 
+using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
@@ -204,19 +205,44 @@ bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
         }
         else if( "filepath" == p_words[0] )
         {
-            
+            if( p_words.size() < 2 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
+
+
         }
         else if( "assetname" == p_words[0] )
         {
+            if( p_words.size() < 2 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
 
         }
         else if( "rendertarget" == p_words[0] )
         {
+            if( p_words.size() < 2 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
 
         }
         else if( "rendertarget_size" == p_words[0] )
         {
-
+            if( p_words.size() < 3 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
+        }
+        else
+        {
+            _PARSER_UNEXPECTED_KEYWORD_
+            return false;
         }
     }
     return true;
@@ -240,4 +266,9 @@ void Texture::GetFormat( long& p_width, long& p_height, long& p_bpp )
     p_width = m_width;
     p_height = m_height;
     p_bpp = m_bpp;
+}
+
+Asset* Texture::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( Texture, Texture );
 }

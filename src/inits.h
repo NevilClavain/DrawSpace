@@ -20,45 +20,14 @@
 *                                                                          
 */
 
-#ifndef _ASSET_H_
-#define _ASSET_H_
+#ifndef _INITS_H_
+#define _INITS_H_
 
-#include "archive.h"
-#include "mediator.h"
+#include "drawspace_commons.h"
 
 namespace DrawSpace
 {
-
-class Asset
-{
-public:
-    
-    typedef Asset* (*InstanciateFunc)( void );
-
-protected:
-    dsstring    m_assetname;
-
-    //std::map<dsstring, std::vector<dsstring>>   m_properties;
-
-    std::map<dsstring, DrawSpace::Core::PropertyPool>    m_properties;
-
-public:
-
-    Asset( void );
-    virtual ~Asset( void );
-
-    // binary files load/save methods
-    virtual void Serialize( Utils::Archive& p_archive ) = 0;
-    virtual bool Unserialize( Utils::Archive& p_archive ) = 0;
-
-    // text file load/save methods
-    virtual void DumpProperties( dsstring& p_text ) = 0;
-    virtual bool ParseProperties( const dsstring& p_text ) = 0;
-
-    virtual bool ApplyProperties( void ) = 0;
-
-    virtual void SetName( const dsstring& p_name );
-    
-};
+void Initialize( void );
 }
+
 #endif

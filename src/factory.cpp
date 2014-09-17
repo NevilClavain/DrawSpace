@@ -21,10 +21,12 @@
 */
 
 #include "factory.h"
-#include "asset.h"
+#include "assetsbase.h"
+#include "configsbase.h"
 
 DrawSpace::Core::Factory* DrawSpace::Core::Factory::m_instance = NULL;
 
+using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
@@ -39,9 +41,45 @@ Factory::~Factory( void )
 
 }
 
+bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    if( m_capture_texture_props )
+    {
+        m_text_properties.push_back( p_line );
+
+        if( "end_texture" == p_words[0] )
+        {
+            m_capture_texture_props = false;
+
+            // instanciate texture object
+            // call ParseProperties() method
+            // register in Assetsbase
+        }
+    }
+    else
+    {
+        if( "declare_texture" == p_words[0] )
+        {
+            m_capture_texture_props = true;
+            m_text_properties.clear();
+
+            m_text_properties.push_back( p_line );
+        }
+        else
+        {
+            _PARSER_UNEXPECTED_KEYWORD_
+        }
+    }
+    return true;
+}
+
 bool Factory::ExecuteFromTextFile( const dsstring& p_path )
 {
-    return false;
+    m_capture_texture_props = false;
+
+    char seps[] = { 0x09, 0x020, 0x00 };
+    // run parser
+    return Run( p_path, seps );
 }
 
 bool Factory::ExecuteFromBinaryFile( const dsstring& p_path )
@@ -57,4 +95,9 @@ bool Factory::ExecuteFromArchiveChunk( const DrawSpace::Utils::Archive& p_arc )
 bool Factory::ExecuteFromTextChunk( const dsstring& p_text )
 {
     return false;
+}
+
+void Factory::RegisterInstanciationFuncByText( const dsstring& p_keyword, Asset::InstanciateFunc p_func )
+{
+    m_instanciationfuncs_bytext[p_keyword] = p_func;
 }

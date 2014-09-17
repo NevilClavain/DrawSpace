@@ -738,6 +738,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\inits.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\inits.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\pass.cpp"
 			>
 		</File>

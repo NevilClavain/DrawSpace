@@ -116,10 +116,9 @@ m_mousemoving_last_x( 0 ),
 m_mousemoving_last_y( 0 ),
 m_mouse_circularmode( false ),
 m_cmdline( "" ),
-
 m_gl_ready( false )
 {
-
+    Initialize();
 }
 
 App::~App( void )
