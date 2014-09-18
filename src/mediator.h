@@ -219,8 +219,7 @@ public:
                 prop->m_value = p_propvalue;
                 break;
             }            
-        }
-        m_mutex.Release();
+        }        
     };
 
 

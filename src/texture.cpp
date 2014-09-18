@@ -200,6 +200,8 @@ bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             _PARSER_MISSING_ARG__
             return false;
         }
+
+        m_properties["filepath"].SetPropValue<dsstring>( p_words[1] );
     }
     else if( "assetname" == p_words[0] )
     {
@@ -209,6 +211,7 @@ bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             return false;
         }
 
+        m_properties["assetname"].SetPropValue<dsstring>( p_words[1] );
     }
     else if( "rendertarget" == p_words[0] )
     {
@@ -218,6 +221,7 @@ bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             return false;
         }
 
+        m_properties["rendertarget"].SetPropValue<bool>( (bool)StringToInt( p_words[1] ) );
     }
     else if( "rendertarget_size" == p_words[0] )
     {
@@ -226,12 +230,17 @@ bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             _PARSER_MISSING_ARG__
             return false;
         }
+
+        m_properties["rendertarget_size"].SetPropValue<unsigned long>( "width", StringToInt( p_words[1] ) );
+        m_properties["rendertarget_size"].SetPropValue<unsigned long>( "height", StringToInt( p_words[2] ) );
     }
     else
     {
         _PARSER_UNEXPECTED_KEYWORD_
         return false;
     }
+
+    return true;
 }
 
 void Texture::SetFormat( long p_width, long p_height, long p_bpp )
