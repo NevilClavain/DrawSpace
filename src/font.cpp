@@ -35,16 +35,35 @@ using namespace DrawSpace::Interface;
 
 Font::Font( void ) : m_importer( NULL )/*, m_texture( NULL )*/
 {
-
+    // properties array creation
+    m_properties["filespath"].AddPropValue<dsstring>( "texturefilepath", "" );
+    m_properties["filespath"].AddPropValue<dsstring>( "metricsfilepath", "" );
 }
 
 Font::~Font( void )
 {
-
 }
 
 bool Font::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    if( "filespath" == p_words[0] )
+    {
+        if( p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["filespath"].SetPropValue<dsstring>( "texturefilepath", p_words[1] );
+        m_properties["filespath"].SetPropValue<dsstring>( "metricsfilepath", p_words[2] );
+    }
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
+
+
     return true;
 }
 
@@ -125,7 +144,10 @@ void Font::GetTexturePath( dsstring& p_texturepath )
 
 bool Font::ApplyProperties( void )
 {
-    return false;
+    dsstring texturefilepath = m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
+    dsstring metricsfilepath = m_properties["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
+
+    return Build( texturefilepath, metricsfilepath );
 }
 
 void Font::Serialize( Utils::Archive& p_archive  )
@@ -140,10 +162,24 @@ bool Font::Unserialize( Utils::Archive& p_archive )
 
 void Font::DumpProperties( dsstring& p_text )
 {
+    p_text = "declare_asset ";
+    p_text += dsstring( FONT_TEXT_KEYWORD );
+
+    p_text += "\n";
+
+    p_text += "filepath ";
+    p_text += m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
+    p_text += " ";
+    p_text += m_properties["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
+    p_text += "\n";
+
+    p_text += "end_asset\n";
 
 }
 
 bool Font::ParseProperties( const dsstring& p_text )
 {
-    return true;
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
 }

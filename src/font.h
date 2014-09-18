@@ -28,6 +28,10 @@
 #include "texture.h"
 #include "fx.h"
 
+#define FONT_TEXT_KEYWORD    "Font"
+#define FONT_ARC_MAGICNUMBER 0x1069
+
+
 namespace DrawSpace
 {
 namespace Interface
