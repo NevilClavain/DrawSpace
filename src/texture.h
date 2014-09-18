@@ -25,14 +25,17 @@
 
 #include "drawspace_commons.h"
 #include "asset.h"
-#include "parser.h"
+//#include "parser.h"
+
+#define TEXTURE_TEXT_KEYWORD    "Texture"
+#define TEXTURE_ARC_MAGICNUMBER 0x1066       
 
 namespace DrawSpace
 {
 namespace Core
 {
 
-class Texture : public Asset, public DrawSpace::Utils::Parser
+class Texture : public Asset/*, public DrawSpace::Utils::Parser*/
 {
 protected:
     dsstring        m_path;
@@ -46,8 +49,6 @@ protected:
     bool            m_render_target;
     unsigned long   m_render_target_width;
     unsigned long   m_render_target_height;
-
-    bool            m_parse_trigger;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
     

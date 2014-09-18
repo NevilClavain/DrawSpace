@@ -39,6 +39,11 @@ Shader::~Shader( void )
 {
 }
 
+bool Shader::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    return true;
+}
+
 bool Shader::IsCompiled( void )
 {
     return m_compiled;

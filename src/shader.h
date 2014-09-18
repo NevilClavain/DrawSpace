@@ -39,6 +39,8 @@ protected:
     size_t                          m_datasize;
     bool                            m_compiled;
 
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
 public:
     Shader( const dsstring& p_path, bool p_compiled );
     Shader( bool p_compiled );

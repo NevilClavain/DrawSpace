@@ -36,13 +36,19 @@ class Factory : public DrawSpace::Utils::Parser
 {
 protected:
 
-    std::map<dsstring, Asset::InstanciateFunc>      m_instanciationfuncs_bytext;
-    std::map<long, Asset::InstanciateFunc>          m_instanciationfuncs_byarc;
+    std::map<dsstring, Asset::InstanciateFunc>      m_assets_instanciationfuncs_bytext;
+    std::map<short, Asset::InstanciateFunc>         m_assets_instanciationfuncs_byarc;
 
-    std::vector<dsstring>                           m_text_properties;
+    dsstring                                        m_asset_properties;
+    dsstring                                        m_asset_keyword;
 
-    bool                                            m_capture_texture_props;
-    dsstring                                        m_texture_text_properties;
+    dsstring                                        m_config_properties;
+    dsstring                                        m_config_keyword;
+
+    bool                                            m_capture_asset_props;
+    bool                                            m_capture_config_props;
+    
+    
 
     static Factory* m_instance;
 
@@ -70,7 +76,8 @@ public:
     bool ExecuteFromArchiveChunk( const DrawSpace::Utils::Archive& p_arc );
     bool ExecuteFromTextChunk( const dsstring& p_text );
 
-    void RegisterInstanciationFuncByText( const dsstring& p_keyword, Asset::InstanciateFunc p_func );
+    void RegisterAssetInstanciationFuncByText( const dsstring& p_keyword, Asset::InstanciateFunc p_func );
+    void RegisterAssetInstanciationFuncByArc( short p_magic, Asset::InstanciateFunc p_func );
 
 };
 }

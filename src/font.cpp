@@ -43,6 +43,11 @@ Font::~Font( void )
 
 }
 
+bool Font::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    return true;
+}
+
 void Font::SetImporter( DrawSpace::Interface::FontImport* p_importer )
 {
     m_importer = p_importer;

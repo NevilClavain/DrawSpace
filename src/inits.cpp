@@ -30,6 +30,7 @@ using namespace DrawSpace::Core;
 // generic and statics initialisations done here
 void DrawSpace::Initialize( void )
 {
-    Factory::GetInstance()->RegisterInstanciationFuncByText( "Texture", Texture::Instanciate );
+    Factory::GetInstance()->RegisterAssetInstanciationFuncByText( TEXTURE_TEXT_KEYWORD, Texture::Instanciate );
+    Factory::GetInstance()->RegisterAssetInstanciationFuncByArc( TEXTURE_ARC_MAGICNUMBER, Texture::Instanciate );
 
 }

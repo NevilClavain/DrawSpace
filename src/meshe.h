@@ -46,6 +46,8 @@ protected:
 
     DrawSpace::Interface::MesheImport*  m_importer;
 
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
 public:
 
     Meshe( void );

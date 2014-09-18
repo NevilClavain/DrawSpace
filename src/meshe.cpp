@@ -37,6 +37,11 @@ Meshe::~Meshe( void )
 
 }
 
+bool Meshe::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    return true;
+}
+
 void Meshe::SetImporter( DrawSpace::Interface::MesheImport* p_importer )
 {
     m_importer = p_importer;

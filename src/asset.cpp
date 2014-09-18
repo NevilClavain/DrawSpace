@@ -37,3 +37,8 @@ void Asset::SetName( const dsstring& p_name )
 {
     m_assetname = p_name;
 }
+
+void Asset::GetName( dsstring& p_name )
+{
+    p_name = m_assetname;
+}

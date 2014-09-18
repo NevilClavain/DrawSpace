@@ -41,8 +41,22 @@ protected:
     std::map<dsstring, DrawSpace::Core::Configurable*>      m_configurables;
     ConfigurableRegistrationHandler*                        m_configreg_handler;
 
-public:
+    static ConfigsBase*                                     m_instance;
+
     ConfigsBase( void );
+
+public:
+
+    static ConfigsBase* GetInstance( void )
+    {
+        if( NULL == m_instance )
+        {
+            m_instance = new ConfigsBase();
+        }
+
+        return m_instance;
+    }
+    
     virtual ~ConfigsBase( void );
 
     void RegisterConfigurable( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf );

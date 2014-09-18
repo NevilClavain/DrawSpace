@@ -23,6 +23,7 @@
 #include "factory.h"
 #include "assetsbase.h"
 #include "configsbase.h"
+#include "exceptions.h"
 
 DrawSpace::Core::Factory* DrawSpace::Core::Factory::m_instance = NULL;
 
@@ -43,31 +44,95 @@ Factory::~Factory( void )
 
 bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
-    if( m_capture_texture_props )
-    {
-        m_text_properties.push_back( p_line );
-
-        if( "end_texture" == p_words[0] )
+    if( m_capture_asset_props )
+    {        
+        if( "end_asset" == p_words[0] )
         {
-            m_capture_texture_props = false;
+            m_capture_asset_props = false;
+            
+            // instanciate asset object
 
-            // instanciate texture object
-            // call ParseProperties() method
-            // register in Assetsbase
+            if( m_assets_instanciationfuncs_bytext.count( m_asset_keyword ) > 0 )
+            {
+                Asset* asset = ( *m_assets_instanciationfuncs_bytext[m_asset_keyword] ) ();
+
+                // call ParseProperties() method
+                if( false == asset->ParseProperties( m_asset_properties ) )
+                {
+                    dsstring asset_parse_error;
+                    asset->GetLastError( asset_parse_error );
+
+                    m_lasterror = asset_parse_error;
+                    return false;
+                }
+
+                // register in Assetsbase
+
+                // check out if an name has been specified for asset
+                dsstring assetname;
+                asset->GetName( assetname );
+
+                if( "" == assetname )
+                {
+                    _DSEXCEPTION( "asset has no name, and so cannot be registered in AssetsBase" );
+                }
+
+                if( AssetsBase::GetInstance()->AssetIdExists( assetname ) )
+                {
+                    _DSEXCEPTION( "asset with same id already registered in AssetsBase" );
+                }
+
+                AssetsBase::GetInstance()->RegisterAsset( assetname, asset );
+            }
+            else
+            {
+                _DSEXCEPTION( dsstring( "no registered instanciation function for the keyword : " ) +  m_asset_keyword );
+            }                               
+        }
+        else
+        {
+            m_asset_properties += p_line;
+            m_asset_properties += "\n";
+        }
+    }
+    else if( m_capture_config_props )
+    {
+        if( "end_config" == p_words[0] )
+        {
+
+        }
+        else
+        {
+            m_config_properties += p_line;
+            m_config_properties += "\n";
         }
     }
     else
     {
-        if( "declare_texture" == p_words[0] )
+        if( p_words.size() < 2 )
         {
-            m_capture_texture_props = true;
-            m_text_properties.clear();
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+        if( "declare_asset" == p_words[0] )
+        {
+            m_capture_asset_props = true;
 
-            m_text_properties.push_back( p_line );
+            m_asset_properties = "";
+            m_asset_keyword = p_words[1];
+
+        }
+        else if( "declare_config" == p_words[0] )
+        {
+            m_capture_config_props = false;
+
+            m_config_properties = "";
+            m_config_keyword = p_words[1];
         }
         else
         {
             _PARSER_UNEXPECTED_KEYWORD_
+            return false;
         }
     }
     return true;
@@ -75,7 +140,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
 
 bool Factory::ExecuteFromTextFile( const dsstring& p_path )
 {
-    m_capture_texture_props = false;
+    m_capture_asset_props = false;
 
     char seps[] = { 0x09, 0x020, 0x00 };
     // run parser
@@ -94,10 +159,18 @@ bool Factory::ExecuteFromArchiveChunk( const DrawSpace::Utils::Archive& p_arc )
 
 bool Factory::ExecuteFromTextChunk( const dsstring& p_text )
 {
-    return false;
+    m_capture_asset_props = false;
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
 }
 
-void Factory::RegisterInstanciationFuncByText( const dsstring& p_keyword, Asset::InstanciateFunc p_func )
+void Factory::RegisterAssetInstanciationFuncByText( const dsstring& p_keyword, Asset::InstanciateFunc p_func )
 {
-    m_instanciationfuncs_bytext[p_keyword] = p_func;
+    m_assets_instanciationfuncs_bytext[p_keyword] = p_func;
+}
+
+void Factory::RegisterAssetInstanciationFuncByArc( short p_magic, Asset::InstanciateFunc p_func )
+{
+    m_assets_instanciationfuncs_byarc[p_magic] = p_func;
 }

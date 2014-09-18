@@ -22,6 +22,8 @@
 
 #include "assetsbase.h"
 
+DrawSpace::Core::AssetsBase* DrawSpace::Core::AssetsBase::m_instance = NULL;
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
@@ -36,8 +38,7 @@ AssetsBase::~AssetsBase( void )
 
 void AssetsBase::RegisterAsset( const dsstring& p_id, DrawSpace::Asset* p_asset )
 {
-    m_assets[p_id] = p_asset;
-    p_asset->SetName( p_id );
+    m_assets[p_id] = p_asset;    
     if( m_assetreg_handler )
     {
         (*m_assetreg_handler)( p_asset );
@@ -56,4 +57,13 @@ DrawSpace::Asset* AssetsBase::GetAsset( const dsstring& p_id )
 void AssetsBase::RegisterAssetRegistrationHandler( AssetRegistrationHandler* p_handler )
 {
     m_assetreg_handler = p_handler;
+}
+
+bool AssetsBase::AssetIdExists( const dsstring& p_id )
+{
+    if( m_assets.count( p_id ) > 0 )
+    {
+        return true;
+    }
+    return false;
 }

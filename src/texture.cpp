@@ -144,7 +144,10 @@ void Texture::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_texture\n";
+    p_text = "declare_asset ";
+    p_text += dsstring( TEXTURE_TEXT_KEYWORD );
+
+    p_text += "\n";
 
     p_text += "assetname ";
     p_text += m_properties["assetname"].GetPropValue<dsstring>();
@@ -178,74 +181,57 @@ void Texture::DumpProperties( dsstring& p_text )
 
     p_text += "\n";
 
-    p_text += "end_texture\n";
+    p_text += "end_asset\n";
 }
 
 bool Texture::ParseProperties( const dsstring& p_text )
 {
     char seps[] = { 0x09, 0x020, 0x00 };
 
-    m_parse_trigger = false;
     return RunOnTextChunk( p_text, seps );
 }
 
 bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
-    if( "declare_texture" == p_words[0] )
+    if( "filepath" == p_words[0] )
     {
-        m_parse_trigger = true;
-        return true;
-    }
-    else if( m_parse_trigger )
-    {
-        if( "end_texture" == p_words[0] )
+        if( p_words.size() < 2 )
         {
-            m_parse_trigger = true;
-            return true;
-        }
-        else if( "filepath" == p_words[0] )
-        {
-            if( p_words.size() < 2 )
-            {
-                _PARSER_MISSING_ARG__
-                return false;
-            }
-
-
-        }
-        else if( "assetname" == p_words[0] )
-        {
-            if( p_words.size() < 2 )
-            {
-                _PARSER_MISSING_ARG__
-                return false;
-            }
-
-        }
-        else if( "rendertarget" == p_words[0] )
-        {
-            if( p_words.size() < 2 )
-            {
-                _PARSER_MISSING_ARG__
-                return false;
-            }
-
-        }
-        else if( "rendertarget_size" == p_words[0] )
-        {
-            if( p_words.size() < 3 )
-            {
-                _PARSER_MISSING_ARG__
-                return false;
-            }
-        }
-        else
-        {
-            _PARSER_UNEXPECTED_KEYWORD_
+            _PARSER_MISSING_ARG__
             return false;
         }
     }
-    return true;
+    else if( "assetname" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+    }
+    else if( "rendertarget" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+    }
+    else if( "rendertarget_size" == p_words[0] )
+    {
+        if( p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+    }
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
 }
 
 void Texture::SetFormat( long p_width, long p_height, long p_bpp )

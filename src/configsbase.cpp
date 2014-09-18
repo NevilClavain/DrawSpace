@@ -22,6 +22,8 @@
 
 #include "configsbase.h"
 
+DrawSpace::Core::ConfigsBase* DrawSpace::Core::ConfigsBase::m_instance = NULL;
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 

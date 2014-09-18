@@ -25,11 +25,12 @@
 
 #include "archive.h"
 #include "mediator.h"
+#include "parser.h"
 
 namespace DrawSpace
 {
 
-class Asset
+class Asset : public DrawSpace::Utils::Parser
 {
 public:
     
@@ -58,6 +59,7 @@ public:
     virtual bool ApplyProperties( void ) = 0;
 
     virtual void SetName( const dsstring& p_name );
+    virtual void GetName( dsstring& p_name );
     
 };
 }

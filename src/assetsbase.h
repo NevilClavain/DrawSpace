@@ -42,14 +42,30 @@ protected:
     std::map<dsstring, DrawSpace::Asset*>   m_assets;
     AssetRegistrationHandler*               m_assetreg_handler;
 
-public:
+    static AssetsBase*                      m_instance;
+
     AssetsBase( void );
+
+public:
+
+    static AssetsBase* GetInstance( void )
+    {
+        if( NULL == m_instance )
+        {
+            m_instance = new AssetsBase();
+        }
+
+        return m_instance;
+    }
+    
     virtual ~AssetsBase( void );
 
     void RegisterAsset( const dsstring& p_id, DrawSpace::Asset* p_asset );
     DrawSpace::Asset* GetAsset( const dsstring& p_id );
 
     void RegisterAssetRegistrationHandler( AssetRegistrationHandler* p_handler );
+
+    bool AssetIdExists( const dsstring& p_id );
 };
 }
 }
