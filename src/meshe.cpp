@@ -25,16 +25,20 @@
 #include "md5.h"
 #include "exceptions.h"
 #include "misc_utils.h"
+#include "pimanager.h"
+#include "mesheimport.h"
 
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface;
 
 Meshe::Meshe( void ) : m_importer( NULL )
 {
     // properties array creation
     m_properties["filepath"].AddPropValue<dsstring>( "" );
     m_properties["index"].AddPropValue<long>( 0 );
+    m_properties["plugin"].AddPropValue<dsstring>( "" );
 }
 
 Meshe::~Meshe( void )
@@ -63,6 +67,16 @@ bool Meshe::on_new_line( const dsstring& p_line, long p_line_num, std::vector<ds
         }
 
         m_properties["index"].SetPropValue<long>( StringToInt( p_words[1] ) );
+    }
+    else if( "plugin" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["plugin"].SetPropValue<dsstring>( p_words[1] );
     }
     else
     {
@@ -203,7 +217,23 @@ bool Meshe::ApplyProperties( void )
     dsstring path = m_properties["filepath"].GetPropValue<dsstring>();
     long index = m_properties["index"].GetPropValue<long>();
 
-    return LoadFromFile( path, index );
+    dsstring plugin = m_properties["plugin"].GetPropValue<dsstring>();
+
+    PlugInManager<MesheImport>::Handle pihandle;
+    PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( plugin.c_str(), pihandle );
+    if( pistatus != PIM_OK )
+    {
+        return false;
+    }
+
+    MesheImport* mesheimp;
+
+    if( PIM_OK == PlugInManager<MesheImport>::Instanciate( pihandle, &mesheimp ) )
+    {
+        SetImporter( mesheimp );
+        return LoadFromFile( path, index );    
+    }    
+    return false;
 }
 
 void Meshe::Serialize( Archive& p_archive  )
@@ -234,6 +264,11 @@ void Meshe::DumpProperties( dsstring& p_text )
     IntToString( m_properties["index"].GetPropValue<long>(), text_value );
     p_text += text_value;
     p_text += "\n";
+
+    p_text += "plugin ";
+    p_text += m_properties["plugin"].GetPropValue<dsstring>();
+    p_text += "\n";
+
 
     p_text += "end_asset\n";
 
