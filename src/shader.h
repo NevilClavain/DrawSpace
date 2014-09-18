@@ -26,6 +26,10 @@
 #include "drawspace_commons.h"
 #include "asset.h"
 #include "vector.h"
+
+#define SHADER_TEXT_KEYWORD    "Shader"
+#define SHADER_ARC_MAGICNUMBER 0x1067
+
 namespace DrawSpace
 {
 namespace Core
@@ -42,6 +46,7 @@ protected:
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
+    Shader( void );
     Shader( const dsstring& p_path, bool p_compiled );
     Shader( bool p_compiled );
     ~Shader( void );

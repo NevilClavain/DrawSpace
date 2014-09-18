@@ -25,17 +25,16 @@
 
 #include "drawspace_commons.h"
 #include "asset.h"
-//#include "parser.h"
 
 #define TEXTURE_TEXT_KEYWORD    "Texture"
-#define TEXTURE_ARC_MAGICNUMBER 0x1066       
+#define TEXTURE_ARC_MAGICNUMBER 0x1066
 
 namespace DrawSpace
 {
 namespace Core
 {
 
-class Texture : public Asset/*, public DrawSpace::Utils::Parser*/
+class Texture : public Asset
 {
 protected:
     dsstring        m_path;

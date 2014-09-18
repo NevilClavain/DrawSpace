@@ -221,7 +221,7 @@ bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             return false;
         }
 
-        m_properties["rendertarget"].SetPropValue<bool>( (bool)StringToInt( p_words[1] ) );
+        m_properties["rendertarget"].SetPropValue<bool>( "true" == p_words[1] ? true : false );        
     }
     else if( "rendertarget_size" == p_words[0] )
     {
