@@ -23,13 +23,18 @@
 #include "meshe.h"
 #include "mesheimport.h"
 #include "md5.h"
+#include "exceptions.h"
+#include "misc_utils.h"
+
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 Meshe::Meshe( void ) : m_importer( NULL )
 {
-
+    // properties array creation
+    m_properties["filepath"].AddPropValue<dsstring>( "" );
+    m_properties["index"].AddPropValue<long>( 0 );
 }
 
 Meshe::~Meshe( void )
@@ -39,6 +44,31 @@ Meshe::~Meshe( void )
 
 bool Meshe::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    if( "filepath" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["filepath"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "index" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["index"].SetPropValue<long>( StringToInt( p_words[1] ) );
+    }
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
     return true;
 }
 
@@ -170,7 +200,10 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
 
 bool Meshe::ApplyProperties( void )
 {
-    return false;
+    dsstring path = m_properties["filepath"].GetPropValue<dsstring>();
+    long index = m_properties["index"].GetPropValue<long>();
+
+    return LoadFromFile( path, index );
 }
 
 void Meshe::Serialize( Archive& p_archive  )
@@ -185,12 +218,31 @@ bool Meshe::Unserialize( Archive& p_archive )
 
 void Meshe::DumpProperties( dsstring& p_text )
 {
+    dsstring text_value;
+
+    p_text = "declare_asset ";
+    p_text += dsstring( MESHE_TEXT_KEYWORD );
+
+    p_text += "\n";
+
+    p_text += "filepath ";
+    p_text += m_properties["filepath"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+    p_text += "index ";
+
+    IntToString( m_properties["index"].GetPropValue<long>(), text_value );
+    p_text += text_value;
+    p_text += "\n";
+
+    p_text += "end_asset\n";
 
 }
 
 bool Meshe::ParseProperties( const dsstring& p_text )
 {
-    return true;
+    char seps[] = { 0x09, 0x020, 0x00 };
+    return RunOnTextChunk( p_text, seps );
 }
 
 

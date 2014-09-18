@@ -29,6 +29,10 @@
 #include "asset.h"
 #include "vector.h"
 
+#define MESHE_TEXT_KEYWORD    "Meshe"
+#define MESHE_ARC_MAGICNUMBER 0x1068
+
+
 namespace DrawSpace
 {
 namespace Interface
