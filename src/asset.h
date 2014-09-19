@@ -37,11 +37,8 @@ public:
     typedef Asset* (*InstanciateFunc)( void );
 
 protected:
-    dsstring    m_assetname;
-
-    //std::map<dsstring, std::vector<dsstring>>   m_properties;
-
-    std::map<dsstring, DrawSpace::Core::PropertyPool>    m_properties;
+    dsstring                                                m_assetname;
+    std::map<dsstring, DrawSpace::Core::PropertyPool>       m_properties;
 
 public:
 

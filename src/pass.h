@@ -57,6 +57,10 @@ public:
 
 class FinalPass : public Pass
 {
+protected:
+
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
 public:
     FinalPass( const dsstring& p_name );
     virtual ~FinalPass( void );
@@ -76,6 +80,8 @@ class IntermediatePass : public Pass
 {
 protected:
     Core::Texture*          m_targettexture;
+
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     IntermediatePass( const dsstring& p_name );

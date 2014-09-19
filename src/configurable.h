@@ -25,18 +25,19 @@
 
 
 #include "archive.h"
+#include "mediator.h"
+#include "parser.h"
 
 namespace DrawSpace
 {
 namespace Core
 {
-class Configurable
+class Configurable : public DrawSpace::Utils::Parser
 {
 protected:
 
-    dsstring                                    m_configname;
-
-    std::map<dsstring, std::vector<dsstring>>   m_properties;
+    dsstring                                                m_configname;
+    std::map<dsstring, DrawSpace::Core::PropertyPool>       m_properties;
 
 public:
     Configurable( void );

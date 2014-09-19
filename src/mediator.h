@@ -151,6 +151,18 @@ public:
         //m_mutex.Release();
     };
 
+    // when specifying a name is annoying and useless...
+    template<typename base>
+    void AddProp( void )
+    {
+        //m_mutex.WaitInfinite();
+
+        TypedProperty<base>* prop = new TypedProperty<base>( "" );
+        m_props.push_back( prop );
+
+        //m_mutex.Release();
+    };
+
 
     // when specifying a name is annoying and useless...
     template<typename base>

@@ -26,19 +26,24 @@
 #include "drawspace_commons.h"
 #include "renderstate.h"
 #include "shader.h"
-#include "asset.h"
+#include "configurable.h"
+
+#define FX_TEXT_KEYWORD    "Fx"
+#define FX_ARC_MAGICNUMBER 0x4040
+
 
 namespace DrawSpace
 {
 namespace Core
 {
-class Fx
+class Fx : public Configurable
 {
 protected:
     std::vector<Shader*>                        m_shaders;
     std::vector<RenderState>                    m_renderstates_in;
     std::vector<RenderState>                    m_renderstates_out;
 
+    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     Fx( void );
@@ -54,8 +59,14 @@ public:
     void AddRenderStateIn( const RenderState& p_renderstate );
     void AddRenderStateOut( const RenderState& p_renderstate );
     void Serialize( Utils::Archive& p_archive  );
-    void Unserialize( Utils::Archive& p_archive );
+    bool Unserialize( Utils::Archive& p_archive );
     void GetMD5( dsstring& p_md5 );
+
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
+
+    void ApplyProperties( void );
+
 };
 }
 }

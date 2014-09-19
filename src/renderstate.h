@@ -52,8 +52,11 @@ public:
 
 protected:
 
-    dsstring    m_arg;         //argument operation renderstate, sous forme de chaine ascii
-    Operation   m_operation;
+    dsstring                                m_arg;         //argument operation renderstate, sous forme de chaine ascii
+    Operation                               m_operation;
+
+    static std::map<Operation, dsstring>    m_tostring;
+    static std::map<dsstring, Operation>    m_fromstring;
 
 public:
 
@@ -61,10 +64,14 @@ public:
     RenderState( Operation p_operation, const dsstring& p_arg );
     ~RenderState( void );
 
+    static void InitStringMaps( void );
+
     void SetOperation( Operation p_operation );
+    void SetOperationFromString( const dsstring& p_operation );
     void SetArg( const dsstring& p_arg );
 
     Operation GetOperation( void );
+    void GetOperationToString( dsstring& p_operation );
     void GetArg( dsstring& p_arg );
 };
 

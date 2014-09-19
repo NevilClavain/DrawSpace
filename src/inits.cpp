@@ -23,6 +23,7 @@
 #include "inits.h"
 #include "factory.h"
 #include "texture.h"
+#include "renderstate.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -33,4 +34,5 @@ void DrawSpace::Initialize( void )
     Factory::GetInstance()->RegisterAssetInstanciationFuncByText( TEXTURE_TEXT_KEYWORD, Texture::Instanciate );
     Factory::GetInstance()->RegisterAssetInstanciationFuncByArc( TEXTURE_ARC_MAGICNUMBER, Texture::Instanciate );
 
+    RenderState::InitStringMaps();
 }
