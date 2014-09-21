@@ -63,6 +63,8 @@ public:
     DrawSpace::Core::Configurable* GetConfigurable( const dsstring& p_id );
 
     void RegisterConfigurableRegistrationHandler( ConfigurableRegistrationHandler* p_handler );
+
+    bool ConfigIdExists( const dsstring& p_id );
 };
 }
 }

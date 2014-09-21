@@ -58,3 +58,12 @@ void ConfigsBase::RegisterConfigurableRegistrationHandler( ConfigurableRegistrat
 {
     m_configreg_handler = p_handler;
 }
+
+bool ConfigsBase::ConfigIdExists( const dsstring& p_id )
+{
+    if( m_configurables.count( p_id ) > 0 )
+    {
+        return true;
+    }
+    return false;
+}

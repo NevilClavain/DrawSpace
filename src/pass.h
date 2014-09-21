@@ -34,7 +34,23 @@ namespace DrawSpace
 
 class Pass : public Core::Configurable
 {
-protected:	
+protected:
+
+    typedef enum
+    {
+        TEXTURE_NAME,
+        PASS_NAME,
+
+    } TextureSource;
+
+    typedef struct
+    {
+        TextureSource   source;
+        dsstring        name;
+
+    } TextureSourceName;
+
+
     Core::RenderingQueue*   m_renderingqueue;
     ViewportQuad*           m_viewportquad;
 

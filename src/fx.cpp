@@ -356,5 +356,7 @@ void Fx::ApplyProperties( void )
         RenderState rs = rsout_list[i];
         AddRenderStateOut( rs );
     }
+
+    m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
