@@ -36,6 +36,22 @@ Pass::Pass( const dsstring& p_name ) :
 m_name( p_name ),
 m_viewportquad( NULL )
 {
+    // properties array creation
+    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+
+    m_properties["enabledepthclear"].AddPropValue<bool>( false );
+    m_properties["enabletargetclear"].AddPropValue<bool>( false );
+    m_properties["targetclearcolor"].AddProp<unsigned char>( "r" );
+    m_properties["targetclearcolor"].AddProp<unsigned char>( "g" );
+    m_properties["targetclearcolor"].AddProp<unsigned char>( "b" );
+   
+    m_properties["viewportquad"].AddPropValue<bool>( false );
+    m_properties["viewportquad_fx"].AddPropValue<dsstring>( "" );
+
+    m_properties["viewportquad_textures"].AddProp<std::vector<std::pair<long, TextureSourceName>>>();
+
+    m_properties["viewportquad_shaderparams"].AddProp<std::map<dsstring, RenderingNode::ShadersParams>>();
+
 }
 
 Pass::~Pass( void )
@@ -44,6 +60,213 @@ Pass::~Pass( void )
     {
         _DRAWSPACE_DELETE_( m_viewportquad );
     }
+}
+
+void Pass::Serialize( Utils::Archive& p_archive  )
+{
+
+}
+
+bool Pass::Unserialize( Utils::Archive& p_archive )
+{
+    return false;
+}
+
+void Pass::DumpProperties( dsstring& p_text )
+{
+}
+
+bool Pass::ParseProperties( const dsstring& p_text )
+{
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
+}
+
+
+void Pass::ApplyProperties( void )
+{   
+    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+
+    bool enabledepthclear = m_properties["enabledepthclear"].GetPropValue<bool>();
+    GetRenderingQueue()->EnableDepthClearing( enabledepthclear );
+
+    bool enabletargetclear = m_properties["enabletargetclear"].GetPropValue<bool>();
+    GetRenderingQueue()->EnableTargetClearing( enabletargetclear );
+
+    unsigned char r = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "r" );
+    unsigned char g = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "g" );
+    unsigned char b = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "b" );
+
+    GetRenderingQueue()->SetTargetClearingColor( r, g, b );
+
+    bool viewportquad = m_properties["viewportquad"].GetPropValue<bool>();
+
+    if( viewportquad )
+    {
+        CreateViewportQuad();
+
+        dsstring viewportquad_fx = m_properties["viewportquad_fx"].GetPropValue<dsstring>();
+
+        if( false == ConfigsBase::GetInstance()->ConfigIdExists( viewportquad_fx ) )
+        {
+            _DSEXCEPTION( "Config id unknown in ConfigsBase" );
+        }
+
+        Configurable* config = ConfigsBase::GetInstance()->GetConfigurable( viewportquad_fx );
+
+        Fx* fx = dynamic_cast<Fx*>( config );
+        if( !fx )
+        {
+            _DSEXCEPTION( "Specified asset is not an Fx" );
+        }
+
+        GetViewportQuad()->SetFx( fx );
+
+        std::vector<std::pair<long, TextureSourceName>> viewportquad_textures;
+
+        viewportquad_textures = m_properties["viewportquad_textures"].GetPropValue<std::vector<std::pair<long, TextureSourceName>>>();
+
+        for( size_t i = 0; i < viewportquad_textures.size(); i++ )
+        {
+            TextureSourceName texture_source_name = viewportquad_textures[i].second;
+            long stage = viewportquad_textures[i].first;
+
+            if( PASS_NAME == texture_source_name.source )
+            {
+                if( false == ConfigsBase::GetInstance()->ConfigIdExists( texture_source_name.name ) )
+                {
+                    _DSEXCEPTION( "Config id unknown in ConfigsBase" );
+                }
+
+                Configurable* pass = ConfigsBase::GetInstance()->GetConfigurable( texture_source_name.name );
+
+                IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( pass );
+
+                if( ipass )
+                {
+                    GetViewportQuad()->SetTexture( ipass->GetTargetTexture(), stage );
+                }
+                else
+                {
+                    _DSEXCEPTION( "Specified pass is not an Intermediate pass" );
+                }
+            }
+            else
+            {
+                if( false == AssetsBase::GetInstance()->AssetIdExists( texture_source_name.name ) )
+                {
+                    _DSEXCEPTION( "Asset id unknown in AssetsBase" );
+                }
+
+                Asset* asset = AssetsBase::GetInstance()->GetAsset( texture_source_name.name );
+
+                Texture* texture = dynamic_cast<Texture*>( asset);
+                if( !texture )
+                {
+                    _DSEXCEPTION( "Specified asset is not a texture" );
+                }
+
+                GetViewportQuad()->SetTexture( static_cast<Texture*>( asset ), stage );
+            }
+        }
+
+        std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = m_properties["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
+        for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
+        {
+            GetViewportQuad()->AddShaderParameter( (*it).second.shader_index, (*it).first, (*it).second.param_register );
+
+            GetViewportQuad()->SetShaderRealVector( (*it).first, (*it).second.param_values );
+        }
+    }
+     
+    GetRenderingQueue()->SetTargetClearingColor( r, g, b );
+}
+
+bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    if( "configname" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "enabledepthclear" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+        m_properties["enabledepthclear"].SetPropValue<bool>( ( "true" == p_words[1] ? true : false ) );
+    }
+    else if( "targetclearcolor" == p_words[0] )
+    {
+        if( p_words.size() < 4 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["targetclearcolor"].SetPropValue<unsigned char>( "r", (unsigned char)StringToInt( p_words[1] ) );
+        m_properties["targetclearcolor"].SetPropValue<unsigned char>( "g", (unsigned char)StringToInt( p_words[2] ) );
+        m_properties["targetclearcolor"].SetPropValue<unsigned char>( "b", (unsigned char)StringToInt( p_words[3] ) );
+    }
+    else if( "viewportquad" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+        m_properties["viewportquad"].SetPropValue<bool>( ( "true" == p_words[1] ? true : false ) );
+    }
+    else if( "viewportquad_fx" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+        m_properties["viewportquad_fx"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "viewportquad_textures" == p_words[0] )
+    {
+        if( p_words.size() < 4 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        long stage;
+        TextureSourceName tsn;
+
+        if( "pass" == p_words[1] )
+        {
+
+        }
+        else if( "texture" == p_words[1] )
+        {
+
+        }
+        else
+        {
+            _PARSER_UNEXPECTED_KEYWORD_
+            return false;
+        }
+
+    }
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
+
+    return true;
 }
 
 void Pass::GetName( dsstring& p_name )
@@ -82,22 +305,6 @@ ViewportQuad* Pass::GetViewportQuad( void )
 
 FinalPass::FinalPass( const dsstring& p_name ) : Pass( p_name )
 {
-    // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
-
-    m_properties["enabledepthclear"].AddPropValue<bool>( false );
-    m_properties["enabletargetclear"].AddPropValue<bool>( false );
-    m_properties["targetclearcolor"].AddProp<unsigned char>( "r" );
-    m_properties["targetclearcolor"].AddProp<unsigned char>( "g" );
-    m_properties["targetclearcolor"].AddProp<unsigned char>( "b" );
-   
-    m_properties["viewportquad"].AddPropValue<bool>( false );
-    m_properties["viewportquad_fx"].AddPropValue<dsstring>( "" );
-
-    m_properties["viewportquad_textures"].AddProp<std::vector<std::pair<long, TextureSourceName>>>();
-
-    m_properties["viewportquad_shaderparams"].AddProp<std::map<dsstring, RenderingNode::ShadersParams>>();
-
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue );
 }
 
@@ -106,112 +313,10 @@ FinalPass::~FinalPass( void )
     _DRAWSPACE_DELETE_( m_renderingqueue );
 }
 
-void FinalPass::Serialize( Utils::Archive& p_archive  )
-{
-
-}
-
-bool FinalPass::Unserialize( Utils::Archive& p_archive )
-{
-    return false;
-}
-
-void FinalPass::DumpProperties( dsstring& p_text )
-{
-}
-
-bool FinalPass::ParseProperties( const dsstring& p_text )
-{
-    char seps[] = { 0x09, 0x020, 0x00 };
-
-    return RunOnTextChunk( p_text, seps );
-}
-
-
-void FinalPass::ApplyProperties( void )
-{   
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
-
-    bool enabledepthclear = m_properties["enabledepthclear"].GetPropValue<bool>();
-    GetRenderingQueue()->EnableDepthClearing( enabledepthclear );
-
-    bool enabletargetclear = m_properties["enabletargetclear"].GetPropValue<bool>();
-    GetRenderingQueue()->EnableTargetClearing( enabletargetclear );
-
-    unsigned char r = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "r" );
-    unsigned char g = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "g" );
-    unsigned char b = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "b" );
-
-    bool viewportquad = m_properties["viewportquad"].GetPropValue<bool>();
-
-    if( viewportquad )
-    {
-        CreateViewportQuad();
-
-        dsstring viewportquad_fx = m_properties["viewportquad_fx"].GetPropValue<dsstring>();
-
-        if( false == ConfigsBase::GetInstance()->ConfigIdExists( viewportquad_fx ) )
-        {
-            _DSEXCEPTION( "Config id unknown in ConfigsBase" );
-        }
-
-        Configurable* fx = ConfigsBase::GetInstance()->GetConfigurable( viewportquad_fx );
-
-        GetViewportQuad()->SetFx( static_cast<Fx*>( fx ) );
-
-        std::vector<std::pair<long, TextureSourceName>> viewportquad_textures;
-
-        viewportquad_textures = m_properties["viewportquad_textures"].GetPropValue<std::vector<std::pair<long, TextureSourceName>>>();
-
-        for( size_t i = 0; i < viewportquad_textures.size(); i++ )
-        {
-            TextureSourceName texture_source_name = viewportquad_textures[i].second;
-            long stage = viewportquad_textures[i].first;
-
-            if( PASS_NAME == texture_source_name.source )
-            {
-                if( false == ConfigsBase::GetInstance()->ConfigIdExists( texture_source_name.name ) )
-                {
-                    _DSEXCEPTION( "Config id unknown in ConfigsBase" );
-                }
-
-                Configurable* pass = ConfigsBase::GetInstance()->GetConfigurable( texture_source_name.name );
-
-                IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( pass );
-
-                if( ipass )
-                {
-                    GetViewportQuad()->SetTexture( ipass->GetTargetTexture(), stage );
-                }
-                else
-                {
-                    _DSEXCEPTION( "Specified pass is not an Intermediate pass" );
-                }
-            }
-            else
-            {
-
-            }
-        }
-    }
-
-    
-    GetRenderingQueue()->SetTargetClearingColor( r, g, b );
-}
-
-bool FinalPass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    return true;
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 IntermediatePass::IntermediatePass( const dsstring& p_name ) : Pass( p_name )
 {
-    // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
-
-
     //////// creation texture target
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
@@ -240,32 +345,4 @@ IntermediatePass::~IntermediatePass( void )
 Core::Texture* IntermediatePass::GetTargetTexture( void )
 {
     return m_targettexture;
-}
-
-void IntermediatePass::Serialize( Utils::Archive& p_archive  )
-{
-
-}
-
-bool IntermediatePass::Unserialize( Utils::Archive& p_archive )
-{
-    return false;
-}
-
-void IntermediatePass::DumpProperties( dsstring& p_text )
-{
-}
-
-bool IntermediatePass::ParseProperties( const dsstring& p_text )
-{
-    return false;
-}
-
-void IntermediatePass::ApplyProperties( void )
-{
-}
-
-bool IntermediatePass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    return true;
 }

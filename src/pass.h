@@ -56,6 +56,8 @@ protected:
 
     dsstring                m_name;
 
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
     // pour empecher l'instanciation
     Pass( const dsstring& p_name );
 public:
@@ -69,17 +71,7 @@ public:
     virtual ViewportQuad* GetViewportQuad( void );
 
     virtual void GetName( dsstring& p_name );
-};
 
-class FinalPass : public Pass
-{
-protected:
-
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
-public:
-    FinalPass( const dsstring& p_name );
-    virtual ~FinalPass( void );
 
     virtual void Serialize( Utils::Archive& p_archive  );
     virtual bool Unserialize( Utils::Archive& p_archive );
@@ -89,6 +81,29 @@ public:
 
 
     virtual void ApplyProperties( void );
+
+};
+
+class FinalPass : public Pass
+{
+protected:
+
+    //virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
+public:
+    FinalPass( const dsstring& p_name );
+    virtual ~FinalPass( void );
+
+    /*
+    virtual void Serialize( Utils::Archive& p_archive  );
+    virtual bool Unserialize( Utils::Archive& p_archive );
+
+    virtual void DumpProperties( dsstring& p_text );
+    virtual bool ParseProperties( const dsstring& p_text );
+
+
+    virtual void ApplyProperties( void );
+    */
 
 };
 
@@ -97,7 +112,7 @@ class IntermediatePass : public Pass
 protected:
     Core::Texture*          m_targettexture;
 
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+    //virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     IntermediatePass( const dsstring& p_name );
@@ -105,6 +120,8 @@ public:
     virtual ~IntermediatePass( void );
 
     Core::Texture* GetTargetTexture( void );
+
+    /*
 
     virtual void Serialize( Utils::Archive& p_archive  );
     virtual bool Unserialize( Utils::Archive& p_archive );
@@ -114,6 +131,7 @@ public:
 
 
     virtual void ApplyProperties( void );
+    */
 
 };
 }
