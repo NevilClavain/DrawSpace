@@ -317,6 +317,40 @@ void Fx::DumpProperties( dsstring& p_text )
     p_text += "\n";
 
 
+    std::vector<RenderState> renderstates_in = m_properties["renderstates_in"].GetPropValue<std::vector<RenderState>>();
+    for( size_t i = 0; i < renderstates_in.size(); i++ )
+    {
+        RenderState rs = renderstates_in[i];
+
+        p_text += "renderstates_in ";
+
+        rs.GetOperationToString( text_value );
+        p_text += text_value;
+        p_text += " ";
+
+        rs.GetArg( text_value );
+        p_text += text_value;
+        p_text += "\n";
+    }
+
+    std::vector<RenderState> renderstates_out = m_properties["renderstates_out"].GetPropValue<std::vector<RenderState>>();
+    for( size_t i = 0; i < renderstates_out.size(); i++ )
+    {
+        RenderState rs = renderstates_out[i];
+
+        p_text += "renderstates_out ";
+
+        rs.GetOperationToString( text_value );
+        p_text += text_value;
+        p_text += " ";
+
+        rs.GetArg( text_value );
+        p_text += text_value;
+        p_text += "\n";
+    }
+
+
+    /*
     p_text += "renderstates_in";
     std::vector<RenderState> rsin_list = m_properties["renderstates_in"].GetPropValue<std::vector<RenderState>>();
     for( size_t i = 0; i < rsin_list.size(); i++ )
@@ -351,6 +385,10 @@ void Fx::DumpProperties( dsstring& p_text )
 
     }
     p_text += "\n";
+
+    */
+
+
 
 
     p_text += "end_config\n";
