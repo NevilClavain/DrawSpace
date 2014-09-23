@@ -200,6 +200,7 @@ bool Fx::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstr
     }
     else if( "renderstates_in" == p_words[0] )
     {
+        /*
         std::vector<RenderState> rs_list;
 
         // le nombre de word doit etre impair (mot cle + n paire (operation et argument)
@@ -219,9 +220,27 @@ bool Fx::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstr
         }
 
         m_properties["renderstates_in"].SetPropValue<std::vector<RenderState>>( rs_list );
+        */
+
+        std::vector<RenderState> renderstates_in = m_properties["renderstates_in"].GetPropValue<std::vector<RenderState>>();
+
+        if( 0 == p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;            
+        }
+
+        RenderState rs;
+        rs.SetOperationFromString( p_words[1] ); 
+        rs.SetArg( p_words[2] );
+
+        renderstates_in.push_back( rs );
+
+        m_properties["renderstates_in"].SetPropValue<std::vector<RenderState>>( renderstates_in );
     }
     else if( "renderstates_out" == p_words[0] )
     {
+        /*
         std::vector<RenderState> rs_list;
 
         // le nombre de word doit etre impair (mot cle + n paire (operation et argument)
@@ -241,6 +260,25 @@ bool Fx::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstr
         }
 
         m_properties["renderstates_out"].SetPropValue<std::vector<RenderState>>( rs_list );
+
+        */
+
+        std::vector<RenderState> renderstates_out = m_properties["renderstates_out"].GetPropValue<std::vector<RenderState>>();
+
+        if( 0 == p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;            
+        }
+
+        RenderState rs;
+        rs.SetOperationFromString( p_words[1] ); 
+        rs.SetArg( p_words[2] );
+
+        renderstates_out.push_back( rs );
+
+        m_properties["renderstates_out"].SetPropValue<std::vector<RenderState>>( renderstates_out );
+
     }
     else
     {
