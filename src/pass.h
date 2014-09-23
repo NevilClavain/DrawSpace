@@ -29,6 +29,10 @@
 #include "viewportquad.h"
 #include "configurable.h"
 
+#define PASS_TEXT_KEYWORD    "Pass"
+#define PASS_ARC_MAGICNUMBER 0x4041
+
+
 namespace DrawSpace
 {
 

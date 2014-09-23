@@ -74,6 +74,104 @@ bool Pass::Unserialize( Utils::Archive& p_archive )
 
 void Pass::DumpProperties( dsstring& p_text )
 {
+    dsstring text_value;
+
+    p_text = "declare_config ";
+    p_text += dsstring( PASS_TEXT_KEYWORD );
+
+    p_text += "\n";
+
+    p_text += "configname ";
+    p_text += m_properties["configname"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+
+    p_text += "enabledepthclear ";
+    p_text += ( m_properties["enabledepthclear"].GetPropValue<bool>() ? "true" : "false" );
+    p_text += "\n";
+
+    p_text += "enabletargetclear ";
+    p_text += ( m_properties["enabletargetclear"].GetPropValue<bool>() ? "true" : "false" );
+    p_text += "\n";
+
+    p_text += "targetclearcolor ";
+
+    IntToString( m_properties["targetclearcolor"].GetPropValue<unsigned char>( "r" ), text_value );
+    p_text += text_value;
+    p_text += " ";
+
+    IntToString( m_properties["targetclearcolor"].GetPropValue<unsigned char>( "g" ), text_value );
+    p_text += text_value;
+    p_text += " ";
+
+    IntToString( m_properties["targetclearcolor"].GetPropValue<unsigned char>( "b" ), text_value );
+    p_text += text_value;
+    p_text += "\n";
+
+    p_text += "viewportquad ";
+    p_text += ( true == m_properties["viewportquad"].GetPropValue<bool>() ? "true" : "false" );
+    p_text += "\n";
+
+    if( true == m_properties["viewportquad"].GetPropValue<bool>() )
+    {
+        p_text += "viewportquad_fx ";
+        p_text += m_properties["viewportquad_fx"].GetPropValue<dsstring>();
+        p_text += "\n";
+        
+        std::vector<std::pair<long, TextureSourceName>> viewportquad_textures;
+        viewportquad_textures = m_properties["viewportquad_textures"].GetPropValue<std::vector<std::pair<long, TextureSourceName>>>();
+
+        for( size_t i = 0; i < viewportquad_textures.size(); i++ )
+        {
+            p_text += "viewportquad_textures ";
+
+            if( Pass::PASS_NAME == viewportquad_textures[i].second.source )
+            {
+                p_text += "pass ";
+            }
+            else
+            {
+                p_text += "texture ";
+            }
+
+            p_text += viewportquad_textures[i].second.name;
+            p_text += " ";
+
+            IntToString( viewportquad_textures[i].first, text_value );
+
+            p_text += text_value;
+            p_text += "\n";
+        }
+
+        std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = m_properties["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
+        for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
+        {
+            p_text += "viewportquad_shaderparams ";
+
+            p_text += it->first;
+            p_text += " ";
+
+            IntToString( it->second.shader_index, text_value );
+            p_text += text_value;
+            p_text += " ";
+
+
+            IntToString( it->second.param_register, text_value );
+            p_text += text_value;
+            p_text += " ";
+
+            for( long i = 0; i < 4; i++ )
+            {
+                RealToString( it->second.param_values[i], text_value );
+                p_text += text_value;
+                p_text += " ";                
+            }
+
+            p_text += "\n";
+        }
+    }
+
+    p_text += "end_config\n";
 }
 
 bool Pass::ParseProperties( const dsstring& p_text )
@@ -174,9 +272,9 @@ void Pass::ApplyProperties( void )
         std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = m_properties["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
         for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
         {
-            GetViewportQuad()->AddShaderParameter( (*it).second.shader_index, (*it).first, (*it).second.param_register );
+            GetViewportQuad()->AddShaderParameter( it->second.shader_index, it->first, it->second.param_register );
 
-            GetViewportQuad()->SetShaderRealVector( (*it).first, (*it).second.param_values );
+            GetViewportQuad()->SetShaderRealVector( it->first, it->second.param_values );
         }
     }
      
