@@ -35,15 +35,12 @@ Configurable::~Configurable( void )
 
 }
 
-/*
-PropertyPool& Configurable::GetPropertyPool( void )
-{
-    return m_properties;
-}
-*/
-
-
 void Configurable::SetName( const dsstring& p_name )
 {
     m_configname = p_name;
+}
+
+void Configurable::GetName( dsstring& p_name )
+{
+    p_name = m_configname;
 }

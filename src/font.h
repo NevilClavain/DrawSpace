@@ -78,6 +78,8 @@ public:
     virtual void DumpProperties( dsstring& p_text );
     virtual bool ParseProperties( const dsstring& p_text );
 
+    static Asset* Instanciate( void );
+
 };
 }
 }

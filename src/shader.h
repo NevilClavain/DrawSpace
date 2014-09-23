@@ -68,6 +68,8 @@ public:
 
 
     void    SetText( const dsstring& p_text );
+
+    static Asset* Instanciate( void );
 };
 }
 }

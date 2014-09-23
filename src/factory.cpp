@@ -174,3 +174,13 @@ void Factory::RegisterAssetInstanciationFuncByArc( short p_magic, Asset::Instanc
 {
     m_assets_instanciationfuncs_byarc[p_magic] = p_func;
 }
+
+void Factory::RegisterConfigInstanciationFuncByText( const dsstring& p_keyword, Configurable::InstanciateFunc p_func )
+{
+    m_configs_instanciationfuncs_bytext[p_keyword] = p_func;
+}
+
+void Factory::RegisterConfigInstanciationFuncByArc( short p_magic, Configurable::InstanciateFunc p_func )
+{
+    m_configs_instanciationfuncs_byarc[p_magic] = p_func;
+}

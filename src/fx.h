@@ -67,6 +67,8 @@ public:
 
     void ApplyProperties( void );
 
+    static Configurable* Instanciate( void );
+
 };
 }
 }

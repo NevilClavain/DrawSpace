@@ -32,8 +32,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-Pass::Pass( const dsstring& p_name ) : 
-m_name( p_name ),
+Pass::Pass( void ) : 
 m_viewportquad( NULL )
 {
     // properties array creation
@@ -75,11 +74,6 @@ bool Pass::Unserialize( Utils::Archive& p_archive )
 void Pass::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
-
-    p_text = "declare_config ";
-    p_text += dsstring( PASS_TEXT_KEYWORD );
-
-    p_text += "\n";
 
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
@@ -169,9 +163,7 @@ void Pass::DumpProperties( dsstring& p_text )
 
             p_text += "\n";
         }
-    }
-
-    p_text += "end_config\n";
+    }    
 }
 
 bool Pass::ParseProperties( const dsstring& p_text )
@@ -406,7 +398,7 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
 
 void Pass::GetName( dsstring& p_name )
 {
-    p_name = m_name;
+    p_name = m_configname;
 }
 
 
@@ -420,14 +412,14 @@ void Pass::CreateViewportQuad( void )
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
     renderer->GetRenderCharacteristics( renderer_characteristics );
-    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_name + dsstring( "/viewportquad" ), renderer_characteristics.width_viewport, renderer_characteristics.height_viewport ) );
+    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_configname + dsstring( "/viewportquad" ), renderer_characteristics.width_viewport, renderer_characteristics.height_viewport ) );
 
     m_renderingqueue->Add( m_viewportquad );
 }
 
 void Pass::CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height )
 {
-    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_name + dsstring( "/viewportquad" ), p_viewport_width, p_viewport_height ) );
+    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_configname + dsstring( "/viewportquad" ), p_viewport_width, p_viewport_height ) );
     m_renderingqueue->Add( m_viewportquad );
 }
 
@@ -438,8 +430,14 @@ ViewportQuad* Pass::GetViewportQuad( void )
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-FinalPass::FinalPass( const dsstring& p_name ) : Pass( p_name )
+FinalPass::FinalPass( void )
 {
+    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue );
+}
+
+FinalPass::FinalPass( const dsstring& p_name )
+{
+    m_configname = p_name;
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue );
 }
 
@@ -448,9 +446,28 @@ FinalPass::~FinalPass( void )
     _DRAWSPACE_DELETE_( m_renderingqueue );
 }
 
+void FinalPass::DumpProperties( dsstring& p_text )
+{
+    dsstring text_value;
+
+    p_text = "declare_config ";
+    p_text += dsstring( FINALPASS_TEXT_KEYWORD );
+
+    p_text += "\n";
+
+    Pass::DumpProperties( p_text );
+
+    p_text += "end_config\n";
+}
+
+Configurable* FinalPass::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( FinalPass, FinalPass );
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-IntermediatePass::IntermediatePass( const dsstring& p_name ) : Pass( p_name )
+IntermediatePass::IntermediatePass( void )
 {
     //////// creation texture target
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -458,15 +475,32 @@ IntermediatePass::IntermediatePass( const dsstring& p_name ) : Pass( p_name )
     DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
     renderer->GetRenderCharacteristics( renderer_characteristics );
 
-    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
+    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_configname + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
 
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
 }
 
-IntermediatePass::IntermediatePass( const dsstring& p_name, long p_target_width, long p_target_height ) : Pass( p_name )
+
+
+IntermediatePass::IntermediatePass( const dsstring& p_name )
 {
+    m_configname = p_name;
     //////// creation texture target
-    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, p_target_width, p_target_height ) );
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+    DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
+    renderer->GetRenderCharacteristics( renderer_characteristics );
+
+    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_configname + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
+
+    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
+}
+
+IntermediatePass::IntermediatePass( const dsstring& p_name, long p_target_width, long p_target_height )
+{
+    m_configname = p_name;
+    //////// creation texture target
+    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_configname + dsstring( "/target" ), true, p_target_width, p_target_height ) );
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
 }
 
@@ -480,4 +514,23 @@ IntermediatePass::~IntermediatePass( void )
 Core::Texture* IntermediatePass::GetTargetTexture( void )
 {
     return m_targettexture;
+}
+
+void IntermediatePass::DumpProperties( dsstring& p_text )
+{
+    dsstring text_value;
+
+    p_text = "declare_config ";
+    p_text += dsstring( INTERMEDIATEPASS_TEXT_KEYWORD );
+
+    p_text += "\n";
+
+    Pass::DumpProperties( p_text );
+
+    p_text += "end_config\n";
+}
+
+Configurable* IntermediatePass::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass );
 }

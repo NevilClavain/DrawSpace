@@ -34,6 +34,10 @@ namespace Core
 {
 class Configurable : public DrawSpace::Utils::Parser
 {
+public:
+
+    typedef Configurable* (*InstanciateFunc)( void );
+
 protected:
 
     dsstring                                                m_configname;
@@ -53,6 +57,7 @@ public:
     virtual void ApplyProperties( void ) = 0;
 
     virtual void SetName( const dsstring& p_name );
+    virtual void GetName( dsstring& p_name );
 
 };
 

@@ -27,6 +27,7 @@
 #include "misc_utils.h"
 
 
+using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
@@ -216,4 +217,9 @@ void Shader::SetText( const dsstring& p_text )
     m_data = (void *)_DRAWSPACE_NEW_EXPLICIT_SIZE_( char, char[p_text.size()], p_text.size() );
     m_datasize = p_text.size();
     memcpy( m_data, (void *)p_text.c_str(), p_text.size() );
+}
+
+Asset* Shader::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( Shader, Shader );
 }

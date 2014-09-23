@@ -27,6 +27,7 @@
 #include "archive.h"
 #include "parser.h"
 #include "asset.h"
+#include "configurable.h"
 
 namespace DrawSpace
 {
@@ -36,17 +37,21 @@ class Factory : public DrawSpace::Utils::Parser
 {
 protected:
 
-    std::map<dsstring, Asset::InstanciateFunc>      m_assets_instanciationfuncs_bytext;
-    std::map<short, Asset::InstanciateFunc>         m_assets_instanciationfuncs_byarc;
+    std::map<dsstring, Asset::InstanciateFunc>              m_assets_instanciationfuncs_bytext;
+    std::map<short, Asset::InstanciateFunc>                 m_assets_instanciationfuncs_byarc;
 
-    dsstring                                        m_asset_properties;
-    dsstring                                        m_asset_keyword;
+    std::map<dsstring, Configurable::InstanciateFunc>       m_configs_instanciationfuncs_bytext;
+    std::map<short, Configurable::InstanciateFunc>          m_configs_instanciationfuncs_byarc;
 
-    dsstring                                        m_config_properties;
-    dsstring                                        m_config_keyword;
 
-    bool                                            m_capture_asset_props;
-    bool                                            m_capture_config_props;
+    dsstring                                                m_asset_properties;
+    dsstring                                                m_asset_keyword;
+
+    dsstring                                                m_config_properties;
+    dsstring                                                m_config_keyword;
+
+    bool                                                    m_capture_asset_props;
+    bool                                                    m_capture_config_props;
     
     
 
@@ -78,6 +83,10 @@ public:
 
     void RegisterAssetInstanciationFuncByText( const dsstring& p_keyword, Asset::InstanciateFunc p_func );
     void RegisterAssetInstanciationFuncByArc( short p_magic, Asset::InstanciateFunc p_func );
+
+    void RegisterConfigInstanciationFuncByText( const dsstring& p_keyword, Configurable::InstanciateFunc p_func );
+    void RegisterConfigInstanciationFuncByArc( short p_magic, Configurable::InstanciateFunc p_func );
+
 
 };
 }

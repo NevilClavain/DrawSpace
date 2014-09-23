@@ -23,6 +23,11 @@
 #include "inits.h"
 #include "factory.h"
 #include "texture.h"
+#include "shader.h"
+#include "meshe.h"
+#include "font.h"
+#include "fx.h"
+#include "pass.h"
 #include "renderstate.h"
 
 using namespace DrawSpace;
@@ -33,6 +38,24 @@ void DrawSpace::Initialize( void )
 {
     Factory::GetInstance()->RegisterAssetInstanciationFuncByText( TEXTURE_TEXT_KEYWORD, Texture::Instanciate );
     Factory::GetInstance()->RegisterAssetInstanciationFuncByArc( TEXTURE_ARC_MAGICNUMBER, Texture::Instanciate );
+
+    Factory::GetInstance()->RegisterAssetInstanciationFuncByText( SHADER_TEXT_KEYWORD, Shader::Instanciate );
+    Factory::GetInstance()->RegisterAssetInstanciationFuncByArc( SHADER_ARC_MAGICNUMBER, Shader::Instanciate );
+
+    Factory::GetInstance()->RegisterAssetInstanciationFuncByText( MESHE_TEXT_KEYWORD, Meshe::Instanciate );
+    Factory::GetInstance()->RegisterAssetInstanciationFuncByArc( MESHE_ARC_MAGICNUMBER, Meshe::Instanciate );
+
+    Factory::GetInstance()->RegisterAssetInstanciationFuncByText( FONT_TEXT_KEYWORD, Font::Instanciate );
+    Factory::GetInstance()->RegisterAssetInstanciationFuncByArc( FONT_ARC_MAGICNUMBER, Font::Instanciate );
+
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FX_TEXT_KEYWORD, Fx::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FX_ARC_MAGICNUMBER, Fx::Instanciate );
+
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( INTERMEDIATEPASS_TEXT_KEYWORD, Fx::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( INTERMEDIATEPASS_ARC_MAGICNUMBER, Fx::Instanciate );
+
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FINALPASS_TEXT_KEYWORD, Fx::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FINALPASS_ARC_MAGICNUMBER, Fx::Instanciate );
 
     RenderState::InitStringMaps();
 }

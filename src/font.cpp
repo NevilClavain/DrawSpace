@@ -215,3 +215,8 @@ bool Font::ParseProperties( const dsstring& p_text )
 
     return RunOnTextChunk( p_text, seps );
 }
+
+Asset* Font::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( Font, Font );
+}

@@ -29,6 +29,7 @@
 #include "mesheimport.h"
 
 
+using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
@@ -310,4 +311,9 @@ void Meshe::GetMD5( dsstring& p_md5 )
 
     delete[] vbuff;
     delete[] tbuff;
+}
+
+Asset* Meshe::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( Meshe, Meshe );
 }

@@ -29,9 +29,11 @@
 #include "viewportquad.h"
 #include "configurable.h"
 
-#define PASS_TEXT_KEYWORD    "Pass"
-#define PASS_ARC_MAGICNUMBER 0x4041
+#define FINALPASS_TEXT_KEYWORD      "FinalPass"
+#define FINALPASS_ARC_MAGICNUMBER   0x4041
 
+#define INTERMEDIATEPASS_TEXT_KEYWORD      "IntermediatePass"
+#define INTERMEDIATEPASS_ARC_MAGICNUMBER   0x4042
 
 namespace DrawSpace
 {
@@ -58,12 +60,12 @@ protected:
     Core::RenderingQueue*   m_renderingqueue;
     ViewportQuad*           m_viewportquad;
 
-    dsstring                m_name;
+    //dsstring                m_name;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
     // pour empecher l'instanciation
-    Pass( const dsstring& p_name );
+    Pass( void );    
 public:
     virtual ~Pass( void );
 
@@ -86,6 +88,7 @@ public:
 
     virtual void ApplyProperties( void );
 
+
 };
 
 class FinalPass : public Pass
@@ -95,20 +98,13 @@ protected:
     //virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
+    FinalPass( void );
     FinalPass( const dsstring& p_name );
     virtual ~FinalPass( void );
 
-    /*
-    virtual void Serialize( Utils::Archive& p_archive  );
-    virtual bool Unserialize( Utils::Archive& p_archive );
-
     virtual void DumpProperties( dsstring& p_text );
-    virtual bool ParseProperties( const dsstring& p_text );
 
-
-    virtual void ApplyProperties( void );
-    */
-
+    static Configurable* Instanciate( void );
 };
 
 class IntermediatePass : public Pass
@@ -119,23 +115,16 @@ protected:
     //virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
+    IntermediatePass( void );
     IntermediatePass( const dsstring& p_name );
     IntermediatePass( const dsstring& p_name, long p_target_width, long p_target_height );
     virtual ~IntermediatePass( void );
 
     Core::Texture* GetTargetTexture( void );
 
-    /*
-
-    virtual void Serialize( Utils::Archive& p_archive  );
-    virtual bool Unserialize( Utils::Archive& p_archive );
-
     virtual void DumpProperties( dsstring& p_text );
-    virtual bool ParseProperties( const dsstring& p_text );
 
-
-    virtual void ApplyProperties( void );
-    */
+    static Configurable* Instanciate( void );
 
 };
 }

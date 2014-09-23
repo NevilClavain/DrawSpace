@@ -82,6 +82,8 @@ public:
     bool ParseProperties( const dsstring& p_text );
 
     void GetMD5( dsstring& p_md5 );
+
+    static Asset* Instanciate( void );
 };
 }
 }

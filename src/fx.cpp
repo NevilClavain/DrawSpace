@@ -442,3 +442,7 @@ void Fx::ApplyProperties( void )
     m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
+Configurable* Fx::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( Fx, Fx );
+}
