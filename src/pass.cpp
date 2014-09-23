@@ -242,16 +242,18 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
             return false;
         }
 
+        std::vector<std::pair<long, TextureSourceName>> viewportquad_textures = m_properties["m_properties"].GetPropValue<std::vector<std::pair<long, TextureSourceName>>>();
+
         long stage;
         TextureSourceName tsn;
 
         if( "pass" == p_words[1] )
         {
-
+            tsn.source = Pass::PASS_NAME;
         }
         else if( "texture" == p_words[1] )
         {
-
+            tsn.source = Pass::TEXTURE_NAME;
         }
         else
         {
@@ -259,6 +261,41 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
             return false;
         }
 
+        tsn.name = p_words[2];
+
+        stage = StringToInt( p_words[3] );
+
+        viewportquad_textures.push_back( std::pair<long, TextureSourceName>( stage, tsn ) );
+
+        m_properties["m_properties"].SetPropValue<std::vector<std::pair<long, TextureSourceName>>>( viewportquad_textures );
+    }
+
+    else if( "viewportquad_shaderparams" == p_words[0] )
+    {
+        if( p_words.size() < 8 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = m_properties["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
+
+        RenderingNode::ShadersParams    shader_params;
+        dsstring                        param_name;
+
+        param_name = p_words[1];
+
+        shader_params.shader_index = StringToInt( p_words[2] );
+        shader_params.param_register = StringToInt( p_words[3] );
+
+        shader_params.param_values[0] = StringToReal( p_words[4] );
+        shader_params.param_values[1] = StringToReal( p_words[5] );
+        shader_params.param_values[2] = StringToReal( p_words[6] );
+        shader_params.param_values[3] = StringToReal( p_words[7] );
+
+        viewportquad_shaderparams[param_name] = shader_params;
+
+        m_properties["viewportquad_shaderparams"].SetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>( viewportquad_shaderparams );
     }
     else
     {
