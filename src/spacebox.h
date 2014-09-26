@@ -26,10 +26,15 @@
 #include "transformnode.h"
 #include "scenegraph.h"
 #include "renderer.h"
+#include "configurable.h"
+
+#define SPACEBOX_TEXT_KEYWORD           "Spacebox"
+#define SPACEBOX_ARC_MAGICNUMBER        0x4043
+
 
 namespace DrawSpace
 {
-class Spacebox : public Core::TransformNode
+class Spacebox : public Core::TransformNode, public Core::Configurable
 {
 public:
 
@@ -50,14 +55,18 @@ protected:
 
 	} NodesSet;
 
+	typedef struct
+	{
+        dsstring              texturenames[6];
+
+	} TexturesNameSet;
+
+
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshes[6];
     std::map<dsstring, NodesSet>                            m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
     DrawSpace::Scenegraph*                                  m_scenegraph;
-    std::map<DrawSpace::Core::RenderingNode*, dsstring>     m_nodes_mesheid;
-
-    //std::map<dsstring, void*>                               m_meshe_datas;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -65,13 +74,22 @@ public:
     Spacebox( void );
     virtual ~Spacebox( void );
 
-    virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
-    virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
+    void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
+    void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
 
-    virtual DrawSpace::Core::Meshe* GetMeshe( int p_mesheid );
+    DrawSpace::Core::Meshe* GetMeshe( int p_mesheid );
 
-    virtual void RegisterPassSlot( const dsstring p_passname );
-    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_quadid );
+    void RegisterPassSlot( const dsstring p_passname );
+    DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_quadid );
+
+    void Serialize( Utils::Archive& p_archive  );
+    bool Unserialize( Utils::Archive& p_archive );
+
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
+
+    void ApplyProperties( void );
+
     
 };
 }

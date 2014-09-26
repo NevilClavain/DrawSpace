@@ -23,6 +23,8 @@
 #include "spacebox.h"
 #include "memalloc.h"
 #include "exceptions.h"
+#include "configsbase.h"
+#include "assetsbase.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
@@ -30,6 +32,15 @@ using namespace DrawSpace::Core;
 
 Spacebox::Spacebox( void ) : m_renderer( NULL ), m_scenegraph( NULL )
 {
+    // properties array creation
+    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+
+    m_properties["passes_fx"].AddProp<std::map<dsstring, dsstring>>();
+    m_properties["passes_textures"].AddProp<std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>>();
+    m_properties["passes_order"].AddProp<std::map<dsstring, long>>();
+        
+    //////////////////////////////////
+
     Vertex v1, v2, v3, v4;
 
     for( long i = 0; i < 6; i++ )
@@ -244,74 +255,9 @@ void Spacebox::OnRegister( Scenegraph* p_scenegraph )
         {
             current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
         }
-
-        /*
-        if( current_pass != NULL )
-        {
-            for( long i = 0; i < 6; i++ )
-            {
-                current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
-            }
-        }
-        */
     }
     m_scenegraph = p_scenegraph;
 }
-
-/*
-bool Spacebox::LoadAssets( void )
-{
-    void* meshe_data;
-
-    if( false == m_renderer->CreateMeshe( m_meshes[FrontQuad], &meshe_data ) )
-    {
-        return false;
-    }
-    m_meshe_datas["front"] = meshe_data;
-
-    if( false == m_renderer->CreateMeshe( m_meshes[RearQuad], &meshe_data ) )
-    {
-        return false;
-    }
-    m_meshe_datas["rear"] = meshe_data;
-
-    if( false == m_renderer->CreateMeshe( m_meshes[LeftQuad], &meshe_data ) )
-    {
-        return false;
-    }
-    m_meshe_datas["left"] = meshe_data;
-
-    if( false == m_renderer->CreateMeshe( m_meshes[RightQuad], &meshe_data ) )
-    {
-        return false;
-    }
-    m_meshe_datas["right"] = meshe_data;
-
-    if( false == m_renderer->CreateMeshe( m_meshes[TopQuad], &meshe_data ) )
-    {
-        return false;
-    }
-    m_meshe_datas["top"] = meshe_data;
-
-    if( false == m_renderer->CreateMeshe( m_meshes[BottomQuad], &meshe_data ) )
-    {
-        return false;
-    }
-    m_meshe_datas["bottom"] = meshe_data;
-   
-    for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-    {
-        for( long i = 0; i < 6; i++ )
-        {            
-		    if( false == m_renderer->CreateRenderingNode( (*it).second.nodes[i] ) )
-		    {
-			    return false;
-		    }
-        }
-    }
-    return true;
-}
-*/
 
 Core::Meshe* Spacebox::GetMeshe( int p_mesheid )
 {
@@ -347,38 +293,6 @@ void Spacebox::RegisterPassSlot( const dsstring p_passname )
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
 
-        switch( i )
-        {
-            case FrontQuad:
-
-                m_nodes_mesheid[nodeset.nodes[i]] = "front";
-                break;
-            
-            case RearQuad:
-
-                m_nodes_mesheid[nodeset.nodes[i]] = "rear";
-                break;
-
-            case LeftQuad:
-
-                m_nodes_mesheid[nodeset.nodes[i]] = "left";
-                break;
-
-            case RightQuad:
-
-                m_nodes_mesheid[nodeset.nodes[i]] = "right";
-                break;
-
-            case TopQuad:
-
-                m_nodes_mesheid[nodeset.nodes[i]] = "top";
-                break;
-
-            case BottomQuad:
-
-                m_nodes_mesheid[nodeset.nodes[i]] = "bottom";
-                break;
-        }
     }
 
     m_passesnodes[p_passname] = nodeset;
@@ -394,5 +308,82 @@ DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring& p_pas
     return m_passesnodes[p_passname].nodes[p_quadid];
 }
 
+void Spacebox::Serialize( Utils::Archive& p_archive  )
+{
+
+}
+
+bool Spacebox::Unserialize( Utils::Archive& p_archive )
+{
+    return true;
+}
+
+void Spacebox::DumpProperties( dsstring& p_text )
+{
+}
+
+bool Spacebox::ParseProperties( const dsstring& p_text )
+{
+    return true;
+}
+
+void Spacebox::ApplyProperties( void )
+{
+    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+
+    // create passes slots and set fx to each corresponding rendering nodes
+    std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();
+    for( std::map<dsstring, dsstring>::iterator it = passes_fx.begin(); it != passes_fx.end(); ++it )
+    {
+        RegisterPassSlot( it->first );
+        NodesSet nodeset = m_passesnodes[it->first];
+        dsstring fxname = it->second;
+
+        Configurable* config = ConfigsBase::GetInstance()->GetConfigurable( fxname );
+
+        Fx* fx = dynamic_cast<Fx*>( config );
+        if( !fx )
+        {
+            _DSEXCEPTION( "Specified asset is not an Fx" );
+        }
+        
+        for( long i = 0; i < 6; i++ )
+        {
+            nodeset.nodes[i]->SetFx( fx );
+        }
+    }
+
+    std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>> passes_textures = m_properties["passes_textures"].GetPropValue<std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>>();
+    for( std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>::iterator it = passes_textures.begin(); it != passes_textures.end(); ++it )
+    {
+        if( 0 == m_passesnodes.count( it->first ) )
+        {
+            _DSEXCEPTION( "Specified pass is not registered/don't exists" );
+        }
+
+        NodesSet nodeset = m_passesnodes[it->first];
+
+        std::vector<std::pair<long, TexturesNameSet>> textures_set = it->second;
+
+        for( size_t i = 0; i < textures_set.size(); i++ )
+        {
+            long stage = textures_set[i].first;
+            TexturesNameSet nameset = textures_set[i].second;
+
+            for( long j = 0; j < 6; j++ )
+            {
+                Asset* asset = AssetsBase::GetInstance()->GetAsset( nameset.texturenames[i] );
+
+                Texture* texture = dynamic_cast<Texture*>( asset);
+                if( !texture )
+                {
+                    _DSEXCEPTION( "Specified asset is not a texture" );
+                }
+                
+                nodeset.nodes[i]->SetTexture( texture, stage );
+            }
+        }                
+    }
+}
 
 
