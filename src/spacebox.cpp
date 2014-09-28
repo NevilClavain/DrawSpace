@@ -25,10 +25,12 @@
 #include "exceptions.h"
 #include "configsbase.h"
 #include "assetsbase.h"
+#include "misc_utils.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 Spacebox::Spacebox( void ) : m_renderer( NULL ), m_scenegraph( NULL )
 {
@@ -318,13 +320,151 @@ bool Spacebox::Unserialize( Utils::Archive& p_archive )
     return true;
 }
 
+
+bool Spacebox::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    if( "configname" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "passes_fx" == p_words[0] )
+    {
+        if( p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();
+        passes_fx[p_words[1]] = p_words[2];
+
+        m_properties["passes_fx"].SetPropValue<std::map<dsstring, dsstring>>( passes_fx );
+
+    }
+    else if( "passes_textures" == p_words[0] )
+    {
+        if( p_words.size() < 9 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>> passes_textures = m_properties["passes_textures"].GetPropValue<std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>>();
+
+        long stage = StringToInt( p_words[2] );
+        TexturesNameSet names;
+
+        names.texturenames[0] = p_words[3];
+        names.texturenames[1] = p_words[4];
+        names.texturenames[2] = p_words[5];
+        names.texturenames[3] = p_words[6];
+        names.texturenames[4] = p_words[7];
+        names.texturenames[5] = p_words[8];
+
+        passes_textures[p_words[1]].push_back( std::pair<long, TexturesNameSet>( stage, names ) );
+
+        m_properties["passes_textures"].SetPropValue<std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>>( passes_textures );
+    }
+    else if( "passes_order" == p_words[0] )
+    {
+        if( p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        std::map<dsstring, long> passes_order = m_properties["passes_order"].GetPropValue<std::map<dsstring, long>>();
+
+        passes_order[p_words[1]] = StringToInt( p_words[2] );
+
+        m_properties["passes_order"].SetPropValue<std::map<dsstring, long>>( passes_order );
+    }
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
+
+    return true;
+}
+
 void Spacebox::DumpProperties( dsstring& p_text )
 {
+    dsstring text_value;
+
+    p_text = "declare_config ";
+    p_text += dsstring( SPACEBOX_TEXT_KEYWORD );
+
+    p_text += "\n";
+
+    p_text += "configname ";
+    p_text += m_properties["configname"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+    std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();
+    for( std::map<dsstring, dsstring>::iterator it = passes_fx.begin(); it != passes_fx.end(); ++it )
+    {
+        p_text += "passes_fx ";
+
+        p_text += it->first;
+        p_text += " ";
+        p_text += it->second;
+        p_text += "\n";
+    }
+
+    std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>> passes_textures = m_properties["passes_textures"].GetPropValue<std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>>();
+    for( std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>::iterator it = passes_textures.begin(); it != passes_textures.end(); ++it )
+    {       
+        for( size_t i = 0; i < it->second.size(); i++ )
+        {
+            p_text += "passes_textures ";
+            p_text += it->first;
+            p_text += " ";
+
+            std::pair<long, TexturesNameSet> name_sets = (it->second)[i];
+
+            IntToString( name_sets.first, text_value );
+
+            p_text += text_value;
+            p_text += " ";
+
+            for( long j = 0; j < 6; j++ )
+            {
+                p_text += name_sets.second.texturenames[i];
+                p_text += " ";
+            }
+        }
+
+        p_text += "\n";
+    }
+
+    std::map<dsstring, long> passes_order = m_properties["passes_order"].GetPropValue<std::map<dsstring, long>>();
+    for( std::map<dsstring, long>::iterator it = passes_order.begin(); it != passes_order.end(); ++it )
+    {
+        p_text += "passes_order ";
+        p_text += it->first;
+        p_text += " ";
+        
+        IntToString( it->second, text_value );
+        p_text += text_value;
+
+        p_text += "\n";
+    }
+
+    p_text += "end_config\n";
 }
 
 bool Spacebox::ParseProperties( const dsstring& p_text )
 {
-    return true;
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
 }
 
 void Spacebox::ApplyProperties( void )
@@ -383,6 +523,22 @@ void Spacebox::ApplyProperties( void )
                 nodeset.nodes[i]->SetTexture( texture, stage );
             }
         }                
+    }
+
+    std::map<dsstring, long> passes_order = m_properties["passes_order"].GetPropValue<std::map<dsstring, long>>();
+    for( std::map<dsstring, long>::iterator it = passes_order.begin(); it != passes_order.end(); ++it )
+    {
+        if( 0 == m_passesnodes.count( it->first ) )
+        {
+            _DSEXCEPTION( "Specified pass is not registered/don't exists" );
+        }
+
+        NodesSet nodeset = m_passesnodes[it->first];
+
+        for( long i = 0; i < 6; i++ )
+        {
+            nodeset.nodes[i]->SetOrderNumber( it->second );
+        }      
     }
 }
 

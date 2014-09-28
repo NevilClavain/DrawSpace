@@ -57,7 +57,7 @@ protected:
 
 	typedef struct
 	{
-        dsstring              texturenames[6];
+        dsstring                texturenames[6];
 
 	} TexturesNameSet;
 
@@ -69,6 +69,8 @@ protected:
     DrawSpace::Scenegraph*                                  m_scenegraph;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+
+    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     Spacebox( void );
