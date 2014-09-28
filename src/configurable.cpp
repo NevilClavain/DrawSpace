@@ -35,12 +35,12 @@ Configurable::~Configurable( void )
 
 }
 
-void Configurable::SetName( const dsstring& p_name )
+void Configurable::SetConfigurableName( const dsstring& p_name )
 {
     m_configname = p_name;
 }
 
-void Configurable::GetName( dsstring& p_name )
+void Configurable::GetConfigurableName( dsstring& p_name )
 {
     p_name = m_configname;
 }

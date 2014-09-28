@@ -31,6 +31,17 @@ using namespace DrawSpace::Utils;
 CircularMovement::CircularMovement( void ) :
 m_angular_speed( 0.0 )
 {
+    // properties array creation
+    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+
+    m_properties["center_pos"].AddProp<Vector>();
+    m_properties["delta_center"].AddProp<Vector>();
+    m_properties["rot_axis"].AddProp<Vector>();
+
+    m_properties["init_angle"].AddPropValue<dsreal>( 0.0 );
+    m_properties["theta"].AddPropValue<dsreal>( 0.0 );
+    m_properties["phi"].AddPropValue<dsreal>( 0.0 );
+
 }
 
 CircularMovement::~CircularMovement( void )
@@ -127,3 +138,46 @@ void CircularMovement::Reset( void )
     m_current_angle = 0.0;
 }
 
+void CircularMovement::Serialize( Utils::Archive& p_archive  )
+{
+
+}
+
+bool CircularMovement::Unserialize( Utils::Archive& p_archive )
+{
+    return true;
+}
+
+bool CircularMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    return true;
+}
+
+void CircularMovement::DumpProperties( dsstring& p_text )
+{
+
+}
+
+bool CircularMovement::ParseProperties( const dsstring& p_text )
+{
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
+}
+
+void CircularMovement::ApplyProperties( void )
+{
+    Init( m_properties["center_pos"].GetPropValue<Vector>(),             
+            m_properties["delta_center"].GetPropValue<Vector>(),
+            m_properties["rot_axis"].GetPropValue<Vector>(),
+            m_properties["init_angle"].GetPropValue<dsreal>(),
+            m_properties["theta"].GetPropValue<dsreal>(),
+            m_properties["phi"].GetPropValue<dsreal>() );
+
+    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+}
+
+Configurable* CircularMovement::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( CircularMovement, CircularMovement );
+}

@@ -25,12 +25,17 @@
 
 #include "movement.h"
 #include "quaternion.h"
+#include "configurable.h"
+
+#define SPACEBOX_TEXT_KEYWORD           "Spacebox"
+#define SPACEBOX_ARC_MAGICNUMBER        0x4043
+
 
 namespace DrawSpace
 {
 namespace Core
 {
-class CircularMovement : public Movement
+class CircularMovement : public Movement, public Configurable
 {
 protected:
 
@@ -52,6 +57,8 @@ protected:
     dsreal                      m_current_theta;
     dsreal                      m_current_phi;
 
+    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
 public:
 
     CircularMovement( void );
@@ -65,6 +72,17 @@ public:
     void SetPhi( dsreal p_phi );
 
     void Reset( void );
+
+    void Serialize( Utils::Archive& p_archive  );
+    bool Unserialize( Utils::Archive& p_archive );
+
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
+
+    void ApplyProperties( void );
+
+    static Configurable* Instanciate( void );
+
 
 };
 }

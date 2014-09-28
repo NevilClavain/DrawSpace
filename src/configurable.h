@@ -56,8 +56,8 @@ public:
 
     virtual void ApplyProperties( void ) = 0;
 
-    virtual void SetName( const dsstring& p_name );
-    virtual void GetName( dsstring& p_name );
+    virtual void SetConfigurableName( const dsstring& p_name );
+    virtual void GetConfigurableName( dsstring& p_name );
 
 };
 

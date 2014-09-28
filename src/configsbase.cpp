@@ -37,8 +37,7 @@ ConfigsBase::~ConfigsBase( void )
 
 void ConfigsBase::RegisterConfigurable( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf )
 {
-    m_configurables[p_id] = p_conf;
-    p_conf->SetName( p_id );
+    m_configurables[p_id] = p_conf;    
     if( m_configreg_handler )
     {
         (*m_configreg_handler)( p_conf );
