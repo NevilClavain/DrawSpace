@@ -542,4 +542,9 @@ void Spacebox::ApplyProperties( void )
     }
 }
 
+Configurable* Spacebox::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( Spacebox, Spacebox );
+}
+
 
