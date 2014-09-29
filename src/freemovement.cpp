@@ -170,3 +170,38 @@ void FreeMovement::Compute( Utils::TimeManager& p_timemanager )
 
     m_result = m_orientation * m_position;
 }
+
+bool FreeMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    return true;
+}
+
+void FreeMovement::Serialize( Utils::Archive& p_archive  )
+{
+
+}
+
+bool FreeMovement::Unserialize( Utils::Archive& p_archive )
+{
+    return true;
+}
+
+void FreeMovement::DumpProperties( dsstring& p_text )
+{
+
+}
+
+bool FreeMovement::ParseProperties( const dsstring& p_text )
+{
+    return true;
+}
+
+void FreeMovement::ApplyProperties( void )
+{
+
+}
+
+Configurable* FreeMovement::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( FreeMovement, FreeMovement );
+}

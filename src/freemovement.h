@@ -25,12 +25,16 @@
 
 #include "movement.h"
 #include "quaternion.h"
+#include "configurable.h"
+
+#define FREEMVT_TEXT_KEYWORD           "FreeMvt"
+#define FREEMVT_ARC_MAGICNUMBER        0x5046
 
 namespace DrawSpace
 {
 namespace Core
 {
-class FreeMovement : public Movement
+class FreeMovement : public Movement, public Configurable
 {
 protected:
     Utils::Vector           m_local_speed;
@@ -44,20 +48,31 @@ protected:
 	Utils::Matrix		    m_position;
 	Utils::Matrix		    m_orientation;
 
+    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     FreeMovement( void );
     virtual ~FreeMovement( void );
 
-    virtual void Init( const Utils::Vector& p_init_pos );
+    void Init( const Utils::Vector& p_init_pos );
 
-    virtual void RotateYaw( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
-	virtual void RotatePitch( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
-	virtual void RotateRoll( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
-    virtual void RotateAxis( Utils::Vector& p_axis, dsreal p_rspeed, Utils::TimeManager& p_timemanager );
+    void RotateYaw( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
+	void RotatePitch( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
+	void RotateRoll( dsreal p_rspeed, Utils::TimeManager& p_timemanager );
+    void RotateAxis( Utils::Vector& p_axis, dsreal p_rspeed, Utils::TimeManager& p_timemanager );
 
-    virtual void SetSpeed( dsreal p_speed );
-    virtual void Compute( Utils::TimeManager& p_timemanager );
+    void SetSpeed( dsreal p_speed );
+    void Compute( Utils::TimeManager& p_timemanager );
+
+    void Serialize( Utils::Archive& p_archive  );
+    bool Unserialize( Utils::Archive& p_archive );
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
+
+    void ApplyProperties( void );
+
+    static Configurable* Instanciate( void );
+
 
 };
 }

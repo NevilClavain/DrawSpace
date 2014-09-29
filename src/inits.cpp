@@ -31,6 +31,7 @@
 #include "spacebox.h"
 #include "circularmovement.h"
 #include "fpsmovement.h"
+#include "freemovement.h"
 #include "renderstate.h"
 
 using namespace DrawSpace;
@@ -68,6 +69,9 @@ void DrawSpace::Initialize( void )
 
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FPSMVT_TEXT_KEYWORD, FPSMovement::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FPSMVT_ARC_MAGICNUMBER, FPSMovement::Instanciate );
+
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FREEMVT_TEXT_KEYWORD, FreeMovement::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FREEMVT_ARC_MAGICNUMBER, FreeMovement::Instanciate );
 
     RenderState::InitStringMaps();
 }
