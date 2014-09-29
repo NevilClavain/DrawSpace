@@ -27,8 +27,8 @@
 #include "quaternion.h"
 #include "configurable.h"
 
-#define SPACEBOX_TEXT_KEYWORD           "Spacebox"
-#define SPACEBOX_ARC_MAGICNUMBER        0x4043
+#define CIRCULARMVT_TEXT_KEYWORD           "CircularMvt"
+#define CIRCLARMVT_ARC_MAGICNUMBER        0x4044
 
 
 namespace DrawSpace

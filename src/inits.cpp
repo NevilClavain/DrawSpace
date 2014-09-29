@@ -29,6 +29,7 @@
 #include "fx.h"
 #include "pass.h"
 #include "spacebox.h"
+#include "circularmovement.h"
 #include "renderstate.h"
 
 using namespace DrawSpace;
@@ -61,6 +62,8 @@ void DrawSpace::Initialize( void )
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( SPACEBOX_TEXT_KEYWORD, Spacebox::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( SPACEBOX_ARC_MAGICNUMBER, Spacebox::Instanciate );
 
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( CIRCULARMVT_TEXT_KEYWORD, CircularMovement::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( CIRCLARMVT_ARC_MAGICNUMBER, CircularMovement::Instanciate );
 
     RenderState::InitStringMaps();
 }
