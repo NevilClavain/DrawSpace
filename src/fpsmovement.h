@@ -25,12 +25,17 @@
 
 #include "movement.h"
 #include "quaternion.h"
+#include "configurable.h"
+
+#define FPSMVT_TEXT_KEYWORD           "FpsMvt"
+#define FPSMVT_ARC_MAGICNUMBER        0x5045
+
 
 namespace DrawSpace
 {
 namespace Core
 {
-class FPSMovement : public Movement
+class FPSMovement : public Movement, public Configurable
 {
 protected:
     Utils::Vector           m_local_speed;
@@ -51,20 +56,32 @@ protected:
 
     bool                    m_ymvt;
 
+    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
 
     FPSMovement( bool p_ymvt = false );
     virtual ~FPSMovement( void );
 
-    virtual void Init( const Utils::Vector& p_init_pos, dsreal p_initial_yaw = 0.0, dsreal p_initial_pitch = 0.0 );
-    virtual void InitRot( void );
+    void Init( const Utils::Vector& p_init_pos, dsreal p_initial_yaw = 0.0, dsreal p_initial_pitch = 0.0 );
+    void InitRot( void );
 
-    virtual void RotateYaw( dsreal p_speed, Utils::TimeManager& p_timemanager );
-    virtual void RotatePitch( dsreal p_speed, Utils::TimeManager& p_timemanager );
+    void RotateYaw( dsreal p_speed, Utils::TimeManager& p_timemanager );
+    void RotatePitch( dsreal p_speed, Utils::TimeManager& p_timemanager );
 
-    virtual void SetSpeed( dsreal p_speed );
-    virtual void Compute( Utils::TimeManager& p_timemanager /*, bool p_ymvt = false */ );
+    void SetSpeed( dsreal p_speed );
+    void Compute( Utils::TimeManager& p_timemanager /*, bool p_ymvt = false */ );
+
+    void Serialize( Utils::Archive& p_archive  );
+    bool Unserialize( Utils::Archive& p_archive );
+
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
+
+    void ApplyProperties( void );
+
+    static Configurable* Instanciate( void );
+
 
 };
 }
