@@ -28,7 +28,7 @@
 #include "configurable.h"
 
 #define CIRCULARMVT_TEXT_KEYWORD           "CircularMvt"
-#define CIRCLARMVT_ARC_MAGICNUMBER        0x4044
+#define CIRCULARMVT_ARC_MAGICNUMBER        0x5044
 
 
 namespace DrawSpace
