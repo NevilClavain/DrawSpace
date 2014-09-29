@@ -234,7 +234,7 @@ void FPSMovement::ApplyProperties( void )
     m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
-FPSMovement::Configurable* Instanciate( void )
+FPSMovement::Configurable* FPSMovement::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( FPSMovement, FPSMovement );
 }
