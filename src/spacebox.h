@@ -76,7 +76,7 @@ public:
     Spacebox( void );
     virtual ~Spacebox( void );
 
-    void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
+    //void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
 
     DrawSpace::Core::Meshe* GetMeshe( int p_mesheid );

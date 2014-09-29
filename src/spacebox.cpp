@@ -26,13 +26,14 @@
 #include "configsbase.h"
 #include "assetsbase.h"
 #include "misc_utils.h"
+#include "plugin.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-Spacebox::Spacebox( void ) : m_renderer( NULL ), m_scenegraph( NULL )
+Spacebox::Spacebox( void ) : /*m_renderer( NULL ),*/ m_scenegraph( NULL )
 {
     // properties array creation
     m_properties["configname"].AddPropValue<dsstring>( m_configname );
@@ -42,6 +43,8 @@ Spacebox::Spacebox( void ) : m_renderer( NULL ), m_scenegraph( NULL )
     m_properties["passes_order"].AddProp<std::map<dsstring, long>>();
         
     //////////////////////////////////
+
+    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
     Vertex v1, v2, v3, v4;
 
@@ -231,12 +234,12 @@ Spacebox::~Spacebox( void )
 {
 }
 
-
-
+/*
 void Spacebox::SetRenderer( Renderer * p_renderer )
 {
     m_renderer = p_renderer;
 }
+*/
 
 void Spacebox::OnRegister( Scenegraph* p_scenegraph )
 {
