@@ -23,6 +23,7 @@
 #include "headmovement.h"
 #include "maths.h"
 #include "transformation.h"
+#include "misc_utils.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -34,6 +35,13 @@ m_scalefactor( 1.0 ),
 m_refbody( NULL ),
 m_body_mass( 1.0 )
 {
+    // properties array creation
+    m_properties["configname"].AddPropValue<dsstring>( m_configname );        
+    m_properties["refbody"].AddPropValue<dsstring>( m_configname );
+    m_properties["scale_factor"].AddPropValue<dsreal>( 1.0 );
+    m_properties["ref_force"].AddPropValue<dsreal>( 0.0 );
+    m_properties["head_pos"].AddProp<Vector>();
+
 }
 
 HeadMovement::~HeadMovement( void )
@@ -492,4 +500,41 @@ void HeadMovement::Compute( DrawSpace::Utils::TimeManager& p_timemanager )
     trf.BuildResult();
     trf.GetResult( &m_result );
                
+}
+
+
+void HeadMovement::Serialize( Utils::Archive& p_archive  )
+{
+
+}
+
+bool HeadMovement::Unserialize( Utils::Archive& p_archive )
+{
+    return true;
+}
+
+bool HeadMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    return true;
+}
+
+void HeadMovement::DumpProperties( dsstring& p_text )
+{
+
+
+}
+
+bool HeadMovement::ParseProperties( const dsstring& p_text )
+{
+    return true;
+}
+
+void HeadMovement::ApplyProperties( void )
+{
+
+}
+
+Configurable* HeadMovement::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( HeadMovement, HeadMovement );
 }

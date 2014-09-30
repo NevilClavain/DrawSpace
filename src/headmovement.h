@@ -26,12 +26,17 @@
 #include "movement.h"
 #include "inertbody.h"
 #include "timemanager.h"
+#include "configurable.h"
+
+
+#define HEADMVT_TEXT_KEYWORD           "HeadMvt"
+#define HEADMVT_ARC_MAGICNUMBER        0x5047
 
 namespace DrawSpace
 {
 namespace Core
 {
-class HeadMovement : public Movement
+class HeadMovement : public Movement, public Configurable
 {
 protected:
 
@@ -70,6 +75,8 @@ protected:
     DrawSpace::Utils::Matrix        m_cam_delta_pos;
     DrawSpace::Utils::Matrix        m_cam_base_pos;
 
+    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
 public:
 
     HeadMovement( void );
@@ -78,6 +85,16 @@ public:
     virtual void Init( DrawSpace::Dynamics::InertBody* p_refbody, dsreal p_scalefactor, dsreal p_ref_force, const DrawSpace::Utils::Vector& p_head_pos );
 
     virtual void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
+
+
+    void Serialize( Utils::Archive& p_archive  );
+    bool Unserialize( Utils::Archive& p_archive );
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
+
+    void ApplyProperties( void );
+
+    static Configurable* Instanciate( void );
 
 };
 
