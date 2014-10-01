@@ -233,7 +233,6 @@ void FreeMovement::DumpProperties( dsstring& p_text )
     p_text += "\n";
 
     p_text += "end_config\n";
-
 }
 
 bool FreeMovement::ParseProperties( const dsstring& p_text )

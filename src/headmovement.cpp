@@ -24,6 +24,8 @@
 #include "maths.h"
 #include "transformation.h"
 #include "misc_utils.h"
+#include "configsbase.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -37,7 +39,7 @@ m_body_mass( 1.0 )
 {
     // properties array creation
     m_properties["configname"].AddPropValue<dsstring>( m_configname );        
-    m_properties["refbody"].AddPropValue<dsstring>( m_configname );
+    m_properties["refbody"].AddPropValue<dsstring>( "" );
     m_properties["scale_factor"].AddPropValue<dsreal>( 1.0 );
     m_properties["ref_force"].AddPropValue<dsreal>( 0.0 );
     m_properties["head_pos"].AddProp<Vector>();
@@ -515,23 +517,143 @@ bool HeadMovement::Unserialize( Utils::Archive& p_archive )
 
 bool HeadMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    if( "configname" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "refbody" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["refbody"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "scale_factor" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["scale_factor"].SetPropValue<dsreal>( StringToReal( p_words[1] ) );
+    }
+    else if( "ref_force" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["ref_force"].SetPropValue<dsreal>( StringToReal( p_words[1] ) );
+    }
+    else if( "head_pos" == p_words[0] )
+    {
+        if( p_words.size() < 4 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        Vector v;
+        for( long i = 0; i < 3; i++ )
+        {
+            v[i] = StringToReal( p_words[i + 1] );
+        }
+        v[3] = 1.0;
+
+        m_properties["head_pos"].SetPropValue<Vector>( v );
+    }
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
+
     return true;
 }
 
 void HeadMovement::DumpProperties( dsstring& p_text )
 {
+    dsstring text_value;
+
+    p_text = "declare_config ";
+    p_text += dsstring( HEADMVT_TEXT_KEYWORD );
+
+    p_text += "\n";
+
+    p_text += "configname ";
+    p_text += m_properties["configname"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+    p_text += "refbody ";
+    p_text += m_properties["refbody"].GetPropValue<dsstring>();
+    p_text += "\n";
 
 
+    p_text += "scale_factor ";
+    RealToString( m_properties["scale_factor"].GetPropValue<dsreal>(), text_value );
+    p_text += "\n";
+
+    p_text += "ref_force ";
+    RealToString( m_properties["ref_force"].GetPropValue<dsreal>(), text_value );
+    p_text += "\n";
+
+
+    p_text += "head_pos ";
+    Vector head_pos = m_properties["head_pos"].GetPropValue<Vector>();
+    for( long i = 0; i < 4; i++ )
+    {
+        RealToString( head_pos[i], text_value );
+
+        p_text += text_value;
+        p_text += " ";
+    }
+    p_text += "\n";
+
+    p_text += "end_config\n";
 }
 
 bool HeadMovement::ParseProperties( const dsstring& p_text )
 {
-    return true;
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
 }
 
 void HeadMovement::ApplyProperties( void )
 {
+    dsstring refbody = m_properties["refbody"].GetPropValue<dsstring>();
 
+    if( false == ConfigsBase::GetInstance()->ConfigIdExists( refbody ) )
+    {
+        _DSEXCEPTION( "Config id unknown in ConfigsBase" );
+    }
+
+    Configurable* config = ConfigsBase::GetInstance()->GetConfigurable( refbody );
+
+    DrawSpace::Dynamics::InertBody* body = dynamic_cast<DrawSpace::Dynamics::InertBody*>( config );
+    if( !body )
+    {
+        _DSEXCEPTION( "Specified asset is not an Dynamics::InertBody" );
+    }
+
+
+    Init( body, m_properties["scale_factor"].GetPropValue<dsreal>(), 
+                m_properties["ref_force"].GetPropValue<dsreal>(),
+                m_properties["head_pos"].GetPropValue<Vector>() );
+                
+    m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 Configurable* HeadMovement::Instanciate( void )
