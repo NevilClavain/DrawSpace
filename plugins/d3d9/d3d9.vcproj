@@ -61,10 +61,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3d9.lib d3dx9.lib log4cxx.lib drawspace.lib"
+				AdditionalDependencies="d3d9.lib d3dx9.lib log4cxx.lib drawspace.lib BulletDynamics_vs2005_debug.lib BulletCollision_vs2005_debug.lib LinearMath_vs2005_debug.lib"
 				OutputFile="$(SolutionDir)\libs\drawspaced3d9.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=".\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\..\DrawSpace_thirdparts\log4cxx\lib\msvc\release;.\..\..\libs"
+				AdditionalLibraryDirectories=".\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\..\DrawSpace_thirdparts\log4cxx\lib\msvc\release;.\..\..\libs;&quot;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
