@@ -165,10 +165,12 @@ void Orbit::RegisterChunk( DrawSpace::Chunk* p_drawable )
     m_drawable = p_drawable;
 }
 
+/*
 void Orbit::Progress( TimeManager& p_timer )
 {
     
 }
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

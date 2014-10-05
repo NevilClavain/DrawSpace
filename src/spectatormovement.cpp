@@ -22,6 +22,9 @@
 
 #include "spectatormovement.h"
 #include "maths.h"
+#include "misc_utils.h"
+#include "configsbase.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -33,6 +36,14 @@ SpectatorMovement::SpectatorMovement( void ) :
 m_attachedbody( NULL ),
 m_linked_to_orbiter( false )
 {
+    // properties array creation
+    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    m_properties["refbody"].AddPropValue<dsstring>( "" );
+    m_properties["scale_pos"].AddPropValue<dsreal>( 1.0 );
+    m_properties["period"].AddPropValue<long>( 10 );
+    m_properties["orbiter_link"].AddPropValue<bool>( false );
+
+
     m_timercb = _DRAWSPACE_NEW_( SpectatorTimer, SpectatorTimer( this, &SpectatorMovement::on_timer ) );
 }
 
@@ -124,7 +135,7 @@ void SpectatorMovement::compute_pos( void )
     m_result = translate * body_transf;
 }
 
-void SpectatorMovement::Init( InertBody* p_attachedbody, dsreal p_scalepos, long p_posperiod, TimeManager& p_timemanager, const dsstring& p_timername, bool p_orbiterlink )
+void SpectatorMovement::Init( InertBody* p_attachedbody, dsreal p_scalepos, long p_posperiod, bool p_orbiterlink )
 {
     m_linked_to_orbiter = p_orbiterlink;
 
@@ -133,20 +144,38 @@ void SpectatorMovement::Init( InertBody* p_attachedbody, dsreal p_scalepos, long
     m_scalepos = p_scalepos;
     m_posperiod = p_posperiod;
 
-
-    p_timemanager.AddTimer( p_timername, m_posperiod, m_timercb );
-
     // pour executer compute_pos() des le 1er appel a SpectatorMovement::Compute(); les appels suivants seront fait periodiquement
     // sur appel timer manager a on_timer()
     m_compute = true;
 
-    p_timemanager.SetTimerState( p_timername, true );
+    
 }
 
 void SpectatorMovement::Compute( TimeManager& p_timemanager )
 {
     if( m_compute )
     {
+        
+        dsstring timer_name;
+
+        if( m_configname != "" )
+        {
+            timer_name = m_configname + "_spectatormvt";
+        }
+        else
+        {
+            char myptr[10];
+
+            unsigned long ptr = (unsigned long)this;
+            sprintf( myptr, "%.8x", ptr );
+
+            timer_name = dsstring( myptr ) + "_spectatormvt";
+        }
+
+        p_timemanager.AddTimer( timer_name, m_posperiod, m_timercb );
+
+        p_timemanager.SetTimerState( timer_name, true );
+
         compute_pos();
         m_compute = false;
     }    
@@ -155,4 +184,142 @@ void SpectatorMovement::Compute( TimeManager& p_timemanager )
 void SpectatorMovement::on_timer( const dsstring& p_timername )
 {
     m_compute = true;
+}
+
+bool SpectatorMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    if( "configname" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "refbody" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["refbody"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "scale_pos" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["scale_pos"].SetPropValue<dsreal>( StringToReal( p_words[1] ) );
+    }
+    else if( "period" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["period"].SetPropValue<long>( StringToInt( p_words[1] ) );
+    }
+    else if( "orbiter_link" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+        m_properties["orbiter_link"].SetPropValue<bool>( ( "true" == p_words[1] ? true : false ) );
+    }
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
+
+    return true;
+}
+
+void SpectatorMovement::Serialize( Utils::Archive& p_archive  )
+{
+}
+
+bool SpectatorMovement::Unserialize( Utils::Archive& p_archive )
+{
+    return true;
+}
+
+void SpectatorMovement::DumpProperties( dsstring& p_text )
+{
+    dsstring text_value;
+
+    p_text = "declare_config ";
+    p_text += dsstring( SPECTATORMVT_TEXT_KEYWORD );
+
+    p_text += "\n";
+
+    p_text += "configname ";
+    p_text += m_properties["configname"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+    p_text += "refbody ";
+    p_text += m_properties["refbody"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+
+    p_text += "scale_pos ";
+    RealToString( m_properties["scale_pos"].GetPropValue<dsreal>(), text_value );
+    p_text += "\n";
+
+    p_text += "period ";
+    IntToString( m_properties["period"].GetPropValue<long>(), text_value );
+    p_text += "\n";
+
+    p_text += "orbiter_link ";
+    p_text += ( true == m_properties["orbiter_link"].GetPropValue<bool>() ? "true" : "false" );
+    p_text += "\n";
+
+    p_text += "end_config\n";
+}
+
+bool SpectatorMovement::ParseProperties( const dsstring& p_text )
+{
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
+}
+
+void SpectatorMovement::ApplyProperties( void )
+{
+    dsstring refbody = m_properties["refbody"].GetPropValue<dsstring>();
+
+    if( false == ConfigsBase::GetInstance()->ConfigIdExists( refbody ) )
+    {
+        _DSEXCEPTION( "Config id unknown in ConfigsBase" );
+    }
+
+    Configurable* config = ConfigsBase::GetInstance()->GetConfigurable( refbody );
+
+    DrawSpace::Dynamics::InertBody* body = dynamic_cast<DrawSpace::Dynamics::InertBody*>( config );
+    if( !body )
+    {
+        _DSEXCEPTION( "Specified asset is not an Dynamics::InertBody" );
+    }
+
+    Init( body, m_properties["scale_pos"].GetPropValue<dsreal>(), 
+                m_properties["period"].GetPropValue<long>(),
+                m_properties["orbiter_link"].GetPropValue<bool>() );
+                
+    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+}
+
+Configurable* SpectatorMovement::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( SpectatorMovement, SpectatorMovement );
 }

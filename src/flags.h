@@ -23,7 +23,7 @@
 #ifndef _FLAGS_H_
 #define _FLAGS_H_
 
-#pragma warning( disable : 4231 4996 )
+#pragma warning( disable : 4231 4996 4311 )
 
 #define _DRAWSPACE_ENABLE_TRACES_
 

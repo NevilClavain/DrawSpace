@@ -35,6 +35,7 @@
 #include "headmovement.h"
 #include "linearmovement.h"
 #include "longlatmovement.h"
+#include "spectatormovement.h"
 #include "renderstate.h"
 
 using namespace DrawSpace;
@@ -85,6 +86,8 @@ void DrawSpace::Initialize( void )
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( LONGLATMVT_TEXT_KEYWORD, LongLatMovement::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( LONGLATMVT_ARC_MAGICNUMBER, LongLatMovement::Instanciate );
 
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( SPECTATORMVT_TEXT_KEYWORD, SpectatorMovement::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( SPECTATORMVT_ARC_MAGICNUMBER, SpectatorMovement::Instanciate );
 
     RenderState::InitStringMaps();
 }

@@ -88,7 +88,7 @@ public:
     void    BuildMeshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
     void    RegisterChunk( DrawSpace::Chunk* p_drawable );
 
-    void    Progress( DrawSpace::Utils::TimeManager& p_timer );
+    //void    Progress( DrawSpace::Utils::TimeManager& p_timer );
 
     friend class Calendar;
 };
