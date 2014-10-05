@@ -51,6 +51,15 @@ m_relative_altitud( 0.0 ),
 m_znear( 1.0 ),
 m_lockedobject_distance( 0.0 )
 {
+    // properties array creation
+    /*
+    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    m_properties["refmovement"].AddProp<dsstring>();
+    m_properties["reflonglatmovement"].AddProp<dsstring>();
+    m_properties["reflock"].AddProp<std::pair<dsstring, dsstring>>();
+    m_properties["refattachedbody"].AddProp<dsstring>();
+    */
+
     // prepare projection matrix    
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rendercharacteristics );
