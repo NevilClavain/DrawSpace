@@ -22,6 +22,8 @@
 
 #include "transformqueue.h"
 #include "tracedefs.h"
+#include "exceptions.h"
+
 _DECLARE_DS_LOGGER( logger, "TransformQueue" )
 
 using namespace DrawSpace::Core;
@@ -49,18 +51,24 @@ bool TransformQueue::add( TransformNode* p_node )
     dsstring name;
     p_node->GetName( name );
 
+    
     if( "" == name )
     {
+        _DSEXCEPTION( "node has a void name !" );
+
         // mettre une trace error
-        _DSERROR( logger, "node has a void name !" )
-        return false;
+        //_DSERROR( logger, "node has a void name !" )
+        //return false;
     }
 
     if( m_nodes.count( name ) > 0 )
     {
         // mettre une trace warning
-        _DSWARN( logger, "a node with the same name exists!!!" )
+        //_DSWARN( logger, "a node with the same name exists!!!" )
+
+        _DSEXCEPTION( "a node with the same name exists!!!" );
     }
+    
 
     _DSDEBUG( logger, "adding node : " << name.c_str() )
     m_nodes[name] = p_node;
