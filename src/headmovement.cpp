@@ -39,7 +39,7 @@ m_body_mass( 1.0 )
 {
     // properties array creation
     //m_properties["configname"].AddPropValue<dsstring>( m_configname );        
-    m_properties["refbody"].AddPropValue<dsstring>( "" );
+    //m_properties["refbody"].AddPropValue<dsstring>( "" );
     m_properties["scale_factor"].AddPropValue<dsreal>( 1.0 );
     m_properties["ref_force"].AddPropValue<dsreal>( 0.0 );
     m_properties["head_pos"].AddProp<Vector>();
@@ -50,15 +50,21 @@ HeadMovement::~HeadMovement( void )
 {
 }
 
-void HeadMovement::Init( DrawSpace::Dynamics::InertBody* p_refbody, dsreal p_scalefactor, dsreal p_ref_force, const Vector& p_head_pos )
+void HeadMovement::SetRefBody( DrawSpace::Dynamics::InertBody* p_refbody )
 {
     m_refbody = p_refbody;
-    m_scalefactor = p_scalefactor;
 
     InertBody::Parameters params;
 
     m_refbody->GetParameters( params );
     m_body_mass = params.mass;
+}
+
+void HeadMovement::Init( dsreal p_scalefactor, dsreal p_ref_force, const Vector& p_head_pos )
+{
+    
+    m_scalefactor = p_scalefactor;
+
 
     m_head_pos = p_head_pos;
     m_ref_force = p_ref_force;
@@ -528,7 +534,7 @@ bool HeadMovement::on_new_line( const dsstring& p_line, long p_line_num, std::ve
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else*/ if( "refbody" == p_words[0] )
+    else*/ /*if( "refbody" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -538,7 +544,7 @@ bool HeadMovement::on_new_line( const dsstring& p_line, long p_line_num, std::ve
 
         m_properties["refbody"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "scale_factor" == p_words[0] )
+    else*/ if( "scale_factor" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -597,10 +603,11 @@ void HeadMovement::DumpProperties( dsstring& p_text )
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
 */
+    /*
     p_text += "refbody ";
     p_text += m_properties["refbody"].GetPropValue<dsstring>();
     p_text += "\n";
-
+    */
 
     p_text += "scale_factor ";
     RealToString( m_properties["scale_factor"].GetPropValue<dsreal>(), text_value );
@@ -632,7 +639,7 @@ bool HeadMovement::ParseProperties( const dsstring& p_text )
 }
 
 void HeadMovement::ApplyProperties( void )
-{
+{/*
     dsstring refbody = m_properties["refbody"].GetPropValue<dsstring>();
 
     if( false == ConfigsBase::GetInstance()->ConfigIdExists( refbody ) )
@@ -652,6 +659,8 @@ void HeadMovement::ApplyProperties( void )
     Init( body, m_properties["scale_factor"].GetPropValue<dsreal>(), 
                 m_properties["ref_force"].GetPropValue<dsreal>(),
                 m_properties["head_pos"].GetPropValue<Vector>() );
+
+*/
                 
     //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }

@@ -114,7 +114,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             _PARSER_MISSING_ARG__
             return false;
         }
-        if( "declare_asset" == p_words[0] )
+        if( "declare_asset_instance" == p_words[0] )
         {
             m_capture_asset_props = true;
 
@@ -122,12 +122,16 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             m_asset_keyword = p_words[1];
 
         }
-        else if( "declare_config" == p_words[0] )
+        else if( "declare_config_instance" == p_words[0] )
         {
             m_capture_config_props = false;
 
             m_config_properties = "";
             m_config_keyword = p_words[1];
+        }
+        else if( "declare_config" == p_words[0] )
+        {
+            // TODO
         }
         else
         {

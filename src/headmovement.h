@@ -82,9 +82,12 @@ public:
     HeadMovement( void );
     virtual ~HeadMovement( void );
 
-    virtual void Init( DrawSpace::Dynamics::InertBody* p_refbody, dsreal p_scalefactor, dsreal p_ref_force, const DrawSpace::Utils::Vector& p_head_pos );
+    void Init( dsreal p_scalefactor, dsreal p_ref_force, const DrawSpace::Utils::Vector& p_head_pos );
 
-    virtual void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
+
+    void SetRefBody( DrawSpace::Dynamics::InertBody* p_refbody );
+
+    void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
 
 
     void Serialize( Utils::Archive& p_archive  );
