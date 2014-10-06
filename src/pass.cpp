@@ -36,7 +36,7 @@ Pass::Pass( void ) :
 m_viewportquad( NULL )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
 
     m_properties["enabledepthclear"].AddPropValue<bool>( false );
     m_properties["enabletargetclear"].AddPropValue<bool>( false );
@@ -75,9 +75,11 @@ void Pass::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
+    /*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
+    */
 
 
     p_text += "enabledepthclear ";
@@ -176,7 +178,7 @@ bool Pass::ParseProperties( const dsstring& p_text )
 
 void Pass::ApplyProperties( void )
 {   
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 
     bool enabledepthclear = m_properties["enabledepthclear"].GetPropValue<bool>();
     GetRenderingQueue()->EnableDepthClearing( enabledepthclear );
@@ -275,6 +277,7 @@ void Pass::ApplyProperties( void )
 
 bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -285,7 +288,7 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "enabledepthclear" == p_words[0] )
+    else*/ if( "enabledepthclear" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -396,10 +399,17 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
     return true;
 }
 
+
+void Pass::SetName( const dsstring& p_name )
+{
+    m_name = p_name;
+}
+
 void Pass::GetName( dsstring& p_name )
 {
-    p_name = m_configname;
+    p_name = m_name;
 }
+
 
 
 RenderingQueue* Pass::GetRenderingQueue( void )
@@ -412,14 +422,24 @@ void Pass::CreateViewportQuad( void )
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
     renderer->GetRenderCharacteristics( renderer_characteristics );
-    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_configname + dsstring( "/viewportquad" ), renderer_characteristics.width_viewport, renderer_characteristics.height_viewport ) );
+
+    if( "" == m_name )
+    {
+        _DSEXCEPTION( "pass name cannot be empty" );
+    }
+    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_name + dsstring( "/viewportquad" ), renderer_characteristics.width_viewport, renderer_characteristics.height_viewport ) );
 
     m_renderingqueue->Add( m_viewportquad );
 }
 
 void Pass::CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height )
 {
-    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_configname + dsstring( "/viewportquad" ), p_viewport_width, p_viewport_height ) );
+    if( "" == m_name )
+    {
+        _DSEXCEPTION( "pass name cannot be empty" );
+    }
+
+    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_name + dsstring( "/viewportquad" ), p_viewport_width, p_viewport_height ) );
     m_renderingqueue->Add( m_viewportquad );
 }
 
@@ -437,7 +457,7 @@ FinalPass::FinalPass( void )
 
 FinalPass::FinalPass( const dsstring& p_name )
 {
-    m_configname = p_name;
+    m_name = p_name;
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue );
 }
 
@@ -475,7 +495,12 @@ IntermediatePass::IntermediatePass( void )
     DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
     renderer->GetRenderCharacteristics( renderer_characteristics );
 
-    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_configname + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
+    if( "" == m_name )
+    {
+        _DSEXCEPTION( "pass name cannot be empty" );
+    }
+
+    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
 
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
 }
@@ -484,23 +509,34 @@ IntermediatePass::IntermediatePass( void )
 
 IntermediatePass::IntermediatePass( const dsstring& p_name )
 {
-    m_configname = p_name;
+    m_name = p_name;
     //////// creation texture target
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
     DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
     renderer->GetRenderCharacteristics( renderer_characteristics );
 
-    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_configname + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
+    if( "" == m_name )
+    {
+        _DSEXCEPTION( "pass name cannot be empty" );
+    }
+
+    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
 
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
 }
 
 IntermediatePass::IntermediatePass( const dsstring& p_name, long p_target_width, long p_target_height )
 {
-    m_configname = p_name;
+    m_name = p_name;
     //////// creation texture target
-    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_configname + dsstring( "/target" ), true, p_target_width, p_target_height ) );
+
+    if( "" == m_name )
+    {
+        _DSEXCEPTION( "pass name cannot be empty" );
+    }
+
+    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, p_target_width, p_target_height ) );
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
 }
 

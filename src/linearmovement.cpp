@@ -33,7 +33,7 @@ LinearMovement::LinearMovement( void ) :
 m_speed( 0.0 )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
 
     m_properties["init_pos"].AddProp<Vector>();
     m_properties["direction"].AddProp<Vector>();
@@ -130,6 +130,7 @@ dsreal LinearMovement::GetTranslationLength( void )
 
 bool LinearMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -140,7 +141,7 @@ bool LinearMovement::on_new_line( const dsstring& p_line, long p_line_num, std::
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "init_pos" == p_words[0] )
+    else*/ if( "init_pos" == p_words[0] )
     {
         if( p_words.size() < 4 )
         {
@@ -220,11 +221,11 @@ void LinearMovement::DumpProperties( dsstring& p_text )
     p_text += dsstring( LINEARMVT_TEXT_KEYWORD );
 
     p_text += "\n";
-
+/*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
-
+*/
     p_text += "init_pos ";
     Vector init_pos = m_properties["init_pos"].GetPropValue<Vector>();
     for( long i = 0; i < 4; i++ )
@@ -273,7 +274,7 @@ void LinearMovement::ApplyProperties( void )
             m_properties["theta"].GetPropValue<dsreal>(),
             m_properties["phi"].GetPropValue<dsreal>() );
 
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 Configurable* LinearMovement::Instanciate( void )

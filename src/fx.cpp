@@ -38,7 +38,7 @@ Fx::Fx( void )
     m_properties["shaders"].AddProp<std::vector<dsstring>>();
     m_properties["renderstates_in"].AddProp<std::vector<RenderState>>();
     m_properties["renderstates_out"].AddProp<std::vector<RenderState>>();
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
 }
 
 Fx::~Fx( void )
@@ -188,6 +188,7 @@ bool Fx::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstr
         }
         m_properties["shaders"].SetPropValue<std::vector<dsstring>>( shaders_name );
     }
+    /*
     else if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -198,6 +199,7 @@ bool Fx::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstr
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
+    */
     else if( "renderstates_in" == p_words[0] )
     {
         /*
@@ -298,9 +300,11 @@ void Fx::DumpProperties( dsstring& p_text )
 
     p_text += "\n";
 
+    /*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
+    */
 
 
     p_text += "shaders ";
@@ -397,7 +401,7 @@ void Fx::ApplyProperties( void )
         AddRenderStateOut( rs );
     }
 
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 Configurable* Fx::Instanciate( void )

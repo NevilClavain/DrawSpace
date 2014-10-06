@@ -53,6 +53,8 @@ protected:
 
     SpectatorTimer*                 m_timercb;
 
+    dsstring                        m_name; // just to give a name to the timer entry
+
     void compute_pos( void );
 
     void on_timer( const dsstring& p_timername );
@@ -64,6 +66,7 @@ public:
     SpectatorMovement( void );
     virtual ~SpectatorMovement( void );
 
+    void SetName( const dsstring& p_name );
 
     void Init( DrawSpace::Dynamics::InertBody* p_attachedbody, dsreal p_scalepos, 
                        long p_posperiod, bool p_orbiterlink );

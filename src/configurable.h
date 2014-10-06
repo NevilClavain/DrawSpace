@@ -40,7 +40,7 @@ public:
 
 protected:
 
-    dsstring                                                m_configname;
+    //dsstring                                                m_configname;
     std::map<dsstring, DrawSpace::Core::PropertyPool>       m_properties;
 
 public:
@@ -56,8 +56,10 @@ public:
 
     virtual void ApplyProperties( void ) = 0;
 
+    /*
     virtual void SetConfigurableName( const dsstring& p_name );
     virtual void GetConfigurableName( dsstring& p_name );
+    */
 
 };
 

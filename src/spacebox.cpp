@@ -36,7 +36,7 @@ using namespace DrawSpace::Utils;
 Spacebox::Spacebox( void ) : /*m_renderer( NULL ),*/ m_scenegraph( NULL )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+//    m_properties["configname"].AddPropValue<dsstring>( m_configname );
 
     m_properties["passes_fx"].AddProp<std::map<dsstring, dsstring>>();
     m_properties["passes_textures"].AddProp<std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>>();
@@ -326,6 +326,7 @@ bool Spacebox::Unserialize( Utils::Archive& p_archive )
 
 bool Spacebox::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -336,7 +337,7 @@ bool Spacebox::on_new_line( const dsstring& p_line, long p_line_num, std::vector
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "passes_fx" == p_words[0] )
+    else*/ if( "passes_fx" == p_words[0] )
     {
         if( p_words.size() < 3 )
         {
@@ -405,11 +406,11 @@ void Spacebox::DumpProperties( dsstring& p_text )
     p_text += dsstring( SPACEBOX_TEXT_KEYWORD );
 
     p_text += "\n";
-
+/*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
-
+*/
     std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();
     for( std::map<dsstring, dsstring>::iterator it = passes_fx.begin(); it != passes_fx.end(); ++it )
     {
@@ -472,7 +473,7 @@ bool Spacebox::ParseProperties( const dsstring& p_text )
 
 void Spacebox::ApplyProperties( void )
 {
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 
     // create passes slots and set fx to each corresponding rendering nodes
     std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();

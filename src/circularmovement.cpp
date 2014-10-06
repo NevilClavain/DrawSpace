@@ -33,7 +33,7 @@ CircularMovement::CircularMovement( void ) :
 m_angular_speed( 0.0 )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
 
     m_properties["center_pos"].AddProp<Vector>();
     m_properties["delta_center"].AddProp<Vector>();
@@ -149,6 +149,7 @@ bool CircularMovement::Unserialize( Utils::Archive& p_archive )
 
 bool CircularMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -159,7 +160,7 @@ bool CircularMovement::on_new_line( const dsstring& p_line, long p_line_num, std
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "center_pos" == p_words[0] )
+    else*/ if( "center_pos" == p_words[0] )
     {
         if( p_words.size() < 4 )
         {
@@ -257,11 +258,11 @@ void CircularMovement::DumpProperties( dsstring& p_text )
     p_text += dsstring( CIRCULARMVT_TEXT_KEYWORD );
 
     p_text += "\n";
-
+/*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
-
+*/
     p_text += "center_pos ";
     Vector center_pos = m_properties["center_pos"].GetPropValue<Vector>();
     for( long i = 0; i < 4; i++ )
@@ -326,7 +327,7 @@ void CircularMovement::ApplyProperties( void )
             m_properties["theta"].GetPropValue<dsreal>(),
             m_properties["phi"].GetPropValue<dsreal>() );
 
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 Configurable* CircularMovement::Instanciate( void )

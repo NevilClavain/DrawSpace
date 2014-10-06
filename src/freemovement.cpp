@@ -31,7 +31,7 @@ using namespace DrawSpace::Utils;
 FreeMovement::FreeMovement( void )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
     m_properties["init_pos"].AddProp<Vector>();
 
 }
@@ -167,6 +167,7 @@ void FreeMovement::Compute( Utils::TimeManager& p_timemanager )
 
 bool FreeMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -177,7 +178,7 @@ bool FreeMovement::on_new_line( const dsstring& p_line, long p_line_num, std::ve
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "init_pos" == p_words[0] )
+    else*/ if( "init_pos" == p_words[0] )
     {
         if( p_words.size() < 4 )
         {
@@ -216,11 +217,11 @@ void FreeMovement::DumpProperties( dsstring& p_text )
     p_text += dsstring( FREEMVT_TEXT_KEYWORD );
 
     p_text += "\n";
-
+/*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
-
+*/
     p_text += "init_pos ";
     Vector init_pos = m_properties["init_pos"].GetPropValue<Vector>();
     for( long i = 0; i < 4; i++ )
@@ -245,9 +246,7 @@ bool FreeMovement::ParseProperties( const dsstring& p_text )
 void FreeMovement::ApplyProperties( void )
 {
     Init( m_properties["init_pos"].GetPropValue<Vector>() );
-
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
-
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 Configurable* FreeMovement::Instanciate( void )

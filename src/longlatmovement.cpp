@@ -33,7 +33,7 @@ using namespace DrawSpace::Utils;
 LongLatMovement::LongLatMovement( void )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
 
     m_properties["init_longitud_theta"].AddPropValue<dsreal>( 0.0 );
     m_properties["init_longitud_phi"].AddPropValue<dsreal>( 0.0 );
@@ -109,6 +109,7 @@ void LongLatMovement::SetPhi( dsreal p_phi )
 
 bool LongLatMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -119,7 +120,7 @@ bool LongLatMovement::on_new_line( const dsstring& p_line, long p_line_num, std:
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "init_longitud_theta" == p_words[0] )
+    else*/ if( "init_longitud_theta" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -198,9 +199,11 @@ void LongLatMovement::DumpProperties( dsstring& p_text )
 
     p_text += "\n";
 
+    /*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
+*/
 
     p_text += "init_longitud_theta ";
     RealToString( m_properties["init_longitud_theta"].GetPropValue<dsreal>(), text_value );
@@ -242,7 +245,7 @@ void LongLatMovement::ApplyProperties( void )
             m_properties["init_phi"].GetPropValue<dsreal>()       
         );
 
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 Configurable* LongLatMovement::Instanciate( void )

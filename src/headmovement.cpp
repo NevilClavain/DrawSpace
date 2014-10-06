@@ -38,7 +38,7 @@ m_refbody( NULL ),
 m_body_mass( 1.0 )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );        
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );        
     m_properties["refbody"].AddPropValue<dsstring>( "" );
     m_properties["scale_factor"].AddPropValue<dsreal>( 1.0 );
     m_properties["ref_force"].AddPropValue<dsreal>( 0.0 );
@@ -517,6 +517,7 @@ bool HeadMovement::Unserialize( Utils::Archive& p_archive )
 
 bool HeadMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -527,7 +528,7 @@ bool HeadMovement::on_new_line( const dsstring& p_line, long p_line_num, std::ve
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "refbody" == p_words[0] )
+    else*/ if( "refbody" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -591,11 +592,11 @@ void HeadMovement::DumpProperties( dsstring& p_text )
     p_text += dsstring( HEADMVT_TEXT_KEYWORD );
 
     p_text += "\n";
-
+/*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
-
+*/
     p_text += "refbody ";
     p_text += m_properties["refbody"].GetPropValue<dsstring>();
     p_text += "\n";
@@ -653,7 +654,7 @@ void HeadMovement::ApplyProperties( void )
                 m_properties["ref_force"].GetPropValue<dsreal>(),
                 m_properties["head_pos"].GetPropValue<Vector>() );
                 
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 Configurable* HeadMovement::Instanciate( void )

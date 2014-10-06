@@ -60,7 +60,7 @@ protected:
     Core::RenderingQueue*   m_renderingqueue;
     ViewportQuad*           m_viewportquad;
 
-    //dsstring                m_name;
+    dsstring                m_name;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
@@ -76,6 +76,7 @@ public:
 
     virtual ViewportQuad* GetViewportQuad( void );
 
+    virtual void SetName( const dsstring& p_name );
     virtual void GetName( dsstring& p_name );
 
 

@@ -37,7 +37,7 @@ m_attachedbody( NULL ),
 m_linked_to_orbiter( false )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
     m_properties["refbody"].AddPropValue<dsstring>( "" );
     m_properties["scale_pos"].AddPropValue<dsreal>( 1.0 );
     m_properties["period"].AddPropValue<long>( 10 );
@@ -135,6 +135,11 @@ void SpectatorMovement::compute_pos( void )
     m_result = translate * body_transf;
 }
 
+void SpectatorMovement::SetName( const dsstring& p_name )
+{
+    m_name = p_name;
+}
+
 void SpectatorMovement::Init( InertBody* p_attachedbody, dsreal p_scalepos, long p_posperiod, bool p_orbiterlink )
 {
     m_linked_to_orbiter = p_orbiterlink;
@@ -158,18 +163,13 @@ void SpectatorMovement::Compute( TimeManager& p_timemanager )
         
         dsstring timer_name;
 
-        if( m_configname != "" )
+        if( m_name != "" )
         {
-            timer_name = m_configname + "_spectatormvt";
+            timer_name = m_name + "_spectatormvt";
         }
         else
         {
-            char myptr[10];
-
-            unsigned long ptr = (unsigned long)this;
-            sprintf( myptr, "%.8x", ptr );
-
-            timer_name = dsstring( myptr ) + "_spectatormvt";
+            _DSEXCEPTION( "spectator mvt name is empty !" );
         }
 
         p_timemanager.AddTimer( timer_name, m_posperiod, m_timercb );
@@ -188,6 +188,7 @@ void SpectatorMovement::on_timer( const dsstring& p_timername )
 
 bool SpectatorMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -198,7 +199,7 @@ bool SpectatorMovement::on_new_line( const dsstring& p_line, long p_line_num, st
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "refbody" == p_words[0] )
+    else*/ if( "refbody" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -263,11 +264,11 @@ void SpectatorMovement::DumpProperties( dsstring& p_text )
     p_text += dsstring( SPECTATORMVT_TEXT_KEYWORD );
 
     p_text += "\n";
-
+/*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
-
+*/
     p_text += "refbody ";
     p_text += m_properties["refbody"].GetPropValue<dsstring>();
     p_text += "\n";
@@ -316,7 +317,7 @@ void SpectatorMovement::ApplyProperties( void )
                 m_properties["period"].GetPropValue<long>(),
                 m_properties["orbiter_link"].GetPropValue<bool>() );
                 
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 Configurable* SpectatorMovement::Instanciate( void )

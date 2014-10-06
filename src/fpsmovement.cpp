@@ -31,7 +31,7 @@ using namespace DrawSpace::Utils;
 FPSMovement::FPSMovement( bool p_ymvt ) : m_ymvt( p_ymvt )
 {
     // properties array creation
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
+    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
 
     m_properties["init_pos"].AddProp<Vector>();
     m_properties["init_yaw"].AddPropValue<dsreal>( 0.0 );
@@ -125,6 +125,7 @@ bool FPSMovement::Unserialize( Utils::Archive& p_archive )
 
 bool FPSMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    /*
     if( "configname" == p_words[0] )
     {
         if( p_words.size() < 2 )
@@ -135,7 +136,7 @@ bool FPSMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vec
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "init_pos" == p_words[0] )
+    else*/ if( "init_pos" == p_words[0] )
     {
         if( p_words.size() < 4 )
         {
@@ -190,9 +191,11 @@ void FPSMovement::DumpProperties( dsstring& p_text )
 
     p_text += "\n";
 
+    /*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
+    */
 
     p_text += "init_pos ";
     Vector init_pos = m_properties["init_pos"].GetPropValue<Vector>();
@@ -231,7 +234,7 @@ void FPSMovement::ApplyProperties( void )
             m_properties["init_yaw"].GetPropValue<dsreal>(),
             m_properties["init_pitch"].GetPropValue<dsreal>() );
 
-    m_configname = m_properties["configname"].GetPropValue<dsstring>();
+    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
 }
 
 FPSMovement::Configurable* FPSMovement::Instanciate( void )
