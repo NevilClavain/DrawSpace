@@ -260,10 +260,10 @@ void SpectatorMovement::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_config ";
-    p_text += dsstring( SPECTATORMVT_TEXT_KEYWORD );
+    //p_text = "declare_config ";
+    //p_text += dsstring( SPECTATORMVT_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 /*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
@@ -286,7 +286,7 @@ void SpectatorMovement::DumpProperties( dsstring& p_text )
     p_text += ( true == m_properties["orbiter_link"].GetPropValue<bool>() ? "true" : "false" );
     p_text += "\n";
 
-    p_text += "end_config\n";
+    //p_text += "end_config\n";
 }
 
 bool SpectatorMovement::ParseProperties( const dsstring& p_text )

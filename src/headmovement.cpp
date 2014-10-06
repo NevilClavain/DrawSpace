@@ -588,10 +588,10 @@ void HeadMovement::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_config ";
-    p_text += dsstring( HEADMVT_TEXT_KEYWORD );
+    //p_text = "declare_config ";
+    //p_text += dsstring( HEADMVT_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 /*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
@@ -621,8 +621,7 @@ void HeadMovement::DumpProperties( dsstring& p_text )
         p_text += " ";
     }
     p_text += "\n";
-
-    p_text += "end_config\n";
+    //p_text += "end_config\n";
 }
 
 bool HeadMovement::ParseProperties( const dsstring& p_text )

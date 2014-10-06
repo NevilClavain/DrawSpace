@@ -295,10 +295,10 @@ void Fx::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_config ";
-    p_text += dsstring( FX_TEXT_KEYWORD );
+    //p_text = "declare_config ";
+    //p_text += dsstring( FX_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 
     /*
     p_text += "configname ";
@@ -353,8 +353,7 @@ void Fx::DumpProperties( dsstring& p_text )
         p_text += "\n";
     }
 
-    p_text += "end_config\n";
-
+    //p_text += "end_config\n";
 }
 
 bool Fx::ParseProperties( const dsstring& p_text )

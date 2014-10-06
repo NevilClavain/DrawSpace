@@ -177,10 +177,10 @@ void Shader::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_asset ";
-    p_text += dsstring( SHADER_TEXT_KEYWORD );
+    //p_text = "declare_asset ";
+    //p_text += dsstring( SHADER_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 
     p_text += "assetname ";
     p_text += m_properties["assetname"].GetPropValue<dsstring>();
@@ -202,7 +202,7 @@ void Shader::DumpProperties( dsstring& p_text )
     }
     p_text += "\n";
 
-    p_text += "end_asset\n";
+    //p_text += "end_asset\n";
 }
 
 bool Shader::ParseProperties( const dsstring& p_text )

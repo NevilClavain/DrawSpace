@@ -251,10 +251,10 @@ void Meshe::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_asset ";
-    p_text += dsstring( MESHE_TEXT_KEYWORD );
+    //p_text = "declare_asset ";
+    //p_text += dsstring( MESHE_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 
     p_text += "filepath ";
     p_text += m_properties["filepath"].GetPropValue<dsstring>();
@@ -271,7 +271,7 @@ void Meshe::DumpProperties( dsstring& p_text )
     p_text += "\n";
 
 
-    p_text += "end_asset\n";
+    //p_text += "end_asset\n";
 
 }
 

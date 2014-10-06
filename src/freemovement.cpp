@@ -213,10 +213,10 @@ void FreeMovement::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_config ";
-    p_text += dsstring( FREEMVT_TEXT_KEYWORD );
+    //p_text = "declare_config ";
+    //p_text += dsstring( FREEMVT_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 /*
     p_text += "configname ";
     p_text += m_properties["configname"].GetPropValue<dsstring>();
@@ -233,7 +233,7 @@ void FreeMovement::DumpProperties( dsstring& p_text )
     }
     p_text += "\n";
 
-    p_text += "end_config\n";
+    //p_text += "end_config\n";
 }
 
 bool FreeMovement::ParseProperties( const dsstring& p_text )

@@ -186,10 +186,10 @@ void FPSMovement::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_config ";
-    p_text += dsstring( FPSMVT_TEXT_KEYWORD );
+    //p_text = "declare_config ";
+    //p_text += dsstring( FPSMVT_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 
     /*
     p_text += "configname ";
@@ -217,7 +217,7 @@ void FPSMovement::DumpProperties( dsstring& p_text )
     RealToString( m_properties["init_pitch"].GetPropValue<dsreal>(), text_value );
     p_text += "\n";
 
-    p_text += "end_config\n";
+    //p_text += "end_config\n";
 
 }
 

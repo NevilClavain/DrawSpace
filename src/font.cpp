@@ -190,10 +190,10 @@ bool Font::Unserialize( Utils::Archive& p_archive )
 
 void Font::DumpProperties( dsstring& p_text )
 {
-    p_text = "declare_asset ";
-    p_text += dsstring( FONT_TEXT_KEYWORD );
+    //p_text = "declare_asset ";
+    //p_text += dsstring( FONT_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 
     p_text += "filepath ";
     p_text += m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );

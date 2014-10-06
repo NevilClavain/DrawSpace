@@ -468,16 +468,16 @@ FinalPass::~FinalPass( void )
 
 void FinalPass::DumpProperties( dsstring& p_text )
 {
-    dsstring text_value;
+    //dsstring text_value;
 
-    p_text = "declare_config ";
-    p_text += dsstring( FINALPASS_TEXT_KEYWORD );
+    //p_text = "declare_config ";
+    //p_text += dsstring( FINALPASS_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 
     Pass::DumpProperties( p_text );
 
-    p_text += "end_config\n";
+    //p_text += "end_config\n";
 }
 
 Configurable* FinalPass::Instanciate( void )
@@ -556,14 +556,14 @@ void IntermediatePass::DumpProperties( dsstring& p_text )
 {
     dsstring text_value;
 
-    p_text = "declare_config ";
-    p_text += dsstring( INTERMEDIATEPASS_TEXT_KEYWORD );
+    //p_text = "declare_config ";
+    //p_text += dsstring( INTERMEDIATEPASS_TEXT_KEYWORD );
 
-    p_text += "\n";
+    //p_text += "\n";
 
     Pass::DumpProperties( p_text );
 
-    p_text += "end_config\n";
+    //p_text += "end_config\n";
 }
 
 Configurable* IntermediatePass::Instanciate( void )
