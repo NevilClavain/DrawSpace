@@ -58,16 +58,20 @@ void ConfigsBase::RegisterConfigurableInstanceRegistrationHandler( ConfigurableI
     m_configinstancereg_handler = p_handler;
 }
 
-void ConfigsBase::RegisterConfigurableTextDescription( const dsstring& p_id, const dsstring& p_text )
+void ConfigsBase::RegisterConfigurableTextDescription( const dsstring& p_id, const dsstring& p_keyword, const dsstring& p_text )
 {
-    m_configurables_text[p_id] = p_text;
+    std::pair<dsstring, dsstring> descr( p_keyword, p_text );
+    m_configurables_text[p_id] = descr;
 }
 
-void ConfigsBase::GetConfigurableInstance( const dsstring& p_id, dsstring& p_outtext )
+void ConfigsBase::GetConfigurableText( const dsstring& p_id, dsstring& p_outkeyword, dsstring& p_outtext )
 {
     if( m_configurables_text.count( p_id ) > 0 )
     {
-        p_outtext = m_configurables_text[p_id];
+        std::pair<dsstring, dsstring> descr = m_configurables_text[p_id];
+
+        p_outtext = descr.second;
+        p_outkeyword = descr.first;
     }
 }
 

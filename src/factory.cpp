@@ -116,13 +116,17 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
                     _DSEXCEPTION( "config text with same id already registered in ConfigsBase" );
                 }
 
+                /*
                 dsstring complete_text;
-
                 complete_text = dsstring( "declare_config " ) + m_config_keyword + dsstring( " " ) + m_config_name + dsstring( "\n" );
                 complete_text += m_config_properties + dsstring( "\n" );
                 complete_text += dsstring( "end_config" );
 
                 ConfigsBase::GetInstance()->RegisterConfigurableTextDescription( m_config_name, complete_text );
+                */
+
+                ConfigsBase::GetInstance()->RegisterConfigurableTextDescription( m_config_name, m_config_keyword, m_config_properties );
+
             }
             else
             {
