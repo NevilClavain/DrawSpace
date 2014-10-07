@@ -42,6 +42,11 @@ Factory::~Factory( void )
 
 }
 
+DrawSpace::Core::Configurable* Factory::BuildConfigurableFromText( const dsstring& p_text )
+{
+    return NULL;
+}
+
 bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
     if( m_capture_asset_props )
@@ -87,7 +92,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             else
             {
                 _DSEXCEPTION( dsstring( "no registered instanciation function for the keyword : " ) +  m_asset_keyword );
-            }                               
+            }
         }
         else
         {
@@ -99,7 +104,61 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
     {
         if( "end_config" == p_words[0] )
         {
+            m_capture_config_props = false;
+            if( m_store_config_text_only )
+            {
+                // register text in Configsbase
 
+                // check out if an name has been specified for config text
+
+                if( ConfigsBase::GetInstance()->ConfigurableTextExists( m_config_name ) )
+                {
+                    _DSEXCEPTION( "config text with same id already registered in ConfigsBase" );
+                }
+
+                dsstring complete_text;
+
+                complete_text = dsstring( "declare_config " ) + m_config_keyword + dsstring( " " ) + m_config_name + dsstring( "\n" );
+                complete_text += m_config_properties + dsstring( "\n" );
+                complete_text += dsstring( "end_config" );
+
+                ConfigsBase::GetInstance()->RegisterConfigurableTextDescription( m_config_name, complete_text );
+            }
+            else
+            {
+                // instanciate config object
+
+                if( m_configs_instanciationfuncs_bytext.count( m_config_keyword ) > 0 )
+                {
+                    Configurable* config = ( *m_configs_instanciationfuncs_bytext[m_config_keyword] ) ();
+
+                    // call ParseProperties() method
+                    if( false == config->ParseProperties( m_config_properties ) )
+                    {
+                        dsstring config_parse_error;
+                        config->GetLastError( config_parse_error );
+
+                        m_lasterror = config_parse_error;
+                        return false;
+                    }
+
+                    // register in Configsbase
+
+                    // check out if an name has been specified for config instance
+
+                    if( ConfigsBase::GetInstance()->ConfigurableInstanceExists( m_config_name ) )
+                    {
+                        _DSEXCEPTION( "config instance with same id already registered in ConfigsBase" );
+                    }
+
+                    ConfigsBase::GetInstance()->RegisterConfigurableInstance( m_config_name, config );
+
+                }
+                else
+                {
+                    _DSEXCEPTION( dsstring( "no registered instanciation function for the keyword : " ) +  m_config_keyword );
+                }
+            }
         }
         else
         {
@@ -109,13 +168,13 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
     }
     else
     {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
         if( "declare_asset_instance" == p_words[0] )
         {
+            if( p_words.size() < 2 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
             m_capture_asset_props = true;
 
             m_asset_properties = "";
@@ -124,14 +183,33 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
         }
         else if( "declare_config_instance" == p_words[0] )
         {
+            if( p_words.size() < 3 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
             m_capture_config_props = false;
 
             m_config_properties = "";
             m_config_keyword = p_words[1];
+            m_config_name = p_words[2];
+
+            m_store_config_text_only = false; 
         }
         else if( "declare_config" == p_words[0] )
         {
-            // TODO
+            if( p_words.size() < 3 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
+            m_capture_config_props = false;
+
+            m_config_properties = "";
+            m_config_keyword = p_words[1];
+            m_config_name = p_words[2];
+
+            m_store_config_text_only = true;
         }
         else
         {
@@ -153,11 +231,13 @@ bool Factory::ExecuteFromTextFile( const dsstring& p_path )
 
 bool Factory::ExecuteFromBinaryFile( const dsstring& p_path )
 {
+    // TODO
     return false;
 }
 
 bool Factory::ExecuteFromArchiveChunk( const DrawSpace::Utils::Archive& p_arc )
 {
+    // TODO
     return false;
 }
 

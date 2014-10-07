@@ -663,6 +663,10 @@ void HeadMovement::ApplyProperties( void )
 */
                 
     //m_configname = m_properties["configname"].GetPropValue<dsstring>();
+
+    Init( m_properties["scale_factor"].GetPropValue<dsreal>(), 
+                m_properties["ref_force"].GetPropValue<dsreal>(),
+                m_properties["head_pos"].GetPropValue<Vector>() );
 }
 
 Configurable* HeadMovement::Instanciate( void )

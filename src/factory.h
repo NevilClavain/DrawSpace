@@ -49,9 +49,12 @@ protected:
 
     dsstring                                                m_config_properties;
     dsstring                                                m_config_keyword;
+    dsstring                                                m_config_name;
 
     bool                                                    m_capture_asset_props;
     bool                                                    m_capture_config_props;
+
+    bool                                                    m_store_config_text_only;
     
     
 
@@ -75,6 +78,8 @@ public:
 
     ~Factory( void );
 
+    DrawSpace::Core::Configurable* BuildConfigurableFromText( const dsstring& p_text );
+
     bool ExecuteFromTextFile( const dsstring& p_path );
     bool ExecuteFromBinaryFile( const dsstring& p_path );
 
@@ -85,9 +90,7 @@ public:
     void RegisterAssetInstanciationFuncByArc( short p_magic, Asset::InstanciateFunc p_func );
 
     void RegisterConfigInstanciationFuncByText( const dsstring& p_keyword, Configurable::InstanciateFunc p_func );
-    void RegisterConfigInstanciationFuncByArc( short p_magic, Configurable::InstanciateFunc p_func );
-
-
+    void RegisterConfigInstanciationFuncByArc( short p_magic, Configurable::InstanciateFunc p_func );   
 };
 }
 }

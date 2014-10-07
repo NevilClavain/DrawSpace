@@ -68,8 +68,9 @@ public:
 
     void SetName( const dsstring& p_name );
 
-    void Init( DrawSpace::Dynamics::InertBody* p_attachedbody, dsreal p_scalepos, 
-                       long p_posperiod, bool p_orbiterlink );
+    void Init( dsreal p_scalepos, long p_posperiod, bool p_orbiterlink );
+
+    void SetRefBody( DrawSpace::Dynamics::InertBody* p_refbody );
 
     void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
 

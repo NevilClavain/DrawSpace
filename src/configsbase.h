@@ -34,14 +34,22 @@ class ConfigsBase
 {
 public:
 
-    typedef BaseCallback<void, DrawSpace::Core::Configurable*> ConfigurableRegistrationHandler;
+    typedef BaseCallback<void, DrawSpace::Core::Configurable*> ConfigurableInstanceRegistrationHandler;
 
 protected:
 
-    std::map<dsstring, DrawSpace::Core::Configurable*>      m_configurables;
-    ConfigurableRegistrationHandler*                        m_configreg_handler;
-
     static ConfigsBase*                                     m_instance;
+
+
+    std::map<dsstring, DrawSpace::Core::Configurable*>      m_configurables_instances;
+    ConfigurableInstanceRegistrationHandler*                m_configinstancereg_handler;
+
+    std::map<dsstring, dsstring>                            m_configurables_text;
+
+
+
+
+
 
     ConfigsBase( void );
 
@@ -59,12 +67,18 @@ public:
     
     virtual ~ConfigsBase( void );
 
-    void RegisterConfigurable( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf );
-    DrawSpace::Core::Configurable* GetConfigurable( const dsstring& p_id );
+    void RegisterConfigurableInstanceRegistrationHandler( ConfigurableInstanceRegistrationHandler* p_handler );
 
-    void RegisterConfigurableRegistrationHandler( ConfigurableRegistrationHandler* p_handler );
+    void RegisterConfigurableInstance( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf );
+    DrawSpace::Core::Configurable* GetConfigurableInstance( const dsstring& p_id );
 
-    bool ConfigIdExists( const dsstring& p_id );
+    void RegisterConfigurableTextDescription( const dsstring& p_id, const dsstring& p_text );
+    void GetConfigurableInstance( const dsstring& p_id, dsstring& p_outtext );
+
+    
+    bool ConfigurableInstanceExists( const dsstring& p_id );
+
+    bool ConfigurableTextExists( const dsstring& p_id );
 };
 }
 }

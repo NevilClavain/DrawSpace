@@ -200,12 +200,12 @@ void Pass::ApplyProperties( void )
 
         dsstring viewportquad_fx = m_properties["viewportquad_fx"].GetPropValue<dsstring>();
 
-        if( false == ConfigsBase::GetInstance()->ConfigIdExists( viewportquad_fx ) )
+        if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( viewportquad_fx ) )
         {
             _DSEXCEPTION( "Config id unknown in ConfigsBase" );
         }
 
-        Configurable* config = ConfigsBase::GetInstance()->GetConfigurable( viewportquad_fx );
+        Configurable* config = ConfigsBase::GetInstance()->GetConfigurableInstance( viewportquad_fx );
 
         Fx* fx = dynamic_cast<Fx*>( config );
         if( !fx )
@@ -226,12 +226,12 @@ void Pass::ApplyProperties( void )
 
             if( PASS_NAME == texture_source_name.source )
             {
-                if( false == ConfigsBase::GetInstance()->ConfigIdExists( texture_source_name.name ) )
+                if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( texture_source_name.name ) )
                 {
                     _DSEXCEPTION( "Config id unknown in ConfigsBase" );
                 }
 
-                Configurable* pass = ConfigsBase::GetInstance()->GetConfigurable( texture_source_name.name );
+                Configurable* pass = ConfigsBase::GetInstance()->GetConfigurableInstance( texture_source_name.name );
 
                 IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( pass );
 

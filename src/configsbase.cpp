@@ -27,7 +27,7 @@ DrawSpace::Core::ConfigsBase* DrawSpace::Core::ConfigsBase::m_instance = NULL;
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-ConfigsBase::ConfigsBase( void ) : m_configreg_handler( NULL )
+ConfigsBase::ConfigsBase( void ) : m_configinstancereg_handler( NULL )
 {
 }
 
@@ -35,32 +35,54 @@ ConfigsBase::~ConfigsBase( void )
 {
 }
 
-void ConfigsBase::RegisterConfigurable( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf )
+void ConfigsBase::RegisterConfigurableInstance( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf )
 {
-    m_configurables[p_id] = p_conf;    
-    if( m_configreg_handler )
+    m_configurables_instances[p_id] = p_conf;
+    if( m_configinstancereg_handler )
     {
-        (*m_configreg_handler)( p_conf );
+        (*m_configinstancereg_handler)( p_conf );
     }
 }
 
-DrawSpace::Core::Configurable* ConfigsBase::GetConfigurable( const dsstring& p_id )
+DrawSpace::Core::Configurable* ConfigsBase::GetConfigurableInstance( const dsstring& p_id )
 {
-    if( m_configurables.count( p_id ) > 0 )
+    if( m_configurables_instances.count( p_id ) > 0 )
     {
-        return m_configurables[p_id];
+        return m_configurables_instances[p_id];
     }
     return NULL;
 }
 
-void ConfigsBase::RegisterConfigurableRegistrationHandler( ConfigurableRegistrationHandler* p_handler )
+void ConfigsBase::RegisterConfigurableInstanceRegistrationHandler( ConfigurableInstanceRegistrationHandler* p_handler )
 {
-    m_configreg_handler = p_handler;
+    m_configinstancereg_handler = p_handler;
 }
 
-bool ConfigsBase::ConfigIdExists( const dsstring& p_id )
+void ConfigsBase::RegisterConfigurableTextDescription( const dsstring& p_id, const dsstring& p_text )
 {
-    if( m_configurables.count( p_id ) > 0 )
+    m_configurables_text[p_id] = p_text;
+}
+
+void ConfigsBase::GetConfigurableInstance( const dsstring& p_id, dsstring& p_outtext )
+{
+    if( m_configurables_text.count( p_id ) > 0 )
+    {
+        p_outtext = m_configurables_text[p_id];
+    }
+}
+
+bool ConfigsBase::ConfigurableInstanceExists( const dsstring& p_id )
+{
+    if( m_configurables_instances.count( p_id ) > 0 )
+    {
+        return true;
+    }
+    return false;
+}
+
+bool ConfigsBase::ConfigurableTextExists( const dsstring& p_id )
+{
+    if( m_configurables_text.count( p_id ) > 0 )
     {
         return true;
     }

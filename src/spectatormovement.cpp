@@ -38,7 +38,7 @@ m_linked_to_orbiter( false )
 {
     // properties array creation
     //m_properties["configname"].AddPropValue<dsstring>( m_configname );
-    m_properties["refbody"].AddPropValue<dsstring>( "" );
+    //m_properties["refbody"].AddPropValue<dsstring>( "" );
     m_properties["scale_pos"].AddPropValue<dsreal>( 1.0 );
     m_properties["period"].AddPropValue<long>( 10 );
     m_properties["orbiter_link"].AddPropValue<bool>( false );
@@ -140,20 +140,21 @@ void SpectatorMovement::SetName( const dsstring& p_name )
     m_name = p_name;
 }
 
-void SpectatorMovement::Init( InertBody* p_attachedbody, dsreal p_scalepos, long p_posperiod, bool p_orbiterlink )
+void SpectatorMovement::Init( dsreal p_scalepos, long p_posperiod, bool p_orbiterlink )
 {
     m_linked_to_orbiter = p_orbiterlink;
-
-    m_attachedbody = p_attachedbody;
 
     m_scalepos = p_scalepos;
     m_posperiod = p_posperiod;
 
     // pour executer compute_pos() des le 1er appel a SpectatorMovement::Compute(); les appels suivants seront fait periodiquement
     // sur appel timer manager a on_timer()
-    m_compute = true;
+    m_compute = true;   
+}
 
-    
+void SpectatorMovement::SetRefBody( DrawSpace::Dynamics::InertBody* p_refbody )
+{
+    m_attachedbody = p_refbody;
 }
 
 void SpectatorMovement::Compute( TimeManager& p_timemanager )
@@ -199,7 +200,7 @@ bool SpectatorMovement::on_new_line( const dsstring& p_line, long p_line_num, st
 
         m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else*/ if( "refbody" == p_words[0] )
+    else*/ /*if( "refbody" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -209,7 +210,7 @@ bool SpectatorMovement::on_new_line( const dsstring& p_line, long p_line_num, st
 
         m_properties["refbody"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "scale_pos" == p_words[0] )
+    else */if( "scale_pos" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -269,9 +270,11 @@ void SpectatorMovement::DumpProperties( dsstring& p_text )
     p_text += m_properties["configname"].GetPropValue<dsstring>();
     p_text += "\n";
 */
+    /*
     p_text += "refbody ";
     p_text += m_properties["refbody"].GetPropValue<dsstring>();
     p_text += "\n";
+    */
 
 
     p_text += "scale_pos ";
@@ -298,6 +301,7 @@ bool SpectatorMovement::ParseProperties( const dsstring& p_text )
 
 void SpectatorMovement::ApplyProperties( void )
 {
+    /*
     dsstring refbody = m_properties["refbody"].GetPropValue<dsstring>();
 
     if( false == ConfigsBase::GetInstance()->ConfigIdExists( refbody ) )
@@ -316,8 +320,13 @@ void SpectatorMovement::ApplyProperties( void )
     Init( body, m_properties["scale_pos"].GetPropValue<dsreal>(), 
                 m_properties["period"].GetPropValue<long>(),
                 m_properties["orbiter_link"].GetPropValue<bool>() );
-                
+                */
     //m_configname = m_properties["configname"].GetPropValue<dsstring>();
+
+    Init( m_properties["scale_pos"].GetPropValue<dsreal>(), 
+                m_properties["period"].GetPropValue<long>(),
+                m_properties["orbiter_link"].GetPropValue<bool>() );
+
 }
 
 Configurable* SpectatorMovement::Instanciate( void )

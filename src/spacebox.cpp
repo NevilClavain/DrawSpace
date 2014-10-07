@@ -483,7 +483,7 @@ void Spacebox::ApplyProperties( void )
         NodesSet nodeset = m_passesnodes[it->first];
         dsstring fxname = it->second;
 
-        Configurable* config = ConfigsBase::GetInstance()->GetConfigurable( fxname );
+        Configurable* config = ConfigsBase::GetInstance()->GetConfigurableInstance( fxname );
 
         Fx* fx = dynamic_cast<Fx*>( config );
         if( !fx )
