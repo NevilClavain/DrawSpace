@@ -23,11 +23,16 @@
 #include "exceptions.h"
 #include "memalloc.h"
 #include "chunk.h"
+#include "exceptions.h"
+#include "configsbase.h"
+#include "assetsbase.h"
+#include "misc_utils.h"
 
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 Chunk::Chunk( void ) : 
 m_renderer( NULL ), 
@@ -35,6 +40,12 @@ m_scenegraph( NULL ),
 m_lod_draw( true ),
 m_meshe( NULL )
 {
+    // properties array creation
+    m_properties["meshe"].AddProp<dsstring>();
+    m_properties["passes_fx"].AddProp<std::map<dsstring, dsstring>>();
+    m_properties["passes_textures"].AddProp<std::map<dsstring, std::vector<std::pair<long, dsstring>>>>();
+
+
     //m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     m_lod_callback = _DRAWSPACE_NEW_( LodCallback, LodCallback( this, &Chunk::on_lod_event ) );
 }
@@ -230,4 +241,193 @@ DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring& p_passna
     }
 
     return m_passesnodes[p_passname];
+}
+
+bool Chunk::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    if( "passes_fx" == p_words[0] )
+    {
+        if( p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();
+        passes_fx[p_words[1]] = p_words[2];
+
+        m_properties["passes_fx"].SetPropValue<std::map<dsstring, dsstring>>( passes_fx );
+
+    }
+    else if( "passes_textures" == p_words[0] )
+    {
+        if( p_words.size() < 4 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        std::map<dsstring, std::vector<std::pair<long, dsstring>>> passes_textures = m_properties["passes_textures"].GetPropValue<std::map<dsstring, std::vector<std::pair<long, dsstring>>>>();
+
+        long stage = StringToInt( p_words[2] );
+        dsstring texture_name = p_words[3];
+
+        passes_textures[p_words[1]].push_back( std::pair<long, dsstring>( stage, texture_name ) );
+
+        m_properties["passes_textures"].SetPropValue<std::map<dsstring, std::vector<std::pair<long, dsstring>>>>( passes_textures );
+    }
+    else if( "meshe" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["meshe"].SetPropValue<dsstring>( p_words[1] );
+    }
+
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
+
+    return true;
+}
+
+void Chunk::Serialize( Utils::Archive& p_archive  )
+{
+}
+
+bool Chunk::Unserialize( Utils::Archive& p_archive )
+{
+    return true;
+}
+
+void Chunk::DumpProperties( dsstring& p_text )
+{
+    dsstring text_value;
+
+    p_text = "meshe ";
+    p_text += m_properties["meshe"].GetPropValue<dsstring>();
+    p_text += "\n";
+
+    std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();
+    for( std::map<dsstring, dsstring>::iterator it = passes_fx.begin(); it != passes_fx.end(); ++it )
+    {
+        p_text += "passes_fx ";
+
+        p_text += it->first;
+        p_text += " ";
+        p_text += it->second;
+        p_text += "\n";
+    }
+
+    std::map<dsstring, std::vector<std::pair<long, dsstring>>> passes_textures = m_properties["passes_textures"].GetPropValue<std::map<dsstring, std::vector<std::pair<long, dsstring>>>>();
+    for( std::map<dsstring, std::vector<std::pair<long, dsstring>>>::iterator it = passes_textures.begin(); it != passes_textures.end(); ++it )
+    {       
+        for( size_t i = 0; i < it->second.size(); i++ )
+        {
+            p_text += "passes_textures ";
+            p_text += it->first;
+            p_text += " ";
+
+            std::pair<long, dsstring> name_sets = (it->second)[i];
+
+            IntToString( name_sets.first, text_value );
+
+            p_text += text_value;
+            p_text += " ";
+            p_text += name_sets.second;                
+        }
+
+        p_text += "\n";
+    }
+}
+
+bool Chunk::ParseProperties( const dsstring& p_text )
+{
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
+}
+
+void Chunk::ApplyProperties( void )
+{
+    dsstring meshe_name = m_properties["meshe"].GetPropValue<dsstring>();
+
+    if( false == AssetsBase::GetInstance()->AssetIdExists( meshe_name ) )
+    {
+        _DSEXCEPTION( "Meshe Asset id unknown in AssetsBase" );
+    }
+    
+    Asset* asset = AssetsBase::GetInstance()->GetAsset( meshe_name );
+
+    Meshe* meshe = dynamic_cast<Meshe*>( asset );
+    if( !meshe )
+    {
+        _DSEXCEPTION( "Specified asset is not a Meshe" );
+    }
+
+    SetMeshe( meshe );
+
+    // create passes slots and set fx to each corresponding rendering nodes
+    std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();
+    for( std::map<dsstring, dsstring>::iterator it = passes_fx.begin(); it != passes_fx.end(); ++it )
+    {
+        RegisterPassSlot( it->first );
+        RenderingNode* rendering_node = m_passesnodes[it->first];
+        dsstring fxname = it->second;
+
+        if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( fxname ) )
+        {
+            _DSEXCEPTION( "Config id unknown in ConfigsBase" );
+        }
+
+        Configurable* config = ConfigsBase::GetInstance()->GetConfigurableInstance( fxname );
+
+        Fx* fx = dynamic_cast<Fx*>( config );
+        if( !fx )
+        {
+            _DSEXCEPTION( "Specified asset is not an Fx" );
+        }
+        rendering_node->SetFx( fx );        
+    }
+
+    // textures for each passe rendering node
+
+    std::map<dsstring, std::vector<std::pair<long, dsstring>>> passes_textures = m_properties["passes_textures"].GetPropValue<std::map<dsstring, std::vector<std::pair<long, dsstring>>>>();
+    for( std::map<dsstring, std::vector<std::pair<long, dsstring>>>::iterator it = passes_textures.begin(); it != passes_textures.end(); ++it )
+    {
+        if( 0 == m_passesnodes.count( it->first ) )
+        {
+            _DSEXCEPTION( "Specified pass is not registered/don't exists" );
+        }
+
+        RenderingNode* rendering_node = m_passesnodes[it->first];
+
+        std::vector<std::pair<long, dsstring>> textures_set = it->second;
+
+        for( size_t i = 0; i < textures_set.size(); i++ )
+        {
+            long stage = textures_set[i].first;
+            dsstring texture_name = textures_set[i].second;
+
+            Asset* asset = AssetsBase::GetInstance()->GetAsset( texture_name );
+
+            Texture* texture = dynamic_cast<Texture*>( asset );
+            if( !texture )
+            {
+                _DSEXCEPTION( "Specified asset is not a texture" );
+            }
+
+            rendering_node->SetTexture( texture, stage );
+        }
+    }
+}
+
+Configurable* Chunk::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( Chunk, Chunk );
 }

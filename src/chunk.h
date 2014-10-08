@@ -26,10 +26,15 @@
 #include "transformnode.h"
 #include "scenegraph.h"
 #include "renderer.h"
+#include "configurable.h"
+
+#define CHUNK_TEXT_KEYWORD           "Chunk"
+#define CHUNK_ARC_MAGICNUMBER        0x6041
+
 
 namespace DrawSpace
 {
-class Chunk : public Core::TransformNode
+class Chunk : public Core::TransformNode, public Core::Configurable
 {
 protected:
 
@@ -47,20 +52,31 @@ protected:
    
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_lod_event( DrawSpace::Core::LodStep*, DrawSpace::Core::LodStep::Event p_event );
+    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     Chunk( void );
     virtual ~Chunk( void );
+   
+    void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
+    void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
 
-    
-    virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
-    virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
+    DrawSpace::Core::Meshe* GetMeshe( void );
+    void SetMeshe( DrawSpace::Core::Meshe* p_meshe );
 
-    virtual DrawSpace::Core::Meshe* GetMeshe( void );
-    virtual void SetMeshe( DrawSpace::Core::Meshe* p_meshe );
+    void RegisterPassSlot( const dsstring p_passname );
+    DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
 
-    virtual void RegisterPassSlot( const dsstring p_passname );
-    virtual DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
+    void Serialize( Utils::Archive& p_archive  );
+    bool Unserialize( Utils::Archive& p_archive );
+
+    void DumpProperties( dsstring& p_text );
+    bool ParseProperties( const dsstring& p_text );
+
+    void ApplyProperties( void );
+
+    static Configurable* Instanciate( void );
+
     
 };
 }
