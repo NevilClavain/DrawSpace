@@ -78,7 +78,8 @@ public:
 
     ~Factory( void );
 
-    DrawSpace::Core::Configurable* BuildConfigurableFromText( const dsstring& p_text );
+    DrawSpace::Core::Configurable* BuildConfigurableFromText( const dsstring& p_keyword, const dsstring& p_text );
+    DrawSpace::Asset* BuildAssetFromText( const dsstring& p_keyword, const dsstring& p_text );
 
     bool ExecuteFromTextFile( const dsstring& p_path );
     bool ExecuteFromBinaryFile( const dsstring& p_path );

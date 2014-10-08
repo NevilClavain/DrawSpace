@@ -42,8 +42,59 @@ Factory::~Factory( void )
 
 }
 
-DrawSpace::Core::Configurable* Factory::BuildConfigurableFromText( const dsstring& p_text )
+DrawSpace::Core::Configurable* Factory::BuildConfigurableFromText( const dsstring& p_keyword, const dsstring& p_text )
 {
+    // instanciate config object
+
+    if( m_configs_instanciationfuncs_bytext.count( p_keyword ) > 0 )
+    {
+        Configurable* config = ( *m_configs_instanciationfuncs_bytext[p_keyword] ) ();
+
+        // call ParseProperties() method
+        if( false == config->ParseProperties( p_text ) )
+        {
+            dsstring config_parse_error;
+            config->GetLastError( config_parse_error );
+
+            m_lasterror = config_parse_error;
+            return NULL;
+        }
+
+        config->ApplyProperties();
+        return config;
+    }
+    else
+    {
+        _DSEXCEPTION( dsstring( "no registered instanciation function for the keyword : " ) +  m_config_keyword );
+    }
+
+    return NULL;
+}
+
+DrawSpace::Asset* Factory::BuildAssetFromText( const dsstring& p_keyword, const dsstring& p_text )
+{
+    if( m_assets_instanciationfuncs_bytext.count( p_keyword ) > 0 )
+    {
+        Asset* asset = ( *m_assets_instanciationfuncs_bytext[p_keyword] ) ();
+
+        // call ParseProperties() method
+        if( false == asset->ParseProperties( p_text ) )
+        {
+            dsstring asset_parse_error;
+            asset->GetLastError( asset_parse_error );
+
+            m_lasterror = asset_parse_error;
+            return NULL;
+        }
+
+        asset->ApplyProperties();
+        return asset;
+    }
+    else
+    {
+        _DSEXCEPTION( dsstring( "no registered instanciation function for the keyword : " ) +  m_asset_keyword );
+    }
+
     return NULL;
 }
 
@@ -54,23 +105,10 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
         if( "end_asset" == p_words[0] )
         {
             m_capture_asset_props = false;
-            
-            // instanciate asset object
 
-            if( m_assets_instanciationfuncs_bytext.count( m_asset_keyword ) > 0 )
+            Asset* asset = BuildAssetFromText( m_asset_keyword, m_asset_properties );
+            if( asset )
             {
-                Asset* asset = ( *m_assets_instanciationfuncs_bytext[m_asset_keyword] ) ();
-
-                // call ParseProperties() method
-                if( false == asset->ParseProperties( m_asset_properties ) )
-                {
-                    dsstring asset_parse_error;
-                    asset->GetLastError( asset_parse_error );
-
-                    m_lasterror = asset_parse_error;
-                    return false;
-                }
-
                 // register in Assetsbase
 
                 // check out if an name has been specified for asset
@@ -91,8 +129,9 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             }
             else
             {
-                _DSEXCEPTION( dsstring( "no registered instanciation function for the keyword : " ) +  m_asset_keyword );
-            }
+                // m_last_error deja positionne dans BuildAssetFromText()
+                return false;
+            }           
         }
         else
         {
@@ -116,36 +155,13 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
                     _DSEXCEPTION( "config text with same id already registered in ConfigsBase" );
                 }
 
-                /*
-                dsstring complete_text;
-                complete_text = dsstring( "declare_config " ) + m_config_keyword + dsstring( " " ) + m_config_name + dsstring( "\n" );
-                complete_text += m_config_properties + dsstring( "\n" );
-                complete_text += dsstring( "end_config" );
-
-                ConfigsBase::GetInstance()->RegisterConfigurableTextDescription( m_config_name, complete_text );
-                */
-
                 ConfigsBase::GetInstance()->RegisterConfigurableTextDescription( m_config_name, m_config_keyword, m_config_properties );
-
             }
             else
             {
-                // instanciate config object
-
-                if( m_configs_instanciationfuncs_bytext.count( m_config_keyword ) > 0 )
+                Configurable* config = BuildConfigurableFromText( m_config_keyword, m_config_properties );
+                if( config )
                 {
-                    Configurable* config = ( *m_configs_instanciationfuncs_bytext[m_config_keyword] ) ();
-
-                    // call ParseProperties() method
-                    if( false == config->ParseProperties( m_config_properties ) )
-                    {
-                        dsstring config_parse_error;
-                        config->GetLastError( config_parse_error );
-
-                        m_lasterror = config_parse_error;
-                        return false;
-                    }
-
                     // register in Configsbase
 
                     // check out if an name has been specified for config instance
@@ -156,11 +172,11 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
                     }
 
                     ConfigsBase::GetInstance()->RegisterConfigurableInstance( m_config_name, config );
-
                 }
                 else
                 {
-                    _DSEXCEPTION( dsstring( "no registered instanciation function for the keyword : " ) +  m_config_keyword );
+                    // m_last_error deja positionne dans BuildConfigurableFromText()
+                    return false;
                 }
             }
         }
