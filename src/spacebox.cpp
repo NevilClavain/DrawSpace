@@ -518,7 +518,7 @@ void Spacebox::ApplyProperties( void )
             {
                 Asset* asset = AssetsBase::GetInstance()->GetAsset( nameset.texturenames[i] );
 
-                Texture* texture = dynamic_cast<Texture*>( asset);
+                Texture* texture = dynamic_cast<Texture*>( asset );
                 if( !texture )
                 {
                     _DSEXCEPTION( "Specified asset is not a texture" );
