@@ -29,7 +29,7 @@
 #include "configurable.h"
 
 #define SPACEBOX_TEXT_KEYWORD           "Spacebox"
-#define SPACEBOX_ARC_MAGICNUMBER        0x4043
+#define SPACEBOX_ARC_MAGICNUMBER        0x6040
 
 
 namespace DrawSpace
