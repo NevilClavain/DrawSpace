@@ -92,6 +92,8 @@ protected:
 
 
 public:
+
+    Body( void );
     Body( World* p_world );
     virtual ~Body( void );
 

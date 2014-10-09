@@ -28,6 +28,14 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
 
+Body::Body( void ) :
+m_world( NULL ),
+m_contact_state( false )
+{
+    m_lastworldtrans.Identity();
+}
+
+
 Body::Body( World* p_world ) :
 m_world( p_world ),
 m_contact_state( false )

@@ -21,12 +21,29 @@
 */
 
 #include "inertbody.h"
+#include "exceptions.h"
+#include "configsbase.h"
+#include "assetsbase.h"
+#include "misc_utils.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
+
+InertBody::InertBody( void ) :
+m_refbody( NULL ),
+m_rigidBody( NULL ),
+m_collisionShape( NULL ),
+m_motionState( NULL ),
+m_meshe_data( NULL ),
+m_drawable( NULL ),
+m_global_world_mem( NULL )
+{
+    init();
+}
 
 InertBody::InertBody( World* p_world, TransformNode* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world ),
 m_refbody( NULL ),
@@ -39,17 +56,26 @@ m_drawable( p_drawable )
 {
     m_global_world_mem = m_world;
 
-    dsreal world_scale = World::m_scale;
-    btTransform bt_transform;
+    init();
+    init_body();
+}
 
+InertBody::~InertBody( void )
+{
+    destroy_body();
+}
+
+void InertBody::init( void )
+{
+    // properties array creation
+    m_properties["body_parameters"].AddProp<Body::Parameters>();       
     m_lastlocalworldtrans.Identity();
+}
 
-    /*
-    bt_transform.setIdentity();
-    bt_transform.setOrigin( btVector3( m_parameters.initial_pos[0] * world_scale, m_parameters.initial_pos[1] * world_scale, m_parameters.initial_pos[2] * world_scale ) );
-    */
-
-    btScalar btmat[16];
+void InertBody::init_body( void )
+{
+    btScalar    btmat[16];
+    btTransform bt_transform;
 
     btmat[0] = m_parameters.initial_attitude( 0, 0 );
     btmat[1] = m_parameters.initial_attitude( 0, 1 );
@@ -75,12 +101,6 @@ m_drawable( p_drawable )
    
     create_body( bt_transform );
 }
-
-InertBody::~InertBody( void )
-{
-    destroy_body();
-}
-
 
 void InertBody::create_body( const btTransform& p_transform )
 {
@@ -114,6 +134,11 @@ void InertBody::destroy_body( void )
     _DRAWSPACE_DELETE_( m_rigidBody );
 }
 
+void InertBody::SetWorld( World* p_world )
+{
+    m_world             = p_world;
+    m_global_world_mem  = m_world;
+}
 
 void InertBody::GetParameters( Parameters& p_parameters )
 {
@@ -173,6 +198,11 @@ void InertBody::Update( void )
 TransformNode* InertBody::GetDrawable( void )
 {
     return m_drawable;
+}
+
+void InertBody::SetDrawable( DrawSpace::Core::TransformNode* p_drawable )
+{
+    m_drawable = p_drawable;
 }
 
 /*
@@ -613,4 +643,40 @@ bool InertBody::HasLanded( void )
 bool InertBody::IsActive( void )
 {
     return m_rigidBody->isActive();
+}
+
+bool InertBody::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    return true;
+}
+
+void InertBody::Serialize( Utils::Archive& p_archive  )
+{
+}
+
+bool InertBody::Unserialize( Utils::Archive& p_archive )
+{
+    return true;
+}
+
+void InertBody::DumpProperties( dsstring& p_text )
+{
+}
+
+bool InertBody::ParseProperties( const dsstring& p_text )
+{
+    char seps[] = { 0x09, 0x020, 0x00 };
+
+    return RunOnTextChunk( p_text, seps );
+}
+
+void InertBody::ApplyProperties( void )
+{
+    m_parameters = m_properties["body_parameters"].GetPropValue<Body::Parameters>();
+    init_body();
+}
+
+Configurable* InertBody::Instanciate( void )
+{
+    return _DRAWSPACE_NEW_( InertBody, InertBody );
 }

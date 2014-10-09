@@ -30,6 +30,7 @@
 #include "pass.h"
 #include "spacebox.h"
 #include "chunk.h"
+#include "inertbody.h"
 #include "circularmovement.h"
 #include "fpsmovement.h"
 #include "freemovement.h"
@@ -71,6 +72,10 @@ void DrawSpace::Initialize( void )
 
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( CHUNK_TEXT_KEYWORD, Chunk::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( CHUNK_ARC_MAGICNUMBER, Chunk::Instanciate );
+
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( INERTBODY_TEXT_KEYWORD, Chunk::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( INERTBODY_ARC_MAGICNUMBER, Chunk::Instanciate );
+
 
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( CIRCULARMVT_TEXT_KEYWORD, CircularMovement::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( CIRCULARMVT_ARC_MAGICNUMBER, CircularMovement::Instanciate );
