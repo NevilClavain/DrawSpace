@@ -195,7 +195,7 @@ void Font::DumpProperties( dsstring& p_text )
 
     //p_text += "\n";
 
-    p_text += "filepath ";
+    p_text += "filespath ";
     p_text += m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
     p_text += " ";
     p_text += m_properties["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
