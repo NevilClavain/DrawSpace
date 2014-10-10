@@ -620,7 +620,7 @@ void HeadMovement::DumpProperties( dsstring& p_text )
 
     p_text += "head_pos ";
     Vector head_pos = m_properties["head_pos"].GetPropValue<Vector>();
-    for( long i = 0; i < 4; i++ )
+    for( long i = 0; i < 3; i++ )
     {
         RealToString( head_pos[i], text_value );
 
