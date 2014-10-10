@@ -41,6 +41,21 @@ class InertBody : public Body, public Core::Configurable
 {
 protected:
 
+    typedef enum
+    {
+        BODY_INITIAL_ATTITUDE_TRANSLATION,
+        BODY_INITIAL_ATTITUDE_ROTATION,
+
+    } BodyInitialAttitudComponentType;
+
+    typedef struct
+    {
+        BodyInitialAttitudComponentType type;
+        DrawSpace::Utils::Vector        vector; // si rotation : axe de rotation; si translation : composantes translation
+        dsreal                          angle;
+
+    } BodyInitialAttitudComponent;
+
     Parameters                      m_parameters;
 
     btRigidBody*                    m_rigidBody;

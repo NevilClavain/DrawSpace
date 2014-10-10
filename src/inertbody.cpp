@@ -25,7 +25,7 @@
 #include "configsbase.h"
 #include "assetsbase.h"
 #include "misc_utils.h"
-
+#include "transformation.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -68,7 +68,13 @@ InertBody::~InertBody( void )
 void InertBody::init( void )
 {
     // properties array creation
-    m_properties["body_parameters"].AddProp<Body::Parameters>();       
+    m_properties["mass"].AddPropValue<dsreal>( 1.0 );
+    m_properties["initial_attitude"].AddProp<std::vector<BodyInitialAttitudComponent>>();
+    m_properties["shape_type"].AddProp<Shape>();
+    m_properties["sphere_shape_radius"].AddProp<dsreal>();
+    m_properties["box_shape_dims"].AddProp<Vector>();
+    m_properties["meshe_shape_name"].AddProp<dsstring>();
+
     m_lastlocalworldtrans.Identity();
 }
 
@@ -647,6 +653,112 @@ bool InertBody::IsActive( void )
 
 bool InertBody::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    if( "mass" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["mass"].SetPropValue<dsreal>( StringToReal( p_words[1] ) );
+    }
+    else if( "initial_attitude" == p_words[0] )
+    {
+        BodyInitialAttitudComponent att;
+
+        std::vector<BodyInitialAttitudComponent> initial_attitude = m_properties["initial_attitude"].GetPropValue<std::vector<BodyInitialAttitudComponent>>();
+
+        if( p_words.size() < 5 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        Vector v;
+        for( long i = 0; i < 3; i++ )
+        {
+            v[i] = StringToReal( p_words[i + 2] );
+        }
+        v[3] = 1.0;
+
+        att.vector = v;
+
+        m_properties["head_pos"].SetPropValue<Vector>( v );
+
+        if( "translation" == p_words[1] )
+        {
+            att.type = BODY_INITIAL_ATTITUDE_TRANSLATION;
+        }
+        else if( "rotation" == p_words[1] )
+        {
+            att.type = BODY_INITIAL_ATTITUDE_ROTATION;
+
+            if( p_words.size() < 6 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
+            att.angle = StringToReal( p_words[5] );
+        }
+        else
+        {
+            _PARSER_UNEXPECTED_KEYWORD_
+        }
+
+        initial_attitude.push_back( att );
+
+        m_properties["initial_attitude"].SetPropValue<std::vector<BodyInitialAttitudComponent>>( initial_attitude );
+    }
+    else if( "shape_type" == p_words[0] )
+    {
+        if( p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        if( "meshe_shape" == p_words[1] )
+        {
+            m_properties["shape_type"].SetPropValue<Shape>( MESHE_SHAPE );
+            m_properties["meshe_shape_name"].SetPropValue<dsstring>( p_words[2] );
+        }
+        else if( "sphere_shape " == p_words[1] )
+        {
+            m_properties["shape_type"].SetPropValue<Shape>( SPHERE_SHAPE );
+            m_properties["sphere_shape_radius"].SetPropValue<dsreal>( StringToReal( p_words[2] ) );
+        }
+        else if( "box_shape " == p_words[1] )
+        {
+            m_properties["shape_type"].SetPropValue<Shape>( BOX_SHAPE );
+
+            if( p_words.size() < 5 )
+            {
+                _PARSER_MISSING_ARG__
+                return false;
+            }
+
+            Vector v;
+            for( long i = 0; i < 3; i++ )
+            {
+                v[i] = StringToReal( p_words[i + 2] );
+            }
+            v[3] = 1.0;
+
+            m_properties["box_shape_dims"].SetPropValue<Vector>( v );
+        }
+        else
+        {
+            _PARSER_UNEXPECTED_KEYWORD_
+        }        
+    }
+
+    else
+    {
+        _PARSER_UNEXPECTED_KEYWORD_
+        return false;
+    }
+
     return true;
 }
 
@@ -661,6 +773,86 @@ bool InertBody::Unserialize( Utils::Archive& p_archive )
 
 void InertBody::DumpProperties( dsstring& p_text )
 {
+    dsstring text_value;
+
+    p_text += "mass ";
+    RealToString( m_properties["mass"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
+    p_text += "\n";
+
+    std::vector<BodyInitialAttitudComponent> initial_attitude = m_properties["initial_attitude"].GetPropValue<std::vector<BodyInitialAttitudComponent>>();
+    for( size_t i = 0; i < initial_attitude.size(); i++ )
+    {
+        p_text += "initial_attitude ";
+            
+        BodyInitialAttitudComponent curr = initial_attitude[i];
+
+        if( BODY_INITIAL_ATTITUDE_ROTATION == curr.type )
+        {
+            p_text += "translation ";
+
+            for( long i = 0; i < 3; i++ )
+            {
+                RealToString( curr.vector[i], text_value );
+                p_text += text_value;
+                p_text += " ";
+            }            
+        }
+        else // BODY_INITIAL_ATTITUDE_TRANSLATION
+        {
+            p_text += "rotation ";
+
+            for( long i = 0; i < 3; i++ )
+            {
+                RealToString( curr.vector[i], text_value );
+                p_text += text_value;
+                p_text += " ";
+            }
+            RealToString( curr.angle, text_value );
+        }
+        p_text += "\n";
+    }
+
+    p_text += "shape_type ";
+
+    switch( m_properties["shape_type"].GetPropValue<Shape>() )
+    {
+        case BOX_SHAPE:
+            {
+                p_text += "box_shape ";
+
+                Vector box_shape_dims = m_properties["box_shape_dims"].GetPropValue<Vector>();
+                for( long i = 0; i < 3; i++ )
+                {
+                    RealToString( box_shape_dims[i], text_value );
+
+                    p_text += text_value;
+                    p_text += " ";
+                }
+                p_text += "\n";
+            }
+            break;
+
+        case SPHERE_SHAPE:
+
+            p_text += "sphere_shape ";
+
+            RealToString( m_properties["sphere_shape_radius"].GetPropValue<dsreal>(), text_value );
+            p_text += text_value;
+            p_text += "\n";
+
+            break;
+
+        case MESHE_SHAPE:
+
+            p_text += "meshe_shape ";
+            p_text += m_properties["meshe_shape_name"].GetPropValue<dsstring>();
+            p_text += "\n";
+
+            break;
+    }
+
+    p_text += "\n";
 }
 
 bool InertBody::ParseProperties( const dsstring& p_text )
@@ -672,7 +864,67 @@ bool InertBody::ParseProperties( const dsstring& p_text )
 
 void InertBody::ApplyProperties( void )
 {
-    m_parameters = m_properties["body_parameters"].GetPropValue<Body::Parameters>();
+    m_parameters.mass = m_properties["mass"].GetPropValue<dsreal>();
+
+    Transformation transf;
+    std::vector<BodyInitialAttitudComponent> initial_attitude = m_properties["initial_attitude"].GetPropValue<std::vector<BodyInitialAttitudComponent>>();
+    for( size_t i = 0; i < initial_attitude.size(); i++ )
+    {
+        BodyInitialAttitudComponent curr = initial_attitude[i];
+
+        Matrix mat;
+
+        if( BODY_INITIAL_ATTITUDE_ROTATION == curr.type )
+        {
+            mat.Translation( curr.vector );
+        }
+        else // BODY_INITIAL_ATTITUDE_TRANSLATION
+        {
+            mat.Rotation( curr.vector, curr.angle );
+        }
+
+        transf.PushMatrix( mat );
+    }
+
+    transf.BuildResult();
+    transf.GetResult( &m_parameters.initial_attitude );
+
+    m_parameters.shape_descr.shape = m_properties["shape_type"].GetPropValue<Shape>();
+
+    switch( m_parameters.shape_descr.shape )
+    {
+        case BOX_SHAPE:
+
+            m_parameters.shape_descr.box_dims = m_properties["box_shape_dims"].GetPropValue<Vector>();
+            break;
+
+        case SPHERE_SHAPE:
+
+            m_parameters.shape_descr.sphere_radius = m_properties["sphere_shape_radius"].GetPropValue<dsreal>();
+            break;
+
+        case MESHE_SHAPE:
+            {
+                dsstring meshe_name = m_properties["meshe_shape_name"].GetPropValue<dsstring>();
+
+                if( false == AssetsBase::GetInstance()->AssetIdExists( meshe_name ) )
+                {
+                    _DSEXCEPTION( "Meshe Asset id unknown in AssetsBase" );
+                }
+                
+                Asset* asset = AssetsBase::GetInstance()->GetAsset( meshe_name );
+
+                Meshe* meshe = dynamic_cast<Meshe*>( asset );
+                if( !meshe )
+                {
+                    _DSEXCEPTION( "Specified asset is not a Meshe" );
+                }
+
+                m_parameters.shape_descr.meshe = *meshe;
+            }
+            break;
+    }
+
     init_body();
 }
 
