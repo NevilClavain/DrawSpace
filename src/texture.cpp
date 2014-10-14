@@ -174,6 +174,7 @@ void Texture::DumpProperties( dsstring& p_text )
     IntToString( m_properties["rendertarget_size"].GetPropValue<unsigned long>( "width" ), text_value );
     p_text += "width ";
     p_text += text_value;
+    p_text += " ";
 
     IntToString( m_properties["rendertarget_size"].GetPropValue<unsigned long>( "height" ), text_value );
     p_text += "height ";
