@@ -102,7 +102,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
 {
     if( m_capture_asset_props )
     {        
-        if( "end_asset" == p_words[0] )
+        if( DECLARE_END_ASSET_KEYWORD == p_words[0] )
         {
             m_capture_asset_props = false;
 
@@ -141,7 +141,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
     }
     else if( m_capture_config_props )
     {
-        if( "end_config" == p_words[0] )
+        if( DECLARE_END_CONFIG_KEYWORD == p_words[0] )
         {
             m_capture_config_props = false;
             if( m_store_config_text_only )
@@ -188,7 +188,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
     }
     else
     {
-        if( "declare_asset_instance" == p_words[0] )
+        if( DECLARE_ASSET_INSTANCE_KEYWORD == p_words[0] )
         {
             if( p_words.size() < 2 )
             {
@@ -201,7 +201,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             m_asset_keyword = p_words[1];
 
         }
-        else if( "declare_config_instance" == p_words[0] )
+        else if( DECLARE_CONFIG_INSTANCE_KEYWORD == p_words[0] )
         {
             if( p_words.size() < 3 )
             {
@@ -216,7 +216,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
 
             m_store_config_text_only = false; 
         }
-        else if( "declare_config" == p_words[0] )
+        else if( DECLARE_CONFIG_KEYWORD == p_words[0] )
         {
             if( p_words.size() < 3 )
             {

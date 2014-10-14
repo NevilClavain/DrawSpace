@@ -29,6 +29,13 @@
 #include "asset.h"
 #include "configurable.h"
 
+#define DECLARE_ASSET_INSTANCE_KEYWORD              "declare_asset_instance"
+#define DECLARE_CONFIG_INSTANCE_KEYWORD             "declare_config_instance"
+#define DECLARE_CONFIG_KEYWORD                      "declare_config"
+
+#define DECLARE_END_ASSET_KEYWORD                   "end_asset"
+#define DECLARE_END_CONFIG_KEYWORD                  "end_config"
+
 namespace DrawSpace
 {
 namespace Core
