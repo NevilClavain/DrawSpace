@@ -73,6 +73,8 @@ public:
 
     void ApplyProperties( void );
 
+    void GetKeyword( dsstring& p_outkeyword );
+
     static Configurable* Instanciate( void );
 
 };

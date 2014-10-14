@@ -86,7 +86,6 @@ public:
     virtual void DumpProperties( dsstring& p_text );
     virtual bool ParseProperties( const dsstring& p_text );
 
-
     virtual void ApplyProperties( void );
 
 
@@ -103,7 +102,9 @@ public:
     FinalPass( const dsstring& p_name );
     virtual ~FinalPass( void );
 
-    virtual void DumpProperties( dsstring& p_text );
+    void DumpProperties( dsstring& p_text );
+
+    void GetKeyword( dsstring& p_outkeyword );
 
     static Configurable* Instanciate( void );
 };
@@ -123,7 +124,9 @@ public:
 
     Core::Texture* GetTargetTexture( void );
 
-    virtual void DumpProperties( dsstring& p_text );
+    void DumpProperties( dsstring& p_text );
+
+    void GetKeyword( dsstring& p_outkeyword );
 
     static Configurable* Instanciate( void );
 

@@ -318,7 +318,7 @@ void Fx::DumpProperties( dsstring& p_text )
         p_text += " ";
     }
     
-    p_text += "\n";
+    p_text += "\r\n";
 
 
     std::vector<RenderState> renderstates_in = m_properties["renderstates_in"].GetPropValue<std::vector<RenderState>>();
@@ -334,7 +334,7 @@ void Fx::DumpProperties( dsstring& p_text )
 
         rs.GetArg( text_value );
         p_text += text_value;
-        p_text += "\n";
+        p_text += "\r\n";
     }
 
     std::vector<RenderState> renderstates_out = m_properties["renderstates_out"].GetPropValue<std::vector<RenderState>>();
@@ -350,7 +350,7 @@ void Fx::DumpProperties( dsstring& p_text )
 
         rs.GetArg( text_value );
         p_text += text_value;
-        p_text += "\n";
+        p_text += "\r\n";
     }
 
     //p_text += "end_config\n";
@@ -406,4 +406,9 @@ void Fx::ApplyProperties( void )
 Configurable* Fx::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( Fx, Fx );
+}
+
+void Fx::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = FX_TEXT_KEYWORD;
 }

@@ -611,11 +611,11 @@ void HeadMovement::DumpProperties( dsstring& p_text )
 
     p_text += "scale_factor ";
     RealToString( m_properties["scale_factor"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "ref_force ";
     RealToString( m_properties["ref_force"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
 
     p_text += "head_pos ";
@@ -627,7 +627,7 @@ void HeadMovement::DumpProperties( dsstring& p_text )
         p_text += text_value;
         p_text += " ";
     }
-    p_text += "\n";
+    p_text += "\r\n";
     //p_text += "end_config\n";
 }
 
@@ -672,4 +672,9 @@ void HeadMovement::ApplyProperties( void )
 Configurable* HeadMovement::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( HeadMovement, HeadMovement );
+}
+
+void HeadMovement::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = HEADMVT_TEXT_KEYWORD;
 }

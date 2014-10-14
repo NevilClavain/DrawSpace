@@ -279,15 +279,15 @@ void SpectatorMovement::DumpProperties( dsstring& p_text )
 
     p_text += "scale_pos ";
     RealToString( m_properties["scale_pos"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "period ";
     IntToString( m_properties["period"].GetPropValue<long>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "orbiter_link ";
     p_text += ( true == m_properties["orbiter_link"].GetPropValue<bool>() ? "true" : "false" );
-    p_text += "\n";
+    p_text += "\r\n";
 
     //p_text += "end_config\n";
 }
@@ -332,4 +332,9 @@ void SpectatorMovement::ApplyProperties( void )
 Configurable* SpectatorMovement::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( SpectatorMovement, SpectatorMovement );
+}
+
+void SpectatorMovement::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = SPECTATORMVT_TEXT_KEYWORD;
 }

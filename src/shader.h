@@ -63,11 +63,12 @@ public:
     void	Serialize( Utils::Archive& p_archive );
     bool	Unserialize( Utils::Archive& p_archive );
 
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
+    void    DumpProperties( dsstring& p_text );
+    bool    ParseProperties( const dsstring& p_text );
 
     void    SetText( const dsstring& p_text );
+
+    void    GetKeyword( dsstring& p_outkeyword );
 
     static Asset* Instanciate( void );
 };

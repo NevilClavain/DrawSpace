@@ -206,16 +206,16 @@ void FPSMovement::DumpProperties( dsstring& p_text )
         p_text += text_value;
         p_text += " ";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
 
     p_text += "init_yaw ";
     RealToString( m_properties["init_yaw"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "init_pitch ";
     RealToString( m_properties["init_pitch"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     //p_text += "end_config\n";
 
@@ -240,4 +240,9 @@ void FPSMovement::ApplyProperties( void )
 FPSMovement::Configurable* FPSMovement::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( FPSMovement, FPSMovement );
+}
+
+void FPSMovement::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = FPSMVT_TEXT_KEYWORD;
 }

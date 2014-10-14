@@ -258,17 +258,17 @@ void Meshe::DumpProperties( dsstring& p_text )
 
     p_text += "filepath ";
     p_text += m_properties["filepath"].GetPropValue<dsstring>();
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "index ";
 
     IntToString( m_properties["index"].GetPropValue<long>(), text_value );
     p_text += text_value;
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "plugin ";
     p_text += m_properties["plugin"].GetPropValue<dsstring>();
-    p_text += "\n";
+    p_text += "\r\n";
 
 
     //p_text += "end_asset\n";
@@ -316,4 +316,9 @@ void Meshe::GetMD5( dsstring& p_md5 )
 Asset* Meshe::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( Meshe, Meshe );
+}
+
+void Meshe::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = MESHE_TEXT_KEYWORD;
 }

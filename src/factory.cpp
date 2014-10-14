@@ -288,3 +288,29 @@ void Factory::RegisterConfigInstanciationFuncByArc( short p_magic, Configurable:
 {
     m_configs_instanciationfuncs_byarc[p_magic] = p_func;
 }
+
+void Factory::GetAssetKeywordsList( std::vector<dsstring>& p_outlist )
+{
+    for( std::map<dsstring, Asset::InstanciateFunc>::iterator it = m_assets_instanciationfuncs_bytext.begin(); it != m_assets_instanciationfuncs_bytext.end(); ++it )
+    {
+        p_outlist.push_back( it->first );
+    }
+}
+
+void Factory::GetConfigKeywordsList( std::vector<dsstring>& p_outlist )
+{
+    for( std::map<dsstring, Configurable::InstanciateFunc>::iterator it = m_configs_instanciationfuncs_bytext.begin(); it != m_configs_instanciationfuncs_bytext.end(); ++it )
+    {
+        p_outlist.push_back( it->first );
+    }
+}
+
+Asset* Factory::InstanciateAssetFromKeyword( const dsstring& p_keyword )
+{
+    return ( *m_assets_instanciationfuncs_bytext[p_keyword] ) ();
+}
+
+Configurable* Factory::InstanciateConfigFromKeyword( const dsstring& p_keyword )
+{
+    return ( *m_configs_instanciationfuncs_bytext[p_keyword] ) ();
+}

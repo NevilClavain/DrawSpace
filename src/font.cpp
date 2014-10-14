@@ -199,13 +199,13 @@ void Font::DumpProperties( dsstring& p_text )
     p_text += m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
     p_text += " ";
     p_text += m_properties["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "plugin ";
     p_text += m_properties["plugin"].GetPropValue<dsstring>();
-    p_text += "\n";
+    p_text += "\r\n";
 
-    p_text += "end_asset\n";
+    //p_text += "end_asset\n";
 
 }
 
@@ -219,4 +219,9 @@ bool Font::ParseProperties( const dsstring& p_text )
 Asset* Font::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( Font, Font );
+}
+
+void Font::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = FONT_TEXT_KEYWORD;
 }

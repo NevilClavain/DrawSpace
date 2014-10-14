@@ -78,6 +78,8 @@ public:
     void SetFormat( long p_width, long p_height, long p_bpp );
     void GetFormat( long& p_width, long& p_height, long& p_bpp );
 
+    void GetKeyword( dsstring& p_outkeyword );
+
     static Asset* Instanciate( void );
 
 };

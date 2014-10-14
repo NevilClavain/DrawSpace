@@ -56,11 +56,7 @@ public:
 
     virtual void ApplyProperties( void ) = 0;
 
-    /*
-    virtual void SetConfigurableName( const dsstring& p_name );
-    virtual void GetConfigurableName( dsstring& p_name );
-    */
-
+    virtual void GetKeyword( dsstring& p_outkeyword ) = 0;
 };
 
 }

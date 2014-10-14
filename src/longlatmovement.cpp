@@ -207,23 +207,23 @@ void LongLatMovement::DumpProperties( dsstring& p_text )
 
     p_text += "init_longitud_theta ";
     RealToString( m_properties["init_longitud_theta"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "init_longitud_phi ";
     RealToString( m_properties["init_longitud_phi"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "init_alt ";
     RealToString( m_properties["init_alt"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "init_theta ";
     RealToString( m_properties["init_theta"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "init_phi ";
     RealToString( m_properties["init_phi"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
     //p_text += "end_config\n";
 }
 
@@ -251,3 +251,7 @@ Configurable* LongLatMovement::Instanciate( void )
     return _DRAWSPACE_NEW_( LongLatMovement, LongLatMovement );
 }
 
+void LongLatMovement::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = LONGLATMVT_TEXT_KEYWORD;
+}

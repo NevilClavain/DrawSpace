@@ -778,7 +778,7 @@ void InertBody::DumpProperties( dsstring& p_text )
     p_text += "mass ";
     RealToString( m_properties["mass"].GetPropValue<dsreal>(), text_value );
     p_text += text_value;
-    p_text += "\n";
+    p_text += "\r\n";
 
     std::vector<BodyInitialAttitudComponent> initial_attitude = m_properties["initial_attitude"].GetPropValue<std::vector<BodyInitialAttitudComponent>>();
     for( size_t i = 0; i < initial_attitude.size(); i++ )
@@ -810,7 +810,7 @@ void InertBody::DumpProperties( dsstring& p_text )
             }
             RealToString( curr.angle, text_value );
         }
-        p_text += "\n";
+        p_text += "\r\n";
     }
 
     p_text += "shape_type ";
@@ -829,7 +829,7 @@ void InertBody::DumpProperties( dsstring& p_text )
                     p_text += text_value;
                     p_text += " ";
                 }
-                p_text += "\n";
+                p_text += "\r\n";
             }
             break;
 
@@ -839,7 +839,7 @@ void InertBody::DumpProperties( dsstring& p_text )
 
             RealToString( m_properties["sphere_shape_radius"].GetPropValue<dsreal>(), text_value );
             p_text += text_value;
-            p_text += "\n";
+            p_text += "\r\n";
 
             break;
 
@@ -847,12 +847,12 @@ void InertBody::DumpProperties( dsstring& p_text )
 
             p_text += "meshe_shape ";
             p_text += m_properties["meshe_shape_name"].GetPropValue<dsstring>();
-            p_text += "\n";
+            p_text += "\r\n";
 
             break;
     }
 
-    p_text += "\n";
+    p_text += "\r\n";
 }
 
 bool InertBody::ParseProperties( const dsstring& p_text )
@@ -931,4 +931,9 @@ void InertBody::ApplyProperties( void )
 Configurable* InertBody::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( InertBody, InertBody );
+}
+
+void InertBody::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = INERTBODY_TEXT_KEYWORD;
 }

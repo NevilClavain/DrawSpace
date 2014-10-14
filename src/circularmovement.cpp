@@ -272,7 +272,7 @@ void CircularMovement::DumpProperties( dsstring& p_text )
         p_text += text_value;
         p_text += " ";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "delta_center ";
     Vector delta_center = m_properties["delta_center"].GetPropValue<Vector>();
@@ -283,7 +283,7 @@ void CircularMovement::DumpProperties( dsstring& p_text )
         p_text += text_value;
         p_text += " ";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "rot_axis ";
     Vector rot_axis = m_properties["rot_axis"].GetPropValue<Vector>();
@@ -294,19 +294,19 @@ void CircularMovement::DumpProperties( dsstring& p_text )
         p_text += text_value;
         p_text += " ";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "init_angle ";
     RealToString( m_properties["init_angle"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "theta ";
     RealToString( m_properties["theta"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "phi ";
     RealToString( m_properties["phi"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     //p_text += "end_config\n";
 }
@@ -333,4 +333,9 @@ void CircularMovement::ApplyProperties( void )
 Configurable* CircularMovement::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( CircularMovement, CircularMovement );
+}
+
+void CircularMovement::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = CIRCULARMVT_TEXT_KEYWORD;
 }

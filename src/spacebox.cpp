@@ -419,7 +419,7 @@ void Spacebox::DumpProperties( dsstring& p_text )
         p_text += it->first;
         p_text += " ";
         p_text += it->second;
-        p_text += "\n";
+        p_text += "\r\n";
     }
 
     std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>> passes_textures = m_properties["passes_textures"].GetPropValue<std::map<dsstring, std::vector<std::pair<long, TexturesNameSet>>>>();
@@ -445,7 +445,7 @@ void Spacebox::DumpProperties( dsstring& p_text )
             }
         }
 
-        p_text += "\n";
+        p_text += "\r\n";
     }
 
     std::map<dsstring, long> passes_order = m_properties["passes_order"].GetPropValue<std::map<dsstring, long>>();
@@ -458,7 +458,7 @@ void Spacebox::DumpProperties( dsstring& p_text )
         IntToString( it->second, text_value );
         p_text += text_value;
 
-        p_text += "\n";
+        p_text += "\r\n";
     }
 
     //p_text += "end_config\n";
@@ -549,6 +549,11 @@ void Spacebox::ApplyProperties( void )
 Configurable* Spacebox::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( Spacebox, Spacebox );
+}
+
+void Spacebox::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = SPACEBOX_TEXT_KEYWORD;
 }
 
 

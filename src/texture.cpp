@@ -151,11 +151,11 @@ void Texture::DumpProperties( dsstring& p_text )
 
     p_text += "assetname ";
     p_text += m_properties["assetname"].GetPropValue<dsstring>();
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "filepath ";
     p_text += m_properties["filepath"].GetPropValue<dsstring>();
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "rendertarget ";
 
@@ -167,7 +167,7 @@ void Texture::DumpProperties( dsstring& p_text )
     {
         p_text += "false";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "rendertarget_size ";
 
@@ -179,7 +179,7 @@ void Texture::DumpProperties( dsstring& p_text )
     p_text += "height ";
     p_text += text_value;
 
-    p_text += "\n";
+    p_text += "\r\n";
 
     //p_text += "end_asset\n";
 }
@@ -266,4 +266,9 @@ void Texture::GetFormat( long& p_width, long& p_height, long& p_bpp )
 Asset* Texture::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( Texture, Texture );
+}
+
+void Texture::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = TEXTURE_TEXT_KEYWORD;
 }

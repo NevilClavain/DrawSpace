@@ -91,7 +91,14 @@ public:
     void RegisterAssetInstanciationFuncByArc( short p_magic, Asset::InstanciateFunc p_func );
 
     void RegisterConfigInstanciationFuncByText( const dsstring& p_keyword, Configurable::InstanciateFunc p_func );
-    void RegisterConfigInstanciationFuncByArc( short p_magic, Configurable::InstanciateFunc p_func );   
+    void RegisterConfigInstanciationFuncByArc( short p_magic, Configurable::InstanciateFunc p_func );
+
+    void GetAssetKeywordsList( std::vector<dsstring>& p_outlist );
+    void GetConfigKeywordsList( std::vector<dsstring>& p_outlist );
+
+    DrawSpace::Asset* InstanciateAssetFromKeyword( const dsstring& p_keyword );
+    DrawSpace::Core::Configurable* InstanciateConfigFromKeyword( const dsstring& p_keyword );
+
 };
 }
 }

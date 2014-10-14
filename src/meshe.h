@@ -83,6 +83,8 @@ public:
 
     void GetMD5( dsstring& p_md5 );
 
+    void GetKeyword( dsstring& p_outkeyword );
+
     static Asset* Instanciate( void );
 };
 }

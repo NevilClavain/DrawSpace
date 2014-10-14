@@ -84,11 +84,11 @@ void Pass::DumpProperties( dsstring& p_text )
 
     p_text += "enabledepthclear ";
     p_text += ( m_properties["enabledepthclear"].GetPropValue<bool>() ? "true" : "false" );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "enabletargetclear ";
     p_text += ( m_properties["enabletargetclear"].GetPropValue<bool>() ? "true" : "false" );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "targetclearcolor ";
 
@@ -102,17 +102,17 @@ void Pass::DumpProperties( dsstring& p_text )
 
     IntToString( m_properties["targetclearcolor"].GetPropValue<unsigned char>( "b" ), text_value );
     p_text += text_value;
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "viewportquad ";
     p_text += ( true == m_properties["viewportquad"].GetPropValue<bool>() ? "true" : "false" );
-    p_text += "\n";
+    p_text += "\r\n";
 
     if( true == m_properties["viewportquad"].GetPropValue<bool>() )
     {
         p_text += "viewportquad_fx ";
         p_text += m_properties["viewportquad_fx"].GetPropValue<dsstring>();
-        p_text += "\n";
+        p_text += "\r\n";
         
         std::vector<std::pair<long, TextureSourceName>> viewportquad_textures;
         viewportquad_textures = m_properties["viewportquad_textures"].GetPropValue<std::vector<std::pair<long, TextureSourceName>>>();
@@ -136,7 +136,7 @@ void Pass::DumpProperties( dsstring& p_text )
             IntToString( viewportquad_textures[i].first, text_value );
 
             p_text += text_value;
-            p_text += "\n";
+            p_text += "\r\n";
         }
 
         std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = m_properties["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
@@ -163,7 +163,7 @@ void Pass::DumpProperties( dsstring& p_text )
                 p_text += " ";                
             }
 
-            p_text += "\n";
+            p_text += "\r\n";
         }
     }    
 }
@@ -485,6 +485,11 @@ Configurable* FinalPass::Instanciate( void )
     return _DRAWSPACE_NEW_( FinalPass, FinalPass );
 }
 
+void FinalPass::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = FINALPASS_TEXT_KEYWORD;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 IntermediatePass::IntermediatePass( void )
@@ -569,4 +574,9 @@ void IntermediatePass::DumpProperties( dsstring& p_text )
 Configurable* IntermediatePass::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass );
+}
+
+void IntermediatePass::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = INTERMEDIATEPASS_TEXT_KEYWORD;
 }

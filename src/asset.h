@@ -57,6 +57,8 @@ public:
 
     virtual void SetName( const dsstring& p_name );
     virtual void GetName( dsstring& p_name );
+
+    virtual void GetKeyword( dsstring& p_outkeyword ) = 0;
     
 };
 }

@@ -311,7 +311,7 @@ void Chunk::DumpProperties( dsstring& p_text )
 
     p_text = "meshe ";
     p_text += m_properties["meshe"].GetPropValue<dsstring>();
-    p_text += "\n";
+    p_text += "\r\n";
 
     std::map<dsstring, dsstring> passes_fx = m_properties["passes_fx"].GetPropValue<std::map<dsstring, dsstring>>();
     for( std::map<dsstring, dsstring>::iterator it = passes_fx.begin(); it != passes_fx.end(); ++it )
@@ -321,7 +321,7 @@ void Chunk::DumpProperties( dsstring& p_text )
         p_text += it->first;
         p_text += " ";
         p_text += it->second;
-        p_text += "\n";
+        p_text += "\r\n";
     }
 
     std::map<dsstring, std::vector<std::pair<long, dsstring>>> passes_textures = m_properties["passes_textures"].GetPropValue<std::map<dsstring, std::vector<std::pair<long, dsstring>>>>();
@@ -342,7 +342,7 @@ void Chunk::DumpProperties( dsstring& p_text )
             p_text += name_sets.second;                
         }
 
-        p_text += "\n";
+        p_text += "\r\n";
     }
 }
 
@@ -430,4 +430,9 @@ void Chunk::ApplyProperties( void )
 Configurable* Chunk::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( Chunk, Chunk );
+}
+
+void Chunk::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = CHUNK_TEXT_KEYWORD;
 }

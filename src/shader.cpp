@@ -184,11 +184,11 @@ void Shader::DumpProperties( dsstring& p_text )
 
     p_text += "assetname ";
     p_text += m_properties["assetname"].GetPropValue<dsstring>();
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "filepath ";
     p_text += m_properties["filepath"].GetPropValue<dsstring>();
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "compiled ";
 
@@ -200,7 +200,7 @@ void Shader::DumpProperties( dsstring& p_text )
     {
         p_text += "false";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
     //p_text += "end_asset\n";
 }
@@ -222,4 +222,9 @@ void Shader::SetText( const dsstring& p_text )
 Asset* Shader::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( Shader, Shader );
+}
+
+void Shader::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = SHADER_TEXT_KEYWORD;
 }

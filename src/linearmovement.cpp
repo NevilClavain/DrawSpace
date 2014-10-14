@@ -235,7 +235,7 @@ void LinearMovement::DumpProperties( dsstring& p_text )
         p_text += text_value;
         p_text += " ";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "direction ";
     Vector direction = m_properties["direction"].GetPropValue<Vector>();
@@ -246,15 +246,15 @@ void LinearMovement::DumpProperties( dsstring& p_text )
         p_text += text_value;
         p_text += " ";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "theta ";
     RealToString( m_properties["theta"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     p_text += "phi ";
     RealToString( m_properties["phi"].GetPropValue<dsreal>(), text_value );
-    p_text += "\n";
+    p_text += "\r\n";
 
     //p_text += "end_config\n";
 }
@@ -280,4 +280,9 @@ void LinearMovement::ApplyProperties( void )
 Configurable* LinearMovement::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( LinearMovement, LinearMovement );
+}
+
+void LinearMovement::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = LINEARMVT_TEXT_KEYWORD;
 }

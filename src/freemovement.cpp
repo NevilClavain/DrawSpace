@@ -231,7 +231,7 @@ void FreeMovement::DumpProperties( dsstring& p_text )
         p_text += text_value;
         p_text += " ";
     }
-    p_text += "\n";
+    p_text += "\r\n";
 
     //p_text += "end_config\n";
 }
@@ -252,4 +252,9 @@ void FreeMovement::ApplyProperties( void )
 Configurable* FreeMovement::Instanciate( void )
 {
     return _DRAWSPACE_NEW_( FreeMovement, FreeMovement );
+}
+
+void FreeMovement::GetKeyword( dsstring& p_outkeyword )
+{
+    p_outkeyword = FREEMVT_TEXT_KEYWORD;
 }
