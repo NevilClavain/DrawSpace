@@ -279,10 +279,12 @@ void SpectatorMovement::DumpProperties( dsstring& p_text )
 
     p_text += "scale_pos ";
     RealToString( m_properties["scale_pos"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "period ";
     IntToString( m_properties["period"].GetPropValue<long>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "orbiter_link ";

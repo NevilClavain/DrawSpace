@@ -207,22 +207,27 @@ void LongLatMovement::DumpProperties( dsstring& p_text )
 
     p_text += "init_longitud_theta ";
     RealToString( m_properties["init_longitud_theta"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "init_longitud_phi ";
     RealToString( m_properties["init_longitud_phi"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "init_alt ";
     RealToString( m_properties["init_alt"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "init_theta ";
     RealToString( m_properties["init_theta"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "init_phi ";
     RealToString( m_properties["init_phi"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
     //p_text += "end_config\n";
 }

@@ -224,7 +224,7 @@ void FreeMovement::DumpProperties( dsstring& p_text )
 */
     p_text += "init_pos ";
     Vector init_pos = m_properties["init_pos"].GetPropValue<Vector>();
-    for( long i = 0; i < 4; i++ )
+    for( long i = 0; i < 3; i++ )
     {
         RealToString( init_pos[i], text_value );
 

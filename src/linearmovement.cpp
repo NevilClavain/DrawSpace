@@ -250,10 +250,12 @@ void LinearMovement::DumpProperties( dsstring& p_text )
 
     p_text += "theta ";
     RealToString( m_properties["theta"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "phi ";
     RealToString( m_properties["phi"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     //p_text += "end_config\n";

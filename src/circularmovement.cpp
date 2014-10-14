@@ -265,7 +265,7 @@ void CircularMovement::DumpProperties( dsstring& p_text )
 */
     p_text += "center_pos ";
     Vector center_pos = m_properties["center_pos"].GetPropValue<Vector>();
-    for( long i = 0; i < 4; i++ )
+    for( long i = 0; i < 3; i++ )
     {
         RealToString( center_pos[i], text_value );
 
@@ -276,7 +276,7 @@ void CircularMovement::DumpProperties( dsstring& p_text )
 
     p_text += "delta_center ";
     Vector delta_center = m_properties["delta_center"].GetPropValue<Vector>();
-    for( long i = 0; i < 4; i++ )
+    for( long i = 0; i < 3; i++ )
     {
         RealToString( delta_center[i], text_value );
 
@@ -287,7 +287,7 @@ void CircularMovement::DumpProperties( dsstring& p_text )
 
     p_text += "rot_axis ";
     Vector rot_axis = m_properties["rot_axis"].GetPropValue<Vector>();
-    for( long i = 0; i < 4; i++ )
+    for( long i = 0; i < 3; i++ )
     {
         RealToString( rot_axis[i], text_value );
 
@@ -298,14 +298,17 @@ void CircularMovement::DumpProperties( dsstring& p_text )
 
     p_text += "init_angle ";
     RealToString( m_properties["init_angle"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "theta ";
     RealToString( m_properties["theta"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "phi ";
     RealToString( m_properties["phi"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     //p_text += "end_config\n";

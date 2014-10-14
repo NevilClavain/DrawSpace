@@ -611,10 +611,12 @@ void HeadMovement::DumpProperties( dsstring& p_text )
 
     p_text += "scale_factor ";
     RealToString( m_properties["scale_factor"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
     p_text += "ref_force ";
     RealToString( m_properties["ref_force"].GetPropValue<dsreal>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
 

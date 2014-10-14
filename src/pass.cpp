@@ -40,9 +40,9 @@ m_viewportquad( NULL )
 
     m_properties["enabledepthclear"].AddPropValue<bool>( false );
     m_properties["enabletargetclear"].AddPropValue<bool>( false );
-    m_properties["targetclearcolor"].AddProp<unsigned char>( "r" );
-    m_properties["targetclearcolor"].AddProp<unsigned char>( "g" );
-    m_properties["targetclearcolor"].AddProp<unsigned char>( "b" );
+    m_properties["targetclearcolor"].AddPropValue<unsigned char>( "r", 0 );
+    m_properties["targetclearcolor"].AddPropValue<unsigned char>( "g", 0 );
+    m_properties["targetclearcolor"].AddPropValue<unsigned char>( "b", 0 );
    
     m_properties["viewportquad"].AddPropValue<bool>( false );
     m_properties["viewportquad_fx"].AddPropValue<dsstring>( "" );

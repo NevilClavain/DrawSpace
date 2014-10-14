@@ -42,6 +42,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Dynamics;
 
 // generic and statics initialisations done here
 void DrawSpace::Initialize( void )
@@ -61,11 +62,11 @@ void DrawSpace::Initialize( void )
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FX_TEXT_KEYWORD, Fx::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FX_ARC_MAGICNUMBER, Fx::Instanciate );
 
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( INTERMEDIATEPASS_TEXT_KEYWORD, Fx::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( INTERMEDIATEPASS_ARC_MAGICNUMBER, Fx::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( INTERMEDIATEPASS_TEXT_KEYWORD, IntermediatePass::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( INTERMEDIATEPASS_ARC_MAGICNUMBER, IntermediatePass::Instanciate );
 
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FINALPASS_TEXT_KEYWORD, Fx::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FINALPASS_ARC_MAGICNUMBER, Fx::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FINALPASS_TEXT_KEYWORD, FinalPass::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FINALPASS_ARC_MAGICNUMBER, FinalPass::Instanciate );
 
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( SPACEBOX_TEXT_KEYWORD, Spacebox::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( SPACEBOX_ARC_MAGICNUMBER, Spacebox::Instanciate );
@@ -73,8 +74,8 @@ void DrawSpace::Initialize( void )
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( CHUNK_TEXT_KEYWORD, Chunk::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( CHUNK_ARC_MAGICNUMBER, Chunk::Instanciate );
 
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( INERTBODY_TEXT_KEYWORD, Chunk::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( INERTBODY_ARC_MAGICNUMBER, Chunk::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( INERTBODY_TEXT_KEYWORD, InertBody::Instanciate );
+    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( INERTBODY_ARC_MAGICNUMBER, InertBody::Instanciate );
 
 
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( CIRCULARMVT_TEXT_KEYWORD, CircularMovement::Instanciate );

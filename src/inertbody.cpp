@@ -70,8 +70,8 @@ void InertBody::init( void )
     // properties array creation
     m_properties["mass"].AddPropValue<dsreal>( 1.0 );
     m_properties["initial_attitude"].AddProp<std::vector<BodyInitialAttitudComponent>>();
-    m_properties["shape_type"].AddProp<Shape>();
-    m_properties["sphere_shape_radius"].AddProp<dsreal>();
+    m_properties["shape_type"].AddPropValue<Shape>( Body::BOX_SHAPE );
+    m_properties["sphere_shape_radius"].AddPropValue<dsreal>( 1.0 );
     m_properties["box_shape_dims"].AddProp<Vector>();
     m_properties["meshe_shape_name"].AddProp<dsstring>();
 
