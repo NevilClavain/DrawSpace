@@ -399,7 +399,7 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
     return true;
 }
 
-
+/*
 void Pass::SetName( const dsstring& p_name )
 {
     m_name = p_name;
@@ -409,7 +409,7 @@ void Pass::GetName( dsstring& p_name )
 {
     p_name = m_name;
 }
-
+*/
 
 
 RenderingQueue* Pass::GetRenderingQueue( void )
@@ -453,6 +453,10 @@ void Pass::SetSpecificName( const dsstring& p_name )
     m_name = p_name;
 }
 
+void Pass::GetSpecificName( dsstring& p_name )
+{
+    p_name = m_name;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 FinalPass::FinalPass( void )

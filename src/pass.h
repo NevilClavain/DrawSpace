@@ -76,8 +76,8 @@ public:
 
     virtual ViewportQuad* GetViewportQuad( void );
 
-    virtual void SetName( const dsstring& p_name );
-    virtual void GetName( dsstring& p_name );
+    //virtual void SetName( const dsstring& p_name );
+    //virtual void GetName( dsstring& p_name );
 
 
     virtual void Serialize( Utils::Archive& p_archive  );
@@ -89,6 +89,7 @@ public:
     virtual void ApplyProperties( void );
 
     virtual void SetSpecificName( const dsstring& p_name );
+    virtual void GetSpecificName( dsstring& p_name );
 
 
 };

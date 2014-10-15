@@ -42,7 +42,7 @@ Scenegraph::~Scenegraph( void )
 void Scenegraph::RegisterPass( Pass* p_pass )
 {
     dsstring pass_name;
-    p_pass->GetName( pass_name );
+    p_pass->GetSpecificName( pass_name );
     m_passes[pass_name] = p_pass;    
 }
 
