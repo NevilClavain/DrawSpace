@@ -38,6 +38,7 @@ Meshe::Meshe( void ) : m_importer( NULL )
 {
     // properties array creation
     m_properties["filepath"].AddPropValue<dsstring>( "" );
+    m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
     m_properties["index"].AddPropValue<long>( 0 );
     m_properties["plugin"].AddPropValue<dsstring>( "" );
 }
@@ -58,6 +59,16 @@ bool Meshe::on_new_line( const dsstring& p_line, long p_line_num, std::vector<ds
         }
 
         m_properties["filepath"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "assetname" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["assetname"].SetPropValue<dsstring>( p_words[1] );
     }
     else if( "index" == p_words[0] )
     {
@@ -215,6 +226,8 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
 
 bool Meshe::ApplyProperties( void )
 {
+    m_assetname = m_properties["assetname"].GetPropValue<dsstring>();
+
     dsstring path = m_properties["filepath"].GetPropValue<dsstring>();
     long index = m_properties["index"].GetPropValue<long>();
 
@@ -255,6 +268,10 @@ void Meshe::DumpProperties( dsstring& p_text )
     //p_text += dsstring( MESHE_TEXT_KEYWORD );
 
     //p_text += "\n";
+
+    p_text += "assetname ";
+    p_text += m_properties["assetname"].GetPropValue<dsstring>();
+    p_text += "\r\n";
 
     p_text += "filepath ";
     p_text += m_properties["filepath"].GetPropValue<dsstring>();

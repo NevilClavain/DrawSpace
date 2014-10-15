@@ -38,6 +38,7 @@ Font::Font( void ) : m_importer( NULL )/*, m_texture( NULL )*/
 {
     // properties array creation
     m_properties["filespath"].AddPropValue<dsstring>( "texturefilepath", "" );
+    m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
     m_properties["filespath"].AddPropValue<dsstring>( "metricsfilepath", "" );
     m_properties["plugin"].AddPropValue<dsstring>( "" );
 }
@@ -58,6 +59,16 @@ bool Font::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
 
         m_properties["filespath"].SetPropValue<dsstring>( "texturefilepath", p_words[1] );
         m_properties["filespath"].SetPropValue<dsstring>( "metricsfilepath", p_words[2] );
+    }
+    else if( "assetname" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["assetname"].SetPropValue<dsstring>( p_words[1] );
     }
     else if( "plugin" == p_words[0] )
     {
@@ -155,6 +166,8 @@ void Font::GetTexturePath( dsstring& p_texturepath )
 
 bool Font::ApplyProperties( void )
 {
+    m_assetname = m_properties["assetname"].GetPropValue<dsstring>();
+
     dsstring texturefilepath = m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
     dsstring metricsfilepath = m_properties["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
 
@@ -194,6 +207,10 @@ void Font::DumpProperties( dsstring& p_text )
     //p_text += dsstring( FONT_TEXT_KEYWORD );
 
     //p_text += "\n";
+
+    p_text += "assetname ";
+    p_text += m_properties["assetname"].GetPropValue<dsstring>();
+    p_text += "\r\n";
 
     p_text += "filespath ";
     p_text += m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
