@@ -88,6 +88,8 @@ public:
 
     virtual void ApplyProperties( void );
 
+    virtual void SetSpecificName( const dsstring& p_name );
+
 
 };
 

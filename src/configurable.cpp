@@ -35,14 +35,7 @@ Configurable::~Configurable( void )
 
 }
 
-/*
-void Configurable::SetConfigurableName( const dsstring& p_name )
+// to be defined by inheriters, if needed
+void Configurable::SetSpecificName( const dsstring& p_name )
 {
-    m_configname = p_name;
 }
-
-void Configurable::GetConfigurableName( dsstring& p_name )
-{
-    p_name = m_configname;
-}
-*/

@@ -448,6 +448,11 @@ ViewportQuad* Pass::GetViewportQuad( void )
     return m_viewportquad;
 }
 
+void Pass::SetSpecificName( const dsstring& p_name )
+{
+    m_name = p_name;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 FinalPass::FinalPass( void )

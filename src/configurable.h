@@ -57,6 +57,8 @@ public:
     virtual void ApplyProperties( void ) = 0;
 
     virtual void GetKeyword( dsstring& p_outkeyword ) = 0;
+
+    virtual void SetSpecificName( const dsstring& p_name );
 };
 
 }

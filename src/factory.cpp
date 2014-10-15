@@ -162,7 +162,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
                 Configurable* config = BuildConfigurableFromText( m_config_keyword, m_config_properties );
                 if( config )
                 {
-                    // register in Configsbase
+                    // register instance in Configsbase
 
                     // check out if an name has been specified for config instance
 
@@ -172,6 +172,12 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
                     }
 
                     ConfigsBase::GetInstance()->RegisterConfigurableInstance( m_config_name, config );
+
+                    // instance Configurable créée et stockée par fichier config resource : lui attribuer le nom specifique
+                    // pour les configurables dont on stocke seulement la description (cf ci dessus, m_store_config_text_only), 
+                    // l'instanciation et l'attribution du nom specifique sont à la charge de l'appli cliente !
+
+                    config->SetSpecificName( m_config_name );
                 }
                 else
                 {
