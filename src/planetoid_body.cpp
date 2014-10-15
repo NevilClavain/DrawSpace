@@ -30,14 +30,14 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Planetoid;
 
 
-DrawSpace::Planetoid::Body::Body( const dsstring& p_name, dsreal p_ray ) : 
-m_name( p_name ),
+DrawSpace::Planetoid::Body::Body( const dsstring& p_scenename, dsreal p_ray ) : 
+m_scenename( p_scenename ),
 m_ray( p_ray * 1000.0 )
 {
     m_world.Initialize();
        
     m_drawable = _DRAWSPACE_NEW_( SphericalLOD::Drawing, SphericalLOD::Drawing );
-    m_drawable->SetName( p_name );
+    m_drawable->SetSceneName( p_scenename );
     m_drawable->SetRenderer( SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
     
     m_orbiter = _DRAWSPACE_NEW_( Orbiter, Orbiter( &m_world, m_drawable ) );
@@ -103,12 +103,12 @@ void DrawSpace::Planetoid::Body::on_camera_event( Scenegraph::CameraEvent p_even
             return;
         }
 
-        dsstring current_camera_name;
-        p_node->GetName( current_camera_name );
+        dsstring current_camera_scenename;
+        p_node->GetSceneName( current_camera_scenename );
 
-        if( m_registered_camerapoints.count( current_camera_name ) > 0 )
+        if( m_registered_camerapoints.count( current_camera_scenename ) > 0 )
         {
-            m_current_camerapoint = current_camera_name;
+            m_current_camerapoint = current_camera_scenename;
 
             for( std::map<dsstring, RegisteredCamera>::iterator it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
             {
@@ -317,7 +317,7 @@ void DrawSpace::Planetoid::Body::RegisterInertBody( const dsstring& p_bodyname, 
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( /*&m_world,*/ NULL ) );
 
-    dsstring final_name = m_name + dsstring( " " ) + p_bodyname;
+    dsstring final_name = m_scenename + dsstring( " " ) + p_bodyname;
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, true ) );
     planet_fragment->SetHotState( false );
 
@@ -344,7 +344,7 @@ void DrawSpace::Planetoid::Body::RegisterIncludedInertBody( const dsstring& p_bo
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( /*&m_world,*/ NULL ) );
 
-    dsstring final_name = m_name + dsstring( " " ) + p_bodyname;
+    dsstring final_name = m_scenename + dsstring( " " ) + p_bodyname;
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, true ) );
     planet_fragment->SetHotState( true );
 
@@ -364,7 +364,7 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
 
-    dsstring final_name = m_name + dsstring( " " ) + p_cameraname;
+    dsstring final_name = m_scenename + dsstring( " " ) + p_cameraname;
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, false ) );
 
     slod_body->Initialize();
@@ -384,8 +384,8 @@ bool DrawSpace::Planetoid::Body::RegisterCameraPoint( CameraPoint* p_camera )
 {
     RegisteredCamera reg_camera;
 
-    dsstring camera_name;
-    p_camera->GetName( camera_name );
+    dsstring camera_scenename;
+    p_camera->GetSceneName( camera_scenename );
 
     reg_camera.camera = p_camera;
 
@@ -425,7 +425,7 @@ bool DrawSpace::Planetoid::Body::RegisterCameraPoint( CameraPoint* p_camera )
                     reg_camera.attached_body = NULL;
                     reg_camera.attached_collider = NULL;
 
-                    create_camera_collisions( camera_name, p_camera, reg_camera );
+                    create_camera_collisions( camera_scenename, p_camera, reg_camera );
 
                     reg_camera.camera->SetRelativeOrbiter( m_orbiter );
                 }
@@ -445,7 +445,7 @@ bool DrawSpace::Planetoid::Body::RegisterCameraPoint( CameraPoint* p_camera )
                     reg_camera.attached_body = NULL;
                     reg_camera.attached_collider = collider;
 
-                    create_camera_collisions( camera_name, p_camera, reg_camera );
+                    create_camera_collisions( camera_scenename, p_camera, reg_camera );
 
                     reg_camera.camera->SetRelativeOrbiter( m_orbiter );                    
                 }
@@ -463,19 +463,19 @@ bool DrawSpace::Planetoid::Body::RegisterCameraPoint( CameraPoint* p_camera )
         reg_camera.type = FREE;
         reg_camera.attached_body = NULL;
 
-        create_camera_collisions( camera_name, p_camera, reg_camera );
+        create_camera_collisions( camera_scenename, p_camera, reg_camera );
     }
 
     ////
 
-    m_registered_camerapoints[camera_name] = reg_camera;
+    m_registered_camerapoints[camera_scenename] = reg_camera;
 
     return true;
 }
 
-void DrawSpace::Planetoid::Body::GetName( dsstring& p_name )
+void DrawSpace::Planetoid::Body::GetSceneName( dsstring& p_name )
 {
-    p_name = m_name;
+    p_name = m_scenename;
 }
 
 void DrawSpace::Planetoid::Body::RegisterCollider( DrawSpace::Dynamics::Collider* p_collider )

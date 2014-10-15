@@ -59,8 +59,8 @@ public:
     
     virtual void        ComputeFinalTransform( Utils::TimeManager& p_timemanager );
     virtual void        SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat );
-    virtual void        GetName( dsstring& p_name );
-    virtual void        SetName( const dsstring& p_name );
+    virtual void        GetSceneName( dsstring& p_name );
+    virtual void        SetSceneName( const dsstring& p_name );
     virtual void        GetSceneWorld( Utils::Matrix& p_mat );    
     virtual void        ComputeLod( void );
     virtual void        ClearLodStepsList( void );

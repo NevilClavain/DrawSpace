@@ -317,10 +317,10 @@ void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
 
         if( m_camera )
         {
-            dsstring camera_name;
+            dsstring camera_scenename;
 
-            m_camera->GetName( camera_name );
-            p_owner->GetCameraHotpoint( camera_name, camera_pos );
+            m_camera->GetSceneName( camera_scenename );
+            p_owner->GetCameraHotpoint( camera_scenename, camera_pos );
             
             inject_hotpoint = true;
         }

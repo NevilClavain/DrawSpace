@@ -78,12 +78,12 @@ void TransformNode::SetLocalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_localtransformation = p_mat;
 }
 
-void TransformNode::GetName( dsstring& p_name )
+void TransformNode::GetSceneName( dsstring& p_name )
 {
     p_name = m_scenename;
 }
 
-void TransformNode::SetName( const dsstring& p_name )
+void TransformNode::SetSceneName( const dsstring& p_name )
 {
     m_scenename = p_name;
 }

@@ -49,7 +49,7 @@ void TransformQueue::ComputeTransformations( TimeManager& p_timemanager )
 bool TransformQueue::add( TransformNode* p_node )
 {
     dsstring name;
-    p_node->GetName( name );
+    p_node->GetSceneName( name );
 
     
     if( "" == name )

@@ -79,7 +79,7 @@ protected:
     dsreal                                                      m_ray;
 
     DrawSpace::Dynamics::World                                  m_world;
-    dsstring                                                    m_name;
+    dsstring                                                    m_scenename;
     DrawSpace::Dynamics::Orbiter*                               m_orbiter;
         
     DrawSpace::SphericalLOD::Drawing*                           m_drawable;
@@ -104,7 +104,7 @@ protected:
 
 public:
     
-    Body( const dsstring& p_name, dsreal p_ray );
+    Body( const dsstring& p_scenename, dsreal p_ray );
     virtual ~Body( void );
 
     DrawSpace::SphericalLOD::Drawing*   GetDrawable( void );
@@ -123,7 +123,7 @@ public:
     void                                RegisterIncludedInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body, const DrawSpace::Utils::Matrix& p_initmat );
     bool                                RegisterCameraPoint( DrawSpace::Dynamics::CameraPoint* p_camera );
 
-    void                                GetName( dsstring& p_name );
+    void                                GetSceneName( dsstring& p_name );
     
     void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
 
