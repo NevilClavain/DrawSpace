@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="dfront2"
+	Name="dfront"
 	ProjectGUID="{4333C933-8F7E-422D-83AA-8CC3C80B4ED0}"
-	RootNamespace="dfront2"
+	RootNamespace="dfront"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;./../../../DrawSpace_thirdparts/wxWidgets-2.8.12/include&quot;;&quot;./../../../DrawSpace_thirdparts/wxWidgets-2.8.12/include/msvc&quot;;./../../src;./../../../DrawSpace_thirdparts/log4cxx/include;&quot;./../../../DrawSpace_thirdparts/bullet-2.82/src&quot;;&quot;./../../../DrawSpace_thirdparts/lua-1.5/include&quot;"
+				AdditionalIncludeDirectories="&quot;./../../../../DrawSpace_thirdparts/wxWidgets-2.8.12/include&quot;;&quot;./../../../../DrawSpace_thirdparts/wxWidgets-2.8.12/include/msvc&quot;;./../../../src;./../../../../DrawSpace_thirdparts/log4cxx/include;&quot;./../../../../DrawSpace_thirdparts/bullet-2.82/src&quot;;&quot;./../../../../DrawSpace_thirdparts/lua-1.5/include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;__WXMSW__;__WXDEBUG__;NOPCH;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,9 +63,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw28d_core.lib wxbase28d.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib wsock32.lib wxpngd.lib wxzlibd.lib wxjpegd.lib wxtiffd.lib drawspace.lib log4cxx.lib BulletDynamics_vs2005_debug.lib BulletCollision_vs2005_debug.lib LinearMath_vs2005_debug.lib lua.lib"
-				OutputFile="./../../../DrawSpace_Samples/bin/dfront.exe"
+				OutputFile="./../../../../DrawSpace_Samples/bin/dfront.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;./../../../DrawSpace_thirdparts/wxWidgets-2.8.12/lib/vc_lib&quot;;./../../libs;./../../../DrawSpace_thirdparts/log4cxx/lib/msvc/release;&quot;./../../../DrawSpace_thirdparts/bullet-2.82/lib&quot;;&quot;./../../../DrawSpace_thirdparts/lua-1.5/lib/Debug&quot;"
+				AdditionalLibraryDirectories="&quot;./../../../../DrawSpace_thirdparts/wxWidgets-2.8.12/lib/vc_lib&quot;;./../../../libs;./../../../../DrawSpace_thirdparts/log4cxx/lib/msvc/release;&quot;./../../../../DrawSpace_thirdparts/bullet-2.82/lib&quot;;&quot;./../../../../DrawSpace_thirdparts/lua-1.5/lib/Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
