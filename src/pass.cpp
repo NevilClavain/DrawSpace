@@ -33,7 +33,8 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 Pass::Pass( void ) : 
-m_viewportquad( NULL )
+m_viewportquad( NULL ),
+m_initialized( false )
 {
     // properties array creation
     //m_properties["configname"].AddPropValue<dsstring>( m_configname );
@@ -414,6 +415,10 @@ void Pass::GetName( dsstring& p_name )
 
 RenderingQueue* Pass::GetRenderingQueue( void )
 {
+    if( !m_initialized )
+    {
+        _DSEXCEPTION( "pass " + m_name + " not initialized (call Initialize() method)" );
+    }
     return m_renderingqueue;
 }
 
@@ -461,18 +466,23 @@ void Pass::GetSpecificName( dsstring& p_name )
 
 FinalPass::FinalPass( void )
 {
-    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue );
 }
 
 FinalPass::FinalPass( const dsstring& p_name )
 {
     m_name = p_name;
-    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue );
 }
 
 FinalPass::~FinalPass( void )
 {	
     _DRAWSPACE_DELETE_( m_renderingqueue );
+}
+
+bool FinalPass::Initialize( void )
+{
+    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue );
+    m_initialized = true;
+    return true;
 }
 
 void FinalPass::DumpProperties( dsstring& p_text )
@@ -501,8 +511,14 @@ void FinalPass::GetKeyword( dsstring& p_outkeyword )
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-IntermediatePass::IntermediatePass( void )
+IntermediatePass::IntermediatePass( void ) :
+m_targetdims_fromrenderer( true ),
+m_targetdims_width( 256 ),
+m_targetdims_height( 256 )
 {
+    init_properties();
+    
+    /*
     //////// creation texture target
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
@@ -517,13 +533,22 @@ IntermediatePass::IntermediatePass( void )
     m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
 
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
+    */
 }
 
 
 
-IntermediatePass::IntermediatePass( const dsstring& p_name )
+IntermediatePass::IntermediatePass( const dsstring& p_name ) :
+m_targetdims_fromrenderer( true ),
+m_targetdims_width( 256 ),
+m_targetdims_height( 256 )
 {
+    init_properties();
+
     m_name = p_name;
+    
+
+    /*
     //////// creation texture target
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
@@ -538,20 +563,7 @@ IntermediatePass::IntermediatePass( const dsstring& p_name )
     m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, renderer_characteristics.width_resol, renderer_characteristics.height_resol ) );
 
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
-}
-
-IntermediatePass::IntermediatePass( const dsstring& p_name, long p_target_width, long p_target_height )
-{
-    m_name = p_name;
-    //////// creation texture target
-
-    if( "" == m_name )
-    {
-        _DSEXCEPTION( "pass name cannot be empty" );
-    }
-
-    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, p_target_width, p_target_height ) );
-    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
+    */
 }
 
 IntermediatePass::~IntermediatePass( void )
@@ -561,9 +573,91 @@ IntermediatePass::~IntermediatePass( void )
 
 }
 
+void IntermediatePass::init_properties( void )
+{
+    m_properties["targetdimsfromrenderer"].AddPropValue<bool>( true );
+    m_properties["targetdims"].AddPropValue<long>( "width", 256 );
+    m_properties["targetdims"].AddPropValue<long>( "height", 256 );
+}
+
+
+void IntermediatePass::SetTargetDimsFromRenderer( bool p_state )
+{
+    m_targetdims_fromrenderer = p_state; 
+}
+
+void IntermediatePass::SetTargetDims( long p_width, long p_height )
+{
+    m_targetdims_width = p_width;
+    m_targetdims_height = p_height;
+}
+
+
+bool IntermediatePass::Initialize( void )
+{
+    long h_resol, w_resol;
+    //////// creation texture target
+    if( "" == m_name )
+    {
+        _DSEXCEPTION( "pass name cannot be empty" );
+    }
+
+    if( m_targetdims_fromrenderer )
+    {
+        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+        DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
+        renderer->GetRenderCharacteristics( renderer_characteristics );
+
+        h_resol = renderer_characteristics.height_resol;
+        w_resol = renderer_characteristics.width_resol;
+
+    }
+    else
+    {
+        h_resol = m_targetdims_height;
+        w_resol = m_targetdims_width;
+    }
+
+    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, w_resol, h_resol ) );
+    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
+
+    m_initialized = true;
+    return true;
+}
+
 Core::Texture* IntermediatePass::GetTargetTexture( void )
 {
     return m_targettexture;
+}
+
+
+bool IntermediatePass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    if( "targetdimsfromrenderer" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+        m_properties["enabledepthclear"].SetPropValue<bool>( ( "true" == p_words[1] ? true : false ) );
+    }
+    else if( "targetdims" == p_words[0] )
+    {
+        if( p_words.size() < 3 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+        m_properties["targetdims"].SetPropValue<long>( "width", (long)StringToInt( p_words[1] ) );
+        m_properties["targetdims"].SetPropValue<long>( "height", (long)StringToInt( p_words[2] ) );        
+    }
+    else
+    {
+        return Pass::on_new_line( p_line, p_line_num, p_words );
+    }
+    return true;
 }
 
 void IntermediatePass::DumpProperties( dsstring& p_text )
@@ -577,7 +671,29 @@ void IntermediatePass::DumpProperties( dsstring& p_text )
 
     Pass::DumpProperties( p_text );
 
+    p_text += "targetdimsfromrenderer ";
+    p_text += ( m_properties["targetdimsfromrenderer"].GetPropValue<bool>() ? "true" : "false" );
+    p_text += "\r\n";
+
+    p_text += "targetdims ";
+
+    IntToString( m_properties["targetdims"].GetPropValue<long>( "width" ), text_value );
+    p_text += text_value;
+    p_text += " ";
+
+    IntToString( m_properties["targetdims"].GetPropValue<long>( "height" ), text_value );
+    p_text += text_value;
+    p_text += " ";
+
     //p_text += "end_config\n";
+}
+
+void IntermediatePass::ApplyProperties( void )
+{
+    SetTargetDimsFromRenderer( m_properties["targetdimsfromrenderer"].GetPropValue<bool>() );
+    SetTargetDims( m_properties["targetdims"].GetPropValue<long>( "width" ), m_properties["targetdims"].GetPropValue<long>( "height" ) );
+
+    Pass::ApplyProperties();
 }
 
 Configurable* IntermediatePass::Instanciate( void )

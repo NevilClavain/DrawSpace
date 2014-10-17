@@ -62,6 +62,8 @@ protected:
 
     dsstring                m_name;
 
+    bool                    m_initialized;
+
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
     // pour empecher l'instanciation
@@ -105,6 +107,8 @@ public:
     FinalPass( const dsstring& p_name );
     virtual ~FinalPass( void );
 
+    bool Initialize( void );
+
     void DumpProperties( dsstring& p_text );
 
     void GetKeyword( dsstring& p_outkeyword );
@@ -117,17 +121,27 @@ class IntermediatePass : public Pass
 protected:
     Core::Texture*          m_targettexture;
 
-    //virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+    bool                    m_targetdims_fromrenderer;
+    long                    m_targetdims_width;
+    long                    m_targetdims_height;
+
+    void init_properties( void );
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     IntermediatePass( void );
     IntermediatePass( const dsstring& p_name );
-    IntermediatePass( const dsstring& p_name, long p_target_width, long p_target_height );
     virtual ~IntermediatePass( void );
 
+    void SetTargetDimsFromRenderer( bool p_state );
+    void SetTargetDims( long p_width, long p_height );
+
+    bool Initialize( void );
+    
     Core::Texture* GetTargetTexture( void );
 
-    void DumpProperties( dsstring& p_text );
+    virtual void DumpProperties( dsstring& p_text );
+    virtual void ApplyProperties( void );
 
     void GetKeyword( dsstring& p_outkeyword );
 

@@ -30,6 +30,7 @@ TextWidget::TextWidget( const dsstring& p_name, long p_virtual_width, long p_vir
 Widget( p_name, p_virtual_width, p_virtual_height, p_parentwidget )
 {	
     m_pass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( m_name + "/pass" ) );
+    m_pass->Initialize();
 
     m_image = _DRAWSPACE_NEW_( Image, Image( m_real_width, m_real_height ) );   
     m_image->SetTexture( m_pass->GetTargetTexture(), 0 );
