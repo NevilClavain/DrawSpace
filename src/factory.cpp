@@ -248,8 +248,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
 
 bool Factory::ExecuteFromTextFile( const dsstring& p_path )
 {
-    m_capture_asset_props = false;
-
+    m_capture_config_props = m_capture_asset_props = false;
     char seps[] = { 0x09, 0x020, 0x00 };
     // run parser
     return Run( p_path, seps );
@@ -269,7 +268,7 @@ bool Factory::ExecuteFromArchiveChunk( const DrawSpace::Utils::Archive& p_arc )
 
 bool Factory::ExecuteFromTextChunk( const dsstring& p_text )
 {
-    m_capture_asset_props = false;
+    m_capture_config_props = m_capture_asset_props = false;
     char seps[] = { 0x09, 0x020, 0x00 };
 
     return RunOnTextChunk( p_text, seps );
