@@ -66,6 +66,8 @@ public:
     void RegisterAssetRegistrationHandler( AssetRegistrationHandler* p_handler );
 
     bool AssetIdExists( const dsstring& p_id );
+
+    void GetAssetsList( std::map<dsstring, DrawSpace::Asset*>& p_list );
 };
 }
 }

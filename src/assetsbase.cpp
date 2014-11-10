@@ -67,3 +67,8 @@ bool AssetsBase::AssetIdExists( const dsstring& p_id )
     }
     return false;
 }
+
+void AssetsBase::GetAssetsList( std::map<dsstring, DrawSpace::Asset*>& p_list )
+{
+    p_list = m_assets;
+}
