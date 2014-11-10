@@ -20,58 +20,24 @@
 *                                                                          
 */
 
-#ifndef _FRAME_H_
-#define _FRAME_H_
+#ifndef __BasicSceneObjectPropertiesDialog__
+#define __BasicSceneObjectPropertiesDialog__
 
-#include <wx/wx.h>
-#include <vector>
-#include <DrawSpace.h>
 
-#include "BasicScenePanel.h"
-#include "BasicSceneObjectsListDialog.h"
-#include "BasicSceneObjectPropertiesDialog.h"
+#include "panel.h"
 
-class RenderFrame : public wxFrame
+class BasicSceneObjectPropertiesDialog : public ObjectPropertiesDialog
 {
-public:
-    static wxString                     m_caption;
-    static wxSize                       m_size;
-
 protected:
-	DECLARE_EVENT_TABLE()
 
-    static RenderFrame*                 m_instance;
-    bool                                m_gl_ready;
-    DrawSpace::Interface::MesheImport*  m_meshe_import;
-
-    BasicScenePanel*                    m_panel;
-    BasicSceneObjectsListDialog*        m_objectslist_dialog;
-    BasicSceneObjectPropertiesDialog*   m_objectproperties_dialog;
-    
-    void                                on_render_frame( void );
-    
-    RenderFrame( void );
+    virtual void OnCloseButtonClicked( wxCommandEvent& event );
 
 public:
-	virtual ~RenderFrame( void );
 
-    static RenderFrame* GetInstance( void )
-    {
-        if( !m_instance )
-        {
-            m_instance = new RenderFrame(); 
-        }
-        return m_instance;
-    }
+    BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title );
+    wxPropertyGrid* GetPropertyGrid( void );
 
-    void SetGlReady( bool p_ready );
-	void OnIdle( wxIdleEvent& p_event );
-	void OnClose( wxCloseEvent& p_event );
-    void SetMesheImport( DrawSpace::Interface::MesheImport* p_import );
-
-    void UpdateAll( void );
 
 };
 
-
-#endif
+#endif // __BasicSceneObjectPropertiesDialog__

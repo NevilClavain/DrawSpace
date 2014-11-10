@@ -24,9 +24,16 @@
 #define _APP_H_
 
 #include <wx/wx.h>
+#include <wx/cmdline.h>
 
 #include "renderframe.h"
 #include "drawspace.h"
+
+static const wxCmdLineEntryDesc cmdLineDesc[] =
+{
+    { wxCMD_LINE_OPTION, "f", "file", "resources description file", wxCMD_LINE_VAL_STRING },
+    { wxCMD_LINE_NONE }
+};
 
 class DFrontApp : public wxApp
 {
@@ -68,6 +75,11 @@ protected:
 
     DrawSpace::Interface::MesheImport*  m_meshe_import;
 
+
+
+    dsstring                            m_resource_filepath;
+ 
+
     bool                                init_renderer( void );
     bool                                load_renderer_plugin( const dsstring& p_file );
 
@@ -77,6 +89,9 @@ public:
 
 	virtual bool OnInit( void );
     virtual int OnExit( void );
+
+    virtual void OnInitCmdLine( wxCmdLineParser& p_parser );
+    virtual bool OnCmdLineParsed( wxCmdLineParser& p_parser );
 
     //virtual int FilterEvent( wxEvent& p_event );
 };

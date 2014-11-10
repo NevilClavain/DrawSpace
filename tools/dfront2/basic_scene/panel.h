@@ -10,26 +10,23 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
-#include <wx/listctrl.h>
+#include <wx/panel.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/string.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/combobox.h>
-#include <wx/radiobut.h>
-#include <wx/statbox.h>
-#include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/listbox.h>
+#include <wx/listctrl.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
+#include <wx/button.h>
+#include <wx/propgrid/propgrid.h>
+#include <wx/propgrid/advprops.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -44,30 +41,60 @@ class Panel : public wxDialog
 	protected:
 		wxNotebook* m_notebook1;
 		wxPanel* m_camerasPanel;
-		wxListCtrl* m_listCtrl1;
-		wxButton* m_deleteCameraButton;
-		wxStaticText* m_staticText1;
-		wxTextCtrl* m_textCtrl1;
-		wxStaticText* m_staticText2;
-		wxComboBox* m_comboBox2;
-		wxStaticText* m_staticText3;
-		wxComboBox* m_comboBox3;
-		wxStaticText* m_staticText4;
-		wxComboBox* m_comboBox4;
-		wxStaticText* m_staticText5;
-		wxRadioButton* m_radioBtn6;
-		wxRadioButton* m_radioBtn7;
-		wxComboBox* m_comboBox6;
-		wxButton* m_button6;
 		wxPanel* m_passesPanel;
-		wxListBox* m_listBox2;
 		wxPanel* m_resourcesPanel;
+		wxListCtrl* m_assets_listCtrl;
+		wxListCtrl* m_configs_listCtrl;
 		wxPanel* m_scenePanel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnAssetsListItemActivated( wxListEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		Panel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Basic_scene commands"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 565,644 ), long style = wxCAPTION ); 
+		Panel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Basic_scene commands"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 565,644 ), long style = 0 ); 
 		~Panel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ObjectsListDialog
+///////////////////////////////////////////////////////////////////////////////
+class ObjectsListDialog : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxListCtrl* m_listCtrl;
+		wxButton* m_button4;
+	
+	public:
+		
+		ObjectsListDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 537,388 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~ObjectsListDialog();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ObjectPropertiesDialog
+///////////////////////////////////////////////////////////////////////////////
+class ObjectPropertiesDialog : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxPropertyGrid* m_propertyGrid;
+		wxButton* m_close_button;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnCloseButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		ObjectPropertiesDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 381,318 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~ObjectPropertiesDialog();
 	
 };
 

@@ -45,6 +45,11 @@ DFrontApp::~DFrontApp( void )
 
 bool DFrontApp::OnInit( void )
 {
+   if( !wxApp::OnInit() )
+   {
+        return false;
+   }
+
     m_w_title = "Basic scene";
 
     DrawSpace::Initialize();
@@ -95,6 +100,20 @@ bool DFrontApp::OnInit( void )
     if( false == parser_status )
     {
         wxMessageBox( wxT("Unable to load appconfig.txt\nBack to default values"), wxT("DrawFront warning"), wxICON_WARNING );
+    }
+
+    bool status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
+    if( status )
+    {
+        m_frame->UpdateAll();
+    }
+    else
+    {
+        dsstring last_error;
+
+        Factory::GetInstance()->GetLastError( last_error );
+        wxMessageBox( last_error.c_str(), wxT("DrawFront parsing error"), wxICON_ERROR );
+        return false;
     }
 
 	return true;
@@ -176,5 +195,21 @@ bool DFrontApp::Config::on_new_line( const dsstring& p_line, long p_line_num, st
             m_renderplugin = p_words[1];
         }
     }
+    return true;
+}
+
+void DFrontApp::OnInitCmdLine( wxCmdLineParser& p_parser )
+{
+    p_parser.SetDesc( cmdLineDesc );
+}
+
+bool DFrontApp::OnCmdLineParsed( wxCmdLineParser& p_parser )
+{
+    wxString path;
+    p_parser.Found( "f", &path );
+
+    wxCharBuffer buffer = path.ToAscii();
+    m_resource_filepath = buffer.data();
+
     return true;
 }

@@ -373,7 +373,11 @@ bool ConsoleDialog::save( void )
         }
         path = saveFileDialog.GetPath();
     }
-    save_textfile( (char *)path.c_str() );
+    //save_textfile( (char *)path.c_str() );
+
+    wxCharBuffer buffer = path.ToAscii();
+    save_textfile( buffer.data() );
+
     return true;
 }
 
@@ -405,7 +409,10 @@ void ConsoleDialog::OnMenuOpen( wxCommandEvent& p_event )
         return;
     }
     wxString path = openFileDialog.GetPath();
-    load_textfile( (char *)path.c_str() );
+    //load_textfile( (char *)path.c_str() );
+
+    wxCharBuffer buffer = path.ToAscii();
+    load_textfile( buffer.data() );
 
     m_title_part2 = path;
     update_title();
@@ -426,7 +433,10 @@ void ConsoleDialog::OnMenuSaveAs( wxCommandEvent& p_event )
         return;
     }
     path = saveFileDialog.GetPath();    
-    save_textfile( (char *)path.c_str() );
+    //save_textfile( (char *)path.c_str() );
+
+    wxCharBuffer buffer = path.ToAscii();
+    save_textfile( buffer.data() );
 }
 
 void ConsoleDialog::OnMenuAbout( wxCommandEvent& p_event )
