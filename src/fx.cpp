@@ -226,7 +226,7 @@ bool Fx::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstr
 
         std::vector<RenderState> renderstates_in = m_properties["renderstates_in"].GetPropValue<std::vector<RenderState>>();
 
-        if( 0 == p_words.size() < 3 )
+        if( p_words.size() < 3 )
         {
             _PARSER_MISSING_ARG__
             return false;            
@@ -267,7 +267,7 @@ bool Fx::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstr
 
         std::vector<RenderState> renderstates_out = m_properties["renderstates_out"].GetPropValue<std::vector<RenderState>>();
 
-        if( 0 == p_words.size() < 3 )
+        if( p_words.size() < 3 )
         {
             _PARSER_MISSING_ARG__
             return false;            

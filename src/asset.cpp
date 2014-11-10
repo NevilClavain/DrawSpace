@@ -33,6 +33,11 @@ Asset::~Asset( void )
 {
 }
 
+void Asset::GetPropertiesMap( PropertiesMap& p_map )
+{
+    p_map = m_properties;
+}
+
 void Asset::SetName( const dsstring& p_name )
 {
     m_assetname = p_name;

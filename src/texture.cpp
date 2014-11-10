@@ -226,14 +226,14 @@ bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
     }
     else if( "rendertarget_size" == p_words[0] )
     {
-        if( p_words.size() < 3 )
+        if( p_words.size() < 5 )
         {
             _PARSER_MISSING_ARG__
             return false;
         }
 
-        m_properties["rendertarget_size"].SetPropValue<unsigned long>( "width", StringToInt( p_words[1] ) );
-        m_properties["rendertarget_size"].SetPropValue<unsigned long>( "height", StringToInt( p_words[2] ) );
+        m_properties["rendertarget_size"].SetPropValue<unsigned long>( "width", StringToInt( p_words[2] ) );
+        m_properties["rendertarget_size"].SetPropValue<unsigned long>( "height", StringToInt( p_words[4] ) );
     }
     else
     {

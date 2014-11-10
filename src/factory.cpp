@@ -56,7 +56,7 @@ DrawSpace::Core::Configurable* Factory::BuildConfigurableFromText( const dsstrin
             dsstring config_parse_error;
             config->GetLastError( config_parse_error );
 
-            m_lasterror = config_parse_error;
+            m_lasterror = dsstring( "Local parsing error for " ) + p_keyword + dsstring( " : " ) + config_parse_error;
             return NULL;
         }
 
@@ -83,7 +83,7 @@ DrawSpace::Asset* Factory::BuildAssetFromText( const dsstring& p_keyword, const 
             dsstring asset_parse_error;
             asset->GetLastError( asset_parse_error );
 
-            m_lasterror = asset_parse_error;
+            m_lasterror = dsstring( "Local parsing error for " ) + p_keyword + dsstring( " : " ) + asset_parse_error;
             return NULL;
         }
 
@@ -214,7 +214,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
                 _PARSER_MISSING_ARG__
                 return false;
             }
-            m_capture_config_props = false;
+            m_capture_config_props = true;
 
             m_config_properties = "";
             m_config_keyword = p_words[1];
@@ -229,7 +229,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
                 _PARSER_MISSING_ARG__
                 return false;
             }
-            m_capture_config_props = false;
+            m_capture_config_props = true;
 
             m_config_properties = "";
             m_config_keyword = p_words[1];
@@ -251,7 +251,8 @@ bool Factory::ExecuteFromTextFile( const dsstring& p_path )
     m_capture_config_props = m_capture_asset_props = false;
     char seps[] = { 0x09, 0x020, 0x00 };
     // run parser
-    return Run( p_path, seps );
+    bool status = Run( p_path, seps );
+    return status;
 }
 
 bool Factory::ExecuteFromBinaryFile( const dsstring& p_path )

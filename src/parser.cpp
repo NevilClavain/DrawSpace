@@ -109,6 +109,7 @@ bool Parser::Run( const dsstring& p_filepath, const dsstring& p_separators )
 
                 if( !on_new_line( line, line_count, words ) )
                 {
+                    status = false;
                     break;
                 }
             }
@@ -139,6 +140,7 @@ bool Parser::RunOnTextChunk( const dsstring& p_text, const dsstring& p_separator
 
         if( !on_new_line( lines[i], line_count, words ) )
         {
+            status = false;
             break;
         }        
     }

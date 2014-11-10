@@ -113,6 +113,8 @@ public:
 
     void GetKeyword( dsstring& p_outkeyword );
 
+    virtual void ApplyProperties( void );
+
     static Configurable* Instanciate( void );
 };
 

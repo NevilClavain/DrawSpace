@@ -36,14 +36,18 @@ public:
     
     typedef Asset* (*InstanciateFunc)( void );
 
+    typedef std::map<dsstring, DrawSpace::Core::PropertyPool> PropertiesMap;
+
 protected:
     dsstring                                                m_assetname;
-    std::map<dsstring, DrawSpace::Core::PropertyPool>       m_properties;
+    PropertiesMap                                           m_properties;
 
 public:
 
     Asset( void );
     virtual ~Asset( void );
+
+    virtual void GetPropertiesMap( PropertiesMap& p_map );
 
     // binary files load/save methods
     virtual void Serialize( Utils::Archive& p_archive ) = 0;

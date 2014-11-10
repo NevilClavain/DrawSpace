@@ -39,6 +39,7 @@ m_initialized( false )
     // properties array creation
     //m_properties["configname"].AddPropValue<dsstring>( m_configname );
 
+    m_properties["passname"].AddPropValue<dsstring>( "" );
     m_properties["enabledepthclear"].AddPropValue<bool>( false );
     m_properties["enabletargetclear"].AddPropValue<bool>( false );
     m_properties["targetclearcolor"].AddPropValue<unsigned char>( "r", 0 );
@@ -82,6 +83,9 @@ void Pass::DumpProperties( dsstring& p_text )
     p_text += "\n";
     */
 
+    p_text += "passname ";
+    p_text += m_properties["passname"].GetPropValue<dsstring>();
+    p_text += "\r\n";
 
     p_text += "enabledepthclear ";
     p_text += ( m_properties["enabledepthclear"].GetPropValue<bool>() ? "true" : "false" );
@@ -178,9 +182,7 @@ bool Pass::ParseProperties( const dsstring& p_text )
 
 
 void Pass::ApplyProperties( void )
-{   
-    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
-
+{      
     bool enabledepthclear = m_properties["enabledepthclear"].GetPropValue<bool>();
     GetRenderingQueue()->EnableDepthClearing( enabledepthclear );
 
@@ -298,6 +300,15 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
         }
         m_properties["enabledepthclear"].SetPropValue<bool>( ( "true" == p_words[1] ? true : false ) );
     }
+    else if( "enabletargetclear" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+        m_properties["enabletargetclear"].SetPropValue<bool>( ( "true" == p_words[1] ? true : false ) );
+    }
     else if( "targetclearcolor" == p_words[0] )
     {
         if( p_words.size() < 4 )
@@ -309,6 +320,16 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
         m_properties["targetclearcolor"].SetPropValue<unsigned char>( "r", (unsigned char)StringToInt( p_words[1] ) );
         m_properties["targetclearcolor"].SetPropValue<unsigned char>( "g", (unsigned char)StringToInt( p_words[2] ) );
         m_properties["targetclearcolor"].SetPropValue<unsigned char>( "b", (unsigned char)StringToInt( p_words[3] ) );
+    }
+    else if( "passname" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["passname"].SetPropValue<dsstring>( p_words[1] );
     }
     else if( "viewportquad" == p_words[0] )
     {
@@ -509,6 +530,14 @@ void FinalPass::GetKeyword( dsstring& p_outkeyword )
     p_outkeyword = FINALPASS_TEXT_KEYWORD;
 }
 
+void FinalPass::ApplyProperties( void )
+{
+    m_name = m_properties["passname"].GetPropValue<dsstring>();
+    Initialize();
+    Pass::ApplyProperties();
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 IntermediatePass::IntermediatePass( void ) :
@@ -693,6 +722,8 @@ void IntermediatePass::ApplyProperties( void )
     SetTargetDimsFromRenderer( m_properties["targetdimsfromrenderer"].GetPropValue<bool>() );
     SetTargetDims( m_properties["targetdims"].GetPropValue<long>( "width" ), m_properties["targetdims"].GetPropValue<long>( "height" ) );
 
+    m_name = m_properties["passname"].GetPropValue<dsstring>();
+    Initialize();
     Pass::ApplyProperties();
 }
 
