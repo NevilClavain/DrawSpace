@@ -20,38 +20,32 @@
 *                                                                          
 */
 
-#ifndef _APP_H_
-#define _APP_H_
-
-#include <wx/wx.h>
-
-#include "console.h"
+#ifndef __BasicSceneMainFrame__
+#define __BasicSceneMainFrame__
 
 
+#include "panel.h"
+#include "drawspace.h"
 
-class DFrontApp : public wxApp
+class BasicSceneMainFrame : public MainFrame
 {
 protected:
 
+    bool                                m_glready;
 
-    ////////////////////////////////////////////////
+    DrawSpace::Utils::TimeManager       m_timer;
 
-    ConsoleDialog*                          m_console;
-
-    std::map<dsstring, dsstring>            m_exeplugins;
+    virtual void OnClose( wxCloseEvent& event );
+    virtual void OnIdle( wxIdleEvent& event );
 
 
 public:
-	DFrontApp( void );
-	virtual ~DFrontApp( void );
+	BasicSceneMainFrame( wxWindow* parent );
 
-	virtual bool OnInit( void );
-    virtual int OnExit( void );
+    void SetGLReady( void );
+
+    void Update( void );
+	
 };
 
-DECLARE_APP( DFrontApp )
-
-
-
-
-#endif
+#endif // __BasicSceneMainFrame__

@@ -20,38 +20,50 @@
 *                                                                          
 */
 
-#ifndef _APP_H_
-#define _APP_H_
+#include "BasicSceneMainFrame.h"
+#include "drawspace.h"
+#include "adapters.h"
 
-#include <wx/wx.h>
-
-#include "console.h"
-
-
-
-class DFrontApp : public wxApp
+BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent ),
+m_glready( false )
 {
-protected:
+
+}
+
+void BasicSceneMainFrame::OnClose( wxCloseEvent& event )
+{
+    Destroy();
+}
+
+void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
+{
+    if( m_glready )
+    {
+
+        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        renderer->ClearScreen( 0, 0, 120 );
 
 
-    ////////////////////////////////////////////////
+        renderer->BeginScreen();
+                 
+        renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
 
-    ConsoleDialog*                          m_console;
+        renderer->EndScreen();
 
-    std::map<dsstring, dsstring>            m_exeplugins;
+        renderer->FlipScreen();
 
+        m_timer.Update();
 
-public:
-	DFrontApp( void );
-	virtual ~DFrontApp( void );
+        event.RequestMore( true );
+    }
+}
 
-	virtual bool OnInit( void );
-    virtual int OnExit( void );
-};
+void BasicSceneMainFrame::SetGLReady( void )
+{
+    m_glready = true;
+}
 
-DECLARE_APP( DFrontApp )
-
-
-
-
-#endif
+void BasicSceneMainFrame::Update( void )
+{
+    AdaptAssetsList( m_assets_listCtrl );
+}

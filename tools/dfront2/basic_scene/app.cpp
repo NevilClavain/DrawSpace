@@ -32,7 +32,6 @@ using namespace DrawSpace::Interface;
 IMPLEMENT_APP( DFrontApp )
 
 DFrontApp::DFrontApp( void ) :
-m_config( 800, 600, false ),
 m_app_ready( false )
 {
 }
@@ -54,26 +53,21 @@ bool DFrontApp::OnInit( void )
 
     DrawSpace::Initialize();
 
-    bool parser_status = m_config.Run( "appconfig.txt", "    " );
+    m_w_width = 500;
+    m_w_height = 300;
+    m_w_fullscreen = false;
+    m_renderplugin = "drawspaced3d9.dll";
 
-    m_w_width = m_config.m_width;
-    m_w_height = m_config.m_height;
-    m_w_fullscreen = m_config.m_fullscreen;
-    m_renderplugin = m_config.m_renderplugin;
+    m_mainframe = new BasicSceneMainFrame( NULL );
+    m_mainframe->Show();
 
-    if( m_w_fullscreen )
-    {
-        wxMessageBox( wxT("Fullscreen mode not allowed. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );
-        return false;
-    }
+    //m_hwnd = (HWND)m_frame->GetHWND();
+    m_hwnd = (HWND)m_mainframe->GetHWND();
 
-    RenderFrame::m_caption = m_w_title;
-    RenderFrame::m_size = wxSize( m_w_width, m_w_height );
-    m_frame = RenderFrame::GetInstance();
+	//m_frame->Show();
 
-    m_hwnd = (HWND)m_frame->GetHWND();
 
-	m_frame->Show();
+
 
     m_app_ready = true;
 
@@ -83,7 +77,7 @@ bool DFrontApp::OnInit( void )
         return false;
     }
     m_meshe_import = DrawSpace::Utils::InstanciateMesheImportFromPlugin( "ac3dmeshe_plugin" );
-    m_frame->SetMesheImport( m_meshe_import );
+    //m_frame->SetMesheImport( m_meshe_import );
 
     if( false == load_renderer_plugin( m_renderplugin ) )
     {
@@ -97,15 +91,12 @@ bool DFrontApp::OnInit( void )
         return false;
     }
 
-    if( false == parser_status )
-    {
-        wxMessageBox( wxT("Unable to load appconfig.txt\nBack to default values"), wxT("DrawFront warning"), wxICON_WARNING );
-    }
-
     bool status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
     if( status )
     {
-        m_frame->UpdateAll();
+        //m_frame->UpdateAll();
+
+        m_mainframe->Update();
     }
     else
     {
@@ -156,45 +147,8 @@ bool DFrontApp::init_renderer( void )
     }
     renderer->SetViewport( true, 0, 0, 0, 0, 0.0f, 1.0f );
 
-    m_frame->SetGlReady( true );
-    return true;
-}
-
-DFrontApp::Config::Config( long p_width, long p_height, bool p_fullscreen ) :
-m_width( p_width ),
-m_height( p_height ),
-m_fullscreen( p_fullscreen )
-{
-}
-
-bool DFrontApp::Config::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    if( 2 == p_words.size() )
-    {
-        if( "width" == p_words[0] )
-        {
-            m_width = atoi( p_words[1].c_str() );
-        }
-        if( "height" == p_words[0] )
-        {
-            m_height = atoi( p_words[1].c_str() );
-        }
-        if( "fullscreen" == p_words[0] )
-        {
-            if( "true" == p_words[1] )
-            {
-                m_fullscreen = true;
-            }
-            else
-            {
-                m_fullscreen = false;
-            }
-        }
-        if( "renderplugin" == p_words[0] )
-        {
-            m_renderplugin = p_words[1];
-        }
-    }
+    //m_frame->SetGlReady( true );
+    m_mainframe->SetGLReady();
     return true;
 }
 

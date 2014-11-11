@@ -27,6 +27,7 @@
 #include <wx/button.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
+#include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -95,6 +96,35 @@ class ObjectPropertiesDialog : public wxDialog
 		
 		ObjectPropertiesDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 381,318 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~ObjectPropertiesDialog();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class MainFrame
+///////////////////////////////////////////////////////////////////////////////
+class MainFrame : public wxFrame 
+{
+	private:
+	
+	protected:
+		wxNotebook* m_notebook2;
+		wxPanel* m_camerasPanel;
+		wxPanel* m_passesPanel;
+		wxPanel* m_resourcesPanel;
+		wxListCtrl* m_assets_listCtrl;
+		wxListCtrl* m_listCtrl5;
+		wxPanel* m_scenePanel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("DFront Basic Scene"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1164,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		
+		~MainFrame();
 	
 };
 

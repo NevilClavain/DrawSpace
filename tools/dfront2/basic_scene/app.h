@@ -28,6 +28,7 @@
 
 #include "renderframe.h"
 #include "drawspace.h"
+#include "BasicSceneMainFrame.h"
 
 static const wxCmdLineEntryDesc cmdLineDesc[] =
 {
@@ -39,22 +40,11 @@ class DFrontApp : public wxApp
 {
 protected:
 
-    class Config : public DrawSpace::Utils::Parser
-    {
-    protected:
-        bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
-    public:
-        long        m_width;
-        long        m_height;
-        bool        m_fullscreen;
-        dsstring    m_renderplugin;
-
-        Config( long p_width, long p_height, bool p_fullscreen );
-    };
 
 
-    RenderFrame*                        m_frame;
+    //RenderFrame*                        m_frame;
+
+    BasicSceneMainFrame*                m_mainframe;
 
     ////////////////////////////////////////////////
 
@@ -65,7 +55,7 @@ protected:
     long                                m_w_height;
     bool                                m_w_fullscreen;
     dsstring                            m_renderplugin;
-    Config                              m_config;
+
     dsstring                            m_w_title;
 
     ////////////////////////////////////////////////

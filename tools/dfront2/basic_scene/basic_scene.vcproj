@@ -196,6 +196,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BasicSceneMainFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BasicSceneMainFrame.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BasicSceneObjectPropertiesDialog.cpp"
 				>
 			</File>
