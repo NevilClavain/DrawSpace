@@ -37,6 +37,7 @@ protected:
 
     virtual void OnClose( wxCloseEvent& event );
     virtual void OnIdle( wxIdleEvent& event );
+    virtual void OnAssetsListItemActivated( wxListEvent& p_event );
 
 
 public:

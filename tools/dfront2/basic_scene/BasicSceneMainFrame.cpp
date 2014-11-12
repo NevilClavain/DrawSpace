@@ -24,6 +24,11 @@
 #include "drawspace.h"
 #include "adapters.h"
 
+#include "BasicSceneObjectPropertiesDialog.h"
+
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+
 BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent ),
 m_glready( false )
 {
@@ -66,4 +71,43 @@ void BasicSceneMainFrame::SetGLReady( void )
 void BasicSceneMainFrame::Update( void )
 {
     AdaptAssetsList( m_assets_listCtrl );
+}
+
+void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+
+    Asset* asset = (Asset*)m_assets_listCtrl->GetItemData( sel_index );
+
+    Texture* texture = dynamic_cast<Texture*>( asset );
+    if( texture )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Textures properties" );
+        AdaptTextureProps( texture, dialog->GetPropertyGrid() );
+        dialog->Show();
+    }
+
+    Shader* shader = dynamic_cast<Shader*>( asset );
+    if( shader )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader properties" );
+        AdaptShaderProps( shader, dialog->GetPropertyGrid() );
+        dialog->Show();
+    }
+
+    Font* font = dynamic_cast<Font*>( asset );
+    if( font )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Font properties" );
+        AdaptFontProps( font, dialog->GetPropertyGrid() );
+        dialog->Show();
+    }
+
+    Meshe* meshe = dynamic_cast<Meshe*>( asset );
+    if( meshe )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Meshe properties" );
+        AdaptMesheProps( meshe, dialog->GetPropertyGrid() );
+        dialog->Show();
+    }
 }

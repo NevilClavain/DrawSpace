@@ -53,9 +53,9 @@ Panel::Panel( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	m_resourcesPanel->SetSizer( bSizer14 );
 	m_resourcesPanel->Layout();
 	bSizer14->Fit( m_resourcesPanel );
-	m_notebook1->AddPage( m_resourcesPanel, wxT("Resources"), false );
+	m_notebook1->AddPage( m_resourcesPanel, wxT("Resources"), true );
 	m_scenePanel = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook1->AddPage( m_scenePanel, wxT("Scene"), true );
+	m_notebook1->AddPage( m_scenePanel, wxT("Scene"), false );
 	
 	bSizer1->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 	
@@ -198,6 +198,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame::OnClose ) );
 	this->Connect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle ) );
+	m_assets_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnAssetsListItemActivated ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -205,5 +206,6 @@ MainFrame::~MainFrame()
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame::OnClose ) );
 	this->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle ) );
+	m_assets_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnAssetsListItemActivated ), NULL, this );
 	
 }
