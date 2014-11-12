@@ -9,7 +9,7 @@ DrawSpace currently rely on some 3rd-parts libraries:
 
 	** DirectX 9 SDK : 	      http://www.microsoft.com/en-us/download/details.aspx?id=6812
 	** log4cxx : 		      http://logging.apache.org/log4cxx/
-	** wxWidgets v2.8.12	      http://www.wxwidgets.org/
+	** wxWidgets v3.0.2	      http://www.wxwidgets.org/
 	** Shiny C/C++/Lua profiler : http://sourceforge.net/projects/shinyprofiler/
         
 	** Bullet physics 2.82 :      http://bulletphysics.org/wordpress/
