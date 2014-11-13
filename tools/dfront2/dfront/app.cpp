@@ -30,7 +30,8 @@ using namespace DrawSpace::Interface;
 
 IMPLEMENT_APP( DFrontApp )
 
-DFrontApp::DFrontApp( void )
+DFrontApp::DFrontApp( void ):
+m_config( this )
 {
 }
 
@@ -45,6 +46,8 @@ bool DFrontApp::OnInit( void )
 
     DrawSpace::Initialize();
 
+    bool parser_status = m_config.Run( "drawfront.cfg", "    " );
+
     m_console = new ConsoleDialog( NULL, "DrawFRONT", m_exeplugins );
 
     m_console->Show();
@@ -54,4 +57,18 @@ bool DFrontApp::OnInit( void )
 int DFrontApp::OnExit( void )
 {
     return 0;
+}
+
+DFrontApp::Config::Config( DFrontApp* p_owner ) :
+m_owner( p_owner )
+{
+}
+
+bool DFrontApp::Config::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    if( "exe_plugin" == p_words[0] && 3 == p_words.size() )
+    {
+        m_owner->m_exeplugins[p_words[1]] = p_words[2];
+    }
+    return true;
 }

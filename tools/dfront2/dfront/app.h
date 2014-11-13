@@ -33,10 +33,23 @@ class DFrontApp : public wxApp
 {
 protected:
 
+    class Config : public DrawSpace::Utils::Parser
+    {
+    protected:
+
+        DFrontApp* m_owner;
+
+        bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
+    public:
+        Config( DFrontApp* p_owner );
+    };
+
 
     ////////////////////////////////////////////////
 
     ConsoleDialog*                          m_console;
+    Config                                  m_config;
 
     std::map<dsstring, dsstring>            m_exeplugins;
 
