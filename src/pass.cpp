@@ -382,7 +382,7 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
 
         viewportquad_textures.push_back( std::pair<long, TextureSourceName>( stage, tsn ) );
 
-        m_properties["m_properties"].SetPropValue<std::vector<std::pair<long, TextureSourceName>>>( viewportquad_textures );
+        m_properties["viewportquad_textures"].SetPropValue<std::vector<std::pair<long, TextureSourceName>>>( viewportquad_textures );
     }
 
     else if( "viewportquad_shaderparams" == p_words[0] )
