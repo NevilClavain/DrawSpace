@@ -175,10 +175,13 @@ void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_p
     p_propertygrid->Append( new wxBoolProperty( "rendertarget", wxPG_LABEL, rendertarget ) );
     //p_propertygrid->DisableProperty( "rendertarget" );
 
-    p_propertygrid->Append( new wxIntProperty( "rendertarget_size/width", wxPG_LABEL, rendetarget_w ) );
-    //p_propertygrid->DisableProperty( "rendertarget_size/width" );
-    p_propertygrid->Append( new wxIntProperty( "rendertarget_size/height", wxPG_LABEL, rendetarget_h ) );
-    //p_propertygrid->DisableProperty( "rendertarget_size/height" );
+    if( rendertarget )
+    {
+        p_propertygrid->Append( new wxIntProperty( "rendertarget_size/width", wxPG_LABEL, rendetarget_w ) );
+        //p_propertygrid->DisableProperty( "rendertarget_size/width" );
+        p_propertygrid->Append( new wxIntProperty( "rendertarget_size/height", wxPG_LABEL, rendetarget_h ) );
+        //p_propertygrid->DisableProperty( "rendertarget_size/height" );
+    }
     
 }
 
@@ -230,5 +233,85 @@ void AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxPropertyGrid* p_propert
 
 void AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid )
 {
+    Configurable::PropertiesMap props;
+    p_fx->GetPropertiesMap( props );
+
+    std::vector<dsstring> shaders_list = props["shaders"].GetPropValue<std::vector<dsstring>>();
+    for( size_t i = 0; i < shaders_list.size(); i++ )
+    {
+        char shader_index[32];
+        sprintf( shader_index, "shader:%d", i );
+        dsstring shader_name = shaders_list[i];
+        p_propertygrid->Append( new wxStringProperty( shader_index, wxPG_LABEL, shader_name.c_str() ) );
+    }
+
+    std::vector<RenderState> rsin_list = props["renderstates_in"].GetPropValue<std::vector<RenderState>>();
+    for( size_t i = 0; i < rsin_list.size(); i++ )
+    {
+        dsstring renderstate_op;
+        dsstring renderstate_arg;
+
+        RenderState rs = rsin_list[i];
+        
+        char rsin_index[32];
+        sprintf( rsin_index, "renderstate_in:%d", i );
+        
+        rs.GetOperationToString( renderstate_op );
+        rs.GetArg( renderstate_arg );
+        dsstring final = renderstate_op + "," + renderstate_arg;
+        p_propertygrid->Append( new wxStringProperty( rsin_index, wxPG_LABEL, final.c_str() ) );
+    }
+
+    std::vector<RenderState> rsout_list = props["renderstates_out"].GetPropValue<std::vector<RenderState>>();
+    for( size_t i = 0; i < rsout_list.size(); i++ )
+    {
+        dsstring renderstate_op;
+        dsstring renderstate_arg;
+
+        RenderState rs = rsout_list[i];
+        
+        char rsout_index[32];
+        sprintf( rsout_index, "renderstate_out:%d", i );
+        
+        rs.GetOperationToString( renderstate_op );
+        rs.GetArg( renderstate_arg );
+        dsstring final = renderstate_op + "," + renderstate_arg;
+        p_propertygrid->Append( new wxStringProperty( rsout_index, wxPG_LABEL, final.c_str() ) );
+    }
+}
+
+void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid )
+{
+    Configurable::PropertiesMap props;
+    p_pass->GetPropertiesMap( props );
+
+    dsstring passname = props["passname"].GetPropValue<dsstring>();
+    p_propertygrid->Append( new wxStringProperty( "passname", wxPG_LABEL, passname.c_str() ) );
+
+    if( p_intermediate_pass )
+    {
+        bool targetdimsfromrenderer = props["targetdimsfromrenderer"].GetPropValue<bool>();
+        long targetdims_width = props["targetdims"].GetPropValue<long>( "width" );
+        long targetdims_height = props["targetdims"].GetPropValue<long>( "height" );
+
+        p_propertygrid->Append( new wxBoolProperty( "targetdimsfromrenderer", wxPG_LABEL, targetdimsfromrenderer ) );
+
+        if( !targetdimsfromrenderer )
+        {
+            p_propertygrid->Append( new wxIntProperty( "targetdims/width", wxPG_LABEL, targetdims_width ) );
+            p_propertygrid->Append( new wxIntProperty( "targetdims/height", wxPG_LABEL, targetdims_height ) );
+        }
+    }
+
+    p_propertygrid->Append( new wxBoolProperty( "enabledepthclear", wxPG_LABEL, props["enabledepthclear"].GetPropValue<bool>() ) );
+    p_propertygrid->Append( new wxBoolProperty( "enabletargetclear", wxPG_LABEL, props["enabletargetclear"].GetPropValue<bool>() ) );
+
+    p_propertygrid->Append( new wxIntProperty( "targetclearcolor/r", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "r" ) ) );
+    p_propertygrid->Append( new wxIntProperty( "targetclearcolor/g", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "g" ) ) );
+    p_propertygrid->Append( new wxIntProperty( "targetclearcolor/b", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "b" ) ) );
+
+    bool viewportquad = props["viewportquad"].GetPropValue<bool>();
+
+    p_propertygrid->Append( new wxBoolProperty( "viewportquad", wxPG_LABEL, viewportquad ) );
 
 }

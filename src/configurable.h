@@ -37,15 +37,17 @@ class Configurable : public DrawSpace::Utils::Parser
 public:
 
     typedef Configurable* (*InstanciateFunc)( void );
+    typedef std::map<dsstring, DrawSpace::Core::PropertyPool> PropertiesMap;
 
 protected:
 
-    //dsstring                                                m_configname;
-    std::map<dsstring, DrawSpace::Core::PropertyPool>       m_properties;
+    PropertiesMap       m_properties;
 
 public:
     Configurable( void );
     virtual ~Configurable( void );
+
+    virtual void GetPropertiesMap( PropertiesMap& p_map );
 
     virtual void Serialize( Utils::Archive& p_archive  ) = 0;
     virtual bool Unserialize( Utils::Archive& p_archive ) = 0;

@@ -36,6 +36,7 @@ void AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_prop
 void AdaptFontProps( DrawSpace::Core::Font* p_font, wxPropertyGrid* p_propertygrid );
 void AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxPropertyGrid* p_propertygrid );
 void AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid );
+void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
 
 
 #endif

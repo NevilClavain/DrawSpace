@@ -115,6 +115,23 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
 
 void BasicSceneMainFrame::OnConfigsListItemActivated( wxListEvent& p_event )
 {
+    long sel_index = p_event.GetIndex();
 
+    Configurable* config = (Configurable*)m_configs_listCtrl->GetItemData( sel_index );
 
+    Fx* fx = dynamic_cast<Fx*>( config );
+    if( fx )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Fx properties" );
+        AdaptFxProps( fx, dialog->GetPropertyGrid() );
+        dialog->Show();
+    }
+
+    IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( config );
+    if( ipass )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Intermediate Pass properties" );
+        AdaptPassProps( true, ipass, dialog->GetPropertyGrid() );
+        dialog->Show();
+    }
 }
