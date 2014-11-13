@@ -30,17 +30,11 @@ using namespace DrawSpace::Utils;
 
 FreeMovement::FreeMovement( void )
 {
-    // properties array creation
-    //m_properties["configname"].AddPropValue<dsstring>( m_configname );
-    m_properties["init_pos"].AddProp<Vector>();
-
 }
 
 FreeMovement::~FreeMovement( void )
 {
-
 }
-
 
 void FreeMovement::Init( const Utils::Vector& p_init_pos )
 {
@@ -163,98 +157,4 @@ void FreeMovement::Compute( Utils::TimeManager& p_timemanager )
 	m_position( 3, 2 ) = z;   
 
     m_result = m_orientation * m_position;
-}
-
-bool FreeMovement::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    /*
-    if( "configname" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else*/ if( "init_pos" == p_words[0] )
-    {
-        if( p_words.size() < 4 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        Vector v;
-        for( long i = 0; i < 3; i++ )
-        {
-            v[i] = StringToReal( p_words[i + 1] );
-        }
-        v[3] = 1.0;
-
-        m_properties["init_pos"].SetPropValue<Vector>( v );
-    }
-
-    return true;
-}
-
-void FreeMovement::Serialize( Utils::Archive& p_archive  )
-{
-
-}
-
-bool FreeMovement::Unserialize( Utils::Archive& p_archive )
-{
-    return true;
-}
-
-void FreeMovement::DumpProperties( dsstring& p_text )
-{
-    dsstring text_value;
-
-    //p_text = "declare_config ";
-    //p_text += dsstring( FREEMVT_TEXT_KEYWORD );
-
-    //p_text += "\n";
-/*
-    p_text += "configname ";
-    p_text += m_properties["configname"].GetPropValue<dsstring>();
-    p_text += "\n";
-*/
-    p_text += "init_pos ";
-    Vector init_pos = m_properties["init_pos"].GetPropValue<Vector>();
-    for( long i = 0; i < 3; i++ )
-    {
-        RealToString( init_pos[i], text_value );
-
-        p_text += text_value;
-        p_text += " ";
-    }
-    p_text += "\r\n";
-
-    //p_text += "end_config\n";
-}
-
-bool FreeMovement::ParseProperties( const dsstring& p_text )
-{
-    char seps[] = { 0x09, 0x020, 0x00 };
-
-    return RunOnTextChunk( p_text, seps );
-}
-
-void FreeMovement::ApplyProperties( void )
-{
-    Init( m_properties["init_pos"].GetPropValue<Vector>() );
-    //m_configname = m_properties["configname"].GetPropValue<dsstring>();
-}
-
-Configurable* FreeMovement::Instanciate( void )
-{
-    return _DRAWSPACE_NEW_( FreeMovement, FreeMovement );
-}
-
-void FreeMovement::GetKeyword( dsstring& p_outkeyword )
-{
-    p_outkeyword = FREEMVT_TEXT_KEYWORD;
 }

@@ -26,17 +26,12 @@
 #include "movement.h"
 #include "inertbody.h"
 #include "timemanager.h"
-#include "configurable.h"
-
-
-#define SPECTATORMVT_TEXT_KEYWORD           "SpectatorMvt"
-#define SPECTATORMVT_ARC_MAGICNUMBER        0x5050
 
 namespace DrawSpace
 {
 namespace Core
 {
-class SpectatorMovement : public Movement, public Configurable
+class SpectatorMovement : public Movement
 {
 protected:
 
@@ -59,8 +54,6 @@ protected:
 
     void on_timer( const dsstring& p_timername );
 
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
 
     SpectatorMovement( void );
@@ -73,20 +66,6 @@ public:
     void SetRefBody( DrawSpace::Dynamics::InertBody* p_refbody );
 
     void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );
-
-
 };
 
 }

@@ -25,16 +25,12 @@
 
 #include "movement.h"
 #include "quaternion.h"
-#include "configurable.h"
-
-#define FREEMVT_TEXT_KEYWORD           "FreeMvt"
-#define FREEMVT_ARC_MAGICNUMBER        0x5046
 
 namespace DrawSpace
 {
 namespace Core
 {
-class FreeMovement : public Movement, public Configurable
+class FreeMovement : public Movement
 {
 protected:
     Utils::Vector           m_local_speed;
@@ -47,8 +43,6 @@ protected:
 	// les sorties
 	Utils::Matrix		    m_position;
 	Utils::Matrix		    m_orientation;
-
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     FreeMovement( void );
@@ -63,19 +57,6 @@ public:
 
     void SetSpeed( dsreal p_speed );
     void Compute( Utils::TimeManager& p_timemanager );
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );
-
-
 };
 }
 }

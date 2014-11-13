@@ -25,17 +25,12 @@
 
 #include "movement.h"
 #include "quaternion.h"
-#include "configurable.h"
-
-#define CIRCULARMVT_TEXT_KEYWORD           "CircularMvt"
-#define CIRCULARMVT_ARC_MAGICNUMBER        0x5044
-
 
 namespace DrawSpace
 {
 namespace Core
 {
-class CircularMovement : public Movement, public Configurable
+class CircularMovement : public Movement
 {
 protected:
 
@@ -57,8 +52,6 @@ protected:
     dsreal                      m_current_theta;
     dsreal                      m_current_phi;
 
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
 
     CircularMovement( void );
@@ -72,20 +65,6 @@ public:
     void SetPhi( dsreal p_phi );
 
     void Reset( void );
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );
-
-
 };
 }
 }

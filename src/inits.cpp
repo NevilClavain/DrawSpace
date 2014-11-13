@@ -31,7 +31,7 @@
 #include "spacebox.h"
 #include "chunk.h"
 #include "inertbody.h"
-#include "circularmovement.h"
+
 #include "fpsmovement.h"
 #include "freemovement.h"
 #include "headmovement.h"
@@ -76,28 +76,6 @@ void DrawSpace::Initialize( void )
 
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( INERTBODY_TEXT_KEYWORD, InertBody::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( INERTBODY_ARC_MAGICNUMBER, InertBody::Instanciate );
-
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( CIRCULARMVT_TEXT_KEYWORD, CircularMovement::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( CIRCULARMVT_ARC_MAGICNUMBER, CircularMovement::Instanciate );
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FPSMVT_TEXT_KEYWORD, FPSMovement::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FPSMVT_ARC_MAGICNUMBER, FPSMovement::Instanciate );
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FREEMVT_TEXT_KEYWORD, FreeMovement::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FREEMVT_ARC_MAGICNUMBER, FreeMovement::Instanciate );
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( HEADMVT_TEXT_KEYWORD, HeadMovement::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( HEADMVT_ARC_MAGICNUMBER, HeadMovement::Instanciate );
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( LINEARMVT_TEXT_KEYWORD, LinearMovement::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( LINEARMVT_ARC_MAGICNUMBER, LinearMovement::Instanciate );
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( LONGLATMVT_TEXT_KEYWORD, LongLatMovement::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( LONGLATMVT_ARC_MAGICNUMBER, LongLatMovement::Instanciate );
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( SPECTATORMVT_TEXT_KEYWORD, SpectatorMovement::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( SPECTATORMVT_ARC_MAGICNUMBER, SpectatorMovement::Instanciate );
 
     RenderState::InitStringMaps();
 }

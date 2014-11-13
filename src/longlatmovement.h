@@ -25,17 +25,12 @@
 
 #include "movement.h"
 #include "quaternion.h"
-#include "configurable.h"
-
-#define LONGLATMVT_TEXT_KEYWORD           "LongLatMvt"
-#define LONGLATMVT_ARC_MAGICNUMBER        0x5049
-
 
 namespace DrawSpace
 {
 namespace Core
 {
-class LongLatMovement : public Movement, public Configurable
+class LongLatMovement : public Movement
 {
 protected:
 
@@ -51,8 +46,6 @@ protected:
 	Utils::Quaternion		    m_qpitch;
     Utils::Quaternion		    m_rot_res;
 
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
 
     LongLatMovement( void );
@@ -63,20 +56,6 @@ public:
 
     void SetTheta( dsreal p_theta );
     void SetPhi( dsreal p_phi );
-
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );
-
 };
 }
 }

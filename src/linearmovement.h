@@ -25,17 +25,12 @@
 
 #include "movement.h"
 #include "quaternion.h"
-#include "configurable.h"
-
-
-#define LINEARMVT_TEXT_KEYWORD           "LinearMvt"
-#define LINEARMVT_ARC_MAGICNUMBER        0x5048
 
 namespace DrawSpace
 {
 namespace Core
 {
-class LinearMovement : public Movement, public Configurable
+class LinearMovement : public Movement
 {
 protected:
 
@@ -53,8 +48,6 @@ protected:
 	Utils::Quaternion		    m_qpitch;
     Utils::Quaternion		    m_rot_res;
 
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
 
     LinearMovement( void );
@@ -70,21 +63,6 @@ public:
     void Reset( void );
 
     dsreal GetTranslationLength( void );
-
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );
-
-
 };
 }
 }

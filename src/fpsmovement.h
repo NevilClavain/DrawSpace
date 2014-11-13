@@ -25,17 +25,12 @@
 
 #include "movement.h"
 #include "quaternion.h"
-#include "configurable.h"
-
-#define FPSMVT_TEXT_KEYWORD           "FpsMvt"
-#define FPSMVT_ARC_MAGICNUMBER        0x5045
-
 
 namespace DrawSpace
 {
 namespace Core
 {
-class FPSMovement : public Movement, public Configurable
+class FPSMovement : public Movement
 {
 protected:
     Utils::Vector           m_local_speed;
@@ -56,8 +51,6 @@ protected:
 
     bool                    m_ymvt;
 
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
 
     FPSMovement( bool p_ymvt = false );
@@ -71,20 +64,6 @@ public:
 
     void SetSpeed( dsreal p_speed );
     void Compute( Utils::TimeManager& p_timemanager /*, bool p_ymvt = false */ );
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );
-
-
 };
 }
 }
