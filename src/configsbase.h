@@ -44,8 +44,6 @@ protected:
     std::map<dsstring, DrawSpace::Core::Configurable*>      m_configurables_instances;
     ConfigurableInstanceRegistrationHandler*                m_configinstancereg_handler;
 
-    std::map<dsstring, std::pair<dsstring, dsstring>>       m_configurables_text;
-
     ConfigsBase( void );
 
 public:
@@ -66,17 +64,11 @@ public:
 
     void RegisterConfigurableInstance( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf );
     DrawSpace::Core::Configurable* GetConfigurableInstance( const dsstring& p_id );
-
-    void RegisterConfigurableTextDescription( const dsstring& p_id, const dsstring& p_keyword, const dsstring& p_text );
-    void GetConfigurableText( const dsstring& p_id, dsstring& p_outkeyword, dsstring& p_outtext );
-
     
     bool ConfigurableInstanceExists( const dsstring& p_id );
 
-    bool ConfigurableTextExists( const dsstring& p_id );
-
     void GetConfigsInstancesList( std::map<dsstring, DrawSpace::Core::Configurable*>& p_list );
-    void GetConfigsTextList( std::map<dsstring, std::pair<dsstring, dsstring>>& p_list );
+
     
 };
 }

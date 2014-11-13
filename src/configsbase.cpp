@@ -58,35 +58,10 @@ void ConfigsBase::RegisterConfigurableInstanceRegistrationHandler( ConfigurableI
     m_configinstancereg_handler = p_handler;
 }
 
-void ConfigsBase::RegisterConfigurableTextDescription( const dsstring& p_id, const dsstring& p_keyword, const dsstring& p_text )
-{
-    std::pair<dsstring, dsstring> descr( p_keyword, p_text );
-    m_configurables_text[p_id] = descr;
-}
-
-void ConfigsBase::GetConfigurableText( const dsstring& p_id, dsstring& p_outkeyword, dsstring& p_outtext )
-{
-    if( m_configurables_text.count( p_id ) > 0 )
-    {
-        std::pair<dsstring, dsstring> descr = m_configurables_text[p_id];
-
-        p_outtext = descr.second;
-        p_outkeyword = descr.first;
-    }
-}
 
 bool ConfigsBase::ConfigurableInstanceExists( const dsstring& p_id )
 {
     if( m_configurables_instances.count( p_id ) > 0 )
-    {
-        return true;
-    }
-    return false;
-}
-
-bool ConfigsBase::ConfigurableTextExists( const dsstring& p_id )
-{
-    if( m_configurables_text.count( p_id ) > 0 )
     {
         return true;
     }
@@ -98,7 +73,3 @@ void ConfigsBase::GetConfigsInstancesList( std::map<dsstring, DrawSpace::Core::C
     p_list = m_configurables_instances;
 }
 
-void ConfigsBase::GetConfigsTextList( std::map<dsstring, std::pair<dsstring, dsstring>>& p_list )
-{
-    p_list = m_configurables_text;
-}

@@ -60,11 +60,7 @@ protected:
 
     bool                                                    m_capture_asset_props;
     bool                                                    m_capture_config_props;
-
-    bool                                                    m_store_config_text_only;
-    
-    
-
+   
     static Factory* m_instance;
 
     Factory( void );

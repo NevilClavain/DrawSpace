@@ -108,20 +108,13 @@ void AdaptConfigsList( wxListCtrl* p_listctrl )
     col1.SetWidth( 100 );
     p_listctrl->InsertColumn( 1, col1 );
 
-
-    wxListItem col2;
-    col2.SetId( 2 );
-    col2.SetText( "Mode" );
-    col2.SetWidth( 70 );
-    p_listctrl->InsertColumn( 2, col2 );
-
     ///
 
     std::map<dsstring, DrawSpace::Core::Configurable*> instances_list;
     std::map<dsstring, std::pair<dsstring, dsstring>> texts_list;
 
     ConfigsBase::GetInstance()->GetConfigsInstancesList( instances_list );
-    ConfigsBase::GetInstance()->GetConfigsTextList( texts_list );
+
 
     long id = 0;
     for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = instances_list.begin(); it != instances_list.end(); ++it )
@@ -148,47 +141,17 @@ void AdaptConfigsList( wxListCtrl* p_listctrl )
         {
             type_name = FINALPASS_TEXT_KEYWORD;
         }
-        else if( dynamic_cast<Spacebox*>( it->second ) )
-        {
-            type_name = SPACEBOX_TEXT_KEYWORD;
-        }
-        else if( dynamic_cast<Chunk*>( it->second ) )
-        {
-            type_name = CHUNK_TEXT_KEYWORD;
-        }
-        else if( dynamic_cast<InertBody*>( it->second ) )
-        {
-            type_name = INERTBODY_TEXT_KEYWORD;
-        }
         else
         {
             type_name = "???";
         }
 
         p_listctrl->SetItem( id, 1, type_name.c_str() );
-        p_listctrl->SetItem( id, 2, "Instance" );
-
         p_listctrl->SetItemData( id, (long)it->second );
         
         id++;
     }
 
-    for( std::map<dsstring, std::pair<dsstring, dsstring>>::iterator it = texts_list.begin(); it != texts_list.end(); ++it )
-    {
-        wxListItem item;
-        item.SetId( id );
-
-        dsstring configname = it->first;
-        item.SetText( configname.c_str() );
-        p_listctrl->InsertItem( item );
-
-        dsstring type_name = it->second.first;
-
-        p_listctrl->SetItem( id, 1, type_name.c_str() );
-        p_listctrl->SetItem( id, 2, "Description" );
-
-        id++;
-    }
 }
 
 void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid )

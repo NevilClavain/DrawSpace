@@ -68,14 +68,5 @@ void DrawSpace::Initialize( void )
     Factory::GetInstance()->RegisterConfigInstanciationFuncByText( FINALPASS_TEXT_KEYWORD, FinalPass::Instanciate );
     Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( FINALPASS_ARC_MAGICNUMBER, FinalPass::Instanciate );
 
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( SPACEBOX_TEXT_KEYWORD, Spacebox::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( SPACEBOX_ARC_MAGICNUMBER, Spacebox::Instanciate );
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( CHUNK_TEXT_KEYWORD, Chunk::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( CHUNK_ARC_MAGICNUMBER, Chunk::Instanciate );
-
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByText( INERTBODY_TEXT_KEYWORD, InertBody::Instanciate );
-    Factory::GetInstance()->RegisterConfigInstanciationFuncByArc( INERTBODY_ARC_MAGICNUMBER, InertBody::Instanciate );
-
     RenderState::InitStringMaps();
 }

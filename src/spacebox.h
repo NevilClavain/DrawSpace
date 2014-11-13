@@ -26,15 +26,11 @@
 #include "transformnode.h"
 #include "scenegraph.h"
 #include "renderer.h"
-#include "configurable.h"
-
-#define SPACEBOX_TEXT_KEYWORD           "Spacebox"
-#define SPACEBOX_ARC_MAGICNUMBER        0x6040
 
 
 namespace DrawSpace
 {
-class Spacebox : public Core::TransformNode, public Core::Configurable
+class Spacebox : public Core::TransformNode
 {
 public:
 
@@ -70,8 +66,6 @@ protected:
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
     Spacebox( void );
     virtual ~Spacebox( void );
@@ -83,18 +77,6 @@ public:
 
     void RegisterPassSlot( const dsstring p_passname );
     DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_quadid );
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );
     
 };
 }

@@ -144,47 +144,30 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
         if( DECLARE_END_CONFIG_KEYWORD == p_words[0] )
         {
             m_capture_config_props = false;
-            if( m_store_config_text_only )
+
+            Configurable* config = BuildConfigurableFromText( m_config_keyword, m_config_properties );
+            if( config )
             {
-                // register text in Configsbase
+                // register instance in Configsbase
 
-                // check out if an name has been specified for config text
+                // check out if an name has been specified for config instance
 
-                if( ConfigsBase::GetInstance()->ConfigurableTextExists( m_config_name ) )
+                if( ConfigsBase::GetInstance()->ConfigurableInstanceExists( m_config_name ) )
                 {
-                    _DSEXCEPTION( "config text with same id already registered in ConfigsBase" );
+                    _DSEXCEPTION( "config instance with same id already registered in ConfigsBase" );
                 }
 
-                ConfigsBase::GetInstance()->RegisterConfigurableTextDescription( m_config_name, m_config_keyword, m_config_properties );
+                ConfigsBase::GetInstance()->RegisterConfigurableInstance( m_config_name, config );
+
+                // instance Configurable créée et stockée par fichier config resource : lui attribuer le nom specifique
+                config->SetSpecificName( m_config_name );
             }
             else
             {
-                Configurable* config = BuildConfigurableFromText( m_config_keyword, m_config_properties );
-                if( config )
-                {
-                    // register instance in Configsbase
-
-                    // check out if an name has been specified for config instance
-
-                    if( ConfigsBase::GetInstance()->ConfigurableInstanceExists( m_config_name ) )
-                    {
-                        _DSEXCEPTION( "config instance with same id already registered in ConfigsBase" );
-                    }
-
-                    ConfigsBase::GetInstance()->RegisterConfigurableInstance( m_config_name, config );
-
-                    // instance Configurable créée et stockée par fichier config resource : lui attribuer le nom specifique
-                    // pour les configurables dont on stocke seulement la description (cf ci dessus, m_store_config_text_only), 
-                    // l'instanciation et l'attribution du nom specifique sont à la charge de l'appli cliente !
-
-                    config->SetSpecificName( m_config_name );
-                }
-                else
-                {
-                    // m_last_error deja positionne dans BuildConfigurableFromText()
-                    return false;
-                }
+                // m_last_error deja positionne dans BuildConfigurableFromText()
+                return false;
             }
+
         }
         else
         {
@@ -220,22 +203,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             m_config_keyword = p_words[1];
             m_config_name = p_words[2];
 
-            m_store_config_text_only = false; 
-        }
-        else if( DECLARE_CONFIG_KEYWORD == p_words[0] )
-        {
-            if( p_words.size() < 3 )
-            {
-                _PARSER_MISSING_ARG__
-                return false;
-            }
-            m_capture_config_props = true;
 
-            m_config_properties = "";
-            m_config_keyword = p_words[1];
-            m_config_name = p_words[2];
-
-            m_store_config_text_only = true;
         }
         else
         {

@@ -26,18 +26,13 @@
 #include "body.h"
 #include "vector.h"
 #include "matrix.h"
-#include "configurable.h"
-
-
-#define INERTBODY_TEXT_KEYWORD           "InertBody"
-#define INERTBODY_ARC_MAGICNUMBER        0x6042
 
 
 namespace DrawSpace
 {
 namespace Dynamics
 {
-class InertBody : public Body, public Core::Configurable
+class InertBody : public Body
 {
 protected:
 
@@ -75,8 +70,6 @@ protected:
 
     void init( void );
     void init_body( void );
-
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
 
@@ -119,20 +112,6 @@ public:
 
     DrawSpace::Core::TransformNode* GetDrawable( void );
     void SetDrawable( DrawSpace::Core::TransformNode* p_drawable );
-
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );    
-
 };
 }
 }
