@@ -25,8 +25,6 @@
 
 #include <wx/wx.h>
 #include <wx/cmdline.h>
-
-#include "renderframe.h"
 #include "drawspace.h"
 #include "BasicSceneMainFrame.h"
 

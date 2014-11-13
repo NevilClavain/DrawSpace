@@ -220,27 +220,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BasicScenePanel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BasicScenePanel.h"
-				>
-			</File>
-			<File
 				RelativePath=".\panel.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\panel.h"
-				>
-			</File>
-			<File
-				RelativePath=".\renderframe.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\renderframe.h"
 				>
 			</File>
 		</Filter>

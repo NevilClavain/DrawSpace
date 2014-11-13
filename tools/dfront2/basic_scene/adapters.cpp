@@ -23,6 +23,7 @@
 #include "adapters.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Core;
 
 void AdaptAssetsList( wxListCtrl* p_listctrl )
@@ -35,7 +36,7 @@ void AdaptAssetsList( wxListCtrl* p_listctrl )
     p_listctrl->InsertColumn( 0, col0 );
 
     wxListItem col1;
-    col1.SetId( 0 );
+    col1.SetId( 1 );
     col1.SetText( "Type" );
     col1.SetWidth( 150 );
     p_listctrl->InsertColumn( 1, col1 );
@@ -90,6 +91,104 @@ void AdaptAssetsList( wxListCtrl* p_listctrl )
         id++;
             
     }   
+}
+
+void AdaptConfigsList( wxListCtrl* p_listctrl )
+{
+    // columns creations   
+    wxListItem col0;
+    col0.SetId( 0 );
+    col0.SetText( "Name" );
+    col0.SetWidth( 110 );
+    p_listctrl->InsertColumn( 0, col0 );
+
+    wxListItem col1;
+    col1.SetId( 1 );
+    col1.SetText( "Type" );
+    col1.SetWidth( 100 );
+    p_listctrl->InsertColumn( 1, col1 );
+
+
+    wxListItem col2;
+    col2.SetId( 2 );
+    col2.SetText( "Mode" );
+    col2.SetWidth( 70 );
+    p_listctrl->InsertColumn( 2, col2 );
+
+    ///
+
+    std::map<dsstring, DrawSpace::Core::Configurable*> instances_list;
+    std::map<dsstring, std::pair<dsstring, dsstring>> texts_list;
+
+    ConfigsBase::GetInstance()->GetConfigsInstancesList( instances_list );
+    ConfigsBase::GetInstance()->GetConfigsTextList( texts_list );
+
+    long id = 0;
+    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = instances_list.begin(); it != instances_list.end(); ++it )
+    {
+        wxListItem item;
+        item.SetId( id );
+
+        dsstring configname = it->first;
+        item.SetText( configname.c_str() );
+        p_listctrl->InsertItem( item );
+
+
+        dsstring type_name;
+
+        if( dynamic_cast<Fx*>( it->second ) )
+        {
+            type_name = FX_TEXT_KEYWORD;
+        }
+        else if( dynamic_cast<IntermediatePass*>( it->second ) )
+        {
+            type_name = INTERMEDIATEPASS_TEXT_KEYWORD;
+        }
+        else if( dynamic_cast<FinalPass*>( it->second ) )
+        {
+            type_name = FINALPASS_TEXT_KEYWORD;
+        }
+        else if( dynamic_cast<Spacebox*>( it->second ) )
+        {
+            type_name = SPACEBOX_TEXT_KEYWORD;
+        }
+        else if( dynamic_cast<Chunk*>( it->second ) )
+        {
+            type_name = CHUNK_TEXT_KEYWORD;
+        }
+        else if( dynamic_cast<InertBody*>( it->second ) )
+        {
+            type_name = INERTBODY_TEXT_KEYWORD;
+        }
+        else
+        {
+            type_name = "???";
+        }
+
+        p_listctrl->SetItem( id, 1, type_name.c_str() );
+        p_listctrl->SetItem( id, 2, "Instance" );
+
+        p_listctrl->SetItemData( id, (long)it->second );
+        
+        id++;
+    }
+
+    for( std::map<dsstring, std::pair<dsstring, dsstring>>::iterator it = texts_list.begin(); it != texts_list.end(); ++it )
+    {
+        wxListItem item;
+        item.SetId( id );
+
+        dsstring configname = it->first;
+        item.SetText( configname.c_str() );
+        p_listctrl->InsertItem( item );
+
+        dsstring type_name = it->second.first;
+
+        p_listctrl->SetItem( id, 1, type_name.c_str() );
+        p_listctrl->SetItem( id, 2, "Description" );
+
+        id++;
+    }
 }
 
 void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid )
@@ -164,4 +263,9 @@ void AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxPropertyGrid* p_propert
     p_propertygrid->Append( new wxStringProperty( "filepath", wxPG_LABEL, filepath.c_str() ) );
     p_propertygrid->Append( new wxIntProperty( "index", wxPG_LABEL, index ) );
     p_propertygrid->Append( new wxStringProperty( "plugin", wxPG_LABEL, plugin.c_str() ) );      
+}
+
+void AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid )
+{
+
 }

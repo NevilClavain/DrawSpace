@@ -71,6 +71,7 @@ void BasicSceneMainFrame::SetGLReady( void )
 void BasicSceneMainFrame::Update( void )
 {
     AdaptAssetsList( m_assets_listCtrl );
+    AdaptConfigsList( m_configs_listCtrl );
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -110,4 +111,10 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
         AdaptMesheProps( meshe, dialog->GetPropertyGrid() );
         dialog->Show();
     }
+}
+
+void BasicSceneMainFrame::OnConfigsListItemActivated( wxListEvent& p_event )
+{
+
+
 }
