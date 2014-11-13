@@ -74,6 +74,10 @@ public:
     bool ConfigurableInstanceExists( const dsstring& p_id );
 
     bool ConfigurableTextExists( const dsstring& p_id );
+
+    void GetConfigsInstancesList( std::map<dsstring, DrawSpace::Core::Configurable*>& p_list );
+    void GetConfigsTextList( std::map<dsstring, std::pair<dsstring, dsstring>>& p_list );
+    
 };
 }
 }

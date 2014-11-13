@@ -92,3 +92,13 @@ bool ConfigsBase::ConfigurableTextExists( const dsstring& p_id )
     }
     return false;
 }
+
+void ConfigsBase::GetConfigsInstancesList( std::map<dsstring, DrawSpace::Core::Configurable*>& p_list )
+{
+    p_list = m_configurables_instances;
+}
+
+void ConfigsBase::GetConfigsTextList( std::map<dsstring, std::pair<dsstring, dsstring>>& p_list )
+{
+    p_list = m_configurables_text;
+}
