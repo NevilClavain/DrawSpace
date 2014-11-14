@@ -39,6 +39,9 @@ protected:
     virtual void OnIdle( wxIdleEvent& event );
     virtual void OnAssetsListItemActivated( wxListEvent& p_event );
     virtual void OnConfigsListItemActivated( wxListEvent& p_event );
+    virtual void OnPassesListItemActivated( wxListEvent& p_event );
+    virtual void OnPassesListItemSelected( wxListEvent& p_event );
+    virtual void OnShadersListItemActivated( wxListEvent& p_event );
 
 
 public:

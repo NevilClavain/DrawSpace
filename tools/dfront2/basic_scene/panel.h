@@ -60,9 +60,11 @@ class ObjectPropertiesDialog : public wxDialog
 	protected:
 		wxPropertyGrid* m_propertyGrid;
 		wxButton* m_close_button;
+		wxButton* m_apply_button;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnApplyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -83,6 +85,8 @@ class MainFrame : public wxFrame
 		wxNotebook* m_notebook2;
 		wxPanel* m_camerasPanel;
 		wxPanel* m_passesPanel;
+		wxListCtrl* m_passes_listCtrl;
+		wxListCtrl* m_shadersparams_listCtrl;
 		wxPanel* m_resourcesPanel;
 		wxListCtrl* m_assets_listCtrl;
 		wxListCtrl* m_configs_listCtrl;
@@ -91,6 +95,9 @@ class MainFrame : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
+		virtual void OnPassesListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnPassesListItemSelected( wxListEvent& event ) { event.Skip(); }
+		virtual void OnShadersListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnAssetsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnConfigsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		

@@ -22,10 +22,14 @@
 
 #include "BasicSceneObjectPropertiesDialog.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+
 BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title )
-:
-ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 381,318 ) )
+: ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 381,318 ) ),
+m_applybutton_handler( NULL )
 {
+    m_apply_button->Show( false );
 }
 
 wxPropertyGrid* BasicSceneObjectPropertiesDialog::GetPropertyGrid( void )
@@ -36,4 +40,24 @@ wxPropertyGrid* BasicSceneObjectPropertiesDialog::GetPropertyGrid( void )
 void BasicSceneObjectPropertiesDialog::OnCloseButtonClicked( wxCommandEvent& event )
 {
     Close();
+}
+
+void BasicSceneObjectPropertiesDialog::OnApplyButtonClicked( wxCommandEvent& event )
+{
+    if( m_applybutton_handler )
+    {
+        (*m_applybutton_handler)( m_propertyGrid );
+    }
+
+    Close();
+}
+
+void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )
+{
+    m_apply_button->Show( true );
+}
+
+void BasicSceneObjectPropertiesDialog::RegisterApplyButtonHandler( BaseCallback<void, wxPropertyGrid*>* p_handler )
+{
+    m_applybutton_handler = p_handler;
 }

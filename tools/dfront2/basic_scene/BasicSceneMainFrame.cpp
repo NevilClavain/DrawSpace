@@ -70,8 +70,9 @@ void BasicSceneMainFrame::SetGLReady( void )
 
 void BasicSceneMainFrame::Update( void )
 {
-    AdaptAssetsList( m_assets_listCtrl );
-    AdaptConfigsList( m_configs_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptAssetsList( m_assets_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptConfigsList( m_configs_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -84,7 +85,7 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
     if( texture )
     {
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Textures properties" );
-        AdaptTextureProps( texture, dialog->GetPropertyGrid() );
+        wxWidgetAdapter::GetInstance()->AdaptTextureProps( texture, dialog->GetPropertyGrid() );
         dialog->Show();
     }
 
@@ -92,7 +93,7 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
     if( shader )
     {
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader properties" );
-        AdaptShaderProps( shader, dialog->GetPropertyGrid() );
+        wxWidgetAdapter::GetInstance()->AdaptShaderProps( shader, dialog->GetPropertyGrid() );
         dialog->Show();
     }
 
@@ -100,7 +101,7 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
     if( font )
     {
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Font properties" );
-        AdaptFontProps( font, dialog->GetPropertyGrid() );
+        wxWidgetAdapter::GetInstance()->AdaptFontProps( font, dialog->GetPropertyGrid() );
         dialog->Show();
     }
 
@@ -108,7 +109,7 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
     if( meshe )
     {
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Meshe properties" );
-        AdaptMesheProps( meshe, dialog->GetPropertyGrid() );
+        wxWidgetAdapter::GetInstance()->AdaptMesheProps( meshe, dialog->GetPropertyGrid() );
         dialog->Show();
     }
 }
@@ -123,7 +124,7 @@ void BasicSceneMainFrame::OnConfigsListItemActivated( wxListEvent& p_event )
     if( fx )
     {
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Fx properties" );
-        AdaptFxProps( fx, dialog->GetPropertyGrid() );
+        wxWidgetAdapter::GetInstance()->AdaptFxProps( fx, dialog->GetPropertyGrid() );
         dialog->Show();
     }
 
@@ -131,7 +132,64 @@ void BasicSceneMainFrame::OnConfigsListItemActivated( wxListEvent& p_event )
     if( ipass )
     {
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Intermediate Pass properties" );
-        AdaptPassProps( true, ipass, dialog->GetPropertyGrid() );
+        wxWidgetAdapter::GetInstance()->AdaptPassProps( true, ipass, dialog->GetPropertyGrid() );
         dialog->Show();
     }
+
+    FinalPass* fpass = dynamic_cast<FinalPass*>( config );
+    if( fpass )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Final Pass properties" );
+        wxWidgetAdapter::GetInstance()->AdaptPassProps( false, fpass, dialog->GetPropertyGrid() );
+        dialog->Show();
+
+    }
+}
+
+void BasicSceneMainFrame::OnPassesListItemActivated( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+
+    Configurable* config = (Configurable*)m_passes_listCtrl->GetItemData( sel_index );
+
+    IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( config );
+    if( ipass )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Intermediate Pass properties" );
+        wxWidgetAdapter::GetInstance()->AdaptPassProps( true, ipass, dialog->GetPropertyGrid() );
+        dialog->Show();
+    }
+
+    FinalPass* fpass = dynamic_cast<FinalPass*>( config );
+    if( fpass )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Final Pass properties" );
+        wxWidgetAdapter::GetInstance()->AdaptPassProps( false, fpass, dialog->GetPropertyGrid() );
+        dialog->Show();
+
+    }
+}
+
+void BasicSceneMainFrame::OnPassesListItemSelected( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+    Configurable* config = (Configurable*)m_passes_listCtrl->GetItemData( sel_index );
+
+    wxWidgetAdapter::GetInstance()->AdaptPassesShaderParamsList( static_cast<Pass*>( config ), m_shadersparams_listCtrl );
+}
+
+void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+    Pass* pass = (Pass*)m_shadersparams_listCtrl->GetItemData( sel_index );
+
+    wxString shader_name = m_shadersparams_listCtrl->GetItemText( sel_index );
+
+    wxCharBuffer buffer = shader_name.ToAscii();
+
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader parameter values" );
+
+    wxWidgetAdapter::GetInstance()->AdaptPassShaderValuesProps( pass, buffer.data(), dialog );
+    dialog->EnableApplyButton();
+    dialog->Show();
 }

@@ -25,19 +25,24 @@
 
 
 #include "panel.h"
+#include "drawspace.h"
 
 class BasicSceneObjectPropertiesDialog : public ObjectPropertiesDialog
 {
 protected:
 
     virtual void OnCloseButtonClicked( wxCommandEvent& event );
+    virtual void OnApplyButtonClicked( wxCommandEvent& event );
+
+    DrawSpace::Core::BaseCallback<void, wxPropertyGrid*>*     m_applybutton_handler;
 
 public:
 
     BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title );
     wxPropertyGrid* GetPropertyGrid( void );
 
-
+    void EnableApplyButton( void );
+    void RegisterApplyButtonHandler( DrawSpace::Core::BaseCallback<void, wxPropertyGrid*>* p_handler );
 };
 
 #endif // __BasicSceneObjectPropertiesDialog__

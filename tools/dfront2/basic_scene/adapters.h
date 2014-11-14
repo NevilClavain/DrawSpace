@@ -27,16 +27,49 @@
 #include <wx/listctrl.h>
 #include <wx/propgrid/propgrid.h>
 #include "drawspace.h"
+#include "BasicSceneObjectPropertiesDialog.h"
 
-void AdaptAssetsList( wxListCtrl* p_listctrl );
-void AdaptConfigsList( wxListCtrl* p_listctrl );
+class wxWidgetAdapter
+{
+protected:
 
-void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );
-void AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_propertygrid );
-void AdaptFontProps( DrawSpace::Core::Font* p_font, wxPropertyGrid* p_propertygrid );
-void AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxPropertyGrid* p_propertygrid );
-void AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid );
-void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
+    static wxWidgetAdapter* m_instance;
+
+    wxWidgetAdapter( void );
+
+
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, wxPropertyGrid*>* m_applypassshadervalues_callback;
+
+
+    void on_applypassshadervalues( wxPropertyGrid* p_propertygrid );
+
+public:
+
+    ~wxWidgetAdapter( void );
+
+    static wxWidgetAdapter* GetInstance( void )
+    {
+        if( !m_instance )
+        {
+            m_instance = new wxWidgetAdapter;
+        }
+        return m_instance;
+    }
+
+    void AdaptAssetsList( wxListCtrl* p_listctrl );
+    void AdaptConfigsList( wxListCtrl* p_listctrl );
+    void AdaptPassesList( wxListCtrl* p_listctrl );
+    void AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxListCtrl* p_listctrl );
+
+    void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );
+    void AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_propertygrid );
+    void AdaptFontProps( DrawSpace::Core::Font* p_font, wxPropertyGrid* p_propertygrid );
+    void AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxPropertyGrid* p_propertygrid );
+    void AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid );
+    void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
+    void AdaptPassShaderValuesProps( DrawSpace::Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog );
+
+};
 
 
 #endif
