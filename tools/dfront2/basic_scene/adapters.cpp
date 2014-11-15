@@ -25,12 +25,13 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 wxWidgetAdapter* wxWidgetAdapter::m_instance = NULL;
 
 wxWidgetAdapter::wxWidgetAdapter( void )
 {
-    m_applypassshadervalues_callback = new CallBack<wxWidgetAdapter, void, wxPropertyGrid*>( this, &wxWidgetAdapter::on_applypassshadervalues );
+    m_applypassshadervalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applypassshadervalues );
 }
 
 wxWidgetAdapter::~wxWidgetAdapter( void )
@@ -495,7 +496,7 @@ void wxWidgetAdapter::AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass*
     }
 }
 
-void wxWidgetAdapter::AdaptPassShaderValuesProps( DrawSpace::Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptPassShaderValuesProps( Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
@@ -514,28 +515,68 @@ void wxWidgetAdapter::AdaptPassShaderValuesProps( DrawSpace::Pass* p_pass, char*
     propertygrid->Append( new wxFloatProperty( "z", wxPG_LABEL, z ) );
     propertygrid->Append( new wxFloatProperty( "w", wxPG_LABEL, w ) );
 
+    char* param_id = new char[strlen( p_param_id ) + 1];
+    strcpy( param_id, p_param_id );
+
     p_dialog->RegisterApplyButtonHandler( m_applypassshadervalues_callback );
+    p_dialog->SetData( "pass", p_pass );
+
+    p_dialog->SetData( "param_id", param_id );
 }
 
-void wxWidgetAdapter::on_applypassshadervalues( wxPropertyGrid* p_propertygrid )
+void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
     wxFloatProperty* prop;
     wxAny value;
     dsreal x, y, z, w;
+
+    wxString choice;
     
-    prop = static_cast<wxFloatProperty*>( p_propertygrid->GetProperty( "x" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "x" ) );
     value = prop->GetValue();   
     value.GetAs<double>( &x );
 
-    prop = static_cast<wxFloatProperty*>( p_propertygrid->GetProperty( "y" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "y" ) );
     value = prop->GetValue();   
     value.GetAs<double>( &y );
 
-    prop = static_cast<wxFloatProperty*>( p_propertygrid->GetProperty( "z" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "z" ) );
     value = prop->GetValue();   
     value.GetAs<double>( &z );
 
-    prop = static_cast<wxFloatProperty*>( p_propertygrid->GetProperty( "w" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "w" ) );
     value = prop->GetValue();   
     value.GetAs<double>( &w );
+
+    Pass* pass = (Pass*)p_dialog->GetData( "pass" );
+    char* param_id = (char*)p_dialog->GetData( "param_id" );
+
+    // apply pass viewportquad shader values modifications
+    pass->GetViewportQuad()->SetShaderRealVector( param_id, Vector( x, y, z, w ) );
+
+    // update pass properties
+    Configurable::PropertiesMap props;
+    pass->GetPropertiesMap( props );
+
+    std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = props["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
+
+    viewportquad_shaderparams[param_id].param_values[0] = x;
+    viewportquad_shaderparams[param_id].param_values[1] = y;
+    viewportquad_shaderparams[param_id].param_values[2] = z;
+    viewportquad_shaderparams[param_id].param_values[3] = w;
+
+    props["viewportquad_shaderparams"].SetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>( viewportquad_shaderparams );
+
+    pass->SetPropertiesMap( props );
+
+
+    // release string allocated in wxWidgetAdapter::AdaptPassShaderValuesProps()
+    delete[] param_id;
+
+
+    // update mainframe list ctrl
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+    AdaptPassesShaderParamsList( pass, ctrl );
 }

@@ -166,7 +166,6 @@ void BasicSceneMainFrame::OnPassesListItemActivated( wxListEvent& p_event )
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Final Pass properties" );
         wxWidgetAdapter::GetInstance()->AdaptPassProps( false, fpass, dialog->GetPropertyGrid() );
         dialog->Show();
-
     }
 }
 
@@ -189,6 +188,7 @@ void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
 
     BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader parameter values" );
 
+    dialog->SetData( "ctrl", m_shadersparams_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptPassShaderValuesProps( pass, buffer.data(), dialog );
     dialog->EnableApplyButton();
     dialog->Show();

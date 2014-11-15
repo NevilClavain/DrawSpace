@@ -40,6 +40,11 @@ void Configurable::GetPropertiesMap( PropertiesMap& p_map )
     p_map = m_properties;
 }
 
+void Configurable::SetPropertiesMap( const PropertiesMap& p_map )
+{
+    m_properties = p_map;
+}
+
 // to be defined by inheriters, if needed
 void Configurable::SetSpecificName( const dsstring& p_name )
 {

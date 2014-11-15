@@ -48,6 +48,7 @@ public:
     virtual ~Configurable( void );
 
     virtual void GetPropertiesMap( PropertiesMap& p_map );
+    virtual void SetPropertiesMap( const PropertiesMap& p_map );
 
     virtual void Serialize( Utils::Archive& p_archive  ) = 0;
     virtual bool Unserialize( Utils::Archive& p_archive ) = 0;

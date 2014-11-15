@@ -38,10 +38,10 @@ protected:
     wxWidgetAdapter( void );
 
 
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, wxPropertyGrid*>* m_applypassshadervalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applypassshadervalues_callback;
 
 
-    void on_applypassshadervalues( wxPropertyGrid* p_propertygrid );
+    void on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog );
 
 public:
 

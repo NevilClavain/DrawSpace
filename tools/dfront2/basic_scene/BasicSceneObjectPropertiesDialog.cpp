@@ -46,7 +46,7 @@ void BasicSceneObjectPropertiesDialog::OnApplyButtonClicked( wxCommandEvent& eve
 {
     if( m_applybutton_handler )
     {
-        (*m_applybutton_handler)( m_propertyGrid );
+        (*m_applybutton_handler)( this );
     }
 
     Close();
@@ -57,7 +57,24 @@ void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )
     m_apply_button->Show( true );
 }
 
-void BasicSceneObjectPropertiesDialog::RegisterApplyButtonHandler( BaseCallback<void, wxPropertyGrid*>* p_handler )
+void BasicSceneObjectPropertiesDialog::RegisterApplyButtonHandler( BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )
 {
     m_applybutton_handler = p_handler;
+}
+
+void BasicSceneObjectPropertiesDialog::SetData( const dsstring& p_id, void* p_data )
+{
+    m_datas[p_id] = p_data;
+}
+
+void* BasicSceneObjectPropertiesDialog::GetData( const dsstring& p_id )
+{
+    if( m_datas.count( p_id ) > 0 )
+    {
+        return m_datas[p_id];
+    }
+    else
+    {
+        return NULL;
+    }
 }
