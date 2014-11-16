@@ -24,8 +24,9 @@
 #include <wx/icon.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
-#include <wx/panel.h>
 #include <wx/statbox.h>
+#include <wx/combobox.h>
+#include <wx/panel.h>
 #include <wx/notebook.h>
 #include <wx/frame.h>
 
@@ -84,6 +85,9 @@ class MainFrame : public wxFrame
 	protected:
 		wxNotebook* m_notebook2;
 		wxPanel* m_camerasPanel;
+		wxListCtrl* m_mvts_listCtrl;
+		wxButton* m_createmvt_button;
+		wxComboBox* m_mvttype_comboBox;
 		wxPanel* m_passesPanel;
 		wxListCtrl* m_passes_listCtrl;
 		wxListCtrl* m_shadersparams_listCtrl;
@@ -95,6 +99,7 @@ class MainFrame : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
+		virtual void OnCreateMvtButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnShadersListItemActivated( wxListEvent& event ) { event.Skip(); }

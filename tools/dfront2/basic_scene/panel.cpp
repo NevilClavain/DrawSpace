@@ -92,7 +92,51 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	m_camerasPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras"), false );
+	wxBoxSizer* bSizer81;
+	bSizer81 = new wxBoxSizer( wxVERTICAL );
+	
+	wxStaticBoxSizer* sbSizer51;
+	sbSizer51 = new wxStaticBoxSizer( new wxStaticBox( m_camerasPanel, wxID_ANY, wxT("CameraPoints") ), wxVERTICAL );
+	
+	
+	bSizer81->Add( sbSizer51, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer6;
+	sbSizer6 = new wxStaticBoxSizer( new wxStaticBox( m_camerasPanel, wxID_ANY, wxT("Movements") ), wxVERTICAL );
+	
+	m_mvts_listCtrl = new wxListCtrl( m_camerasPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	sbSizer6->Add( m_mvts_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer91;
+	bSizer91 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_createmvt_button = new wxButton( m_camerasPanel, wxID_ANY, wxT("Create movement"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer91->Add( m_createmvt_button, 0, wxALL, 5 );
+	
+	m_mvttype_comboBox = new wxComboBox( m_camerasPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
+	m_mvttype_comboBox->Append( wxT("Linear") );
+	m_mvttype_comboBox->Append( wxT("Circular") );
+	m_mvttype_comboBox->Append( wxT("FPS") );
+	m_mvttype_comboBox->Append( wxT("Free") );
+	m_mvttype_comboBox->Append( wxT("Head") );
+	m_mvttype_comboBox->Append( wxT("Spectator") );
+	m_mvttype_comboBox->Append( wxT("LongLat") );
+	m_mvttype_comboBox->Append( wxEmptyString );
+	m_mvttype_comboBox->Append( wxEmptyString );
+	m_mvttype_comboBox->SetSelection( 0 );
+	bSizer91->Add( m_mvttype_comboBox, 0, wxALL, 5 );
+	
+	
+	sbSizer6->Add( bSizer91, 1, wxEXPAND, 5 );
+	
+	
+	bSizer81->Add( sbSizer6, 1, wxEXPAND, 5 );
+	
+	
+	m_camerasPanel->SetSizer( bSizer81 );
+	m_camerasPanel->Layout();
+	bSizer81->Fit( m_camerasPanel );
+	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras"), true );
 	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -119,7 +163,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_passesPanel->SetSizer( bSizer7 );
 	m_passesPanel->Layout();
 	bSizer7->Fit( m_passesPanel );
-	m_notebook2->AddPage( m_passesPanel, wxT("Passes"), true );
+	m_notebook2->AddPage( m_passesPanel, wxT("Passes"), false );
 	m_resourcesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxVERTICAL );
@@ -161,6 +205,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame::OnClose ) );
 	this->Connect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle ) );
+	m_createmvt_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateMvtButtonClicked ), NULL, this );
 	m_passes_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnPassesListItemActivated ), NULL, this );
 	m_passes_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnPassesListItemSelected ), NULL, this );
 	m_shadersparams_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnShadersListItemActivated ), NULL, this );
@@ -173,6 +218,7 @@ MainFrame::~MainFrame()
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame::OnClose ) );
 	this->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle ) );
+	m_createmvt_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateMvtButtonClicked ), NULL, this );
 	m_passes_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnPassesListItemActivated ), NULL, this );
 	m_passes_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnPassesListItemSelected ), NULL, this );
 	m_shadersparams_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnShadersListItemActivated ), NULL, this );

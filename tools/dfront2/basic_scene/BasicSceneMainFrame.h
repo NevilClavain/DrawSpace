@@ -42,6 +42,7 @@ protected:
     virtual void OnPassesListItemActivated( wxListEvent& p_event );
     virtual void OnPassesListItemSelected( wxListEvent& p_event );
     virtual void OnShadersListItemActivated( wxListEvent& p_event );
+    virtual void OnCreateMvtButtonClicked( wxCommandEvent& p_event );
 
 
 public:

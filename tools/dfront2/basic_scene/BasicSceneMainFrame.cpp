@@ -193,3 +193,91 @@ void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
     dialog->EnableApplyButton();
     dialog->Show();
 }
+
+void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
+{
+    int index = m_mvttype_comboBox->GetSelection();
+
+    switch( index )
+    {
+        case 0:
+            // Linear
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Linear movement values" );
+
+                wxWidgetAdapter::GetInstance()->AdaptLinearMvtValuesProps( dialog );
+                dialog->EnableApplyButton();
+                dialog->Show();
+            }
+            break;
+
+        case 1:
+            // Circular
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Circular movement values" );
+
+                wxWidgetAdapter::GetInstance()->AdaptCircularMvtValuesProps( dialog );
+                dialog->EnableApplyButton();
+                dialog->Show();
+            }
+            break;
+
+
+        case 2:
+            // FPS
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "FPS movement values" );
+
+                wxWidgetAdapter::GetInstance()->AdaptFPSMvtValuesProps( dialog );
+                dialog->EnableApplyButton();
+                dialog->Show();
+            }
+            break;
+
+        case 3:
+            // Free
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Free movement values" );
+
+                wxWidgetAdapter::GetInstance()->AdaptFreeMvtValuesProps( dialog );
+                dialog->EnableApplyButton();
+                dialog->Show();
+            }
+            break;
+
+        case 4:
+            // Head
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Head movement values" );
+
+                wxWidgetAdapter::GetInstance()->AdaptHeadMvtValuesProps( dialog );
+                dialog->EnableApplyButton();
+                dialog->Show();
+            }
+            break;
+
+        case 5:
+            // Spectator
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spectator movement values" );
+
+                wxWidgetAdapter::GetInstance()->AdaptSpectatorMvtValuesProps( dialog );
+                dialog->EnableApplyButton();
+                dialog->Show();
+            }
+            break;
+
+        case 6:
+            // LongLat
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Longlat movement values" );
+
+                wxWidgetAdapter::GetInstance()->AdaptLongLatMvtValuesProps( dialog );
+                dialog->EnableApplyButton();
+                dialog->Show();
+            }
+
+            break;
+
+    }
+}

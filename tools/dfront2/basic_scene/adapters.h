@@ -69,6 +69,14 @@ public:
     void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
     void AdaptPassShaderValuesProps( DrawSpace::Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog );
 
+    void AdaptLinearMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptCircularMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptFPSMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptFreeMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptHeadMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptSpectatorMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptLongLatMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
+
 };
 
 

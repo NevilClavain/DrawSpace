@@ -580,3 +580,96 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
     AdaptPassesShaderParamsList( pass, ctrl );
 }
+
+void wxWidgetAdapter::AdaptLinearMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial pos/z", wxPG_LABEL, 0.0 ) );
+
+    propertygrid->Append( new wxFloatProperty( "Direction/x", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Direction/y", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Direction/z", wxPG_LABEL, 0.0 ) );
+
+    propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, 0.0 ) );
+
+}
+
+void wxWidgetAdapter::AdaptCircularMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxFloatProperty( "Center pos/x", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Center pos/y", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Center pos/z", wxPG_LABEL, 0.0 ) );
+
+    propertygrid->Append( new wxFloatProperty( "Delta center/x", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Delta center/y", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Delta center/z", wxPG_LABEL, 0.0 ) );
+
+    propertygrid->Append( new wxFloatProperty( "Rotation axis/x", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Rotation axis/y", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Rotation axis/z", wxPG_LABEL, 0.0 ) );
+
+
+    propertygrid->Append( new wxFloatProperty( "Initial angle", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, 0.0 ) );
+
+}
+
+void wxWidgetAdapter::AdaptFPSMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial pos/z", wxPG_LABEL, 0.0 ) );
+
+    propertygrid->Append( new wxFloatProperty( "Initial yaw", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial pitch", wxPG_LABEL, 0.0 ) );
+}
+
+void wxWidgetAdapter::AdaptFreeMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial pos/z", wxPG_LABEL, 0.0 ) );
+}
+
+void wxWidgetAdapter::AdaptHeadMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxFloatProperty( "Scale factor", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Ref force", wxPG_LABEL, 0.0 ) );
+
+    propertygrid->Append( new wxFloatProperty( "Head pos/x", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Head pos/y", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Head pos/z", wxPG_LABEL, 0.0 ) );
+}
+
+void wxWidgetAdapter::AdaptSpectatorMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxFloatProperty( "Scale pos", wxPG_LABEL, 20.0 ) );
+    propertygrid->Append( new wxIntProperty( "Period", wxPG_LABEL, 10 ) );
+    propertygrid->Append( new wxBoolProperty( "Attached to Orbiter", wxPG_LABEL, false ) );
+}
+
+void wxWidgetAdapter::AdaptLongLatMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxFloatProperty( "Initial longitud", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial latitud", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial altitud", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial theta", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Initial phi", wxPG_LABEL, 0.0 ) );
+}
