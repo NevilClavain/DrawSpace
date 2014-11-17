@@ -73,6 +73,7 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptAssetsList( m_assets_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptConfigsList( m_configs_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -205,7 +206,10 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Linear movement values" );
 
-                wxWidgetAdapter::GetInstance()->AdaptLinearMvtValuesProps( dialog );
+                dialog->SetData( "mvts_map", &m_movements );
+                dialog->SetData( "ctrl", m_mvts_listCtrl );
+
+                wxWidgetAdapter::GetInstance()->AdaptLinearMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
             }
@@ -216,7 +220,10 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Circular movement values" );
 
-                wxWidgetAdapter::GetInstance()->AdaptCircularMvtValuesProps( dialog );
+                dialog->SetData( "mvts_map", &m_movements );
+                dialog->SetData( "ctrl", m_mvts_listCtrl );
+
+                wxWidgetAdapter::GetInstance()->AdaptCircularMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
             }
@@ -228,7 +235,10 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "FPS movement values" );
 
-                wxWidgetAdapter::GetInstance()->AdaptFPSMvtValuesProps( dialog );
+                dialog->SetData( "mvts_map", &m_movements );
+                dialog->SetData( "ctrl", m_mvts_listCtrl );
+
+                wxWidgetAdapter::GetInstance()->AdaptFPSMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
             }
@@ -239,7 +249,10 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Free movement values" );
 
-                wxWidgetAdapter::GetInstance()->AdaptFreeMvtValuesProps( dialog );
+                dialog->SetData( "mvts_map", &m_movements );
+                dialog->SetData( "ctrl", m_mvts_listCtrl );
+
+                wxWidgetAdapter::GetInstance()->AdaptFreeMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
             }
@@ -250,7 +263,10 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Head movement values" );
 
-                wxWidgetAdapter::GetInstance()->AdaptHeadMvtValuesProps( dialog );
+                dialog->SetData( "mvts_map", &m_movements );
+                dialog->SetData( "ctrl", m_mvts_listCtrl );
+
+                wxWidgetAdapter::GetInstance()->AdaptHeadMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
             }
@@ -261,7 +277,10 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spectator movement values" );
 
-                wxWidgetAdapter::GetInstance()->AdaptSpectatorMvtValuesProps( dialog );
+                dialog->SetData( "mvts_map", &m_movements );
+                dialog->SetData( "ctrl", m_mvts_listCtrl );
+
+                wxWidgetAdapter::GetInstance()->AdaptSpectatorMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
             }
@@ -272,12 +291,30 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Longlat movement values" );
 
-                wxWidgetAdapter::GetInstance()->AdaptLongLatMvtValuesProps( dialog );
+                dialog->SetData( "mvts_map", &m_movements );
+                dialog->SetData( "ctrl", m_mvts_listCtrl );
+
+                wxWidgetAdapter::GetInstance()->AdaptLongLatMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
             }
 
             break;
 
+    }
+}
+
+void BasicSceneMainFrame::OnMvtsListItemActivated( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+
+    Movement* mvt = (Movement*)m_mvts_listCtrl->GetItemData( sel_index );
+
+    LinearMovement* linearmvt = dynamic_cast<LinearMovement*>( mvt );
+    if( linearmvt )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Linear movement properties" );
+        wxWidgetAdapter::GetInstance()->AdaptLinearMvtProps( linearmvt, dialog );
+        dialog->Show();
     }
 }

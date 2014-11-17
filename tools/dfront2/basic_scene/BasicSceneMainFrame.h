@@ -31,9 +31,9 @@ class BasicSceneMainFrame : public MainFrame
 {
 protected:
 
-    bool                                m_glready;
-
-    DrawSpace::Utils::TimeManager       m_timer;
+    bool                                                    m_glready;
+    DrawSpace::Utils::TimeManager                           m_timer;
+    std::map<dsstring, DrawSpace::Core::Movement*>          m_movements;
 
     virtual void OnClose( wxCloseEvent& event );
     virtual void OnIdle( wxIdleEvent& event );
@@ -43,6 +43,7 @@ protected:
     virtual void OnPassesListItemSelected( wxListEvent& p_event );
     virtual void OnShadersListItemActivated( wxListEvent& p_event );
     virtual void OnCreateMvtButtonClicked( wxCommandEvent& p_event );
+    virtual void OnMvtsListItemActivated( wxListEvent& p_event );
 
 
 public:

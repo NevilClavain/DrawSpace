@@ -34,14 +34,29 @@ class wxWidgetAdapter
 protected:
 
     static wxWidgetAdapter* m_instance;
-
-    wxWidgetAdapter( void );
-
-
+   
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applypassshadervalues_callback;
+
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applylinearmvtvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycircularmvtvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyfpsmvtvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyfreemvtvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyheadmvtvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspectatormvtvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applylonglatmvtvalues_callback;
 
 
     void on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applycircularmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applyspectatormvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+
+    wxWidgetAdapter( void );
+
 
 public:
 
@@ -60,6 +75,8 @@ public:
     void AdaptConfigsList( wxListCtrl* p_listctrl );
     void AdaptPassesList( wxListCtrl* p_listctrl );
     void AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxListCtrl* p_listctrl );
+    void AdaptMvtsList( std::map<dsstring, DrawSpace::Core::Movement*>* p_map, wxListCtrl* p_listctrl );
+
 
     void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );
     void AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_propertygrid );
@@ -69,13 +86,15 @@ public:
     void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
     void AdaptPassShaderValuesProps( DrawSpace::Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void AdaptLinearMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptCircularMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptFPSMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptFreeMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptHeadMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptSpectatorMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptLongLatMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+
+    void AdaptLinearMvtProps( DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
 
 };
 

@@ -48,8 +48,6 @@ void BasicSceneObjectPropertiesDialog::OnApplyButtonClicked( wxCommandEvent& eve
     {
         (*m_applybutton_handler)( this );
     }
-
-    Close();
 }
 
 void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )

@@ -20,6 +20,7 @@
 *                                                                          
 */
 
+#include <wx/wx.h>
 #include "adapters.h"
 
 using namespace DrawSpace;
@@ -32,10 +33,19 @@ wxWidgetAdapter* wxWidgetAdapter::m_instance = NULL;
 wxWidgetAdapter::wxWidgetAdapter( void )
 {
     m_applypassshadervalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applypassshadervalues );
+
+    m_applylinearmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applylinearmvtvalues );
+    m_applycircularmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycircularmvtvalues );
+    m_applyfpsmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyfpsmvtvalues );
+    m_applyfreemvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyfreemvtvalues );
+    m_applyheadmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyheadmvtvalues );
+    m_applyspectatormvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspectatormvtvalues );
+    m_applylonglatmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applylonglatmvtvalues );
 }
 
 wxWidgetAdapter::~wxWidgetAdapter( void )
 {
+    delete m_applypassshadervalues_callback;
 
 }
 
@@ -291,6 +301,74 @@ void wxWidgetAdapter::AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxLi
     }
 }
 
+
+void wxWidgetAdapter::AdaptMvtsList( std::map<dsstring, DrawSpace::Core::Movement*>* p_map, wxListCtrl* p_listctrl )
+{
+    p_listctrl->ClearAll();
+
+    wxListItem col0;
+    col0.SetId( 0 );
+    col0.SetText( "Movement alias" );
+    col0.SetWidth( 110 );
+    p_listctrl->InsertColumn( 0, col0 );
+
+    wxListItem col1;
+    col1.SetId( 1 );
+    col1.SetText( "Movement type" );
+    col1.SetWidth( 100 );
+    p_listctrl->InsertColumn( 1, col1 );
+
+    long id = 0;
+    for( std::map<dsstring, Movement*>::iterator it = p_map->begin(); it != p_map->end(); ++it )
+    {
+        Movement* mvt = it->second;
+
+        dsstring alias = it->first;
+
+        wxListItem item;
+        item.SetId( id );
+        item.SetText( alias.c_str() );
+        p_listctrl->InsertItem( item );
+
+
+        dsstring type_name;
+
+        if( dynamic_cast<LinearMovement*>( mvt ) )
+        {
+            type_name = "Linear";
+        }
+        else if( dynamic_cast<CircularMovement*>( mvt ) )
+        {
+            type_name = "Circular";
+        }
+        else if( dynamic_cast<FPSMovement*>( mvt ) )
+        {
+            type_name = "FPS";
+        }
+        else if( dynamic_cast<FreeMovement*>( mvt ) )
+        {
+            type_name = "Free";
+        }
+        else if( dynamic_cast<HeadMovement*>( mvt ) )
+        {
+            type_name = "Head";
+        }
+        else if( dynamic_cast<SpectatorMovement*>( mvt ) )
+        {
+            type_name = "Spectator";
+        }
+        else if( dynamic_cast<LongLatMovement*>( mvt ) )
+        {
+            type_name = "Longlat";
+        }
+        p_listctrl->SetItem( id, 1, type_name.c_str() );
+
+        p_listctrl->SetItemData( id, (long)mvt );
+
+        id++;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void wxWidgetAdapter::AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid )
@@ -531,8 +609,6 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
     wxFloatProperty* prop;
     wxAny value;
     dsreal x, y, z, w;
-
-    wxString choice;
     
     prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "x" ) );
     value = prop->GetValue();   
@@ -579,11 +655,15 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
     // update mainframe list ctrl
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
     AdaptPassesShaderParamsList( pass, ctrl );
+
+    p_dialog->Close();
 }
 
-void wxWidgetAdapter::AdaptLinearMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
     propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
@@ -596,11 +676,100 @@ void wxWidgetAdapter::AdaptLinearMvtValuesProps( BasicSceneObjectPropertiesDialo
     propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, 0.0 ) );
 
+    p_dialog->RegisterApplyButtonHandler( m_applylinearmvtvalues_callback );
+
 }
 
-void wxWidgetAdapter::AdaptCircularMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxStringProperty* prop2;
+    wxAny value;
+
+    dsreal rval;
+    Vector init_pos;
+    Vector direction;
+    dsreal theta, phi;
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial pos/x" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[0] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial pos/y" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[1] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial pos/z" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[2] = rval;
+
+    init_pos[3] = 1.0;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction/x" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    direction[0] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction/y" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    direction[1] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction/z" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    direction[2] = rval;
+
+    direction[3] = 1.0;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Theta" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &theta );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Phi" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &phi );
+
+    LinearMovement* linear_mvt = new LinearMovement();
+    linear_mvt->Init( init_pos, direction, theta, phi );
+
+    std::map<dsstring, DrawSpace::Core::Movement*>* mvts_map = (std::map<dsstring, DrawSpace::Core::Movement*>*)p_dialog->GetData( "mvts_map" );
+
+    (*mvts_map)[alias] = linear_mvt;
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    AdaptMvtsList( mvts_map, ctrl );
+
+    p_dialog->Close();
+}
+
+void wxWidgetAdapter::AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
     propertygrid->Append( new wxFloatProperty( "Center pos/x", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Center pos/y", wxPG_LABEL, 0.0 ) );
@@ -619,11 +788,20 @@ void wxWidgetAdapter::AdaptCircularMvtValuesProps( BasicSceneObjectPropertiesDia
     propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, 0.0 ) );
 
+    p_dialog->RegisterApplyButtonHandler( m_applycircularmvtvalues_callback );
+
 }
 
-void wxWidgetAdapter::AdaptFPSMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+
+}
+
+void wxWidgetAdapter::AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
     propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
@@ -631,20 +809,38 @@ void wxWidgetAdapter::AdaptFPSMvtValuesProps( BasicSceneObjectPropertiesDialog* 
 
     propertygrid->Append( new wxFloatProperty( "Initial yaw", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial pitch", wxPG_LABEL, 0.0 ) );
+
+    p_dialog->RegisterApplyButtonHandler( m_applyfpsmvtvalues_callback );
 }
 
-void wxWidgetAdapter::AdaptFreeMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+
+}
+
+void wxWidgetAdapter::AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
     propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial pos/z", wxPG_LABEL, 0.0 ) );
+
+    p_dialog->RegisterApplyButtonHandler( m_applyfreemvtvalues_callback );
 }
 
-void wxWidgetAdapter::AdaptHeadMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+
+}
+
+void wxWidgetAdapter::AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
     propertygrid->Append( new wxFloatProperty( "Scale factor", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Ref force", wxPG_LABEL, 0.0 ) );
@@ -652,24 +848,62 @@ void wxWidgetAdapter::AdaptHeadMvtValuesProps( BasicSceneObjectPropertiesDialog*
     propertygrid->Append( new wxFloatProperty( "Head pos/x", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Head pos/y", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Head pos/z", wxPG_LABEL, 0.0 ) );
+
+    p_dialog->RegisterApplyButtonHandler( m_applyheadmvtvalues_callback );
 }
 
-void wxWidgetAdapter::AdaptSpectatorMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+
+}
+
+void wxWidgetAdapter::AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
     propertygrid->Append( new wxFloatProperty( "Scale pos", wxPG_LABEL, 20.0 ) );
     propertygrid->Append( new wxIntProperty( "Period", wxPG_LABEL, 10 ) );
     propertygrid->Append( new wxBoolProperty( "Attached to Orbiter", wxPG_LABEL, false ) );
+
+    p_dialog->RegisterApplyButtonHandler( m_applyspectatormvtvalues_callback );
 }
 
-void wxWidgetAdapter::AdaptLongLatMvtValuesProps( BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+
+}
+
+void wxWidgetAdapter::AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
     propertygrid->Append( new wxFloatProperty( "Initial longitud", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial latitud", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial altitud", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial theta", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial phi", wxPG_LABEL, 0.0 ) );
+
+    p_dialog->RegisterApplyButtonHandler( m_applylonglatmvtvalues_callback );
+}
+
+void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+
+}
+
+
+void wxWidgetAdapter::AdaptLinearMvtProps( DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    Vector init_pos;
+    Vector current_pos;
+    Vector direction;
+    Vector current_theta;
+    Vector current_phi;
+
+    // to be continued...
+
 }
