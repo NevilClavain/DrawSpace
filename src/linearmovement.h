@@ -63,6 +63,12 @@ public:
     void Reset( void );
 
     dsreal GetTranslationLength( void );
+
+    void GetInitPos( Utils::Vector& p_init_pos );
+    void GetCurrentPos( Utils::Vector& p_current_pos );
+    void GetDirection( Utils::Vector& p_direction );
+    dsreal GetCurrentTheta( void );
+    dsreal GetCurrentPhi( void );
 };
 }
 }

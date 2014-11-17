@@ -46,6 +46,7 @@ public:
 	static inline double	Cubic( dsreal a )							{ return a * a * (3 - 2*a); };
 	
 	static inline double	DegToRad( dsreal ang )					    { return ( ( ang * PI ) / 180.0 ); };
+    static inline double	RadToDeg( dsreal ang )					    { return ( ( ang * 180.0 ) / PI ); };
 
 
 	static inline void		SphericaltoCartesian( const Vector& p_in, Vector& p_out )

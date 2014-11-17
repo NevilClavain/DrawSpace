@@ -112,10 +112,36 @@ void LinearMovement::SetTheta( dsreal p_theta )
 
 void LinearMovement::SetPhi( dsreal p_phi )
 {
-    m_current_phi = DrawSpace::Utils::Maths::DegToRad( p_phi );
+    m_current_phi = Maths::DegToRad( p_phi );
 }
 
 dsreal LinearMovement::GetTranslationLength( void )
 {
     return m_current_pos.Length();
 }
+
+void LinearMovement::GetInitPos( Utils::Vector& p_init_pos )
+{
+    p_init_pos = m_init_pos;
+}
+
+void LinearMovement::GetCurrentPos( Utils::Vector& p_current_pos )
+{
+    p_current_pos = m_current_pos;
+}
+
+void LinearMovement::GetDirection( Utils::Vector& p_direction )
+{
+    p_direction = m_direction;
+}
+
+dsreal LinearMovement::GetCurrentTheta( void )
+{
+    return Maths::RadToDeg( m_current_phi );
+}
+
+dsreal LinearMovement::GetCurrentPhi( void )
+{
+    return Maths::RadToDeg( m_current_theta );
+}
+
