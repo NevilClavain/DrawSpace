@@ -665,13 +665,17 @@ void wxWidgetAdapter::AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDia
 
     propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
-    propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Initial pos/z", wxPG_LABEL, 0.0 ) );
 
-    propertygrid->Append( new wxFloatProperty( "Direction/x", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Direction/y", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Direction/z", wxPG_LABEL, 0.0 ) );
+    wxPGProperty* initpos_prop = propertygrid->Append( new wxStringProperty( "Initial position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
+
+    wxPGProperty* direction_prop = propertygrid->Append( new wxStringProperty( "Direction", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( direction_prop, new wxFloatProperty( "x", wxPG_LABEL, 1.0 ) );
+    propertygrid->AppendIn( direction_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( direction_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
+
 
     propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, 0.0 ) );
@@ -709,34 +713,34 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
         return;
     }
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial pos/x" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.x" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     init_pos[0] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial pos/y" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.y" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     init_pos[1] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial pos/z" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.z" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     init_pos[2] = rval;
 
     init_pos[3] = 1.0;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction/x" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction.x" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     direction[0] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction/y" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction.y" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     direction[1] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction/z" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction.z" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     direction[2] = rval;
@@ -771,17 +775,20 @@ void wxWidgetAdapter::AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesD
 
     propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
-    propertygrid->Append( new wxFloatProperty( "Center pos/x", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Center pos/y", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Center pos/z", wxPG_LABEL, 0.0 ) );
+    wxPGProperty* centerpos_prop = propertygrid->Append( new wxStringProperty( "Center position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( centerpos_prop, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( centerpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( centerpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
 
-    propertygrid->Append( new wxFloatProperty( "Delta center/x", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Delta center/y", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Delta center/z", wxPG_LABEL, 0.0 ) );
+    wxPGProperty* deltacenter_prop = propertygrid->Append( new wxStringProperty( "Delta center", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( deltacenter_prop, new wxFloatProperty( "x", wxPG_LABEL, 10.0 ) );
+    propertygrid->AppendIn( deltacenter_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( deltacenter_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
 
-    propertygrid->Append( new wxFloatProperty( "Rotation axis/x", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Rotation axis/y", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Rotation axis/z", wxPG_LABEL, 0.0 ) );
+    wxPGProperty* rotaxis_prop = propertygrid->Append( new wxStringProperty( "Rotation axis", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( rotaxis_prop, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( rotaxis_prop, new wxFloatProperty( "y", wxPG_LABEL, 1.0 ) );
+    propertygrid->AppendIn( rotaxis_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
 
 
     propertygrid->Append( new wxFloatProperty( "Initial angle", wxPG_LABEL, 0.0 ) );
@@ -823,17 +830,17 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
         return;
     }
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center pos/x" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center position.x" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     center_pos[0] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center pos/y" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center position.y" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     center_pos[1] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center pos/z" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center position.z" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     center_pos[2] = rval;
@@ -841,17 +848,17 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     center_pos[3] = 1.0;
 
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center/x" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center.x" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     delta_center[0] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center/y" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center.y" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     delta_center[1] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center/z" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center.z" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     delta_center[2] = rval;
@@ -859,17 +866,17 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     delta_center[3] = 1.0;
 
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis/x" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis.x" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     rot_axis[0] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis/y" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis.y" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     rot_axis[1] = rval;
 
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis/z" ) );
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis.z" ) );
     value = prop->GetValue();
     value.GetAs<double>( &rval );
     rot_axis[2] = rval;
@@ -910,9 +917,11 @@ void wxWidgetAdapter::AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog
 
     propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
-    propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Initial pos/z", wxPG_LABEL, 0.0 ) );
+    wxPGProperty* initpos_prop = propertygrid->Append( new wxStringProperty( "Initial position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
+
 
     propertygrid->Append( new wxFloatProperty( "Initial yaw", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial pitch", wxPG_LABEL, 0.0 ) );
@@ -931,9 +940,11 @@ void wxWidgetAdapter::AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialo
 
     propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
-    propertygrid->Append( new wxFloatProperty( "Initial pos/x", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Initial pos/y", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Initial pos/z", wxPG_LABEL, 0.0 ) );
+    wxPGProperty* initpos_prop = propertygrid->Append( new wxStringProperty( "Initial position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
+
 
     p_dialog->RegisterApplyButtonHandler( m_applyfreemvtvalues_callback );
 }
@@ -952,9 +963,11 @@ void wxWidgetAdapter::AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialo
     propertygrid->Append( new wxFloatProperty( "Scale factor", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Ref force", wxPG_LABEL, 0.0 ) );
 
-    propertygrid->Append( new wxFloatProperty( "Head pos/x", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Head pos/y", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Head pos/z", wxPG_LABEL, 0.0 ) );
+    wxPGProperty* headpos_prop = propertygrid->Append( new wxStringProperty( "Head position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
+
 
     p_dialog->RegisterApplyButtonHandler( m_applyheadmvtvalues_callback );
 }
@@ -1003,7 +1016,7 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
 }
 
 
-void wxWidgetAdapter::AdaptLinearMvtProps( DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
@@ -1019,24 +1032,30 @@ void wxWidgetAdapter::AdaptLinearMvtProps( DrawSpace::Core::LinearMovement* p_mo
     current_theta = p_movement->GetCurrentTheta();
     current_phi = p_movement->GetCurrentPhi();
 
-    propertygrid->Append( new wxFloatProperty( "Initial position/x", wxPG_LABEL, init_pos[0] ) );
-    propertygrid->Append( new wxFloatProperty( "Initial position/y", wxPG_LABEL, init_pos[1] ) );
-    propertygrid->Append( new wxFloatProperty( "Initial position/z", wxPG_LABEL, init_pos[2] ) );
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtname.c_str() ) );
 
-    propertygrid->Append( new wxFloatProperty( "Direction/x", wxPG_LABEL, direction[0] ) );
-    propertygrid->Append( new wxFloatProperty( "Direction/y", wxPG_LABEL, direction[1] ) );
-    propertygrid->Append( new wxFloatProperty( "Direction/z", wxPG_LABEL, direction[2] ) );
+    wxPGProperty* initpos_prop = propertygrid->Append( new wxStringProperty( "Initial position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "x", wxPG_LABEL, init_pos[0] ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "y", wxPG_LABEL, init_pos[1] ) );
+    propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "z", wxPG_LABEL, init_pos[2] ) );
 
-    propertygrid->Append( new wxFloatProperty( "Current position/x", wxPG_LABEL, current_pos[0] ) );
-    propertygrid->Append( new wxFloatProperty( "Current position/y", wxPG_LABEL, current_pos[1] ) );
-    propertygrid->Append( new wxFloatProperty( "Current position/z", wxPG_LABEL, current_pos[2] ) );
+
+    wxPGProperty* direction_prop = propertygrid->Append( new wxStringProperty( "Direction", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( direction_prop, new wxFloatProperty( "x", wxPG_LABEL, direction[0] ) );
+    propertygrid->AppendIn( direction_prop, new wxFloatProperty( "y", wxPG_LABEL, direction[1] ) );
+    propertygrid->AppendIn( direction_prop, new wxFloatProperty( "z", wxPG_LABEL, direction[2] ) );
+
+    wxPGProperty* currentpos_prop = propertygrid->Append( new wxStringProperty( "Current position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( currentpos_prop, new wxFloatProperty( "x", wxPG_LABEL, current_pos[0] ) );
+    propertygrid->AppendIn( currentpos_prop, new wxFloatProperty( "y", wxPG_LABEL, current_pos[1] ) );
+    propertygrid->AppendIn( currentpos_prop, new wxFloatProperty( "z", wxPG_LABEL, current_pos[2] ) );
 
     propertygrid->Append( new wxFloatProperty( "Current theta", wxPG_LABEL, current_theta ) );
     propertygrid->Append( new wxFloatProperty( "Current phi", wxPG_LABEL, current_phi ) );
 
 }
 
-void wxWidgetAdapter::AdaptCircularMvtProps( DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
@@ -1056,21 +1075,26 @@ void wxWidgetAdapter::AdaptCircularMvtProps( DrawSpace::Core::CircularMovement* 
     current_theta = p_movement->GetCurrentTheta();
     current_phi = p_movement->GetCurrentPhi();
 
-    propertygrid->Append( new wxFloatProperty( "Center position/x", wxPG_LABEL, center_pos[0] ) );
-    propertygrid->Append( new wxFloatProperty( "Center position/y", wxPG_LABEL, center_pos[1] ) );
-    propertygrid->Append( new wxFloatProperty( "Center position/z", wxPG_LABEL, center_pos[2] ) );
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtname.c_str() ) );
 
-    propertygrid->Append( new wxFloatProperty( "Delta center/x", wxPG_LABEL, delta_center[0] ) );
-    propertygrid->Append( new wxFloatProperty( "Delta center/y", wxPG_LABEL, delta_center[1] ) );
-    propertygrid->Append( new wxFloatProperty( "Delta center/z", wxPG_LABEL, delta_center[2] ) );
+    wxPGProperty* centerpos_prop = propertygrid->Append( new wxStringProperty( "Center position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( centerpos_prop, new wxFloatProperty( "x", wxPG_LABEL, center_pos[0] ) );
+    propertygrid->AppendIn( centerpos_prop, new wxFloatProperty( "y", wxPG_LABEL, center_pos[1] ) );
+    propertygrid->AppendIn( centerpos_prop, new wxFloatProperty( "z", wxPG_LABEL, center_pos[2] ) );
 
-    propertygrid->Append( new wxFloatProperty( "Rotation axis/x", wxPG_LABEL, rot_axis[0] ) );
-    propertygrid->Append( new wxFloatProperty( "Rotation axis/y", wxPG_LABEL, rot_axis[1] ) );
-    propertygrid->Append( new wxFloatProperty( "Rotation axis/z", wxPG_LABEL, rot_axis[2] ) );
+    wxPGProperty* deltacenter_prop = propertygrid->Append( new wxStringProperty( "Delta center", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( deltacenter_prop, new wxFloatProperty( "x", wxPG_LABEL, delta_center[0] ) );
+    propertygrid->AppendIn( deltacenter_prop, new wxFloatProperty( "y", wxPG_LABEL, delta_center[1] ) );
+    propertygrid->AppendIn( deltacenter_prop, new wxFloatProperty( "z", wxPG_LABEL, delta_center[2] ) );
+
+    wxPGProperty* rotaxis_prop = propertygrid->Append( new wxStringProperty( "Rotation axis", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( rotaxis_prop, new wxFloatProperty( "x", wxPG_LABEL, rot_axis[0] ) );
+    propertygrid->AppendIn( rotaxis_prop, new wxFloatProperty( "y", wxPG_LABEL, rot_axis[1] ) );
+    propertygrid->AppendIn( rotaxis_prop, new wxFloatProperty( "z", wxPG_LABEL, rot_axis[2] ) );
+
 
     propertygrid->Append( new wxFloatProperty( "Initial angle", wxPG_LABEL, init_angle ) );
     propertygrid->Append( new wxFloatProperty( "Current angle", wxPG_LABEL, current_angle ) );
-
     propertygrid->Append( new wxFloatProperty( "Current theta", wxPG_LABEL, current_theta ) );
     propertygrid->Append( new wxFloatProperty( "Current phi", wxPG_LABEL, current_phi ) );
 }

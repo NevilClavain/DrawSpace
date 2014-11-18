@@ -94,8 +94,8 @@ public:
     void AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void AdaptLinearMvtProps( DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptCircularMvtProps( DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
 
 };
 

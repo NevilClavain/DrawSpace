@@ -308,13 +308,19 @@ void BasicSceneMainFrame::OnMvtsListItemActivated( wxListEvent& p_event )
 {
     long sel_index = p_event.GetIndex();
 
+    wxString mvt_name = m_mvts_listCtrl->GetItemText( sel_index );
+    wxCharBuffer buffer = mvt_name.ToAscii();
+
+    dsstring mvt_name2 = buffer.data();
+
+
     Movement* mvt = (Movement*)m_mvts_listCtrl->GetItemData( sel_index );
 
     LinearMovement* linearmvt = dynamic_cast<LinearMovement*>( mvt );
     if( linearmvt )
     {
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Linear movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptLinearMvtProps( linearmvt, dialog );
+        wxWidgetAdapter::GetInstance()->AdaptLinearMvtProps( mvt_name2, linearmvt, dialog );
         dialog->Show();
     }
 
@@ -322,8 +328,7 @@ void BasicSceneMainFrame::OnMvtsListItemActivated( wxListEvent& p_event )
     if( circularmvt )
     {
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Circular movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptCircularMvtProps( circularmvt, dialog );
+        wxWidgetAdapter::GetInstance()->AdaptCircularMvtProps( mvt_name2, circularmvt, dialog );
         dialog->Show();
     }
-
 }
