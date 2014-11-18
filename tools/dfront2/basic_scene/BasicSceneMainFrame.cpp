@@ -331,4 +331,28 @@ void BasicSceneMainFrame::OnMvtsListItemActivated( wxListEvent& p_event )
         wxWidgetAdapter::GetInstance()->AdaptCircularMvtProps( mvt_name2, circularmvt, dialog );
         dialog->Show();
     }
+
+    FPSMovement* fpsmvt = dynamic_cast<FPSMovement*>( mvt );
+    if( fpsmvt )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "FPS movement properties" );
+        wxWidgetAdapter::GetInstance()->AdaptFpsMvtProps( mvt_name2, fpsmvt, dialog );
+        dialog->Show();
+    }
+
+    FreeMovement* freemvt = dynamic_cast<FreeMovement*>( mvt );
+    if( freemvt )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Free movement properties" );
+        wxWidgetAdapter::GetInstance()->AdaptFreeMvtProps( mvt_name2, freemvt, dialog );
+        dialog->Show();
+    }
+
+    HeadMovement* headmvt = dynamic_cast<HeadMovement*>( mvt );
+    if( headmvt )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Head movement properties" );
+        wxWidgetAdapter::GetInstance()->AdaptHeadMvtProps( mvt_name2, headmvt, dialog );
+        dialog->Show();
+    }
 }

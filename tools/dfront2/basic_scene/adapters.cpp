@@ -1009,6 +1009,71 @@ void wxWidgetAdapter::AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog
 
 void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxStringProperty* prop2;
+    wxAny value;
+
+    dsreal rval;
+    Vector init_pos;
+    dsreal init_yaw, init_pitch;
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.x" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[0] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.y" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[1] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.z" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[2] = rval;
+
+    init_pos[3] = 1.0;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial yaw" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &init_yaw );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial pitch" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &init_pitch );
+
+
+    FPSMovement* fps_mvt = new FPSMovement();
+    fps_mvt->Init( init_pos, init_yaw, init_pitch );
+
+    std::map<dsstring, DrawSpace::Core::Movement*>* mvts_map = (std::map<dsstring, DrawSpace::Core::Movement*>*)p_dialog->GetData( "mvts_map" );
+
+    (*mvts_map)[alias] = fps_mvt;
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    AdaptMvtsList( mvts_map, ctrl );
+
+    p_dialog->Close();
 
 }
 
@@ -1029,6 +1094,61 @@ void wxWidgetAdapter::AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialo
 
 void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxStringProperty* prop2;
+    wxAny value;
+
+    dsreal rval;
+    Vector init_pos;
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.x" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[0] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.y" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[1] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.z" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    init_pos[2] = rval;
+
+    init_pos[3] = 1.0;
+
+    FreeMovement* free_mvt = new FreeMovement();
+    free_mvt->Init( init_pos );
+
+    std::map<dsstring, DrawSpace::Core::Movement*>* mvts_map = (std::map<dsstring, DrawSpace::Core::Movement*>*)p_dialog->GetData( "mvts_map" );
+
+    (*mvts_map)[alias] = free_mvt;
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    AdaptMvtsList( mvts_map, ctrl );
+
+    p_dialog->Close();
 
 }
 
@@ -1038,8 +1158,8 @@ void wxWidgetAdapter::AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialo
 
     propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
 
-    propertygrid->Append( new wxFloatProperty( "Scale factor", wxPG_LABEL, 0.0 ) );
-    propertygrid->Append( new wxFloatProperty( "Ref force", wxPG_LABEL, 0.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Scale factor", wxPG_LABEL, 1.0 ) );
+    propertygrid->Append( new wxFloatProperty( "Ref force", wxPG_LABEL, 10.0 ) );
 
     wxPGProperty* headpos_prop = propertygrid->Append( new wxStringProperty( "Head position", wxPG_LABEL, "<composed>" ) );
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
@@ -1052,6 +1172,72 @@ void wxWidgetAdapter::AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialo
 
 void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxStringProperty* prop2;
+    wxAny value;
+
+    dsreal rval;
+    Vector head_pos;
+    dsreal scale_factor;
+    dsreal ref_force;
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Head position.x" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    head_pos[0] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Head position.y" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    head_pos[1] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Head position.z" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    head_pos[2] = rval;
+
+    head_pos[3] = 1.0;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Scale factor" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &scale_factor );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Ref force" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &ref_force );
+
+
+    HeadMovement* head_mvt = new HeadMovement();
+    head_mvt->Init( scale_factor, ref_force, head_pos );
+
+    std::map<dsstring, DrawSpace::Core::Movement*>* mvts_map = (std::map<dsstring, DrawSpace::Core::Movement*>*)p_dialog->GetData( "mvts_map" );
+
+    (*mvts_map)[alias] = head_mvt;
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    AdaptMvtsList( mvts_map, ctrl );
+
+    p_dialog->Close();
 
 }
 
@@ -1175,4 +1361,68 @@ void wxWidgetAdapter::AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpac
     propertygrid->Append( new wxFloatProperty( "Current angle", wxPG_LABEL, current_angle ) );
     propertygrid->Append( new wxFloatProperty( "Current theta", wxPG_LABEL, current_theta ) );
     propertygrid->Append( new wxFloatProperty( "Current phi", wxPG_LABEL, current_phi ) );
+}
+
+void wxWidgetAdapter::AdaptFpsMvtProps( const dsstring& p_mvtname, DrawSpace::Core::FPSMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+  
+    Vector current_pos;
+    dsreal current_yaw, current_pitch;
+
+    p_movement->GetCurrentPos( current_pos );
+    current_yaw = p_movement->GetCurrentYaw();
+    current_pitch = p_movement->GetCurrentPitch();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtname.c_str() ) );
+
+    wxPGProperty* currpos_prop = propertygrid->Append( new wxStringProperty( "Current position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "x", wxPG_LABEL, current_pos[0] ) );
+    propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "y", wxPG_LABEL, current_pos[1] ) );
+    propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "z", wxPG_LABEL, current_pos[2] ) );
+
+    propertygrid->Append( new wxFloatProperty( "Current yaw", wxPG_LABEL, current_yaw ) );
+    propertygrid->Append( new wxFloatProperty( "Current pitch", wxPG_LABEL, current_pitch ) );
+
+}
+
+void wxWidgetAdapter::AdaptFreeMvtProps( const dsstring& p_mvtname, DrawSpace::Core::FreeMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+  
+    Vector current_pos;
+
+    p_movement->GetCurrentPos( current_pos );
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtname.c_str() ) );
+
+    wxPGProperty* currpos_prop = propertygrid->Append( new wxStringProperty( "Current position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "x", wxPG_LABEL, current_pos[0] ) );
+    propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "y", wxPG_LABEL, current_pos[1] ) );
+    propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "z", wxPG_LABEL, current_pos[2] ) );
+}
+
+void wxWidgetAdapter::AdaptHeadMvtProps( const dsstring& p_mvtname, DrawSpace::Core::HeadMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    Vector head_pos;
+    dsreal ref_force;
+    dsreal scale_factor;
+
+    p_movement->GetHeadPos( head_pos );
+    scale_factor = p_movement->GetScaleFactor();
+    ref_force = p_movement->GetRefForce();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtname.c_str() ) );
+
+    propertygrid->Append( new wxFloatProperty( "Scale factor", wxPG_LABEL, scale_factor ) );
+    propertygrid->Append( new wxFloatProperty( "Ref force", wxPG_LABEL, ref_force ) );
+
+
+    wxPGProperty* headpos_prop = propertygrid->Append( new wxStringProperty( "Head position", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "x", wxPG_LABEL, head_pos[0] ) );
+    propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "y", wxPG_LABEL, head_pos[1] ) );
+    propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "z", wxPG_LABEL, head_pos[2] ) );
+
 }
