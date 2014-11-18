@@ -126,4 +126,38 @@ void CircularMovement::Reset( void )
     m_current_angle = 0.0;
 }
 
+void CircularMovement::GetCenterPos( Utils::Vector& p_center_pos )
+{
+    p_center_pos = m_center_pos;
+}
+
+void CircularMovement::GetDeltaCenter( Utils::Vector& p_delta_center )
+{
+    p_delta_center = m_delta_center;
+}
+
+void CircularMovement::GetRotAxis( Utils::Vector& p_rotaxis )
+{
+    p_rotaxis = m_rotaxis;
+}
+
+dsreal CircularMovement::GetInitAngle( void )
+{
+    return m_init_angle;
+}
+
+dsreal CircularMovement::GetCurrentAngle( void )
+{
+    return m_current_angle;
+}
+
+dsreal CircularMovement::GetCurrentTheta( void )
+{
+    return Maths::RadToDeg( m_current_theta );
+}
+
+dsreal CircularMovement::GetCurrentPhi( void )
+{
+    return Maths::RadToDeg( m_current_phi );
+}
 

@@ -64,6 +64,14 @@ public:
     void SetTheta( dsreal p_theta );
     void SetPhi( dsreal p_phi );
 
+    void GetCenterPos( Utils::Vector& p_center_pos );
+    void GetDeltaCenter( Utils::Vector& p_delta_center );
+    void GetRotAxis( Utils::Vector& p_rotaxis );
+    dsreal GetInitAngle( void );
+    dsreal GetCurrentAngle( void );
+    dsreal GetCurrentTheta( void );
+    dsreal GetCurrentPhi( void );
+
     void Reset( void );
 };
 }

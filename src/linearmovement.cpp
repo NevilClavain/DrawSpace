@@ -137,11 +137,11 @@ void LinearMovement::GetDirection( Utils::Vector& p_direction )
 
 dsreal LinearMovement::GetCurrentTheta( void )
 {
-    return Maths::RadToDeg( m_current_phi );
+    return Maths::RadToDeg( m_current_theta );
 }
 
 dsreal LinearMovement::GetCurrentPhi( void )
 {
-    return Maths::RadToDeg( m_current_theta );
+    return Maths::RadToDeg( m_current_phi );
 }
 
