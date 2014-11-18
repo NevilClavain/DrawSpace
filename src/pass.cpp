@@ -357,7 +357,7 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
             return false;
         }
 
-        std::vector<std::pair<long, TextureSourceName>> viewportquad_textures = m_properties["m_properties"].GetPropValue<std::vector<std::pair<long, TextureSourceName>>>();
+        std::vector<std::pair<long, TextureSourceName>> viewportquad_textures = m_properties["viewportquad_textures"].GetPropValue<std::vector<std::pair<long, TextureSourceName>>>();
 
         long stage;
         TextureSourceName tsn;
