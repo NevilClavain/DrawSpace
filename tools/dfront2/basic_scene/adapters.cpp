@@ -1256,6 +1256,59 @@ void wxWidgetAdapter::AdaptSpectatorMvtCreationProps( BasicSceneObjectProperties
 
 void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;    
+    wxStringProperty* prop2;
+    wxIntProperty* prop3;
+    wxBoolProperty* prop4;
+    wxAny value;
+
+    dsreal  scale_pos;
+    long    period;
+    bool    orbiter_link;
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Scale pos" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &scale_pos );
+
+    prop3 = static_cast<wxIntProperty*>( propertygrid->GetProperty( "Period" ) );
+    value = prop->GetValue();
+    value.GetAs<long>( &period );
+
+    prop4 = static_cast<wxBoolProperty*>( propertygrid->GetProperty( "Attached to Orbiter" ) );
+    value = prop->GetValue();
+    value.GetAs<bool>( &orbiter_link );
+
+    SpectatorMovement* spectator_mvt = new SpectatorMovement();
+    spectator_mvt->Init( scale_pos, period, orbiter_link );
+
+    std::map<dsstring, DrawSpace::Core::Movement*>* mvts_map = (std::map<dsstring, DrawSpace::Core::Movement*>*)p_dialog->GetData( "mvts_map" );
+
+    (*mvts_map)[alias] = spectator_mvt;
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    AdaptMvtsList( mvts_map, ctrl );
+
+    p_dialog->Close();
 
 }
 
