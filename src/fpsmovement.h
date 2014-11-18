@@ -64,6 +64,10 @@ public:
 
     void SetSpeed( dsreal p_speed );
     void Compute( Utils::TimeManager& p_timemanager /*, bool p_ymvt = false */ );
+
+    void GetCurrentPos( Utils::Vector& p_pos );
+    dsreal GetCurrentYaw( void );
+    dsreal GetCurrentPitch( void );
 };
 }
 }

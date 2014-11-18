@@ -57,6 +57,8 @@ public:
 
     void SetSpeed( dsreal p_speed );
     void Compute( Utils::TimeManager& p_timemanager );
+
+    void GetCurrentPos( Utils::Vector& p_pos );
 };
 }
 }

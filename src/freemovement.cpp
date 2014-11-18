@@ -158,3 +158,12 @@ void FreeMovement::Compute( Utils::TimeManager& p_timemanager )
 
     m_result = m_orientation * m_position;
 }
+
+void FreeMovement::GetCurrentPos( Utils::Vector& p_pos )
+{
+    p_pos[0] = m_position( 3, 0 );
+    p_pos[1] = m_position( 3, 1 );
+    p_pos[2] = m_position( 3, 2 );
+    p_pos[3] = 1.0;
+}
+

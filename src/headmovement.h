@@ -79,6 +79,10 @@ public:
 
     void SetRefBody( DrawSpace::Dynamics::InertBody* p_refbody );
     void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
+
+    dsreal GetScaleFactor( void );
+    dsreal GetRefForce( void );
+    void GetHeadPos( Utils::Vector& p_headpos );
 };
 
 }

@@ -502,3 +502,18 @@ void HeadMovement::Compute( DrawSpace::Utils::TimeManager& p_timemanager )
     trf.GetResult( &m_result );
                
 }
+
+dsreal HeadMovement::GetScaleFactor( void )
+{
+    return m_scalefactor;
+}
+
+dsreal HeadMovement::GetRefForce( void )
+{
+    return m_ref_force;
+}
+
+void HeadMovement::GetHeadPos( Utils::Vector& p_headpos )
+{
+    p_headpos = m_head_pos;
+}
