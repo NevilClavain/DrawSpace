@@ -1265,7 +1265,7 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     wxAny value;
 
     dsreal  scale_pos;
-    long    period;
+    int     period;
     bool    orbiter_link;
 
     dsstring alias;
@@ -1290,11 +1290,11 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     value.GetAs<double>( &scale_pos );
 
     prop3 = static_cast<wxIntProperty*>( propertygrid->GetProperty( "Period" ) );
-    value = prop->GetValue();
-    value.GetAs<long>( &period );
+    value = prop3->GetValue();
+    value.GetAs<int>( &period );
 
     prop4 = static_cast<wxBoolProperty*>( propertygrid->GetProperty( "Attached to Orbiter" ) );
-    value = prop->GetValue();
+    value = prop4->GetValue();
     value.GetAs<bool>( &orbiter_link );
 
     SpectatorMovement* spectator_mvt = new SpectatorMovement();
@@ -1329,9 +1329,69 @@ void wxWidgetAdapter::AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDi
 
 void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxStringProperty* prop2;
+    wxAny value;
+
+    dsreal init_longit;
+    dsreal init_latit;
+    dsreal init_altitud;
+    dsreal init_theta;
+    dsreal init_phi;
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial longitud" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &init_longit );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial latitud" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &init_latit );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial altitud" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &init_altitud );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial theta" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &init_theta );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial phi" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &init_phi );
+
+    LongLatMovement* longlat_mvt = new LongLatMovement();
+    longlat_mvt->Init( init_longit, init_latit, init_altitud, init_theta, init_phi );
+
+    std::map<dsstring, DrawSpace::Core::Movement*>* mvts_map = (std::map<dsstring, DrawSpace::Core::Movement*>*)p_dialog->GetData( "mvts_map" );
+
+    (*mvts_map)[alias] = longlat_mvt;
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    AdaptMvtsList( mvts_map, ctrl );
+
+    p_dialog->Close();
 
 }
-
 
 void wxWidgetAdapter::AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
 {
@@ -1477,5 +1537,50 @@ void wxWidgetAdapter::AdaptHeadMvtProps( const dsstring& p_mvtname, DrawSpace::C
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "x", wxPG_LABEL, head_pos[0] ) );
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "y", wxPG_LABEL, head_pos[1] ) );
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "z", wxPG_LABEL, head_pos[2] ) );
+
+}
+
+void wxWidgetAdapter::AdaptSpectatorMvtProps( const dsstring& p_mvtname, DrawSpace::Core::SpectatorMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    dsreal  scale_pos;
+    long    pos_period;
+    bool    orbiter_link;
+
+    scale_pos = p_movement->GetScalePos();
+    pos_period = p_movement->GetPosPeriod();
+    orbiter_link = p_movement->GetOrbiterLinkState();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtname.c_str() ) );
+    
+    propertygrid->Append( new wxFloatProperty( "Scale pos", wxPG_LABEL, scale_pos ) );
+    propertygrid->Append( new wxIntProperty( "Position period", wxPG_LABEL, pos_period ) );
+    propertygrid->Append( new wxBoolProperty( "Orbiter link", wxPG_LABEL, orbiter_link ) );
+}
+
+void wxWidgetAdapter::AdaptLongLatMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LongLatMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    dsreal longitud;
+    dsreal latitud;
+    dsreal altitud;
+    dsreal theta;
+    dsreal phi;
+
+    longitud = p_movement->GetCurrentLongitud();
+    latitud = p_movement->GetCurrentLatitud();
+    altitud = p_movement->GetCurrentAltitud();
+    theta = p_movement->GetCurrentTheta();
+    phi = p_movement->GetCurrentPhi();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtname.c_str() ) );
+    
+    propertygrid->Append( new wxFloatProperty( "Longitud", wxPG_LABEL, longitud ) );
+    propertygrid->Append( new wxFloatProperty( "Latitud", wxPG_LABEL, latitud ) );
+    propertygrid->Append( new wxFloatProperty( "Altitud", wxPG_LABEL, altitud ) );
+    propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, theta ) );
+    propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, phi ) );
 
 }

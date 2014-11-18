@@ -355,4 +355,21 @@ void BasicSceneMainFrame::OnMvtsListItemActivated( wxListEvent& p_event )
         wxWidgetAdapter::GetInstance()->AdaptHeadMvtProps( mvt_name2, headmvt, dialog );
         dialog->Show();
     }
+    
+    SpectatorMovement* spectatormvt = dynamic_cast<SpectatorMovement*>( mvt );
+    if( spectatormvt )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spectator movement properties" );
+        wxWidgetAdapter::GetInstance()->AdaptSpectatorMvtProps( mvt_name2, spectatormvt, dialog );
+        dialog->Show();
+    }
+
+    LongLatMovement* longlatmvt = dynamic_cast<LongLatMovement*>( mvt );
+    if( longlatmvt )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Longlat movement properties" );
+        wxWidgetAdapter::GetInstance()->AdaptLongLatMvtProps( mvt_name2, longlatmvt, dialog );
+        dialog->Show();
+    }
+
 }
