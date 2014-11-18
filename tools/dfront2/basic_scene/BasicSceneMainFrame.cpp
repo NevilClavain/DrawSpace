@@ -317,4 +317,13 @@ void BasicSceneMainFrame::OnMvtsListItemActivated( wxListEvent& p_event )
         wxWidgetAdapter::GetInstance()->AdaptLinearMvtProps( linearmvt, dialog );
         dialog->Show();
     }
+
+    CircularMovement* circularmvt = dynamic_cast<CircularMovement*>( mvt );
+    if( circularmvt )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Circular movement properties" );
+        wxWidgetAdapter::GetInstance()->AdaptCircularMvtProps( circularmvt, dialog );
+        dialog->Show();
+    }
+
 }

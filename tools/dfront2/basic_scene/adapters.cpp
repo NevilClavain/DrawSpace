@@ -794,6 +794,113 @@ void wxWidgetAdapter::AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesD
 
 void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxStringProperty* prop2;
+    wxAny value;
+
+    dsreal rval;
+    Vector center_pos;
+    Vector delta_center;
+    Vector rot_axis;
+    dsreal init_angle, theta, phi;
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center pos/x" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    center_pos[0] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center pos/y" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    center_pos[1] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center pos/z" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    center_pos[2] = rval;
+
+    center_pos[3] = 1.0;
+
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center/x" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    delta_center[0] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center/y" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    delta_center[1] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center/z" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    delta_center[2] = rval;
+
+    delta_center[3] = 1.0;
+
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis/x" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    rot_axis[0] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis/y" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    rot_axis[1] = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis/z" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    rot_axis[2] = rval;
+
+    rot_axis[3] = 1.0;
+
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial angle" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &init_angle );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Theta" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &theta );
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Phi" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &phi );
+
+    CircularMovement* circular_mvt = new CircularMovement();
+    circular_mvt->Init( center_pos, delta_center, rot_axis, init_angle, theta, phi );
+
+    std::map<dsstring, DrawSpace::Core::Movement*>* mvts_map = (std::map<dsstring, DrawSpace::Core::Movement*>*)p_dialog->GetData( "mvts_map" );
+
+    (*mvts_map)[alias] = circular_mvt;
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    AdaptMvtsList( mvts_map, ctrl );
+
+    p_dialog->Close();
 
 }
 
@@ -898,12 +1005,72 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
 
 void wxWidgetAdapter::AdaptLinearMvtProps( DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
     Vector init_pos;
     Vector current_pos;
     Vector direction;
-    Vector current_theta;
-    Vector current_phi;
+    dsreal current_theta;
+    dsreal current_phi;
 
-    // to be continued...
+    p_movement->GetInitPos( init_pos );
+    p_movement->GetDirection( direction );
+    p_movement->GetCurrentPos( current_pos );
+    current_theta = p_movement->GetCurrentTheta();
+    current_phi = p_movement->GetCurrentPhi();
 
+    propertygrid->Append( new wxFloatProperty( "Initial position/x", wxPG_LABEL, init_pos[0] ) );
+    propertygrid->Append( new wxFloatProperty( "Initial position/y", wxPG_LABEL, init_pos[1] ) );
+    propertygrid->Append( new wxFloatProperty( "Initial position/z", wxPG_LABEL, init_pos[2] ) );
+
+    propertygrid->Append( new wxFloatProperty( "Direction/x", wxPG_LABEL, direction[0] ) );
+    propertygrid->Append( new wxFloatProperty( "Direction/y", wxPG_LABEL, direction[1] ) );
+    propertygrid->Append( new wxFloatProperty( "Direction/z", wxPG_LABEL, direction[2] ) );
+
+    propertygrid->Append( new wxFloatProperty( "Current position/x", wxPG_LABEL, current_pos[0] ) );
+    propertygrid->Append( new wxFloatProperty( "Current position/y", wxPG_LABEL, current_pos[1] ) );
+    propertygrid->Append( new wxFloatProperty( "Current position/z", wxPG_LABEL, current_pos[2] ) );
+
+    propertygrid->Append( new wxFloatProperty( "Current theta", wxPG_LABEL, current_theta ) );
+    propertygrid->Append( new wxFloatProperty( "Current phi", wxPG_LABEL, current_phi ) );
+
+}
+
+void wxWidgetAdapter::AdaptCircularMvtProps( DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    Vector center_pos;
+    Vector delta_center;
+    Vector rot_axis;
+    dsreal init_angle;
+    dsreal current_angle;
+    dsreal current_theta;
+    dsreal current_phi;
+
+    p_movement->GetCenterPos( center_pos );
+    p_movement->GetDeltaCenter( delta_center );
+    p_movement->GetRotAxis( rot_axis );
+    init_angle = p_movement->GetInitAngle();
+    current_angle = p_movement->GetCurrentAngle();
+    current_theta = p_movement->GetCurrentTheta();
+    current_phi = p_movement->GetCurrentPhi();
+
+    propertygrid->Append( new wxFloatProperty( "Center position/x", wxPG_LABEL, center_pos[0] ) );
+    propertygrid->Append( new wxFloatProperty( "Center position/y", wxPG_LABEL, center_pos[1] ) );
+    propertygrid->Append( new wxFloatProperty( "Center position/z", wxPG_LABEL, center_pos[2] ) );
+
+    propertygrid->Append( new wxFloatProperty( "Delta center/x", wxPG_LABEL, delta_center[0] ) );
+    propertygrid->Append( new wxFloatProperty( "Delta center/y", wxPG_LABEL, delta_center[1] ) );
+    propertygrid->Append( new wxFloatProperty( "Delta center/z", wxPG_LABEL, delta_center[2] ) );
+
+    propertygrid->Append( new wxFloatProperty( "Rotation axis/x", wxPG_LABEL, rot_axis[0] ) );
+    propertygrid->Append( new wxFloatProperty( "Rotation axis/y", wxPG_LABEL, rot_axis[1] ) );
+    propertygrid->Append( new wxFloatProperty( "Rotation axis/z", wxPG_LABEL, rot_axis[2] ) );
+
+    propertygrid->Append( new wxFloatProperty( "Initial angle", wxPG_LABEL, init_angle ) );
+    propertygrid->Append( new wxFloatProperty( "Current angle", wxPG_LABEL, current_angle ) );
+
+    propertygrid->Append( new wxFloatProperty( "Current theta", wxPG_LABEL, current_theta ) );
+    propertygrid->Append( new wxFloatProperty( "Current phi", wxPG_LABEL, current_phi ) );
 }

@@ -95,6 +95,7 @@ public:
     void AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
 
     void AdaptLinearMvtProps( DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptCircularMvtProps( DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
 
 };
 
