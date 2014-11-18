@@ -670,7 +670,7 @@ bool IntermediatePass::on_new_line( const dsstring& p_line, long p_line_num, std
             _PARSER_MISSING_ARG__
             return false;
         }
-        m_properties["enabledepthclear"].SetPropValue<bool>( ( "true" == p_words[1] ? true : false ) );
+        m_properties["targetdimsfromrenderer"].SetPropValue<bool>( ( "true" == p_words[1] ? true : false ) );
     }
     else if( "targetdims" == p_words[0] )
     {
