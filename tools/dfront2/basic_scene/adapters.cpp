@@ -454,46 +454,71 @@ void wxWidgetAdapter::AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p
     p_fx->GetPropertiesMap( props );
 
     std::vector<dsstring> shaders_list = props["shaders"].GetPropValue<std::vector<dsstring>>();
-    for( size_t i = 0; i < shaders_list.size(); i++ )
+
+    if( shaders_list.size() > 0 )
     {
-        char shader_index[32];
-        sprintf( shader_index, "shader/%d", i );
-        dsstring shader_name = shaders_list[i];
-        p_propertygrid->Append( new wxStringProperty( shader_index, wxPG_LABEL, shader_name.c_str() ) );
+        wxPGProperty* shaderslist_prop = p_propertygrid->Append( new wxStringProperty( "shaders", wxPG_LABEL, "<composed>" ) );
+
+        for( size_t i = 0; i < shaders_list.size(); i++ )
+        {
+            char shader_index[32];
+            sprintf( shader_index, "%d", i );
+
+            p_propertygrid->AppendIn( shaderslist_prop, new wxStringProperty( shader_index, wxPG_LABEL, shaders_list[i].c_str() ) );
+        }
     }
 
     std::vector<RenderState> rsin_list = props["renderstates_in"].GetPropValue<std::vector<RenderState>>();
-    for( size_t i = 0; i < rsin_list.size(); i++ )
-    {
-        dsstring renderstate_op;
-        dsstring renderstate_arg;
 
-        RenderState rs = rsin_list[i];
-        
-        char rsin_index[32];
-        sprintf( rsin_index, "renderstate_in/%d", i );
-        
-        rs.GetOperationToString( renderstate_op );
-        rs.GetArg( renderstate_arg );
-        dsstring final = renderstate_op + "," + renderstate_arg;
-        p_propertygrid->Append( new wxStringProperty( rsin_index, wxPG_LABEL, final.c_str() ) );
+    if( rsin_list.size() > 0 )
+    {
+        wxPGProperty* rsinlist_prop = p_propertygrid->Append( new wxStringProperty( "renderstates_in", wxPG_LABEL, "<composed>" ) );
+        for( size_t i = 0; i < rsin_list.size(); i++ )
+        {
+            dsstring renderstate_op;
+            dsstring renderstate_arg;
+
+            RenderState rs = rsin_list[i];
+            
+            char rsin_index[32];
+            
+            sprintf( rsin_index, "%d", i );
+
+            wxPGProperty* rsinlistindex_prop = p_propertygrid->AppendIn( rsinlist_prop, new wxStringProperty( rsin_index, wxPG_LABEL, "<composed>" ) );
+
+            
+            rs.GetOperationToString( renderstate_op );
+            rs.GetArg( renderstate_arg );
+
+            p_propertygrid->AppendIn( rsinlistindex_prop, new wxStringProperty( "Operation", wxPG_LABEL, renderstate_op.c_str() ) );
+            p_propertygrid->AppendIn( rsinlistindex_prop, new wxStringProperty( "Argument", wxPG_LABEL, renderstate_arg.c_str() ) );
+        }
     }
 
     std::vector<RenderState> rsout_list = props["renderstates_out"].GetPropValue<std::vector<RenderState>>();
-    for( size_t i = 0; i < rsout_list.size(); i++ )
+    if( rsout_list.size() > 0 )
     {
-        dsstring renderstate_op;
-        dsstring renderstate_arg;
+        wxPGProperty* rsoutlist_prop = p_propertygrid->Append( new wxStringProperty( "renderstates_out", wxPG_LABEL, "<composed>" ) );
+        for( size_t i = 0; i < rsout_list.size(); i++ )
+        {
+            dsstring renderstate_op;
+            dsstring renderstate_arg;
 
-        RenderState rs = rsout_list[i];
-        
-        char rsout_index[32];
-        sprintf( rsout_index, "renderstate_out:%d", i );
-        
-        rs.GetOperationToString( renderstate_op );
-        rs.GetArg( renderstate_arg );
-        dsstring final = renderstate_op + "," + renderstate_arg;
-        p_propertygrid->Append( new wxStringProperty( rsout_index, wxPG_LABEL, final.c_str() ) );
+            RenderState rs = rsout_list[i];
+            
+            char rsout_index[32];
+
+            sprintf( rsout_index, "%d", i );
+
+            wxPGProperty* rsoutlistindex_prop = p_propertygrid->AppendIn( rsoutlist_prop, new wxStringProperty( rsout_index, wxPG_LABEL, "<composed>" ) );
+            
+            rs.GetOperationToString( renderstate_op );
+            rs.GetArg( renderstate_arg );
+
+            p_propertygrid->AppendIn( rsoutlistindex_prop, new wxStringProperty( "Operation", wxPG_LABEL, renderstate_op.c_str() ) );
+            p_propertygrid->AppendIn( rsoutlistindex_prop, new wxStringProperty( "Argument", wxPG_LABEL, renderstate_arg.c_str() ) );
+
+        }
     }
 }
 
@@ -515,17 +540,22 @@ void wxWidgetAdapter::AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass*
 
         if( !targetdimsfromrenderer )
         {
-            p_propertygrid->Append( new wxIntProperty( "targetdims/width", wxPG_LABEL, targetdims_width ) );
-            p_propertygrid->Append( new wxIntProperty( "targetdims/height", wxPG_LABEL, targetdims_height ) );
+            wxPGProperty* targetdims_prop = p_propertygrid->Append( new wxStringProperty( "targetdims", wxPG_LABEL, "<composed>" ) );
+            p_propertygrid->AppendIn( targetdims_prop, new wxIntProperty( "width", wxPG_LABEL, targetdims_width ) );
+            p_propertygrid->AppendIn( targetdims_prop, new wxIntProperty( "height", wxPG_LABEL, targetdims_height ) );
         }
     }
 
     p_propertygrid->Append( new wxBoolProperty( "enabledepthclear", wxPG_LABEL, props["enabledepthclear"].GetPropValue<bool>() ) );
     p_propertygrid->Append( new wxBoolProperty( "enabletargetclear", wxPG_LABEL, props["enabletargetclear"].GetPropValue<bool>() ) );
 
-    p_propertygrid->Append( new wxIntProperty( "targetclearcolor/r", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "r" ) ) );
-    p_propertygrid->Append( new wxIntProperty( "targetclearcolor/g", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "g" ) ) );
-    p_propertygrid->Append( new wxIntProperty( "targetclearcolor/b", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "b" ) ) );
+    if( props["enabletargetclear"].GetPropValue<bool>() )
+    {
+        wxPGProperty* targetclearcolor_prop = p_propertygrid->Append( new wxStringProperty( "targetclearcolor", wxPG_LABEL, "<composed>" ) );
+        p_propertygrid->AppendIn( targetclearcolor_prop, new wxIntProperty( "r", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "r" ) ) );
+        p_propertygrid->AppendIn( targetclearcolor_prop, new wxIntProperty( "g", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "g" ) ) );
+        p_propertygrid->AppendIn( targetclearcolor_prop, new wxIntProperty( "b", wxPG_LABEL, props["targetclearcolor"].GetPropValue<unsigned char>( "b" ) ) );
+    }
 
     bool viewportquad = props["viewportquad"].GetPropValue<bool>();
 
@@ -537,39 +567,87 @@ void wxWidgetAdapter::AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass*
         
         std::vector<std::pair<long, Pass::TextureSourceName>> viewportquad_textures;
         viewportquad_textures = props["viewportquad_textures"].GetPropValue<std::vector<std::pair<long, Pass::TextureSourceName>>>();
-        for( size_t i = 0; i < viewportquad_textures.size(); i++ )
+
+        if( viewportquad_textures.size() > 0 )
         {
-            Pass::TextureSourceName texture_source_name = viewportquad_textures[i].second;
-            long stage = viewportquad_textures[i].first;
+            wxPGProperty* vpqtextures_prop = p_propertygrid->Append( new wxStringProperty( "viewportquad_textures", wxPG_LABEL, "<composed>" ) );
 
-            char texture_entry[128];
-
-            sprintf( texture_entry, "textures/%d, stage %d", i, stage );
-
-            dsstring final;
-            if( Pass::PASS_NAME == texture_source_name.source )
+            for( size_t i = 0; i < viewportquad_textures.size(); i++ )
             {
-                final = "Pass : " + texture_source_name.name;
-            }
-            else
-            {
-                final = "Texture : " + texture_source_name.name;
+                /*
+                Pass::TextureSourceName texture_source_name = viewportquad_textures[i].second;
+                long stage = viewportquad_textures[i].first;
+
+                char texture_entry[128];
+
+                sprintf( texture_entry, "textures/%d, stage %d", i, stage );
+
+                dsstring final;
+                if( Pass::PASS_NAME == texture_source_name.source )
+                {
+                    final = "Pass : " + texture_source_name.name;
+                }
+                else
+                {
+                    final = "Texture : " + texture_source_name.name;
+                }
+
+                p_propertygrid->Append( new wxStringProperty( texture_entry, wxPG_LABEL, final.c_str() ) );
+                */
+
+                Pass::TextureSourceName texture_source_name = viewportquad_textures[i].second;
+                long stage = viewportquad_textures[i].first;
+
+                char stage_entry[32];
+                sprintf( stage_entry, "stage %d", stage );
+                wxPGProperty* vpqtexturestage_prop = p_propertygrid->AppendIn( vpqtextures_prop, new wxStringProperty( stage_entry, wxPG_LABEL, "<composed>" ) );
+
+                if( Pass::PASS_NAME == texture_source_name.source )
+                {
+                    p_propertygrid->AppendIn( vpqtexturestage_prop, new wxStringProperty( "Source type", wxPG_LABEL, "Pass" ) );
+                }
+                else
+                {
+                    p_propertygrid->AppendIn( vpqtexturestage_prop, new wxStringProperty( "Source type", wxPG_LABEL, "Texture" ) );
+                }
+
+                p_propertygrid->AppendIn( vpqtexturestage_prop, new wxStringProperty( "Source name", wxPG_LABEL, texture_source_name.name.c_str() ) );
             }
 
-            p_propertygrid->Append( new wxStringProperty( texture_entry, wxPG_LABEL, final.c_str() ) );
         }
 
         std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = props["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
-        for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
+
+        if( viewportquad_shaderparams.size() )
         {
-            char param_entry[128];
-            sprintf( param_entry, "shaderparams/%s, shader %d register %d", it->first.c_str(), it->second.shader_index, it->second.param_register );
+            wxPGProperty* vpqshaderparams_prop = p_propertygrid->Append( new wxStringProperty( "viewportquad_shaderparams", wxPG_LABEL, "<composed>" ) );
 
-            char param_value[64];
+            for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
+            {
+                /*
+                char param_entry[128];
+                sprintf( param_entry, "shaderparams/%s, shader %d register %d", it->first.c_str(), it->second.shader_index, it->second.param_register );
 
-            sprintf( param_value, "%.2f %.2f %.2f %.2f", it->second.param_values[0], it->second.param_values[1], it->second.param_values[2], it->second.param_values[3] );
+                char param_value[64];
 
-            p_propertygrid->Append( new wxStringProperty( param_entry, wxPG_LABEL, param_value ) );
+                sprintf( param_value, "%.2f %.2f %.2f %.2f", it->second.param_values[0], it->second.param_values[1], it->second.param_values[2], it->second.param_values[3] );
+
+                p_propertygrid->Append( new wxStringProperty( param_entry, wxPG_LABEL, param_value ) );
+                */
+
+                wxPGProperty* vpqshaderparamname_prop = p_propertygrid->AppendIn( vpqshaderparams_prop, new wxStringProperty( it->first.c_str(), wxPG_LABEL, "<composed>" ) );
+
+                p_propertygrid->AppendIn( vpqshaderparamname_prop, new wxIntProperty( "shader index", wxPG_LABEL, it->second.shader_index ) );
+                p_propertygrid->AppendIn( vpqshaderparamname_prop, new wxIntProperty( "register", wxPG_LABEL, it->second.param_register ) );
+
+                wxPGProperty* vpqshaderparamvalue_prop = p_propertygrid->AppendIn( vpqshaderparamname_prop, new wxStringProperty( "value", wxPG_LABEL, "<composed>" ) );
+
+                p_propertygrid->AppendIn( vpqshaderparamvalue_prop, new wxFloatProperty( "x", wxPG_LABEL, it->second.param_values[0] ) );
+                p_propertygrid->AppendIn( vpqshaderparamvalue_prop, new wxFloatProperty( "y", wxPG_LABEL, it->second.param_values[1] ) );
+                p_propertygrid->AppendIn( vpqshaderparamvalue_prop, new wxFloatProperty( "z", wxPG_LABEL, it->second.param_values[2] ) );
+                p_propertygrid->AppendIn( vpqshaderparamvalue_prop, new wxFloatProperty( "w", wxPG_LABEL, it->second.param_values[3] ) );
+
+            }
         }
     }
 }
