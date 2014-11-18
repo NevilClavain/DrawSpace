@@ -56,6 +56,12 @@ public:
 
     void SetTheta( dsreal p_theta );
     void SetPhi( dsreal p_phi );
+
+    dsreal GetCurrentLongitud( void );
+    dsreal GetCurrentLatitud( void );
+    dsreal GetCurrentAltitud( void );
+    dsreal GetCurrentTheta( void );
+    dsreal GetCurrentPhi( void );
 };
 }
 }

@@ -99,3 +99,27 @@ void LongLatMovement::SetPhi( dsreal p_phi )
     m_current_phi = DrawSpace::Utils::Maths::DegToRad( p_phi );
 }
 
+dsreal LongLatMovement::GetCurrentLongitud( void )
+{
+    return DrawSpace::Utils::Maths::RadToDeg( m_longitud_theta );
+}
+
+dsreal LongLatMovement::GetCurrentLatitud( void )
+{
+    return DrawSpace::Utils::Maths::RadToDeg( m_latitud_phi );
+}
+
+dsreal LongLatMovement::GetCurrentAltitud( void )
+{
+    return m_alt;
+}
+
+dsreal LongLatMovement::GetCurrentTheta( void )
+{
+    return DrawSpace::Utils::Maths::RadToDeg( m_current_theta );
+}
+
+dsreal LongLatMovement::GetCurrentPhi( void )
+{
+    return DrawSpace::Utils::Maths::RadToDeg( m_current_phi );
+}

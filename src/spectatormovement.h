@@ -66,6 +66,10 @@ public:
     void SetRefBody( DrawSpace::Dynamics::InertBody* p_refbody );
 
     void Compute( DrawSpace::Utils::TimeManager& p_timemanager );
+
+    dsreal GetScalePos( void );
+    long GetPosPeriod( void );
+    bool GetOrbiterLinkState( void );
 };
 
 }

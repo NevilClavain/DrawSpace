@@ -178,3 +178,18 @@ void SpectatorMovement::on_timer( const dsstring& p_timername )
 {
     m_compute = true;
 }
+
+dsreal SpectatorMovement::GetScalePos( void )
+{
+    return m_scalepos;
+}
+
+long SpectatorMovement::GetPosPeriod( void )
+{
+    return m_posperiod;
+}
+
+bool SpectatorMovement::GetOrbiterLinkState( void )
+{
+    return m_linked_to_orbiter;
+}
