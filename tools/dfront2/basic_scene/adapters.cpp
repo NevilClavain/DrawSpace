@@ -33,7 +33,6 @@ wxWidgetAdapter* wxWidgetAdapter::m_instance = NULL;
 wxWidgetAdapter::wxWidgetAdapter( void )
 {
     m_applypassshadervalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applypassshadervalues );
-
     m_applylinearmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applylinearmvtvalues );
     m_applycircularmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycircularmvtvalues );
     m_applyfpsmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyfpsmvtvalues );
@@ -41,12 +40,20 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applyheadmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyheadmvtvalues );
     m_applyspectatormvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspectatormvtvalues );
     m_applylonglatmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applylonglatmvtvalues );
+    m_applycameravalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameravalues );
 }
 
 wxWidgetAdapter::~wxWidgetAdapter( void )
 {
     delete m_applypassshadervalues_callback;
-
+    delete m_applylinearmvtvalues_callback;
+    delete m_applycircularmvtvalues_callback;
+    delete m_applyfpsmvtvalues_callback;
+    delete m_applyfreemvtvalues_callback;
+    delete m_applyheadmvtvalues_callback;
+    delete m_applyspectatormvtvalues_callback;
+    delete m_applylonglatmvtvalues_callback;
+    delete m_applycameravalues_callback;  
 }
 
 void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
@@ -367,6 +374,54 @@ void wxWidgetAdapter::AdaptMvtsList( std::map<dsstring, DrawSpace::Core::Movemen
 
         id++;
     }
+}
+
+void wxWidgetAdapter::AdaptCamerasList( std::map<dsstring, DrawSpace::Dynamics::CameraPoint*>* p_map, wxListCtrl* p_listctrl )
+{
+    p_listctrl->ClearAll();
+
+    wxListItem col0;
+    col0.SetId( 0 );
+    col0.SetText( "Camera alias" );
+    col0.SetWidth( 110 );
+    p_listctrl->InsertColumn( 0, col0 );
+
+    wxListItem col1;
+    col1.SetId( 1 );
+    col1.SetText( "Attached body class" );
+    col1.SetWidth( 150 );
+    p_listctrl->InsertColumn( 1, col1 );
+
+    wxListItem col2;
+    col2.SetId( 2 );
+    col2.SetText( "Locking" );
+    col2.SetWidth( 100 );
+    p_listctrl->InsertColumn( 2, col2 );
+
+    wxListItem col3;
+    col3.SetId( 3 );
+    col3.SetText( "Movement class" );
+    col3.SetWidth( 100 );
+    p_listctrl->InsertColumn( 3, col3 );
+
+    wxListItem col4;
+    col4.SetId( 4 );
+    col4.SetText( "Longlat movement" );
+    col4.SetWidth( 150 );
+    p_listctrl->InsertColumn( 4, col4 );
+
+    wxListItem col5;
+    col5.SetId( 5 );
+    col5.SetText( "Relative orbiter" );
+    col5.SetWidth( 150 );
+    p_listctrl->InsertColumn( 5, col5 );
+
+    wxListItem col6;
+    col6.SetId( 6 );
+    col6.SetText( "Altitud" );
+    col6.SetWidth( 70 );
+    p_listctrl->InsertColumn( 6, col6 );
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1392,6 +1447,82 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     p_dialog->Close();
 
 }
+
+void wxWidgetAdapter::AdaptCameraCreationProps( std::map<dsstring, DrawSpace::Core::Movement*>* p_mvts_map, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
+
+    wxArrayString availables_bodies_labels;
+    // TODO : completer availables_bodies_labels
+    propertygrid->Append( new wxEnumProperty( "Attached body", wxPG_LABEL, availables_bodies_labels ));
+
+    wxArrayString availables_bodies_transformnodes_labels;
+    // TODO : completer availables_bodies_transformnodes_labels
+    propertygrid->Append( new wxEnumProperty( "Lock target", wxPG_LABEL, availables_bodies_transformnodes_labels ));
+
+
+    wxArrayString availables_movements_labels;
+    wxArrayString availables_longlatmovements_labels;
+
+    for( std::map<dsstring, DrawSpace::Core::Movement*>::iterator it = p_mvts_map->begin(); it != p_mvts_map->end(); ++it )
+    {
+        availables_movements_labels.Add( it->first.c_str() );
+
+        Movement* mvt = it->second;
+
+        if( dynamic_cast<LongLatMovement*>( mvt ) )
+        {
+            availables_longlatmovements_labels.Add( it->first );
+        }
+    }
+
+    propertygrid->Append( new wxEnumProperty( "Movement", wxPG_LABEL, availables_movements_labels ));
+    propertygrid->Append( new wxEnumProperty( "Longlat movement", wxPG_LABEL, availables_longlatmovements_labels ));
+
+
+    p_dialog->RegisterApplyButtonHandler( m_applycameravalues_callback );
+
+}
+
+void wxWidgetAdapter::on_applycameravalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxStringProperty* prop2;
+    wxAny value;
+
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+
+    wxEnumProperty* prop3;
+    prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "Movement" ) );           
+    wxString movement_name = prop3->GetValueAsString();   
+    buffer = movement_name.ToAscii();
+    dsstring movement_name_2 = buffer.data();
+    
+    _asm nop
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void wxWidgetAdapter::AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
 {

@@ -44,6 +44,7 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyheadmvtvalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspectatormvtvalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applylonglatmvtvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameravalues_callback;
 
 
     void on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -54,6 +55,7 @@ protected:
     void on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applyspectatormvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applycameravalues( BasicSceneObjectPropertiesDialog* p_dialog );
 
     wxWidgetAdapter( void );
 
@@ -76,6 +78,7 @@ public:
     void AdaptPassesList( wxListCtrl* p_listctrl );
     void AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxListCtrl* p_listctrl );
     void AdaptMvtsList( std::map<dsstring, DrawSpace::Core::Movement*>* p_map, wxListCtrl* p_listctrl );
+    void AdaptCamerasList( std::map<dsstring, DrawSpace::Dynamics::CameraPoint*>* p_map, wxListCtrl* p_listctrl );
 
 
     void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );
@@ -93,6 +96,7 @@ public:
     void AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptCameraCreationProps( std::map<dsstring, DrawSpace::Core::Movement*>* p_mvts_map, BasicSceneObjectPropertiesDialog* p_dialog );
 
     void AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );

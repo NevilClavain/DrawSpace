@@ -85,6 +85,8 @@ class MainFrame : public wxFrame
 	protected:
 		wxNotebook* m_notebook2;
 		wxPanel* m_camerasPanel;
+		wxListCtrl* m_cameras_listCtrl;
+		wxButton* m_createcamera_button;
 		wxListCtrl* m_mvts_listCtrl;
 		wxButton* m_createmvt_button;
 		wxComboBox* m_mvttype_comboBox;
@@ -99,6 +101,7 @@ class MainFrame : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
+		virtual void OnCreateCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnMvtsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnCreateMvtButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemActivated( wxListEvent& event ) { event.Skip(); }
