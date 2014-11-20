@@ -43,26 +43,35 @@ public:
 
         bool                            attached_to_body;
         dsstring                        attached_body_classname; // only if attached_to_body == true
+        dsstring                        attached_body_alias;
 
         bool                            locked_on_body;
         bool                            locked_on_transformnode;
+        dsstring                        locked_object_alias;
 
         bool                            has_movement;
         dsstring                        movement_classname; // only if has_movement == true
+        dsstring                        movement_alias;
 
         bool                            has_longlatmovement;
+        dsstring                        longlatmovement_alias;
 
     } Infos;
 
 protected:
 
     Body*                                           m_attached_body;
+    dsstring                                        m_attached_body_alias;
 
     Body*                                           m_locked_body;
     DrawSpace::Core::TransformNode*                 m_locked_node;
+    dsstring                                        m_locked_object_alias;
 
     DrawSpace::Core::Movement*                      m_movement;
+    dsstring                                        m_movement_alias;
+
     DrawSpace::Core::LongLatMovement*               m_longlatmovement;
+    dsstring                                        m_longlatmovement_alias;
 
     DrawSpace::Utils::Vector                        m_locked_body_center;
 
@@ -79,17 +88,17 @@ protected:
 
 public:
 
-    CameraPoint( const dsstring& p_name, Body* p_body = NULL );
+    CameraPoint( const dsstring& p_name, Body* p_body, const dsstring& p_body_alias );
     virtual ~CameraPoint( void );
 
     virtual void OnRegister( Scenegraph* p_scenegraph );
    
-    virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
-    virtual void RegisterLongLatMovement( DrawSpace::Core::LongLatMovement* p_longlatmovement );
+    virtual void RegisterMovement( const dsstring& p_alias, DrawSpace::Core::Movement* p_movement );
+    virtual void RegisterLongLatMovement( const dsstring& p_alias, DrawSpace::Core::LongLatMovement* p_longlatmovement );
     virtual void ComputeFinalTransform( Utils::TimeManager& p_timemanager );
 
-    virtual void LockOnBody( Body* p_locked_body );
-    virtual void LockOnTransformNode( DrawSpace::Core::TransformNode* p_locked_node );
+    virtual void LockOnBody( const dsstring& p_alias, Body* p_locked_body );
+    virtual void LockOnTransformNode( const dsstring& p_alias, DrawSpace::Core::TransformNode* p_locked_node );
 
 
     virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );

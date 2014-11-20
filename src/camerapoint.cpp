@@ -40,8 +40,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
-CameraPoint::CameraPoint( const dsstring& p_name, Body* p_body ) : TransformNode( p_name ), 
-m_attached_body( p_body ), 
+CameraPoint::CameraPoint( const dsstring& p_name, Body* p_body, const dsstring& p_body_alias ) : TransformNode( p_name ), 
+m_attached_body( p_body ),
+m_attached_body_alias( p_body_alias ),
 m_movement( NULL ),
 m_locked_body( NULL ),
 m_locked_node( NULL ),
@@ -80,14 +81,16 @@ void CameraPoint::OnRegister( Scenegraph* p_scenegraph )
 }
 
 
-void CameraPoint::RegisterMovement( DrawSpace::Core::Movement* p_movement )
+void CameraPoint::RegisterMovement( const dsstring& p_alias, DrawSpace::Core::Movement* p_movement )
 {
-    m_movement = p_movement;
+    m_movement          = p_movement;
+    m_movement_alias    = p_alias;
 }
 
-void CameraPoint::RegisterLongLatMovement( DrawSpace::Core::LongLatMovement* p_longlatmovement )
+void CameraPoint::RegisterLongLatMovement( const dsstring& p_alias, DrawSpace::Core::LongLatMovement* p_longlatmovement )
 {
-    m_longlatmovement = p_longlatmovement;
+    m_longlatmovement       = p_longlatmovement;
+    m_longlatmovement_alias = p_alias;
 }
 
 void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
@@ -95,6 +98,7 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
     if( m_attached_body )
     {
         p_infos.attached_to_body = true;
+        p_infos.attached_body_alias = m_attached_body_alias;
         Orbiter* orbiter = dynamic_cast<Orbiter*>( m_attached_body );
         if( orbiter )
         {
@@ -140,22 +144,26 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
     {
         p_infos.attached_to_body = false;
         p_infos.attached_body_classname = "";
+        p_infos.attached_body_alias = "";
     }
 
     if( m_locked_body )
     {
         p_infos.locked_on_body = true;
         p_infos.locked_on_transformnode = false;
+        p_infos.attached_body_alias = m_locked_object_alias;
     }
     else if( m_locked_node )
     {
         p_infos.locked_on_body = false;
         p_infos.locked_on_transformnode = true;
+        p_infos.attached_body_alias = m_locked_object_alias;
     }
     else
     {
         p_infos.locked_on_body = false;
         p_infos.locked_on_transformnode = false;
+        p_infos.attached_body_alias = "";
     }
 
     if( m_movement )
@@ -194,20 +202,24 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
         {
             p_infos.movement_classname = "<Unknown movement class>";
         }
+        p_infos.movement_alias = m_movement_alias;
     }
     else
     {
         p_infos.has_movement = false;
         p_infos.movement_classname = "";
+        p_infos.movement_alias = "";
     }
 
     if( m_longlatmovement )
     {
         p_infos.has_longlatmovement = true;
+        p_infos.longlatmovement_alias = m_longlatmovement_alias;
     }
     else
     {
         p_infos.has_longlatmovement = false;
+        p_infos.longlatmovement_alias = "";
     }
 
     p_infos.relative_orbiter = m_relative_orbiter;
@@ -324,14 +336,16 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
     }
 }
 
-void CameraPoint::LockOnBody( Body* p_locked_body )
+void CameraPoint::LockOnBody( const dsstring& p_alias, Body* p_locked_body )
 {
     m_locked_body = p_locked_body;
+    m_locked_object_alias = p_alias;
 }
 
-void CameraPoint::LockOnTransformNode( TransformNode* p_locked_node )
+void CameraPoint::LockOnTransformNode( const dsstring& p_alias, TransformNode* p_locked_node )
 {
     m_locked_node = p_locked_node;
+    m_locked_object_alias = p_alias;
 }
 
 void CameraPoint::GetLockedBodyCenter( Vector& p_vector )
