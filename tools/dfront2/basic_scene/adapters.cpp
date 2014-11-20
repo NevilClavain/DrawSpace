@@ -78,8 +78,7 @@ void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
 
     long id = 0;
 
-    for( std::map<dsstring, Asset*>::iterator it = assets_list.begin();
-        it != assets_list.end(); ++it )
+    for( std::map<dsstring, Asset*>::iterator it = assets_list.begin(); it != assets_list.end(); ++it, id++ )
     {
 
         wxListItem item;
@@ -116,10 +115,7 @@ void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
         }
         p_listctrl->SetItem( id, 1, type_name.c_str() );
 
-        p_listctrl->SetItemData( id, (long)it->second );
-
-        id++;
-            
+        p_listctrl->SetItemData( id, (long)it->second );            
     }   
 }
 
@@ -146,7 +142,7 @@ void wxWidgetAdapter::AdaptConfigsList( wxListCtrl* p_listctrl )
 
 
     long id = 0;
-    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = instances_list.begin(); it != instances_list.end(); ++it )
+    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = instances_list.begin(); it != instances_list.end(); ++it, id++ )
     {
         wxListItem item;
         item.SetId( id );
@@ -176,9 +172,7 @@ void wxWidgetAdapter::AdaptConfigsList( wxListCtrl* p_listctrl )
         }
 
         p_listctrl->SetItem( id, 1, type_name.c_str() );
-        p_listctrl->SetItemData( id, (long)it->second );
-        
-        id++;
+        p_listctrl->SetItemData( id, (long)it->second );       
     }
 }
 
@@ -281,7 +275,7 @@ void wxWidgetAdapter::AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxLi
     {
         long id = 0;
         std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = props["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
-        for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
+        for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++it, id++ )
         {
             wxListItem item;
             item.SetId( id );
@@ -301,9 +295,7 @@ void wxWidgetAdapter::AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxLi
             p_listctrl->SetItem( id, 2, param_register );
             p_listctrl->SetItem( id, 3, param_values );
 
-            p_listctrl->SetItemData( id, (long)p_pass );
-
-            id++;
+            p_listctrl->SetItemData( id, (long)p_pass );            
         }
     }
 }
@@ -326,7 +318,7 @@ void wxWidgetAdapter::AdaptMvtsList( std::map<dsstring, DrawSpace::Core::Movemen
     p_listctrl->InsertColumn( 1, col1 );
 
     long id = 0;
-    for( std::map<dsstring, Movement*>::iterator it = p_map->begin(); it != p_map->end(); ++it )
+    for( std::map<dsstring, Movement*>::iterator it = p_map->begin(); it != p_map->end(); ++it, id++ )
     {
         Movement* mvt = it->second;
 
@@ -371,12 +363,10 @@ void wxWidgetAdapter::AdaptMvtsList( std::map<dsstring, DrawSpace::Core::Movemen
         p_listctrl->SetItem( id, 1, type_name.c_str() );
 
         p_listctrl->SetItemData( id, (long)mvt );
-
-        id++;
     }
 }
 
-void wxWidgetAdapter::AdaptCamerasList( std::map<dsstring, DrawSpace::Dynamics::CameraPoint*>* p_map, wxListCtrl* p_listctrl )
+void wxWidgetAdapter::AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl )
 {
     p_listctrl->ClearAll();
 
@@ -388,7 +378,7 @@ void wxWidgetAdapter::AdaptCamerasList( std::map<dsstring, DrawSpace::Dynamics::
 
     wxListItem col1;
     col1.SetId( 1 );
-    col1.SetText( "Attached body class" );
+    col1.SetText( "Attached body" );
     col1.SetWidth( 150 );
     p_listctrl->InsertColumn( 1, col1 );
 
@@ -400,7 +390,7 @@ void wxWidgetAdapter::AdaptCamerasList( std::map<dsstring, DrawSpace::Dynamics::
 
     wxListItem col3;
     col3.SetId( 3 );
-    col3.SetText( "Movement class" );
+    col3.SetText( "Movement" );
     col3.SetWidth( 100 );
     p_listctrl->InsertColumn( 3, col3 );
 
@@ -422,6 +412,87 @@ void wxWidgetAdapter::AdaptCamerasList( std::map<dsstring, DrawSpace::Dynamics::
     col6.SetWidth( 70 );
     p_listctrl->InsertColumn( 6, col6 );
 
+    ///////////////////////////////////////
+
+    std::map<dsstring, Core::TransformNode*> cameras_list = p_scenegraph->GetCamerasList();
+
+    long id = 0;
+    for( std::map<dsstring, Core::TransformNode*>::iterator it = cameras_list.begin(); it != cameras_list.end(); ++it, id++ )
+    {
+        CameraPoint* camera = static_cast<CameraPoint*>( it->second );
+
+        dsstring alias = it->first;
+        wxListItem item;
+        item.SetId( id );
+        item.SetText( alias.c_str() );
+        p_listctrl->InsertItem( item );
+
+        CameraPoint::Infos infos;
+        camera->GetInfos( infos );
+
+
+        dsstring attached_body_name;
+        if( infos.attached_to_body )
+        {
+            attached_body_name = infos.attached_body_alias;
+        }
+        else
+        {
+            attached_body_name = "...";
+        }
+        p_listctrl->SetItem( id, 1, attached_body_name.c_str() );
+
+        dsstring locking_object_name;
+        if( infos.locked_on_body || infos.locked_on_transformnode )
+        {
+            locking_object_name = infos.locked_object_alias;
+        }
+        else
+        {
+            locking_object_name = "...";
+        }
+        p_listctrl->SetItem( id, 2, locking_object_name.c_str() );
+
+        dsstring movement_name;
+        if( infos.has_movement )
+        {
+            movement_name = infos.movement_alias;
+        }
+        else
+        {
+            movement_name = "...";
+        }
+        p_listctrl->SetItem( id, 3, movement_name.c_str() );
+
+        
+        dsstring llmovement_name;
+        if( infos.has_longlatmovement )
+        {
+            llmovement_name = infos.longlatmovement_alias;
+        }
+        else
+        {
+            llmovement_name = "...";
+        }
+
+        p_listctrl->SetItem( id, 4, llmovement_name.c_str() );
+
+        dsstring relative_orbiter;
+        char altitud[32];
+        if( infos.relative_orbiter )
+        {
+            relative_orbiter = "true";
+            sprintf( altitud, "%d", infos.altitud );
+        }
+        else
+        {
+            relative_orbiter = "false";
+            sprintf( altitud, "..." );
+        }
+        p_listctrl->SetItem( id, 5, relative_orbiter.c_str() );
+        p_listctrl->SetItem( id, 6, altitud );
+
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1466,6 +1537,9 @@ void wxWidgetAdapter::AdaptCameraCreationProps( std::map<dsstring, DrawSpace::Co
     wxArrayString availables_movements_labels;
     wxArrayString availables_longlatmovements_labels;
 
+    availables_movements_labels.Add( "..." );
+    availables_longlatmovements_labels.Add( "..." );
+
     for( std::map<dsstring, DrawSpace::Core::Movement*>::iterator it = p_mvts_map->begin(); it != p_mvts_map->end(); ++it )
     {
         availables_movements_labels.Add( it->first.c_str() );
@@ -1513,13 +1587,39 @@ void wxWidgetAdapter::on_applycameravalues( BasicSceneObjectPropertiesDialog* p_
 
 
     wxEnumProperty* prop3;
-    prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "Movement" ) );           
+
+    prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "Movement" ) );
     wxString movement_name = prop3->GetValueAsString();   
     buffer = movement_name.ToAscii();
     dsstring movement_name_2 = buffer.data();
-    
-    _asm nop
 
+    prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "Longlat movement" ) );
+    wxString llmovement_name = prop3->GetValueAsString();   
+    buffer = llmovement_name.ToAscii();
+    dsstring llmovement_name_2 = buffer.data();
+
+    std::map<dsstring, DrawSpace::Core::Movement*>* mvts_map = (std::map<dsstring, DrawSpace::Core::Movement*>*)p_dialog->GetData( "mvts_map" );
+
+    CameraPoint* camera_point = new CameraPoint( alias, NULL, "" );
+
+    if( movement_name_2 != "..." )
+    {
+        camera_point->RegisterMovement( movement_name_2, (*mvts_map)[movement_name_2] );
+    }
+
+    if( llmovement_name_2 != "..." )
+    {
+        camera_point->RegisterLongLatMovement( llmovement_name_2, static_cast<LongLatMovement*>( (*mvts_map)[llmovement_name_2] ) );
+    }
+
+    DrawSpace::Scenegraph* scenegraph = (DrawSpace::Scenegraph*)p_dialog->GetData( "scenegraph" );
+    scenegraph->RegisterNode( camera_point );
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    AdaptCamerasList( scenegraph, ctrl );
+
+    p_dialog->Close();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

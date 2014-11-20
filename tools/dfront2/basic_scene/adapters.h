@@ -78,7 +78,7 @@ public:
     void AdaptPassesList( wxListCtrl* p_listctrl );
     void AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxListCtrl* p_listctrl );
     void AdaptMvtsList( std::map<dsstring, DrawSpace::Core::Movement*>* p_map, wxListCtrl* p_listctrl );
-    void AdaptCamerasList( std::map<dsstring, DrawSpace::Dynamics::CameraPoint*>* p_map, wxListCtrl* p_listctrl );
+    void AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl );
 
 
     void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );

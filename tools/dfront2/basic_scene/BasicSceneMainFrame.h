@@ -33,8 +33,8 @@ protected:
 
     bool                                                    m_glready;
     DrawSpace::Utils::TimeManager                           m_timer;
-    std::map<dsstring, DrawSpace::Core::Movement*>          m_movements;
-    std::map<dsstring, DrawSpace::Dynamics::CameraPoint*>   m_cameras;
+    std::map<dsstring, DrawSpace::Core::Movement*>          m_movements;    
+    DrawSpace::Scenegraph                                   m_scenegraph;
 
     virtual void OnClose( wxCloseEvent& event );
     virtual void OnIdle( wxIdleEvent& event );

@@ -74,7 +74,7 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptConfigsList( m_configs_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
-    wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_cameras, m_cameras_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_scenegraph, m_cameras_listCtrl );
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -380,6 +380,10 @@ void BasicSceneMainFrame::OnCreateCameraButtonClicked( wxCommandEvent& p_event )
     BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera creation" );
 
     wxWidgetAdapter::GetInstance()->AdaptCameraCreationProps( &m_movements, dialog );
+
+    dialog->SetData( "mvts_map", &m_movements );
+    dialog->SetData( "scenegraph", &m_scenegraph );
+    dialog->SetData( "ctrl", m_cameras_listCtrl );
     dialog->EnableApplyButton();
     dialog->Show();
 
