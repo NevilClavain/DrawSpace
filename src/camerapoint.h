@@ -112,6 +112,7 @@ public:
     virtual void SetRelativeAltitude( dsreal p_relative_altitud );
 
     virtual void GetProjection( DrawSpace::Utils::Matrix& p_mat );
+    virtual dsreal GetZNear( void );
 
     virtual void UpdateProjectionZNear( dsreal p_znear );
 

@@ -378,6 +378,11 @@ void CameraPoint::GetProjection( DrawSpace::Utils::Matrix& p_mat )
     p_mat = m_projection;
 }
 
+dsreal CameraPoint::GetZNear( void )
+{
+    return m_znear;
+}
+
 void CameraPoint::UpdateProjectionZNear( dsreal p_znear )
 {
     m_znear = p_znear;
