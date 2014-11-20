@@ -28,6 +28,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Dynamics;
 
 BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent ),
 m_glready( false )
@@ -387,4 +388,15 @@ void BasicSceneMainFrame::OnCreateCameraButtonClicked( wxCommandEvent& p_event )
     dialog->EnableApplyButton();
     dialog->Show();
 
+}
+
+void BasicSceneMainFrame::OnCamerasListItemActivated( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+    CameraPoint* camera = (CameraPoint*)m_cameras_listCtrl->GetItemData( sel_index );
+
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera znear property" );
+    wxWidgetAdapter::GetInstance()->AdaptCameraZnearValueProps( camera, dialog );
+    dialog->EnableApplyButton();
+    dialog->Show();
 }

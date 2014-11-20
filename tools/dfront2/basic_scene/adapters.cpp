@@ -492,6 +492,8 @@ void wxWidgetAdapter::AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxL
         p_listctrl->SetItem( id, 5, relative_orbiter.c_str() );
         p_listctrl->SetItem( id, 6, altitud );
 
+        p_listctrl->SetItemData( id, (long)camera );
+
     }
 }
 
@@ -861,6 +863,16 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
     AdaptPassesShaderParamsList( pass, ctrl );
 
     p_dialog->Close();
+}
+
+
+void wxWidgetAdapter::AdaptCameraZnearValueProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    dsreal znear = p_camera->GetZNear();
+
+    propertygrid->Append( new wxFloatProperty( "znear", wxPG_LABEL, znear ) );  
 }
 
 void wxWidgetAdapter::AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )

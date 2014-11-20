@@ -46,6 +46,7 @@ protected:
     virtual void OnCreateMvtButtonClicked( wxCommandEvent& p_event );
     virtual void OnMvtsListItemActivated( wxListEvent& p_event );
     virtual void OnCreateCameraButtonClicked( wxCommandEvent& p_event );
+    virtual void OnCamerasListItemActivated( wxListEvent& p_event );
 
 
 public:
