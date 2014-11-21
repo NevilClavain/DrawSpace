@@ -97,6 +97,9 @@ class MainFrame : public wxFrame
 		wxListCtrl* m_assets_listCtrl;
 		wxListCtrl* m_configs_listCtrl;
 		wxPanel* m_scenePanel;
+		wxListCtrl* m_scenegraph_listCtrl;
+		wxButton* m_setcamera_button;
+		wxComboBox* m_cameraslist_comboBox;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -110,6 +113,8 @@ class MainFrame : public wxFrame
 		virtual void OnShadersListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnAssetsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnConfigsListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnScenegraphItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnSetCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

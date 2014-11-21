@@ -76,6 +76,7 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_scenegraph, m_cameras_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -302,7 +303,6 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             }
 
             break;
-
     }
 }
 
@@ -384,7 +384,9 @@ void BasicSceneMainFrame::OnCreateCameraButtonClicked( wxCommandEvent& p_event )
 
     dialog->SetData( "mvts_map", &m_movements );
     dialog->SetData( "scenegraph", &m_scenegraph );
-    dialog->SetData( "ctrl", m_cameras_listCtrl );
+    dialog->SetData( "cameraslistctrl", m_cameras_listCtrl );
+    dialog->SetData( "scenegraphctrl", m_scenegraph_listCtrl );
+    dialog->SetData( "cameraslistcombobox", m_cameraslist_comboBox );
     dialog->EnableApplyButton();
     dialog->Show();
 
@@ -396,7 +398,32 @@ void BasicSceneMainFrame::OnCamerasListItemActivated( wxListEvent& p_event )
     CameraPoint* camera = (CameraPoint*)m_cameras_listCtrl->GetItemData( sel_index );
 
     BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera znear property" );
-    wxWidgetAdapter::GetInstance()->AdaptCameraZnearValueProps( camera, dialog );
+    wxWidgetAdapter::GetInstance()->AdaptCameraProps( camera, dialog );
+
+    dialog->SetData( "camera", camera );
     dialog->EnableApplyButton();
     dialog->Show();
+}
+
+void BasicSceneMainFrame::OnScenegraphItemActivated( wxListEvent& p_event )
+{
+
+}
+
+void BasicSceneMainFrame::OnSetCameraButtonClicked( wxCommandEvent& p_event )
+{
+    int index = m_cameraslist_comboBox->GetSelection();
+
+    CameraPoint* camera = (CameraPoint*)m_cameraslist_comboBox->GetClientData( index );
+
+    if( NULL == camera )
+    {
+        m_scenegraph.SetCurrentCamera( "" );
+    }
+    else
+    {
+        dsstring camera_name;
+        camera->GetSceneName( camera_name );
+        m_scenegraph.SetCurrentCamera( camera_name );
+    }
 }

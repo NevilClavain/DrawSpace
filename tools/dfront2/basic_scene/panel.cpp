@@ -146,7 +146,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_camerasPanel->SetSizer( bSizer81 );
 	m_camerasPanel->Layout();
 	bSizer81->Fit( m_camerasPanel );
-	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras"), true );
+	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras"), false );
 	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -202,7 +202,29 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer9->Fit( m_resourcesPanel );
 	m_notebook2->AddPage( m_resourcesPanel, wxT("Resources"), false );
 	m_scenePanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), false );
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxVERTICAL );
+	
+	m_scenegraph_listCtrl = new wxListCtrl( m_scenePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	bSizer11->Add( m_scenegraph_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer12;
+	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_setcamera_button = new wxButton( m_scenePanel, wxID_ANY, wxT("Set scene camera"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer12->Add( m_setcamera_button, 0, wxALL, 5 );
+	
+	m_cameraslist_comboBox = new wxComboBox( m_scenePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
+	bSizer12->Add( m_cameraslist_comboBox, 0, wxALL, 5 );
+	
+	
+	bSizer11->Add( bSizer12, 1, wxEXPAND, 5 );
+	
+	
+	m_scenePanel->SetSizer( bSizer11 );
+	m_scenePanel->Layout();
+	bSizer11->Fit( m_scenePanel );
+	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), true );
 	
 	bSizer8->Add( m_notebook2, 1, wxEXPAND | wxALL, 5 );
 	
@@ -224,6 +246,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_shadersparams_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnShadersListItemActivated ), NULL, this );
 	m_assets_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnAssetsListItemActivated ), NULL, this );
 	m_configs_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnConfigsListItemActivated ), NULL, this );
+	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnScenegraphItemActivated ), NULL, this );
+	m_setcamera_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnSetCameraButtonClicked ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -240,5 +264,7 @@ MainFrame::~MainFrame()
 	m_shadersparams_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnShadersListItemActivated ), NULL, this );
 	m_assets_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnAssetsListItemActivated ), NULL, this );
 	m_configs_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnConfigsListItemActivated ), NULL, this );
+	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnScenegraphItemActivated ), NULL, this );
+	m_setcamera_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnSetCameraButtonClicked ), NULL, this );
 	
 }

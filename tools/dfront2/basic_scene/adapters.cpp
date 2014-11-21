@@ -41,6 +41,7 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applyspectatormvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspectatormvtvalues );
     m_applylonglatmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applylonglatmvtvalues );
     m_applycameravalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameravalues );
+    m_applycameraprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameraprops );
 }
 
 wxWidgetAdapter::~wxWidgetAdapter( void )
@@ -53,7 +54,8 @@ wxWidgetAdapter::~wxWidgetAdapter( void )
     delete m_applyheadmvtvalues_callback;
     delete m_applyspectatormvtvalues_callback;
     delete m_applylonglatmvtvalues_callback;
-    delete m_applycameravalues_callback;  
+    delete m_applycameravalues_callback;
+    delete m_applycameraprops_callback;
 }
 
 void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
@@ -497,6 +499,53 @@ void wxWidgetAdapter::AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxL
     }
 }
 
+void wxWidgetAdapter::AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl )
+{
+    p_listctrl->ClearAll();
+
+    wxListItem col0;
+    col0.SetId( 0 );
+    col0.SetText( "Scene name" );
+    col0.SetWidth( 110 );
+    p_listctrl->InsertColumn( 0, col0 );
+
+    wxListItem col1;
+    col1.SetId( 1 );
+    col1.SetText( "type" );
+    col1.SetWidth( 150 );
+    p_listctrl->InsertColumn( 1, col1 );
+
+    /////////////////////////////////////////////
+
+    std::map<dsstring, TransformNode*> nodes_list = p_scenegraph->GetNodesList();
+
+    long id = 0;
+    for( std::map<dsstring, TransformNode*>::iterator it = nodes_list.begin(); it != nodes_list.end(); ++it, id++ )
+    {
+        dsstring scenename = it->first;
+        wxListItem item;
+        item.SetId( id );
+        item.SetText( scenename.c_str() );
+        p_listctrl->InsertItem( item );
+
+
+        TransformNode* node = it->second;
+
+        dsstring type_name;
+
+        if( dynamic_cast<CameraPoint*>( node ) )
+        {
+            type_name = "Camera";
+        }
+        else
+        {
+            type_name = "???";    
+        }
+
+        p_listctrl->SetItem( id, 1, type_name.c_str() );    
+    }    
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void wxWidgetAdapter::AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid )
@@ -866,13 +915,33 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
 }
 
 
-void wxWidgetAdapter::AdaptCameraZnearValueProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptCameraProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
     dsreal znear = p_camera->GetZNear();
+    propertygrid->Append( new wxFloatProperty( "znear", wxPG_LABEL, znear ) );
 
-    propertygrid->Append( new wxFloatProperty( "znear", wxPG_LABEL, znear ) );  
+    p_dialog->RegisterApplyButtonHandler( m_applycameraprops_callback );
+}
+
+void wxWidgetAdapter::on_applycameraprops( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxAny value;
+    dsreal znear;
+    
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "znear" ) );
+    value = prop->GetValue();   
+    value.GetAs<double>( &znear );
+
+    CameraPoint* camera = (CameraPoint*)p_dialog->GetData( "camera" );
+
+    camera->UpdateProjectionZNear( znear );
+
+    p_dialog->Close();
 }
 
 void wxWidgetAdapter::AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1627,9 +1696,13 @@ void wxWidgetAdapter::on_applycameravalues( BasicSceneObjectPropertiesDialog* p_
     DrawSpace::Scenegraph* scenegraph = (DrawSpace::Scenegraph*)p_dialog->GetData( "scenegraph" );
     scenegraph->RegisterNode( camera_point );
 
-    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+    wxListCtrl* cameraslistctrl = (wxListCtrl*)p_dialog->GetData( "cameraslistctrl" );
+    wxListCtrl* scenegraphctrl = (wxListCtrl*)p_dialog->GetData( "scenegraphctrl" );
+    wxComboBox* cameraslistcombobox = (wxComboBox*)p_dialog->GetData( "cameraslistcombobox" );
 
-    AdaptCamerasList( scenegraph, ctrl );
+    AdaptCamerasList( scenegraph, cameraslistctrl );
+    AdaptScenegraphList( scenegraph, scenegraphctrl );
+    AdaptCameraListComboBox( scenegraph, cameraslistcombobox );
 
     p_dialog->Close();
 }
@@ -1826,4 +1899,19 @@ void wxWidgetAdapter::AdaptLongLatMvtProps( const dsstring& p_mvtname, DrawSpace
     propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, theta ) );
     propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, phi ) );
 
+}
+
+void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox )
+{
+    p_combobox->Clear();
+
+    p_combobox->Append( wxString( "<none>" ), (void *)NULL );
+
+    std::map<dsstring, Core::TransformNode*> cameras_list = p_scenegraph->GetCamerasList();
+    for( std::map<dsstring, Core::TransformNode*>::iterator it = cameras_list.begin(); it != cameras_list.end(); ++it )
+    {
+        p_combobox->Append( it->first.c_str(), (void *)it->second );
+    }
+
+    p_combobox->SetSelection( 0 );
 }
