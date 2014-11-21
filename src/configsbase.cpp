@@ -38,6 +38,7 @@ ConfigsBase::~ConfigsBase( void )
 void ConfigsBase::RegisterConfigurableInstance( const dsstring& p_id, DrawSpace::Core::Configurable* p_conf )
 {
     m_configurables_instances[p_id] = p_conf;
+    m_ordered_configurables_instances.push_back( p_conf );
     if( m_configinstancereg_handler )
     {
         (*m_configinstancereg_handler)( p_conf );
@@ -73,3 +74,7 @@ void ConfigsBase::GetConfigsInstancesList( std::map<dsstring, DrawSpace::Core::C
     p_list = m_configurables_instances;
 }
 
+void ConfigsBase::GetOrderedConfigsInstancesList( std::vector<DrawSpace::Core::Configurable*>& p_list )
+{
+    p_list = m_ordered_configurables_instances;
+}

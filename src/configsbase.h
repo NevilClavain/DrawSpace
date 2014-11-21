@@ -42,6 +42,9 @@ protected:
 
 
     std::map<dsstring, DrawSpace::Core::Configurable*>      m_configurables_instances;
+    std::vector<DrawSpace::Core::Configurable*>             m_ordered_configurables_instances;  // vector where config instances are stored in the same order as they were registered
+
+
     ConfigurableInstanceRegistrationHandler*                m_configinstancereg_handler;
 
     ConfigsBase( void );
@@ -68,6 +71,7 @@ public:
     bool ConfigurableInstanceExists( const dsstring& p_id );
 
     void GetConfigsInstancesList( std::map<dsstring, DrawSpace::Core::Configurable*>& p_list );
+    void GetOrderedConfigsInstancesList( std::vector<DrawSpace::Core::Configurable*>& p_list );
 
     
 };
