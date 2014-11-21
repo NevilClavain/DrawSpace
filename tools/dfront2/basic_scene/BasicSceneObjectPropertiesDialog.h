@@ -47,6 +47,7 @@ public:
     wxPropertyGrid* GetPropertyGrid( void );
 
     void EnableApplyButton( void );
+    void EnableSpecificButton0( const dsstring& p_label );
     void RegisterApplyButtonHandler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler );
 
     void SetData( const dsstring& p_id, void* p_data );

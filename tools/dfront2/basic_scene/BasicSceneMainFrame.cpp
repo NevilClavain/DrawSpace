@@ -460,3 +460,12 @@ void BasicSceneMainFrame::OnSetCameraButtonClicked( wxCommandEvent& p_event )
         m_scenegraph.SetCurrentCamera( camera_name );
     }
 }
+
+void BasicSceneMainFrame::OnCreateDrawableButtonClicked( wxCommandEvent& p_event )
+{
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spacebox creation" );
+    wxWidgetAdapter::GetInstance()->AdaptSpaceBoxCreationProps( dialog );
+    dialog->EnableApplyButton();
+    dialog->EnableSpecificButton0( "Add pass slot" );
+    dialog->Show();
+}

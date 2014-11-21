@@ -62,6 +62,7 @@ class ObjectPropertiesDialog : public wxDialog
 		wxPropertyGrid* m_propertyGrid;
 		wxButton* m_close_button;
 		wxButton* m_apply_button;
+		wxButton* m_specific_button_0;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseButtonClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -100,6 +101,8 @@ class MainFrame : public wxFrame
 		wxListCtrl* m_scenegraph_listCtrl;
 		wxButton* m_setcamera_button;
 		wxComboBox* m_cameraslist_comboBox;
+		wxButton* m_create_drawable_button;
+		wxComboBox* m_drawabletypes_comboBox;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -115,6 +118,7 @@ class MainFrame : public wxFrame
 		virtual void OnConfigsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnScenegraphItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnSetCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCreateDrawableButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

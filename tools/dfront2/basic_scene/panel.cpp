@@ -58,6 +58,9 @@ ObjectPropertiesDialog::ObjectPropertiesDialog( wxWindow* parent, wxWindowID id,
 	m_apply_button = new wxButton( this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer13->Add( m_apply_button, 0, wxALL, 5 );
 	
+	m_specific_button_0 = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer13->Add( m_specific_button_0, 0, wxALL, 5 );
+	
 	
 	bSizer12->Add( bSizer13, 1, wxEXPAND, 5 );
 	
@@ -99,7 +102,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sbSizer51 = new wxStaticBoxSizer( new wxStaticBox( m_camerasPanel, wxID_ANY, wxT("CameraPoints") ), wxVERTICAL );
 	
 	m_cameras_listCtrl = new wxListCtrl( m_camerasPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	sbSizer51->Add( m_cameras_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	sbSizer51->Add( m_cameras_listCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxHORIZONTAL );
@@ -108,7 +111,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer10->Add( m_createcamera_button, 0, wxALL, 5 );
 	
 	
-	sbSizer51->Add( bSizer10, 1, wxEXPAND, 5 );
+	sbSizer51->Add( bSizer10, 0, wxEXPAND, 5 );
 	
 	
 	bSizer81->Add( sbSizer51, 1, wxEXPAND, 5 );
@@ -117,7 +120,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sbSizer6 = new wxStaticBoxSizer( new wxStaticBox( m_camerasPanel, wxID_ANY, wxT("Movements") ), wxVERTICAL );
 	
 	m_mvts_listCtrl = new wxListCtrl( m_camerasPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	sbSizer6->Add( m_mvts_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	sbSizer6->Add( m_mvts_listCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer91;
 	bSizer91 = new wxBoxSizer( wxHORIZONTAL );
@@ -137,7 +140,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer91->Add( m_mvttype_comboBox, 0, wxALL, 5 );
 	
 	
-	sbSizer6->Add( bSizer91, 1, wxEXPAND, 5 );
+	sbSizer6->Add( bSizer91, 0, wxEXPAND, 5 );
 	
 	
 	bSizer81->Add( sbSizer6, 1, wxEXPAND, 5 );
@@ -155,7 +158,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sbSizer31 = new wxStaticBoxSizer( new wxStaticBox( m_passesPanel, wxID_ANY, wxT("Passes") ), wxVERTICAL );
 	
 	m_passes_listCtrl = new wxListCtrl( m_passesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	sbSizer31->Add( m_passes_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	sbSizer31->Add( m_passes_listCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	bSizer7->Add( sbSizer31, 1, wxEXPAND, 5 );
@@ -164,7 +167,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( m_passesPanel, wxID_ANY, wxT("Shaders parameters") ), wxVERTICAL );
 	
 	m_shadersparams_listCtrl = new wxListCtrl( m_passesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	sbSizer4->Add( m_shadersparams_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	sbSizer4->Add( m_shadersparams_listCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	bSizer7->Add( sbSizer4, 1, wxEXPAND, 5 );
@@ -182,7 +185,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( m_resourcesPanel, wxID_ANY, wxT("Assets") ), wxVERTICAL );
 	
 	m_assets_listCtrl = new wxListCtrl( m_resourcesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	sbSizer3->Add( m_assets_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	sbSizer3->Add( m_assets_listCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	bSizer9->Add( sbSizer3, 1, wxEXPAND, 5 );
@@ -191,7 +194,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( m_resourcesPanel, wxID_ANY, wxT("Configurables") ), wxVERTICAL );
 	
 	m_configs_listCtrl = new wxListCtrl( m_resourcesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	sbSizer5->Add( m_configs_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	sbSizer5->Add( m_configs_listCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	bSizer9->Add( sbSizer5, 1, wxEXPAND, 5 );
@@ -206,7 +209,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
 	
 	m_scenegraph_listCtrl = new wxListCtrl( m_scenePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	bSizer11->Add( m_scenegraph_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	bSizer11->Add( m_scenegraph_listCtrl, 2, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer12;
 	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
@@ -218,7 +221,22 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer12->Add( m_cameraslist_comboBox, 0, wxALL, 5 );
 	
 	
-	bSizer11->Add( bSizer12, 1, wxEXPAND, 5 );
+	bSizer11->Add( bSizer12, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer13;
+	bSizer13 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_create_drawable_button = new wxButton( m_scenePanel, wxID_ANY, wxT("Create Drawable"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer13->Add( m_create_drawable_button, 0, wxALL, 5 );
+	
+	m_drawabletypes_comboBox = new wxComboBox( m_scenePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+	m_drawabletypes_comboBox->Append( wxT("SpaceBox") );
+	m_drawabletypes_comboBox->Append( wxT("Chunk") );
+	m_drawabletypes_comboBox->SetSelection( 0 );
+	bSizer13->Add( m_drawabletypes_comboBox, 0, wxALL, 5 );
+	
+	
+	bSizer11->Add( bSizer13, 1, wxEXPAND, 5 );
 	
 	
 	m_scenePanel->SetSizer( bSizer11 );
@@ -248,6 +266,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_configs_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnConfigsListItemActivated ), NULL, this );
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnScenegraphItemActivated ), NULL, this );
 	m_setcamera_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnSetCameraButtonClicked ), NULL, this );
+	m_create_drawable_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -266,5 +285,6 @@ MainFrame::~MainFrame()
 	m_configs_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnConfigsListItemActivated ), NULL, this );
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnScenegraphItemActivated ), NULL, this );
 	m_setcamera_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnSetCameraButtonClicked ), NULL, this );
+	m_create_drawable_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
 	
 }

@@ -104,6 +104,7 @@ public:
     void AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptCameraCreationProps( std::map<dsstring, DrawSpace::Core::Movement*>* p_mvts_map, BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
 
     void AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );

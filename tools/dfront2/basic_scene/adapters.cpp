@@ -1783,6 +1783,14 @@ void wxWidgetAdapter::on_applycameravalues( BasicSceneObjectPropertiesDialog* p_
     p_dialog->Close();
 }
 
+void wxWidgetAdapter::AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Scene name", wxPG_LABEL, "" ) );
+
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void wxWidgetAdapter::AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )

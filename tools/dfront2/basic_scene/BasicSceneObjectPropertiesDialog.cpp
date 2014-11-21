@@ -30,6 +30,7 @@ BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* pa
 m_applybutton_handler( NULL )
 {
     m_apply_button->Show( false );
+    m_specific_button_0->Show( false );
 }
 
 wxPropertyGrid* BasicSceneObjectPropertiesDialog::GetPropertyGrid( void )
@@ -53,6 +54,13 @@ void BasicSceneObjectPropertiesDialog::OnApplyButtonClicked( wxCommandEvent& eve
 void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )
 {
     m_apply_button->Show( true );
+}
+
+void BasicSceneObjectPropertiesDialog::EnableSpecificButton0( const dsstring& p_label )
+{
+    m_specific_button_0->Show( true );
+
+    m_specific_button_0->SetLabel( p_label );
 }
 
 void BasicSceneObjectPropertiesDialog::RegisterApplyButtonHandler( BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )

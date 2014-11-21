@@ -50,6 +50,7 @@ protected:
     virtual void OnCamerasListItemActivated( wxListEvent& p_event );
     virtual void OnScenegraphItemActivated( wxListEvent& p_event );
     virtual void OnSetCameraButtonClicked( wxCommandEvent& p_event );
+    virtual void OnCreateDrawableButtonClicked( wxCommandEvent& p_event );
 
 
 public:
