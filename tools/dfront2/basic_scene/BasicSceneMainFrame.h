@@ -35,6 +35,7 @@ protected:
     DrawSpace::Utils::TimeManager                           m_timer;
     std::map<dsstring, DrawSpace::Core::Movement*>          m_movements;    
     DrawSpace::Scenegraph                                   m_scenegraph;
+    std::vector<DrawSpace::Core::Configurable*>             m_ordered_configs;
 
     virtual void OnClose( wxCloseEvent& event );
     virtual void OnIdle( wxIdleEvent& event );

@@ -47,19 +47,40 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
     {
 
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        
+        m_scenegraph.ComputeTransformations( m_timer );
+
+        /*
         renderer->ClearScreen( 0, 0, 120 );
+        renderer->BeginScreen();
+        renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
+        renderer->EndScreen();
+        */
+
+
+        for( size_t i = 0; i < m_ordered_configs.size(); i++ )
+        {
+            Pass* pass = dynamic_cast<Pass*>( m_ordered_configs[i] );
+            if( pass )
+            {
+                pass->GetRenderingQueue()->Draw();
+            }
+        }
 
 
         renderer->BeginScreen();
-                 
         renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
-
         renderer->EndScreen();
 
         renderer->FlipScreen();
 
         m_timer.Update();
+        if( m_timer.IsReady() )
+        {
 
+        }
+
+        // wxWidget framework specific !
         event.RequestMore( true );
     }
 }
@@ -77,6 +98,8 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_scenegraph, m_cameras_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
+
+    ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
