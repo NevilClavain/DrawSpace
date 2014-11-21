@@ -96,3 +96,8 @@ bool TransformQueue::GetNodeGlobalTransform( const dsstring& p_nodename, DrawSpa
     _DSERROR( logger, "no node with this name found !" )
     return false;
 }
+
+std::map<dsstring, TransformNode*>& TransformQueue::GetNodesList( void )
+{
+    return m_nodes;
+}

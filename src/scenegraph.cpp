@@ -78,6 +78,15 @@ TransformNode* Scenegraph::GetCurrentCamera( void )
 
 bool Scenegraph::SetCurrentCamera( const dsstring& p_nodename )
 {
+    if( "" == p_nodename )
+    {
+        m_current_camera = "";
+        for( std::vector<CameraEventHandler*>::iterator it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
+        {
+            ( **it )( ACTIVE, NULL );
+        }
+        return true;
+    }
     if( m_cameras_list.count( p_nodename ) > 0 )
     {
         m_current_camera = p_nodename;
