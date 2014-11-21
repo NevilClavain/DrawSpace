@@ -90,8 +90,11 @@ public:
     void AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxPropertyGrid* p_propertygrid );
     void AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid );
     void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
-    void AdaptPassShaderValuesProps( DrawSpace::Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptCameraProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog );
+
+    void AdaptPassShaderValuesPropsModification( DrawSpace::Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptCameraPropsModification( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog );
+    
 
     void AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );

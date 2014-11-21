@@ -190,10 +190,10 @@ void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
 
     wxCharBuffer buffer = shader_name.ToAscii();
 
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader parameter values" );
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader parameters modification" );
 
     dialog->SetData( "ctrl", m_shadersparams_listCtrl );
-    wxWidgetAdapter::GetInstance()->AdaptPassShaderValuesProps( pass, buffer.data(), dialog );
+    wxWidgetAdapter::GetInstance()->AdaptPassShaderValuesPropsModification( pass, buffer.data(), dialog );
     dialog->EnableApplyButton();
     dialog->Show();
 }
@@ -397,8 +397,8 @@ void BasicSceneMainFrame::OnCamerasListItemActivated( wxListEvent& p_event )
     long sel_index = p_event.GetIndex();
     CameraPoint* camera = (CameraPoint*)m_cameras_listCtrl->GetItemData( sel_index );
 
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera znear property" );
-    wxWidgetAdapter::GetInstance()->AdaptCameraProps( camera, dialog );
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties modifications" );
+    wxWidgetAdapter::GetInstance()->AdaptCameraPropsModification( camera, dialog );
 
     dialog->SetData( "camera", camera );
     dialog->EnableApplyButton();
@@ -407,7 +407,17 @@ void BasicSceneMainFrame::OnCamerasListItemActivated( wxListEvent& p_event )
 
 void BasicSceneMainFrame::OnScenegraphItemActivated( wxListEvent& p_event )
 {
+    long sel_index = p_event.GetIndex();
 
+    TransformNode* tnode = (TransformNode*)m_scenegraph_listCtrl->GetItemData( sel_index );
+
+    CameraPoint* camera = dynamic_cast<CameraPoint*>( tnode );
+    if( camera )
+    {
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties" );
+        wxWidgetAdapter::GetInstance()->AdaptCameraProps( camera, dialog );
+        dialog->Show();
+    }
 }
 
 void BasicSceneMainFrame::OnSetCameraButtonClicked( wxCommandEvent& p_event )

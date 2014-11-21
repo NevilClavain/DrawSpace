@@ -386,7 +386,7 @@ void wxWidgetAdapter::AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxL
 
     wxListItem col2;
     col2.SetId( 2 );
-    col2.SetText( "Locking" );
+    col2.SetText( "Locked on" );
     col2.SetWidth( 100 );
     p_listctrl->InsertColumn( 2, col2 );
 
@@ -542,7 +542,9 @@ void wxWidgetAdapter::AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, 
             type_name = "???";    
         }
 
-        p_listctrl->SetItem( id, 1, type_name.c_str() );    
+        p_listctrl->SetItem( id, 1, type_name.c_str() );
+
+        p_listctrl->SetItemData( id, (long)it->second );
     }    
 }
 
@@ -829,7 +831,79 @@ void wxWidgetAdapter::AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass*
     }
 }
 
-void wxWidgetAdapter::AdaptPassShaderValuesProps( Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptCameraProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    CameraPoint::Infos infos;
+    p_camera->GetInfos( infos );
+
+    dsstring attached_body_name;
+    if( infos.attached_to_body )
+    {
+        attached_body_name = infos.attached_body_alias;
+    }
+    else
+    {
+        attached_body_name = "...";
+    }
+    propertygrid->Append( new wxStringProperty( "attached_body_name", wxPG_LABEL, attached_body_name.c_str() ) );
+
+    dsstring locking_object_name;
+    if( infos.locked_on_body || infos.locked_on_transformnode )
+    {
+        locking_object_name = infos.locked_object_alias;
+    }
+    else
+    {
+        locking_object_name = "...";
+    }
+    propertygrid->Append( new wxStringProperty( "locked_object_name", wxPG_LABEL, locking_object_name.c_str() ) );
+
+    dsstring movement_name;
+    if( infos.has_movement )
+    {
+        movement_name = infos.movement_alias;
+    }
+    else
+    {
+        movement_name = "...";
+    }
+    propertygrid->Append( new wxStringProperty( "movement_name", wxPG_LABEL, movement_name.c_str() ) );
+
+    dsstring llmovement_name;
+    if( infos.has_longlatmovement )
+    {
+        llmovement_name = infos.longlatmovement_alias;
+    }
+    else
+    {
+        llmovement_name = "...";
+    }
+    propertygrid->Append( new wxStringProperty( "longlat_movement_name", wxPG_LABEL, llmovement_name.c_str() ) );
+
+    bool relative_orbiter;
+    char altitud[32];
+    if( infos.relative_orbiter )
+    {
+        relative_orbiter = true;
+        sprintf( altitud, "%d", infos.altitud );
+    }
+    else
+    {
+        relative_orbiter = false;
+        sprintf( altitud, "..." );
+    }
+
+    propertygrid->Append( new wxBoolProperty( "relative_orbiter", wxPG_LABEL, relative_orbiter ) );
+    propertygrid->Append( new wxStringProperty( "altitud", wxPG_LABEL, altitud ) );
+
+    dsreal znear = p_camera->GetZNear();
+    propertygrid->Append( new wxFloatProperty( "znear", wxPG_LABEL, znear ) );
+
+}
+
+void wxWidgetAdapter::AdaptPassShaderValuesPropsModification( Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
@@ -903,7 +977,7 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
     pass->SetPropertiesMap( props );
 
 
-    // release string allocated in wxWidgetAdapter::AdaptPassShaderValuesProps()
+    // release string allocated in wxWidgetAdapter::AdaptPassShaderValuesPropsModification()
     delete[] param_id;
 
 
@@ -915,7 +989,7 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
 }
 
 
-void wxWidgetAdapter::AdaptCameraProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptCameraPropsModification( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
@@ -943,6 +1017,8 @@ void wxWidgetAdapter::on_applycameraprops( BasicSceneObjectPropertiesDialog* p_d
 
     p_dialog->Close();
 }
+
+
 
 void wxWidgetAdapter::AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
