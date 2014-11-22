@@ -67,6 +67,7 @@ class ObjectPropertiesDialog : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnApplyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSpecificButton0Clicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

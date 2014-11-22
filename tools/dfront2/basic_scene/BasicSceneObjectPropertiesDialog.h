@@ -32,14 +32,13 @@ class BasicSceneObjectPropertiesDialog : public ObjectPropertiesDialog
 protected:
 
     DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>*     m_applybutton_handler;
-
-    //void*                                                                       m_data;
-
+    DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>*     m_specificbutton0_handler;
     std::map<dsstring, void*>                                                   m_datas;
 
 
     virtual void OnCloseButtonClicked( wxCommandEvent& event );
     virtual void OnApplyButtonClicked( wxCommandEvent& event );
+    virtual void OnSpecificButton0Clicked( wxCommandEvent& event );
 
 public:
 
@@ -49,6 +48,7 @@ public:
     void EnableApplyButton( void );
     void EnableSpecificButton0( const dsstring& p_label );
     void RegisterApplyButtonHandler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler );
+    void RegisterSpecificButton0Handler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler );
 
     void SetData( const dsstring& p_id, void* p_data );
     void* GetData( const dsstring& p_id );

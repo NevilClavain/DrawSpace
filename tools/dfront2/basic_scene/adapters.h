@@ -46,6 +46,10 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applylonglatmvtvalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameravalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameraprops_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxaddpassslot_callback;
+
+    long m_pass_slot_index;
 
 
     void on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -58,6 +62,9 @@ protected:
     void on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applycameravalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applycameraprops( BasicSceneObjectPropertiesDialog* p_dialog );
+
+    void on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDialog* p_dialog );
     
 
     wxWidgetAdapter( void );

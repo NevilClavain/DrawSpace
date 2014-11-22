@@ -42,6 +42,9 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applylonglatmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applylonglatmvtvalues );
     m_applycameravalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameravalues );
     m_applycameraprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameraprops );
+
+    m_applyspaceboxvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspaceboxvalues );
+    m_applyspaceboxaddpassslot_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspaceboxaddpassslot );
 }
 
 wxWidgetAdapter::~wxWidgetAdapter( void )
@@ -56,6 +59,8 @@ wxWidgetAdapter::~wxWidgetAdapter( void )
     delete m_applylonglatmvtvalues_callback;
     delete m_applycameravalues_callback;
     delete m_applycameraprops_callback;
+    delete m_applyspaceboxvalues_callback;
+    delete m_applyspaceboxaddpassslot_callback;
 }
 
 void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
@@ -1789,6 +1794,128 @@ void wxWidgetAdapter::AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDial
 
     propertygrid->Append( new wxStringProperty( "Scene name", wxPG_LABEL, "" ) );
 
+    p_dialog->RegisterApplyButtonHandler( m_applyspaceboxvalues_callback );
+    p_dialog->RegisterSpecificButton0Handler( m_applyspaceboxaddpassslot_callback );
+
+    m_pass_slot_index = 0;
+}
+
+
+void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+
+}
+
+void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    std::map<dsstring, DrawSpace::Core::Configurable*> configs;
+    char pass_slot_index[32];
+    wxArrayString availables_passes_labels;
+
+    sprintf( pass_slot_index, "pass_slot_%d", m_pass_slot_index++ );
+    wxPGProperty* slot_prop = propertygrid->Append( new wxStringProperty( pass_slot_index, wxPG_LABEL, "<composed>" ) );
+
+ 
+
+    ConfigsBase::GetInstance()->GetConfigsInstancesList( configs );
+    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = configs.begin(); it != configs.end(); ++it )
+    {
+        Pass* pass = dynamic_cast<Pass*>( it->second );
+        if( pass )
+        {
+            dsstring pass_name;
+            
+            availables_passes_labels.Add( it->first.c_str() );
+        }
+    }
+
+    propertygrid->AppendIn( slot_prop, new wxEnumProperty( "Pass name", wxPG_LABEL, availables_passes_labels ));
+
+    ////
+
+    wxArrayString availables_textures_labels;
+
+    /// retrieve all textures assets name
+
+    std::map<dsstring, Asset*> assets_list;
+    AssetsBase::GetInstance()->GetAssetsList( assets_list );
+
+    for( std::map<dsstring, Asset*>::iterator it = assets_list.begin(); it != assets_list.end(); ++it )
+    {
+        if( dynamic_cast<Texture*>( it->second ) )
+        {
+            availables_textures_labels.Add( it->first.c_str() );
+        }
+    }
+    ////
+
+    wxPGProperty* slot_textures_prop = propertygrid->AppendIn( slot_prop, new wxStringProperty( "textures", wxPG_LABEL, "<composed>" ) );
+    for( long i = 0; i < 6; i++ )
+    {
+        dsstring sb_type;
+
+        switch( i )
+        {
+            case Spacebox::FrontQuad:
+
+                sb_type = "front";
+                break;
+
+            case Spacebox::RearQuad:
+
+                sb_type = "rear";
+                break;
+
+            case Spacebox::TopQuad:
+
+                sb_type = "top";
+                break;
+
+            case Spacebox::BottomQuad:
+
+                sb_type = "bottom";
+                break;
+
+            case Spacebox::LeftQuad:
+
+                sb_type = "left";
+                break;
+
+            case Spacebox::RightQuad:
+
+                sb_type = "right";
+                break;
+
+        }
+
+        propertygrid->AppendIn( slot_textures_prop, new wxEnumProperty( sb_type.c_str(), wxPG_LABEL, availables_textures_labels ) );
+    }
+
+
+    wxArrayString availables_fx_labels;
+
+    /// retrieve all fx config name
+
+    std::map<dsstring, DrawSpace::Core::Configurable*> configs_list;
+
+    ConfigsBase::GetInstance()->GetConfigsInstancesList( configs_list );
+    
+    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = configs_list.begin(); it != configs_list.end(); ++it )
+    {
+        if( dynamic_cast<Fx*>( it->second ) )
+        {
+            availables_fx_labels.Add( it->first.c_str() );
+        }
+    }
+
+
+    propertygrid->AppendIn( slot_prop, new wxEnumProperty( "fx", wxPG_LABEL, availables_fx_labels ) );
+
+    ////
+
+    propertygrid->ResetColumnSizes();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

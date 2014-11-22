@@ -100,6 +100,16 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
 
     ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
+
+
+    for( size_t i = 0; i < m_ordered_configs.size(); i++ )
+    {
+        Pass* pass = dynamic_cast<Pass*>( m_ordered_configs[i] );
+        if( pass )
+        {
+            m_scenegraph.RegisterPass( pass );
+        }
+    }
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -463,9 +473,18 @@ void BasicSceneMainFrame::OnSetCameraButtonClicked( wxCommandEvent& p_event )
 
 void BasicSceneMainFrame::OnCreateDrawableButtonClicked( wxCommandEvent& p_event )
 {
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spacebox creation" );
-    wxWidgetAdapter::GetInstance()->AdaptSpaceBoxCreationProps( dialog );
-    dialog->EnableApplyButton();
-    dialog->EnableSpecificButton0( "Add pass slot" );
-    dialog->Show();
+    int drawable_type = m_drawabletypes_comboBox->GetSelection();
+
+    switch( drawable_type )
+    {
+
+        case 0:
+            BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spacebox creation" );
+            wxWidgetAdapter::GetInstance()->AdaptSpaceBoxCreationProps( dialog );
+            dialog->EnableApplyButton();
+            dialog->EnableSpecificButton0( "Add pass slot" );
+            dialog->Show();
+            break;
+
+    }
 }

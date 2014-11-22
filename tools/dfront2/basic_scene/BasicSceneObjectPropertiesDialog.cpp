@@ -27,7 +27,8 @@ using namespace DrawSpace::Core;
 
 BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title )
 : ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 381,318 ) ),
-m_applybutton_handler( NULL )
+m_applybutton_handler( NULL ),
+m_specificbutton0_handler( NULL )
 {
     m_apply_button->Show( false );
     m_specific_button_0->Show( false );
@@ -51,6 +52,14 @@ void BasicSceneObjectPropertiesDialog::OnApplyButtonClicked( wxCommandEvent& eve
     }
 }
 
+void BasicSceneObjectPropertiesDialog::OnSpecificButton0Clicked( wxCommandEvent& event )
+{
+    if( m_specificbutton0_handler )
+    {
+        (*m_specificbutton0_handler)( this );
+    }
+}
+
 void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )
 {
     m_apply_button->Show( true );
@@ -66,6 +75,11 @@ void BasicSceneObjectPropertiesDialog::EnableSpecificButton0( const dsstring& p_
 void BasicSceneObjectPropertiesDialog::RegisterApplyButtonHandler( BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )
 {
     m_applybutton_handler = p_handler;
+}
+
+void BasicSceneObjectPropertiesDialog::RegisterSpecificButton0Handler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )
+{
+    m_specificbutton0_handler = p_handler;
 }
 
 void BasicSceneObjectPropertiesDialog::SetData( const dsstring& p_id, void* p_data )
