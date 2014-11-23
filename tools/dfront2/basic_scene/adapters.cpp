@@ -1803,7 +1803,166 @@ void wxWidgetAdapter::AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDial
 
 void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
+    wxStringProperty* prop2;
+    wxAny value;
+
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Scene name" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+
+    Spacebox* spacebox = new Spacebox();
+
+    long pass_slot_count = 0;
+    wxEnumProperty* prop3;
+    wxIntProperty* prop4;
+
+    while( 1 )
+    {
+        char pass_slot_index[32];
+        sprintf( pass_slot_index, "pass_slot_%d", pass_slot_count++ );
+
+        // check if root pass slot exists
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( pass_slot_index ) );
+        if( NULL == prop3 )
+        {
+            break;
+        }
+        
+
+        
+        dsstring curr_id;
+
+        curr_id = pass_slot_index;
+        curr_id += ".pass_name";
+
+        
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+
+
+        wxString pass_slot_name = prop3->GetValueAsString();   
+        buffer = pass_slot_name.ToAscii();
+        dsstring pass_slot_name_2 = buffer.data();
+
+        // ICI : pass slot name
+        spacebox->RegisterPassSlot( pass_slot_name_2 );
+
+        for( long i = 0; i < 6; i++ )
+        {
+            dsstring sb_type;
+
+            switch( i )
+            {
+                case Spacebox::FrontQuad:
+
+                    sb_type = "front";
+                    break;
+
+                case Spacebox::RearQuad:
+
+                    sb_type = "rear";
+                    break;
+
+                case Spacebox::TopQuad:
+
+                    sb_type = "top";
+                    break;
+
+                case Spacebox::BottomQuad:
+
+                    sb_type = "bottom";
+                    break;
+
+                case Spacebox::LeftQuad:
+
+                    sb_type = "left";
+                    break;
+
+                case Spacebox::RightQuad:
+
+                    sb_type = "right";
+                    break;
+
+            }
+
+            for( long j = 0; j < RenderingNode::NbMaxTextures; j++ )
+            {
+                char texture_stage_index[32];
+                sprintf( texture_stage_index, "stage %d", j );
+    
+                curr_id = pass_slot_index;
+                curr_id += ".textures.";
+                curr_id += sb_type;
+                curr_id += ".";
+                curr_id += dsstring( texture_stage_index );
+
+
+                prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+
+                wxString pass_slot_texture_name = prop3->GetValueAsString();   
+                buffer = pass_slot_texture_name.ToAscii();
+                dsstring pass_slot_texture_name_2 = buffer.data();
+
+                if( pass_slot_texture_name_2 != "..." )
+                {                               
+                    Texture* texture = static_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( pass_slot_texture_name_2 ) );
+                    spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetTexture( texture, j );
+                }
+            }
+        }
+
+
+        curr_id = pass_slot_index;
+        curr_id += ".fx";
+        
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+
+        wxString pass_slot_fxname = prop3->GetValueAsString();   
+        buffer = pass_slot_fxname.ToAscii();
+        dsstring pass_slot_fxname_2 = buffer.data();
+        // ICI : pass slot fx name
+
+        Fx* fx = static_cast<Fx*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_slot_fxname_2 ) );
+        for( long i = 0; i < 6; i++ )
+        {
+            spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetFx( fx );
+        }
+
+        curr_id = pass_slot_index;
+        curr_id += ".rendering_order";
+        
+        prop4 = static_cast<wxIntProperty*>( propertygrid->GetProperty( curr_id ) );        
+        value = prop4->GetValue();
+        int rendering_order;
+        value.GetAs<int>( &rendering_order );
+
+        for( long i = 0; i < 6; i++ )
+        {
+            spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetOrderNumber( rendering_order );
+        }
+                
+    }
+
+    DrawSpace::Scenegraph* scenegraph = (DrawSpace::Scenegraph*)p_dialog->GetData( "scenegraph" );
+    scenegraph->RegisterNode( spacebox );
+
+    p_dialog->Close();
 }
 
 void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1831,7 +1990,7 @@ void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDia
         }
     }
 
-    propertygrid->AppendIn( slot_prop, new wxEnumProperty( "Pass name", wxPG_LABEL, availables_passes_labels ));
+    propertygrid->AppendIn( slot_prop, new wxEnumProperty( "pass_name", wxPG_LABEL, availables_passes_labels ));
 
     ////
 
@@ -1842,6 +2001,7 @@ void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDia
     std::map<dsstring, Asset*> assets_list;
     AssetsBase::GetInstance()->GetAssetsList( assets_list );
 
+    availables_textures_labels.Add( "..." );
     for( std::map<dsstring, Asset*>::iterator it = assets_list.begin(); it != assets_list.end(); ++it )
     {
         if( dynamic_cast<Texture*>( it->second ) )
@@ -1890,7 +2050,21 @@ void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDia
 
         }
 
-        propertygrid->AppendIn( slot_textures_prop, new wxEnumProperty( sb_type.c_str(), wxPG_LABEL, availables_textures_labels ) );
+        wxPGProperty* slot_texture_stage_prop = propertygrid->AppendIn( slot_textures_prop, new wxStringProperty( sb_type.c_str(), wxPG_LABEL, "<composed>" ) );
+        
+        
+        for( long j = 0; j < RenderingNode::NbMaxTextures; j++ )
+        {
+            char texture_stage_index[32];
+
+            sprintf( texture_stage_index, "stage %d", j );
+            propertygrid->AppendIn( slot_texture_stage_prop, new wxEnumProperty( texture_stage_index, wxPG_LABEL, availables_textures_labels ) );
+        }
+        
+        
+
+
+        
     }
 
 
@@ -1912,6 +2086,11 @@ void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDia
 
 
     propertygrid->AppendIn( slot_prop, new wxEnumProperty( "fx", wxPG_LABEL, availables_fx_labels ) );
+
+    //////////////////
+
+    propertygrid->AppendIn( slot_prop, new wxIntProperty( "rendering_order", wxPG_LABEL, 200 ) );
+
 
     ////
 

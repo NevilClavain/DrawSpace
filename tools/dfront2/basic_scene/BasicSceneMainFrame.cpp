@@ -483,6 +483,7 @@ void BasicSceneMainFrame::OnCreateDrawableButtonClicked( wxCommandEvent& p_event
             wxWidgetAdapter::GetInstance()->AdaptSpaceBoxCreationProps( dialog );
             dialog->EnableApplyButton();
             dialog->EnableSpecificButton0( "Add pass slot" );
+            dialog->SetData( "scenegraph", &m_scenegraph );
             dialog->Show();
             break;
 
