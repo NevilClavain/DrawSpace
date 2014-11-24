@@ -122,7 +122,6 @@ protected:
 
     Config                                                      m_config;
 
-    RECT                                                        m_wndrect;
     HWND                                                        m_hwnd;
 
     dsstring                                                    m_lasterror;
@@ -164,7 +163,7 @@ public:
     virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height );
     virtual void Release( void );
 
-    virtual void SetViewport( bool p_windowed, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz );
+    virtual void SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz );
     
     virtual void BeginScreen( void );
     virtual void EndScreen( void );

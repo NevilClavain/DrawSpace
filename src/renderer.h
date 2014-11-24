@@ -51,7 +51,7 @@ public:
     virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height ) = 0;
     virtual void Release( void ) = 0;
 
-    virtual void SetViewport( bool p_windowed, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz ) = 0;
+    virtual void SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz ) = 0;
     
     virtual void BeginScreen( void ) = 0;
     virtual void EndScreen( void ) = 0;

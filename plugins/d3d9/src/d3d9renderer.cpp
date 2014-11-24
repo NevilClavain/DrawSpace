@@ -101,8 +101,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     _DSDEBUG( logger, "begin" )
 
     m_hwnd = p_hwnd;
-    ::GetClientRect( m_hwnd, &m_wndrect );
-
+    
     m_lpd3d = Direct3DCreate9( D3D_SDK_VERSION );
     if( NULL == m_lpd3d )
     {	
@@ -293,14 +292,16 @@ void D3D9Renderer::Release( void )
     _DSDEBUG( logger, "end" )
 }
 
-void D3D9Renderer::SetViewport( bool p_windowed, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz )
+void D3D9Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz )
 {
-    if( p_windowed )
+    if( p_automatic )
     {
-        m_viewport.X = m_wndrect.left;
-        m_viewport.Y = m_wndrect.top;
-        m_viewport.Width = m_wndrect.right - m_wndrect.left;
-        m_viewport.Height = m_wndrect.bottom - m_wndrect.top;
+        RECT wndrect;
+        ::GetClientRect( m_hwnd, &wndrect );
+        m_viewport.X = wndrect.left;
+        m_viewport.Y = wndrect.top;
+        m_viewport.Width = wndrect.right - wndrect.left;
+        m_viewport.Height = wndrect.bottom - wndrect.top;
         m_viewport.MinZ = p_vpminz;
         m_viewport.MaxZ = p_vpmaxz;
     }
