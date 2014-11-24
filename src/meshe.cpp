@@ -235,7 +235,7 @@ bool Meshe::ApplyProperties( void )
 
     PlugInManager<MesheImport>::Handle pihandle;
     PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( plugin.c_str(), pihandle );
-    if( pistatus != PIM_OK )
+    if( pistatus != PIM_OK && pistatus != PIM_OK_PIALREADYLOADED )
     {
         return false;
     }
