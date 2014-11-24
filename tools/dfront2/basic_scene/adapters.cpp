@@ -1829,6 +1829,8 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
 
     Spacebox* spacebox = new Spacebox();
 
+    spacebox->SetSceneName( alias );
+
     long pass_slot_count = 0;
     wxEnumProperty* prop3;
     wxIntProperty* prop4;
@@ -1955,12 +1957,24 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         for( long i = 0; i < 6; i++ )
         {
             spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetOrderNumber( rendering_order );
-        }
-                
+        }                
     }
 
+    // register spacebox in scenegraph
     DrawSpace::Scenegraph* scenegraph = (DrawSpace::Scenegraph*)p_dialog->GetData( "scenegraph" );
     scenegraph->RegisterNode( spacebox );
+
+    // call UpdateOutputQueue() for all passes
+    std::vector<DrawSpace::Core::Configurable*>* configs = (std::vector<DrawSpace::Core::Configurable*>*)p_dialog->GetData( "configs" );
+    for( size_t i = 0; i < configs->size(); i++ )
+    {
+        Pass* pass = dynamic_cast<Pass*>( (*configs)[i] );
+        if( pass )
+        {
+            pass->GetRenderingQueue()->UpdateOutputQueue();
+        }
+    }
+
 
     p_dialog->Close();
 }

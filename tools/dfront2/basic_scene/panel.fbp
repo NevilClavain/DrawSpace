@@ -748,7 +748,7 @@
             <property name="name">MainFrame</property>
             <property name="pos"></property>
             <property name="size">1164,600</property>
-            <property name="style">wxDEFAULT_FRAME_STYLE</property>
+            <property name="style">wxCAPTION|wxCLOSE_BOX</property>
             <property name="subclass"></property>
             <property name="title">DFront Basic Scene</property>
             <property name="tooltip"></property>

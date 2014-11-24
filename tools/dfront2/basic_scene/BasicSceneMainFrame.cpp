@@ -30,10 +30,14 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 
-BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent ),
+BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent, wxID_ANY, "DFront Basic Scene", wxDefaultPosition, wxSize( 1164,600 ), wxCAPTION | wxCLOSE_BOX ),
 m_glready( false )
 {
+}
 
+wxNotebook* BasicSceneMainFrame::GetNoteBook( void )
+{
+    return m_notebook2;
 }
 
 void BasicSceneMainFrame::OnClose( wxCloseEvent& event )
@@ -48,15 +52,8 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
 
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
         
+        
         m_scenegraph.ComputeTransformations( m_timer );
-
-        /*
-        renderer->ClearScreen( 0, 0, 120 );
-        renderer->BeginScreen();
-        renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
-        renderer->EndScreen();
-        */
-
 
         for( size_t i = 0; i < m_ordered_configs.size(); i++ )
         {
@@ -68,9 +65,9 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
         }
 
 
-        renderer->BeginScreen();
-        renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
-        renderer->EndScreen();
+        //renderer->BeginScreen();
+        //renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
+        //renderer->EndScreen();
 
         renderer->FlipScreen();
 
@@ -98,16 +95,16 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_scenegraph, m_cameras_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
 
     ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
-
-
     for( size_t i = 0; i < m_ordered_configs.size(); i++ )
     {
         Pass* pass = dynamic_cast<Pass*>( m_ordered_configs[i] );
         if( pass )
         {
             m_scenegraph.RegisterPass( pass );
+            pass->GetRenderingQueue()->UpdateOutputQueue();
         }
     }
 }
@@ -484,6 +481,7 @@ void BasicSceneMainFrame::OnCreateDrawableButtonClicked( wxCommandEvent& p_event
             dialog->EnableApplyButton();
             dialog->EnableSpecificButton0( "Add pass slot" );
             dialog->SetData( "scenegraph", &m_scenegraph );
+            dialog->SetData( "configs", &m_ordered_configs );
             dialog->Show();
             break;
 

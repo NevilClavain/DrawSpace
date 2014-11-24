@@ -61,7 +61,7 @@ protected:
     bool                                m_app_ready;
 
 
-    DrawSpace::Interface::MesheImport*  m_meshe_import;
+    
 
 
 
@@ -81,7 +81,7 @@ public:
     virtual void OnInitCmdLine( wxCmdLineParser& p_parser );
     virtual bool OnCmdLineParsed( wxCmdLineParser& p_parser );
 
-    //virtual int FilterEvent( wxEvent& p_event );
+    virtual bool OnExceptionInMainLoop( void );
 };
 
 DECLARE_APP( DFrontApp )

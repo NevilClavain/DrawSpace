@@ -53,43 +53,45 @@ bool DFrontApp::OnInit( void )
 
     DrawSpace::Initialize();
 
-    m_w_width = 500;
-    m_w_height = 300;
-    m_w_fullscreen = false;
-    m_renderplugin = "drawspaced3d9.dll";
 
     m_mainframe = new BasicSceneMainFrame( NULL );
     m_mainframe->Show();
 
+    
+
     //m_hwnd = (HWND)m_frame->GetHWND();
     m_hwnd = (HWND)m_mainframe->GetHWND();
 
-	//m_frame->Show();
+    HWND hwndpanel = m_mainframe->GetNoteBook()->GetHWND();
 
+    RECT rect, rectpanel;
+    GetClientRect( m_hwnd, &rect );
+    GetClientRect( hwndpanel, &rectpanel );
+
+    m_w_width = rect.right - rectpanel.right;
+    m_w_height = rect.bottom;
+    m_w_fullscreen = false;
+    m_renderplugin = "drawspaced3d9.dll";
 
 
 
     m_app_ready = true;
 
-    if( false == DrawSpace::Utils::LoadMesheImportPlugin( "ac3dmeshe.dll", "ac3dmeshe_plugin" ) )
-    {
-        wxMessageBox( wxT("Unable to load ac3d plugin. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );
-        return false;
-    }
-    m_meshe_import = DrawSpace::Utils::InstanciateMesheImportFromPlugin( "ac3dmeshe_plugin" );
-    //m_frame->SetMesheImport( m_meshe_import );
-
     if( false == load_renderer_plugin( m_renderplugin ) )
     {
-        wxMessageBox( wxT("Unable to load specified plugin. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );
+        wxMessageBox( "Unable to load specified plugin. Exiting now", "DrawFront error", wxICON_ERROR );
         return false;
     }
 
     if( false == init_renderer() )
     {
-        wxMessageBox( wxT("Renderer init FAILURE. Exiting now"), wxT("DrawFront error"), wxICON_ERROR );
+        wxMessageBox( "Renderer init FAILURE. Exiting now", "DrawFront error", wxICON_ERROR );
         return false;
     }
+
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+
 
     bool status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
     if( status )
@@ -103,7 +105,7 @@ bool DFrontApp::OnInit( void )
         dsstring last_error;
 
         Factory::GetInstance()->GetLastError( last_error );
-        wxMessageBox( last_error.c_str(), wxT("DrawFront parsing error"), wxICON_ERROR );
+        wxMessageBox( last_error.c_str(), "DrawFront parsing error", wxICON_ERROR );
         return false;
     }
 
@@ -145,7 +147,7 @@ bool DFrontApp::init_renderer( void )
     {
         return false;
     }
-    renderer->SetViewport( true, 0, 0, 0, 0, 0.0f, 1.0f );
+    renderer->SetViewport( false, 0, 0, m_w_width, m_w_height, 0.0f, 1.0f );
 
     //m_frame->SetGlReady( true );
     m_mainframe->SetGLReady();
@@ -164,6 +166,25 @@ bool DFrontApp::OnCmdLineParsed( wxCmdLineParser& p_parser )
 
     wxCharBuffer buffer = path.ToAscii();
     m_resource_filepath = buffer.data();
+
+    return true;
+}
+
+bool DFrontApp::OnExceptionInMainLoop( void )
+{
+    try
+    {
+        throw;
+    }
+    catch( dsexception& p_exception )
+    {
+        const char* what = p_exception.what();
+        wxMessageBox( what, "DrawSpace exception", wxICON_ERROR );
+    }
+    catch( ... )
+    {
+
+    }
 
     return true;
 }

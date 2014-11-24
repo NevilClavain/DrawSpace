@@ -57,8 +57,8 @@ public:
 	BasicSceneMainFrame( wxWindow* parent );
 
     void SetGLReady( void );
-
     void Update( void );
+    wxNotebook* GetNoteBook( void );
 	
 };
 
