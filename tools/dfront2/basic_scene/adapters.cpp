@@ -542,6 +542,10 @@ void wxWidgetAdapter::AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, 
         {
             type_name = "Camera";
         }
+        else if( dynamic_cast<Spacebox*>( node ) )
+        {
+            type_name = "Spacebox";
+        }
         else
         {
             type_name = "???";    
@@ -1975,7 +1979,8 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         }
     }
 
-
+    wxListCtrl* scenegraphctrl = (wxListCtrl*)p_dialog->GetData( "scenegraphctrl" );
+    AdaptScenegraphList( scenegraph, scenegraphctrl );
     p_dialog->Close();
 }
 

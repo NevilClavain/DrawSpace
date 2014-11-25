@@ -481,6 +481,7 @@ void BasicSceneMainFrame::OnCreateDrawableButtonClicked( wxCommandEvent& p_event
             dialog->EnableApplyButton();
             dialog->EnableSpecificButton0( "Add pass slot" );
             dialog->SetData( "scenegraph", &m_scenegraph );
+            dialog->SetData( "scenegraphctrl", m_scenegraph_listCtrl );
             dialog->SetData( "configs", &m_ordered_configs );
             dialog->Show();
             break;
