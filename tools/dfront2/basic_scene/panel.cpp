@@ -210,8 +210,23 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* bSizer14;
+	bSizer14 = new wxBoxSizer( wxHORIZONTAL );
+	
 	m_scenegraph_listCtrl = new wxListCtrl( m_scenePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	bSizer11->Add( m_scenegraph_listCtrl, 2, wxALL|wxEXPAND, 5 );
+	bSizer14->Add( m_scenegraph_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer15;
+	bSizer15 = new wxBoxSizer( wxVERTICAL );
+	
+	m_edittransf_button = new wxButton( m_scenePanel, wxID_ANY, wxT("Transformations"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer15->Add( m_edittransf_button, 0, wxALL, 5 );
+	
+	
+	bSizer14->Add( bSizer15, 0, wxEXPAND, 5 );
+	
+	
+	bSizer11->Add( bSizer14, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer12;
 	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
@@ -246,7 +261,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer11->Fit( m_scenePanel );
 	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), true );
 	
-	bSizer8->Add( m_notebook2, 1, wxEXPAND | wxALL, 5 );
+	bSizer8->Add( m_notebook2, 1, wxEXPAND, 0 );
 	
 	
 	this->SetSizer( bSizer8 );

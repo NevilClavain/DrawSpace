@@ -100,6 +100,7 @@ class MainFrame : public wxFrame
 		wxListCtrl* m_configs_listCtrl;
 		wxPanel* m_scenePanel;
 		wxListCtrl* m_scenegraph_listCtrl;
+		wxButton* m_edittransf_button;
 		wxButton* m_setcamera_button;
 		wxComboBox* m_cameraslist_comboBox;
 		wxButton* m_create_drawable_button;
