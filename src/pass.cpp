@@ -213,7 +213,7 @@ void Pass::ApplyProperties( void )
         Fx* fx = dynamic_cast<Fx*>( config );
         if( !fx )
         {
-            _DSEXCEPTION( "Specified asset is not an Fx" );
+            _DSEXCEPTION( "Specified config is not an Fx" );
         }
 
         GetViewportQuad()->SetFx( fx );
