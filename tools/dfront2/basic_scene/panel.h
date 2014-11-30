@@ -63,16 +63,18 @@ class ObjectPropertiesDialog : public wxDialog
 		wxButton* m_close_button;
 		wxButton* m_apply_button;
 		wxButton* m_specific_button_0;
+		wxButton* m_specific_button_1;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnApplyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSpecificButton0Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSpecificButton1Clicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		ObjectPropertiesDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 381,318 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		ObjectPropertiesDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 476,318 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~ObjectPropertiesDialog();
 	
 };
@@ -100,7 +102,8 @@ class MainFrame : public wxFrame
 		wxListCtrl* m_configs_listCtrl;
 		wxPanel* m_scenePanel;
 		wxListCtrl* m_scenegraph_listCtrl;
-		wxButton* m_edittransf_button;
+		wxButton* m_transftype_button;
+		wxButton* m_transfoedit_button;
 		wxButton* m_setcamera_button;
 		wxComboBox* m_cameraslist_comboBox;
 		wxButton* m_create_drawable_button;
@@ -118,7 +121,13 @@ class MainFrame : public wxFrame
 		virtual void OnShadersListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnAssetsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnConfigsListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnScenegraphListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
+		virtual void OnScenegraphListDeleteItem( wxListEvent& event ) { event.Skip(); }
 		virtual void OnScenegraphItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnScenegraphListItemDeselected( wxListEvent& event ) { event.Skip(); }
+		virtual void OnScenegraphListItemSelected( wxListEvent& event ) { event.Skip(); }
+		virtual void OnTransfTypeButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnTransfoEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSetCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreateDrawableButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		

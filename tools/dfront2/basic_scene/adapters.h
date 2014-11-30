@@ -28,6 +28,7 @@
 #include <wx/propgrid/propgrid.h>
 #include "drawspace.h"
 #include "BasicSceneObjectPropertiesDialog.h"
+#include "BasicSceneMainFrame.h"
 
 class wxWidgetAdapter
 {
@@ -48,8 +49,13 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameraprops_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxvalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxaddpassslot_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackvalue_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackaddmatrix_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackclearall_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfosourcemodification_callback;
 
     long m_pass_slot_index;
+    long m_matrix_slot_index;
 
 
     void on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -65,6 +71,12 @@ protected:
 
     void on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDialog* p_dialog );
+
+    void on_applymatrixstackvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applymatrixstackclearall( BasicSceneObjectPropertiesDialog* p_dialog );
+
+    void on_applytransfosourcemodification( BasicSceneObjectPropertiesDialog* p_dialog );
     
 
     wxWidgetAdapter( void );
@@ -120,6 +132,10 @@ public:
     void AdaptHeadMvtProps( const dsstring& p_mvtname, DrawSpace::Core::HeadMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptSpectatorMvtProps( const dsstring& p_mvtname, DrawSpace::Core::SpectatorMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptLongLatMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LongLatMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
+
+    void AdaptTransfoSourceModification( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptMatrixStackEdition( BasicSceneObjectPropertiesDialog* p_dialog );
+    
 
     void AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox );
 

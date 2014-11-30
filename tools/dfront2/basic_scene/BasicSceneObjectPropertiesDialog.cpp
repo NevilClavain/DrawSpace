@@ -26,12 +26,14 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
 BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title )
-: ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 381,318 ) ),
+: ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 460, 318 ) ),
 m_applybutton_handler( NULL ),
-m_specificbutton0_handler( NULL )
+m_specificbutton0_handler( NULL ),
+m_specificbutton1_handler( NULL )
 {
     m_apply_button->Show( false );
     m_specific_button_0->Show( false );
+    m_specific_button_1->Show( false );
 }
 
 wxPropertyGrid* BasicSceneObjectPropertiesDialog::GetPropertyGrid( void )
@@ -60,6 +62,14 @@ void BasicSceneObjectPropertiesDialog::OnSpecificButton0Clicked( wxCommandEvent&
     }
 }
 
+void BasicSceneObjectPropertiesDialog::OnSpecificButton1Clicked( wxCommandEvent& event )
+{
+    if( m_specificbutton1_handler )
+    {
+        (*m_specificbutton1_handler)( this );
+    }
+}
+
 void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )
 {
     m_apply_button->Show( true );
@@ -68,8 +78,13 @@ void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )
 void BasicSceneObjectPropertiesDialog::EnableSpecificButton0( const dsstring& p_label )
 {
     m_specific_button_0->Show( true );
-
     m_specific_button_0->SetLabel( p_label );
+}
+
+void BasicSceneObjectPropertiesDialog::EnableSpecificButton1( const dsstring& p_label )
+{
+    m_specific_button_1->Show( true );
+    m_specific_button_1->SetLabel( p_label );
 }
 
 void BasicSceneObjectPropertiesDialog::RegisterApplyButtonHandler( BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )
@@ -80,6 +95,11 @@ void BasicSceneObjectPropertiesDialog::RegisterApplyButtonHandler( BaseCallback<
 void BasicSceneObjectPropertiesDialog::RegisterSpecificButton0Handler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )
 {
     m_specificbutton0_handler = p_handler;
+}
+
+void BasicSceneObjectPropertiesDialog::RegisterSpecificButton1Handler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )
+{
+    m_specificbutton1_handler = p_handler;
 }
 
 void BasicSceneObjectPropertiesDialog::SetData( const dsstring& p_id, void* p_data )

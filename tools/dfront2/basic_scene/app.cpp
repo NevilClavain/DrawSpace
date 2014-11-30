@@ -92,20 +92,29 @@ bool DFrontApp::OnInit( void )
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
 
-
-    bool status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
-    if( status )
+    try
     {
-        //m_frame->UpdateAll();
 
-        m_mainframe->Update();
+        bool status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
+        if( status )
+        {
+            //m_frame->UpdateAll();
+
+            m_mainframe->Update();
+        }
+        else
+        {
+            dsstring last_error;
+
+            Factory::GetInstance()->GetLastError( last_error );
+            wxMessageBox( last_error.c_str(), "DrawFront parsing error", wxICON_ERROR );
+            return false;
+        }
     }
-    else
+    catch( dsexception& p_exception )
     {
-        dsstring last_error;
-
-        Factory::GetInstance()->GetLastError( last_error );
-        wxMessageBox( last_error.c_str(), "DrawFront parsing error", wxICON_ERROR );
+        const char* what = p_exception.what();
+        wxMessageBox( what, "DrawSpace exception", wxICON_ERROR );
         return false;
     }
 
