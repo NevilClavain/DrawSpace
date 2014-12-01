@@ -29,6 +29,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
+using namespace DrawSpace::Utils;
 
 BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent, wxID_ANY, "DFront Basic Scene", wxDefaultPosition, wxSize( 1264,600 ), wxCAPTION | wxCLOSE_BOX ),
 m_glready( false ),
@@ -54,8 +55,34 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
     {
 
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-        
-        
+
+        // transform all scenegraph's nodes
+
+        for( std::map<dsstring, MetadataScenegraphEntry>::iterator it = m_metada_scenegraph.begin(); it != m_metada_scenegraph.end(); ++it )
+        {
+            MetadataScenegraphEntry entry = it->second;
+
+            switch( entry.transformation_source_type )
+            {
+                case TRANSFORMATIONSOURCE_MATRIXSTACK:
+                    {
+                        entry.matrix_stack.BuildResult();
+                        Matrix mat;
+                        entry.matrix_stack.GetResult( &mat );
+                        entry.node->SetLocalTransform( mat );
+                    }
+                    break;
+
+                case TRANSFORMATIONSOURCE_MOVEMENT:
+
+                    break;
+
+                case TRANSFORMATIONSOURCE_BODY:
+
+                    break;
+            }
+        }
+                
         m_scenegraph.ComputeTransformations( m_timer );
 
         for( size_t i = 0; i < m_ordered_configs.size(); i++ )
