@@ -1870,6 +1870,7 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     long pass_slot_count = 0;
     wxEnumProperty* prop3;
     wxIntProperty* prop4;
+    wxStringProperty* prop5;
 
     while( 1 )
     {
@@ -1877,14 +1878,12 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         sprintf( pass_slot_index, "pass_slot_%d", pass_slot_count++ );
 
         // check if root pass slot exists
-        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( pass_slot_index ) );
-        if( NULL == prop3 )
+        prop5 = static_cast<wxStringProperty*>( propertygrid->GetProperty( pass_slot_index ) );
+        if( NULL == prop5 )
         {
             break;
         }
-        
-
-        
+                
         dsstring curr_id;
 
         curr_id = pass_slot_index;
@@ -2011,7 +2010,7 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     scale_mat.Scale( 20.0, 20.0, 20.0 );
     BasicSceneMainFrame::TransformationMatrixDescriptor descr;
     descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE;
-    descr.arg.angle = 0.0;
+    descr.arg.angle = 0.0;    
     descr.arg.scale[0] = scale_mat( 0, 0 );
     descr.arg.scale[1] = scale_mat( 1, 1 );
     descr.arg.scale[2] = scale_mat( 2, 2 );
@@ -2475,6 +2474,190 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( BasicSceneObjectPropertiesDialog*
 
 void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxStringProperty* prop;
+    wxFloatProperty* prop2;
+    wxEnumProperty* prop3;
+    wxCharBuffer buffer;
+    wxAny value;
+
+
+    BasicSceneMainFrame::MetadataScenegraphEntry* entry = (BasicSceneMainFrame::MetadataScenegraphEntry*)p_dialog->GetData( "metadata_scenegraph_entry" );
+    entry->matrix_stack_descr.clear();
+    entry->matrix_stack.ClearAll();
+
+    long matrix_count = 0;
+    while( 1 )
+    {
+        char matrix_index[32];
+
+        sprintf( matrix_index, "matrix_%d", matrix_count++ );
+
+        // check if root exists
+        prop = static_cast<wxStringProperty*>( propertygrid->GetProperty( matrix_index ) );
+        if( NULL == prop )
+        {
+            break;
+        }
+
+        dsstring curr_id;
+
+        curr_id = matrix_index;
+        curr_id += ".matrix_type";
+
+        
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+
+
+        wxString matrix_type_name = prop3->GetValueAsString();   
+        buffer = matrix_type_name.ToAscii();
+        dsstring matrix_type_name_2 = buffer.data();
+
+
+        curr_id = matrix_index;
+        curr_id += ".translation.x";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float translation_x;
+        value.GetAs<float>( &translation_x );
+
+        curr_id = matrix_index;
+        curr_id += ".translation.y";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float translation_y;
+        value.GetAs<float>( &translation_y );
+
+        curr_id = matrix_index;
+        curr_id += ".translation.z";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float translation_z;
+        value.GetAs<float>( &translation_z );
+
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.x";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float rotation_axis_x;
+        value.GetAs<float>( &rotation_axis_x );
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.y";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float rotation_axis_y;
+        value.GetAs<float>( &rotation_axis_y );
+
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.z";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float rotation_axis_z;
+        value.GetAs<float>( &rotation_axis_z );
+
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.angle";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float rotation_angle;
+        value.GetAs<float>( &rotation_angle );
+
+
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.x";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float scaling_x;
+        value.GetAs<float>( &scaling_x );
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.y";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float scaling_y;
+        value.GetAs<float>( &scaling_y );
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.z";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float scaling_z;
+        value.GetAs<float>( &scaling_z );
+
+
+        ////////////////////////
+
+        BasicSceneMainFrame::TransformationMatrixDescriptor descr;
+
+        if( "identity" == matrix_type_name_2 )
+        {
+            descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY;
+        }
+        else if( "translation" == matrix_type_name_2 )
+        {
+            descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_TRANSLATION;
+        }
+        else if( "rotation" == matrix_type_name_2 )
+        {
+            descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_ROTATION;
+        }
+        else if( "scaling" == matrix_type_name_2 )
+        {
+            descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE;
+        }
+
+        descr.arg.translation[0] = translation_x;
+        descr.arg.translation[1] = translation_y;
+        descr.arg.translation[2] = translation_z;
+        descr.arg.translation[3] = 1.0;
+
+
+        descr.arg.rotation[0] = rotation_axis_x;
+        descr.arg.rotation[1] = rotation_axis_y;
+        descr.arg.rotation[2] = rotation_axis_z;
+        descr.arg.rotation[3] = 1.0;
+
+        descr.arg.angle = rotation_angle;
+
+        descr.arg.scale[0] = scaling_x;
+        descr.arg.scale[1] = scaling_y;
+        descr.arg.scale[2] = scaling_z;
+        descr.arg.scale[3] = 1.0;
+
+        entry->matrix_stack_descr.push_back( descr );
+        
+        /////
+
+        Matrix mat;
+
+        if( "identity" == matrix_type_name_2 )
+        {           
+            mat.Identity();
+            entry->matrix_stack.PushMatrix( mat );
+        }
+        else if( "translation" == matrix_type_name_2 )
+        {
+            mat.Translation( translation_x, translation_y, translation_z );
+        }
+        else if( "rotation" == matrix_type_name_2 )
+        {
+            mat.Rotation( Vector( rotation_axis_x, rotation_axis_y, rotation_axis_z, 1.0 ), Utils::Maths::DegToRad( rotation_angle ) );
+        }
+        else if( "scaling" == matrix_type_name_2 )
+        {
+            mat.Scale( scaling_x, scaling_y, scaling_z );
+        }
+
+        entry->matrix_stack.PushMatrix( mat );
+    }
+
+    p_dialog->Close();
 }
 
 void wxWidgetAdapter::on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDialog* p_dialog )
