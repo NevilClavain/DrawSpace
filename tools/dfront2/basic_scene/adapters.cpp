@@ -718,6 +718,9 @@ void wxWidgetAdapter::AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p
 
         }
     }
+
+    p_propertygrid->ResetColumnSizes();
+    p_propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid )
@@ -848,6 +851,9 @@ void wxWidgetAdapter::AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass*
             }
         }
     }
+
+    p_propertygrid->ResetColumnSizes();
+    p_propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::AdaptCameraProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1067,6 +1073,8 @@ void wxWidgetAdapter::AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDia
 
     p_dialog->RegisterApplyButtonHandler( m_applylinearmvtvalues_callback );
 
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1182,6 +1190,8 @@ void wxWidgetAdapter::AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesD
 
     p_dialog->RegisterApplyButtonHandler( m_applycircularmvtvalues_callback );
 
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1312,6 +1322,9 @@ void wxWidgetAdapter::AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog
     propertygrid->Append( new wxFloatProperty( "Initial pitch", wxPG_LABEL, 0.0 ) );
 
     p_dialog->RegisterApplyButtonHandler( m_applyfpsmvtvalues_callback );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1395,8 +1408,10 @@ void wxWidgetAdapter::AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialo
     propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
 
-
     p_dialog->RegisterApplyButtonHandler( m_applyfreemvtvalues_callback );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1473,8 +1488,10 @@ void wxWidgetAdapter::AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialo
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
 
-
     p_dialog->RegisterApplyButtonHandler( m_applyheadmvtvalues_callback );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2108,19 +2125,13 @@ void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDia
 
         wxPGProperty* slot_texture_stage_prop = propertygrid->AppendIn( slot_textures_prop, new wxStringProperty( sb_type.c_str(), wxPG_LABEL, "<composed>" ) );
         
-        
         for( long j = 0; j < RenderingNode::NbMaxTextures; j++ )
         {
             char texture_stage_index[32];
 
             sprintf( texture_stage_index, "stage %d", j );
             propertygrid->AppendIn( slot_texture_stage_prop, new wxEnumProperty( texture_stage_index, wxPG_LABEL, availables_textures_labels ) );
-        }
-        
-        
-
-
-        
+        }        
     }
 
 
@@ -2151,6 +2162,8 @@ void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDia
     ////
 
     propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2415,34 +2428,20 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( BasicSceneObjectPropertiesDialog*
         wxPGProperty* mat_prop = propertygrid->Append( new wxStringProperty( matrix_index, wxPG_LABEL, "<composed>" ) );
 
         matrix_type_labels.Add( "identity" );
+        matrix_type_labels.Add( "scaling" );
         matrix_type_labels.Add( "translation" );
         matrix_type_labels.Add( "rotation" );
-        matrix_type_labels.Add( "scaling" );
+        
 
-        wxEnumProperty* matrix_type_combo = new wxEnumProperty( "matrix_type", wxPG_LABEL, matrix_type_labels ); 
+        wxArrayInt arrIds;
+        arrIds.Add( BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY );
+        arrIds.Add( BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE );
+        arrIds.Add( BasicSceneMainFrame::TRANSFORMATIONMATRIX_TRANSLATION );
+        arrIds.Add( BasicSceneMainFrame::TRANSFORMATIONMATRIX_ROTATION );
+
+
+        wxEnumProperty* matrix_type_combo = new wxEnumProperty( "matrix_type", wxPG_LABEL, matrix_type_labels, arrIds, entry->matrix_stack_descr[i].ope ); 
         propertygrid->AppendIn( mat_prop, matrix_type_combo );
-
-        /*
-        BasicSceneMainFrame::TransformationMatrixDescriptor descr = entry->matrix_stack_descr[i];
-        switch( descr.ope )
-        {
-            case BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY:
-
-                break;
-
-            case BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE:
-
-                break;
-
-            case BasicSceneMainFrame::TRANSFORMATIONMATRIX_TRANSLATION:
-
-                break;
-
-            case BasicSceneMainFrame::TRANSFORMATIONMATRIX_ROTATION:
-
-                break;
-        }
-        */
         
         wxPGProperty* mat_prop_translation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "translation", wxPG_LABEL, "<composed>" ) );
         propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "x", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation[0] ) );
@@ -2469,6 +2468,9 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( BasicSceneObjectPropertiesDialog*
     p_dialog->RegisterApplyButtonHandler( m_applymatrixstackvalue_callback );
     p_dialog->RegisterSpecificButton0Handler( m_applymatrixstackaddmatrix_callback );
     p_dialog->RegisterSpecificButton1Handler( m_applymatrixstackclearall_callback );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2508,6 +2510,7 @@ void wxWidgetAdapter::on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDi
     propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "z", wxPG_LABEL, 1.0 ) );
 
     propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::on_applymatrixstackclearall( BasicSceneObjectPropertiesDialog* p_dialog )
