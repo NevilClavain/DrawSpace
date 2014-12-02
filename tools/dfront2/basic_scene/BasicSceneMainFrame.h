@@ -92,16 +92,53 @@ public:
     } MetadataScenegraphEntry;
 
 
+    typedef enum
+    {
+        MOVEMENTCONTROLSOURCE_KEYBMOUSE,
+        MOVEMENTCONTROLSOURCE_AUTOMATIC
+
+    } MovementControlSource;
+
+    typedef enum
+    {
+        THETAPHICONTROL_POSITION,
+        THETAPHICONTROL_SPEED,
+
+    } ThetaPhiControlMode;
+
+    typedef struct
+    {
+        DrawSpace::Core::Movement*  movement;
+        MovementControlSource       movement_control_source;
+
+        dsreal                      speed;
+        ThetaPhiControlMode         thetaphi_control_mode;
+
+        dsreal                      theta;
+        dsreal                      phi;
+
+        dsreal                      yaw_speed;
+        dsreal                      pitch_speed;
+        dsreal                      roll_speed;
+
+
+    } MovementEntry;
+
+
 protected:
     bool                                                    m_glready;
     DrawSpace::Utils::TimeManager                           m_timer;
-    std::map<dsstring, DrawSpace::Core::Movement*>          m_movements;
+    //std::map<dsstring, DrawSpace::Core::Movement*>          m_movements;
+    std::map<dsstring, MovementEntry>                       m_movements;
 
     DrawSpace::Scenegraph                                   m_scenegraph;
     std::map<dsstring, MetadataScenegraphEntry>             m_metada_scenegraph;
 
     std::vector<DrawSpace::Core::Configurable*>             m_ordered_configs;
     long                                                    m_scenegraphlistctrl_currentindex;
+
+
+    MovementEntry*                                          m_mousekeyb_output;
 
     
 
@@ -125,6 +162,9 @@ protected:
     virtual void OnScenegraphListItemDeselected( wxListEvent& p_event );
     virtual void OnScenegraphListDeleteItem( wxListEvent& p_event );
     virtual void OnScenegraphListDeleteAllItems( wxListEvent& p_event );
+	virtual void OnControlButtonClicked( wxCommandEvent& p_event );
+	virtual void OnMouseKeyboardOutputButtonClicked( wxCommandEvent& p_event );
+
 
 
 public:

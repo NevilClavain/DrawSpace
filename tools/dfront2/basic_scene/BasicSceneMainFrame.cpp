@@ -33,7 +33,8 @@ using namespace DrawSpace::Utils;
 
 BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent, wxID_ANY, "DFront Basic Scene", wxDefaultPosition, wxSize( 1264,600 ), wxCAPTION | wxCLOSE_BOX ),
 m_glready( false ),
-m_scenegraphlistctrl_currentindex( -1 )
+m_scenegraphlistctrl_currentindex( -1 ),
+m_mousekeyb_output( NULL )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
@@ -94,10 +95,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
             }
         }
 
-
-        //renderer->BeginScreen();
-        //renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
-        //renderer->EndScreen();
+        renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
 
         renderer->FlipScreen();
 
@@ -604,4 +602,14 @@ void BasicSceneMainFrame::OnScenegraphListDeleteAllItems( wxListEvent& p_event )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
+}
+
+void BasicSceneMainFrame::OnControlButtonClicked( wxCommandEvent& p_event )
+{
+
+}
+
+void BasicSceneMainFrame::OnMouseKeyboardOutputButtonClicked( wxCommandEvent& p_event )
+{
+
 }

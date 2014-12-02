@@ -91,9 +91,12 @@ class MainFrame : public wxFrame
 		wxPanel* m_camerasPanel;
 		wxListCtrl* m_cameras_listCtrl;
 		wxButton* m_createcamera_button;
-		wxListCtrl* m_mvts_listCtrl;
 		wxButton* m_createmvt_button;
 		wxComboBox* m_mvttype_comboBox;
+		wxListCtrl* m_mvts_listCtrl;
+		wxButton* m_control_button;
+		wxButton* m_mousekeyboardoutput_button;
+		wxComboBox* m_mousekeyboardoutput_comboBox;
 		wxPanel* m_passesPanel;
 		wxListCtrl* m_passes_listCtrl;
 		wxListCtrl* m_shadersparams_listCtrl;
@@ -114,8 +117,10 @@ class MainFrame : public wxFrame
 		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
 		virtual void OnCamerasListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnCreateCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnMvtsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnCreateMvtButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnMvtsListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnControlButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnMouseKeyboardOutputButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnShadersListItemActivated( wxListEvent& event ) { event.Skip(); }
