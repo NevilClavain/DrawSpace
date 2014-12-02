@@ -118,7 +118,9 @@ class MainFrame : public wxFrame
 		virtual void OnCamerasListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnCreateCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreateMvtButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnMvtsListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
 		virtual void OnMvtsListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnMvtsListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnControlButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnMouseKeyboardOutputButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemActivated( wxListEvent& event ) { event.Skip(); }

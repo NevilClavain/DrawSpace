@@ -2287,6 +2287,8 @@ void wxWidgetAdapter::AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace:
     propertygrid->Append( new wxFloatProperty( "Current theta", wxPG_LABEL, current_theta ) );
     propertygrid->Append( new wxFloatProperty( "Current phi", wxPG_LABEL, current_phi ) );
 
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2331,6 +2333,9 @@ void wxWidgetAdapter::AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpac
     propertygrid->Append( new wxFloatProperty( "Current angle", wxPG_LABEL, current_angle ) );
     propertygrid->Append( new wxFloatProperty( "Current theta", wxPG_LABEL, current_theta ) );
     propertygrid->Append( new wxFloatProperty( "Current phi", wxPG_LABEL, current_phi ) );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::AdaptFpsMvtProps( const dsstring& p_mvtname, DrawSpace::Core::FPSMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2354,6 +2359,8 @@ void wxWidgetAdapter::AdaptFpsMvtProps( const dsstring& p_mvtname, DrawSpace::Co
     propertygrid->Append( new wxFloatProperty( "Current yaw", wxPG_LABEL, current_yaw ) );
     propertygrid->Append( new wxFloatProperty( "Current pitch", wxPG_LABEL, current_pitch ) );
 
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::AdaptFreeMvtProps( const dsstring& p_mvtname, DrawSpace::Core::FreeMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2370,6 +2377,9 @@ void wxWidgetAdapter::AdaptFreeMvtProps( const dsstring& p_mvtname, DrawSpace::C
     propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "x", wxPG_LABEL, current_pos[0] ) );
     propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "y", wxPG_LABEL, current_pos[1] ) );
     propertygrid->AppendIn( currpos_prop, new wxFloatProperty( "z", wxPG_LABEL, current_pos[2] ) );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 }
 
 void wxWidgetAdapter::AdaptHeadMvtProps( const dsstring& p_mvtname, DrawSpace::Core::HeadMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2395,6 +2405,9 @@ void wxWidgetAdapter::AdaptHeadMvtProps( const dsstring& p_mvtname, DrawSpace::C
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "y", wxPG_LABEL, head_pos[1] ) );
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "z", wxPG_LABEL, head_pos[2] ) );
 
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
+
 }
 
 void wxWidgetAdapter::AdaptSpectatorMvtProps( const dsstring& p_mvtname, DrawSpace::Core::SpectatorMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2414,6 +2427,10 @@ void wxWidgetAdapter::AdaptSpectatorMvtProps( const dsstring& p_mvtname, DrawSpa
     propertygrid->Append( new wxFloatProperty( "Scale pos", wxPG_LABEL, scale_pos ) );
     propertygrid->Append( new wxIntProperty( "Position period", wxPG_LABEL, pos_period ) );
     propertygrid->Append( new wxBoolProperty( "Orbiter link", wxPG_LABEL, orbiter_link ) );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
+
 }
 
 void wxWidgetAdapter::AdaptLongLatMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LongLatMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2439,6 +2456,10 @@ void wxWidgetAdapter::AdaptLongLatMvtProps( const dsstring& p_mvtname, DrawSpace
     propertygrid->Append( new wxFloatProperty( "Altitud", wxPG_LABEL, altitud ) );
     propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, theta ) );
     propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, phi ) );
+
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
 
 }
 
@@ -2781,6 +2802,16 @@ void wxWidgetAdapter::on_applymatrixstackclearall( BasicSceneObjectPropertiesDia
 {
     p_dialog->GetPropertyGrid()->Clear();
     m_matrix_slot_index = 0;
+}
+
+void wxWidgetAdapter::AdaptMovementEntryControlProps( const dsstring& p_mvtalias, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtalias.c_str() ) );
+
+    BasicSceneMainFrame::MovementEntry* movement_entry = (BasicSceneMainFrame::MovementEntry*)p_dialog->GetData( "movement_entry" );
+
+    // to be continued...
 }
 
 void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox )

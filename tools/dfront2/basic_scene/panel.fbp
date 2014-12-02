@@ -1567,7 +1567,7 @@
                                                             <event name="OnListColDragging"></event>
                                                             <event name="OnListColEndDrag"></event>
                                                             <event name="OnListColRightClick"></event>
-                                                            <event name="OnListDeleteAllItems"></event>
+                                                            <event name="OnListDeleteAllItems">OnMvtsListDeleteAllItems</event>
                                                             <event name="OnListDeleteItem"></event>
                                                             <event name="OnListEndLabelEdit"></event>
                                                             <event name="OnListInsertItem"></event>
@@ -1576,7 +1576,7 @@
                                                             <event name="OnListItemFocused"></event>
                                                             <event name="OnListItemMiddleClick"></event>
                                                             <event name="OnListItemRightClick"></event>
-                                                            <event name="OnListItemSelected"></event>
+                                                            <event name="OnListItemSelected">OnMvtsListItemSelected</event>
                                                             <event name="OnListKeyDown"></event>
                                                             <event name="OnMiddleDClick"></event>
                                                             <event name="OnMiddleDown"></event>

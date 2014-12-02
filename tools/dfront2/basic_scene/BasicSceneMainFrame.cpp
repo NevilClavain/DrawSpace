@@ -34,10 +34,12 @@ using namespace DrawSpace::Utils;
 BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent, wxID_ANY, "DFront Basic Scene", wxDefaultPosition, wxSize( 1264,600 ), wxCAPTION | wxCLOSE_BOX ),
 m_glready( false ),
 m_scenegraphlistctrl_currentindex( -1 ),
+m_mvtslistctrl_currentindex( -1 ),
 m_mousekeyb_output( NULL )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
+    m_control_button->Enable( false );
 }
 
 wxNotebook* BasicSceneMainFrame::GetNoteBook( void )
@@ -606,10 +608,81 @@ void BasicSceneMainFrame::OnScenegraphListDeleteAllItems( wxListEvent& p_event )
 
 void BasicSceneMainFrame::OnControlButtonClicked( wxCommandEvent& p_event )
 {
+    wxString mvt_name = m_mvts_listCtrl->GetItemText( m_mvtslistctrl_currentindex );
+    wxCharBuffer buffer = mvt_name.ToAscii();
+    dsstring mvt_name2 = buffer.data();
 
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Movement control edition" );
+
+    dialog->SetData( "movement_entry", &m_movements[mvt_name2] );
+    dialog->EnableApplyButton();
+
+    wxWidgetAdapter::GetInstance()->AdaptMovementEntryControlProps( mvt_name2, dialog );
+    dialog->Show();
 }
 
 void BasicSceneMainFrame::OnMouseKeyboardOutputButtonClicked( wxCommandEvent& p_event )
 {
 
+}
+
+void BasicSceneMainFrame::OnMvtsListDeleteAllItems( wxListEvent& p_event )
+{
+    m_control_button->Enable( false );
+}
+
+void BasicSceneMainFrame::OnMvtsListItemSelected( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+    m_mvtslistctrl_currentindex = sel_index;
+
+    wxString mvt_name = m_mvts_listCtrl->GetItemText( sel_index );
+    wxCharBuffer buffer = mvt_name.ToAscii();
+    dsstring mvt_name2 = buffer.data();
+
+    MovementEntry movement_entry = m_movements[mvt_name2];
+
+    LinearMovement* linearmvt = dynamic_cast<LinearMovement*>( movement_entry.movement );
+    if( linearmvt )
+    {
+        m_control_button->Enable( true );
+    }
+
+    CircularMovement* circularmvt = dynamic_cast<CircularMovement*>( movement_entry.movement );
+    if( circularmvt )
+    {
+        m_control_button->Enable( true );
+    }
+
+    FPSMovement* fpsmvt = dynamic_cast<FPSMovement*>( movement_entry.movement );
+    if( fpsmvt )
+    {
+        m_control_button->Enable( true );
+    }
+
+    FreeMovement* freemvt = dynamic_cast<FreeMovement*>( movement_entry.movement );
+    if( freemvt )
+    {
+        m_control_button->Enable( true );
+    }
+
+    HeadMovement* headmvt = dynamic_cast<HeadMovement*>( movement_entry.movement );
+    if( headmvt )
+    {
+        m_control_button->Enable( false );
+    }
+
+    SpectatorMovement* spectatormvt = dynamic_cast<SpectatorMovement*>( movement_entry.movement );
+    if( spectatormvt )
+    {
+        m_control_button->Enable( false );
+    }
+
+    LongLatMovement* longlatmvt = dynamic_cast<LongLatMovement*>( movement_entry.movement );
+    if( longlatmvt )
+    {
+        m_control_button->Enable( true );
+    }
+
+    _asm nop
 }

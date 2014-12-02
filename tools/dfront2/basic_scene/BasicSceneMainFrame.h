@@ -128,7 +128,6 @@ public:
 protected:
     bool                                                    m_glready;
     DrawSpace::Utils::TimeManager                           m_timer;
-    //std::map<dsstring, DrawSpace::Core::Movement*>          m_movements;
     std::map<dsstring, MovementEntry>                       m_movements;
 
     DrawSpace::Scenegraph                                   m_scenegraph;
@@ -136,6 +135,7 @@ protected:
 
     std::vector<DrawSpace::Core::Configurable*>             m_ordered_configs;
     long                                                    m_scenegraphlistctrl_currentindex;
+    long                                                    m_mvtslistctrl_currentindex;
 
 
     MovementEntry*                                          m_mousekeyb_output;
@@ -151,6 +151,8 @@ protected:
     virtual void OnShadersListItemActivated( wxListEvent& p_event );
     virtual void OnCreateMvtButtonClicked( wxCommandEvent& p_event );
     virtual void OnMvtsListItemActivated( wxListEvent& p_event );
+    virtual void OnMvtsListDeleteAllItems( wxListEvent& p_event );
+    virtual void OnMvtsListItemSelected( wxListEvent& p_event );
     virtual void OnCreateCameraButtonClicked( wxCommandEvent& p_event );
     virtual void OnCamerasListItemActivated( wxListEvent& p_event );
     virtual void OnScenegraphItemActivated( wxListEvent& p_event );

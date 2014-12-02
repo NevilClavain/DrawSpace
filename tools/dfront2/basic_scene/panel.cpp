@@ -310,7 +310,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_cameras_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnCamerasListItemActivated ), NULL, this );
 	m_createcamera_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateCameraButtonClicked ), NULL, this );
 	m_createmvt_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateMvtButtonClicked ), NULL, this );
+	m_mvts_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnMvtsListDeleteAllItems ), NULL, this );
 	m_mvts_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnMvtsListItemActivated ), NULL, this );
+	m_mvts_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnMvtsListItemSelected ), NULL, this );
 	m_control_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnControlButtonClicked ), NULL, this );
 	m_mousekeyboardoutput_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnMouseKeyboardOutputButtonClicked ), NULL, this );
 	m_passes_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnPassesListItemActivated ), NULL, this );
@@ -337,7 +339,9 @@ MainFrame::~MainFrame()
 	m_cameras_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnCamerasListItemActivated ), NULL, this );
 	m_createcamera_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateCameraButtonClicked ), NULL, this );
 	m_createmvt_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateMvtButtonClicked ), NULL, this );
+	m_mvts_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnMvtsListDeleteAllItems ), NULL, this );
 	m_mvts_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnMvtsListItemActivated ), NULL, this );
+	m_mvts_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnMvtsListItemSelected ), NULL, this );
 	m_control_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnControlButtonClicked ), NULL, this );
 	m_mousekeyboardoutput_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnMouseKeyboardOutputButtonClicked ), NULL, this );
 	m_passes_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnPassesListItemActivated ), NULL, this );
