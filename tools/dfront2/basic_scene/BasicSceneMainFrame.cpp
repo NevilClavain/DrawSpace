@@ -40,11 +40,38 @@ m_mousekeyb_output( NULL )
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
     m_control_button->Enable( false );
+
+    m_timercb = new TimerCallback( this, &BasicSceneMainFrame::on_timer );
+
+    m_timer.AddTimer( "timer", 100, m_timercb );
+    m_timer.SetTimerState( "timer", true );
 }
 
 wxNotebook* BasicSceneMainFrame::GetNoteBook( void )
 {
     return m_notebook2;
+}
+
+void BasicSceneMainFrame::compute_regs( void )
+{
+    for( std::map<dsstring, RegisterEntry>::iterator it = m_registers.begin(); it != m_registers.end(); ++it )
+    {
+        RegisterEntry* register_entry = &(it->second);
+
+        if( REGISTER_CONSTANT == register_entry->mode )
+        {
+            register_entry->current_value = register_entry->const_value;
+        }
+        else if( REGISTER_VARIABLE == register_entry->mode )
+        {
+
+        }
+    }
+}
+
+void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
+{
+    wxWidgetAdapter::GetInstance()->AdaptRegistersLastValues( &m_registers, m_registers_listCtrl );
 }
 
 void BasicSceneMainFrame::OnClose( wxCloseEvent& event )
@@ -56,7 +83,8 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
 {
     if( m_glready )
     {
-
+        compute_regs();
+        
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
         // transform all scenegraph's nodes
@@ -126,6 +154,8 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_scenegraph, m_cameras_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
+    wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );
+
 
     ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
     for( size_t i = 0; i < m_ordered_configs.size(); i++ )
@@ -683,6 +713,18 @@ void BasicSceneMainFrame::OnMvtsListItemSelected( wxListEvent& p_event )
     {
         m_control_button->Enable( true );
     }
+}
 
-    _asm nop
+void BasicSceneMainFrame::OnCreateRegButtonClicked( wxCommandEvent& p_event )
+{
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register creation" );
+
+    dialog->SetData( "registers_map", &m_registers );
+    dialog->SetData( "ctrl", m_registers_listCtrl );
+
+    dialog->EnableApplyButton();
+
+    wxWidgetAdapter::GetInstance()->AdaptRegisterCreationProps( dialog );
+    dialog->Show();
+    
 }

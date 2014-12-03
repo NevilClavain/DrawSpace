@@ -53,6 +53,7 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackaddmatrix_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackclearall_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfosourcemodification_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyregistervalues_callback;
 
     long m_pass_slot_index;
     long m_matrix_slot_index;
@@ -77,6 +78,8 @@ protected:
     void on_applymatrixstackclearall( BasicSceneObjectPropertiesDialog* p_dialog );
 
     void on_applytransfosourcemodification( BasicSceneObjectPropertiesDialog* p_dialog );
+
+    void on_applyregistervalues( BasicSceneObjectPropertiesDialog* p_dialog );
     
 
     wxWidgetAdapter( void );
@@ -102,6 +105,7 @@ public:
     void AdaptMvtsList( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_map, wxListCtrl* p_listctrl );
     void AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl );
     void AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl );
+    void AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
 
     void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );
     void AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_propertygrid );
@@ -124,6 +128,7 @@ public:
     void AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptCameraCreationProps( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_mvts_map, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptRegisterCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
 
     void AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
@@ -140,6 +145,7 @@ public:
     
 
     void AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox );
+    void AdaptRegistersLastValues( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
 
 };
 

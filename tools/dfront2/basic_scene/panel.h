@@ -111,6 +111,9 @@ class MainFrame : public wxFrame
 		wxComboBox* m_cameraslist_comboBox;
 		wxButton* m_create_drawable_button;
 		wxComboBox* m_drawabletypes_comboBox;
+		wxPanel* m_registersPanel;
+		wxListCtrl* m_registers_listCtrl;
+		wxButton* m_createreg_button;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -137,6 +140,7 @@ class MainFrame : public wxFrame
 		virtual void OnTransfoEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSetCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreateDrawableButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCreateRegButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

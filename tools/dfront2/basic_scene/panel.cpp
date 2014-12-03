@@ -183,7 +183,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_camerasPanel->SetSizer( bSizer81 );
 	m_camerasPanel->Layout();
 	bSizer81->Fit( m_camerasPanel );
-	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras"), true );
+	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras && Movements"), false );
 	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -295,6 +295,21 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_scenePanel->Layout();
 	bSizer11->Fit( m_scenePanel );
 	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), false );
+	m_registersPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer19;
+	bSizer19 = new wxBoxSizer( wxVERTICAL );
+	
+	m_registers_listCtrl = new wxListCtrl( m_registersPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	bSizer19->Add( m_registers_listCtrl, 1, wxALL|wxEXPAND, 5 );
+	
+	m_createreg_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Create register"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer19->Add( m_createreg_button, 0, wxALL, 5 );
+	
+	
+	m_registersPanel->SetSizer( bSizer19 );
+	m_registersPanel->Layout();
+	bSizer19->Fit( m_registersPanel );
+	m_notebook2->AddPage( m_registersPanel, wxT("Registers"), true );
 	
 	bSizer8->Add( m_notebook2, 1, wxEXPAND, 0 );
 	
@@ -329,6 +344,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_transfoedit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfoEditButtonClicked ), NULL, this );
 	m_setcamera_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnSetCameraButtonClicked ), NULL, this );
 	m_create_drawable_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
+	m_createreg_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateRegButtonClicked ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -358,5 +374,6 @@ MainFrame::~MainFrame()
 	m_transfoedit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfoEditButtonClicked ), NULL, this );
 	m_setcamera_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnSetCameraButtonClicked ), NULL, this );
 	m_create_drawable_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
+	m_createreg_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateRegButtonClicked ), NULL, this );
 	
 }

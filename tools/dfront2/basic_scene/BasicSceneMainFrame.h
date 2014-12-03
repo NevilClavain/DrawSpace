@@ -102,7 +102,7 @@ public:
     typedef enum
     {
         THETAPHICONTROL_POSITION,
-        THETAPHICONTROL_SPEED,
+        THETAPHICONTROL_SPEED
 
     } ThetaPhiControlMode;
 
@@ -125,7 +125,47 @@ public:
     } MovementEntry;
 
 
+    typedef enum
+    {
+        REGISTER_CONSTANT,
+        REGISTER_VARIABLE
+
+    } RegisterMode;
+
+    typedef enum
+    {
+        REGISTER_VARIABLE_TRANSLATION_SIMPLE,
+        REGISTER_VARIABLE_TRANSLATION_ROUNDTRIP,
+        REGISTER_VARIABLE_ANGULAR_SIMPLE,
+        REGISTER_VARIABLE_ANGULAR_ROUNDTRIP,
+
+    } RegisterVariableMode;
+
+
+    typedef struct
+    {
+        RegisterMode            mode;
+        dsreal                  const_value;
+
+        RegisterVariableMode    variable_mode;
+        dsreal                  variable_initial_value;
+        dsreal                  variable_speed;
+        dsreal                  variable_range_sup;
+        dsreal                  variable_range_inf;
+
+        bool                    state;
+
+        dsreal                  current_value;
+
+    } RegisterEntry;
+
+
 protected:
+
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&> TimerCallback;
+
+    void on_timer( const dsstring& p_timername );
+
     bool                                                    m_glready;
     DrawSpace::Utils::TimeManager                           m_timer;
     std::map<dsstring, MovementEntry>                       m_movements;
@@ -137,8 +177,11 @@ protected:
     long                                                    m_scenegraphlistctrl_currentindex;
     long                                                    m_mvtslistctrl_currentindex;
 
-
     MovementEntry*                                          m_mousekeyb_output;
+
+    std::map<dsstring, RegisterEntry>                       m_registers;
+
+    TimerCallback*                                          m_timercb;
 
     
 
@@ -166,6 +209,7 @@ protected:
     virtual void OnScenegraphListDeleteAllItems( wxListEvent& p_event );
 	virtual void OnControlButtonClicked( wxCommandEvent& p_event );
 	virtual void OnMouseKeyboardOutputButtonClicked( wxCommandEvent& p_event );
+    virtual void OnCreateRegButtonClicked( wxCommandEvent& p_event );
 
 
 
@@ -175,6 +219,8 @@ public:
     void SetGLReady( void );
     void Update( void );
     wxNotebook* GetNoteBook( void );
+
+    void compute_regs( void );
 	
 };
 

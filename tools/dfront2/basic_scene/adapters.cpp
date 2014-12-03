@@ -51,6 +51,8 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applymatrixstackclearall_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applymatrixstackclearall );
 
     m_applytransfosourcemodification_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applytransfosourcemodification );
+
+    m_applyregistervalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyregistervalues );
 }
 
 wxWidgetAdapter::~wxWidgetAdapter( void )
@@ -71,6 +73,7 @@ wxWidgetAdapter::~wxWidgetAdapter( void )
     delete m_applymatrixstackaddmatrix_callback;
     delete m_applymatrixstackclearall_callback;
     delete m_applytransfosourcemodification_callback;
+    delete m_applyregistervalues_callback;
 }
 
 void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
@@ -526,7 +529,7 @@ void wxWidgetAdapter::AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, 
 
     wxListItem col1;
     col1.SetId( 1 );
-    col1.SetText( "type" );
+    col1.SetText( "Type" );
     col1.SetWidth( 150 );
     p_listctrl->InsertColumn( 1, col1 );
 
@@ -565,6 +568,53 @@ void wxWidgetAdapter::AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, 
 
         p_listctrl->SetItemData( id, (long)it->second );
     }    
+}
+
+void wxWidgetAdapter::AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl )
+{
+    p_listctrl->ClearAll();
+
+    wxListItem col0;
+    col0.SetId( 0 );
+    col0.SetText( "Alias" );
+    col0.SetWidth( 110 );
+    p_listctrl->InsertColumn( 0, col0 );
+
+    wxListItem col1;
+    col1.SetId( 1 );
+    col1.SetText( "Mode" );
+    col1.SetWidth( 90 );
+    p_listctrl->InsertColumn( 1, col1 );
+
+    wxListItem col2;
+    col2.SetId( 1 );
+    col2.SetText( "Current value" );
+    col2.SetWidth( 150 );
+    p_listctrl->InsertColumn( 2, col2 );
+
+    ////////////////////////////////////////////
+
+    long id = 0;
+    for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = p_registers->begin(); it != p_registers->end(); ++it, id++ )
+    {
+        dsstring alias = it->first;
+        wxListItem item;
+        item.SetId( id );
+        item.SetText( alias.c_str() );
+        p_listctrl->InsertItem( item );
+
+        BasicSceneMainFrame::RegisterEntry register_entry = it->second;
+
+        if( BasicSceneMainFrame::REGISTER_CONSTANT == register_entry.mode )
+        {
+            p_listctrl->SetItem( id, 1, "constant" );
+        }
+        else if( BasicSceneMainFrame::REGISTER_VARIABLE == register_entry.mode )
+        {
+            p_listctrl->SetItem( id, 1, "variable" );
+        }
+    }
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2248,6 +2298,144 @@ void wxWidgetAdapter::on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDia
 
 }
 
+
+void wxWidgetAdapter::AdaptRegisterCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
+
+    wxArrayString register_mode_labels;
+    register_mode_labels.Add( "constant" );
+    register_mode_labels.Add( "variable" );   
+    propertygrid->Append( new wxEnumProperty( "Mode", wxPG_LABEL, register_mode_labels ));
+    propertygrid->Append( new wxFloatProperty( "Constant value", wxPG_LABEL, 0.0 ) );
+
+    wxPGProperty* variable_props = propertygrid->Append( new wxStringProperty( "Variable", wxPG_LABEL, "<composed>" ) );
+
+    wxArrayString register_variable_mode_labels;
+    register_variable_mode_labels.Add( "translation_simple" );
+    register_variable_mode_labels.Add( "translation_roundtrip" );
+    register_variable_mode_labels.Add( "angular_simple" );
+    register_variable_mode_labels.Add( "angular_roundtrip" );
+
+    propertygrid->AppendIn( variable_props, new wxEnumProperty( "Mode", wxPG_LABEL, register_variable_mode_labels ));
+    propertygrid->AppendIn( variable_props, new wxFloatProperty( "Initial value", wxPG_LABEL, 0.0 ));
+    propertygrid->AppendIn( variable_props, new wxFloatProperty( "Speed", wxPG_LABEL, 1.0 ));
+
+    wxPGProperty* variable_props_range = propertygrid->AppendIn( variable_props, new wxStringProperty( "Range", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Inf", wxPG_LABEL, 0.0 ));
+    propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Sup", wxPG_LABEL, 10.0 ));
+
+    p_dialog->RegisterApplyButtonHandler( m_applyregistervalues_callback );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
+}
+
+void wxWidgetAdapter::on_applyregistervalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxStringProperty* prop2;
+    wxAny value;
+
+    dsreal rval;
+    BasicSceneMainFrame::RegisterEntry register_entry;
+
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    wxEnumProperty* prop3;
+
+    prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "Mode" ) );
+    wxString mode_name = prop3->GetValueAsString();   
+    buffer = mode_name.ToAscii();
+    dsstring mode_name_2 = buffer.data();
+
+    if( "constant" == mode_name_2 )
+    {
+        register_entry.mode = BasicSceneMainFrame::REGISTER_CONSTANT;
+    }
+    else if( "variable" == mode_name_2 )
+    {
+        register_entry.mode = BasicSceneMainFrame::REGISTER_VARIABLE;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Constant value" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    register_entry.const_value = rval;
+
+
+    prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "Variable.Mode" ) );
+    wxString variable_mode_name = prop3->GetValueAsString();   
+    buffer = variable_mode_name.ToAscii();
+    dsstring variable_mode_name_2 = buffer.data();
+
+    if( "translation_simple" == variable_mode_name_2 )
+    {
+        register_entry.variable_mode = BasicSceneMainFrame::REGISTER_VARIABLE_TRANSLATION_SIMPLE;
+    }
+    else if( "translation_roundtrip" == variable_mode_name_2 )
+    {
+        register_entry.variable_mode = BasicSceneMainFrame::REGISTER_VARIABLE_TRANSLATION_ROUNDTRIP;
+    }
+    else if( "angular_simple" == variable_mode_name_2 )
+    {
+        register_entry.variable_mode = BasicSceneMainFrame::REGISTER_VARIABLE_ANGULAR_SIMPLE;
+    }
+    else if( "angular_roundtrip" == variable_mode_name_2 )
+    {
+        register_entry.variable_mode = BasicSceneMainFrame::REGISTER_VARIABLE_ANGULAR_ROUNDTRIP;
+    }
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Variable.Initial value" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    register_entry.variable_initial_value = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Variable.Speed" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    register_entry.variable_speed = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Variable.Range.Inf" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    register_entry.variable_range_inf = rval;
+
+    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Variable.Range.Sup" ) );
+    value = prop->GetValue();
+    value.GetAs<double>( &rval );
+    register_entry.variable_range_sup = rval;
+
+    std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* registers = (std::map<dsstring, BasicSceneMainFrame::RegisterEntry>*)p_dialog->GetData( "registers_map" );
+
+    register_entry.current_value = -1.0;
+
+    (*registers)[alias] = register_entry;
+
+    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+    AdaptRegistersList( registers, ctrl );
+    p_dialog->Close();
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void wxWidgetAdapter::AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2827,4 +3015,18 @@ void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegra
     }
 
     p_combobox->SetSelection( 0 );
+}
+
+void wxWidgetAdapter::AdaptRegistersLastValues( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl )
+{
+    long id = 0;
+    for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = p_registers->begin(); it != p_registers->end(); ++it, id++ )
+    {
+        BasicSceneMainFrame::RegisterEntry register_entry = it->second;
+
+        char reg_val[32];
+        sprintf( reg_val, "%f", register_entry.current_value );
+
+        p_listctrl->SetItem( id, 2, reg_val );
+    }
 }
