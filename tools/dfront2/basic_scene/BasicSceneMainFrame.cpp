@@ -35,11 +35,13 @@ BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent
 m_glready( false ),
 m_scenegraphlistctrl_currentindex( -1 ),
 m_mvtslistctrl_currentindex( -1 ),
+m_cameraslistctrl_currentindex( -1 ),
 m_mousekeyb_output( NULL )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
     m_control_button->Enable( false );
+    m_cameraedit_button->Enable( false );
 
     m_timercb = new TimerCallback( this, &BasicSceneMainFrame::on_timer );
 
@@ -487,12 +489,31 @@ void BasicSceneMainFrame::OnCamerasListItemActivated( wxListEvent& p_event )
     long sel_index = p_event.GetIndex();
     CameraPoint* camera = (CameraPoint*)m_cameras_listCtrl->GetItemData( sel_index );
 
+    /*
     BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties modifications" );
     wxWidgetAdapter::GetInstance()->AdaptCameraPropsModification( camera, dialog );
 
     dialog->SetData( "camera", camera );
     dialog->EnableApplyButton();
     dialog->Show();
+    */
+
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties" );
+    wxWidgetAdapter::GetInstance()->AdaptCameraProps( camera, dialog );
+    dialog->Show();
+
+}
+
+void BasicSceneMainFrame::OnCamerasListDeleteAllItems( wxListEvent& p_event )
+{
+    m_cameraedit_button->Enable( false );
+}
+
+void BasicSceneMainFrame::OnCamerasListItemSelected( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+    m_cameraslistctrl_currentindex = sel_index;
+    m_cameraedit_button->Enable( true );
 }
 
 void BasicSceneMainFrame::OnScenegraphItemActivated( wxListEvent& p_event )
@@ -727,4 +748,15 @@ void BasicSceneMainFrame::OnCreateRegButtonClicked( wxCommandEvent& p_event )
     wxWidgetAdapter::GetInstance()->AdaptRegisterCreationProps( dialog );
     dialog->Show();
     
+}
+
+void BasicSceneMainFrame::OnCameraEditButtonClicked( wxCommandEvent& p_event )
+{
+    CameraPoint* camera = (CameraPoint*)m_cameras_listCtrl->GetItemData( m_cameraslistctrl_currentindex );
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties modifications" );
+    wxWidgetAdapter::GetInstance()->AdaptCameraPropsModification( camera, dialog );
+
+    dialog->SetData( "camera", camera );
+    dialog->EnableApplyButton();
+    dialog->Show();
 }

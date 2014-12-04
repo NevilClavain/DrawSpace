@@ -176,6 +176,7 @@ protected:
     std::vector<DrawSpace::Core::Configurable*>             m_ordered_configs;
     long                                                    m_scenegraphlistctrl_currentindex;
     long                                                    m_mvtslistctrl_currentindex;
+    long                                                    m_cameraslistctrl_currentindex;
 
     MovementEntry*                                          m_mousekeyb_output;
 
@@ -198,6 +199,8 @@ protected:
     virtual void OnMvtsListItemSelected( wxListEvent& p_event );
     virtual void OnCreateCameraButtonClicked( wxCommandEvent& p_event );
     virtual void OnCamerasListItemActivated( wxListEvent& p_event );
+    virtual void OnCamerasListDeleteAllItems( wxListEvent& p_event );
+    virtual void OnCamerasListItemSelected( wxListEvent& p_event );
     virtual void OnScenegraphItemActivated( wxListEvent& p_event );
     virtual void OnScenegraphListItemSelected( wxListEvent& p_event );
     virtual void OnSetCameraButtonClicked( wxCommandEvent& p_event );
@@ -210,6 +213,7 @@ protected:
 	virtual void OnControlButtonClicked( wxCommandEvent& p_event );
 	virtual void OnMouseKeyboardOutputButtonClicked( wxCommandEvent& p_event );
     virtual void OnCreateRegButtonClicked( wxCommandEvent& p_event );
+    virtual void OnCameraEditButtonClicked( wxCommandEvent& p_event );
 
 
 
