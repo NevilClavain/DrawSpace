@@ -587,10 +587,16 @@ void wxWidgetAdapter::AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame
     p_listctrl->InsertColumn( 1, col1 );
 
     wxListItem col2;
-    col2.SetId( 1 );
-    col2.SetText( "Current value" );
-    col2.SetWidth( 150 );
+    col2.SetId( 2 );
+    col2.SetText( "State" );
+    col2.SetWidth( 80 );
     p_listctrl->InsertColumn( 2, col2 );
+
+    wxListItem col3;
+    col3.SetId( 3 );
+    col3.SetText( "Current value" );
+    col3.SetWidth( 120 );
+    p_listctrl->InsertColumn( 3, col3 );
 
     ////////////////////////////////////////////
 
@@ -613,8 +619,16 @@ void wxWidgetAdapter::AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame
         {
             p_listctrl->SetItem( id, 1, "variable" );
         }
-    }
 
+        if( register_entry.state )
+        {
+            p_listctrl->SetItem( id, 2, "on" );
+        }
+        else
+        {
+            p_listctrl->SetItem( id, 2, "off" );
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2428,6 +2442,7 @@ void wxWidgetAdapter::on_applyregistervalues( BasicSceneObjectPropertiesDialog* 
     std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* registers = (std::map<dsstring, BasicSceneMainFrame::RegisterEntry>*)p_dialog->GetData( "registers_map" );
 
     register_entry.current_value = -1.0;
+    register_entry.state = false;
 
     (*registers)[alias] = register_entry;
 
@@ -3027,6 +3042,6 @@ void wxWidgetAdapter::AdaptRegistersLastValues( std::map<dsstring, BasicSceneMai
         char reg_val[32];
         sprintf( reg_val, "%f", register_entry.current_value );
 
-        p_listctrl->SetItem( id, 2, reg_val );
+        p_listctrl->SetItem( id, 3, reg_val );
     }
 }
