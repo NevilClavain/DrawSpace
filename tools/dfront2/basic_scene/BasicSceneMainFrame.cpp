@@ -73,7 +73,7 @@ void BasicSceneMainFrame::compute_regs( void )
 
 void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
 {
-    wxWidgetAdapter::GetInstance()->AdaptRegistersLastValues( &m_registers, m_registers_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptRegistersLastValue( &m_registers, m_registers_listCtrl );
 }
 
 void BasicSceneMainFrame::OnClose( wxCloseEvent& event )
@@ -465,7 +465,6 @@ void BasicSceneMainFrame::OnMvtsListItemActivated( wxListEvent& p_event )
         wxWidgetAdapter::GetInstance()->AdaptLongLatMvtProps( mvt_name2, longlatmvt, dialog );
         dialog->Show();
     }
-
 }
 
 void BasicSceneMainFrame::OnCreateCameraButtonClicked( wxCommandEvent& p_event )
@@ -758,5 +757,21 @@ void BasicSceneMainFrame::OnCameraEditButtonClicked( wxCommandEvent& p_event )
 
     dialog->SetData( "camera", camera );
     dialog->EnableApplyButton();
+    dialog->Show();
+}
+
+void BasicSceneMainFrame::OnRegistersListItemActivated( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+
+    wxString reg_name = m_registers_listCtrl->GetItemText( sel_index );
+    wxCharBuffer buffer = reg_name.ToAscii();
+
+    dsstring reg_name2 = buffer.data();
+
+    RegisterEntry* register_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( sel_index );
+
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register properties" );
+    wxWidgetAdapter::GetInstance()->AdaptRegProps( reg_name2, register_entry, dialog );
     dialog->Show();
 }

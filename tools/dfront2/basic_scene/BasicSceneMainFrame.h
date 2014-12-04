@@ -214,6 +214,7 @@ protected:
 	virtual void OnMouseKeyboardOutputButtonClicked( wxCommandEvent& p_event );
     virtual void OnCreateRegButtonClicked( wxCommandEvent& p_event );
     virtual void OnCameraEditButtonClicked( wxCommandEvent& p_event );
+    virtual void OnRegistersListItemActivated( wxListEvent& p_event );
 
 
 

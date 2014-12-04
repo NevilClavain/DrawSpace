@@ -144,6 +144,7 @@ class MainFrame : public wxFrame
 		virtual void OnTransfoEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSetCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreateDrawableButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnRegistersListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnCreateRegButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	

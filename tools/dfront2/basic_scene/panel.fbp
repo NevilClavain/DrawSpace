@@ -979,7 +979,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Cameras &amp;&amp; Movements</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
@@ -3408,7 +3408,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Registers</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
@@ -3571,7 +3571,7 @@
                                             <event name="OnListDeleteItem"></event>
                                             <event name="OnListEndLabelEdit"></event>
                                             <event name="OnListInsertItem"></event>
-                                            <event name="OnListItemActivated"></event>
+                                            <event name="OnListItemActivated">OnRegistersListItemActivated</event>
                                             <event name="OnListItemDeselected"></event>
                                             <event name="OnListItemFocused"></event>
                                             <event name="OnListItemMiddleClick"></event>
