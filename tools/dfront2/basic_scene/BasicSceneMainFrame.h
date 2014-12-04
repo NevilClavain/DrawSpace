@@ -157,6 +157,10 @@ public:
 
         dsreal                  current_value;
 
+       
+        bool                    variable_roundtrip_back;
+        bool                    discontinuity;
+
     } RegisterEntry;
 
 

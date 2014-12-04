@@ -64,9 +64,121 @@ void BasicSceneMainFrame::compute_regs( void )
         {
             register_entry->current_value = register_entry->const_value;
         }
-        else if( REGISTER_VARIABLE == register_entry->mode )
+        else if( REGISTER_VARIABLE == register_entry->mode && register_entry->state )
         {
+            switch( register_entry->variable_mode )
+            {
+                case REGISTER_VARIABLE_TRANSLATION_SIMPLE:
+                    {
+                        if( register_entry->current_value > register_entry->variable_range_inf && 
+                            register_entry->current_value < register_entry->variable_range_sup )
+                        {
+                            m_timer.TranslationSpeedInc( &register_entry->current_value, register_entry->variable_speed );
+                        }
+                    }
+                    break;
 
+                case REGISTER_VARIABLE_TRANSLATION_ROUNDTRIP:
+                    {
+                        if( !register_entry->variable_roundtrip_back )
+                        {
+                            if( register_entry->current_value <= register_entry->variable_range_sup )
+                            {
+                                m_timer.TranslationSpeedInc( &register_entry->current_value, register_entry->variable_speed );
+                            }
+                            else
+                            {
+                                register_entry->variable_roundtrip_back = true;
+                            }
+                        }
+                        else
+                        {
+                            if( register_entry->current_value >= register_entry->variable_range_inf )
+                            {
+                                m_timer.TranslationSpeedDec( &register_entry->current_value, register_entry->variable_speed );
+                            }
+                            else
+                            {
+                                register_entry->variable_roundtrip_back = false;
+                            }
+                        }
+                    }
+                    break;
+
+                case REGISTER_VARIABLE_ANGULAR_SIMPLE:
+                    {
+                        if( register_entry->current_value > register_entry->variable_range_inf && 
+                            register_entry->current_value < register_entry->variable_range_sup )
+                        {
+                            m_timer.AngleSpeedInc( &register_entry->current_value, register_entry->variable_speed );
+                        }
+                    }
+                    break;
+
+                case REGISTER_VARIABLE_ANGULAR_ROUNDTRIP:
+                    {
+                        if( register_entry->discontinuity )
+                        {
+                            if( !register_entry->variable_roundtrip_back )
+                            {
+                                if( register_entry->variable_speed > 0.0 )
+                                {
+                                    m_timer.AngleSpeedInc( &register_entry->current_value, register_entry->variable_speed );
+                                }
+                                else
+                                {
+                                    m_timer.AngleSpeedDec( &register_entry->current_value, -register_entry->variable_speed );
+                                }
+
+                                if( !( ( 0.0 <= register_entry->current_value && register_entry->current_value <= register_entry->variable_range_sup ) ||
+                                      ( register_entry->variable_range_inf <= register_entry->current_value && register_entry->current_value < 360.0 ) ) )
+                                {
+                                    register_entry->variable_roundtrip_back = true;
+                                }
+                            }
+                            else
+                            {
+
+                                if( register_entry->variable_speed > 0.0 )
+                                {
+                                    m_timer.AngleSpeedDec( &register_entry->current_value, register_entry->variable_speed );
+                                }
+                                else
+                                {
+                                    m_timer.AngleSpeedInc( &register_entry->current_value, -register_entry->variable_speed );
+                                }
+
+                                if( !( ( 0.0 <= register_entry->current_value && register_entry->current_value <= register_entry->variable_range_sup ) ||
+                                      ( register_entry->variable_range_inf <= register_entry->current_value && register_entry->current_value < 360.0 ) ) )
+                                {
+                                    register_entry->variable_roundtrip_back = false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if( !register_entry->variable_roundtrip_back )
+                            {
+                                m_timer.AngleSpeedInc( &register_entry->current_value, register_entry->variable_speed );
+
+                                if( !( register_entry->variable_range_inf <= register_entry->current_value && register_entry->current_value <= register_entry->variable_range_sup ) )
+                                {
+                                    register_entry->variable_roundtrip_back = true;
+                                }
+                            }
+                            else
+                            {
+                                m_timer.AngleSpeedDec( &register_entry->current_value, register_entry->variable_speed );
+
+                                if( !( register_entry->variable_range_inf <= register_entry->current_value && register_entry->current_value <= register_entry->variable_range_sup ) )
+                                {
+                                    register_entry->variable_roundtrip_back = false;
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
         }
     }
 }

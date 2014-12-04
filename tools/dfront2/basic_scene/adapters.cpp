@@ -2325,8 +2325,8 @@ void wxWidgetAdapter::AdaptRegisterCreationProps( BasicSceneObjectPropertiesDial
     propertygrid->AppendIn( variable_props, new wxFloatProperty( "Speed", wxPG_LABEL, 1.0 ));
 
     wxPGProperty* variable_props_range = propertygrid->AppendIn( variable_props, new wxStringProperty( "Range", wxPG_LABEL, "<composed>" ) );
-    propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Inf", wxPG_LABEL, 0.0 ));
-    propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Sup", wxPG_LABEL, 10.0 ));
+    propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Inf", wxPG_LABEL, -1000000.0 ));
+    propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Sup", wxPG_LABEL, 1000000.0 ));
 
     p_dialog->RegisterApplyButtonHandler( m_applyregistervalues_callback );
 
@@ -2428,11 +2428,33 @@ void wxWidgetAdapter::on_applyregistervalues( BasicSceneObjectPropertiesDialog* 
 
     std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* registers = (std::map<dsstring, BasicSceneMainFrame::RegisterEntry>*)p_dialog->GetData( "registers_map" );
 
-    register_entry.current_value = -1.0;
-    register_entry.state = false;
+    //register_entry.current_value = -1.0;
+    register_entry.state = true;
+
+    if( BasicSceneMainFrame::REGISTER_CONSTANT == register_entry.mode )
+    {
+        register_entry.current_value = register_entry.const_value;
+    }
+    else if( BasicSceneMainFrame::REGISTER_VARIABLE == register_entry.mode )
+    {
+        register_entry.current_value = register_entry.variable_initial_value;
+    }
+
+    register_entry.variable_roundtrip_back = false;
+
+    if( BasicSceneMainFrame::REGISTER_VARIABLE == register_entry.mode && BasicSceneMainFrame::REGISTER_VARIABLE_ANGULAR_ROUNDTRIP == register_entry.variable_mode
+        && register_entry.variable_range_sup < register_entry.variable_range_inf )
+    {
+        // on va franchir la discontinuite 0 deg - 359 deg
+        register_entry.discontinuity = true;
+    }
+    else
+    {
+        register_entry.discontinuity = false;
+    }
 
     (*registers)[alias] = register_entry;
-
+   
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
     AdaptRegistersList( registers, ctrl );
     p_dialog->Close();
