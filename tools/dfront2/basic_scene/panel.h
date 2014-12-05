@@ -113,8 +113,12 @@ class MainFrame : public wxFrame
 		wxButton* m_create_drawable_button;
 		wxComboBox* m_drawabletypes_comboBox;
 		wxPanel* m_registersPanel;
-		wxListCtrl* m_registers_listCtrl;
 		wxButton* m_createreg_button;
+		wxListCtrl* m_registers_listCtrl;
+		wxButton* m_modreg_button;
+		wxButton* m_resetreg_button;
+		wxButton* m_regon_button;
+		wxButton* m_regoff_button;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -144,8 +148,14 @@ class MainFrame : public wxFrame
 		virtual void OnTransfoEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSetCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreateDrawableButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnRegistersListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnCreateRegButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnRegsListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
+		virtual void OnRegistersListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnRegsListItemSelected( wxListEvent& event ) { event.Skip(); }
+		virtual void OnModRegButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnResetRegButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnRegOnButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnRegOffButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

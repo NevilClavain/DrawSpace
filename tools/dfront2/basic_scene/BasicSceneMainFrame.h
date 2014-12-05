@@ -181,6 +181,7 @@ protected:
     long                                                    m_scenegraphlistctrl_currentindex;
     long                                                    m_mvtslistctrl_currentindex;
     long                                                    m_cameraslistctrl_currentindex;
+    long                                                    m_regslistctrl_currentindex;
 
     MovementEntry*                                          m_mousekeyb_output;
 
@@ -219,6 +220,14 @@ protected:
     virtual void OnCreateRegButtonClicked( wxCommandEvent& p_event );
     virtual void OnCameraEditButtonClicked( wxCommandEvent& p_event );
     virtual void OnRegistersListItemActivated( wxListEvent& p_event );
+	virtual void OnRegsListDeleteAllItems( wxListEvent& p_event );
+	virtual void OnRegsListItemSelected( wxListEvent& p_event );
+	virtual void OnModRegButtonClicked( wxCommandEvent& p_event );
+    virtual void OnResetRegButtonClicked( wxCommandEvent& p_event );
+    virtual void OnRegOnButtonClicked( wxCommandEvent& p_event );
+    virtual void OnRegOffButtonClicked( wxCommandEvent& p_event );
+
+
 
 
 

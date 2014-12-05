@@ -123,7 +123,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_cameras_listCtrl = new wxListCtrl( m_camerasPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
 	bSizer20->Add( m_cameras_listCtrl, 1, wxALL|wxEXPAND, 5 );
 	
-	m_cameraedit_button = new wxButton( m_camerasPanel, wxID_ANY, wxT("Camera edit"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_cameraedit_button = new wxButton( m_camerasPanel, wxID_ANY, wxT("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer20->Add( m_cameraedit_button, 0, wxALL, 5 );
 	
 	
@@ -308,11 +308,35 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer19;
 	bSizer19 = new wxBoxSizer( wxVERTICAL );
 	
-	m_registers_listCtrl = new wxListCtrl( m_registersPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	bSizer19->Add( m_registers_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
 	m_createreg_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Create register"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer19->Add( m_createreg_button, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer21;
+	bSizer21 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_registers_listCtrl = new wxListCtrl( m_registersPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	bSizer21->Add( m_registers_listCtrl, 1, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer22;
+	bSizer22 = new wxBoxSizer( wxVERTICAL );
+	
+	m_modreg_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer22->Add( m_modreg_button, 0, wxALL, 5 );
+	
+	m_resetreg_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer22->Add( m_resetreg_button, 0, wxALL, 5 );
+	
+	m_regon_button = new wxButton( m_registersPanel, wxID_ANY, wxT("On"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer22->Add( m_regon_button, 0, wxALL, 5 );
+	
+	m_regoff_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Off"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer22->Add( m_regoff_button, 0, wxALL, 5 );
+	
+	
+	bSizer21->Add( bSizer22, 0, wxEXPAND, 5 );
+	
+	
+	bSizer19->Add( bSizer21, 1, wxEXPAND, 5 );
 	
 	
 	m_registersPanel->SetSizer( bSizer19 );
@@ -356,8 +380,14 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_transfoedit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfoEditButtonClicked ), NULL, this );
 	m_setcamera_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnSetCameraButtonClicked ), NULL, this );
 	m_create_drawable_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
-	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
 	m_createreg_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateRegButtonClicked ), NULL, this );
+	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnRegsListDeleteAllItems ), NULL, this );
+	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
+	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnRegsListItemSelected ), NULL, this );
+	m_modreg_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnModRegButtonClicked ), NULL, this );
+	m_resetreg_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnResetRegButtonClicked ), NULL, this );
+	m_regon_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnRegOnButtonClicked ), NULL, this );
+	m_regoff_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnRegOffButtonClicked ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -390,7 +420,13 @@ MainFrame::~MainFrame()
 	m_transfoedit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfoEditButtonClicked ), NULL, this );
 	m_setcamera_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnSetCameraButtonClicked ), NULL, this );
 	m_create_drawable_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
-	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
 	m_createreg_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateRegButtonClicked ), NULL, this );
+	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnRegsListDeleteAllItems ), NULL, this );
+	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
+	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnRegsListItemSelected ), NULL, this );
+	m_modreg_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnModRegButtonClicked ), NULL, this );
+	m_resetreg_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnResetRegButtonClicked ), NULL, this );
+	m_regon_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnRegOnButtonClicked ), NULL, this );
+	m_regoff_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnRegOffButtonClicked ), NULL, this );
 	
 }

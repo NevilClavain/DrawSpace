@@ -36,12 +36,17 @@ m_glready( false ),
 m_scenegraphlistctrl_currentindex( -1 ),
 m_mvtslistctrl_currentindex( -1 ),
 m_cameraslistctrl_currentindex( -1 ),
+m_regslistctrl_currentindex( -1 ),
 m_mousekeyb_output( NULL )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
     m_control_button->Enable( false );
     m_cameraedit_button->Enable( false );
+    m_modreg_button->Enable( false );
+    m_resetreg_button->Enable( false );
+    m_regon_button->Enable( false );
+    m_regoff_button->Enable( false );
 
     m_timercb = new TimerCallback( this, &BasicSceneMainFrame::on_timer );
 
@@ -886,4 +891,65 @@ void BasicSceneMainFrame::OnRegistersListItemActivated( wxListEvent& p_event )
     BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register properties" );
     wxWidgetAdapter::GetInstance()->AdaptRegProps( reg_name2, register_entry, dialog );
     dialog->Show();
+}
+
+void BasicSceneMainFrame::OnRegsListDeleteAllItems( wxListEvent& p_event )
+{
+    m_modreg_button->Enable( false );
+    m_resetreg_button->Enable( false );
+    m_regon_button->Enable( false );
+    m_regoff_button->Enable( false );
+}
+
+void BasicSceneMainFrame::OnRegsListItemSelected( wxListEvent& p_event )
+{
+    long sel_index = p_event.GetIndex();
+    m_regslistctrl_currentindex = sel_index;
+
+    
+    m_modreg_button->Enable( true );
+
+    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( sel_index );
+
+    if( REGISTER_VARIABLE == reg_entry->mode )
+    {
+        m_resetreg_button->Enable( true );
+        m_regon_button->Enable( true );
+        m_regoff_button->Enable( true );
+    }
+    else
+    {
+        m_resetreg_button->Enable( false );
+        m_regon_button->Enable( false );
+        m_regoff_button->Enable( false );
+    }
+}
+
+void BasicSceneMainFrame::OnModRegButtonClicked( wxCommandEvent& p_event )
+{
+    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register properties modifications" );
+    wxWidgetAdapter::GetInstance()->AdaptRegisterPropsModification( reg_entry, dialog );
+
+    dialog->SetData( "reg_entry", reg_entry );
+    dialog->EnableApplyButton();
+    dialog->Show();
+}
+
+void BasicSceneMainFrame::OnResetRegButtonClicked( wxCommandEvent& p_event )
+{
+    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
+    wxWidgetAdapter::GetInstance()->InitializeRegister( reg_entry );
+}
+
+void BasicSceneMainFrame::OnRegOnButtonClicked( wxCommandEvent& p_event )
+{
+    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
+    reg_entry->state = true;
+}
+
+void BasicSceneMainFrame::OnRegOffButtonClicked( wxCommandEvent& p_event )
+{
+    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
+    reg_entry->state = false;
 }

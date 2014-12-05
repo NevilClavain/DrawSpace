@@ -53,6 +53,8 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applytransfosourcemodification_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applytransfosourcemodification );
 
     m_applyregistervalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyregistervalues );
+
+    m_applyregisterprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyregisterprops );
 }
 
 wxWidgetAdapter::~wxWidgetAdapter( void )
@@ -74,6 +76,7 @@ wxWidgetAdapter::~wxWidgetAdapter( void )
     delete m_applymatrixstackclearall_callback;
     delete m_applytransfosourcemodification_callback;
     delete m_applyregistervalues_callback;
+    delete m_applyregisterprops_callback;
 }
 
 void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
@@ -1100,6 +1103,79 @@ void wxWidgetAdapter::on_applycameraprops( BasicSceneObjectPropertiesDialog* p_d
 }
 
 
+void wxWidgetAdapter::AdaptRegisterPropsModification( BasicSceneMainFrame::RegisterEntry* p_regentry, BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    if( BasicSceneMainFrame::REGISTER_CONSTANT == p_regentry->mode )
+    {
+        propertygrid->Append( new wxFloatProperty( "Constant value", wxPG_LABEL, p_regentry->const_value ) );
+    }
+    else if( BasicSceneMainFrame::REGISTER_VARIABLE == p_regentry->mode )
+    {
+        propertygrid->Append( new wxFloatProperty( "Initial value", wxPG_LABEL, p_regentry->variable_initial_value ));
+        propertygrid->Append( new wxFloatProperty( "Speed", wxPG_LABEL, p_regentry->variable_speed ));
+
+        wxPGProperty* variable_props_range = propertygrid->Append( new wxStringProperty( "Range", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Inf", wxPG_LABEL, p_regentry->variable_range_inf ));
+        propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Sup", wxPG_LABEL, p_regentry->variable_range_sup ));
+
+    }
+    p_dialog->RegisterApplyButtonHandler( m_applyregisterprops_callback );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
+
+}
+
+void wxWidgetAdapter::on_applyregisterprops( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxFloatProperty* prop;
+    wxAny value;
+    dsreal rval;
+
+
+    BasicSceneMainFrame::RegisterEntry* reg_entry = (BasicSceneMainFrame::RegisterEntry*)p_dialog->GetData( "reg_entry" );
+
+    if( BasicSceneMainFrame::REGISTER_CONSTANT == reg_entry->mode )
+    {
+        prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Constant value" ) );
+        value = prop->GetValue();
+        value.GetAs<double>( &rval );
+        reg_entry->const_value = rval;
+
+    }
+    else if( BasicSceneMainFrame::REGISTER_VARIABLE == reg_entry->mode )
+    {
+        prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial value" ) );
+        value = prop->GetValue();
+        value.GetAs<double>( &rval );
+        reg_entry->variable_initial_value = rval;
+
+        prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Speed" ) );
+        value = prop->GetValue();
+        value.GetAs<double>( &rval );
+        reg_entry->variable_speed = rval;
+
+        prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Range.Inf" ) );
+        value = prop->GetValue();
+        value.GetAs<double>( &rval );
+        reg_entry->variable_range_inf = rval;
+
+        prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Range.Sup" ) );
+        value = prop->GetValue();
+        value.GetAs<double>( &rval );
+        reg_entry->variable_range_sup = rval;
+
+        InitializeRegister( reg_entry );
+    }
+
+    p_dialog->Close();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void wxWidgetAdapter::AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
@@ -2428,36 +2504,42 @@ void wxWidgetAdapter::on_applyregistervalues( BasicSceneObjectPropertiesDialog* 
 
     std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* registers = (std::map<dsstring, BasicSceneMainFrame::RegisterEntry>*)p_dialog->GetData( "registers_map" );
 
-    //register_entry.current_value = -1.0;
-    register_entry.state = true;
-
-    if( BasicSceneMainFrame::REGISTER_CONSTANT == register_entry.mode )
-    {
-        register_entry.current_value = register_entry.const_value;
-    }
-    else if( BasicSceneMainFrame::REGISTER_VARIABLE == register_entry.mode )
-    {
-        register_entry.current_value = register_entry.variable_initial_value;
-    }
-
-    register_entry.variable_roundtrip_back = false;
-
-    if( BasicSceneMainFrame::REGISTER_VARIABLE == register_entry.mode && BasicSceneMainFrame::REGISTER_VARIABLE_ANGULAR_ROUNDTRIP == register_entry.variable_mode
-        && register_entry.variable_range_sup < register_entry.variable_range_inf )
-    {
-        // on va franchir la discontinuite 0 deg - 359 deg
-        register_entry.discontinuity = true;
-    }
-    else
-    {
-        register_entry.discontinuity = false;
-    }
+    InitializeRegister( &register_entry );
 
     (*registers)[alias] = register_entry;
    
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
     AdaptRegistersList( registers, ctrl );
     p_dialog->Close();
+}
+
+
+void wxWidgetAdapter::InitializeRegister( BasicSceneMainFrame::RegisterEntry* p_reg_entry )
+{
+    p_reg_entry->state = true;
+
+    if( BasicSceneMainFrame::REGISTER_CONSTANT == p_reg_entry->mode )
+    {
+        p_reg_entry->current_value = p_reg_entry->const_value;
+    }
+    else if( BasicSceneMainFrame::REGISTER_VARIABLE == p_reg_entry->mode )
+    {
+        p_reg_entry->current_value = p_reg_entry->variable_initial_value;
+    }
+
+    p_reg_entry->variable_roundtrip_back = false;
+
+    if( BasicSceneMainFrame::REGISTER_VARIABLE == p_reg_entry->mode && BasicSceneMainFrame::REGISTER_VARIABLE_ANGULAR_ROUNDTRIP == p_reg_entry->variable_mode
+        && p_reg_entry->variable_range_sup < p_reg_entry->variable_range_inf )
+    {
+        // on va franchir la discontinuite 0 deg - 359 deg
+        p_reg_entry->discontinuity = true;
+    }
+    else
+    {
+        p_reg_entry->discontinuity = false;
+    }
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2722,6 +2804,10 @@ void wxWidgetAdapter::AdaptRegProps( const dsstring& p_alias, BasicSceneMainFram
         propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Inf", wxPG_LABEL, p_reg->variable_range_inf ));
         propertygrid->AppendIn( variable_props_range, new wxFloatProperty( "Sup", wxPG_LABEL, p_reg->variable_range_sup ));
     }
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
