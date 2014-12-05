@@ -50,12 +50,24 @@ public:
 
     typedef struct
     {
-        DrawSpace::Utils::Vector translation;
+        dsstring    var_alias;
+        dsreal      value;          // si var_alias = ""
 
-        DrawSpace::Utils::Vector rotation;
-        dsreal                   angle;
+    } TransformationMatrixValueLinkage;
 
-        DrawSpace::Utils::Vector scale;
+    typedef struct
+    {
+        //DrawSpace::Utils::Vector                translation;
+        TransformationMatrixValueLinkage        translation_vals_link[3];
+
+        //DrawSpace::Utils::Vector                rotation;
+        TransformationMatrixValueLinkage        rotation_vals_link[3];
+
+        //dsreal                                  angle;
+        TransformationMatrixValueLinkage        angle_val_link;
+
+        //DrawSpace::Utils::Vector                scale;
+        TransformationMatrixValueLinkage        scale_vals_link[3];
 
     } TransformationMatrixArg;
 
@@ -65,6 +77,7 @@ public:
         TransformationMatrixArg         arg;
 
     } TransformationMatrixDescriptor;
+
 
     typedef struct
     {
@@ -76,18 +89,11 @@ public:
         bool                                            propose_movement;
         bool                                            propose_body;
         
-        DrawSpace::Utils::Transformation                matrix_stack;
+        //DrawSpace::Utils::Transformation                matrix_stack;
+        std::vector<TransformationMatrixDescriptor>     matrix_stack_descr;
         DrawSpace::Core::Movement*                      movement;
         DrawSpace::Dynamics::Body*                      body;
 
-        // descriptions source de transformation
-
-        // cas matrix_stack
-        std::vector<TransformationMatrixDescriptor>     matrix_stack_descr;
-
-        // cas movement
-
-        // cas body
 
     } MetadataScenegraphEntry;
 

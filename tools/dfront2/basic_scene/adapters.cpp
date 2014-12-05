@@ -2216,18 +2216,44 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     metadata_scenegraph_entry.propose_matrixstack = true;
     metadata_scenegraph_entry.propose_body = false;
     metadata_scenegraph_entry.propose_movement = false;
+    
+    /*
     DrawSpace::Utils::Matrix scale_mat;
     scale_mat.Scale( 20.0, 20.0, 20.0 );
+    metadata_scenegraph_entry.matrix_stack.PushMatrix( scale_mat );
+    */
+
+
     BasicSceneMainFrame::TransformationMatrixDescriptor descr;
+
     descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE;
-    descr.arg.angle = 0.0;    
+
+    /*
+    descr.arg.angle = 0.0;
     descr.arg.scale[0] = scale_mat( 0, 0 );
     descr.arg.scale[1] = scale_mat( 1, 1 );
     descr.arg.scale[2] = scale_mat( 2, 2 );
     descr.arg.scale[3] = 1.0;
+    */
+
+    descr.arg.translation_vals_link[0].value = 0.0;
+    descr.arg.translation_vals_link[1].value = 0.0;
+    descr.arg.translation_vals_link[2].value = 0.0;
+
+    descr.arg.rotation_vals_link[0].value = 0.0;
+    descr.arg.rotation_vals_link[1].value = 0.0;
+    descr.arg.rotation_vals_link[2].value = 0.0;
+
+    descr.arg.angle_val_link.value = 0.0;
+
+    descr.arg.scale_vals_link[0].value = 20.0;
+    descr.arg.scale_vals_link[1].value = 20.0;
+    descr.arg.scale_vals_link[2].value = 20.0;
+
+    
     metadata_scenegraph_entry.matrix_stack_descr.push_back( descr );
 
-    metadata_scenegraph_entry.matrix_stack.PushMatrix( scale_mat );
+    
 
     (*metadata_scenegraph)[alias] = metadata_scenegraph_entry;
 
@@ -2896,21 +2922,28 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( BasicSceneObjectPropertiesDialog*
         propertygrid->AppendIn( mat_prop, matrix_type_combo );
         
         wxPGProperty* mat_prop_translation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "translation", wxPG_LABEL, "<composed>" ) );
+        /*
         propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "x", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation[0] ) );
         propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "y", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation[1] ) );
         propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "z", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation[2] ) );
+        */
 
         wxPGProperty* mat_prop_rotation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "rotation", wxPG_LABEL, "<composed>" ) );
         wxPGProperty* mat_prop_rotation_axis = propertygrid->AppendIn( mat_prop_rotation, new wxStringProperty( "axis", wxPG_LABEL, "<composed>" ) );
+        /*
         propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "x", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation[0] ) );
         propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "y", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation[1] ) );
         propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "z", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation[2] ) );
         propertygrid->AppendIn( mat_prop_rotation, new wxFloatProperty( "angle", wxPG_LABEL, entry->matrix_stack_descr[i].arg.angle ) );
+        */
         
         wxPGProperty* mat_prop_scale = propertygrid->AppendIn( mat_prop, new wxStringProperty( "scaling", wxPG_LABEL, "<composed>" ) );
+
+        /*
         propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "x", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale[0] ) );
         propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "y", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale[1] ) );
         propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "z", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale[2] ) );
+        */
 
     }
 
@@ -2938,7 +2971,7 @@ void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialo
 
     BasicSceneMainFrame::MetadataScenegraphEntry* entry = (BasicSceneMainFrame::MetadataScenegraphEntry*)p_dialog->GetData( "metadata_scenegraph_entry" );
     entry->matrix_stack_descr.clear();
-    entry->matrix_stack.ClearAll();
+    //entry->matrix_stack.ClearAll();
 
     long matrix_count = 0;
     while( 1 )
@@ -3065,6 +3098,7 @@ void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialo
             descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE;
         }
 
+        /*
         descr.arg.translation[0] = translation_x;
         descr.arg.translation[1] = translation_y;
         descr.arg.translation[2] = translation_z;
@@ -3082,11 +3116,13 @@ void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialo
         descr.arg.scale[1] = scaling_y;
         descr.arg.scale[2] = scaling_z;
         descr.arg.scale[3] = 1.0;
+        */
 
         entry->matrix_stack_descr.push_back( descr );
         
         /////
 
+        /*
         Matrix mat;
 
         if( "identity" == matrix_type_name_2 )
@@ -3108,6 +3144,7 @@ void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialo
         }
 
         entry->matrix_stack.PushMatrix( mat );
+        */
     }
 }
 

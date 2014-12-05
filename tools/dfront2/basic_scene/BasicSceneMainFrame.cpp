@@ -216,10 +216,64 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
             {
                 case TRANSFORMATIONSOURCE_MATRIXSTACK:
                     {
+                        /*
                         entry.matrix_stack.BuildResult();
                         Matrix mat;
                         entry.matrix_stack.GetResult( &mat );
                         entry.node->SetLocalTransform( mat );
+                        */
+
+                        DrawSpace::Utils::Transformation matrix_stack;
+
+                        for( size_t i = 0; i < entry.matrix_stack_descr.size(); i++ )
+                        {
+                            Matrix mat;
+
+                            switch( entry.matrix_stack_descr[i].ope )
+                            {
+                                case TRANSFORMATIONMATRIX_IDENTITY:
+                                    break;
+
+                                case TRANSFORMATIONMATRIX_SCALE:
+                                    {
+                                        dsreal scale[3];
+
+                                        for( long j = 0; j < 3; j++ )
+                                        {
+                                            if( "" == entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias )
+                                            {
+                                                scale[j] = entry.matrix_stack_descr[i].arg.scale_vals_link[j].value;
+                                            }
+                                            else
+                                            {
+                                                dsstring var_alias = entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias;
+                                                // aller chercher curren_value de la variable referencee
+
+                                                RegisterEntry reg_entry = m_registers[var_alias];
+                                                scale[j] = reg_entry.current_value;
+                                            }
+                                        }
+
+                                        mat.Scale( scale[0], scale[1], scale[2] );
+                                        matrix_stack.PushMatrix( mat );
+                                    }
+                                    break;
+
+                                case TRANSFORMATIONMATRIX_TRANSLATION:
+
+                                    break;
+
+                                case TRANSFORMATIONMATRIX_ROTATION:
+
+                                    break;
+                            }
+                        }
+
+
+                        matrix_stack.BuildResult();
+                        Matrix mat_res;
+                        matrix_stack.GetResult( &mat_res );
+                        entry.node->SetLocalTransform( mat_res );
                     }
                     break;
 
