@@ -1960,8 +1960,8 @@ void wxWidgetAdapter::AdaptCameraCreationProps( std::map<dsstring, BasicSceneMai
         }
     }
 
-    propertygrid->Append( new wxEnumProperty( "Movement", wxPG_LABEL, availables_movements_labels ));
-    propertygrid->Append( new wxEnumProperty( "Longlat movement", wxPG_LABEL, availables_longlatmovements_labels ));
+    propertygrid->Append( new wxEnumProperty( "Movement", wxPG_LABEL, availables_movements_labels ) );
+    propertygrid->Append( new wxEnumProperty( "Longlat movement", wxPG_LABEL, availables_longlatmovements_labels ) );
 
 
     p_dialog->RegisterApplyButtonHandler( m_applycameravalues_callback );
@@ -2237,18 +2237,27 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     */
 
     descr.arg.translation_vals_link[0].value = 0.0;
+    descr.arg.translation_vals_link[0].var_alias = "...";
     descr.arg.translation_vals_link[1].value = 0.0;
+    descr.arg.translation_vals_link[1].var_alias = "...";
     descr.arg.translation_vals_link[2].value = 0.0;
+    descr.arg.translation_vals_link[3].var_alias = "...";
 
     descr.arg.rotation_vals_link[0].value = 0.0;
+    descr.arg.rotation_vals_link[0].var_alias = "...";
     descr.arg.rotation_vals_link[1].value = 0.0;
+    descr.arg.rotation_vals_link[1].var_alias = "...";
     descr.arg.rotation_vals_link[2].value = 0.0;
+    descr.arg.rotation_vals_link[2].var_alias = "...";
 
     descr.arg.angle_val_link.value = 0.0;
 
     descr.arg.scale_vals_link[0].value = 20.0;
+    descr.arg.scale_vals_link[0].var_alias = "...";
     descr.arg.scale_vals_link[1].value = 20.0;
+    descr.arg.scale_vals_link[1].var_alias = "...";
     descr.arg.scale_vals_link[2].value = 20.0;
+    descr.arg.scale_vals_link[2].var_alias = "...";
 
     
     metadata_scenegraph_entry.matrix_stack_descr.push_back( descr );
@@ -2890,11 +2899,22 @@ void wxWidgetAdapter::on_applytransfosourcemodification( BasicSceneObjectPropert
     p_dialog->Close();
 }
 
-void wxWidgetAdapter::AdaptMatrixStackEdition( BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
     BasicSceneMainFrame::MetadataScenegraphEntry* entry = (BasicSceneMainFrame::MetadataScenegraphEntry*)p_dialog->GetData( "metadata_scenegraph_entry" );
+
+    /////////////////// recup tout les alias de variables
+    wxArrayString vars_labels;
+    vars_labels.Add( "..." );
+
+    for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = p_registers->begin(); it != p_registers->end(); ++it )
+    {
+        vars_labels.Add( it->first );
+    }
+
+    ////////////////////////////////////////////
 
     size_t i;
     for( i = 0; i < entry->matrix_stack_descr.size(); i++ )
@@ -2922,28 +2942,58 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( BasicSceneObjectPropertiesDialog*
         propertygrid->AppendIn( mat_prop, matrix_type_combo );
         
         wxPGProperty* mat_prop_translation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "translation", wxPG_LABEL, "<composed>" ) );
-        /*
-        propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "x", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation[0] ) );
-        propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "y", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation[1] ) );
-        propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "z", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation[2] ) );
-        */
+
+
+        wxPGProperty* mat_prop_translation_x = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_translation_x, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation_vals_link[0].value ) );
+        propertygrid->AppendIn( mat_prop_translation_x, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+        wxPGProperty* mat_prop_translation_y = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_translation_y, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation_vals_link[1].value ) );
+        propertygrid->AppendIn( mat_prop_translation_y, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+        wxPGProperty* mat_prop_translation_z = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_translation_z, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation_vals_link[2].value ) );
+        propertygrid->AppendIn( mat_prop_translation_z, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+
+
 
         wxPGProperty* mat_prop_rotation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "rotation", wxPG_LABEL, "<composed>" ) );
         wxPGProperty* mat_prop_rotation_axis = propertygrid->AppendIn( mat_prop_rotation, new wxStringProperty( "axis", wxPG_LABEL, "<composed>" ) );
-        /*
-        propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "x", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation[0] ) );
-        propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "y", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation[1] ) );
-        propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "z", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation[2] ) );
-        propertygrid->AppendIn( mat_prop_rotation, new wxFloatProperty( "angle", wxPG_LABEL, entry->matrix_stack_descr[i].arg.angle ) );
-        */
+
+        wxPGProperty* mat_prop_rotation_x = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_rotation_x, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation_vals_link[0].value ) );
+        propertygrid->AppendIn( mat_prop_rotation_x, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+        wxPGProperty* mat_prop_rotation_y = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_rotation_y, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation_vals_link[1].value ) );
+        propertygrid->AppendIn( mat_prop_rotation_y, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+        wxPGProperty* mat_prop_rotation_z = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_rotation_z, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation_vals_link[2].value ) );
+        propertygrid->AppendIn( mat_prop_rotation_z, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+
+        wxPGProperty* mat_prop_rotation_angle = propertygrid->AppendIn( mat_prop_rotation, new wxStringProperty( "angle", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_rotation_angle, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.angle_val_link.value ) );
+        propertygrid->AppendIn( mat_prop_rotation_angle, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
         
         wxPGProperty* mat_prop_scale = propertygrid->AppendIn( mat_prop, new wxStringProperty( "scaling", wxPG_LABEL, "<composed>" ) );
 
-        /*
-        propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "x", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale[0] ) );
-        propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "y", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale[1] ) );
-        propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "z", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale[2] ) );
-        */
+        wxPGProperty* mat_prop_scale_x = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_scale_x, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale_vals_link[0].value ) );
+        propertygrid->AppendIn( mat_prop_scale_x, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+        wxPGProperty* mat_prop_scale_y = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_scale_y, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale_vals_link[1].value ) );
+        propertygrid->AppendIn( mat_prop_scale_y, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+        wxPGProperty* mat_prop_scale_z = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
+        propertygrid->AppendIn( mat_prop_scale_z, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale_vals_link[2].value ) );
+        propertygrid->AppendIn( mat_prop_scale_z, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
 
     }
 
@@ -3001,82 +3051,6 @@ void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialo
         dsstring matrix_type_name_2 = buffer.data();
 
 
-        curr_id = matrix_index;
-        curr_id += ".translation.x";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float translation_x;
-        value.GetAs<float>( &translation_x );
-
-        curr_id = matrix_index;
-        curr_id += ".translation.y";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float translation_y;
-        value.GetAs<float>( &translation_y );
-
-        curr_id = matrix_index;
-        curr_id += ".translation.z";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float translation_z;
-        value.GetAs<float>( &translation_z );
-
-
-        curr_id = matrix_index;
-        curr_id += ".rotation.axis.x";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float rotation_axis_x;
-        value.GetAs<float>( &rotation_axis_x );
-
-        curr_id = matrix_index;
-        curr_id += ".rotation.axis.y";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float rotation_axis_y;
-        value.GetAs<float>( &rotation_axis_y );
-
-
-        curr_id = matrix_index;
-        curr_id += ".rotation.axis.z";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float rotation_axis_z;
-        value.GetAs<float>( &rotation_axis_z );
-
-
-        curr_id = matrix_index;
-        curr_id += ".rotation.angle";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float rotation_angle;
-        value.GetAs<float>( &rotation_angle );
-
-
-
-        curr_id = matrix_index;
-        curr_id += ".scaling.x";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float scaling_x;
-        value.GetAs<float>( &scaling_x );
-
-        curr_id = matrix_index;
-        curr_id += ".scaling.y";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float scaling_y;
-        value.GetAs<float>( &scaling_y );
-
-        curr_id = matrix_index;
-        curr_id += ".scaling.z";
-        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
-        value = prop2->GetValue();
-        float scaling_z;
-        value.GetAs<float>( &scaling_z );
-
-
         ////////////////////////
 
         BasicSceneMainFrame::TransformationMatrixDescriptor descr;
@@ -3098,53 +3072,192 @@ void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialo
             descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE;
         }
 
-        /*
-        descr.arg.translation[0] = translation_x;
-        descr.arg.translation[1] = translation_y;
-        descr.arg.translation[2] = translation_z;
-        descr.arg.translation[3] = 1.0;
+
+        ///////////////////////////////////////////////////////////////////////////////
+
+        curr_id = matrix_index;
+        curr_id += ".translation.x.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float translation_x;
+        value.GetAs<float>( &translation_x );
+
+        curr_id = matrix_index;
+        curr_id += ".translation.x.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString translation_x_var = prop3->GetValueAsString();
+        buffer = translation_x_var.ToAscii();
+
+        descr.arg.translation_vals_link[0].value = translation_x;
+        descr.arg.translation_vals_link[0].var_alias = buffer.data();
 
 
-        descr.arg.rotation[0] = rotation_axis_x;
-        descr.arg.rotation[1] = rotation_axis_y;
-        descr.arg.rotation[2] = rotation_axis_z;
-        descr.arg.rotation[3] = 1.0;
+        curr_id = matrix_index;
+        curr_id += ".translation.y.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float translation_y;
+        value.GetAs<float>( &translation_y );
 
-        descr.arg.angle = rotation_angle;
+        curr_id = matrix_index;
+        curr_id += ".translation.y.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString translation_y_var = prop3->GetValueAsString();
+        buffer = translation_y_var.ToAscii();
 
-        descr.arg.scale[0] = scaling_x;
-        descr.arg.scale[1] = scaling_y;
-        descr.arg.scale[2] = scaling_z;
-        descr.arg.scale[3] = 1.0;
-        */
+        descr.arg.translation_vals_link[1].value = translation_y;
+        descr.arg.translation_vals_link[1].var_alias = buffer.data();
+
+
+        curr_id = matrix_index;
+        curr_id += ".translation.z.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float translation_z;
+        value.GetAs<float>( &translation_z );
+
+        curr_id = matrix_index;
+        curr_id += ".translation.z.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString translation_z_var = prop3->GetValueAsString();
+        buffer = translation_z_var.ToAscii();
+
+        descr.arg.translation_vals_link[2].value = translation_z;
+        descr.arg.translation_vals_link[2].var_alias = buffer.data();
+
+
+        ///////////////////////////////////////////////////////////////////////////////
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.x.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float rotation_x;
+        value.GetAs<float>( &rotation_x );
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.x.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString rotation_x_var = prop3->GetValueAsString();
+        buffer = rotation_x_var.ToAscii();
+
+        descr.arg.rotation_vals_link[0].value = rotation_x;
+        descr.arg.rotation_vals_link[0].var_alias = buffer.data();
+
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.y.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float rotation_y;
+        value.GetAs<float>( &rotation_y );
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.y.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString rotation_y_var = prop3->GetValueAsString();
+        buffer = rotation_y_var.ToAscii();
+
+        descr.arg.rotation_vals_link[1].value = rotation_y;
+        descr.arg.rotation_vals_link[1].var_alias = buffer.data();
+
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.z.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float rotation_z;
+        value.GetAs<float>( &rotation_z );
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.axis.z.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString rotation_z_var = prop3->GetValueAsString();
+        buffer = rotation_z_var.ToAscii();
+
+        descr.arg.rotation_vals_link[2].value = rotation_z;
+        descr.arg.rotation_vals_link[2].var_alias = buffer.data();
+
+
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.angle.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float rotation_a;
+        value.GetAs<float>( &rotation_a );
+
+        curr_id = matrix_index;
+        curr_id += ".rotation.angle.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString rotation_a_var = prop3->GetValueAsString();
+        buffer = rotation_a_var.ToAscii();
+
+        descr.arg.angle_val_link.value = rotation_a;
+        descr.arg.angle_val_link.var_alias = buffer.data();
+
+
+        ///////////////////////////////////////////////////////////////////////////////
+
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.x.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float scale_x;
+        value.GetAs<float>( &scale_x );
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.x.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString scale_x_var = prop3->GetValueAsString();
+        buffer = scale_x_var.ToAscii();
+
+        descr.arg.scale_vals_link[0].value = scale_x;
+        descr.arg.scale_vals_link[0].var_alias = buffer.data();
+
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.y.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float scale_y;
+        value.GetAs<float>( &scale_y );
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.y.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString scale_y_var = prop3->GetValueAsString();
+        buffer = scale_y_var.ToAscii();
+
+        descr.arg.scale_vals_link[1].value = scale_y;
+        descr.arg.scale_vals_link[1].var_alias = buffer.data();
+
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.z.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float scale_z;
+        value.GetAs<float>( &scale_z );
+
+        curr_id = matrix_index;
+        curr_id += ".scaling.z.variable";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString scale_z_var = prop3->GetValueAsString();
+        buffer = scale_z_var.ToAscii();
+
+        descr.arg.scale_vals_link[2].value = scale_z;
+        descr.arg.scale_vals_link[2].var_alias = buffer.data();
+
+
+        ///////////////////////////////////////////////////////////////////////////////
+
+
 
         entry->matrix_stack_descr.push_back( descr );
         
-        /////
 
-        /*
-        Matrix mat;
-
-        if( "identity" == matrix_type_name_2 )
-        {           
-            mat.Identity();
-            entry->matrix_stack.PushMatrix( mat );
-        }
-        else if( "translation" == matrix_type_name_2 )
-        {
-            mat.Translation( translation_x, translation_y, translation_z );
-        }
-        else if( "rotation" == matrix_type_name_2 )
-        {
-            mat.Rotation( Vector( rotation_axis_x, rotation_axis_y, rotation_axis_z, 1.0 ), Utils::Maths::DegToRad( rotation_angle ) );
-        }
-        else if( "scaling" == matrix_type_name_2 )
-        {
-            mat.Scale( scaling_x, scaling_y, scaling_z );
-        }
-
-        entry->matrix_stack.PushMatrix( mat );
-        */
     }
 }
 
@@ -3163,22 +3276,90 @@ void wxWidgetAdapter::on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDi
     matrix_type_labels.Add( "scaling" );
     propertygrid->AppendIn( mat_prop, new wxEnumProperty( "matrix_type", wxPG_LABEL, matrix_type_labels ) );
 
+
+    /////////////////// recup tout les alias de variables
+
+    std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* registers = (std::map<dsstring, BasicSceneMainFrame::RegisterEntry>*)p_dialog->GetData( "registers" );
+    wxArrayString vars_labels;
+    vars_labels.Add( "..." );
+
+    for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = registers->begin(); it != registers->end(); ++it )
+    {
+        vars_labels.Add( it->first );
+    }
+
+    ////////////////////////////////////////////
+
+
     wxPGProperty* mat_prop_translation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "translation", wxPG_LABEL, "<composed>" ) );
+
+    /*
     propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( mat_prop_translation, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
+    */
+
+    wxPGProperty* mat_prop_translation_x = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_translation_x, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_translation_x, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+    wxPGProperty* mat_prop_translation_y = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_translation_y, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_translation_y, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+    wxPGProperty* mat_prop_translation_z = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_translation_z, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_translation_z, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
 
     wxPGProperty* mat_prop_rotation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "rotation", wxPG_LABEL, "<composed>" ) );
     wxPGProperty* mat_prop_rotation_axis = propertygrid->AppendIn( mat_prop_rotation, new wxStringProperty( "axis", wxPG_LABEL, "<composed>" ) );
+
+    /*
     propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "x", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( mat_prop_rotation_axis, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( mat_prop_rotation, new wxFloatProperty( "angle", wxPG_LABEL, 0.0 ) );
+    */
+
+    wxPGProperty* mat_prop_rotation_x = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_rotation_x, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_rotation_x, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+    wxPGProperty* mat_prop_rotation_y = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_rotation_y, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_rotation_y, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+    wxPGProperty* mat_prop_rotation_z = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_rotation_z, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_rotation_z, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+
+    wxPGProperty* mat_prop_rotation_angle = propertygrid->AppendIn( mat_prop_rotation, new wxStringProperty( "angle", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_rotation_angle, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_rotation_angle, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
     
     wxPGProperty* mat_prop_scale = propertygrid->AppendIn( mat_prop, new wxStringProperty( "scaling", wxPG_LABEL, "<composed>" ) );
+
+    /*
     propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "x", wxPG_LABEL, 1.0 ) );
     propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "y", wxPG_LABEL, 1.0 ) );
     propertygrid->AppendIn( mat_prop_scale, new wxFloatProperty( "z", wxPG_LABEL, 1.0 ) );
+    */
+
+    wxPGProperty* mat_prop_scale_x = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_scale_x, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_scale_x, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+    wxPGProperty* mat_prop_scale_y = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_scale_y, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_scale_y, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
+    wxPGProperty* mat_prop_scale_z = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
+    propertygrid->AppendIn( mat_prop_scale_z, new wxFloatProperty( "constant", wxPG_LABEL, 0.0 ) );
+    propertygrid->AppendIn( mat_prop_scale_z, new wxEnumProperty( "variable", wxPG_LABEL, vars_labels ) );
+
 
     propertygrid->ResetColumnSizes();
     propertygrid->CollapseAll();

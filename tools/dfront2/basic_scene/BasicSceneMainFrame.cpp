@@ -240,7 +240,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
 
                                         for( long j = 0; j < 3; j++ )
                                         {
-                                            if( "" == entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias )
+                                            if( "..." == entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias )
                                             {
                                                 scale[j] = entry.matrix_stack_descr[i].arg.scale_vals_link[j].value;
                                             }
@@ -260,11 +260,67 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
                                     break;
 
                                 case TRANSFORMATIONMATRIX_TRANSLATION:
+                                    {
+                                        dsreal trans[3];
 
+                                        for( long j = 0; j < 3; j++ )
+                                        {
+                                            if( "..." == entry.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias )
+                                            {
+                                                trans[j] = entry.matrix_stack_descr[i].arg.translation_vals_link[j].value;
+                                            }
+                                            else
+                                            {
+                                                dsstring var_alias = entry.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias;
+                                                // aller chercher curren_value de la variable referencee
+
+                                                RegisterEntry reg_entry = m_registers[var_alias];
+                                                trans[j] = reg_entry.current_value;
+                                            }
+                                        }
+
+                                        mat.Translation( trans[0], trans[1], trans[2] );
+                                        matrix_stack.PushMatrix( mat );
+                                    }
                                     break;
 
                                 case TRANSFORMATIONMATRIX_ROTATION:
+                                    {
+                                        dsreal axis[3];
+                                        dsreal angle;
 
+                                        for( long j = 0; j < 3; j++ )
+                                        {
+                                            if( "..." == entry.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias )
+                                            {
+                                                axis[j] = entry.matrix_stack_descr[i].arg.rotation_vals_link[j].value;
+                                            }
+                                            else
+                                            {
+                                                dsstring var_alias = entry.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias;
+                                                // aller chercher curren_value de la variable referencee
+
+                                                RegisterEntry reg_entry = m_registers[var_alias];
+                                                axis[j] = reg_entry.current_value;
+                                            }
+                                        }
+
+                                        if( "..." == entry.matrix_stack_descr[i].arg.angle_val_link.var_alias )
+                                        {
+                                            angle = entry.matrix_stack_descr[i].arg.angle_val_link.value;
+                                        }
+                                        else
+                                        {
+                                            dsstring var_alias = entry.matrix_stack_descr[i].arg.angle_val_link.var_alias;
+                                            // aller chercher curren_value de la variable referencee
+
+                                            RegisterEntry reg_entry = m_registers[var_alias];
+                                            angle = reg_entry.current_value;
+                                        }
+
+                                        mat.Rotation( Vector( axis[0], axis[1], axis[2], 1.0 ), Maths::DegToRad( angle ) );
+                                        matrix_stack.PushMatrix( mat );
+                                    }
                                     break;
                             }
                         }
@@ -805,10 +861,11 @@ void BasicSceneMainFrame::OnTransfoEditButtonClicked( wxCommandEvent& p_event )
         spacebox->GetSceneName( scene_name );
 
         dialog->SetData( "metadata_scenegraph_entry", &m_metada_scenegraph[scene_name] );
+        dialog->SetData( "registers", &m_registers );
         dialog->EnableApplyButton();
         dialog->EnableSpecificButton0( "Add matrix" );
         dialog->EnableSpecificButton1( "Clear all" );
-        wxWidgetAdapter::GetInstance()->AdaptMatrixStackEdition( dialog );
+        wxWidgetAdapter::GetInstance()->AdaptMatrixStackEdition( &m_registers, dialog );
         dialog->Show();
     }
 }

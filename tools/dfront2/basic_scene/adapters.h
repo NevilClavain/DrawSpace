@@ -147,7 +147,7 @@ public:
     void AdaptRegProps( const dsstring& p_alias, BasicSceneMainFrame::RegisterEntry* p_reg, BasicSceneObjectPropertiesDialog* p_dialog );
     
     void AdaptTransfoSourceModification( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptMatrixStackEdition( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog );
 
     void AdaptMovementEntryControlProps( const dsstring& p_mvtalias, BasicSceneObjectPropertiesDialog* p_dialog );
     
