@@ -150,6 +150,7 @@ public:
 
     typedef struct
     {
+        long                    id;
         RegisterMode            mode;
         dsreal                  const_value;
 

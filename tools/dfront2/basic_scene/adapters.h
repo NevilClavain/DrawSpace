@@ -59,6 +59,8 @@ protected:
     long m_pass_slot_index;
     long m_matrix_slot_index;
 
+    long m_register_index;
+
 
     void on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
