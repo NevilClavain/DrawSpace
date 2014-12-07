@@ -1285,6 +1285,7 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
     //(*mvts_map)[alias] = linear_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = linear_mvt;
+    /*
     movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.speed = 0;
     movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
@@ -1293,6 +1294,7 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
     movement_entry.yaw_speed = 0.0;
     movement_entry.pitch_speed = 0.0;
     movement_entry.roll_speed = 0.0;
+    */
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1440,6 +1442,7 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     //(*mvts_map)[alias] = circular_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = circular_mvt;
+    /*
     movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.speed = 0;
     movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
@@ -1448,6 +1451,7 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     movement_entry.yaw_speed = 0.0;
     movement_entry.pitch_speed = 0.0;
     movement_entry.roll_speed = 0.0;
+    */
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1543,6 +1547,7 @@ void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_
     //(*mvts_map)[alias] = fps_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = fps_mvt;
+    /*
     movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.speed = 0;
     movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
@@ -1551,6 +1556,7 @@ void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_
     movement_entry.yaw_speed = 0.0;
     movement_entry.pitch_speed = 0.0;
     movement_entry.roll_speed = 0.0;
+    */
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1632,6 +1638,7 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     //(*mvts_map)[alias] = free_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = free_mvt;
+    /*
     movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.speed = 0;
     movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
@@ -1640,6 +1647,7 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.yaw_speed = 0.0;
     movement_entry.pitch_speed = 0.0;
     movement_entry.roll_speed = 0.0;
+    */
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1736,6 +1744,7 @@ void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p
     //(*mvts_map)[alias] = head_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = head_mvt;
+    /*
     movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.speed = 0;
     movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
@@ -1744,6 +1753,7 @@ void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.yaw_speed = 0.0;
     movement_entry.pitch_speed = 0.0;
     movement_entry.roll_speed = 0.0;
+    */
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1819,6 +1829,7 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     //(*mvts_map)[alias] = spectator_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = spectator_mvt;
+    /*
     movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.speed = 0;
     movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
@@ -1827,6 +1838,7 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     movement_entry.yaw_speed = 0.0;
     movement_entry.pitch_speed = 0.0;
     movement_entry.roll_speed = 0.0;
+    */
     (*mvts_map)[alias] = movement_entry;
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
@@ -1911,6 +1923,7 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     //(*mvts_map)[alias] = longlat_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = longlat_mvt;
+    /*
     movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.speed = 0;
     movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
@@ -1919,6 +1932,7 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     movement_entry.yaw_speed = 0.0;
     movement_entry.pitch_speed = 0.0;
     movement_entry.roll_speed = 0.0;
+    */
     (*mvts_map)[alias] = movement_entry;
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
@@ -3465,7 +3479,7 @@ void wxWidgetAdapter::on_applymatrixstackclearall( BasicSceneObjectPropertiesDia
     m_matrix_slot_index = 0;
 }
 
-void wxWidgetAdapter::AdaptMovementEntryControlProps( const dsstring& p_mvtalias, BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptMovementEntryControlProps( const dsstring& p_mvtalias, std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
     propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtalias.c_str() ) );
@@ -3473,6 +3487,29 @@ void wxWidgetAdapter::AdaptMovementEntryControlProps( const dsstring& p_mvtalias
     BasicSceneMainFrame::MovementEntry* movement_entry = (BasicSceneMainFrame::MovementEntry*)p_dialog->GetData( "movement_entry" );
 
     // to be continued...
+
+    
+
+    /////////////////// recup tout les alias de variables
+
+    wxArrayString ctrlsource_labels;
+    wxArrayInt ctrlsource_arrIds;
+
+    ctrlsource_labels.Add( "keyboard and mouse" );
+    ctrlsource_arrIds.Add( -1 );
+
+    for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = p_registers->begin(); it != p_registers->end(); ++it )
+    {
+        ctrlsource_labels.Add( it->first );
+        ctrlsource_arrIds.Add( it->second.id );
+    }
+
+    propertygrid->Append( new wxEnumProperty( "speed control", wxPG_LABEL, ctrlsource_labels ) );
+    propertygrid->Append( new wxEnumProperty( "yaw control", wxPG_LABEL, ctrlsource_labels ) );
+    propertygrid->Append( new wxEnumProperty( "pitch control", wxPG_LABEL, ctrlsource_labels ) );
+    propertygrid->Append( new wxEnumProperty( "roll control", wxPG_LABEL, ctrlsource_labels ) );
+    
+
 }
 
 void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox )

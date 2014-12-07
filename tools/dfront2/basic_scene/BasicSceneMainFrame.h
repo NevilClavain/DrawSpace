@@ -105,27 +105,22 @@ public:
 
     } MovementControlSource;
 
-    typedef enum
-    {
-        THETAPHICONTROL_POSITION,
-        THETAPHICONTROL_SPEED
-
-    } ThetaPhiControlMode;
 
     typedef struct
     {
         DrawSpace::Core::Movement*  movement;
-        MovementControlSource       movement_control_source;
 
-        dsreal                      speed;
-        ThetaPhiControlMode         thetaphi_control_mode;
+        MovementControlSource       speed_control_source;
+        dsstring                    speed_control_register;
 
-        dsreal                      theta;
-        dsreal                      phi;
+        MovementControlSource       yaw_control_source;
+        dsstring                    yaw_control_register;
 
-        dsreal                      yaw_speed;
-        dsreal                      pitch_speed;
-        dsreal                      roll_speed;
+        MovementControlSource       pitch_control_source;
+        dsstring                    pitch_control_register;
+
+        MovementControlSource       roll_control_source;
+        dsstring                    roll_control_register;
 
 
     } MovementEntry;

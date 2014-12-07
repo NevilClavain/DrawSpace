@@ -151,7 +151,7 @@ public:
     void AdaptTransfoSourceModification( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void AdaptMovementEntryControlProps( const dsstring& p_mvtalias, BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptMovementEntryControlProps( const dsstring& p_mvtalias, std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog );
     
 
     void AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox );
