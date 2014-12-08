@@ -101,7 +101,7 @@ public:
     typedef enum
     {
         MOVEMENTCONTROLSOURCE_KEYBMOUSE,
-        MOVEMENTCONTROLSOURCE_AUTOMATIC
+        MOVEMENTCONTROLSOURCE_REGISTER
 
     } MovementControlSource;
 

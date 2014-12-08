@@ -56,6 +56,8 @@ wxWidgetAdapter::wxWidgetAdapter( void )
 
     m_applyregisterprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyregisterprops );
 
+    m_applymovementcontrolprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applymovementcontrolprops );
+
     m_register_index = 0;
 }
 
@@ -79,6 +81,7 @@ wxWidgetAdapter::~wxWidgetAdapter( void )
     delete m_applytransfosourcemodification_callback;
     delete m_applyregistervalues_callback;
     delete m_applyregisterprops_callback;
+    delete m_applymovementcontrolprops_callback;
 }
 
 void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
@@ -1285,16 +1288,10 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
     //(*mvts_map)[alias] = linear_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = linear_mvt;
-    /*
-    movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.speed = 0;
-    movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
-    movement_entry.theta = 0.0;
-    movement_entry.phi = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
-    */
+    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1442,16 +1439,10 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     //(*mvts_map)[alias] = circular_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = circular_mvt;
-    /*
-    movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.speed = 0;
-    movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
-    movement_entry.theta = 0.0;
-    movement_entry.phi = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
-    */
+    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1547,16 +1538,10 @@ void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_
     //(*mvts_map)[alias] = fps_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = fps_mvt;
-    /*
-    movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.speed = 0;
-    movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
-    movement_entry.theta = 0.0;
-    movement_entry.phi = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
-    */
+    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1638,16 +1623,10 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     //(*mvts_map)[alias] = free_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = free_mvt;
-    /*
-    movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.speed = 0;
-    movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
-    movement_entry.theta = 0.0;
-    movement_entry.phi = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
-    */
+    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1744,16 +1723,10 @@ void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p
     //(*mvts_map)[alias] = head_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = head_mvt;
-    /*
-    movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.speed = 0;
-    movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
-    movement_entry.theta = 0.0;
-    movement_entry.phi = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
-    */
+    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1829,16 +1802,10 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     //(*mvts_map)[alias] = spectator_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = spectator_mvt;
-    /*
-    movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.speed = 0;
-    movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
-    movement_entry.theta = 0.0;
-    movement_entry.phi = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
-    */
+    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     (*mvts_map)[alias] = movement_entry;
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
@@ -1923,16 +1890,10 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     //(*mvts_map)[alias] = longlat_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = longlat_mvt;
-    /*
-    movement_entry.movement_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.speed = 0;
-    movement_entry.thetaphi_control_mode = BasicSceneMainFrame::THETAPHICONTROL_POSITION;
-    movement_entry.theta = 0.0;
-    movement_entry.phi = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
-    */
+    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     (*mvts_map)[alias] = movement_entry;
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
@@ -3105,8 +3066,6 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMain
 
     }
 
-    propertygrid->ResetColumnSizes();
-
     m_matrix_slot_index = i;
     p_dialog->RegisterApplyButtonHandler( m_applymatrixstackvalue_callback );
     p_dialog->RegisterSpecificButton0Handler( m_applymatrixstackaddmatrix_callback );
@@ -3479,21 +3438,19 @@ void wxWidgetAdapter::on_applymatrixstackclearall( BasicSceneObjectPropertiesDia
     m_matrix_slot_index = 0;
 }
 
-void wxWidgetAdapter::AdaptMovementEntryControlProps( const dsstring& p_mvtalias, std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog )
+void wxWidgetAdapter::AdaptMovementControlProps( const dsstring& p_mvtalias, std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog )
 {
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
     propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtalias.c_str() ) );
 
     BasicSceneMainFrame::MovementEntry* movement_entry = (BasicSceneMainFrame::MovementEntry*)p_dialog->GetData( "movement_entry" );
-
-    // to be continued...
-
     
 
     /////////////////// recup tout les alias de variables
 
     wxArrayString ctrlsource_labels;
     wxArrayInt ctrlsource_arrIds;
+    int ctrlsource_index;
 
     ctrlsource_labels.Add( "keyboard and mouse" );
     ctrlsource_arrIds.Add( -1 );
@@ -3504,11 +3461,131 @@ void wxWidgetAdapter::AdaptMovementEntryControlProps( const dsstring& p_mvtalias
         ctrlsource_arrIds.Add( it->second.id );
     }
 
-    propertygrid->Append( new wxEnumProperty( "speed control", wxPG_LABEL, ctrlsource_labels ) );
-    propertygrid->Append( new wxEnumProperty( "yaw control", wxPG_LABEL, ctrlsource_labels ) );
-    propertygrid->Append( new wxEnumProperty( "pitch control", wxPG_LABEL, ctrlsource_labels ) );
-    propertygrid->Append( new wxEnumProperty( "roll control", wxPG_LABEL, ctrlsource_labels ) );
+    ///////////////////////////////////////////////////////////
+
+    if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
+    {
+        ctrlsource_index = -1;
+    }
+    else if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->speed_control_source )
+    {
+        BasicSceneMainFrame::RegisterEntry reg = (*p_registers)[movement_entry->speed_control_register];
+        ctrlsource_index = reg.id;
+    }
+    propertygrid->Append( new wxEnumProperty( "speed control", wxPG_LABEL, ctrlsource_labels, ctrlsource_arrIds, ctrlsource_index ) );
+
+    if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+    {
+        ctrlsource_index = -1;
+    }
+    else if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->yaw_control_source )
+    {
+        BasicSceneMainFrame::RegisterEntry reg = (*p_registers)[movement_entry->yaw_control_register];
+        ctrlsource_index = reg.id;
+    }
+    propertygrid->Append( new wxEnumProperty( "yaw control", wxPG_LABEL, ctrlsource_labels, ctrlsource_arrIds, ctrlsource_index ) );
+
+    if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
+    {
+        ctrlsource_index = -1;
+    }
+    else if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->pitch_control_source )
+    {
+        BasicSceneMainFrame::RegisterEntry reg = (*p_registers)[movement_entry->pitch_control_register];
+        ctrlsource_index = reg.id;
+    }
+    propertygrid->Append( new wxEnumProperty( "pitch control", wxPG_LABEL, ctrlsource_labels, ctrlsource_arrIds, ctrlsource_index ) );
+
+    if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->roll_control_source )
+    {
+        ctrlsource_index = -1;
+    }
+    else if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->roll_control_source )
+    {
+        BasicSceneMainFrame::RegisterEntry reg = (*p_registers)[movement_entry->roll_control_register];
+        ctrlsource_index = reg.id;
+    }
+    propertygrid->Append( new wxEnumProperty( "roll control", wxPG_LABEL, ctrlsource_labels, ctrlsource_arrIds, ctrlsource_index ) );
     
+
+    p_dialog->RegisterApplyButtonHandler( m_applymovementcontrolprops_callback );
+
+    propertygrid->ResetColumnSizes();
+    propertygrid->CollapseAll();
+}
+
+void wxWidgetAdapter::on_applymovementcontrolprops( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    BasicSceneMainFrame::MovementEntry* movement_entry = (BasicSceneMainFrame::MovementEntry*)p_dialog->GetData( "movement_entry" );
+
+    wxCharBuffer buffer;
+    wxEnumProperty* prop;
+
+    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "speed control" ) );
+    wxString source_name = prop->GetValueAsString();   
+    buffer = source_name.ToAscii();
+    dsstring speed_control = buffer.data();
+
+
+    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "yaw control" ) );
+    wxString yaw_name = prop->GetValueAsString();   
+    buffer = yaw_name.ToAscii();
+    dsstring yaw_control = buffer.data();
+
+
+    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "pitch control" ) );
+    wxString pitch_name = prop->GetValueAsString();   
+    buffer = pitch_name.ToAscii();
+    dsstring pitch_control = buffer.data();
+
+
+    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "roll control" ) );
+    wxString roll_name = prop->GetValueAsString();   
+    buffer = roll_name.ToAscii();
+    dsstring roll_control = buffer.data();
+
+    if( "keyboard and mouse" == speed_control )
+    {
+        movement_entry->speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    }
+    else
+    {
+        movement_entry->speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
+        movement_entry->speed_control_register = speed_control;
+    }
+
+    if( "keyboard and mouse" == yaw_control )
+    {
+        movement_entry->yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+        movement_entry->yaw_control_register = yaw_control;
+    }
+    else
+    {
+        movement_entry->yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
+    }
+
+    if( "keyboard and mouse" == pitch_control )
+    {
+        movement_entry->pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+        movement_entry->pitch_control_register = pitch_control;
+        
+    }
+    else
+    {
+        movement_entry->pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
+    }
+
+    if( "keyboard and mouse" == roll_control )
+    {
+        movement_entry->roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+
+    }
+    else
+    {
+        movement_entry->roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
+    }
 
 }
 

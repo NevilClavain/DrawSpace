@@ -895,7 +895,7 @@ void BasicSceneMainFrame::OnControlButtonClicked( wxCommandEvent& p_event )
     dialog->SetData( "movement_entry", &m_movements[mvt_name2] );
     dialog->EnableApplyButton();
 
-    wxWidgetAdapter::GetInstance()->AdaptMovementEntryControlProps( mvt_name2, &m_registers, dialog );
+    wxWidgetAdapter::GetInstance()->AdaptMovementControlProps( mvt_name2, &m_registers, dialog );
     dialog->Show();
 }
 
