@@ -154,6 +154,8 @@ public:
     
 
     void AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox );
+    void AdaptKeyboardOutputComboBox( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_mvts, wxComboBox* p_combobox );
+
     void AdaptRegistersLastValue( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
 
     void InitializeRegister( BasicSceneMainFrame::RegisterEntry* p_reg_entry );

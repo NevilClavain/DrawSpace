@@ -1292,12 +1292,23 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.theta_pos = 0.0;
+    movement_entry.phi_pos = 0.0;
+    movement_entry.yaw_speed = 0.0;
+    movement_entry.pitch_speed = 0.0;
+    movement_entry.roll_speed = 0.0;
+
     (*mvts_map)[alias] = movement_entry;
 
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
 
     AdaptMvtsList( mvts_map, ctrl );
+
+    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
+
+    AdaptKeyboardOutputComboBox( mvts_map, combo );
+
 
     p_dialog->Close();
 }
@@ -1443,6 +1454,12 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.theta_pos = 0.0;
+    movement_entry.phi_pos = 0.0;
+    movement_entry.yaw_speed = 0.0;
+    movement_entry.pitch_speed = 0.0;
+    movement_entry.roll_speed = 0.0;
+
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1450,8 +1467,12 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
 
     AdaptMvtsList( mvts_map, ctrl );
 
-    p_dialog->Close();
+    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
 
+    AdaptKeyboardOutputComboBox( mvts_map, combo );
+
+    
+    p_dialog->Close();
 }
 
 void wxWidgetAdapter::AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1542,12 +1563,24 @@ void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.theta_pos = 0.0;
+    movement_entry.phi_pos = 0.0;
+    movement_entry.yaw_speed = 0.0;
+    movement_entry.pitch_speed = 0.0;
+    movement_entry.roll_speed = 0.0;
+
+
     (*mvts_map)[alias] = movement_entry;
 
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
 
     AdaptMvtsList( mvts_map, ctrl );
+
+    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
+
+    AdaptKeyboardOutputComboBox( mvts_map, combo );
+
 
     p_dialog->Close();
 
@@ -1627,6 +1660,13 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.theta_pos = 0.0;
+    movement_entry.phi_pos = 0.0;
+    movement_entry.yaw_speed = 0.0;
+    movement_entry.pitch_speed = 0.0;
+    movement_entry.roll_speed = 0.0;
+
+
     (*mvts_map)[alias] = movement_entry;
 
 
@@ -1634,6 +1674,11 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
 
     AdaptMvtsList( mvts_map, ctrl );
+
+    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
+
+    AdaptKeyboardOutputComboBox( mvts_map, combo );
+
 
     p_dialog->Close();
 
@@ -1727,12 +1772,24 @@ void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.theta_pos = 0.0;
+    movement_entry.phi_pos = 0.0;
+    movement_entry.yaw_speed = 0.0;
+    movement_entry.pitch_speed = 0.0;
+    movement_entry.roll_speed = 0.0;
+
+
     (*mvts_map)[alias] = movement_entry;
 
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
 
     AdaptMvtsList( mvts_map, ctrl );
+
+    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
+
+    AdaptKeyboardOutputComboBox( mvts_map, combo );
+
 
     p_dialog->Close();
 
@@ -1806,11 +1863,23 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.theta_pos = 0.0;
+    movement_entry.phi_pos = 0.0;
+    movement_entry.yaw_speed = 0.0;
+    movement_entry.pitch_speed = 0.0;
+    movement_entry.roll_speed = 0.0;
+
+
     (*mvts_map)[alias] = movement_entry;
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
 
     AdaptMvtsList( mvts_map, ctrl );
+
+    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
+
+    AdaptKeyboardOutputComboBox( mvts_map, combo );
+
 
     p_dialog->Close();
 
@@ -1894,11 +1963,24 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+    movement_entry.theta_pos = 0.0;
+    movement_entry.phi_pos = 0.0;
+    movement_entry.yaw_speed = 0.0;
+    movement_entry.pitch_speed = 0.0;
+    movement_entry.roll_speed = 0.0;
+
+
     (*mvts_map)[alias] = movement_entry;
 
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
 
     AdaptMvtsList( mvts_map, ctrl );
+
+
+    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
+
+    AdaptKeyboardOutputComboBox( mvts_map, combo );
+
 
     p_dialog->Close();
 
@@ -3593,7 +3675,7 @@ void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegra
 {
     p_combobox->Clear();
 
-    p_combobox->Append( wxString( "<none>" ), (void *)NULL );
+    p_combobox->Append( wxString( "..." ), (void *)NULL );
 
     std::map<dsstring, Core::TransformNode*> cameras_list = p_scenegraph->GetCamerasList();
     for( std::map<dsstring, Core::TransformNode*>::iterator it = cameras_list.begin(); it != cameras_list.end(); ++it )
@@ -3601,6 +3683,17 @@ void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegra
         p_combobox->Append( it->first.c_str(), (void *)it->second );
     }
 
+    p_combobox->SetSelection( 0 );
+}
+
+void wxWidgetAdapter::AdaptKeyboardOutputComboBox( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_mvts, wxComboBox* p_combobox )
+{
+    p_combobox->Clear();
+    p_combobox->Append( wxString( "..." ), (void *)NULL );
+    for( std::map<dsstring, BasicSceneMainFrame::MovementEntry>::iterator it = p_mvts->begin(); it != p_mvts->end(); ++it )
+    {
+        p_combobox->Append( it->first.c_str(), (void *)&(it->second) ); 
+    }
     p_combobox->SetSelection( 0 );
 }
 

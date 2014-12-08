@@ -37,7 +37,8 @@ m_scenegraphlistctrl_currentindex( -1 ),
 m_mvtslistctrl_currentindex( -1 ),
 m_cameraslistctrl_currentindex( -1 ),
 m_regslistctrl_currentindex( -1 ),
-m_mousekeyb_output( NULL )
+m_last_xmouse( 0 ),
+m_last_ymouse( 0 )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
@@ -193,12 +194,203 @@ void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
     wxWidgetAdapter::GetInstance()->AdaptRegistersLastValue( &m_registers, m_registers_listCtrl );
 }
 
-void BasicSceneMainFrame::OnClose( wxCloseEvent& event )
+void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 {
     Destroy();
 }
 
-void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
+void BasicSceneMainFrame::compute_scenegraph_transforms( void )
+{
+    // transform all scenegraph's nodes
+
+    for( std::map<dsstring, MetadataScenegraphEntry>::iterator it = m_metada_scenegraph.begin(); it != m_metada_scenegraph.end(); ++it )
+    {
+        MetadataScenegraphEntry entry = it->second;
+
+        switch( entry.transformation_source_type )
+        {
+            case TRANSFORMATIONSOURCE_MATRIXSTACK:
+                {
+                    /*
+                    entry.matrix_stack.BuildResult();
+                    Matrix mat;
+                    entry.matrix_stack.GetResult( &mat );
+                    entry.node->SetLocalTransform( mat );
+                    */
+
+                    DrawSpace::Utils::Transformation matrix_stack;
+
+                    for( size_t i = 0; i < entry.matrix_stack_descr.size(); i++ )
+                    {
+                        Matrix mat;
+
+                        switch( entry.matrix_stack_descr[i].ope )
+                        {
+                            case TRANSFORMATIONMATRIX_IDENTITY:
+                                break;
+
+                            case TRANSFORMATIONMATRIX_SCALE:
+                                {
+                                    dsreal scale[3];
+
+                                    for( long j = 0; j < 3; j++ )
+                                    {
+                                        if( "..." == entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias )
+                                        {
+                                            scale[j] = entry.matrix_stack_descr[i].arg.scale_vals_link[j].value;
+                                        }
+                                        else
+                                        {
+                                            dsstring var_alias = entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias;
+                                            // aller chercher curren_value de la variable referencee
+
+                                            RegisterEntry reg_entry = m_registers[var_alias];
+                                            scale[j] = reg_entry.current_value;
+                                        }
+                                    }
+
+                                    mat.Scale( scale[0], scale[1], scale[2] );
+                                    matrix_stack.PushMatrix( mat );
+                                }
+                                break;
+
+                            case TRANSFORMATIONMATRIX_TRANSLATION:
+                                {
+                                    dsreal trans[3];
+
+                                    for( long j = 0; j < 3; j++ )
+                                    {
+                                        if( "..." == entry.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias )
+                                        {
+                                            trans[j] = entry.matrix_stack_descr[i].arg.translation_vals_link[j].value;
+                                        }
+                                        else
+                                        {
+                                            dsstring var_alias = entry.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias;
+                                            // aller chercher curren_value de la variable referencee
+
+                                            RegisterEntry reg_entry = m_registers[var_alias];
+                                            trans[j] = reg_entry.current_value;
+                                        }
+                                    }
+
+                                    mat.Translation( trans[0], trans[1], trans[2] );
+                                    matrix_stack.PushMatrix( mat );
+                                }
+                                break;
+
+                            case TRANSFORMATIONMATRIX_ROTATION:
+                                {
+                                    dsreal axis[3];
+                                    dsreal angle;
+
+                                    for( long j = 0; j < 3; j++ )
+                                    {
+                                        if( "..." == entry.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias )
+                                        {
+                                            axis[j] = entry.matrix_stack_descr[i].arg.rotation_vals_link[j].value;
+                                        }
+                                        else
+                                        {
+                                            dsstring var_alias = entry.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias;
+                                            // aller chercher curren_value de la variable referencee
+
+                                            RegisterEntry reg_entry = m_registers[var_alias];
+                                            axis[j] = reg_entry.current_value;
+                                        }
+                                    }
+
+                                    if( "..." == entry.matrix_stack_descr[i].arg.angle_val_link.var_alias )
+                                    {
+                                        angle = entry.matrix_stack_descr[i].arg.angle_val_link.value;
+                                    }
+                                    else
+                                    {
+                                        dsstring var_alias = entry.matrix_stack_descr[i].arg.angle_val_link.var_alias;
+                                        // aller chercher curren_value de la variable referencee
+
+                                        RegisterEntry reg_entry = m_registers[var_alias];
+                                        angle = reg_entry.current_value;
+                                    }
+
+                                    mat.Rotation( Vector( axis[0], axis[1], axis[2], 1.0 ), Maths::DegToRad( angle ) );
+                                    matrix_stack.PushMatrix( mat );
+                                }
+                                break;
+                        }
+                    }
+
+
+                    matrix_stack.BuildResult();
+                    Matrix mat_res;
+                    matrix_stack.GetResult( &mat_res );
+                    entry.node->SetLocalTransform( mat_res );
+                }
+                break;
+
+            case TRANSFORMATIONSOURCE_MOVEMENT:
+
+                break;
+
+            case TRANSFORMATIONSOURCE_BODY:
+
+                break;
+        }
+    }
+
+}
+
+void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
+{
+
+}
+void BasicSceneMainFrame::OnKeyUp( wxKeyEvent& p_event )
+{
+
+}
+
+void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
+{
+    wxCoord curr_xmouse = p_event.GetX();
+    wxCoord curr_ymouse = p_event.GetY();
+    int delta_x = curr_xmouse - m_last_xmouse;
+    int delta_y = curr_ymouse - m_last_ymouse;
+    
+    int index = m_mousekeyboardoutput_comboBox->GetSelection();
+
+    MovementEntry* movement_entry = (MovementEntry*)m_mousekeyboardoutput_comboBox->GetClientData( index );
+    if( movement_entry )
+    {
+        m_timer.AngleSpeedInc( &movement_entry->theta_pos, -delta_x / 4.0 );
+        m_timer.AngleSpeedInc( &movement_entry->phi_pos, -delta_y / 4.0 );
+
+        movement_entry->yaw_speed = -delta_x / 4.0;
+        movement_entry->pitch_speed = -delta_y / 4.0;
+    }
+
+    m_last_xmouse = p_event.GetX();
+    m_last_ymouse = p_event.GetY();
+}
+
+void BasicSceneMainFrame::compute_movements( void )
+{
+    for( std::map<dsstring, MovementEntry>::iterator it = m_movements.begin(); it != m_movements.end(); ++it )
+    {
+        MovementEntry movement_entry = it->second;
+
+        Movement* movement = movement_entry.movement;
+
+        LinearMovement* linear_movement = dynamic_cast<LinearMovement*>( movement );
+        if( linear_movement )
+        {
+            linear_movement->SetTheta( movement_entry.theta_pos );
+            linear_movement->SetPhi( movement_entry.phi_pos );
+        }
+    }
+}
+
+
+void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
 {
     if( m_glready )
     {
@@ -206,142 +398,8 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
         
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
-        // transform all scenegraph's nodes
-
-        for( std::map<dsstring, MetadataScenegraphEntry>::iterator it = m_metada_scenegraph.begin(); it != m_metada_scenegraph.end(); ++it )
-        {
-            MetadataScenegraphEntry entry = it->second;
-
-            switch( entry.transformation_source_type )
-            {
-                case TRANSFORMATIONSOURCE_MATRIXSTACK:
-                    {
-                        /*
-                        entry.matrix_stack.BuildResult();
-                        Matrix mat;
-                        entry.matrix_stack.GetResult( &mat );
-                        entry.node->SetLocalTransform( mat );
-                        */
-
-                        DrawSpace::Utils::Transformation matrix_stack;
-
-                        for( size_t i = 0; i < entry.matrix_stack_descr.size(); i++ )
-                        {
-                            Matrix mat;
-
-                            switch( entry.matrix_stack_descr[i].ope )
-                            {
-                                case TRANSFORMATIONMATRIX_IDENTITY:
-                                    break;
-
-                                case TRANSFORMATIONMATRIX_SCALE:
-                                    {
-                                        dsreal scale[3];
-
-                                        for( long j = 0; j < 3; j++ )
-                                        {
-                                            if( "..." == entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias )
-                                            {
-                                                scale[j] = entry.matrix_stack_descr[i].arg.scale_vals_link[j].value;
-                                            }
-                                            else
-                                            {
-                                                dsstring var_alias = entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias;
-                                                // aller chercher curren_value de la variable referencee
-
-                                                RegisterEntry reg_entry = m_registers[var_alias];
-                                                scale[j] = reg_entry.current_value;
-                                            }
-                                        }
-
-                                        mat.Scale( scale[0], scale[1], scale[2] );
-                                        matrix_stack.PushMatrix( mat );
-                                    }
-                                    break;
-
-                                case TRANSFORMATIONMATRIX_TRANSLATION:
-                                    {
-                                        dsreal trans[3];
-
-                                        for( long j = 0; j < 3; j++ )
-                                        {
-                                            if( "..." == entry.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias )
-                                            {
-                                                trans[j] = entry.matrix_stack_descr[i].arg.translation_vals_link[j].value;
-                                            }
-                                            else
-                                            {
-                                                dsstring var_alias = entry.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias;
-                                                // aller chercher curren_value de la variable referencee
-
-                                                RegisterEntry reg_entry = m_registers[var_alias];
-                                                trans[j] = reg_entry.current_value;
-                                            }
-                                        }
-
-                                        mat.Translation( trans[0], trans[1], trans[2] );
-                                        matrix_stack.PushMatrix( mat );
-                                    }
-                                    break;
-
-                                case TRANSFORMATIONMATRIX_ROTATION:
-                                    {
-                                        dsreal axis[3];
-                                        dsreal angle;
-
-                                        for( long j = 0; j < 3; j++ )
-                                        {
-                                            if( "..." == entry.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias )
-                                            {
-                                                axis[j] = entry.matrix_stack_descr[i].arg.rotation_vals_link[j].value;
-                                            }
-                                            else
-                                            {
-                                                dsstring var_alias = entry.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias;
-                                                // aller chercher curren_value de la variable referencee
-
-                                                RegisterEntry reg_entry = m_registers[var_alias];
-                                                axis[j] = reg_entry.current_value;
-                                            }
-                                        }
-
-                                        if( "..." == entry.matrix_stack_descr[i].arg.angle_val_link.var_alias )
-                                        {
-                                            angle = entry.matrix_stack_descr[i].arg.angle_val_link.value;
-                                        }
-                                        else
-                                        {
-                                            dsstring var_alias = entry.matrix_stack_descr[i].arg.angle_val_link.var_alias;
-                                            // aller chercher curren_value de la variable referencee
-
-                                            RegisterEntry reg_entry = m_registers[var_alias];
-                                            angle = reg_entry.current_value;
-                                        }
-
-                                        mat.Rotation( Vector( axis[0], axis[1], axis[2], 1.0 ), Maths::DegToRad( angle ) );
-                                        matrix_stack.PushMatrix( mat );
-                                    }
-                                    break;
-                            }
-                        }
-
-
-                        matrix_stack.BuildResult();
-                        Matrix mat_res;
-                        matrix_stack.GetResult( &mat_res );
-                        entry.node->SetLocalTransform( mat_res );
-                    }
-                    break;
-
-                case TRANSFORMATIONSOURCE_MOVEMENT:
-
-                    break;
-
-                case TRANSFORMATIONSOURCE_BODY:
-
-                    break;
-            }
-        }
+        compute_movements();
+        compute_scenegraph_transforms();
                 
         m_scenegraph.ComputeTransformations( m_timer );
 
@@ -355,6 +413,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
         }
 
         renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
+        renderer->DrawText( 255, 0, 0, 10, 40, "%d %d", m_last_xmouse, m_last_ymouse );
 
         renderer->FlipScreen();
 
@@ -365,7 +424,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& event )
         }
 
         // wxWidget framework specific !
-        event.RequestMore( true );
+        p_event.RequestMore( true );
     }
 }
 
@@ -383,8 +442,8 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_scenegraph, m_cameras_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
-    wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );
-
+    wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );    
+    wxWidgetAdapter::GetInstance()->AdaptKeyboardOutputComboBox( &m_movements, m_mousekeyboardoutput_comboBox );
 
     ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
     for( size_t i = 0; i < m_ordered_configs.size(); i++ )
@@ -530,6 +589,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
 
                 dialog->SetData( "mvts_map", &m_movements );
                 dialog->SetData( "ctrl", m_mvts_listCtrl );
+                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
 
                 wxWidgetAdapter::GetInstance()->AdaptLinearMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
@@ -544,6 +604,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
 
                 dialog->SetData( "mvts_map", &m_movements );
                 dialog->SetData( "ctrl", m_mvts_listCtrl );
+                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
 
                 wxWidgetAdapter::GetInstance()->AdaptCircularMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
@@ -559,6 +620,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
 
                 dialog->SetData( "mvts_map", &m_movements );
                 dialog->SetData( "ctrl", m_mvts_listCtrl );
+                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
 
                 wxWidgetAdapter::GetInstance()->AdaptFPSMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
@@ -573,6 +635,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
 
                 dialog->SetData( "mvts_map", &m_movements );
                 dialog->SetData( "ctrl", m_mvts_listCtrl );
+                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
 
                 wxWidgetAdapter::GetInstance()->AdaptFreeMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
@@ -587,6 +650,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
 
                 dialog->SetData( "mvts_map", &m_movements );
                 dialog->SetData( "ctrl", m_mvts_listCtrl );
+                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
 
                 wxWidgetAdapter::GetInstance()->AdaptHeadMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
@@ -601,6 +665,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
 
                 dialog->SetData( "mvts_map", &m_movements );
                 dialog->SetData( "ctrl", m_mvts_listCtrl );
+                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
 
                 wxWidgetAdapter::GetInstance()->AdaptSpectatorMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
@@ -615,6 +680,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
 
                 dialog->SetData( "mvts_map", &m_movements );
                 dialog->SetData( "ctrl", m_mvts_listCtrl );
+                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
 
                 wxWidgetAdapter::GetInstance()->AdaptLongLatMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
@@ -899,9 +965,8 @@ void BasicSceneMainFrame::OnControlButtonClicked( wxCommandEvent& p_event )
     dialog->Show();
 }
 
-void BasicSceneMainFrame::OnMouseKeyboardOutputButtonClicked( wxCommandEvent& p_event )
+void BasicSceneMainFrame::OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event )
 {
-
 }
 
 void BasicSceneMainFrame::OnMvtsListDeleteAllItems( wxListEvent& p_event )

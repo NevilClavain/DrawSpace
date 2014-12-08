@@ -122,6 +122,13 @@ public:
         MovementControlSource       roll_control_source;
         dsstring                    roll_control_register;
 
+        dsreal                      theta_pos;
+        dsreal                      phi_pos;
+
+        dsreal                      yaw_speed;
+        dsreal                      pitch_speed;
+        dsreal                      roll_speed;
+
 
     } MovementEntry;
 
@@ -172,6 +179,12 @@ protected:
 
     void on_timer( const dsstring& p_timername );
 
+    void compute_scenegraph_transforms( void );
+    void compute_regs( void );
+
+    void compute_movements( void );
+
+
     bool                                                    m_glready;
     DrawSpace::Utils::TimeManager                           m_timer;
     std::map<dsstring, MovementEntry>                       m_movements;
@@ -185,16 +198,20 @@ protected:
     long                                                    m_cameraslistctrl_currentindex;
     long                                                    m_regslistctrl_currentindex;
 
-    MovementEntry*                                          m_mousekeyb_output;
-
     std::map<dsstring, RegisterEntry>                       m_registers;
 
     TimerCallback*                                          m_timercb;
 
+    wxCoord                                                 m_last_xmouse;
+    wxCoord                                                 m_last_ymouse;
+
     
 
-    virtual void OnClose( wxCloseEvent& event );
-    virtual void OnIdle( wxIdleEvent& event );
+    virtual void OnClose( wxCloseEvent& p_event );
+    virtual void OnIdle( wxIdleEvent& p_event );
+	virtual void OnKeyDown( wxKeyEvent& p_event );
+	virtual void OnKeyUp( wxKeyEvent& p_event );
+	virtual void OnMouseMotion( wxMouseEvent& p_event );
     virtual void OnAssetsListItemActivated( wxListEvent& p_event );
     virtual void OnConfigsListItemActivated( wxListEvent& p_event );
     virtual void OnPassesListItemActivated( wxListEvent& p_event );
@@ -218,7 +235,7 @@ protected:
     virtual void OnScenegraphListDeleteItem( wxListEvent& p_event );
     virtual void OnScenegraphListDeleteAllItems( wxListEvent& p_event );
 	virtual void OnControlButtonClicked( wxCommandEvent& p_event );
-	virtual void OnMouseKeyboardOutputButtonClicked( wxCommandEvent& p_event );
+    virtual void OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event );
     virtual void OnCreateRegButtonClicked( wxCommandEvent& p_event );
     virtual void OnCameraEditButtonClicked( wxCommandEvent& p_event );
     virtual void OnRegistersListItemActivated( wxListEvent& p_event );
@@ -238,10 +255,7 @@ public:
 
     void SetGLReady( void );
     void Update( void );
-    wxNotebook* GetNoteBook( void );
-
-    void compute_regs( void );
-	
+    wxNotebook* GetNoteBook( void );  	
 };
 
 #endif // __BasicSceneMainFrame__
