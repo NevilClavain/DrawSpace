@@ -1292,11 +1292,11 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos = 0.0;
-    movement_entry.phi_pos = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
+    movement_entry.theta_pos_mouse = 0.0;
+    movement_entry.phi_pos_mouse = 0.0;
+    movement_entry.yaw_speed_mouse = 0.0;
+    movement_entry.pitch_speed_mouse = 0.0;
+    movement_entry.roll_speed_mouse = 0.0;
 
     (*mvts_map)[alias] = movement_entry;
 
@@ -1454,11 +1454,11 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos = 0.0;
-    movement_entry.phi_pos = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
+    movement_entry.theta_pos_mouse = 0.0;
+    movement_entry.phi_pos_mouse = 0.0;
+    movement_entry.yaw_speed_mouse = 0.0;
+    movement_entry.pitch_speed_mouse = 0.0;
+    movement_entry.roll_speed_mouse = 0.0;
 
     (*mvts_map)[alias] = movement_entry;
 
@@ -1563,11 +1563,11 @@ void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos = 0.0;
-    movement_entry.phi_pos = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
+    movement_entry.theta_pos_mouse = 0.0;
+    movement_entry.phi_pos_mouse = 0.0;
+    movement_entry.yaw_speed_mouse = 0.0;
+    movement_entry.pitch_speed_mouse = 0.0;
+    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -1660,11 +1660,11 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos = 0.0;
-    movement_entry.phi_pos = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
+    movement_entry.theta_pos_mouse = 0.0;
+    movement_entry.phi_pos_mouse = 0.0;
+    movement_entry.yaw_speed_mouse = 0.0;
+    movement_entry.pitch_speed_mouse = 0.0;
+    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -1772,11 +1772,11 @@ void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos = 0.0;
-    movement_entry.phi_pos = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
+    movement_entry.theta_pos_mouse = 0.0;
+    movement_entry.phi_pos_mouse = 0.0;
+    movement_entry.yaw_speed_mouse = 0.0;
+    movement_entry.pitch_speed_mouse = 0.0;
+    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -1863,11 +1863,11 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos = 0.0;
-    movement_entry.phi_pos = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
+    movement_entry.theta_pos_mouse = 0.0;
+    movement_entry.phi_pos_mouse = 0.0;
+    movement_entry.yaw_speed_mouse = 0.0;
+    movement_entry.pitch_speed_mouse = 0.0;
+    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -1963,11 +1963,11 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos = 0.0;
-    movement_entry.phi_pos = 0.0;
-    movement_entry.yaw_speed = 0.0;
-    movement_entry.pitch_speed = 0.0;
-    movement_entry.roll_speed = 0.0;
+    movement_entry.theta_pos_mouse = 0.0;
+    movement_entry.phi_pos_mouse = 0.0;
+    movement_entry.yaw_speed_mouse = 0.0;
+    movement_entry.pitch_speed_mouse = 0.0;
+    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -3640,23 +3640,23 @@ void wxWidgetAdapter::on_applymovementcontrolprops( BasicSceneObjectPropertiesDi
 
     if( "keyboard and mouse" == yaw_control )
     {
-        movement_entry->yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-        movement_entry->yaw_control_register = yaw_control;
+        movement_entry->yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;        
     }
     else
     {
         movement_entry->yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
+        movement_entry->yaw_control_register = yaw_control;
     }
 
     if( "keyboard and mouse" == pitch_control )
     {
-        movement_entry->pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-        movement_entry->pitch_control_register = pitch_control;
+        movement_entry->pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;        
         
     }
     else
     {
         movement_entry->pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
+        movement_entry->pitch_control_register = pitch_control;
     }
 
     if( "keyboard and mouse" == roll_control )
@@ -3667,6 +3667,7 @@ void wxWidgetAdapter::on_applymovementcontrolprops( BasicSceneObjectPropertiesDi
     else
     {
         movement_entry->roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
+        movement_entry->pitch_control_register = roll_control;
     }
 
 }

@@ -122,12 +122,12 @@ public:
         MovementControlSource       roll_control_source;
         dsstring                    roll_control_register;
 
-        dsreal                      theta_pos;
-        dsreal                      phi_pos;
+        dsreal                      theta_pos_mouse;
+        dsreal                      phi_pos_mouse;
 
-        dsreal                      yaw_speed;
-        dsreal                      pitch_speed;
-        dsreal                      roll_speed;
+        dsreal                      yaw_speed_mouse;
+        dsreal                      pitch_speed_mouse;
+        dsreal                      roll_speed_mouse;
 
 
     } MovementEntry;
