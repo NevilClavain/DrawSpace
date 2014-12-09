@@ -178,12 +178,12 @@ protected:
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&> TimerCallback;
 
     void on_timer( const dsstring& p_timername );
-
     void compute_scenegraph_transforms( void );
     void compute_regs( void );
-
     void compute_movements( void );
 
+    long                                                    m_w_width;
+    long                                                    m_w_height;
 
     bool                                                    m_glready;
     DrawSpace::Utils::TimeManager                           m_timer;
@@ -255,7 +255,9 @@ public:
 
     void SetGLReady( void );
     void Update( void );
-    wxNotebook* GetNoteBook( void );  	
+    wxNotebook* GetNoteBook( void );
+
+    void SetWindowDims( long p_w_width, long p_w_height );
 };
 
 #endif // __BasicSceneMainFrame__

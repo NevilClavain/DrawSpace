@@ -60,6 +60,12 @@ wxNotebook* BasicSceneMainFrame::GetNoteBook( void )
     return m_notebook2;
 }
 
+void BasicSceneMainFrame::SetWindowDims( long p_w_width, long p_w_height )
+{
+    m_w_width = p_w_width;
+    m_w_height = p_w_height;
+}
+
 void BasicSceneMainFrame::compute_regs( void )
 {
     for( std::map<dsstring, RegisterEntry>::iterator it = m_registers.begin(); it != m_registers.end(); ++it )
@@ -351,8 +357,54 @@ void BasicSceneMainFrame::OnKeyUp( wxKeyEvent& p_event )
 
 void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
 {
+    if( !p_event.Dragging() )
+    {
+        return;
+    }
+
     wxCoord curr_xmouse = p_event.GetX();
     wxCoord curr_ymouse = p_event.GetY();
+
+    if( curr_xmouse < m_w_width / 4 )
+    {
+        curr_xmouse = 3 * m_w_width / 4;
+        WarpPointer( curr_xmouse, curr_ymouse );
+    m_last_xmouse = curr_xmouse;
+    m_last_ymouse = curr_ymouse;
+
+        return;
+    }
+    else if( curr_xmouse > 3 * m_w_width / 4 )
+    {
+        curr_xmouse = m_w_width / 4;
+        WarpPointer( curr_xmouse, curr_ymouse );
+    m_last_xmouse = curr_xmouse;
+    m_last_ymouse = curr_ymouse;
+
+        return;
+    }
+
+    if( curr_ymouse < m_w_height / 4 )
+    {
+        curr_ymouse = 3 * m_w_height / 4;
+        WarpPointer( curr_xmouse, curr_ymouse );
+    m_last_xmouse = curr_xmouse;
+    m_last_ymouse = curr_ymouse;
+
+        return;
+    }
+    else if( curr_ymouse > 3 * m_w_height / 4 )
+    {
+        curr_ymouse = m_w_height / 4;
+        WarpPointer( curr_xmouse, curr_ymouse );
+    m_last_xmouse = curr_xmouse;
+    m_last_ymouse = curr_ymouse;
+
+        return;
+    }
+
+    //WarpPointer( curr_xmouse, curr_ymouse );
+
     int delta_x = curr_xmouse - m_last_xmouse;
     int delta_y = curr_ymouse - m_last_ymouse;
     
@@ -361,15 +413,15 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
     MovementEntry* movement_entry = (MovementEntry*)m_mousekeyboardoutput_comboBox->GetClientData( index );
     if( movement_entry )
     {
-        m_timer.AngleSpeedInc( &movement_entry->theta_pos, -delta_x / 4.0 );
-        m_timer.AngleSpeedInc( &movement_entry->phi_pos, -delta_y / 4.0 );
+        m_timer.AngleSpeedInc( &movement_entry->theta_pos, -20.0 * delta_x );
+        m_timer.AngleSpeedInc( &movement_entry->phi_pos, -20.0 * delta_y );
 
-        movement_entry->yaw_speed = -delta_x / 4.0;
-        movement_entry->pitch_speed = -delta_y / 4.0;
+        movement_entry->yaw_speed = -20.0 * delta_x;
+        movement_entry->pitch_speed = -20.0 * delta_y;
     }
 
-    m_last_xmouse = p_event.GetX();
-    m_last_ymouse = p_event.GetY();
+    m_last_xmouse = curr_xmouse;
+    m_last_ymouse = curr_ymouse;
 }
 
 void BasicSceneMainFrame::compute_movements( void )

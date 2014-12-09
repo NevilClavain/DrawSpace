@@ -56,10 +56,7 @@ bool DFrontApp::OnInit( void )
 
     m_mainframe = new BasicSceneMainFrame( NULL );
     m_mainframe->Show();
-
-    
-
-    //m_hwnd = (HWND)m_frame->GetHWND();
+   
     m_hwnd = (HWND)m_mainframe->GetHWND();
 
     HWND hwndpanel = m_mainframe->GetNoteBook()->GetHWND();
@@ -70,6 +67,8 @@ bool DFrontApp::OnInit( void )
 
     m_w_width = rect.right - rectpanel.right;
     m_w_height = rect.bottom;
+    m_mainframe->SetWindowDims( m_w_width, m_w_height );
+
     m_w_fullscreen = false;
     m_renderplugin = "drawspaced3d9.dll";
 
