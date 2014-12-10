@@ -125,11 +125,6 @@ public:
         dsreal                      theta_pos_mouse;
         dsreal                      phi_pos_mouse;
 
-        dsreal                      yaw_speed_mouse;
-        dsreal                      pitch_speed_mouse;
-        dsreal                      roll_speed_mouse;
-
-
     } MovementEntry;
 
 

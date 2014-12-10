@@ -1294,9 +1294,6 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
-    movement_entry.yaw_speed_mouse = 0.0;
-    movement_entry.pitch_speed_mouse = 0.0;
-    movement_entry.roll_speed_mouse = 0.0;
 
     (*mvts_map)[alias] = movement_entry;
 
@@ -1456,9 +1453,6 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
-    movement_entry.yaw_speed_mouse = 0.0;
-    movement_entry.pitch_speed_mouse = 0.0;
-    movement_entry.roll_speed_mouse = 0.0;
 
     (*mvts_map)[alias] = movement_entry;
 
@@ -1565,9 +1559,6 @@ void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
-    movement_entry.yaw_speed_mouse = 0.0;
-    movement_entry.pitch_speed_mouse = 0.0;
-    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -1662,9 +1653,6 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
-    movement_entry.yaw_speed_mouse = 0.0;
-    movement_entry.pitch_speed_mouse = 0.0;
-    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -1774,9 +1762,6 @@ void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
-    movement_entry.yaw_speed_mouse = 0.0;
-    movement_entry.pitch_speed_mouse = 0.0;
-    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -1865,9 +1850,6 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
-    movement_entry.yaw_speed_mouse = 0.0;
-    movement_entry.pitch_speed_mouse = 0.0;
-    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;
@@ -1965,9 +1947,6 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
-    movement_entry.yaw_speed_mouse = 0.0;
-    movement_entry.pitch_speed_mouse = 0.0;
-    movement_entry.roll_speed_mouse = 0.0;
 
 
     (*mvts_map)[alias] = movement_entry;

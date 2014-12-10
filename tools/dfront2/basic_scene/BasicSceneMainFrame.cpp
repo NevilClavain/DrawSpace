@@ -408,11 +408,53 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
     MovementEntry* movement_entry = (MovementEntry*)m_mousekeyboardoutput_comboBox->GetClientData( index );
     if( movement_entry )
     {
-        m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
-        m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
 
-        movement_entry->yaw_speed_mouse = -20.0 * delta_x;
-        movement_entry->pitch_speed_mouse = -20.0 * delta_y;
+        LinearMovement* linear_movement = dynamic_cast<LinearMovement*>( movement_entry->movement );
+        if( linear_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+            {
+                m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
+                linear_movement->SetTheta( movement_entry->theta_pos_mouse );
+            }
+
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
+            {
+                m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
+                linear_movement->SetPhi( movement_entry->phi_pos_mouse );
+            }
+        }
+
+        CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement_entry->movement );
+        if( circular_movement )
+        {            
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+            {
+                m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
+                circular_movement->SetTheta( movement_entry->theta_pos_mouse );
+            }
+             
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->pitch_control_source )
+            {
+                m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
+                circular_movement->SetPhi( m_registers[movement_entry->pitch_control_register].current_value );
+            }                        
+        }
+
+        FPSMovement* fps_movement = dynamic_cast<FPSMovement*>( movement_entry->movement );
+        if( fps_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+            {
+                fps_movement->RotateYaw( -delta_x / 4.0, m_timer );
+
+            }
+
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
+            {
+                fps_movement->RotatePitch( -delta_y / 4.0, m_timer );
+            }
+        }
     }
 
     m_last_xmouse = curr_xmouse;
@@ -430,24 +472,44 @@ void BasicSceneMainFrame::compute_movements( void )
         LinearMovement* linear_movement = dynamic_cast<LinearMovement*>( movement );
         if( linear_movement )
         {
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry.yaw_control_source )
-            {
-                linear_movement->SetTheta( movement_entry.theta_pos_mouse );
-            }
-            else if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
             {
                 linear_movement->SetTheta( m_registers[movement_entry.yaw_control_register].current_value );
             }
-
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry.pitch_control_source )
-            {
-                linear_movement->SetPhi( movement_entry.phi_pos_mouse );
-            }
-            else if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
             {
                 linear_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
             }            
         }
+
+        CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement );
+        if( circular_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
+            {
+                circular_movement->SetTheta( m_registers[movement_entry.yaw_control_register].current_value );
+            }
+
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
+            {
+                circular_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
+            }                        
+        }
+
+        
+        FPSMovement* fps_movement = dynamic_cast<FPSMovement*>( movement );
+        if( fps_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
+            {
+                
+            }
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
+            {
+
+            }                        
+
+        }      
     }
 }
 
