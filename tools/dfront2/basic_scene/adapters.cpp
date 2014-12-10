@@ -2592,7 +2592,7 @@ void wxWidgetAdapter::on_applyregistervalues( BasicSceneObjectPropertiesDialog* 
 
 void wxWidgetAdapter::InitializeRegister( BasicSceneMainFrame::RegisterEntry* p_reg_entry )
 {
-    p_reg_entry->state = true;
+    p_reg_entry->state = false;
 
     if( BasicSceneMainFrame::REGISTER_CONSTANT == p_reg_entry->mode )
     {
