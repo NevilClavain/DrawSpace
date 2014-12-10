@@ -496,20 +496,6 @@ void BasicSceneMainFrame::compute_movements( void )
             }                        
         }
 
-        
-        FPSMovement* fps_movement = dynamic_cast<FPSMovement*>( movement );
-        if( fps_movement )
-        {
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
-            {
-                
-            }
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
-            {
-
-            }                        
-
-        }      
     }
 }
 

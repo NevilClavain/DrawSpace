@@ -3505,8 +3505,14 @@ void wxWidgetAdapter::AdaptMovementControlProps( const dsstring& p_mvtalias, std
     propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtalias.c_str() ) );
 
     BasicSceneMainFrame::MovementEntry* movement_entry = (BasicSceneMainFrame::MovementEntry*)p_dialog->GetData( "movement_entry" );
-    
 
+    bool enable_registers = true;
+
+    if( dynamic_cast<FPSMovement*>( movement_entry->movement ) || dynamic_cast<FreeMovement*>( movement_entry->movement ) )
+    {
+        enable_registers = false;
+    }
+    
     /////////////////// recup tout les alias de variables
 
     wxArrayString ctrlsource_labels;
@@ -3516,10 +3522,13 @@ void wxWidgetAdapter::AdaptMovementControlProps( const dsstring& p_mvtalias, std
     ctrlsource_labels.Add( "keyboard and mouse" );
     ctrlsource_arrIds.Add( -1 );
 
-    for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = p_registers->begin(); it != p_registers->end(); ++it )
+    if( enable_registers )
     {
-        ctrlsource_labels.Add( it->first );
-        ctrlsource_arrIds.Add( it->second.id );
+        for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = p_registers->begin(); it != p_registers->end(); ++it )
+        {
+            ctrlsource_labels.Add( it->first );
+            ctrlsource_arrIds.Add( it->second.id );
+        }
     }
 
     ///////////////////////////////////////////////////////////
@@ -3649,6 +3658,7 @@ void wxWidgetAdapter::on_applymovementcontrolprops( BasicSceneObjectPropertiesDi
         movement_entry->pitch_control_register = roll_control;
     }
 
+    p_dialog->Close();
 }
 
 void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox )
