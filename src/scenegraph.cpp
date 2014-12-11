@@ -179,3 +179,8 @@ void Scenegraph::PointProjection( const DrawSpace::Utils::Vector& p_point, dsrea
     GetCurrentCameraProj( proj );
     renderer->PointProjection( m_view, proj, point, p_outx, p_outy, p_outz );       
 }
+
+void Scenegraph::GetCurrentCameraName( dsstring& p_outname )
+{
+    p_outname = m_current_camera;
+}
