@@ -38,7 +38,8 @@ m_mvtslistctrl_currentindex( -1 ),
 m_cameraslistctrl_currentindex( -1 ),
 m_regslistctrl_currentindex( -1 ),
 m_last_xmouse( 0 ),
-m_last_ymouse( 0 )
+m_last_ymouse( 0 ),
+m_current_camera( NULL )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
@@ -539,6 +540,25 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
 {
     if( m_glready )
     {
+        int index = m_cameraslist_comboBox->GetSelection();
+        CameraPoint* camera = (CameraPoint*)m_cameraslist_comboBox->GetClientData( index );
+
+        if( camera != m_current_camera )
+        {
+            if( NULL == camera )
+            {
+                m_scenegraph.SetCurrentCamera( "" );
+            }
+            else
+            {
+                dsstring camera_name;
+                camera->GetSceneName( camera_name );
+                m_scenegraph.SetCurrentCamera( camera_name );
+            }
+            m_current_camera = camera;
+        }
+
+
         compute_regs();
         
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -997,24 +1017,6 @@ void BasicSceneMainFrame::OnScenegraphListItemSelected( wxListEvent& p_event )
     {
         m_transftype_button->Enable( true );
         m_transfoedit_button->Enable( true );
-    }
-}
-
-void BasicSceneMainFrame::OnSetCameraButtonClicked( wxCommandEvent& p_event )
-{
-    int index = m_cameraslist_comboBox->GetSelection();
-
-    CameraPoint* camera = (CameraPoint*)m_cameraslist_comboBox->GetClientData( index );
-
-    if( NULL == camera )
-    {
-        m_scenegraph.SetCurrentCamera( "" );
-    }
-    else
-    {
-        dsstring camera_name;
-        camera->GetSceneName( camera_name );
-        m_scenegraph.SetCurrentCamera( camera_name );
     }
 }
 

@@ -109,7 +109,7 @@ class MainFrame : public wxFrame
 		wxListCtrl* m_scenegraph_listCtrl;
 		wxButton* m_transftype_button;
 		wxButton* m_transfoedit_button;
-		wxButton* m_setcamera_button;
+		wxStaticText* m_staticText2;
 		wxComboBox* m_cameraslist_comboBox;
 		wxButton* m_create_drawable_button;
 		wxComboBox* m_drawabletypes_comboBox;
@@ -150,7 +150,6 @@ class MainFrame : public wxFrame
 		virtual void OnScenegraphListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnTransfTypeButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTransfoEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnSetCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreateDrawableButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnRegsListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
 		virtual void OnRegistersListItemActivated( wxListEvent& event ) { event.Skip(); }

@@ -200,6 +200,8 @@ protected:
     wxCoord                                                 m_last_xmouse;
     wxCoord                                                 m_last_ymouse;
 
+    DrawSpace::Dynamics::CameraPoint*                       m_current_camera;
+
     
 
     virtual void OnClose( wxCloseEvent& p_event );
@@ -222,7 +224,6 @@ protected:
     virtual void OnCamerasListItemSelected( wxListEvent& p_event );
     virtual void OnScenegraphItemActivated( wxListEvent& p_event );
     virtual void OnScenegraphListItemSelected( wxListEvent& p_event );
-    virtual void OnSetCameraButtonClicked( wxCommandEvent& p_event );
     virtual void OnCreateDrawableButtonClicked( wxCommandEvent& p_event );
     virtual void OnTransfTypeButtonClicked( wxCommandEvent& p_event );
 	virtual void OnTransfoEditButtonClicked( wxCommandEvent& p_event );
