@@ -415,7 +415,6 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
         {
             if( p_event.LeftIsDown() )
             {
-
                 if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
                 {
                     m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
@@ -491,6 +490,25 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
             }
         }
 
+        LongLatMovement* longlat_movement = dynamic_cast<LongLatMovement*>( movement_entry->movement );
+        if( longlat_movement )
+        {
+            if( p_event.LeftIsDown() )
+            {
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+                {
+                    m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
+                    longlat_movement->SetTheta( movement_entry->theta_pos_mouse );
+                }
+
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
+                {
+                    m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
+                    longlat_movement->SetPhi( movement_entry->phi_pos_mouse );
+                }
+            }
+        }
+
     }
 
     m_last_xmouse = curr_xmouse;
@@ -515,7 +533,7 @@ void BasicSceneMainFrame::compute_movements( void )
             if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
             {
                 linear_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
-            }            
+            }
         }
 
         CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement );
@@ -529,9 +547,23 @@ void BasicSceneMainFrame::compute_movements( void )
             if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
             {
                 circular_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
-            }                        
+            }
         }
 
+        LongLatMovement* longlat_movement = dynamic_cast<LongLatMovement*>( movement );
+        if( longlat_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
+            {
+                longlat_movement->SetTheta( m_registers[movement_entry.yaw_control_register].current_value );
+            }
+
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
+            {
+                longlat_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
+            }
+
+        }
     }
 }
 
