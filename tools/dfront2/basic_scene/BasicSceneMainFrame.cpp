@@ -412,49 +412,84 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
         LinearMovement* linear_movement = dynamic_cast<LinearMovement*>( movement_entry->movement );
         if( linear_movement )
         {
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+            if( p_event.LeftIsDown() )
             {
-                m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
-                linear_movement->SetTheta( movement_entry->theta_pos_mouse );
-            }
 
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
-            {
-                m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
-                linear_movement->SetPhi( movement_entry->phi_pos_mouse );
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+                {
+                    m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
+                    linear_movement->SetTheta( movement_entry->theta_pos_mouse );
+                }
+
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
+                {
+                    m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
+                    linear_movement->SetPhi( movement_entry->phi_pos_mouse );
+                }
             }
         }
 
         CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement_entry->movement );
         if( circular_movement )
-        {            
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+        {
+            if( p_event.LeftIsDown() )
             {
-                m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
-                circular_movement->SetTheta( movement_entry->theta_pos_mouse );
+
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+                {
+                    m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
+                    circular_movement->SetTheta( movement_entry->theta_pos_mouse );
+                }
+                 
+                if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->pitch_control_source )
+                {
+                    m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
+                    circular_movement->SetPhi( m_registers[movement_entry->pitch_control_register].current_value );
+                }
             }
-             
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->pitch_control_source )
-            {
-                m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
-                circular_movement->SetPhi( m_registers[movement_entry->pitch_control_register].current_value );
-            }                        
         }
 
         FPSMovement* fps_movement = dynamic_cast<FPSMovement*>( movement_entry->movement );
         if( fps_movement )
         {
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+            if( p_event.LeftIsDown() )
             {
-                fps_movement->RotateYaw( -delta_x / 4.0, m_timer );
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+                {
+                    fps_movement->RotateYaw( -delta_x / 4.0, m_timer );
+                }
 
-            }
-
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
-            {
-                fps_movement->RotatePitch( -delta_y / 4.0, m_timer );
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
+                {
+                    fps_movement->RotatePitch( -delta_y / 4.0, m_timer );
+                }
             }
         }
+
+        FreeMovement* free_movement = dynamic_cast<FreeMovement*>( movement_entry->movement );
+        if( free_movement )
+        {
+            if( p_event.LeftIsDown() )
+            {
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
+                {
+                    free_movement->RotateYaw( -delta_x / 4.0, m_timer );
+                }
+
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
+                {
+                    free_movement->RotatePitch( -delta_y / 4.0, m_timer );
+                }
+            }
+            else if( p_event.RightIsDown() )
+            {
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->roll_control_source )
+                {
+                    free_movement->RotateRoll( -delta_x / 4.0, m_timer );
+                }
+            }
+        }
+
     }
 
     m_last_xmouse = curr_xmouse;
@@ -523,7 +558,17 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
         }
 
         renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
-        renderer->DrawText( 255, 0, 0, 10, 40, "%d %d", m_last_xmouse, m_last_ymouse );
+        
+        dsstring camera_name;
+        m_scenegraph.GetCurrentCameraName( camera_name );
+        if( "" == camera_name )
+        {
+            camera_name = "...";
+        }
+
+        renderer->DrawText( 255, 0, 0, 10, 40, "current camera : %s", camera_name.c_str() );
+        
+
 
         renderer->FlipScreen();
 
