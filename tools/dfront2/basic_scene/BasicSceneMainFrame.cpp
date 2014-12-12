@@ -349,7 +349,74 @@ void BasicSceneMainFrame::compute_scenegraph_transforms( void )
 
 void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
 {
+    int index = m_mousekeyboardoutput_comboBox->GetSelection();
+    MovementEntry* movement_entry = (MovementEntry*)m_mousekeyboardoutput_comboBox->GetClientData( index );
+    if( movement_entry )
+    {
+        LinearMovement* linear_movement = dynamic_cast<LinearMovement*>( movement_entry->movement );
+        if( linear_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
+            {
+                if( 'Q' == p_event.GetKeyCode() )
+                {
+                    linear_movement->SetSpeed( 3.0 );
+                }
+                else if( 'A' == p_event.GetKeyCode() )
+                {
+                    linear_movement->SetSpeed( -3.0 );
+                }
+            }
+        }
 
+        CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement_entry->movement );
+        if( circular_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
+            {                
+                if( 'Q' == p_event.GetKeyCode() )
+                {
+                    circular_movement->SetAngularSpeed( 10.0 );
+                }
+                else if( 'A' == p_event.GetKeyCode() )
+                {
+                    circular_movement->SetAngularSpeed( -10.0 );
+                }
+            }
+        }
+
+        FPSMovement* fps_movement = dynamic_cast<FPSMovement*>( movement_entry->movement );
+        if( fps_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
+            {
+                if( 'Q' == p_event.GetKeyCode() )
+                {
+                    fps_movement->SetSpeed( 3.0 );
+                }
+                else if( 'A' == p_event.GetKeyCode() )
+                {
+                    fps_movement->SetSpeed( -3.0 );
+                }
+            }
+        }
+
+        FreeMovement* free_movement = dynamic_cast<FreeMovement*>( movement_entry->movement );
+        if( free_movement )
+        {
+            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
+            {
+                if( 'Q' == p_event.GetKeyCode() )
+                {
+                    fps_movement->SetSpeed( 3.0 );
+                }
+                else if( 'A' == p_event.GetKeyCode() )
+                {
+                    fps_movement->SetSpeed( -3.0 );
+                }
+            }
+        }
+    }
 }
 void BasicSceneMainFrame::OnKeyUp( wxKeyEvent& p_event )
 {
@@ -507,7 +574,6 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
                 }
             }
         }
-
     }
 
     m_last_xmouse = curr_xmouse;
