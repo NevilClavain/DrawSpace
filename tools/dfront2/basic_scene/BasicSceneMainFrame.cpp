@@ -434,17 +434,16 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
         {
             if( p_event.LeftIsDown() )
             {
-
                 if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
                 {
                     m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
                     circular_movement->SetTheta( movement_entry->theta_pos_mouse );
                 }
                  
-                if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->pitch_control_source )
+                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
                 {
                     m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
-                    circular_movement->SetPhi( m_registers[movement_entry->pitch_control_register].current_value );
+                    circular_movement->SetPhi( movement_entry->phi_pos_mouse );
                 }
             }
         }
@@ -534,6 +533,10 @@ void BasicSceneMainFrame::compute_movements( void )
             {
                 linear_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
             }
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.speed_control_source )
+            {
+                linear_movement->SetSpeed( m_registers[movement_entry.speed_control_register].current_value );
+            }
         }
 
         CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement );
@@ -547,6 +550,10 @@ void BasicSceneMainFrame::compute_movements( void )
             if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
             {
                 circular_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
+            }
+            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.speed_control_source )
+            {
+                circular_movement->SetAngularSpeed( m_registers[movement_entry.speed_control_register].current_value );
             }
         }
 
@@ -562,7 +569,6 @@ void BasicSceneMainFrame::compute_movements( void )
             {
                 longlat_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
             }
-
         }
     }
 }
@@ -589,7 +595,6 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
             }
             m_current_camera = camera;
         }
-
 
         compute_regs();
         
