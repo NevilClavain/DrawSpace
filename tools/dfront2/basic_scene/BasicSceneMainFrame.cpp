@@ -54,6 +54,19 @@ m_current_camera( NULL )
 
     m_timer.AddTimer( "timer", 100, m_timercb );
     m_timer.SetTimerState( "timer", true );
+
+
+    m_scripting_cb = new ScriptingCallback( this, &BasicSceneMainFrame::on_scripting );
+
+    DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->Initialize();
+
+    DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->RegisterCB( m_scripting_cb );
+}
+
+
+void BasicSceneMainFrame::on_scripting( int p_value )
+{
+    _asm nop
 }
 
 wxNotebook* BasicSceneMainFrame::GetNoteBook( void )
@@ -203,6 +216,7 @@ void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
 
 void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 {
+    DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->Shutdown();
     Destroy();
 }
 
@@ -1290,6 +1304,8 @@ void BasicSceneMainFrame::OnMvtsListItemSelected( wxListEvent& p_event )
 
 void BasicSceneMainFrame::OnCreateRegButtonClicked( wxCommandEvent& p_event )
 {
+    DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->TestCBCall();
+
     BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register creation" );
 
     dialog->SetData( "registers_map", &m_registers );
@@ -1298,8 +1314,7 @@ void BasicSceneMainFrame::OnCreateRegButtonClicked( wxCommandEvent& p_event )
     dialog->EnableApplyButton();
 
     wxWidgetAdapter::GetInstance()->AdaptRegisterCreationProps( dialog );
-    dialog->Show();
-    
+    dialog->Show();    
 }
 
 void BasicSceneMainFrame::OnCameraEditButtonClicked( wxCommandEvent& p_event )

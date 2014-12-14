@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="basic_scene"
-	ProjectGUID="{32565971-E3D1-4321-9674-D4E5D1FCB999}"
-	RootNamespace="basic_scene"
+	Name="luascripting"
+	ProjectGUID="{5F66027B-1281-4FAC-8ED1-C3FE66BE1025}"
+	RootNamespace="luascripting"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -19,7 +19,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -39,10 +39,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/include&quot;;&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/include/msvc&quot;;./../../../src;./../../../../DrawSpace_thirdparts/log4cxx/include;&quot;./../../../../DrawSpace_thirdparts/bullet-2.82/src&quot;;&quot;./../../../.../DrawSpace_thirdparts/lua-1.5/include&quot;;./../../../scripting"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;__WXMSW__;__WXDEBUG__;NOPCH;"
+				AdditionalIncludeDirectories=".\..;.\..\..\src;&quot;./../../../DrawSpace_thirdparts/lua-1.5/include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LUASCRIPTING_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,10 +61,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw30ud_core.lib wxbase30ud.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib wsock32.lib wxpngd.lib wxzlibd.lib wxjpegd.lib wxtiffd.lib drawspace.lib log4cxx.lib BulletDynamics_vs2005_debug.lib BulletCollision_vs2005_debug.lib LinearMath_vs2005_debug.lib lua.lib"
-				OutputFile="./../../../../DrawSpace_Samples/bin/basic_scene.exe"
+				AdditionalDependencies="drawspace.lib lua.lib"
+				OutputFile="$(OutDir)\..\..\..\libs\$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/lib/vc_lib&quot;;./../../../libs;./../../../../DrawSpace_thirdparts/log4cxx/lib/msvc/release;&quot;./../../../../DrawSpace_thirdparts/bullet-2.82/lib&quot;;&quot;./../../../../DrawSpace_thirdparts/lua-1.5/lib/Debug&quot;"
+				AdditionalLibraryDirectories="./../../libs;&quot;./../../../DrawSpace_thirdparts/lua-1.5/lib/debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -99,7 +98,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -120,7 +119,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LUASCRIPTING_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -175,64 +174,34 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Fichiers sources"
+			Name="Source Files"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\adapters.cpp"
+				RelativePath=".\luacontext.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\adapters.h"
+				RelativePath=".\luacontext.h"
 				>
 			</File>
 			<File
-				RelativePath=".\app.cpp"
+				RelativePath=".\luascripting.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\app.h"
+				RelativePath=".\luascripting.h"
 				>
 			</File>
 			<File
-				RelativePath=".\BasicSceneMainFrame.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\BasicSceneMainFrame.h"
+				RelativePath="..\scripting.h"
 				>
 			</File>
-			<File
-				RelativePath=".\BasicSceneObjectPropertiesDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BasicSceneObjectPropertiesDialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BasicSceneObjectsListDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BasicSceneObjectsListDialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\panel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\panel.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Fichiers de ressources"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
 		</Filter>
 	</Files>
 	<Globals>

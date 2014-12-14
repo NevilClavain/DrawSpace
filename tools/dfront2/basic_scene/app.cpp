@@ -29,6 +29,8 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
+DrawSpace::Core::SingletonPlugin<Scripting>* DrawSpace::Core::SingletonPlugin<Scripting>::m_instance = NULL;
+
 IMPLEMENT_APP( DFrontApp )
 
 DFrontApp::DFrontApp( void ) :
@@ -54,6 +56,13 @@ bool DFrontApp::OnInit( void )
     DrawSpace::Initialize();
 
 
+    if( false == load_scripting_plugin( "luascripting.dll" ) )
+    {
+        wxMessageBox( "Unable to load scripting plugin. Exiting now", "DrawFront error", wxICON_ERROR );
+        return false;
+    }
+
+
     m_mainframe = new BasicSceneMainFrame( NULL );
     m_mainframe->Show();
    
@@ -76,9 +85,10 @@ bool DFrontApp::OnInit( void )
 
     m_app_ready = true;
 
+   
     if( false == load_renderer_plugin( m_renderplugin ) )
     {
-        wxMessageBox( "Unable to load specified plugin. Exiting now", "DrawFront error", wxICON_ERROR );
+        wxMessageBox( "Unable to load specified rendering plugin. Exiting now", "DrawFront error", wxICON_ERROR );
         return false;
     }
 
@@ -146,6 +156,25 @@ bool DFrontApp::load_renderer_plugin( const dsstring& p_file )
     return true;
 }
 
+bool DFrontApp::load_scripting_plugin( const dsstring& p_file )
+{
+    PlugInManager<Scripting>::Handle pihandle;
+    Scripting* scripting;
+    PluginManagerStatus pistatus = PlugInManager<Scripting>::LoadPlugin( p_file.c_str(), pihandle );
+    if( pistatus != PIM_OK )
+    {
+        return false;
+    }
+
+    if( PlugInManager<Scripting>::Instanciate( pihandle, &scripting ) != PIM_OK )
+    {
+        return false;
+    }
+
+    SingletonPlugin<Scripting>::GetInstance()->m_interface = scripting;
+
+    return true;
+}
 
 bool DFrontApp::init_renderer( void )
 {

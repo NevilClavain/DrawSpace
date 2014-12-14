@@ -26,6 +26,7 @@
 
 #include "panel.h"
 #include "drawspace.h"
+#include "scripting.h"
 
 class BasicSceneMainFrame : public MainFrame
 {
@@ -170,12 +171,15 @@ public:
 
 protected:
 
-    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&> TimerCallback;
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   TimerCallback;
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, int>               ScriptingCallback;
 
     void on_timer( const dsstring& p_timername );
     void compute_scenegraph_transforms( void );
     void compute_regs( void );
     void compute_movements( void );
+
+    void on_scripting( int p_value );
 
     long                                                    m_w_width;
     long                                                    m_w_height;
@@ -201,6 +205,9 @@ protected:
     wxCoord                                                 m_last_ymouse;
 
     DrawSpace::Dynamics::CameraPoint*                       m_current_camera;
+
+
+    ScriptingCallback*                                      m_scripting_cb;
 
     
 

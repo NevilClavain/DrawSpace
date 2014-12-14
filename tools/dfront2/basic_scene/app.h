@@ -27,6 +27,7 @@
 #include <wx/cmdline.h>
 #include "drawspace.h"
 #include "BasicSceneMainFrame.h"
+#include "scripting.h"
 
 static const wxCmdLineEntryDesc cmdLineDesc[] =
 {
@@ -70,6 +71,7 @@ protected:
 
     bool                                init_renderer( void );
     bool                                load_renderer_plugin( const dsstring& p_file );
+    bool                                load_scripting_plugin( const dsstring& p_file );
 
 public:
 	DFrontApp( void );
