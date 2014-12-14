@@ -172,9 +172,12 @@ public:
 protected:
 
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   TimerCallback;
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   ScriptingErrorCallback;
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, int>               ScriptingCallback;
 
     void on_timer( const dsstring& p_timername );
+    void on_scripting_error( const dsstring& p_error );
+
     void compute_scenegraph_transforms( void );
     void compute_regs( void );
     void compute_movements( void );
@@ -200,12 +203,14 @@ protected:
     std::map<dsstring, RegisterEntry>                       m_registers;
 
     TimerCallback*                                          m_timercb;
+    ScriptingErrorCallback*                                 m_scripting_error_cb;
 
     wxCoord                                                 m_last_xmouse;
     wxCoord                                                 m_last_ymouse;
 
     DrawSpace::Dynamics::CameraPoint*                       m_current_camera;
 
+    Scripting*                                              m_scripting;
 
     ScriptingCallback*                                      m_scripting_cb;
 
@@ -249,10 +254,6 @@ protected:
     virtual void OnRegOnButtonClicked( wxCommandEvent& p_event );
     virtual void OnRegOffButtonClicked( wxCommandEvent& p_event );
 
-
-
-
-
 public:
 	BasicSceneMainFrame( wxWindow* parent );
 
@@ -261,6 +262,9 @@ public:
     wxNotebook* GetNoteBook( void );
 
     void SetWindowDims( long p_w_width, long p_w_height );
+
+
+    void ExecStartupScript( const dsstring& p_scriptfilepath );
 };
 
 #endif // __BasicSceneMainFrame__

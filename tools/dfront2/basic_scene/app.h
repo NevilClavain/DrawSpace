@@ -31,7 +31,8 @@
 
 static const wxCmdLineEntryDesc cmdLineDesc[] =
 {
-    { wxCMD_LINE_OPTION, "f", "file", "resources description file", wxCMD_LINE_VAL_STRING },
+    { wxCMD_LINE_OPTION, "r", "resource_file", "resources description file", wxCMD_LINE_VAL_STRING },
+    { wxCMD_LINE_OPTION, "s", "script_file", "scripting file", wxCMD_LINE_VAL_STRING },
     { wxCMD_LINE_NONE }
 };
 
@@ -67,6 +68,8 @@ protected:
 
 
     dsstring                            m_resource_filepath;
+
+    dsstring                            m_script_filepath;
  
 
     bool                                init_renderer( void );

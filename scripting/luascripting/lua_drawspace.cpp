@@ -20,43 +20,27 @@
 *                                                                          
 */
 
-#ifndef _LUASCRIPTING_H_
-#define _LUASCRIPTING_H_
+#include "lua_drawspace.h"
 
-#include <scripting.h>
-#include "luacontext.h"
 
-class LuaScripting : public Scripting
+const char LuaDrawSpace::className[] = "DrawSpace";
+const Luna<LuaDrawSpace>::RegType LuaDrawSpace::Register[] =
 {
-protected:
-
-    DrawSpace::Core::BaseCallback<void, int>*     m_handler;
-
-
-    LuaContext              m_luacontext;
-
-
-public:
-
-    LuaScripting( void );
-
-    bool Initialize( void );
-    void Shutdown( void );
-
-    void ExecChunk( const char* p_cmd );
-    void ExecFile( const char* p_path );
-
-
-    void RegisterScriptErrorHandler( ScriptErrorHandler* p_error_handler );
-
-    
-
-
-    //////////////////////////
-    void RegisterCB( DrawSpace::Core::BaseCallback<void, int>* p_handler );
-    void TestCBCall( void );
-
+  { "Foo", &LuaDrawSpace::Lua_Foo },
+  { 0 }
 };
 
 
-#endif
+LuaDrawSpace::LuaDrawSpace( lua_State* p_L ) 
+{  
+}
+
+LuaDrawSpace::~LuaDrawSpace( void ) 
+{
+}
+
+int LuaDrawSpace::Lua_Foo( lua_State* p_L )
+{
+    return 0;
+}
+

@@ -81,10 +81,7 @@ bool DFrontApp::OnInit( void )
     m_w_fullscreen = false;
     m_renderplugin = "drawspaced3d9.dll";
 
-
-
     m_app_ready = true;
-
    
     if( false == load_renderer_plugin( m_renderplugin ) )
     {
@@ -106,10 +103,9 @@ bool DFrontApp::OnInit( void )
 
         bool status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
         if( status )
-        {
-            //m_frame->UpdateAll();
-
+        {           
             m_mainframe->Update();
+            m_mainframe->ExecStartupScript( m_script_filepath );
         }
         else
         {
@@ -199,10 +195,16 @@ void DFrontApp::OnInitCmdLine( wxCmdLineParser& p_parser )
 bool DFrontApp::OnCmdLineParsed( wxCmdLineParser& p_parser )
 {
     wxString path;
-    p_parser.Found( "f", &path );
+
+    p_parser.Found( "r", &path );
 
     wxCharBuffer buffer = path.ToAscii();
     m_resource_filepath = buffer.data();
+
+    p_parser.Found( "s", &path );
+
+    buffer = path.ToAscii();
+    m_script_filepath = buffer.data();
 
     return true;
 }

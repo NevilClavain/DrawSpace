@@ -179,6 +179,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\lua_drawspace.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_drawspace.h"
+				>
+			</File>
+			<File
 				RelativePath=".\luacontext.cpp"
 				>
 			</File>

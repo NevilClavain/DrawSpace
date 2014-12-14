@@ -55,18 +55,35 @@ m_current_camera( NULL )
     m_timer.AddTimer( "timer", 100, m_timercb );
     m_timer.SetTimerState( "timer", true );
 
+    m_scripting_error_cb = new ScriptingErrorCallback( this, &BasicSceneMainFrame::on_scripting_error );
+
 
     m_scripting_cb = new ScriptingCallback( this, &BasicSceneMainFrame::on_scripting );
 
-    DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->Initialize();
+    m_scripting = DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface;
 
-    DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->RegisterCB( m_scripting_cb );
+    m_scripting->Initialize();
+    m_scripting->RegisterScriptErrorHandler( m_scripting_error_cb );
+    
+
+    m_scripting->RegisterCB( m_scripting_cb );
 }
 
 
 void BasicSceneMainFrame::on_scripting( int p_value )
 {
     _asm nop
+}
+
+void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
+{
+    _asm nop
+}
+
+void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
+{
+    // TODO
+    m_scripting->ExecFile( p_scriptfilepath.c_str() );
 }
 
 wxNotebook* BasicSceneMainFrame::GetNoteBook( void )
