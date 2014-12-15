@@ -24,6 +24,7 @@
 #include <wx/icon.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
+#include <wx/textctrl.h>
 #include <wx/statbox.h>
 #include <wx/combobox.h>
 #include <wx/stattext.h>
@@ -88,6 +89,10 @@ class MainFrame : public wxFrame
 	private:
 	
 	protected:
+		wxTextCtrl* m_consoleinput_textCtrl;
+		wxButton* m_button18;
+		wxButton* m_button19;
+		wxButton* m_button20;
 		wxNotebook* m_notebook2;
 		wxPanel* m_camerasPanel;
 		wxListCtrl* m_cameras_listCtrl;

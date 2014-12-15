@@ -223,7 +223,6 @@ protected:
     ScriptingPrintCallback*                                 m_scripting_print_cb;
     ScriptingDrawspaceDisplayFramerateCallback*             m_scripting_dsdisplayframerate_cb;
 
-
     
 
     virtual void OnClose( wxCloseEvent& p_event );

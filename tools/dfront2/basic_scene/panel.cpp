@@ -95,10 +95,47 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	bSizer8 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer25;
+	bSizer25 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxBoxSizer* bSizer28;
+	bSizer28 = new wxBoxSizer( wxVERTICAL );
 	
 	
-	bSizer8->Add( 0, 0, 3, wxEXPAND, 5 );
+	bSizer28->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer31;
+	bSizer31 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_consoleinput_textCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 800,120 ), wxTE_MULTILINE );
+	m_consoleinput_textCtrl->SetFont( wxFont( 6, 75, 90, 90, false, wxT("Terminal") ) );
+	m_consoleinput_textCtrl->SetForegroundColour( wxColour( 225, 225, 225 ) );
+	m_consoleinput_textCtrl->SetBackgroundColour( wxColour( 0, 0, 0 ) );
+	
+	bSizer31->Add( m_consoleinput_textCtrl, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer32;
+	bSizer32 = new wxBoxSizer( wxVERTICAL );
+	
+	m_button18 = new wxButton( this, wxID_ANY, wxT("Send"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer32->Add( m_button18, 0, wxALL, 5 );
+	
+	m_button19 = new wxButton( this, wxID_ANY, wxT("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer32->Add( m_button19, 0, wxALL, 5 );
+	
+	m_button20 = new wxButton( this, wxID_ANY, wxT("Load"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer32->Add( m_button20, 0, wxALL, 5 );
+	
+	
+	bSizer31->Add( bSizer32, 1, wxEXPAND, 5 );
+	
+	
+	bSizer28->Add( bSizer31, 0, wxEXPAND, 5 );
+	
+	
+	bSizer25->Add( bSizer28, 1, wxEXPAND, 5 );
 	
 	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	m_camerasPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
@@ -173,18 +210,24 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	sbSizer6->Add( bSizer91, 0, wxEXPAND, 5 );
 	
-	wxBoxSizer* bSizer18;
-	bSizer18 = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bSizer29;
+	bSizer29 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer30;
+	bSizer30 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticText1 = new wxStaticText( m_camerasPanel, wxID_ANY, wxT("Keyboard && mouse output :"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1->Wrap( -1 );
-	bSizer18->Add( m_staticText1, 0, wxALL, 5 );
+	bSizer30->Add( m_staticText1, 0, wxALL, 5 );
 	
 	m_mousekeyboardoutput_comboBox = new wxComboBox( m_camerasPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
-	bSizer18->Add( m_mousekeyboardoutput_comboBox, 0, wxALL, 5 );
+	bSizer30->Add( m_mousekeyboardoutput_comboBox, 0, wxALL, 5 );
 	
 	
-	sbSizer6->Add( bSizer18, 1, wxEXPAND, 5 );
+	bSizer29->Add( bSizer30, 1, wxEXPAND, 5 );
+	
+	
+	sbSizer6->Add( bSizer29, 1, wxEXPAND, 5 );
 	
 	
 	bSizer81->Add( sbSizer6, 1, wxEXPAND, 5 );
@@ -247,7 +290,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_resourcesPanel->SetSizer( bSizer9 );
 	m_resourcesPanel->Layout();
 	bSizer9->Fit( m_resourcesPanel );
-	m_notebook2->AddPage( m_resourcesPanel, wxT("Resources"), false );
+	m_notebook2->AddPage( m_resourcesPanel, wxT("Resources"), true );
 	m_scenePanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
@@ -305,7 +348,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_scenePanel->SetSizer( bSizer11 );
 	m_scenePanel->Layout();
 	bSizer11->Fit( m_scenePanel );
-	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), true );
+	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), false );
 	m_registersPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer19;
 	bSizer19 = new wxBoxSizer( wxVERTICAL );
@@ -346,7 +389,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer19->Fit( m_registersPanel );
 	m_notebook2->AddPage( m_registersPanel, wxT("Registers"), false );
 	
-	bSizer8->Add( m_notebook2, 1, wxEXPAND, 0 );
+	bSizer25->Add( m_notebook2, 0, wxEXPAND, 0 );
+	
+	
+	bSizer8->Add( bSizer25, 1, wxEXPAND, 5 );
 	
 	
 	this->SetSizer( bSizer8 );

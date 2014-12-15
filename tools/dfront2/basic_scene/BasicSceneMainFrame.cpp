@@ -50,10 +50,12 @@ m_current_camera( NULL )
     m_regon_button->Enable( false );
     m_regoff_button->Enable( false );
 
+
     m_timercb = new TimerCallback( this, &BasicSceneMainFrame::on_timer );
 
     m_timer.AddTimer( "timer", 100, m_timercb );
     m_timer.SetTimerState( "timer", true );
+
 
 
 
