@@ -40,7 +40,8 @@ m_regslistctrl_currentindex( -1 ),
 m_last_xmouse( 0 ),
 m_last_ymouse( 0 ),
 m_current_camera( NULL ),
-m_display_framerate( false )
+m_display_framerate( false ),
+m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
@@ -50,6 +51,9 @@ m_display_framerate( false )
     m_resetreg_button->Enable( false );
     m_regon_button->Enable( false );
     m_regoff_button->Enable( false );
+
+    m_consoleinput_textCtrl->SetFont( m_console_font );
+    m_consoleoutput_textCtrl->SetFont( m_console_font );
 
 
     m_timercb = new TimerCallback( this, &BasicSceneMainFrame::on_timer );

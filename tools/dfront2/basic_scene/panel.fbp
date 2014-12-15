@@ -949,7 +949,7 @@
                                                 <property name="enabled">1</property>
                                                 <property name="fg">255,255,0</property>
                                                 <property name="floatable">1</property>
-                                                <property name="font">Terminal,90,90,6,75,0</property>
+                                                <property name="font">System,90,92,10,74,0</property>
                                                 <property name="gripper">0</property>
                                                 <property name="hidden">0</property>
                                                 <property name="id">wxID_ANY</property>

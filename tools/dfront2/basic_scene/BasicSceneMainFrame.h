@@ -223,6 +223,8 @@ protected:
 
     bool                                                    m_display_framerate;
 
+    wxFont                                                  m_console_font;
+
     
 
     virtual void OnClose( wxCloseEvent& p_event );

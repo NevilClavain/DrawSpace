@@ -110,7 +110,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer31 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_consoleinput_textCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 760,120 ), wxTE_MULTILINE );
-	m_consoleinput_textCtrl->SetFont( wxFont( 6, 75, 90, 90, false, wxT("Terminal") ) );
+	m_consoleinput_textCtrl->SetFont( wxFont( 10, 74, 90, 92, false, wxT("System") ) );
 	m_consoleinput_textCtrl->SetForegroundColour( wxColour( 255, 255, 0 ) );
 	m_consoleinput_textCtrl->SetBackgroundColour( wxColour( 0, 0, 255 ) );
 	
