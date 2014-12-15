@@ -109,7 +109,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer31;
 	bSizer31 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_consoleinput_textCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 800,120 ), wxTE_MULTILINE );
+	m_consoleinput_textCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 760,120 ), wxTE_MULTILINE );
 	m_consoleinput_textCtrl->SetFont( wxFont( 6, 75, 90, 90, false, wxT("Terminal") ) );
 	m_consoleinput_textCtrl->SetForegroundColour( wxColour( 225, 225, 225 ) );
 	m_consoleinput_textCtrl->SetBackgroundColour( wxColour( 0, 0, 0 ) );
@@ -119,14 +119,14 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer32;
 	bSizer32 = new wxBoxSizer( wxVERTICAL );
 	
-	m_button18 = new wxButton( this, wxID_ANY, wxT("Send"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer32->Add( m_button18, 0, wxALL, 5 );
+	m_consoleinsend_button = new wxButton( this, wxID_ANY, wxT("Send"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer32->Add( m_consoleinsend_button, 0, wxALL, 5 );
 	
-	m_button19 = new wxButton( this, wxID_ANY, wxT("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer32->Add( m_button19, 0, wxALL, 5 );
+	m_consoleinclear_button = new wxButton( this, wxID_ANY, wxT("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer32->Add( m_consoleinclear_button, 0, wxALL, 5 );
 	
-	m_button20 = new wxButton( this, wxID_ANY, wxT("Load"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer32->Add( m_button20, 0, wxALL, 5 );
+	m_consoleinload_button = new wxButton( this, wxID_ANY, wxT("Load"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer32->Add( m_consoleinload_button, 0, wxALL, 5 );
 	
 	
 	bSizer31->Add( bSizer32, 1, wxEXPAND, 5 );
@@ -136,6 +136,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	
 	bSizer25->Add( bSizer28, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer33;
+	bSizer33 = new wxBoxSizer( wxVERTICAL );
 	
 	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	m_camerasPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
@@ -207,6 +210,13 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_mvttype_comboBox->SetSelection( 0 );
 	bSizer91->Add( m_mvttype_comboBox, 0, wxALL, 5 );
 	
+	m_staticText1 = new wxStaticText( m_camerasPanel, wxID_ANY, wxT("controlled :"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1->Wrap( -1 );
+	bSizer91->Add( m_staticText1, 0, wxALL, 5 );
+	
+	m_mousekeyboardoutput_comboBox = new wxComboBox( m_camerasPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
+	bSizer91->Add( m_mousekeyboardoutput_comboBox, 0, wxALL, 5 );
+	
 	
 	sbSizer6->Add( bSizer91, 0, wxEXPAND, 5 );
 	
@@ -215,13 +225,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	wxBoxSizer* bSizer30;
 	bSizer30 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText1 = new wxStaticText( m_camerasPanel, wxID_ANY, wxT("Keyboard && mouse output :"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText1->Wrap( -1 );
-	bSizer30->Add( m_staticText1, 0, wxALL, 5 );
-	
-	m_mousekeyboardoutput_comboBox = new wxComboBox( m_camerasPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
-	bSizer30->Add( m_mousekeyboardoutput_comboBox, 0, wxALL, 5 );
 	
 	
 	bSizer29->Add( bSizer30, 1, wxEXPAND, 5 );
@@ -236,7 +239,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_camerasPanel->SetSizer( bSizer81 );
 	m_camerasPanel->Layout();
 	bSizer81->Fit( m_camerasPanel );
-	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras && Movements"), false );
+	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras && Movements"), true );
 	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -290,7 +293,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_resourcesPanel->SetSizer( bSizer9 );
 	m_resourcesPanel->Layout();
 	bSizer9->Fit( m_resourcesPanel );
-	m_notebook2->AddPage( m_resourcesPanel, wxT("Resources"), true );
+	m_notebook2->AddPage( m_resourcesPanel, wxT("Resources"), false );
 	m_scenePanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
@@ -299,7 +302,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer14 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_scenegraph_listCtrl = new wxListCtrl( m_scenePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	bSizer14->Add( m_scenegraph_listCtrl, 0, wxALL|wxEXPAND, 5 );
+	bSizer14->Add( m_scenegraph_listCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer15;
 	bSizer15 = new wxBoxSizer( wxVERTICAL );
@@ -389,7 +392,15 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer19->Fit( m_registersPanel );
 	m_notebook2->AddPage( m_registersPanel, wxT("Registers"), false );
 	
-	bSizer25->Add( m_notebook2, 0, wxEXPAND, 0 );
+	bSizer33->Add( m_notebook2, 1, wxEXPAND, 0 );
+	
+	m_consoleoutput_textCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 300,170 ), wxTE_MULTILINE|wxTE_READONLY );
+	m_consoleoutput_textCtrl->SetFont( wxFont( 6, 75, 90, 90, false, wxT("Terminal") ) );
+	
+	bSizer33->Add( m_consoleoutput_textCtrl, 0, wxALL|wxEXPAND, 0 );
+	
+	
+	bSizer25->Add( bSizer33, 0, wxEXPAND, 5 );
 	
 	
 	bSizer8->Add( bSizer25, 1, wxEXPAND, 5 );
@@ -406,6 +417,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame::OnKeyDown ) );
 	this->Connect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::OnKeyUp ) );
 	this->Connect( wxEVT_MOTION, wxMouseEventHandler( MainFrame::OnMouseMotion ) );
+	m_consoleinsend_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
+	m_consoleinclear_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInClearButtonClicked ), NULL, this );
+	m_consoleinload_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInLoadButtonClicked ), NULL, this );
 	m_cameras_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnCamerasListDeleteAllItems ), NULL, this );
 	m_cameras_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnCamerasListItemActivated ), NULL, this );
 	m_cameras_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnCamerasListItemSelected ), NULL, this );
@@ -448,6 +462,9 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame::OnKeyDown ) );
 	this->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::OnKeyUp ) );
 	this->Disconnect( wxEVT_MOTION, wxMouseEventHandler( MainFrame::OnMouseMotion ) );
+	m_consoleinsend_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
+	m_consoleinclear_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInClearButtonClicked ), NULL, this );
+	m_consoleinload_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInLoadButtonClicked ), NULL, this );
 	m_cameras_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnCamerasListDeleteAllItems ), NULL, this );
 	m_cameras_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnCamerasListItemActivated ), NULL, this );
 	m_cameras_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnCamerasListItemSelected ), NULL, this );

@@ -90,9 +90,9 @@ class MainFrame : public wxFrame
 	
 	protected:
 		wxTextCtrl* m_consoleinput_textCtrl;
-		wxButton* m_button18;
-		wxButton* m_button19;
-		wxButton* m_button20;
+		wxButton* m_consoleinsend_button;
+		wxButton* m_consoleinclear_button;
+		wxButton* m_consoleinload_button;
 		wxNotebook* m_notebook2;
 		wxPanel* m_camerasPanel;
 		wxListCtrl* m_cameras_listCtrl;
@@ -125,6 +125,7 @@ class MainFrame : public wxFrame
 		wxButton* m_regon_button;
 		wxButton* m_regoff_button;
 		wxButton* m_createreg_button;
+		wxTextCtrl* m_consoleoutput_textCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -132,6 +133,9 @@ class MainFrame : public wxFrame
 		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnKeyUp( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnMouseMotion( wxMouseEvent& event ) { event.Skip(); }
+		virtual void OnConsoleInSendButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnConsoleInClearButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnConsoleInLoadButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCamerasListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
 		virtual void OnCamerasListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnCamerasListItemSelected( wxListEvent& event ) { event.Skip(); }
@@ -168,7 +172,7 @@ class MainFrame : public wxFrame
 	
 	public:
 		
-		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("DFront Basic Scene"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1164,600 ), long style = wxCAPTION|wxCLOSE_BOX|wxTAB_TRAVERSAL );
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("DFront Basic Scene"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1300,600 ), long style = wxCAPTION|wxCLOSE_BOX|wxTAB_TRAVERSAL );
 		
 		~MainFrame();
 	
