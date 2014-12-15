@@ -223,6 +223,8 @@ protected:
     ScriptingPrintCallback*                                 m_scripting_print_cb;
     ScriptingDrawspaceDisplayFramerateCallback*             m_scripting_dsdisplayframerate_cb;
 
+    bool                                                    m_display_framerate;
+
     
 
     virtual void OnClose( wxCloseEvent& p_event );
@@ -262,6 +264,10 @@ protected:
     virtual void OnResetRegButtonClicked( wxCommandEvent& p_event );
     virtual void OnRegOnButtonClicked( wxCommandEvent& p_event );
     virtual void OnRegOffButtonClicked( wxCommandEvent& p_event );
+    virtual void OnConsoleInSendButtonClicked( wxCommandEvent& p_event );
+    virtual void OnConsoleInClearButtonClicked( wxCommandEvent& p_event );
+    virtual void OnConsoleInLoadButtonClicked( wxCommandEvent& p_event );
+
 
 public:
 	BasicSceneMainFrame( wxWindow* parent );
@@ -274,6 +280,7 @@ public:
 
 
     void ExecStartupScript( const dsstring& p_scriptfilepath );
+    void PrintOutputConsole( const dsstring& p_text );
 };
 
 #endif // __BasicSceneMainFrame__

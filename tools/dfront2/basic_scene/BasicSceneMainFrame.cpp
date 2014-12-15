@@ -39,7 +39,8 @@ m_cameraslistctrl_currentindex( -1 ),
 m_regslistctrl_currentindex( -1 ),
 m_last_xmouse( 0 ),
 m_last_ymouse( 0 ),
-m_current_camera( NULL )
+m_current_camera( NULL ),
+m_display_framerate( false )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
@@ -78,23 +79,29 @@ m_current_camera( NULL )
 
 void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
 {
-    _asm nop
+    PrintOutputConsole( p_error );
 }
 
 void BasicSceneMainFrame::on_scripting_print( const dsstring& p_text )
 {
-    _asm nop
+    PrintOutputConsole( p_text );
 }
 
 void BasicSceneMainFrame::on_scripting_displayframerate( bool p_display )
 {
-    _asm nop
+    m_display_framerate = p_display;
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
 {
     // TODO
     m_scripting->ExecFile( p_scriptfilepath.c_str() );
+}
+
+void BasicSceneMainFrame::PrintOutputConsole( const dsstring& p_text )
+{
+    m_consoleoutput_textCtrl->AppendText( wxString( p_text.c_str() ) );
+    m_consoleoutput_textCtrl->AppendText( wxString( "\n" ) );
 }
 
 wxNotebook* BasicSceneMainFrame::GetNoteBook( void )
@@ -722,7 +729,10 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
             }
         }
 
-        renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
+        if( m_display_framerate )
+        {
+            renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
+        }
         
         dsstring camera_name;
         m_scenegraph.GetCurrentCameraName( camera_name );
@@ -1431,4 +1441,18 @@ void BasicSceneMainFrame::OnRegOffButtonClicked( wxCommandEvent& p_event )
 {
     RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
     reg_entry->state = false;
+}
+
+void BasicSceneMainFrame::OnConsoleInSendButtonClicked( wxCommandEvent& p_event )
+{
+    m_scripting->ExecChunk( m_consoleinput_textCtrl->GetValue().c_str() );
+}
+
+void BasicSceneMainFrame::OnConsoleInClearButtonClicked( wxCommandEvent& p_event )
+{
+    m_consoleinput_textCtrl->Clear();
+}
+
+void BasicSceneMainFrame::OnConsoleInLoadButtonClicked( wxCommandEvent& p_event )
+{
 }

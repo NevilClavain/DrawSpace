@@ -46,10 +46,10 @@ DFrontApp::~DFrontApp( void )
 
 bool DFrontApp::OnInit( void )
 {
-   if( !wxApp::OnInit() )
-   {
+    if( !wxApp::OnInit() )
+    {
         return false;
-   }
+    }
 
     m_w_title = "Basic scene";
 
@@ -88,12 +88,15 @@ bool DFrontApp::OnInit( void )
         wxMessageBox( "Unable to load specified rendering plugin. Exiting now", "DrawFront error", wxICON_ERROR );
         return false;
     }
+    m_mainframe->PrintOutputConsole( "Rendering plugin: ready (" + m_renderplugin + ")" );
 
     if( false == init_renderer() )
     {
         wxMessageBox( "Renderer init FAILURE. Exiting now", "DrawFront error", wxICON_ERROR );
         return false;
     }
+
+    m_mainframe->PrintOutputConsole( "Rendering initialization: done" );
 
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
@@ -103,9 +106,11 @@ bool DFrontApp::OnInit( void )
 
         bool status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
         if( status )
-        {           
+        {
+            m_mainframe->PrintOutputConsole( "Resources file execution: OK (" + m_resource_filepath + ")" );
             m_mainframe->Update();
             m_mainframe->ExecStartupScript( m_script_filepath );
+            m_mainframe->PrintOutputConsole( "Script file execution: OK (" + m_script_filepath + ")" );
         }
         else
         {
