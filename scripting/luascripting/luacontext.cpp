@@ -5,7 +5,12 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-LuaContext::LuaContext( void )
+LuaContext* LuaContext::m_instance = NULL;
+
+LuaContext::LuaContext( void ) :
+m_errorhandler( NULL ),
+m_printhandler( NULL ),
+m_displayframerate_handler( NULL )
 {
 }
 
@@ -78,11 +83,33 @@ void LuaContext::RegisterErrorHandler( BaseCallback<void, const dsstring&>* p_ha
     m_errorhandler = p_handler;
 }
 
+void LuaContext::RegisterPrintHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
+{
+    m_printhandler = p_handler;
+}
+
+void LuaContext::RegisterDisplayFrameRateHandler( DrawSpace::Core::BaseCallback<void, bool>* p_handler )
+{
+    m_displayframerate_handler = p_handler;
+}
+
+DrawSpace::Core::BaseCallback<void, bool>* LuaContext::GetDisplayFrameRateHandler( void )
+{
+    return m_displayframerate_handler;
+}
+
 lua_State* LuaContext::GetLuaState( void )
 {
     return m_L;
 }
 
+void LuaContext::print( const dsstring& p_text )
+{
+    if( m_printhandler )
+    {
+        (*m_printhandler)( p_text );
+    }
+}
 
 int LuaContext::lua_print( lua_State* p_L )
 {
@@ -99,8 +126,7 @@ int LuaContext::lua_print( lua_State* p_L )
 
 	arg = luaL_checkstring( p_L, 1 );
 	text = arg;
-
-    // TODO : appeler une callback client
+    LuaContext::GetInstance()->print( text );
 
     return 0;
 }

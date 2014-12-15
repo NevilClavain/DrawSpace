@@ -30,12 +30,8 @@ class LuaScripting : public Scripting
 {
 protected:
 
-    DrawSpace::Core::BaseCallback<void, int>*     m_handler;
-
-
-    LuaContext              m_luacontext;
-
-
+    DrawSpace::Core::BaseCallback<void, int>*       m_handler;
+    
 public:
 
     LuaScripting( void );
@@ -47,7 +43,9 @@ public:
     void ExecFile( const char* p_path );
 
 
-    void RegisterScriptErrorHandler( ScriptErrorHandler* p_error_handler );
+    void RegisterScriptErrorHandler( ErrorHandler* p_error_handler );
+    void RegisterScriptGlobalPrintHandler( GlobalPrintHandler* p_handler );
+    void RegisterDrawspaceDisplayFramerateHandler( DrawspaceDisplayFramerateHandler* p_handler );
 
     
 

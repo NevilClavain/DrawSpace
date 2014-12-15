@@ -24,18 +24,24 @@
 #ifndef _LUA_DRAWSPACE_H_
 #define _LUA_DRAWSPACE_H_
 
+#include "drawspace_commons.h"
+#include "callback.h"
 #include "luna.h"
 
 class LuaDrawSpace
 {
+public:
+
+    DrawSpace::Core::BaseCallback<void, bool>*       m_displayframerate_handler;
+
 protected:
 
 
 public:
     LuaDrawSpace( lua_State* p_L );
     ~LuaDrawSpace( void );
-  
-    int Lua_Foo( lua_State* p_L );
+     
+    int Lua_DisplayFramerate( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaDrawSpace>::RegType Register[];

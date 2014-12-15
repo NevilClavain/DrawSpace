@@ -30,7 +30,9 @@ class Scripting
 {
 public:
 
-    typedef DrawSpace::Core::BaseCallback<void, const dsstring&> ScriptErrorHandler;
+    typedef DrawSpace::Core::BaseCallback<void, const dsstring&> ErrorHandler;
+    typedef DrawSpace::Core::BaseCallback<void, const dsstring&> GlobalPrintHandler;
+    typedef DrawSpace::Core::BaseCallback<void, bool> DrawspaceDisplayFramerateHandler;
 
     virtual bool Initialize( void ) = 0;
     virtual void Shutdown( void ) = 0;
@@ -39,7 +41,9 @@ public:
     virtual void ExecFile( const char* p_path ) = 0;
 
 
-    virtual void RegisterScriptErrorHandler( ScriptErrorHandler* p_errorhandler ) = 0;
+    virtual void RegisterScriptErrorHandler( ErrorHandler* p_errorhandler ) = 0;
+    virtual void RegisterScriptGlobalPrintHandler( GlobalPrintHandler* p_handler ) = 0;
+    virtual void RegisterDrawspaceDisplayFramerateHandler( DrawspaceDisplayFramerateHandler* p_handler ) = 0;
 
 
     //////////////////////////////////////////

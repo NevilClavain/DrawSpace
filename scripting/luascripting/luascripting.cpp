@@ -27,36 +27,44 @@
 LuaScripting::LuaScripting( void ) :
 m_handler( NULL )
 {
-
-
 }
 
 bool LuaScripting::Initialize( void )
 {
-    m_luacontext.Startup();
-    Luna<LuaDrawSpace>::Register( m_luacontext.GetLuaState() );
+    LuaContext::GetInstance()->Startup();
+    Luna<LuaDrawSpace>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     return true;
 }
 
 void LuaScripting::Shutdown( void )
 {
-    m_luacontext.Stop();
+    LuaContext::GetInstance()->Stop();
 }
 
 void LuaScripting::ExecChunk( const char* p_cmd )
 {
-    m_luacontext.Exec( p_cmd );
+    LuaContext::GetInstance()->Exec( p_cmd );
 }
 
 void LuaScripting::ExecFile( const char* p_path )
 {
-    m_luacontext.Execfile( p_path );
+    LuaContext::GetInstance()->Execfile( p_path );
 }
 
-void LuaScripting::RegisterScriptErrorHandler( ScriptErrorHandler* p_error_handler )
+void LuaScripting::RegisterScriptErrorHandler( ErrorHandler* p_error_handler )
 {
-    m_luacontext.RegisterErrorHandler( p_error_handler );
+    LuaContext::GetInstance()->RegisterErrorHandler( p_error_handler );
+}
+
+void LuaScripting::RegisterScriptGlobalPrintHandler( GlobalPrintHandler* p_handler )
+{
+    LuaContext::GetInstance()->RegisterPrintHandler( p_handler );
+}
+
+void LuaScripting::RegisterDrawspaceDisplayFramerateHandler( DrawspaceDisplayFramerateHandler* p_handler )
+{
+    LuaContext::GetInstance()->RegisterDisplayFrameRateHandler( p_handler );
 }
 
 void LuaScripting::RegisterCB( DrawSpace::Core::BaseCallback<void, int>* p_handler )

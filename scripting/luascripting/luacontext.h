@@ -39,16 +39,33 @@ class LuaContext
 {
 protected:
 
+    static LuaContext*                                          m_instance;
+
     lua_State* m_L;
     dsstring m_lasterror;
-    DrawSpace::Core::BaseCallback<void, const dsstring&>*     m_errorhandler;
+    DrawSpace::Core::BaseCallback<void, const dsstring&>*       m_errorhandler;
+    DrawSpace::Core::BaseCallback<void, const dsstring&>*       m_printhandler;
+    DrawSpace::Core::BaseCallback<void, bool>*                  m_displayframerate_handler;
+
     std::vector<std::string> m_func_list;
 
     static int lua_print( lua_State* p_L );
 
-public:
+    void print( const dsstring& p_text );
+
     LuaContext( void );
+
+public:    
     virtual ~LuaContext( void );
+
+    static LuaContext* GetInstance( void )
+    {
+        if( NULL == m_instance )
+        {
+            m_instance = new LuaContext;
+        }
+        return m_instance;
+    }
 
     void Startup( void );
     void Stop( void );
@@ -57,10 +74,13 @@ public:
 
     void GetLastError( dsstring& p_str );
     void RegisterErrorHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
+    void RegisterPrintHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );
+    void RegisterDisplayFrameRateHandler( DrawSpace::Core::BaseCallback<void, bool>* p_handler );
+
+    DrawSpace::Core::BaseCallback<void, bool>* GetDisplayFrameRateHandler( void );
+    
 
     lua_State* GetLuaState( void );
-
-
 };
 
 

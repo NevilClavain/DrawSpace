@@ -173,16 +173,23 @@ protected:
 
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   TimerCallback;
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   ScriptingErrorCallback;
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   ScriptingPrintCallback;
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, bool>              ScriptingDrawspaceDisplayFramerateCallback;
+
+
+
+
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, int>               ScriptingCallback;
 
     void on_timer( const dsstring& p_timername );
     void on_scripting_error( const dsstring& p_error );
+    void on_scripting_print( const dsstring& p_text );
+    void on_scripting_displayframerate( bool p_display );
 
     void compute_scenegraph_transforms( void );
     void compute_regs( void );
     void compute_movements( void );
 
-    void on_scripting( int p_value );
 
     long                                                    m_w_width;
     long                                                    m_w_height;
@@ -203,7 +210,6 @@ protected:
     std::map<dsstring, RegisterEntry>                       m_registers;
 
     TimerCallback*                                          m_timercb;
-    ScriptingErrorCallback*                                 m_scripting_error_cb;
 
     wxCoord                                                 m_last_xmouse;
     wxCoord                                                 m_last_ymouse;
@@ -212,7 +218,11 @@ protected:
 
     Scripting*                                              m_scripting;
 
-    ScriptingCallback*                                      m_scripting_cb;
+
+    ScriptingErrorCallback*                                 m_scripting_error_cb;
+    ScriptingPrintCallback*                                 m_scripting_print_cb;
+    ScriptingDrawspaceDisplayFramerateCallback*             m_scripting_dsdisplayframerate_cb;
+
 
     
 

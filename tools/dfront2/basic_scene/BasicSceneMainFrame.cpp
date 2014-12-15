@@ -55,27 +55,36 @@ m_current_camera( NULL )
     m_timer.AddTimer( "timer", 100, m_timercb );
     m_timer.SetTimerState( "timer", true );
 
-    m_scripting_error_cb = new ScriptingErrorCallback( this, &BasicSceneMainFrame::on_scripting_error );
 
 
-    m_scripting_cb = new ScriptingCallback( this, &BasicSceneMainFrame::on_scripting );
 
     m_scripting = DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface;
 
     m_scripting->Initialize();
-    m_scripting->RegisterScriptErrorHandler( m_scripting_error_cb );
-    
 
-    m_scripting->RegisterCB( m_scripting_cb );
+    m_scripting_error_cb = new ScriptingErrorCallback( this, &BasicSceneMainFrame::on_scripting_error );
+    m_scripting->RegisterScriptErrorHandler( m_scripting_error_cb );
+
+    m_scripting_print_cb = new ScriptingPrintCallback( this, &BasicSceneMainFrame::on_scripting_print );
+    m_scripting->RegisterScriptGlobalPrintHandler( m_scripting_print_cb );
+
+    m_scripting_dsdisplayframerate_cb = new ScriptingDrawspaceDisplayFramerateCallback( this, &BasicSceneMainFrame::on_scripting_displayframerate );
+    m_scripting->RegisterDrawspaceDisplayFramerateHandler( m_scripting_dsdisplayframerate_cb );
+
 }
 
 
-void BasicSceneMainFrame::on_scripting( int p_value )
+void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
 {
     _asm nop
 }
 
-void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
+void BasicSceneMainFrame::on_scripting_print( const dsstring& p_text )
+{
+    _asm nop
+}
+
+void BasicSceneMainFrame::on_scripting_displayframerate( bool p_display )
 {
     _asm nop
 }
