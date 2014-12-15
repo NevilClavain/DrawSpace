@@ -24,8 +24,7 @@
 #include "lua_drawspace.h"
 
 
-LuaScripting::LuaScripting( void ) :
-m_handler( NULL )
+LuaScripting::LuaScripting( void )
 {
 }
 
@@ -57,25 +56,8 @@ void LuaScripting::RegisterScriptErrorHandler( ErrorHandler* p_error_handler )
     LuaContext::GetInstance()->RegisterErrorHandler( p_error_handler );
 }
 
-void LuaScripting::RegisterScriptGlobalPrintHandler( GlobalPrintHandler* p_handler )
+void LuaScripting::RegisterScriptCallsHandler( ScriptCallsHandler* p_handler )
 {
-    LuaContext::GetInstance()->RegisterPrintHandler( p_handler );
+    LuaContext::GetInstance()->RegisterScriptCallsHandler( p_handler );
 }
 
-void LuaScripting::RegisterDrawspaceDisplayFramerateHandler( DrawspaceDisplayFramerateHandler* p_handler )
-{
-    LuaContext::GetInstance()->RegisterDisplayFrameRateHandler( p_handler );
-}
-
-void LuaScripting::RegisterCB( DrawSpace::Core::BaseCallback<void, int>* p_handler )
-{
-    m_handler = p_handler;
-}
-
-void LuaScripting::TestCBCall( void )
-{
-    if( m_handler )
-    {
-        (*m_handler)( 666 );
-    }
-}

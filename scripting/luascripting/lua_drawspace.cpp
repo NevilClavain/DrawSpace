@@ -23,6 +23,9 @@
 #include "lua_drawspace.h"
 #include "luacontext.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+
 const char LuaDrawSpace::className[] = "DrawSpace";
 const Luna<LuaDrawSpace>::RegType LuaDrawSpace::Register[] =
 {
@@ -31,10 +34,9 @@ const Luna<LuaDrawSpace>::RegType LuaDrawSpace::Register[] =
 };
 
 
-LuaDrawSpace::LuaDrawSpace( lua_State* p_L ) :
-m_displayframerate_handler( NULL )
-{
-    m_displayframerate_handler = LuaContext::GetInstance()->GetDisplayFrameRateHandler();
+LuaDrawSpace::LuaDrawSpace( lua_State* p_L )
+{   
+    m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
 }
 
 LuaDrawSpace::~LuaDrawSpace( void ) 
@@ -52,9 +54,14 @@ int LuaDrawSpace::Lua_DisplayFramerate( lua_State* p_L )
 
     bool display = ( (int)luaL_checkinteger( p_L, 2 ) != 0 ? true : false );
 
-    if( m_displayframerate_handler )
+    if( m_scriptcalls_handler )
     {
-        (*m_displayframerate_handler)( display );
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:DisplayFramerate" );
+        props.AddPropValue<bool>( "state", display );
+
+        (*m_scriptcalls_handler)( props );        
+
     }
 
     return 0;

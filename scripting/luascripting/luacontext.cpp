@@ -9,8 +9,7 @@ LuaContext* LuaContext::m_instance = NULL;
 
 LuaContext::LuaContext( void ) :
 m_errorhandler( NULL ),
-m_printhandler( NULL ),
-m_displayframerate_handler( NULL )
+m_scriptcalls_handler( NULL )
 {
 }
 
@@ -83,19 +82,14 @@ void LuaContext::RegisterErrorHandler( BaseCallback<void, const dsstring&>* p_ha
     m_errorhandler = p_handler;
 }
 
-void LuaContext::RegisterPrintHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler )
+void LuaContext::RegisterScriptCallsHandler( DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>* p_handler )
 {
-    m_printhandler = p_handler;
+    m_scriptcalls_handler = p_handler;
 }
 
-void LuaContext::RegisterDisplayFrameRateHandler( DrawSpace::Core::BaseCallback<void, bool>* p_handler )
+DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>* LuaContext::GetScriptCallsHandler( void )
 {
-    m_displayframerate_handler = p_handler;
-}
-
-DrawSpace::Core::BaseCallback<void, bool>* LuaContext::GetDisplayFrameRateHandler( void )
-{
-    return m_displayframerate_handler;
+    return m_scriptcalls_handler;
 }
 
 lua_State* LuaContext::GetLuaState( void )
@@ -105,9 +99,13 @@ lua_State* LuaContext::GetLuaState( void )
 
 void LuaContext::print( const dsstring& p_text )
 {
-    if( m_printhandler )
+    if( m_scriptcalls_handler )
     {
-        (*m_printhandler)( p_text );
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "global:print" );
+        props.AddPropValue<dsstring>( "text", p_text );
+
+        (*m_scriptcalls_handler)( props );        
     }
 }
 

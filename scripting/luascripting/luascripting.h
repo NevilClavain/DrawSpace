@@ -27,11 +27,7 @@
 #include "luacontext.h"
 
 class LuaScripting : public Scripting
-{
-protected:
-
-    DrawSpace::Core::BaseCallback<void, int>*       m_handler;
-    
+{    
 public:
 
     LuaScripting( void );
@@ -42,18 +38,8 @@ public:
     void ExecChunk( const char* p_cmd );
     void ExecFile( const char* p_path );
 
-
     void RegisterScriptErrorHandler( ErrorHandler* p_error_handler );
-    void RegisterScriptGlobalPrintHandler( GlobalPrintHandler* p_handler );
-    void RegisterDrawspaceDisplayFramerateHandler( DrawspaceDisplayFramerateHandler* p_handler );
-
-    
-
-
-    //////////////////////////
-    void RegisterCB( DrawSpace::Core::BaseCallback<void, int>* p_handler );
-    void TestCBCall( void );
-
+    void RegisterScriptCallsHandler( ScriptCallsHandler* p_handler );
 };
 
 

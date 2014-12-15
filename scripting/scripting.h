@@ -22,6 +22,7 @@
 
 #include "drawspace_commons.h"
 #include "callback.h"
+#include "mediator.h"
 
 #ifndef _SCRIPTING_H_
 #define _SCRIPTING_H_
@@ -30,9 +31,8 @@ class Scripting
 {
 public:
 
-    typedef DrawSpace::Core::BaseCallback<void, const dsstring&> ErrorHandler;
-    typedef DrawSpace::Core::BaseCallback<void, const dsstring&> GlobalPrintHandler;
-    typedef DrawSpace::Core::BaseCallback<void, bool> DrawspaceDisplayFramerateHandler;
+    typedef DrawSpace::Core::BaseCallback<void, const dsstring&>                    ErrorHandler;
+    typedef DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>     ScriptCallsHandler;
 
     virtual bool Initialize( void ) = 0;
     virtual void Shutdown( void ) = 0;
@@ -40,16 +40,8 @@ public:
     virtual void ExecChunk( const char* p_cmd ) = 0;
     virtual void ExecFile( const char* p_path ) = 0;
 
-
     virtual void RegisterScriptErrorHandler( ErrorHandler* p_errorhandler ) = 0;
-    virtual void RegisterScriptGlobalPrintHandler( GlobalPrintHandler* p_handler ) = 0;
-    virtual void RegisterDrawspaceDisplayFramerateHandler( DrawspaceDisplayFramerateHandler* p_handler ) = 0;
-
-
-    //////////////////////////////////////////
-    virtual void RegisterCB( DrawSpace::Core::BaseCallback<void, int>* p_handler ) = 0;
-    virtual void TestCBCall( void ) = 0;
-
+    virtual void RegisterScriptCallsHandler( ScriptCallsHandler* p_handler ) = 0;
 };
 
 

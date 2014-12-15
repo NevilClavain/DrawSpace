@@ -171,10 +171,10 @@ public:
 
 protected:
 
-    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   TimerCallback;
-    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   ScriptingErrorCallback;
-    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>   ScriptingPrintCallback;
-    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, bool>              ScriptingDrawspaceDisplayFramerateCallback;
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>                   TimerCallback;
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>                   ScriptingErrorCallback;
+
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, DrawSpace::Core::PropertyPool&>    ScriptingCallsCallback;
 
 
 
@@ -183,8 +183,7 @@ protected:
 
     void on_timer( const dsstring& p_timername );
     void on_scripting_error( const dsstring& p_error );
-    void on_scripting_print( const dsstring& p_text );
-    void on_scripting_displayframerate( bool p_display );
+    void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );
 
     void compute_scenegraph_transforms( void );
     void compute_regs( void );
@@ -220,8 +219,7 @@ protected:
 
 
     ScriptingErrorCallback*                                 m_scripting_error_cb;
-    ScriptingPrintCallback*                                 m_scripting_print_cb;
-    ScriptingDrawspaceDisplayFramerateCallback*             m_scripting_dsdisplayframerate_cb;
+    ScriptingCallsCallback*                                 m_scripting_calls_cb;
 
     bool                                                    m_display_framerate;
 

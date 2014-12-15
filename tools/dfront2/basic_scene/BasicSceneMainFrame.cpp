@@ -57,10 +57,6 @@ m_display_framerate( false )
     m_timer.AddTimer( "timer", 100, m_timercb );
     m_timer.SetTimerState( "timer", true );
 
-
-
-
-
     m_scripting = DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface;
 
     m_scripting->Initialize();
@@ -68,33 +64,33 @@ m_display_framerate( false )
     m_scripting_error_cb = new ScriptingErrorCallback( this, &BasicSceneMainFrame::on_scripting_error );
     m_scripting->RegisterScriptErrorHandler( m_scripting_error_cb );
 
-    m_scripting_print_cb = new ScriptingPrintCallback( this, &BasicSceneMainFrame::on_scripting_print );
-    m_scripting->RegisterScriptGlobalPrintHandler( m_scripting_print_cb );
-
-    m_scripting_dsdisplayframerate_cb = new ScriptingDrawspaceDisplayFramerateCallback( this, &BasicSceneMainFrame::on_scripting_displayframerate );
-    m_scripting->RegisterDrawspaceDisplayFramerateHandler( m_scripting_dsdisplayframerate_cb );
-
+    m_scripting_calls_cb = new ScriptingCallsCallback( this, &BasicSceneMainFrame::on_scripting_calls );
+    m_scripting->RegisterScriptCallsHandler( m_scripting_calls_cb );
 }
-
 
 void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
 {
     PrintOutputConsole( p_error );
 }
 
-void BasicSceneMainFrame::on_scripting_print( const dsstring& p_text )
+void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool )
 {
-    PrintOutputConsole( p_text );
-}
+    dsstring script_call_id = p_propertypool.GetPropValue<dsstring>( "script_call_id" );
 
-void BasicSceneMainFrame::on_scripting_displayframerate( bool p_display )
-{
-    m_display_framerate = p_display;
+    if( "global:print" == script_call_id )
+    {
+        dsstring text = p_propertypool.GetPropValue<dsstring>( "text" );
+        PrintOutputConsole( text );
+    }
+    else if( "DrawSpace:DisplayFramerate" == script_call_id )
+    {
+        bool state = p_propertypool.GetPropValue<bool>( "state" );
+        m_display_framerate = state;
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
 {
-    // TODO
     m_scripting->ExecFile( p_scriptfilepath.c_str() );
 }
 
@@ -1342,8 +1338,6 @@ void BasicSceneMainFrame::OnMvtsListItemSelected( wxListEvent& p_event )
 
 void BasicSceneMainFrame::OnCreateRegButtonClicked( wxCommandEvent& p_event )
 {
-    DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->TestCBCall();
-
     BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register creation" );
 
     dialog->SetData( "registers_map", &m_registers );

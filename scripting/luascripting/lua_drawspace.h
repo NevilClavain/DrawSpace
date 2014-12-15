@@ -26,13 +26,14 @@
 
 #include "drawspace_commons.h"
 #include "callback.h"
+#include "mediator.h"
 #include "luna.h"
 
 class LuaDrawSpace
 {
 public:
 
-    DrawSpace::Core::BaseCallback<void, bool>*       m_displayframerate_handler;
+    DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
 
 protected:
 
