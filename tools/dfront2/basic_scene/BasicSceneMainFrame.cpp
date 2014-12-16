@@ -41,6 +41,7 @@ m_last_xmouse( 0 ),
 m_last_ymouse( 0 ),
 m_current_camera( NULL ),
 m_display_framerate( false ),
+m_display_currentcamera( false ),
 m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false )
 {
     m_transftype_button->Enable( false );
@@ -90,6 +91,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     {
         bool state = p_propertypool.GetPropValue<bool>( "state" );
         m_display_framerate = state;
+    }
+    else if( "DrawSpace:DisplayCurrentCamera" == script_call_id )
+    {
+        bool state = p_propertypool.GetPropValue<bool>( "state" );
+        m_display_currentcamera = state;
     }
 }
 
@@ -733,15 +739,18 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
         {
             renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
         }
-        
-        dsstring camera_name;
-        m_scenegraph.GetCurrentCameraName( camera_name );
-        if( "" == camera_name )
-        {
-            camera_name = "...";
-        }
 
-        renderer->DrawText( 255, 0, 0, 10, 40, "current camera : %s", camera_name.c_str() );
+        if( m_display_currentcamera )
+        {            
+            dsstring camera_name;
+            m_scenegraph.GetCurrentCameraName( camera_name );
+            if( "" == camera_name )
+            {
+                camera_name = "...";
+            }
+
+            renderer->DrawText( 255, 0, 0, 10, 40, "current camera : %s", camera_name.c_str() );
+        }
         
 
 

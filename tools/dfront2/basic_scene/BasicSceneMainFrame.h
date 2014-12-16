@@ -222,6 +222,7 @@ protected:
     ScriptingCallsCallback*                                 m_scripting_calls_cb;
 
     bool                                                    m_display_framerate;
+    bool                                                    m_display_currentcamera;
 
     wxFont                                                  m_console_font;
 

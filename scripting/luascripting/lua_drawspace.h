@@ -43,6 +43,7 @@ public:
     ~LuaDrawSpace( void );
      
     int Lua_DisplayFramerate( lua_State* p_L );
+    int Lua_DisplayCurrentCamera( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaDrawSpace>::RegType Register[];
