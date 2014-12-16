@@ -23,8 +23,8 @@
 #include "BasicSceneMainFrame.h"
 #include "drawspace.h"
 #include "adapters.h"
-
 #include "BasicSceneObjectPropertiesDialog.h"
+#include "buildobjects.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -96,6 +96,30 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     {
         bool state = p_propertypool.GetPropValue<bool>( "state" );
         m_display_currentcamera = state;
+    }
+    else if( "SpaceBoxBuilder:BuildIt" == script_call_id )
+    {
+        Spacebox::Descriptor descriptor = p_propertypool.GetPropValue<Spacebox::Descriptor>( "descr" );
+
+        MetadataScenegraphEntry entry;
+        BuildSpaceBox( descriptor, entry );
+
+        m_scenegraph.RegisterNode( entry.node );
+
+        m_metada_scenegraph[descriptor.scene_name] = entry;
+
+        // call UpdateOutputQueue() for all passes
+        
+        for( size_t i = 0; i < m_ordered_configs.size(); i++ )
+        {
+            Pass* pass = dynamic_cast<Pass*>( m_ordered_configs[i] );
+            if( pass )
+            {
+                pass->GetRenderingQueue()->UpdateOutputQueue();
+            }
+        }
+
+        wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
     }
 }
 

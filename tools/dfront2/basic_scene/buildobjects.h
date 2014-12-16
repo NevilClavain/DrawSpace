@@ -20,46 +20,7 @@
 *                                                                          
 */
 
-#include "luascripting.h"
-#include "lua_drawspace.h"
-#include "lua_spaceboxbuilder.h"
+#include "drawspace.h"
+#include "BasicSceneMainFrame.h"
 
-
-LuaScripting::LuaScripting( void )
-{
-}
-
-bool LuaScripting::Initialize( void )
-{
-    LuaContext::GetInstance()->Startup();
-    Luna<LuaDrawSpace>::Register( LuaContext::GetInstance()->GetLuaState() );
-    Luna<LuaSpaceboxBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
-
-    return true;
-}
-
-void LuaScripting::Shutdown( void )
-{
-    LuaContext::GetInstance()->Stop();
-}
-
-void LuaScripting::ExecChunk( const char* p_cmd )
-{
-    LuaContext::GetInstance()->Exec( p_cmd );
-}
-
-void LuaScripting::ExecFile( const char* p_path )
-{
-    LuaContext::GetInstance()->Execfile( p_path );
-}
-
-void LuaScripting::RegisterScriptErrorHandler( ErrorHandler* p_error_handler )
-{
-    LuaContext::GetInstance()->RegisterErrorHandler( p_error_handler );
-}
-
-void LuaScripting::RegisterScriptCallsHandler( ScriptCallsHandler* p_handler )
-{
-    LuaContext::GetInstance()->RegisterScriptCallsHandler( p_handler );
-}
-
+bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSceneMainFrame::MetadataScenegraphEntry& p_entry );

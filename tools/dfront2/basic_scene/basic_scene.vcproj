@@ -220,6 +220,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\buildobjects.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\buildobjects.h"
+				>
+			</File>
+			<File
 				RelativePath=".\panel.cpp"
 				>
 			</File>

@@ -61,8 +61,7 @@ int LuaDrawSpace::Lua_DisplayFramerate( lua_State* p_L )
         props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:DisplayFramerate" );
         props.AddPropValue<bool>( "state", display );
 
-        (*m_scriptcalls_handler)( props );        
-
+        (*m_scriptcalls_handler)( props );
     }
 
     return 0;
@@ -85,8 +84,7 @@ int LuaDrawSpace::Lua_DisplayCurrentCamera( lua_State* p_L )
         props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:DisplayCurrentCamera" );
         props.AddPropValue<bool>( "state", display );
 
-        (*m_scriptcalls_handler)( props );        
-
+        (*m_scriptcalls_handler)( props );
     }
 
     return 0;

@@ -41,6 +41,23 @@ public:
 	static const int    TopQuad      = 4;
 	static const int    BottomQuad   = 5;
 
+
+    typedef struct 
+    {
+        dsstring        fx_name;
+        long            rendering_order;
+        dsstring        textures[6][Core::RenderingNode::NbMaxTextures];
+
+    } PassDescriptor;
+
+    typedef struct
+    {
+        dsstring                            scene_name;
+        std::map<dsstring, PassDescriptor>  passes_slots;
+
+    } Descriptor;
+
+
 protected:
 
     typedef DrawSpace::Core::CallBack<Spacebox, void, DrawSpace::Core::RenderingNode*>   RenderingNodeDrawCallback;

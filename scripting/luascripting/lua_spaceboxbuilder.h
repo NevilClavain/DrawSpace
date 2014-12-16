@@ -20,46 +20,41 @@
 *                                                                          
 */
 
-#include "luascripting.h"
-#include "lua_drawspace.h"
-#include "lua_spaceboxbuilder.h"
+#ifndef _LUA_SPACEBOXBUILDER_H_
+#define _LUA_SPACEBOXBUILDER_H_
 
+#include "drawspace_commons.h"
+#include "callback.h"
+#include "mediator.h"
+#include "spacebox.h"
+#include "luna.h"
 
-LuaScripting::LuaScripting( void )
+class LuaSpaceboxBuilder
 {
-}
+public:
 
-bool LuaScripting::Initialize( void )
-{
-    LuaContext::GetInstance()->Startup();
-    Luna<LuaDrawSpace>::Register( LuaContext::GetInstance()->GetLuaState() );
-    Luna<LuaSpaceboxBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
+    DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
 
-    return true;
-}
+protected:
 
-void LuaScripting::Shutdown( void )
-{
-    LuaContext::GetInstance()->Stop();
-}
+    DrawSpace::Spacebox::Descriptor m_descriptor;
 
-void LuaScripting::ExecChunk( const char* p_cmd )
-{
-    LuaContext::GetInstance()->Exec( p_cmd );
-}
 
-void LuaScripting::ExecFile( const char* p_path )
-{
-    LuaContext::GetInstance()->Execfile( p_path );
-}
 
-void LuaScripting::RegisterScriptErrorHandler( ErrorHandler* p_error_handler )
-{
-    LuaContext::GetInstance()->RegisterErrorHandler( p_error_handler );
-}
+public:
+    LuaSpaceboxBuilder( lua_State* p_L );
+    ~LuaSpaceboxBuilder( void );
+     
+    int Lua_SetSceneName( lua_State* p_L );
+    int Lua_RegisterPassSlot( lua_State* p_L );
+    int Lua_SetPassSlotFxName( lua_State* p_L );
+    int Lua_SetPassSlotRenderingOrder( lua_State* p_L );
+    int Lua_SetPassSlotTextureName( lua_State* p_L );
+    int Lua_BuildIt( lua_State* p_L );
 
-void LuaScripting::RegisterScriptCallsHandler( ScriptCallsHandler* p_handler )
-{
-    LuaContext::GetInstance()->RegisterScriptCallsHandler( p_handler );
-}
+    
+    static const char className[];
+    static const Luna<LuaSpaceboxBuilder>::RegType Register[];
+};
 
+#endif

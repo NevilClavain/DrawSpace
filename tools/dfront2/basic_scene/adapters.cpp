@@ -2255,24 +2255,9 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     metadata_scenegraph_entry.propose_body = false;
     metadata_scenegraph_entry.propose_movement = false;
     
-    /*
-    DrawSpace::Utils::Matrix scale_mat;
-    scale_mat.Scale( 20.0, 20.0, 20.0 );
-    metadata_scenegraph_entry.matrix_stack.PushMatrix( scale_mat );
-    */
-
-
     BasicSceneMainFrame::TransformationMatrixDescriptor descr;
 
     descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE;
-
-    /*
-    descr.arg.angle = 0.0;
-    descr.arg.scale[0] = scale_mat( 0, 0 );
-    descr.arg.scale[1] = scale_mat( 1, 1 );
-    descr.arg.scale[2] = scale_mat( 2, 2 );
-    descr.arg.scale[3] = 1.0;
-    */
 
     descr.arg.translation_vals_link[0].value = 0.0;
     descr.arg.translation_vals_link[0].var_alias = "...";
