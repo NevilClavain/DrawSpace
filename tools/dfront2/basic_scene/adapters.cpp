@@ -2149,10 +2149,6 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         buffer = pass_slot_name.ToAscii();
         dsstring pass_slot_name_2 = buffer.data();
 
-        // ICI : pass slot name
-        //spacebox->RegisterPassSlot( pass_slot_name_2 );
-        //sb_descr.passes_slots[pass_slot_name_2] = pass_descr;
-
         for( long i = 0; i < 6; i++ )
         {
             dsstring sb_type;
@@ -2211,9 +2207,6 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
 
                 if( pass_slot_texture_name_2 != "..." )
                 {                               
-                    //Texture* texture = static_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( pass_slot_texture_name_2 ) );
-                    //spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetTexture( texture, j );
-
                     sb_descr.passes_slots[pass_slot_name_2].textures[i][j] = pass_slot_texture_name_2;
                 }
             }
@@ -2231,13 +2224,6 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         // ICI : pass slot fx name
         sb_descr.passes_slots[pass_slot_name_2].fx_name = pass_slot_fxname_2;
 
-        /*
-        Fx* fx = static_cast<Fx*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_slot_fxname_2 ) );
-        for( long i = 0; i < 6; i++ )
-        {
-            spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetFx( fx );
-        }
-        */
 
         curr_id = pass_slot_index;
         curr_id += ".rendering_order";
@@ -2247,13 +2233,6 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         int rendering_order;
         value.GetAs<int>( &rendering_order );
 
-        /*
-        for( long i = 0; i < 6; i++ )
-        {
-            spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetOrderNumber( rendering_order );
-        }
-        */
-
         sb_descr.passes_slots[pass_slot_name_2].rendering_order = rendering_order;
 
     }
@@ -2261,56 +2240,11 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     // register spacebox in scenegraph
     DrawSpace::Scenegraph* scenegraph = (DrawSpace::Scenegraph*)p_dialog->GetData( "scenegraph" );
 
-    //scenegraph->RegisterNode( spacebox );
-
     std::map<dsstring, BasicSceneMainFrame::MetadataScenegraphEntry>* metadata_scenegraph = (std::map<dsstring, BasicSceneMainFrame::MetadataScenegraphEntry>*)p_dialog->GetData( "metadata_scenegraph" );
 
     
     BasicSceneMainFrame::MetadataScenegraphEntry metadata_scenegraph_entry;
 
-    /*
-    metadata_scenegraph_entry.node = spacebox;
-    metadata_scenegraph_entry.transformation_source_type = BasicSceneMainFrame::TRANSFORMATIONSOURCE_MATRIXSTACK;
-    metadata_scenegraph_entry.propose_matrixstack = true;
-    metadata_scenegraph_entry.propose_body = false;
-    metadata_scenegraph_entry.propose_movement = false;
-    
-    BasicSceneMainFrame::TransformationMatrixDescriptor descr;
-
-    descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE;
-
-    descr.arg.translation_vals_link[0].value = 0.0;
-    descr.arg.translation_vals_link[0].var_alias = "...";
-    descr.arg.translation_vals_link[1].value = 0.0;
-    descr.arg.translation_vals_link[1].var_alias = "...";
-    descr.arg.translation_vals_link[2].value = 0.0;
-    descr.arg.translation_vals_link[2].var_alias = "...";
-
-    descr.arg.rotation_vals_link[0].value = 0.0;
-    descr.arg.rotation_vals_link[0].var_alias = "...";
-    descr.arg.rotation_vals_link[1].value = 0.0;
-    descr.arg.rotation_vals_link[1].var_alias = "...";
-    descr.arg.rotation_vals_link[2].value = 0.0;
-    descr.arg.rotation_vals_link[2].var_alias = "...";
-
-    descr.arg.angle_val_link.value = 0.0;
-    descr.arg.angle_val_link.var_alias = "...";
-
-    descr.arg.scale_vals_link[0].value = 20.0;
-    descr.arg.scale_vals_link[0].var_alias = "...";
-    descr.arg.scale_vals_link[1].value = 20.0;
-    descr.arg.scale_vals_link[1].var_alias = "...";
-    descr.arg.scale_vals_link[2].value = 20.0;
-    descr.arg.scale_vals_link[2].var_alias = "...";
-
-    
-    metadata_scenegraph_entry.matrix_stack_descr.push_back( descr );
-
-    
-
-    (*metadata_scenegraph)[alias] = metadata_scenegraph_entry;
-
-    */
 
     dsstring error_msg;
     BuildSpaceBox( sb_descr, metadata_scenegraph_entry, error_msg );
