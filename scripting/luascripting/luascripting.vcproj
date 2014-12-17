@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\..;.\..\..\src;&quot;./../../../DrawSpace_thirdparts/lua-1.5/include&quot;"
+				AdditionalIncludeDirectories=".\..;.\..\..\src;&quot;./../../../DrawSpace_thirdparts/lua-1.5/include&quot;;./../../../DrawSpace_thirdparts/log4cxx/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LUASCRIPTING_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

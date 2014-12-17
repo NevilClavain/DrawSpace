@@ -20,6 +20,7 @@
 *                                                                          
 */
 
+#include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 #include "drawspace.h"
 #include "adapters.h"
@@ -102,24 +103,32 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         Spacebox::Descriptor descriptor = p_propertypool.GetPropValue<Spacebox::Descriptor>( "descr" );
 
         MetadataScenegraphEntry entry;
-        BuildSpaceBox( descriptor, entry );
+        dsstring error_msg;
+        bool status = BuildSpaceBox( descriptor, entry, error_msg );
 
-        m_scenegraph.RegisterNode( entry.node );
-
-        m_metada_scenegraph[descriptor.scene_name] = entry;
-
-        // call UpdateOutputQueue() for all passes
-        
-        for( size_t i = 0; i < m_ordered_configs.size(); i++ )
+        if( status )
         {
-            Pass* pass = dynamic_cast<Pass*>( m_ordered_configs[i] );
-            if( pass )
-            {
-                pass->GetRenderingQueue()->UpdateOutputQueue();
-            }
-        }
+            m_scenegraph.RegisterNode( entry.node );
 
-        wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
+            m_metada_scenegraph[descriptor.scene_name] = entry;
+
+            // call UpdateOutputQueue() for all passes
+            
+            for( size_t i = 0; i < m_ordered_configs.size(); i++ )
+            {
+                Pass* pass = dynamic_cast<Pass*>( m_ordered_configs[i] );
+                if( pass )
+                {
+                    pass->GetRenderingQueue()->UpdateOutputQueue();
+                }
+            }
+
+            wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
+        }
+        else
+        {
+            wxMessageBox( error_msg, "DrawFront error", wxICON_ERROR );
+        }
     }
 }
 

@@ -22,6 +22,7 @@
 
 #include "lua_spaceboxbuilder.h"
 #include "luacontext.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -90,17 +91,15 @@ int LuaSpaceboxBuilder::Lua_SetPassSlotFxName( lua_State* p_L )
     const char* pass_name = luaL_checkstring( p_L, 2 );
     const char* fx_name = luaL_checkstring( p_L, 3 );
 
-    bool status = true;
     if( 0 == m_descriptor.passes_slots.count( pass_name ) )
     {
-        status = false;
+        _DSEXCEPTION( "scripting FATAL : unknown pass" );
     }
     else
     {
         m_descriptor.passes_slots[pass_name].fx_name = fx_name;
     }
-    lua_pushunsigned( p_L, (lua_Unsigned)status );
-    return 1;
+    return 0;
 }
 int LuaSpaceboxBuilder::Lua_SetPassSlotRenderingOrder( lua_State* p_L )
 {
@@ -112,18 +111,16 @@ int LuaSpaceboxBuilder::Lua_SetPassSlotRenderingOrder( lua_State* p_L )
 	}
     const char* pass_name = luaL_checkstring( p_L, 2 );
     long order = luaL_checkinteger( p_L, 3 );
-
-    bool status = true;
+    
     if( 0 == m_descriptor.passes_slots.count( pass_name ) )
     {
-        status = false;
+        _DSEXCEPTION( "scripting FATAL : unknown pass" );
     }
     else
     {
         m_descriptor.passes_slots[pass_name].rendering_order = order;
     }
-    lua_pushunsigned( p_L, (lua_Unsigned)status );
-    return 1;
+    return 0;
 }
 int LuaSpaceboxBuilder::Lua_SetPassSlotTextureName( lua_State* p_L )
 {
@@ -138,18 +135,15 @@ int LuaSpaceboxBuilder::Lua_SetPassSlotTextureName( lua_State* p_L )
     long face_id = luaL_checkinteger( p_L, 4 );
     long stage = luaL_checkinteger( p_L, 5 );
     
-
-    bool status = true;
     if( 0 == m_descriptor.passes_slots.count( pass_name ) )
     {
-        status = false;
+        _DSEXCEPTION( "scripting FATAL : unknown pass" );
     }
     else
     {
         m_descriptor.passes_slots[pass_name].textures[face_id][stage] = texture_name;
     }
-    lua_pushunsigned( p_L, (lua_Unsigned)status );
-    return 1;
+    return 0;
 }
 
 int LuaSpaceboxBuilder::Lua_BuildIt( lua_State* p_L )

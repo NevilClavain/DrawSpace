@@ -25,7 +25,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSceneMainFrame::MetadataScenegraphEntry& p_entry )
+bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSceneMainFrame::MetadataScenegraphEntry& p_entry, dsstring& p_error )
 {
     Spacebox* spacebox = new Spacebox();
     spacebox->SetSceneName( p_descriptor.scene_name );
@@ -36,7 +36,19 @@ bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSc
     {
         spacebox->RegisterPassSlot( it->first.c_str() );
 
-        Fx* fx = static_cast<Fx*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->second.fx_name ) );
+        if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( it->second.fx_name ) )
+        {
+            p_error = "BuildSpaceBox : unknown Fx config name (" + it->second.fx_name + dsstring( ")" );
+            return false;
+        }
+
+        Fx* fx = dynamic_cast<Fx*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->second.fx_name ) );
+
+        if( NULL == fx )
+        {
+            p_error = "BuildSpaceBox : specified config is not an Fx (" + it->second.fx_name + dsstring( ")" );
+            return false;
+        }
 
         for( long i = 0; i < 6; i++ )
         {
@@ -44,7 +56,19 @@ bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSc
             {
                 if( it->second.textures[i][j] != "" )
                 {
-                    Texture* texture = static_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( it->second.textures[i][j] ) );
+                    if( false == AssetsBase::GetInstance()->AssetIdExists( it->second.textures[i][j] ) )
+                    {
+                        p_error = "BuildSpaceBox : unknown texture asset name (" + it->second.textures[i][j] + dsstring( ")" );
+                        return false;
+                    }
+
+                    Texture* texture = dynamic_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( it->second.textures[i][j] ) );
+                    if( NULL == texture )
+                    {
+                        p_error = "BuildSpaceBox : specified asset is not a Texture (" + it->second.textures[i][j] + dsstring( ")" );
+                        return false;
+                    }
+
                     spacebox->GetNodeFromPass( it->first, i )->SetTexture( texture, j );
                 }
             }
@@ -91,5 +115,7 @@ bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSc
     p_entry.matrix_stack_descr.push_back( descr );
     
     p_entry.node = spacebox;
+
+    p_error = "";
     return true;
 }
