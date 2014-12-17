@@ -127,7 +127,168 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         }
         else
         {
-            wxMessageBox( error_msg, "DrawFront error", wxICON_ERROR );
+            wxMessageBox( error_msg, "Script error", wxICON_ERROR );
+        }
+    }
+    else if( "SpaceBoxBuilder:ClearMatrixStack" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "name" );
+
+        if( m_metada_scenegraph.count( scene_name ) > 0 )
+        {
+            m_metada_scenegraph[scene_name].matrix_stack_descr.clear();
+        }
+        else
+        {
+            wxMessageBox( "Unknown spacebox scene name", "Script error", wxICON_ERROR );
+        }
+    }
+    else if( "SpaceBoxBuilder:AddMatrix" == script_call_id )
+    {
+        dsstring mat_type = p_propertypool.GetPropValue<dsstring>( "mat_type" );
+
+        dsreal x, y, z, angle;
+        dsstring xreg, yreg, zreg, anglereg;
+        TransformationMatrixDescriptor mat_descr;
+        
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "name" );
+
+        if( m_metada_scenegraph.count( scene_name ) > 0 )
+        {           
+            if( "scaling" == mat_type )
+            {
+                x = p_propertypool.GetPropValue<dsreal>( "x" );
+                y = p_propertypool.GetPropValue<dsreal>( "y" );
+                z = p_propertypool.GetPropValue<dsreal>( "z" );
+
+                xreg = p_propertypool.GetPropValue<dsstring>( "xreg" );
+                yreg = p_propertypool.GetPropValue<dsstring>( "yreg" );
+                zreg = p_propertypool.GetPropValue<dsstring>( "zreg" );
+
+                mat_descr.ope = TRANSFORMATIONMATRIX_SCALE;
+
+                mat_descr.arg.scale_vals_link[0].value = x;
+                mat_descr.arg.scale_vals_link[0].var_alias = ( xreg != "" ? xreg : "..." );
+
+                mat_descr.arg.scale_vals_link[1].value = y;
+                mat_descr.arg.scale_vals_link[1].var_alias = ( yreg != "" ? yreg : "..." );
+                
+                mat_descr.arg.scale_vals_link[2].value = z;
+                mat_descr.arg.scale_vals_link[2].var_alias = ( zreg != "" ? zreg : "..." );
+
+                mat_descr.arg.translation_vals_link[0].var_alias = "...";
+                mat_descr.arg.translation_vals_link[1].var_alias = "...";
+                mat_descr.arg.translation_vals_link[2].var_alias = "...";
+                mat_descr.arg.translation_vals_link[0].value = 0.0;
+                mat_descr.arg.translation_vals_link[1].value = 0.0;
+                mat_descr.arg.translation_vals_link[2].value = 0.0;
+
+
+                mat_descr.arg.rotation_vals_link[0].var_alias = "...";
+                mat_descr.arg.rotation_vals_link[1].var_alias = "...";
+                mat_descr.arg.rotation_vals_link[2].var_alias = "...";
+                mat_descr.arg.rotation_vals_link[0].value = 0.0;
+                mat_descr.arg.rotation_vals_link[1].value = 0.0;
+                mat_descr.arg.rotation_vals_link[2].value = 0.0;
+
+
+                mat_descr.arg.angle_val_link.var_alias = "...";
+
+
+                m_metada_scenegraph[scene_name].matrix_stack_descr.push_back( mat_descr );
+            }
+            else if( "translation" == mat_type )
+            {
+                x = p_propertypool.GetPropValue<dsreal>( "x" );
+                y = p_propertypool.GetPropValue<dsreal>( "y" );
+                z = p_propertypool.GetPropValue<dsreal>( "z" );
+
+                xreg = p_propertypool.GetPropValue<dsstring>( "xreg" );
+                yreg = p_propertypool.GetPropValue<dsstring>( "yreg" );
+                zreg = p_propertypool.GetPropValue<dsstring>( "zreg" );
+
+                mat_descr.ope = TRANSFORMATIONMATRIX_TRANSLATION;
+
+                mat_descr.arg.translation_vals_link[0].value = x;
+                mat_descr.arg.translation_vals_link[0].var_alias = ( xreg != "" ? xreg : "..." );
+
+                mat_descr.arg.translation_vals_link[1].value = y;
+                mat_descr.arg.translation_vals_link[1].var_alias = ( yreg != "" ? yreg : "..." );
+                
+                mat_descr.arg.translation_vals_link[2].value = z;
+                mat_descr.arg.translation_vals_link[2].var_alias = ( zreg != "" ? zreg : "..." );
+
+
+                mat_descr.arg.scale_vals_link[0].var_alias = "...";
+                mat_descr.arg.scale_vals_link[1].var_alias = "...";
+                mat_descr.arg.scale_vals_link[2].var_alias = "...";
+                mat_descr.arg.scale_vals_link[0].value = 0.0;
+                mat_descr.arg.scale_vals_link[1].value = 0.0;
+                mat_descr.arg.scale_vals_link[2].value = 0.0;
+
+                mat_descr.arg.rotation_vals_link[0].var_alias = "...";
+                mat_descr.arg.rotation_vals_link[1].var_alias = "...";
+                mat_descr.arg.rotation_vals_link[2].var_alias = "...";
+                mat_descr.arg.rotation_vals_link[0].value = 0.0;
+                mat_descr.arg.rotation_vals_link[1].value = 0.0;
+                mat_descr.arg.rotation_vals_link[2].value = 0.0;
+
+                mat_descr.arg.angle_val_link.var_alias = "...";
+
+                m_metada_scenegraph[scene_name].matrix_stack_descr.push_back( mat_descr );
+            }
+            else if( "rotation" == mat_type )
+            {
+                x = p_propertypool.GetPropValue<dsreal>( "x" );
+                y = p_propertypool.GetPropValue<dsreal>( "y" );
+                z = p_propertypool.GetPropValue<dsreal>( "z" );
+                angle = p_propertypool.GetPropValue<dsreal>( "angle" );
+
+                xreg = p_propertypool.GetPropValue<dsstring>( "xreg" );
+                yreg = p_propertypool.GetPropValue<dsstring>( "yreg" );
+                zreg = p_propertypool.GetPropValue<dsstring>( "zreg" );
+                anglereg = p_propertypool.GetPropValue<dsstring>( "areg" );
+
+                mat_descr.ope = TRANSFORMATIONMATRIX_ROTATION;
+
+                mat_descr.arg.rotation_vals_link[0].value = x;
+                mat_descr.arg.rotation_vals_link[0].var_alias = ( xreg != "" ? xreg : "..." );
+
+                mat_descr.arg.rotation_vals_link[1].value = y;
+                mat_descr.arg.rotation_vals_link[1].var_alias = ( yreg != "" ? yreg : "..." );
+                
+                mat_descr.arg.rotation_vals_link[2].value = z;
+                mat_descr.arg.rotation_vals_link[2].var_alias = ( zreg != "" ? zreg : "..." );
+
+                mat_descr.arg.angle_val_link.value = angle;
+                mat_descr.arg.angle_val_link.var_alias = ( anglereg != "" ? anglereg : "..." );
+
+
+                mat_descr.arg.scale_vals_link[0].var_alias = "...";
+                mat_descr.arg.scale_vals_link[1].var_alias = "...";
+                mat_descr.arg.scale_vals_link[2].var_alias = "...";
+                mat_descr.arg.scale_vals_link[0].value = 0.0;
+                mat_descr.arg.scale_vals_link[1].value = 0.0;
+                mat_descr.arg.scale_vals_link[2].value = 0.0;
+
+                mat_descr.arg.translation_vals_link[0].var_alias = "...";
+                mat_descr.arg.translation_vals_link[1].var_alias = "...";
+                mat_descr.arg.translation_vals_link[2].var_alias = "...";
+                mat_descr.arg.translation_vals_link[0].value = 0.0;
+                mat_descr.arg.translation_vals_link[1].value = 0.0;
+                mat_descr.arg.translation_vals_link[2].value = 0.0;
+
+
+                m_metada_scenegraph[scene_name].matrix_stack_descr.push_back( mat_descr );
+            }        
+            else
+            {
+                wxMessageBox( "Bad matrix type", "Script error", wxICON_ERROR );
+            }            
+        }
+        else
+        {
+            wxMessageBox( "Unknown spacebox scene name", "Script error", wxICON_ERROR );
         }
     }
 }

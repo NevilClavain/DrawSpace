@@ -51,6 +51,8 @@ public:
     int Lua_SetPassSlotRenderingOrder( lua_State* p_L );
     int Lua_SetPassSlotTextureName( lua_State* p_L );
     int Lua_BuildIt( lua_State* p_L );
+    int Lua_ClearMatrixStack( lua_State* p_L );
+    int Lua_AddMatrix( lua_State* p_L );
 
     
     static const char className[];
