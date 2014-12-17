@@ -22,6 +22,7 @@
 
 #include <wx/wx.h>
 #include "adapters.h"
+#include "buildobjects.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Dynamics;
@@ -2110,10 +2111,13 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         return;
     }
 
+    Spacebox::Descriptor        sb_descr;
+    Spacebox::PassDescriptor    pass_descr;
 
-    Spacebox* spacebox = new Spacebox();
+    //Spacebox* spacebox = new Spacebox();
+    //spacebox->SetSceneName( alias );
+    sb_descr.scene_name = alias;
 
-    spacebox->SetSceneName( alias );
 
     long pass_slot_count = 0;
     wxEnumProperty* prop3;
@@ -2146,7 +2150,8 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         dsstring pass_slot_name_2 = buffer.data();
 
         // ICI : pass slot name
-        spacebox->RegisterPassSlot( pass_slot_name_2 );
+        //spacebox->RegisterPassSlot( pass_slot_name_2 );
+        //sb_descr.passes_slots[pass_slot_name_2] = pass_descr;
 
         for( long i = 0; i < 6; i++ )
         {
@@ -2206,8 +2211,10 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
 
                 if( pass_slot_texture_name_2 != "..." )
                 {                               
-                    Texture* texture = static_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( pass_slot_texture_name_2 ) );
-                    spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetTexture( texture, j );
+                    //Texture* texture = static_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( pass_slot_texture_name_2 ) );
+                    //spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetTexture( texture, j );
+
+                    sb_descr.passes_slots[pass_slot_name_2].textures[i][j] = pass_slot_texture_name_2;
                 }
             }
         }
@@ -2222,12 +2229,15 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         buffer = pass_slot_fxname.ToAscii();
         dsstring pass_slot_fxname_2 = buffer.data();
         // ICI : pass slot fx name
+        sb_descr.passes_slots[pass_slot_name_2].fx_name = pass_slot_fxname_2;
 
+        /*
         Fx* fx = static_cast<Fx*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_slot_fxname_2 ) );
         for( long i = 0; i < 6; i++ )
         {
             spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetFx( fx );
         }
+        */
 
         curr_id = pass_slot_index;
         curr_id += ".rendering_order";
@@ -2237,18 +2247,28 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
         int rendering_order;
         value.GetAs<int>( &rendering_order );
 
+        /*
         for( long i = 0; i < 6; i++ )
         {
             spacebox->GetNodeFromPass( pass_slot_name_2, i )->SetOrderNumber( rendering_order );
-        }                
+        }
+        */
+
+        sb_descr.passes_slots[pass_slot_name_2].rendering_order = rendering_order;
+
     }
 
     // register spacebox in scenegraph
     DrawSpace::Scenegraph* scenegraph = (DrawSpace::Scenegraph*)p_dialog->GetData( "scenegraph" );
-    scenegraph->RegisterNode( spacebox );
+
+    //scenegraph->RegisterNode( spacebox );
+
     std::map<dsstring, BasicSceneMainFrame::MetadataScenegraphEntry>* metadata_scenegraph = (std::map<dsstring, BasicSceneMainFrame::MetadataScenegraphEntry>*)p_dialog->GetData( "metadata_scenegraph" );
 
+    
     BasicSceneMainFrame::MetadataScenegraphEntry metadata_scenegraph_entry;
+
+    /*
     metadata_scenegraph_entry.node = spacebox;
     metadata_scenegraph_entry.transformation_source_type = BasicSceneMainFrame::TRANSFORMATIONSOURCE_MATRIXSTACK;
     metadata_scenegraph_entry.propose_matrixstack = true;
@@ -2289,6 +2309,15 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     
 
     (*metadata_scenegraph)[alias] = metadata_scenegraph_entry;
+
+    */
+
+    dsstring error_msg;
+    BuildSpaceBox( sb_descr, metadata_scenegraph_entry, error_msg );
+    
+    scenegraph->RegisterNode( metadata_scenegraph_entry.node );
+    (*metadata_scenegraph)[alias] = metadata_scenegraph_entry;
+
 
     // call UpdateOutputQueue() for all passes
     std::vector<DrawSpace::Core::Configurable*>* configs = (std::vector<DrawSpace::Core::Configurable*>*)p_dialog->GetData( "configs" );
