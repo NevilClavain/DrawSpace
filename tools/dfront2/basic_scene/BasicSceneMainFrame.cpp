@@ -291,6 +291,21 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             wxMessageBox( "Unknown spacebox scene name", "Script error", wxICON_ERROR );
         }
     }
+    else if( "DrawSpace:CreateConstRegister" == script_call_id )
+    {
+        dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
+        dsreal reg_val = p_propertypool.GetPropValue<dsreal>( "reg_val" );
+
+        BasicSceneMainFrame::RegisterEntry register_entry;
+        memset( &register_entry, 0, sizeof( BasicSceneMainFrame::RegisterEntry ) );
+
+        register_entry.mode = BasicSceneMainFrame::REGISTER_CONSTANT;
+        register_entry.const_value = reg_val;
+        register_entry.id = wxWidgetAdapter::GetInstance()->m_register_index++;
+        m_registers[reg_name] = register_entry;
+
+        wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
