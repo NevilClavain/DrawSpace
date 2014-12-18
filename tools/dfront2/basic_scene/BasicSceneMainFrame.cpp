@@ -79,6 +79,29 @@ void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
     PrintOutputConsole( p_error );
 }
 
+bool BasicSceneMainFrame::set_var_alias( const dsstring& p_source, dsstring& p_dest )
+{
+    bool status = true;
+    if( p_source != "" )
+    {
+        if( m_registers.count( p_source ) > 0 )
+        {
+            p_dest = p_source;
+        }
+        else
+        {
+            wxMessageBox( "unknown register : " + p_source, "Script error", wxICON_ERROR );
+            status = false;
+        }
+    }
+    else
+    {
+        p_dest = "...";
+    }
+
+    return status;
+}
+
 void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool )
 {
     dsstring script_call_id = p_propertypool.GetPropValue<dsstring>( "script_call_id" );
@@ -168,13 +191,23 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 mat_descr.ope = TRANSFORMATIONMATRIX_SCALE;
 
                 mat_descr.arg.scale_vals_link[0].value = x;
-                mat_descr.arg.scale_vals_link[0].var_alias = ( xreg != "" ? xreg : "..." );
+                if( !set_var_alias( xreg, mat_descr.arg.scale_vals_link[0].var_alias ) )
+                {
+                    return;
+                }
+
 
                 mat_descr.arg.scale_vals_link[1].value = y;
-                mat_descr.arg.scale_vals_link[1].var_alias = ( yreg != "" ? yreg : "..." );
+                if( !set_var_alias( yreg, mat_descr.arg.scale_vals_link[1].var_alias ) )
+                {
+                    return;
+                }
                 
                 mat_descr.arg.scale_vals_link[2].value = z;
-                mat_descr.arg.scale_vals_link[2].var_alias = ( zreg != "" ? zreg : "..." );
+                if( !set_var_alias( zreg, mat_descr.arg.scale_vals_link[2].var_alias ) )
+                {
+                    return;
+                }
 
                 mat_descr.arg.translation_vals_link[0].var_alias = "...";
                 mat_descr.arg.translation_vals_link[1].var_alias = "...";
@@ -210,13 +243,22 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 mat_descr.ope = TRANSFORMATIONMATRIX_TRANSLATION;
 
                 mat_descr.arg.translation_vals_link[0].value = x;
-                mat_descr.arg.translation_vals_link[0].var_alias = ( xreg != "" ? xreg : "..." );
+                if( !set_var_alias( xreg, mat_descr.arg.translation_vals_link[0].var_alias ) )
+                {
+                    return;
+                }
 
                 mat_descr.arg.translation_vals_link[1].value = y;
-                mat_descr.arg.translation_vals_link[1].var_alias = ( yreg != "" ? yreg : "..." );
+                if( !set_var_alias( yreg, mat_descr.arg.translation_vals_link[1].var_alias ) )
+                {
+                    return;
+                }
                 
                 mat_descr.arg.translation_vals_link[2].value = z;
-                mat_descr.arg.translation_vals_link[2].var_alias = ( zreg != "" ? zreg : "..." );
+                if( !set_var_alias( zreg, mat_descr.arg.translation_vals_link[2].var_alias ) )
+                {
+                    return;
+                }
 
 
                 mat_descr.arg.scale_vals_link[0].var_alias = "...";
@@ -252,16 +294,28 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 mat_descr.ope = TRANSFORMATIONMATRIX_ROTATION;
 
                 mat_descr.arg.rotation_vals_link[0].value = x;
-                mat_descr.arg.rotation_vals_link[0].var_alias = ( xreg != "" ? xreg : "..." );
+                if( !set_var_alias( xreg, mat_descr.arg.rotation_vals_link[0].var_alias ) )
+                {
+                    return;
+                }
 
                 mat_descr.arg.rotation_vals_link[1].value = y;
-                mat_descr.arg.rotation_vals_link[1].var_alias = ( yreg != "" ? yreg : "..." );
+                if( !set_var_alias( yreg, mat_descr.arg.rotation_vals_link[1].var_alias ) )
+                {
+                    return;
+                }
                 
                 mat_descr.arg.rotation_vals_link[2].value = z;
-                mat_descr.arg.rotation_vals_link[2].var_alias = ( zreg != "" ? zreg : "..." );
+                if( !set_var_alias( zreg, mat_descr.arg.rotation_vals_link[2].var_alias ) )
+                {
+                    return;
+                }
 
                 mat_descr.arg.angle_val_link.value = angle;
-                mat_descr.arg.angle_val_link.var_alias = ( anglereg != "" ? anglereg : "..." );
+                if( !set_var_alias( anglereg, mat_descr.arg.angle_val_link.var_alias ) )
+                {
+                    return;
+                }
 
 
                 mat_descr.arg.scale_vals_link[0].var_alias = "...";

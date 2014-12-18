@@ -177,10 +177,6 @@ protected:
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, DrawSpace::Core::PropertyPool&>    ScriptingCallsCallback;
 
 
-
-
-    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, int>               ScriptingCallback;
-
     void on_timer( const dsstring& p_timername );
     void on_scripting_error( const dsstring& p_error );
     void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );
@@ -188,6 +184,8 @@ protected:
     void compute_scenegraph_transforms( void );
     void compute_regs( void );
     void compute_movements( void );
+
+    bool set_var_alias( const dsstring& p_source, dsstring& p_dest );
 
 
     long                                                    m_w_width;
