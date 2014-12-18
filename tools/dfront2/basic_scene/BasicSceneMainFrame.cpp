@@ -356,8 +356,9 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         register_entry.mode = BasicSceneMainFrame::REGISTER_CONSTANT;
         register_entry.const_value = reg_val;
         register_entry.id = wxWidgetAdapter::GetInstance()->m_register_index++;
-        m_registers[reg_name] = register_entry;
+        wxWidgetAdapter::GetInstance()->InitializeRegister( &register_entry );
 
+        m_registers[reg_name] = register_entry;
         wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );
     }
     else if( "DrawSpace:ModifyConstRegisterValue" == script_call_id )
@@ -381,6 +382,69 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
         }
     }
+    else if( "DrawSpace:CreateVarRegister" == script_call_id )
+    {
+        dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
+        dsstring var_mode = p_propertypool.GetPropValue<dsstring>( "var_mode" );
+        dsreal init_val = p_propertypool.GetPropValue<dsreal>( "init_val" );
+        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
+        dsreal range_inf = p_propertypool.GetPropValue<dsreal>( "range_inf" );
+        dsreal range_sup = p_propertypool.GetPropValue<dsreal>( "range_sup" );
+
+        BasicSceneMainFrame::RegisterEntry register_entry;
+        memset( &register_entry, 0, sizeof( BasicSceneMainFrame::RegisterEntry ) );
+
+        register_entry.mode = BasicSceneMainFrame::REGISTER_VARIABLE;
+
+        if( "translation_simple" == var_mode )
+        {
+            register_entry.variable_mode = BasicSceneMainFrame::REGISTER_VARIABLE_TRANSLATION_SIMPLE;
+        }
+        else if( "translation_roundtrip" == var_mode )
+        {
+            register_entry.variable_mode = BasicSceneMainFrame::REGISTER_VARIABLE_TRANSLATION_ROUNDTRIP;
+        }
+        else if( "angular_simple" == var_mode )
+        {
+            register_entry.variable_mode = BasicSceneMainFrame::REGISTER_VARIABLE_ANGULAR_SIMPLE;
+        }
+        else if( "angular_roundtrip" == var_mode )
+        {
+            register_entry.variable_mode = BasicSceneMainFrame::REGISTER_VARIABLE_ANGULAR_ROUNDTRIP;
+        }
+
+        register_entry.variable_initial_value = init_val;
+        register_entry.variable_speed = speed;
+        register_entry.variable_range_inf = range_inf;
+        register_entry.variable_range_sup = range_sup;
+
+        register_entry.id = wxWidgetAdapter::GetInstance()->m_register_index++;
+        wxWidgetAdapter::GetInstance()->InitializeRegister( &register_entry );
+        m_registers[reg_name] = register_entry;
+        wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );
+
+    }
+    else if( "DrawSpace:ResetVarRegister" == script_call_id )
+    {
+
+    }
+    else if( "DrawSpace:SetVarRegisterState" == script_call_id )
+    {
+
+    }
+    else if( "DrawSpace:SetVarRegisterInitVal" == script_call_id )
+    {
+
+    }
+    else if( "DrawSpace:SetVarRegisterSpeed" == script_call_id )
+    {
+
+    }
+    else if( "DrawSpace:SetVarRegisterRange" == script_call_id )
+    {
+
+    }
+
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
