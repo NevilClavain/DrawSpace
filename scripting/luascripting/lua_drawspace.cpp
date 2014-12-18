@@ -32,6 +32,7 @@ const Luna<LuaDrawSpace>::RegType LuaDrawSpace::Register[] =
   { "DisplayFramerate", &LuaDrawSpace::Lua_DisplayFramerate },
   { "DisplayCurrentCamera", &LuaDrawSpace::Lua_DisplayCurrentCamera },
   { "CreateConstRegister", &LuaDrawSpace::Lua_CreateConstRegister },
+  { "ModifyConstRegisterValue", &LuaDrawSpace::Lua_ModifyConstRegisterValue },
   { 0 }
 };
 
@@ -113,6 +114,30 @@ int LuaDrawSpace::Lua_CreateConstRegister( lua_State* p_L )
 
         (*m_scriptcalls_handler)( props );
     }
+    return 0;
+}
 
+int LuaDrawSpace::Lua_ModifyConstRegisterValue( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "ModifyConstRegisterValue : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    const char* reg_name = luaL_checkstring( p_L, 2 );
+    dsreal reg_val = luaL_checknumber( p_L, 3 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:ModifyConstRegisterValue" );
+        props.AddPropValue<dsstring>( "reg_name", reg_name );
+        props.AddPropValue<dsreal>( "reg_val", reg_val );
+
+        (*m_scriptcalls_handler)( props );
+    }
     return 0;
 }

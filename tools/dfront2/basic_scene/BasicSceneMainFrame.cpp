@@ -360,6 +360,27 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
         wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );
     }
+    else if( "DrawSpace:ModifyConstRegisterValue" == script_call_id )
+    {
+        dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
+        dsreal reg_val = p_propertypool.GetPropValue<dsreal>( "reg_val" );
+
+        if( m_registers.count( reg_name ) > 0 )
+        {
+            if( REGISTER_CONSTANT == m_registers[reg_name].mode )
+            {
+                m_registers[reg_name].const_value = reg_val;
+            }
+            else
+            {
+                wxMessageBox( "Specified register is not constant type : " + reg_name, "Script error", wxICON_ERROR );
+            }
+        }
+        else
+        {
+            wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
+        }
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
