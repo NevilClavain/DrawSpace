@@ -23,6 +23,7 @@
 #include "luascripting.h"
 #include "lua_drawspace.h"
 #include "lua_spaceboxbuilder.h"
+#include "lua_movementbuilder.h"
 
 
 LuaScripting::LuaScripting( void )
@@ -34,6 +35,7 @@ bool LuaScripting::Initialize( void )
     LuaContext::GetInstance()->Startup();
     Luna<LuaDrawSpace>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna<LuaSpaceboxBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna<LuaMovementBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     return true;
 }
