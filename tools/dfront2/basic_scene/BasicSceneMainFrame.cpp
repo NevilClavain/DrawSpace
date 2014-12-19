@@ -374,7 +374,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             }
             else
             {
-                wxMessageBox( "Specified register is not constant type : " + reg_name, "Script error", wxICON_ERROR );
+                wxMessageBox( "Specified register is not a constant type : " + reg_name, "Script error", wxICON_ERROR );
             }
         }
         else
@@ -426,25 +426,110 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "DrawSpace:ResetVarRegister" == script_call_id )
     {
+        dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
 
+        if( m_registers.count( reg_name ) > 0 )
+        {
+            if( REGISTER_VARIABLE == m_registers[reg_name].mode )
+            {
+                wxWidgetAdapter::GetInstance()->InitializeRegister( &m_registers[reg_name] );      
+            }
+            else
+            {
+                wxMessageBox( "Specified register is not a variable type : " + reg_name, "Script error", wxICON_ERROR );
+            }
+        }
+        else
+        {
+            wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
+        }
     }
     else if( "DrawSpace:SetVarRegisterState" == script_call_id )
     {
+        dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
+        bool state = p_propertypool.GetPropValue<bool>( "state" );
 
+        if( m_registers.count( reg_name ) > 0 )
+        {
+            if( REGISTER_VARIABLE == m_registers[reg_name].mode )
+            {
+                m_registers[reg_name].state = state;
+            }
+            else
+            {
+                wxMessageBox( "Specified register is not a variable type : " + reg_name, "Script error", wxICON_ERROR );
+            }
+        }
+        else
+        {
+            wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
+        }
     }
     else if( "DrawSpace:SetVarRegisterInitVal" == script_call_id )
     {
+        dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
+        dsreal init_val = p_propertypool.GetPropValue<dsreal>( "init_val" );
 
+        if( m_registers.count( reg_name ) > 0 )
+        {
+            if( REGISTER_VARIABLE == m_registers[reg_name].mode )
+            {
+                m_registers[reg_name].variable_initial_value = init_val;
+            }
+            else
+            {
+                wxMessageBox( "Specified register is not a variable type : " + reg_name, "Script error", wxICON_ERROR );
+            }
+        }
+        else
+        {
+            wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
+        }
     }
     else if( "DrawSpace:SetVarRegisterSpeed" == script_call_id )
     {
+        dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
+        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
 
+        if( m_registers.count( reg_name ) > 0 )
+        {
+            if( REGISTER_VARIABLE == m_registers[reg_name].mode )
+            {
+                m_registers[reg_name].variable_speed = speed;
+            }
+            else
+            {
+                wxMessageBox( "Specified register is not a variable type : " + reg_name, "Script error", wxICON_ERROR );
+            }
+        }
+        else
+        {
+            wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
+        }
     }
     else if( "DrawSpace:SetVarRegisterRange" == script_call_id )
     {
+        dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
+        dsreal range_min = p_propertypool.GetPropValue<dsreal>( "range_min" );
+        dsreal range_max = p_propertypool.GetPropValue<dsreal>( "range_max" );
 
+        if( m_registers.count( reg_name ) > 0 )
+        {
+            if( REGISTER_VARIABLE == m_registers[reg_name].mode )
+            {
+                m_registers[reg_name].variable_range_inf = range_min;
+                m_registers[reg_name].variable_range_sup = range_max;
+            }
+            else
+            {
+                wxMessageBox( "Specified register is not a variable type : " + reg_name, "Script error", wxICON_ERROR );
+            }
+        }
+        else
+        {
+            wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
+        }
     }
-
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
