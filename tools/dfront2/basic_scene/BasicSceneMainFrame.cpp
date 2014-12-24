@@ -530,6 +530,76 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
         }
     }
+    else if( "MovementBuilder:Lua_BuildIt" == script_call_id )
+    {
+        dsstring type_name = p_propertypool.GetPropValue<dsstring>( "type" );
+        dsstring name = p_propertypool.GetPropValue<dsstring>( "name" );
+
+        if( "Linear" == type_name )
+        {
+            Vector init_pos = p_propertypool.GetPropValue<Vector>( "initpos" );
+            Vector direction = p_propertypool.GetPropValue<Vector>( "direction" );
+
+            dsreal theta = p_propertypool.GetPropValue<dsreal>( "theta" );
+            dsreal phi = p_propertypool.GetPropValue<dsreal>( "phi" );
+
+            LinearMovement* linear_mvt = new LinearMovement();
+            linear_mvt->Init( init_pos, direction, theta, phi );
+                      
+            BasicSceneMainFrame::MovementEntry movement_entry;
+            movement_entry.movement = linear_mvt;
+            movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+            movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+            movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+            movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+            movement_entry.theta_pos_mouse = 0.0;
+            movement_entry.phi_pos_mouse = 0.0;
+
+            m_movements[name] = movement_entry;
+        }
+        else if( "Circular" == type_name )
+        {
+            Vector center_pos = p_propertypool.GetPropValue<Vector>( "centerpos" );
+            Vector delta_center = p_propertypool.GetPropValue<Vector>( "deltacenter" );
+            Vector rot_axis = p_propertypool.GetPropValue<Vector>( "rotationaxis" );
+
+            dsreal init_angle = p_propertypool.GetPropValue<dsreal>( "angle" );
+            dsreal theta = p_propertypool.GetPropValue<dsreal>( "theta" );
+            dsreal phi = p_propertypool.GetPropValue<dsreal>( "phi" );
+
+            CircularMovement* circular_mvt = new CircularMovement();
+            circular_mvt->Init( center_pos, delta_center, rot_axis, init_angle, theta, phi );
+
+            BasicSceneMainFrame::MovementEntry movement_entry;
+            movement_entry.movement = circular_mvt;
+            movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+            movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+            movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+            movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
+            movement_entry.theta_pos_mouse = 0.0;
+            movement_entry.phi_pos_mouse = 0.0;
+
+            m_movements[name] = movement_entry;
+        }
+        else if( "FPS" == type_name )
+        {
+        }
+        else if( "Free" == type_name )
+        {
+        }
+        else if( "Head" == type_name )
+        {
+        }
+        else if( "Spectator" == type_name )
+        {
+        }
+        else if( "LongLat" == type_name )
+        {
+        }
+
+        wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
+        wxWidgetAdapter::GetInstance()->AdaptKeyboardOutputComboBox( &m_movements, m_mousekeyboardoutput_comboBox );
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )

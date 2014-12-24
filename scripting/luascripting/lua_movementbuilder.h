@@ -42,6 +42,7 @@ protected:
     DrawSpace::Utils::Vector    m_initpos;
     DrawSpace::Utils::Vector    m_direction;
     DrawSpace::Utils::Vector    m_centerpos;
+    DrawSpace::Utils::Vector    m_deltacenter;
     DrawSpace::Utils::Vector    m_rotationaxis;
     dsreal                      m_initialangle;
     dsreal                      m_scalefactor;

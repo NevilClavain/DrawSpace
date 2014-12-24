@@ -26,6 +26,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 const char LuaMovementBuilder::className[] = "MovementBuilder";
 const Luna<LuaMovementBuilder>::RegType LuaMovementBuilder::Register[] =
@@ -118,75 +119,266 @@ int LuaMovementBuilder::Lua_SetInitpos( lua_State* p_L )
 
 int LuaMovementBuilder::Lua_SetDirection( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 4 )
+	{
+		lua_pushstring( p_L, "SetDirection : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_direction[0] = luaL_checknumber( p_L, 2 );
+    m_direction[1] = luaL_checknumber( p_L, 3 );
+    m_direction[2] = luaL_checknumber( p_L, 4 );
+    m_direction[3] = 1.0;
+    
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetInitialTheta( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetInitialTheta : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_theta = luaL_checknumber( p_L, 2 );
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetInitialPhi( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetInitialPhi : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_phi = luaL_checknumber( p_L, 2 );
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetCenterPos( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 4 )
+	{
+		lua_pushstring( p_L, "SetCenterPos : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_centerpos[0] = luaL_checknumber( p_L, 2 );
+    m_centerpos[1] = luaL_checknumber( p_L, 3 );
+    m_centerpos[2] = luaL_checknumber( p_L, 4 );
+    m_centerpos[3] = 1.0;
+    
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetDeltaCenter( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 4 )
+	{
+		lua_pushstring( p_L, "SetDeltaCenter : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_deltacenter[0] = luaL_checknumber( p_L, 2 );
+    m_deltacenter[1] = luaL_checknumber( p_L, 3 );
+    m_deltacenter[2] = luaL_checknumber( p_L, 4 );
+    m_deltacenter[3] = 1.0;
+
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetRotationAxis( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 4 )
+	{
+		lua_pushstring( p_L, "SetRotationAxis : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_rotationaxis[0] = luaL_checknumber( p_L, 2 );
+    m_rotationaxis[1] = luaL_checknumber( p_L, 3 );
+    m_rotationaxis[2] = luaL_checknumber( p_L, 4 );
+    m_rotationaxis[3] = 1.0;
+
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetInitialAngle( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "InitialAngle : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initialangle = luaL_checknumber( p_L, 2 );
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetScaleFactor( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetScaleFactor : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_scalefactor = luaL_checknumber( p_L, 2 );
+
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetRefForce( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetRefForce : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_refforce = luaL_checknumber( p_L, 2 );
+
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetPeriod( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetPeriod : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_period = luaL_checkinteger( p_L, 2 );
+
     return 0;
 }
 
 int LuaMovementBuilder::Lua_AttachToOrbiter( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "AttachToOrbiter : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_attach_to_orbiter = (bool)luaL_checkinteger( p_L, 2 );
+
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetInitialLong( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetInitialLong : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_long = luaL_checknumber( p_L, 2 );
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetInitialLat( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetInitialLat : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_lat = luaL_checknumber( p_L, 2 );
     return 0;
 }
 
 int LuaMovementBuilder::Lua_SetInitialAlt( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetInitialAlt : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_alt = luaL_checknumber( p_L, 2 );
     return 0;
 }
 
 int LuaMovementBuilder::Lua_BuildIt( lua_State* p_L )
 {
+    PropertyPool props;
+    props.AddPropValue<dsstring>( "script_call_id", "MovementBuilder:Lua_BuildIt" );
+    props.AddPropValue<dsstring>( "type", m_type );
+    props.AddPropValue<dsstring>( "name", m_name );
+
+    if( "Linear" == m_type )
+    {
+        props.AddPropValue<Vector>( "initpos", m_initpos );
+        props.AddPropValue<Vector>( "direction", m_direction );
+
+        props.AddPropValue<dsreal>( "theta", m_initial_theta );
+        props.AddPropValue<dsreal>( "phi", m_initial_phi );       
+    }
+    else if( "Circular" == m_type )
+    {
+        props.AddPropValue<Vector>( "centerpos", m_centerpos );
+        props.AddPropValue<Vector>( "deltacenter", m_deltacenter );
+        props.AddPropValue<Vector>( "rotationaxis", m_rotationaxis );
+
+        props.AddPropValue<dsreal>( "angle", m_initialangle );
+        props.AddPropValue<dsreal>( "theta", m_initial_theta );
+        props.AddPropValue<dsreal>( "phi", m_initial_phi ); 
+    }
+    else if( "FPS" == m_type )
+    {
+        props.AddPropValue<Vector>( "initpos", m_initpos );
+
+        props.AddPropValue<dsreal>( "yaw", m_initial_theta );
+        props.AddPropValue<dsreal>( "pitch", m_initial_phi );        
+    }
+    else if( "Free" == m_type )
+    {
+        props.AddPropValue<Vector>( "initpos", m_initpos );
+    }
+    else if( "Head" == m_type )
+    {
+        props.AddPropValue<dsreal>( "scalefactor", m_scalefactor );
+        props.AddPropValue<dsreal>( "refforce", m_refforce );
+        props.AddPropValue<Vector>( "initpos", m_initpos );
+    }
+    else if( "Spectator" == m_type )
+    {
+        props.AddPropValue<dsreal>( "scalefactor", m_scalefactor );
+        props.AddPropValue<long>( "period", m_period );
+        props.AddPropValue<bool>( "attachorbiter", m_attach_to_orbiter );
+    }
+    else if( "LongLat" == m_type )
+    {
+        props.AddPropValue<dsreal>( "longitud", m_initial_long );
+        props.AddPropValue<dsreal>( "latitud", m_initial_lat );
+        props.AddPropValue<dsreal>( "altitud", m_initial_alt );
+
+        props.AddPropValue<dsreal>( "theta", m_initial_theta );
+        props.AddPropValue<dsreal>( "phi", m_initial_phi );       
+
+    }
+
+    (*m_scriptcalls_handler)( props );
+
     return 0;
 }
