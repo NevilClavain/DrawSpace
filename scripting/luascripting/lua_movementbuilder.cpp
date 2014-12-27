@@ -367,7 +367,7 @@ int LuaMovementBuilder::Lua_BuildIt( lua_State* p_L )
         props.AddPropValue<long>( "period", m_period );
         props.AddPropValue<bool>( "attachorbiter", m_attach_to_orbiter );
     }
-    else if( "LongLat" == m_type )
+    else if( "Longlat" == m_type )
     {
         props.AddPropValue<dsreal>( "longitud", m_initial_long );
         props.AddPropValue<dsreal>( "latitud", m_initial_lat );
