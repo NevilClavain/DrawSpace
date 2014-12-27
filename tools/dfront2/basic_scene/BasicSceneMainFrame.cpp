@@ -103,6 +103,22 @@ bool BasicSceneMainFrame::set_var_alias( const dsstring& p_source, dsstring& p_d
     return status;
 }
 
+bool BasicSceneMainFrame::RegisterMovement( const dsstring& p_name, const MovementEntry& p_movement )
+{
+    if( m_movements.count( p_name ) > 0 )
+    {
+        wxMessageBox( "Movement with same name already exists : " + p_name, "Drawfronr error", wxICON_ERROR );
+        return false;
+    }
+
+    m_movements[p_name] = p_movement;
+
+    wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
+    wxWidgetAdapter::GetInstance()->AdaptKeyboardOutputComboBox( &m_movements, m_mousekeyboardoutput_comboBox );
+
+    return true;
+}
+
 void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool )
 {
     dsstring script_call_id = p_propertypool.GetPropValue<dsstring>( "script_call_id" );
@@ -629,11 +645,13 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
             movement_entry.movement = longlat_mvt;
         }
+        else
+        {
+            wxMessageBox( "Unknown movement class name : " + type_name, "Script error", wxICON_ERROR );
+            return;
+        }
 
-        m_movements[name] = movement_entry;
-
-        wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
-        wxWidgetAdapter::GetInstance()->AdaptKeyboardOutputComboBox( &m_movements, m_mousekeyboardoutput_comboBox );
+        RegisterMovement( name, movement_entry );
     }
 }
 
@@ -1463,11 +1481,8 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             // Linear
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Linear movement creation" );
-
-                dialog->SetData( "mvts_map", &m_movements );
-                dialog->SetData( "ctrl", m_mvts_listCtrl );
-                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
-
+                
+                dialog->SetData( "frame", this );
                 wxWidgetAdapter::GetInstance()->AdaptLinearMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
@@ -1479,10 +1494,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Circular movement creation" );
 
-                dialog->SetData( "mvts_map", &m_movements );
-                dialog->SetData( "ctrl", m_mvts_listCtrl );
-                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
-
+                dialog->SetData( "frame", this );
                 wxWidgetAdapter::GetInstance()->AdaptCircularMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
@@ -1495,10 +1507,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "FPS movement creation" );
 
-                dialog->SetData( "mvts_map", &m_movements );
-                dialog->SetData( "ctrl", m_mvts_listCtrl );
-                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
-
+                dialog->SetData( "frame", this );
                 wxWidgetAdapter::GetInstance()->AdaptFPSMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
@@ -1510,10 +1519,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Free movement creation" );
 
-                dialog->SetData( "mvts_map", &m_movements );
-                dialog->SetData( "ctrl", m_mvts_listCtrl );
-                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
-
+                dialog->SetData( "frame", this );
                 wxWidgetAdapter::GetInstance()->AdaptFreeMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
@@ -1525,10 +1531,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Head movement creation" );
 
-                dialog->SetData( "mvts_map", &m_movements );
-                dialog->SetData( "ctrl", m_mvts_listCtrl );
-                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
-
+                dialog->SetData( "frame", this );
                 wxWidgetAdapter::GetInstance()->AdaptHeadMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
@@ -1540,10 +1543,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spectator movement creation" );
 
-                dialog->SetData( "mvts_map", &m_movements );
-                dialog->SetData( "ctrl", m_mvts_listCtrl );
-                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
-
+                dialog->SetData( "frame", this );
                 wxWidgetAdapter::GetInstance()->AdaptSpectatorMvtCreationProps( dialog );
                 dialog->EnableApplyButton();
                 dialog->Show();
@@ -1555,9 +1555,7 @@ void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Longlat movement creation" );
 
-                dialog->SetData( "mvts_map", &m_movements );
-                dialog->SetData( "ctrl", m_mvts_listCtrl );
-                dialog->SetData( "combo", m_mousekeyboardoutput_comboBox );
+                dialog->SetData( "frame", this );
 
                 wxWidgetAdapter::GetInstance()->AdaptLongLatMvtCreationProps( dialog );
                 dialog->EnableApplyButton();

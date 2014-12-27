@@ -280,6 +280,8 @@ public:
 
     void ExecStartupScript( const dsstring& p_scriptfilepath );
     void PrintOutputConsole( const dsstring& p_text );
+
+    bool RegisterMovement( const dsstring& p_name, const MovementEntry& p_movement );
 };
 
 #endif // __BasicSceneMainFrame__

@@ -1283,10 +1283,7 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
 
     LinearMovement* linear_mvt = new LinearMovement();
     linear_mvt->Init( init_pos, direction, theta, phi );
-
-    std::map<dsstring, BasicSceneMainFrame::MovementEntry>* mvts_map = (std::map<dsstring, BasicSceneMainFrame::MovementEntry>*)p_dialog->GetData( "mvts_map" );
-
-    //(*mvts_map)[alias] = linear_mvt;
+    
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = linear_mvt;
     movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
@@ -1296,19 +1293,24 @@ void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog*
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
 
-    (*mvts_map)[alias] = movement_entry;
+    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
+    if( frame->RegisterMovement( alias, movement_entry ) )
+    {
+        p_dialog->Close();
+    }
+
+    //(*mvts_map)[alias] = movement_entry;
+
+    //wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
+
+    //AdaptMvtsList( mvts_map, ctrl );
+
+    //wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
+
+    //AdaptKeyboardOutputComboBox( mvts_map, combo );
 
 
-    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
-
-    AdaptMvtsList( mvts_map, ctrl );
-
-    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
-
-    AdaptKeyboardOutputComboBox( mvts_map, combo );
-
-
-    p_dialog->Close();
+    //p_dialog->Close();
 }
 
 void wxWidgetAdapter::AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1443,9 +1445,6 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     CircularMovement* circular_mvt = new CircularMovement();
     circular_mvt->Init( center_pos, delta_center, rot_axis, init_angle, theta, phi );
 
-    std::map<dsstring, BasicSceneMainFrame::MovementEntry>* mvts_map = (std::map<dsstring, BasicSceneMainFrame::MovementEntry>*)p_dialog->GetData( "mvts_map" );
-
-    //(*mvts_map)[alias] = circular_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = circular_mvt;
     movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
@@ -1455,19 +1454,11 @@ void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialo
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
 
-    (*mvts_map)[alias] = movement_entry;
-
-
-    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
-
-    AdaptMvtsList( mvts_map, ctrl );
-
-    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
-
-    AdaptKeyboardOutputComboBox( mvts_map, combo );
-
-    
-    p_dialog->Close();
+    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
+    if( frame->RegisterMovement( alias, movement_entry ) )
+    {
+        p_dialog->Close();
+    }
 }
 
 void wxWidgetAdapter::AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1549,9 +1540,6 @@ void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_
     FPSMovement* fps_mvt = new FPSMovement();
     fps_mvt->Init( init_pos, init_yaw, init_pitch );
 
-    std::map<dsstring, BasicSceneMainFrame::MovementEntry>* mvts_map = (std::map<dsstring, BasicSceneMainFrame::MovementEntry>*)p_dialog->GetData( "mvts_map" );
-
-    //(*mvts_map)[alias] = fps_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = fps_mvt;
     movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
@@ -1561,21 +1549,11 @@ void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
 
-
-    (*mvts_map)[alias] = movement_entry;
-
-
-    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
-
-    AdaptMvtsList( mvts_map, ctrl );
-
-    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
-
-    AdaptKeyboardOutputComboBox( mvts_map, combo );
-
-
-    p_dialog->Close();
-
+    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
+    if( frame->RegisterMovement( alias, movement_entry ) )
+    {
+        p_dialog->Close();
+    }
 }
 
 void wxWidgetAdapter::AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1643,9 +1621,6 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     FreeMovement* free_mvt = new FreeMovement();
     free_mvt->Init( init_pos );
 
-    std::map<dsstring, BasicSceneMainFrame::MovementEntry>* mvts_map = (std::map<dsstring, BasicSceneMainFrame::MovementEntry>*)p_dialog->GetData( "mvts_map" );
-
-    //(*mvts_map)[alias] = free_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = free_mvt;
     movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
@@ -1655,22 +1630,11 @@ void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
 
-
-    (*mvts_map)[alias] = movement_entry;
-
-
-
-    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
-
-    AdaptMvtsList( mvts_map, ctrl );
-
-    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
-
-    AdaptKeyboardOutputComboBox( mvts_map, combo );
-
-
-    p_dialog->Close();
-
+    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
+    if( frame->RegisterMovement( alias, movement_entry ) )
+    {
+        p_dialog->Close();
+    }
 }
 
 void wxWidgetAdapter::AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1752,9 +1716,6 @@ void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p
     HeadMovement* head_mvt = new HeadMovement();
     head_mvt->Init( scale_factor, ref_force, head_pos );
 
-    std::map<dsstring, BasicSceneMainFrame::MovementEntry>* mvts_map = (std::map<dsstring, BasicSceneMainFrame::MovementEntry>*)p_dialog->GetData( "mvts_map" );
-
-    //(*mvts_map)[alias] = head_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = head_mvt;
     movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
@@ -1764,21 +1725,11 @@ void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
 
-
-    (*mvts_map)[alias] = movement_entry;
-
-
-    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
-
-    AdaptMvtsList( mvts_map, ctrl );
-
-    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
-
-    AdaptKeyboardOutputComboBox( mvts_map, combo );
-
-
-    p_dialog->Close();
-
+    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
+    if( frame->RegisterMovement( alias, movement_entry ) )
+    {
+        p_dialog->Close();
+    }
 }
 
 void wxWidgetAdapter::AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1840,9 +1791,6 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     SpectatorMovement* spectator_mvt = new SpectatorMovement();
     spectator_mvt->Init( scale_pos, period, orbiter_link );
 
-    std::map<dsstring, BasicSceneMainFrame::MovementEntry>* mvts_map = (std::map<dsstring, BasicSceneMainFrame::MovementEntry>*)p_dialog->GetData( "mvts_map" );
-
-    //(*mvts_map)[alias] = spectator_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = spectator_mvt;
     movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
@@ -1852,20 +1800,11 @@ void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDial
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
 
-
-    (*mvts_map)[alias] = movement_entry;
-
-    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
-
-    AdaptMvtsList( mvts_map, ctrl );
-
-    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
-
-    AdaptKeyboardOutputComboBox( mvts_map, combo );
-
-
-    p_dialog->Close();
-
+    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
+    if( frame->RegisterMovement( alias, movement_entry ) )
+    {
+        p_dialog->Close();
+    }
 }
 
 void wxWidgetAdapter::AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1937,9 +1876,6 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     LongLatMovement* longlat_mvt = new LongLatMovement();
     longlat_mvt->Init( init_longit, init_latit, init_altitud, init_theta, init_phi );
 
-    std::map<dsstring, BasicSceneMainFrame::MovementEntry>* mvts_map = (std::map<dsstring, BasicSceneMainFrame::MovementEntry>*)p_dialog->GetData( "mvts_map" );
-
-    //(*mvts_map)[alias] = longlat_mvt;
     BasicSceneMainFrame::MovementEntry movement_entry;
     movement_entry.movement = longlat_mvt;
     movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
@@ -1949,21 +1885,11 @@ void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog
     movement_entry.theta_pos_mouse = 0.0;
     movement_entry.phi_pos_mouse = 0.0;
 
-
-    (*mvts_map)[alias] = movement_entry;
-
-    wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
-
-    AdaptMvtsList( mvts_map, ctrl );
-
-
-    wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
-
-    AdaptKeyboardOutputComboBox( mvts_map, combo );
-
-
-    p_dialog->Close();
-
+    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
+    if( frame->RegisterMovement( alias, movement_entry ) )
+    {
+        p_dialog->Close();
+    }
 }
 
 void wxWidgetAdapter::AdaptCameraCreationProps( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_mvts_map, BasicSceneObjectPropertiesDialog* p_dialog )
