@@ -317,6 +317,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\scenenode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\scenenode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\shader.cpp"
 				>
 			</File>
