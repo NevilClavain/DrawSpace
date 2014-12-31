@@ -393,3 +393,15 @@ dsreal CameraPoint::GetLockedObjectDistance( void )
 {
     return m_lockedobject_distance;
 }
+
+/////////////////////
+
+void CameraPoint::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_localtransformation;
+}
+
+void CameraPoint::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_globaltransformation = m_localtransformation;
+}

@@ -66,6 +66,7 @@
 #include "text_widget.h"
 #include "reticle_widget.h"
 #include "scenegraph.h"
+#include "scenenodegraph.h"
 #include "memalloc.h"
 #include "events.h"
 #include "fpsmovement.h"

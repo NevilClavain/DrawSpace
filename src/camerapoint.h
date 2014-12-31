@@ -117,6 +117,11 @@ public:
     virtual void UpdateProjectionZNear( dsreal p_znear );
 
     virtual dsreal GetLockedObjectDistance( void );
+
+    ///////////////////////////////
+
+    virtual void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    virtual void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 };
 }
 }
