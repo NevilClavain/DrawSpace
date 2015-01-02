@@ -45,10 +45,6 @@ protected:
     
     std::vector<LodStep*>           m_lodsteps;
 
-    /*
-    TransformNode*                  m_parent;
-    std::vector<TransformNode*>     m_children;
-    */
     
 public:
     TransformNode( const dsstring& p_name );

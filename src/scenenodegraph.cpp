@@ -48,7 +48,7 @@ void SceneNodeGraph::ComputeTransformations( Utils::TimeManager& p_timemanager )
     }
 }
 
-bool SceneNodeGraph::add( BaseSceneNode* p_node )
+bool SceneNodeGraph::AddNode( BaseSceneNode* p_node )
 {
     dsstring name;
     p_node->GetSceneName( name );
@@ -75,18 +75,22 @@ std::map<dsstring, BaseSceneNode*>& SceneNodeGraph::GetNodesList( void )
 
 void SceneNodeGraph::RegisterPass( Pass* p_pass )
 {
-    // TODO
+    dsstring pass_name;
+    p_pass->GetSpecificName( pass_name );
+    m_passes[pass_name] = p_pass;    
 }
 
-bool SceneNodeGraph::RegisterNode( BaseSceneNode* p_node )
+void SceneNodeGraph::RegisterNode( BaseSceneNode* p_node )
 {
-    //TODO
-    return true;
+    p_node->OnRegister( this );
 }
 
 Pass* SceneNodeGraph::GetPass( const dsstring& p_passname )
 {
-    //TODO
+    if( m_passes.count( p_passname ) > 0 )
+    {
+        return m_passes[p_passname];
+    }
     return NULL;
 }
 
@@ -153,8 +157,8 @@ void SceneNodeGraph::GetCurrentCameraProj( Utils::Matrix& p_proj )
 
         camera_node = dynamic_cast<SceneNode<CameraPoint>*>( m_cameras_list[m_current_camera] );
         if( NULL == camera_node )
-        {
-            //exception
+        {            
+            _DSEXCEPTION( "scene node is not a camerapoint !" );
         }
         else
         {

@@ -177,7 +177,10 @@ void InertBody::Update( void )
     if( NULL == m_refbody )
     {
         // not attached
-        m_drawable->SetLocalTransform( updated_matrix );
+        if( m_drawable )
+        {
+            m_drawable->SetLocalTransform( updated_matrix );
+        }
         m_lastworldtrans = updated_matrix;
     }
     else
@@ -188,7 +191,10 @@ void InertBody::Update( void )
 
         DrawSpace::Utils::Matrix res = updated_matrix * mat_b;
 
-        m_drawable->SetLocalTransform( res );
+        if( m_drawable )
+        {
+            m_drawable->SetLocalTransform( res );
+        }
         m_lastworldtrans = res;
     }
 }
@@ -643,3 +649,22 @@ bool InertBody::IsActive( void )
     return m_rigidBody->isActive();
 }
 
+void InertBody::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_lastworldtrans;
+}
+
+void InertBody::GetFinalTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_finaltransform;
+}
+
+void InertBody::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_finaltransform = p_mat;
+}
+
+void InertBody::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+
+}

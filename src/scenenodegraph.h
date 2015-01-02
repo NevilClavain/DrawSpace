@@ -51,9 +51,7 @@ protected:
     std::map<dsstring, Core::BaseSceneNode*>    m_cameras_list;
     Utils::Matrix                               m_view;
     std::vector<CameraEventHandler*>            m_cameraevt_handlers;
-
-    bool add( BaseSceneNode* p_node );
-
+   
 public:
     SceneNodeGraph( void );
     virtual ~SceneNodeGraph( void );
@@ -62,7 +60,10 @@ public:
     std::map<dsstring, BaseSceneNode*>& GetNodesList( void );
 
     void RegisterPass( Pass* p_pass );
-    bool RegisterNode( BaseSceneNode* p_node );	
+
+    void RegisterNode( BaseSceneNode* p_node );	
+    bool AddNode( BaseSceneNode* p_node );
+
     Pass* GetPass( const dsstring& p_passname );
 
 

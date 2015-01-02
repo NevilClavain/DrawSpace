@@ -36,7 +36,8 @@ using namespace DrawSpace::Utils;
 
 Chunk::Chunk( void ) : 
 m_renderer( NULL ), 
-m_scenegraph( NULL ), 
+m_scenegraph( NULL ),
+m_scenenodegraph( NULL ),
 m_lod_draw( true ),
 m_meshe( NULL )
 {
@@ -141,6 +142,94 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
     m_lodsteps.push_back( lodstep );
 }
 
+void Chunk::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    if( NULL == m_meshe )
+    {
+        _DSEXCEPTION( "NULL meshe ; please allocate a meshe object for chunk prior to other operations" );
+    }
+
+    for( std::map<dsstring, RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    {
+        Pass* current_pass = p_scenegraph->GetPass( (*it).first );
+
+        if( NULL == current_pass )
+        {
+            dsstring msg = "Chunk : pass '";
+            msg += (*it).first;
+            msg += "' does not exists in scenegraph";
+
+            _DSEXCEPTION( msg )
+        }
+
+        current_pass->GetRenderingQueue()->Add( (*it).second );
+    }
+    m_scenenodegraph = p_scenegraph;
+
+
+    dsstring vsphere_name = m_scenename + dsstring( "/vsphere" );
+    m_vsphere = _DRAWSPACE_NEW_( VSphere, VSphere( vsphere_name ) );
+
+    // virtual sphere characteristics
+    dsreal vsphere_ray;
+    Utils::Vector vsphere_point;
+
+    Utils::Vector vmin, vmax;
+    m_meshe->GetAABB( vmin, vmax );
+
+    Utils::Vector delta;
+    delta[0] = vmax[0] - vmin[0];
+    delta[1] = vmax[1] - vmin[1];
+    delta[2] = vmax[2] - vmin[2];
+
+    vsphere_point[0] = ( delta[0] / 2.0 ) + vmin[0];
+    vsphere_point[1] = ( delta[1] / 2.0 ) + vmin[1];
+    vsphere_point[2] = ( delta[2] / 2.0 ) + vmin[2];
+
+    long index_max = 0;
+    double max_delta = delta[0];
+
+    if( max_delta < delta[1] )
+    {
+        max_delta = delta[1];
+        index_max = 1;
+    }
+    if( max_delta < delta[2] )
+    {
+        max_delta = delta[2];
+        index_max = 2;
+    }
+   
+    switch( index_max )
+    {
+        case 0:
+
+            vsphere_ray = delta[0] / 2.0;
+            break;
+
+        case 1:
+
+            vsphere_ray = delta[1] / 2.0;
+            break;
+
+        case 2:
+
+            vsphere_ray = delta[2] / 2.0;
+            break;
+
+    }
+
+    m_vsphere->SetRay( vsphere_ray );
+    m_vsphere->SetPoint( vsphere_point );
+
+
+    // LOD default settings
+    LodStep* lodstep = _DRAWSPACE_NEW_( LodStep, LodStep( -1000.0, 1000.0, m_vsphere ) );
+    lodstep->RegisterHandler( m_lod_callback );
+    m_lodsteps.push_back( lodstep );
+
+}
+
 Core::Meshe* Chunk::GetMeshe( void )
 {
     return m_meshe;
@@ -233,4 +322,19 @@ DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring& p_passna
     }
 
     return m_passesnodes[p_passname];
+}
+
+void Chunk::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_localtransformation;
+}
+
+void Chunk::GetFinalTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_globaltransformation;
+}
+
+void Chunk::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_globaltransformation = p_mat;
 }

@@ -24,6 +24,7 @@
 #define _CAMERAPOINT_H_
 
 #include "scenegraph.h"
+#include "scenenodegraph.h"
 #include "orbiter.h"
 #include "longlatmovement.h"
 
@@ -92,6 +93,9 @@ public:
     virtual ~CameraPoint( void );
 
     virtual void OnRegister( Scenegraph* p_scenegraph );
+    virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
+    virtual void Update( void ) { };
    
     virtual void RegisterMovement( const dsstring& p_alias, DrawSpace::Core::Movement* p_movement );
     virtual void RegisterLongLatMovement( const dsstring& p_alias, DrawSpace::Core::LongLatMovement* p_longlatmovement );

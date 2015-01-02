@@ -33,6 +33,8 @@ namespace DrawSpace
 {
 namespace Core
 {
+class SceneNodeGraph;
+
 class BaseSceneNode
 {
 protected:
@@ -43,6 +45,14 @@ protected:
 
     
 public:
+
+    BaseSceneNode( const dsstring& p_scenename ) :
+    m_scenename( p_scenename )
+    {
+
+
+    }
+
     virtual void GetSceneName( dsstring& p_scenename )
     {
         p_scenename = m_scenename;
@@ -54,6 +64,7 @@ public:
     }
 
     virtual void ComputeTransformation( void ) = 0;
+    virtual void OnRegister( SceneNodeGraph* p_scenegraph ) = 0;
 
     virtual void AddChild( BaseSceneNode* p_node )
     {
@@ -73,44 +84,13 @@ protected:
     BaseSceneNode*              m_parent;    
     DrawSpace::Utils::Matrix    m_globaltransform;
     Base*                       m_content;
-
-    bool                        m_detachable;
-
-    virtual void ComputeTransformation( void )
-    {
-        if( !m_content )
-        {
-            return;
-        }
-
-        Matrix base_mat;
-        m_content->GetBaseTransform( base_mat );
-       
-        if( m_parent )
-        {
-            Matrix parent_final_transform;
-            m_parent->GetFinalTransform( parent_final_transform );
-
-            m_finaltransform = base_mat * parent_final_transform;
-        }
-        else
-        {
-            m_finaltransform = base_mat;
-        }
-        m_content->SetFinalTransform( m_finaltransform );
-
-        // Update() children
-        for( size_t i = 0; i < m_children.size(); i++ )
-        {
-            m_children[i]->ComputeTransformation();
-        }
-    }
-
+    
 public:
 
-    SceneNode( void ) :
+    SceneNode( const dsstring& p_scenename ) :
+    BaseSceneNode( p_scenename ),
     m_content( NULL ),
-    m_detachable( false )    
+    m_parent( NULL )
     {
     }
 
@@ -132,6 +112,46 @@ public:
     virtual Base* GetContent( void )
     {
         return m_content;
+    }
+
+    virtual void ComputeTransformation( void )
+    {
+        if( !m_content )
+        {
+            return;
+        }
+
+        m_content->Update();
+
+        DrawSpace::Utils::Matrix base_mat;        
+        m_content->GetBaseTransform( base_mat );
+       
+        if( m_parent )
+        {
+            DrawSpace::Utils::Matrix parent_final_transform;
+            m_parent->GetFinalTransform( parent_final_transform );
+
+            m_finaltransform = base_mat * parent_final_transform;
+        }
+        else
+        {
+            m_finaltransform = base_mat;
+        }
+        m_content->SetFinalTransform( m_finaltransform );
+
+        // Update() children
+        for( size_t i = 0; i < m_children.size(); i++ )
+        {
+            m_children[i]->ComputeTransformation();
+        }
+    }
+
+    void OnRegister( SceneNodeGraph* p_scenegraph )
+    {
+        if( m_content )
+        {
+            m_content->OnRegister( p_scenegraph, this );
+        }
     }
 
     friend class SceneNodeGraph;

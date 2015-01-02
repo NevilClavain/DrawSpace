@@ -26,7 +26,7 @@
 #include "body.h"
 #include "vector.h"
 #include "matrix.h"
-
+#include "scenenodegraph.h"
 
 namespace DrawSpace
 {
@@ -62,6 +62,8 @@ protected:
     World*                          m_global_world_mem;
 
     DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
+
+    DrawSpace::Utils::Matrix        m_finaltransform; // output for scenenodegraph;
 
     DrawSpace::Core::TransformNode* m_drawable;
 
@@ -112,6 +114,13 @@ public:
 
     DrawSpace::Core::TransformNode* GetDrawable( void );
     void SetDrawable( DrawSpace::Core::TransformNode* p_drawable );
+
+    void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void GetFinalTransform( DrawSpace::Utils::Matrix& p_mat );
+    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
 };
 }
 }

@@ -35,6 +35,7 @@
 #include "renderer.h"
 
 
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
@@ -78,6 +79,12 @@ void CameraPoint::OnRegister( Scenegraph* p_scenegraph )
 {
     std::map<dsstring, Core::TransformNode*>& camera_list = p_scenegraph->GetCamerasList();
     camera_list[m_scenename] = this; 
+}
+
+void CameraPoint::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_node )
+{
+    std::map<dsstring, Core::BaseSceneNode*>& camera_list = p_scenegraph->GetCamerasList();
+    camera_list[m_scenename] = p_node;    
 }
 
 
