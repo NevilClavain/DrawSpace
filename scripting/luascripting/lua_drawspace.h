@@ -1,8 +1,7 @@
-
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2014                                
+* Emmanuel Chaumont Copyright (c) 2013-2015                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -18,8 +17,9 @@
 *                                                                          
 *    You should have received a copy of the GNU General Public License     
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*                                                                          
+*
 */
+
 
 #ifndef _LUA_DRAWSPACE_H_
 #define _LUA_DRAWSPACE_H_

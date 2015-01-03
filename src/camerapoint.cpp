@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2014                                
+* Emmanuel Chaumont Copyright (c) 2013-2015                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -17,9 +17,8 @@
 *                                                                          
 *    You should have received a copy of the GNU General Public License     
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*                                                                          
+*
 */
-
 
 #include "camerapoint.h"
 #include "maths.h"
@@ -282,7 +281,7 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
 
         Matrix res = body_transf * camera_transf;
 
-        // point (0,0,0) local au body, exprimé dans le repere de la camera
+        // point (0,0,0) local au body, exprimï¿½ dans le repere de la camera
 
         Vector body_center( 0.0, 0.0, 0.0, 1.0 );
         Vector body_center_2;

@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2014                                
+* Emmanuel Chaumont Copyright (c) 2013-2015                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -17,7 +17,7 @@
 *                                                                          
 *    You should have received a copy of the GNU General Public License     
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*                                                                          
+*
 */
 
 #include "factory.h"
@@ -159,7 +159,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
 
                 ConfigsBase::GetInstance()->RegisterConfigurableInstance( m_config_name, config );
 
-                // instance Configurable créée et stockée par fichier config resource : lui attribuer le nom specifique
+                // instance Configurable crï¿½ï¿½e et stockï¿½e par fichier config resource : lui attribuer le nom specifique
                 config->SetSpecificName( m_config_name );
             }
             else

@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2014                                
+* Emmanuel Chaumont Copyright (c) 2013-2015                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -17,7 +17,7 @@
 *                                                                          
 *    You should have received a copy of the GNU General Public License     
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*                                                                          
+*
 */
 
 #include "inertbody.h"
@@ -222,11 +222,11 @@ mat_b => matrice du body auxquel on s'attache (exemple : planete)
 
     2/ pendant la phase d'attachement :
 
-        body attaché : injecter dans le drawable (via SetLocalTransform()) la matrice transfo suivante :
+        body attachï¿½ : injecter dans le drawable (via SetLocalTransform()) la matrice transfo suivante :
                     
                         mat_body * mat_b
 
-                        avec mat_body = la transfo du body calculée par bullet
+                        avec mat_body = la transfo du body calculï¿½e par bullet
 
                         (au tout debut de l'attachement, mat_body = mat_a2)
 

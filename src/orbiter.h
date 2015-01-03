@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2014                                
+* Emmanuel Chaumont Copyright (c) 2013-2015                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -17,7 +17,7 @@
 *                                                                          
 *    You should have received a copy of the GNU General Public License     
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*                                                                          
+*
 */
 
 #ifndef _ORBITER_H_
@@ -52,7 +52,7 @@ protected:
 
     dsreal                              m_revolution_tilt_angle; // inclinaison axe de rotation planete
 
-    dsreal                              m_orbit_duration; // unité : 1.0 = annee terrestre (365 jours)
+    dsreal                              m_orbit_duration; // unitï¿½ : 1.0 = annee terrestre (365 jours)
 
     dsreal                              m_revolution_duration; // unite : 1.0 jour terrestre (24h)
 
