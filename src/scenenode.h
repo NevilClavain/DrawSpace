@@ -123,7 +123,7 @@ public:
 
         m_content->Update();
 
-        DrawSpace::Utils::Matrix base_mat;        
+        DrawSpace::Utils::Matrix base_mat;
         m_content->GetBaseTransform( base_mat );
        
         if( m_parent )
