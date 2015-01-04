@@ -55,7 +55,7 @@ public:
     Rocket( World* p_world, DrawSpace::Core::TransformNode* p_drawable, const Body::Parameters& p_parameters );
     virtual ~Rocket( void );
     
-    void Update( void );
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager );
 
     void ApplyFwdForce( dsreal p_norm );
     void ApplyRevForce( dsreal p_norm );

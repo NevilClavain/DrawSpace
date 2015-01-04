@@ -62,9 +62,7 @@ protected:
     World*                          m_global_world_mem;
 
     DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
-
-    DrawSpace::Utils::Matrix        m_finaltransform; // output for scenenodegraph;
-
+   
     DrawSpace::Core::TransformNode* m_drawable;
 
     void                            create_body( const btTransform& p_transform );
@@ -82,7 +80,8 @@ public:
     void SetWorld( World* p_world );
 
     void GetParameters( Parameters& p_parameters );
-    void Update( void );
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
 
     void Attach( Body* p_body );
     void IncludeTo( Body* p_body, const DrawSpace::Utils::Matrix& p_initmat );
@@ -116,8 +115,12 @@ public:
     void SetDrawable( DrawSpace::Core::TransformNode* p_drawable );
 
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+
+    /*
     void GetFinalTransform( DrawSpace::Utils::Matrix& p_mat );
-    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+    */
+    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+    
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 

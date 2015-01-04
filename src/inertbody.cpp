@@ -143,7 +143,7 @@ void InertBody::GetParameters( Parameters& p_parameters )
     p_parameters = m_parameters;
 }
 
-void InertBody::Update( void )
+void InertBody::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     dsreal world_scale = World::m_scale;
 
@@ -653,7 +653,7 @@ void InertBody::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_lastworldtrans;
 }
-
+/*
 void InertBody::GetFinalTransform( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_finaltransform;
@@ -663,7 +663,7 @@ void InertBody::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
     m_finaltransform = p_mat;
 }
-
+*/
 void InertBody::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
 

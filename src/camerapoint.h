@@ -27,6 +27,7 @@
 #include "scenenodegraph.h"
 #include "orbiter.h"
 #include "longlatmovement.h"
+#include "scenenode.h"
 
 
 namespace DrawSpace
@@ -86,6 +87,9 @@ protected:
 
     dsreal                                          m_lockedobject_distance;
 
+    DrawSpace::Core::SceneNode<CameraPoint>*        m_owner;
+    DrawSpace::Utils::Matrix                        m_body_transf;
+
 
 public:
 
@@ -95,7 +99,8 @@ public:
     virtual void OnRegister( Scenegraph* p_scenegraph );
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    virtual void Update( void ) { };
+    virtual void Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    virtual void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
     virtual void RegisterMovement( const dsstring& p_alias, DrawSpace::Core::Movement* p_movement );
     virtual void RegisterLongLatMovement( const dsstring& p_alias, DrawSpace::Core::LongLatMovement* p_longlatmovement );
@@ -122,10 +127,16 @@ public:
 
     virtual dsreal GetLockedObjectDistance( void );
 
+    
+
     ///////////////////////////////
 
     virtual void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    
     virtual void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+    /*
+    virtual void GetFinalTransform( DrawSpace::Utils::Matrix& p_mat );
+    */
 };
 }
 }

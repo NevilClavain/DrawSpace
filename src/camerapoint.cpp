@@ -50,7 +50,8 @@ m_longlatmovement( NULL ),
 m_relative_orbiter( NULL ),
 m_relative_altitud( 0.0 ),
 m_znear( 1.0 ),
-m_lockedobject_distance( 0.0 )
+m_lockedobject_distance( 0.0 ),
+m_owner( NULL )
 {
     // properties array creation
     /*
@@ -83,9 +84,10 @@ void CameraPoint::OnRegister( Scenegraph* p_scenegraph )
 void CameraPoint::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_node )
 {
     std::map<dsstring, Core::BaseSceneNode*>& camera_list = p_scenegraph->GetCamerasList();
-    camera_list[m_scenename] = p_node;    
-}
+    camera_list[m_scenename] = p_node;
 
+    m_owner = static_cast<SceneNode<CameraPoint>*>( p_node );
+}
 
 void CameraPoint::RegisterMovement( const dsstring& p_alias, DrawSpace::Core::Movement* p_movement )
 {
@@ -232,6 +234,101 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
     p_infos.altitud = m_relative_altitud;
 }
 
+void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Matrix body_transf;
+
+    if( m_locked_body || m_locked_node )
+    {
+        Matrix temp_global;
+
+
+        //////////////////////
+       
+        // recup transfo parent
+
+        BaseSceneNode* parent = m_owner->GetParentNode();
+        if( parent )
+        {
+            parent->GetFinalTransform( body_transf );
+            temp_global = m_localtransformation * body_transf;
+        }
+        else
+        {
+            temp_global = m_localtransformation;
+        }
+
+        //////////////////////
+
+        if( m_locked_body )
+        {
+            m_locked_body->GetLastWorldTransformation( body_transf );
+        }
+        else if( m_locked_node )
+        {
+            m_locked_node->GetSceneWorld( body_transf );
+        }
+
+        m_body_transf = body_transf;
+
+        Matrix camera_transf = temp_global;
+        camera_transf.Inverse();
+
+        Matrix res = body_transf * camera_transf;
+
+        // point (0,0,0) local au body, exprime dans le repère de la camera
+
+        Vector body_center( 0.0, 0.0, 0.0, 1.0 );
+        Vector body_center_2;
+
+        res.Transform( &body_center, &body_center_2 );
+
+        m_locked_body_center = body_center_2;
+
+
+        body_center_2.Normalize();
+
+        dsreal theta = atan2( body_center_2[0], body_center_2[2] );        
+        theta = 3.1415927 + theta;
+ 
+        Matrix roty;
+        roty.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), theta );
+
+        Vector theta_dir( body_center_2[0], 0.0, body_center_2[2], 1.0 );
+
+        dsreal phi = atan2( body_center_2[1], theta_dir.Length() );
+        
+        Matrix rotx;
+        rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), phi );
+
+        Matrix final_lock;
+        final_lock = rotx * roty;
+
+        Matrix final_res = final_lock * m_localtransformation;
+        m_localtransformation = final_res;      
+    }
+}
+
+void CameraPoint::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    // calcul de la distance de l'objet suivi
+    if( m_locked_body || m_locked_node )
+    {
+        Vector body_center( 0.0, 0.0, 0.0, 1.0 );
+        Vector body_center_2;
+
+        Matrix view = m_globaltransformation;
+        view.Inverse();
+        Matrix final = m_body_transf * view;
+        final.Transform( &body_center, &body_center_2 );
+        m_lockedobject_distance = body_center_2.Length();
+    }
+    else
+    {
+        m_lockedobject_distance = 0.0;
+    }
+}
+
 void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
 {
     Matrix body_transf;
@@ -281,7 +378,7 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
 
         Matrix res = body_transf * camera_transf;
 
-        // point (0,0,0) local au body, exprim� dans le repere de la camera
+        // point (0,0,0) local au body, exprime dans le repère de la camera
 
         Vector body_center( 0.0, 0.0, 0.0, 1.0 );
         Vector body_center_2;
@@ -407,7 +504,14 @@ void CameraPoint::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
     p_mat = m_localtransformation;
 }
 
+
 void CameraPoint::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
-    m_globaltransformation = m_localtransformation;
+    m_globaltransformation = p_mat;
 }
+/*
+void CameraPoint::GetFinalTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_globaltransformation;
+}
+*/

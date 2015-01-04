@@ -63,7 +63,7 @@ public:
         p_mat = m_finaltransform;
     }
 
-    virtual void ComputeTransformation( void ) = 0;
+    virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager ) = 0;
     virtual void OnRegister( SceneNodeGraph* p_scenegraph ) = 0;
 
     virtual void AddChild( BaseSceneNode* p_node )
@@ -114,14 +114,14 @@ public:
         return m_content;
     }
 
-    virtual void ComputeTransformation( void )
+    virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager )
     {
         if( !m_content )
         {
             return;
         }
 
-        m_content->Update();
+        m_content->Update( p_timemanager );
 
         DrawSpace::Utils::Matrix base_mat;
         m_content->GetBaseTransform( base_mat );
@@ -139,10 +139,12 @@ public:
         }
         m_content->SetFinalTransform( m_finaltransform );
 
+        m_content->Update2( p_timemanager );
+
         // Update() children
         for( size_t i = 0; i < m_children.size(); i++ )
         {
-            m_children[i]->ComputeTransformation();
+            m_children[i]->ComputeTransformation( p_timemanager );
         }
     }
 
@@ -152,6 +154,11 @@ public:
         {
             m_content->OnRegister( p_scenegraph, this );
         }
+    }
+
+    BaseSceneNode* GetParentNode( void )
+    {
+        return m_parent;
     }
 
     friend class SceneNodeGraph;

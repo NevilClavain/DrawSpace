@@ -77,7 +77,7 @@ void FPSMovement::SetSpeed( dsreal p_speed )
     m_local_speed[2] = -p_speed;
 }
 
-void FPSMovement::Compute( TimeManager& p_timemanager/*, bool p_ymvt */ )
+void FPSMovement::Compute( TimeManager& p_timemanager )
 {
 	Vector gs;
 
@@ -107,6 +107,11 @@ void FPSMovement::Compute( TimeManager& p_timemanager/*, bool p_ymvt */ )
     m_result = m_orientation * m_position;
 }
 
+void FPSMovement::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Compute( p_timemanager );
+}
+
 void FPSMovement::GetCurrentPos( Utils::Vector& p_pos )
 {
     p_pos[0] = m_position( 3, 0 );
@@ -123,4 +128,9 @@ dsreal FPSMovement::GetCurrentYaw( void )
 dsreal FPSMovement::GetCurrentPitch( void )
 {
     return m_apitch;
+}
+
+void FPSMovement::GetBaseTransform( Matrix& p_mat )
+{
+    p_mat = m_result;
 }

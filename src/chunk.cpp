@@ -244,10 +244,18 @@ void Chunk::SetMeshe( DrawSpace::Core::Meshe* p_meshe )
 void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
     DrawSpace::Utils::Matrix view;
-    m_scenegraph->GetCurrentCameraView( view );
-
     DrawSpace::Utils::Matrix proj;
-    m_scenegraph->GetCurrentCameraProj( proj );
+
+    if( m_scenenodegraph )
+    {
+        m_scenenodegraph->GetCurrentCameraView( view );
+        m_scenenodegraph->GetCurrentCameraProj( proj );
+    }
+    else
+    {
+        m_scenegraph->GetCurrentCameraView( view );
+        m_scenegraph->GetCurrentCameraProj( proj );
+    }
 
     DrawSpace::Utils::Matrix res;
     res = m_globaltransformation * view;
@@ -329,12 +337,14 @@ void Chunk::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
     p_mat = m_localtransformation;
 }
 
+/*
 void Chunk::GetFinalTransform( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_globaltransformation;
 }
-
+*/
 void Chunk::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
     m_globaltransformation = p_mat;
 }
+

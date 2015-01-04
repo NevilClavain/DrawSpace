@@ -44,7 +44,24 @@ void SceneNodeGraph::ComputeTransformations( Utils::TimeManager& p_timemanager )
 {
     for( std::map<dsstring, BaseSceneNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        it->second->ComputeTransformation();
+        it->second->ComputeTransformation( p_timemanager );
+    }
+
+    // TODO
+    /*
+    for( std::map<dsstring, BaseSceneNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    {
+        it->second->ComputeLod();
+    }
+    */
+
+    m_view.Identity();
+
+    if( m_current_camera != "" )
+    {
+        //m_cameras_list[m_current_camera]->GetSceneWorld( m_view );
+        m_cameras_list[m_current_camera]->GetFinalTransform( m_view );        
+        m_view.Inverse();
     }
 }
 

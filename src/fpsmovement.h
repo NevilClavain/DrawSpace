@@ -25,6 +25,7 @@
 
 #include "movement.h"
 #include "quaternion.h"
+#include "scenenodegraph.h"
 
 namespace DrawSpace
 {
@@ -50,7 +51,7 @@ protected:
     Utils::Matrix			m_orientation;
 
     bool                    m_ymvt;
-
+   
 public:
 
     FPSMovement( bool p_ymvt = false );
@@ -63,11 +64,21 @@ public:
     void RotatePitch( dsreal p_speed, Utils::TimeManager& p_timemanager );
 
     void SetSpeed( dsreal p_speed );
-    void Compute( Utils::TimeManager& p_timemanager /*, bool p_ymvt = false */ );
+    void Compute( Utils::TimeManager& p_timemanager );
 
     void GetCurrentPos( Utils::Vector& p_pos );
     dsreal GetCurrentYaw( void );
     dsreal GetCurrentPitch( void );
+
+
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+
+    void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+    
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) { };
+
 };
 }
 }

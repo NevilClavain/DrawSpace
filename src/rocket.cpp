@@ -64,9 +64,9 @@ Rocket::~Rocket( void )
 {
 }
 
-void Rocket::Update( void )
+void Rocket::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 {
-    InertBody::Update();
+    InertBody::Update( p_timemanager );
 
     Matrix local_rot = m_lastlocalworldtrans;
     local_rot.ClearTranslation();

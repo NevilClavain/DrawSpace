@@ -54,7 +54,8 @@ public:
     Chunk( void );
     virtual ~Chunk( void );
 
-    void Update( void ) {};
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
    
     void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
@@ -67,8 +68,11 @@ public:
     DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
 
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    /*
     void GetFinalTransform( DrawSpace::Utils::Matrix& p_mat );
+    */
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+    
 
     // temporaire, le temps de la transition entre scenegraph et scenenodegraph
     void SetScenegraph( DrawSpace::Scenegraph* p_scenegraph )
