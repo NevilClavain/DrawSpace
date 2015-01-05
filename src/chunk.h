@@ -68,17 +68,8 @@ public:
     DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
 
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
-    /*
-    void GetFinalTransform( DrawSpace::Utils::Matrix& p_mat );
-    */
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
     
-
-    // temporaire, le temps de la transition entre scenegraph et scenenodegraph
-    void SetScenegraph( DrawSpace::Scenegraph* p_scenegraph )
-    {
-        m_scenegraph = p_scenegraph;
-    }
 
 };
 }
