@@ -193,3 +193,13 @@ bool SpectatorMovement::GetOrbiterLinkState( void )
 {
     return m_linked_to_orbiter;
 }
+
+void SpectatorMovement::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Compute( p_timemanager );
+}
+
+void SpectatorMovement::GetBaseTransform( Matrix& p_mat )
+{
+    p_mat = m_result;
+}

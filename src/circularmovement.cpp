@@ -161,3 +161,12 @@ dsreal CircularMovement::GetCurrentPhi( void )
     return Maths::RadToDeg( m_current_phi );
 }
 
+void CircularMovement::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Compute( p_timemanager );
+}
+
+void CircularMovement::GetBaseTransform( Matrix& p_mat )
+{
+    p_mat = m_result;
+}

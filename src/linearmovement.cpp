@@ -24,6 +24,7 @@
 #include "maths.h"
 #include "misc_utils.h"
 
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
@@ -145,3 +146,12 @@ dsreal LinearMovement::GetCurrentPhi( void )
     return Maths::RadToDeg( m_current_phi );
 }
 
+void LinearMovement::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Compute( p_timemanager );
+}
+
+void LinearMovement::GetBaseTransform( Matrix& p_mat )
+{
+    p_mat = m_result;
+}

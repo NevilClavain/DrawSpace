@@ -26,6 +26,7 @@
 #include "movement.h"
 #include "inertbody.h"
 #include "timemanager.h"
+#include "scenenodegraph.h"
 
 namespace DrawSpace
 {
@@ -83,6 +84,15 @@ public:
     dsreal GetScaleFactor( void );
     dsreal GetRefForce( void );
     void GetHeadPos( Utils::Vector& p_headpos );
+
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+
+    void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+    
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) { };
+
 };
 
 }

@@ -25,6 +25,7 @@
 
 #include "movement.h"
 #include "quaternion.h"
+#include "scenenodegraph.h"
 
 namespace DrawSpace
 {
@@ -73,6 +74,15 @@ public:
     dsreal GetCurrentPhi( void );
 
     void Reset( void );
+
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+
+    void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+    
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) { };
+
 };
 }
 }

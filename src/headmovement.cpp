@@ -517,3 +517,13 @@ void HeadMovement::GetHeadPos( Utils::Vector& p_headpos )
 {
     p_headpos = m_head_pos;
 }
+
+void HeadMovement::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Compute( p_timemanager );
+}
+
+void HeadMovement::GetBaseTransform( Matrix& p_mat )
+{
+    p_mat = m_result;
+}

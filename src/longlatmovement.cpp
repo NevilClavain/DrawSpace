@@ -123,3 +123,13 @@ dsreal LongLatMovement::GetCurrentPhi( void )
 {
     return DrawSpace::Utils::Maths::RadToDeg( m_current_phi );
 }
+
+void LongLatMovement::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Compute( p_timemanager );
+}
+
+void LongLatMovement::GetBaseTransform( Matrix& p_mat )
+{
+    p_mat = m_result;
+}

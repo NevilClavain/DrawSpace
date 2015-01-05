@@ -167,3 +167,12 @@ void FreeMovement::GetCurrentPos( Utils::Vector& p_pos )
     p_pos[3] = 1.0;
 }
 
+void FreeMovement::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Compute( p_timemanager );
+}
+
+void FreeMovement::GetBaseTransform( Matrix& p_mat )
+{
+    p_mat = m_result;
+}
