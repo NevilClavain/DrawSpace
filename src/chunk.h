@@ -55,7 +55,7 @@ public:
     virtual ~Chunk( void );
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
-    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
     void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );

@@ -38,7 +38,7 @@ Chunk::Chunk( void ) :
 m_renderer( NULL ), 
 m_scenegraph( NULL ),
 m_scenenodegraph( NULL ),
-m_lod_draw( true ),
+m_lod_draw( false ),
 m_meshe( NULL )
 {
     m_lod_callback = _DRAWSPACE_NEW_( LodCallback, LodCallback( this, &Chunk::on_lod_event ) );
@@ -348,3 +348,7 @@ void Chunk::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_globaltransformation = p_mat;
 }
 
+void Chunk::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    ComputeLod();
+}
