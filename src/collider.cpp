@@ -33,6 +33,8 @@ m_orbiter( NULL ),
 m_movement( NULL )
 {
     m_lastlocalworldtrans.Identity();
+    m_finaltransformation.Identity();
+    m_basetransformation.Identity();
 }
 
 Collider::~Collider( void )
@@ -160,6 +162,12 @@ void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
     }
 }
 
+// PROVISOIRE
+void Collider::Update( Utils::TimeManager& p_timemanager )
+{
+    Update( p_timemanager, m_finaltransformation );
+}
+
 btRigidBody* Collider::GetRigidBody( void )
 {
     return m_rigidBody;
@@ -189,4 +197,19 @@ void Collider::RegisterMovement( DrawSpace::Core::Movement* p_movement )
 void Collider::GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_lastlocalworldtrans;
+}
+
+void Collider::SetBaseTransform( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_basetransformation = p_mat;
+}
+
+void Collider::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_basetransformation;
+}
+
+void Collider::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_finaltransformation = p_mat;
 }
