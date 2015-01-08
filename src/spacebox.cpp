@@ -33,7 +33,9 @@ using namespace DrawSpace::Interface;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-Spacebox::Spacebox( void ) : /*m_renderer( NULL ),*/ m_scenegraph( NULL )
+Spacebox::Spacebox( void ) :
+m_scenegraph( NULL ),
+m_scenenodegraph( NULL )
 {        
     //////////////////////////////////
 
@@ -227,13 +229,6 @@ Spacebox::~Spacebox( void )
 {
 }
 
-/*
-void Spacebox::SetRenderer( Renderer * p_renderer )
-{
-    m_renderer = p_renderer;
-}
-*/
-
 void Spacebox::OnRegister( Scenegraph* p_scenegraph )
 {
     for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
@@ -257,6 +252,29 @@ void Spacebox::OnRegister( Scenegraph* p_scenegraph )
     m_scenegraph = p_scenegraph;
 }
 
+void Spacebox::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    {
+        Pass* current_pass = p_scenegraph->GetPass( (*it).first );
+
+        if( NULL == current_pass )
+        {
+            dsstring msg = "Spacebox : pass '";
+            msg += (*it).first;
+            msg += "' does not exists in scenegraph";
+
+            _DSEXCEPTION( msg )
+        }
+
+        for( long i = 0; i < 6; i++ )
+        {
+            current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
+        }
+    }
+    m_scenenodegraph = p_scenegraph;
+}
+
 Core::Meshe* Spacebox::GetMeshe( int p_mesheid )
 {
     return m_meshes[p_mesheid];
@@ -269,11 +287,27 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
 
     world = m_globaltransformation;
     world.ClearTranslation();
-    m_scenegraph->GetCurrentCameraView( view );
+
+    if( m_scenenodegraph )
+    {
+        m_scenenodegraph->GetCurrentCameraView( view );
+    }
+    else
+    {
+        m_scenegraph->GetCurrentCameraView( view );
+    }
     view.ClearTranslation();
 
     DrawSpace::Utils::Matrix proj;
-    m_scenegraph->GetCurrentCameraProj( proj );
+
+    if( m_scenenodegraph )
+    {
+        m_scenenodegraph->GetCurrentCameraProj( proj );
+    }
+    else
+    {
+        m_scenegraph->GetCurrentCameraProj( proj );
+    }
 
     m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), world, view, proj );
 }
@@ -306,5 +340,14 @@ DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring& p_pas
     return m_passesnodes[p_passname].nodes[p_quadid];
 }
 
+void Spacebox::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_localtransformation;
+}
+
+void Spacebox::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_globaltransformation = p_mat;
+}
 
 

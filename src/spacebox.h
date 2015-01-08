@@ -26,6 +26,7 @@
 #include "transformnode.h"
 #include "scenegraph.h"
 #include "renderer.h"
+#include "scenenodegraph.h"
 
 
 namespace DrawSpace
@@ -80,6 +81,7 @@ protected:
     std::map<dsstring, NodesSet>                            m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
     DrawSpace::Scenegraph*                                  m_scenegraph;
+    DrawSpace::Core::SceneNodeGraph*                        m_scenenodegraph;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -89,11 +91,19 @@ public:
 
     //void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
     DrawSpace::Core::Meshe* GetMeshe( int p_mesheid );
 
     void RegisterPassSlot( const dsstring p_passname );
     DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_quadid );
+
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+
+    void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+
     
 };
 }
