@@ -109,16 +109,17 @@ protected:
     DrawSpace::Utils::TimeManager*              m_time_manager;
 
     std::vector<Orbit*>                         m_orbits;
+    std::vector<Orbiter*>                       m_orbiters;
+
     CalendarTimer*                              m_timercb;
     bool                                        m_active;
-    //DrawSpace::Dynamics::World*     m_world;
 
     std::vector<DrawSpace::Dynamics::World*>    m_worlds;
 
     void on_timer( const dsstring& p_timername );
 
-    void set_orbit_angle( Orbit* p_orbit, dstime p_currtime );
-    void set_orbiter_rotation_angle( Orbit* p_orbit, dstime p_currtime );
+    double compute_orbit_angle( double p_orbit_duration, dstime p_currtime );
+    double compute_revolution_angle( double p_revolution_duration, dstime p_currtime );
 
 public:
     
@@ -126,11 +127,12 @@ public:
     virtual ~Calendar( void );
 
     dstime      GetOffsetTime( void );
-    TimeMode  GetCurrentTimeFactor( void );
+    TimeMode    GetCurrentTimeFactor( void );
     void        SetTimeFactor( TimeMode p_time_mode );
     void        GetFormatedDate( dsstring& p_date );
 
     void        RegisterOrbit( Orbit* p_orbit );
+    void        RegisterOrbiter( Orbiter* p_orbiter );
     
     bool        Startup( dstime p_start_time );
     void        Shutdown( void );

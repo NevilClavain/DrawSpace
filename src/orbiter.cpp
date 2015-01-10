@@ -42,8 +42,7 @@ void Orbit::orbit_step( dsreal p_angle, DrawSpace::Utils::Matrix& p_orbit_mat, D
     x = ( x * m_ray );
     z = ( z * m_ray );
 
-    Transformation transformation;
-    Transformation transformation_planet;
+    Transformation transformation;    
     Matrix result;
 
     Matrix orbit_translation;
@@ -69,34 +68,50 @@ void Orbit::orbit_step( dsreal p_angle, DrawSpace::Utils::Matrix& p_orbit_mat, D
     Matrix revolution_tilt;
     revolution_tilt.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), Maths::DegToRad( m_revolution_tilt_angle ) );
 
+    // PROVISOIRE
+    if( m_centroid )
+    {
+        transformation.PushMatrix( offset_rot );
+        transformation.PushMatrix( tilt );
+        transformation.PushMatrix( orbit_offset );
+        transformation.PushMatrix( orbit_translation );    
+        transformation.PushMatrix( orbit2 );  
+        
 
-    transformation.PushMatrix( offset_rot );
-    transformation.PushMatrix( tilt );
-    transformation.PushMatrix( orbit_offset );
-    transformation.PushMatrix( orbit_translation );
-    //transformation.PushMatrix( revolution_tilt );
-    transformation.PushMatrix( orbit2 );  
-    
+        transformation.BuildResult();
+        transformation.GetResult( &result );
 
-    transformation.BuildResult();
-    transformation.GetResult( &result );
-
-    p_orbit_mat = result;
+        p_orbit_mat = result;
 
 
-    transformation.ClearAll();
-    transformation.PushMatrix( offset_rot );
-    transformation.PushMatrix( tilt );
-    transformation.PushMatrix( orbit_offset );
-    transformation.PushMatrix( orbit_translation );
-    transformation.PushMatrix( revolution_tilt );
-    transformation.PushMatrix( revolution );
-    transformation.PushMatrix( orbit2 );
-    
-    transformation.BuildResult();
-    transformation.GetResult( &result );
+        transformation.ClearAll();
+        transformation.PushMatrix( offset_rot );
+        transformation.PushMatrix( tilt );
+        transformation.PushMatrix( orbit_offset );
+        transformation.PushMatrix( orbit_translation );
+        transformation.PushMatrix( revolution_tilt );
+        transformation.PushMatrix( revolution );
+        transformation.PushMatrix( orbit2 );
+        
+        transformation.BuildResult();
+        transformation.GetResult( &result );
 
-    p_planet_mat = result;
+        p_planet_mat = result;
+    }
+    else
+    {
+        transformation.PushMatrix( offset_rot );
+        transformation.PushMatrix( tilt );
+        transformation.PushMatrix( orbit_offset );
+        transformation.PushMatrix( orbit_translation );    
+               
+        transformation.BuildResult();
+        transformation.GetResult( &result );
+
+        p_orbit_mat = result;
+
+        m_basetransform = result;
+    }
 }
 
 void Orbit::OrbitStep( const Matrix& p_centroidbase )
@@ -165,12 +180,17 @@ void Orbit::RegisterChunk( DrawSpace::Chunk* p_drawable )
     m_drawable = p_drawable;
 }
 
-/*
-void Orbit::Progress( TimeManager& p_timer )
+void Orbit::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 {
-    
+    p_mat = m_basetransform;
 }
-*/
+
+void Orbit::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Matrix local_orbit;
+    Matrix local_planet;
+    orbit_step( m_orbit_angle, local_orbit, local_planet );
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -201,11 +221,6 @@ void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
     dsreal world_scale = World::m_scale;
 
     btTransform bt_transform;
-
-    /*
-    bt_transform.setIdentity();
-    bt_transform.setOrigin( btVector3( p_parameters.initial_pos[0] * world_scale, p_parameters.initial_pos[1] * world_scale, p_parameters.initial_pos[2] * world_scale ) );
-    */
 
     btScalar btmat[16];
 
@@ -284,6 +299,37 @@ TransformNode* Orbiter::GetDrawable( void )
     return m_drawable;
 }
 
+void Orbiter::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Matrix revolution_tilt;
+    revolution_tilt.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), Maths::DegToRad( m_revolution_tilt_angle ) );
+
+    Matrix orbit2;
+    orbit2.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( 360.0 - m_orbit_angle ) );
+
+    Matrix revolution;
+    revolution.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( m_revolution_angle ) );
+
+    Transformation transformation;
+    Matrix result;
+
+
+    transformation.ClearAll();
+    transformation.PushMatrix( revolution_tilt );
+    transformation.PushMatrix( revolution );
+    transformation.PushMatrix( orbit2 );
+    
+    transformation.BuildResult();
+    transformation.GetResult( &result );
+
+    m_basetransform = result;
+}
+
+void Orbiter::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_basetransform;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 Centroid::Centroid( void ) : m_orbiter( NULL )
@@ -315,4 +361,11 @@ void Centroid::SetOrbiter( Orbiter* p_orbiter )
     m_orbiter = p_orbiter;
 }
 
+void Centroid::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    Matrix id;
+    id.Identity();
+
+    p_mat = id;
+}
 

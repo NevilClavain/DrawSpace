@@ -59,6 +59,10 @@ protected:
     Centroid*                           m_centroid;
     DrawSpace::Chunk*                   m_drawable; // drawable representant la trajectoire orbite
 
+    DrawSpace::Utils::Matrix            m_basetransform;
+
+
+
     void orbit_step( dsreal p_angle, DrawSpace::Utils::Matrix& p_orbit_mat, DrawSpace::Utils::Matrix& p_planet_mat );
 
     void build_orbit_meshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
@@ -82,13 +86,22 @@ public:
     m_revolution_tilt_angle( p_revolution_tilt_angle ),
     m_revolution_duration( p_revolution_duration )
     {
+        m_basetransform.Identity();
     };
 
     void    OrbitStep( const DrawSpace::Utils::Matrix& p_centroidbase );
     void    BuildMeshe( dsreal p_anglestep, DrawSpace::Core::Meshe* p_meshe );
     void    RegisterChunk( DrawSpace::Chunk* p_drawable );
 
-    //void    Progress( DrawSpace::Utils::TimeManager& p_timer );
+
+    void    GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void    SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+    
+    void    OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) { };
+
+    void    Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    void    Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+    
 
     friend class Calendar;
 };
@@ -104,6 +117,17 @@ protected:
     btDefaultMotionState*           m_motionState;
 
     DrawSpace::Core::TransformNode* m_drawable;
+
+    dsreal                          m_orbit_angle;
+    dsreal                          m_revolution_angle; // orbiter self rotation
+
+
+    dsreal                          m_orbit_duration; // unite : 1.0 = annee terrestre (365 jours)
+    dsreal                          m_revolution_duration; // unite : 1.0 jour terrestre (24h)
+    dsreal                          m_revolution_tilt_angle; // inclinaison axe de rotation planete
+
+    DrawSpace::Utils::Matrix        m_basetransform;
+
 
 public:
 
@@ -121,6 +145,17 @@ public:
     virtual btRigidBody* GetRigidBody( void );
 
     DrawSpace::Core::TransformNode* GetDrawable( void );
+
+
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+
+    void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+    
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) { };
+
+    friend class Calendar;
 };
 
 
@@ -138,6 +173,17 @@ public:
     void RegisterSubOrbit( Orbit* p_orbit );
     void Update( const DrawSpace::Utils::Matrix& p_prevcentroidbase, const DrawSpace::Utils::Matrix& p_localorbitmat, const DrawSpace::Utils::Matrix& p_localplanetmat );
     void SetOrbiter( Orbiter* p_orbiter );
+
+    void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) {};
+    
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) {};
+
+
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+
+
 };
 
 

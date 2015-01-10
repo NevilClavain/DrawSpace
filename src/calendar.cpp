@@ -255,9 +255,15 @@ void Calendar::RegisterOrbit( Orbit* p_orbit )
     m_orbits.push_back( p_orbit );
 }
 
-void Calendar::set_orbit_angle( Orbit* p_orbit, dstime p_currtime )
+void Calendar::RegisterOrbiter( Orbiter* p_orbiter )
 {
-    dsreal orbit_duration = p_orbit->m_orbit_duration;
+    m_orbiters.push_back( p_orbiter );
+}
+
+
+double Calendar::compute_orbit_angle( double p_orbit_duration, dstime p_currtime )
+{
+    dsreal orbit_duration = p_orbit_duration;
     
     long year_sec = 3600 * 24 * 365;
 
@@ -273,19 +279,19 @@ void Calendar::set_orbit_angle( Orbit* p_orbit, dstime p_currtime )
 
     angle_orbit_i_2 = (long)angle_orbit_i;
 
-    double final_angle = (angle_orbit_i_2 % 360) + angle_orbit_f;       
+    double final_angle = (angle_orbit_i_2 % 360) + angle_orbit_f;   
     
-    p_orbit->m_orbit_angle = final_angle;
+    return final_angle;
 }
 
-void Calendar::set_orbiter_rotation_angle( Orbit* p_orbit, dstime p_currtime )
+double Calendar::compute_revolution_angle( double p_revolution_duration, dstime p_currtime )
 {
-    if( p_orbit->m_revolution_duration == 0.0 )
+    if( 0.0 == p_revolution_duration )
     {
-        return;
+        return 0.0;
     }
 
-    dsreal revolution_duration = p_orbit->m_revolution_duration;
+    dsreal revolution_duration = p_revolution_duration;
 
     long day_sec = 3600 * 24;
 
@@ -303,7 +309,7 @@ void Calendar::set_orbiter_rotation_angle( Orbit* p_orbit, dstime p_currtime )
 
     double final_angle = (angle_rev_i_2 % 360) + angle_rev_f;       
 
-    p_orbit->m_revolution_angle = final_angle;
+    return final_angle;
 }
 
 bool Calendar::Startup( dstime p_start_time )
@@ -319,8 +325,16 @@ bool Calendar::Startup( dstime p_start_time )
     {
         Orbit* curr_orbit = m_orbits[i];
 
-        set_orbit_angle( curr_orbit, p_start_time );
-        set_orbiter_rotation_angle( curr_orbit, p_start_time );
+        curr_orbit->m_orbit_angle = compute_orbit_angle( curr_orbit->m_orbit_duration, p_start_time );
+        curr_orbit->m_revolution_angle = compute_revolution_angle( curr_orbit->m_revolution_duration, p_start_time );
+    }
+
+    for( size_t i = 0; i < m_orbiters.size(); i++ )
+    {
+        Orbiter* curr_orbiter = m_orbiters[i];
+
+        curr_orbiter->m_orbit_angle = compute_orbit_angle( curr_orbiter->m_orbit_duration, p_start_time );
+        curr_orbiter->m_revolution_angle = compute_revolution_angle( curr_orbiter->m_revolution_duration, p_start_time );
     }
 
     // demarre le timer...
@@ -382,9 +396,18 @@ void Calendar::Run( void )
         {
             Orbit* curr_orbit = m_orbits[i];
         
-            set_orbit_angle( curr_orbit, m_current_time );
-            set_orbiter_rotation_angle( curr_orbit, m_current_time );
+            curr_orbit->m_orbit_angle = compute_orbit_angle( curr_orbit->m_orbit_duration, m_current_time );
+            curr_orbit->m_revolution_angle = compute_revolution_angle( curr_orbit->m_revolution_duration, m_current_time );
         }
+
+        for( size_t i = 0; i < m_orbiters.size(); i++ )
+        {
+            Orbiter* curr_orbiter = m_orbiters[i];
+
+            curr_orbiter->m_orbit_angle = compute_orbit_angle( curr_orbiter->m_orbit_duration, m_current_time );
+            curr_orbiter->m_revolution_angle = compute_revolution_angle( curr_orbiter->m_revolution_duration, m_current_time );
+        }
+
 
         for( size_t i = 0; i < m_worlds.size(); i++ )
         {
