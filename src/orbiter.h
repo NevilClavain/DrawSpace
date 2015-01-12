@@ -146,6 +146,21 @@ public:
 
     DrawSpace::Core::TransformNode* GetDrawable( void );
 
+    void SetOrbitDuration( dsreal p_orbit_duration )
+    {
+        m_orbit_duration = p_orbit_duration;
+    }
+
+    void SetRevolutionDuration( dsreal p_revolution_duration )
+    {
+        m_revolution_duration = p_revolution_duration;
+    }
+
+    void SetRevolutionTiltAngle( dsreal p_angle )
+    {
+        m_revolution_tilt_angle = p_angle;
+    }
+
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};

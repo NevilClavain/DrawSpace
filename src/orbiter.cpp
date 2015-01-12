@@ -199,7 +199,10 @@ m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
 m_meshe_data( NULL ),
-m_drawable( p_drawable )
+m_drawable( p_drawable ),
+m_orbit_duration( 0.0 ),
+m_revolution_duration( 0.0 ),
+m_revolution_tilt_angle( 0.0 )
 {
 }
 
