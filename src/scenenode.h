@@ -29,6 +29,13 @@
 #include "lod.h"
 #include "timemanager.h"
 
+
+#define SCENENODE_FLAG_PLANETFRAGMENT_ALLOC                 0x01
+#define SCENENODE_FLAG_DLINKSCAN                            0x02
+#define SCENENODE_FLAG_DLINKED                              0x04
+
+
+
 namespace DrawSpace
 {
 namespace Core
@@ -42,12 +49,13 @@ protected:
     dsstring                    m_scenename;
     std::vector<BaseSceneNode*> m_children;
     DrawSpace::Utils::Matrix    m_finaltransform;
-
+    unsigned long               m_flags;
     
 public:
 
     BaseSceneNode( const dsstring& p_scenename ) :
-    m_scenename( p_scenename )
+    m_scenename( p_scenename ),
+    m_flags( 0 )
     {
 
 
@@ -70,6 +78,16 @@ public:
     {
         m_children.push_back( p_node );
     }
+
+    virtual void SetFlag( unsigned long p_flag )
+    {
+        m_flags |= p_flag;
+    }
+
+    virtual bool CheckFlag( unsigned long p_flag )
+    {
+        return ( m_flags & p_flag );
+    }
     
     friend class SceneNodeGraph;
     
@@ -78,9 +96,7 @@ public:
 template <typename Base>
 class SceneNode : public BaseSceneNode
 {
-protected:
-
-    
+protected:    
     BaseSceneNode*              m_parent;    
     DrawSpace::Utils::Matrix    m_globaltransform;
     Base*                       m_content;
