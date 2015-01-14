@@ -41,16 +41,40 @@ public:
 
     } CameraEvent;
 
-    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, BaseSceneNode*>  CameraEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, BaseSceneNode*>   CameraEventHandler;
+
+    typedef enum
+    {
+        NODE_ADDED,
+
+    } NodesEvent;
+
+    typedef DrawSpace::Core::BaseCallback2<void, NodesEvent, BaseSceneNode*>    NodesEventHandler;
 
 protected:
 
+    // liste des nodes "roots", comprenant d'eventuels nodes fils, qui ne sont donc pas stockes ici
+    // ce tableau est complete par l'appel a AddNode()
+
     std::map<dsstring, BaseSceneNode*>          m_nodes;
+
+    // liste exhaustive de tout les nodes, y compris les nodes fils, qui ne sont pas stockes dans m_nodes
+    // ce tableau est complete par l'appel a RegisterNode()
+    std::vector<BaseSceneNode*>                 m_all_nodes;
+
+    // liste de tout les nodes "camera"
+    std::map<dsstring, Core::BaseSceneNode*>    m_cameras_list;
+
+
+
     std::map<dsstring, Pass*>                   m_passes;
     dsstring                                    m_current_camera;
-    std::map<dsstring, Core::BaseSceneNode*>    m_cameras_list;
+
     Utils::Matrix                               m_view;
+
     std::vector<CameraEventHandler*>            m_cameraevt_handlers;
+    std::vector<NodesEventHandler*>             m_nodesevt_handlers;
+
    
 public:
     SceneNodeGraph( void );
@@ -77,6 +101,7 @@ public:
     std::map<dsstring, BaseSceneNode*>& GetCamerasList( void );
 
     void RegisterCameraEvtHandler( CameraEventHandler* p_handler );
+    void RegisterNodesEvtHandler( NodesEventHandler* p_handler );
 
     void PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 

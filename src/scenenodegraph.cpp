@@ -100,6 +100,12 @@ void SceneNodeGraph::RegisterPass( Pass* p_pass )
 void SceneNodeGraph::RegisterNode( BaseSceneNode* p_node )
 {
     p_node->OnRegister( this );
+    m_all_nodes.push_back( p_node );
+
+    for( size_t i = 0; i < m_nodesevt_handlers.size(); i++ )
+    {
+        ( *m_nodesevt_handlers[i] )( NODE_ADDED, p_node );
+    }
 }
 
 Pass* SceneNodeGraph::GetPass( const dsstring& p_passname )
@@ -208,6 +214,18 @@ void SceneNodeGraph::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
     else
     {
         (*p_handler)( ACTIVE, NULL );
+    }
+}
+
+void SceneNodeGraph::RegisterNodesEvtHandler( NodesEventHandler* p_handler )
+{
+    m_nodesevt_handlers.push_back( p_handler );
+
+    // balancer la liste des nodes deja enregistres
+    
+    for( size_t i = 0; i < m_all_nodes.size(); i++ )
+    {
+        (*p_handler)( NODE_ADDED, m_all_nodes[i] );
     }
 }
 
