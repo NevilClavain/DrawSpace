@@ -47,14 +47,6 @@ void SceneNodeGraph::ComputeTransformations( Utils::TimeManager& p_timemanager )
         it->second->ComputeTransformation( p_timemanager );
     }
 
-    // TODO
-    /*
-    for( std::map<dsstring, BaseSceneNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
-    {
-        it->second->ComputeLod();
-    }
-    */
-
     m_view.Identity();
 
     if( m_current_camera != "" )
