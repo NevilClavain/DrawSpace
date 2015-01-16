@@ -24,20 +24,23 @@
 #define _PLANETOID_BODY_H_
 
 #include "planetoid_fragment.h"
-
+#include "scenenodegraph.h"
 
 namespace DrawSpace
 {
 namespace Planetoid
 {
 
-class Body
+class Body : public Dynamics::Orbiter
 {
 public:
 
-    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Scenegraph::CameraEvent, DrawSpace::Core::TransformNode*>       CameraEvtCb;
+    //typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Scenegraph::CameraEvent, DrawSpace::Core::TransformNode*>           CameraEvtCb;
 
-    typedef DrawSpace::Core::BaseCallback<void, DrawSpace::Planetoid::Body*>                                                                        PlanetRelativeEventHandler;
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*> CameraEvtCb;
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>  NodesEventCb;
+
+    typedef DrawSpace::Core::BaseCallback<void, DrawSpace::Planetoid::Body*>                                                                            PlanetRelativeEventHandler;
 
 protected:
 
@@ -80,11 +83,12 @@ protected:
 
     DrawSpace::Dynamics::World                                  m_world;
     dsstring                                                    m_scenename;
-    DrawSpace::Dynamics::Orbiter*                               m_orbiter;
+    //DrawSpace::Dynamics::Orbiter*                               m_orbiter;
         
     DrawSpace::SphericalLOD::Drawing*                           m_drawable;
     
     CameraEvtCb*                                                m_camera_evt_cb;
+    NodesEventCb*                                               m_nodes_evt_cb;
       
     std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>   m_registered_bodies;
     std::map<dsstring, RegisteredCamera>                        m_registered_camerapoints;
@@ -97,7 +101,10 @@ protected:
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
     void body_find_attached_camera( DrawSpace::Dynamics::InertBody* p_body, std::vector<dsstring>& p_name );
-    void on_camera_event( DrawSpace::Scenegraph::CameraEvent p_event, DrawSpace::Core::TransformNode* p_node );
+    //void on_camera_event( DrawSpace::Scenegraph::CameraEvent p_event, DrawSpace::Core::TransformNode* p_node );
+
+    void on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
+    void on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
 
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr );
 
@@ -107,27 +114,42 @@ public:
     Body( const dsstring& p_scenename, dsreal p_ray );
     virtual ~Body( void );
 
+    /*
     DrawSpace::SphericalLOD::Drawing*   GetDrawable( void );
     DrawSpace::Dynamics::Orbiter*       GetOrbiter( void );
     DrawSpace::Dynamics::World*         GetWorld( void );
+    */
 
     CameraEvtCb*                        GetCameraEvtCb( void );
+    NodesEventCb*                       GetNodesEvtCb( void );
 
     void                                ApplyGravity( void );
-
     void                                ManageBodies( void );
     void                                Update( void );
 
+    /*
     void                                RegisterInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body );
     void                                RegisterCollider( DrawSpace::Dynamics::Collider* p_collider );
     void                                RegisterIncludedInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body, const DrawSpace::Utils::Matrix& p_initmat );
     bool                                RegisterCameraPoint( DrawSpace::Dynamics::CameraPoint* p_camera );
+    */
 
     void                                GetSceneName( dsstring& p_name );
     
     void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
 
     Fragment*                           GetRegisteredBodyPlanetFragment( DrawSpace::Dynamics::InertBody* p_body );
+
+    void                                RegisterPassSlot( const dsstring& p_passname );
+    DrawSpace::Core::RenderingNode*     GetNodeFromPass( const dsstring& p_passname, int p_faceid );
+    void                                SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
+
+
+    void                                SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+
+    void                                OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
+    void                                Update( DrawSpace::Utils::TimeManager& p_timemanager );
 
 };
 

@@ -30,7 +30,7 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Planetoid;
 
 
-DrawSpace::Planetoid::Body::Body( const dsstring& p_scenename, dsreal p_ray ) : 
+DrawSpace::Planetoid::Body::Body( const dsstring& p_scenename, dsreal p_ray ) : Orbiter( &m_world, NULL ),
 m_scenename( p_scenename ),
 m_ray( p_ray * 1000.0 )
 {
@@ -40,9 +40,10 @@ m_ray( p_ray * 1000.0 )
     m_drawable->SetSceneName( p_scenename );
     m_drawable->SetRenderer( SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
     
-    m_orbiter = _DRAWSPACE_NEW_( Orbiter, Orbiter( &m_world, m_drawable ) );
+    //m_orbiter = _DRAWSPACE_NEW_( Orbiter, Orbiter( &m_world, m_drawable ) );
 
     m_camera_evt_cb = _DRAWSPACE_NEW_( CameraEvtCb, CameraEvtCb( this, &DrawSpace::Planetoid::Body::on_camera_event ) );
+    m_nodes_evt_cb = _DRAWSPACE_NEW_( NodesEventCb, NodesEventCb( this, &DrawSpace::Planetoid::Body::on_nodes_event ) );
 }
 
 DrawSpace::Planetoid::Body::~Body( void )
@@ -73,7 +74,8 @@ void DrawSpace::Planetoid::Body::GetCameraHotpoint( const dsstring& p_name, Matr
 
 void DrawSpace::Planetoid::Body::attach_body( InertBody* p_body )
 {
-    p_body->Attach( m_orbiter );
+    //p_body->Attach( m_orbiter );
+    p_body->Attach( this );
     m_registered_bodies[p_body].attached = true;
 }
 
@@ -94,7 +96,9 @@ void DrawSpace::Planetoid::Body::body_find_attached_camera( InertBody* p_body, s
     }
 }
 
-void DrawSpace::Planetoid::Body::on_camera_event( Scenegraph::CameraEvent p_event, TransformNode* p_node )
+//void DrawSpace::Planetoid::Body::on_camera_event( Scenegraph::CameraEvent p_event, TransformNode* p_node )
+
+void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
 {
     if( DrawSpace::Scenegraph::ACTIVE == p_event )
     {
@@ -110,9 +114,10 @@ void DrawSpace::Planetoid::Body::on_camera_event( Scenegraph::CameraEvent p_even
         {
             m_current_camerapoint = current_camera_scenename;
 
+            /*
             for( std::map<dsstring, RegisteredCamera>::iterator it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
             {
-                if( it->second.camera == p_node )
+                if( it->second.camera == p_node )                
                 {
                     Fragment* fragment = it->second.fragment;
                     m_drawable->SetCurrentPlanetBody( fragment->GetPlanetBody() );
@@ -120,6 +125,10 @@ void DrawSpace::Planetoid::Body::on_camera_event( Scenegraph::CameraEvent p_even
                     break;
                 }
             }
+            */
+            Fragment* fragment = m_registered_camerapoints[current_camera_scenename].fragment;
+            m_drawable->SetCurrentPlanetBody( fragment->GetPlanetBody() );
+
         }
         else
         {
@@ -129,6 +138,11 @@ void DrawSpace::Planetoid::Body::on_camera_event( Scenegraph::CameraEvent p_even
     }
 }
 
+void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
+{
+}
+
+/*
 SphericalLOD::Drawing* DrawSpace::Planetoid::Body::GetDrawable( void )
 {
     return m_drawable;
@@ -143,10 +157,16 @@ World* DrawSpace::Planetoid::Body::GetWorld( void )
 {
     return &m_world;
 }
+*/
 
 DrawSpace::Planetoid::Body::CameraEvtCb* DrawSpace::Planetoid::Body::GetCameraEvtCb( void )
 {
     return m_camera_evt_cb;
+}
+
+DrawSpace::Planetoid::Body::NodesEventCb* DrawSpace::Planetoid::Body::GetNodesEvtCb( void )
+{
+    return m_nodes_evt_cb;
 }
 
 void DrawSpace::Planetoid::Body::ApplyGravity( void )
@@ -235,7 +255,8 @@ void DrawSpace::Planetoid::Body::ManageBodies( void )
             bodypos2[2] = bodypos( 3, 2 );
 
             DrawSpace::Utils::Matrix planetbodypos;
-            m_orbiter->GetLastWorldTransformation( planetbodypos );
+            //m_orbiter->GetLastWorldTransformation( planetbodypos );
+            GetLastWorldTransformation( planetbodypos );
 
             DrawSpace::Utils::Vector planetbodypos2;
             planetbodypos2[0] = planetbodypos( 3, 0 );
@@ -263,7 +284,8 @@ void DrawSpace::Planetoid::Body::ManageBodies( void )
 
                 for( size_t i = 0; i < cameras.size(); i++ )
                 {
-                    m_registered_camerapoints[cameras[i]].camera->SetRelativeOrbiter( m_orbiter );
+                    //m_registered_camerapoints[cameras[i]].camera->SetRelativeOrbiter( m_orbiter );
+                    m_registered_camerapoints[cameras[i]].camera->SetRelativeOrbiter( this );
 
                     Fragment* fragment = m_registered_camerapoints[cameras[i]].fragment;
 
@@ -287,7 +309,8 @@ void DrawSpace::Planetoid::Body::Update( void )
 
         if( inertbody )
         {
-            if( inertbody->GetRefBody() == m_orbiter )
+            //if( inertbody->GetRefBody() == m_orbiter )
+            if( inertbody->GetRefBody() == this )
             {
                 std::vector<dsstring> cameras;
                 body_find_attached_camera( inertbody, cameras );
@@ -307,6 +330,7 @@ void DrawSpace::Planetoid::Body::Update( void )
     }
 }
 
+/*
 void DrawSpace::Planetoid::Body::RegisterInertBody( const dsstring& p_bodyname, InertBody* p_body )
 {
     RegisteredBody reg_body;
@@ -315,7 +339,7 @@ void DrawSpace::Planetoid::Body::RegisterInertBody( const dsstring& p_bodyname, 
     reg_body.body = p_body;
 
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
-    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( /*&m_world,*/ NULL ) );
+    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
 
     dsstring final_name = m_scenename + dsstring( " " ) + p_bodyname;
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, true ) );
@@ -342,7 +366,7 @@ void DrawSpace::Planetoid::Body::RegisterIncludedInertBody( const dsstring& p_bo
     p_body->IncludeTo( m_orbiter, p_initmat );
 
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
-    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( /*&m_world,*/ NULL ) );
+    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
 
     dsstring final_name = m_scenename + dsstring( " " ) + p_bodyname;
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, true ) );
@@ -358,6 +382,7 @@ void DrawSpace::Planetoid::Body::RegisterIncludedInertBody( const dsstring& p_bo
     m_sphericallod_body_list[p_bodyname] = slod_body;
     m_registered_bodies[p_body] = reg_body;
 }
+*/
 
 void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr )
 {
@@ -374,12 +399,14 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
 
     p_cameradescr.fragment = planet_fragment;
 
-    p_cameradescr.camera->SetRelativeOrbiter( m_orbiter );
+    //p_cameradescr.camera->SetRelativeOrbiter( m_orbiter );
+    p_cameradescr.camera->SetRelativeOrbiter( this );
 
     m_sphericallod_body_list[p_cameraname] = slod_body;
     m_planetfragments_list.push_back( planet_fragment );    
 }
 
+/*
 bool DrawSpace::Planetoid::Body::RegisterCameraPoint( CameraPoint* p_camera )
 {
     RegisteredCamera reg_camera;
@@ -472,17 +499,20 @@ bool DrawSpace::Planetoid::Body::RegisterCameraPoint( CameraPoint* p_camera )
 
     return true;
 }
+*/
 
 void DrawSpace::Planetoid::Body::GetSceneName( dsstring& p_name )
 {
     p_name = m_scenename;
 }
 
+/*
 void DrawSpace::Planetoid::Body::RegisterCollider( DrawSpace::Dynamics::Collider* p_collider )
 {
     p_collider->AddToWorld( &m_world );
     p_collider->SetRootOrbiter( m_orbiter );
 }
+*/
 
 Fragment* DrawSpace::Planetoid::Body::GetRegisteredBodyPlanetFragment( DrawSpace::Dynamics::InertBody* p_body )
 {
@@ -491,4 +521,37 @@ Fragment* DrawSpace::Planetoid::Body::GetRegisteredBodyPlanetFragment( DrawSpace
         return NULL;
     }    
     return m_registered_bodies[p_body].fragment;
+}
+
+void DrawSpace::Planetoid::Body::RegisterPassSlot( const dsstring& p_passname )
+{
+    m_drawable->RegisterPassSlot( p_passname );
+}
+
+DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetNodeFromPass( const dsstring& p_passname, int p_faceid )
+{
+    return m_drawable->GetNodeFromPass( p_passname, p_faceid );
+}
+
+void DrawSpace::Planetoid::Body::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname )
+{
+    m_drawable->SetNodeFromPassSpecificFx( p_passname, p_faceid, p_fxname );
+}
+
+void DrawSpace::Planetoid::Body::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_drawable->SetFinalTransform( p_mat );
+}
+
+void DrawSpace::Planetoid::Body::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    m_drawable->OnRegister( p_scenegraph, p_node );
+}
+
+void DrawSpace::Planetoid::Body::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Orbiter::Update( p_timemanager );
+    ApplyGravity();
+    Update();
+    ManageBodies();
 }
