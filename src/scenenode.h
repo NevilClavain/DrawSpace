@@ -30,9 +30,8 @@
 #include "timemanager.h"
 
 
-#define SCENENODE_FLAG_PLANETFRAGMENT_ALLOC                 0x01
-#define SCENENODE_FLAG_DLINKSCAN                            0x02
-#define SCENENODE_FLAG_DLINKED                              0x04
+#define SCENENODE_FLAG_DLINKSCAN                            0x01
+#define SCENENODE_FLAG_DLINKED                              0x02
 
 
 

@@ -79,24 +79,27 @@ protected:
     } RegisteredCamera;
 
 
-    dsreal                                                      m_ray;
+    dsreal                                                                  m_ray;
 
-    DrawSpace::Dynamics::World                                  m_world;
-    dsstring                                                    m_scenename;
+    DrawSpace::Dynamics::World                                              m_world;
+    dsstring                                                                m_scenename;
     //DrawSpace::Dynamics::Orbiter*                               m_orbiter;
         
-    DrawSpace::SphericalLOD::Drawing*                           m_drawable;
+    DrawSpace::SphericalLOD::Drawing*                                       m_drawable;
     
-    CameraEvtCb*                                                m_camera_evt_cb;
-    NodesEventCb*                                               m_nodes_evt_cb;
+    CameraEvtCb*                                                            m_camera_evt_cb;
+    NodesEventCb*                                                           m_nodes_evt_cb;
       
-    std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>   m_registered_bodies;
-    std::map<dsstring, RegisteredCamera>                        m_registered_camerapoints;
-    dsstring                                                    m_current_camerapoint;
+    std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>               m_registered_bodies;
+    std::map<dsstring, RegisteredCamera>                                    m_registered_camerapoints;
+    dsstring                                                                m_current_camerapoint;
 
-    std::vector<Fragment*>                                      m_planetfragments_list;
+    std::vector<Fragment*>                                                  m_planetfragments_list;
 
-    std::map<dsstring, DrawSpace::SphericalLOD::Body*>          m_sphericallod_body_list;
+    //std::map<dsstring, DrawSpace::SphericalLOD::Body*>          m_sphericallod_body_list;
+
+    std::map<dsstring, DrawSpace::Utils::Matrix>                            m_includedbody_initmat_table;
+    std::map<DrawSpace::Dynamics::CameraPoint*, DrawSpace::Dynamics::Body*> m_camerabodyassociation_table;
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -150,6 +153,10 @@ public:
     void                                OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
     void                                Update( DrawSpace::Utils::TimeManager& p_timemanager );
+
+    void                                RegisterLinkedBodyInitMatrix( const dsstring& p_name, const DrawSpace::Utils::Matrix& p_initmat );
+    void                                RegisterCameraBodyAssociation( DrawSpace::Dynamics::CameraPoint* p_camera, DrawSpace::Dynamics::Body* p_body );
+
 
 };
 

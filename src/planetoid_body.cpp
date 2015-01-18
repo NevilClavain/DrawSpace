@@ -22,6 +22,8 @@
 
 #include "planetoid_body.h"
 #include "plugin.h"
+#include "exceptions.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -140,6 +142,168 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
 
 void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
 {
+    if( SceneNodeGraph::NODE_ADDED == p_event )
+    {
+        SceneNode<InertBody>* inertbody_node = dynamic_cast<SceneNode<InertBody>*>( p_node );
+        if( inertbody_node )
+        {          
+            if( inertbody_node->CheckFlag( SCENENODE_FLAG_DLINKSCAN ) )
+            {
+                RegisteredBody reg_body;
+
+                if( inertbody_node->CheckFlag( SCENENODE_FLAG_DLINKED ) )
+                {
+                    reg_body.attached = true;
+                    reg_body.body = inertbody_node->GetContent();
+
+                    Matrix body_initmat;
+                    dsstring bodyname;                   
+                    p_node->GetSceneName( bodyname );
+
+                    // ICI
+
+                    if( m_includedbody_initmat_table.count( bodyname ) > 0 )
+                    {
+                        body_initmat = m_includedbody_initmat_table[bodyname];
+                    }
+                    else
+                    {
+                        _DSEXCEPTION( "included body " + bodyname + " has no initial mat on planet" );
+                    }
+
+                    inertbody_node->GetContent()->IncludeTo( this, body_initmat );
+
+                    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
+                    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
+
+
+                    dsstring final_name = m_scenename + dsstring( " " ) + bodyname;
+                    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, true ) );
+                    planet_fragment->SetHotState( true );
+
+                    m_planetfragments_list.push_back( planet_fragment );
+                    reg_body.fragment = planet_fragment;
+
+                    planet_fragment->SetInertBody( inertbody_node->GetContent() );
+
+                    slod_body->Initialize();
+                    
+                    m_registered_bodies[inertbody_node->GetContent()] = reg_body;
+
+                }
+                else
+                {                    
+                    reg_body.attached = false;
+                    reg_body.body = inertbody_node->GetContent();
+
+                    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
+                    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
+
+                    dsstring bodyname;                   
+                    p_node->GetSceneName( bodyname );
+                   
+                    dsstring final_name = m_scenename + dsstring( " " ) + bodyname;
+
+                    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, true ) );
+                    planet_fragment->SetHotState( false );
+
+                    m_planetfragments_list.push_back( planet_fragment );
+                    reg_body.fragment = planet_fragment;
+
+                    planet_fragment->SetInertBody( inertbody_node->GetContent() );
+
+                    slod_body->Initialize();
+
+                    m_registered_bodies[inertbody_node->GetContent()] = reg_body;
+                }
+            }
+            return;
+        }
+        
+        SceneNode<CameraPoint>* camera_node = dynamic_cast<SceneNode<CameraPoint>*>( p_node );
+        if( camera_node )
+        {
+            RegisteredCamera reg_camera;
+            dsstring camera_scenename;
+
+            p_node->GetSceneName( camera_scenename );
+
+            if( m_camerabodyassociation_table.count( camera_node->GetContent() ) > 0 )
+            {
+                DrawSpace::Dynamics::Body* attached_body = m_camerabodyassociation_table[camera_node->GetContent()];
+                InertBody* inert_body = dynamic_cast<InertBody*>( attached_body );
+
+                if( inert_body )
+                {
+                    if( m_registered_bodies.count( inert_body ) > 0 )
+                    {
+                        reg_camera.type = INERTBODY_LINKED;
+                        reg_camera.attached_body = inert_body;
+                        reg_camera.attached_collider = NULL;
+                        reg_camera.fragment = m_registered_bodies[inert_body].fragment;
+                    }
+                    else
+                    {
+                        // body attache n'est pas enregistre, erreur
+
+                        _DSEXCEPTION( "body associated to camera " + camera_scenename + " is not registered !" ); 
+                    }
+
+                }
+                else
+                {
+                    Orbiter* orbiter = dynamic_cast<Orbiter*>( attached_body );
+                    if( orbiter  )
+                    {
+                        if( orbiter == this )
+                        {
+                            // la camera est attachee a notre planete !
+
+                            reg_camera.type = FREE_ON_PLANET;
+                            reg_camera.attached_body = NULL;
+                            reg_camera.attached_collider = NULL;
+
+                            create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera );
+
+                            reg_camera.camera->SetRelativeOrbiter( this );
+
+                        }
+                        else
+                        {
+                            _DSEXCEPTION( "orbiter associated with camera " + camera_scenename + " is not THIS planet" );
+                        }
+                    }
+                    else
+                    {
+                        Collider* collider = dynamic_cast<Collider*>( attached_body );
+
+                        if( collider )
+                        {
+                            reg_camera.type = COLLIDER_LINKED;
+                            reg_camera.attached_body = NULL;
+                            reg_camera.attached_collider = collider;
+
+                            create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera );
+
+                            reg_camera.camera->SetRelativeOrbiter( this );
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                reg_camera.type = FREE;
+                reg_camera.attached_body = NULL;
+                create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera );
+            }
+
+            return;
+        }
+    }
 }
 
 /*
@@ -330,6 +494,16 @@ void DrawSpace::Planetoid::Body::Update( void )
     }
 }
 
+void DrawSpace::Planetoid::Body::RegisterLinkedBodyInitMatrix( const dsstring& p_name, const DrawSpace::Utils::Matrix& p_initmat )
+{
+    m_includedbody_initmat_table[p_name] = p_initmat;
+}
+
+void DrawSpace::Planetoid::Body::RegisterCameraBodyAssociation( DrawSpace::Dynamics::CameraPoint* p_camera, DrawSpace::Dynamics::Body* p_body )
+{
+    m_camerabodyassociation_table[p_camera] = p_body;
+}
+
 /*
 void DrawSpace::Planetoid::Body::RegisterInertBody( const dsstring& p_bodyname, InertBody* p_body )
 {
@@ -402,7 +576,7 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
     //p_cameradescr.camera->SetRelativeOrbiter( m_orbiter );
     p_cameradescr.camera->SetRelativeOrbiter( this );
 
-    m_sphericallod_body_list[p_cameraname] = slod_body;
+    //m_sphericallod_body_list[p_cameraname] = slod_body;
     m_planetfragments_list.push_back( planet_fragment );    
 }
 
@@ -474,7 +648,7 @@ bool DrawSpace::Planetoid::Body::RegisterCameraPoint( CameraPoint* p_camera )
 
                     create_camera_collisions( camera_scenename, p_camera, reg_camera );
 
-                    reg_camera.camera->SetRelativeOrbiter( m_orbiter );                    
+                    reg_camera.camera->SetRelativeOrbiter( m_orbiter );
                 }
                 else
                 {
