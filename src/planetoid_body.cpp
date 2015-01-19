@@ -159,16 +159,15 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     Matrix body_initmat;
                     dsstring bodyname;                   
                     p_node->GetSceneName( bodyname );
-
-                    // ICI
-
+                   
                     if( m_includedbody_initmat_table.count( bodyname ) > 0 )
                     {
                         body_initmat = m_includedbody_initmat_table[bodyname];
                     }
                     else
                     {
-                        _DSEXCEPTION( "included body " + bodyname + " has no initial mat on planet" );
+                        // this included inertbody does not belong to this planet...
+                        return;
                     }
 
                     inertbody_node->GetContent()->IncludeTo( this, body_initmat );
@@ -244,16 +243,13 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     }
                     else
                     {
-                        // body attache n'est pas enregistre, erreur
-
-                        _DSEXCEPTION( "body associated to camera " + camera_scenename + " is not registered !" ); 
+                        return;
                     }
-
                 }
                 else
                 {
                     Orbiter* orbiter = dynamic_cast<Orbiter*>( attached_body );
-                    if( orbiter  )
+                    if( orbiter )
                     {
                         if( orbiter == this )
                         {
