@@ -90,6 +90,16 @@ public:
         return m_enable_dynamiclink;
     }
 
+    void DisableDynamicLink( void )
+    {
+        m_enable_dynamiclink = false;
+    }
+
+    void SetDynamicLinkInitState( bool p_state )
+    {
+        m_enable_dynamiclink_initstate = p_state;
+    }
+
     bool IsDynamicLinkInitState( void )
     {
         return m_enable_dynamiclink_initstate;

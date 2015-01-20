@@ -55,6 +55,9 @@ DrawSpace::Planetoid::Body::~Body( void )
 
 void DrawSpace::Planetoid::Body::GetCameraHotpoint( const dsstring& p_name, Matrix& p_outmat )
 {
+
+
+    /*
     if( m_registered_camerapoints.count( p_name ) == 0 )
     {
         return;
@@ -72,6 +75,7 @@ void DrawSpace::Planetoid::Body::GetCameraHotpoint( const dsstring& p_name, Matr
     {
         m_registered_camerapoints[p_name].camera->GetLocalTransform( p_outmat );
     }
+    */
 }
 
 void DrawSpace::Planetoid::Body::attach_body( InertBody* p_body )
