@@ -40,7 +40,9 @@ m_collisionShape( NULL ),
 m_motionState( NULL ),
 m_meshe_data( NULL ),
 m_drawable( NULL ),
-m_global_world_mem( NULL )
+m_global_world_mem( NULL ),
+m_enable_dynamiclink( true ),
+m_enable_dynamiclink_initstate( false )
 {
     init();
 }
@@ -68,6 +70,7 @@ InertBody::~InertBody( void )
 void InertBody::init( void )
 {
     m_lastlocalworldtrans.Identity();
+    m_dynamiclink_initial_matrix.Identity();
 }
 
 void InertBody::init_body( void )
@@ -342,7 +345,7 @@ void InertBody::Attach( Body* p_body )
 
 */
 
-void InertBody::IncludeTo( Body* p_body, const Matrix& p_initmat )
+void InertBody::IncludeTo( Body* p_body )
 {
     if( m_refbody )
     {
@@ -356,7 +359,7 @@ void InertBody::IncludeTo( Body* p_body, const Matrix& p_initmat )
     p_body->GetLastWorldTransformation( mat_b );
     mat_b.Inverse();
 
-    DrawSpace::Utils::Matrix mat_a2 = p_initmat;
+    DrawSpace::Utils::Matrix mat_a2 = m_dynamiclink_initial_matrix;
     
     // memoriser mat_a2, pour le reinjecter en transfo initiale pour le nouveau body
     btScalar kmat[16];    

@@ -30,10 +30,6 @@
 #include "timemanager.h"
 
 
-#define SCENENODE_FLAG_DLINKSCAN                            0x01
-#define SCENENODE_FLAG_DLINKED                              0x02
-
-
 
 namespace DrawSpace
 {
@@ -47,14 +43,12 @@ protected:
     
     dsstring                    m_scenename;
     std::vector<BaseSceneNode*> m_children;
-    DrawSpace::Utils::Matrix    m_finaltransform;
-    unsigned long               m_flags;
+    DrawSpace::Utils::Matrix    m_finaltransform;    
     
 public:
 
     BaseSceneNode( const dsstring& p_scenename ) :
-    m_scenename( p_scenename ),
-    m_flags( 0 )
+    m_scenename( p_scenename )    
     {
 
 
@@ -76,16 +70,6 @@ public:
     virtual void AddChild( BaseSceneNode* p_node )
     {
         m_children.push_back( p_node );
-    }
-
-    virtual void SetFlag( unsigned long p_flag )
-    {
-        m_flags |= p_flag;
-    }
-
-    virtual bool CheckFlag( unsigned long p_flag )
-    {
-        return ( m_flags & p_flag );
     }
     
     friend class SceneNodeGraph;

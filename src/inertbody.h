@@ -65,6 +65,12 @@ protected:
    
     DrawSpace::Core::TransformNode* m_drawable;
 
+    // attribut d'infos pour les planetes et stations....
+    bool                            m_enable_dynamiclink;
+    bool                            m_enable_dynamiclink_initstate;
+    DrawSpace::Utils::Matrix        m_dynamiclink_initial_matrix;
+
+
     void                            create_body( const btTransform& p_transform );
     void                            destroy_body( void );
 
@@ -79,12 +85,32 @@ public:
 
     void SetWorld( World* p_world );
 
+    bool IsDynamicLinkEnabled( void )
+    {
+        return m_enable_dynamiclink;
+    }
+
+    bool IsDynamicLinkInitState( void )
+    {
+        return m_enable_dynamiclink_initstate;
+    }
+
+    void SetDynamicLinkInitialMatrix( const DrawSpace::Utils::Matrix& p_mat )
+    {
+        m_dynamiclink_initial_matrix = p_mat;
+    }
+
+    void GetDynamicLinkInitialMatrix( DrawSpace::Utils::Matrix& p_mat )
+    {
+        p_mat = m_dynamiclink_initial_matrix;
+    }
+
     void GetParameters( Parameters& p_parameters );
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
 
     void Attach( Body* p_body );
-    void IncludeTo( Body* p_body, const DrawSpace::Utils::Matrix& p_initmat );
+    void IncludeTo( Body* p_body );
     void Detach( void );
 
     void GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat );

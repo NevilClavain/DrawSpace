@@ -147,30 +147,21 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
         SceneNode<InertBody>* inertbody_node = dynamic_cast<SceneNode<InertBody>*>( p_node );
         if( inertbody_node )
         {          
-            if( inertbody_node->CheckFlag( SCENENODE_FLAG_DLINKSCAN ) )
+            if( inertbody_node->GetContent()->IsDynamicLinkEnabled() )
             {
                 RegisteredBody reg_body;
 
-                if( inertbody_node->CheckFlag( SCENENODE_FLAG_DLINKED ) )
+                if( inertbody_node->GetContent()->IsDynamicLinkInitState() )
                 {
                     reg_body.attached = true;
                     reg_body.body = inertbody_node->GetContent();
 
-                    Matrix body_initmat;
-                    dsstring bodyname;                   
+                    
+                    dsstring bodyname;
                     p_node->GetSceneName( bodyname );
                    
-                    if( m_includedbody_initmat_table.count( bodyname ) > 0 )
-                    {
-                        body_initmat = m_includedbody_initmat_table[bodyname];
-                    }
-                    else
-                    {
-                        // this included inertbody does not belong to this planet...
-                        return;
-                    }
 
-                    inertbody_node->GetContent()->IncludeTo( this, body_initmat );
+                    inertbody_node->GetContent()->IncludeTo( this );
 
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
@@ -227,11 +218,10 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
             p_node->GetSceneName( camera_scenename );
 
-            if( m_camerabodyassociation_table.count( camera_node->GetContent() ) > 0 )
+            DrawSpace::Dynamics::Body* camrefbody = camera_node->GetContent()->GetReferentBody();
+            if( camrefbody )
             {
-                DrawSpace::Dynamics::Body* attached_body = m_camerabodyassociation_table[camera_node->GetContent()];
-                InertBody* inert_body = dynamic_cast<InertBody*>( attached_body );
-
+                InertBody* inert_body = dynamic_cast<InertBody*>( camrefbody );
                 if( inert_body )
                 {
                     if( m_registered_bodies.count( inert_body ) > 0 )
@@ -243,12 +233,13 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     }
                     else
                     {
+                        // camera liee a un inertbody ignore par la planete (dynamic link pas autorise) : ne rien faire
                         return;
                     }
                 }
                 else
                 {
-                    Orbiter* orbiter = dynamic_cast<Orbiter*>( attached_body );
+                    Orbiter* orbiter = dynamic_cast<Orbiter*>( camrefbody );
                     if( orbiter )
                     {
                         if( orbiter == this )
@@ -266,11 +257,12 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         }
                         else
                         {
-                            _DSEXCEPTION( "orbiter associated with camera " + camera_scenename + " is not THIS planet" );
+                            // camera peut etre liee a une autre planete ou a un autre orbiter; ne rien faire ici...
                         }
                     }
                     else
                     {
+                        /*
                         Collider* collider = dynamic_cast<Collider*>( attached_body );
 
                         if( collider )
@@ -287,6 +279,10 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         {
 
                         }
+                        */
+
+                        // le body referent de la camera ne peut pas être autre chose qu'un inertbody ou un orbiter
+                        _DSEXCEPTION( "camera referent body bad type" );
                     }
                 }
             }
@@ -490,15 +486,6 @@ void DrawSpace::Planetoid::Body::Update( void )
     }
 }
 
-void DrawSpace::Planetoid::Body::RegisterLinkedBodyInitMatrix( const dsstring& p_name, const DrawSpace::Utils::Matrix& p_initmat )
-{
-    m_includedbody_initmat_table[p_name] = p_initmat;
-}
-
-void DrawSpace::Planetoid::Body::RegisterCameraBodyAssociation( DrawSpace::Dynamics::CameraPoint* p_camera, DrawSpace::Dynamics::Body* p_body )
-{
-    m_camerabodyassociation_table[p_camera] = p_body;
-}
 
 /*
 void DrawSpace::Planetoid::Body::RegisterInertBody( const dsstring& p_bodyname, InertBody* p_body )

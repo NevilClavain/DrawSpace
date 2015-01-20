@@ -98,8 +98,6 @@ protected:
 
     //std::map<dsstring, DrawSpace::SphericalLOD::Body*>          m_sphericallod_body_list;
 
-    std::map<dsstring, DrawSpace::Utils::Matrix>                            m_includedbody_initmat_table;
-    std::map<DrawSpace::Dynamics::CameraPoint*, DrawSpace::Dynamics::Body*> m_camerabodyassociation_table;
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -154,8 +152,6 @@ public:
 
     void                                Update( DrawSpace::Utils::TimeManager& p_timemanager );
 
-    void                                RegisterLinkedBodyInitMatrix( const dsstring& p_name, const DrawSpace::Utils::Matrix& p_initmat );
-    void                                RegisterCameraBodyAssociation( DrawSpace::Dynamics::CameraPoint* p_camera, DrawSpace::Dynamics::Body* p_body );
 
 
 };

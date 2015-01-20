@@ -51,7 +51,8 @@ m_relative_orbiter( NULL ),
 m_relative_altitud( 0.0 ),
 m_znear( 1.0 ),
 m_lockedobject_distance( 0.0 ),
-m_owner( NULL )
+m_owner( NULL ),
+m_referent_body( NULL )
 {
     // properties array creation
     /*
