@@ -28,6 +28,7 @@
 #include "collider.h"
 #include "camerapoint.h"
 #include "inertbody.h"
+#include "rocket.h"
 #include "mediator.h"
 #include "runner.h"
 #include "task.h"

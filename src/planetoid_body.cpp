@@ -161,7 +161,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 {
     if( SceneNodeGraph::NODE_ADDED == p_event )
     {
-        SceneNode<InertBody>* inertbody_node = dynamic_cast<SceneNode<InertBody>*>( p_node );
+        SceneNode<Rocket>* inertbody_node = dynamic_cast<SceneNode<Rocket>*>( p_node );
         if( inertbody_node )
         {          
             if( inertbody_node->GetContent()->IsDynamicLinkEnabled() )
@@ -312,7 +312,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                 create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera );
             }
 
-            return;
+            m_registered_camerapoints[camera_scenename] = reg_camera;
         }
     }
 }

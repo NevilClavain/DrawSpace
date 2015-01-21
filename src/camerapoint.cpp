@@ -521,3 +521,12 @@ SceneNode<CameraPoint>* CameraPoint::GetOwner( void )
 {
     return m_owner;
 }
+
+void CameraPoint::SetReferentBody( DrawSpace::Dynamics::Body* p_refbody )
+{
+    m_referent_body = p_refbody;
+}
+Body* CameraPoint::GetReferentBody( void )
+{
+    return m_referent_body;
+}

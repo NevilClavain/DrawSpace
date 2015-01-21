@@ -85,35 +85,12 @@ public:
 
     void SetWorld( World* p_world );
 
-    bool IsDynamicLinkEnabled( void )
-    {
-        return m_enable_dynamiclink;
-    }
-
-    void DisableDynamicLink( void )
-    {
-        m_enable_dynamiclink = false;
-    }
-
-    void SetDynamicLinkInitState( bool p_state )
-    {
-        m_enable_dynamiclink_initstate = p_state;
-    }
-
-    bool IsDynamicLinkInitState( void )
-    {
-        return m_enable_dynamiclink_initstate;
-    }
-
-    void SetDynamicLinkInitialMatrix( const DrawSpace::Utils::Matrix& p_mat )
-    {
-        m_dynamiclink_initial_matrix = p_mat;
-    }
-
-    void GetDynamicLinkInitialMatrix( DrawSpace::Utils::Matrix& p_mat )
-    {
-        p_mat = m_dynamiclink_initial_matrix;
-    }
+    bool IsDynamicLinkEnabled( void );
+    void DisableDynamicLink( void );
+    void SetDynamicLinkInitState( bool p_state );
+    bool IsDynamicLinkInitState( void );
+    void SetDynamicLinkInitialMatrix( const DrawSpace::Utils::Matrix& p_mat );
+    void GetDynamicLinkInitialMatrix( DrawSpace::Utils::Matrix& p_mat );
 
     void GetParameters( Parameters& p_parameters );
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );

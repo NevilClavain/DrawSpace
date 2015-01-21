@@ -138,14 +138,8 @@ public:
     
     virtual void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
-    virtual void SetReferentBody( DrawSpace::Dynamics::Body* p_refbody )
-    {
-        m_referent_body = p_refbody;
-    }
-    DrawSpace::Dynamics::Body* GetReferentBody( void )
-    {
-        return m_referent_body;
-    }
+    virtual void SetReferentBody( DrawSpace::Dynamics::Body* p_refbody );
+    virtual DrawSpace::Dynamics::Body* GetReferentBody( void );
 };
 }
 }

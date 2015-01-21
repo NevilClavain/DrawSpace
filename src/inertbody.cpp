@@ -54,7 +54,9 @@ m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
 m_meshe_data( NULL ),
-m_drawable( p_drawable )
+m_drawable( p_drawable ),
+m_enable_dynamiclink( true ),
+m_enable_dynamiclink_initstate( false )
 {
     m_global_world_mem = m_world;
 
@@ -670,4 +672,34 @@ void InertBody::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 void InertBody::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
 
+}
+
+bool InertBody::IsDynamicLinkEnabled( void )
+{
+    return m_enable_dynamiclink;
+}
+
+void InertBody::DisableDynamicLink( void )
+{
+    m_enable_dynamiclink = false;
+}
+
+void InertBody::SetDynamicLinkInitState( bool p_state )
+{
+    m_enable_dynamiclink_initstate = p_state;
+}
+
+bool InertBody::IsDynamicLinkInitState( void )
+{
+    return m_enable_dynamiclink_initstate;
+}
+
+void InertBody::SetDynamicLinkInitialMatrix( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_dynamiclink_initial_matrix = p_mat;
+}
+
+void InertBody::GetDynamicLinkInitialMatrix( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_dynamiclink_initial_matrix;
 }
