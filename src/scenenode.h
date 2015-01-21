@@ -67,6 +67,8 @@ public:
     virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager ) = 0;
     virtual void OnRegister( SceneNodeGraph* p_scenegraph ) = 0;
 
+    virtual void GetTransformationRelativeTo( BaseSceneNode* p_node, DrawSpace::Utils::Matrix& p_mat ) = 0;
+
     virtual void AddChild( BaseSceneNode* p_node )
     {
         m_children.push_back( p_node );
@@ -158,6 +160,23 @@ public:
     BaseSceneNode* GetParentNode( void )
     {
         return m_parent;
+    }
+
+    void GetTransformationRelativeTo( BaseSceneNode* p_node, DrawSpace::Utils::Matrix& p_mat )
+    {
+        DrawSpace::Utils::Matrix base_mat, res;
+        m_content->GetBaseTransform( base_mat );
+        
+        res = p_mat * base_mat;
+        p_mat = res;
+        
+        if( p_node != this )
+        {            
+            if( m_parent )
+            {
+                m_parent->GetTransformationRelativeTo( p_node, p_mat );
+            }
+        }
     }
 
     friend class SceneNodeGraph;

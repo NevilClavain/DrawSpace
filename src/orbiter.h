@@ -26,6 +26,7 @@
 #include "body.h"
 #include "chunk.h"
 #include "timemanager.h"
+#include "scenenode.h"
 
 namespace DrawSpace
 {
@@ -128,6 +129,8 @@ protected:
 
     DrawSpace::Utils::Matrix        m_basetransform;
 
+    DrawSpace::Core::BaseSceneNode* m_owner;
+
 
 public:
 
@@ -168,7 +171,9 @@ public:
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
     
-    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) { };
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
+    DrawSpace::Core::BaseSceneNode* GetOwner( void );
 
     friend class Calendar;
 };

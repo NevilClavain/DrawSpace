@@ -202,7 +202,8 @@ m_meshe_data( NULL ),
 m_drawable( p_drawable ),
 m_orbit_duration( 0.0 ),
 m_revolution_duration( 0.0 ),
-m_revolution_tilt_angle( 0.0 )
+m_revolution_tilt_angle( 0.0 ),
+m_owner( NULL )
 {
 }
 
@@ -331,6 +332,16 @@ void Orbiter::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 void Orbiter::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_basetransform;
+}
+
+void Orbiter::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    m_owner = p_node;
+}
+
+BaseSceneNode* Orbiter::GetOwner( void )
+{
+    return m_owner;
 }
 
 ////////////////////////////////////////////////////////////////////////////

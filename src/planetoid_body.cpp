@@ -55,6 +55,19 @@ DrawSpace::Planetoid::Body::~Body( void )
 
 void DrawSpace::Planetoid::Body::GetCameraHotpoint( const dsstring& p_name, Matrix& p_outmat )
 {
+    if( INERTBODY_LINKED == m_registered_camerapoints[p_name].type )
+    {
+        m_registered_camerapoints[p_name].attached_body->GetLastLocalWorldTrans( p_outmat );
+    }
+    else if( FREE_ON_PLANET == m_registered_camerapoints[p_name].type )
+    {
+        SceneNode<CameraPoint>* camera_node = m_registered_camerapoints[p_name].camera->GetOwner();
+
+        Matrix res;
+        Orbiter* orbiter = static_cast<Orbiter*>( m_registered_camerapoints[p_name].camera->GetReferentBody() );
+        camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
+        p_outmat = res;
+    }
 
 
     /*
@@ -220,6 +233,8 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
             RegisteredCamera reg_camera;
             dsstring camera_scenename;
 
+            reg_camera.camera = camera_node->GetContent();
+
             p_node->GetSceneName( camera_scenename );
 
             DrawSpace::Dynamics::Body* camrefbody = camera_node->GetContent()->GetReferentBody();
@@ -256,7 +271,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                             create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera );
 
-                            reg_camera.camera->SetRelativeOrbiter( this );
+                            //reg_camera.camera->SetRelativeOrbiter( this );
 
                         }
                         else

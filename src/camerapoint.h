@@ -130,7 +130,7 @@ public:
 
     virtual dsreal GetLockedObjectDistance( void );
 
-    
+    virtual DrawSpace::Core::SceneNode<CameraPoint>* GetOwner( void );
 
     ///////////////////////////////
 

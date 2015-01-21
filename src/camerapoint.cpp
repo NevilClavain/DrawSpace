@@ -516,3 +516,8 @@ void CameraPoint::GetFinalTransform( DrawSpace::Utils::Matrix& p_mat )
     p_mat = m_globaltransformation;
 }
 */
+
+SceneNode<CameraPoint>* CameraPoint::GetOwner( void )
+{
+    return m_owner;
+}
