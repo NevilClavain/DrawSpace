@@ -46,6 +46,7 @@ m_ray( p_ray * 1000.0 )
 
     m_camera_evt_cb = _DRAWSPACE_NEW_( CameraEvtCb, CameraEvtCb( this, &DrawSpace::Planetoid::Body::on_camera_event ) );
     m_nodes_evt_cb = _DRAWSPACE_NEW_( NodesEventCb, NodesEventCb( this, &DrawSpace::Planetoid::Body::on_nodes_event ) );
+    m_scenegraph_evt_cb = _DRAWSPACE_NEW_( ScenegraphEventCb, ScenegraphEventCb( this, &DrawSpace::Planetoid::Body::on_scenegraph_event ) );
 }
 
 DrawSpace::Planetoid::Body::~Body( void )
@@ -161,24 +162,38 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 {
     if( SceneNodeGraph::NODE_ADDED == p_event )
     {
-        SceneNode<Rocket>* inertbody_node = dynamic_cast<SceneNode<Rocket>*>( p_node );
+        SceneNode<InertBody>* inertbody_node = dynamic_cast<SceneNode<InertBody>*>( p_node );
+        SceneNode<Rocket>* rocket_node = dynamic_cast<SceneNode<Rocket>*>( p_node );
+
+        InertBody* inertbody = NULL;
+
         if( inertbody_node )
-        {          
-            if( inertbody_node->GetContent()->IsDynamicLinkEnabled() )
+        {
+            inertbody = inertbody_node->GetContent();
+        }
+        else if( rocket_node )
+        {
+            inertbody = rocket_node->GetContent();
+        }
+
+        if( inertbody )
+        {
+            
+            if( inertbody->IsDynamicLinkEnabled() )
             {
                 RegisteredBody reg_body;
 
-                if( inertbody_node->GetContent()->IsDynamicLinkInitState() )
+                if( inertbody->IsDynamicLinkInitState() )
                 {
                     reg_body.attached = true;
-                    reg_body.body = inertbody_node->GetContent();
+                    reg_body.body = inertbody;
 
                     
                     dsstring bodyname;
                     p_node->GetSceneName( bodyname );
                    
 
-                    inertbody_node->GetContent()->IncludeTo( this );
+                    inertbody->IncludeTo( this );
 
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
@@ -191,17 +206,17 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     m_planetfragments_list.push_back( planet_fragment );
                     reg_body.fragment = planet_fragment;
 
-                    planet_fragment->SetInertBody( inertbody_node->GetContent() );
+                    planet_fragment->SetInertBody( inertbody );
 
                     slod_body->Initialize();
                     
-                    m_registered_bodies[inertbody_node->GetContent()] = reg_body;
+                    m_registered_bodies[inertbody] = reg_body;
 
                 }
                 else
                 {                    
                     reg_body.attached = false;
-                    reg_body.body = inertbody_node->GetContent();
+                    reg_body.body = inertbody;
 
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
@@ -217,11 +232,11 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     m_planetfragments_list.push_back( planet_fragment );
                     reg_body.fragment = planet_fragment;
 
-                    planet_fragment->SetInertBody( inertbody_node->GetContent() );
+                    planet_fragment->SetInertBody( inertbody );
 
                     slod_body->Initialize();
 
-                    m_registered_bodies[inertbody_node->GetContent()] = reg_body;
+                    m_registered_bodies[inertbody] = reg_body;
                 }
             }
             return;
@@ -317,6 +332,19 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
     }
 }
 
+void DrawSpace::Planetoid::Body::on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event )
+{
+    if( DrawSpace::Core::SceneNodeGraph::TRANSFORMATIONS_BEGIN == p_event )
+    {
+        ApplyGravity();
+    }
+    else if( DrawSpace::Core::SceneNodeGraph::TRANSFORMATIONS_DONE == p_event )
+    {
+        UpdateFragments();
+        ManageBodies();
+    }
+}
+
 /*
 SphericalLOD::Drawing* DrawSpace::Planetoid::Body::GetDrawable( void )
 {
@@ -334,15 +362,6 @@ World* DrawSpace::Planetoid::Body::GetWorld( void )
 }
 */
 
-DrawSpace::Planetoid::Body::CameraEvtCb* DrawSpace::Planetoid::Body::GetCameraEvtCb( void )
-{
-    return m_camera_evt_cb;
-}
-
-DrawSpace::Planetoid::Body::NodesEventCb* DrawSpace::Planetoid::Body::GetNodesEvtCb( void )
-{
-    return m_nodes_evt_cb;
-}
 
 void DrawSpace::Planetoid::Body::ApplyGravity( void )
 {
@@ -471,7 +490,7 @@ void DrawSpace::Planetoid::Body::ManageBodies( void )
     }
 }
 
-void DrawSpace::Planetoid::Body::Update( void )
+void DrawSpace::Planetoid::Body::UpdateFragments( void )
 {
     for( size_t i = 0; i < m_planetfragments_list.size(); i++ )
     {
@@ -716,6 +735,7 @@ void DrawSpace::Planetoid::Body::SetNodeFromPassSpecificFx( const dsstring& p_pa
 
 void DrawSpace::Planetoid::Body::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
+    Orbiter::SetFinalTransform( p_mat );
     m_drawable->SetFinalTransform( p_mat );
 }
 
@@ -727,7 +747,17 @@ void DrawSpace::Planetoid::Body::OnRegister( DrawSpace::Core::SceneNodeGraph* p_
 void DrawSpace::Planetoid::Body::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     Orbiter::Update( p_timemanager );
-    ApplyGravity();
-    Update();
-    ManageBodies();
+}
+
+void DrawSpace::Planetoid::Body::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    Orbiter::Update2( p_timemanager );
+}
+
+void DrawSpace::Planetoid::Body::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+    // enregistrer le cb evt nodes imperativement AVANT le cb evt cameras
+    p_scenegraph.RegisterNodesEvtHandler( m_nodes_evt_cb );
+    p_scenegraph.RegisterCameraEvtHandler( m_camera_evt_cb );
+    p_scenegraph.RegisterScenegraphEvtHandler( m_scenegraph_evt_cb );
 }

@@ -211,6 +211,7 @@ Orbiter::~Orbiter( void )
 {
 }
 
+// deprecated !!! : to remove -*-later-*-
 void Orbiter::Update( const Matrix& p_mat )
 {
     m_lastworldtrans = p_mat;
@@ -342,6 +343,11 @@ void Orbiter::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpa
 BaseSceneNode* Orbiter::GetOwner( void )
 {
     return m_owner;
+}
+
+void Orbiter::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
+{
+    m_lastworldtrans = p_mat;
 }
 
 ////////////////////////////////////////////////////////////////////////////

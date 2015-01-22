@@ -42,9 +42,17 @@ SceneNodeGraph::~SceneNodeGraph( void )
 
 void SceneNodeGraph::ComputeTransformations( Utils::TimeManager& p_timemanager )
 {
+    for( size_t i = 0; i < m_scenegraphevt_handlers.size(); i++ )
+    {
+        (* m_scenegraphevt_handlers[i] )( TRANSFORMATIONS_BEGIN );
+    }
     for( std::map<dsstring, BaseSceneNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
         it->second->ComputeTransformation( p_timemanager );
+    }
+    for( size_t i = 0; i < m_scenegraphevt_handlers.size(); i++ )
+    {
+        (* m_scenegraphevt_handlers[i] )( TRANSFORMATIONS_DONE );
     }
 
     m_view.Identity();
@@ -219,6 +227,11 @@ void SceneNodeGraph::RegisterNodesEvtHandler( NodesEventHandler* p_handler )
     {
         (*p_handler)( NODE_ADDED, m_all_nodes[i] );
     }
+}
+
+void SceneNodeGraph::RegisterScenegraphEvtHandler( ScenegraphEventHandler* p_handler )
+{
+    m_scenegraphevt_handlers.push_back( p_handler );
 }
 
 void SceneNodeGraph::PointProjection( const Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )

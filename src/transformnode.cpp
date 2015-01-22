@@ -31,7 +31,7 @@ TransformNode::TransformNode( const dsstring& p_name ) :
 m_scenename( p_name )
 {
     m_localtransformation.Identity();
-    m_globaltransformation.Identity();    
+    m_globaltransformation.Identity();
 }
 
 TransformNode::TransformNode( void ) /*: m_parent( NULL )*/

@@ -255,8 +255,16 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     DrawSpace::Utils::Matrix view;
     DrawSpace::Utils::Matrix proj;
 
-    m_scenegraph->GetCurrentCameraView( view );
-    m_scenegraph->GetCurrentCameraProj( proj );
+    if( m_scenenodegraph )
+    {
+        m_scenenodegraph->GetCurrentCameraView( view );
+        m_scenenodegraph->GetCurrentCameraProj( proj );
+    }
+    else
+    {
+        m_scenegraph->GetCurrentCameraView( view );
+        m_scenegraph->GetCurrentCameraProj( proj );
+    }
 
     FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );

@@ -656,6 +656,10 @@ bool InertBody::IsActive( void )
 
 void InertBody::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 {
+    // InertBody sera TOUJOURS a la racine du scenegraph
+    // (un Inertbody ne peut pas avoir de node parent)
+    // donc ici le melange base/final (ou local/global) n'a pas de consequence...
+
     p_mat = m_lastworldtrans;
 }
 /*

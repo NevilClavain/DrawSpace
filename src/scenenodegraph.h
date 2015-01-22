@@ -51,6 +51,16 @@ public:
 
     typedef DrawSpace::Core::BaseCallback2<void, NodesEvent, BaseSceneNode*>    NodesEventHandler;
 
+    typedef enum
+    {
+        TRANSFORMATIONS_BEGIN,
+        TRANSFORMATIONS_DONE,
+
+    } ScenegraphEvent;
+
+    typedef DrawSpace::Core::BaseCallback<void, ScenegraphEvent>    ScenegraphEventHandler;
+
+
 protected:
 
     // liste des nodes "roots", comprenant d'eventuels nodes fils, qui ne sont donc pas stockes ici
@@ -74,6 +84,7 @@ protected:
 
     std::vector<CameraEventHandler*>            m_cameraevt_handlers;
     std::vector<NodesEventHandler*>             m_nodesevt_handlers;
+    std::vector<ScenegraphEventHandler*>        m_scenegraphevt_handlers;
 
    
 public:
@@ -102,6 +113,7 @@ public:
 
     void RegisterCameraEvtHandler( CameraEventHandler* p_handler );
     void RegisterNodesEvtHandler( NodesEventHandler* p_handler );
+    void RegisterScenegraphEvtHandler( ScenegraphEventHandler* p_handler );
 
     void PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
