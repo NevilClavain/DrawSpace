@@ -26,6 +26,7 @@
 #include "widget.h"
 #include "body.h"
 #include "scenegraph.h"
+#include "scenenodegraph.h"
 
 namespace DrawSpace
 {
@@ -57,7 +58,8 @@ protected:
 
     DrawSpace::Dynamics::Body*                      m_locked_body;
     DrawSpace::Core::TransformNode*                 m_locked_node;
-    DrawSpace::Scenegraph*                          m_scenegraph;
+    //DrawSpace::Scenegraph*                          m_scenegraph;
+    DrawSpace::Core::SceneNodeGraph*                m_scenegraph;
 
     ClippingParams                                  m_clipping_params;
 
@@ -65,7 +67,7 @@ protected:
 
 
 public:
-    ReticleWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Scenegraph* p_scenegraph, Widget* p_parentwidget );
+    ReticleWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, /*DrawSpace::Scenegraph* p_scenegraph,*/ DrawSpace::Core::SceneNodeGraph* p_scenegraph, Widget* p_parentwidget );
     virtual ~ReticleWidget( void );
 
     virtual void LockOnBody( DrawSpace::Dynamics::Body* p_locked_body );

@@ -89,6 +89,8 @@ protected:
 
     DrawSpace::Core::SceneNode<CameraPoint>*        m_owner;
     DrawSpace::Utils::Matrix                        m_body_transf;
+
+    // NE PAS SUPPRIMER
     DrawSpace::Dynamics::Body*                      m_referent_body;
 
 
@@ -138,6 +140,7 @@ public:
     
     virtual void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
+    // NE PAS SUPPRIMER !!!
     virtual void SetReferentBody( DrawSpace::Dynamics::Body* p_refbody );
     virtual DrawSpace::Dynamics::Body* GetReferentBody( void );
 };

@@ -28,7 +28,7 @@
 #include "vsphere.h"
 #include "lod.h"
 #include "timemanager.h"
-
+#include "exceptions.h"
 
 
 namespace DrawSpace
@@ -106,6 +106,10 @@ public:
 
     virtual void LinkTo( BaseSceneNode* p_node )
     {
+        if( p_node == this )
+        {
+            _DSEXCEPTION( "Trying to link scenegraph node " + m_scenename + " to itself !!" );
+        }
         p_node->AddChild( this );
         m_parent = p_node;
     }
@@ -164,14 +168,14 @@ public:
 
     void GetTransformationRelativeTo( BaseSceneNode* p_node, DrawSpace::Utils::Matrix& p_mat )
     {
-        DrawSpace::Utils::Matrix base_mat, res;
-        m_content->GetBaseTransform( base_mat );
-        
-        res = p_mat * base_mat;
-        p_mat = res;
-        
         if( p_node != this )
         {            
+            DrawSpace::Utils::Matrix base_mat, res;
+            m_content->GetBaseTransform( base_mat );
+            
+            res = p_mat * base_mat;
+            p_mat = res;
+        
             if( m_parent )
             {
                 m_parent->GetTransformationRelativeTo( p_node, p_mat );

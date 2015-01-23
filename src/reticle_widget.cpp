@@ -31,7 +31,7 @@ using namespace DrawSpace::Utils;
 
 
 
-ReticleWidget::ReticleWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, Scenegraph* p_scenegraph, Widget* p_parentwidget ) :
+ReticleWidget::ReticleWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, /*Scenegraph* p_scenegraph, */ DrawSpace::Core::SceneNodeGraph* p_scenegraph, Widget* p_parentwidget ) :
 Widget( p_name, p_virtual_width, p_virtual_height, p_parentwidget ),
 m_scenegraph( p_scenegraph ),
 m_locked_node( NULL ),

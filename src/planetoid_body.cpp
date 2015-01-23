@@ -177,8 +177,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
         }
 
         if( inertbody )
-        {
-            
+        {            
             if( inertbody->IsDynamicLinkEnabled() )
             {
                 RegisteredBody reg_body;
@@ -238,6 +237,17 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                     m_registered_bodies[inertbody] = reg_body;
                 }
+            }
+            return;
+        }
+
+        SceneNode<Collider>* collider_node = dynamic_cast<SceneNode<Collider>*>( p_node );
+        if( collider_node )
+        {
+            Orbiter* collider_ref_orbiter = collider_node->GetContent()->GetReferentOrbiter();
+            if( collider_ref_orbiter == this )
+            {
+                collider_node->GetContent()->AddToWorld( &m_world );
             }
             return;
         }
@@ -741,6 +751,7 @@ void DrawSpace::Planetoid::Body::SetFinalTransform( const DrawSpace::Utils::Matr
 
 void DrawSpace::Planetoid::Body::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
+    Orbiter::OnRegister( p_scenegraph, p_node );
     m_drawable->OnRegister( p_scenegraph, p_node );
 }
 

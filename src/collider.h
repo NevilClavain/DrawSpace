@@ -26,6 +26,7 @@
 #include "body.h"
 #include "orbiter.h"
 #include "movement.h"
+#include "scenenode.h"
 
 namespace DrawSpace
 {
@@ -51,6 +52,12 @@ protected:
     DrawSpace::Utils::Matrix        m_basetransformation;
     DrawSpace::Utils::Matrix        m_finaltransformation;
 
+
+    DrawSpace::Core::BaseSceneNode* m_owner;
+
+    // NE PAS SUPPRIMER
+    Orbiter*                        m_referent_orbiter;
+
 public:
 
     Collider( DrawSpace::Core::TransformNode* p_drawable );
@@ -58,8 +65,8 @@ public:
 
     virtual void Update( Utils::TimeManager& p_timemanager, const DrawSpace::Utils::Matrix& p_mat );
 
-    virtual void Update( Utils::TimeManager& p_timemanager );
-    virtual void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+    virtual void Update( Utils::TimeManager& p_timemanager ) {};
+    virtual void Update2( Utils::TimeManager& p_timemanager );
 
     virtual void SetRootOrbiter( Orbiter* p_orbiter );
     virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
@@ -81,7 +88,12 @@ public:
     
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
-    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) { };
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
+    // NE PAS SUPPRIMER
+    virtual void SetReferentOrbiter( DrawSpace::Dynamics::Orbiter* p_reforbiter );
+    virtual DrawSpace::Dynamics::Orbiter* GetReferentOrbiter( void );
+
 
 };
 }

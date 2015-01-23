@@ -30,7 +30,9 @@ using namespace DrawSpace::Dynamics;
 Collider::Collider( DrawSpace::Core::TransformNode* p_drawable ) : Body( /*p_world*/ NULL ),
 m_drawable( p_drawable ),
 m_orbiter( NULL ),
-m_movement( NULL )
+m_movement( NULL ),
+m_referent_orbiter( NULL ),
+m_owner( NULL )
 {
     m_lastlocalworldtrans.Identity();
     m_finaltransformation.Identity();
@@ -162,10 +164,24 @@ void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
     }
 }
 
-// PROVISOIRE
-void Collider::Update( Utils::TimeManager& p_timemanager )
+
+void Collider::Update2( TimeManager& p_timemanager )
 {
-    Update( p_timemanager, m_finaltransformation );
+    if( m_referent_orbiter )
+    {
+        // si ce collider est relatif a un orbiter (avec son world local)
+        // alors il faut lui soumettre la transfo relative a cet orbiter, et non
+        // pas la transfo globale calculee par la chaine scenegraph
+        Matrix orbiter_local_mat;
+        orbiter_local_mat.Identity();
+        m_owner->GetTransformationRelativeTo( m_referent_orbiter->GetOwner(), orbiter_local_mat );
+
+        Update( p_timemanager, orbiter_local_mat );
+    }
+    else
+    {
+        Update( p_timemanager, m_finaltransformation );
+    }
 }
 
 btRigidBody* Collider::GetRigidBody( void )
@@ -213,3 +229,19 @@ void Collider::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
     m_finaltransformation = p_mat;
 }
+
+void Collider::SetReferentOrbiter( DrawSpace::Dynamics::Orbiter* p_reforbiter )
+{
+    m_referent_orbiter = p_reforbiter;
+}
+
+DrawSpace::Dynamics::Orbiter* Collider::GetReferentOrbiter( void )
+{
+    return m_referent_orbiter;
+}
+
+void Collider::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_node )
+{
+    m_owner = p_node;
+}
+
