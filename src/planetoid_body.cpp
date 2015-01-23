@@ -65,6 +65,7 @@ void DrawSpace::Planetoid::Body::GetCameraHotpoint( const dsstring& p_name, Matr
         SceneNode<CameraPoint>* camera_node = m_registered_camerapoints[p_name].camera->GetOwner();
 
         Matrix res;
+        res.Identity();
         Orbiter* orbiter = static_cast<Orbiter*>( m_registered_camerapoints[p_name].camera->GetReferentBody() );
         camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
         p_outmat = res;
@@ -107,11 +108,20 @@ void DrawSpace::Planetoid::Body::detach_body( InertBody* p_body )
 
 void DrawSpace::Planetoid::Body::body_find_attached_camera( InertBody* p_body, std::vector<dsstring>& p_name )
 {
+    DrawSpace::Dynamics::Body* body = p_body;
+
     for( std::map<dsstring, RegisteredCamera>::iterator it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
     {
+        /*
         if( it->second.camera->GetAttachedBody() == p_body )
         {
             p_name.push_back( it->first );            
+        }
+        */
+
+        if( it->second.camera->GetReferentBody() == body )
+        {
+            p_name.push_back( it->first );
         }
     }
 }
