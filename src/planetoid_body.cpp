@@ -316,25 +316,6 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     }
                     else
                     {
-                        /*
-                        Collider* collider = dynamic_cast<Collider*>( attached_body );
-
-                        if( collider )
-                        {
-                            reg_camera.type = COLLIDER_LINKED;
-                            reg_camera.attached_body = NULL;
-                            reg_camera.attached_collider = collider;
-
-                            create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera );
-
-                            reg_camera.camera->SetRelativeOrbiter( this );
-                        }
-                        else
-                        {
-
-                        }
-                        */
-
                         // le body referent de la camera ne peut pas être autre chose qu'un inertbody ou un orbiter
                         _DSEXCEPTION( "camera referent body bad type" );
                     }
