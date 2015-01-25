@@ -239,6 +239,8 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     Matrix body_transf;
 
+    m_localtransformation.Identity();
+
     if( m_locked_body || m_locked_node )
     {
         Matrix temp_global;
@@ -289,22 +291,37 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 
         body_center_2.Normalize();
 
-        dsreal theta = atan2( body_center_2[0], body_center_2[2] );        
-        theta = 3.1415927 + theta;
+        dsreal theta = atan2( body_center_2[0], body_center_2[2] );
+
+        
+        theta = PI + theta;
+        if( theta > 2* PI )
+        {
+            theta -= 2 * PI;
+        }
+        
  
         Matrix roty;
         roty.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), theta );
 
+        //roty.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( -45.0 ) );
+
         Vector theta_dir( body_center_2[0], 0.0, body_center_2[2], 1.0 );
 
         dsreal phi = atan2( body_center_2[1], theta_dir.Length() );
+
+        if( phi < 0 )
+        {
+            phi = ( 2 * PI ) + phi;
+        }
         
         Matrix rotx;
         rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), phi );
+        //rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), Maths::DegToRad( -5.0 ) );
 
         Matrix final_lock;
         final_lock = rotx * roty;
-
+        
         Matrix final_res = final_lock * m_localtransformation;
         m_localtransformation = final_res;      
     }
