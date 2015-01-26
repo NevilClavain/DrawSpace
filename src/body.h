@@ -87,6 +87,8 @@ protected:
 
     std::vector<EventHandler*>          m_evt_handlers;
 
+    std::map<Body*, Body*>              m_attached_inertbodies;
+
     btCollisionShape*                   instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe = NULL );
 
 
@@ -104,6 +106,11 @@ public:
 
     virtual bool GetContactState( void );
     virtual void SetContactState( bool p_state );
+
+    virtual void RegisterAttachedInertBody( Body* p_body );
+    virtual void UnregisterAttachedInertBody( Body* p_body );
+
+    virtual void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
 };
 }
 }

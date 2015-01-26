@@ -94,8 +94,9 @@ public:
 
     void GetParameters( Parameters& p_parameters );
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
-    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
 
+    void UpdateAsAttached( DrawSpace::Utils::TimeManager& p_timemanager );
+    
     void Attach( Body* p_body );
     void IncludeTo( Body* p_body );
     void Detach( void );

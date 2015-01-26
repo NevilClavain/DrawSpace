@@ -150,6 +150,7 @@ void InertBody::GetParameters( Parameters& p_parameters )
 
 void InertBody::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 {
+    /*
     dsreal world_scale = World::m_scale;
 
     btScalar                 bt_matrix[16];
@@ -202,6 +203,94 @@ void InertBody::Update( DrawSpace::Utils::TimeManager& p_timemanager )
         }
         m_lastworldtrans = res;
     }
+    */
+
+    if( m_refbody )
+    {
+        // c'est le body auquel on est attaché qui va se charger d'appeller le code de calcul transfo (via la methode UpdateAsAttached() )
+        return;
+    }
+
+    dsreal world_scale = World::m_scale;
+
+    btScalar                 bt_matrix[16];
+    DrawSpace::Utils::Matrix updated_matrix;
+
+    m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
+   
+    updated_matrix( 0, 0 ) = bt_matrix[0];
+    updated_matrix( 0, 1 ) = bt_matrix[1];
+    updated_matrix( 0, 2 ) = bt_matrix[2];
+    updated_matrix( 0, 3 ) = bt_matrix[3];
+
+    updated_matrix( 1, 0 ) = bt_matrix[4];
+    updated_matrix( 1, 1 ) = bt_matrix[5];
+    updated_matrix( 1, 2 ) = bt_matrix[6];
+    updated_matrix( 1, 3 ) = bt_matrix[7];
+
+    updated_matrix( 2, 0 ) = bt_matrix[8];
+    updated_matrix( 2, 1 ) = bt_matrix[9];
+    updated_matrix( 2, 2 ) = bt_matrix[10];
+    updated_matrix( 2, 3 ) = bt_matrix[11];
+
+    updated_matrix( 3, 0 ) = bt_matrix[12] / world_scale;
+    updated_matrix( 3, 1 ) = bt_matrix[13] / world_scale;
+    updated_matrix( 3, 2 ) = bt_matrix[14] / world_scale;
+    updated_matrix( 3, 3 ) = bt_matrix[15];
+
+    m_lastlocalworldtrans = updated_matrix;
+
+    // not attached
+    if( m_drawable )
+    {
+        m_drawable->SetLocalTransform( updated_matrix );
+    }
+    m_lastworldtrans = updated_matrix;
+
+}
+
+void InertBody::UpdateAsAttached( DrawSpace::Utils::TimeManager& p_timemanager )
+{
+    dsreal world_scale = World::m_scale;
+
+    btScalar                 bt_matrix[16];
+    DrawSpace::Utils::Matrix updated_matrix;
+
+    m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
+   
+    updated_matrix( 0, 0 ) = bt_matrix[0];
+    updated_matrix( 0, 1 ) = bt_matrix[1];
+    updated_matrix( 0, 2 ) = bt_matrix[2];
+    updated_matrix( 0, 3 ) = bt_matrix[3];
+
+    updated_matrix( 1, 0 ) = bt_matrix[4];
+    updated_matrix( 1, 1 ) = bt_matrix[5];
+    updated_matrix( 1, 2 ) = bt_matrix[6];
+    updated_matrix( 1, 3 ) = bt_matrix[7];
+
+    updated_matrix( 2, 0 ) = bt_matrix[8];
+    updated_matrix( 2, 1 ) = bt_matrix[9];
+    updated_matrix( 2, 2 ) = bt_matrix[10];
+    updated_matrix( 2, 3 ) = bt_matrix[11];
+
+    updated_matrix( 3, 0 ) = bt_matrix[12] / world_scale;
+    updated_matrix( 3, 1 ) = bt_matrix[13] / world_scale;
+    updated_matrix( 3, 2 ) = bt_matrix[14] / world_scale;
+    updated_matrix( 3, 3 ) = bt_matrix[15];
+
+    m_lastlocalworldtrans = updated_matrix;
+
+    // attached : ajouter la transfo du body auquel on est attache
+    DrawSpace::Utils::Matrix mat_b;
+    m_refbody->GetLastWorldTransformation( mat_b );
+
+    DrawSpace::Utils::Matrix res = updated_matrix * mat_b;
+
+    if( m_drawable )
+    {
+        m_drawable->SetLocalTransform( res );
+    }
+    m_lastworldtrans = res;
 }
 
 TransformNode* InertBody::GetDrawable( void )
@@ -334,6 +423,7 @@ void InertBody::Attach( Body* p_body )
     ////////
 
     m_refbody = p_body;
+    m_refbody->RegisterAttachedInertBody( this );
 
     for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
@@ -436,6 +526,7 @@ void InertBody::IncludeTo( Body* p_body )
     ////////
 
     m_refbody = p_body;
+    m_refbody->RegisterAttachedInertBody( this );
 
     for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
@@ -533,6 +624,7 @@ void InertBody::Detach( void )
 
     //////////////////////////////////////
 
+    m_refbody->UnregisterAttachedInertBody( this );
     m_refbody = NULL;
 
     for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )

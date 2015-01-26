@@ -182,6 +182,8 @@ void Collider::Update2( TimeManager& p_timemanager )
     {
         Update( p_timemanager, m_finaltransformation );
     }
+
+    Body::Update2( p_timemanager );
 }
 
 btRigidBody* Collider::GetRigidBody( void )

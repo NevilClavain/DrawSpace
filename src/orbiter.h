@@ -166,8 +166,7 @@ public:
 
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
-    void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
-
+    
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
     
