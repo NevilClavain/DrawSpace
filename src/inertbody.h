@@ -65,6 +65,8 @@ protected:
    
     DrawSpace::Core::TransformNode* m_drawable;
 
+    DrawSpace::Core::BaseSceneNode* m_owner;
+
     // attribut d'infos pour les planetes et stations....
     bool                            m_enable_dynamiclink;
     bool                            m_enable_dynamiclink_initstate;
@@ -95,7 +97,6 @@ public:
     void GetParameters( Parameters& p_parameters );
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
 
-    void UpdateAsAttached( DrawSpace::Utils::TimeManager& p_timemanager );
     
     void Attach( Body* p_body );
     void IncludeTo( Body* p_body );
@@ -134,6 +135,8 @@ public:
     void GetFinalTransform( DrawSpace::Utils::Matrix& p_mat );
     */
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+
+    DrawSpace::Core::BaseSceneNode* GetOwner( void );
     
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );

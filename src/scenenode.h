@@ -65,9 +65,10 @@ public:
     }
 
     virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager ) = 0;
+    virtual void ForceComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager ) = 0;
     virtual void OnRegister( SceneNodeGraph* p_scenegraph ) = 0;
-
     virtual void GetTransformationRelativeTo( BaseSceneNode* p_node, DrawSpace::Utils::Matrix& p_mat ) = 0;
+    virtual void Enable( bool p_state ) = 0;
 
     virtual void AddChild( BaseSceneNode* p_node )
     {
@@ -85,13 +86,15 @@ protected:
     BaseSceneNode*              m_parent;    
     DrawSpace::Utils::Matrix    m_globaltransform;
     Base*                       m_content;
+    bool                        m_enable;
     
 public:
 
     SceneNode( const dsstring& p_scenename ) :
     BaseSceneNode( p_scenename ),
     m_content( NULL ),
-    m_parent( NULL )
+    m_parent( NULL ),
+    m_enable( true )
     {
     }
 
@@ -119,7 +122,7 @@ public:
         return m_content;
     }
 
-    virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager )
+    virtual void ForceComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager )
     {
         if( !m_content )
         {
@@ -153,6 +156,17 @@ public:
         }
     }
 
+
+    virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager )
+    {
+        if( !m_enable )
+        {
+            return;
+        }
+
+        ForceComputeTransformation( p_timemanager );
+    }
+
     void OnRegister( SceneNodeGraph* p_scenegraph )
     {
         if( m_content )
@@ -181,6 +195,11 @@ public:
                 m_parent->GetTransformationRelativeTo( p_node, p_mat );
             }
         }
+    }
+
+    void Enable( bool p_state )
+    {
+        m_enable = p_state;
     }
 
     friend class SceneNodeGraph;

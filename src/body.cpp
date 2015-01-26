@@ -122,24 +122,34 @@ void Body::SetContactState( bool p_state )
 void Body::RegisterAttachedInertBody( Body* p_body )
 {
     m_attached_inertbodies[p_body] = p_body;
+
+    
 }
 
 void Body::UnregisterAttachedInertBody( Body* p_body )
 {
     if( m_attached_inertbodies.count( p_body ) > 0 )
     {
-        m_attached_inertbodies.erase( p_body );
+        m_attached_inertbodies.erase( p_body );        
     }
 }
 
 void Body::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
 {
+    // inertbodies attaches a ce body : on deporte l'execution de leur transfo ici, dans Update2 du body
+    // auquel ils sont attache, plutot que dans SceneNode::ComputeTransformation() des inertbodies
+    // et ce afin d'etre sur que les transfos de ces inertbodies sont toujours à jour par rapport
+    // a la transfo du body auquel ils sont attachés
+
     for( std::map<Body*, Body*>::iterator it = m_attached_inertbodies.begin(); it != m_attached_inertbodies.end(); ++it )
     {
         InertBody* inertbody = dynamic_cast<InertBody*>( it->first );
         if( inertbody )
         {
-            inertbody->UpdateAsAttached( p_timemanager );
+            //inertbody->UpdateAsAttached( p_timemanager );
+           
+            BaseSceneNode* node = inertbody->GetOwner();
+            node->ForceComputeTransformation( p_timemanager );
         }
     }
 }
