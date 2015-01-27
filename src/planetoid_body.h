@@ -60,7 +60,7 @@ protected:
         FREE,
         FREE_ON_PLANET,
         INERTBODY_LINKED,
-        COLLIDER_LINKED
+        //COLLIDER_LINKED
 
     } CameraType;
 

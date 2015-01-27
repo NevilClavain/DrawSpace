@@ -58,7 +58,7 @@ protected:
     btTriangleMesh*                 m_meshe_data;
     btDefaultMotionState*           m_motionState;
 
-    Body*                           m_refbody;
+    Body*                           m_attachedbody;
     World*                          m_global_world_mem;
 
     DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
@@ -70,6 +70,7 @@ protected:
     // attribut d'infos pour les planetes et stations....
     bool                            m_enable_dynamiclink;
     bool                            m_enable_dynamiclink_initstate;
+    Body*                           m_referent_body;
     DrawSpace::Utils::Matrix        m_dynamiclink_initial_matrix;
 
 
@@ -93,6 +94,8 @@ public:
     bool IsDynamicLinkInitState( void );
     void SetDynamicLinkInitialMatrix( const DrawSpace::Utils::Matrix& p_mat );
     void GetDynamicLinkInitialMatrix( DrawSpace::Utils::Matrix& p_mat );
+    void SetReferentBody( Body* p_body );
+    Body* GetReferentBody( void );
 
     void GetParameters( Parameters& p_parameters );
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
@@ -124,7 +127,7 @@ public:
 
     bool IsActive( void );
 
-    Body* GetRefBody( void );
+    Body* GetAttachedBody( void );
 
     DrawSpace::Core::TransformNode* GetDrawable( void );
     void SetDrawable( DrawSpace::Core::TransformNode* p_drawable );
@@ -140,6 +143,8 @@ public:
     
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
+    
 
 };
 }

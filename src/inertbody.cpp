@@ -34,7 +34,7 @@ using namespace DrawSpace::Dynamics;
 
 
 InertBody::InertBody( void ) :
-m_refbody( NULL ),
+m_attachedbody( NULL ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
@@ -43,13 +43,14 @@ m_drawable( NULL ),
 m_global_world_mem( NULL ),
 m_enable_dynamiclink( true ),
 m_enable_dynamiclink_initstate( false ),
-m_owner( NULL )
+m_owner( NULL ),
+m_referent_body( NULL )
 {
     init();
 }
 
 InertBody::InertBody( World* p_world, TransformNode* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world ),
-m_refbody( NULL ),
+m_attachedbody( NULL ),
 m_parameters( p_parameters ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
@@ -58,7 +59,8 @@ m_meshe_data( NULL ),
 m_drawable( p_drawable ),
 m_enable_dynamiclink( true ),
 m_enable_dynamiclink_initstate( false ),
-m_owner( NULL )
+m_owner( NULL ),
+m_referent_body( NULL )
 {
     m_global_world_mem = m_world;
 
@@ -182,7 +184,7 @@ void InertBody::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 
     m_lastlocalworldtrans = updated_matrix;
 
-    if( NULL == m_refbody )
+    if( NULL == m_attachedbody )
     {
         // not attached
         if( m_drawable )
@@ -195,7 +197,7 @@ void InertBody::Update( DrawSpace::Utils::TimeManager& p_timemanager )
     {
         // attached : ajouter la transfo du body auquel on est attache
         DrawSpace::Utils::Matrix mat_b;
-        m_refbody->GetLastWorldTransformation( mat_b );
+        m_attachedbody->GetLastWorldTransformation( mat_b );
 
         DrawSpace::Utils::Matrix res = updated_matrix * mat_b;
 
@@ -251,7 +253,7 @@ mat_b => matrice du body auxquel on s'attache (exemple : planete)
 
 void InertBody::Attach( Body* p_body )
 {
-    if( m_refbody )
+    if( m_attachedbody )
     {
         return;
     }
@@ -337,8 +339,8 @@ void InertBody::Attach( Body* p_body )
 
     ////////
 
-    m_refbody = p_body;
-    m_refbody->RegisterAttachedInertBody( this );
+    m_attachedbody = p_body;
+    m_attachedbody->RegisterAttachedInertBody( this );
 
     // desactiver l'execution du calcul transfo dans le scenegraph.
     // ce sera fait depuis Update2() du body auquel on s'attache
@@ -349,7 +351,7 @@ void InertBody::Attach( Body* p_body )
 
     for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
-        ( **it )( ATTACHED, m_refbody );
+        ( **it )( ATTACHED, m_attachedbody );
     }
 }
 
@@ -361,7 +363,7 @@ void InertBody::Attach( Body* p_body )
 
 void InertBody::IncludeTo( Body* p_body )
 {
-    if( m_refbody )
+    if( m_attachedbody )
     {
         return;
     }
@@ -447,8 +449,8 @@ void InertBody::IncludeTo( Body* p_body )
 
     ////////
 
-    m_refbody = p_body;
-    m_refbody->RegisterAttachedInertBody( this );
+    m_attachedbody = p_body;
+    m_attachedbody->RegisterAttachedInertBody( this );
     // desactiver l'execution du calcul transfo dans le scenegraph.
     // ce sera fait depuis Update2() du body auquel on s'attache
     if( m_owner )
@@ -458,13 +460,13 @@ void InertBody::IncludeTo( Body* p_body )
 
     for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
-        ( **it )( ATTACHED, m_refbody );
+        ( **it )( ATTACHED, m_attachedbody );
     }
 }
 
 void InertBody::Detach( void )
 {
-    if( !m_refbody )
+    if( !m_attachedbody )
     {
         return;
     }
@@ -473,7 +475,7 @@ void InertBody::Detach( void )
 
     // recup derniere transfo body auquel on s'attache
     Matrix mat_b;
-    m_refbody->GetLastWorldTransformation( mat_b );
+    m_attachedbody->GetLastWorldTransformation( mat_b );
     
     DrawSpace::Utils::Matrix mat_a3 = /*m_lastworldtrans*/ m_lastlocalworldtrans * mat_b;
 
@@ -552,14 +554,14 @@ void InertBody::Detach( void )
 
     //////////////////////////////////////
 
-    m_refbody->UnregisterAttachedInertBody( this );
+    m_attachedbody->UnregisterAttachedInertBody( this );
     // on se detache, reactiver l'execution du calcul transfo dans le scenegraph.    
     if( m_owner )
     {
         m_owner->Enable( true );
     }
 
-    m_refbody = NULL;
+    m_attachedbody = NULL;
 
     for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
@@ -646,13 +648,13 @@ void InertBody::RegisterEvtHandler( EventHandler* p_handler )
 {
     m_evt_handlers.push_back( p_handler );
 
-    Body::Event evt = ( NULL == m_refbody ? DETACHED : ATTACHED );
-    (*p_handler)( evt, m_refbody );
+    Body::Event evt = ( NULL == m_attachedbody ? DETACHED : ATTACHED );
+    (*p_handler)( evt, m_attachedbody );
 }
 
-Body* InertBody::GetRefBody( void )
+Body* InertBody::GetAttachedBody( void )
 {
-    return m_refbody;
+    return m_attachedbody;
 }
 
 bool InertBody::HasLanded( void )
@@ -738,4 +740,14 @@ void InertBody::SetDynamicLinkInitialMatrix( const DrawSpace::Utils::Matrix& p_m
 void InertBody::GetDynamicLinkInitialMatrix( DrawSpace::Utils::Matrix& p_mat )
 {
     p_mat = m_dynamiclink_initial_matrix;
+}
+
+void InertBody::SetReferentBody( Body* p_body )
+{
+    m_referent_body = p_body;
+}
+
+Body* InertBody::GetReferentBody( void )
+{
+    return m_referent_body;
 }
