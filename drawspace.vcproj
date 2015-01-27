@@ -361,6 +361,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\transformation.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\transformation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\transformnode.cpp"
 				>
 			</File>
@@ -502,14 +510,6 @@
 			</File>
 			<File
 				RelativePath=".\src\tracedefs.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\transformation.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\transformation.h"
 				>
 			</File>
 			<File

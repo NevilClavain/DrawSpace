@@ -22,6 +22,8 @@
 
 #include "transformation.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 Transformation::Transformation( void )
@@ -70,3 +72,14 @@ void Transformation::ClearAll( void )
     m_result.Identity();
     m_matrix_chain.clear();
 }
+
+void Transformation::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+{    
+    BuildResult();
+}
+
+void Transformation::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+{
+    p_mat = m_result;
+}
+

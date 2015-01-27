@@ -25,27 +25,37 @@
 
 #include "drawspace_commons.h"
 #include "Matrix.h"
+#include "scenenodegraph.h"
 
 namespace DrawSpace
 {
-namespace Utils
+namespace Core
 {
 
 class Transformation
 {
 protected:
 
-	std::vector<Matrix>	    m_matrix_chain;
-	Matrix				    m_result;
+	std::vector<DrawSpace::Utils::Matrix>	m_matrix_chain;
+    DrawSpace::Utils::Matrix	            m_result;
 
 public:
 	Transformation( void );
 	~Transformation( void );
 
-	void	PushMatrix( Matrix p_matrix );
-	void	BuildResult( void );
-	void	GetResult( Matrix* p_res );
+	void    PushMatrix( DrawSpace::Utils::Matrix p_matrix );
+	void    BuildResult( void );
+	void	GetResult( DrawSpace::Utils::Matrix* p_res );
 	void	ClearAll( void );
+
+    void    Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    void    Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
+
+    void    GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
+    void    SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+    
+    void    OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node ) { };
+
 };
 }
 }
