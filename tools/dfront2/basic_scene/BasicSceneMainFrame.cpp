@@ -241,8 +241,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 mat_descr.arg.rotation_vals_link[1].value = 0.0;
                 mat_descr.arg.rotation_vals_link[2].value = 0.0;
 
-
                 mat_descr.arg.angle_val_link.var_alias = "...";
+                mat_descr.arg.angle_val_link.value = 0.0;
 
 
                 m_metada_scenegraph[scene_name].matrix_stack_descr.push_back( mat_descr );
@@ -293,6 +293,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 mat_descr.arg.rotation_vals_link[2].value = 0.0;
 
                 mat_descr.arg.angle_val_link.var_alias = "...";
+                mat_descr.arg.angle_val_link.value = 0.0;
 
                 m_metada_scenegraph[scene_name].matrix_stack_descr.push_back( mat_descr );
             }
@@ -836,7 +837,7 @@ void BasicSceneMainFrame::compute_scenegraph_transforms( void )
                     entry.node->SetLocalTransform( mat );
                     */
 
-                    DrawSpace::Utils::Transformation matrix_stack;
+                    Transformation matrix_stack;
 
                     for( size_t i = 0; i < entry.matrix_stack_descr.size(); i++ )
                     {
