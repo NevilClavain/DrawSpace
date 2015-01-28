@@ -24,6 +24,7 @@
 #include <memalloc.h>
 
 using namespace DrawSpace;
+using namespace DrawSpace::Core;
 extern void TranslateD3DD9Error( HRESULT p_hRes, dsstring &p_str );
 
 _DECLARE_DS_LOGGER( logger, "d3d9" )
@@ -921,7 +922,7 @@ bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::
     inv( 2, 2 ) = -1.0;
     final_view = p_view * inv;
 
-    DrawSpace::Utils::Transformation chain;
+    Transformation chain;
     //chain.PushMatrix( m_projection );
     chain.PushMatrix( p_proj );
     chain.PushMatrix( final_view );
