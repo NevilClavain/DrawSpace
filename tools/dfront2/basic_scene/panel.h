@@ -1,25 +1,3 @@
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
-
 ///////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version Jun  5 2014)
 // http://www.wxformbuilder.org/
@@ -51,6 +29,7 @@
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 #include <wx/panel.h>
+#include <wx/treectrl.h>
 #include <wx/notebook.h>
 #include <wx/frame.h>
 
@@ -140,6 +119,7 @@ class MainFrame : public wxFrame
 		wxComboBox* m_cameraslist_comboBox;
 		wxButton* m_create_drawable_button;
 		wxComboBox* m_drawabletypes_comboBox;
+		wxTreeCtrl* m_treeCtrl1;
 		wxPanel* m_registersPanel;
 		wxListCtrl* m_registers_listCtrl;
 		wxButton* m_modreg_button;
@@ -178,10 +158,12 @@ class MainFrame : public wxFrame
 		virtual void OnScenegraphListDeleteItem( wxListEvent& event ) { event.Skip(); }
 		virtual void OnScenegraphItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnScenegraphListItemDeselected( wxListEvent& event ) { event.Skip(); }
+		virtual void OnScenegraphListRightClick( wxListEvent& event ) { event.Skip(); }
 		virtual void OnScenegraphListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnTransfTypeButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTransfoEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreateDrawableButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& event ) { event.Skip(); }
 		virtual void OnRegsListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
 		virtual void OnRegistersListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnRegsListItemSelected( wxListEvent& event ) { event.Skip(); }

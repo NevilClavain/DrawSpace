@@ -1351,6 +1351,35 @@ void BasicSceneMainFrame::Update( void )
             pass->GetRenderingQueue()->UpdateOutputQueue();
         }
     }
+
+    
+
+    
+    wxImageList* pImageList = new wxImageList( 21, 19, TRUE );
+
+
+    wxBitmap bmp( "icon.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp1( "icon1.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp2( "icon2.bmp", wxBITMAP_TYPE_BMP );
+
+
+    
+    pImageList->Add( bmp );
+    pImageList->Add( bmp1 );
+    pImageList->Add( bmp2 );
+    
+
+    m_treeCtrl1->AssignImageList( pImageList );
+
+
+    wxTreeItemId ti_root = m_treeCtrl1->AddRoot( "prout0", 0 );
+    wxTreeItemId ti_sb0 = m_treeCtrl1->AppendItem( ti_root, "sub_prout0", 0 );
+    wxTreeItemId ti_sb1 = m_treeCtrl1->AppendItem( ti_root, "sub_prout1", 1 );
+    wxTreeItemId ti_sb10 = m_treeCtrl1->AppendItem( ti_sb1, "sub_prout10", 2 );
+    
+
+
+    
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -1362,7 +1391,7 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
     Texture* texture = dynamic_cast<Texture*>( asset );
     if( texture )
     {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Textures properties" );
+        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Texture properties" );
         wxWidgetAdapter::GetInstance()->AdaptTextureProps( texture, dialog->GetPropertyGrid() );
         dialog->Show();
     }
@@ -1806,6 +1835,41 @@ void BasicSceneMainFrame::OnScenegraphListDeleteAllItems( wxListEvent& p_event )
 {
     m_transftype_button->Enable( false );
     m_transfoedit_button->Enable( false );
+}
+
+void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
+ { 	
+ 	switch(p_evt.GetId()) {
+ 		case 2000:
+
+            _asm nop
+ 			break;
+ 		case 2001:
+
+            _asm nop
+ 			break;
+ 	}
+ }
+
+void BasicSceneMainFrame::OnScenegraphListRightClick( wxListEvent& p_event )
+{
+ 	wxMenu mnu;
+ 	
+ 	mnu.Append(2000, 	"Do something");
+ 	mnu.Append(2001, 	"Do something else");
+ 	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this);
+ 	PopupMenu(&mnu);
+}
+
+void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event )
+{
+	
+ 	wxMenu mnu;
+ 	
+ 	mnu.Append(2000, 	"Do something !");
+ 	mnu.Append(2001, 	"Do something else !");
+ 	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this);
+ 	PopupMenu(&mnu);
 }
 
 void BasicSceneMainFrame::OnControlButtonClicked( wxCommandEvent& p_event )

@@ -1,25 +1,3 @@
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
-
 ///////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version Jun  5 2014)
 // http://www.wxformbuilder.org/
@@ -261,7 +239,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_camerasPanel->SetSizer( bSizer81 );
 	m_camerasPanel->Layout();
 	bSizer81->Fit( m_camerasPanel );
-	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras && Movements"), true );
+	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras && Movements"), false );
 	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -369,11 +347,14 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	bSizer11->Add( bSizer13, 1, wxEXPAND, 5 );
 	
+	m_treeCtrl1 = new wxTreeCtrl( m_scenePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	bSizer11->Add( m_treeCtrl1, 1, wxALL|wxEXPAND, 5 );
+	
 	
 	m_scenePanel->SetSizer( bSizer11 );
 	m_scenePanel->Layout();
 	bSizer11->Fit( m_scenePanel );
-	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), false );
+	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), true );
 	m_registersPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer19;
 	bSizer19 = new wxBoxSizer( wxVERTICAL );
@@ -462,10 +443,12 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ITEM, wxListEventHandler( MainFrame::OnScenegraphListDeleteItem ), NULL, this );
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnScenegraphItemActivated ), NULL, this );
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( MainFrame::OnScenegraphListItemDeselected ), NULL, this );
+	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler( MainFrame::OnScenegraphListRightClick ), NULL, this );
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnScenegraphListItemSelected ), NULL, this );
 	m_transftype_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfTypeButtonClicked ), NULL, this );
 	m_transfoedit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfoEditButtonClicked ), NULL, this );
 	m_create_drawable_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
+	m_treeCtrl1->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
 	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnRegsListDeleteAllItems ), NULL, this );
 	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
 	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnRegsListItemSelected ), NULL, this );
@@ -507,10 +490,12 @@ MainFrame::~MainFrame()
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ITEM, wxListEventHandler( MainFrame::OnScenegraphListDeleteItem ), NULL, this );
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnScenegraphItemActivated ), NULL, this );
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( MainFrame::OnScenegraphListItemDeselected ), NULL, this );
+	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler( MainFrame::OnScenegraphListRightClick ), NULL, this );
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnScenegraphListItemSelected ), NULL, this );
 	m_transftype_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfTypeButtonClicked ), NULL, this );
 	m_transfoedit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfoEditButtonClicked ), NULL, this );
 	m_create_drawable_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
+	m_treeCtrl1->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
 	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnRegsListDeleteAllItems ), NULL, this );
 	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
 	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnRegsListItemSelected ), NULL, this );

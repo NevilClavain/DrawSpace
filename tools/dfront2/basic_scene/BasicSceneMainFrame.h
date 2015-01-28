@@ -252,6 +252,13 @@ protected:
     virtual void OnScenegraphListItemDeselected( wxListEvent& p_event );
     virtual void OnScenegraphListDeleteItem( wxListEvent& p_event );
     virtual void OnScenegraphListDeleteAllItems( wxListEvent& p_event );
+
+
+    virtual void OnScenegraphListRightClick( wxListEvent& p_event );
+    virtual void OnPopupClick(wxCommandEvent& p_evt);
+    virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event );
+
+
 	virtual void OnControlButtonClicked( wxCommandEvent& p_event );
     virtual void OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event );
     virtual void OnCreateRegButtonClicked( wxCommandEvent& p_event );
