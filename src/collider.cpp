@@ -67,9 +67,9 @@ void Collider::SetKinematic( const Body::Parameters& p_parameters )
     btmat[10] = p_parameters.initial_attitude( 2, 2 );
     btmat[11] = p_parameters.initial_attitude( 2, 3 );
 
-    btmat[12] = p_parameters.initial_attitude( 3, 0 );
-    btmat[13] = p_parameters.initial_attitude( 3, 1 );
-    btmat[14] = p_parameters.initial_attitude( 3, 2 );
+    btmat[12] = p_parameters.initial_attitude( 3, 0 ) * world_scale;
+    btmat[13] = p_parameters.initial_attitude( 3, 1 ) * world_scale;
+    btmat[14] = p_parameters.initial_attitude( 3, 2 ) * world_scale;
     btmat[15] = p_parameters.initial_attitude( 3, 3 );
 
     bt_transform.setFromOpenGLMatrix( btmat ); 
@@ -104,6 +104,8 @@ void Collider::UnsetKinematic( void )
 
 void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
 {
+    dsreal world_scale = World::m_scale;
+
     Matrix body_transf;
 
     if( m_movement )
@@ -136,9 +138,9 @@ void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
     btmat[10] = body_transf( 2, 2 );
     btmat[11] = body_transf( 2, 3 );
 
-    btmat[12] = body_transf( 3, 0 );
-    btmat[13] = body_transf( 3, 1 );
-    btmat[14] = body_transf( 3, 2 );
+    btmat[12] = body_transf( 3, 0 ) * world_scale;
+    btmat[13] = body_transf( 3, 1 ) * world_scale;
+    btmat[14] = body_transf( 3, 2 ) * world_scale;
     btmat[15] = body_transf( 3, 3 );
 
     bt_transform.setFromOpenGLMatrix( btmat ); 

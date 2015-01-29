@@ -105,6 +105,9 @@ public:
     void IncludeTo( Body* p_body );
     void Detach( void );
 
+
+    void ForceInitialAttitude( const DrawSpace::Utils::Matrix& p_mat );
+
     void GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat );
 
     void ApplyForce( const DrawSpace::Utils::Vector p_force );

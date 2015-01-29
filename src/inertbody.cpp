@@ -81,6 +81,8 @@ void InertBody::init( void )
 
 void InertBody::init_body( void )
 {
+    dsreal world_scale = World::m_scale;
+
     btScalar    btmat[16];
     btTransform bt_transform;
 
@@ -99,9 +101,9 @@ void InertBody::init_body( void )
     btmat[10] = m_parameters.initial_attitude( 2, 2 );
     btmat[11] = m_parameters.initial_attitude( 2, 3 );
 
-    btmat[12] = m_parameters.initial_attitude( 3, 0 );
-    btmat[13] = m_parameters.initial_attitude( 3, 1 );
-    btmat[14] = m_parameters.initial_attitude( 3, 2 );
+    btmat[12] = m_parameters.initial_attitude( 3, 0 ) * world_scale;
+    btmat[13] = m_parameters.initial_attitude( 3, 1 ) * world_scale;
+    btmat[14] = m_parameters.initial_attitude( 3, 2 ) * world_scale;
     btmat[15] = m_parameters.initial_attitude( 3, 3 );
 
     bt_transform.setFromOpenGLMatrix( btmat ); 
@@ -567,6 +569,58 @@ void InertBody::Detach( void )
     {
         ( **it )( DETACHED, NULL );
     }
+}
+
+void InertBody::ForceInitialAttitude( const DrawSpace::Utils::Matrix& p_mat )
+{
+    
+    dsreal world_scale = World::m_scale;
+
+    btTransform         bt_transform;
+    btScalar            bt_matrix[16];
+    
+    bt_matrix[0] = p_mat( 0, 0 );
+    bt_matrix[1] = p_mat( 0, 1 );
+    bt_matrix[2] = p_mat( 0, 2 );
+    bt_matrix[3] = p_mat( 0, 3 );
+
+    bt_matrix[4] = p_mat( 1, 0 );
+    bt_matrix[5] = p_mat( 1, 1 );
+    bt_matrix[6] = p_mat( 1, 2 );
+    bt_matrix[7] = p_mat( 1, 3 );
+
+    bt_matrix[8] = p_mat( 2, 0 );
+    bt_matrix[9] = p_mat( 2, 1 );
+    bt_matrix[10] = p_mat( 2, 2 );
+    bt_matrix[11] = p_mat( 2, 3 );
+
+    bt_matrix[12] = p_mat( 3, 0 ) * world_scale;
+    bt_matrix[13] = p_mat( 3, 1 ) * world_scale;
+    bt_matrix[14] = p_mat( 3, 2 ) * world_scale;
+    bt_matrix[15] = p_mat( 3, 3 );
+
+    bt_transform.setFromOpenGLMatrix( bt_matrix ); 
+    m_motionState->setWorldTransform( bt_transform );
+
+    
+    btVector3 bt_linearspeed_mem;
+    btVector3 bt_angularspeed_mem;
+
+    bt_linearspeed_mem = m_rigidBody->getLinearVelocity();
+    bt_angularspeed_mem = m_rigidBody->getAngularVelocity();
+
+    ///////////////////////////////////////////////////////
+
+    // detruire le body...
+    destroy_body();
+
+
+    // recreer le body...
+    create_body( bt_transform );
+   
+    m_rigidBody->setAngularVelocity( bt_angularspeed_mem );
+    m_rigidBody->setLinearVelocity( bt_linearspeed_mem );
+
 }
 
 void InertBody::GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat )
