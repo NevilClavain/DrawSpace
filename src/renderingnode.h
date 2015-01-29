@@ -62,6 +62,8 @@ protected:
 
     BaseCallback<void, RenderingNode*>*     m_handler;
 
+    bool                                    m_drawing_enabled;
+
 public:
     RenderingNode( void );
     virtual ~RenderingNode( void );
@@ -105,6 +107,8 @@ public:
     virtual void SetShaderBool( const dsstring& p_id, bool p_value );
 
     virtual void GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist );
+
+    virtual void SetDrawingState( bool p_drawing );
 
     friend class RenderingQueue;
 };

@@ -55,6 +55,21 @@ void Chunk::SetRenderer( Renderer * p_renderer )
     m_renderer = p_renderer;
 }
 
+void Chunk::SetDrawingState( const dsstring& p_passname, bool p_drawing )
+{
+    if( m_passesnodes.count( p_passname ) > 0 )
+    {
+        m_passesnodes[p_passname]->SetDrawingState( p_drawing );
+        return;
+    }
+
+    dsstring msg = "Chunk : pass '";
+    msg += p_passname;
+    msg += "' unknown";
+
+    _DSEXCEPTION( msg )   
+}
+
 void Chunk::OnRegister( Scenegraph* p_scenegraph )
 {
     if( NULL == m_meshe )

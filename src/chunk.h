@@ -57,7 +57,9 @@ public:
     void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
-    void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
+    void SetRenderer( DrawSpace::Interface::Renderer* p_renderer );
+    void SetDrawingState( const dsstring& p_passname, bool p_drawing );
+
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 

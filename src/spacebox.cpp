@@ -229,6 +229,25 @@ Spacebox::~Spacebox( void )
 {
 }
 
+void Spacebox::SetDrawingState( const dsstring& p_passname, bool p_drawing )
+{
+    if( m_passesnodes.count( p_passname ) > 0 )
+    {
+        for( size_t i = 0; i < 6; i++ )
+        {
+            m_passesnodes[p_passname].nodes[i]->SetDrawingState( p_drawing );
+        }
+        return;
+    }
+
+    dsstring msg = "Spacebox : pass '";
+    msg += p_passname;
+    msg += "' unknown";
+
+    _DSEXCEPTION( msg )   
+
+}
+
 void Spacebox::OnRegister( Scenegraph* p_scenegraph )
 {
     for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )

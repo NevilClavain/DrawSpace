@@ -30,7 +30,8 @@ RenderingNode::RenderingNode( void ) :
 m_order( 10000 ), 
 m_handler( NULL ), 
 m_meshe( NULL ),
-m_fx( NULL )
+m_fx( NULL ),
+m_drawing_enabled( true )
 {
     //m_fx = _DRAWSPACE_NEW_( Fx, Fx );
     
@@ -142,4 +143,9 @@ void RenderingNode::SetShaderBool( const dsstring& p_id, bool p_value )
 void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist )
 {
     p_outlist = m_shader_params;
+}
+
+void RenderingNode::SetDrawingState( bool p_drawing )
+{
+    m_drawing_enabled = p_drawing;
 }

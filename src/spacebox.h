@@ -89,6 +89,8 @@ public:
     Spacebox( void );
     virtual ~Spacebox( void );
 
+    void SetDrawingState( const dsstring& p_passname, bool p_drawing );
+
     //void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );

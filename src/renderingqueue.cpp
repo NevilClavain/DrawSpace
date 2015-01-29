@@ -148,7 +148,10 @@ void RenderingQueue::Draw( void )
 
             case DRAW_NODE:
 
-                curr_operation.node->OnDraw();
+                if( curr_operation.node->m_drawing_enabled )
+                {
+                    curr_operation.node->OnDraw();
+                }
                 break;
         }
     }
