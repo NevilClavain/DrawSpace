@@ -1369,6 +1369,8 @@ void BasicSceneMainFrame::Update( void )
     wxBitmap bmp_rocket( "icon_rocket.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_spacebox( "icon_spacebox.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_transfo( "icon_transfo.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_scenegraph( "icon_scenegraph.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_drawspace( "icon_drawspace.bmp", wxBITMAP_TYPE_BMP );
 
 
     
@@ -1383,19 +1385,21 @@ void BasicSceneMainFrame::Update( void )
     pImageList->Add( bmp_rocket );
     pImageList->Add( bmp_spacebox );
     pImageList->Add( bmp_transfo );
+    pImageList->Add( bmp_scenegraph );
+    pImageList->Add( bmp_drawspace );
     
 
-    m_treeCtrl1->AssignImageList( pImageList );
+    m_scenegraphs_treeCtrl->AssignImageList( pImageList );
 
 
+    /*
     wxTreeItemId ti_root = m_treeCtrl1->AddRoot( "prout0", SPACEBOX_ICON_INDEX );
     wxTreeItemId ti_sb0 = m_treeCtrl1->AppendItem( ti_root, "sub_prout0", INERTBODY_ICON_INDEX );
     wxTreeItemId ti_sb1 = m_treeCtrl1->AppendItem( ti_root, "sub_prout1", PLANET_ICON_INDEX );
     wxTreeItemId ti_sb10 = m_treeCtrl1->AppendItem( ti_sb1, "sub_prout10", ORBITER_ICON_INDEX );
+    */
     
-
-
-    
+    m_scenegraphs_root_item = m_scenegraphs_treeCtrl->AddRoot( "DrawSpace", DRAWSPACE_ICON_INDEX );
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -1855,35 +1859,26 @@ void BasicSceneMainFrame::OnScenegraphListDeleteAllItems( wxListEvent& p_event )
 
 void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
  { 	
- 	switch(p_evt.GetId()) {
- 		case 2000:
-
-            _asm nop
- 			break;
- 		case 2001:
+ 	switch(p_evt.GetId()) 
+    {
+ 		case CONTEXTMENU_NEWSCENENODEGRAPH:
 
             _asm nop
  			break;
  	}
  }
 
-void BasicSceneMainFrame::OnScenegraphListRightClick( wxListEvent& p_event )
-{
- 	wxMenu mnu;
- 	
- 	mnu.Append(2000, 	"Do something");
- 	mnu.Append(2001, 	"Do something else");
- 	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this);
- 	PopupMenu(&mnu);
-}
-
 void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event )
 {
 	
  	wxMenu mnu;
  	
- 	mnu.Append(2000, 	"Do something !");
- 	mnu.Append(2001, 	"Do something else !");
+    wxTreeItemId item = p_event.GetItem();
+    if( item.GetID() == m_scenegraphs_root_item.GetID() )
+    {
+        mnu.Append( CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." );
+    }
+
  	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this);
  	PopupMenu(&mnu);
 }

@@ -347,8 +347,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	bSizer11->Add( bSizer13, 1, wxEXPAND, 5 );
 	
-	m_treeCtrl1 = new wxTreeCtrl( m_scenePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
-	bSizer11->Add( m_treeCtrl1, 1, wxALL|wxEXPAND, 5 );
+	m_scenegraphs_treeCtrl = new wxTreeCtrl( m_scenePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	bSizer11->Add( m_scenegraphs_treeCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	m_scenePanel->SetSizer( bSizer11 );
@@ -443,12 +443,11 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ITEM, wxListEventHandler( MainFrame::OnScenegraphListDeleteItem ), NULL, this );
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnScenegraphItemActivated ), NULL, this );
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( MainFrame::OnScenegraphListItemDeselected ), NULL, this );
-	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler( MainFrame::OnScenegraphListRightClick ), NULL, this );
 	m_scenegraph_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnScenegraphListItemSelected ), NULL, this );
 	m_transftype_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfTypeButtonClicked ), NULL, this );
 	m_transfoedit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfoEditButtonClicked ), NULL, this );
 	m_create_drawable_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
-	m_treeCtrl1->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
+	m_scenegraphs_treeCtrl->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
 	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnRegsListDeleteAllItems ), NULL, this );
 	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
 	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnRegsListItemSelected ), NULL, this );
@@ -490,12 +489,11 @@ MainFrame::~MainFrame()
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ITEM, wxListEventHandler( MainFrame::OnScenegraphListDeleteItem ), NULL, this );
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnScenegraphItemActivated ), NULL, this );
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( MainFrame::OnScenegraphListItemDeselected ), NULL, this );
-	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler( MainFrame::OnScenegraphListRightClick ), NULL, this );
 	m_scenegraph_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnScenegraphListItemSelected ), NULL, this );
 	m_transftype_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfTypeButtonClicked ), NULL, this );
 	m_transfoedit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnTransfoEditButtonClicked ), NULL, this );
 	m_create_drawable_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateDrawableButtonClicked ), NULL, this );
-	m_treeCtrl1->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
+	m_scenegraphs_treeCtrl->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
 	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnRegsListDeleteAllItems ), NULL, this );
 	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
 	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnRegsListItemSelected ), NULL, this );

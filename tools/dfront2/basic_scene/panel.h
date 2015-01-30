@@ -119,7 +119,7 @@ class MainFrame : public wxFrame
 		wxComboBox* m_cameraslist_comboBox;
 		wxButton* m_create_drawable_button;
 		wxComboBox* m_drawabletypes_comboBox;
-		wxTreeCtrl* m_treeCtrl1;
+		wxTreeCtrl* m_scenegraphs_treeCtrl;
 		wxPanel* m_registersPanel;
 		wxListCtrl* m_registers_listCtrl;
 		wxButton* m_modreg_button;
@@ -158,7 +158,6 @@ class MainFrame : public wxFrame
 		virtual void OnScenegraphListDeleteItem( wxListEvent& event ) { event.Skip(); }
 		virtual void OnScenegraphItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnScenegraphListItemDeselected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnScenegraphListRightClick( wxListEvent& event ) { event.Skip(); }
 		virtual void OnScenegraphListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnTransfTypeButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTransfoEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }

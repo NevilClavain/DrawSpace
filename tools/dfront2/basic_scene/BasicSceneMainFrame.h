@@ -28,19 +28,24 @@
 #include "drawspace.h"
 #include "scripting.h"
 
-#define DFRONT_ICON_DIM             22
+#define DFRONT_ICON_DIM                     22
 
-#define CAMERA_ICON_INDEX           0
-#define CHUNK_ICON_INDEX            1
-#define COLLIDER_ICON_INDEX         2
-#define INERTBODY_ICON_INDEX        3
-#define MOVEMENT_ICON_INDEX         4
-#define ORBIT_ICON_INDEX            5
-#define ORBITER_ICON_INDEX          6
-#define PLANET_ICON_INDEX           7
-#define ROCKET_ICON_INDEX           8
-#define SPACEBOX_ICON_INDEX         9
-#define TRANSFO_ICON_INDEX          10
+#define CAMERA_ICON_INDEX                   0
+#define CHUNK_ICON_INDEX                    1
+#define COLLIDER_ICON_INDEX                 2
+#define INERTBODY_ICON_INDEX                3
+#define MOVEMENT_ICON_INDEX                 4
+#define ORBIT_ICON_INDEX                    5
+#define ORBITER_ICON_INDEX                  6
+#define PLANET_ICON_INDEX                   7
+#define ROCKET_ICON_INDEX                   8
+#define SPACEBOX_ICON_INDEX                 9
+#define TRANSFO_ICON_INDEX                  10
+#define SCENEGRAPH_ICON_INDEX               11
+#define DRAWSPACE_ICON_INDEX                12
+
+
+#define CONTEXTMENU_NEWSCENENODEGRAPH       2000
 
 class BasicSceneMainFrame : public MainFrame
 {
@@ -238,7 +243,9 @@ protected:
 
     wxFont                                                  m_console_font;
 
-    
+    wxTreeItemId                                            m_scenegraphs_root_item;
+
+
 
     virtual void OnClose( wxCloseEvent& p_event );
     virtual void OnIdle( wxIdleEvent& p_event );
@@ -267,11 +274,8 @@ protected:
     virtual void OnScenegraphListDeleteItem( wxListEvent& p_event );
     virtual void OnScenegraphListDeleteAllItems( wxListEvent& p_event );
 
-
-    virtual void OnScenegraphListRightClick( wxListEvent& p_event );
     virtual void OnPopupClick(wxCommandEvent& p_evt);
     virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event );
-
 
 	virtual void OnControlButtonClicked( wxCommandEvent& p_event );
     virtual void OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event );
