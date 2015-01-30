@@ -118,6 +118,17 @@ public:
     } MetadataScenegraphEntry;
 
 
+
+    typedef struct
+    {
+        dsstring                            name;
+        DrawSpace::Core::SceneNodeGraph*    scenenodegraph;
+        std::vector<dsstring>               registeredpassesnames;
+        void*                               treeitemid;
+
+    } SceneNodeGraphEntry;
+
+
     typedef enum
     {
         MOVEMENTCONTROLSOURCE_KEYBMOUSE,
@@ -216,6 +227,13 @@ protected:
 
     DrawSpace::Scenegraph                                   m_scenegraph;
     std::map<dsstring, MetadataScenegraphEntry>             m_metada_scenegraph;
+
+    SceneNodeGraphEntry                                     m_scenenodegraphs;
+
+
+
+
+
 
     std::vector<DrawSpace::Core::Configurable*>             m_ordered_configs;
     long                                                    m_scenegraphlistctrl_currentindex;
