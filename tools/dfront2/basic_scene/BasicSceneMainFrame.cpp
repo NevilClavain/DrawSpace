@@ -1863,7 +1863,14 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
     {
  		case CONTEXTMENU_NEWSCENENODEGRAPH:
 
-            _asm nop
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Scenenodegraph creation" );
+
+                wxWidgetAdapter::GetInstance()->AdaptScenegraphnodeCreationProps( dialog );
+                dialog->EnableApplyButton();
+                dialog->Show();
+                break;
+            }
  			break;
  	}
  }

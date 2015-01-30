@@ -44,6 +44,8 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applycameravalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameravalues );
     m_applycameraprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameraprops );
 
+    m_applyscenenodegraphvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyscenenodegraphvalues );
+
     m_applyspaceboxvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspaceboxvalues );
     m_applyspaceboxaddpassslot_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspaceboxaddpassslot );
 
@@ -1998,6 +2000,22 @@ void wxWidgetAdapter::on_applycameravalues( BasicSceneObjectPropertiesDialog* p_
 
     p_dialog->Close();
 }
+
+void wxWidgetAdapter::AdaptScenegraphnodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+    propertygrid->Append( new wxStringProperty( "Name", wxPG_LABEL, "" ) );
+
+    p_dialog->RegisterApplyButtonHandler( m_applyscenenodegraphvalues_callback );
+    
+}
+
+void wxWidgetAdapter::on_applyscenenodegraphvalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    p_dialog->Close();
+}
+
+
 
 void wxWidgetAdapter::AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
