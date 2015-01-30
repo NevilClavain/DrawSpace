@@ -1355,27 +1355,43 @@ void BasicSceneMainFrame::Update( void )
     
 
     
-    wxImageList* pImageList = new wxImageList( 21, 19, TRUE );
+    wxImageList* pImageList = new wxImageList( DFRONT_ICON_DIM, DFRONT_ICON_DIM, TRUE );
 
 
-    wxBitmap bmp( "icon.bmp", wxBITMAP_TYPE_BMP );
-    wxBitmap bmp1( "icon1.bmp", wxBITMAP_TYPE_BMP );
-    wxBitmap bmp2( "icon2.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_camera( "icon_camera.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_chunk( "icon_chunk.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_collider( "icon_collider.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_inertbody( "icon_inertbody.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_movement( "icon_movement.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_orbit( "icon_orbit.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_orbiter( "icon_orbiter.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_planet( "icon_planet.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_rocket( "icon_rocket.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_spacebox( "icon_spacebox.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_transfo( "icon_transfo.bmp", wxBITMAP_TYPE_BMP );
 
 
     
-    pImageList->Add( bmp );
-    pImageList->Add( bmp1 );
-    pImageList->Add( bmp2 );
+    pImageList->Add( bmp_camera );
+    pImageList->Add( bmp_chunk );
+    pImageList->Add( bmp_collider );
+    pImageList->Add( bmp_inertbody );
+    pImageList->Add( bmp_movement );
+    pImageList->Add( bmp_orbit );
+    pImageList->Add( bmp_orbiter );
+    pImageList->Add( bmp_planet );
+    pImageList->Add( bmp_rocket );
+    pImageList->Add( bmp_spacebox );
+    pImageList->Add( bmp_transfo );
     
 
     m_treeCtrl1->AssignImageList( pImageList );
 
 
-    wxTreeItemId ti_root = m_treeCtrl1->AddRoot( "prout0", 0 );
-    wxTreeItemId ti_sb0 = m_treeCtrl1->AppendItem( ti_root, "sub_prout0", 0 );
-    wxTreeItemId ti_sb1 = m_treeCtrl1->AppendItem( ti_root, "sub_prout1", 1 );
-    wxTreeItemId ti_sb10 = m_treeCtrl1->AppendItem( ti_sb1, "sub_prout10", 2 );
+    wxTreeItemId ti_root = m_treeCtrl1->AddRoot( "prout0", SPACEBOX_ICON_INDEX );
+    wxTreeItemId ti_sb0 = m_treeCtrl1->AppendItem( ti_root, "sub_prout0", INERTBODY_ICON_INDEX );
+    wxTreeItemId ti_sb1 = m_treeCtrl1->AppendItem( ti_root, "sub_prout1", PLANET_ICON_INDEX );
+    wxTreeItemId ti_sb10 = m_treeCtrl1->AppendItem( ti_sb1, "sub_prout10", ORBITER_ICON_INDEX );
     
 
 

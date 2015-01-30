@@ -28,6 +28,20 @@
 #include "drawspace.h"
 #include "scripting.h"
 
+#define DFRONT_ICON_DIM             22
+
+#define CAMERA_ICON_INDEX           0
+#define CHUNK_ICON_INDEX            1
+#define COLLIDER_ICON_INDEX         2
+#define INERTBODY_ICON_INDEX        3
+#define MOVEMENT_ICON_INDEX         4
+#define ORBIT_ICON_INDEX            5
+#define ORBITER_ICON_INDEX          6
+#define PLANET_ICON_INDEX           7
+#define ROCKET_ICON_INDEX           8
+#define SPACEBOX_ICON_INDEX         9
+#define TRANSFO_ICON_INDEX          10
+
 class BasicSceneMainFrame : public MainFrame
 {
 public:
