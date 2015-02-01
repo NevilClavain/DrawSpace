@@ -2012,6 +2012,42 @@ void wxWidgetAdapter::AdaptScenegraphnodeCreationProps( BasicSceneObjectProperti
 
 void wxWidgetAdapter::on_applyscenenodegraphvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxStringProperty* prop2;
+    wxAny value;
+
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Name" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    std::map<void*, BasicSceneMainFrame::SceneNodeGraphEntry>* scenenodegraphs_map = (std::map<void*, BasicSceneMainFrame::SceneNodeGraphEntry>*)p_dialog->GetData( "scenenodegraphs_map" );
+    wxTreeCtrl* scenegraphs_treeCtrl = (wxTreeCtrl*)p_dialog->GetData( "scenegraphs_treeCtrl" );
+    wxTreeItemId* scenegraphs_root_item = (wxTreeItemId*)p_dialog->GetData( "scenegraphs_root_item" );
+
+    BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+    entry.name = alias;
+    entry.scenenodegraph = new SceneNodeGraph();
+    entry.treeitemid = scenegraphs_treeCtrl->AppendItem( *scenegraphs_root_item, alias2, SCENEGRAPH_ICON_INDEX );
+    (*scenenodegraphs_map)[entry.treeitemid.GetID()] = entry;
+
+    scenegraphs_treeCtrl->ExpandAll();
+
     p_dialog->Close();
 }
 
@@ -2058,8 +2094,6 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     Spacebox::Descriptor        sb_descr;
     Spacebox::PassDescriptor    pass_descr;
 
-    //Spacebox* spacebox = new Spacebox();
-    //spacebox->SetSceneName( alias );
     sb_descr.scene_name = alias;
 
 

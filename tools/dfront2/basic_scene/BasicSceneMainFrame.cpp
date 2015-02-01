@@ -1706,19 +1706,10 @@ void BasicSceneMainFrame::OnCamerasListItemActivated( wxListEvent& p_event )
     long sel_index = p_event.GetIndex();
     CameraPoint* camera = (CameraPoint*)m_cameras_listCtrl->GetItemData( sel_index );
 
-    /*
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties modifications" );
-    wxWidgetAdapter::GetInstance()->AdaptCameraPropsModification( camera, dialog );
-
-    dialog->SetData( "camera", camera );
-    dialog->EnableApplyButton();
-    dialog->Show();
-    */
 
     BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties" );
     wxWidgetAdapter::GetInstance()->AdaptCameraProps( camera, dialog );
     dialog->Show();
-
 }
 
 void BasicSceneMainFrame::OnCamerasListDeleteAllItems( wxListEvent& p_event )
@@ -1867,6 +1858,11 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Scenenodegraph creation" );
 
                 wxWidgetAdapter::GetInstance()->AdaptScenegraphnodeCreationProps( dialog );
+
+
+                dialog->SetData( "scenenodegraphs_map", &m_scenenodegraphs );
+                dialog->SetData( "scenegraphs_treeCtrl", m_scenegraphs_treeCtrl );
+                dialog->SetData( "scenegraphs_root_item", &m_scenegraphs_root_item );
                 dialog->EnableApplyButton();
                 dialog->Show();
                 break;
@@ -1876,8 +1872,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
  }
 
 void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event )
-{
-	
+{	
  	wxMenu mnu;
  	
     wxTreeItemId item = p_event.GetItem();

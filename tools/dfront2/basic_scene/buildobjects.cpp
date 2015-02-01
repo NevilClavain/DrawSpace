@@ -34,7 +34,7 @@ bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSc
 
     for( std::map<dsstring, Spacebox::PassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
     {
-        spacebox->RegisterPassSlot( it->first.c_str() );
+        //spacebox->RegisterPassSlot( it->first.c_str() );
 
         if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( it->second.fx_name ) )
         {
@@ -69,12 +69,12 @@ bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSc
                         return false;
                     }
 
-                    spacebox->GetNodeFromPass( it->first, i )->SetTexture( texture, j );
+                    //spacebox->GetNodeFromPass( it->first, i )->SetTexture( texture, j );
                 }
             }
 
-            spacebox->GetNodeFromPass( it->first, i )->SetFx( fx );
-            spacebox->GetNodeFromPass( it->first, i )->SetOrderNumber( it->second.rendering_order );
+            //spacebox->GetNodeFromPass( it->first, i )->SetFx( fx );
+            //spacebox->GetNodeFromPass( it->first, i )->SetOrderNumber( it->second.rendering_order );
         }
     }
 

@@ -122,9 +122,8 @@ public:
     typedef struct
     {
         dsstring                            name;
-        DrawSpace::Core::SceneNodeGraph*    scenenodegraph;
-        std::vector<dsstring>               registeredpassesnames;
-        void*                               treeitemid;
+        DrawSpace::Core::SceneNodeGraph*    scenenodegraph;        
+        wxTreeItemId                        treeitemid;
 
     } SceneNodeGraphEntry;
 
@@ -228,7 +227,7 @@ protected:
     DrawSpace::Scenegraph                                   m_scenegraph;
     std::map<dsstring, MetadataScenegraphEntry>             m_metada_scenegraph;
 
-    SceneNodeGraphEntry                                     m_scenenodegraphs;
+    std::map<void*, SceneNodeGraphEntry>                    m_scenenodegraphs;
 
 
 
