@@ -78,7 +78,8 @@ protected:
 
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshes[6];
-    std::map<dsstring, NodesSet>                            m_passesnodes;
+    //std::map<dsstring, NodesSet>                            m_passesnodes;
+    std::map<Pass*, NodesSet>                               m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
     DrawSpace::Scenegraph*                                  m_scenegraph;
     DrawSpace::Core::SceneNodeGraph*                        m_scenenodegraph;
@@ -89,7 +90,8 @@ public:
     Spacebox( void );
     virtual ~Spacebox( void );
 
-    void SetDrawingState( const dsstring& p_passname, bool p_drawing );
+    //void SetDrawingState( const dsstring& p_passname, bool p_drawing );
+    void SetDrawingState( Pass* p_pass, bool p_drawing );
 
     //void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
@@ -97,8 +99,10 @@ public:
 
     DrawSpace::Core::Meshe* GetMeshe( int p_mesheid );
 
-    void RegisterPassSlot( const dsstring p_passname );
-    DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_quadid );
+    //void RegisterPassSlot( const dsstring p_passname );
+    void RegisterPassSlot( Pass* p_pass );
+    //DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_quadid );
+    DrawSpace::Core::RenderingNode* GetNodeFromPass( Pass* p_pass, int p_quadid );
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};

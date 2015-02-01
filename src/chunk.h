@@ -39,7 +39,9 @@ protected:
 
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshe;
-    std::map<dsstring, DrawSpace::Core::RenderingNode*>     m_passesnodes;
+    //std::map<dsstring, DrawSpace::Core::RenderingNode*>     m_passesnodes;
+    std::map<Pass*, DrawSpace::Core::RenderingNode*>        m_passesnodes;
+
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
     LodCallback*                                            m_lod_callback;
     bool                                                    m_lod_draw;
@@ -58,7 +60,8 @@ public:
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
     void SetRenderer( DrawSpace::Interface::Renderer* p_renderer );
-    void SetDrawingState( const dsstring& p_passname, bool p_drawing );
+    //void SetDrawingState( const dsstring& p_passname, bool p_drawing );
+    void SetDrawingState( Pass* p_passname, bool p_drawing );
 
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
@@ -66,8 +69,12 @@ public:
     DrawSpace::Core::Meshe* GetMeshe( void );
     void SetMeshe( DrawSpace::Core::Meshe* p_meshe );
 
-    void RegisterPassSlot( const dsstring p_passname );
-    DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
+    //void RegisterPassSlot( const dsstring p_passname );
+    void RegisterPassSlot( Pass* p_pass );
+
+    //DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
+
+    DrawSpace::Core::RenderingNode* GetNodeFromPass( Pass* p_pass );
 
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );

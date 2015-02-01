@@ -41,7 +41,7 @@ Interface::FontImport* InstanciateFontImportFromPlugin( const dsstring& p_plugin
 bool LoadMesheImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias );
 Interface::MesheImport* InstanciateMesheImportFromPlugin( const dsstring& p_pluginalias );
 
-void BuildSpaceboxFx( DrawSpace::Spacebox* p_spacebox, const dsstring& p_passname );
+void BuildSpaceboxFx( DrawSpace::Spacebox* p_spacebox, Pass* p_pass );
 
 long StringToInt( const dsstring& p_value );
 dsreal StringToReal( const dsstring& p_value );

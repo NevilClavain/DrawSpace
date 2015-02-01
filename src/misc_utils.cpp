@@ -221,16 +221,16 @@ Interface::MesheImport* DrawSpace::Utils::InstanciateMesheImportFromPlugin( cons
     return NULL;
 }
 
-void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, const dsstring& p_passname )
+void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, Pass* p_pass )
 {
     for( long i = 0; i < 6; i++ )
     {
 
-        p_spacebox->GetNodeFromPass( p_passname, i )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
-        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+        p_spacebox->GetNodeFromPass( p_pass, i )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+        p_spacebox->GetNodeFromPass( p_pass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
+        p_spacebox->GetNodeFromPass( p_pass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( false ) ) );
 
-        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->GetShader( 0 )->SetText(
+        p_spacebox->GetNodeFromPass( p_pass, i )->GetFx()->GetShader( 0 )->SetText(
 
             "float4x4 matWorldViewProjection: register(c0);"
 
@@ -258,7 +258,7 @@ void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, const dsstring& p_
 
                 );
 
-        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->GetShader( 1 )->SetText(
+        p_spacebox->GetNodeFromPass( p_pass, i )->GetFx()->GetShader( 1 )->SetText(
 
             "sampler2D Texture0;"
 
@@ -275,11 +275,11 @@ void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, const dsstring& p_
 
                 );
 
-        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+        p_spacebox->GetNodeFromPass( p_pass, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+        p_spacebox->GetNodeFromPass( p_pass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
 
-        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-        p_spacebox->GetNodeFromPass( p_passname, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+        p_spacebox->GetNodeFromPass( p_pass, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+        p_spacebox->GetNodeFromPass( p_pass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
 
     }    
 }

@@ -724,11 +724,19 @@ Fragment* DrawSpace::Planetoid::Body::GetRegisteredBodyPlanetFragment( DrawSpace
     return m_registered_bodies[p_body].fragment;
 }
 
+/*
 void DrawSpace::Planetoid::Body::RegisterPassSlot( const dsstring& p_passname )
 {
     m_drawable->RegisterPassSlot( p_passname );
 }
+*/
 
+void DrawSpace::Planetoid::Body::RegisterPassSlot( Pass* p_pass )
+{
+    m_drawable->RegisterPassSlot( p_pass );
+}
+
+/*
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetNodeFromPass( const dsstring& p_passname, int p_faceid )
 {
     return m_drawable->GetNodeFromPass( p_passname, p_faceid );
@@ -738,6 +746,18 @@ void DrawSpace::Planetoid::Body::SetNodeFromPassSpecificFx( const dsstring& p_pa
 {
     m_drawable->SetNodeFromPassSpecificFx( p_passname, p_faceid, p_fxname );
 }
+*/
+
+DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetNodeFromPass( Pass* p_pass, int p_faceid )
+{
+    return m_drawable->GetNodeFromPass( p_pass, p_faceid );
+}
+
+void DrawSpace::Planetoid::Body::SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname )
+{
+    m_drawable->SetNodeFromPassSpecificFx( p_pass, p_faceid, p_fxname );
+}
+
 
 void DrawSpace::Planetoid::Body::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {

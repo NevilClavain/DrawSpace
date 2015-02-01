@@ -71,7 +71,8 @@ protected:
     Body*                                                                       m_planetbody;
 
 
-    std::map<dsstring, NodesSet>                                                m_passesnodes;
+    //std::map<dsstring, NodesSet>                                                m_passesnodes;
+    std::map<Pass*, NodesSet>                                                   m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
     DrawSpace::Interface::Renderer*                                             m_renderer;
     DrawSpace::Scenegraph*                                                      m_scenegraph;
@@ -92,9 +93,14 @@ public:
     virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    virtual void RegisterPassSlot( const dsstring& p_passname );
-    DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_faceid );
-    void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
+    //virtual void RegisterPassSlot( const dsstring& p_passname );
+    virtual void RegisterPassSlot( Pass* p_pass );
+
+    //DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_faceid );
+    DrawSpace::Core::RenderingNode* GetNodeFromPass( Pass* p_pass, int p_faceid );
+
+    //void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
+    void SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname );
 
     Body* GetBody( void );
 

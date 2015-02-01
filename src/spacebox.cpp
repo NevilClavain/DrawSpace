@@ -229,6 +229,7 @@ Spacebox::~Spacebox( void )
 {
 }
 
+/*
 void Spacebox::SetDrawingState( const dsstring& p_passname, bool p_drawing )
 {
     if( m_passesnodes.count( p_passname ) > 0 )
@@ -247,9 +248,27 @@ void Spacebox::SetDrawingState( const dsstring& p_passname, bool p_drawing )
     _DSEXCEPTION( msg )   
 
 }
+*/
+
+void Spacebox::SetDrawingState( Pass* p_pass, bool p_drawing )
+{
+    if( m_passesnodes.count( p_pass ) > 0 )
+    {
+        for( size_t i = 0; i < 6; i++ )
+        {
+            m_passesnodes[p_pass].nodes[i]->SetDrawingState( p_drawing );
+        }
+        return;
+    }
+
+    dsstring msg = "Spacebox : unknown pass '";
+    _DSEXCEPTION( msg )   
+
+}
 
 void Spacebox::OnRegister( Scenegraph* p_scenegraph )
 {
+    /*
     for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = p_scenegraph->GetPass( (*it).first );
@@ -269,12 +288,15 @@ void Spacebox::OnRegister( Scenegraph* p_scenegraph )
         }
     }
     m_scenegraph = p_scenegraph;
+    */
 }
 
 void Spacebox::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    //for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    for( std::map<Pass*, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
+        /*
         Pass* current_pass = p_scenegraph->GetPass( (*it).first );
 
         if( NULL == current_pass )
@@ -285,6 +307,9 @@ void Spacebox::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSp
 
             _DSEXCEPTION( msg )
         }
+        */
+
+        Pass* current_pass = it->first;
 
         for( long i = 0; i < 6; i++ )
         {
@@ -331,7 +356,8 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
     m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), world, view, proj );
 }
 
-void Spacebox::RegisterPassSlot( const dsstring p_passname )
+//void Spacebox::RegisterPassSlot( const dsstring p_passname )
+void Spacebox::RegisterPassSlot( Pass* p_pass )
 {
     NodesSet nodeset;
     for( long i = 0; i < 6; i++ )
@@ -346,17 +372,23 @@ void Spacebox::RegisterPassSlot( const dsstring p_passname )
 
     }
 
-    m_passesnodes[p_passname] = nodeset;
+    //m_passesnodes[p_passname] = nodeset;
+
+    m_passesnodes[p_pass] = nodeset;
 }
 
-DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring& p_passname, int p_quadid )
+//DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( const dsstring& p_passname, int p_quadid )
+DrawSpace::Core::RenderingNode* Spacebox::GetNodeFromPass( Pass* p_pass, int p_quadid )
 {
-    if( 0 == m_passesnodes.count( p_passname ) )
+    //if( 0 == m_passesnodes.count( p_passname ) )
+    if( 0 == m_passesnodes.count( p_pass ) )
     {
         return NULL;
     }
 
-    return m_passesnodes[p_passname].nodes[p_quadid];
+    //return m_passesnodes[p_passname].nodes[p_quadid];
+
+    return m_passesnodes[p_pass].nodes[p_quadid];
 }
 
 void Spacebox::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )

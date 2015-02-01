@@ -55,8 +55,10 @@ void Chunk::SetRenderer( Renderer * p_renderer )
     m_renderer = p_renderer;
 }
 
-void Chunk::SetDrawingState( const dsstring& p_passname, bool p_drawing )
+//void Chunk::SetDrawingState( const dsstring& p_passname, bool p_drawing )
+void Chunk::SetDrawingState( Pass* p_pass, bool p_drawing )
 {
+    /*
     if( m_passesnodes.count( p_passname ) > 0 )
     {
         m_passesnodes[p_passname]->SetDrawingState( p_drawing );
@@ -67,7 +69,18 @@ void Chunk::SetDrawingState( const dsstring& p_passname, bool p_drawing )
     msg += p_passname;
     msg += "' unknown";
 
-    _DSEXCEPTION( msg )   
+    _DSEXCEPTION( msg )
+    */
+
+    if( m_passesnodes.count( p_pass ) > 0 )
+    {
+        m_passesnodes[p_pass]->SetDrawingState( p_drawing );
+        return;
+    }
+
+    dsstring msg = "Chunk : unknown pass";
+    _DSEXCEPTION( msg )
+
 }
 
 void Chunk::OnRegister( Scenegraph* p_scenegraph )
@@ -77,6 +90,7 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
         _DSEXCEPTION( "NULL meshe ; please allocate a meshe object for chunk prior to other operations" );
     }
 
+    /*
     for( std::map<dsstring, RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = p_scenegraph->GetPass( (*it).first );
@@ -92,6 +106,7 @@ void Chunk::OnRegister( Scenegraph* p_scenegraph )
 
         current_pass->GetRenderingQueue()->Add( (*it).second );
     }
+    */
     m_scenegraph = p_scenegraph;
 
 
@@ -164,8 +179,11 @@ void Chunk::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace
         _DSEXCEPTION( "NULL meshe ; please allocate a meshe object for chunk prior to other operations" );
     }
 
-    for( std::map<dsstring, RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    //for( std::map<dsstring, RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+
+    for( std::map<Pass*, RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
+        /*
         Pass* current_pass = p_scenegraph->GetPass( (*it).first );
 
         if( NULL == current_pass )
@@ -176,6 +194,9 @@ void Chunk::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace
 
             _DSEXCEPTION( msg )
         }
+        */
+
+        Pass* current_pass = it->first;
 
         current_pass->GetRenderingQueue()->Add( (*it).second );
     }
@@ -319,6 +340,7 @@ void Chunk::on_lod_event( LodStep*, LodStep::Event p_event )
     }
 }
 
+/*
 void Chunk::RegisterPassSlot( const dsstring p_passname )
 {
     m_passesnodes[p_passname] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
@@ -336,7 +358,26 @@ void Chunk::RegisterPassSlot( const dsstring p_passname )
     m_callbacks.push_back( cb );
 
 }
+*/
+void Chunk::RegisterPassSlot( Pass* p_pass )
+{
+    m_passesnodes[p_pass] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
 
+    if( NULL == m_meshe )
+    {
+        _DSEXCEPTION( "NULL meshe ; please allocate a meshe object for chunk prior to other operations" );
+    }
+
+    m_passesnodes[p_pass]->SetMeshe( m_meshe );
+
+    RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Chunk::on_renderingnode_draw ) );
+
+    m_passesnodes[p_pass]->RegisterHandler( cb );
+    m_callbacks.push_back( cb );
+
+}
+
+/*
 DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring& p_passname )
 {
     if( 0 == m_passesnodes.count( p_passname ) )
@@ -346,6 +387,18 @@ DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( const dsstring& p_passna
 
     return m_passesnodes[p_passname];
 }
+*/
+
+DrawSpace::Core::RenderingNode* Chunk::GetNodeFromPass( Pass* p_pass )
+{
+    if( 0 == m_passesnodes.count( p_pass ) )
+    {
+        return NULL;
+    }
+
+    return m_passesnodes[p_pass];
+}
+
 
 void Chunk::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 {

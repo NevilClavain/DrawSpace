@@ -142,9 +142,15 @@ public:
 
     Fragment*                           GetRegisteredBodyPlanetFragment( DrawSpace::Dynamics::InertBody* p_body );
 
-    void                                RegisterPassSlot( const dsstring& p_passname );
-    DrawSpace::Core::RenderingNode*     GetNodeFromPass( const dsstring& p_passname, int p_faceid );
-    void                                SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
+    //void                                RegisterPassSlot( const dsstring& p_passname );
+
+    void                                RegisterPassSlot( Pass* p_pass );
+
+    //DrawSpace::Core::RenderingNode*     GetNodeFromPass( const dsstring& p_passname, int p_faceid );
+    DrawSpace::Core::RenderingNode*     GetNodeFromPass( Pass* p_pass, int p_faceid );
+
+    //void                                SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
+    void                                SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname );
 
 
     void                                SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
