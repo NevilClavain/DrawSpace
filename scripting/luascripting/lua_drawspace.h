@@ -45,6 +45,8 @@ public:
     int Lua_DisplayFramerate( lua_State* p_L );
     int Lua_DisplayCurrentCamera( lua_State* p_L );
 
+    int Lua_CreateSceneNodeGraph( lua_State* p_L );
+
     int Lua_CreateConstRegister( lua_State* p_L );
     int Lua_ModifyConstRegisterValue( lua_State* p_L );
 

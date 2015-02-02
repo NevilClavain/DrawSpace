@@ -212,6 +212,21 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         bool state = p_propertypool.GetPropValue<bool>( "state" );
         m_display_currentcamera = state;
     }
+    else if( "DrawSpace:CreateSceneNodeGraph" == script_call_id )
+    {
+        dsstring alias = p_propertypool.GetPropValue<dsstring>( "name" );
+
+        SceneNodeGraphEntry entry;
+
+        entry.name = alias;
+        entry.scenenodegraph = new SceneNodeGraph();
+        entry.treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, alias.c_str(), SCENEGRAPH_ICON_INDEX );
+        m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
+
+        m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
+
+
+    }
     else if( "SpaceBoxBuilder:BuildIt" == script_call_id )
     {
         Spacebox::Descriptor descriptor = p_propertypool.GetPropValue<Spacebox::Descriptor>( "descr" );

@@ -31,9 +31,9 @@ const Luna<LuaDrawSpace>::RegType LuaDrawSpace::Register[] =
 {
   { "DisplayFramerate", &LuaDrawSpace::Lua_DisplayFramerate },
   { "DisplayCurrentCamera", &LuaDrawSpace::Lua_DisplayCurrentCamera },
+  { "CreateSceneNodeGraph", &LuaDrawSpace::Lua_CreateSceneNodeGraph },
   { "CreateConstRegister", &LuaDrawSpace::Lua_CreateConstRegister },
   { "ModifyConstRegisterValue", &LuaDrawSpace::Lua_ModifyConstRegisterValue },
-
   { "CreateVarRegister", &LuaDrawSpace::Lua_CreateVarRegister },
   { "ResetVarRegister", &LuaDrawSpace::Lua_ResetVarRegister },
   { "SetVarRegisterState", &LuaDrawSpace::Lua_SetVarRegisterState },
@@ -96,6 +96,28 @@ int LuaDrawSpace::Lua_DisplayCurrentCamera( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
 
+    return 0;
+}
+
+int LuaDrawSpace::Lua_CreateSceneNodeGraph( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "CreateSceneNodeGraph : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* name = luaL_checkstring( p_L, 2 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:CreateSceneNodeGraph" );
+        props.AddPropValue<dsstring>( "name", name );
+
+        (*m_scriptcalls_handler)( props );
+    }
     return 0;
 }
 
