@@ -47,9 +47,36 @@
 
 #define CONTEXTMENU_NEWSCENENODEGRAPH       2000
 
+#define CONTEXTMENU_NEWSPACEBOX             2010
+#define CONTEXTMENU_NEWCHUNK                2011
+#define CONTEXTMENU_NEWINERTBODY            2012
+#define CONTEXTMENU_NEWCOLLIDER             2013
+#define CONTEXTMENU_NEWROCKET               2014
+#define CONTEXTMENU_NEWORBIT                2015
+#define CONTEXTMENU_NEWORBITER              2016
+#define CONTEXTMENU_NEWPLANET               2017
+#define CONTEXTMENU_NEWTRANSFO              2018
+#define CONTEXTMENU_NEWCAMERA               2019
+#define CONTEXTMENU_NEWLINEARMVT            2020
+#define CONTEXTMENU_NEWCIRCULARMVT          2021
+#define CONTEXTMENU_NEWFPSMVT               2022
+#define CONTEXTMENU_NEWFREEMVT              2023
+#define CONTEXTMENU_NEWHEADMVT              2024
+#define CONTEXTMENU_NEWLONGLATMVT           2025
+#define CONTEXTMENU_NEWSPECTATORMVT         2026
+#define CONTEXTMENU_SEPARATOR               2080
+
+
 class BasicSceneMainFrame : public MainFrame
 {
 public:
+
+    typedef struct
+    {
+        int         id;
+        dsstring    text;
+
+    } PopupMenuEntry;
 
     typedef enum
     {
@@ -216,6 +243,8 @@ protected:
 
     bool set_var_alias( const dsstring& p_source, dsstring& p_dest );
 
+    void build_popupmenu( int p_level, wxMenu& p_menu );
+
 
     long                                                    m_w_width;
     long                                                    m_w_height;
@@ -261,6 +290,9 @@ protected:
     wxFont                                                  m_console_font;
 
     wxTreeItemId                                            m_scenegraphs_root_item;
+
+
+    std::map<int, std::vector<PopupMenuEntry>>              m_scenegraphs_masks;
 
 
 

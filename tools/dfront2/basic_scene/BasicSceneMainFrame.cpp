@@ -72,6 +72,65 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
 
     m_scripting_calls_cb = new ScriptingCallsCallback( this, &BasicSceneMainFrame::on_scripting_calls );
     m_scripting->RegisterScriptCallsHandler( m_scripting_calls_cb );
+
+    ////////////////////////////////////
+
+    // root; seul la creation de scenenodegraph est possible
+    //m_scenegraphs_masks[0].push_back( CONTEXTMENU_NEWSCENENODEGRAPH );
+
+    PopupMenuEntry pme_separator = { CONTEXTMENU_SEPARATOR, "" };
+
+    PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
+    PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
+    PopupMenuEntry pme_newchunk = { CONTEXTMENU_NEWCHUNK, "New chunk..." };
+    PopupMenuEntry pme_newinertbody = { CONTEXTMENU_NEWINERTBODY, "New inertbody..." };
+    PopupMenuEntry pme_newcollider = { CONTEXTMENU_NEWCOLLIDER, "New collider..." };
+    PopupMenuEntry pme_newrocket = { CONTEXTMENU_NEWROCKET, "New rocket..." };
+    PopupMenuEntry pme_neworbit = { CONTEXTMENU_NEWORBIT, "New orbit..." };
+    PopupMenuEntry pme_neworbiter = { CONTEXTMENU_NEWORBITER, "New orbiter..." };
+    PopupMenuEntry pme_newplanet = { CONTEXTMENU_NEWPLANET, "New planet..." };
+    PopupMenuEntry pme_newtransfo = { CONTEXTMENU_NEWTRANSFO, "New transformation..." };
+    PopupMenuEntry pme_newcamera = { CONTEXTMENU_NEWCAMERA, "New camera point..." };
+    PopupMenuEntry pme_newlinearmvt = { CONTEXTMENU_NEWLINEARMVT, "New linear movement..." };
+    PopupMenuEntry pme_newcircularmvt = { CONTEXTMENU_NEWCIRCULARMVT, "New circular movement..." };
+    PopupMenuEntry pme_newfpsmvt = { CONTEXTMENU_NEWFPSMVT, "New fps movement..." };
+    PopupMenuEntry pme_newfreemvt = { CONTEXTMENU_NEWFREEMVT, "New free movement..." };
+    PopupMenuEntry pme_newheadmvt = { CONTEXTMENU_NEWHEADMVT, "New head movement..." };
+    PopupMenuEntry pme_newlonglatmvt = { CONTEXTMENU_NEWLONGLATMVT, "New longlat movement..." };
+    PopupMenuEntry pme_newspectatormvt = { CONTEXTMENU_NEWSPECTATORMVT, "New spectator movement..." };
+
+    
+    m_scenegraphs_masks[0].push_back( pme_newscenenodegraph );
+
+
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newspacebox );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newchunk );
+
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_separator );
+
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newinertbody );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newcollider );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newrocket );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_neworbit );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newplanet );
+
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_separator );
+
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newtransfo );
+    
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_separator );
+
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newspectatormvt );
+
+
+
+
+
+
 }
 
 void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
@@ -103,11 +162,26 @@ bool BasicSceneMainFrame::set_var_alias( const dsstring& p_source, dsstring& p_d
     return status;
 }
 
+void BasicSceneMainFrame::build_popupmenu( int p_level, wxMenu& p_menu )
+{   
+    for( size_t i = 0; i < m_scenegraphs_masks[p_level].size(); i++ )
+    {
+        if( CONTEXTMENU_SEPARATOR == m_scenegraphs_masks[p_level][i].id )
+        {
+            p_menu.AppendSeparator();
+        }
+        else
+        {
+            p_menu.Append( m_scenegraphs_masks[p_level][i].id, m_scenegraphs_masks[p_level][i].text.c_str() );
+        }
+    }
+}
+
 bool BasicSceneMainFrame::RegisterMovement( const dsstring& p_name, const MovementEntry& p_movement )
 {
     if( m_movements.count( p_name ) > 0 )
     {
-        wxMessageBox( "Movement with same name already exists : " + p_name, "Drawfronr error", wxICON_ERROR );
+        wxMessageBox( "Movement with same name already exists : " + p_name, "Drawfront error", wxICON_ERROR );
         return false;
     }
 
@@ -1878,7 +1952,16 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
     wxTreeItemId item = p_event.GetItem();
     if( item.GetID() == m_scenegraphs_root_item.GetID() )
     {
-        mnu.Append( CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." );
+        build_popupmenu( 0, mnu );
+    }
+    else
+    {
+        
+        if( m_scenenodegraphs.count( item.GetID() ) > 0 )
+        {
+            // clicked item belong to a registered scenenodegraph...
+            build_popupmenu( CONTEXTMENU_NEWSCENENODEGRAPH, mnu );
+        }
     }
 
  	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this);

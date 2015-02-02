@@ -2046,7 +2046,7 @@ void wxWidgetAdapter::on_applyscenenodegraphvalues( BasicSceneObjectPropertiesDi
     entry.treeitemid = scenegraphs_treeCtrl->AppendItem( *scenegraphs_root_item, alias2, SCENEGRAPH_ICON_INDEX );
     (*scenenodegraphs_map)[entry.treeitemid.GetID()] = entry;
 
-    scenegraphs_treeCtrl->ExpandAll();
+    scenegraphs_treeCtrl->ExpandAllChildren( *scenegraphs_root_item );
 
     p_dialog->Close();
 }
