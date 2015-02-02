@@ -90,13 +90,6 @@ std::map<dsstring, BaseSceneNode*>& SceneNodeGraph::GetNodesList( void )
 }
 
 
-void SceneNodeGraph::RegisterPass( Pass* p_pass )
-{
-    dsstring pass_name;
-    p_pass->GetSpecificName( pass_name );
-    m_passes[pass_name] = p_pass;    
-}
-
 void SceneNodeGraph::RegisterNode( BaseSceneNode* p_node )
 {
     p_node->OnRegister( this );
@@ -108,14 +101,6 @@ void SceneNodeGraph::RegisterNode( BaseSceneNode* p_node )
     }
 }
 
-Pass* SceneNodeGraph::GetPass( const dsstring& p_passname )
-{
-    if( m_passes.count( p_passname ) > 0 )
-    {
-        return m_passes[p_passname];
-    }
-    return NULL;
-}
 
 Core::BaseSceneNode* SceneNodeGraph::GetCurrentCamera( void )
 {    

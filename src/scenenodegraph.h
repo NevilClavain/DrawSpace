@@ -76,8 +76,6 @@ protected:
     std::map<dsstring, Core::BaseSceneNode*>    m_cameras_list;
 
 
-
-    std::map<dsstring, Pass*>                   m_passes;
     dsstring                                    m_current_camera;
 
     Utils::Matrix                               m_view;
@@ -94,12 +92,8 @@ public:
     void ComputeTransformations( DrawSpace::Utils::TimeManager& p_timemanager );
     std::map<dsstring, BaseSceneNode*>& GetNodesList( void );
 
-    void RegisterPass( Pass* p_pass );
-
     void RegisterNode( BaseSceneNode* p_node );	
     bool AddNode( BaseSceneNode* p_node );
-
-    Pass* GetPass( const dsstring& p_passname );
 
 
     Core::BaseSceneNode* GetCurrentCamera( void );
