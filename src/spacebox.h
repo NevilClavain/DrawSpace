@@ -83,6 +83,7 @@ protected:
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
     DrawSpace::Scenegraph*                                  m_scenegraph;
     DrawSpace::Core::SceneNodeGraph*                        m_scenenodegraph;
+    bool                                                    m_enable_translations;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -109,6 +110,8 @@ public:
 
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+
+    void EnableTranslations( bool p_enable );
 
     
 };

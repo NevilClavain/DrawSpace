@@ -35,7 +35,8 @@ using namespace DrawSpace::Utils;
 
 Spacebox::Spacebox( void ) :
 m_scenegraph( NULL ),
-m_scenenodegraph( NULL )
+m_scenenodegraph( NULL ),
+m_enable_translations( false )
 {        
     //////////////////////////////////
 
@@ -330,7 +331,11 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
     DrawSpace::Utils::Matrix world;
 
     world = m_globaltransformation;
-    world.ClearTranslation();
+
+    if( !m_enable_translations )
+    {
+        world.ClearTranslation();
+    }
 
     if( m_scenenodegraph )
     {
@@ -401,4 +406,7 @@ void Spacebox::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_globaltransformation = p_mat;
 }
 
-
+void Spacebox::EnableTranslations( bool p_enable )
+{
+    m_enable_translations = p_enable;
+}
