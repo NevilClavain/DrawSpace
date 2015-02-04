@@ -267,6 +267,18 @@ void Spacebox::SetDrawingState( Pass* p_pass, bool p_drawing )
 
 }
 
+void Spacebox::SetQuadDrawingState( Pass* p_pass, int p_quad, bool p_drawing )
+{
+    if( m_passesnodes.count( p_pass ) > 0 )
+    {
+        m_passesnodes[p_pass].nodes[p_quad]->SetDrawingState( p_drawing );
+        return;
+    }
+
+    dsstring msg = "Spacebox : unknown pass '";
+    _DSEXCEPTION( msg )
+}
+
 void Spacebox::OnRegister( Scenegraph* p_scenegraph )
 {
     /*

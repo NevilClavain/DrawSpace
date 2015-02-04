@@ -93,6 +93,7 @@ public:
 
     //void SetDrawingState( const dsstring& p_passname, bool p_drawing );
     void SetDrawingState( Pass* p_pass, bool p_drawing );
+    void SetQuadDrawingState( Pass* p_pass, int p_quad, bool p_drawing );
 
     //void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
     void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
