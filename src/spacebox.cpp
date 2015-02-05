@@ -36,7 +36,8 @@ using namespace DrawSpace::Utils;
 Spacebox::Spacebox( void ) :
 m_scenegraph( NULL ),
 m_scenenodegraph( NULL ),
-m_enable_translations( false )
+m_enable_translations( false ),
+m_ignore_camera( false )
 {        
     //////////////////////////////////
 
@@ -349,15 +350,20 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
         world.ClearTranslation();
     }
 
-    if( m_scenenodegraph )
+    view.Identity();
+
+    if( !m_ignore_camera )
     {
-        m_scenenodegraph->GetCurrentCameraView( view );
+        if( m_scenenodegraph )
+        {
+            m_scenenodegraph->GetCurrentCameraView( view );
+        }
+        else
+        {
+            m_scenegraph->GetCurrentCameraView( view );
+        }
+        view.ClearTranslation();
     }
-    else
-    {
-        m_scenegraph->GetCurrentCameraView( view );
-    }
-    view.ClearTranslation();
 
     DrawSpace::Utils::Matrix proj;
 
@@ -421,4 +427,9 @@ void Spacebox::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 void Spacebox::EnableTranslations( bool p_enable )
 {
     m_enable_translations = p_enable;
+}
+
+void Spacebox::IgnoreCamera( bool p_ignore )
+{
+    m_ignore_camera = p_ignore;
 }

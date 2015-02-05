@@ -84,6 +84,7 @@ protected:
     DrawSpace::Scenegraph*                                  m_scenegraph;
     DrawSpace::Core::SceneNodeGraph*                        m_scenenodegraph;
     bool                                                    m_enable_translations;
+    bool                                                    m_ignore_camera;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -113,6 +114,7 @@ public:
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
     void EnableTranslations( bool p_enable );
+    void IgnoreCamera( bool p_ignore );
 
     
 };
