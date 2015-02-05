@@ -48,6 +48,9 @@ protected:
     DrawSpace::Scenegraph*                                  m_scenegraph; 
     DrawSpace::Core::SceneNodeGraph*                        m_scenenodegraph;
     DrawSpace::Core::VSphere*                               m_vsphere;
+    bool                                                    m_ignore_camera;
+
+    bool                                                    m_enable_lod;
    
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_lod_event( DrawSpace::Core::LodStep*, DrawSpace::Core::LodStep::Event p_event );
@@ -78,6 +81,10 @@ public:
 
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+
+    void IgnoreCamera( bool p_ignore );
+
+    void EnableLod( bool p_enable );
     
 
 };

@@ -39,7 +39,9 @@ m_renderer( NULL ),
 m_scenegraph( NULL ),
 m_scenenodegraph( NULL ),
 m_lod_draw( false ),
-m_meshe( NULL )
+m_meshe( NULL ),
+m_ignore_camera( false ),
+m_enable_lod( false )
 {
     m_lod_callback = _DRAWSPACE_NEW_( LodCallback, LodCallback( this, &Chunk::on_lod_event ) );
 }
@@ -282,9 +284,16 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
     DrawSpace::Utils::Matrix view;
     DrawSpace::Utils::Matrix proj;
 
+
+    view.Identity();
+
+
     if( m_scenenodegraph )
     {
-        m_scenenodegraph->GetCurrentCameraView( view );
+        if( !m_ignore_camera )
+        {
+            m_scenenodegraph->GetCurrentCameraView( view );
+        }
         m_scenenodegraph->GetCurrentCameraProj( proj );
     }
     else
@@ -293,13 +302,17 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
         m_scenegraph->GetCurrentCameraProj( proj );
     }
 
-    DrawSpace::Utils::Matrix res;
-    res = m_globaltransformation * view;
-    m_vsphere->Transform( res );
 
-    if( false == m_lod_draw )
+    if( m_enable_lod )
     {
-        return;
+        DrawSpace::Utils::Matrix res;
+        res = m_globaltransformation * view;
+        m_vsphere->Transform( res );
+
+        if( false == m_lod_draw )
+        {
+            return;
+        }
     }
 
     bool draw = false;
@@ -419,4 +432,14 @@ void Chunk::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 void Chunk::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     ComputeLod();
+}
+
+void Chunk::IgnoreCamera( bool p_ignore )
+{
+    m_ignore_camera = p_ignore;
+}
+
+void Chunk::EnableLod( bool p_enable )
+{
+    m_enable_lod = p_enable;
 }
