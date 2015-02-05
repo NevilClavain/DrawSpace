@@ -72,6 +72,8 @@ public:
     void ApplyRightRoll( dsreal p_norm );
 
     void ZeroSpeed( void );
+
+    void ForceLinearSpeed( const DrawSpace::Utils::Vector& p_speed ); 
 };
 }
 }
