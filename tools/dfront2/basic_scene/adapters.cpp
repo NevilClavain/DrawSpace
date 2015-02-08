@@ -45,6 +45,7 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applycameraprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameraprops );
 
     m_applyscenenodegraphvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyscenenodegraphvalues );
+    m_applytransfonodevalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applytransfonodevalues );
 
     m_applyspaceboxvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspaceboxvalues );
     m_applyspaceboxaddpassslot_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspaceboxaddpassslot );
@@ -2006,8 +2007,7 @@ void wxWidgetAdapter::AdaptScenegraphnodeCreationProps( BasicSceneObjectProperti
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
     propertygrid->Append( new wxStringProperty( "Name", wxPG_LABEL, "" ) );
 
-    p_dialog->RegisterApplyButtonHandler( m_applyscenenodegraphvalues_callback );
-    
+    p_dialog->RegisterApplyButtonHandler( m_applyscenenodegraphvalues_callback );    
 }
 
 void wxWidgetAdapter::on_applyscenenodegraphvalues( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2051,6 +2051,132 @@ void wxWidgetAdapter::on_applyscenenodegraphvalues( BasicSceneObjectPropertiesDi
     p_dialog->Close();
 }
 
+
+void wxWidgetAdapter::AdaptTransfonodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+    propertygrid->Append( new wxStringProperty( "Scene name", wxPG_LABEL, "" ) );
+
+    p_dialog->RegisterApplyButtonHandler( m_applytransfonodevalues_callback );
+}
+
+void wxWidgetAdapter::on_applytransfonodevalues( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxStringProperty* prop2;
+    wxAny value;
+
+
+    dsstring alias;
+    wxString alias2;
+    wxCharBuffer buffer;
+
+
+    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Scene name" ) );
+    value = prop2->GetValue();
+    value.GetAs<wxString>( &alias2 );
+    buffer = alias2.ToAscii();
+    alias = buffer.data();
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'Scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    std::map<void*, BasicSceneMainFrame::SceneNodeGraphEntry>* scenenodegraphs_map = (std::map<void*, BasicSceneMainFrame::SceneNodeGraphEntry>*)p_dialog->GetData( "scenenodegraphs_map" );
+    std::map<void*, BasicSceneMainFrame::TransformationNodeEntry>* transformation_nodes_map = (std::map<void*, BasicSceneMainFrame::TransformationNodeEntry>*)p_dialog->GetData( "transformation_nodes_map" );
+    wxTreeItemId* last_clicked_treeitem = (wxTreeItemId*)p_dialog->GetData( "last_clicked_treeitem" );
+    wxTreeCtrl* scenegraphs_treeCtrl = (wxTreeCtrl*)p_dialog->GetData( "scenegraphs_treeCtrl" );
+    std::map<void*, DrawSpace::Core::BaseSceneNode*>* tree_nodes_map = (std::map<void*, DrawSpace::Core::BaseSceneNode*>*)p_dialog->GetData( "tree_nodes_map" );
+
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    // create the transformation node
+
+    SceneNode<Transformation>* transfo_node;
+    transfo_node = new SceneNode<Transformation>( alias );
+    transfo_node->SetContent( new Transformation );
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    // now we must found the scenenodegraph we belong to make the RegisterNode() call
+
+    wxTreeItemId current = *last_clicked_treeitem;
+
+    void* id;
+
+    while( 1 )
+    {
+        id = current.GetID();
+
+        if( scenenodegraphs_map->count( id ) > 0 )
+        {
+            break;
+        }
+
+        wxTreeItemId current = scenegraphs_treeCtrl->GetItemParent( current );
+    }
+
+    BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+    entry = (*scenenodegraphs_map)[id];
+    entry.scenenodegraph->RegisterNode( transfo_node );
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    // link to the scenegraph hierarchy
+
+    current = *last_clicked_treeitem;
+    id = current.GetID();
+
+    if( scenenodegraphs_map->count( id ) > 0 )
+    {
+        // parent is a scenegraph : use SceneNodeGraph::Add() method
+        entry.scenenodegraph->AddNode( transfo_node );
+    }
+    else
+    {
+        BaseSceneNode* parent_node = (*tree_nodes_map)[id];
+        transfo_node->LinkTo( parent_node );
+    }
+    
+
+    
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    // GUI : add item in the tree
+
+    wxTreeItemId treeitemid = scenegraphs_treeCtrl->AppendItem( *last_clicked_treeitem, alias2, TRANSFO_ICON_INDEX );
+    scenegraphs_treeCtrl->ExpandAllChildren( *last_clicked_treeitem );
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    // record the new transformation node and associated metadata
+
+    BasicSceneMainFrame::TransformationNodeEntry t_entry;
+
+    t_entry.name = alias;
+    t_entry.transformation = transfo_node;
+    t_entry.treeitemid = treeitemid;
+    t_entry.scenenodegraphtreeitemid = id;
+
+    BasicSceneMainFrame::TransformationMatrixDescriptor transfdescr;
+    transfdescr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY;
+
+    t_entry.matrix_stack_descr.push_back( transfdescr );
+
+    (*transformation_nodes_map)[t_entry.treeitemid.GetID()] = t_entry;
+
+    (*tree_nodes_map)[t_entry.treeitemid.GetID()] = transfo_node;
+
+    p_dialog->Close();
+}
 
 
 void wxWidgetAdapter::AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )

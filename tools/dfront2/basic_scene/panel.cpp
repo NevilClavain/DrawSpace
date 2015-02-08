@@ -347,8 +347,14 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	bSizer11->Add( bSizer13, 1, wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer291;
+	bSizer291 = new wxBoxSizer( wxHORIZONTAL );
+	
 	m_scenegraphs_treeCtrl = new wxTreeCtrl( m_scenePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
-	bSizer11->Add( m_scenegraphs_treeCtrl, 1, wxALL|wxEXPAND, 5 );
+	bSizer291->Add( m_scenegraphs_treeCtrl, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer11->Add( bSizer291, 1, wxEXPAND, 5 );
 	
 	
 	m_scenePanel->SetSizer( bSizer11 );

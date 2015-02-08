@@ -70,6 +70,7 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameravalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameraprops_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyscenenodegraphvalues_callback;
+    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfonodevalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxvalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxaddpassslot_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackvalue_callback;
@@ -98,6 +99,7 @@ protected:
     void on_applycameraprops( BasicSceneObjectPropertiesDialog* p_dialog );
 
     void on_applyscenenodegraphvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_applytransfonodevalues( BasicSceneObjectPropertiesDialog* p_dialog );
 
     void on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -172,6 +174,9 @@ public:
     void AdaptHeadMvtProps( const dsstring& p_mvtname, DrawSpace::Core::HeadMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     
     void AdaptScenegraphnodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+    void AdaptTransfonodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+
+
     void AdaptSpectatorMvtProps( const dsstring& p_mvtname, DrawSpace::Core::SpectatorMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptLongLatMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LongLatMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptRegProps( const dsstring& p_alias, BasicSceneMainFrame::RegisterEntry* p_reg, BasicSceneObjectPropertiesDialog* p_dialog );

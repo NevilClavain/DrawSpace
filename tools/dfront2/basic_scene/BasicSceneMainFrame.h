@@ -45,6 +45,21 @@
 #define DRAWSPACE_ICON_INDEX                12
 
 
+#define CAMERA_MASK                         1
+#define CHUNK_MASK                          2
+#define COLLIDER_MASK                       3
+#define INERTBODY_MASK                      4
+#define MOVEMENT_MASK                       5
+#define ORBIT_MASK                          6
+#define ORBITER_MASK                        7
+#define PLANET_MASK                         8
+#define ROCKET_MASK                         9
+#define SPACEBOX_MASK                       10
+#define TRANSFO_MASK                        11
+#define SCENEGRAPH_MASK                     12
+#define DRAWSPACE_MASK                      13
+
+
 #define CONTEXTMENU_NEWSCENENODEGRAPH       2000
 
 #define CONTEXTMENU_NEWSPACEBOX             2010
@@ -65,6 +80,7 @@
 #define CONTEXTMENU_NEWLONGLATMVT           2025
 #define CONTEXTMENU_NEWSPECTATORMVT         2026
 #define CONTEXTMENU_SEPARATOR               2080
+#define CONTEXTMENU_EDIT                    2081
 
 
 class BasicSceneMainFrame : public MainFrame
@@ -102,8 +118,9 @@ public:
 
     } TransformationMatrixValueLinkage;
 
-    typedef struct
+    class TransformationMatrixArg
     {
+    public:
         //DrawSpace::Utils::Vector                translation;
         TransformationMatrixValueLinkage        translation_vals_link[3];
 
@@ -116,7 +133,24 @@ public:
         //DrawSpace::Utils::Vector                scale;
         TransformationMatrixValueLinkage        scale_vals_link[3];
 
-    } TransformationMatrixArg;
+     public:
+        TransformationMatrixArg( void )
+        {
+            translation_vals_link[0].value = 0.0;
+            translation_vals_link[1].value = 0.0;
+            translation_vals_link[2].value = 0.0;
+
+            rotation_vals_link[0].value = 0.0;
+            rotation_vals_link[1].value = 0.0;
+            rotation_vals_link[2].value = 0.0;
+
+            scale_vals_link[0].value = 0.0;
+            scale_vals_link[1].value = 0.0;
+            scale_vals_link[2].value = 0.0;
+
+            angle_val_link.value = 0.0;
+        }
+    };
 
     typedef struct
     {
@@ -153,6 +187,22 @@ public:
         wxTreeItemId                        treeitemid;
 
     } SceneNodeGraphEntry;
+
+
+    typedef struct
+    {
+
+        dsstring                                                        name;
+        DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*    transformation;
+        wxTreeItemId                                                    treeitemid;
+
+        void*                                                           scenenodegraphtreeitemid;
+
+        std::vector<TransformationMatrixDescriptor>                     matrix_stack_descr;
+
+    } TransformationNodeEntry;
+
+
 
 
     typedef enum
@@ -241,6 +291,8 @@ protected:
     void compute_regs( void );
     void compute_movements( void );
 
+    void compute_transformnodes( void );
+
     bool set_var_alias( const dsstring& p_source, dsstring& p_dest );
 
     void build_popupmenu( int p_level, wxMenu& p_menu );
@@ -256,12 +308,22 @@ protected:
     DrawSpace::Scenegraph                                   m_scenegraph;
     std::map<dsstring, MetadataScenegraphEntry>             m_metada_scenegraph;
 
+
+    //////////////////////////////////////////////////////////////////////////////////
+
     std::map<void*, SceneNodeGraphEntry>                    m_scenenodegraphs;
 
+    std::map<void*, DrawSpace::Core::BaseSceneNode*>        m_tree_nodes;
+
+    std::map<void*, TransformationNodeEntry>                m_transformation_nodes;
+
+
+    
 
 
 
 
+    //////////////////////////////////////////////////////////////////////////////////
 
     std::vector<DrawSpace::Core::Configurable*>             m_ordered_configs;
     long                                                    m_scenegraphlistctrl_currentindex;
@@ -293,6 +355,8 @@ protected:
 
 
     std::map<int, std::vector<PopupMenuEntry>>              m_scenegraphs_masks;
+
+    wxTreeItemId                                            m_last_clicked_treeitem;
 
 
 

@@ -79,6 +79,7 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     //m_scenegraphs_masks[0].push_back( CONTEXTMENU_NEWSCENENODEGRAPH );
 
     PopupMenuEntry pme_separator = { CONTEXTMENU_SEPARATOR, "" };
+    PopupMenuEntry pme_edit = { CONTEXTMENU_EDIT, "Edit..." };
 
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
@@ -99,35 +100,58 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     PopupMenuEntry pme_newlonglatmvt = { CONTEXTMENU_NEWLONGLATMVT, "New longlat movement..." };
     PopupMenuEntry pme_newspectatormvt = { CONTEXTMENU_NEWSPECTATORMVT, "New spectator movement..." };
 
+
+    ///////////////////////////////////////////////////////////////////
+
+    m_scenegraphs_masks[DRAWSPACE_MASK].push_back( pme_newscenenodegraph );
+
+    ///////////////////////////////////////////////////////////////////
+
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newspacebox );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newchunk );
+
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_separator );
+
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newinertbody );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newrocket );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_neworbit );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newplanet );
+
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_separator );
+
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newtransfo );
     
-    m_scenegraphs_masks[0].push_back( pme_newscenenodegraph );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_separator );
 
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newspectatormvt );
 
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newspacebox );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newchunk );
+    ///////////////////////////////////////////////////////////////////
 
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_separator );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newspacebox );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_neworbit );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newplanet );
 
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newinertbody );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newcollider );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newrocket );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_neworbit );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newplanet );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
 
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_separator );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newtransfo );
 
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newtransfo );
-    
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_separator );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
 
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newlinearmvt );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newcircularmvt );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newfpsmvt );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newfreemvt );
-    m_scenegraphs_masks[CONTEXTMENU_NEWSCENENODEGRAPH].push_back( pme_newspectatormvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newheadmvt );
 
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
 
-
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edit );
 
 
 
@@ -1048,6 +1072,115 @@ void BasicSceneMainFrame::compute_scenegraph_transforms( void )
 
 }
 
+
+void BasicSceneMainFrame::compute_transformnodes( void )
+{
+    for( std::map<void*, TransformationNodeEntry>::iterator it = m_transformation_nodes.begin(); it != m_transformation_nodes.end(); ++it )
+    {
+        it->second.transformation->GetContent()->ClearAll();
+
+        for( size_t i = 0; i < it->second.matrix_stack_descr.size(); i++ )
+        {
+            Matrix mat;
+
+            switch( it->second.matrix_stack_descr[i].ope )
+            {
+                case TRANSFORMATIONMATRIX_IDENTITY:
+                    break;
+
+                case TRANSFORMATIONMATRIX_SCALE:
+                    {
+                        dsreal scale[3];
+
+                        for( long j = 0; j < 3; j++ )
+                        {
+                            if( "..." == it->second.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias )
+                            {
+                                scale[j] = it->second.matrix_stack_descr[i].arg.scale_vals_link[j].value;
+                            }
+                            else
+                            {
+                                dsstring var_alias = it->second.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias;
+                                // aller chercher curren_value de la variable referencee
+
+                                RegisterEntry reg_entry = m_registers[var_alias];
+                                scale[j] = reg_entry.current_value;
+                            }
+                        }
+
+                        mat.Scale( scale[0], scale[1], scale[2] );                       
+                        it->second.transformation->GetContent()->PushMatrix( mat );
+                    }
+                    break;
+
+                case TRANSFORMATIONMATRIX_TRANSLATION:
+                    {
+                        dsreal trans[3];
+
+                        for( long j = 0; j < 3; j++ )
+                        {
+                            if( "..." == it->second.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias )
+                            {
+                                trans[j] = it->second.matrix_stack_descr[i].arg.translation_vals_link[j].value;
+                            }
+                            else
+                            {
+                                dsstring var_alias = it->second.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias;
+                                // aller chercher curren_value de la variable referencee
+
+                                RegisterEntry reg_entry = m_registers[var_alias];
+                                trans[j] = reg_entry.current_value;
+                            }
+                        }
+
+                        mat.Translation( trans[0], trans[1], trans[2] );
+                        it->second.transformation->GetContent()->PushMatrix( mat );
+                    }
+                    break;
+
+                case TRANSFORMATIONMATRIX_ROTATION:
+                    {
+                        dsreal axis[3];
+                        dsreal angle;
+
+                        for( long j = 0; j < 3; j++ )
+                        {
+                            if( "..." == it->second.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias )
+                            {
+                                axis[j] = it->second.matrix_stack_descr[i].arg.rotation_vals_link[j].value;
+                            }
+                            else
+                            {
+                                dsstring var_alias = it->second.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias;
+                                // aller chercher curren_value de la variable referencee
+
+                                RegisterEntry reg_entry = m_registers[var_alias];
+                                axis[j] = reg_entry.current_value;
+                            }
+                        }
+
+                        if( "..." == it->second.matrix_stack_descr[i].arg.angle_val_link.var_alias )
+                        {
+                            angle = it->second.matrix_stack_descr[i].arg.angle_val_link.value;
+                        }
+                        else
+                        {
+                            dsstring var_alias = it->second.matrix_stack_descr[i].arg.angle_val_link.var_alias;
+                            // aller chercher curren_value de la variable referencee
+
+                            RegisterEntry reg_entry = m_registers[var_alias];
+                            angle = reg_entry.current_value;
+                        }
+
+                        mat.Rotation( Vector( axis[0], axis[1], axis[2], 1.0 ), Maths::DegToRad( angle ) );
+                        it->second.transformation->GetContent()->PushMatrix( mat );
+                    }
+                    break;
+            }
+        }
+    }
+}
+
 void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
 {
     int index = m_mousekeyboardoutput_comboBox->GetSelection();
@@ -1369,8 +1502,16 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
 
         compute_movements();
         compute_scenegraph_transforms();
+
+        compute_transformnodes();
                 
-        m_scenegraph.ComputeTransformations( m_timer );
+        //m_scenegraph.ComputeTransformations( m_timer );
+
+
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            it->second.scenenodegraph->ComputeTransformations( m_timer );
+        }
 
         for( size_t i = 0; i < m_ordered_configs.size(); i++ )
         {
@@ -1938,16 +2079,14 @@ void BasicSceneMainFrame::OnScenegraphListDeleteAllItems( wxListEvent& p_event )
 }
 
 void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
- { 	
- 	switch(p_evt.GetId()) 
+{   
+ 	switch( p_evt.GetId() ) 
     {
  		case CONTEXTMENU_NEWSCENENODEGRAPH:
-
             {
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Scenenodegraph creation" );
 
                 wxWidgetAdapter::GetInstance()->AdaptScenegraphnodeCreationProps( dialog );
-
 
                 dialog->SetData( "scenenodegraphs_map", &m_scenenodegraphs );
                 dialog->SetData( "scenegraphs_treeCtrl", m_scenegraphs_treeCtrl );
@@ -1957,6 +2096,23 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 break;
             }
  			break;
+
+        case CONTEXTMENU_NEWTRANSFO:
+            {
+                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Transformation node creation" );
+
+                wxWidgetAdapter::GetInstance()->AdaptTransfonodeCreationProps( dialog );
+
+                dialog->SetData( "scenenodegraphs_map", &m_scenenodegraphs );
+                dialog->SetData( "last_clicked_treeitem", &m_last_clicked_treeitem );
+                dialog->SetData( "scenegraphs_treeCtrl", m_scenegraphs_treeCtrl );
+                dialog->SetData( "transformation_nodes_map", &m_transformation_nodes );
+                dialog->SetData( "tree_nodes_map", &m_tree_nodes );
+
+                dialog->EnableApplyButton();
+                dialog->Show();
+            }
+            break;
  	}
  }
 
@@ -1965,9 +2121,12 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
  	wxMenu mnu;
  	
     wxTreeItemId item = p_event.GetItem();
+
+    m_last_clicked_treeitem = item;
+
     if( item.GetID() == m_scenegraphs_root_item.GetID() )
     {
-        build_popupmenu( 0, mnu );
+        build_popupmenu( DRAWSPACE_MASK, mnu );
     }
     else
     {
@@ -1975,11 +2134,15 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
         if( m_scenenodegraphs.count( item.GetID() ) > 0 )
         {
             // clicked item belong to a registered scenenodegraph...
-            build_popupmenu( CONTEXTMENU_NEWSCENENODEGRAPH, mnu );
+            build_popupmenu( SCENEGRAPH_MASK, mnu );
+        }
+        else if( m_transformation_nodes.count( item.GetID() ) > 0 )
+        {
+            build_popupmenu( TRANSFO_MASK, mnu );
         }
     }
 
- 	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this);
+ 	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this );
  	PopupMenu(&mnu);
 }
 
