@@ -2117,7 +2117,7 @@ void wxWidgetAdapter::on_applytransfonodevalues( BasicSceneObjectPropertiesDialo
             break;
         }
 
-        wxTreeItemId current = scenegraphs_treeCtrl->GetItemParent( current );
+        current = scenegraphs_treeCtrl->GetItemParent( current );
     }
 
     BasicSceneMainFrame::SceneNodeGraphEntry entry;
