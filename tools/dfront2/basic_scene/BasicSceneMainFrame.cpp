@@ -2038,6 +2038,7 @@ void BasicSceneMainFrame::OnTransfTypeButtonClicked( wxCommandEvent& p_event )
 
 void BasicSceneMainFrame::OnTransfoEditButtonClicked( wxCommandEvent& p_event )
 {
+    /*
     long sel_index = m_scenegraphlistctrl_currentindex;
 
     TransformNode* transform_node = (TransformNode*)m_scenegraph_listCtrl->GetItemData( sel_index );
@@ -2062,6 +2063,7 @@ void BasicSceneMainFrame::OnTransfoEditButtonClicked( wxCommandEvent& p_event )
         wxWidgetAdapter::GetInstance()->AdaptMatrixStackEdition( &m_registers, dialog );
         dialog->Show();
     }
+    */
 }
 
 void BasicSceneMainFrame::OnScenegraphListItemDeselected( wxListEvent& p_event )
@@ -2111,6 +2113,27 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 dialog->EnableApplyButton();
                 dialog->Show();
+            }
+            break;
+
+        case CONTEXTMENU_EDIT:
+            {
+                void* id = m_last_clicked_treeitem.GetID();
+
+                if( m_transformation_nodes.count( id ) > 0 )
+                {
+                    TransformationNodeEntry* tne = &( m_transformation_nodes[id] );
+
+                    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Transformation node edition" );
+
+                    dialog->SetData( "registers", &m_registers );
+                    dialog->SetData( "transfo_node_entry", tne );
+                    dialog->EnableApplyButton();
+                    dialog->EnableSpecificButton0( "Add matrix" );
+                    dialog->EnableSpecificButton1( "Clear all" );
+                    wxWidgetAdapter::GetInstance()->AdaptMatrixStackEdition( &m_registers, tne, dialog );
+                    dialog->Show();
+                }
             }
             break;
  	}

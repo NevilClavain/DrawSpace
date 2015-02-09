@@ -139,16 +139,26 @@ public:
             translation_vals_link[0].value = 0.0;
             translation_vals_link[1].value = 0.0;
             translation_vals_link[2].value = 0.0;
+            translation_vals_link[0].var_alias = "...";
+            translation_vals_link[1].var_alias = "...";
+            translation_vals_link[2].var_alias = "...";
 
             rotation_vals_link[0].value = 0.0;
             rotation_vals_link[1].value = 0.0;
             rotation_vals_link[2].value = 0.0;
+            rotation_vals_link[0].var_alias = "...";
+            rotation_vals_link[1].var_alias = "...";
+            rotation_vals_link[2].var_alias = "...";
 
             scale_vals_link[0].value = 0.0;
             scale_vals_link[1].value = 0.0;
             scale_vals_link[2].value = 0.0;
+            scale_vals_link[0].var_alias = "...";
+            scale_vals_link[1].var_alias = "...";
+            scale_vals_link[2].var_alias = "...";
 
             angle_val_link.value = 0.0;
+            angle_val_link.var_alias = "...";
         }
     };
 
