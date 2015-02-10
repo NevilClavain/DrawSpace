@@ -59,6 +59,11 @@ public:
         p_scenename = m_scenename;
     }
 
+    virtual void SetSceneName( const dsstring& p_scenename )
+    {
+        m_scenename = p_scenename;
+    }
+
     virtual void GetFinalTransform( DrawSpace::Utils::Matrix& p_mat )
     {
         p_mat = m_finaltransform;

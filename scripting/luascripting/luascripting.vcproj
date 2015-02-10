@@ -203,6 +203,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lua_transformnodebuilder.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_transformnodebuilder.h"
+				>
+			</File>
+			<File
 				RelativePath=".\luacontext.cpp"
 				>
 			</File>

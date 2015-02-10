@@ -20,50 +20,40 @@
 *
 */
 
-#include "luascripting.h"
-#include "lua_drawspace.h"
-#include "lua_spaceboxbuilder.h"
-#include "lua_transformnodebuilder.h"
-#include "lua_movementbuilder.h"
+#ifndef _TRANSFORMNODEBUILDER_H_
+#define _TRANSFORMNODEBUILDER_H_
 
+#include "drawspace_commons.h"
+#include "callback.h"
+#include "mediator.h"
+#include "transformation.h"
+#include "luna.h"
 
-LuaScripting::LuaScripting( void )
+class LuaTransformationNodeBuilder
 {
-}
+public:
 
-bool LuaScripting::Initialize( void )
-{
-    LuaContext::GetInstance()->Startup();
-    Luna<LuaDrawSpace>::Register( LuaContext::GetInstance()->GetLuaState() );
-    Luna<LuaSpaceboxBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
-    Luna<LuaTransformationNodeBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
-    Luna<LuaMovementBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
+    DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
 
-    return true;
-}
+protected:
 
-void LuaScripting::Shutdown( void )
-{
-    LuaContext::GetInstance()->Stop();
-}
+    DrawSpace::Core::Transformation                             m_transformation;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation> m_transformation_node;
 
-void LuaScripting::ExecChunk( const char* p_cmd )
-{
-    LuaContext::GetInstance()->Exec( p_cmd );
-}
+public:
 
-void LuaScripting::ExecFile( const char* p_path )
-{
-    LuaContext::GetInstance()->Execfile( p_path );
-}
+    LuaTransformationNodeBuilder( lua_State* p_L );
+    ~LuaTransformationNodeBuilder( void );
+     
+    int Lua_SetSceneName( lua_State* p_L );
+    int Lua_LinkTo( lua_State* p_L );
 
-void LuaScripting::RegisterScriptErrorHandler( ErrorHandler* p_error_handler )
-{
-    LuaContext::GetInstance()->RegisterErrorHandler( p_error_handler );
-}
+    int Lua_ClearMatrixStack( lua_State* p_L );
+    int Lua_AddMatrix( lua_State* p_L );
 
-void LuaScripting::RegisterScriptCallsHandler( ScriptCallsHandler* p_handler )
-{
-    LuaContext::GetInstance()->RegisterScriptCallsHandler( p_handler );
-}
+    static const char className[];
+    static const Luna<LuaTransformationNodeBuilder>::RegType Register[];
 
+};
+
+#endif

@@ -2164,7 +2164,7 @@ void wxWidgetAdapter::on_applytransfonodevalues( BasicSceneObjectPropertiesDialo
     t_entry.name = alias;
     t_entry.transformation = transfo_node;
     t_entry.treeitemid = treeitemid;
-    t_entry.scenenodegraphtreeitemid = id;
+
 
     BasicSceneMainFrame::TransformationMatrixDescriptor transfdescr;
     transfdescr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY;
