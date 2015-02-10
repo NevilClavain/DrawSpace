@@ -24,22 +24,32 @@
 #include "luacontext.h"
 #include "exceptions.h"
 
+#include "lua_matrix.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
 const char LuaTransformationNodeBuilder::className[] = "TransformationNodeBuilder";
-const Luna<LuaTransformationNodeBuilder>::RegType LuaTransformationNodeBuilder::Register[] =
+const Luna2<LuaTransformationNodeBuilder>::RegType LuaTransformationNodeBuilder::methods[] =
 {
-  { "SetSceneName", &LuaTransformationNodeBuilder::Lua_SetSceneName },
   { "LinkTo", &LuaTransformationNodeBuilder::Lua_LinkTo },
   { "ClearMatrixStack", &LuaTransformationNodeBuilder::Lua_ClearMatrixStack },
   { "AddMatrix", &LuaTransformationNodeBuilder::Lua_AddMatrix },
-  { 0 }
+  { 0, 0 }
 };
 
 LuaTransformationNodeBuilder::LuaTransformationNodeBuilder( lua_State* p_L )
 : m_transformation_node( "transformation_node" )
-{   
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "TransformationNodeBuilder ctor : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* scene_name = luaL_checkstring( p_L, 1 );
+    m_transformation_node.SetSceneName( scene_name );
+    
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
     m_transformation_node.SetContent( &m_transformation );
 }
@@ -48,31 +58,16 @@ LuaTransformationNodeBuilder::~LuaTransformationNodeBuilder( void )
 {
 }
 
-int LuaTransformationNodeBuilder::Lua_SetSceneName( lua_State* p_L )
+int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
 	{
-		lua_pushstring( p_L, "SetSceneName : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* scene_name = luaL_checkstring( p_L, 2 );
-
-    m_transformation_node.SetSceneName( scene_name );
-
-    return 0;
-}
-
-int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 3 )
-	{
 		lua_pushstring( p_L, "LinkTo : bad number of args" );
 		lua_error( p_L );		
 	}
-    const char* scenegraph_name = luaL_checkstring( p_L, 2 );
-    const char* parent_name = luaL_checkstring( p_L, 3 );
+    const char* scenegraph_name = luaL_checkstring( p_L, 1 );
+    const char* parent_name = luaL_checkstring( p_L, 2 );
 
     dsstring scene_name;
     m_transformation_node.GetSceneName( scene_name );
@@ -99,6 +94,8 @@ int LuaTransformationNodeBuilder::Lua_ClearMatrixStack( lua_State* p_L )
 
 int LuaTransformationNodeBuilder::Lua_AddMatrix( lua_State* p_L )
 {
+    LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 1 );
+
     return 0;
 }
 

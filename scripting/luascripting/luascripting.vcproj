@@ -187,19 +187,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\lua_movementbuilder.cpp"
+				RelativePath=".\lua_matrix.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\lua_movementbuilder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\lua_spaceboxbuilder.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\lua_spaceboxbuilder.h"
+				RelativePath=".\lua_matrix.h"
 				>
 			</File>
 			<File

@@ -45,14 +45,13 @@ public:
     LuaTransformationNodeBuilder( lua_State* p_L );
     ~LuaTransformationNodeBuilder( void );
      
-    int Lua_SetSceneName( lua_State* p_L );
     int Lua_LinkTo( lua_State* p_L );
 
     int Lua_ClearMatrixStack( lua_State* p_L );
     int Lua_AddMatrix( lua_State* p_L );
 
     static const char className[];
-    static const Luna<LuaTransformationNodeBuilder>::RegType Register[];
+    static const Luna2<LuaTransformationNodeBuilder>::RegType methods[];
 
 };
 

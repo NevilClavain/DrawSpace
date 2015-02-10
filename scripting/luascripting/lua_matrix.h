@@ -20,43 +20,29 @@
 *
 */
 
-#ifndef _LUA_SPACEBOXBUILDER_H_
-#define _LUA_SPACEBOXBUILDER_H_
+#ifndef _LUAMATRIX_H_
+#define _LUAMATRIX_H_
 
 #include "drawspace_commons.h"
 #include "callback.h"
-#include "mediator.h"
-#include "spacebox.h"
+#include "matrix.h"
 #include "luna.h"
 
-class LuaSpaceboxBuilder
+class LuaMatrix
 {
-public:
-
-    DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
-
 protected:
 
-    DrawSpace::Spacebox::Descriptor m_descriptor;
-
-
+    DrawSpace::Utils::Matrix m_mat;
 
 public:
-    LuaSpaceboxBuilder( lua_State* p_L );
-    ~LuaSpaceboxBuilder( void );
-     
-    int Lua_SetSceneName( lua_State* p_L );
-    int Lua_RegisterPassSlot( lua_State* p_L );
-    int Lua_SetPassSlotFxName( lua_State* p_L );
-    int Lua_SetPassSlotRenderingOrder( lua_State* p_L );
-    int Lua_SetPassSlotTextureName( lua_State* p_L );
-    int Lua_BuildIt( lua_State* p_L );
-    int Lua_ClearMatrixStack( lua_State* p_L );
-    int Lua_AddMatrix( lua_State* p_L );
 
-    
+    LuaMatrix( lua_State* p_L );
+    ~LuaMatrix( void );
+
     static const char className[];
-    static const Luna2<LuaSpaceboxBuilder>::RegType methods[];
+    static const Luna2<LuaMatrix>::RegType methods[];
+
+
 };
 
 #endif

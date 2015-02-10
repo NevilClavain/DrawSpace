@@ -28,7 +28,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
 const char LuaSpaceboxBuilder::className[] = "SpaceBoxBuilder";
-const Luna<LuaSpaceboxBuilder>::RegType LuaSpaceboxBuilder::Register[] =
+const Luna2<LuaSpaceboxBuilder>::RegType LuaSpaceboxBuilder::methods[] =
 {
   { "SetSceneName", &LuaSpaceboxBuilder::Lua_SetSceneName },
   { "RegisterPassSlot", &LuaSpaceboxBuilder::Lua_RegisterPassSlot },

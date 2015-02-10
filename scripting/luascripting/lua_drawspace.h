@@ -59,7 +59,7 @@ public:
 
 
     static const char className[];
-    static const Luna<LuaDrawSpace>::RegType Register[];
+    static const Luna2<LuaDrawSpace>::RegType methods[];
 };
 
 #endif

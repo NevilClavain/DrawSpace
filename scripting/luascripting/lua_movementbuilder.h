@@ -82,7 +82,7 @@ public:
 
     
     static const char className[];
-    static const Luna<LuaMovementBuilder>::RegType Register[];
+    static const Luna2<LuaMovementBuilder>::RegType methods[];
 };
 
 #endif

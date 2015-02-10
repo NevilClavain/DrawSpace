@@ -29,7 +29,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 const char LuaMovementBuilder::className[] = "MovementBuilder";
-const Luna<LuaMovementBuilder>::RegType LuaMovementBuilder::Register[] =
+const Luna2<LuaMovementBuilder>::RegType LuaMovementBuilder::methods[] =
 {
   { "SetName", &LuaMovementBuilder::Lua_SetName },
   { "SetType", &LuaMovementBuilder::Lua_SetType },
