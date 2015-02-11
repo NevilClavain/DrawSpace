@@ -86,6 +86,11 @@ void Matrix::Rotation( const Vector& p_axis, dsreal p_angle )
     m_matrix[3][1] = 0;
     m_matrix[3][2] = 0;
     m_matrix[3][3] = 1;
+
+    m_configinfos.type = CONFIG_ROTATION;
+
+    m_configinfos.values = p_axis;
+    m_configinfos.values[3] = p_angle;
 }
 
 void Matrix::Transform( Vector* p_vec_in, Vector* p_vec_out )
@@ -119,7 +124,9 @@ void Matrix::MatrixMult( Matrix* p_mA, Matrix* p_mB, Matrix* p_mRes )
                                      p_mA->m_matrix[i][2] * p_mB->m_matrix[2][j] +
                                      p_mA->m_matrix[i][3] * p_mB->m_matrix[3][j];
         }
-    }	
+    }
+
+    p_mRes->m_configinfos.type = CONFIG_UNDETERMINED;
 }
 
 
@@ -136,7 +143,7 @@ Matrix operator* ( Matrix p_mA, Matrix p_mB )
                           p_mA( i, 2 ) * p_mB( 2, j ) +
                           p_mA( i, 3 ) * p_mB( 3, j );
         }
-    }	
+    }
     return res;
 }
 

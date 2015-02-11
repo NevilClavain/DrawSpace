@@ -32,15 +32,40 @@ namespace Utils
 {
 class Matrix
 {
+public:
+
+    typedef enum
+    {
+        CONFIG_UNDETERMINED,
+        CONFIG_ZERO,
+        CONFIG_IDENTITY,
+        CONFIG_TRANSLATION,
+        CONFIG_SCALING,
+        CONFIG_ROTATION
+
+    } ConfigurationType;
+
+    typedef struct
+    {
+        ConfigurationType   type;
+        Vector              values;
+
+    } ConfigurationInfo;
+
 protected:
 
-    dsreal m_matrix[4][4];
-
+    ConfigurationInfo   m_configinfos;
+    dsreal              m_matrix[4][4];
 
 public:
 
     Matrix( void );
     ~Matrix( void );
+
+    void GetConfigInfos( ConfigurationInfo& p_infos )
+    {
+        p_infos = m_configinfos;
+    }
 
     void Zero( void )
     {
@@ -63,6 +88,8 @@ public:
         m_matrix[3][1] = 0.0;
         m_matrix[3][2] = 0.0;
         m_matrix[3][3] = 0.0;
+
+        m_configinfos.type = CONFIG_ZERO;
     }
 
     dsreal operator()( int p_row, int p_col ) const
@@ -72,6 +99,7 @@ public:
 
     dsreal& operator()( int p_row, int p_col )
     {
+        m_configinfos.type = CONFIG_UNDETERMINED;
         return m_matrix[p_row][p_col];
     };
 
@@ -82,6 +110,8 @@ public:
         m_matrix[1][1] = 1.0;
         m_matrix[2][2] = 1.0;
         m_matrix[3][3] = 1.0;
+
+        m_configinfos.type = CONFIG_IDENTITY;
     }
 
     void Translation( dsreal p_x, dsreal p_y, dsreal p_z )
@@ -89,7 +119,14 @@ public:
         Identity();
         m_matrix[3][0] = p_x;
         m_matrix[3][1] = p_y;
-        m_matrix[3][2] = p_z;	
+        m_matrix[3][2] = p_z;
+
+        m_configinfos.type = CONFIG_TRANSLATION;
+        m_configinfos.values[0] = p_x;
+        m_configinfos.values[1] = p_y;
+        m_configinfos.values[2] = p_z;
+        m_configinfos.values[3] = 1.0;
+
     }
 
     void Translation( const Vector& p_pos )
@@ -98,6 +135,13 @@ public:
         m_matrix[3][0] = p_pos[0];
         m_matrix[3][1] = p_pos[1];
         m_matrix[3][2] = p_pos[2];
+
+        m_configinfos.type = CONFIG_TRANSLATION;
+        m_configinfos.values[0] = p_pos[0];
+        m_configinfos.values[1] = p_pos[1];
+        m_configinfos.values[2] = p_pos[2];
+        m_configinfos.values[3] = 1.0;
+
     }
 
     void Transpose( void )
@@ -123,6 +167,8 @@ public:
         m_matrix[3][0] = msave[0][3];
         m_matrix[3][1] = msave[1][3];
         m_matrix[3][2] = msave[2][3];
+
+        m_configinfos.type = CONFIG_UNDETERMINED;
     }
 
     void Perspective( dsreal p_w, dsreal p_h, dsreal p_zn, dsreal p_zf )
@@ -133,6 +179,8 @@ public:
         m_matrix[2][2] = p_zf / ( p_zf - p_zn );
         m_matrix[3][2] = - p_zn * m_matrix[2][2];
         m_matrix[2][3] = 1.0f;
+
+        m_configinfos.type = CONFIG_UNDETERMINED;
     }
 
     void Scale( dsreal p_sx, dsreal p_sy, dsreal p_sz )
@@ -141,7 +189,14 @@ public:
         m_matrix[0][0] = p_sx;
         m_matrix[1][1] = p_sy;
         m_matrix[2][2] = p_sz;
-        m_matrix[3][3] = 1.0;				
+        m_matrix[3][3] = 1.0;
+
+        m_configinfos.type = CONFIG_SCALING;
+        m_configinfos.values[0] = p_sx;
+        m_configinfos.values[1] = p_sy;
+        m_configinfos.values[2] = p_sz;
+        m_configinfos.values[3] = 1.0;
+
     }
 
     void Scale( const Vector& p_pos )
@@ -150,7 +205,14 @@ public:
         m_matrix[0][0] = p_pos[0];
         m_matrix[1][1] = p_pos[1];
         m_matrix[2][2] = p_pos[2];
-        m_matrix[3][3] = 1.0;				
+        m_matrix[3][3] = 1.0;
+
+        m_configinfos.type = CONFIG_SCALING;
+        m_configinfos.values[0] = p_pos[0];
+        m_configinfos.values[1] = p_pos[1];
+        m_configinfos.values[2] = p_pos[2];
+        m_configinfos.values[3] = 1.0;
+
     }
 
 
@@ -159,6 +221,8 @@ public:
         m_matrix[3][0] = 0.0;
         m_matrix[3][1] = 0.0;
         m_matrix[3][2] = 0.0;
+
+        m_configinfos.type = CONFIG_UNDETERMINED;
     }
 
     void Rotation( const Vector& p_axis, dsreal p_angle );
