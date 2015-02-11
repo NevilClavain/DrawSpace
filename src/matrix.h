@@ -161,7 +161,7 @@ public:
         m_matrix[3][2] = 0.0;
     }
 
-    void Rotation( Vector p_axis, dsreal p_angle );
+    void Rotation( const Vector& p_axis, dsreal p_angle );
     void Inverse( void );
     void Transform( Vector* p_vec_in, Vector* p_vec_out );
     dsreal* GetArray( void ) { return (dsreal*)m_matrix; };

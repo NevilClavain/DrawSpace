@@ -47,7 +47,7 @@ void Matrix::Inverse( void )
     memcpy( &m_matrix, &res.m_matrix, 16 * sizeof( dsreal ) );
 }
 
-void Matrix::Rotation( Vector p_axis, dsreal p_angle )
+void Matrix::Rotation( const Vector& p_axis, dsreal p_angle )
 {
     dsreal c = std::cos( p_angle );
     dsreal s = std::sin( p_angle );
