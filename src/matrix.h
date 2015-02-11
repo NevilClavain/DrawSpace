@@ -144,6 +144,16 @@ public:
         m_matrix[3][3] = 1.0;				
     }
 
+    void Scale( const Vector& p_pos )
+    {
+        Zero();
+        m_matrix[0][0] = p_pos[0];
+        m_matrix[1][1] = p_pos[1];
+        m_matrix[2][2] = p_pos[2];
+        m_matrix[3][3] = 1.0;				
+    }
+
+
     void ClearTranslation( void )
     {
         m_matrix[3][0] = 0.0;
