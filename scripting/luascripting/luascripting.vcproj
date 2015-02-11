@@ -203,6 +203,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lua_vector.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_vector.h"
+				>
+			</File>
+			<File
 				RelativePath=".\luacontext.cpp"
 				>
 			</File>

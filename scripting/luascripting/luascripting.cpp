@@ -26,6 +26,7 @@
 #include "lua_transformnodebuilder.h"
 //#include "lua_movementbuilder.h"
 #include "lua_matrix.h"
+#include "lua_vector.h"
 
 
 LuaScripting::LuaScripting( void )
@@ -40,6 +41,7 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaTransformationNodeBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
     //Luna2<LuaMovementBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaMatrix>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaVector>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     return true;
 }

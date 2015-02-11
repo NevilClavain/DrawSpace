@@ -20,26 +20,32 @@
 *
 */
 
-#ifndef _LUA_MATRIX_H_
-#define _LUA_MATRIX_H_
+#ifndef _LUA_VECTOR_H_
+#define _LUA_VECTOR_H_
 
-#include "matrix.h"
+#include "vector.h"
 #include "luna.h"
 
-class LuaMatrix
+class LuaVector
 {
 protected:
 
-    DrawSpace::Utils::Matrix m_mat;
+    DrawSpace::Utils::Vector m_vector;
 
 public:
 
-    LuaMatrix( lua_State* p_L );
-    ~LuaMatrix( void );
+    LuaVector( lua_State* p_L );
+    ~LuaVector( void );
+
+    int Lua_Set( lua_State* p_L );
+    int Lua_Get( lua_State* p_L );
+    int Lua_Lenght( lua_State* p_L );
+    int Lua_LenghtPow2( lua_State* p_L );
+    int Lua_Normalize( lua_State* p_L );
+    int Lua_Scale( lua_State* p_L );
 
     static const char className[];
-    static const Luna2<LuaMatrix>::RegType methods[];
-
+    static const Luna2<LuaVector>::RegType methods[];
 
 };
 
