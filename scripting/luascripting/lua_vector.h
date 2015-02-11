@@ -28,7 +28,7 @@
 
 class LuaVector
 {
-protected:
+public:
 
     DrawSpace::Utils::Vector m_vector;
 

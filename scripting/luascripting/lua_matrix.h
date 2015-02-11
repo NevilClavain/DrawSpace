@@ -28,7 +28,7 @@
 
 class LuaMatrix
 {
-protected:
+public:
 
     DrawSpace::Utils::Matrix m_mat;
 
@@ -36,6 +36,22 @@ public:
 
     LuaMatrix( lua_State* p_L );
     ~LuaMatrix( void );
+
+    int Lua_Set( lua_State* p_L );
+    int Lua_Get( lua_State* p_L );
+
+    int Lua_Zero( lua_State* p_L );
+    int Lua_Identity( lua_State* p_L );
+
+    int Lua_Translation( lua_State* p_L );
+    int Lua_Transpose( lua_State* p_L );
+    int Lua_Perspective( lua_State* p_L );
+
+    int Lua_Scale( lua_State* p_L );
+    int Lua_ClearTranslation( lua_State* p_L );
+    int Lua_Rotation( lua_State* p_L );
+    int Lua_Inverse( lua_State* p_L );
+    int Lua_Transform( lua_State* p_L );
 
     static const char className[];
     static const Luna2<LuaMatrix>::RegType methods[];

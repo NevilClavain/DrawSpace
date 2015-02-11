@@ -78,6 +78,7 @@ int LuaVector::Lua_Get( lua_State* p_L )
     }
 
     int index = luaL_checkinteger( p_L, 1 );
+    if( index > 3 ) index = 3;
 
     lua_pushnumber( p_L, m_vector[index] );
     return 1;
