@@ -43,10 +43,11 @@ public:
 	Transformation( void );
 	~Transformation( void );
 
-	void    PushMatrix( DrawSpace::Utils::Matrix p_matrix );
+	void    PushMatrix( const DrawSpace::Utils::Matrix& p_matrix );
 	void    BuildResult( void );
 	void	GetResult( DrawSpace::Utils::Matrix* p_res );
 	void	ClearAll( void );
+    void    GetMatrixChain( std::vector<DrawSpace::Utils::Matrix>& p_list );
 
     void    Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void    Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};

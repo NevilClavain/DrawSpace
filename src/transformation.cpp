@@ -35,7 +35,7 @@ Transformation::~Transformation( void )
 {
 }
 
-void Transformation::PushMatrix( Matrix p_matrix )
+void Transformation::PushMatrix( const Matrix& p_matrix )
 {
     m_matrix_chain.push_back( p_matrix );
 }
@@ -71,6 +71,11 @@ void Transformation::ClearAll( void )
 {
     m_result.Identity();
     m_matrix_chain.clear();
+}
+
+void Transformation::GetMatrixChain( std::vector<DrawSpace::Utils::Matrix>& p_list )
+{
+    p_list = m_matrix_chain;
 }
 
 void Transformation::Update( DrawSpace::Utils::TimeManager& p_timemanager )
