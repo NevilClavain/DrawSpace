@@ -49,6 +49,7 @@ public:
     {
         ConfigurationType   type;
         Vector              values;
+        dsstring            metadatas[4];
 
     } ConfigurationInfo;
 
@@ -65,6 +66,11 @@ public:
     void GetConfigInfos( ConfigurationInfo& p_infos )
     {
         p_infos = m_configinfos;
+    }
+
+    void SetMetaData( long p_index, const dsstring& p_metadata )
+    {
+        m_configinfos.metadatas[p_index] = p_metadata;
     }
 
     void Zero( void )
