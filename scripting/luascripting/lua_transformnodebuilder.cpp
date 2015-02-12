@@ -96,6 +96,7 @@ int LuaTransformationNodeBuilder::Lua_AddMatrix( lua_State* p_L )
 {
     LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 1 );
 
+    m_transformation.PushMatrix( mat->m_mat );
     return 0;
 }
 
