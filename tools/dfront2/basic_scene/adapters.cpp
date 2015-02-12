@@ -2165,11 +2165,14 @@ void wxWidgetAdapter::on_applytransfonodevalues( BasicSceneObjectPropertiesDialo
     t_entry.transformation = transfo_node;
     t_entry.treeitemid = treeitemid;
 
+    /*
 
     BasicSceneMainFrame::TransformationMatrixDescriptor transfdescr;
     transfdescr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY;
 
     t_entry.matrix_stack_descr.push_back( transfdescr );
+    */
+
 
     (*transformation_nodes_map)[t_entry.treeitemid.GetID()] = t_entry;
 
@@ -3011,6 +3014,47 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMain
     }
 
     size_t i;
+
+    BasicSceneMainFrame::TransformationNodeEntry* tne = (BasicSceneMainFrame::TransformationNodeEntry*)p_dialog->GetData( "transfo_node_entry" );
+
+    std::vector<Matrix> mat_chain;
+    tne->transformation->GetContent()->GetMatrixChain( mat_chain );
+
+    for( i = 0; i < mat_chain.size(); i++ )
+    {
+        Matrix::ConfigurationInfo mci;
+        mat_chain[i].GetConfigInfos( mci );
+        
+
+        char matrix_index[32];
+        wxArrayString matrix_type_labels;
+
+        sprintf( matrix_index, "matrix_%d", i );
+        wxPGProperty* mat_prop = propertygrid->Append( new wxStringProperty( matrix_index, wxPG_LABEL, "<composed>" ) );
+
+
+        matrix_type_labels.Add( "identity" );
+        matrix_type_labels.Add( "scaling" );
+        matrix_type_labels.Add( "translation" );
+        matrix_type_labels.Add( "rotation" );
+        matrix_type_labels.Add( "zero" );
+        matrix_type_labels.Add( "undetermined" );
+
+        wxArrayInt arrIds;
+        arrIds.Add( Matrix::CONFIG_IDENTITY );
+        arrIds.Add( Matrix::CONFIG_SCALING );
+        arrIds.Add( Matrix::CONFIG_TRANSLATION );
+        arrIds.Add( Matrix::CONFIG_ROTATION );
+        arrIds.Add( Matrix::CONFIG_ZERO );
+        arrIds.Add( Matrix::CONFIG_UNDETERMINED );
+
+        wxEnumProperty* matrix_type_combo = new wxEnumProperty( "matrix_type", wxPG_LABEL, matrix_type_labels, arrIds, mci.type ); 
+        propertygrid->AppendIn( mat_prop, matrix_type_combo );
+
+        
+    }
+
+    /*
     for( i = 0; i < p_transfonode->matrix_stack_descr.size(); i++ )
     {
         char matrix_index[32];
@@ -3181,204 +3225,13 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMain
     propertygrid->ResetColumnSizes();
     propertygrid->CollapseAll();
 
-    /*
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    BasicSceneMainFrame::MetadataScenegraphEntry* entry = (BasicSceneMainFrame::MetadataScenegraphEntry*)p_dialog->GetData( "metadata_scenegraph_entry" );
-
-    /////////////////// recup tout les alias de variables
-
-    wxArrayInt regs_arrIds;
-
-    wxArrayString regs_labels;
-    regs_labels.Add( "..." );
-    regs_arrIds.Add( -1 );
-
-    for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = p_registers->begin(); it != p_registers->end(); ++it )
-    {
-        regs_labels.Add( it->first );
-        regs_arrIds.Add( it->second.id );
-    }
-
-    ////////////////////////////////////////////
-
-    size_t i;
-    for( i = 0; i < entry->matrix_stack_descr.size(); i++ )
-    {
-        char matrix_index[32];
-        wxArrayString matrix_type_labels;
-
-        int reg_selection;
-
-        sprintf( matrix_index, "matrix_%d", i );
-        wxPGProperty* mat_prop = propertygrid->Append( new wxStringProperty( matrix_index, wxPG_LABEL, "<composed>" ) );
-
-        matrix_type_labels.Add( "identity" );
-        matrix_type_labels.Add( "scaling" );
-        matrix_type_labels.Add( "translation" );
-        matrix_type_labels.Add( "rotation" );
-        
-
-        wxArrayInt arrIds;
-        arrIds.Add( BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY );
-        arrIds.Add( BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE );
-        arrIds.Add( BasicSceneMainFrame::TRANSFORMATIONMATRIX_TRANSLATION );
-        arrIds.Add( BasicSceneMainFrame::TRANSFORMATIONMATRIX_ROTATION );
-
-
-        wxEnumProperty* matrix_type_combo = new wxEnumProperty( "matrix_type", wxPG_LABEL, matrix_type_labels, arrIds, entry->matrix_stack_descr[i].ope ); 
-        propertygrid->AppendIn( mat_prop, matrix_type_combo );
-        
-        wxPGProperty* mat_prop_translation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "translation", wxPG_LABEL, "<composed>" ) );
-
-
-        wxPGProperty* mat_prop_translation_x = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_translation_x, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation_vals_link[0].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.translation_vals_link[0].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.translation_vals_link[0].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_translation_x, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-        wxPGProperty* mat_prop_translation_y = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_translation_y, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation_vals_link[1].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.translation_vals_link[1].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.translation_vals_link[1].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_translation_y, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-
-
-        wxPGProperty* mat_prop_translation_z = propertygrid->AppendIn( mat_prop_translation, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_translation_z, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.translation_vals_link[2].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.translation_vals_link[2].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.translation_vals_link[2].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_translation_z, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-
-
-
-        wxPGProperty* mat_prop_rotation = propertygrid->AppendIn( mat_prop, new wxStringProperty( "rotation", wxPG_LABEL, "<composed>" ) );
-        wxPGProperty* mat_prop_rotation_axis = propertygrid->AppendIn( mat_prop_rotation, new wxStringProperty( "axis", wxPG_LABEL, "<composed>" ) );
-
-        wxPGProperty* mat_prop_rotation_x = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_rotation_x, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation_vals_link[0].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.rotation_vals_link[0].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.rotation_vals_link[0].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_rotation_x, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-        wxPGProperty* mat_prop_rotation_y = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_rotation_y, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation_vals_link[1].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.rotation_vals_link[1].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.rotation_vals_link[1].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_rotation_y, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-        wxPGProperty* mat_prop_rotation_z = propertygrid->AppendIn( mat_prop_rotation_axis, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_rotation_z, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.rotation_vals_link[2].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.rotation_vals_link[2].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.rotation_vals_link[2].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_rotation_z, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-
-        wxPGProperty* mat_prop_rotation_angle = propertygrid->AppendIn( mat_prop_rotation, new wxStringProperty( "angle", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_rotation_angle, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.angle_val_link.value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.angle_val_link.var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.angle_val_link.var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_rotation_angle, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-        
-        wxPGProperty* mat_prop_scale = propertygrid->AppendIn( mat_prop, new wxStringProperty( "scaling", wxPG_LABEL, "<composed>" ) );
-
-        wxPGProperty* mat_prop_scale_x = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "x", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_scale_x, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale_vals_link[0].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.scale_vals_link[0].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.scale_vals_link[0].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_scale_x, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-        wxPGProperty* mat_prop_scale_y = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "y", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_scale_y, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale_vals_link[1].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.scale_vals_link[1].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.scale_vals_link[1].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_scale_y, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-        wxPGProperty* mat_prop_scale_z = propertygrid->AppendIn( mat_prop_scale, new wxStringProperty( "z", wxPG_LABEL, "<composed>" ) );
-        propertygrid->AppendIn( mat_prop_scale_z, new wxFloatProperty( "constant", wxPG_LABEL, entry->matrix_stack_descr[i].arg.scale_vals_link[2].value ) );
-        if( "..." == entry->matrix_stack_descr[i].arg.scale_vals_link[2].var_alias )
-        {
-            reg_selection = -1;
-        }
-        else
-        {
-            reg_selection = (*p_registers)[entry->matrix_stack_descr[i].arg.scale_vals_link[2].var_alias].id;
-        }
-        propertygrid->AppendIn( mat_prop_scale_z, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
-
-
-    }
-
-    m_matrix_slot_index = i;
-    p_dialog->RegisterApplyButtonHandler( m_applymatrixstackvalue_callback );
-    p_dialog->RegisterSpecificButton0Handler( m_applymatrixstackaddmatrix_callback );
-    p_dialog->RegisterSpecificButton1Handler( m_applymatrixstackclearall_callback );
-
-    propertygrid->ResetColumnSizes();
-    propertygrid->CollapseAll();
     */
+
 }
 
 void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    /*
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
     wxStringProperty* prop;
@@ -3387,11 +3240,6 @@ void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialo
     wxCharBuffer buffer;
     wxAny value;
 
-
-    /*
-    BasicSceneMainFrame::MetadataScenegraphEntry* entry = (BasicSceneMainFrame::MetadataScenegraphEntry*)p_dialog->GetData( "metadata_scenegraph_entry" );
-    entry->matrix_stack_descr.clear();
-    */
 
     BasicSceneMainFrame::TransformationNodeEntry* entry = (BasicSceneMainFrame::TransformationNodeEntry*)p_dialog->GetData( "transfo_node_entry" );
     entry->matrix_stack_descr.clear();
@@ -3630,6 +3478,7 @@ void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialo
         entry->matrix_stack_descr.push_back( descr );
         
     }
+    */
 }
 
 void wxWidgetAdapter::on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDialog* p_dialog )

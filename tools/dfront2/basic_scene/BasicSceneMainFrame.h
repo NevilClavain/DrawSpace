@@ -94,6 +94,8 @@ public:
 
     } PopupMenuEntry;
 
+    
+
     typedef enum
     {
         TRANSFORMATIONSOURCE_MATRIXSTACK,
@@ -168,7 +170,7 @@ public:
         TransformationMatrixArg         arg;
 
     } TransformationMatrixDescriptor;
-
+    
 
     typedef struct
     {
@@ -206,7 +208,7 @@ public:
         DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*    transformation;
         wxTreeItemId                                                    treeitemid;
 
-        std::vector<TransformationMatrixDescriptor>                     matrix_stack_descr;
+        //std::vector<TransformationMatrixDescriptor>                     matrix_stack_descr;
 
     } TransformationNodeEntry;
 

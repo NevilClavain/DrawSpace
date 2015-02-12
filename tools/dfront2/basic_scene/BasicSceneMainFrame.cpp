@@ -862,10 +862,12 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         t_entry.transformation = transfo_node;
         t_entry.treeitemid = treeitemid;
 
+        /*
         BasicSceneMainFrame::TransformationMatrixDescriptor transfdescr;
         transfdescr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY;
 
         t_entry.matrix_stack_descr.push_back( transfdescr );
+        */
 
         m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
         m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
@@ -1178,6 +1180,7 @@ void BasicSceneMainFrame::compute_scenegraph_transforms( void )
 
 void BasicSceneMainFrame::compute_transformnodes( void )
 {
+    /*
     for( std::map<void*, TransformationNodeEntry>::iterator it = m_transformation_nodes.begin(); it != m_transformation_nodes.end(); ++it )
     {
         it->second.transformation->GetContent()->ClearAll();
@@ -1282,6 +1285,7 @@ void BasicSceneMainFrame::compute_transformnodes( void )
             }
         }
     }
+    */
 }
 
 void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
