@@ -3109,6 +3109,7 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMain
 
     m_matrix_slot_index = i;
 
+    p_dialog->RegisterApplyButtonHandler( m_applymatrixstackvalue_callback );
     p_dialog->RegisterSpecificButton0Handler( m_applymatrixstackaddmatrix_callback );
     p_dialog->RegisterSpecificButton1Handler( m_applymatrixstackclearall_callback );
 
@@ -3294,6 +3295,176 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMain
 
 void wxWidgetAdapter::on_applymatrixstackvalues( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+    wxStringProperty* prop;
+    wxFloatProperty* prop2;
+    wxEnumProperty* prop3;
+    wxCharBuffer buffer;
+    wxAny value;
+
+
+    BasicSceneMainFrame::TransformationNodeEntry* tne = (BasicSceneMainFrame::TransformationNodeEntry*)p_dialog->GetData( "transfo_node_entry" );
+    
+    Transformation new_chain;
+
+    bool ok = true;
+
+    long matrix_count = 0;
+    while( 1 )
+    {
+        char matrix_index[32];
+
+        sprintf( matrix_index, "matrix_%d", matrix_count++ );
+
+        // check if root exists
+        prop = static_cast<wxStringProperty*>( propertygrid->GetProperty( matrix_index ) );
+        if( NULL == prop )
+        {
+            break;
+        }
+
+
+        dsstring curr_id;
+
+        curr_id = matrix_index;
+        curr_id += ".matrix_type";
+        
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+
+        wxString matrix_type_name = prop3->GetValueAsString();   
+        buffer = matrix_type_name.ToAscii();
+        dsstring matrix_type_name_2 = buffer.data();
+
+        Vector   values;
+        dsstring metadatas[4];
+
+
+
+        curr_id = matrix_index;
+        curr_id += ".x.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float x;
+        value.GetAs<float>( &x );
+        values[0] = x;
+
+        curr_id = matrix_index;
+        curr_id += ".x.register";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString translation_x_var = prop3->GetValueAsString();
+        buffer = translation_x_var.ToAscii();
+        metadatas[0] = buffer.data();
+
+
+
+        curr_id = matrix_index;
+        curr_id += ".y.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float y;
+        value.GetAs<float>( &y );
+        values[1] = y;
+
+        curr_id = matrix_index;
+        curr_id += ".y.register";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString translation_y_var = prop3->GetValueAsString();
+        buffer = translation_y_var.ToAscii();
+        metadatas[1] = buffer.data();
+
+
+        curr_id = matrix_index;
+        curr_id += ".z.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float z;
+        value.GetAs<float>( &z );
+        values[2] = z;
+
+        curr_id = matrix_index;
+        curr_id += ".z.register";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString translation_z_var = prop3->GetValueAsString();
+        buffer = translation_z_var.ToAscii();
+        metadatas[2] = buffer.data();
+
+
+        curr_id = matrix_index;
+        curr_id += ".angle.constant";
+        prop2 = static_cast<wxFloatProperty*>( propertygrid->GetProperty( curr_id ) );
+        value = prop2->GetValue();
+        float a;
+        value.GetAs<float>( &a );
+        values[3] = a;
+
+        curr_id = matrix_index;
+        curr_id += ".angle.register";
+        prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( curr_id ) );
+        wxString angle_var = prop3->GetValueAsString();
+        buffer = angle_var.ToAscii();
+        metadatas[3] = buffer.data();
+        
+       
+        Matrix mat;
+
+        if( "identity" == matrix_type_name_2 )
+        {
+            mat.Identity();            
+        }
+        else if( "translation" == matrix_type_name_2 )
+        {
+            values[3] = 1.0;
+            mat.Translation( values );            
+        }
+        else if( "rotation" == matrix_type_name_2 )
+        {
+            Vector axis = values;
+            axis[3] = 1.0;
+            mat.Rotation( values, Maths::DegToRad( values[3] ) );
+        }
+        else if( "scaling" == matrix_type_name_2 )
+        {
+            values[3] = 1.0;
+            mat.Scale( values );
+        }
+        else if( "zero" == matrix_type_name_2 )
+        {
+            mat.Zero();            
+        }
+        else if( "undetermined" == matrix_type_name_2 )
+        {
+            ok = false;
+            break;
+        }
+
+        for( size_t i = 0; i < 3; i++ )
+        {
+             dsstring metadatas2;
+
+            if( metadatas[i] != "..." )
+            {
+                metadatas2 = metadatas[i];
+            }
+            mat.SetMetaData( i, metadatas2 );
+        }
+
+        new_chain.PushMatrix( mat );        
+    }
+
+    if( ok )
+    {
+        Transformation* tdet = tne->transformation->GetContent();
+        (*tdet) = new_chain;
+
+        p_dialog->Close();
+    }
+    else
+    {
+        wxMessageBox( "Edited matrix chain has a undetermined matrix", "DrawFront error", wxICON_ERROR );
+    }
+
+
     /*
     wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
