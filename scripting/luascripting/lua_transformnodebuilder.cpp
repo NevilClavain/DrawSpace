@@ -89,6 +89,7 @@ int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
 
 int LuaTransformationNodeBuilder::Lua_ClearMatrixStack( lua_State* p_L )
 {
+    m_transformation.ClearAll();
     return 0;
 }
 
