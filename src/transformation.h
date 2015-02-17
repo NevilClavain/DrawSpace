@@ -48,6 +48,7 @@ public:
 	void	GetResult( DrawSpace::Utils::Matrix* p_res );
 	void	ClearAll( void );
     void    GetMatrixChain( std::vector<DrawSpace::Utils::Matrix>& p_list );
+    void    UpdateMatrix( size_t p_index, const DrawSpace::Utils::Matrix& p_mat );
 
     void    Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void    Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};

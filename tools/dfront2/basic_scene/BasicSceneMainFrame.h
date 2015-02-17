@@ -208,8 +208,6 @@ public:
         DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*    transformation;
         wxTreeItemId                                                    treeitemid;
 
-        //std::vector<TransformationMatrixDescriptor>                     matrix_stack_descr;
-
     } TransformationNodeEntry;
 
 

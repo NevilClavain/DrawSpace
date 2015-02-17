@@ -1180,112 +1180,57 @@ void BasicSceneMainFrame::compute_scenegraph_transforms( void )
 
 void BasicSceneMainFrame::compute_transformnodes( void )
 {
-    /*
     for( std::map<void*, TransformationNodeEntry>::iterator it = m_transformation_nodes.begin(); it != m_transformation_nodes.end(); ++it )
     {
-        it->second.transformation->GetContent()->ClearAll();
+        Matrix::ConfigurationInfo mci;
 
-        for( size_t i = 0; i < it->second.matrix_stack_descr.size(); i++ )
+        std::vector<Matrix> mat_list;
+        it->second.transformation->GetContent()->GetMatrixChain( mat_list );
+
+        for( size_t i = 0; i < mat_list.size(); i++ )
         {
-            Matrix mat;
+            Matrix::ConfigurationInfo mci;
+            Matrix updated_mat;
+            mat_list[i].GetConfigInfos( mci );
 
-            switch( it->second.matrix_stack_descr[i].ope )
-            {
-                case TRANSFORMATIONMATRIX_IDENTITY:
-                    break;
-
-                case TRANSFORMATIONMATRIX_SCALE:
-                    {
-                        dsreal scale[3];
-
-                        for( long j = 0; j < 3; j++ )
-                        {
-                            if( "..." == it->second.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias )
-                            {
-                                scale[j] = it->second.matrix_stack_descr[i].arg.scale_vals_link[j].value;
-                            }
-                            else
-                            {
-                                dsstring var_alias = it->second.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias;
-                                // aller chercher curren_value de la variable referencee
-
-                                RegisterEntry reg_entry = m_registers[var_alias];
-                                scale[j] = reg_entry.current_value;
-                            }
-                        }
-
-                        mat.Scale( scale[0], scale[1], scale[2] );                       
-                        it->second.transformation->GetContent()->PushMatrix( mat );
-                    }
-                    break;
-
-                case TRANSFORMATIONMATRIX_TRANSLATION:
-                    {
-                        dsreal trans[3];
-
-                        for( long j = 0; j < 3; j++ )
-                        {
-                            if( "..." == it->second.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias )
-                            {
-                                trans[j] = it->second.matrix_stack_descr[i].arg.translation_vals_link[j].value;
-                            }
-                            else
-                            {
-                                dsstring var_alias = it->second.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias;
-                                // aller chercher curren_value de la variable referencee
-
-                                RegisterEntry reg_entry = m_registers[var_alias];
-                                trans[j] = reg_entry.current_value;
-                            }
-                        }
-
-                        mat.Translation( trans[0], trans[1], trans[2] );
-                        it->second.transformation->GetContent()->PushMatrix( mat );
-                    }
-                    break;
-
-                case TRANSFORMATIONMATRIX_ROTATION:
-                    {
-                        dsreal axis[3];
-                        dsreal angle;
-
-                        for( long j = 0; j < 3; j++ )
-                        {
-                            if( "..." == it->second.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias )
-                            {
-                                axis[j] = it->second.matrix_stack_descr[i].arg.rotation_vals_link[j].value;
-                            }
-                            else
-                            {
-                                dsstring var_alias = it->second.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias;
-                                // aller chercher curren_value de la variable referencee
-
-                                RegisterEntry reg_entry = m_registers[var_alias];
-                                axis[j] = reg_entry.current_value;
-                            }
-                        }
-
-                        if( "..." == it->second.matrix_stack_descr[i].arg.angle_val_link.var_alias )
-                        {
-                            angle = it->second.matrix_stack_descr[i].arg.angle_val_link.value;
-                        }
-                        else
-                        {
-                            dsstring var_alias = it->second.matrix_stack_descr[i].arg.angle_val_link.var_alias;
-                            // aller chercher curren_value de la variable referencee
-
-                            RegisterEntry reg_entry = m_registers[var_alias];
-                            angle = reg_entry.current_value;
-                        }
-
-                        mat.Rotation( Vector( axis[0], axis[1], axis[2], 1.0 ), Maths::DegToRad( angle ) );
-                        it->second.transformation->GetContent()->PushMatrix( mat );
-                    }
-                    break;
+            Vector values = mci.values;
+            for( size_t j = 0; j < 4; j++ )
+            {                        
+                if( mci.metadatas[j] != "" && m_registers.count( mci.metadatas[j] ) > 0 )
+                {                           
+                    values[j] = m_registers[mci.metadatas[j]].current_value;                                
+                }                        
             }
+
+            switch( mci.type )
+            {
+                case Matrix::CONFIG_TRANSLATION:
+                {
+                    updated_mat.Translation( values[0], values[1], values[2] );
+                }
+                break;
+
+                case Matrix::CONFIG_SCALING:
+                {
+                    updated_mat.Scale( values[0], values[1], values[2] );
+                }
+                break;
+
+                case Matrix::CONFIG_ROTATION:
+                {
+                    updated_mat.Rotation( Vector( values[0], values[1], values[2], 1.0 ), values[3] );
+                }
+                break;
+            }
+
+            updated_mat.SetMetaData( 0, mci.metadatas[0] );
+            updated_mat.SetMetaData( 1, mci.metadatas[1] );
+            updated_mat.SetMetaData( 2, mci.metadatas[2] );
+            updated_mat.SetMetaData( 3, mci.metadatas[3] );
+
+            it->second.transformation->GetContent()->UpdateMatrix( i, updated_mat );
         }
     }
-    */
 }
 
 void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )

@@ -21,6 +21,7 @@
 */
 
 #include "transformation.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -76,6 +77,16 @@ void Transformation::ClearAll( void )
 void Transformation::GetMatrixChain( std::vector<DrawSpace::Utils::Matrix>& p_list )
 {
     p_list = m_matrix_chain;
+}
+
+void Transformation::UpdateMatrix( size_t p_index, const Matrix& p_mat )
+{
+    if( p_index >= m_matrix_chain.size() )
+    {
+        _DSEXCEPTION( "index out of range" );
+    }
+
+    m_matrix_chain[p_index] = p_mat;
 }
 
 void Transformation::Update( DrawSpace::Utils::TimeManager& p_timemanager )
