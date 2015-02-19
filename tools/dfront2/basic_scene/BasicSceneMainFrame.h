@@ -98,21 +98,25 @@
 
 #define DIALOG_SHOW dialog->Show(); propertygrid->ResetColumnSizes(); propertygrid->CollapseAll();
 
+#define DIALOG_FINALIZE propertygrid->ResetColumnSizes(); propertygrid->CollapseAll();
 
-#define DIALOG_APPENDROOT_STRING( _label_, _value_ )     propertygrid->Append( new wxStringProperty( _label_, wxPG_LABEL, _value_ ) );
+
+#define DIALOG_APPENDROOT_STRING( _label_, _value_ )    propertygrid->Append( new wxStringProperty( _label_, wxPG_LABEL, _value_ ) );
 #define DIALOG_APPENDROOT_INTEGER( _label_, _value_ )   propertygrid->Append( new wxIntProperty( _label_, wxPG_LABEL, _value_ ) );
 #define DIALOG_APPENDROOT_FLOAT( _label_, _value_ )     propertygrid->Append( new wxFloatProperty( _label_, wxPG_LABEL, _value_ ) );
-#define DIALOG_APPENDROOT_ENUM( _label_, _value_ )       propertygrid->Append( new wxEnumProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDROOT_ENUM( _label_, _value_ )      propertygrid->Append( new wxEnumProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDROOT_BOOL( _label_, _value_ )      propertygrid->Append( new wxBoolProperty( _label_, wxPG_LABEL, _value_ ) );
 
 #define DIALOG_APPENDROOT_NODE( _label_, _var_name_ )   wxPGProperty* _var_name_ = propertygrid->Append( new wxStringProperty( _label_, wxPG_LABEL, "<composed>" ) );
 
 
 #define DIALOG_APPENDNODE_NODE( _parent_, _label_, _var_name_ ) wxPGProperty* _var_name_ = propertygrid->AppendIn( _parent_, new wxStringProperty( _label_, wxPG_LABEL, "<composed>" ) );
 
-#define DIALOG_APPENDNODE_STRING( _parent_, _label_, _value_ )   propertygrid->AppendIn( _parent_, new wxStringProperty( _label_, wxPG_LABEL, _value_ ) );
-#define DIALOG_APPENDNODE_INTEGER( _parent_, _label_, _value_ ) propertygrid->AppendIn( _parent_, new wxIntProperty( _label_, wxPG_LABEL, _value_ ) );
-#define DIALOG_APPENDNODE_FLOAT( _parent_, _label_, _value_ )   propertygrid->AppendIn( _parent_, new wxFloatProperty( _label_, wxPG_LABEL, _value_ ) );
-#define DIALOG_APPENDNODE_ENUM( _parent_, _label_, _value_ )     propertygrid->AppendIn( _parent_, new wxEnumProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_STRING( _parent_, _label_, _value_ )      propertygrid->AppendIn( _parent_, new wxStringProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_INTEGER( _parent_, _label_, _value_ )     propertygrid->AppendIn( _parent_, new wxIntProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_FLOAT( _parent_, _label_, _value_ )       propertygrid->AppendIn( _parent_, new wxFloatProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_ENUM( _parent_, _label_, _value_ )        propertygrid->AppendIn( _parent_, new wxEnumProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_BOOL( _parent_, _label_, _value_ )        propertygrid->AppendIn( _parent_, new wxBoolProperty( _label_, wxPG_LABEL, _value_ ) );
 
 
 #define DIALOG_APPENDNODE_ITERATE( _parent_, _value_, _func_, _labels_ ) \
@@ -147,6 +151,53 @@
     char comment[128]; \
     sprintf( comment, _format_, p_dialog->GetSpecific1Counter() ); \
     wxString _var_name_ = comment; \
+
+
+#define DIALOG_PROPERTIES_VARS \
+        wxStringProperty* string_prop; \
+        wxFloatProperty* float_prop; \
+        wxIntProperty* int_prop; \
+        wxBoolProperty* bool_prop; \
+        wxEnumProperty* enum_prop; \
+        wxCharBuffer buffer; \
+        wxAny value; \
+
+#define DIALOG_CHECK_PROPERTY( _name_ ) propertygrid->GetProperty( _name_ )
+
+#define DIALOG_GET_STRING_PROPERTY( _name_, _var_name_ ) \
+        wxString _var_name_; \
+        string_prop = static_cast<wxStringProperty*>( propertygrid->GetProperty( _name_ ) ); \
+        value = string_prop->GetValue(); \
+        value.GetAs<wxString>( &_var_name_ ); \
+
+#define DIALOG_GET_INT_PROPERTY( _name_, _var_name_ ) \
+        int _var_name_; \
+        int_prop = static_cast<wxIntProperty*>( propertygrid->GetProperty( _name_ ) ); \
+        value = int_prop->GetValue(); \
+        value.GetAs<int>( &_var_name_ ); \
+
+#define DIALOG_GET_BOOL_PROPERTY( _name_, _var_name_ ) \
+        bool _var_name_; \
+        bool_prop = static_cast<wxBoolProperty*>( propertygrid->GetProperty( _name_ ) ); \
+        value = bool_prop->GetValue(); \
+        value.GetAs<bool>( &_var_name_ );
+        
+#define DIALOG_GET_FLOAT_PROPERTY( _name_, _var_name_ ) \
+        dsreal _var_name_;\
+        float_prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( _name_ ) ); \
+        value = float_prop->GetValue(); \
+        value.GetAs<dsreal>( &_var_name_ );
+        
+#define DIALOG_GET_ENUM_PROPERTY( _name_, _var_name_ ) \
+        wxString _var_name_; \
+        enum_prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( _name_ ) ); \
+        _var_name_ = enum_prop->GetValueAsString(); \
+
+#define DIALOG_WXSTRING_TO_DSSTRING( _src_var_name_, _dst_var_name_ ) \
+        dsstring _dst_var_name_; \
+        buffer = _src_var_name_.ToAscii(); \
+        _dst_var_name_ = buffer.data(); \
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

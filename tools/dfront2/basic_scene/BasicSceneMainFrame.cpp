@@ -2610,6 +2610,28 @@ wxArrayString BasicSceneMainFrame::insert_void_choice( const wxArrayString& p_ar
 
 void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    DIALOG_GETGRID
+    DIALOG_PROPERTIES_VARS
+
+    if( "Spacebox node creation" == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", scene_name )
+
+        DIALOG_GET_INT_PROPERTY( "the beast", var_int )
+
+        DIALOG_GET_FLOAT_PROPERTY( "pi", pi )
+
+        DIALOG_GET_ENUM_PROPERTY( "list", sel_text )
+
+        DIALOG_WXSTRING_TO_DSSTRING( scene_name, scene_name2 )
+        DIALOG_WXSTRING_TO_DSSTRING( sel_text, sel_text2 )
+
+        
+        if( DIALOG_CHECK_PROPERTY( "PASS_0" ) )
+        {
+            _asm nop
+        }
+    }
     
 }
 
@@ -2621,8 +2643,21 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
     {
         DIALOG_SPECIFIC0_LABEL( "PASS_%d", pass_label )
 
-        DIALOG_APPENDROOT_NODE( pass_label, pass_root )
-        DIALOG_APPENDNODE_INTEGER( pass_root, "order", 200 )
+        DIALOG_APPENDROOT_NODE( pass_label, pass_root )        
+        DIALOG_APPENDNODE_BOOL( pass_root, "enable", true );
+
+        DIALOG_BUILD_LABELS( 32, "texture_stage_%d", textures_stages_labels )
+
+        for( size_t i = 0; i < textures_stages_labels.size(); i++ )
+        {
+            DIALOG_APPENDNODE_NODE( pass_root, textures_stages_labels[i], texture_stage )
+
+
+            DIALOG_APPENDNODE_ENUM( texture_stage, "source", get_textures_list() )
+            DIALOG_APPENDNODE_INTEGER( texture_stage, "order", 200 )
+        }
+                       
+        DIALOG_FINALIZE
     }
 }
 
