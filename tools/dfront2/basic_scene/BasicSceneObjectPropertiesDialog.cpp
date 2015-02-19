@@ -29,7 +29,10 @@ BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* pa
 : ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 460, 318 ) ),
 m_applybutton_handler( NULL ),
 m_specificbutton0_handler( NULL ),
-m_specificbutton1_handler( NULL )
+m_specificbutton1_handler( NULL ),
+m_title( title ),
+m_specific0_counter( 0 ),
+m_specific1_counter( 0 )
 {
     m_apply_button->Show( false );
     m_specific_button_0->Show( false );
@@ -39,6 +42,11 @@ m_specificbutton1_handler( NULL )
 wxPropertyGrid* BasicSceneObjectPropertiesDialog::GetPropertyGrid( void )
 {
     return m_propertyGrid;
+}
+
+wxString BasicSceneObjectPropertiesDialog::GetTitle( void )
+{
+    return m_title;
 }
 
 void BasicSceneObjectPropertiesDialog::OnCloseButtonClicked( wxCommandEvent& event )
@@ -60,6 +68,8 @@ void BasicSceneObjectPropertiesDialog::OnSpecificButton0Clicked( wxCommandEvent&
     {
         (*m_specificbutton0_handler)( this );
     }
+
+    m_specific0_counter++;
 }
 
 void BasicSceneObjectPropertiesDialog::OnSpecificButton1Clicked( wxCommandEvent& event )
@@ -68,6 +78,8 @@ void BasicSceneObjectPropertiesDialog::OnSpecificButton1Clicked( wxCommandEvent&
     {
         (*m_specificbutton1_handler)( this );
     }
+
+    m_specific1_counter++;
 }
 
 void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )
@@ -117,4 +129,14 @@ void* BasicSceneObjectPropertiesDialog::GetData( const dsstring& p_id )
     {
         return NULL;
     }
+}
+
+long BasicSceneObjectPropertiesDialog::GetSpecific0Counter( void )
+{
+    return m_specific0_counter;
+}
+
+long BasicSceneObjectPropertiesDialog::GetSpecific1Counter( void )
+{
+    return m_specific1_counter;
 }

@@ -36,6 +36,11 @@ protected:
     DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>*     m_specificbutton1_handler;
     std::map<dsstring, void*>                                                   m_datas;
 
+    wxString                                                                    m_title;
+
+    long                                                                        m_specific0_counter;
+    long                                                                        m_specific1_counter;
+
 
     virtual void OnCloseButtonClicked( wxCommandEvent& event );
     virtual void OnApplyButtonClicked( wxCommandEvent& event );
@@ -56,6 +61,11 @@ public:
 
     void SetData( const dsstring& p_id, void* p_data );
     void* GetData( const dsstring& p_id );
+
+    wxString GetTitle( void );
+
+    long GetSpecific0Counter( void );
+    long GetSpecific1Counter( void );
 };
 
 #endif // __BasicSceneObjectPropertiesDialog__

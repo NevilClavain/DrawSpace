@@ -9,36 +9,6 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-ObjectsListDialog::ObjectsListDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
-{
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-	
-	wxBoxSizer* bSizer9;
-	bSizer9 = new wxBoxSizer( wxVERTICAL );
-	
-	m_listCtrl = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	bSizer9->Add( m_listCtrl, 5, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer11;
-	bSizer11 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_button4 = new wxButton( this, wxID_ANY, wxT("MyButton"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer11->Add( m_button4, 0, wxALL, 5 );
-	
-	
-	bSizer9->Add( bSizer11, 1, wxEXPAND, 5 );
-	
-	
-	this->SetSizer( bSizer9 );
-	this->Layout();
-	
-	this->Centre( wxBOTH );
-}
-
-ObjectsListDialog::~ObjectsListDialog()
-{
-}
-
 ObjectPropertiesDialog::ObjectPropertiesDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );

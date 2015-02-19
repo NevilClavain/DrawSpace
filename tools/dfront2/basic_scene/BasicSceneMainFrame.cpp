@@ -24,7 +24,7 @@
 #include "BasicSceneMainFrame.h"
 #include "drawspace.h"
 #include "adapters.h"
-#include "BasicSceneObjectPropertiesDialog.h"
+//#include "BasicSceneObjectPropertiesDialog.h"
 #include "buildobjects.h"
 
 using namespace DrawSpace;
@@ -154,6 +154,9 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edit );
 
 
+    m_applybutton_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_applybutton_clicked );
+    m_specificbutton0_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
+    m_specificbutton1_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_specificbutton1_clicked );
 
 }
 
@@ -2188,6 +2191,46 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 }
             }
             break;
+
+        case CONTEXTMENU_NEWSPACEBOX:
+            {
+
+             
+                DIALOG_DECLARE( "Spacebox node creation" )
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+                DIALOG_APPENDROOT_INTEGER( "the beast", 666 )
+                DIALOG_APPENDROOT_FLOAT( "pi", 3.1415927 )
+                DIALOG_APPENDROOT_ENUM( "list", insert_void_choice( get_textures_list() ) )
+
+                /*
+
+                DIALOG_APPENDROOT_NODE( "a pass", root_pass )
+                DIALOG_APPENDNODE_INTEGER( root_pass, "order", 200 )
+                DIALOG_APPENDNODE_NODE( root_pass, "textures", textures_pass )
+
+                DIALOG_APPENDNODE_STRING( textures_pass, "textures alias", "" )
+                DIALOG_APPENDNODE_ENUM( textures_pass, "texture resource name", get_shaders_list() );
+
+
+
+                
+                DIALOG_BUILD_LABELS( 32, "texture_%d", textures )
+
+                
+                DIALOG_APPENDNODE_ITERATE( textures_pass, 45, DIALOG_APPENDNODE_INTEGER, textures )
+
+                */
+
+
+                DIALOG_APPLY
+
+                DIALOG_SPECIFIC0( "Add new pass" )
+
+
+
+                DIALOG_SHOW
+            }
+            break;
  	}
  }
 
@@ -2412,4 +2455,178 @@ void BasicSceneMainFrame::OnConsoleInClearButtonClicked( wxCommandEvent& p_event
 
 void BasicSceneMainFrame::OnConsoleInLoadButtonClicked( wxCommandEvent& p_event )
 {
+}
+
+wxArrayString BasicSceneMainFrame::get_passes_list( void )
+{
+    wxArrayString availables_passes_labels;
+    std::map<dsstring, DrawSpace::Core::Configurable*> configs;
+
+    ConfigsBase::GetInstance()->GetConfigsInstancesList( configs );
+    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = configs.begin(); it != configs.end(); ++it )
+    {
+        Pass* pass = dynamic_cast<Pass*>( it->second );
+        if( pass )
+        {
+            dsstring pass_name;            
+            availables_passes_labels.Add( it->first.c_str() );
+        }
+    }
+    return availables_passes_labels;
+}
+
+wxArrayString BasicSceneMainFrame::get_finalpasses_list( void )
+{
+    wxArrayString availables_passes_labels;
+    std::map<dsstring, DrawSpace::Core::Configurable*> configs;
+
+    ConfigsBase::GetInstance()->GetConfigsInstancesList( configs );
+    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = configs.begin(); it != configs.end(); ++it )
+    {
+        FinalPass* pass = dynamic_cast<FinalPass*>( it->second );
+        if( pass )
+        {
+            dsstring pass_name;            
+            availables_passes_labels.Add( it->first.c_str() );
+        }
+    }
+    return availables_passes_labels;
+}
+
+wxArrayString BasicSceneMainFrame::get_intermediatepasses_list( void )
+{
+    wxArrayString availables_passes_labels;
+    std::map<dsstring, DrawSpace::Core::Configurable*> configs;
+
+    ConfigsBase::GetInstance()->GetConfigsInstancesList( configs );
+    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = configs.begin(); it != configs.end(); ++it )
+    {
+        IntermediatePass* pass = dynamic_cast<IntermediatePass*>( it->second );
+        if( pass )
+        {
+            dsstring pass_name;            
+            availables_passes_labels.Add( it->first.c_str() );
+        }
+    }
+    return availables_passes_labels;
+}
+
+wxArrayString BasicSceneMainFrame::get_fx_list( void )
+{
+    wxArrayString availables_fx_labels;
+    std::map<dsstring, DrawSpace::Core::Configurable*> configs;
+
+    ConfigsBase::GetInstance()->GetConfigsInstancesList( configs );
+    for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = configs.begin(); it != configs.end(); ++it )
+    {
+        Fx* fx = dynamic_cast<Fx*>( it->second );
+        if( fx )
+        {
+            dsstring pass_name;            
+            availables_fx_labels.Add( it->first.c_str() );
+        }
+    }
+    return availables_fx_labels;
+}
+
+wxArrayString BasicSceneMainFrame::get_textures_list( void )
+{
+    wxArrayString availables_textures_labels;
+
+    std::map<dsstring, Asset*> assets_list;
+
+    AssetsBase::GetInstance()->GetAssetsList( assets_list );    
+    for( std::map<dsstring, Asset*>::iterator it = assets_list.begin(); it != assets_list.end(); ++it )
+    {
+        if( dynamic_cast<Texture*>( it->second ) )
+        {
+            availables_textures_labels.Add( it->first.c_str() );
+        }
+    }
+    return availables_textures_labels;
+}
+
+wxArrayString BasicSceneMainFrame::get_shaders_list( void )
+{
+    wxArrayString availables_shaders_labels;
+
+    std::map<dsstring, Asset*> assets_list;
+
+    AssetsBase::GetInstance()->GetAssetsList( assets_list );    
+    for( std::map<dsstring, Asset*>::iterator it = assets_list.begin(); it != assets_list.end(); ++it )
+    {
+        if( dynamic_cast<Shader*>( it->second ) )
+        {
+            availables_shaders_labels.Add( it->first.c_str() );
+        }
+    }
+
+    return availables_shaders_labels;
+}
+
+wxArrayString BasicSceneMainFrame::get_meshes_list( void )
+{
+    wxArrayString availables_meshes_labels;
+
+    std::map<dsstring, Asset*> assets_list;
+
+    AssetsBase::GetInstance()->GetAssetsList( assets_list );    
+    for( std::map<dsstring, Asset*>::iterator it = assets_list.begin(); it != assets_list.end(); ++it )
+    {
+        if( dynamic_cast<Meshe*>( it->second ) )
+        {
+            availables_meshes_labels.Add( it->first.c_str() );
+        }
+    }
+
+    return availables_meshes_labels;
+}
+
+wxArrayString BasicSceneMainFrame::get_fonts_list( void )
+{
+    wxArrayString availables_fonts_labels;
+
+    std::map<dsstring, Asset*> assets_list;
+
+    AssetsBase::GetInstance()->GetAssetsList( assets_list );    
+    for( std::map<dsstring, Asset*>::iterator it = assets_list.begin(); it != assets_list.end(); ++it )
+    {
+        if( dynamic_cast<Font*>( it->second ) )
+        {
+            availables_fonts_labels.Add( it->first.c_str() );
+        }
+    }
+
+    return availables_fonts_labels;
+}
+
+wxArrayString BasicSceneMainFrame::insert_void_choice( const wxArrayString& p_array )
+{
+    wxArrayString completed_array = p_array;
+    completed_array.Insert( "...", 0 );
+
+    return completed_array;
+}
+
+void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    
+}
+
+void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    DIALOG_GETGRID
+
+    if( "Spacebox node creation" == DIALOG_TITLE )
+    {
+        DIALOG_SPECIFIC0_LABEL( "PASS_%d", pass_label )
+
+        DIALOG_APPENDROOT_NODE( pass_label, pass_root )
+        DIALOG_APPENDNODE_INTEGER( pass_root, "order", 200 )
+    }
+}
+
+void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
+{
+    
 }

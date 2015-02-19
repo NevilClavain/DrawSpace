@@ -212,14 +212,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BasicSceneObjectsListDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BasicSceneObjectsListDialog.h"
-				>
-			</File>
-			<File
 				RelativePath=".\buildobjects.cpp"
 				>
 			</File>

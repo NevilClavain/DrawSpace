@@ -27,6 +27,7 @@
 #include "panel.h"
 #include "drawspace.h"
 #include "scripting.h"
+#include "BasicSceneObjectPropertiesDialog.h"
 
 #define DFRONT_ICON_DIM                     22
 
@@ -81,6 +82,74 @@
 #define CONTEXTMENU_NEWSPECTATORMVT         2026
 #define CONTEXTMENU_SEPARATOR               2080
 #define CONTEXTMENU_EDIT                    2081
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#define DIALOG_DECLARE( _title_ ) \
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, _title_ ); \
+    wxPropertyGrid* propertygrid = dialog->GetPropertyGrid(); \
+    dialog->RegisterApplyButtonHandler( m_applybutton_clicked_cb ); \
+    dialog->RegisterSpecificButton0Handler( m_specificbutton0_clicked_cb ); \
+    dialog->RegisterSpecificButton1Handler( m_specificbutton1_clicked_cb ); \
+
+
+#define DIALOG_GETGRID wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
+
+#define DIALOG_SHOW dialog->Show(); propertygrid->ResetColumnSizes(); propertygrid->CollapseAll();
+
+
+#define DIALOG_APPENDROOT_STRING( _label_, _value_ )     propertygrid->Append( new wxStringProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDROOT_INTEGER( _label_, _value_ )   propertygrid->Append( new wxIntProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDROOT_FLOAT( _label_, _value_ )     propertygrid->Append( new wxFloatProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDROOT_ENUM( _label_, _value_ )       propertygrid->Append( new wxEnumProperty( _label_, wxPG_LABEL, _value_ ) );
+
+#define DIALOG_APPENDROOT_NODE( _label_, _var_name_ )   wxPGProperty* _var_name_ = propertygrid->Append( new wxStringProperty( _label_, wxPG_LABEL, "<composed>" ) );
+
+
+#define DIALOG_APPENDNODE_NODE( _parent_, _label_, _var_name_ ) wxPGProperty* _var_name_ = propertygrid->AppendIn( _parent_, new wxStringProperty( _label_, wxPG_LABEL, "<composed>" ) );
+
+#define DIALOG_APPENDNODE_STRING( _parent_, _label_, _value_ )   propertygrid->AppendIn( _parent_, new wxStringProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_INTEGER( _parent_, _label_, _value_ ) propertygrid->AppendIn( _parent_, new wxIntProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_FLOAT( _parent_, _label_, _value_ )   propertygrid->AppendIn( _parent_, new wxFloatProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_ENUM( _parent_, _label_, _value_ )     propertygrid->AppendIn( _parent_, new wxEnumProperty( _label_, wxPG_LABEL, _value_ ) );
+
+
+#define DIALOG_APPENDNODE_ITERATE( _parent_, _value_, _func_, _labels_ ) \
+    for( size_t i = 0; i < _labels_.size(); i++ ) \
+    { \
+        wxString current = _labels_[i]; \
+        _func_( _parent_, current, _value_ )\
+    } \
+
+#define DIALOG_BUILD_LABELS( _count_, _format_, _var_name_ ) \
+    wxArrayString _var_name_; \
+    for( int i = 0; i < _count_; i++ ) \
+    { \
+        char comment[128]; \
+        sprintf( comment, _format_, i ); \
+        wxString curr = comment; \
+        _var_name_.Add( curr ); \
+    } \
+
+#define DIALOG_APPLY                                            dialog->EnableApplyButton();
+#define DIALOG_SPECIFIC0( _text_ )                              dialog->EnableSpecificButton0( _text_ );
+#define DIALOG_SPECIFIC1( _text_ )                              dialog->EnableSpecificButton1( _text_ );
+
+#define DIALOG_TITLE                                            p_dialog->GetTitle()
+
+#define DIALOG_SPECIFIC0_LABEL( _format_, _var_name_ ) \
+    char comment[128]; \
+    sprintf( comment, _format_, p_dialog->GetSpecific0Counter() ); \
+    wxString _var_name_ = comment; \
+
+#define DIALOG_SPECIFIC1_LABEL( _format_, _var_name_ ) \
+    char comment[128]; \
+    sprintf( comment, _format_, p_dialog->GetSpecific1Counter() ); \
+    wxString _var_name_ = comment; \
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 class BasicSceneMainFrame : public MainFrame
@@ -291,6 +360,9 @@ protected:
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, DrawSpace::Core::PropertyPool&>    ScriptingCallsCallback;
 
 
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*> DialogButtonCallback;
+
+
     void on_timer( const dsstring& p_timername );
     void on_scripting_error( const dsstring& p_error );
     void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );
@@ -305,6 +377,19 @@ protected:
 
     void build_popupmenu( int p_level, wxMenu& p_menu );
 
+    wxArrayString get_passes_list( void );
+    wxArrayString get_finalpasses_list( void );
+    wxArrayString get_intermediatepasses_list( void );
+    wxArrayString get_fx_list( void );
+    wxArrayString get_textures_list( void );
+    wxArrayString get_shaders_list( void );
+    wxArrayString get_meshes_list( void );
+    wxArrayString get_fonts_list( void );
+    wxArrayString insert_void_choice( const wxArrayString& p_array );
+
+
+
+    
 
     long                                                    m_w_width;
     long                                                    m_w_height;
@@ -366,6 +451,16 @@ protected:
 
     wxTreeItemId                                            m_last_clicked_treeitem;
 
+
+    DialogButtonCallback*                                   m_applybutton_clicked_cb;
+    DialogButtonCallback*                                   m_specificbutton0_clicked_cb;
+    DialogButtonCallback*                                   m_specificbutton1_clicked_cb;
+
+
+
+    void on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
+    void on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
 
 
     virtual void OnClose( wxCloseEvent& p_event );

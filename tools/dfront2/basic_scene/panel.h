@@ -10,7 +10,11 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
-#include <wx/listctrl.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
+#include <wx/propgrid/propgrid.h>
+#include <wx/propgrid/advprops.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
@@ -19,12 +23,8 @@
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/dialog.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
-#include <wx/propgrid/propgrid.h>
-#include <wx/propgrid/advprops.h>
 #include <wx/textctrl.h>
+#include <wx/listctrl.h>
 #include <wx/statbox.h>
 #include <wx/combobox.h>
 #include <wx/stattext.h>
@@ -35,24 +35,6 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class ObjectsListDialog
-///////////////////////////////////////////////////////////////////////////////
-class ObjectsListDialog : public wxDialog 
-{
-	private:
-	
-	protected:
-		wxListCtrl* m_listCtrl;
-		wxButton* m_button4;
-	
-	public:
-		
-		ObjectsListDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 537,388 ), long style = wxDEFAULT_DIALOG_STYLE ); 
-		~ObjectsListDialog();
-	
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class ObjectPropertiesDialog
