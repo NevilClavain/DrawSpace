@@ -126,6 +126,15 @@
         _func_( _parent_, current, _value_ )\
     } \
 
+#define DIALOG_APPENDNODE_ITERATE_NODE_BEGIN( _parent_, _counter_, _list_, _var_name_ ) \
+    for( size_t _counter_ = 0; i < _list_.size(); _counter_++ ) \
+    { \
+        DIALOG_APPENDNODE_NODE( _parent_, _list_[_counter_], _var_name_ ) \
+
+
+#define DIALOG_APPENDNODE_ITERATE_NODE_END \
+    } \
+
 #define DIALOG_BUILD_LABELS( _count_, _format_, _var_name_ ) \
     wxArrayString _var_name_; \
     for( int i = 0; i < _count_; i++ ) \
@@ -198,6 +207,35 @@
         buffer = _src_var_name_.ToAscii(); \
         _dst_var_name_ = buffer.data(); \
 
+
+#define DIALOG_EXPLORE_NODES_BEGIN( _root_, _format_, _counter_, _curr_label_ ) \
+        long _counter_ = 0;\
+        while( 1 ) \
+        { \
+            dsstring _curr_label_; \
+            char comment[128]; \
+            sprintf( comment, _format_, _counter_++ ); \
+            dsstring final; \
+            if( _root_ != "" ) \
+            { \
+                final = _root_ + dsstring( "." ) + comment;\
+            } \
+            else \
+            { \
+                final = comment; \
+            } \
+            if( NULL == DIALOG_CHECK_PROPERTY( final ) )\
+            { \
+                break;\
+            } \
+            _curr_label_ = final; \
+  
+
+#define DIALOG_EXPLORE_NODES_END \
+        } \
+
+#define DIALOG_INCREMENT_STRING( _src_, _delta_ ) \
+        dsstring( _src_ + dsstring( "." ) + _delta_ ) \
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

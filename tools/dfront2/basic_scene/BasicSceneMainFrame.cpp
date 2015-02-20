@@ -2627,10 +2627,27 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         DIALOG_WXSTRING_TO_DSSTRING( sel_text, sel_text2 )
 
         
-        if( DIALOG_CHECK_PROPERTY( "PASS_0" ) )
-        {
-            _asm nop
-        }
+
+        DIALOG_EXPLORE_NODES_BEGIN( "", "PASS_%d", i, pass_slot, comment )
+            
+
+            DIALOG_GET_BOOL_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "enable" ), enable_it )
+
+            
+            DIALOG_EXPLORE_NODES_BEGIN( pass_slot, "texture_stage_%d", j, texture_stage )
+
+                
+                DIALOG_GET_INT_PROPERTY( DIALOG_INCREMENT_STRING( texture_stage, "order" ), order )
+
+                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( texture_stage, "source" ), sel_texture )
+
+                _asm nop
+                
+
+            DIALOG_EXPLORE_NODES_END
+
+            
+        DIALOG_EXPLORE_NODES_END
     }
     
 }
@@ -2646,16 +2663,14 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
         DIALOG_APPENDROOT_NODE( pass_label, pass_root )        
         DIALOG_APPENDNODE_BOOL( pass_root, "enable", true );
 
-        DIALOG_BUILD_LABELS( 32, "texture_stage_%d", textures_stages_labels )
+        DIALOG_BUILD_LABELS( 2, "texture_stage_%d", textures_stages_labels )
 
-        for( size_t i = 0; i < textures_stages_labels.size(); i++ )
-        {
-            DIALOG_APPENDNODE_NODE( pass_root, textures_stages_labels[i], texture_stage )
-
+        DIALOG_APPENDNODE_ITERATE_NODE_BEGIN( pass_root, i, textures_stages_labels, texture_stage )
 
             DIALOG_APPENDNODE_ENUM( texture_stage, "source", get_textures_list() )
             DIALOG_APPENDNODE_INTEGER( texture_stage, "order", 200 )
-        }
+
+        DIALOG_APPENDNODE_ITERATE_NODE_END
                        
         DIALOG_FINALIZE
     }
