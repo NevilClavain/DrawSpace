@@ -631,7 +631,7 @@ void wxWidgetAdapter::AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
 void wxWidgetAdapter::AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid )
 {
     Asset::PropertiesMap props;
@@ -645,23 +645,24 @@ void wxWidgetAdapter::AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wx
 
 
     p_propertygrid->Append( new wxStringProperty( "assetname", wxPG_LABEL, assetname.c_str() ) );
-    //p_propertygrid->DisableProperty( "assetname" );
+    
 
     p_propertygrid->Append( new wxStringProperty( "filepath", wxPG_LABEL, filepath.c_str() ) );
-    //p_propertygrid->DisableProperty( "filepath" );
+    
 
     p_propertygrid->Append( new wxBoolProperty( "rendertarget", wxPG_LABEL, rendertarget ) );
-    //p_propertygrid->DisableProperty( "rendertarget" );
+    
 
     if( rendertarget )
     {
         p_propertygrid->Append( new wxIntProperty( "rendertarget_size/width", wxPG_LABEL, rendetarget_w ) );
-        //p_propertygrid->DisableProperty( "rendertarget_size/width" );
+    
         p_propertygrid->Append( new wxIntProperty( "rendertarget_size/height", wxPG_LABEL, rendetarget_h ) );
-        //p_propertygrid->DisableProperty( "rendertarget_size/height" );
+    
     }
     
 }
+*/
 
 void wxWidgetAdapter::AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_propertygrid )
 {

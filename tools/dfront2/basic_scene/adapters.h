@@ -144,7 +144,7 @@ public:
     void AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl );
     void AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
 
-    void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );
+    //void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );
     void AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_propertygrid );
     void AdaptFontProps( DrawSpace::Core::Font* p_font, wxPropertyGrid* p_propertygrid );
     void AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxPropertyGrid* p_propertygrid );

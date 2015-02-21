@@ -1696,9 +1696,37 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
     Texture* texture = dynamic_cast<Texture*>( asset );
     if( texture )
     {
+        /*
         BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Texture properties" );
         wxWidgetAdapter::GetInstance()->AdaptTextureProps( texture, dialog->GetPropertyGrid() );
         dialog->Show();
+        */
+
+        Asset::PropertiesMap props;
+        texture->GetPropertiesMap( props );
+
+        dsstring assetname = props["assetname"].GetPropValue<dsstring>();
+        dsstring filepath = props["filepath"].GetPropValue<dsstring>();
+        bool rendertarget = props["rendertarget"].GetPropValue<bool>();
+        unsigned long rendetarget_w = props["rendertarget_size"].GetPropValue<unsigned long>( "width" );
+        unsigned long rendetarget_h = props["rendertarget_size"].GetPropValue<unsigned long>( "height" );
+
+        
+        DIALOG_DECLARE( DIALOG_TEXTURE_PROPS_TITLE )
+        DIALOG_APPENDROOT_STRING( "assetname", assetname )
+        DIALOG_APPENDROOT_STRING( "filepath", filepath )
+        DIALOG_APPENDROOT_BOOL( "rendertarget", rendertarget )
+
+        if( rendertarget )
+        {
+            DIALOG_APPENDROOT_NODE( "rendertarget dims", rendertarget_dimsnode )
+
+            DIALOG_APPENDNODE_INTEGER( rendertarget_dimsnode, "width", rendetarget_w )
+            DIALOG_APPENDNODE_INTEGER( rendertarget_dimsnode, "height", rendetarget_h )
+        }
+
+        DIALOG_SHOW
+
     }
 
     Shader* shader = dynamic_cast<Shader*>( asset );
