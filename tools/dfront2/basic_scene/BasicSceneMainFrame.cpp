@@ -45,8 +45,8 @@ m_display_framerate( false ),
 m_display_currentcamera( false ),
 m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false )
 {
-    m_transftype_button->Enable( false );
-    m_transfoedit_button->Enable( false );
+
+
     m_control_button->Enable( false );
     m_cameraedit_button->Enable( false );
     m_modreg_button->Enable( false );
@@ -277,7 +277,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 }
             }
 
-            wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
+            //wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
         }
         else
         {
@@ -1630,7 +1630,7 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_scenegraph, m_cameras_listCtrl );
-    wxWidgetAdapter::GetInstance()->AdaptScenegraphList( &m_scenegraph, m_scenegraph_listCtrl );
+    
     wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
     wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );    
     wxWidgetAdapter::GetInstance()->AdaptKeyboardOutputComboBox( &m_movements, m_mousekeyboardoutput_comboBox );
@@ -2046,7 +2046,7 @@ void BasicSceneMainFrame::OnCreateCameraButtonClicked( wxCommandEvent& p_event )
     dialog->SetData( "mvts_map", &m_movements );
     dialog->SetData( "scenegraph", &m_scenegraph );
     dialog->SetData( "cameraslistctrl", m_cameras_listCtrl );
-    dialog->SetData( "scenegraphctrl", m_scenegraph_listCtrl );
+    
     dialog->SetData( "cameraslistcombobox", m_cameraslist_comboBox );
     dialog->EnableApplyButton();
     dialog->Show();
@@ -2074,132 +2074,6 @@ void BasicSceneMainFrame::OnCamerasListItemSelected( wxListEvent& p_event )
     long sel_index = p_event.GetIndex();
     m_cameraslistctrl_currentindex = sel_index;
     m_cameraedit_button->Enable( true );
-}
-
-void BasicSceneMainFrame::OnScenegraphItemActivated( wxListEvent& p_event )
-{
-    long sel_index = p_event.GetIndex();
-    
-    TransformNode* tnode = (TransformNode*)m_scenegraph_listCtrl->GetItemData( sel_index );
-
-    CameraPoint* camera = dynamic_cast<CameraPoint*>( tnode );
-    if( camera )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties" );
-        wxWidgetAdapter::GetInstance()->AdaptCameraProps( camera, dialog );
-        dialog->Show();
-    }
-}
-
-void BasicSceneMainFrame::OnScenegraphListItemSelected( wxListEvent& p_event )
-{
-    long sel_index = p_event.GetIndex();
-    m_scenegraphlistctrl_currentindex = sel_index;
-
-    TransformNode* transform_node = (TransformNode*)m_scenegraph_listCtrl->GetItemData( sel_index );
-
-    CameraPoint* camera_point = dynamic_cast<CameraPoint*>( transform_node );
-    if( camera_point )
-    {
-        m_transftype_button->Enable( false );
-        m_transfoedit_button->Enable( false );
-    }
-
-    Spacebox* spacebox = dynamic_cast<Spacebox*>( transform_node );
-    if( spacebox )
-    {
-        m_transftype_button->Enable( true );
-        m_transfoedit_button->Enable( true );
-    }
-}
-
-void BasicSceneMainFrame::OnCreateDrawableButtonClicked( wxCommandEvent& p_event )
-{
-    int drawable_type = m_drawabletypes_comboBox->GetSelection();
-
-    switch( drawable_type )
-    {
-        case 0:
-            BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spacebox creation" );
-            wxWidgetAdapter::GetInstance()->AdaptSpaceBoxCreationProps( dialog );
-            dialog->EnableApplyButton();
-            dialog->EnableSpecificButton0( "Add pass slot" );
-            dialog->SetData( "scenegraph", &m_scenegraph );
-            dialog->SetData( "metadata_scenegraph", &m_metada_scenegraph );
-            dialog->SetData( "scenegraphctrl", m_scenegraph_listCtrl );
-            dialog->SetData( "configs", &m_ordered_configs );
-            dialog->Show();
-            break;
-    }
-}
-
-void BasicSceneMainFrame::OnTransfTypeButtonClicked( wxCommandEvent& p_event )
-{
-    long sel_index = m_scenegraphlistctrl_currentindex;
-
-    TransformNode* transform_node = (TransformNode*)m_scenegraph_listCtrl->GetItemData( sel_index );
-
-    CameraPoint* camera_point = dynamic_cast<CameraPoint*>( transform_node );
-    if( camera_point )
-    {
-    }
-    Spacebox* spacebox = dynamic_cast<Spacebox*>( transform_node );
-    if( spacebox )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spacebox transformation source selection" );
-
-        dsstring scene_name;
-        spacebox->GetSceneName( scene_name );
-        
-        dialog->SetData( "metadata_scenegraph_entry", &m_metada_scenegraph[scene_name] );
-        dialog->EnableApplyButton();
-        wxWidgetAdapter::GetInstance()->AdaptTransfoSourceModification( dialog );
-        dialog->Show();
-    }
-}
-
-void BasicSceneMainFrame::OnTransfoEditButtonClicked( wxCommandEvent& p_event )
-{
-    /*
-    long sel_index = m_scenegraphlistctrl_currentindex;
-
-    TransformNode* transform_node = (TransformNode*)m_scenegraph_listCtrl->GetItemData( sel_index );
-
-    CameraPoint* camera_point = dynamic_cast<CameraPoint*>( transform_node );
-    if( camera_point )
-    {
-    }
-    Spacebox* spacebox = dynamic_cast<Spacebox*>( transform_node );
-    if( spacebox )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spacebox transformation source edition" );
-
-        dsstring scene_name;
-        spacebox->GetSceneName( scene_name );
-
-        dialog->SetData( "metadata_scenegraph_entry", &m_metada_scenegraph[scene_name] );
-        dialog->SetData( "registers", &m_registers );
-        dialog->EnableApplyButton();
-        dialog->EnableSpecificButton0( "Add matrix" );
-        dialog->EnableSpecificButton1( "Clear all" );
-        wxWidgetAdapter::GetInstance()->AdaptMatrixStackEdition( &m_registers, dialog );
-        dialog->Show();
-    }
-    */
-}
-
-void BasicSceneMainFrame::OnScenegraphListItemDeselected( wxListEvent& p_event )
-{
-}
-
-void BasicSceneMainFrame::OnScenegraphListDeleteItem( wxListEvent& p_event )
-{
-}
-
-void BasicSceneMainFrame::OnScenegraphListDeleteAllItems( wxListEvent& p_event )
-{
-    m_transftype_button->Enable( false );
-    m_transfoedit_button->Enable( false );
 }
 
 void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)

@@ -581,14 +581,13 @@ protected:
     virtual void OnCamerasListItemActivated( wxListEvent& p_event );
     virtual void OnCamerasListDeleteAllItems( wxListEvent& p_event );
     virtual void OnCamerasListItemSelected( wxListEvent& p_event );
-    virtual void OnScenegraphItemActivated( wxListEvent& p_event );
-    virtual void OnScenegraphListItemSelected( wxListEvent& p_event );
-    virtual void OnCreateDrawableButtonClicked( wxCommandEvent& p_event );
-    virtual void OnTransfTypeButtonClicked( wxCommandEvent& p_event );
-	virtual void OnTransfoEditButtonClicked( wxCommandEvent& p_event );
-    virtual void OnScenegraphListItemDeselected( wxListEvent& p_event );
-    virtual void OnScenegraphListDeleteItem( wxListEvent& p_event );
-    virtual void OnScenegraphListDeleteAllItems( wxListEvent& p_event );
+    
+
+
+
+
+
+
 
     virtual void OnPopupClick(wxCommandEvent& p_evt);
     virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event );

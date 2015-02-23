@@ -529,59 +529,6 @@ void wxWidgetAdapter::AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxL
     }
 }
 
-void wxWidgetAdapter::AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl )
-{
-    p_listctrl->ClearAll();
-
-    wxListItem col0;
-    col0.SetId( 0 );
-    col0.SetText( "Scene name" );
-    col0.SetWidth( 110 );
-    p_listctrl->InsertColumn( 0, col0 );
-
-    wxListItem col1;
-    col1.SetId( 1 );
-    col1.SetText( "Type" );
-    col1.SetWidth( 150 );
-    p_listctrl->InsertColumn( 1, col1 );
-
-    /////////////////////////////////////////////
-
-    std::map<dsstring, TransformNode*> nodes_list = p_scenegraph->GetNodesList();
-
-    long id = 0;
-    for( std::map<dsstring, TransformNode*>::iterator it = nodes_list.begin(); it != nodes_list.end(); ++it, id++ )
-    {
-        dsstring scenename = it->first;
-        wxListItem item;
-        item.SetId( id );
-        item.SetText( scenename.c_str() );
-        p_listctrl->InsertItem( item );
-
-
-        TransformNode* node = it->second;
-
-        dsstring type_name;
-
-        if( dynamic_cast<CameraPoint*>( node ) )
-        {
-            type_name = "Camera";
-        }
-        else if( dynamic_cast<Spacebox*>( node ) )
-        {
-            type_name = "Spacebox";
-        }
-        else
-        {
-            type_name = "???";    
-        }
-
-        p_listctrl->SetItem( id, 1, type_name.c_str() );
-
-        p_listctrl->SetItemData( id, (long)it->second );
-    }    
-}
-
 void wxWidgetAdapter::AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl )
 {
     p_listctrl->ClearAll();
@@ -1953,7 +1900,7 @@ void wxWidgetAdapter::on_applycameravalues( BasicSceneObjectPropertiesDialog* p_
     wxComboBox* cameraslistcombobox = (wxComboBox*)p_dialog->GetData( "cameraslistcombobox" );
 
     AdaptCamerasList( scenegraph, cameraslistctrl );
-    AdaptScenegraphList( scenegraph, scenegraphctrl );
+    
     AdaptCameraListComboBox( scenegraph, cameraslistcombobox );
 
     p_dialog->Close();
@@ -2281,7 +2228,7 @@ void wxWidgetAdapter::on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* 
     }
 
     wxListCtrl* scenegraphctrl = (wxListCtrl*)p_dialog->GetData( "scenegraphctrl" );
-    AdaptScenegraphList( scenegraph, scenegraphctrl );
+    
     p_dialog->Close();
 }
 

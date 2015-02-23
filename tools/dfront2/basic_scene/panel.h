@@ -94,14 +94,9 @@ class MainFrame : public wxFrame
 		wxListCtrl* m_assets_listCtrl;
 		wxListCtrl* m_configs_listCtrl;
 		wxPanel* m_scenePanel;
-		wxListCtrl* m_scenegraph_listCtrl;
-		wxButton* m_transftype_button;
-		wxButton* m_transfoedit_button;
+		wxTreeCtrl* m_scenegraphs_treeCtrl;
 		wxStaticText* m_staticText2;
 		wxComboBox* m_cameraslist_comboBox;
-		wxButton* m_create_drawable_button;
-		wxComboBox* m_drawabletypes_comboBox;
-		wxTreeCtrl* m_scenegraphs_treeCtrl;
 		wxPanel* m_registersPanel;
 		wxListCtrl* m_registers_listCtrl;
 		wxButton* m_modreg_button;
@@ -136,14 +131,6 @@ class MainFrame : public wxFrame
 		virtual void OnShadersListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnAssetsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnConfigsListItemActivated( wxListEvent& event ) { event.Skip(); }
-		virtual void OnScenegraphListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
-		virtual void OnScenegraphListDeleteItem( wxListEvent& event ) { event.Skip(); }
-		virtual void OnScenegraphItemActivated( wxListEvent& event ) { event.Skip(); }
-		virtual void OnScenegraphListItemDeselected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnScenegraphListItemSelected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnTransfTypeButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnTransfoEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCreateDrawableButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& event ) { event.Skip(); }
 		virtual void OnRegsListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
 		virtual void OnRegistersListItemActivated( wxListEvent& event ) { event.Skip(); }
