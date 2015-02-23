@@ -1224,6 +1224,15 @@ void BasicSceneMainFrame::compute_transformnodes( void )
                     updated_mat.Rotation( Vector( values[0], values[1], values[2], 1.0 ), values[3] );
                 }
                 break;
+
+
+                case Matrix::CONFIG_IDENTITY:
+                {
+                    updated_mat.Identity();
+                }
+                break;
+
+
             }
 
             updated_mat.SetMetaData( 0, mci.metadatas[0] );
@@ -2656,7 +2665,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         
 
-        DIALOG_EXPLORE_NODES_BEGIN( "", "PASS_%d", i, pass_slot, comment )
+        DIALOG_EXPLORE_NODES_BEGIN( "", "PASS_%d", i, pass_slot )
             
 
             DIALOG_GET_BOOL_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "enable" ), enable_it )
