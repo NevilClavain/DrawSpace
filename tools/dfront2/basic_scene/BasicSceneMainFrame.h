@@ -382,35 +382,6 @@ public:
 
 
 
-    typedef enum
-    {
-        MOVEMENTCONTROLSOURCE_KEYBMOUSE,
-        MOVEMENTCONTROLSOURCE_REGISTER
-
-    } MovementControlSource;
-
-
-    typedef struct
-    {
-        DrawSpace::Core::Movement*  movement;
-
-        MovementControlSource       speed_control_source;
-        dsstring                    speed_control_register;
-
-        MovementControlSource       yaw_control_source;
-        dsstring                    yaw_control_register;
-
-        MovementControlSource       pitch_control_source;
-        dsstring                    pitch_control_register;
-
-        MovementControlSource       roll_control_source;
-        dsstring                    roll_control_register;
-
-        dsreal                      theta_pos_mouse;
-        dsreal                      phi_pos_mouse;
-
-    } MovementEntry;
-
 
     typedef enum
     {
@@ -467,9 +438,9 @@ protected:
     void on_scripting_error( const dsstring& p_error );
     void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );
 
-    void compute_scenegraph_transforms( void );
+    
     void compute_regs( void );
-    void compute_movements( void );
+
 
     void compute_transformnodes( void );
 
@@ -496,10 +467,10 @@ protected:
 
     bool                                                    m_glready;
     DrawSpace::Utils::TimeManager                           m_timer;
-    std::map<dsstring, MovementEntry>                       m_movements;
+    
 
     DrawSpace::Scenegraph                                   m_scenegraph;
-    std::map<dsstring, MetadataScenegraphEntry>             m_metada_scenegraph;
+    
 
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -573,14 +544,14 @@ protected:
     virtual void OnPassesListItemActivated( wxListEvent& p_event );
     virtual void OnPassesListItemSelected( wxListEvent& p_event );
     virtual void OnShadersListItemActivated( wxListEvent& p_event );
-    virtual void OnCreateMvtButtonClicked( wxCommandEvent& p_event );
-    virtual void OnMvtsListItemActivated( wxListEvent& p_event );
-    virtual void OnMvtsListDeleteAllItems( wxListEvent& p_event );
-    virtual void OnMvtsListItemSelected( wxListEvent& p_event );
-    virtual void OnCreateCameraButtonClicked( wxCommandEvent& p_event );
-    virtual void OnCamerasListItemActivated( wxListEvent& p_event );
-    virtual void OnCamerasListDeleteAllItems( wxListEvent& p_event );
-    virtual void OnCamerasListItemSelected( wxListEvent& p_event );
+
+    
+    
+    
+    
+
+
+
     
 
 
@@ -592,10 +563,10 @@ protected:
     virtual void OnPopupClick(wxCommandEvent& p_evt);
     virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event );
 
-	virtual void OnControlButtonClicked( wxCommandEvent& p_event );
+	
     virtual void OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event );
     virtual void OnCreateRegButtonClicked( wxCommandEvent& p_event );
-    virtual void OnCameraEditButtonClicked( wxCommandEvent& p_event );
+
     virtual void OnRegistersListItemActivated( wxListEvent& p_event );
 	virtual void OnRegsListDeleteAllItems( wxListEvent& p_event );
 	virtual void OnRegsListItemSelected( wxListEvent& p_event );
@@ -620,8 +591,7 @@ public:
 
     void ExecStartupScript( const dsstring& p_scriptfilepath );
     void PrintOutputConsole( const dsstring& p_text );
-
-    bool RegisterMovement( const dsstring& p_name, const MovementEntry& p_movement );
+    
 };
 
 #endif // __BasicSceneMainFrame__

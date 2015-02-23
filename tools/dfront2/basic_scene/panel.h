@@ -26,10 +26,10 @@
 #include <wx/textctrl.h>
 #include <wx/listctrl.h>
 #include <wx/statbox.h>
-#include <wx/combobox.h>
-#include <wx/stattext.h>
 #include <wx/panel.h>
 #include <wx/treectrl.h>
+#include <wx/stattext.h>
+#include <wx/combobox.h>
 #include <wx/notebook.h>
 #include <wx/frame.h>
 
@@ -77,16 +77,6 @@ class MainFrame : public wxFrame
 		wxButton* m_consoleinclear_button;
 		wxButton* m_consoleinload_button;
 		wxNotebook* m_notebook2;
-		wxPanel* m_camerasPanel;
-		wxListCtrl* m_cameras_listCtrl;
-		wxButton* m_cameraedit_button;
-		wxButton* m_createcamera_button;
-		wxListCtrl* m_mvts_listCtrl;
-		wxButton* m_control_button;
-		wxButton* m_createmvt_button;
-		wxComboBox* m_mvttype_comboBox;
-		wxStaticText* m_staticText1;
-		wxComboBox* m_mousekeyboardoutput_comboBox;
 		wxPanel* m_passesPanel;
 		wxListCtrl* m_passes_listCtrl;
 		wxListCtrl* m_shadersparams_listCtrl;
@@ -115,17 +105,6 @@ class MainFrame : public wxFrame
 		virtual void OnConsoleInSendButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConsoleInClearButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConsoleInLoadButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCamerasListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
-		virtual void OnCamerasListItemActivated( wxListEvent& event ) { event.Skip(); }
-		virtual void OnCamerasListItemSelected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnCameraEditButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCreateCameraButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnMvtsListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
-		virtual void OnMvtsListItemActivated( wxListEvent& event ) { event.Skip(); }
-		virtual void OnMvtsListItemSelected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnControlButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCreateMvtButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnMouseKeyboardOutputCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnShadersListItemActivated( wxListEvent& event ) { event.Skip(); }

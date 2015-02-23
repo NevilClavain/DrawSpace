@@ -34,14 +34,8 @@ wxWidgetAdapter* wxWidgetAdapter::m_instance = NULL;
 wxWidgetAdapter::wxWidgetAdapter( void )
 {
     m_applypassshadervalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applypassshadervalues );
-    m_applylinearmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applylinearmvtvalues );
-    m_applycircularmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycircularmvtvalues );
-    m_applyfpsmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyfpsmvtvalues );
-    m_applyfreemvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyfreemvtvalues );
-    m_applyheadmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyheadmvtvalues );
-    m_applyspectatormvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspectatormvtvalues );
-    m_applylonglatmvtvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applylonglatmvtvalues );
-    m_applycameravalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameravalues );
+
+    
     m_applycameraprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameraprops );
 
 
@@ -60,7 +54,7 @@ wxWidgetAdapter::wxWidgetAdapter( void )
 
     m_applyregisterprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyregisterprops );
 
-    m_applymovementcontrolprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applymovementcontrolprops );
+    
 
     m_register_index = 0;
 }
@@ -68,14 +62,7 @@ wxWidgetAdapter::wxWidgetAdapter( void )
 wxWidgetAdapter::~wxWidgetAdapter( void )
 {
     delete m_applypassshadervalues_callback;
-    delete m_applylinearmvtvalues_callback;
-    delete m_applycircularmvtvalues_callback;
-    delete m_applyfpsmvtvalues_callback;
-    delete m_applyfreemvtvalues_callback;
-    delete m_applyheadmvtvalues_callback;
-    delete m_applyspectatormvtvalues_callback;
-    delete m_applylonglatmvtvalues_callback;
-    delete m_applycameravalues_callback;
+    
     delete m_applycameraprops_callback;
     delete m_applyspaceboxvalues_callback;
     delete m_applyspaceboxaddpassslot_callback;
@@ -85,7 +72,7 @@ wxWidgetAdapter::~wxWidgetAdapter( void )
     delete m_applytransfosourcemodification_callback;
     delete m_applyregistervalues_callback;
     delete m_applyregisterprops_callback;
-    delete m_applymovementcontrolprops_callback;
+    
 }
 
 void wxWidgetAdapter::AdaptAssetsList( wxListCtrl* p_listctrl )
@@ -333,201 +320,6 @@ void wxWidgetAdapter::AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxLi
 }
 
 
-void wxWidgetAdapter::AdaptMvtsList( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_map, wxListCtrl* p_listctrl )
-{
-    p_listctrl->ClearAll();
-
-    wxListItem col0;
-    col0.SetId( 0 );
-    col0.SetText( "Movement alias" );
-    col0.SetWidth( 110 );
-    p_listctrl->InsertColumn( 0, col0 );
-
-    wxListItem col1;
-    col1.SetId( 1 );
-    col1.SetText( "Movement type" );
-    col1.SetWidth( 100 );
-    p_listctrl->InsertColumn( 1, col1 );
-
-    long id = 0;
-    for( std::map<dsstring, BasicSceneMainFrame::MovementEntry>::iterator it = p_map->begin(); it != p_map->end(); ++it, id++ )
-    {
-        Movement* mvt = it->second.movement;
-
-        dsstring alias = it->first;
-
-        wxListItem item;
-        item.SetId( id );
-        item.SetText( alias.c_str() );
-        p_listctrl->InsertItem( item );
-
-
-        dsstring type_name;
-
-        if( dynamic_cast<LinearMovement*>( mvt ) )
-        {
-            type_name = "Linear";
-        }
-        else if( dynamic_cast<CircularMovement*>( mvt ) )
-        {
-            type_name = "Circular";
-        }
-        else if( dynamic_cast<FPSMovement*>( mvt ) )
-        {
-            type_name = "FPS";
-        }
-        else if( dynamic_cast<FreeMovement*>( mvt ) )
-        {
-            type_name = "Free";
-        }
-        else if( dynamic_cast<HeadMovement*>( mvt ) )
-        {
-            type_name = "Head";
-        }
-        else if( dynamic_cast<SpectatorMovement*>( mvt ) )
-        {
-            type_name = "Spectator";
-        }
-        else if( dynamic_cast<LongLatMovement*>( mvt ) )
-        {
-            type_name = "Longlat";
-        }
-        p_listctrl->SetItem( id, 1, type_name.c_str() );
-
-        p_listctrl->SetItemData( id, (long)mvt );
-    }
-}
-
-void wxWidgetAdapter::AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl )
-{
-    p_listctrl->ClearAll();
-
-    wxListItem col0;
-    col0.SetId( 0 );
-    col0.SetText( "Camera alias" );
-    col0.SetWidth( 110 );
-    p_listctrl->InsertColumn( 0, col0 );
-
-    wxListItem col1;
-    col1.SetId( 1 );
-    col1.SetText( "Attached body" );
-    col1.SetWidth( 150 );
-    p_listctrl->InsertColumn( 1, col1 );
-
-    wxListItem col2;
-    col2.SetId( 2 );
-    col2.SetText( "Locked on" );
-    col2.SetWidth( 100 );
-    p_listctrl->InsertColumn( 2, col2 );
-
-    wxListItem col3;
-    col3.SetId( 3 );
-    col3.SetText( "Movement" );
-    col3.SetWidth( 100 );
-    p_listctrl->InsertColumn( 3, col3 );
-
-    wxListItem col4;
-    col4.SetId( 4 );
-    col4.SetText( "Longlat movement" );
-    col4.SetWidth( 150 );
-    p_listctrl->InsertColumn( 4, col4 );
-
-    wxListItem col5;
-    col5.SetId( 5 );
-    col5.SetText( "Relative orbiter" );
-    col5.SetWidth( 150 );
-    p_listctrl->InsertColumn( 5, col5 );
-
-    wxListItem col6;
-    col6.SetId( 6 );
-    col6.SetText( "Altitud" );
-    col6.SetWidth( 70 );
-    p_listctrl->InsertColumn( 6, col6 );
-
-    ///////////////////////////////////////
-
-    std::map<dsstring, Core::TransformNode*> cameras_list = p_scenegraph->GetCamerasList();
-
-    long id = 0;
-    for( std::map<dsstring, Core::TransformNode*>::iterator it = cameras_list.begin(); it != cameras_list.end(); ++it, id++ )
-    {
-        CameraPoint* camera = static_cast<CameraPoint*>( it->second );
-
-        dsstring alias = it->first;
-        wxListItem item;
-        item.SetId( id );
-        item.SetText( alias.c_str() );
-        p_listctrl->InsertItem( item );
-
-        CameraPoint::Infos infos;
-        camera->GetInfos( infos );
-
-
-        dsstring attached_body_name;
-        if( infos.attached_to_body )
-        {
-            attached_body_name = infos.attached_body_alias;
-        }
-        else
-        {
-            attached_body_name = "...";
-        }
-        p_listctrl->SetItem( id, 1, attached_body_name.c_str() );
-
-        dsstring locking_object_name;
-        if( infos.locked_on_body || infos.locked_on_transformnode )
-        {
-            locking_object_name = infos.locked_object_alias;
-        }
-        else
-        {
-            locking_object_name = "...";
-        }
-        p_listctrl->SetItem( id, 2, locking_object_name.c_str() );
-
-        dsstring movement_name;
-        if( infos.has_movement )
-        {
-            movement_name = infos.movement_alias;
-        }
-        else
-        {
-            movement_name = "...";
-        }
-        p_listctrl->SetItem( id, 3, movement_name.c_str() );
-
-        
-        dsstring llmovement_name;
-        if( infos.has_longlatmovement )
-        {
-            llmovement_name = infos.longlatmovement_alias;
-        }
-        else
-        {
-            llmovement_name = "...";
-        }
-
-        p_listctrl->SetItem( id, 4, llmovement_name.c_str() );
-
-        dsstring relative_orbiter;
-        char altitud[32];
-        if( infos.relative_orbiter )
-        {
-            relative_orbiter = "true";
-            sprintf( altitud, "%d", infos.altitud );
-        }
-        else
-        {
-            relative_orbiter = "false";
-            sprintf( altitud, "..." );
-        }
-        p_listctrl->SetItem( id, 5, relative_orbiter.c_str() );
-        p_listctrl->SetItem( id, 6, altitud );
-
-        p_listctrl->SetItemData( id, (long)camera );
-
-    }
-}
 
 void wxWidgetAdapter::AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl )
 {
@@ -1111,114 +903,12 @@ void wxWidgetAdapter::AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDia
     propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, 0.0 ) );
 
-    p_dialog->RegisterApplyButtonHandler( m_applylinearmvtvalues_callback );
+    //p_dialog->RegisterApplyButtonHandler( m_applylinearmvtvalues_callback );
 
     propertygrid->ResetColumnSizes();
     propertygrid->CollapseAll();
 }
 
-void wxWidgetAdapter::on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    wxFloatProperty* prop;
-    wxStringProperty* prop2;
-    wxAny value;
-
-    dsreal rval;
-    Vector init_pos;
-    Vector direction;
-    dsreal theta, phi;
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.x" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[0] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.y" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[1] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.z" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[2] = rval;
-
-    init_pos[3] = 1.0;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction.x" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    direction[0] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction.y" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    direction[1] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Direction.z" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    direction[2] = rval;
-
-    direction[3] = 1.0;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Theta" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &theta );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Phi" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &phi );
-
-    LinearMovement* linear_mvt = new LinearMovement();
-    linear_mvt->Init( init_pos, direction, theta, phi );
-    
-    BasicSceneMainFrame::MovementEntry movement_entry;
-    movement_entry.movement = linear_mvt;
-    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos_mouse = 0.0;
-    movement_entry.phi_pos_mouse = 0.0;
-
-    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
-    if( frame->RegisterMovement( alias, movement_entry ) )
-    {
-        p_dialog->Close();
-    }
-
-    //(*mvts_map)[alias] = movement_entry;
-
-    //wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
-
-    //AdaptMvtsList( mvts_map, ctrl );
-
-    //wxComboBox* combo = (wxComboBox*)p_dialog->GetData( "combo" );
-
-    //AdaptKeyboardOutputComboBox( mvts_map, combo );
-
-
-    //p_dialog->Close();
-}
 
 void wxWidgetAdapter::AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
@@ -1246,126 +936,10 @@ void wxWidgetAdapter::AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesD
     propertygrid->Append( new wxFloatProperty( "Theta", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Phi", wxPG_LABEL, 0.0 ) );
 
-    p_dialog->RegisterApplyButtonHandler( m_applycircularmvtvalues_callback );
+    //p_dialog->RegisterApplyButtonHandler( m_applycircularmvtvalues_callback );
 
     propertygrid->ResetColumnSizes();
     propertygrid->CollapseAll();
-}
-
-void wxWidgetAdapter::on_applycircularmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    wxFloatProperty* prop;
-    wxStringProperty* prop2;
-    wxAny value;
-
-    dsreal rval;
-    Vector center_pos;
-    Vector delta_center;
-    Vector rot_axis;
-    dsreal init_angle, theta, phi;
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center position.x" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    center_pos[0] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center position.y" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    center_pos[1] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Center position.z" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    center_pos[2] = rval;
-
-    center_pos[3] = 1.0;
-
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center.x" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    delta_center[0] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center.y" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    delta_center[1] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Delta center.z" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    delta_center[2] = rval;
-
-    delta_center[3] = 1.0;
-
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis.x" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    rot_axis[0] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis.y" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    rot_axis[1] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Rotation axis.z" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    rot_axis[2] = rval;
-
-    rot_axis[3] = 1.0;
-
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial angle" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &init_angle );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Theta" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &theta );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Phi" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &phi );
-
-    CircularMovement* circular_mvt = new CircularMovement();
-    circular_mvt->Init( center_pos, delta_center, rot_axis, init_angle, theta, phi );
-
-    BasicSceneMainFrame::MovementEntry movement_entry;
-    movement_entry.movement = circular_mvt;
-    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos_mouse = 0.0;
-    movement_entry.phi_pos_mouse = 0.0;
-
-    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
-    if( frame->RegisterMovement( alias, movement_entry ) )
-    {
-        p_dialog->Close();
-    }
 }
 
 void wxWidgetAdapter::AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -1383,85 +957,12 @@ void wxWidgetAdapter::AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog
     propertygrid->Append( new wxFloatProperty( "Initial yaw", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial pitch", wxPG_LABEL, 0.0 ) );
 
-    p_dialog->RegisterApplyButtonHandler( m_applyfpsmvtvalues_callback );
+    //p_dialog->RegisterApplyButtonHandler( m_applyfpsmvtvalues_callback );
 
     propertygrid->ResetColumnSizes();
     propertygrid->CollapseAll();
 }
 
-void wxWidgetAdapter::on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    wxFloatProperty* prop;
-    wxStringProperty* prop2;
-    wxAny value;
-
-    dsreal rval;
-    Vector init_pos;
-    dsreal init_yaw, init_pitch;
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.x" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[0] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.y" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[1] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.z" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[2] = rval;
-
-    init_pos[3] = 1.0;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial yaw" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &init_yaw );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial pitch" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &init_pitch );
-
-
-    FPSMovement* fps_mvt = new FPSMovement();
-    fps_mvt->Init( init_pos, init_yaw, init_pitch );
-
-    BasicSceneMainFrame::MovementEntry movement_entry;
-    movement_entry.movement = fps_mvt;
-    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos_mouse = 0.0;
-    movement_entry.phi_pos_mouse = 0.0;
-
-    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
-    if( frame->RegisterMovement( alias, movement_entry ) )
-    {
-        p_dialog->Close();
-    }
-}
 
 void wxWidgetAdapter::AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
@@ -1474,75 +975,12 @@ void wxWidgetAdapter::AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialo
     propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( initpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
 
-    p_dialog->RegisterApplyButtonHandler( m_applyfreemvtvalues_callback );
+    //p_dialog->RegisterApplyButtonHandler( m_applyfreemvtvalues_callback );
 
     propertygrid->ResetColumnSizes();
     propertygrid->CollapseAll();
 }
 
-void wxWidgetAdapter::on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    wxFloatProperty* prop;
-    wxStringProperty* prop2;
-    wxAny value;
-
-    dsreal rval;
-    Vector init_pos;
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.x" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[0] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.y" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[1] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial position.z" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    init_pos[2] = rval;
-
-    init_pos[3] = 1.0;
-
-    FreeMovement* free_mvt = new FreeMovement();
-    free_mvt->Init( init_pos );
-
-    BasicSceneMainFrame::MovementEntry movement_entry;
-    movement_entry.movement = free_mvt;
-    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos_mouse = 0.0;
-    movement_entry.phi_pos_mouse = 0.0;
-
-    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
-    if( frame->RegisterMovement( alias, movement_entry ) )
-    {
-        p_dialog->Close();
-    }
-}
 
 void wxWidgetAdapter::AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
@@ -1558,86 +996,12 @@ void wxWidgetAdapter::AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialo
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "y", wxPG_LABEL, 0.0 ) );
     propertygrid->AppendIn( headpos_prop, new wxFloatProperty( "z", wxPG_LABEL, 0.0 ) );
 
-    p_dialog->RegisterApplyButtonHandler( m_applyheadmvtvalues_callback );
+    //p_dialog->RegisterApplyButtonHandler( m_applyheadmvtvalues_callback );
 
     propertygrid->ResetColumnSizes();
     propertygrid->CollapseAll();
 }
 
-void wxWidgetAdapter::on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    wxFloatProperty* prop;
-    wxStringProperty* prop2;
-    wxAny value;
-
-    dsreal rval;
-    Vector head_pos;
-    dsreal scale_factor;
-    dsreal ref_force;
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Head position.x" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    head_pos[0] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Head position.y" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    head_pos[1] = rval;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Head position.z" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &rval );
-    head_pos[2] = rval;
-
-    head_pos[3] = 1.0;
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Scale factor" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &scale_factor );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Ref force" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &ref_force );
-
-
-    HeadMovement* head_mvt = new HeadMovement();
-    head_mvt->Init( scale_factor, ref_force, head_pos );
-
-    BasicSceneMainFrame::MovementEntry movement_entry;
-    movement_entry.movement = head_mvt;
-    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos_mouse = 0.0;
-    movement_entry.phi_pos_mouse = 0.0;
-
-    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
-    if( frame->RegisterMovement( alias, movement_entry ) )
-    {
-        p_dialog->Close();
-    }
-}
 
 void wxWidgetAdapter::AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
@@ -1649,70 +1013,9 @@ void wxWidgetAdapter::AdaptSpectatorMvtCreationProps( BasicSceneObjectProperties
     propertygrid->Append( new wxIntProperty( "Period", wxPG_LABEL, 10 ) );
     propertygrid->Append( new wxBoolProperty( "Attached to Orbiter", wxPG_LABEL, false ) );
 
-    p_dialog->RegisterApplyButtonHandler( m_applyspectatormvtvalues_callback );
+    //p_dialog->RegisterApplyButtonHandler( m_applyspectatormvtvalues_callback );
 }
 
-void wxWidgetAdapter::on_applyspectatormvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    wxFloatProperty* prop;    
-    wxStringProperty* prop2;
-    wxIntProperty* prop3;
-    wxBoolProperty* prop4;
-    wxAny value;
-
-    dsreal  scale_pos;
-    int     period;
-    bool    orbiter_link;
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Scale pos" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &scale_pos );
-
-    prop3 = static_cast<wxIntProperty*>( propertygrid->GetProperty( "Period" ) );
-    value = prop3->GetValue();
-    value.GetAs<int>( &period );
-
-    prop4 = static_cast<wxBoolProperty*>( propertygrid->GetProperty( "Attached to Orbiter" ) );
-    value = prop4->GetValue();
-    value.GetAs<bool>( &orbiter_link );
-
-    SpectatorMovement* spectator_mvt = new SpectatorMovement();
-    spectator_mvt->Init( scale_pos, period, orbiter_link );
-
-    BasicSceneMainFrame::MovementEntry movement_entry;
-    movement_entry.movement = spectator_mvt;
-    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos_mouse = 0.0;
-    movement_entry.phi_pos_mouse = 0.0;
-
-    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
-    if( frame->RegisterMovement( alias, movement_entry ) )
-    {
-        p_dialog->Close();
-    }
-}
 
 void wxWidgetAdapter::AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
 {
@@ -1726,185 +1029,10 @@ void wxWidgetAdapter::AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDi
     propertygrid->Append( new wxFloatProperty( "Initial theta", wxPG_LABEL, 0.0 ) );
     propertygrid->Append( new wxFloatProperty( "Initial phi", wxPG_LABEL, 0.0 ) );
 
-    p_dialog->RegisterApplyButtonHandler( m_applylonglatmvtvalues_callback );
+    //p_dialog->RegisterApplyButtonHandler( m_applylonglatmvtvalues_callback );
 }
 
-void wxWidgetAdapter::on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
 
-    wxFloatProperty* prop;
-    wxStringProperty* prop2;
-    wxAny value;
-
-    dsreal init_longit;
-    dsreal init_latit;
-    dsreal init_altitud;
-    dsreal init_theta;
-    dsreal init_phi;
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial longitud" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &init_longit );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial latitud" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &init_latit );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial altitud" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &init_altitud );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial theta" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &init_theta );
-
-    prop = static_cast<wxFloatProperty*>( propertygrid->GetProperty( "Initial phi" ) );
-    value = prop->GetValue();
-    value.GetAs<double>( &init_phi );
-
-    LongLatMovement* longlat_mvt = new LongLatMovement();
-    longlat_mvt->Init( init_longit, init_latit, init_altitud, init_theta, init_phi );
-
-    BasicSceneMainFrame::MovementEntry movement_entry;
-    movement_entry.movement = longlat_mvt;
-    movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    movement_entry.theta_pos_mouse = 0.0;
-    movement_entry.phi_pos_mouse = 0.0;
-
-    BasicSceneMainFrame* frame = (BasicSceneMainFrame*)p_dialog->GetData( "frame" );
-    if( frame->RegisterMovement( alias, movement_entry ) )
-    {
-        p_dialog->Close();
-    }
-}
-
-void wxWidgetAdapter::AdaptCameraCreationProps( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_mvts_map, BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, "" ) );
-
-    wxArrayString availables_bodies_labels;
-    // TODO : completer availables_bodies_labels
-    propertygrid->Append( new wxEnumProperty( "Attached body", wxPG_LABEL, availables_bodies_labels ));
-
-    wxArrayString availables_bodies_transformnodes_labels;
-    // TODO : completer availables_bodies_transformnodes_labels
-    propertygrid->Append( new wxEnumProperty( "Lock target", wxPG_LABEL, availables_bodies_transformnodes_labels ));
-
-
-    wxArrayString availables_movements_labels;
-    wxArrayString availables_longlatmovements_labels;
-
-    availables_movements_labels.Add( "..." );
-    availables_longlatmovements_labels.Add( "..." );
-
-    for( std::map<dsstring, BasicSceneMainFrame::MovementEntry>::iterator it = p_mvts_map->begin(); it != p_mvts_map->end(); ++it )
-    {
-        availables_movements_labels.Add( it->first.c_str() );
-
-        Movement* mvt = it->second.movement;
-
-        if( dynamic_cast<LongLatMovement*>( mvt ) )
-        {
-            availables_longlatmovements_labels.Add( it->first );
-        }
-    }
-
-    propertygrid->Append( new wxEnumProperty( "Movement", wxPG_LABEL, availables_movements_labels ) );
-    propertygrid->Append( new wxEnumProperty( "Longlat movement", wxPG_LABEL, availables_longlatmovements_labels ) );
-
-
-    p_dialog->RegisterApplyButtonHandler( m_applycameravalues_callback );
-
-}
-
-void wxWidgetAdapter::on_applycameravalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    wxStringProperty* prop2;
-    wxAny value;
-
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Alias" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Alias' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-
-    wxEnumProperty* prop3;
-
-    prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "Movement" ) );
-    wxString movement_name = prop3->GetValueAsString();   
-    buffer = movement_name.ToAscii();
-    dsstring movement_name_2 = buffer.data();
-
-    prop3 = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "Longlat movement" ) );
-    wxString llmovement_name = prop3->GetValueAsString();   
-    buffer = llmovement_name.ToAscii();
-    dsstring llmovement_name_2 = buffer.data();
-
-    std::map<dsstring, BasicSceneMainFrame::MovementEntry>* mvts_map = (std::map<dsstring, BasicSceneMainFrame::MovementEntry>*)p_dialog->GetData( "mvts_map" );
-
-    CameraPoint* camera_point = new CameraPoint( alias, NULL, "" );
-
-    if( movement_name_2 != "..." )
-    {
-        camera_point->RegisterMovement( movement_name_2, (*mvts_map)[movement_name_2].movement );
-    }
-
-    if( llmovement_name_2 != "..." )
-    {
-        camera_point->RegisterLongLatMovement( llmovement_name_2, static_cast<LongLatMovement*>( (*mvts_map)[llmovement_name_2].movement ) );
-    }
-
-    DrawSpace::Scenegraph* scenegraph = (DrawSpace::Scenegraph*)p_dialog->GetData( "scenegraph" );
-    scenegraph->RegisterNode( camera_point );
-
-    wxListCtrl* cameraslistctrl = (wxListCtrl*)p_dialog->GetData( "cameraslistctrl" );
-    wxListCtrl* scenegraphctrl = (wxListCtrl*)p_dialog->GetData( "scenegraphctrl" );
-    wxComboBox* cameraslistcombobox = (wxComboBox*)p_dialog->GetData( "cameraslistcombobox" );
-
-    AdaptCamerasList( scenegraph, cameraslistctrl );
-    
-    AdaptCameraListComboBox( scenegraph, cameraslistcombobox );
-
-    p_dialog->Close();
-}
 
 
 
@@ -3241,167 +2369,7 @@ void wxWidgetAdapter::on_applymatrixstackclearall( BasicSceneObjectPropertiesDia
     m_matrix_slot_index = 0;
 }
 
-void wxWidgetAdapter::AdaptMovementControlProps( const dsstring& p_mvtalias, std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-    propertygrid->Append( new wxStringProperty( "Alias", wxPG_LABEL, p_mvtalias.c_str() ) );
 
-    BasicSceneMainFrame::MovementEntry* movement_entry = (BasicSceneMainFrame::MovementEntry*)p_dialog->GetData( "movement_entry" );
-
-    bool enable_registers = true;
-
-    if( dynamic_cast<FPSMovement*>( movement_entry->movement ) || dynamic_cast<FreeMovement*>( movement_entry->movement ) )
-    {
-        enable_registers = false;
-    }
-    
-    /////////////////// recup tout les alias de variables
-
-    wxArrayString ctrlsource_labels;
-    wxArrayInt ctrlsource_arrIds;
-    int ctrlsource_index;
-
-    ctrlsource_labels.Add( "keyboard and mouse" );
-    ctrlsource_arrIds.Add( -1 );
-
-    if( enable_registers )
-    {
-        for( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>::iterator it = p_registers->begin(); it != p_registers->end(); ++it )
-        {
-            ctrlsource_labels.Add( it->first );
-            ctrlsource_arrIds.Add( it->second.id );
-        }
-    }
-
-    ///////////////////////////////////////////////////////////
-
-    if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
-    {
-        ctrlsource_index = -1;
-    }
-    else if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->speed_control_source )
-    {
-        BasicSceneMainFrame::RegisterEntry reg = (*p_registers)[movement_entry->speed_control_register];
-        ctrlsource_index = reg.id;
-    }
-    propertygrid->Append( new wxEnumProperty( "speed control", wxPG_LABEL, ctrlsource_labels, ctrlsource_arrIds, ctrlsource_index ) );
-
-    if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
-    {
-        ctrlsource_index = -1;
-    }
-    else if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->yaw_control_source )
-    {
-        BasicSceneMainFrame::RegisterEntry reg = (*p_registers)[movement_entry->yaw_control_register];
-        ctrlsource_index = reg.id;
-    }
-    propertygrid->Append( new wxEnumProperty( "yaw control", wxPG_LABEL, ctrlsource_labels, ctrlsource_arrIds, ctrlsource_index ) );
-
-    if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
-    {
-        ctrlsource_index = -1;
-    }
-    else if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->pitch_control_source )
-    {
-        BasicSceneMainFrame::RegisterEntry reg = (*p_registers)[movement_entry->pitch_control_register];
-        ctrlsource_index = reg.id;
-    }
-    propertygrid->Append( new wxEnumProperty( "pitch control", wxPG_LABEL, ctrlsource_labels, ctrlsource_arrIds, ctrlsource_index ) );
-
-    if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->roll_control_source )
-    {
-        ctrlsource_index = -1;
-    }
-    else if( BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER == movement_entry->roll_control_source )
-    {
-        BasicSceneMainFrame::RegisterEntry reg = (*p_registers)[movement_entry->roll_control_register];
-        ctrlsource_index = reg.id;
-    }
-    propertygrid->Append( new wxEnumProperty( "roll control", wxPG_LABEL, ctrlsource_labels, ctrlsource_arrIds, ctrlsource_index ) );
-    
-
-    p_dialog->RegisterApplyButtonHandler( m_applymovementcontrolprops_callback );
-
-    propertygrid->ResetColumnSizes();
-    propertygrid->CollapseAll();
-}
-
-void wxWidgetAdapter::on_applymovementcontrolprops( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    BasicSceneMainFrame::MovementEntry* movement_entry = (BasicSceneMainFrame::MovementEntry*)p_dialog->GetData( "movement_entry" );
-
-    wxCharBuffer buffer;
-    wxEnumProperty* prop;
-
-    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "speed control" ) );
-    wxString source_name = prop->GetValueAsString();   
-    buffer = source_name.ToAscii();
-    dsstring speed_control = buffer.data();
-
-
-    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "yaw control" ) );
-    wxString yaw_name = prop->GetValueAsString();   
-    buffer = yaw_name.ToAscii();
-    dsstring yaw_control = buffer.data();
-
-
-    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "pitch control" ) );
-    wxString pitch_name = prop->GetValueAsString();   
-    buffer = pitch_name.ToAscii();
-    dsstring pitch_control = buffer.data();
-
-
-    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "roll control" ) );
-    wxString roll_name = prop->GetValueAsString();   
-    buffer = roll_name.ToAscii();
-    dsstring roll_control = buffer.data();
-
-    if( "keyboard and mouse" == speed_control )
-    {
-        movement_entry->speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-    }
-    else
-    {
-        movement_entry->speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
-        movement_entry->speed_control_register = speed_control;
-    }
-
-    if( "keyboard and mouse" == yaw_control )
-    {
-        movement_entry->yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;        
-    }
-    else
-    {
-        movement_entry->yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
-        movement_entry->yaw_control_register = yaw_control;
-    }
-
-    if( "keyboard and mouse" == pitch_control )
-    {
-        movement_entry->pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;        
-        
-    }
-    else
-    {
-        movement_entry->pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
-        movement_entry->pitch_control_register = pitch_control;
-    }
-
-    if( "keyboard and mouse" == roll_control )
-    {
-        movement_entry->roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-
-    }
-    else
-    {
-        movement_entry->roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_REGISTER;
-        movement_entry->pitch_control_register = roll_control;
-    }
-
-    p_dialog->Close();
-}
 
 void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox )
 {
@@ -3418,16 +2386,6 @@ void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegra
     p_combobox->SetSelection( 0 );
 }
 
-void wxWidgetAdapter::AdaptKeyboardOutputComboBox( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_mvts, wxComboBox* p_combobox )
-{
-    p_combobox->Clear();
-    p_combobox->Append( wxString( "..." ), (void *)NULL );
-    for( std::map<dsstring, BasicSceneMainFrame::MovementEntry>::iterator it = p_mvts->begin(); it != p_mvts->end(); ++it )
-    {
-        p_combobox->Append( it->first.c_str(), (void *)&(it->second) ); 
-    }
-    p_combobox->SetSelection( 0 );
-}
 
 void wxWidgetAdapter::AdaptRegistersLastValue( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl )
 {

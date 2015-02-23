@@ -111,105 +111,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer33 = new wxBoxSizer( wxVERTICAL );
 	
 	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	m_camerasPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer81;
-	bSizer81 = new wxBoxSizer( wxVERTICAL );
-	
-	wxStaticBoxSizer* sbSizer51;
-	sbSizer51 = new wxStaticBoxSizer( new wxStaticBox( m_camerasPanel, wxID_ANY, wxT("CameraPoints") ), wxVERTICAL );
-	
-	wxBoxSizer* bSizer20;
-	bSizer20 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_cameras_listCtrl = new wxListCtrl( m_camerasPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	bSizer20->Add( m_cameras_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
-	m_cameraedit_button = new wxButton( m_camerasPanel, wxID_ANY, wxT("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer20->Add( m_cameraedit_button, 0, wxALL, 5 );
-	
-	
-	sbSizer51->Add( bSizer20, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer10;
-	bSizer10 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_createcamera_button = new wxButton( m_camerasPanel, wxID_ANY, wxT("Create camera"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer10->Add( m_createcamera_button, 0, wxALL, 5 );
-	
-	
-	sbSizer51->Add( bSizer10, 0, wxEXPAND, 5 );
-	
-	
-	bSizer81->Add( sbSizer51, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer6;
-	sbSizer6 = new wxStaticBoxSizer( new wxStaticBox( m_camerasPanel, wxID_ANY, wxT("Movements") ), wxVERTICAL );
-	
-	wxBoxSizer* bSizer16;
-	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_mvts_listCtrl = new wxListCtrl( m_camerasPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	bSizer16->Add( m_mvts_listCtrl, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer17;
-	bSizer17 = new wxBoxSizer( wxVERTICAL );
-	
-	m_control_button = new wxButton( m_camerasPanel, wxID_ANY, wxT("Control"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer17->Add( m_control_button, 0, wxALL, 5 );
-	
-	
-	bSizer16->Add( bSizer17, 0, wxEXPAND, 5 );
-	
-	
-	sbSizer6->Add( bSizer16, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer91;
-	bSizer91 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_createmvt_button = new wxButton( m_camerasPanel, wxID_ANY, wxT("Create movement"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer91->Add( m_createmvt_button, 0, wxALL, 5 );
-	
-	m_mvttype_comboBox = new wxComboBox( m_camerasPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
-	m_mvttype_comboBox->Append( wxT("Linear") );
-	m_mvttype_comboBox->Append( wxT("Circular") );
-	m_mvttype_comboBox->Append( wxT("FPS") );
-	m_mvttype_comboBox->Append( wxT("Free") );
-	m_mvttype_comboBox->Append( wxT("Head") );
-	m_mvttype_comboBox->Append( wxT("Spectator") );
-	m_mvttype_comboBox->Append( wxT("LongLat") );
-	m_mvttype_comboBox->SetSelection( 0 );
-	bSizer91->Add( m_mvttype_comboBox, 0, wxALL, 5 );
-	
-	m_staticText1 = new wxStaticText( m_camerasPanel, wxID_ANY, wxT("controlled :"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText1->Wrap( -1 );
-	bSizer91->Add( m_staticText1, 0, wxALL, 5 );
-	
-	m_mousekeyboardoutput_comboBox = new wxComboBox( m_camerasPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
-	bSizer91->Add( m_mousekeyboardoutput_comboBox, 0, wxALL, 5 );
-	
-	
-	sbSizer6->Add( bSizer91, 0, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer29;
-	bSizer29 = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* bSizer30;
-	bSizer30 = new wxBoxSizer( wxHORIZONTAL );
-	
-	
-	bSizer29->Add( bSizer30, 1, wxEXPAND, 5 );
-	
-	
-	sbSizer6->Add( bSizer29, 1, wxEXPAND, 5 );
-	
-	
-	bSizer81->Add( sbSizer6, 1, wxEXPAND, 5 );
-	
-	
-	m_camerasPanel->SetSizer( bSizer81 );
-	m_camerasPanel->Layout();
-	bSizer81->Fit( m_camerasPanel );
-	m_notebook2->AddPage( m_camerasPanel, wxT("Cameras && Movements"), false );
 	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -363,17 +264,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_consoleinsend_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
 	m_consoleinclear_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInClearButtonClicked ), NULL, this );
 	m_consoleinload_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInLoadButtonClicked ), NULL, this );
-	m_cameras_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnCamerasListDeleteAllItems ), NULL, this );
-	m_cameras_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnCamerasListItemActivated ), NULL, this );
-	m_cameras_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnCamerasListItemSelected ), NULL, this );
-	m_cameraedit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCameraEditButtonClicked ), NULL, this );
-	m_createcamera_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateCameraButtonClicked ), NULL, this );
-	m_mvts_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnMvtsListDeleteAllItems ), NULL, this );
-	m_mvts_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnMvtsListItemActivated ), NULL, this );
-	m_mvts_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnMvtsListItemSelected ), NULL, this );
-	m_control_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnControlButtonClicked ), NULL, this );
-	m_createmvt_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateMvtButtonClicked ), NULL, this );
-	m_mousekeyboardoutput_comboBox->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( MainFrame::OnMouseKeyboardOutputCombobox ), NULL, this );
 	m_passes_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnPassesListItemActivated ), NULL, this );
 	m_passes_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnPassesListItemSelected ), NULL, this );
 	m_shadersparams_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnShadersListItemActivated ), NULL, this );
@@ -401,17 +291,6 @@ MainFrame::~MainFrame()
 	m_consoleinsend_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
 	m_consoleinclear_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInClearButtonClicked ), NULL, this );
 	m_consoleinload_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInLoadButtonClicked ), NULL, this );
-	m_cameras_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnCamerasListDeleteAllItems ), NULL, this );
-	m_cameras_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnCamerasListItemActivated ), NULL, this );
-	m_cameras_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnCamerasListItemSelected ), NULL, this );
-	m_cameraedit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCameraEditButtonClicked ), NULL, this );
-	m_createcamera_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateCameraButtonClicked ), NULL, this );
-	m_mvts_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnMvtsListDeleteAllItems ), NULL, this );
-	m_mvts_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnMvtsListItemActivated ), NULL, this );
-	m_mvts_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnMvtsListItemSelected ), NULL, this );
-	m_control_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnControlButtonClicked ), NULL, this );
-	m_createmvt_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateMvtButtonClicked ), NULL, this );
-	m_mousekeyboardoutput_comboBox->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( MainFrame::OnMouseKeyboardOutputCombobox ), NULL, this );
 	m_passes_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnPassesListItemActivated ), NULL, this );
 	m_passes_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnPassesListItemSelected ), NULL, this );
 	m_shadersparams_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnShadersListItemActivated ), NULL, this );

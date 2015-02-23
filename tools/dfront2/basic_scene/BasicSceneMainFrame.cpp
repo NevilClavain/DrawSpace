@@ -47,8 +47,8 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
 {
 
 
-    m_control_button->Enable( false );
-    m_cameraedit_button->Enable( false );
+    
+
     m_modreg_button->Enable( false );
     m_resetreg_button->Enable( false );
     m_regon_button->Enable( false );
@@ -204,21 +204,6 @@ void BasicSceneMainFrame::build_popupmenu( int p_level, wxMenu& p_menu )
     }
 }
 
-bool BasicSceneMainFrame::RegisterMovement( const dsstring& p_name, const MovementEntry& p_movement )
-{
-    if( m_movements.count( p_name ) > 0 )
-    {
-        wxMessageBox( "Movement with same name already exists : " + p_name, "Drawfront error", wxICON_ERROR );
-        return false;
-    }
-
-    m_movements[p_name] = p_movement;
-
-    wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
-    wxWidgetAdapter::GetInstance()->AdaptKeyboardOutputComboBox( &m_movements, m_mousekeyboardoutput_comboBox );
-
-    return true;
-}
 
 void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool )
 {
@@ -264,7 +249,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             m_scenegraph.RegisterNode( entry.node );
 
-            m_metada_scenegraph[descriptor.scene_name] = entry;
+            //m_metada_scenegraph[descriptor.scene_name] = entry;
 
             // call UpdateOutputQueue() for all passes
             
@@ -288,14 +273,6 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "name" );
 
-        if( m_metada_scenegraph.count( scene_name ) > 0 )
-        {
-            m_metada_scenegraph[scene_name].matrix_stack_descr.clear();
-        }
-        else
-        {
-            wxMessageBox( "Unknown spacebox scene name", "Script error", wxICON_ERROR );
-        }
     }
     else if( "SpaceBoxBuilder:AddMatrix" == script_call_id )
     {
@@ -307,175 +284,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "name" );
 
-        if( m_metada_scenegraph.count( scene_name ) > 0 )
-        {           
-            if( "scaling" == mat_type )
-            {
-                x = p_propertypool.GetPropValue<dsreal>( "x" );
-                y = p_propertypool.GetPropValue<dsreal>( "y" );
-                z = p_propertypool.GetPropValue<dsreal>( "z" );
 
-                xreg = p_propertypool.GetPropValue<dsstring>( "xreg" );
-                yreg = p_propertypool.GetPropValue<dsstring>( "yreg" );
-                zreg = p_propertypool.GetPropValue<dsstring>( "zreg" );
-
-                mat_descr.ope = TRANSFORMATIONMATRIX_SCALE;
-
-                mat_descr.arg.scale_vals_link[0].value = x;
-                if( !set_var_alias( xreg, mat_descr.arg.scale_vals_link[0].var_alias ) )
-                {
-                    return;
-                }
-
-
-                mat_descr.arg.scale_vals_link[1].value = y;
-                if( !set_var_alias( yreg, mat_descr.arg.scale_vals_link[1].var_alias ) )
-                {
-                    return;
-                }
-                
-                mat_descr.arg.scale_vals_link[2].value = z;
-                if( !set_var_alias( zreg, mat_descr.arg.scale_vals_link[2].var_alias ) )
-                {
-                    return;
-                }
-
-                mat_descr.arg.translation_vals_link[0].var_alias = "...";
-                mat_descr.arg.translation_vals_link[1].var_alias = "...";
-                mat_descr.arg.translation_vals_link[2].var_alias = "...";
-                mat_descr.arg.translation_vals_link[0].value = 0.0;
-                mat_descr.arg.translation_vals_link[1].value = 0.0;
-                mat_descr.arg.translation_vals_link[2].value = 0.0;
-
-
-                mat_descr.arg.rotation_vals_link[0].var_alias = "...";
-                mat_descr.arg.rotation_vals_link[1].var_alias = "...";
-                mat_descr.arg.rotation_vals_link[2].var_alias = "...";
-                mat_descr.arg.rotation_vals_link[0].value = 0.0;
-                mat_descr.arg.rotation_vals_link[1].value = 0.0;
-                mat_descr.arg.rotation_vals_link[2].value = 0.0;
-
-                mat_descr.arg.angle_val_link.var_alias = "...";
-                mat_descr.arg.angle_val_link.value = 0.0;
-
-
-                m_metada_scenegraph[scene_name].matrix_stack_descr.push_back( mat_descr );
-            }
-            else if( "translation" == mat_type )
-            {
-                x = p_propertypool.GetPropValue<dsreal>( "x" );
-                y = p_propertypool.GetPropValue<dsreal>( "y" );
-                z = p_propertypool.GetPropValue<dsreal>( "z" );
-
-                xreg = p_propertypool.GetPropValue<dsstring>( "xreg" );
-                yreg = p_propertypool.GetPropValue<dsstring>( "yreg" );
-                zreg = p_propertypool.GetPropValue<dsstring>( "zreg" );
-
-                mat_descr.ope = TRANSFORMATIONMATRIX_TRANSLATION;
-
-                mat_descr.arg.translation_vals_link[0].value = x;
-                if( !set_var_alias( xreg, mat_descr.arg.translation_vals_link[0].var_alias ) )
-                {
-                    return;
-                }
-
-                mat_descr.arg.translation_vals_link[1].value = y;
-                if( !set_var_alias( yreg, mat_descr.arg.translation_vals_link[1].var_alias ) )
-                {
-                    return;
-                }
-                
-                mat_descr.arg.translation_vals_link[2].value = z;
-                if( !set_var_alias( zreg, mat_descr.arg.translation_vals_link[2].var_alias ) )
-                {
-                    return;
-                }
-
-
-                mat_descr.arg.scale_vals_link[0].var_alias = "...";
-                mat_descr.arg.scale_vals_link[1].var_alias = "...";
-                mat_descr.arg.scale_vals_link[2].var_alias = "...";
-                mat_descr.arg.scale_vals_link[0].value = 0.0;
-                mat_descr.arg.scale_vals_link[1].value = 0.0;
-                mat_descr.arg.scale_vals_link[2].value = 0.0;
-
-                mat_descr.arg.rotation_vals_link[0].var_alias = "...";
-                mat_descr.arg.rotation_vals_link[1].var_alias = "...";
-                mat_descr.arg.rotation_vals_link[2].var_alias = "...";
-                mat_descr.arg.rotation_vals_link[0].value = 0.0;
-                mat_descr.arg.rotation_vals_link[1].value = 0.0;
-                mat_descr.arg.rotation_vals_link[2].value = 0.0;
-
-                mat_descr.arg.angle_val_link.var_alias = "...";
-                mat_descr.arg.angle_val_link.value = 0.0;
-
-                m_metada_scenegraph[scene_name].matrix_stack_descr.push_back( mat_descr );
-            }
-            else if( "rotation" == mat_type )
-            {
-                x = p_propertypool.GetPropValue<dsreal>( "x" );
-                y = p_propertypool.GetPropValue<dsreal>( "y" );
-                z = p_propertypool.GetPropValue<dsreal>( "z" );
-                angle = p_propertypool.GetPropValue<dsreal>( "angle" );
-
-                xreg = p_propertypool.GetPropValue<dsstring>( "xreg" );
-                yreg = p_propertypool.GetPropValue<dsstring>( "yreg" );
-                zreg = p_propertypool.GetPropValue<dsstring>( "zreg" );
-                anglereg = p_propertypool.GetPropValue<dsstring>( "areg" );
-
-                mat_descr.ope = TRANSFORMATIONMATRIX_ROTATION;
-
-                mat_descr.arg.rotation_vals_link[0].value = x;
-                if( !set_var_alias( xreg, mat_descr.arg.rotation_vals_link[0].var_alias ) )
-                {
-                    return;
-                }
-
-                mat_descr.arg.rotation_vals_link[1].value = y;
-                if( !set_var_alias( yreg, mat_descr.arg.rotation_vals_link[1].var_alias ) )
-                {
-                    return;
-                }
-                
-                mat_descr.arg.rotation_vals_link[2].value = z;
-                if( !set_var_alias( zreg, mat_descr.arg.rotation_vals_link[2].var_alias ) )
-                {
-                    return;
-                }
-
-                mat_descr.arg.angle_val_link.value = angle;
-                if( !set_var_alias( anglereg, mat_descr.arg.angle_val_link.var_alias ) )
-                {
-                    return;
-                }
-
-
-                mat_descr.arg.scale_vals_link[0].var_alias = "...";
-                mat_descr.arg.scale_vals_link[1].var_alias = "...";
-                mat_descr.arg.scale_vals_link[2].var_alias = "...";
-                mat_descr.arg.scale_vals_link[0].value = 0.0;
-                mat_descr.arg.scale_vals_link[1].value = 0.0;
-                mat_descr.arg.scale_vals_link[2].value = 0.0;
-
-                mat_descr.arg.translation_vals_link[0].var_alias = "...";
-                mat_descr.arg.translation_vals_link[1].var_alias = "...";
-                mat_descr.arg.translation_vals_link[2].var_alias = "...";
-                mat_descr.arg.translation_vals_link[0].value = 0.0;
-                mat_descr.arg.translation_vals_link[1].value = 0.0;
-                mat_descr.arg.translation_vals_link[2].value = 0.0;
-
-
-                m_metada_scenegraph[scene_name].matrix_stack_descr.push_back( mat_descr );
-            }        
-            else
-            {
-                wxMessageBox( "Bad matrix type", "Script error", wxICON_ERROR );
-            }            
-        }
-        else
-        {
-            wxMessageBox( "Unknown spacebox scene name", "Script error", wxICON_ERROR );
-        }
     }
     else if( "DrawSpace:CreateConstRegister" == script_call_id )
     {
@@ -664,109 +473,9 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "MovementBuilder:Lua_BuildIt" == script_call_id )
     {
-        dsstring type_name = p_propertypool.GetPropValue<dsstring>( "type" );
-        dsstring name = p_propertypool.GetPropValue<dsstring>( "name" );
 
-        BasicSceneMainFrame::MovementEntry movement_entry;
 
-        movement_entry.speed_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-        movement_entry.yaw_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-        movement_entry.pitch_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-        movement_entry.roll_control_source = BasicSceneMainFrame::MOVEMENTCONTROLSOURCE_KEYBMOUSE;
-        movement_entry.theta_pos_mouse = 0.0;
-        movement_entry.phi_pos_mouse = 0.0;
-
-        if( "Linear" == type_name )
-        {
-            Vector init_pos = p_propertypool.GetPropValue<Vector>( "initpos" );
-            Vector direction = p_propertypool.GetPropValue<Vector>( "direction" );
-
-            dsreal theta = p_propertypool.GetPropValue<dsreal>( "theta" );
-            dsreal phi = p_propertypool.GetPropValue<dsreal>( "phi" );
-
-            LinearMovement* linear_mvt = new LinearMovement();
-            linear_mvt->Init( init_pos, direction, theta, phi );
-                       
-            movement_entry.movement = linear_mvt;
-        }
-        else if( "Circular" == type_name )
-        {
-            Vector center_pos = p_propertypool.GetPropValue<Vector>( "centerpos" );
-            Vector delta_center = p_propertypool.GetPropValue<Vector>( "deltacenter" );
-            Vector rot_axis = p_propertypool.GetPropValue<Vector>( "rotationaxis" );
-
-            dsreal init_angle = p_propertypool.GetPropValue<dsreal>( "angle" );
-            dsreal theta = p_propertypool.GetPropValue<dsreal>( "theta" );
-            dsreal phi = p_propertypool.GetPropValue<dsreal>( "phi" );
-
-            CircularMovement* circular_mvt = new CircularMovement();
-            circular_mvt->Init( center_pos, delta_center, rot_axis, init_angle, theta, phi );
-
-            movement_entry.movement = circular_mvt;
-        }
-        else if( "FPS" == type_name )
-        {
-            Vector init_pos = p_propertypool.GetPropValue<Vector>( "initpos" );
-            dsreal init_yaw = p_propertypool.GetPropValue<dsreal>( "yaw" );
-            dsreal init_pitch = p_propertypool.GetPropValue<dsreal>( "pitch" );
-
-            FPSMovement* fps_mvt = new FPSMovement();
-            fps_mvt->Init( init_pos, init_yaw, init_pitch );
-            
-            movement_entry.movement = fps_mvt;
-        }
-        else if( "Free" == type_name )
-        {
-            Vector init_pos = p_propertypool.GetPropValue<Vector>( "initpos" );
-
-            FreeMovement* free_mvt = new FreeMovement();
-            free_mvt->Init( init_pos );
-
-            movement_entry.movement = free_mvt;            
-        }
-        else if( "Head" == type_name )
-        {
-            Vector head_pos = p_propertypool.GetPropValue<Vector>( "initpos" );
-            dsreal scale_factor = p_propertypool.GetPropValue<dsreal>( "scalefactor" );
-            dsreal ref_force = p_propertypool.GetPropValue<dsreal>( "refforce" );
-
-            HeadMovement* head_mvt = new HeadMovement();
-            head_mvt->Init( scale_factor, ref_force, head_pos );
-
-            movement_entry.movement = head_mvt;            
-        }
-        else if( "Spectator" == type_name )
-        {
-            dsreal scale_pos = p_propertypool.GetPropValue<dsreal>( "scalefactor" );
-            long period = p_propertypool.GetPropValue<long>( "period" );
-            bool orbiter_link = p_propertypool.GetPropValue<bool>( "attachorbiter" );
-
-            SpectatorMovement* spectator_mvt = new SpectatorMovement();
-            spectator_mvt->Init( scale_pos, period, orbiter_link );
-
-            movement_entry.movement = spectator_mvt;
-        }
-        else if( "Longlat" == type_name )
-        {
-            dsreal init_longit = p_propertypool.GetPropValue<dsreal>( "longitud" );
-            dsreal init_latit = p_propertypool.GetPropValue<dsreal>( "latitud" );
-            dsreal init_altitud = p_propertypool.GetPropValue<dsreal>( "altitud" );
-
-            dsreal init_theta = p_propertypool.GetPropValue<dsreal>( "theta" );
-            dsreal init_phi = p_propertypool.GetPropValue<dsreal>( "phi" );
-
-            LongLatMovement* longlat_mvt = new LongLatMovement();
-            longlat_mvt->Init( init_longit, init_latit, init_altitud, init_theta, init_phi );
-
-            movement_entry.movement = longlat_mvt;
-        }
-        else
-        {
-            wxMessageBox( "Unknown movement class name : " + type_name, "Script error", wxICON_ERROR );
-            return;
-        }
-
-        RegisterMovement( name, movement_entry );
+        //RegisterMovement( name, movement_entry );
     }
     else if( "TransformationNodeBuilder:LinkTo" == script_call_id )
     {
@@ -1039,147 +748,6 @@ void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
     Destroy();
 }
 
-void BasicSceneMainFrame::compute_scenegraph_transforms( void )
-{
-    // transform all scenegraph's nodes
-
-    for( std::map<dsstring, MetadataScenegraphEntry>::iterator it = m_metada_scenegraph.begin(); it != m_metada_scenegraph.end(); ++it )
-    {
-        MetadataScenegraphEntry entry = it->second;
-
-        switch( entry.transformation_source_type )
-        {
-            case TRANSFORMATIONSOURCE_MATRIXSTACK:
-                {
-                    /*
-                    entry.matrix_stack.BuildResult();
-                    Matrix mat;
-                    entry.matrix_stack.GetResult( &mat );
-                    entry.node->SetLocalTransform( mat );
-                    */
-
-                    Transformation matrix_stack;
-
-                    for( size_t i = 0; i < entry.matrix_stack_descr.size(); i++ )
-                    {
-                        Matrix mat;
-
-                        switch( entry.matrix_stack_descr[i].ope )
-                        {
-                            case TRANSFORMATIONMATRIX_IDENTITY:
-                                break;
-
-                            case TRANSFORMATIONMATRIX_SCALE:
-                                {
-                                    dsreal scale[3];
-
-                                    for( long j = 0; j < 3; j++ )
-                                    {
-                                        if( "..." == entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias )
-                                        {
-                                            scale[j] = entry.matrix_stack_descr[i].arg.scale_vals_link[j].value;
-                                        }
-                                        else
-                                        {
-                                            dsstring var_alias = entry.matrix_stack_descr[i].arg.scale_vals_link[j].var_alias;
-                                            // aller chercher curren_value de la variable referencee
-
-                                            RegisterEntry reg_entry = m_registers[var_alias];
-                                            scale[j] = reg_entry.current_value;
-                                        }
-                                    }
-
-                                    mat.Scale( scale[0], scale[1], scale[2] );
-                                    matrix_stack.PushMatrix( mat );
-                                }
-                                break;
-
-                            case TRANSFORMATIONMATRIX_TRANSLATION:
-                                {
-                                    dsreal trans[3];
-
-                                    for( long j = 0; j < 3; j++ )
-                                    {
-                                        if( "..." == entry.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias )
-                                        {
-                                            trans[j] = entry.matrix_stack_descr[i].arg.translation_vals_link[j].value;
-                                        }
-                                        else
-                                        {
-                                            dsstring var_alias = entry.matrix_stack_descr[i].arg.translation_vals_link[j].var_alias;
-                                            // aller chercher curren_value de la variable referencee
-
-                                            RegisterEntry reg_entry = m_registers[var_alias];
-                                            trans[j] = reg_entry.current_value;
-                                        }
-                                    }
-
-                                    mat.Translation( trans[0], trans[1], trans[2] );
-                                    matrix_stack.PushMatrix( mat );
-                                }
-                                break;
-
-                            case TRANSFORMATIONMATRIX_ROTATION:
-                                {
-                                    dsreal axis[3];
-                                    dsreal angle;
-
-                                    for( long j = 0; j < 3; j++ )
-                                    {
-                                        if( "..." == entry.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias )
-                                        {
-                                            axis[j] = entry.matrix_stack_descr[i].arg.rotation_vals_link[j].value;
-                                        }
-                                        else
-                                        {
-                                            dsstring var_alias = entry.matrix_stack_descr[i].arg.rotation_vals_link[j].var_alias;
-                                            // aller chercher curren_value de la variable referencee
-
-                                            RegisterEntry reg_entry = m_registers[var_alias];
-                                            axis[j] = reg_entry.current_value;
-                                        }
-                                    }
-
-                                    if( "..." == entry.matrix_stack_descr[i].arg.angle_val_link.var_alias )
-                                    {
-                                        angle = entry.matrix_stack_descr[i].arg.angle_val_link.value;
-                                    }
-                                    else
-                                    {
-                                        dsstring var_alias = entry.matrix_stack_descr[i].arg.angle_val_link.var_alias;
-                                        // aller chercher curren_value de la variable referencee
-
-                                        RegisterEntry reg_entry = m_registers[var_alias];
-                                        angle = reg_entry.current_value;
-                                    }
-
-                                    mat.Rotation( Vector( axis[0], axis[1], axis[2], 1.0 ), Maths::DegToRad( angle ) );
-                                    matrix_stack.PushMatrix( mat );
-                                }
-                                break;
-                        }
-                    }
-
-
-                    matrix_stack.BuildResult();
-                    Matrix mat_res;
-                    matrix_stack.GetResult( &mat_res );
-                    entry.node->SetLocalTransform( mat_res );
-                }
-                break;
-
-            case TRANSFORMATIONSOURCE_MOVEMENT:
-
-                break;
-
-            case TRANSFORMATIONSOURCE_BODY:
-
-                break;
-        }
-    }
-
-}
-
 
 void BasicSceneMainFrame::compute_transformnodes( void )
 {
@@ -1247,74 +815,7 @@ void BasicSceneMainFrame::compute_transformnodes( void )
 
 void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
 {
-    int index = m_mousekeyboardoutput_comboBox->GetSelection();
-    MovementEntry* movement_entry = (MovementEntry*)m_mousekeyboardoutput_comboBox->GetClientData( index );
-    if( movement_entry )
-    {
-        LinearMovement* linear_movement = dynamic_cast<LinearMovement*>( movement_entry->movement );
-        if( linear_movement )
-        {
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
-            {
-                if( 'Q' == p_event.GetKeyCode() )
-                {
-                    linear_movement->SetSpeed( 3.0 );
-                }
-                else if( 'A' == p_event.GetKeyCode() )
-                {
-                    linear_movement->SetSpeed( -3.0 );
-                }
-            }
-        }
 
-        CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement_entry->movement );
-        if( circular_movement )
-        {
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
-            {                
-                if( 'Q' == p_event.GetKeyCode() )
-                {
-                    circular_movement->SetAngularSpeed( 10.0 );
-                }
-                else if( 'A' == p_event.GetKeyCode() )
-                {
-                    circular_movement->SetAngularSpeed( -10.0 );
-                }
-            }
-        }
-
-        FPSMovement* fps_movement = dynamic_cast<FPSMovement*>( movement_entry->movement );
-        if( fps_movement )
-        {
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
-            {
-                if( 'Q' == p_event.GetKeyCode() )
-                {
-                    fps_movement->SetSpeed( 3.0 );
-                }
-                else if( 'A' == p_event.GetKeyCode() )
-                {
-                    fps_movement->SetSpeed( -3.0 );
-                }
-            }
-        }
-
-        FreeMovement* free_movement = dynamic_cast<FreeMovement*>( movement_entry->movement );
-        if( free_movement )
-        {
-            if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->speed_control_source )
-            {
-                if( 'Q' == p_event.GetKeyCode() )
-                {
-                    fps_movement->SetSpeed( 3.0 );
-                }
-                else if( 'A' == p_event.GetKeyCode() )
-                {
-                    fps_movement->SetSpeed( -3.0 );
-                }
-            }
-        }
-    }
 }
 void BasicSceneMainFrame::OnKeyUp( wxKeyEvent& p_event )
 {
@@ -1369,172 +870,9 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
     int delta_x = curr_xmouse - m_last_xmouse;
     int delta_y = curr_ymouse - m_last_ymouse;
     
-    int index = m_mousekeyboardoutput_comboBox->GetSelection();
-
-    MovementEntry* movement_entry = (MovementEntry*)m_mousekeyboardoutput_comboBox->GetClientData( index );
-    if( movement_entry )
-    {
-
-        LinearMovement* linear_movement = dynamic_cast<LinearMovement*>( movement_entry->movement );
-        if( linear_movement )
-        {
-            if( p_event.LeftIsDown() )
-            {
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
-                {
-                    m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
-                    linear_movement->SetTheta( movement_entry->theta_pos_mouse );
-                }
-
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
-                {
-                    m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
-                    linear_movement->SetPhi( movement_entry->phi_pos_mouse );
-                }
-            }
-        }
-
-        CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement_entry->movement );
-        if( circular_movement )
-        {
-            if( p_event.LeftIsDown() )
-            {
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
-                {
-                    m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
-                    circular_movement->SetTheta( movement_entry->theta_pos_mouse );
-                }
-                 
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
-                {
-                    m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
-                    circular_movement->SetPhi( movement_entry->phi_pos_mouse );
-                }
-            }
-        }
-
-        FPSMovement* fps_movement = dynamic_cast<FPSMovement*>( movement_entry->movement );
-        if( fps_movement )
-        {
-            if( p_event.LeftIsDown() )
-            {
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
-                {
-                    fps_movement->RotateYaw( -delta_x / 4.0, m_timer );
-                }
-
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
-                {
-                    fps_movement->RotatePitch( -delta_y / 4.0, m_timer );
-                }
-            }
-        }
-
-        FreeMovement* free_movement = dynamic_cast<FreeMovement*>( movement_entry->movement );
-        if( free_movement )
-        {
-            if( p_event.LeftIsDown() )
-            {
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
-                {
-                    free_movement->RotateYaw( -delta_x / 4.0, m_timer );
-                }
-
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
-                {
-                    free_movement->RotatePitch( -delta_y / 4.0, m_timer );
-                }
-            }
-            else if( p_event.RightIsDown() )
-            {
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->roll_control_source )
-                {
-                    free_movement->RotateRoll( -delta_x / 4.0, m_timer );
-                }
-            }
-        }
-
-        LongLatMovement* longlat_movement = dynamic_cast<LongLatMovement*>( movement_entry->movement );
-        if( longlat_movement )
-        {
-            if( p_event.LeftIsDown() )
-            {
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->yaw_control_source )
-                {
-                    m_timer.AngleSpeedInc( &movement_entry->theta_pos_mouse, -20.0 * delta_x );
-                    longlat_movement->SetTheta( movement_entry->theta_pos_mouse );
-                }
-
-                if( MOVEMENTCONTROLSOURCE_KEYBMOUSE == movement_entry->pitch_control_source )
-                {
-                    m_timer.AngleSpeedInc( &movement_entry->phi_pos_mouse, -20.0 * delta_y );
-                    longlat_movement->SetPhi( movement_entry->phi_pos_mouse );
-                }
-            }
-        }
-    }
 
     m_last_xmouse = curr_xmouse;
     m_last_ymouse = curr_ymouse;
-}
-
-void BasicSceneMainFrame::compute_movements( void )
-{
-    for( std::map<dsstring, MovementEntry>::iterator it = m_movements.begin(); it != m_movements.end(); ++it )
-    {
-        MovementEntry movement_entry = it->second;
-
-        Movement* movement = movement_entry.movement;
-
-        LinearMovement* linear_movement = dynamic_cast<LinearMovement*>( movement );
-        if( linear_movement )
-        {
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
-            {
-                linear_movement->SetTheta( m_registers[movement_entry.yaw_control_register].current_value );
-            }
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
-            {
-                linear_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
-            }
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.speed_control_source )
-            {
-                linear_movement->SetSpeed( m_registers[movement_entry.speed_control_register].current_value );
-            }
-        }
-
-        CircularMovement* circular_movement = dynamic_cast<CircularMovement*>( movement );
-        if( circular_movement )
-        {
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
-            {
-                circular_movement->SetTheta( m_registers[movement_entry.yaw_control_register].current_value );
-            }
-
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
-            {
-                circular_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
-            }
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.speed_control_source )
-            {
-                circular_movement->SetAngularSpeed( m_registers[movement_entry.speed_control_register].current_value );
-            }
-        }
-
-        LongLatMovement* longlat_movement = dynamic_cast<LongLatMovement*>( movement );
-        if( longlat_movement )
-        {
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.yaw_control_source )
-            {
-                longlat_movement->SetTheta( m_registers[movement_entry.yaw_control_register].current_value );
-            }
-
-            if( MOVEMENTCONTROLSOURCE_REGISTER == movement_entry.pitch_control_source )
-            {
-                longlat_movement->SetPhi( m_registers[movement_entry.pitch_control_register].current_value );
-            }
-        }
-    }
 }
 
 
@@ -1564,9 +902,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
         
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
-        compute_movements();
-        compute_scenegraph_transforms();
-
+        
         compute_transformnodes();
                 
         //m_scenegraph.ComputeTransformations( m_timer );
@@ -1628,12 +964,12 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptAssetsList( m_assets_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptConfigsList( m_configs_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );
-    wxWidgetAdapter::GetInstance()->AdaptMvtsList( &m_movements, m_mvts_listCtrl );
-    wxWidgetAdapter::GetInstance()->AdaptCamerasList( &m_scenegraph, m_cameras_listCtrl );
+    
+    
     
     wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
     wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );    
-    wxWidgetAdapter::GetInstance()->AdaptKeyboardOutputComboBox( &m_movements, m_mousekeyboardoutput_comboBox );
+    
 
     ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
     for( size_t i = 0; i < m_ordered_configs.size(); i++ )
@@ -1873,208 +1209,10 @@ void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
     dialog->Show();
 }
 
-void BasicSceneMainFrame::OnCreateMvtButtonClicked( wxCommandEvent& p_event )
-{
-    int index = m_mvttype_comboBox->GetSelection();
-
-    switch( index )
-    {
-        case 0:
-            // Linear
-            {
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Linear movement creation" );
-                
-                dialog->SetData( "frame", this );
-                wxWidgetAdapter::GetInstance()->AdaptLinearMvtCreationProps( dialog );
-                dialog->EnableApplyButton();
-                dialog->Show();
-            }
-            break;
-
-        case 1:
-            // Circular
-            {
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Circular movement creation" );
-
-                dialog->SetData( "frame", this );
-                wxWidgetAdapter::GetInstance()->AdaptCircularMvtCreationProps( dialog );
-                dialog->EnableApplyButton();
-                dialog->Show();
-            }
-            break;
 
 
-        case 2:
-            // FPS
-            {
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "FPS movement creation" );
-
-                dialog->SetData( "frame", this );
-                wxWidgetAdapter::GetInstance()->AdaptFPSMvtCreationProps( dialog );
-                dialog->EnableApplyButton();
-                dialog->Show();
-            }
-            break;
-
-        case 3:
-            // Free
-            {
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Free movement creation" );
-
-                dialog->SetData( "frame", this );
-                wxWidgetAdapter::GetInstance()->AdaptFreeMvtCreationProps( dialog );
-                dialog->EnableApplyButton();
-                dialog->Show();
-            }
-            break;
-
-        case 4:
-            // Head
-            {
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Head movement creation" );
-
-                dialog->SetData( "frame", this );
-                wxWidgetAdapter::GetInstance()->AdaptHeadMvtCreationProps( dialog );
-                dialog->EnableApplyButton();
-                dialog->Show();
-            }
-            break;
-
-        case 5:
-            // Spectator
-            {
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spectator movement creation" );
-
-                dialog->SetData( "frame", this );
-                wxWidgetAdapter::GetInstance()->AdaptSpectatorMvtCreationProps( dialog );
-                dialog->EnableApplyButton();
-                dialog->Show();
-            }
-            break;
-
-        case 6:
-            // LongLat
-            {
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Longlat movement creation" );
-
-                dialog->SetData( "frame", this );
-
-                wxWidgetAdapter::GetInstance()->AdaptLongLatMvtCreationProps( dialog );
-                dialog->EnableApplyButton();
-                dialog->Show();
-            }
-
-            break;
-    }
-}
-
-void BasicSceneMainFrame::OnMvtsListItemActivated( wxListEvent& p_event )
-{
-    long sel_index = p_event.GetIndex();
-
-    wxString mvt_name = m_mvts_listCtrl->GetItemText( sel_index );
-    wxCharBuffer buffer = mvt_name.ToAscii();
-
-    dsstring mvt_name2 = buffer.data();
 
 
-    Movement* mvt = (Movement*)m_mvts_listCtrl->GetItemData( sel_index );
-
-    LinearMovement* linearmvt = dynamic_cast<LinearMovement*>( mvt );
-    if( linearmvt )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Linear movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptLinearMvtProps( mvt_name2, linearmvt, dialog );
-        dialog->Show();
-    }
-
-    CircularMovement* circularmvt = dynamic_cast<CircularMovement*>( mvt );
-    if( circularmvt )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Circular movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptCircularMvtProps( mvt_name2, circularmvt, dialog );
-        dialog->Show();
-    }
-
-    FPSMovement* fpsmvt = dynamic_cast<FPSMovement*>( mvt );
-    if( fpsmvt )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "FPS movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptFpsMvtProps( mvt_name2, fpsmvt, dialog );
-        dialog->Show();
-    }
-
-    FreeMovement* freemvt = dynamic_cast<FreeMovement*>( mvt );
-    if( freemvt )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Free movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptFreeMvtProps( mvt_name2, freemvt, dialog );
-        dialog->Show();
-    }
-
-    HeadMovement* headmvt = dynamic_cast<HeadMovement*>( mvt );
-    if( headmvt )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Head movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptHeadMvtProps( mvt_name2, headmvt, dialog );
-        dialog->Show();
-    }
-    
-    SpectatorMovement* spectatormvt = dynamic_cast<SpectatorMovement*>( mvt );
-    if( spectatormvt )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Spectator movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptSpectatorMvtProps( mvt_name2, spectatormvt, dialog );
-        dialog->Show();
-    }
-
-    LongLatMovement* longlatmvt = dynamic_cast<LongLatMovement*>( mvt );
-    if( longlatmvt )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Longlat movement properties" );
-        wxWidgetAdapter::GetInstance()->AdaptLongLatMvtProps( mvt_name2, longlatmvt, dialog );
-        dialog->Show();
-    }
-}
-
-void BasicSceneMainFrame::OnCreateCameraButtonClicked( wxCommandEvent& p_event )
-{
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera creation" );
-
-    wxWidgetAdapter::GetInstance()->AdaptCameraCreationProps( &m_movements, dialog );
-
-    dialog->SetData( "mvts_map", &m_movements );
-    dialog->SetData( "scenegraph", &m_scenegraph );
-    dialog->SetData( "cameraslistctrl", m_cameras_listCtrl );
-    
-    dialog->SetData( "cameraslistcombobox", m_cameraslist_comboBox );
-    dialog->EnableApplyButton();
-    dialog->Show();
-
-}
-
-void BasicSceneMainFrame::OnCamerasListItemActivated( wxListEvent& p_event )
-{
-    long sel_index = p_event.GetIndex();
-    CameraPoint* camera = (CameraPoint*)m_cameras_listCtrl->GetItemData( sel_index );
-
-
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties" );
-    wxWidgetAdapter::GetInstance()->AdaptCameraProps( camera, dialog );
-    dialog->Show();
-}
-
-void BasicSceneMainFrame::OnCamerasListDeleteAllItems( wxListEvent& p_event )
-{
-    m_cameraedit_button->Enable( false );
-}
-
-void BasicSceneMainFrame::OnCamerasListItemSelected( wxListEvent& p_event )
-{
-    long sel_index = p_event.GetIndex();
-    m_cameraslistctrl_currentindex = sel_index;
-    m_cameraedit_button->Enable( true );
-}
 
 void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 {   
@@ -2210,83 +1348,12 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
  	PopupMenu(&mnu);
 }
 
-void BasicSceneMainFrame::OnControlButtonClicked( wxCommandEvent& p_event )
-{
-    wxString mvt_name = m_mvts_listCtrl->GetItemText( m_mvtslistctrl_currentindex );
-    wxCharBuffer buffer = mvt_name.ToAscii();
-    dsstring mvt_name2 = buffer.data();
-
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Movement control edition" );
-
-    dialog->SetData( "movement_entry", &m_movements[mvt_name2] );
-    dialog->EnableApplyButton();
-
-    wxWidgetAdapter::GetInstance()->AdaptMovementControlProps( mvt_name2, &m_registers, dialog );
-    dialog->Show();
-}
 
 void BasicSceneMainFrame::OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event )
 {
 }
 
-void BasicSceneMainFrame::OnMvtsListDeleteAllItems( wxListEvent& p_event )
-{
-    m_control_button->Enable( false );
-}
 
-void BasicSceneMainFrame::OnMvtsListItemSelected( wxListEvent& p_event )
-{
-    long sel_index = p_event.GetIndex();
-    m_mvtslistctrl_currentindex = sel_index;
-
-    wxString mvt_name = m_mvts_listCtrl->GetItemText( sel_index );
-    wxCharBuffer buffer = mvt_name.ToAscii();
-    dsstring mvt_name2 = buffer.data();
-
-    MovementEntry movement_entry = m_movements[mvt_name2];
-
-    LinearMovement* linearmvt = dynamic_cast<LinearMovement*>( movement_entry.movement );
-    if( linearmvt )
-    {
-        m_control_button->Enable( true );
-    }
-
-    CircularMovement* circularmvt = dynamic_cast<CircularMovement*>( movement_entry.movement );
-    if( circularmvt )
-    {
-        m_control_button->Enable( true );
-    }
-
-    FPSMovement* fpsmvt = dynamic_cast<FPSMovement*>( movement_entry.movement );
-    if( fpsmvt )
-    {
-        m_control_button->Enable( true );
-    }
-
-    FreeMovement* freemvt = dynamic_cast<FreeMovement*>( movement_entry.movement );
-    if( freemvt )
-    {
-        m_control_button->Enable( true );
-    }
-
-    HeadMovement* headmvt = dynamic_cast<HeadMovement*>( movement_entry.movement );
-    if( headmvt )
-    {
-        m_control_button->Enable( false );
-    }
-
-    SpectatorMovement* spectatormvt = dynamic_cast<SpectatorMovement*>( movement_entry.movement );
-    if( spectatormvt )
-    {
-        m_control_button->Enable( false );
-    }
-
-    LongLatMovement* longlatmvt = dynamic_cast<LongLatMovement*>( movement_entry.movement );
-    if( longlatmvt )
-    {
-        m_control_button->Enable( true );
-    }
-}
 
 void BasicSceneMainFrame::OnCreateRegButtonClicked( wxCommandEvent& p_event )
 {
@@ -2301,16 +1368,6 @@ void BasicSceneMainFrame::OnCreateRegButtonClicked( wxCommandEvent& p_event )
     dialog->Show();    
 }
 
-void BasicSceneMainFrame::OnCameraEditButtonClicked( wxCommandEvent& p_event )
-{
-    CameraPoint* camera = (CameraPoint*)m_cameras_listCtrl->GetItemData( m_cameraslistctrl_currentindex );
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Camera properties modifications" );
-    wxWidgetAdapter::GetInstance()->AdaptCameraPropsModification( camera, dialog );
-
-    dialog->SetData( "camera", camera );
-    dialog->EnableApplyButton();
-    dialog->Show();
-}
 
 void BasicSceneMainFrame::OnRegistersListItemActivated( wxListEvent& p_event )
 {

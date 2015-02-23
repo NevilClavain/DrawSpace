@@ -60,14 +60,7 @@ protected:
    
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applypassshadervalues_callback;
 
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applylinearmvtvalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycircularmvtvalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyfpsmvtvalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyfreemvtvalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyheadmvtvalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspectatormvtvalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applylonglatmvtvalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameravalues_callback;
+    
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameraprops_callback;
 
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfonodevalues_callback;
@@ -79,7 +72,7 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfosourcemodification_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyregistervalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyregisterprops_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymovementcontrolprops_callback;
+    
 
     long m_pass_slot_index;
     long m_matrix_slot_index;
@@ -88,14 +81,7 @@ protected:
 
 
     void on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applylinearmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applycircularmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applyfpsmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applyfreemvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applyheadmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applyspectatormvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applylonglatmvtvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applycameravalues( BasicSceneObjectPropertiesDialog* p_dialog );
+    
     void on_applycameraprops( BasicSceneObjectPropertiesDialog* p_dialog );
 
 
@@ -113,7 +99,7 @@ protected:
     void on_applyregistervalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applyregisterprops( BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void on_applymovementcontrolprops( BasicSceneObjectPropertiesDialog* p_dialog );
+    
     
     
 
@@ -139,8 +125,8 @@ public:
     void AdaptConfigsList( wxListCtrl* p_listctrl );
     void AdaptPassesList( wxListCtrl* p_listctrl );
     void AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxListCtrl* p_listctrl );
-    void AdaptMvtsList( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_map, wxListCtrl* p_listctrl );
-    void AdaptCamerasList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl );
+    
+    
     
     void AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
 
@@ -159,7 +145,7 @@ public:
     void AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptCameraCreationProps( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_mvts_map, BasicSceneObjectPropertiesDialog* p_dialog );
+    
     void AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptRegisterCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
 
@@ -179,11 +165,11 @@ public:
     void AdaptTransfoSourceModification( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneMainFrame::TransformationNodeEntry* p_transfonode, BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void AdaptMovementControlProps( const dsstring& p_mvtalias, std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneObjectPropertiesDialog* p_dialog );
+    
     
 
     void AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox );
-    void AdaptKeyboardOutputComboBox( std::map<dsstring, BasicSceneMainFrame::MovementEntry>* p_mvts, wxComboBox* p_combobox );
+    
 
     void AdaptRegistersLastValue( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
 
