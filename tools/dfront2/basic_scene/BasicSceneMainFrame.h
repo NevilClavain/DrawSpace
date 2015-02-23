@@ -81,11 +81,12 @@
 #define CONTEXTMENU_NEWLONGLATMVT           2025
 #define CONTEXTMENU_NEWSPECTATORMVT         2026
 #define CONTEXTMENU_SEPARATOR               2080
-#define CONTEXTMENU_EDIT                    2081
+#define CONTEXTMENU_EDIT_TRANSFORMNODE      2081
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define DIALOG_TEXTURE_PROPS_TITLE          "Texture properties"      
+#define DIALOG_TEXTURE_PROPS_TITLE          "Texture properties"
+#define DIALOG_SPACEBOX_CREATION_TITLE      "Spacebox node creation"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -79,7 +79,7 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     //m_scenegraphs_masks[0].push_back( CONTEXTMENU_NEWSCENENODEGRAPH );
 
     PopupMenuEntry pme_separator = { CONTEXTMENU_SEPARATOR, "" };
-    PopupMenuEntry pme_edit = { CONTEXTMENU_EDIT, "Edit..." };
+    PopupMenuEntry pme_edittransformnode = { CONTEXTMENU_EDIT_TRANSFORMNODE, "Edit transformation..." };
 
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
@@ -151,7 +151,7 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
 
-    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edit );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edittransformnode );
 
 
     m_applybutton_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_applybutton_clicked );
@@ -2208,7 +2208,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
-        case CONTEXTMENU_EDIT:
+        case CONTEXTMENU_EDIT_TRANSFORMNODE:
             {
                 void* id = m_last_clicked_treeitem.GetID();
 
@@ -2232,12 +2232,13 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
         case CONTEXTMENU_NEWSPACEBOX:
             {
 
-             
+                /*
                 DIALOG_DECLARE( "Spacebox node creation" )
                 DIALOG_APPENDROOT_STRING( "scene name", "" )
                 DIALOG_APPENDROOT_INTEGER( "the beast", 666 )
                 DIALOG_APPENDROOT_FLOAT( "pi", 3.1415927 )
                 DIALOG_APPENDROOT_ENUM( "list", insert_void_choice( get_textures_list() ) )
+                */
 
                 /*
 
@@ -2258,14 +2259,24 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 */
 
+                /*
+                DIALOG_APPLY
+                DIALOG_SPECIFIC0( "Add new pass" )
+                DIALOG_SHOW
+                */
+
+
+
+                DIALOG_DECLARE( DIALOG_SPACEBOX_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
 
                 DIALOG_APPLY
-
-                DIALOG_SPECIFIC0( "Add new pass" )
-
-
+                DIALOG_SPECIFIC0( "Add new pass slot" )
 
                 DIALOG_SHOW
+
+
             }
             break;
  	}
@@ -2650,6 +2661,13 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     DIALOG_GETGRID
     DIALOG_PROPERTIES_VARS
 
+
+
+
+    /*
+    DIALOG_GETGRID
+    DIALOG_PROPERTIES_VARS
+
     if( "Spacebox node creation" == DIALOG_TITLE )
     {
         DIALOG_GET_STRING_PROPERTY( "scene name", scene_name )
@@ -2686,11 +2704,55 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             
         DIALOG_EXPLORE_NODES_END
     }
-    
+    */
 }
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    DIALOG_GETGRID
+
+    if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_SPECIFIC0_LABEL( "pass %d", pass_label )
+
+        DIALOG_APPENDROOT_NODE( pass_label, pass_root )
+
+        DIALOG_APPENDNODE_ENUM( pass_root, "pass", get_intermediatepasses_list() )
+        DIALOG_APPENDNODE_ENUM( pass_root, "fx", get_fx_list() )
+        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", 200 )
+
+        DIALOG_APPENDNODE_NODE( pass_root, "textures", textures_label )
+
+        DIALOG_APPENDNODE_NODE( textures_label, "front", front_label )
+        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", front_textures_stages_labels )
+        DIALOG_APPENDNODE_ITERATE( front_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, front_textures_stages_labels )
+
+        DIALOG_APPENDNODE_NODE( textures_label, "rear", rear_label )
+        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", rear_textures_stages_labels )
+        DIALOG_APPENDNODE_ITERATE( rear_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, rear_textures_stages_labels )
+
+        DIALOG_APPENDNODE_NODE( textures_label, "left", left_label )
+        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", left_textures_stages_labels )
+        DIALOG_APPENDNODE_ITERATE( left_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, left_textures_stages_labels )
+
+        DIALOG_APPENDNODE_NODE( textures_label, "right", right_label )
+        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", right_textures_stages_labels )
+        DIALOG_APPENDNODE_ITERATE( right_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, right_textures_stages_labels )
+
+        DIALOG_APPENDNODE_NODE( textures_label, "bottom", bottom_label )
+        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", bottom_textures_stages_labels )
+        DIALOG_APPENDNODE_ITERATE( bottom_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, bottom_textures_stages_labels )
+
+        DIALOG_APPENDNODE_NODE( textures_label, "top", top_label )
+        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", top_textures_stages_labels )
+        DIALOG_APPENDNODE_ITERATE( top_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, top_textures_stages_labels )
+
+
+        DIALOG_FINALIZE
+    }
+
+
+    /*
     DIALOG_GETGRID
 
     if( "Spacebox node creation" == DIALOG_TITLE )
@@ -2711,9 +2773,11 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
                        
         DIALOG_FINALIZE
     }
+    */
 }
 
 void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
 {
-    
+    DIALOG_GETGRID
+
 }
