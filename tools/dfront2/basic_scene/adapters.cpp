@@ -44,7 +44,7 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applycameravalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameravalues );
     m_applycameraprops_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applycameraprops );
 
-    m_applyscenenodegraphvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyscenenodegraphvalues );
+
     m_applytransfonodevalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applytransfonodevalues );
 
     m_applyspaceboxvalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyspaceboxvalues );
@@ -631,53 +631,8 @@ void wxWidgetAdapter::AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
-void wxWidgetAdapter::AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid )
-{
-    Asset::PropertiesMap props;
-    p_texture->GetPropertiesMap( props );
-
-    dsstring assetname = props["assetname"].GetPropValue<dsstring>();
-    dsstring filepath = props["filepath"].GetPropValue<dsstring>();
-    bool rendertarget = props["rendertarget"].GetPropValue<bool>();
-    unsigned long rendetarget_w = props["rendertarget_size"].GetPropValue<unsigned long>( "width" );
-    unsigned long rendetarget_h = props["rendertarget_size"].GetPropValue<unsigned long>( "height" );
-
-
-    p_propertygrid->Append( new wxStringProperty( "assetname", wxPG_LABEL, assetname.c_str() ) );
-    
-
-    p_propertygrid->Append( new wxStringProperty( "filepath", wxPG_LABEL, filepath.c_str() ) );
-    
-
-    p_propertygrid->Append( new wxBoolProperty( "rendertarget", wxPG_LABEL, rendertarget ) );
-    
-
-    if( rendertarget )
-    {
-        p_propertygrid->Append( new wxIntProperty( "rendertarget_size/width", wxPG_LABEL, rendetarget_w ) );
-    
-        p_propertygrid->Append( new wxIntProperty( "rendertarget_size/height", wxPG_LABEL, rendetarget_h ) );
-    
-    }
-    
-}
-*/
-
-void wxWidgetAdapter::AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_propertygrid )
-{
-    Asset::PropertiesMap props;
-    p_shader->GetPropertiesMap( props );
-
-    dsstring assetname = props["assetname"].GetPropValue<dsstring>();
-    dsstring filepath = props["filepath"].GetPropValue<dsstring>();
-    bool compiled = props["compiled"].GetPropValue<bool>();
-
-    p_propertygrid->Append( new wxStringProperty( "assetname", wxPG_LABEL, assetname.c_str() ) );
-    p_propertygrid->Append( new wxStringProperty( "filepath", wxPG_LABEL, filepath.c_str() ) );
-    p_propertygrid->Append( new wxBoolProperty( "compiled", wxPG_LABEL, compiled ) );
-}
-
 void wxWidgetAdapter::AdaptFontProps( DrawSpace::Core::Font* p_font, wxPropertyGrid* p_propertygrid )
 {
     Asset::PropertiesMap props;
@@ -709,6 +664,7 @@ void wxWidgetAdapter::AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxProper
     p_propertygrid->Append( new wxIntProperty( "index", wxPG_LABEL, index ) );
     p_propertygrid->Append( new wxStringProperty( "plugin", wxPG_LABEL, plugin.c_str() ) );      
 }
+*/
 
 void wxWidgetAdapter::AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid )
 {
@@ -2003,54 +1959,6 @@ void wxWidgetAdapter::on_applycameravalues( BasicSceneObjectPropertiesDialog* p_
     p_dialog->Close();
 }
 
-void wxWidgetAdapter::AdaptScenegraphnodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-    propertygrid->Append( new wxStringProperty( "Name", wxPG_LABEL, "" ) );
-
-    p_dialog->RegisterApplyButtonHandler( m_applyscenenodegraphvalues_callback );    
-}
-
-void wxWidgetAdapter::on_applyscenenodegraphvalues( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    wxStringProperty* prop2;
-    wxAny value;
-
-
-    dsstring alias;
-    wxString alias2;
-    wxCharBuffer buffer;
-
-
-    prop2 = static_cast<wxStringProperty*>( propertygrid->GetProperty( "Name" ) );
-    value = prop2->GetValue();
-    value.GetAs<wxString>( &alias2 );
-    buffer = alias2.ToAscii();
-    alias = buffer.data();
-
-    if( "" == alias )
-    {
-        wxMessageBox( "'Name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        return;
-    }
-
-    std::map<void*, BasicSceneMainFrame::SceneNodeGraphEntry>* scenenodegraphs_map = (std::map<void*, BasicSceneMainFrame::SceneNodeGraphEntry>*)p_dialog->GetData( "scenenodegraphs_map" );
-    wxTreeCtrl* scenegraphs_treeCtrl = (wxTreeCtrl*)p_dialog->GetData( "scenegraphs_treeCtrl" );
-    wxTreeItemId* scenegraphs_root_item = (wxTreeItemId*)p_dialog->GetData( "scenegraphs_root_item" );
-
-    BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-    entry.name = alias;
-    entry.scenenodegraph = new SceneNodeGraph();
-    entry.treeitemid = scenegraphs_treeCtrl->AppendItem( *scenegraphs_root_item, alias2, SCENEGRAPH_ICON_INDEX );
-    (*scenenodegraphs_map)[entry.treeitemid.GetID()] = entry;
-
-    scenegraphs_treeCtrl->ExpandAllChildren( *scenegraphs_root_item );
-
-    p_dialog->Close();
-}
 
 
 void wxWidgetAdapter::AdaptTransfonodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog )

@@ -69,7 +69,7 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applylonglatmvtvalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameravalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameraprops_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyscenenodegraphvalues_callback;
+
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfonodevalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxvalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxaddpassslot_callback;
@@ -98,7 +98,7 @@ protected:
     void on_applycameravalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applycameraprops( BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void on_applyscenenodegraphvalues( BasicSceneObjectPropertiesDialog* p_dialog );
+
     void on_applytransfonodevalues( BasicSceneObjectPropertiesDialog* p_dialog );
 
     void on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -144,10 +144,6 @@ public:
     void AdaptScenegraphList( DrawSpace::Scenegraph* p_scenegraph, wxListCtrl* p_listctrl );
     void AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
 
-    //void AdaptTextureProps( DrawSpace::Core::Texture* p_texture, wxPropertyGrid* p_propertygrid );
-    void AdaptShaderProps( DrawSpace::Core::Shader* p_shader, wxPropertyGrid* p_propertygrid );
-    void AdaptFontProps( DrawSpace::Core::Font* p_font, wxPropertyGrid* p_propertygrid );
-    void AdaptMesheProps( DrawSpace::Core::Meshe* p_meshe, wxPropertyGrid* p_propertygrid );
     void AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid );
     void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
     void AdaptCameraProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog );
@@ -173,7 +169,6 @@ public:
     void AdaptFreeMvtProps( const dsstring& p_mvtname, DrawSpace::Core::FreeMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptHeadMvtProps( const dsstring& p_mvtname, DrawSpace::Core::HeadMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     
-    void AdaptScenegraphnodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptTransfonodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
 
 

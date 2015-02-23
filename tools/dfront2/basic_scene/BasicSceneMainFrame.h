@@ -86,7 +86,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define DIALOG_TEXTURE_PROPS_TITLE          "Texture properties"
+#define DIALOG_SHADER_PROPS_TITLE           "Shader properties"
+#define DIALOG_FONT_PROPS_TITLE             "Font properties"
+#define DIALOG_MESHE_PROPS_TITLE            "Meshe properties"
 #define DIALOG_SPACEBOX_CREATION_TITLE      "Spacebox node creation"
+#define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -241,6 +245,8 @@
 
 #define DIALOG_INCREMENT_STRING( _src_, _delta_ ) \
         dsstring( _src_ + dsstring( "." ) + _delta_ ) \
+
+#define DIALOG_CLOSE p_dialog->Close();
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

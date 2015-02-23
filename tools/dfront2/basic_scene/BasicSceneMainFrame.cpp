@@ -1705,12 +1705,6 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
     Texture* texture = dynamic_cast<Texture*>( asset );
     if( texture )
     {
-        /*
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Texture properties" );
-        wxWidgetAdapter::GetInstance()->AdaptTextureProps( texture, dialog->GetPropertyGrid() );
-        dialog->Show();
-        */
-
         Asset::PropertiesMap props;
         texture->GetPropertiesMap( props );
 
@@ -1741,25 +1735,61 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
     Shader* shader = dynamic_cast<Shader*>( asset );
     if( shader )
     {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader properties" );
-        wxWidgetAdapter::GetInstance()->AdaptShaderProps( shader, dialog->GetPropertyGrid() );
-        dialog->Show();
+        Asset::PropertiesMap props;
+        shader->GetPropertiesMap( props );
+
+        dsstring assetname = props["assetname"].GetPropValue<dsstring>();
+        dsstring filepath = props["filepath"].GetPropValue<dsstring>();
+        bool compiled = props["compiled"].GetPropValue<bool>();
+        
+        DIALOG_DECLARE( DIALOG_SHADER_PROPS_TITLE )
+        DIALOG_APPENDROOT_STRING( "assetname", assetname )
+        DIALOG_APPENDROOT_STRING( "filepath", filepath )
+        DIALOG_APPENDROOT_BOOL( "compiled", compiled )
+
+        DIALOG_SHOW
     }
 
     Font* font = dynamic_cast<Font*>( asset );
     if( font )
     {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Font properties" );
-        wxWidgetAdapter::GetInstance()->AdaptFontProps( font, dialog->GetPropertyGrid() );
-        dialog->Show();
+        Asset::PropertiesMap props;
+        font->GetPropertiesMap( props );
+
+        dsstring assetname = props["assetname"].GetPropValue<dsstring>();
+        dsstring plugin = props["plugin"].GetPropValue<dsstring>();
+        dsstring texturefilepath = props["filespath"].GetPropValue<dsstring>( "texturefilepath" );
+        dsstring metricsfilepath = props["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
+
+        DIALOG_DECLARE( DIALOG_FONT_PROPS_TITLE )
+
+        DIALOG_APPENDROOT_STRING( "assetname", assetname )
+        DIALOG_APPENDROOT_STRING( "plugin", plugin )
+        DIALOG_APPENDROOT_STRING( "texturefilepath", texturefilepath )
+        DIALOG_APPENDROOT_STRING( "metricsfilepath", metricsfilepath )
+
+        DIALOG_SHOW
     }
 
     Meshe* meshe = dynamic_cast<Meshe*>( asset );
     if( meshe )
     {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Meshe properties" );
-        wxWidgetAdapter::GetInstance()->AdaptMesheProps( meshe, dialog->GetPropertyGrid() );
-        dialog->Show();
+        Asset::PropertiesMap props;
+        meshe->GetPropertiesMap( props );
+
+        dsstring assetname = props["assetname"].GetPropValue<dsstring>();
+        dsstring filepath = props["filepath"].GetPropValue<dsstring>();
+        long index = props["index"].GetPropValue<long>();
+        dsstring plugin = props["plugin"].GetPropValue<dsstring>();
+
+        DIALOG_DECLARE( DIALOG_MESHE_PROPS_TITLE )
+
+        DIALOG_APPENDROOT_STRING( "assetname", assetname )
+        DIALOG_APPENDROOT_STRING( "filepath", filepath )
+        DIALOG_APPENDROOT_INTEGER( "index", index )
+        DIALOG_APPENDROOT_STRING( "plugin", plugin )
+
+        DIALOG_SHOW
     }
 }
 
@@ -2178,16 +2208,10 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
     {
  		case CONTEXTMENU_NEWSCENENODEGRAPH:
             {
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Scenenodegraph creation" );
-
-                wxWidgetAdapter::GetInstance()->AdaptScenegraphnodeCreationProps( dialog );
-
-                dialog->SetData( "scenenodegraphs_map", &m_scenenodegraphs );
-                dialog->SetData( "scenegraphs_treeCtrl", m_scenegraphs_treeCtrl );
-                dialog->SetData( "scenegraphs_root_item", &m_scenegraphs_root_item );
-                dialog->EnableApplyButton();
-                dialog->Show();
-                break;
+                DIALOG_DECLARE( DIALOG_SCENEGRAPH_CREATION_TITLE )
+                DIALOG_APPENDROOT_STRING( "name", "" )
+                DIALOG_APPLY
+                DIALOG_SHOW
             }
  			break;
 
@@ -2662,6 +2686,32 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     DIALOG_PROPERTIES_VARS
 
 
+    if( DIALOG_SCENEGRAPH_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "name", scenegraph_name )
+
+        DIALOG_WXSTRING_TO_DSSTRING( scenegraph_name, scenegraph_name2 )
+
+        if( "" == scenegraph_name2 )
+        {
+            wxMessageBox( "'name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        }
+        else
+        {
+
+            BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+            entry.name = scenegraph_name2;
+            entry.scenenodegraph = new SceneNodeGraph();
+            entry.treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, scenegraph_name, SCENEGRAPH_ICON_INDEX );
+
+            m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
+
+            m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
+
+            DIALOG_CLOSE
+        }
+    }
 
 
     /*
