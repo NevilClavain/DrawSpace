@@ -2098,7 +2098,8 @@ void wxWidgetAdapter::AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMain
         propertygrid->AppendIn( mat_prop_z, new wxEnumProperty( "register", wxPG_LABEL, regs_labels, regs_arrIds, reg_selection ) );
 
 
-        propertygrid->AppendIn( mat_prop_angle, new wxFloatProperty( "constant", wxPG_LABEL, Maths::RadToDeg( mci.values[3] ) ) );
+        dsreal ang_deg = Maths::RadToDeg( mci.values[3] );
+        propertygrid->AppendIn( mat_prop_angle, new wxFloatProperty( "constant", wxPG_LABEL, ang_deg ) );
         if( "" == mci.metadatas[3] )
         {
             reg_selection = -1;

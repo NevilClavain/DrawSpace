@@ -903,7 +903,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
         
-        compute_transformnodes();
+        //compute_transformnodes();
                 
         //m_scenegraph.ComputeTransformations( m_timer );
 
@@ -1020,14 +1020,6 @@ void BasicSceneMainFrame::Update( void )
     
 
     m_scenegraphs_treeCtrl->AssignImageList( pImageList );
-
-
-    /*
-    wxTreeItemId ti_root = m_treeCtrl1->AddRoot( "prout0", SPACEBOX_ICON_INDEX );
-    wxTreeItemId ti_sb0 = m_treeCtrl1->AppendItem( ti_root, "sub_prout0", INERTBODY_ICON_INDEX );
-    wxTreeItemId ti_sb1 = m_treeCtrl1->AppendItem( ti_root, "sub_prout1", PLANET_ICON_INDEX );
-    wxTreeItemId ti_sb10 = m_treeCtrl1->AppendItem( ti_sb1, "sub_prout10", ORBITER_ICON_INDEX );
-    */
     
     m_scenegraphs_root_item = m_scenegraphs_treeCtrl->AddRoot( "DrawSpace", DRAWSPACE_ICON_INDEX );
 }
@@ -1229,6 +1221,15 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWTRANSFO:
             {
+
+                DIALOG_DECLARE( DIALOG_TRANSFORM_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+                DIALOG_APPLY
+                DIALOG_SHOW
+
+
+                /*
                 BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Transformation node creation" );
 
                 wxWidgetAdapter::GetInstance()->AdaptTransfonodeCreationProps( dialog );
@@ -1241,6 +1242,9 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 dialog->EnableApplyButton();
                 dialog->Show();
+                */
+
+
             }
             break;
 
@@ -1311,8 +1315,6 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 DIALOG_SPECIFIC0( "Add new pass slot" )
 
                 DIALOG_SHOW
-
-
             }
             break;
  	}
@@ -1642,6 +1644,97 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
             DIALOG_CLOSE
         }
+    }
+
+    else if( DIALOG_TRANSFORM_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
+
+        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+        if( "" == alias )
+        {
+            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // create the transformation node
+
+        SceneNode<Transformation>* transfo_node;
+        transfo_node = new SceneNode<Transformation>( alias );
+        transfo_node->SetContent( new Transformation );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // now we must found the scenenodegraph we belong to make the RegisterNode() call
+
+        wxTreeItemId current = m_last_clicked_treeitem;
+
+        void* id;
+
+        while( 1 )
+        {
+            id = current.GetID();
+
+            if( m_scenenodegraphs.count( id ) > 0 )
+            {
+                break;
+            }
+
+            current = m_scenegraphs_treeCtrl->GetItemParent( current );
+        }
+
+        BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+        entry = m_scenenodegraphs[id];
+        entry.scenenodegraph->RegisterNode( transfo_node );
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        // link to the scenegraph hierarchy
+
+        current = m_last_clicked_treeitem;
+        id = current.GetID();
+
+        if( m_scenenodegraphs.count( id ) > 0 )
+        {
+            // parent is a scenegraph : use SceneNodeGraph::Add() method
+            entry.scenenodegraph->AddNode( transfo_node );
+        }
+        else
+        {
+            BaseSceneNode* parent_node = m_tree_nodes[id];
+            transfo_node->LinkTo( parent_node );
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        // GUI : add item in the tree
+
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, TRANSFO_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // record the new transformation node and associated metadata
+
+        BasicSceneMainFrame::TransformationNodeEntry t_entry;
+
+        t_entry.name = alias;
+        t_entry.transformation = transfo_node;
+        t_entry.treeitemid = treeitemid;
+
+
+        m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
+
+        m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
+
+
+
+        DIALOG_CLOSE
     }
 
 
