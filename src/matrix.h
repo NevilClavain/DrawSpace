@@ -96,6 +96,12 @@ public:
         m_matrix[3][3] = 0.0;
 
         m_configinfos.type = CONFIG_ZERO;
+
+        m_configinfos.values[0] = 0.0;
+        m_configinfos.values[1] = 0.0;
+        m_configinfos.values[2] = 0.0;
+        m_configinfos.values[3] = 0.0;
+
     }
 
     dsreal operator()( int p_row, int p_col ) const
@@ -118,6 +124,12 @@ public:
         m_matrix[3][3] = 1.0;
 
         m_configinfos.type = CONFIG_IDENTITY;
+
+        m_configinfos.values[0] = 0.0;
+        m_configinfos.values[1] = 0.0;
+        m_configinfos.values[2] = 0.0;
+        m_configinfos.values[3] = 0.0;
+
     }
 
     void Translation( dsreal p_x, dsreal p_y, dsreal p_z )
@@ -131,7 +143,7 @@ public:
         m_configinfos.values[0] = p_x;
         m_configinfos.values[1] = p_y;
         m_configinfos.values[2] = p_z;
-        m_configinfos.values[3] = 1.0;
+        m_configinfos.values[3] = 0.0;
 
     }
 
@@ -146,7 +158,7 @@ public:
         m_configinfos.values[0] = p_pos[0];
         m_configinfos.values[1] = p_pos[1];
         m_configinfos.values[2] = p_pos[2];
-        m_configinfos.values[3] = 1.0;
+        m_configinfos.values[3] = 0.0;
 
     }
 
@@ -201,7 +213,7 @@ public:
         m_configinfos.values[0] = p_sx;
         m_configinfos.values[1] = p_sy;
         m_configinfos.values[2] = p_sz;
-        m_configinfos.values[3] = 1.0;
+        m_configinfos.values[3] = 0.0;
 
     }
 
@@ -217,7 +229,7 @@ public:
         m_configinfos.values[0] = p_pos[0];
         m_configinfos.values[1] = p_pos[1];
         m_configinfos.values[2] = p_pos[2];
-        m_configinfos.values[3] = 1.0;
+        m_configinfos.values[3] = 0.0;
 
     }
 
