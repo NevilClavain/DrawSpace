@@ -89,7 +89,9 @@
 #define DIALOG_SHADER_PROPS_TITLE           "Shader properties"
 #define DIALOG_FONT_PROPS_TITLE             "Font properties"
 #define DIALOG_MESHE_PROPS_TITLE            "Meshe properties"
-#define DIALOG_TRANSFORM_CREATION_TITLE    "Transformation node creation"
+#define DIALOG_FX_PROPS_TITLE               "Fx properties"
+#define DIALOG_TRANSFORM_CREATION_TITLE     "Transformation node creation"
+#define DIALOG_TRANSFORM_EDITION_TITLE      "Transformation node edition"
 #define DIALOG_SPACEBOX_CREATION_TITLE      "Spacebox node creation"
 #define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
 
@@ -126,6 +128,8 @@
 #define DIALOG_APPENDNODE_INTEGER( _parent_, _label_, _value_ )     propertygrid->AppendIn( _parent_, new wxIntProperty( _label_, wxPG_LABEL, _value_ ) );
 #define DIALOG_APPENDNODE_FLOAT( _parent_, _label_, _value_ )       propertygrid->AppendIn( _parent_, new wxFloatProperty( _label_, wxPG_LABEL, _value_ ) );
 #define DIALOG_APPENDNODE_ENUM( _parent_, _label_, _value_ )        propertygrid->AppendIn( _parent_, new wxEnumProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDNODE_ENUM_PRESELECTED( _parent_, _label_, _value_, _array_ids_, _index_ )        propertygrid->AppendIn( _parent_, new wxEnumProperty( _label_, wxPG_LABEL, _value_, _array_ids_, _index_ ) );
+
 #define DIALOG_APPENDNODE_BOOL( _parent_, _label_, _value_ )        propertygrid->AppendIn( _parent_, new wxBoolProperty( _label_, wxPG_LABEL, _value_ ) );
 
 
@@ -144,6 +148,17 @@
 
 #define DIALOG_APPENDNODE_ITERATE_NODE_END \
     } \
+
+
+#define DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( _counter_, _list_, _var_name_ ) \
+    for( size_t _counter_ = 0; i < _list_.size(); _counter_++ ) \
+    { \
+        DIALOG_APPENDROOT_NODE( _list_[_counter_], _var_name_ ) \
+
+
+#define DIALOG_APPENDROOT_ITERATE_NODE_END \
+    } \
+
 
 #define DIALOG_BUILD_LABELS( _count_, _format_, _var_name_ ) \
     wxArrayString _var_name_; \
@@ -249,6 +264,8 @@
 
 #define DIALOG_CLOSE p_dialog->Close();
 
+
+#define DIALOG_CLEARGRID p_dialog->GetPropertyGrid()->Clear();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

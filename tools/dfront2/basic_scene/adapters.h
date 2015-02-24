@@ -64,8 +64,6 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameraprops_callback;
 
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfonodevalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxvalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyspaceboxaddpassslot_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackvalue_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackaddmatrix_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackclearall_callback;
@@ -87,8 +85,6 @@ protected:
 
     void on_applytransfonodevalues( BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void on_applyspaceboxvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applyspaceboxaddpassslot( BasicSceneObjectPropertiesDialog* p_dialog );
 
     void on_applymatrixstackvalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -130,7 +126,7 @@ public:
     
     void AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
 
-    void AdaptFxProps( DrawSpace::Core::Fx* p_fx, wxPropertyGrid* p_propertygrid );
+
     void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
     void AdaptCameraProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog );
 
@@ -138,28 +134,16 @@ public:
     void AdaptCameraPropsModification( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog );
     void AdaptRegisterPropsModification( BasicSceneMainFrame::RegisterEntry* p_regentry, BasicSceneObjectPropertiesDialog* p_dialog );
     
-    void AdaptLinearMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptCircularMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptFPSMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptFreeMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptHeadMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptSpectatorMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptLongLatMvtCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
     
-    void AdaptSpaceBoxCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
+
     void AdaptRegisterCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void AdaptLinearMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LinearMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptCircularMvtProps( const dsstring& p_mvtname, DrawSpace::Core::CircularMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptFpsMvtProps( const dsstring& p_mvtname, DrawSpace::Core::FPSMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptFreeMvtProps( const dsstring& p_mvtname, DrawSpace::Core::FreeMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptHeadMvtProps( const dsstring& p_mvtname, DrawSpace::Core::HeadMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
     
     void AdaptTransfonodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
 
 
-    void AdaptSpectatorMvtProps( const dsstring& p_mvtname, DrawSpace::Core::SpectatorMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptLongLatMvtProps( const dsstring& p_mvtname, DrawSpace::Core::LongLatMovement* p_movement, BasicSceneObjectPropertiesDialog* p_dialog );
+
+
     void AdaptRegProps( const dsstring& p_alias, BasicSceneMainFrame::RegisterEntry* p_reg, BasicSceneObjectPropertiesDialog* p_dialog );
     
     void AdaptTransfoSourceModification( BasicSceneObjectPropertiesDialog* p_dialog );

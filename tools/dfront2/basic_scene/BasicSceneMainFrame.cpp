@@ -1129,10 +1129,70 @@ void BasicSceneMainFrame::OnConfigsListItemActivated( wxListEvent& p_event )
 
     Fx* fx = dynamic_cast<Fx*>( config );
     if( fx )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Fx properties" );
-        wxWidgetAdapter::GetInstance()->AdaptFxProps( fx, dialog->GetPropertyGrid() );
-        dialog->Show();
+    {               
+        Configurable::PropertiesMap props;
+        fx->GetPropertiesMap( props );
+
+
+        DIALOG_DECLARE( DIALOG_FX_PROPS_TITLE )
+
+        std::vector<dsstring> shaders_list = props["shaders"].GetPropValue<std::vector<dsstring>>();
+
+        if( shaders_list.size() > 0 )
+        {
+            DIALOG_APPENDROOT_NODE( "shaders", shaders_root )
+
+            DIALOG_BUILD_LABELS( shaders_list.size(), "shader %d", shader_labels )
+            DIALOG_APPENDNODE_ITERATE( shaders_root, shaders_list[i], DIALOG_APPENDNODE_STRING, shader_labels )
+        }
+
+        std::vector<RenderState> rsin_list = props["renderstates_in"].GetPropValue<std::vector<RenderState>>();
+
+        if( rsin_list.size() > 0 )
+        {
+            DIALOG_APPENDROOT_NODE( "renderstates in", rsin_root )
+
+            DIALOG_BUILD_LABELS( rsin_list.size(), "%d", rsin_labels )
+
+
+            DIALOG_APPENDNODE_ITERATE_NODE_BEGIN( rsin_root, i, rsin_labels, rsin )
+
+                RenderState rs = rsin_list[i];
+                dsstring renderstate_op;
+                dsstring renderstate_arg;
+
+                rs.GetOperationToString( renderstate_op );
+                rs.GetArg( renderstate_arg );
+
+                DIALOG_APPENDNODE_STRING( rsin, "operation", renderstate_op )
+                DIALOG_APPENDNODE_STRING( rsin, "argument", renderstate_arg )
+
+            DIALOG_APPENDNODE_ITERATE_NODE_END
+        }
+
+        std::vector<RenderState> rsout_list = props["renderstates_out"].GetPropValue<std::vector<RenderState>>();
+        if( rsout_list.size() > 0 )
+        {
+            DIALOG_APPENDROOT_NODE( "renderstates out", rsout_root )
+
+            DIALOG_BUILD_LABELS( rsout_list.size(), "%d", rsout_labels )
+
+            DIALOG_APPENDNODE_ITERATE_NODE_BEGIN( rsout_root, i, rsout_labels, rsout )
+
+                RenderState rs = rsout_list[i];
+                dsstring renderstate_op;
+                dsstring renderstate_arg;
+
+                rs.GetOperationToString( renderstate_op );
+                rs.GetArg( renderstate_arg );
+
+                DIALOG_APPENDNODE_STRING( rsout, "operation", renderstate_op )
+                DIALOG_APPENDNODE_STRING( rsout, "argument", renderstate_arg )
+
+            DIALOG_APPENDNODE_ITERATE_NODE_END
+        }
+
+        DIALOG_SHOW            
     }
 
     IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( config );
@@ -1228,23 +1288,6 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 DIALOG_APPLY
                 DIALOG_SHOW
 
-
-                /*
-                BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Transformation node creation" );
-
-                wxWidgetAdapter::GetInstance()->AdaptTransfonodeCreationProps( dialog );
-
-                dialog->SetData( "scenenodegraphs_map", &m_scenenodegraphs );
-                dialog->SetData( "last_clicked_treeitem", &m_last_clicked_treeitem );
-                dialog->SetData( "scenegraphs_treeCtrl", m_scenegraphs_treeCtrl );
-                dialog->SetData( "transformation_nodes_map", &m_transformation_nodes );
-                dialog->SetData( "tree_nodes_map", &m_tree_nodes );
-
-                dialog->EnableApplyButton();
-                dialog->Show();
-                */
-
-
             }
             break;
 
@@ -1254,17 +1297,52 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 if( m_transformation_nodes.count( id ) > 0 )
                 {
-                    TransformationNodeEntry* tne = &( m_transformation_nodes[id] );
 
-                    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Transformation node edition" );
+                    DIALOG_DECLARE( DIALOG_TRANSFORM_EDITION_TITLE )
 
-                    dialog->SetData( "registers", &m_registers );
-                    dialog->SetData( "transfo_node_entry", tne );
-                    dialog->EnableApplyButton();
-                    dialog->EnableSpecificButton0( "Add matrix" );
-                    dialog->EnableSpecificButton1( "Clear all" );
-                    wxWidgetAdapter::GetInstance()->AdaptMatrixStackEdition( &m_registers, tne, dialog );
-                    dialog->Show();
+                    DIALOG_APPLY
+                    DIALOG_SPECIFIC0( "Add matrix" )
+                    DIALOG_SPECIFIC1( "Clear all" )
+
+                    std::vector<Matrix> mat_chain;
+                    m_transformation_nodes[id].transformation->GetContent()->GetMatrixChain( mat_chain );
+
+
+                    DIALOG_BUILD_LABELS( mat_chain.size(), "matrix %d", matrix_labels )
+
+                    DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( i, matrix_labels, matrix_root )
+
+
+                        Matrix::ConfigurationInfo mci;
+                        mat_chain[i].GetConfigInfos( mci );
+
+                        wxArrayString matrix_type_labels;
+
+                        matrix_type_labels.Add( "identity" );
+                        matrix_type_labels.Add( "scaling" );
+                        matrix_type_labels.Add( "translation" );
+                        matrix_type_labels.Add( "rotation" );
+                        matrix_type_labels.Add( "zero" );
+                        matrix_type_labels.Add( "undetermined" );
+
+                        wxArrayInt arrIds;
+                        arrIds.Add( Matrix::CONFIG_IDENTITY );
+                        arrIds.Add( Matrix::CONFIG_SCALING );
+                        arrIds.Add( Matrix::CONFIG_TRANSLATION );
+                        arrIds.Add( Matrix::CONFIG_ROTATION );
+                        arrIds.Add( Matrix::CONFIG_ZERO );
+                        arrIds.Add( Matrix::CONFIG_UNDETERMINED );
+
+                        DIALOG_APPENDNODE_ENUM_PRESELECTED( matrix_root, "type", matrix_type_labels, arrIds, mci.type )
+
+                        DIALOG_APPENDNODE_FLOAT( matrix_root, "x", mci.values[0] )
+                        DIALOG_APPENDNODE_FLOAT( matrix_root, "y", mci.values[1] )
+                        DIALOG_APPENDNODE_FLOAT( matrix_root, "z", mci.values[2] )
+                        DIALOG_APPENDNODE_FLOAT( matrix_root, "angle", Maths::RadToDeg( mci.values[3] ) )
+
+                    DIALOG_APPENDROOT_ITERATE_NODE_END
+                    DIALOG_SHOW
+
                 }
             }
             break;
@@ -1737,6 +1815,11 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         DIALOG_CLOSE
     }
 
+    else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
+    {
+
+    }
+
 
     /*
     DIALOG_GETGRID
@@ -1825,6 +1908,12 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
         DIALOG_FINALIZE
     }
 
+    else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
+    {
+
+    }
+
+
 
     /*
     DIALOG_GETGRID
@@ -1854,4 +1943,8 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
 {
     DIALOG_GETGRID
 
+    if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_CLEARGRID
+    }
 }
