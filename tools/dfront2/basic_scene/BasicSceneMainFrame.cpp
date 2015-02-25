@@ -46,14 +46,7 @@ m_display_currentcamera( false ),
 m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false )
 {
 
-
-    
-
-    m_modreg_button->Enable( false );
-    m_resetreg_button->Enable( false );
-    m_regon_button->Enable( false );
-    m_regoff_button->Enable( false );
-
+   
     m_consoleinput_textCtrl->SetFont( m_console_font );
     m_consoleoutput_textCtrl->SetFont( m_console_font );
 
@@ -166,28 +159,6 @@ void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
     wxMessageBox( "Scripting syntax error", "Script error", wxICON_ERROR );
 }
 
-bool BasicSceneMainFrame::set_var_alias( const dsstring& p_source, dsstring& p_dest )
-{
-    bool status = true;
-    if( p_source != "" )
-    {
-        if( m_registers.count( p_source ) > 0 )
-        {
-            p_dest = p_source;
-        }
-        else
-        {
-            wxMessageBox( "unknown register : " + p_source, "Script error", wxICON_ERROR );
-            status = false;
-        }
-    }
-    else
-    {
-        p_dest = "...";
-    }
-
-    return status;
-}
 
 void BasicSceneMainFrame::build_popupmenu( int p_level, wxMenu& p_menu )
 {   
@@ -288,6 +259,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "DrawSpace:CreateConstRegister" == script_call_id )
     {
+        /*
         dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
         dsreal reg_val = p_propertypool.GetPropValue<dsreal>( "reg_val" );
 
@@ -301,9 +273,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
         m_registers[reg_name] = register_entry;
         wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );
+        */
     }
     else if( "DrawSpace:ModifyConstRegisterValue" == script_call_id )
     {
+        /*
         dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
         dsreal reg_val = p_propertypool.GetPropValue<dsreal>( "reg_val" );
 
@@ -322,9 +296,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
         }
+        */
     }
     else if( "DrawSpace:CreateVarRegister" == script_call_id )
     {
+        /*
         dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
         dsstring var_mode = p_propertypool.GetPropValue<dsstring>( "var_mode" );
         dsreal init_val = p_propertypool.GetPropValue<dsreal>( "init_val" );
@@ -364,9 +340,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_registers[reg_name] = register_entry;
         wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );
 
+        */
     }
     else if( "DrawSpace:ResetVarRegister" == script_call_id )
     {
+        /*
         dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
 
         if( m_registers.count( reg_name ) > 0 )
@@ -384,9 +362,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
         }
+        */
     }
     else if( "DrawSpace:SetVarRegisterState" == script_call_id )
     {
+        /*
         dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
         bool state = p_propertypool.GetPropValue<bool>( "state" );
 
@@ -405,9 +385,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
         }
+        */
     }
     else if( "DrawSpace:SetVarRegisterInitVal" == script_call_id )
     {
+        /*
         dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
         dsreal init_val = p_propertypool.GetPropValue<dsreal>( "init_val" );
 
@@ -426,9 +408,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
         }
+        */
     }
     else if( "DrawSpace:SetVarRegisterSpeed" == script_call_id )
     {
+        /*
         dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
         dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
 
@@ -447,9 +431,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
         }
+        */
     }
     else if( "DrawSpace:SetVarRegisterRange" == script_call_id )
     {
+        /*
         dsstring reg_name = p_propertypool.GetPropValue<dsstring>( "reg_name" );
         dsreal range_min = p_propertypool.GetPropValue<dsreal>( "range_min" );
         dsreal range_max = p_propertypool.GetPropValue<dsreal>( "range_max" );
@@ -470,6 +456,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( "Unknown register name : " + reg_name, "Script error", wxICON_ERROR );
         }
+        */
     }
     else if( "MovementBuilder:Lua_BuildIt" == script_call_id )
     {
@@ -608,138 +595,10 @@ void BasicSceneMainFrame::SetWindowDims( long p_w_width, long p_w_height )
     m_w_height = p_w_height;
 }
 
-void BasicSceneMainFrame::compute_regs( void )
-{
-    for( std::map<dsstring, RegisterEntry>::iterator it = m_registers.begin(); it != m_registers.end(); ++it )
-    {
-        RegisterEntry* register_entry = &(it->second);
-
-        if( REGISTER_CONSTANT == register_entry->mode )
-        {
-            register_entry->current_value = register_entry->const_value;
-        }
-        else if( REGISTER_VARIABLE == register_entry->mode && register_entry->state )
-        {
-            switch( register_entry->variable_mode )
-            {
-                case REGISTER_VARIABLE_TRANSLATION_SIMPLE:
-                    {
-                        if( register_entry->current_value > register_entry->variable_range_inf && 
-                            register_entry->current_value < register_entry->variable_range_sup )
-                        {
-                            m_timer.TranslationSpeedInc( &register_entry->current_value, register_entry->variable_speed );
-                        }
-                    }
-                    break;
-
-                case REGISTER_VARIABLE_TRANSLATION_ROUNDTRIP:
-                    {
-                        if( !register_entry->variable_roundtrip_back )
-                        {
-                            if( register_entry->current_value <= register_entry->variable_range_sup )
-                            {
-                                m_timer.TranslationSpeedInc( &register_entry->current_value, register_entry->variable_speed );
-                            }
-                            else
-                            {
-                                register_entry->variable_roundtrip_back = true;
-                            }
-                        }
-                        else
-                        {
-                            if( register_entry->current_value >= register_entry->variable_range_inf )
-                            {
-                                m_timer.TranslationSpeedDec( &register_entry->current_value, register_entry->variable_speed );
-                            }
-                            else
-                            {
-                                register_entry->variable_roundtrip_back = false;
-                            }
-                        }
-                    }
-                    break;
-
-                case REGISTER_VARIABLE_ANGULAR_SIMPLE:
-                    {
-                        if( register_entry->current_value > register_entry->variable_range_inf && 
-                            register_entry->current_value < register_entry->variable_range_sup )
-                        {
-                            m_timer.AngleSpeedInc( &register_entry->current_value, register_entry->variable_speed );
-                        }
-                    }
-                    break;
-
-                case REGISTER_VARIABLE_ANGULAR_ROUNDTRIP:
-                    {
-                        if( register_entry->discontinuity )
-                        {
-                            if( !register_entry->variable_roundtrip_back )
-                            {
-                                if( register_entry->variable_speed > 0.0 )
-                                {
-                                    m_timer.AngleSpeedInc( &register_entry->current_value, register_entry->variable_speed );
-                                }
-                                else
-                                {
-                                    m_timer.AngleSpeedDec( &register_entry->current_value, -register_entry->variable_speed );
-                                }
-
-                                if( !( ( 0.0 <= register_entry->current_value && register_entry->current_value <= register_entry->variable_range_sup ) ||
-                                      ( register_entry->variable_range_inf <= register_entry->current_value && register_entry->current_value < 360.0 ) ) )
-                                {
-                                    register_entry->variable_roundtrip_back = true;
-                                }
-                            }
-                            else
-                            {
-
-                                if( register_entry->variable_speed > 0.0 )
-                                {
-                                    m_timer.AngleSpeedDec( &register_entry->current_value, register_entry->variable_speed );
-                                }
-                                else
-                                {
-                                    m_timer.AngleSpeedInc( &register_entry->current_value, -register_entry->variable_speed );
-                                }
-
-                                if( !( ( 0.0 <= register_entry->current_value && register_entry->current_value <= register_entry->variable_range_sup ) ||
-                                      ( register_entry->variable_range_inf <= register_entry->current_value && register_entry->current_value < 360.0 ) ) )
-                                {
-                                    register_entry->variable_roundtrip_back = false;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if( !register_entry->variable_roundtrip_back )
-                            {
-                                m_timer.AngleSpeedInc( &register_entry->current_value, register_entry->variable_speed );
-
-                                if( !( register_entry->variable_range_inf <= register_entry->current_value && register_entry->current_value <= register_entry->variable_range_sup ) )
-                                {
-                                    register_entry->variable_roundtrip_back = true;
-                                }
-                            }
-                            else
-                            {
-                                m_timer.AngleSpeedDec( &register_entry->current_value, register_entry->variable_speed );
-
-                                if( !( register_entry->variable_range_inf <= register_entry->current_value && register_entry->current_value <= register_entry->variable_range_sup ) )
-                                {
-                                    register_entry->variable_roundtrip_back = false;
-                                }
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
-    }
-}
 
 void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
 {
-    wxWidgetAdapter::GetInstance()->AdaptRegistersLastValue( &m_registers, m_registers_listCtrl );
+    
 }
 
 void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
@@ -748,70 +607,6 @@ void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
     Destroy();
 }
 
-
-void BasicSceneMainFrame::compute_transformnodes( void )
-{
-    for( std::map<void*, TransformationNodeEntry>::iterator it = m_transformation_nodes.begin(); it != m_transformation_nodes.end(); ++it )
-    {
-        Matrix::ConfigurationInfo mci;
-
-        std::vector<Matrix> mat_list;
-        it->second.transformation->GetContent()->GetMatrixChain( mat_list );
-
-        for( size_t i = 0; i < mat_list.size(); i++ )
-        {
-            Matrix::ConfigurationInfo mci;
-            Matrix updated_mat;
-            mat_list[i].GetConfigInfos( mci );
-
-            Vector values = mci.values;
-            for( size_t j = 0; j < 4; j++ )
-            {                        
-                if( mci.metadatas[j] != "" && m_registers.count( mci.metadatas[j] ) > 0 )
-                {                           
-                    values[j] = m_registers[mci.metadatas[j]].current_value;                                
-                }                        
-            }
-
-            switch( mci.type )
-            {
-                case Matrix::CONFIG_TRANSLATION:
-                {
-                    updated_mat.Translation( values[0], values[1], values[2] );
-                }
-                break;
-
-                case Matrix::CONFIG_SCALING:
-                {
-                    updated_mat.Scale( values[0], values[1], values[2] );
-                }
-                break;
-
-                case Matrix::CONFIG_ROTATION:
-                {
-                    updated_mat.Rotation( Vector( values[0], values[1], values[2], 1.0 ), values[3] );
-                }
-                break;
-
-
-                case Matrix::CONFIG_IDENTITY:
-                {
-                    updated_mat.Identity();
-                }
-                break;
-
-
-            }
-
-            updated_mat.SetMetaData( 0, mci.metadatas[0] );
-            updated_mat.SetMetaData( 1, mci.metadatas[1] );
-            updated_mat.SetMetaData( 2, mci.metadatas[2] );
-            updated_mat.SetMetaData( 3, mci.metadatas[3] );
-
-            it->second.transformation->GetContent()->UpdateMatrix( i, updated_mat );
-        }
-    }
-}
 
 void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
 {
@@ -898,15 +693,10 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
             m_current_camera = camera;
         }
 
-        compute_regs();
+        
         
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-
-        
-        //compute_transformnodes();
-                
-        //m_scenegraph.ComputeTransformations( m_timer );
-
+       
 
         for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
         {
@@ -963,12 +753,9 @@ void BasicSceneMainFrame::Update( void )
 {
     wxWidgetAdapter::GetInstance()->AdaptAssetsList( m_assets_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptConfigsList( m_configs_listCtrl );
-    wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );
-    
-    
-    
+    wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );        
     wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
-    wxWidgetAdapter::GetInstance()->AdaptRegistersList( &m_registers, m_registers_listCtrl );    
+
     
 
     ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
@@ -1437,96 +1224,12 @@ void BasicSceneMainFrame::OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event
 
 
 
-void BasicSceneMainFrame::OnCreateRegButtonClicked( wxCommandEvent& p_event )
-{
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register creation" );
-
-    dialog->SetData( "registers_map", &m_registers );
-    dialog->SetData( "ctrl", m_registers_listCtrl );
-
-    dialog->EnableApplyButton();
-
-    wxWidgetAdapter::GetInstance()->AdaptRegisterCreationProps( dialog );
-    dialog->Show();    
-}
 
 
-void BasicSceneMainFrame::OnRegistersListItemActivated( wxListEvent& p_event )
-{
-    long sel_index = p_event.GetIndex();
 
-    wxString reg_name = m_registers_listCtrl->GetItemText( sel_index );
-    wxCharBuffer buffer = reg_name.ToAscii();
 
-    dsstring reg_name2 = buffer.data();
 
-    RegisterEntry* register_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( sel_index );
 
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register properties" );
-    wxWidgetAdapter::GetInstance()->AdaptRegProps( reg_name2, register_entry, dialog );
-    dialog->Show();
-}
-
-void BasicSceneMainFrame::OnRegsListDeleteAllItems( wxListEvent& p_event )
-{
-    m_modreg_button->Enable( false );
-    m_resetreg_button->Enable( false );
-    m_regon_button->Enable( false );
-    m_regoff_button->Enable( false );
-}
-
-void BasicSceneMainFrame::OnRegsListItemSelected( wxListEvent& p_event )
-{
-    long sel_index = p_event.GetIndex();
-    m_regslistctrl_currentindex = sel_index;
-
-    
-    m_modreg_button->Enable( true );
-
-    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( sel_index );
-
-    if( REGISTER_VARIABLE == reg_entry->mode )
-    {
-        m_resetreg_button->Enable( true );
-        m_regon_button->Enable( true );
-        m_regoff_button->Enable( true );
-    }
-    else
-    {
-        m_resetreg_button->Enable( false );
-        m_regon_button->Enable( false );
-        m_regoff_button->Enable( false );
-    }
-}
-
-void BasicSceneMainFrame::OnModRegButtonClicked( wxCommandEvent& p_event )
-{
-    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Register properties modifications" );
-    wxWidgetAdapter::GetInstance()->AdaptRegisterPropsModification( reg_entry, dialog );
-
-    dialog->SetData( "reg_entry", reg_entry );
-    dialog->EnableApplyButton();
-    dialog->Show();
-}
-
-void BasicSceneMainFrame::OnResetRegButtonClicked( wxCommandEvent& p_event )
-{
-    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
-    wxWidgetAdapter::GetInstance()->InitializeRegister( reg_entry );
-}
-
-void BasicSceneMainFrame::OnRegOnButtonClicked( wxCommandEvent& p_event )
-{
-    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
-    reg_entry->state = true;
-}
-
-void BasicSceneMainFrame::OnRegOffButtonClicked( wxCommandEvent& p_event )
-{
-    RegisterEntry* reg_entry = (RegisterEntry*)m_registers_listCtrl->GetItemData( m_regslistctrl_currentindex );
-    reg_entry->state = false;
-}
 
 void BasicSceneMainFrame::OnConsoleInSendButtonClicked( wxCommandEvent& p_event )
 {

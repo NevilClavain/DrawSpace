@@ -61,43 +61,22 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applypassshadervalues_callback;
 
     
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applycameraprops_callback;
+
 
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfonodevalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackvalue_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackaddmatrix_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackclearall_callback;
 
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyregistervalues_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyregisterprops_callback;
     
 
     long m_pass_slot_index;
-    long m_matrix_slot_index;
 
     
 
 
     void on_applypassshadervalues( BasicSceneObjectPropertiesDialog* p_dialog );
     
-    void on_applycameraprops( BasicSceneObjectPropertiesDialog* p_dialog );
-
-
-    void on_applytransfonodevalues( BasicSceneObjectPropertiesDialog* p_dialog );
-
-
-    void on_applymatrixstackvalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applymatrixstackclearall( BasicSceneObjectPropertiesDialog* p_dialog );
 
 
 
-    void on_applyregistervalues( BasicSceneObjectPropertiesDialog* p_dialog );
-    void on_applyregisterprops( BasicSceneObjectPropertiesDialog* p_dialog );
-
-    
-    
-    
 
     wxWidgetAdapter( void );
 
@@ -124,41 +103,18 @@ public:
     
     
     
-    void AdaptRegistersList( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
+
 
 
     void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
-    void AdaptCameraProps( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog );
+    
 
     void AdaptPassShaderValuesPropsModification( DrawSpace::Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptCameraPropsModification( DrawSpace::Dynamics::CameraPoint* p_camera, BasicSceneObjectPropertiesDialog* p_dialog );
-    void AdaptRegisterPropsModification( BasicSceneMainFrame::RegisterEntry* p_regentry, BasicSceneObjectPropertiesDialog* p_dialog );
-    
     
 
-    void AdaptRegisterCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-
-    
-    void AdaptTransfonodeCreationProps( BasicSceneObjectPropertiesDialog* p_dialog );
-
-
-
-
-    void AdaptRegProps( const dsstring& p_alias, BasicSceneMainFrame::RegisterEntry* p_reg, BasicSceneObjectPropertiesDialog* p_dialog );
-    
-    
-    void AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneMainFrame::TransformationNodeEntry* p_transfonode, BasicSceneObjectPropertiesDialog* p_dialog );
-
-    
-    
-
+     
     void AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox );
     
-
-    void AdaptRegistersLastValue( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, wxListCtrl* p_listctrl );
-
-    void InitializeRegister( BasicSceneMainFrame::RegisterEntry* p_reg_entry );
-
 };
 
 

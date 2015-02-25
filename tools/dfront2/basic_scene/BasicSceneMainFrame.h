@@ -460,12 +460,8 @@ protected:
     void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );
 
     
-    void compute_regs( void );
 
 
-    void compute_transformnodes( void );
-
-    bool set_var_alias( const dsstring& p_source, dsstring& p_dest );
 
     void build_popupmenu( int p_level, wxMenu& p_menu );
 
@@ -516,7 +512,7 @@ protected:
     long                                                    m_cameraslistctrl_currentindex;
     long                                                    m_regslistctrl_currentindex;
 
-    std::map<dsstring, RegisterEntry>                       m_registers;
+    
 
     TimerCallback*                                          m_timercb;
 
@@ -586,15 +582,15 @@ protected:
 
 	
     virtual void OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event );
-    virtual void OnCreateRegButtonClicked( wxCommandEvent& p_event );
 
-    virtual void OnRegistersListItemActivated( wxListEvent& p_event );
-	virtual void OnRegsListDeleteAllItems( wxListEvent& p_event );
-	virtual void OnRegsListItemSelected( wxListEvent& p_event );
-	virtual void OnModRegButtonClicked( wxCommandEvent& p_event );
-    virtual void OnResetRegButtonClicked( wxCommandEvent& p_event );
-    virtual void OnRegOnButtonClicked( wxCommandEvent& p_event );
-    virtual void OnRegOffButtonClicked( wxCommandEvent& p_event );
+
+
+
+
+
+
+
+
     virtual void OnConsoleInSendButtonClicked( wxCommandEvent& p_event );
     virtual void OnConsoleInClearButtonClicked( wxCommandEvent& p_event );
     virtual void OnConsoleInLoadButtonClicked( wxCommandEvent& p_event );

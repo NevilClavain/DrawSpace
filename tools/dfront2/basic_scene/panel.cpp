@@ -111,33 +111,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer33 = new wxBoxSizer( wxVERTICAL );
 	
 	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer7;
-	bSizer7 = new wxBoxSizer( wxVERTICAL );
-	
-	wxStaticBoxSizer* sbSizer31;
-	sbSizer31 = new wxStaticBoxSizer( new wxStaticBox( m_passesPanel, wxID_ANY, wxT("Passes") ), wxVERTICAL );
-	
-	m_passes_listCtrl = new wxListCtrl( m_passesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	sbSizer31->Add( m_passes_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer7->Add( sbSizer31, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer4;
-	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( m_passesPanel, wxID_ANY, wxT("Shaders parameters") ), wxVERTICAL );
-	
-	m_shadersparams_listCtrl = new wxListCtrl( m_passesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	sbSizer4->Add( m_shadersparams_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer7->Add( sbSizer4, 1, wxEXPAND, 5 );
-	
-	
-	m_passesPanel->SetSizer( bSizer7 );
-	m_passesPanel->Layout();
-	bSizer7->Fit( m_passesPanel );
-	m_notebook2->AddPage( m_passesPanel, wxT("Passes"), false );
 	m_resourcesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxVERTICAL );
@@ -165,6 +138,33 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_resourcesPanel->Layout();
 	bSizer9->Fit( m_resourcesPanel );
 	m_notebook2->AddPage( m_resourcesPanel, wxT("Resources"), false );
+	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer7;
+	bSizer7 = new wxBoxSizer( wxVERTICAL );
+	
+	wxStaticBoxSizer* sbSizer31;
+	sbSizer31 = new wxStaticBoxSizer( new wxStaticBox( m_passesPanel, wxID_ANY, wxT("Passes") ), wxVERTICAL );
+	
+	m_passes_listCtrl = new wxListCtrl( m_passesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
+	sbSizer31->Add( m_passes_listCtrl, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer7->Add( sbSizer31, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer4;
+	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( m_passesPanel, wxID_ANY, wxT("Shaders parameters") ), wxVERTICAL );
+	
+	m_shadersparams_listCtrl = new wxListCtrl( m_passesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
+	sbSizer4->Add( m_shadersparams_listCtrl, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer7->Add( sbSizer4, 1, wxEXPAND, 5 );
+	
+	
+	m_passesPanel->SetSizer( bSizer7 );
+	m_passesPanel->Layout();
+	bSizer7->Fit( m_passesPanel );
+	m_notebook2->AddPage( m_passesPanel, wxT("Passes"), false );
 	m_scenePanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
@@ -196,45 +196,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_scenePanel->Layout();
 	bSizer11->Fit( m_scenePanel );
 	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), true );
-	m_registersPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer19;
-	bSizer19 = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* bSizer21;
-	bSizer21 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_registers_listCtrl = new wxListCtrl( m_registersPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	bSizer21->Add( m_registers_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer22;
-	bSizer22 = new wxBoxSizer( wxVERTICAL );
-	
-	m_modreg_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer22->Add( m_modreg_button, 0, wxALL, 5 );
-	
-	m_resetreg_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer22->Add( m_resetreg_button, 0, wxALL, 5 );
-	
-	m_regon_button = new wxButton( m_registersPanel, wxID_ANY, wxT("On"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer22->Add( m_regon_button, 0, wxALL, 5 );
-	
-	m_regoff_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Off"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer22->Add( m_regoff_button, 0, wxALL, 5 );
-	
-	
-	bSizer21->Add( bSizer22, 0, wxEXPAND, 5 );
-	
-	
-	bSizer19->Add( bSizer21, 1, wxEXPAND, 5 );
-	
-	m_createreg_button = new wxButton( m_registersPanel, wxID_ANY, wxT("Create register"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer19->Add( m_createreg_button, 0, wxALL, 5 );
-	
-	
-	m_registersPanel->SetSizer( bSizer19 );
-	m_registersPanel->Layout();
-	bSizer19->Fit( m_registersPanel );
-	m_notebook2->AddPage( m_registersPanel, wxT("Registers"), false );
 	
 	bSizer33->Add( m_notebook2, 1, wxEXPAND, 0 );
 	
@@ -264,20 +225,12 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_consoleinsend_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
 	m_consoleinclear_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInClearButtonClicked ), NULL, this );
 	m_consoleinload_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInLoadButtonClicked ), NULL, this );
+	m_assets_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnAssetsListItemActivated ), NULL, this );
+	m_configs_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnConfigsListItemActivated ), NULL, this );
 	m_passes_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnPassesListItemActivated ), NULL, this );
 	m_passes_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnPassesListItemSelected ), NULL, this );
 	m_shadersparams_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnShadersListItemActivated ), NULL, this );
-	m_assets_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnAssetsListItemActivated ), NULL, this );
-	m_configs_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnConfigsListItemActivated ), NULL, this );
 	m_scenegraphs_treeCtrl->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
-	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnRegsListDeleteAllItems ), NULL, this );
-	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
-	m_registers_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnRegsListItemSelected ), NULL, this );
-	m_modreg_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnModRegButtonClicked ), NULL, this );
-	m_resetreg_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnResetRegButtonClicked ), NULL, this );
-	m_regon_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnRegOnButtonClicked ), NULL, this );
-	m_regoff_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnRegOffButtonClicked ), NULL, this );
-	m_createreg_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateRegButtonClicked ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -291,19 +244,11 @@ MainFrame::~MainFrame()
 	m_consoleinsend_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
 	m_consoleinclear_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInClearButtonClicked ), NULL, this );
 	m_consoleinload_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInLoadButtonClicked ), NULL, this );
+	m_assets_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnAssetsListItemActivated ), NULL, this );
+	m_configs_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnConfigsListItemActivated ), NULL, this );
 	m_passes_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnPassesListItemActivated ), NULL, this );
 	m_passes_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnPassesListItemSelected ), NULL, this );
 	m_shadersparams_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnShadersListItemActivated ), NULL, this );
-	m_assets_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnAssetsListItemActivated ), NULL, this );
-	m_configs_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnConfigsListItemActivated ), NULL, this );
 	m_scenegraphs_treeCtrl->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
-	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS, wxListEventHandler( MainFrame::OnRegsListDeleteAllItems ), NULL, this );
-	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MainFrame::OnRegistersListItemActivated ), NULL, this );
-	m_registers_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFrame::OnRegsListItemSelected ), NULL, this );
-	m_modreg_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnModRegButtonClicked ), NULL, this );
-	m_resetreg_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnResetRegButtonClicked ), NULL, this );
-	m_regon_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnRegOnButtonClicked ), NULL, this );
-	m_regoff_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnRegOffButtonClicked ), NULL, this );
-	m_createreg_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnCreateRegButtonClicked ), NULL, this );
 	
 }

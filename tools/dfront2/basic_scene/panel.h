@@ -77,23 +77,16 @@ class MainFrame : public wxFrame
 		wxButton* m_consoleinclear_button;
 		wxButton* m_consoleinload_button;
 		wxNotebook* m_notebook2;
-		wxPanel* m_passesPanel;
-		wxListCtrl* m_passes_listCtrl;
-		wxListCtrl* m_shadersparams_listCtrl;
 		wxPanel* m_resourcesPanel;
 		wxListCtrl* m_assets_listCtrl;
 		wxListCtrl* m_configs_listCtrl;
+		wxPanel* m_passesPanel;
+		wxListCtrl* m_passes_listCtrl;
+		wxListCtrl* m_shadersparams_listCtrl;
 		wxPanel* m_scenePanel;
 		wxTreeCtrl* m_scenegraphs_treeCtrl;
 		wxStaticText* m_staticText2;
 		wxComboBox* m_cameraslist_comboBox;
-		wxPanel* m_registersPanel;
-		wxListCtrl* m_registers_listCtrl;
-		wxButton* m_modreg_button;
-		wxButton* m_resetreg_button;
-		wxButton* m_regon_button;
-		wxButton* m_regoff_button;
-		wxButton* m_createreg_button;
 		wxTextCtrl* m_consoleoutput_textCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -105,20 +98,12 @@ class MainFrame : public wxFrame
 		virtual void OnConsoleInSendButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConsoleInClearButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConsoleInLoadButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnAssetsListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void OnConfigsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnPassesListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnShadersListItemActivated( wxListEvent& event ) { event.Skip(); }
-		virtual void OnAssetsListItemActivated( wxListEvent& event ) { event.Skip(); }
-		virtual void OnConfigsListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& event ) { event.Skip(); }
-		virtual void OnRegsListDeleteAllItems( wxListEvent& event ) { event.Skip(); }
-		virtual void OnRegistersListItemActivated( wxListEvent& event ) { event.Skip(); }
-		virtual void OnRegsListItemSelected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnModRegButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnResetRegButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnRegOnButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnRegOffButtonClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCreateRegButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
