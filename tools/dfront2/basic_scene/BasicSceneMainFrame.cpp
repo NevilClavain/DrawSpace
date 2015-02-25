@@ -1343,6 +1343,8 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_APPENDROOT_ITERATE_NODE_END
                     DIALOG_SHOW
 
+
+                    dialog->SetSpecific0Counter( mat_chain.size() );
                 }
             }
             break;
@@ -1816,7 +1818,82 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     }
 
     else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
-    {
+    {               
+        std::vector<Matrix> new_chain;
+        bool ok = true;
+        Vector values;
+
+
+        DIALOG_EXPLORE_NODES_BEGIN( "", "matrix %d", i, matrix_label )
+
+            DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "type" ), matrix_type )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "x" ), x )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "y" ), y )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "z" ), z )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "angle" ), angle )
+
+            DIALOG_WXSTRING_TO_DSSTRING( matrix_type, matrix_type2 )
+
+            values[0] = x;
+            values[1] = y;
+            values[2] = z;
+            values[3] = angle;
+           
+            Matrix mat;
+
+            if( "identity" == matrix_type2 )
+            {
+                mat.Identity();            
+            }
+            else if( "translation" == matrix_type2 )
+            {
+                values[3] = 1.0;
+                mat.Translation( values );            
+            }
+            else if( "rotation" == matrix_type2 )
+            {
+                Vector axis = values;
+                axis[3] = 1.0;
+                mat.Rotation( axis, Maths::DegToRad( values[3] ) );
+            }
+            else if( "scaling" == matrix_type2 )
+            {
+                values[3] = 1.0;
+                mat.Scale( values );
+            }
+            else if( "zero" == matrix_type2 )
+            {
+                mat.Zero();            
+            }
+            else if( "undetermined" == matrix_type2 )
+            {
+                ok = false;
+                break;
+            }
+
+            new_chain.push_back( mat );      
+
+
+        DIALOG_EXPLORE_NODES_END
+
+        if( ok )
+        {
+            Transformation* tdet = m_transformation_nodes[m_last_clicked_treeitem.GetID()].transformation->GetContent();
+            //(*tdet) = new_chain;
+
+            tdet->ClearAll();
+            for( size_t i = 0; i < new_chain.size(); i++ )
+            {
+                tdet->PushMatrix( new_chain[i] );
+            }
+
+            p_dialog->Close();
+        }
+        else
+        {
+            wxMessageBox( "Edited matrix chain has a undetermined matrix", "DrawFront error", wxICON_ERROR );
+        }
+
 
     }
 
@@ -1910,7 +1987,27 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
 
     else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
     {
+        DIALOG_SPECIFIC0_LABEL( "matrix %d", matrix_label )
 
+        DIALOG_APPENDROOT_NODE( matrix_label, matrix_root )
+
+        wxArrayString matrix_type_labels;
+
+        matrix_type_labels.Add( "identity" );
+        matrix_type_labels.Add( "scaling" );
+        matrix_type_labels.Add( "translation" );
+        matrix_type_labels.Add( "rotation" );
+        matrix_type_labels.Add( "zero" );
+        matrix_type_labels.Add( "undetermined" );
+
+        DIALOG_APPENDNODE_ENUM( matrix_root, "type", matrix_type_labels )
+
+        DIALOG_APPENDNODE_FLOAT( matrix_root, "x", 0.0 )
+        DIALOG_APPENDNODE_FLOAT( matrix_root, "y", 0.0 )
+        DIALOG_APPENDNODE_FLOAT( matrix_root, "z", 0.0 )
+        DIALOG_APPENDNODE_FLOAT( matrix_root, "angle", 0.0 )
+
+        DIALOG_FINALIZE
     }
 
 
@@ -1946,5 +2043,6 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
     if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
     {
         DIALOG_CLEARGRID
+        DIALOG_SETSPECIFIC0COUNTER( 0 )
     }
 }

@@ -46,7 +46,7 @@ wxWidgetAdapter::wxWidgetAdapter( void )
     m_applymatrixstackaddmatrix_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applymatrixstackaddmatrix );
     m_applymatrixstackclearall_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applymatrixstackclearall );
 
-    m_applytransfosourcemodification_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applytransfosourcemodification );
+
 
     m_applyregistervalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applyregistervalues );
 
@@ -65,7 +65,7 @@ wxWidgetAdapter::~wxWidgetAdapter( void )
     delete m_applymatrixstackvalue_callback;
     delete m_applymatrixstackaddmatrix_callback;
     delete m_applymatrixstackclearall_callback;
-    delete m_applytransfosourcemodification_callback;
+
     delete m_applyregistervalues_callback;
     delete m_applyregisterprops_callback;
     
@@ -1131,57 +1131,6 @@ void wxWidgetAdapter::AdaptRegProps( const dsstring& p_alias, BasicSceneMainFram
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void wxWidgetAdapter::AdaptTransfoSourceModification( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-    wxArrayString transfosources_labels;
-
-    BasicSceneMainFrame::MetadataScenegraphEntry* entry = (BasicSceneMainFrame::MetadataScenegraphEntry*)p_dialog->GetData( "metadata_scenegraph_entry" );
-
-    if( entry->propose_matrixstack )
-    {
-        transfosources_labels.Add( "matrix_stack" );
-    }
-    if( entry->propose_movement )
-    {
-        transfosources_labels.Add( "movement" );
-    }
-    if( entry->propose_body )
-    {
-        transfosources_labels.Add( "body" );
-    }
-
-    propertygrid->Append( new wxEnumProperty( "transformation_source", wxPG_LABEL, transfosources_labels ) );
-    p_dialog->RegisterApplyButtonHandler( m_applytransfosourcemodification_callback );
-}
-
-void wxWidgetAdapter::on_applytransfosourcemodification( BasicSceneObjectPropertiesDialog* p_dialog )
-{
-    wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
-
-    BasicSceneMainFrame::MetadataScenegraphEntry* entry = (BasicSceneMainFrame::MetadataScenegraphEntry*)p_dialog->GetData( "metadata_scenegraph_entry" );
-
-    wxCharBuffer buffer;
-    wxEnumProperty* prop;
-    prop = static_cast<wxEnumProperty*>( propertygrid->GetProperty( "transformation_source" ) );
-    wxString source_name = prop->GetValueAsString();   
-    buffer = source_name.ToAscii();
-    dsstring source_name_2 = buffer.data();
-    
-    if( "matrix_stack" == source_name_2 )
-    {
-        entry->transformation_source_type = BasicSceneMainFrame::TRANSFORMATIONSOURCE_MATRIXSTACK;
-    }
-    else if( "movement" == source_name_2 )
-    {
-        entry->transformation_source_type = BasicSceneMainFrame::TRANSFORMATIONSOURCE_MOVEMENT;
-    }
-    else if( "body" == source_name_2 )
-    {
-        entry->transformation_source_type = BasicSceneMainFrame::TRANSFORMATIONSOURCE_BODY;
-    }
-    p_dialog->Close();
-}
 
 void wxWidgetAdapter::AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneMainFrame::TransformationNodeEntry* p_transfonode, BasicSceneObjectPropertiesDialog* p_dialog )
 {
@@ -1530,7 +1479,7 @@ void wxWidgetAdapter::on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDi
     matrix_type_labels.Add( "undetermined" );
 
 
-    propertygrid->AppendIn( mat_prop, new wxEnumProperty( "matrix_type", wxPG_LABEL, matrix_type_labels ) );
+    propertygrid->AppendIn( mat_prop, new wxEnumProperty( "type", wxPG_LABEL, matrix_type_labels ) );
 
 
     /////////////////// recup tout les alias de variables

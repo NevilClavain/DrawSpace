@@ -267,6 +267,9 @@
 
 #define DIALOG_CLEARGRID p_dialog->GetPropertyGrid()->Clear();
 
+#define DIALOG_SETSPECIFIC0COUNTER( _value_ )    p_dialog->SetSpecific0Counter( _value_ );
+#define DIALOG_SETSPECIFIC1COUNTER( _value_ )    p_dialog->SetSpecific1Counter( _value_ );
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

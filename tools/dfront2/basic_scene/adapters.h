@@ -67,7 +67,7 @@ protected:
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackvalue_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackaddmatrix_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applymatrixstackclearall_callback;
-    DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applytransfosourcemodification_callback;
+
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyregistervalues_callback;
     DrawSpace::Core::CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>* m_applyregisterprops_callback;
     
@@ -90,7 +90,7 @@ protected:
     void on_applymatrixstackaddmatrix( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applymatrixstackclearall( BasicSceneObjectPropertiesDialog* p_dialog );
 
-    void on_applytransfosourcemodification( BasicSceneObjectPropertiesDialog* p_dialog );
+
 
     void on_applyregistervalues( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_applyregisterprops( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -146,7 +146,7 @@ public:
 
     void AdaptRegProps( const dsstring& p_alias, BasicSceneMainFrame::RegisterEntry* p_reg, BasicSceneObjectPropertiesDialog* p_dialog );
     
-    void AdaptTransfoSourceModification( BasicSceneObjectPropertiesDialog* p_dialog );
+    
     void AdaptMatrixStackEdition( std::map<dsstring, BasicSceneMainFrame::RegisterEntry>* p_registers, BasicSceneMainFrame::TransformationNodeEntry* p_transfonode, BasicSceneObjectPropertiesDialog* p_dialog );
 
     

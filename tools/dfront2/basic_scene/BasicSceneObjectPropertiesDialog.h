@@ -66,6 +66,9 @@ public:
 
     long GetSpecific0Counter( void );
     long GetSpecific1Counter( void );
+
+    void SetSpecific0Counter( long p_value );
+    void SetSpecific1Counter( long p_value );
 };
 
 #endif // __BasicSceneObjectPropertiesDialog__

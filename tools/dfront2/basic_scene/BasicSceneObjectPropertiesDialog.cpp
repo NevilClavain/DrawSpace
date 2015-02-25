@@ -140,3 +140,13 @@ long BasicSceneObjectPropertiesDialog::GetSpecific1Counter( void )
 {
     return m_specific1_counter;
 }
+
+void BasicSceneObjectPropertiesDialog::SetSpecific0Counter( long p_value )
+{
+    m_specific0_counter = p_value;
+}
+
+void BasicSceneObjectPropertiesDialog::SetSpecific1Counter( long p_value )
+{
+    m_specific1_counter = p_value;
+}
