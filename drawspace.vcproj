@@ -44,9 +44,10 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;BT_USE_DOUBLE_PRECISION"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				WarnAsError="false"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
@@ -743,6 +744,10 @@
 		</File>
 		<File
 			RelativePath=".\src\flags.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\flags2.h"
 			>
 		</File>
 		<File

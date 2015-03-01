@@ -19,6 +19,7 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 *
 */
+#include "flags2.h"
 
 #ifndef _DRAWSPACE_COMMONS_H_
 #define _DRAWSPACE_COMMONS_H_

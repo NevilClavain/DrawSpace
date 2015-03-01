@@ -45,7 +45,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;__WXMSW__;__WXDEBUG__;NOPCH;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -62,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/FORCE:MULTIPLE"
 				AdditionalDependencies="wxmsw30ud_core.lib wxbase30ud.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib wsock32.lib wxpngd.lib wxzlibd.lib wxjpegd.lib wxtiffd.lib drawspace.lib log4cxx.lib BulletDynamics_vs2005_debug.lib BulletCollision_vs2005_debug.lib LinearMath_vs2005_debug.lib lua.lib"
 				OutputFile="./../../../../DrawSpace_Samples/bin/basic_scene.exe"
 				LinkIncremental="2"
