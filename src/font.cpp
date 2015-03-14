@@ -172,8 +172,15 @@ bool Font::ApplyProperties( void )
 
     dsstring plugin = m_properties["plugin"].GetPropValue<dsstring>();
 
+	dsstring complete_path = plugin;
+#ifdef _DEBUG
+	complete_path += ".dll";
+#else
+	complete_path += "_r.dll";
+#endif
+
     PlugInManager<FontImport>::Handle pihandle;
-    PluginManagerStatus pistatus = PlugInManager<FontImport>::LoadPlugin( plugin.c_str(), pihandle );
+	PluginManagerStatus pistatus = PlugInManager<FontImport>::LoadPlugin( complete_path.c_str(), pihandle );
     if( pistatus != PIM_OK )
     {
         return false;

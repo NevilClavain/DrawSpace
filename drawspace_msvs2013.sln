@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspace_msvs2013", "drawspace_msvs2013.vcxproj", "{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "plugins\d3d9\d3d9.vcxproj", "{47F2BC30-BEB7-4968-9ED9-30129A5916BB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ac3dmeshe", "plugins\ac3dmeshe\ac3dmeshe.vcxproj", "{BF68BF18-6F66-4028-B0AC-C995B8DD4785}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cbfgfont", "plugins\cbfgfont\cbfgfont.vcxproj", "{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}.Debug|Win32.Build.0 = Debug|Win32
+		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}.Release|Win32.ActiveCfg = Release|Win32
+		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}.Release|Win32.Build.0 = Release|Win32
+		{47F2BC30-BEB7-4968-9ED9-30129A5916BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{47F2BC30-BEB7-4968-9ED9-30129A5916BB}.Debug|Win32.Build.0 = Debug|Win32
+		{47F2BC30-BEB7-4968-9ED9-30129A5916BB}.Release|Win32.ActiveCfg = Release|Win32
+		{47F2BC30-BEB7-4968-9ED9-30129A5916BB}.Release|Win32.Build.0 = Release|Win32
+		{BF68BF18-6F66-4028-B0AC-C995B8DD4785}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF68BF18-6F66-4028-B0AC-C995B8DD4785}.Debug|Win32.Build.0 = Debug|Win32
+		{BF68BF18-6F66-4028-B0AC-C995B8DD4785}.Release|Win32.ActiveCfg = Release|Win32
+		{BF68BF18-6F66-4028-B0AC-C995B8DD4785}.Release|Win32.Build.0 = Release|Win32
+		{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}.Debug|Win32.Build.0 = Debug|Win32
+		{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}.Release|Win32.ActiveCfg = Release|Win32
+		{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -233,8 +233,15 @@ bool Meshe::ApplyProperties( void )
 
     dsstring plugin = m_properties["plugin"].GetPropValue<dsstring>();
 
+	dsstring complete_path = plugin;
+#ifdef _DEBUG
+	complete_path += ".dll";
+#else
+	complete_path += "_r.dll";
+#endif
+
     PlugInManager<MesheImport>::Handle pihandle;
-    PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( plugin.c_str(), pihandle );
+	PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( complete_path.c_str(), pihandle );
     if( pistatus != PIM_OK && pistatus != PIM_OK_PIALREADYLOADED )
     {
         return false;

@@ -405,7 +405,7 @@ void ConfFrame::OnButtonSave( wxCommandEvent& p_event )
 	switch( m_combo_renderplugin->GetCurrentSelection() )
 	{
 		case 0:
-			fprintf( fp, "renderplugin   drawspaced3d9.dll\n" );
+			fprintf( fp, "renderplugin   drawspaced3d9\n" );
 			break;
 	}
 

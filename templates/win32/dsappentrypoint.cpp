@@ -24,9 +24,16 @@
 
 bool LoadRendererPlugin( const dsstring& p_file )
 {
+	dsstring complete_path = p_file;
+#ifdef _DEBUG
+	complete_path += ".dll";
+#else
+	complete_path += "_r.dll";
+#endif
+
     DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Handle pihandle;
     DrawSpace::Interface::Renderer* renderer;
-    PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::LoadPlugin( p_file.c_str(), pihandle );
+	PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::LoadPlugin( complete_path.c_str(), pihandle );
     if( pistatus != PIM_OK )
     {
         return false;

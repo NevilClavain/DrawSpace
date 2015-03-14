@@ -171,8 +171,14 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
 
 bool DrawSpace::Utils::LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias )
 {
+	dsstring complete_path = p_path;
+#ifdef _DEBUG
+	complete_path += ".dll";
+#else
+	complete_path += "_r.dll";
+#endif
     PlugInManager<FontImport>::Handle pihandle;
-    PluginManagerStatus pistatus = PlugInManager<FontImport>::LoadPlugin( p_path.c_str(), pihandle );
+    PluginManagerStatus pistatus = PlugInManager<FontImport>::LoadPlugin( complete_path.c_str(), pihandle );
     if( pistatus != PIM_OK )
     {
         return false;
@@ -197,8 +203,14 @@ Interface::FontImport* DrawSpace::Utils::InstanciateFontImportFromPlugin( const 
 
 bool DrawSpace::Utils::LoadMesheImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias )
 {
+	dsstring complete_path = p_path;
+#ifdef _DEBUG
+	complete_path += ".dll";
+#else
+	complete_path += "_r.dll";
+#endif
     PlugInManager<MesheImport>::Handle pihandle;
-    PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( p_path.c_str(), pihandle );
+	PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( complete_path.c_str(), pihandle );
     if( pistatus != PIM_OK )
     {
         return false;

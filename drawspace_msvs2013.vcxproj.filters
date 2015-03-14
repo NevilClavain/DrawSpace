@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{1c52d78b-eb20-4498-984a-fae1e0aa8fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dynamics">
+      <UniqueIdentifier>{69d19a68-e110-4882-a504-25e51b34dfcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="framework">
+      <UniqueIdentifier>{2b54a03b-1159-4b94-aa4f-fed1205d17c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{bfad6dae-6273-4629-aa70-b7409150547c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface">
+      <UniqueIdentifier>{1e6c4210-4d75-4a94-961d-9a77e6428f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="planetoid">
+      <UniqueIdentifier>{63b4cfa6-be09-42cd-b9dd-f97c247b85ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{9395289b-9ea5-48df-8a11-b3f8ed24fde2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sphericalLOD">
+      <UniqueIdentifier>{65480c3b-a391-46c3-a3cd-57b8cfc1499d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\asset.cpp" />
+    <ClCompile Include="src\chunk.cpp" />
+    <ClCompile Include="src\events.cpp" />
+    <ClCompile Include="src\image.cpp" />
+    <ClCompile Include="src\inits.cpp" />
+    <ClCompile Include="src\pass.cpp" />
+    <ClCompile Include="src\scenegraph.cpp" />
+    <ClCompile Include="src\spacebox.cpp" />
+    <ClCompile Include="src\text.cpp" />
+    <ClCompile Include="src\viewportquad.cpp" />
+    <ClCompile Include="src\assetsbase.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\circularmovement.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\configsbase.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\configurable.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\factory.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\font.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fpsmovement.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\freemovement.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fx.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\headmovement.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\linearmovement.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lod.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\longlatmovement.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mediator.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\meshe.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\movement.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderingnode.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderingqueue.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderstate.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\runner.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenenode.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenenodegraph.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shader.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spectatormovement.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transformation.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transformnode.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transformqueue.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vsphere.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\body.cpp">
+      <Filter>dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\calendar.cpp">
+      <Filter>dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\camerapoint.cpp">
+      <Filter>dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\collider.cpp">
+      <Filter>dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\inertbody.cpp">
+      <Filter>dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orbiter.cpp">
+      <Filter>dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rocket.cpp">
+      <Filter>dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world.cpp">
+      <Filter>dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsapp.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\reticle_widget.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\text_widget.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widget.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\planetoid_body.cpp">
+      <Filter>planetoid</Filter>
+    </ClCompile>
+    <ClCompile Include="src\planetoid_fragment.cpp">
+      <Filter>planetoid</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spherelod_body.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spherelod_drawing.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spherelod_face.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spherelod_maps.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spherelod_patch.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
+    <ClCompile Include="src\archive.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\file.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\maths.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\matrix.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\memalloc.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\misc_utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mutex.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\quadtree.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\quaternion.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timemanager.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vector.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\asset.h" />
+    <ClInclude Include="src\chunk.h" />
+    <ClInclude Include="src\drawspace.h" />
+    <ClInclude Include="src\drawspace_commons.h" />
+    <ClInclude Include="src\events.h" />
+    <ClInclude Include="src\flags.h" />
+    <ClInclude Include="src\flags2.h" />
+    <ClInclude Include="src\image.h" />
+    <ClInclude Include="src\inits.h" />
+    <ClInclude Include="src\pass.h" />
+    <ClInclude Include="src\scenegraph.h" />
+    <ClInclude Include="src\spacebox.h" />
+    <ClInclude Include="src\text.h" />
+    <ClInclude Include="src\viewportquad.h" />
+    <ClInclude Include="src\assetsbase.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\callback.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\circularmovement.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\configsbase.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\configurable.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\factory.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\font.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fpsmovement.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\freemovement.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fx.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headmovement.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\linearmovement.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lod.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\longlatmovement.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mediator.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\meshe.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\movement.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\plugin.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingnode.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingqueue.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderstate.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\runner.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenenode.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenenodegraph.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shader.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spectatormovement.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\task.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texture.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transformation.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transformnode.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transformqueue.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\triangle.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vertex.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vsphere.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\body.h">
+      <Filter>dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\calendar.h">
+      <Filter>dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\camerapoint.h">
+      <Filter>dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\collider.h">
+      <Filter>dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inertbody.h">
+      <Filter>dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orbiter.h">
+      <Filter>dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rocket.h">
+      <Filter>dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\world.h">
+      <Filter>dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dsapp.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="src\reticle_widget.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\text_widget.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\widget.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fontimport.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesheimport.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\planetoid_body.h">
+      <Filter>planetoid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\planetoid_fragment.h">
+      <Filter>planetoid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spherelod_body.h">
+      <Filter>sphericalLOD</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spherelod_drawing.h">
+      <Filter>sphericalLOD</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spherelod_face.h">
+      <Filter>sphericalLOD</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spherelod_maps.h">
+      <Filter>sphericalLOD</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spherelod_patch.h">
+      <Filter>sphericalLOD</Filter>
+    </ClInclude>
+    <ClInclude Include="src\archive.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\exceptions.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\file.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\maths.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\matrix.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\md5.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memalloc.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\misc_utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mutex.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\parser.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pimanager.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pimanager_impl.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\quadtree.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\quaternion.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\timemanager.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tracedefs.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vector.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

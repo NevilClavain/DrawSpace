@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./../../src;./../../../DrawSpace_thirdparts/log4cxx/Include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;D3D9_EXPORTS"
+				AdditionalIncludeDirectories="./../../src"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -61,10 +61,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib drawspace.lib BulletDynamics_vs2005_debug.lib BulletCollision_vs2005_debug.lib LinearMath_vs2005_debug.lib"
+				AdditionalOptions="/FORCE:MULTIPLE"
+				AdditionalDependencies="drawspace.lib BulletDynamics_vs2005_debug.lib BulletCollision_vs2005_debug.lib LinearMath_vs2005_debug.lib"
 				OutputFile="$(SolutionDir)\libs\cbfgfont.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=".\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\..\DrawSpace_thirdparts\log4cxx\lib\msvc\release;.\..\..\libs;&quot;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib&quot;"
+				AdditionalLibraryDirectories=".\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;&quot;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -99,7 +100,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -119,8 +120,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;D3D9_EXPORTS"
-				RuntimeLibrary="2"
+				AdditionalIncludeDirectories="./../../src"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -137,7 +139,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="drawspace_r.lib BulletDynamics_vs2005.lib BulletCollision_vs2005.lib LinearMath_vs2005.lib"
+				OutputFile="$(SolutionDir)\libs\cbfgfont_r.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories=".\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;&quot;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

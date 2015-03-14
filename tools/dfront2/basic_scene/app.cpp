@@ -55,7 +55,7 @@ bool DFrontApp::OnInit( void )
     DrawSpace::Initialize();
 
 
-    if( false == load_scripting_plugin( "luascripting.dll" ) )
+    if( false == load_scripting_plugin( "luascripting" ) )
     {
         wxMessageBox( "Unable to load scripting plugin. Exiting now", "DrawFront error", wxICON_ERROR );
         return false;
@@ -78,7 +78,7 @@ bool DFrontApp::OnInit( void )
     m_mainframe->SetWindowDims( m_w_width, m_w_height );
 
     m_w_fullscreen = false;
-    m_renderplugin = "drawspaced3d9.dll";
+    m_renderplugin = "drawspaced3d9";
 
     m_app_ready = true;
    
@@ -138,9 +138,16 @@ int DFrontApp::OnExit( void )
 
 bool DFrontApp::load_renderer_plugin( const dsstring& p_file )
 {
+	dsstring complete_path = p_file;
+#ifdef _DEBUG
+	complete_path += ".dll";
+#else
+	complete_path += "_r.dll";
+#endif
+
     PlugInManager<Renderer>::Handle pihandle;
     Renderer* renderer;
-    PluginManagerStatus pistatus = PlugInManager<Renderer>::LoadPlugin( p_file.c_str(), pihandle );
+	PluginManagerStatus pistatus = PlugInManager<Renderer>::LoadPlugin(complete_path.c_str(), pihandle);
     if( pistatus != PIM_OK )
     {
         return false;
@@ -158,9 +165,16 @@ bool DFrontApp::load_renderer_plugin( const dsstring& p_file )
 
 bool DFrontApp::load_scripting_plugin( const dsstring& p_file )
 {
+	dsstring complete_path = p_file;
+#ifdef _DEBUG
+	complete_path += ".dll";
+#else
+	complete_path += "_r.dll";
+#endif
+
     PlugInManager<Scripting>::Handle pihandle;
     Scripting* scripting;
-    PluginManagerStatus pistatus = PlugInManager<Scripting>::LoadPlugin( p_file.c_str(), pihandle );
+	PluginManagerStatus pistatus = PlugInManager<Scripting>::LoadPlugin( complete_path.c_str(), pihandle );
     if( pistatus != PIM_OK )
     {
         return false;
