@@ -20,46 +20,52 @@
 *
 */
 
-#ifndef _FILE_H_
-#define _FILE_H_
+#ifndef _LOGCONF_H_
+#define _LOGCONF_H_
 
 #include "drawspace_commons.h"
-#include "archive.h"
+#include "logoutput.h"
+#include "logsink.h"
+#include "parser.h"
 
 namespace DrawSpace
 {
-namespace Utils
+namespace Logger
 {
-
-class File
+class Configuration : public DrawSpace::Utils::Parser
 {
 protected:
-    FILE* m_fp;
+
+    typedef struct
+    {
+        Sink*       sink;
+        bool        state;
+        Sink::Level level;
+        Output*     output;
+
+    } SinkEntry;
+
+    static Configuration*           m_instance;
+
+    std::map<dsstring, Output*>     m_outputs;
+    std::map<dsstring, SinkEntry>   m_sinks;
+    
+
+
+    Configuration( void );
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
+    ~Configuration( void );
 
-    typedef enum
-    {
-        CREATENEW,
-        OPENEXISTING,
-        CREATENEWTEXT,
-        OPENEXISTINGTEXT,
+    static Configuration* GetInstance( void );
+    static void RemoveInstance( void );
 
-    } Mode;
-
-    File( const dsstring& p_filename, Mode p_mode );
-    ~File( void );
-
-    void SaveArchive( Archive& p_arc );
-    bool LoadArchive( Archive& p_arc );
-    long FileSize( void );
-
-    void Puts( const dsstring& p_string );
-    void Flush( void );
-
-    static long	FileSize( FILE *p_fp );
-    static void* LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size );
+    void RegisterSink( Sink* p_sink );
+   
 };
 }
 }
+
+
 #endif

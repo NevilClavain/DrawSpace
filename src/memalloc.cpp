@@ -48,13 +48,13 @@ MemAlloc* MemAlloc::GetInstance( void )
 
 void MemAlloc::DumpContent( void )
 {
-    _DSDEBUG( logger, "Allocations total size : " << (unsigned int)m_totalsize << " byte(s)" )
+    _DSDEBUG( logger, dsstring( "Allocations total size : " ) << (unsigned int)m_totalsize << dsstring( " byte(s)" ) )
 
     long count = 1;
     for( std::map<void*, entry>::iterator it = m_blocs.begin(); it != m_blocs.end(); ++it )
     {
-        _DSDEBUG( logger, "--> " << count << "/ ptr = " << (*it).first << " size = " << (*it).second.size << " object = " << (*it).second.item.c_str() << " in function : " << (*it).second.func.c_str()
-            << " " << (*it).second.file.c_str() << ", line " << (*it).second.linenum )
+        _DSDEBUG( logger, dsstring( "--> " ) << count << dsstring( "/ ptr = " ) << (*it).first << dsstring( " size = " ) << (*it).second.size << dsstring( " object = " ) << (*it).second.item.c_str() << dsstring( " in function : " ) << (*it).second.func.c_str()
+            << dsstring( " " ) << (*it).second.file.c_str() << dsstring( ", line " ) << (*it).second.linenum )
 
         count++;
     }
@@ -72,16 +72,16 @@ void MemAlloc::register_bloc( void* p_ptr, size_t p_size, const std::string& p_i
 
     m_totalsize += p_size;
 
-    _DSTRACE( logger, "ptr = " << p_ptr << " size = " << p_size << " object = " << p_item.c_str() << " in function : " << p_funcname.c_str()
-                    << " " << p_filename.c_str() << ", line " << p_line )
+	_DSTRACE(logger, dsstring("ptr = ") << p_ptr << dsstring(" size = ") << p_size << dsstring(" object = ") << p_item.c_str() << dsstring( " in function : " ) << p_funcname.c_str()
+		<< dsstring(" ") << p_filename.c_str() << dsstring( ", line " ) << p_line)
 }
 
 void MemAlloc::Unregister( void* p_ptr )
 {
     if( m_blocs.count( p_ptr ) > 0 )
     {
-        _DSTRACE( logger, "ptr = " << p_ptr << " size = " << m_blocs[p_ptr].size << " object = " << m_blocs[p_ptr].item.c_str() << " in function : " << m_blocs[p_ptr].func.c_str()
-                    << " " << m_blocs[p_ptr].file.c_str() << ", line " << m_blocs[p_ptr].linenum )
+		_DSTRACE(logger, dsstring("ptr = ") << p_ptr << dsstring(" size = ") << m_blocs[p_ptr].size << dsstring(" object = ") << m_blocs[p_ptr].item.c_str() << dsstring( " in function : " ) << m_blocs[p_ptr].func.c_str()
+			<< dsstring(" ") << m_blocs[p_ptr].file.c_str() << dsstring( ", line " ) << m_blocs[p_ptr].linenum)
 
         m_totalsize -= m_blocs[p_ptr].size;
         m_blocs.erase( p_ptr );
@@ -89,6 +89,6 @@ void MemAlloc::Unregister( void* p_ptr )
     }
     else
     {
-        _DSWARN( logger, "no mem bloc " << p_ptr << "(already unallocated ?)" )
+		_DSWARN(logger, dsstring("no mem bloc ") << p_ptr << dsstring( "(already unallocated ?)" ) )
     }
 }

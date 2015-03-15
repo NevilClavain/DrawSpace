@@ -31,9 +31,17 @@ File::File( const dsstring& p_filename, Mode p_mode ) : m_fp( NULL )
     {
         m_fp = fopen( p_filename.c_str(), "wb" );
     }
-    else // OPEN_EXISTING
+    else if( OPEN_EXISTING == p_mode )
     {
         m_fp = fopen( p_filename.c_str(), "rb" );
+    }	
+    else if( CREATENEWTEXT == p_mode )
+    {
+        m_fp = fopen( p_filename.c_str(), "wt" );
+    }
+    else if( OPENEXISTINGTEXT == p_mode )
+    {
+        m_fp = fopen( p_filename.c_str(), "rt" );
     }	
 
 }
@@ -67,6 +75,22 @@ bool File::LoadArchive( Archive& p_arc )
     else
     {
         return false;
+    }
+}
+
+void File::Puts( const dsstring& p_string )
+{
+    if( m_fp )
+    {
+        fputs( p_string.c_str(), m_fp );
+    }
+}
+
+void File::Flush( void )
+{
+    if( m_fp )
+    {
+        fflush( m_fp );
     }
 }
 

@@ -25,6 +25,9 @@
     <Filter Include="sphericalLOD">
       <UniqueIdentifier>{65480c3b-a391-46c3-a3cd-57b8cfc1499d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{929db6ab-c482-4431-a7b9-9cff1cc19bb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\asset.cpp" />
@@ -217,6 +220,16 @@
     <ClCompile Include="src\vector.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\logconf.cpp">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logoutputfile.cpp">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logsink.cpp">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawspace_commons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -225,7 +238,6 @@
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\events.h" />
     <ClInclude Include="src\flags.h" />
-    <ClInclude Include="src\flags2.h" />
     <ClInclude Include="src\image.h" />
     <ClInclude Include="src\inits.h" />
     <ClInclude Include="src\pass.h" />
@@ -446,11 +458,23 @@
     <ClInclude Include="src\timemanager.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\tracedefs.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\vector.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\logconf.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\logoutput.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\logoutputfile.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\logsink.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tracedefs.h">
+      <Filter>logging</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

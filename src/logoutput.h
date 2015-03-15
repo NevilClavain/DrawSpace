@@ -20,46 +20,26 @@
 *
 */
 
-#ifndef _FILE_H_
-#define _FILE_H_
+#ifndef _LOGOUTPUT_H_
+#define _LOGOUTPUT_H_
 
 #include "drawspace_commons.h"
-#include "archive.h"
 
 namespace DrawSpace
 {
-namespace Utils
+namespace Logger
 {
-
-class File
+class Output
 {
-protected:
-    FILE* m_fp;
-
 public:
+    virtual ~Output( void ) { };
 
-    typedef enum
-    {
-        CREATENEW,
-        OPENEXISTING,
-        CREATENEWTEXT,
-        OPENEXISTINGTEXT,
-
-    } Mode;
-
-    File( const dsstring& p_filename, Mode p_mode );
-    ~File( void );
-
-    void SaveArchive( Archive& p_arc );
-    bool LoadArchive( Archive& p_arc );
-    long FileSize( void );
-
-    void Puts( const dsstring& p_string );
-    void Flush( void );
-
-    static long	FileSize( FILE *p_fp );
-    static void* LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size );
+    virtual void LogIt( const dsstring& p_trace ) = 0;
+    virtual void Flush( void ) = 0;
+    virtual void SetFlushPeriod( long p_period ) = 0;
+       
 };
 }
 }
+
 #endif

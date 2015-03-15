@@ -70,7 +70,7 @@ bool TransformQueue::add( TransformNode* p_node )
     }
     
 
-    _DSDEBUG( logger, "adding node : " << name.c_str() )
+    _DSDEBUG( logger, dsstring( "adding node : " ) << name.c_str() )
     m_nodes[name] = p_node;
     return true;
 }

@@ -22,6 +22,7 @@
 
 #include "dsapp.h"
 #include "tracedefs.h"
+
 _DECLARE_DS_LOGGER( logger, "App" )
 
 using namespace DrawSpace;
@@ -35,6 +36,8 @@ using namespace DrawSpace::Interface;
 App* App::m_base_instance = NULL;
 
 DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>* 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::m_instance = NULL;
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -300,16 +303,16 @@ bool App::InitApp( HINSTANCE p_hInstance )
         m_w_fullscreen = m_config.m_fullscreen;
         m_renderplugin = m_config.m_renderplugin;
 
-        _DSDEBUG( logger, "configuration file reading success, new app config is now " << m_w_width << " x " << m_w_height << " fullscreen : " << m_w_fullscreen )
+		_DSDEBUG(logger, dsstring("configuration file reading success, new app config is now ") << m_w_width << dsstring(" x ") << m_w_height << dsstring( " fullscreen : " ) << m_w_fullscreen )
     }
     else
     {
-        _DSWARN( logger, "Failed to parse app configuration file !! -> switching to default settings" )
+		_DSWARN(logger, dsstring( "Failed to parse app configuration file !! -> switching to default settings" ) )
     }
 
     OnAppInit();
 
-    _DSDEBUG( logger, "begin" )
+	_DSDEBUG(logger, dsstring( "begin" ) )
 
     bool status = true;
 
@@ -347,13 +350,13 @@ bool App::InitApp( HINSTANCE p_hInstance )
             m_w_width = fsw;
             m_w_height = fsh;
 
-            _DSDEBUG( logger, "Fullscreen mode : CreateWindowExA " << fsw << " x " << fsh )
+			_DSDEBUG(logger, dsstring("Fullscreen mode : CreateWindowExA ") << fsw << dsstring( " x " ) << fsh)
             m_hwnd = CreateWindowExA( WS_EX_TOPMOST, wc.lpszClassName, "", WS_POPUP, 0, 0, fsw, fsh, NULL, NULL, p_hInstance, NULL );
         }
         else
         {
             // mode fenetre
-            _DSDEBUG( logger, "Windowed mode : CreateWindowA " << m_w_width << " x " << m_w_height )
+			_DSDEBUG(logger, dsstring("Windowed mode : CreateWindowA ") << m_w_width << dsstring( " x " ) << m_w_height )
             m_hwnd = CreateWindowA( wc.lpszClassName, (LPCSTR)m_w_title.c_str(), m_w_style, CW_USEDEFAULT, CW_USEDEFAULT, m_w_width, m_w_height, NULL, NULL, p_hInstance, NULL );
         }
 
@@ -369,7 +372,7 @@ bool App::InitApp( HINSTANCE p_hInstance )
         m_app_ready = true;
     }
 
-    _DSDEBUG( logger, "status = " << status )
+	_DSDEBUG(logger, dsstring( "status = " ) << status )
     return status;
 }
 
@@ -390,6 +393,7 @@ void App::IdleApp( void )
             {
                 _DSDEBUG( logger, "WM_QUIT, calling OnClose()" )
                 OnClose();
+                Logger::Configuration::RemoveInstance();
                 break;
             }
             

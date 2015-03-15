@@ -20,46 +20,55 @@
 *
 */
 
-#ifndef _FILE_H_
-#define _FILE_H_
+#ifndef _LOGSINK_H_
+#define _LOGSINK_H_
 
 #include "drawspace_commons.h"
-#include "archive.h"
+#include "logoutput.h"
 
 namespace DrawSpace
 {
-namespace Utils
+namespace Logger
 {
-
-class File
+class Sink
 {
-protected:
-    FILE* m_fp;
-
 public:
 
     typedef enum
     {
-        CREATENEW,
-        OPENEXISTING,
-        CREATENEWTEXT,
-        OPENEXISTINGTEXT,
+        LEVEL_FATAL,
+        LEVEL_ERROR,
+        LEVEL_WARN,
+        LEVEL_DEBUG,
+        LEVEL_TRACE,
 
-    } Mode;
+    } Level;
 
-    File( const dsstring& p_filename, Mode p_mode );
-    ~File( void );
+protected:
 
-    void SaveArchive( Archive& p_arc );
-    bool LoadArchive( Archive& p_arc );
-    long FileSize( void );
+    Level       m_current_level;
+    bool        m_state;
 
-    void Puts( const dsstring& p_string );
-    void Flush( void );
+    Output*     m_output;
 
-    static long	FileSize( FILE *p_fp );
-    static void* LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size );
+    dsstring    m_name;
+
+public:
+    Sink( const dsstring& p_name );
+    ~Sink( void );
+
+    void SetCurrentLevel( Level p_level );
+    void SetState( bool p_state );
+
+    void LogIt( Level p_level, const dsstring& p_trace );
+
+    void RegisterOutput( Output* p_output );
+
+    void GetName( dsstring& p_name );
+   
 };
 }
 }
+
+
 #endif

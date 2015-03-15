@@ -20,65 +20,43 @@
 *
 */
 
-#include "mutex.h"
-#include "tracedefs.h"
-_DECLARE_DS_LOGGER( logger, "Mutex" )
+#include "logoutputfile.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Utils;
 
-Utils::Mutex::Mutex( void )
+Logger::OutputFile::OutputFile( const dsstring& p_filename ) :
+m_flush_period( 0 ),
+m_period_count( 0 )
 {
-    m_hmutex = CreateMutex( NULL, FALSE, NULL );
-    _DSDEBUG( logger, dsstring( "handle=" ) << m_hmutex )
+    m_file = new File( p_filename, File::CREATENEWTEXT );
 }
 
-Utils::Mutex::~Mutex( void )
-{    
-    CloseHandle( m_hmutex );
-    _DSDEBUG( logger, dsstring( "closed handle " ) << m_hmutex )
+Logger::OutputFile::~OutputFile( void )
+{
+    delete m_file;
 }
 
-void Utils::Mutex::WaitInfinite( void )
+void Logger::OutputFile::LogIt( const dsstring& p_trace )
 {
-    DWORD status = WaitForSingleObject( m_hmutex, INFINITE );
+    m_file->Puts( p_trace );
 
-    if( WAIT_OBJECT_0 != status )
-    {        
-        _DSERROR( logger, dsstring( "unexpected return for WaitForSingleObject, handle " ) << m_hmutex )
-    }
-
-    _DSTRACE( logger, dsstring( "getting mutex, handle " ) << m_hmutex )
-}
-
-bool Utils::Mutex::Wait( long p_interval )
-{
-    bool ret;
-    DWORD status = WaitForSingleObject( m_hmutex, p_interval );
-
-    switch( status )
+    if( m_period_count == m_flush_period )
     {
-        case WAIT_OBJECT_0:
-
-            _DSTRACE( logger, dsstring( "getting mutex, handle " ) << m_hmutex )
-            ret = true;
-            break;
-
-        case WAIT_TIMEOUT:
-
-            _DSTRACE( logger, dsstring( "timed out on mutex, handle " ) << m_hmutex )
-            ret = false;
-            break;
-
-        default:
-
-            _DSERROR( logger, dsstring( "unexpected return for WaitForSingleObject, handle " ) << m_hmutex )
-            ret = false;
-            break;
+        Flush();
+        m_period_count = 0;
+        return;
     }
-    return ret;
+    m_period_count++;
 }
 
-void Utils::Mutex::Release( void )
+void Logger::OutputFile::Flush( void )
 {
-    ReleaseMutex( m_hmutex );
+    m_file->Flush();
 }
+
+void Logger::OutputFile::SetFlushPeriod( long p_period )
+{
+    m_flush_period = p_period;
+}
+

@@ -19,7 +19,6 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 *
 */
-#include "flags2.h"
 
 #ifndef _DRAWSPACE_COMMONS_H_
 #define _DRAWSPACE_COMMONS_H_
@@ -40,5 +39,25 @@
 
 #define DRAWSPACE_GUI_WIDTH 200
 #define DRAWSPACE_GUI_HEIGHT 150
+
+
+dsstring operator<< ( dsstring& p_s1, dsstring& p_s2 );
+
+dsstring operator<< ( dsstring& p_s1, const char* p_s2 );
+
+dsstring operator<< ( const char* p_s1, dsstring& p_s2 );
+
+dsstring operator<< ( dsstring& p_s1, int p_s2 );
+
+dsstring operator<< ( dsstring& p_s1, size_t p_s2 );
+
+dsstring operator<< ( dsstring& p_s1, void* p_s2 );
+
+dsstring operator<< ( dsstring& p_s1, bool p_s2 );
+
+dsstring operator<< ( dsstring& p_s1, DWORD p_s2 );
+
+dsstring operator<< ( dsstring& p_s1, float p_s2 );
+
 
 #endif

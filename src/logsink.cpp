@@ -20,65 +20,51 @@
 *
 */
 
-#include "mutex.h"
-#include "tracedefs.h"
-_DECLARE_DS_LOGGER( logger, "Mutex" )
+
+#include "logsink.h"
+#include "logconf.h"
 
 using namespace DrawSpace;
 
-Utils::Mutex::Mutex( void )
+
+Logger::Sink::Sink( const dsstring& p_name ) : 
+m_name( p_name ),
+m_current_level( LEVEL_WARN ),
+m_state( false ),
+m_output( NULL )
 {
-    m_hmutex = CreateMutex( NULL, FALSE, NULL );
-    _DSDEBUG( logger, dsstring( "handle=" ) << m_hmutex )
+    Logger::Configuration::GetInstance()->RegisterSink( this );
 }
 
-Utils::Mutex::~Mutex( void )
-{    
-    CloseHandle( m_hmutex );
-    _DSDEBUG( logger, dsstring( "closed handle " ) << m_hmutex )
+Logger::Sink::~Sink( void )
+{
 }
 
-void Utils::Mutex::WaitInfinite( void )
+void Logger::Sink::SetCurrentLevel( Logger::Sink::Level p_level )
 {
-    DWORD status = WaitForSingleObject( m_hmutex, INFINITE );
-
-    if( WAIT_OBJECT_0 != status )
-    {        
-        _DSERROR( logger, dsstring( "unexpected return for WaitForSingleObject, handle " ) << m_hmutex )
-    }
-
-    _DSTRACE( logger, dsstring( "getting mutex, handle " ) << m_hmutex )
+    m_current_level = p_level;
 }
 
-bool Utils::Mutex::Wait( long p_interval )
+void Logger::Sink::SetState( bool p_state )
 {
-    bool ret;
-    DWORD status = WaitForSingleObject( m_hmutex, p_interval );
+    m_state = p_state;
+}
 
-    switch( status )
+void Logger::Sink::LogIt( Level p_level, const dsstring& p_trace )
+{
+    if( p_level <= m_current_level && m_state && m_output )
     {
-        case WAIT_OBJECT_0:
-
-            _DSTRACE( logger, dsstring( "getting mutex, handle " ) << m_hmutex )
-            ret = true;
-            break;
-
-        case WAIT_TIMEOUT:
-
-            _DSTRACE( logger, dsstring( "timed out on mutex, handle " ) << m_hmutex )
-            ret = false;
-            break;
-
-        default:
-
-            _DSERROR( logger, dsstring( "unexpected return for WaitForSingleObject, handle " ) << m_hmutex )
-            ret = false;
-            break;
+        dsstring final_trace = m_name + p_trace + dsstring( "\n" );
+        m_output->LogIt( final_trace );
     }
-    return ret;
 }
 
-void Utils::Mutex::Release( void )
+void Logger::Sink::RegisterOutput( Logger::Output* p_output )
 {
-    ReleaseMutex( m_hmutex );
+    m_output = p_output;
+}
+
+void Logger::Sink::GetName( dsstring& p_name )
+{
+    p_name = m_name;
 }

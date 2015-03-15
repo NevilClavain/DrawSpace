@@ -123,16 +123,16 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     DWORD ps_version_maj = D3DSHADER_VERSION_MAJOR( caps.PixelShaderVersion );
     DWORD ps_version_min = D3DSHADER_VERSION_MINOR( caps.PixelShaderVersion );
 
-    _DSDEBUG( logger, "vertex shaders version = " << vs_version_maj << "." << vs_version_min << " pixel shaders version = " << ps_version_maj << "." << ps_version_min );
+	_DSDEBUG( logger, dsstring("vertex shaders version = ") << vs_version_maj << dsstring(".") << vs_version_min << dsstring(" pixel shaders version = ") << ps_version_maj << dsstring( "." ) << ps_version_min );
 
     if( vs_version_maj < 3 || ps_version_maj < 3 )
     {
-        _DSFATAL( logger, "Shader model 3.0 unsupported !" )
+		_DSFATAL( logger, dsstring( "Shader model 3.0 unsupported !" ) )
         return false;
     }
     else
     {
-        _DSDEBUG( logger, "Shader model 3.0 check OK" )
+		_DSDEBUG( logger, dsstring( "Shader model 3.0 check OK" ) )
     }
 
     // search for best z-buffer format
@@ -154,7 +154,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         return false;
     }
 
-    _DSDEBUG( logger, "Selected depth buffer format = " << depth_format )
+	_DSDEBUG( logger, dsstring( "Selected depth buffer format = " ) << depth_format )
     m_depthbuffer_format = depth_format;
 
     //device creation
@@ -186,7 +186,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         m_characteristics.width_resol = d3dpp.BackBufferWidth;
         m_characteristics.height_resol = d3dpp.BackBufferHeight;
 
-        _DSDEBUG( logger, " -> FULLSCREEN " << d3dpp.BackBufferWidth << " x " << d3dpp.BackBufferHeight << " format " << d3dpp.BackBufferFormat )
+		_DSDEBUG( logger, dsstring( " -> FULLSCREEN " ) << d3dpp.BackBufferWidth << dsstring( " x " ) << d3dpp.BackBufferHeight << dsstring( " format " ) << d3dpp.BackBufferFormat )
     }
     else
     {
@@ -211,7 +211,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         m_characteristics.width_resol = p_w_width;
         m_characteristics.height_resol = p_w_height;
 
-        _DSDEBUG( logger, " -> WINDOWED " << p_w_width << " x " << p_w_height )
+		_DSDEBUG( logger, dsstring(" -> WINDOWED ") << p_w_width << dsstring( " x " ) << p_w_height )
     }
 
     DWORD behavior = m_config.m_vertex_processing;
@@ -267,7 +267,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         v_height = v_width * p_w_height / p_w_width;
     }
 
-    _DSDEBUG( logger, "projection : v_width = " << v_width << " v_height = " << v_height );
+	_DSDEBUG( logger, dsstring("projection : v_width = ") << v_width << dsstring( " v_height = " ) << v_height );
 
     //SetProjection( (float)v_width, (float)v_height, 1.0f, 100000000000.0f );
 
@@ -794,7 +794,7 @@ bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
             {
                 if( NULL != errors )
                 {
-                    _DSFATAL( logger, "D3DXCompileShader FAIL : " << (char *)errors->GetBufferPointer() )
+					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)errors->GetBufferPointer() )
                 }
                 return false;
             }
@@ -823,7 +823,7 @@ bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
             {
                 if( NULL != errors )
                 {
-                    _DSFATAL( logger, "D3DXCompileShader FAIL : " << (char *)errors->GetBufferPointer() )
+					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)errors->GetBufferPointer() )
                 }
                 return false;
             }

@@ -84,6 +84,7 @@
       <OutputFile>$(SolutionDir)\libs\drawspaced3d9_r.dll</OutputFile>
       <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013</AdditionalLibraryDirectories>
       <AdditionalDependencies>gdi32.lib;user32.lib;d3d9.lib;d3dx9.lib;drawspace_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

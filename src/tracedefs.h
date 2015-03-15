@@ -19,12 +19,11 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 *
 */
-#pragma warning( disable : 4275 )
+
 #ifndef _TRACESDEFS_H_
 #define _TRACESDEFS_H_
 
 #include "drawspace_commons.h"
-
 /*
 #include <log4cxx/logger.h>
 #include <log4cxx/basicconfigurator.h>
@@ -33,17 +32,20 @@
 using namespace log4cxx;
 using namespace log4cxx::helpers;
 */
+
+#include "logconf.h"
+
 #ifdef _DRAWSPACE_ENABLE_TRACES_
 
-#define _DSTRACE( _logger, _message ) //LOG4CXX_TRACE( _logger, __FUNCTION__ << " " << _message )
-#define _DSDEBUG( _logger, _message ) //LOG4CXX_DEBUG( _logger, __FUNCTION__ << " " << _message )
-#define _DSWARN( _logger, _message )  //LOG4CXX_WARN( _logger, __FUNCTION__ << " " << _message )
-#define _DSERROR( _logger, _message ) //LOG4CXX_ERROR( _logger, __FUNCTION__ << " " << _message )
-#define _DSFATAL( _logger, _message ) //LOG4CXX_FATAL( _logger, __FUNCTION__ << " " << _message )
+#define _DSTRACE( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_TRACE, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_TRACE( _logger, __FUNCTION__ << " " << _message )
+#define _DSDEBUG( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_DEBUG, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_DEBUG( _logger, __FUNCTION__ << " " << _message )
+#define _DSWARN( _logger, _message )  _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_WARN, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_WARN( _logger, __FUNCTION__ << " " << _message )
+#define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_ERROR, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_ERROR( _logger, __FUNCTION__ << " " << _message )
+#define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_FATAL, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_FATAL( _logger, __FUNCTION__ << " " << _message )
 
-#define _DECLARE_DS_LOGGER( _logger, _name ) //static LoggerPtr _logger(Logger::getLogger( _name ));
+#define _DECLARE_DS_LOGGER( _logger, _name ) static DrawSpace::Logger::Sink _logger( _name ); //static LoggerPtr _logger(Logger::getLogger( _name ));
 
-#define _INIT_LOGGER( _file_ ) //PropertyConfigurator::configure( _file_ );  
+#define _INIT_LOGGER( _file_ ) DrawSpace::Logger::Configuration::GetInstance()->Run( _file_, "   " ); //PropertyConfigurator::configure( _file_ );  
 
 #else
 
@@ -61,4 +63,3 @@ using namespace log4cxx::helpers;
 #endif
 
 #endif
-

@@ -22,6 +22,7 @@
     <ClCompile Include="src\collider.cpp" />
     <ClCompile Include="src\configsbase.cpp" />
     <ClCompile Include="src\configurable.cpp" />
+    <ClCompile Include="src\drawspace_commons.cpp" />
     <ClCompile Include="src\dsapp.cpp" />
     <ClCompile Include="src\events.cpp" />
     <ClCompile Include="src\factory.cpp" />
@@ -36,6 +37,9 @@
     <ClCompile Include="src\inits.cpp" />
     <ClCompile Include="src\linearmovement.cpp" />
     <ClCompile Include="src\lod.cpp" />
+    <ClCompile Include="src\logconf.cpp" />
+    <ClCompile Include="src\logoutputfile.cpp" />
+    <ClCompile Include="src\logsink.cpp" />
     <ClCompile Include="src\longlatmovement.cpp" />
     <ClCompile Include="src\maths.cpp" />
     <ClCompile Include="src\matrix.cpp" />
@@ -103,7 +107,6 @@
     <ClInclude Include="src\factory.h" />
     <ClInclude Include="src\file.h" />
     <ClInclude Include="src\flags.h" />
-    <ClInclude Include="src\flags2.h" />
     <ClInclude Include="src\font.h" />
     <ClInclude Include="src\fontimport.h" />
     <ClInclude Include="src\fpsmovement.h" />
@@ -115,6 +118,10 @@
     <ClInclude Include="src\inits.h" />
     <ClInclude Include="src\linearmovement.h" />
     <ClInclude Include="src\lod.h" />
+    <ClInclude Include="src\logconf.h" />
+    <ClInclude Include="src\logoutput.h" />
+    <ClInclude Include="src\logoutputfile.h" />
+    <ClInclude Include="src\logsink.h" />
     <ClInclude Include="src\longlatmovement.h" />
     <ClInclude Include="src\maths.h" />
     <ClInclude Include="src\matrix.h" />

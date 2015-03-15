@@ -20,46 +20,56 @@
 *
 */
 
-#ifndef _FILE_H_
-#define _FILE_H_
-
 #include "drawspace_commons.h"
-#include "archive.h"
 
-namespace DrawSpace
+dsstring operator<< ( dsstring& p_s1, dsstring& p_s2 )
 {
-namespace Utils
-{
-
-class File
-{
-protected:
-    FILE* m_fp;
-
-public:
-
-    typedef enum
-    {
-        CREATENEW,
-        OPENEXISTING,
-        CREATENEWTEXT,
-        OPENEXISTINGTEXT,
-
-    } Mode;
-
-    File( const dsstring& p_filename, Mode p_mode );
-    ~File( void );
-
-    void SaveArchive( Archive& p_arc );
-    bool LoadArchive( Archive& p_arc );
-    long FileSize( void );
-
-    void Puts( const dsstring& p_string );
-    void Flush( void );
-
-    static long	FileSize( FILE *p_fp );
-    static void* LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size );
-};
+    return p_s1 + p_s2;
 }
+
+dsstring operator<< ( dsstring& p_s1, const char* p_s2 )
+{
+    return p_s1 + dsstring( p_s2 );
 }
-#endif
+
+dsstring operator<< ( const char* p_s1, dsstring& p_s2 )
+{
+    return dsstring( p_s1 ) + p_s2;
+}
+
+dsstring operator<< ( dsstring& p_s1, int p_s2 )
+{
+    char buff[32];
+    return dsstring( p_s1 ) + dsstring( itoa( p_s2, buff, 10 ) );
+}
+
+dsstring operator<< ( dsstring& p_s1, size_t p_s2 )
+{
+    char buff[32];
+    return dsstring( p_s1 ) + dsstring( itoa( (unsigned int)p_s2, buff, 10 ) );
+}
+
+dsstring operator<< ( dsstring& p_s1, void* p_s2 )
+{
+    char buff[32];
+    return dsstring( p_s1 ) + dsstring( itoa( (unsigned int)p_s2, buff, 10 ) );
+}
+
+dsstring operator<< ( dsstring& p_s1, bool p_s2 )
+{
+	char buff[32];
+	return dsstring( p_s1 ) + dsstring( itoa( (unsigned int)p_s2, buff, 10 ) );
+}
+
+dsstring operator<< ( dsstring& p_s1, DWORD p_s2 )
+{
+	char buff[32];
+	return dsstring( p_s1 ) + dsstring( itoa((unsigned int)p_s2, buff, 10 ) );
+}
+
+dsstring operator<< ( dsstring& p_s1, float p_s2 )
+{
+	char buff[32];
+	sprintf( buff, "%f", p_s2 );
+	return dsstring( p_s1 ) + dsstring( buff );
+}
