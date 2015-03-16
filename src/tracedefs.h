@@ -43,7 +43,7 @@ using namespace log4cxx::helpers;
 #define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_ERROR, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_ERROR( _logger, __FUNCTION__ << " " << _message )
 #define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_FATAL, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_FATAL( _logger, __FUNCTION__ << " " << _message )
 
-#define _DECLARE_DS_LOGGER( _logger, _name ) static DrawSpace::Logger::Sink _logger( _name ); //static LoggerPtr _logger(Logger::getLogger( _name ));
+#define _DECLARE_DS_LOGGER( _logger, _name, _confptr ) static DrawSpace::Logger::Sink _logger( _name, _confptr ); //static LoggerPtr _logger(Logger::getLogger( _name ));
 
 #define _INIT_LOGGER( _file_ ) DrawSpace::Logger::Configuration::GetInstance()->Run( _file_, "   " ); //PropertyConfigurator::configure( _file_ );  
 

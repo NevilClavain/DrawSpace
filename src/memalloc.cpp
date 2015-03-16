@@ -22,7 +22,7 @@
 
 #include "memalloc.h"
 #include "tracedefs.h"
-_DECLARE_DS_LOGGER( logger, "MemAlloc" )
+_DECLARE_DS_LOGGER( logger, "MemAlloc", DrawSpace::Logger::Configuration::GetInstance() )
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;

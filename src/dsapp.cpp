@@ -23,7 +23,7 @@
 #include "dsapp.h"
 #include "tracedefs.h"
 
-_DECLARE_DS_LOGGER( logger, "App" )
+_DECLARE_DS_LOGGER( logger, "App", DrawSpace::Logger::Configuration::GetInstance() )
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -392,8 +392,7 @@ void App::IdleApp( void )
             if( WM_QUIT == msg.message ) 
             {
                 _DSDEBUG( logger, "WM_QUIT, calling OnClose()" )
-                OnClose();
-                Logger::Configuration::RemoveInstance();
+                OnClose();                
                 break;
             }
             
@@ -406,7 +405,8 @@ void App::IdleApp( void )
         else
         {
             if( m_app_ready )
-            {	
+            {
+                DrawSpace::Logger::Configuration::GetInstance()->UpdateTick();
                 process_input_events();
                 OnRenderFrame();		
             }
@@ -419,7 +419,7 @@ bool App::InitRenderer( void )
     _DSDEBUG( logger, "begin" )
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
-    if( false == renderer->Init( m_hwnd, m_w_fullscreen, m_w_width, m_w_height ) )
+    if( false == renderer->Init( m_hwnd, m_w_fullscreen, m_w_width, m_w_height, DrawSpace::Logger::Configuration::GetInstance() ) )
     {
         _DSDEBUG( logger, "end FAIL" )
         return false;

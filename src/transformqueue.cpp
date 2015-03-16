@@ -24,7 +24,7 @@
 #include "tracedefs.h"
 #include "exceptions.h"
 
-_DECLARE_DS_LOGGER( logger, "TransformQueue" )
+_DECLARE_DS_LOGGER( logger, "TransformQueue", DrawSpace::Logger::Configuration::GetInstance() )
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;

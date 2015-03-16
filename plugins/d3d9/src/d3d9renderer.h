@@ -147,7 +147,7 @@ protected:
 
 
     Characteristics                                             m_characteristics;
-    
+        
     void set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
     void set_pixelshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
 
@@ -160,7 +160,7 @@ public:
     virtual void GetDescr( dsstring& p_descr );
     virtual void DumpMemoryAllocs( void );
 
-    virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height );
+    virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf );
     virtual void Release( void );
 
     virtual void SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz );

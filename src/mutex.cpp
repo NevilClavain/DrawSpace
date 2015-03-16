@@ -22,7 +22,7 @@
 
 #include "mutex.h"
 #include "tracedefs.h"
-_DECLARE_DS_LOGGER( logger, "Mutex" )
+_DECLARE_DS_LOGGER( logger, "Mutex", DrawSpace::Logger::Configuration::GetInstance() )
 
 using namespace DrawSpace;
 

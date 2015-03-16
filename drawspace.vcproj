@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\drawspace_commons.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\factory.cpp"
 				>
 			</File>
@@ -512,10 +516,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\tracedefs.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\vector.cpp"
 				>
 			</File>
@@ -712,6 +712,42 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="logging"
+			>
+			<File
+				RelativePath=".\src\logconf.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\logconf.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\logoutput.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\logoutputfile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\logoutputfile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\logsink.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\logsink.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\tracedefs.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\asset.cpp"
 			>
@@ -746,10 +782,6 @@
 		</File>
 		<File
 			RelativePath=".\src\flags.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\flags2.h"
 			>
 		</File>
 		<File

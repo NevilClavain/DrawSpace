@@ -33,6 +33,13 @@ using namespace DrawSpace::Logger;
 
 Logger::Configuration::Configuration( void )
 {
+    /*
+    m_base_tick = GetTickCount();
+    m_last_tick = m_base_tick;
+    */
+    QueryPerformanceFrequency( &m_freq );
+    QueryPerformanceCounter( &m_base_tick );
+    m_last_tick = m_base_tick;
 }
 
 Logger::Configuration::~Configuration( void )
@@ -194,4 +201,32 @@ void Logger::Configuration::RegisterSink( Sink* p_sink )
         sink_entry.sink = p_sink;
         m_sinks[name] = sink_entry;
     }
+}
+
+void Logger::Configuration::UpdateTick( void )
+{
+    //m_last_tick = GetTickCount();
+
+    QueryPerformanceCounter( &m_last_tick );
+}
+
+LONGLONG Logger::Configuration::GetLastTick( void )
+{
+    //return ( m_last_tick - m_base_tick );
+
+    LONGLONG elapsed = m_last_tick.QuadPart - m_base_tick.QuadPart;
+
+
+    //
+    // We now have the elapsed number of ticks, along with the
+    // number of ticks-per-second. We use these values
+    // to convert to the number of elapsed microseconds.
+    // To guard against loss-of-precision, we convert
+    // to microseconds *before* dividing by ticks-per-second.
+    //
+
+    elapsed *= 1000000;
+    elapsed /= m_freq.QuadPart;
+
+    return elapsed;
 }

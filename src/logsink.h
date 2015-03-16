@@ -30,6 +30,8 @@ namespace DrawSpace
 {
 namespace Logger
 {
+class Configuration;
+
 class Sink
 {
 public:
@@ -46,15 +48,17 @@ public:
 
 protected:
 
-    Level       m_current_level;
-    bool        m_state;
+    Level                   m_current_level;
+    bool                    m_state;
 
-    Output*     m_output;
+    Output*                 m_output;
 
-    dsstring    m_name;
+    dsstring                m_name;
+
+    Logger::Configuration*  m_conf;
 
 public:
-    Sink( const dsstring& p_name );
+    Sink( const dsstring& p_name, Configuration* p_conf );
     ~Sink( void );
 
     void SetCurrentLevel( Level p_level );
@@ -65,7 +69,8 @@ public:
     void RegisterOutput( Output* p_output );
 
     void GetName( dsstring& p_name );
-   
+    void SetConfiguration( Logger::Configuration* p_conf );
+      
 };
 }
 }

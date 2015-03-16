@@ -27,13 +27,17 @@
 using namespace DrawSpace;
 
 
-Logger::Sink::Sink( const dsstring& p_name ) : 
+Logger::Sink::Sink( const dsstring& p_name, Logger::Configuration* p_conf ) : 
 m_name( p_name ),
 m_current_level( LEVEL_WARN ),
 m_state( false ),
-m_output( NULL )
+m_output( NULL ),
+m_conf( p_conf )
 {
-    Logger::Configuration::GetInstance()->RegisterSink( this );
+    if( p_conf )
+    {
+        p_conf->RegisterSink( this );
+    }
 }
 
 Logger::Sink::~Sink( void )
@@ -54,8 +58,50 @@ void Logger::Sink::LogIt( Level p_level, const dsstring& p_trace )
 {
     if( p_level <= m_current_level && m_state && m_output )
     {
-        dsstring final_trace = m_name + p_trace + dsstring( "\n" );
+        dsstring level;
+
+        if( p_level == LEVEL_FATAL )
+        {
+            level = "FATAL";
+        }
+        else if( p_level == LEVEL_ERROR )
+        {
+            level = "ERROR";
+        }
+        else if( p_level == LEVEL_WARN )
+        {
+            level = "WARN";
+        }
+        else if( p_level == LEVEL_DEBUG )
+        {
+            level = "DEBUG";
+        }
+        else if( p_level == LEVEL_TRACE )
+        {
+            level = "TRACE";
+        }
+
+        char thread_id[16];
+        sprintf( thread_id, "[%.8x]", GetCurrentThreadId() );
+
+        char timestamp[32];
+
+        if( m_conf )
+        {
+            sprintf( timestamp, "%.10d", m_conf->GetLastTick() );
+        }
+        else
+        {
+            sprintf( timestamp, "??????????" );
+        }
+
+        dsstring final_trace = dsstring( timestamp ) + dsstring( " " ) + dsstring( thread_id ) + dsstring( " " ) + m_name + dsstring( " " ) + level + dsstring( " " ) + dsstring( "[ " ) + p_trace + dsstring( " ]" ) + dsstring( "\n" );
         m_output->LogIt( final_trace );
+    }
+
+    if( m_conf )
+    {
+        m_conf->UpdateTick();
     }
 }
 
@@ -67,4 +113,9 @@ void Logger::Sink::RegisterOutput( Logger::Output* p_output )
 void Logger::Sink::GetName( dsstring& p_name )
 {
     p_name = m_name;
+}
+
+void Logger::Sink::SetConfiguration( Logger::Configuration* p_conf )
+{
+    m_conf = p_conf;
 }

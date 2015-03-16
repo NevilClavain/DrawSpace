@@ -49,8 +49,10 @@ protected:
 
     std::map<dsstring, Output*>     m_outputs;
     std::map<dsstring, SinkEntry>   m_sinks;
-    
 
+    LARGE_INTEGER                   m_base_tick;
+    LARGE_INTEGER                   m_last_tick;
+    LARGE_INTEGER                   m_freq;
 
     Configuration( void );
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
@@ -62,6 +64,8 @@ public:
     static void RemoveInstance( void );
 
     void RegisterSink( Sink* p_sink );
+    void UpdateTick( void );
+    LONGLONG GetLastTick( void );
    
 };
 }

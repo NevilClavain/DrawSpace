@@ -27,7 +27,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 extern void TranslateD3DD9Error( HRESULT p_hRes, dsstring &p_str );
 
-_DECLARE_DS_LOGGER( logger, "d3d9" )
+_DECLARE_DS_LOGGER( logger, "d3d9", NULL )
 
 D3D9Renderer::D3D9Renderer( void ) :
 m_lpd3d( NULL ),
@@ -81,11 +81,14 @@ D3DFORMAT D3D9Renderer::find_depthbuffer_format( int p_adapterordinal, D3DFORMAT
     }
 }
 
-bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height )
+bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf )
 {
     D3DPRESENT_PARAMETERS d3dpp;
     DECLARE_D3D9ASSERT_VARS
     D3DDISPLAYMODE d3ddm;
+
+    p_logconf->RegisterSink( &logger );
+    logger.SetConfiguration( p_logconf );
 
     if( true == m_config.Run( "appconfig.txt", "    " ) )
     {

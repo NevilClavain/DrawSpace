@@ -85,8 +85,8 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
         }
 
         app->IdleApp();
-
         app->StopRenderer();
+        DrawSpace::Logger::Configuration::RemoveInstance();
     }
     catch( dsexception& p_exception )
     {

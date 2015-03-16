@@ -26,6 +26,7 @@
 #include "drawspace_commons.h"
 #include "matrix.h"
 #include "renderingnode.h"
+#include "logconf.h"
 
 namespace DrawSpace
 {
@@ -48,7 +49,7 @@ public:
     virtual void GetDescr( dsstring& p_descr ) = 0;
     virtual void DumpMemoryAllocs( void ) = 0;
 
-    virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height ) = 0;
+    virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, Logger::Configuration* p_logcong ) = 0;
     virtual void Release( void ) = 0;
 
     virtual void SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz ) = 0;
