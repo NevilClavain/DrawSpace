@@ -194,7 +194,7 @@ bool DFrontApp::init_renderer( void )
 {
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
-    if( false == renderer->Init( m_hwnd, false, m_w_width, m_w_height ) )
+    if( false == renderer->Init( m_hwnd, false, m_w_width, m_w_height, DrawSpace::Logger::Configuration::GetInstance() ) )
     {
         return false;
     }
