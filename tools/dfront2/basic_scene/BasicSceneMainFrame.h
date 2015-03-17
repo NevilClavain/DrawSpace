@@ -90,6 +90,8 @@
 #define DIALOG_FONT_PROPS_TITLE             "Font properties"
 #define DIALOG_MESHE_PROPS_TITLE            "Meshe properties"
 #define DIALOG_FX_PROPS_TITLE               "Fx properties"
+#define DIALOG_IPASS_PROPS_TITLE            "Intermediate Pass properties"
+#define DIALOG_FPASS_PROPS_TITLE            "Final Pass properties"
 #define DIALOG_TRANSFORM_CREATION_TITLE     "Transformation node creation"
 #define DIALOG_TRANSFORM_EDITION_TITLE      "Transformation node edition"
 #define DIALOG_SPACEBOX_CREATION_TITLE      "Spacebox node creation"
@@ -402,48 +404,6 @@ public:
 
 
 
-
-
-    typedef enum
-    {
-        REGISTER_CONSTANT,
-        REGISTER_VARIABLE
-
-    } RegisterMode;
-
-    typedef enum
-    {
-        REGISTER_VARIABLE_TRANSLATION_SIMPLE,
-        REGISTER_VARIABLE_TRANSLATION_ROUNDTRIP,
-        REGISTER_VARIABLE_ANGULAR_SIMPLE,
-        REGISTER_VARIABLE_ANGULAR_ROUNDTRIP,
-
-    } RegisterVariableMode;
-
-
-    typedef struct
-    {
-        long                    id;
-        RegisterMode            mode;
-        dsreal                  const_value;
-
-        RegisterVariableMode    variable_mode;
-        dsreal                  variable_initial_value;
-        dsreal                  variable_speed;
-        dsreal                  variable_range_sup;
-        dsreal                  variable_range_inf;
-
-        bool                    state;
-
-        dsreal                  current_value;
-
-       
-        bool                    variable_roundtrip_back;
-        bool                    discontinuity;
-
-    } RegisterEntry;
-
-
 protected:
 
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>                   TimerCallback;
@@ -476,6 +436,8 @@ protected:
     wxArrayString insert_void_choice( const wxArrayString& p_array );
 
 
+
+    void build_passes_infos_dialog( DrawSpace::Core::Configurable* p_config );
 
     
 

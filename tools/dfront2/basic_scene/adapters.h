@@ -101,17 +101,9 @@ public:
     void AdaptPassesList( wxListCtrl* p_listctrl );
     void AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxListCtrl* p_listctrl );
     
-    
-    
-
-
-
-    void AdaptPassProps( bool p_intermediate_pass, DrawSpace::Pass* p_pass, wxPropertyGrid* p_propertygrid );
-    
-
+        
     void AdaptPassShaderValuesPropsModification( DrawSpace::Pass* p_pass, char* p_param_id, BasicSceneObjectPropertiesDialog* p_dialog );
     
-
      
     void AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox );
     

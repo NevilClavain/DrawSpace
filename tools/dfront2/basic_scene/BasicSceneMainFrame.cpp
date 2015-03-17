@@ -982,22 +982,132 @@ void BasicSceneMainFrame::OnConfigsListItemActivated( wxListEvent& p_event )
         DIALOG_SHOW            
     }
 
-    IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( config );
-    if( ipass )
+    build_passes_infos_dialog( config );
+}
+
+void BasicSceneMainFrame::build_passes_infos_dialog( DrawSpace::Core::Configurable* p_config )
+{ 
+    IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( p_config );
+    FinalPass* fpass = dynamic_cast<FinalPass*>( p_config );
+
+    if( ipass || fpass )
     {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Intermediate Pass properties" );
-        wxWidgetAdapter::GetInstance()->AdaptPassProps( true, ipass, dialog->GetPropertyGrid() );
-        dialog->Show();
+        Configurable::PropertiesMap props;
+        dsstring title;
+
+        if( ipass )
+        {            
+            ipass->GetPropertiesMap( props );
+            title = DIALOG_IPASS_PROPS_TITLE;
+        }
+        else
+        {            
+            fpass->GetPropertiesMap( props );
+            title = DIALOG_FPASS_PROPS_TITLE;
+        }
+
+        DIALOG_DECLARE( title )
+
+        dsstring passname = props["passname"].GetPropValue<dsstring>();
+        DIALOG_APPENDROOT_STRING( "name", passname )
+
+        if( ipass )
+        {
+            bool targetdimsfromrenderer = props["targetdimsfromrenderer"].GetPropValue<bool>();
+
+            DIALOG_APPENDROOT_BOOL( "target dims from renderer", targetdimsfromrenderer );
+
+            if( !targetdimsfromrenderer )
+            {
+                long targetdims_width = props["targetdims"].GetPropValue<long>( "width" );
+                long targetdims_height = props["targetdims"].GetPropValue<long>( "height" );
+
+                DIALOG_APPENDROOT_NODE( "target dims", targetdims_root )
+                DIALOG_APPENDNODE_INTEGER( targetdims_root, "width", targetdims_width )
+                DIALOG_APPENDNODE_INTEGER( targetdims_root, "height", targetdims_height )
+            }
+        }
+
+
+        DIALOG_APPENDROOT_BOOL( "enable depth clear", props["enabledepthclear"].GetPropValue<bool>() );
+        DIALOG_APPENDROOT_BOOL( "enable target clear", props["enabletargetclear"].GetPropValue<bool>() );
+
+        if( props["enabletargetclear"].GetPropValue<bool>() )
+        {
+            DIALOG_APPENDROOT_NODE( "target clear color", targetclearcolor_root )
+
+            DIALOG_APPENDNODE_INTEGER( targetclearcolor_root, "r", props["targetclearcolor"].GetPropValue<unsigned char>( "r" ) )
+            DIALOG_APPENDNODE_INTEGER( targetclearcolor_root, "g", props["targetclearcolor"].GetPropValue<unsigned char>( "g" ) )
+            DIALOG_APPENDNODE_INTEGER( targetclearcolor_root, "b", props["targetclearcolor"].GetPropValue<unsigned char>( "b" ) )
+        }
+
+        bool viewportquad = props["viewportquad"].GetPropValue<bool>();
+        DIALOG_APPENDROOT_BOOL( "viewport quad", viewportquad );
+
+        if( viewportquad )
+        {
+            DIALOG_APPENDROOT_STRING( "viewport quad fx", props["viewportquad_fx"].GetPropValue<dsstring>() );
+
+            std::vector<std::pair<long, Pass::TextureSourceName>> viewportquad_textures;
+            viewportquad_textures = props["viewportquad_textures"].GetPropValue<std::vector<std::pair<long, Pass::TextureSourceName>>>();
+
+            if( viewportquad_textures.size() > 0 )
+            {
+                DIALOG_APPENDROOT_NODE( "viewport quad textures", viewportquadtextures_root )
+
+                DIALOG_BUILD_LABELS( viewportquad_textures.size(), "stage %d", labels )
+
+                DIALOG_APPENDNODE_ITERATE_NODE_BEGIN( viewportquadtextures_root, i, labels, t_out )
+
+                    Pass::TextureSourceName texture_source_name = viewportquad_textures[i].second;
+                    long stage = viewportquad_textures[i].first;
+
+                    if( Pass::PASS_NAME == texture_source_name.source )
+                    {
+                        DIALOG_APPENDNODE_STRING( t_out, "source type", "pass" )
+                    }
+                    else
+                    {
+                        DIALOG_APPENDNODE_STRING( t_out, "source type", "texture" )
+                    }
+                    DIALOG_APPENDNODE_STRING( t_out, "source name", texture_source_name.name )
+
+                DIALOG_APPENDNODE_ITERATE_NODE_END
+            }
+        }
+
+        std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = props["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
+
+        if( viewportquad_shaderparams.size() )
+        {
+            //wxPGProperty* vpqshaderparams_prop = p_propertygrid->Append( new wxStringProperty( "viewportquad_shaderparams", wxPG_LABEL, "<composed>" ) );
+
+            DIALOG_APPENDROOT_NODE( "viewport quad shader params", viewportquadshaderparams_root )
+                           
+            for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
+            {
+
+                //wxPGProperty* vpqshaderparamname_prop = p_propertygrid->AppendIn( vpqshaderparams_prop, new wxStringProperty( it->first.c_str(), wxPG_LABEL, "<composed>" ) );
+
+                DIALOG_APPENDNODE_NODE( viewportquadshaderparams_root, it->first, shaderparam )
+
+                DIALOG_APPENDNODE_INTEGER( shaderparam, "shader index", it->second.shader_index )
+                DIALOG_APPENDNODE_INTEGER( shaderparam, "register", it->second.param_register )
+
+                DIALOG_APPENDNODE_NODE( shaderparam, "values", shaderparamvalues )
+
+                DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "x", it->second.param_values[0] )
+                DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "y", it->second.param_values[1] )
+                DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "z", it->second.param_values[2] )
+                DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "w", it->second.param_values[3] )
+
+            }
+            
+        }
+
+        DIALOG_SHOW
     }
 
-    FinalPass* fpass = dynamic_cast<FinalPass*>( config );
-    if( fpass )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Final Pass properties" );
-        wxWidgetAdapter::GetInstance()->AdaptPassProps( false, fpass, dialog->GetPropertyGrid() );
-        dialog->Show();
-
-    }
 }
 
 void BasicSceneMainFrame::OnPassesListItemActivated( wxListEvent& p_event )
@@ -1006,21 +1116,7 @@ void BasicSceneMainFrame::OnPassesListItemActivated( wxListEvent& p_event )
 
     Configurable* config = (Configurable*)m_passes_listCtrl->GetItemData( sel_index );
 
-    IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( config );
-    if( ipass )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Intermediate Pass properties" );
-        wxWidgetAdapter::GetInstance()->AdaptPassProps( true, ipass, dialog->GetPropertyGrid() );
-        dialog->Show();
-    }
-
-    FinalPass* fpass = dynamic_cast<FinalPass*>( config );
-    if( fpass )
-    {
-        BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Final Pass properties" );
-        wxWidgetAdapter::GetInstance()->AdaptPassProps( false, fpass, dialog->GetPropertyGrid() );
-        dialog->Show();
-    }
+    build_passes_infos_dialog( config );
 }
 
 void BasicSceneMainFrame::OnPassesListItemSelected( wxListEvent& p_event )
