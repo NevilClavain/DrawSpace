@@ -210,6 +210,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "SpaceBoxBuilder:BuildIt" == script_call_id )
     {
+        /*
         Spacebox::Descriptor descriptor = p_propertypool.GetPropValue<Spacebox::Descriptor>( "descr" );
 
         MetadataScenegraphEntry entry;
@@ -239,6 +240,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( error_msg, "Script error", wxICON_ERROR );
         }
+        */
     }
     else if( "SpaceBoxBuilder:ClearMatrixStack" == script_call_id )
     {
@@ -247,6 +249,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "SpaceBoxBuilder:AddMatrix" == script_call_id )
     {
+        /*
         dsstring mat_type = p_propertypool.GetPropValue<dsstring>( "mat_type" );
 
         dsreal x, y, z, angle;
@@ -254,7 +257,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         TransformationMatrixDescriptor mat_descr;
         
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "name" );
-
+        */
 
     }
     else if( "DrawSpace:CreateConstRegister" == script_call_id )

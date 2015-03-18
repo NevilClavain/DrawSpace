@@ -25,21 +25,27 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSceneMainFrame::MetadataScenegraphEntry& p_entry, dsstring& p_error )
+Spacebox* BuildSpaceBox( const BasicSceneMainFrame::Descriptor& p_descriptor, dsstring& p_error )
 {
     Spacebox* spacebox = new Spacebox();
     spacebox->SetSceneName( p_descriptor.scene_name );
 
-    std::map<dsstring, Spacebox::PassDescriptor> passes = p_descriptor.passes_slots;
+    std::map<dsstring, BasicSceneMainFrame::PassDescriptor> passes = p_descriptor.passes_slots;
 
-    for( std::map<dsstring, Spacebox::PassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
+    for( std::map<dsstring, BasicSceneMainFrame::PassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
     {
-        //spacebox->RegisterPassSlot( it->first.c_str() );
+        Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
+        if( !current_pass )
+        {
+            p_error = "BuildSpaceBox : unknown Pass config name (" + dsstring( it->first.c_str() ) + dsstring( ")" );
+            return NULL;
+        }
+
 
         if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( it->second.fx_name ) )
         {
             p_error = "BuildSpaceBox : unknown Fx config name (" + it->second.fx_name + dsstring( ")" );
-            return false;
+            return NULL;
         }
 
         Fx* fx = dynamic_cast<Fx*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->second.fx_name ) );
@@ -47,7 +53,7 @@ bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSc
         if( NULL == fx )
         {
             p_error = "BuildSpaceBox : specified config is not an Fx (" + it->second.fx_name + dsstring( ")" );
-            return false;
+            return NULL;
         }
 
         for( long i = 0; i < 6; i++ )
@@ -59,63 +65,28 @@ bool BuildSpaceBox( const DrawSpace::Spacebox::Descriptor& p_descriptor, BasicSc
                     if( false == AssetsBase::GetInstance()->AssetIdExists( it->second.textures[i][j] ) )
                     {
                         p_error = "BuildSpaceBox : unknown texture asset name (" + it->second.textures[i][j] + dsstring( ")" );
-                        return false;
+                        return NULL;
                     }
 
                     Texture* texture = dynamic_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( it->second.textures[i][j] ) );
                     if( NULL == texture )
                     {
                         p_error = "BuildSpaceBox : specified asset is not a Texture (" + it->second.textures[i][j] + dsstring( ")" );
-                        return false;
+                        return NULL;
                     }
 
-                    //spacebox->GetNodeFromPass( it->first, i )->SetTexture( texture, j );
+                    
+                   
+                    spacebox->GetNodeFromPass( current_pass, i )->SetTexture( texture, j );
+
                 }
             }
 
-            //spacebox->GetNodeFromPass( it->first, i )->SetFx( fx );
-            //spacebox->GetNodeFromPass( it->first, i )->SetOrderNumber( it->second.rendering_order );
+            spacebox->GetNodeFromPass( current_pass, i )->SetFx( fx );
+            spacebox->GetNodeFromPass( current_pass, i )->SetOrderNumber( it->second.rendering_order );
         }
     }
 
-    p_entry.node = spacebox;
-    p_entry.transformation_source_type = BasicSceneMainFrame::TRANSFORMATIONSOURCE_MATRIXSTACK;
-    p_entry.propose_matrixstack = true;
-    p_entry.propose_body = false;
-    p_entry.propose_movement = false;
-    
-    BasicSceneMainFrame::TransformationMatrixDescriptor descr;
-
-    descr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_SCALE;
-
-    descr.arg.translation_vals_link[0].value = 0.0;
-    descr.arg.translation_vals_link[0].var_alias = "...";
-    descr.arg.translation_vals_link[1].value = 0.0;
-    descr.arg.translation_vals_link[1].var_alias = "...";
-    descr.arg.translation_vals_link[2].value = 0.0;
-    descr.arg.translation_vals_link[2].var_alias = "...";
-
-    descr.arg.rotation_vals_link[0].value = 0.0;
-    descr.arg.rotation_vals_link[0].var_alias = "...";
-    descr.arg.rotation_vals_link[1].value = 0.0;
-    descr.arg.rotation_vals_link[1].var_alias = "...";
-    descr.arg.rotation_vals_link[2].value = 0.0;
-    descr.arg.rotation_vals_link[2].var_alias = "...";
-
-    descr.arg.angle_val_link.value = 0.0;
-    descr.arg.angle_val_link.var_alias = "...";
-
-    descr.arg.scale_vals_link[0].value = 20.0;
-    descr.arg.scale_vals_link[0].var_alias = "...";
-    descr.arg.scale_vals_link[1].value = 20.0;
-    descr.arg.scale_vals_link[1].var_alias = "...";
-    descr.arg.scale_vals_link[2].value = 20.0;
-    descr.arg.scale_vals_link[2].var_alias = "...";
-    
-    p_entry.matrix_stack_descr.push_back( descr );
-    
-    p_entry.node = spacebox;
-
     p_error = "";
-    return true;
+    return spacebox;
 }

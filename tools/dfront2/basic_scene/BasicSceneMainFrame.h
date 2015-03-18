@@ -286,104 +286,32 @@ public:
 
     } PopupMenuEntry;
 
+    typedef struct
+    {
+        dsstring                    id;
+        long                        shader_index;
+        long                        shader_register;
+        DrawSpace::Utils::Vector    value;
+
+    } PassShaderParam;
+
+    typedef struct 
+    {
+        dsstring                        fx_name;
+        long                            rendering_order;
+        dsstring                        textures[6][DrawSpace::Core::RenderingNode::NbMaxTextures];
+        std::vector<PassShaderParam>    shader_params;
+
+    } PassDescriptor;
+
+    typedef struct
+    {
+        dsstring                            scene_name;
+        std::map<dsstring, PassDescriptor>  passes_slots;
+
+    } Descriptor;    
+
     
-
-    typedef enum
-    {
-        TRANSFORMATIONSOURCE_MATRIXSTACK,
-        TRANSFORMATIONSOURCE_MOVEMENT,
-        TRANSFORMATIONSOURCE_BODY
-
-    } TransformationSourceType;
-
-    typedef enum
-    {
-        TRANSFORMATIONMATRIX_IDENTITY,
-        TRANSFORMATIONMATRIX_SCALE,
-        TRANSFORMATIONMATRIX_TRANSLATION,
-        TRANSFORMATIONMATRIX_ROTATION
-
-    } TransformationMatrixOperation;
-
-    typedef struct
-    {
-        dsstring    var_alias;
-        dsreal      value;          // si var_alias = ""
-
-    } TransformationMatrixValueLinkage;
-
-    class TransformationMatrixArg
-    {
-    public:
-        //DrawSpace::Utils::Vector                translation;
-        TransformationMatrixValueLinkage        translation_vals_link[3];
-
-        //DrawSpace::Utils::Vector                rotation;
-        TransformationMatrixValueLinkage        rotation_vals_link[3];
-
-        //dsreal                                  angle;
-        TransformationMatrixValueLinkage        angle_val_link;
-
-        //DrawSpace::Utils::Vector                scale;
-        TransformationMatrixValueLinkage        scale_vals_link[3];
-
-     public:
-        TransformationMatrixArg( void )
-        {
-            translation_vals_link[0].value = 0.0;
-            translation_vals_link[1].value = 0.0;
-            translation_vals_link[2].value = 0.0;
-            translation_vals_link[0].var_alias = "...";
-            translation_vals_link[1].var_alias = "...";
-            translation_vals_link[2].var_alias = "...";
-
-            rotation_vals_link[0].value = 0.0;
-            rotation_vals_link[1].value = 0.0;
-            rotation_vals_link[2].value = 0.0;
-            rotation_vals_link[0].var_alias = "...";
-            rotation_vals_link[1].var_alias = "...";
-            rotation_vals_link[2].var_alias = "...";
-
-            scale_vals_link[0].value = 0.0;
-            scale_vals_link[1].value = 0.0;
-            scale_vals_link[2].value = 0.0;
-            scale_vals_link[0].var_alias = "...";
-            scale_vals_link[1].var_alias = "...";
-            scale_vals_link[2].var_alias = "...";
-
-            angle_val_link.value = 0.0;
-            angle_val_link.var_alias = "...";
-        }
-    };
-
-    typedef struct
-    {
-        TransformationMatrixOperation   ope;
-        TransformationMatrixArg         arg;
-
-    } TransformationMatrixDescriptor;
-    
-
-    typedef struct
-    {
-        DrawSpace::Core::TransformNode*                 node;
-        TransformationSourceType                        transformation_source_type;
-
-        // les sources de transfo autorisees pour ce node
-        bool                                            propose_matrixstack;
-        bool                                            propose_movement;
-        bool                                            propose_body;
-        
-        //DrawSpace::Utils::Transformation                matrix_stack;
-        std::vector<TransformationMatrixDescriptor>     matrix_stack_descr;
-        DrawSpace::Core::Movement*                      movement;
-        DrawSpace::Dynamics::Body*                      body;
-
-
-    } MetadataScenegraphEntry;
-
-
-
     typedef struct
     {
         dsstring                            name;
