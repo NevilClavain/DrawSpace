@@ -1235,47 +1235,13 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
         case CONTEXTMENU_NEWSPACEBOX:
             {
 
-                /*
-                DIALOG_DECLARE( "Spacebox node creation" )
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-                DIALOG_APPENDROOT_INTEGER( "the beast", 666 )
-                DIALOG_APPENDROOT_FLOAT( "pi", 3.1415927 )
-                DIALOG_APPENDROOT_ENUM( "list", insert_void_choice( get_textures_list() ) )
-                */
-
-                /*
-
-                DIALOG_APPENDROOT_NODE( "a pass", root_pass )
-                DIALOG_APPENDNODE_INTEGER( root_pass, "order", 200 )
-                DIALOG_APPENDNODE_NODE( root_pass, "textures", textures_pass )
-
-                DIALOG_APPENDNODE_STRING( textures_pass, "textures alias", "" )
-                DIALOG_APPENDNODE_ENUM( textures_pass, "texture resource name", get_shaders_list() );
-
-
-
-                
-                DIALOG_BUILD_LABELS( 32, "texture_%d", textures )
-
-                
-                DIALOG_APPENDNODE_ITERATE( textures_pass, 45, DIALOG_APPENDNODE_INTEGER, textures )
-
-                */
-
-                /*
-                DIALOG_APPLY
-                DIALOG_SPECIFIC0( "Add new pass" )
-                DIALOG_SHOW
-                */
-
-
-
                 DIALOG_DECLARE( DIALOG_SPACEBOX_CREATION_TITLE )
 
                 DIALOG_APPENDROOT_STRING( "scene name", "" )
 
                 DIALOG_APPLY
-                DIALOG_SPECIFIC0( "Add new pass slot" )
+                DIALOG_SPECIFIC0( "New pass slot" )
+                DIALOG_SPECIFIC1( "New shaders param slot" )
 
                 DIALOG_SHOW
             }
@@ -1696,6 +1662,28 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     }
 
+    else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
+
+        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+        if( "" == alias )
+        {
+            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+        DIALOG_EXPLORE_NODES_BEGIN( "", "pass %d", i, pass_slot )
+
+            DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "pass" ), pass_name )
+            DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "fx" ), fx_name )
+
+            _asm nop
+
+        DIALOG_EXPLORE_NODES_END
+    }
+
 
     /*
     DIALOG_GETGRID
@@ -1843,5 +1831,23 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
     {
         DIALOG_CLEARGRID
         DIALOG_SETSPECIFIC0COUNTER( 0 )
+    }
+
+    else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_SPECIFIC1_LABEL( "shader params %d", param_label )
+
+        DIALOG_APPENDROOT_NODE( param_label, param_root )
+        DIALOG_APPENDNODE_ENUM( param_root, "pass", get_intermediatepasses_list() )
+        DIALOG_APPENDNODE_INTEGER( param_root, "shader index", 0 )
+        DIALOG_APPENDNODE_STRING( param_root, "param id", "" )
+        DIALOG_APPENDNODE_INTEGER( param_root, "register", 0 )
+        DIALOG_APPENDNODE_NODE( param_root, "values", param_values )
+        DIALOG_APPENDNODE_FLOAT( param_values, "x", 0.0 )
+        DIALOG_APPENDNODE_FLOAT( param_values, "y", 0.0 )
+        DIALOG_APPENDNODE_FLOAT( param_values, "z", 0.0 )
+        DIALOG_APPENDNODE_FLOAT( param_values, "w", 0.0 )
+        DIALOG_FINALIZE
+
     }
 }
