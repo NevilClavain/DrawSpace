@@ -1805,12 +1805,34 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         }
 
         {
-            DIALOG_EXPLORE_NODES_BEGIN( "", "shader params %d", i, pass_slot )
+            DIALOG_EXPLORE_NODES_BEGIN( "", "shader params %d", i, sp_slot )
 
-                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "pass" ), pass_name )
+                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "pass" ), pass_name )
                 DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
 
-                _asm nop
+                DIALOG_GET_INT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "shader index" ), shader_index )
+                DIALOG_GET_STRING_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "param id" ), param_id )
+                DIALOG_GET_INT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "register" ), shader_register )
+
+                DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.x" ), val_x )
+                DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.y" ), val_y )
+                DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.z" ), val_z )
+                DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.w" ), val_w )
+
+                if( descr.passes_slots.count( pass_name2 ) > 0 )
+                {
+                    PassShaderParam psp;
+
+                    psp.id = param_id;
+                    psp.shader_index = shader_index;
+                    psp.shader_register = shader_register;
+                    psp.value[0] = val_x;
+                    psp.value[0] = val_y;
+                    psp.value[0] = val_z;
+                    psp.value[0] = val_w;
+
+                    descr.passes_slots[pass_name2].shader_params.push_back( psp );
+                }
 
 
             DIALOG_EXPLORE_NODES_END( i )

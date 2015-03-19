@@ -85,7 +85,7 @@ Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, 
             spacebox->GetNodeFromPass( current_pass, i )->SetFx( fx );
             spacebox->GetNodeFromPass( current_pass, i )->SetOrderNumber( it->second.rendering_order );
 
-            for( long j = 0; j < it->second.shader_params.size(); j++ )
+            for( size_t j = 0; j < it->second.shader_params.size(); j++ )
             {
                 spacebox->GetNodeFromPass( current_pass, i )->AddShaderParameter( it->second.shader_params[j].shader_index, it->second.shader_params[j].id, it->second.shader_params[j].shader_register );
                 spacebox->GetNodeFromPass( current_pass, i )->SetShaderRealVector( it->second.shader_params[j].id, it->second.shader_params[j].value );
