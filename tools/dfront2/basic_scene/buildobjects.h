@@ -23,4 +23,4 @@
 #include "drawspace.h"
 #include "BasicSceneMainFrame.h"
 
-DrawSpace::Spacebox* BuildSpaceBox( const BasicSceneMainFrame::Descriptor& p_descriptor, dsstring& p_error );
+DrawSpace::Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, dsstring& p_error );

@@ -25,7 +25,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-Spacebox* BuildSpaceBox( const BasicSceneMainFrame::Descriptor& p_descriptor, dsstring& p_error )
+Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, dsstring& p_error )
 {
     Spacebox* spacebox = new Spacebox();
     spacebox->SetSceneName( p_descriptor.scene_name );
@@ -84,6 +84,13 @@ Spacebox* BuildSpaceBox( const BasicSceneMainFrame::Descriptor& p_descriptor, ds
 
             spacebox->GetNodeFromPass( current_pass, i )->SetFx( fx );
             spacebox->GetNodeFromPass( current_pass, i )->SetOrderNumber( it->second.rendering_order );
+
+            for( long j = 0; j < it->second.shader_params.size(); j++ )
+            {
+                spacebox->GetNodeFromPass( current_pass, i )->AddShaderParameter( it->second.shader_params[j].shader_index, it->second.shader_params[j].id, it->second.shader_params[j].shader_register );
+                spacebox->GetNodeFromPass( current_pass, i )->SetShaderRealVector( it->second.shader_params[j].id, it->second.shader_params[j].value );
+            }
+
         }
     }
 

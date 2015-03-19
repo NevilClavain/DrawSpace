@@ -241,7 +241,7 @@
         { \
             dsstring _curr_label_; \
             char comment[128]; \
-            sprintf( comment, _format_, _counter_++ ); \
+            sprintf( comment, _format_, _counter_ ); \
             dsstring final; \
             if( _root_ != "" ) \
             { \
@@ -258,7 +258,8 @@
             _curr_label_ = final; \
   
 
-#define DIALOG_EXPLORE_NODES_END \
+#define DIALOG_EXPLORE_NODES_END( _counter_ ) \
+            _counter_++;\
         } \
 
 #define DIALOG_INCREMENT_STRING( _src_, _delta_ ) \
@@ -309,7 +310,7 @@ public:
         dsstring                            scene_name;
         std::map<dsstring, PassDescriptor>  passes_slots;
 
-    } Descriptor;    
+    } SBDescriptor;    
 
     
     typedef struct

@@ -1642,7 +1642,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             new_chain.push_back( mat );      
 
 
-        DIALOG_EXPLORE_NODES_END
+        DIALOG_EXPLORE_NODES_END( i )
 
         if( ok )
         {
@@ -1667,6 +1667,9 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
     {
+        BasicSceneMainFrame::SBDescriptor descr;
+        BasicSceneMainFrame::PassDescriptor pass_descr;
+
         DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
 
         DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
@@ -1677,14 +1680,142 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             return;
         }
 
-        DIALOG_EXPLORE_NODES_BEGIN( "", "pass %d", i, pass_slot )
+        descr.scene_name = alias;
 
-            DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "pass" ), pass_name )
-            DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "fx" ), fx_name )
+        {
 
-            _asm nop
+            DIALOG_EXPLORE_NODES_BEGIN( "", "pass %d", i, pass_slot )
 
-        DIALOG_EXPLORE_NODES_END
+                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "pass" ), pass_name )
+                DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
+
+                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "fx" ), fx_name )
+                DIALOG_GET_INT_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "rendering order" ), rendering_order )
+
+                dsstring texture_root_name;
+
+                {
+                    texture_root_name = DIALOG_INCREMENT_STRING( pass_slot, "textures.front" );
+                    DIALOG_EXPLORE_NODES_BEGIN( texture_root_name, "stage %d", j, texture_stage )
+                        DIALOG_GET_ENUM_PROPERTY( texture_stage, texture_name )
+                        DIALOG_WXSTRING_TO_DSSTRING( texture_name, texture_name2 )
+
+                        if( texture_name2 != "..." )
+                        {
+                            pass_descr.textures[Spacebox::FrontQuad][j] = texture_name2;
+                        }
+                        else
+                        {
+                            pass_descr.textures[Spacebox::FrontQuad][j] = "";
+                        }
+                    DIALOG_EXPLORE_NODES_END( j )
+                }
+
+                {
+                    texture_root_name = DIALOG_INCREMENT_STRING( pass_slot, "textures.rear" );
+                    DIALOG_EXPLORE_NODES_BEGIN( texture_root_name, "stage %d", j, texture_stage )
+                        DIALOG_GET_ENUM_PROPERTY( texture_stage, texture_name )
+                        DIALOG_WXSTRING_TO_DSSTRING( texture_name, texture_name2 )
+
+                        if( texture_name2 != "..." )
+                        {
+                            pass_descr.textures[Spacebox::RearQuad][j] = texture_name2;
+                        }
+                        else
+                        {
+                            pass_descr.textures[Spacebox::RearQuad][j] = "";
+                        }
+                    DIALOG_EXPLORE_NODES_END( j )
+                }
+
+                {
+                    texture_root_name = DIALOG_INCREMENT_STRING( pass_slot, "textures.left" );
+                    DIALOG_EXPLORE_NODES_BEGIN( texture_root_name, "stage %d", j, texture_stage )
+                        DIALOG_GET_ENUM_PROPERTY( texture_stage, texture_name )
+                        DIALOG_WXSTRING_TO_DSSTRING( texture_name, texture_name2 )
+
+                        if( texture_name2 != "..." )
+                        {
+                            pass_descr.textures[Spacebox::LeftQuad][j] = texture_name2;
+                        }
+                        else
+                        {
+                            pass_descr.textures[Spacebox::LeftQuad][j] = "";
+                        }
+                    DIALOG_EXPLORE_NODES_END( j )
+                }
+
+                {
+                    texture_root_name = DIALOG_INCREMENT_STRING( pass_slot, "textures.right" );
+                    DIALOG_EXPLORE_NODES_BEGIN( texture_root_name, "stage %d", j, texture_stage )
+                        DIALOG_GET_ENUM_PROPERTY( texture_stage, texture_name )
+                        DIALOG_WXSTRING_TO_DSSTRING( texture_name, texture_name2 )
+
+                        if( texture_name2 != "..." )
+                        {
+                            pass_descr.textures[Spacebox::RightQuad][j] = texture_name2;
+                        }
+                        else
+                        {
+                            pass_descr.textures[Spacebox::RightQuad][j] = "";
+                        }
+                    DIALOG_EXPLORE_NODES_END( j )
+                }
+
+                {
+                    texture_root_name = DIALOG_INCREMENT_STRING( pass_slot, "textures.top" );
+                    DIALOG_EXPLORE_NODES_BEGIN( texture_root_name, "stage %d", j, texture_stage )
+                        DIALOG_GET_ENUM_PROPERTY( texture_stage, texture_name )
+                        DIALOG_WXSTRING_TO_DSSTRING( texture_name, texture_name2 )
+
+                        if( texture_name2 != "..." )
+                        {
+                            pass_descr.textures[Spacebox::TopQuad][j] = texture_name2;
+                        }
+                        else
+                        {
+                            pass_descr.textures[Spacebox::TopQuad][j] = "";
+                        }
+                    DIALOG_EXPLORE_NODES_END( j )
+                }
+
+                {
+                    texture_root_name = DIALOG_INCREMENT_STRING( pass_slot, "textures.bottom" );
+                    DIALOG_EXPLORE_NODES_BEGIN( texture_root_name, "stage %d", j, texture_stage )
+                        DIALOG_GET_ENUM_PROPERTY( texture_stage, texture_name )
+                        DIALOG_WXSTRING_TO_DSSTRING( texture_name, texture_name2 )
+
+                        if( texture_name2 != "..." )
+                        {
+                            pass_descr.textures[Spacebox::BottomQuad][j] = texture_name2;
+                        }
+                        else
+                        {
+                            pass_descr.textures[Spacebox::BottomQuad][j] = "";
+                        }
+                    DIALOG_EXPLORE_NODES_END( j )
+                }
+
+                pass_descr.fx_name = fx_name;
+                pass_descr.rendering_order = rendering_order;          
+                descr.passes_slots[pass_name2] = pass_descr;
+
+            DIALOG_EXPLORE_NODES_END( i )
+
+        }
+
+        {
+            DIALOG_EXPLORE_NODES_BEGIN( "", "shader params %d", i, pass_slot )
+
+                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "pass" ), pass_name )
+                DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
+
+                _asm nop
+
+
+            DIALOG_EXPLORE_NODES_END( i )
+
+        }
     }
 
 
@@ -1763,13 +1894,13 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
         DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", right_textures_stages_labels )
         DIALOG_APPENDNODE_ITERATE( right_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, right_textures_stages_labels )
 
-        DIALOG_APPENDNODE_NODE( textures_label, "bottom", bottom_label )
-        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", bottom_textures_stages_labels )
-        DIALOG_APPENDNODE_ITERATE( bottom_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, bottom_textures_stages_labels )
-
         DIALOG_APPENDNODE_NODE( textures_label, "top", top_label )
         DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", top_textures_stages_labels )
         DIALOG_APPENDNODE_ITERATE( top_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, top_textures_stages_labels )
+
+        DIALOG_APPENDNODE_NODE( textures_label, "bottom", bottom_label )
+        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", bottom_textures_stages_labels )
+        DIALOG_APPENDNODE_ITERATE( bottom_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, bottom_textures_stages_labels )
 
 
         DIALOG_FINALIZE
