@@ -32,6 +32,12 @@ Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, 
 
     std::map<dsstring, BasicSceneMainFrame::PassDescriptor> passes = p_descriptor.passes_slots;
 
+    if( 0 == passes.size() )
+    {
+        p_error = "at least one pass required";
+        return NULL;
+    }
+
     for( std::map<dsstring, BasicSceneMainFrame::PassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
     {
         Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
@@ -41,6 +47,7 @@ Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, 
             return NULL;
         }
 
+        spacebox->RegisterPassSlot( current_pass );
 
         if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( it->second.fx_name ) )
         {
@@ -55,7 +62,7 @@ Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, 
             p_error = "BuildSpaceBox : specified config is not an Fx (" + it->second.fx_name + dsstring( ")" );
             return NULL;
         }
-
+       
         for( long i = 0; i < 6; i++ )
         {
             for( long j = 0; j < RenderingNode::NbMaxTextures; j++ )
@@ -74,9 +81,7 @@ Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, 
                         p_error = "BuildSpaceBox : specified asset is not a Texture (" + it->second.textures[i][j] + dsstring( ")" );
                         return NULL;
                     }
-
-                    
-                   
+                                       
                     spacebox->GetNodeFromPass( current_pass, i )->SetTexture( texture, j );
 
                 }

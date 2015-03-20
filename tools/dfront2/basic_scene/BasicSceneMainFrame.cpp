@@ -558,10 +558,10 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         
         // record the new transformation node and associated metadata
 
-        BasicSceneMainFrame::TransformationNodeEntry t_entry;
+        BasicSceneMainFrame::SceneNodeEntry<Transformation> t_entry;
 
         t_entry.name = scene_name;
-        t_entry.transformation = transfo_node;
+        t_entry.scene_node = transfo_node;
         t_entry.treeitemid = treeitemid;
 
         /*
@@ -603,6 +603,8 @@ void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
 {
     
 }
+
+
 
 void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 {
@@ -1191,7 +1193,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_SPECIFIC1( "Clear all" )
 
                     std::vector<Matrix> mat_chain;
-                    m_transformation_nodes[id].transformation->GetContent()->GetMatrixChain( mat_chain );
+                    m_transformation_nodes[id].scene_node->GetContent()->GetMatrixChain( mat_chain );
 
 
                     DIALOG_BUILD_LABELS( mat_chain.size(), "matrix %d", matrix_labels )
@@ -1461,6 +1463,28 @@ wxArrayString BasicSceneMainFrame::insert_void_choice( const wxArrayString& p_ar
     return completed_array;
 }
 
+void* BasicSceneMainFrame::find_scenenodegraph_id( void )
+{
+    // now we must found the scenenodegraph we belong to make the RegisterNode() call
+    wxTreeItemId current = m_last_clicked_treeitem;
+
+    void* id;
+
+    while( 1 )
+    {
+        id = current.GetID();
+
+        if( m_scenenodegraphs.count( id ) > 0 )
+        {
+            break;
+        }
+
+        current = m_scenegraphs_treeCtrl->GetItemParent( current );
+    }
+
+    return id;
+}
+
 void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     DIALOG_GETGRID
@@ -1517,22 +1541,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         /////////////////////////////////////////////////////////////////////////////////
 
         // now we must found the scenenodegraph we belong to make the RegisterNode() call
-
-        wxTreeItemId current = m_last_clicked_treeitem;
-
-        void* id;
-
-        while( 1 )
-        {
-            id = current.GetID();
-
-            if( m_scenenodegraphs.count( id ) > 0 )
-            {
-                break;
-            }
-
-            current = m_scenegraphs_treeCtrl->GetItemParent( current );
-        }
+        void* id = find_scenenodegraph_id();
 
         BasicSceneMainFrame::SceneNodeGraphEntry entry;
 
@@ -1543,6 +1552,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         // link to the scenegraph hierarchy
 
+        wxTreeItemId current;
         current = m_last_clicked_treeitem;
         id = current.GetID();
 
@@ -1569,18 +1579,16 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         // record the new transformation node and associated metadata
 
-        BasicSceneMainFrame::TransformationNodeEntry t_entry;
+        BasicSceneMainFrame::SceneNodeEntry<Transformation> t_entry;
 
         t_entry.name = alias;
-        t_entry.transformation = transfo_node;
+        t_entry.scene_node = transfo_node;
         t_entry.treeitemid = treeitemid;
 
 
         m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
 
         m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
-
-
 
         DIALOG_CLOSE
     }
@@ -1646,7 +1654,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         if( ok )
         {
-            Transformation* tdet = m_transformation_nodes[m_last_clicked_treeitem.GetID()].transformation->GetContent();
+            Transformation* tdet = m_transformation_nodes[m_last_clicked_treeitem.GetID()].scene_node->GetContent();
             //(*tdet) = new_chain;
 
             tdet->ClearAll();
@@ -1827,9 +1835,9 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
                     psp.shader_index = shader_index;
                     psp.shader_register = shader_register;
                     psp.value[0] = val_x;
-                    psp.value[0] = val_y;
-                    psp.value[0] = val_z;
-                    psp.value[0] = val_w;
+                    psp.value[1] = val_y;
+                    psp.value[2] = val_z;
+                    psp.value[3] = val_w;
 
                     descr.passes_slots[pass_name2].shader_params.push_back( psp );
                 }
@@ -1838,6 +1846,73 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             DIALOG_EXPLORE_NODES_END( i )
 
         }
+
+        dsstring sb_error;
+        Spacebox* sb = BuildSpaceBox( descr, sb_error );
+
+        if( sb )
+        {
+            SceneNode<Spacebox>* sb_node = new SceneNode<Spacebox>( alias );
+            sb_node->SetContent( sb );
+            
+            // now we must found the scenenodegraph we belong to make the RegisterNode() call
+            void* id = find_scenenodegraph_id();
+
+            BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+            entry = m_scenenodegraphs[id];
+            entry.scenenodegraph->RegisterNode( sb_node );
+
+            // link to the scenegraph hierarchy
+
+            wxTreeItemId current;
+            current = m_last_clicked_treeitem;
+            id = current.GetID();
+
+            if( m_scenenodegraphs.count( id ) > 0 )
+            {
+                // parent is a scenegraph : use SceneNodeGraph::Add() method
+                entry.scenenodegraph->AddNode( sb_node );
+            }
+            else
+            {
+                BaseSceneNode* parent_node = m_tree_nodes[id];
+                sb_node->LinkTo( parent_node );
+            }
+
+            // GUI : add item in the tree
+
+            wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, SPACEBOX_ICON_INDEX );
+            m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+
+            // record the new spacebox node and associated metadata
+
+            BasicSceneMainFrame::SceneNodeEntry<Spacebox> t_entry;
+
+            t_entry.name = alias;
+            t_entry.scene_node = sb_node;
+            t_entry.treeitemid = treeitemid;
+
+
+            m_spacebox_nodes[t_entry.treeitemid.GetID()] = t_entry;
+
+            m_tree_nodes[t_entry.treeitemid.GetID()] = sb_node;
+
+            // update passes output queues
+            for( std::map<dsstring, PassDescriptor>::iterator it = descr.passes_slots.begin(); it != descr.passes_slots.end(); ++it )
+            {
+                Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
+
+                current_pass->GetRenderingQueue()->UpdateOutputQueue();
+            }
+            
+            DIALOG_CLOSE
+        }
+        else
+        {
+            wxMessageBox( wxString( "spacebox creation failure : " ) + wxString( sb_error.c_str() ) , "DrawFront error", wxICON_ERROR );
+        }
+
     }
 
 

@@ -322,6 +322,7 @@ public:
     } SceneNodeGraphEntry;
 
 
+    /*
     typedef struct
     {
 
@@ -330,6 +331,16 @@ public:
         wxTreeItemId                                                    treeitemid;
 
     } TransformationNodeEntry;
+    */
+
+    template <typename Base>
+    class SceneNodeEntry
+    {
+    public:
+        dsstring                                                        name;
+        DrawSpace::Core::SceneNode<Base>*                               scene_node;
+        wxTreeItemId                                                    treeitemid;
+    };
 
 
 
@@ -368,26 +379,31 @@ protected:
 
     void build_passes_infos_dialog( DrawSpace::Core::Configurable* p_config );
 
+    void* find_scenenodegraph_id( void );
+
+       
+
+    long                                                                                    m_w_width;
+    long                                                                                    m_w_height;
+
+    bool                                                                                    m_glready;
+    DrawSpace::Utils::TimeManager                                                           m_timer;
     
 
-    long                                                    m_w_width;
-    long                                                    m_w_height;
-
-    bool                                                    m_glready;
-    DrawSpace::Utils::TimeManager                           m_timer;
-    
-
-    DrawSpace::Scenegraph                                   m_scenegraph;
+    DrawSpace::Scenegraph                                                                   m_scenegraph;
     
 
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    std::map<void*, SceneNodeGraphEntry>                    m_scenenodegraphs;
+    std::map<void*, SceneNodeGraphEntry>                                                    m_scenenodegraphs;
 
-    std::map<void*, DrawSpace::Core::BaseSceneNode*>        m_tree_nodes;
+    std::map<void*, DrawSpace::Core::BaseSceneNode*>                                        m_tree_nodes;
 
-    std::map<void*, TransformationNodeEntry>                m_transformation_nodes;
+    //std::map<void*, TransformationNodeEntry>                m_transformation_nodes;
+
+    std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>                        m_transformation_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>                                    m_spacebox_nodes;
 
 
     
