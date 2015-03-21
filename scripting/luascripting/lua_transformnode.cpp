@@ -20,7 +20,7 @@
 *
 */
 
-#include "lua_transformnodebuilder.h"
+#include "lua_transformnode.h"
 #include "luacontext.h"
 #include "exceptions.h"
 
@@ -29,16 +29,16 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-const char LuaTransformationNodeBuilder::className[] = "TransformationNodeBuilder";
-const Luna2<LuaTransformationNodeBuilder>::RegType LuaTransformationNodeBuilder::methods[] =
+const char LuaTransformationNode::className[] = "TransformationNode";
+const Luna2<LuaTransformationNode>::RegType LuaTransformationNode::methods[] =
 {
-  { "LinkTo", &LuaTransformationNodeBuilder::Lua_LinkTo },
-  { "ClearMatrixStack", &LuaTransformationNodeBuilder::Lua_ClearMatrixStack },
-  { "AddMatrix", &LuaTransformationNodeBuilder::Lua_AddMatrix },
+  { "LinkTo", &LuaTransformationNode::Lua_LinkTo },
+  { "ClearMatrixStack", &LuaTransformationNode::Lua_ClearMatrixStack },
+  { "AddMatrix", &LuaTransformationNode::Lua_AddMatrix },
   { 0, 0 }
 };
 
-LuaTransformationNodeBuilder::LuaTransformationNodeBuilder( lua_State* p_L )
+LuaTransformationNode::LuaTransformationNode( lua_State* p_L )
 : m_transformation_node( "transformation_node" )
 {
 	int argc = lua_gettop( p_L );
@@ -54,11 +54,11 @@ LuaTransformationNodeBuilder::LuaTransformationNodeBuilder( lua_State* p_L )
     m_transformation_node.SetContent( &m_transformation );
 }
 
-LuaTransformationNodeBuilder::~LuaTransformationNodeBuilder( void ) 
+LuaTransformationNode::~LuaTransformationNode( void ) 
 {
 }
 
-int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
+int LuaTransformationNode::Lua_LinkTo( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -75,7 +75,7 @@ int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
     if( m_scriptcalls_handler )
     {
         PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "TransformationNodeBuilder:LinkTo" );
+        props.AddPropValue<dsstring>( "script_call_id", "TransformationNode:LinkTo" );
         props.AddPropValue<dsstring>( "scenegraph_name", scenegraph_name );        
         props.AddPropValue<dsstring>( "parent_name", parent_name );
         props.AddPropValue<dsstring>( "scene_name", scene_name );
@@ -87,13 +87,13 @@ int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
     return 0;
 }
 
-int LuaTransformationNodeBuilder::Lua_ClearMatrixStack( lua_State* p_L )
+int LuaTransformationNode::Lua_ClearMatrixStack( lua_State* p_L )
 {
     m_transformation.ClearAll();
     return 0;
 }
 
-int LuaTransformationNodeBuilder::Lua_AddMatrix( lua_State* p_L )
+int LuaTransformationNode::Lua_AddMatrix( lua_State* p_L )
 {
     LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 1 );
 

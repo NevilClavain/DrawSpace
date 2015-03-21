@@ -467,7 +467,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
         //RegisterMovement( name, movement_entry );
     }
-    else if( "TransformationNodeBuilder:LinkTo" == script_call_id )
+    else if( "TransformationNode:LinkTo" == script_call_id )
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
         dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );

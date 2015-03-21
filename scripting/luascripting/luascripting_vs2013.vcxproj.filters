@@ -3,19 +3,22 @@
   <ItemGroup>
     <ClCompile Include="lua_drawspace.cpp" />
     <ClCompile Include="lua_matrix.cpp" />
-    <ClCompile Include="lua_transformnodebuilder.cpp" />
     <ClCompile Include="lua_vector.cpp" />
     <ClCompile Include="luacontext.cpp" />
     <ClCompile Include="luascripting.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="lua_transformnode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lua_drawspace.h" />
     <ClInclude Include="lua_matrix.h" />
-    <ClInclude Include="lua_transformnodebuilder.h" />
     <ClInclude Include="lua_vector.h" />
     <ClInclude Include="luacontext.h" />
     <ClInclude Include="luascripting.h" />
     <ClInclude Include="..\scripting.h" />
+    <ClInclude Include="lua_transformnode.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
