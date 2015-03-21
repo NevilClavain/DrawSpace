@@ -8,6 +8,7 @@
     <ClCompile Include="luascripting.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="lua_transformnode.cpp" />
+    <ClCompile Include="lua_spacebox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lua_drawspace.h" />
@@ -17,6 +18,7 @@
     <ClInclude Include="luascripting.h" />
     <ClInclude Include="..\scripting.h" />
     <ClInclude Include="lua_transformnode.h" />
+    <ClInclude Include="lua_spacebox.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

@@ -44,7 +44,7 @@ LuaTransformationNode::LuaTransformationNode( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
 	{
-		lua_pushstring( p_L, "TransformationNodeBuilder ctor : bad number of args" );
+		lua_pushstring( p_L, "LuaTransformationNode ctor : bad number of args" );
 		lua_error( p_L );		
 	}
     const char* scene_name = luaL_checkstring( p_L, 1 );

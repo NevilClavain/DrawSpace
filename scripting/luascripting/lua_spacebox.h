@@ -20,16 +20,18 @@
 *
 */
 
-#ifndef _LUA_SPACEBOXBUILDER_H_
-#define _LUA_SPACEBOXBUILDER_H_
+#ifndef _LUA_SPACEBOX_H_
+#define _LUA_SPACEBOX_H_
+
 
 #include "drawspace_commons.h"
 #include "callback.h"
 #include "mediator.h"
 #include "spacebox.h"
+
 #include "luna.h"
 
-class LuaSpaceboxBuilder
+class LuaSpacebox
 {
 public:
 
@@ -37,26 +39,50 @@ public:
 
 protected:
 
-    DrawSpace::Spacebox::Descriptor m_descriptor;
 
+    typedef struct
+    {
+        dsstring                    id;
+        long                        shader_index;
+        long                        shader_register;
+        DrawSpace::Utils::Vector    value;
 
+    } PassShaderParam;
+
+    typedef struct 
+    {
+        dsstring                        fx_name;
+        long                            rendering_order;
+        dsstring                        textures[6][DrawSpace::Core::RenderingNode::NbMaxTextures];
+        std::vector<PassShaderParam>    shader_params;
+
+    } PassDescriptor;
+
+    typedef struct
+    {
+        dsstring                            scene_name;
+        std::map<dsstring, PassDescriptor>  passes_slots;
+
+    } SBDescriptor;
+
+    SBDescriptor                                                m_descriptor;
+    
+    DrawSpace::Core::SceneNode<DrawSpace::Spacebox>             m_spacebox_node;
 
 public:
-    LuaSpaceboxBuilder( lua_State* p_L );
-    ~LuaSpaceboxBuilder( void );
+    LuaSpacebox( lua_State* p_L );
+    ~LuaSpacebox( void );
      
-    int Lua_SetSceneName( lua_State* p_L );
     int Lua_RegisterPassSlot( lua_State* p_L );
     int Lua_SetPassSlotFxName( lua_State* p_L );
     int Lua_SetPassSlotRenderingOrder( lua_State* p_L );
     int Lua_SetPassSlotTextureName( lua_State* p_L );
-    int Lua_BuildIt( lua_State* p_L );
-    int Lua_ClearMatrixStack( lua_State* p_L );
-    int Lua_AddMatrix( lua_State* p_L );
+    int Lua_AddPassSlotShaderParam( lua_State* p_L );
+    int Lua_LinkTo( lua_State* p_L );
 
     
     static const char className[];
-    static const Luna2<LuaSpaceboxBuilder>::RegType methods[];
+    static const Luna2<LuaSpacebox>::RegType methods[];
 };
 
 #endif

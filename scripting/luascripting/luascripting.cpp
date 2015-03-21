@@ -22,7 +22,7 @@
 
 #include "luascripting.h"
 #include "lua_drawspace.h"
-//#include "lua_spaceboxbuilder.h"
+#include "lua_spacebox.h"
 #include "lua_transformnode.h"
 //#include "lua_movementbuilder.h"
 #include "lua_matrix.h"
@@ -37,7 +37,7 @@ bool LuaScripting::Initialize( void )
 {
     LuaContext::GetInstance()->Startup();
     Luna2<LuaDrawSpace>::Register( LuaContext::GetInstance()->GetLuaState() );
-    //Luna2<LuaSpaceboxBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaSpacebox>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaTransformationNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     //Luna2<LuaMovementBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaMatrix>::Register( LuaContext::GetInstance()->GetLuaState() );
