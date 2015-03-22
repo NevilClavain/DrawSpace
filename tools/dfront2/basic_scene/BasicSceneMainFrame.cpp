@@ -215,6 +215,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
         BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
 
+       
         wxTreeItemId parent_tree_item;
         void* parent_id = NULL;
 
@@ -277,6 +278,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         }
 
         SceneNode<Transformation>* transfo_node = static_cast<SceneNode<Transformation>*>( node );
+        
+        transfo_node->SetContent( new Transformation );
 
 
         scenenodegraph_entry.scenenodegraph->RegisterNode( node );
