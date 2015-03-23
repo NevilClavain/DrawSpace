@@ -318,6 +318,81 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
         m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
     }
+
+    else if( "SpaceboxNode:LinkTo" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
+        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
+        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
+
+        wxTreeItemId parent_tree_item;
+        void* parent_id = NULL;
+
+
+        // search for scenenodegraph
+
+        bool scene_found = false;
+        SceneNodeGraphEntry scenenodegraph_entry;
+
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            if( it->second.name == scenegraph_name )
+            {
+                scenenodegraph_entry = it->second;
+                scene_found = true;                
+                break;
+            }
+        }
+
+        bool parent_found = false;
+        BaseSceneNode* parent = NULL;
+
+        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
+        {
+            dsstring node_scenename;
+            it->second->GetSceneName( node_scenename );
+
+            if( node_scenename == parent_name )
+            {
+                parent_found = true;
+                parent = it->second;
+                parent_id = it->first;
+                break;
+            }
+        }
+
+        if( !parent_found )
+        {
+            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+            {
+                if( it->second.name == parent_name )
+                {
+                    parent_found = true;
+                    parent_id = it->first;
+                    break;
+                }
+            }
+        }
+
+        if( !scene_found )
+        {
+            wxMessageBox( "Spacebox node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
+            return;           
+        }
+
+        else if( !parent_found )
+        {
+            wxMessageBox( "Spacebox node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
+            return;
+        }
+
+        SceneNode<Spacebox>* sb_node = static_cast<SceneNode<Spacebox>*>( node );
+        
+        sb_node->SetContent( new Spacebox );
+
+
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
