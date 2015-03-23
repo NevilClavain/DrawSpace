@@ -78,7 +78,7 @@ int LuaSpacebox::Lua_LinkTo( lua_State* p_L )
     if( m_scriptcalls_handler )
     {
         PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "TransformationNode:LinkTo" );
+        props.AddPropValue<dsstring>( "script_call_id", "SpaceboxNode:LinkTo" );
         props.AddPropValue<dsstring>( "scenegraph_name", scenegraph_name );        
         props.AddPropValue<dsstring>( "parent_name", parent_name );
         props.AddPropValue<dsstring>( "scene_name", scene_name );

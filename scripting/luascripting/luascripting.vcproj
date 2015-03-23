@@ -200,11 +200,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\lua_transformnodebuilder.cpp"
+				RelativePath=".\lua_spacebox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\lua_transformnodebuilder.h"
+				RelativePath=".\lua_spacebox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_transformnode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_transformnode.h"
 				>
 			</File>
 			<File
