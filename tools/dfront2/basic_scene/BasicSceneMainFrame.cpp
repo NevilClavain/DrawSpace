@@ -308,12 +308,6 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         t_entry.scene_node = transfo_node;
         t_entry.treeitemid = treeitemid;
 
-        /*
-        BasicSceneMainFrame::TransformationMatrixDescriptor transfdescr;
-        transfdescr.ope = BasicSceneMainFrame::TRANSFORMATIONMATRIX_IDENTITY;
-
-        t_entry.matrix_stack_descr.push_back( transfdescr );
-        */
 
         m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
         m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
@@ -325,6 +319,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
         dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
         BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
+        DrawSpace::Utils::SpaceboxDescriptor sb_descr = p_propertypool.GetPropValue<DrawSpace::Utils::SpaceboxDescriptor>( "descriptor" );
 
         wxTreeItemId parent_tree_item;
         void* parent_id = NULL;
@@ -389,9 +384,55 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
         SceneNode<Spacebox>* sb_node = static_cast<SceneNode<Spacebox>*>( node );
         
-        sb_node->SetContent( new Spacebox );
+        //sb_node->SetContent( new Spacebox );
+        dsstring sb_error;
+        Spacebox* sb = BuildSpaceBox( sb_descr, sb_error );
+        if( NULL == sb )
+        {
+            wxMessageBox( "Spacebox node creation error : " + sb_error, "Script error", wxICON_ERROR );
+            return;
+        }
+        else
+        {
+            sb_node->SetContent( sb );
 
+            scenenodegraph_entry.scenenodegraph->RegisterNode( node );
 
+            if( parent )
+            {            
+                sb_node->LinkTo( parent );
+                parent_tree_item = m_transformation_nodes[parent_id].treeitemid;
+            }
+            else
+            {
+                scenenodegraph_entry.scenenodegraph->AddNode( node );
+                parent_tree_item = scenenodegraph_entry.treeitemid;
+            }
+
+        
+            // GUI : add item in the tree
+            wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), SPACEBOX_ICON_INDEX );
+            m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
+        
+            // record the new transformation node and associated metadata
+
+            BasicSceneMainFrame::SceneNodeEntry<Spacebox> t_entry;
+
+            t_entry.name = scene_name;
+            t_entry.scene_node = sb_node;
+            t_entry.treeitemid = treeitemid;
+
+            m_spacebox_nodes[t_entry.treeitemid.GetID()] = t_entry;
+            m_tree_nodes[t_entry.treeitemid.GetID()] = sb_node;
+
+            // update passes output queues
+            for( std::map<dsstring, PassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
+            {
+                Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
+                current_pass->GetRenderingQueue()->UpdateOutputQueue();
+            }
+
+        }
     }
 }
 
@@ -1717,7 +1758,6 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             for( std::map<dsstring, PassDescriptor>::iterator it = descr.passes_slots.begin(); it != descr.passes_slots.end(); ++it )
             {
                 Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
-
                 current_pass->GetRenderingQueue()->UpdateOutputQueue();
             }
             

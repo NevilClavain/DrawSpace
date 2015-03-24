@@ -52,6 +52,7 @@ m_spacebox_node( "spacebox_node" )
 	}
     const char* scene_name = luaL_checkstring( p_L, 1 );
     m_spacebox_node.SetSceneName( scene_name );
+    m_descriptor.scene_name = scene_name;
 
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();    
 }
@@ -83,6 +84,7 @@ int LuaSpacebox::Lua_LinkTo( lua_State* p_L )
         props.AddPropValue<dsstring>( "parent_name", parent_name );
         props.AddPropValue<dsstring>( "scene_name", scene_name );
         props.AddPropValue<BaseSceneNode*>( "node", &m_spacebox_node );
+        props.AddPropValue<DrawSpace::Utils::SpaceboxDescriptor>( "descriptor", m_descriptor );
 
         (*m_scriptcalls_handler)( props );
     }
@@ -98,9 +100,9 @@ int LuaSpacebox::Lua_RegisterPassSlot( lua_State* p_L )
 		lua_pushstring( p_L, "RegisterPassSlot : bad number of args" );
 		lua_error( p_L );		
 	}
-    const char* pass_name = luaL_checkstring( p_L, 2 );
+    const char* pass_name = luaL_checkstring( p_L, 1 );
 
-    PassDescriptor pass_descriptor;
+    DrawSpace::Utils::PassDescriptor pass_descriptor;
     pass_descriptor.rendering_order = 200;
     m_descriptor.passes_slots[pass_name] = pass_descriptor;
 
@@ -188,7 +190,7 @@ int LuaSpacebox::Lua_AddPassSlotShaderParam( lua_State* p_L )
     long shader_register = luaL_checkinteger( p_L, 4 );
     LuaVector* value = Luna2<LuaVector>::check( p_L, 5 );
 
-    PassShaderParam psp;
+    DrawSpace::Utils::PassShaderParam psp;
 
     psp.id = id;
     psp.shader_index = shader_index;

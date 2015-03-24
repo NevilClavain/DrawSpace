@@ -28,6 +28,7 @@
 #include "callback.h"
 #include "mediator.h"
 #include "spacebox.h"
+#include "descriptors.h"
 
 #include "luna.h"
 
@@ -39,33 +40,8 @@ public:
 
 protected:
 
+    DrawSpace::Utils::SpaceboxDescriptor m_descriptor;
 
-    typedef struct
-    {
-        dsstring                    id;
-        long                        shader_index;
-        long                        shader_register;
-        DrawSpace::Utils::Vector    value;
-
-    } PassShaderParam;
-
-    typedef struct 
-    {
-        dsstring                        fx_name;
-        long                            rendering_order;
-        dsstring                        textures[6][DrawSpace::Core::RenderingNode::NbMaxTextures];
-        std::vector<PassShaderParam>    shader_params;
-
-    } PassDescriptor;
-
-    typedef struct
-    {
-        dsstring                            scene_name;
-        std::map<dsstring, PassDescriptor>  passes_slots;
-
-    } SBDescriptor;
-
-    SBDescriptor                                                m_descriptor;
     
     DrawSpace::Core::SceneNode<DrawSpace::Spacebox>             m_spacebox_node;
 
