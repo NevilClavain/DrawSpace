@@ -200,11 +200,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\lua_spacebox.cpp"
+				RelativePath=".\lua_spaceboxnode.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\lua_spacebox.h"
+				RelativePath=".\lua_spaceboxnode.h"
 				>
 			</File>
 			<File

@@ -20,7 +20,7 @@
 *
 */
 
-#include "lua_spacebox.h"
+#include "lua_spaceboxnode.h"
 #include "luacontext.h"
 #include "lua_vector.h"
 #include "exceptions.h"

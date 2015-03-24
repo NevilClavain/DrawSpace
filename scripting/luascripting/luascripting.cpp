@@ -22,7 +22,7 @@
 
 #include "luascripting.h"
 #include "lua_drawspace.h"
-#include "lua_spacebox.h"
+#include "lua_spaceboxnode.h"
 #include "lua_transformnode.h"
 //#include "lua_movementbuilder.h"
 #include "lua_matrix.h"
