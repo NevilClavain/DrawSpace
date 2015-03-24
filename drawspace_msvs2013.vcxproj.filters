@@ -476,5 +476,8 @@
     <ClInclude Include="src\tracedefs.h">
       <Filter>logging</Filter>
     </ClInclude>
+    <ClInclude Include="src\descriptors.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -278,6 +278,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         }
 
         SceneNode<Transformation>* transfo_node = static_cast<SceneNode<Transformation>*>( node );
+        Transformation* tf = new Transformation();
+        transfo_node->SetContent( tf );
                 
 
         scenenodegraph_entry.scenenodegraph->RegisterNode( node );

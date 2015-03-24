@@ -99,6 +99,7 @@
     <ClInclude Include="src\collider.h" />
     <ClInclude Include="src\configsbase.h" />
     <ClInclude Include="src\configurable.h" />
+    <ClInclude Include="src\descriptors.h" />
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\dsapp.h" />
