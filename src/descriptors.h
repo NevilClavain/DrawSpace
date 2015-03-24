@@ -20,7 +20,43 @@
 *
 */
 
-#include "drawspace.h"
-#include "BasicSceneMainFrame.h"
+#ifndef _DESCRIPTORS_H_
+#define _DESCRIPTORS_H_
 
-DrawSpace::Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descriptor, dsstring& p_error );
+#include "drawspace_commons.h"
+#include "vector.h"
+
+namespace DrawSpace
+{
+namespace Utils
+{
+
+typedef struct
+{
+    dsstring                    id;
+    long                        shader_index;
+    long                        shader_register;
+    DrawSpace::Utils::Vector    value;
+
+} PassShaderParam;
+
+typedef struct 
+{
+    dsstring                        fx_name;
+    long                            rendering_order;
+    dsstring                        textures[6][DrawSpace::Core::RenderingNode::NbMaxTextures];
+    std::vector<PassShaderParam>    shader_params;
+
+} PassDescriptor;
+
+typedef struct
+{
+    dsstring                            scene_name;
+    std::map<dsstring, PassDescriptor>  passes_slots;
+
+} SpaceboxDescriptor;
+
+}
+}
+
+#endif

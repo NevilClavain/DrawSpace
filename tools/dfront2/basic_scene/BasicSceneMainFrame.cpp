@@ -1494,8 +1494,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
     {
-        BasicSceneMainFrame::SBDescriptor descr;
-        BasicSceneMainFrame::PassDescriptor pass_descr;
+        DrawSpace::Utils::SpaceboxDescriptor descr;
+        DrawSpace::Utils::PassDescriptor pass_descr;
 
         DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
 

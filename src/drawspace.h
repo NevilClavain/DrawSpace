@@ -93,4 +93,5 @@
 #include "runner.h"
 #include "planetoid_body.h"
 #include "inits.h"
+#include "descriptors.h"
 #endif

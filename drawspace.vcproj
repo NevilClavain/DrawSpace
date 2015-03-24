@@ -420,6 +420,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\descriptors.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\exceptions.h"
 				>
 			</File>

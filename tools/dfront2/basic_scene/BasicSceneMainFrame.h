@@ -287,6 +287,7 @@ public:
 
     } PopupMenuEntry;
 
+    /*
     typedef struct
     {
         dsstring                    id;
@@ -310,7 +311,9 @@ public:
         dsstring                            scene_name;
         std::map<dsstring, PassDescriptor>  passes_slots;
 
-    } SBDescriptor;    
+    } SBDescriptor;
+    */
+
 
     
     typedef struct

@@ -25,12 +25,12 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, dsstring& p_error )
+Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descriptor, dsstring& p_error )
 {
     Spacebox* spacebox = new Spacebox();
     spacebox->SetSceneName( p_descriptor.scene_name );
 
-    std::map<dsstring, BasicSceneMainFrame::PassDescriptor> passes = p_descriptor.passes_slots;
+    std::map<dsstring, DrawSpace::Utils::PassDescriptor> passes = p_descriptor.passes_slots;
 
     if( 0 == passes.size() )
     {
@@ -38,7 +38,7 @@ Spacebox* BuildSpaceBox( const BasicSceneMainFrame::SBDescriptor& p_descriptor, 
         return NULL;
     }
 
-    for( std::map<dsstring, BasicSceneMainFrame::PassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
+    for( std::map<dsstring, DrawSpace::Utils::PassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
     {
         Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
         if( !current_pass )
