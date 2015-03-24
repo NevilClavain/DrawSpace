@@ -278,9 +278,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         }
 
         SceneNode<Transformation>* transfo_node = static_cast<SceneNode<Transformation>*>( node );
-        
-        transfo_node->SetContent( new Transformation );
-
+                
 
         scenenodegraph_entry.scenenodegraph->RegisterNode( node );
 
@@ -1480,16 +1478,12 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             for( size_t i = 0; i < new_chain.size(); i++ )
             {
                 tdet->PushMatrix( new_chain[i] );
-            }
-
-            p_dialog->Close();
+            }            
         }
         else
         {
             wxMessageBox( "Edited matrix chain has a undetermined matrix", "DrawFront error", wxICON_ERROR );
         }
-
-
     }
 
     else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )

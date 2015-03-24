@@ -51,7 +51,7 @@ LuaTransformationNode::LuaTransformationNode( lua_State* p_L )
     m_transformation_node.SetSceneName( scene_name );
     
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
-    //m_transformation_node.SetContent( &m_transformation );
+    m_transformation_node.SetContent( &m_transformation );
 }
 
 LuaTransformationNode::~LuaTransformationNode( void ) 
@@ -89,9 +89,8 @@ int LuaTransformationNode::Lua_LinkTo( lua_State* p_L )
 
 int LuaTransformationNode::Lua_ClearMatrixStack( lua_State* p_L )
 {
-    //m_transformation.ClearAll();
-
-    m_transformation_node.GetContent()->ClearAll();
+    m_transformation.ClearAll();
+    
     return 0;
 }
 
@@ -99,8 +98,7 @@ int LuaTransformationNode::Lua_AddMatrix( lua_State* p_L )
 {
     LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 1 );
 
-    //m_transformation.PushMatrix( mat->m_mat );
-    m_transformation_node.GetContent()->PushMatrix( mat->m_mat );
+    m_transformation.PushMatrix( mat->m_mat );    
     return 0;
 }
 

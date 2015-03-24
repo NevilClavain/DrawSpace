@@ -53,7 +53,7 @@ public:
     int Lua_Inverse( lua_State* p_L );
     int Lua_Transform( lua_State* p_L );
 
-    int Lua_SetMetaData( lua_State* p_L );
+    
 
     static const char className[];
     static const Luna2<LuaMatrix>::RegType methods[];

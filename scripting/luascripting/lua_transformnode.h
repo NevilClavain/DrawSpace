@@ -37,7 +37,7 @@ public:
 
 protected:
 
-    //DrawSpace::Core::Transformation                             m_transformation;
+    DrawSpace::Core::Transformation                             m_transformation;
     DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation> m_transformation_node;
 
 public:

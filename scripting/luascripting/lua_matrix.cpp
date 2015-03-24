@@ -39,8 +39,6 @@ const Luna2<LuaMatrix>::RegType LuaMatrix::methods[] =
     { "Rotation", &LuaMatrix::Lua_Rotation },
     { "Inverse", &LuaMatrix::Lua_Inverse },
     { "Transform", &LuaMatrix::Lua_Transform },
-    { "SetMetaData", &LuaMatrix::Lua_SetMetaData },
-
     { 0, 0 }
 };
 
@@ -223,21 +221,3 @@ int LuaMatrix::Lua_Transform( lua_State* p_L )
     return 0;
 }
 
-int LuaMatrix::Lua_SetMetaData( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 2 )
-	{
-		lua_pushstring( p_L, "SetMetaData : bad number of args" );
-		lua_error( p_L );
-    }
-
-    int index = luaL_checkinteger( p_L, 1 );
-    if( index > 3 ) index = 3;
-
-    const char* metadata = luaL_checkstring( p_L, 2 );
-
-    m_mat.SetMetaData( index, metadata );
-
-    return 0;
-}
