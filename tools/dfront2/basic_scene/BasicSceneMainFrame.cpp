@@ -73,6 +73,8 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
 
     PopupMenuEntry pme_separator = { CONTEXTMENU_SEPARATOR, "" };
     PopupMenuEntry pme_edittransformnode = { CONTEXTMENU_EDIT_TRANSFORMNODE, "Edit transformation..." };
+    PopupMenuEntry pme_editshaders = { CONTEXTMENU_EDIT_SHADERSPARAMS, "Edit shaders params..." };
+    PopupMenuEntry pme_showprops = { CONTEXTMENU_SHOW_PROPS, "Show properties..." };
 
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
@@ -145,6 +147,11 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edittransformnode );
+
+    ///////////////////////////////////////////////////////////////////
+
+    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editshaders );
 
 
     m_applybutton_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_applybutton_clicked );
@@ -1111,6 +1118,20 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 DIALOG_SHOW
             }
             break;
+
+        case CONTEXTMENU_EDIT_SHADERSPARAMS:
+            {
+                _asm nop
+            }
+            break;
+
+        case CONTEXTMENU_SHOW_PROPS:
+            {
+                _asm nop
+            }
+            break;
+
+
  	}
  }
 
@@ -1138,6 +1159,11 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
         {
             build_popupmenu( TRANSFO_MASK, mnu );
         }
+        else if( m_spacebox_nodes.count( item.GetID() ) > 0 )
+        {
+            build_popupmenu( SPACEBOX_MASK, mnu );
+        }
+
     }
 
  	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this );

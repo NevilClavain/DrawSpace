@@ -82,6 +82,8 @@
 #define CONTEXTMENU_NEWSPECTATORMVT         2026
 #define CONTEXTMENU_SEPARATOR               2080
 #define CONTEXTMENU_EDIT_TRANSFORMNODE      2081
+#define CONTEXTMENU_EDIT_SHADERSPARAMS      2082
+#define CONTEXTMENU_SHOW_PROPS              2083
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
