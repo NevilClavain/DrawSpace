@@ -55,11 +55,13 @@ bool DFrontApp::OnInit( void )
     DrawSpace::Initialize();
 
 
+    /*
     if( false == load_scripting_plugin( "luascripting" ) )
     {
         wxMessageBox( "Unable to load scripting plugin. Exiting now", "DrawFront error", wxICON_ERROR );
         return false;
     }
+    */
 
 
     m_mainframe = new BasicSceneMainFrame( NULL );
@@ -163,6 +165,7 @@ bool DFrontApp::load_renderer_plugin( const dsstring& p_file )
     return true;
 }
 
+/*
 bool DFrontApp::load_scripting_plugin( const dsstring& p_file )
 {
 	dsstring complete_path = p_file;
@@ -189,6 +192,7 @@ bool DFrontApp::load_scripting_plugin( const dsstring& p_file )
 
     return true;
 }
+*/
 
 bool DFrontApp::init_renderer( void )
 {

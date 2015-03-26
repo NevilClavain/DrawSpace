@@ -24,8 +24,8 @@
 #include "BasicSceneMainFrame.h"
 #include "drawspace.h"
 #include "adapters.h"
-//#include "BasicSceneObjectPropertiesDialog.h"
 #include "buildobjects.h"
+#include "luascripting.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -56,7 +56,10 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     m_timer.AddTimer( "timer", 100, m_timercb );
     m_timer.SetTimerState( "timer", true );
 
-    m_scripting = DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface;
+    //m_scripting = DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface;
+    m_scripting = new LuaScripting();
+
+
 
     m_scripting->Initialize();
 
@@ -475,7 +478,7 @@ void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
 
 void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 {
-    DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->Shutdown();
+    //DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->Shutdown();
     Destroy();
 }
 
