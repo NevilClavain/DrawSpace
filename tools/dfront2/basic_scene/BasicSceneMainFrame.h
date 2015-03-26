@@ -97,6 +97,7 @@
 #define DIALOG_TRANSFORM_CREATION_TITLE     "Transformation node creation"
 #define DIALOG_TRANSFORM_EDITION_TITLE      "Transformation node edition"
 #define DIALOG_SPACEBOX_CREATION_TITLE      "Spacebox node creation"
+#define DIALOG_SPACEBOX_PROPS               "Spacebox node properties"
 #define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
 
 
@@ -145,7 +146,7 @@
     } \
 
 #define DIALOG_APPENDNODE_ITERATE_NODE_BEGIN( _parent_, _counter_, _list_, _var_name_ ) \
-    for( size_t _counter_ = 0; i < _list_.size(); _counter_++ ) \
+    for( size_t _counter_ = 0; _counter_ < _list_.size(); _counter_++ ) \
     { \
         DIALOG_APPENDNODE_NODE( _parent_, _list_[_counter_], _var_name_ ) \
 
@@ -155,7 +156,7 @@
 
 
 #define DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( _counter_, _list_, _var_name_ ) \
-    for( size_t _counter_ = 0; i < _list_.size(); _counter_++ ) \
+    for( size_t _counter_ = 0; _counter_ < _list_.size(); _counter_++ ) \
     { \
         DIALOG_APPENDROOT_NODE( _list_[_counter_], _var_name_ ) \
 
@@ -288,35 +289,6 @@ public:
         dsstring    text;
 
     } PopupMenuEntry;
-
-    /*
-    typedef struct
-    {
-        dsstring                    id;
-        long                        shader_index;
-        long                        shader_register;
-        DrawSpace::Utils::Vector    value;
-
-    } PassShaderParam;
-
-    typedef struct 
-    {
-        dsstring                        fx_name;
-        long                            rendering_order;
-        dsstring                        textures[6][DrawSpace::Core::RenderingNode::NbMaxTextures];
-        std::vector<PassShaderParam>    shader_params;
-
-    } PassDescriptor;
-
-    typedef struct
-    {
-        dsstring                            scene_name;
-        std::map<dsstring, PassDescriptor>  passes_slots;
-
-    } SBDescriptor;
-    */
-
-
     
     typedef struct
     {
@@ -325,18 +297,6 @@ public:
         wxTreeItemId                        treeitemid;
 
     } SceneNodeGraphEntry;
-
-
-    /*
-    typedef struct
-    {
-
-        dsstring                                                        name;
-        DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*    transformation;
-        wxTreeItemId                                                    treeitemid;
-
-    } TransformationNodeEntry;
-    */
 
     template <typename Base>
     class SceneNodeEntry
@@ -410,7 +370,7 @@ protected:
     std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>                        m_transformation_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>                                    m_spacebox_nodes;
 
-
+    std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     
 
 

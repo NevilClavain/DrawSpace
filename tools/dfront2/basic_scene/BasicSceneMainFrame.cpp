@@ -442,6 +442,9 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 current_pass->GetRenderingQueue()->UpdateOutputQueue();
             }
 
+            // store spacebox description
+
+            m_spacebox_descriptors[t_entry.treeitemid.GetID()] = sb_descr;
         }
     }
 }
@@ -1124,13 +1127,104 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_EDIT_SHADERSPARAMS:
             {
-                _asm nop
+                void* id = m_last_clicked_treeitem.GetID();
             }
             break;
 
         case CONTEXTMENU_SHOW_PROPS:
-            {
-                _asm nop
+            {               
+                void* id = m_last_clicked_treeitem.GetID();
+                if( m_spacebox_descriptors.count( id ) > 0 )
+                {
+                    DrawSpace::Utils::SpaceboxDescriptor sb_descr = m_spacebox_descriptors[id];
+
+                    DIALOG_DECLARE( DIALOG_SPACEBOX_PROPS )
+
+                    DIALOG_APPENDROOT_STRING( "scene name", sb_descr.scene_name )
+
+                    for( std::map<dsstring, PassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
+                    {
+                        PassDescriptor pass_descr = it->second;                        
+                        //DIALOG_APPENDROOT_NODE( pass_labels[label_index], pass_root )
+
+                        DIALOG_APPENDROOT_NODE( it->first, pass_root )
+
+                        DIALOG_APPENDNODE_STRING( pass_root, "fx name", pass_descr.fx_name )
+                        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", pass_descr.rendering_order )
+
+                        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", texture_stages )
+
+
+                        {
+                            DIALOG_APPENDNODE_NODE( pass_root, "front textures", front_root )
+                            for( size_t i = 0; i < texture_stages.size(); i++ )
+                            {
+                                if( pass_descr.textures[Spacebox::FrontQuad][i] != "" )
+                                {
+                                    DIALOG_APPENDNODE_STRING( front_root, texture_stages[i], pass_descr.textures[Spacebox::FrontQuad][i] )
+                                }
+                            }
+                        }
+
+                        {
+                            DIALOG_APPENDNODE_NODE( pass_root, "rear textures", rear_root )
+                            for( size_t i = 0; i < texture_stages.size(); i++ )
+                            {
+                                if( pass_descr.textures[Spacebox::RearQuad][i] != "" )
+                                {
+                                    DIALOG_APPENDNODE_STRING( rear_root, texture_stages[i], pass_descr.textures[Spacebox::RearQuad][i] )
+                                }
+                            }
+                        }
+
+                        {
+                            DIALOG_APPENDNODE_NODE( pass_root, "left textures", left_root )
+                            for( size_t i = 0; i < texture_stages.size(); i++ )
+                            {
+                                if( pass_descr.textures[Spacebox::LeftQuad][i] != "" )
+                                {
+                                    DIALOG_APPENDNODE_STRING( left_root, texture_stages[i], pass_descr.textures[Spacebox::LeftQuad][i] )
+                                }
+                            }
+                        }
+
+                        {
+                            DIALOG_APPENDNODE_NODE( pass_root, "right textures", right_root )
+                            for( size_t i = 0; i < texture_stages.size(); i++ )
+                            {
+                                if( pass_descr.textures[Spacebox::RightQuad][i] != "" )
+                                {
+                                    DIALOG_APPENDNODE_STRING( right_root, texture_stages[i], pass_descr.textures[Spacebox::RightQuad][i] )
+                                }
+                            }
+                        }
+
+                        {
+                            DIALOG_APPENDNODE_NODE( pass_root, "top textures", top_root )
+                            for( size_t i = 0; i < texture_stages.size(); i++ )
+                            {
+                                if( pass_descr.textures[Spacebox::TopQuad][i] != "" )
+                                {
+                                    DIALOG_APPENDNODE_STRING( top_root, texture_stages[i], pass_descr.textures[Spacebox::TopQuad][i] )
+                                }
+                            }
+                        }
+
+                        {
+                            DIALOG_APPENDNODE_NODE( pass_root, "bottom textures", bottom_root )
+                            for( size_t i = 0; i < texture_stages.size(); i++ )
+                            {
+                                if( pass_descr.textures[Spacebox::BottomQuad][i] != "" )
+                                {
+                                    DIALOG_APPENDNODE_STRING( bottom_root, texture_stages[i], pass_descr.textures[Spacebox::BottomQuad][i] )
+                                }
+                            }
+                        }
+
+                    }
+
+                    DIALOG_SHOW
+                }
             }
             break;
 
@@ -1789,6 +1883,10 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
                 Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
                 current_pass->GetRenderingQueue()->UpdateOutputQueue();
             }
+
+            // store spacebox description
+
+            m_spacebox_descriptors[t_entry.treeitemid.GetID()] = descr;
             
             DIALOG_CLOSE
         }
