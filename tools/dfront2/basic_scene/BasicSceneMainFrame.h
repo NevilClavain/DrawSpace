@@ -97,7 +97,8 @@
 #define DIALOG_TRANSFORM_CREATION_TITLE     "Transformation node creation"
 #define DIALOG_TRANSFORM_EDITION_TITLE      "Transformation node edition"
 #define DIALOG_SPACEBOX_CREATION_TITLE      "Spacebox node creation"
-#define DIALOG_SPACEBOX_PROPS               "Spacebox node properties"
+#define DIALOG_SPACEBOX_PROPS_TITLE         "Spacebox node properties"
+#define DIALOG_SPACEBOX_EDITION_TITLE       "Spacebox node properties"
 #define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
 
 
