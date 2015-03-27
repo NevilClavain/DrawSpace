@@ -1221,8 +1221,24 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                             }
                         }
 
-                    }
 
+                        for( size_t i = 0; i < pass_descr.shader_params.size(); i++ )
+                        {
+                            DIALOG_APPENDNODE_NODE( pass_root, pass_descr.shader_params[i].id, shader_param_root )
+
+                            DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader index", pass_descr.shader_params[i].shader_index )
+                            DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader register", pass_descr.shader_params[i].shader_register )
+
+                            DIALOG_APPENDNODE_NODE( shader_param_root, "values", shader_param_values_root )
+
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )
+
+                        }
+                    }
+                 
                     DIALOG_SHOW
                 }
             }

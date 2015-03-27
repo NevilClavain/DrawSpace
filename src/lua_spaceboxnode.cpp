@@ -178,7 +178,7 @@ int LuaSpacebox::Lua_SetPassSlotTextureName( lua_State* p_L )
 int LuaSpacebox::Lua_AddPassSlotShaderParam( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc != 4 )
+	if( argc != 5 )
 	{
 		lua_pushstring( p_L, "AddPassSlotShaderParam : bad number of args" );
 		lua_error( p_L );		
