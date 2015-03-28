@@ -40,9 +40,7 @@ public:
 
 protected:
 
-    DrawSpace::Utils::SpaceboxDescriptor m_descriptor;
-
-    
+    DrawSpace::Utils::SpaceboxDescriptor                        m_descriptor;    
     DrawSpace::Core::SceneNode<DrawSpace::Spacebox>             m_spacebox_node;
 
 public:
@@ -54,6 +52,7 @@ public:
     int Lua_SetPassSlotRenderingOrder( lua_State* p_L );
     int Lua_SetPassSlotTextureName( lua_State* p_L );
     int Lua_AddPassSlotShaderParam( lua_State* p_L );
+    int Lua_UpdateShaderParam( lua_State* p_L );
     int Lua_LinkTo( lua_State* p_L );
 
     

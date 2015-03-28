@@ -36,6 +36,7 @@ const Luna2<LuaSpacebox>::RegType LuaSpacebox::methods[] =
   { "SetPassSlotRenderingOrder", &LuaSpacebox::Lua_SetPassSlotRenderingOrder },
   { "SetPassSlotTextureName", &LuaSpacebox::Lua_SetPassSlotTextureName },
   { "AddPassSlotShaderParam", &LuaSpacebox::Lua_AddPassSlotShaderParam },
+  { "UpdateShaderParam", &LuaSpacebox::Lua_UpdateShaderParam },
   { "LinkTo", &LuaSpacebox::Lua_LinkTo },
   { 0 }
 };
@@ -205,5 +206,34 @@ int LuaSpacebox::Lua_AddPassSlotShaderParam( lua_State* p_L )
     {
         m_descriptor.passes_slots[pass_name].shader_params.push_back( psp );
     }
+    return 0;
+}
+
+int LuaSpacebox::Lua_UpdateShaderParam( lua_State* p_L )
+{
+    int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "UpdateShaderParam : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    const char* pass_name = luaL_checkstring( p_L, 1 );
+    const char* id = luaL_checkstring( p_L, 2 );
+    LuaVector* value = Luna2<LuaVector>::check( p_L, 3 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "SpaceboxNode:UpdateShaderParam" );
+
+        props.AddPropValue<dsstring>( "scene_name", m_descriptor.scene_name );
+        props.AddPropValue<dsstring>( "pass_name", pass_name );
+        props.AddPropValue<dsstring>( "id", id );
+        props.AddPropValue<DrawSpace::Utils::Vector>( "value", value->m_vector );
+
+        (*m_scriptcalls_handler)( props );
+    }
+    
     return 0;
 }

@@ -447,6 +447,61 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             m_spacebox_descriptors[t_entry.treeitemid.GetID()] = sb_descr;
         }
     }
+    else if( "SpaceboxNode:UpdateShaderParam" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        dsstring pass_name = p_propertypool.GetPropValue<dsstring>( "pass_name" );
+        dsstring id = p_propertypool.GetPropValue<dsstring>( "id" );
+        Vector value = p_propertypool.GetPropValue<Vector>( "value" );
+
+        for( std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>::iterator it = m_spacebox_nodes.begin(); it != m_spacebox_nodes.end(); ++it )
+        {
+            if( it->second.name == scene_name )
+            {
+                DrawSpace::Core::SceneNode<Spacebox>* sb = it->second.scene_node;
+                DrawSpace::Utils::SpaceboxDescriptor sb_descr = m_spacebox_descriptors[it->first];
+
+                if( sb_descr.passes_slots.count( pass_name ) > 0 )
+                {
+                    Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_name ) );
+
+                    int id_index = -1;
+
+                    for( size_t i = 0; i < sb_descr.passes_slots[pass_name].shader_params.size(); i++ )
+                    {
+                        if( sb_descr.passes_slots[pass_name].shader_params[i].id == id )
+                        {
+                            id_index = i;
+                            break;
+                        }
+                    }
+
+                    if( id_index == -1 )
+                    {
+                        wxMessageBox( "SpaceboxNode:UpdateShaderParam : unknown shader param id for this node", "Script error", wxICON_ERROR );
+                        return;
+                    }
+
+                    for( int j = 0; j < 6; j++ )
+                    {
+                        sb->GetContent()->GetNodeFromPass( current_pass, j )->SetShaderRealVector( id, value );
+                    }
+
+                    // update descriptor
+                    sb_descr.passes_slots[pass_name].shader_params[id_index].value = value;
+
+                    m_spacebox_descriptors[it->first] = sb_descr;
+
+                    return;
+                }
+                else
+                {
+                    wxMessageBox( "SpaceboxNode:UpdateShaderParam : unknown pass name for this node", "Script error", wxICON_ERROR );
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
@@ -1955,6 +2010,9 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     else if( DIALOG_SPACEBOX_EDITION_TITLE == DIALOG_TITLE )
     {
 
+        DrawSpace::Utils::SpaceboxDescriptor sb_descr = m_spacebox_descriptors[m_last_clicked_treeitem.GetID()];
+        SceneNodeEntry<DrawSpace::Spacebox> sne = m_spacebox_nodes[m_last_clicked_treeitem.GetID()];
+
         DIALOG_EXPLORE_NODES_BEGIN( "", "shader parameter %d", i, sp_slot )
 
             DIALOG_GET_STRING_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "pass name" ), pass_name )
@@ -1965,7 +2023,22 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.z" ), val_z )
             DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.w" ), val_w )
 
-            _asm nop
+           
+
+            DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
+            DIALOG_WXSTRING_TO_DSSTRING( param_id, param_id2 )
+
+            Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_name2 ) );
+
+            for( int j = 0; j < 6; j++ )
+            {
+                sne.scene_node->GetContent()->GetNodeFromPass( current_pass, j )->SetShaderRealVector( param_id2, Vector( val_x, val_y, val_z, val_w ) );
+            }
+
+            // update descriptor
+            sb_descr.passes_slots[pass_name2].shader_params[i].value = Vector( val_x, val_y, val_z, val_w );
+
+            m_spacebox_descriptors[m_last_clicked_treeitem.GetID()] = sb_descr;
 
         DIALOG_EXPLORE_NODES_END( i )
         
@@ -1973,47 +2046,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     }
 
 
-    /*
-    DIALOG_GETGRID
-    DIALOG_PROPERTIES_VARS
-
-    if( "Spacebox node creation" == DIALOG_TITLE )
-    {
-        DIALOG_GET_STRING_PROPERTY( "scene name", scene_name )
-
-        DIALOG_GET_INT_PROPERTY( "the beast", var_int )
-
-        DIALOG_GET_FLOAT_PROPERTY( "pi", pi )
-
-        DIALOG_GET_ENUM_PROPERTY( "list", sel_text )
-
-        DIALOG_WXSTRING_TO_DSSTRING( scene_name, scene_name2 )
-        DIALOG_WXSTRING_TO_DSSTRING( sel_text, sel_text2 )
-
-        
-
-        DIALOG_EXPLORE_NODES_BEGIN( "", "PASS_%d", i, pass_slot )
-            
-
-            DIALOG_GET_BOOL_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "enable" ), enable_it )
-
-            
-            DIALOG_EXPLORE_NODES_BEGIN( pass_slot, "texture_stage_%d", j, texture_stage )
-
-                
-                DIALOG_GET_INT_PROPERTY( DIALOG_INCREMENT_STRING( texture_stage, "order" ), order )
-
-                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( texture_stage, "source" ), sel_texture )
-
-                _asm nop
-                
-
-            DIALOG_EXPLORE_NODES_END
-
-            
-        DIALOG_EXPLORE_NODES_END
-    }
-    */
+  
 }
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
