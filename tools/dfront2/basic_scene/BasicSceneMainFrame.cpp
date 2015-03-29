@@ -78,6 +78,7 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     PopupMenuEntry pme_edittransformnode = { CONTEXTMENU_EDIT_TRANSFORMNODE, "Edit transformation..." };
     PopupMenuEntry pme_editshaders = { CONTEXTMENU_EDIT_SHADERSPARAMS, "Edit shaders params..." };
     PopupMenuEntry pme_showprops = { CONTEXTMENU_SHOW_PROPS, "Show properties..." };
+    PopupMenuEntry pme_editcript = { CONTEXTMENU_EDIT_SCRIPT, "Edit script..." };
 
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
@@ -151,10 +152,13 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edittransformnode );
 
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_editcript );
+
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editshaders );
+    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editcript );
 
 
     m_applybutton_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_applybutton_clicked );
@@ -1211,10 +1215,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                             DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
                             DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )                           
 
-
-
                         DIALOG_APPENDROOT_ITERATE_NODE_END
-
                     }
 
                     DIALOG_APPLY
@@ -1335,6 +1336,13 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                  
                     DIALOG_SHOW
                 }
+            }
+            break;
+
+        case CONTEXTMENU_EDIT_SCRIPT:
+            {
+                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this );
+                frame->Show();
             }
             break;
 

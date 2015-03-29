@@ -28,6 +28,7 @@
 #include "drawspace.h"
 #include "scripting.h"
 #include "BasicSceneObjectPropertiesDialog.h"
+#include "BasicSceneScriptEditFrame.h"
 
 #define DFRONT_ICON_DIM                     22
 
@@ -84,6 +85,7 @@
 #define CONTEXTMENU_EDIT_TRANSFORMNODE      2081
 #define CONTEXTMENU_EDIT_SHADERSPARAMS      2082
 #define CONTEXTMENU_SHOW_PROPS              2083
+#define CONTEXTMENU_EDIT_SCRIPT             2084
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -7,6 +7,7 @@
     <ClCompile Include="BasicSceneObjectPropertiesDialog.cpp" />
     <ClCompile Include="buildobjects.cpp" />
     <ClCompile Include="panel.cpp" />
+    <ClCompile Include="BasicSceneScriptEditFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -15,5 +16,6 @@
     <ClInclude Include="BasicSceneObjectPropertiesDialog.h" />
     <ClInclude Include="buildobjects.h" />
     <ClInclude Include="panel.h" />
+    <ClInclude Include="BasicSceneScriptEditFrame.h" />
   </ItemGroup>
 </Project>

@@ -88,6 +88,7 @@
     <ClCompile Include="app.cpp" />
     <ClCompile Include="BasicSceneMainFrame.cpp" />
     <ClCompile Include="BasicSceneObjectPropertiesDialog.cpp" />
+    <ClCompile Include="BasicSceneScriptEditFrame.cpp" />
     <ClCompile Include="buildobjects.cpp" />
     <ClCompile Include="panel.cpp" />
   </ItemGroup>
@@ -96,6 +97,7 @@
     <ClInclude Include="app.h" />
     <ClInclude Include="BasicSceneMainFrame.h" />
     <ClInclude Include="BasicSceneObjectPropertiesDialog.h" />
+    <ClInclude Include="BasicSceneScriptEditFrame.h" />
     <ClInclude Include="buildobjects.h" />
     <ClInclude Include="panel.h" />
   </ItemGroup>

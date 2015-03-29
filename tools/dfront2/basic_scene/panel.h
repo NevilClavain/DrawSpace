@@ -114,4 +114,23 @@ class MainFrame : public wxFrame
 	
 };
 
+///////////////////////////////////////////////////////////////////////////////
+/// Class ScriptEditFrame
+///////////////////////////////////////////////////////////////////////////////
+class ScriptEditFrame : public wxFrame 
+{
+	private:
+	
+	protected:
+		wxTextCtrl* m_script_textCtrl;
+		wxButton* m_close_button;
+	
+	public:
+		
+		ScriptEditFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		
+		~ScriptEditFrame();
+	
+};
+
 #endif //__PANEL_H__

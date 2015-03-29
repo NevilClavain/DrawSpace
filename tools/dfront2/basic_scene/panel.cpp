@@ -252,3 +252,37 @@ MainFrame::~MainFrame()
 	m_scenegraphs_treeCtrl->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( MainFrame::OnSceneNodeGraphsListRightClick ), NULL, this );
 	
 }
+
+ScriptEditFrame::ScriptEditFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer17;
+	bSizer17 = new wxBoxSizer( wxVERTICAL );
+	
+	m_script_textCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxTE_MULTILINE );
+	m_script_textCtrl->SetFont( wxFont( 10, 74, 90, 92, false, wxT("System") ) );
+	m_script_textCtrl->SetForegroundColour( wxColour( 255, 255, 0 ) );
+	m_script_textCtrl->SetBackgroundColour( wxColour( 0, 0, 255 ) );
+	
+	bSizer17->Add( m_script_textCtrl, 15, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer18;
+	bSizer18 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_close_button = new wxButton( this, wxID_ANY, wxT("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer18->Add( m_close_button, 0, wxALL, 5 );
+	
+	
+	bSizer17->Add( bSizer18, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer17 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+}
+
+ScriptEditFrame::~ScriptEditFrame()
+{
+}
