@@ -124,6 +124,12 @@ class ScriptEditFrame : public wxFrame
 	protected:
 		wxTextCtrl* m_script_textCtrl;
 		wxButton* m_close_button;
+		wxButton* m_apply_button;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnCloseButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnApplyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

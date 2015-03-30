@@ -22,9 +22,18 @@
 
 #include "BasicSceneScriptEditFrame.h"
 
-BasicSceneScriptEditFrame::BasicSceneScriptEditFrame( wxWindow* parent )
-:ScriptEditFrame( parent ),
+BasicSceneScriptEditFrame::BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, const dsstring& p_text )
+:ScriptEditFrame( p_parent, wxID_ANY, p_title.c_str() ),
 m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false )
 {
     m_script_textCtrl->SetFont( m_console_font );
+    m_script_textCtrl->SetValue( p_text );
+}
+
+void BasicSceneScriptEditFrame::OnCloseButtonClicked( wxCommandEvent& event )
+{
+}
+
+void BasicSceneScriptEditFrame::OnApplyButtonClicked( wxCommandEvent& event )
+{    
 }

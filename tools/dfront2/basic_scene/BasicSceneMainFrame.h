@@ -308,6 +308,8 @@ public:
         dsstring                                                        name;
         DrawSpace::Core::SceneNode<Base>*                               scene_node;
         wxTreeItemId                                                    treeitemid;
+
+        dsstring                                                        script;
     };
 
 

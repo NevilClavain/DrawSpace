@@ -1341,7 +1341,27 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_EDIT_SCRIPT:
             {
-                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this );
+
+                dsstring title;
+                dsstring script_text;
+                void* id = m_last_clicked_treeitem.GetID();
+
+                if( m_transformation_nodes.count( id ) > 0 )
+                {
+                    title = "Transformation node: ";
+                    title += m_transformation_nodes[id].name;
+
+                    script_text = m_transformation_nodes[id].script;
+                }
+                else if( m_spacebox_nodes.count( id ) > 0 )
+                {
+                    title = "Spacebox node: ";
+                    title += m_spacebox_nodes[id].name;
+
+                    script_text = m_spacebox_nodes[id].script;
+                }
+
+                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text );
                 frame->Show();
             }
             break;

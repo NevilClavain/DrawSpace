@@ -273,6 +273,9 @@ ScriptEditFrame::ScriptEditFrame( wxWindow* parent, wxWindowID id, const wxStrin
 	m_close_button = new wxButton( this, wxID_ANY, wxT("Close"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer18->Add( m_close_button, 0, wxALL, 5 );
 	
+	m_apply_button = new wxButton( this, wxID_ANY, wxT("Apply && close"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer18->Add( m_apply_button, 0, wxALL, 5 );
+	
 	
 	bSizer17->Add( bSizer18, 1, wxEXPAND, 5 );
 	
@@ -281,8 +284,16 @@ ScriptEditFrame::ScriptEditFrame( wxWindow* parent, wxWindowID id, const wxStrin
 	this->Layout();
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	m_close_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnCloseButtonClicked ), NULL, this );
+	m_apply_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnApplyButtonClicked ), NULL, this );
 }
 
 ScriptEditFrame::~ScriptEditFrame()
 {
+	// Disconnect Events
+	m_close_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnCloseButtonClicked ), NULL, this );
+	m_apply_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnApplyButtonClicked ), NULL, this );
+	
 }

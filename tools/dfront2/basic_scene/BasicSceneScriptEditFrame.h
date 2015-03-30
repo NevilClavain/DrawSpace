@@ -24,14 +24,21 @@
 #define __BasicSceneScriptEditFrame__
 
 #include "panel.h"
+#include "drawspace.h"
 
 class BasicSceneScriptEditFrame : public ScriptEditFrame
 {
 protected:
 
+  
     wxFont m_console_font;
+
+    virtual void OnCloseButtonClicked( wxCommandEvent& event );
+    virtual void OnApplyButtonClicked( wxCommandEvent& event );
+
+
 public:
-		BasicSceneScriptEditFrame( wxWindow* parent );
+		BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, const dsstring& p_text );
 
 	
 };
