@@ -32,6 +32,7 @@
 #include <wx/combobox.h>
 #include <wx/notebook.h>
 #include <wx/frame.h>
+#include <wx/checkbox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -125,6 +126,7 @@ class ScriptEditFrame : public wxFrame
 		wxTextCtrl* m_script_textCtrl;
 		wxButton* m_close_button;
 		wxButton* m_apply_button;
+		wxCheckBox* m_activation_checkBox;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseButtonClicked( wxCommandEvent& event ) { event.Skip(); }

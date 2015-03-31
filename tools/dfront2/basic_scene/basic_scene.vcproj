@@ -217,6 +217,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BasicSceneScriptEditFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BasicSceneScriptEditFrame.h"
+				>
+			</File>
+			<File
 				RelativePath=".\buildobjects.cpp"
 				>
 			</File>

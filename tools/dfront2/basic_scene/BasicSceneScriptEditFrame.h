@@ -30,15 +30,17 @@ class BasicSceneScriptEditFrame : public ScriptEditFrame
 {
 protected:
 
-  
-    wxFont m_console_font;
-
     virtual void OnCloseButtonClicked( wxCommandEvent& event );
     virtual void OnApplyButtonClicked( wxCommandEvent& event );
 
+  
+    wxFont      m_console_font;
+
+    dsstring*   m_text;
+
 
 public:
-		BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, const dsstring& p_text );
+		BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, dsstring* p_text );
 
 	
 };

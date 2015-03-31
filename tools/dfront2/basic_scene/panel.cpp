@@ -277,6 +277,12 @@ ScriptEditFrame::ScriptEditFrame( wxWindow* parent, wxWindowID id, const wxStrin
 	bSizer18->Add( m_apply_button, 0, wxALL, 5 );
 	
 	
+	bSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_activation_checkBox = new wxCheckBox( this, wxID_ANY, wxT("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer18->Add( m_activation_checkBox, 0, wxEXPAND, 5 );
+	
+	
 	bSizer17->Add( bSizer18, 1, wxEXPAND, 5 );
 	
 	
