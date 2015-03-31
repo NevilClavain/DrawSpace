@@ -1344,6 +1344,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 dsstring title;
                 dsstring* script_text;
+                bool * script_state;
                 void* id = m_last_clicked_treeitem.GetID();
 
                 if( m_transformation_nodes.count( id ) > 0 )
@@ -1352,6 +1353,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     title += m_transformation_nodes[id].name;
 
                     script_text = &m_transformation_nodes[id].script;
+                    script_state = &m_transformation_nodes[id].script_enabled;
                 }
                 else if( m_spacebox_nodes.count( id ) > 0 )
                 {
@@ -1359,9 +1361,10 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     title += m_spacebox_nodes[id].name;
 
                     script_text = &m_spacebox_nodes[id].script;
+                    script_state = &m_spacebox_nodes[id].script_enabled;
                 }
 
-                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text );
+                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
                 frame->Show();
             }
             break;

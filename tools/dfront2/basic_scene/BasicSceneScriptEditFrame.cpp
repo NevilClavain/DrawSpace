@@ -22,13 +22,16 @@
 
 #include "BasicSceneScriptEditFrame.h"
 
-BasicSceneScriptEditFrame::BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, dsstring* p_text )
+BasicSceneScriptEditFrame::BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, dsstring* p_text, bool* p_script_state )
 :ScriptEditFrame( p_parent, wxID_ANY, p_title.c_str() ),
 m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false ),
-m_text( p_text )
+m_text( p_text ),
+m_script_state( p_script_state )
 {
     m_script_textCtrl->SetFont( m_console_font );
     m_script_textCtrl->SetValue( p_text->c_str() );
+
+    m_activation_checkBox->SetValue( *m_script_state );
 }
 
 void BasicSceneScriptEditFrame::OnCloseButtonClicked( wxCommandEvent& event )
@@ -42,4 +45,8 @@ void BasicSceneScriptEditFrame::OnApplyButtonClicked( wxCommandEvent& event )
 
     *m_text = newtext.data();
     Close();
+}
+
+void BasicSceneScriptEditFrame::OnLoadButtonClicked( wxCommandEvent& event )
+{
 }

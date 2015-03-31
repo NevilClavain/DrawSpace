@@ -305,11 +305,17 @@ public:
     class SceneNodeEntry
     {
     public:
+        SceneNodeEntry( void )
+        {
+            script_enabled = true;
+        }
+
         dsstring                                                        name;
         DrawSpace::Core::SceneNode<Base>*                               scene_node;
         wxTreeItemId                                                    treeitemid;
 
         dsstring                                                        script;
+        bool                                                            script_enabled;
     };
 
 

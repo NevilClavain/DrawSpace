@@ -32,15 +32,17 @@ protected:
 
     virtual void OnCloseButtonClicked( wxCommandEvent& event );
     virtual void OnApplyButtonClicked( wxCommandEvent& event );
+    virtual void OnLoadButtonClicked( wxCommandEvent& event );
 
   
     wxFont      m_console_font;
 
     dsstring*   m_text;
+    bool*       m_script_state;
 
 
 public:
-		BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, dsstring* p_text );
+		BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, dsstring* p_text, bool* p_script_state );
 
 	
 };
