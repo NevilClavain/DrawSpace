@@ -70,8 +70,8 @@ public:
 
     void Startup( void );
     void Stop( void );
-    void Exec( const char* p_cmd );
-    void Execfile( const char* p_path );
+    bool Exec( const char* p_cmd );
+    bool Execfile( const char* p_path );
 
     void GetLastError( dsstring& p_str );
     void RegisterErrorHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );

@@ -2210,5 +2210,37 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
 
 void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node )
 {
-    _asm nop
+    if( m_inv_tree_nodes.count( p_node ) > 0 )
+    {
+        void* id = m_inv_tree_nodes[p_node];
+        m_nodescript_currentnode = p_node;
+
+        dsstring script;
+        bool* script_enabled;
+
+        if( m_transformation_nodes.count( id ) > 0 )
+        {
+            script = m_transformation_nodes[id].script;
+            script_enabled = &m_transformation_nodes[id].script_enabled;
+        }
+        else if( m_spacebox_nodes.count( id ) > 0 )
+        {
+            script = m_spacebox_nodes[id].script;
+            script_enabled = &m_spacebox_nodes[id].script_enabled;
+        }
+
+        if( *script_enabled )
+        {
+            bool status = m_scripting->ExecChunk( script.c_str() );
+            if( !status )
+            {
+                dsstring err_msg;
+                m_scripting->GetLastError( err_msg );
+                *script_enabled = false;
+
+                PrintOutputConsole( err_msg );
+                wxMessageBox( "Scripting syntax error", "Script error", wxICON_ERROR );
+            }
+        }
+    }
 }

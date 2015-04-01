@@ -34,8 +34,10 @@ public:
     bool Initialize( void );
     void Shutdown( void );
 
-    void ExecChunk( const char* p_cmd );
-    void ExecFile( const char* p_path );
+    bool ExecChunk( const char* p_cmd );
+    bool ExecFile( const char* p_path );
+    void GetLastError( dsstring& p_str );
+
 
     void RegisterScriptErrorHandler( ErrorHandler* p_error_handler );
     void RegisterScriptCallsHandler( ScriptCallsHandler* p_handler );

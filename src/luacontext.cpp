@@ -56,7 +56,7 @@ void LuaContext::Stop( void )
 	lua_close( m_L );
 }
 
-void LuaContext::Exec( const char* p_cmd )
+bool LuaContext::Exec( const char* p_cmd )
 {
 	int status = luaL_dostring( m_L, p_cmd );
 
@@ -72,10 +72,13 @@ void LuaContext::Exec( const char* p_cmd )
         {
             (*m_errorhandler)( m_lasterror );
         }
+
+        return false;
 	}
+    return true;
 }
 
-void LuaContext::Execfile( const char* p_path )
+bool LuaContext::Execfile( const char* p_path )
 {    
 	int status = luaL_dofile( m_L, p_path );
 
@@ -91,7 +94,9 @@ void LuaContext::Execfile( const char* p_path )
         {
             (*m_errorhandler)( m_lasterror );
         }
-	}    
+        return false;
+	}  
+    return true;
 }
 
 void LuaContext::GetLastError( dsstring& p_str )

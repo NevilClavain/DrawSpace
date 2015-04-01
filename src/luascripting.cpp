@@ -51,15 +51,21 @@ void LuaScripting::Shutdown( void )
     LuaContext::GetInstance()->Stop();
 }
 
-void LuaScripting::ExecChunk( const char* p_cmd )
+bool LuaScripting::ExecChunk( const char* p_cmd )
 {
-    LuaContext::GetInstance()->Exec( p_cmd );
+    return LuaContext::GetInstance()->Exec( p_cmd );
 }
 
-void LuaScripting::ExecFile( const char* p_path )
+bool LuaScripting::ExecFile( const char* p_path )
 {
-    LuaContext::GetInstance()->Execfile( p_path );
+    return LuaContext::GetInstance()->Execfile( p_path );
 }
+
+void LuaScripting::GetLastError( dsstring& p_str )
+{
+    LuaContext::GetInstance()->GetLastError( p_str );
+}
+
 
 void LuaScripting::RegisterScriptErrorHandler( ErrorHandler* p_error_handler )
 {

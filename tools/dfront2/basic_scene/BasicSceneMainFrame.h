@@ -431,6 +431,9 @@ protected:
 
     NodeUpdateBeginCallBack*                                m_nodeupdatebegin_cb;
 
+    DrawSpace::Core::BaseSceneNode*                         m_nodescript_currentnode;
+    
+
 
     void on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog );

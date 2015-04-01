@@ -37,8 +37,9 @@ public:
     virtual bool Initialize( void ) = 0;
     virtual void Shutdown( void ) = 0;
 
-    virtual void ExecChunk( const char* p_cmd ) = 0;
-    virtual void ExecFile( const char* p_path ) = 0;
+    virtual bool ExecChunk( const char* p_cmd ) = 0;
+    virtual bool ExecFile( const char* p_path ) = 0;
+    virtual void GetLastError( dsstring& p_str ) = 0;
 
     virtual void RegisterScriptErrorHandler( ErrorHandler* p_errorhandler ) = 0;
     virtual void RegisterScriptCallsHandler( ScriptCallsHandler* p_handler ) = 0;
