@@ -330,6 +330,8 @@ protected:
 
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*> DialogButtonCallback;
 
+    typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, DrawSpace::Core::BaseSceneNode*>   NodeUpdateBeginCallBack;
+
 
     void on_timer( const dsstring& p_timername );
     void on_scripting_error( const dsstring& p_error );
@@ -426,10 +428,15 @@ protected:
     DialogButtonCallback*                                   m_specificbutton1_clicked_cb;
 
 
+    NodeUpdateBeginCallBack*                                m_nodeupdatebegin_cb;
+
 
     void on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
+
+
+    void on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node );
 
 
     virtual void OnClose( wxCloseEvent& p_event );

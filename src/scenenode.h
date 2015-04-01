@@ -87,11 +87,16 @@ public:
 template <typename Base>
 class SceneNode : public BaseSceneNode
 {
-protected:    
-    BaseSceneNode*              m_parent;    
-    DrawSpace::Utils::Matrix    m_globaltransform;
-    Base*                       m_content;
-    bool                        m_enable;
+protected:
+
+    typedef DrawSpace::Core::BaseCallback<void, BaseSceneNode*>    UpdateBeginHandler;
+
+    BaseSceneNode*                      m_parent;    
+    DrawSpace::Utils::Matrix            m_globaltransform;
+    Base*                               m_content;
+    bool                                m_enable;
+   
+    std::vector<UpdateBeginHandler*>    m_updatebegin_handlers;
     
 public:
 
@@ -134,6 +139,11 @@ public:
             return;
         }
 
+        for( size_t i = 0; i < m_updatebegin_handlers.size(); i++ )
+        {
+            (* m_updatebegin_handlers[i] )( this );
+        }
+
         m_content->Update( p_timemanager );
 
         DrawSpace::Utils::Matrix base_mat;
@@ -161,6 +171,10 @@ public:
         }
     }
 
+    virtual void RegisterUpdateBeginEvtHandler( UpdateBeginHandler* p_handler )
+    {
+        m_updatebegin_handlers.push_back( p_handler );
+    }
 
     virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager )
     {

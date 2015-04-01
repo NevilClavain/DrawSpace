@@ -161,9 +161,11 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editcript );
 
 
-    m_applybutton_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_applybutton_clicked );
-    m_specificbutton0_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
-    m_specificbutton1_clicked_cb = new CallBack<BasicSceneMainFrame, void, BasicSceneObjectPropertiesDialog*>( this, &BasicSceneMainFrame::on_specificbutton1_clicked );
+    m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
+    m_specificbutton0_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
+    m_specificbutton1_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton1_clicked );
+
+    m_nodeupdatebegin_cb = new NodeUpdateBeginCallBack( this, &BasicSceneMainFrame::on_nodeupdatebegin );
 
 }
 
@@ -294,6 +296,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         SceneNode<Transformation>* transfo_node = static_cast<SceneNode<Transformation>*>( node );
         Transformation* tf = new Transformation();
         transfo_node->SetContent( tf );
+
+        transfo_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
                 
 
         scenenodegraph_entry.scenenodegraph->RegisterNode( node );
@@ -397,6 +401,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         }
 
         SceneNode<Spacebox>* sb_node = static_cast<SceneNode<Spacebox>*>( node );
+
+        sb_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
         
         //sb_node->SetContent( new Spacebox );
         dsstring sb_error;
@@ -1653,6 +1659,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         transfo_node = new SceneNode<Transformation>( alias );
         transfo_node->SetContent( new Transformation );
 
+        transfo_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+
         /////////////////////////////////////////////////////////////////////////////////
 
         // now we must found the scenenodegraph we belong to make the RegisterNode() call
@@ -1965,6 +1973,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         {
             SceneNode<Spacebox>* sb_node = new SceneNode<Spacebox>( alias );
             sb_node->SetContent( sb );
+            sb_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
             
             // now we must found the scenenodegraph we belong to make the RegisterNode() call
             void* id = find_scenenodegraph_id();
@@ -2193,4 +2202,9 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
         DIALOG_FINALIZE
 
     }
+}
+
+void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node )
+{
+    _asm nop
 }
