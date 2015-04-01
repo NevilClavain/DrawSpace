@@ -329,6 +329,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
         m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
         m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
+        m_inv_tree_nodes[transfo_node] = t_entry.treeitemid.GetID();
     }
 
     else if( "SpaceboxNode:LinkTo" == script_call_id )
@@ -444,6 +445,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
             m_spacebox_nodes[t_entry.treeitemid.GetID()] = t_entry;
             m_tree_nodes[t_entry.treeitemid.GetID()] = sb_node;
+            m_inv_tree_nodes[sb_node] = t_entry.treeitemid.GetID();
 
             // update passes output queues
             for( std::map<dsstring, PassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
@@ -1712,6 +1714,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
 
         m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
+        m_inv_tree_nodes[transfo_node] = t_entry.treeitemid.GetID();
 
         DIALOG_CLOSE
     }
@@ -2017,6 +2020,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             m_spacebox_nodes[t_entry.treeitemid.GetID()] = t_entry;
 
             m_tree_nodes[t_entry.treeitemid.GetID()] = sb_node;
+            m_inv_tree_nodes[sb_node] = t_entry.treeitemid.GetID();
 
             // update passes output queues
             for( std::map<dsstring, PassDescriptor>::iterator it = descr.passes_slots.begin(); it != descr.passes_slots.end(); ++it )

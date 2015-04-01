@@ -377,6 +377,7 @@ protected:
     std::map<void*, SceneNodeGraphEntry>                                                    m_scenenodegraphs;
 
     std::map<void*, DrawSpace::Core::BaseSceneNode*>                                        m_tree_nodes;
+    std::map<DrawSpace::Core::BaseSceneNode*, void*>                                        m_inv_tree_nodes;
    
     std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>                        m_transformation_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>                                    m_spacebox_nodes;
