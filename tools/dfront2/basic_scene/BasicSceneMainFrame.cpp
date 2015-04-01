@@ -1413,15 +1413,6 @@ void BasicSceneMainFrame::OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event
 {
 }
 
-
-
-
-
-
-
-
-
-
 void BasicSceneMainFrame::OnConsoleInSendButtonClicked( wxCommandEvent& p_event )
 {
     m_scripting->ExecChunk( m_consoleinput_textCtrl->GetValue().c_str() );
