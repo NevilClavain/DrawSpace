@@ -36,6 +36,7 @@ m_script_state( p_script_state )
 
 void BasicSceneScriptEditFrame::OnCloseButtonClicked( wxCommandEvent& event )
 {
+    *m_script_state = m_activation_checkBox->GetValue();
     Close();
 }
 
@@ -44,7 +45,7 @@ void BasicSceneScriptEditFrame::OnApplyButtonClicked( wxCommandEvent& event )
     wxString newtext = m_script_textCtrl->GetValue();
 
     *m_text = newtext.data();
-    Close();
+    *m_script_state = m_activation_checkBox->GetValue();    
 }
 
 void BasicSceneScriptEditFrame::OnLoadButtonClicked( wxCommandEvent& event )

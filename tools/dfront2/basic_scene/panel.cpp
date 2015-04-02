@@ -273,7 +273,7 @@ ScriptEditFrame::ScriptEditFrame( wxWindow* parent, wxWindowID id, const wxStrin
 	m_close_button = new wxButton( this, wxID_ANY, wxT("Close"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer18->Add( m_close_button, 0, wxALL, 5 );
 	
-	m_apply_button = new wxButton( this, wxID_ANY, wxT("Apply && close"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_apply_button = new wxButton( this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer18->Add( m_apply_button, 0, wxALL, 5 );
 	
 	m_load_button = new wxButton( this, wxID_ANY, wxT("Load"), wxDefaultPosition, wxDefaultSize, 0 );

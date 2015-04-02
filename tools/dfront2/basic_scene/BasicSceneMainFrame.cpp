@@ -172,7 +172,7 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
 void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
 {
     PrintOutputConsole( p_error );
-    wxMessageBox( "Scripting syntax error", "Script error", wxICON_ERROR );
+    //wxMessageBox( "Scripting syntax error", "Script error", wxICON_ERROR );
 }
 
 
@@ -2239,7 +2239,7 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
                 *script_enabled = false;
 
                 PrintOutputConsole( err_msg );
-                wxMessageBox( "Scripting syntax error", "Script error", wxICON_ERROR );
+                //wxMessageBox( "Scripting syntax error", "Script error", wxICON_ERROR );
             }
         }
     }
