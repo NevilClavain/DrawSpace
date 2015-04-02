@@ -20,19 +20,16 @@
 *
 */
 
-#ifndef _LUA_SPACEBOX_H_
-#define _LUA_SPACEBOX_H_
-
+#ifndef _LUA_TRANSFORMNODEBUILDER_H_
+#define _LUA_TRANSFORMNODEBUILDER_H_
 
 #include "drawspace_commons.h"
 #include "callback.h"
 #include "mediator.h"
-#include "spacebox.h"
-#include "descriptors.h"
-
+#include "transformation.h"
 #include "luna.h"
 
-class LuaSpacebox
+class LuaTransformationNodeBuilder
 {
 public:
 
@@ -40,24 +37,22 @@ public:
 
 protected:
 
-    DrawSpace::Utils::SpaceboxDescriptor                        m_descriptor;    
-    DrawSpace::Core::SceneNode<DrawSpace::Spacebox>             m_spacebox_node;
+    //DrawSpace::Core::Transformation                             m_transformation;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation> m_transformation_node;
 
 public:
-    LuaSpacebox( lua_State* p_L );
-    ~LuaSpacebox( void );
+
+    LuaTransformationNodeBuilder( lua_State* p_L );
+    ~LuaTransformationNodeBuilder( void );
      
-    int Lua_RegisterPassSlot( lua_State* p_L );
-    int Lua_SetPassSlotFxName( lua_State* p_L );
-    int Lua_SetPassSlotRenderingOrder( lua_State* p_L );
-    int Lua_SetPassSlotTextureName( lua_State* p_L );
-    int Lua_AddPassSlotShaderParam( lua_State* p_L );
-    int Lua_UpdateShaderParam( lua_State* p_L );
     int Lua_LinkTo( lua_State* p_L );
 
-    
+    int Lua_ClearMatrixStack( lua_State* p_L );
+    int Lua_AddMatrix( lua_State* p_L );
+
     static const char className[];
-    static const Luna2<LuaSpacebox>::RegType methods[];
+    static const Luna2<LuaTransformationNodeBuilder>::RegType methods[];
+
 };
 
 #endif

@@ -20,7 +20,7 @@
 *
 */
 
-#include "lua_transformnode.h"
+#include "lua_transformnodebuilder.h"
 #include "luacontext.h"
 #include "exceptions.h"
 
@@ -29,16 +29,16 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-const char LuaTransformationNode::className[] = "TransformationNode";
-const Luna2<LuaTransformationNode>::RegType LuaTransformationNode::methods[] =
+const char LuaTransformationNodeBuilder::className[] = "TransformationNodeBuilder";
+const Luna2<LuaTransformationNodeBuilder>::RegType LuaTransformationNodeBuilder::methods[] =
 {
-  { "LinkTo", &LuaTransformationNode::Lua_LinkTo },
-  { "ClearMatrixStack", &LuaTransformationNode::Lua_ClearMatrixStack },
-  { "AddMatrix", &LuaTransformationNode::Lua_AddMatrix },
+  { "LinkTo", &LuaTransformationNodeBuilder::Lua_LinkTo },
+  { "ClearMatrixStack", &LuaTransformationNodeBuilder::Lua_ClearMatrixStack },
+  { "AddMatrix", &LuaTransformationNodeBuilder::Lua_AddMatrix },
   { 0, 0 }
 };
 
-LuaTransformationNode::LuaTransformationNode( lua_State* p_L )
+LuaTransformationNodeBuilder::LuaTransformationNodeBuilder( lua_State* p_L )
 : m_transformation_node( "transformation_node" )
 {
 	int argc = lua_gettop( p_L );
@@ -54,11 +54,11 @@ LuaTransformationNode::LuaTransformationNode( lua_State* p_L )
     //m_transformation_node.SetContent( &m_transformation );
 }
 
-LuaTransformationNode::~LuaTransformationNode( void ) 
+LuaTransformationNodeBuilder::~LuaTransformationNodeBuilder( void ) 
 {
 }
 
-int LuaTransformationNode::Lua_LinkTo( lua_State* p_L )
+int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -87,14 +87,14 @@ int LuaTransformationNode::Lua_LinkTo( lua_State* p_L )
     return 0;
 }
 
-int LuaTransformationNode::Lua_ClearMatrixStack( lua_State* p_L )
+int LuaTransformationNodeBuilder::Lua_ClearMatrixStack( lua_State* p_L )
 {
     //m_transformation.ClearAll();
     m_transformation_node.GetContent()->ClearAll();
     return 0;
 }
 
-int LuaTransformationNode::Lua_AddMatrix( lua_State* p_L )
+int LuaTransformationNodeBuilder::Lua_AddMatrix( lua_State* p_L )
 {
     LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 1 );
 

@@ -170,19 +170,19 @@
 			>
 		</File>
 		<File
-			RelativePath="..\DrawSpace\src\lua_spaceboxnode.cpp"
+			RelativePath=".\src\lua_spaceboxnodebuilder.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\DrawSpace\src\lua_spaceboxnode.h"
+			RelativePath=".\src\lua_spaceboxnodebuilder.h"
 			>
 		</File>
 		<File
-			RelativePath="..\DrawSpace\src\lua_transformnode.cpp"
+			RelativePath=".\src\lua_transformnodebuilder.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\DrawSpace\src\lua_transformnode.h"
+			RelativePath=".\src\lua_transformnodebuilder.h"
 			>
 		</File>
 		<File
