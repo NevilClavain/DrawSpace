@@ -154,6 +154,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_keyboardwrapper.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_keyboardwrapper.h"
+			>
+		</File>
+		<File
 			RelativePath="..\DrawSpace\src\lua_matrix.cpp"
 			>
 		</File>

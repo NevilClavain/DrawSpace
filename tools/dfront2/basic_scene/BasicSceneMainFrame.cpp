@@ -43,7 +43,9 @@ m_last_ymouse( 0 ),
 m_current_camera( NULL ),
 m_display_framerate( false ),
 m_display_currentcamera( false ),
-m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false )
+m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false ),
+m_keyup_code( NULL ),
+m_keydown_code( NULL )
 {
 
    
@@ -524,6 +526,12 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             }
         }
     }
+
+    else if( "KeyboardWrapper:KeyboardWrapper" == script_call_id )
+    {
+        m_keyup_code = p_propertypool.GetPropValue<int*>( "keyupcode" );
+        m_keydown_code = p_propertypool.GetPropValue<int*>( "keydowncode" );
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
@@ -565,8 +573,15 @@ void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 
 void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
 {
+    int keycode = p_event.GetKeyCode();
+
     if( m_keydown_script_enabled )
     {
+        if( m_keydown_code )
+        {
+            *m_keydown_code = keycode;
+        }
+
         bool status = m_scripting->ExecChunk( m_keydown_script.c_str() );
         if( !status )
         {
@@ -576,8 +591,15 @@ void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
 }
 void BasicSceneMainFrame::OnKeyUp( wxKeyEvent& p_event )
 {
+    int keycode = p_event.GetKeyCode();
+
     if( m_keyup_script_enabled )
     {
+        if( m_keyup_code )
+        {
+            *m_keyup_code = keycode;
+        }
+
         bool status = m_scripting->ExecChunk( m_keyup_script.c_str() );
         if( !status )
         {

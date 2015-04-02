@@ -447,8 +447,12 @@ protected:
     dsstring                                                m_keydown_script;
     bool                                                    m_keydown_script_enabled;
 
+    int*                                                    m_keydown_code;
+
     dsstring                                                m_keyup_script;
     bool                                                    m_keyup_script_enabled;
+
+    int*                                                    m_keyup_code;
 
     dsstring                                                m_mousemove_script;
     bool                                                    m_mousemove_script_enabled;
