@@ -2234,12 +2234,7 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
             bool status = m_scripting->ExecChunk( script.c_str() );
             if( !status )
             {
-                dsstring err_msg;
-                m_scripting->GetLastError( err_msg );
                 *script_enabled = false;
-
-                PrintOutputConsole( err_msg );
-                //wxMessageBox( "Scripting syntax error", "Script error", wxICON_ERROR );
             }
         }
     }
