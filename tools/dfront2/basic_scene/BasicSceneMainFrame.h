@@ -45,6 +45,8 @@
 #define TRANSFO_ICON_INDEX                  10
 #define SCENEGRAPH_ICON_INDEX               11
 #define DRAWSPACE_ICON_INDEX                12
+#define KEYBOARD_ICON_INDEX                 13
+#define MOUSE_ICON_INDEX                    14
 
 
 #define CAMERA_MASK                         1
@@ -60,6 +62,8 @@
 #define TRANSFO_MASK                        11
 #define SCENEGRAPH_MASK                     12
 #define DRAWSPACE_MASK                      13
+#define KEYBOARD_MASK                       14
+#define MOUSE_MASK                          15
 
 
 #define CONTEXTMENU_NEWSCENENODEGRAPH       2000
@@ -85,7 +89,11 @@
 #define CONTEXTMENU_EDIT_TRANSFORMNODE      2081
 #define CONTEXTMENU_EDIT_SHADERSPARAMS      2082
 #define CONTEXTMENU_SHOW_PROPS              2083
-#define CONTEXTMENU_EDIT_SCRIPT             2084
+#define CONTEXTMENU_EDIT_NODESCRIPT         2084
+
+#define CONTEXTMENU_EDIT_MOUSEMOVESCRIPT    2085
+#define CONTEXTMENU_EDIT_KEYDOWNSCRIPT      2086
+#define CONTEXTMENU_EDIT_KEYUPSCRIPT        2087
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -417,6 +425,8 @@ protected:
     wxFont                                                  m_console_font;
 
     wxTreeItemId                                            m_scenegraphs_root_item;
+    wxTreeItemId                                            m_keyboard_item;
+    wxTreeItemId                                            m_mouse_item;
 
 
     std::map<int, std::vector<PopupMenuEntry>>              m_scenegraphs_masks;
@@ -432,7 +442,17 @@ protected:
     NodeUpdateBeginCallBack*                                m_nodeupdatebegin_cb;
 
     DrawSpace::Core::BaseSceneNode*                         m_nodescript_currentnode;
-    
+
+
+    dsstring                                                m_keydown_script;
+    bool                                                    m_keydown_script_enabled;
+
+    dsstring                                                m_keyup_script;
+    bool                                                    m_keyup_script_enabled;
+
+    dsstring                                                m_mousemove_script;
+    bool                                                    m_mousemove_script_enabled;
+
 
 
     void on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog );

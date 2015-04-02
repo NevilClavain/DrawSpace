@@ -78,7 +78,11 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     PopupMenuEntry pme_edittransformnode = { CONTEXTMENU_EDIT_TRANSFORMNODE, "Edit transformation..." };
     PopupMenuEntry pme_editshaders = { CONTEXTMENU_EDIT_SHADERSPARAMS, "Edit shaders params..." };
     PopupMenuEntry pme_showprops = { CONTEXTMENU_SHOW_PROPS, "Show properties..." };
-    PopupMenuEntry pme_editcript = { CONTEXTMENU_EDIT_SCRIPT, "Edit script..." };
+    PopupMenuEntry pme_editnodescript = { CONTEXTMENU_EDIT_NODESCRIPT, "Edit script..." };
+
+    PopupMenuEntry pme_editmousemovescript = { CONTEXTMENU_EDIT_MOUSEMOVESCRIPT, "Edit mouse movement script..." };
+    PopupMenuEntry pme_editkeydownscript = { CONTEXTMENU_EDIT_KEYDOWNSCRIPT, "Edit key down script..." };
+    PopupMenuEntry pme_editkeyupscript = { CONTEXTMENU_EDIT_KEYUPSCRIPT, "Edit key up script..." };
 
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
@@ -103,6 +107,12 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[DRAWSPACE_MASK].push_back( pme_newscenenodegraph );
+
+    ///////////////////////////////////////////////////////////////////
+
+    m_scenegraphs_masks[KEYBOARD_MASK].push_back( pme_editkeydownscript );
+    m_scenegraphs_masks[KEYBOARD_MASK].push_back( pme_editkeyupscript );
+    m_scenegraphs_masks[MOUSE_MASK].push_back( pme_editmousemovescript );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -152,13 +162,13 @@ m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edittransformnode );
 
-    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_editcript );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editshaders );
-    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editcript );
+    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editnodescript );
 
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
@@ -555,11 +565,25 @@ void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 
 void BasicSceneMainFrame::OnKeyDown( wxKeyEvent& p_event )
 {
-
+    if( m_keydown_script_enabled )
+    {
+        bool status = m_scripting->ExecChunk( m_keydown_script.c_str() );
+        if( !status )
+        {
+            m_keydown_script_enabled = false;
+        }
+    }
 }
 void BasicSceneMainFrame::OnKeyUp( wxKeyEvent& p_event )
 {
-
+    if( m_keyup_script_enabled )
+    {
+        bool status = m_scripting->ExecChunk( m_keyup_script.c_str() );
+        if( !status )
+        {
+            m_keyup_script_enabled = false;
+        }
+    }
 }
 
 void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
@@ -613,6 +637,16 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
 
     m_last_xmouse = curr_xmouse;
     m_last_ymouse = curr_ymouse;
+
+
+    if( m_mousemove_script_enabled )
+    {
+        bool status = m_scripting->ExecChunk( m_mousemove_script.c_str() );
+        if( !status )
+        {
+            m_mousemove_script_enabled = false;
+        }
+    }
 }
 
 
@@ -733,6 +767,8 @@ void BasicSceneMainFrame::Update( void )
     wxBitmap bmp_transfo( "icon_transfo.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_scenegraph( "icon_scenegraph.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_drawspace( "icon_drawspace.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_keyboard( "icon_keyboard.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_mouse( "icon_mouse.bmp", wxBITMAP_TYPE_BMP );
 
 
     
@@ -749,11 +785,15 @@ void BasicSceneMainFrame::Update( void )
     pImageList->Add( bmp_transfo );
     pImageList->Add( bmp_scenegraph );
     pImageList->Add( bmp_drawspace );
+    pImageList->Add( bmp_keyboard );
+    pImageList->Add( bmp_mouse );
     
 
     m_scenegraphs_treeCtrl->AssignImageList( pImageList );
     
     m_scenegraphs_root_item = m_scenegraphs_treeCtrl->AddRoot( "DrawSpace", DRAWSPACE_ICON_INDEX );
+    m_keyboard_item = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, "Keyboard", KEYBOARD_ICON_INDEX );
+    m_mouse_item = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, "Mouse", MOUSE_ICON_INDEX );
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -1347,7 +1387,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
-        case CONTEXTMENU_EDIT_SCRIPT:
+        case CONTEXTMENU_EDIT_NODESCRIPT:
             {
 
                 dsstring title;
@@ -1377,6 +1417,27 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
+        case CONTEXTMENU_EDIT_MOUSEMOVESCRIPT:
+            {
+                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, "Mouse move", &m_mousemove_script, &m_mousemove_script_enabled );
+                frame->Show();
+            }
+            break;
+
+
+        case CONTEXTMENU_EDIT_KEYDOWNSCRIPT:
+            {
+                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, "Key down", &m_keydown_script, &m_keydown_script_enabled );
+                frame->Show();
+            }
+            break;
+
+        case CONTEXTMENU_EDIT_KEYUPSCRIPT:
+            {
+                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, "Key up", &m_keyup_script, &m_keyup_script_enabled );
+                frame->Show();
+            }
+            break;
 
  	}
  }
@@ -1392,6 +1453,14 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
     if( item.GetID() == m_scenegraphs_root_item.GetID() )
     {
         build_popupmenu( DRAWSPACE_MASK, mnu );
+    }
+    else if( item.GetID() == m_keyboard_item.GetID() )
+    {
+        build_popupmenu( KEYBOARD_MASK, mnu );
+    }
+    else if( item.GetID() == m_mouse_item.GetID() )
+    {
+        build_popupmenu( MOUSE_MASK, mnu );
     }
     else
     {
