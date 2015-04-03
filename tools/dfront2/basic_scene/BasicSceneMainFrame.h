@@ -457,6 +457,7 @@ protected:
     dsstring                                                m_mousemove_script;
     bool                                                    m_mousemove_script_enabled;
 
+    DrawSpace::Utils::MouseMovementsDescriptor*             m_mousemove_descr;
 
 
     void on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -479,20 +480,13 @@ protected:
     virtual void OnShadersListItemActivated( wxListEvent& p_event );
 
     
+    virtual void OnMouseLeftDown( wxMouseEvent& event );
+	virtual void OnMouseLeftUp( wxMouseEvent& event );
+	virtual void OnMouseRightDown( wxMouseEvent& event );
+	virtual void OnMouseRightUp( wxMouseEvent& event );
+
     
-    
-    
-
-
-
-    
-
-
-
-
-
-
-
+   
     virtual void OnPopupClick(wxCommandEvent& p_evt);
     virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event );
 

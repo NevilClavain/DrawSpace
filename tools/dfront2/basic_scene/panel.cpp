@@ -221,7 +221,11 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle ) );
 	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame::OnKeyDown ) );
 	this->Connect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::OnKeyUp ) );
+	this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MainFrame::OnMouseLeftDown ) );
+	this->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( MainFrame::OnMouseLeftUp ) );
 	this->Connect( wxEVT_MOTION, wxMouseEventHandler( MainFrame::OnMouseMotion ) );
+	this->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( MainFrame::OnMouseRightDown ) );
+	this->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( MainFrame::OnMouseRightUp ) );
 	m_consoleinsend_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
 	m_consoleinclear_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInClearButtonClicked ), NULL, this );
 	m_consoleinload_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInLoadButtonClicked ), NULL, this );
@@ -240,7 +244,11 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle ) );
 	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame::OnKeyDown ) );
 	this->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::OnKeyUp ) );
+	this->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MainFrame::OnMouseLeftDown ) );
+	this->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( MainFrame::OnMouseLeftUp ) );
 	this->Disconnect( wxEVT_MOTION, wxMouseEventHandler( MainFrame::OnMouseMotion ) );
+	this->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( MainFrame::OnMouseRightDown ) );
+	this->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( MainFrame::OnMouseRightUp ) );
 	m_consoleinsend_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
 	m_consoleinclear_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInClearButtonClicked ), NULL, this );
 	m_consoleinload_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInLoadButtonClicked ), NULL, this );

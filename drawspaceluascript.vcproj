@@ -170,6 +170,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_mousewrapper.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_mousewrapper.h"
+			>
+		</File>
+		<File
 			RelativePath="..\DrawSpace\src\lua_movementbuilder.cpp"
 			>
 		</File>

@@ -591,8 +591,8 @@
             <event name="OnKillFocus"></event>
             <event name="OnLeaveWindow"></event>
             <event name="OnLeftDClick"></event>
-            <event name="OnLeftDown"></event>
-            <event name="OnLeftUp"></event>
+            <event name="OnLeftDown">OnMouseLeftDown</event>
+            <event name="OnLeftUp">OnMouseLeftUp</event>
             <event name="OnMiddleDClick"></event>
             <event name="OnMiddleDown"></event>
             <event name="OnMiddleUp"></event>
@@ -601,8 +601,8 @@
             <event name="OnMouseWheel"></event>
             <event name="OnPaint"></event>
             <event name="OnRightDClick"></event>
-            <event name="OnRightDown"></event>
-            <event name="OnRightUp"></event>
+            <event name="OnRightDown">OnMouseRightDown</event>
+            <event name="OnRightUp">OnMouseRightUp</event>
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>

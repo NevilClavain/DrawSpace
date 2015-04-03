@@ -25,6 +25,7 @@
 #include "lua_spaceboxnodebuilder.h"
 #include "lua_transformnodebuilder.h"
 #include "lua_keyboardwrapper.h"
+#include "lua_mousewrapper.h"
 #include "lua_matrix.h"
 #include "lua_vector.h"
 
@@ -42,6 +43,7 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaTransformationNodeBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaKeyboardWrapper>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaMouseWrapper>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaMatrix>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaVector>::Register( LuaContext::GetInstance()->GetLuaState() );

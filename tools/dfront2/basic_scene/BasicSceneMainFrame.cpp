@@ -45,7 +45,8 @@ m_display_framerate( false ),
 m_display_currentcamera( false ),
 m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false ),
 m_keyup_code( NULL ),
-m_keydown_code( NULL )
+m_keydown_code( NULL ),
+m_mousemove_descr( NULL )
 {
 
    
@@ -532,6 +533,10 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_keyup_code = p_propertypool.GetPropValue<int*>( "keyupcode" );
         m_keydown_code = p_propertypool.GetPropValue<int*>( "keydowncode" );
     }
+    else if( "MouseWrapper:MouseWrapper" == script_call_id )
+    {
+        m_mousemove_descr = p_propertypool.GetPropValue<DrawSpace::Utils::MouseMovementsDescriptor*>( "descriptor" );
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
@@ -608,13 +613,82 @@ void BasicSceneMainFrame::OnKeyUp( wxKeyEvent& p_event )
     }
 }
 
-void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
+void BasicSceneMainFrame::OnMouseLeftDown( wxMouseEvent& event )
 {
+    if( m_mousemove_script_enabled )
+    {
+        if( m_mousemove_descr )
+        {
+            m_mousemove_descr->leftbutton_down = true;
+        }
+
+        bool status = m_scripting->ExecChunk( m_mousemove_script.c_str() );
+        if( !status )
+        {
+            m_mousemove_script_enabled = false;
+        }
+    }
+}
+
+void BasicSceneMainFrame::OnMouseLeftUp( wxMouseEvent& event )
+{
+    if( m_mousemove_script_enabled )
+    {
+        if( m_mousemove_descr )
+        {
+            m_mousemove_descr->leftbutton_down = false;
+        }
+
+        bool status = m_scripting->ExecChunk( m_mousemove_script.c_str() );
+        if( !status )
+        {
+            m_mousemove_script_enabled = false;
+        }
+    }
+}
+
+void BasicSceneMainFrame::OnMouseRightDown( wxMouseEvent& event )
+{
+    if( m_mousemove_script_enabled )
+    {
+        if( m_mousemove_descr )
+        {
+            m_mousemove_descr->rightbutton_down = true;
+        }
+
+        bool status = m_scripting->ExecChunk( m_mousemove_script.c_str() );
+        if( !status )
+        {
+            m_mousemove_script_enabled = false;
+        }
+    }
+}
+
+void BasicSceneMainFrame::OnMouseRightUp( wxMouseEvent& event )
+{
+    if( m_mousemove_script_enabled )
+    {
+        if( m_mousemove_descr )
+        {
+            m_mousemove_descr->rightbutton_down = false;
+        }
+
+        bool status = m_scripting->ExecChunk( m_mousemove_script.c_str() );
+        if( !status )
+        {
+            m_mousemove_script_enabled = false;
+        }
+    }
+}
+
+
+void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
+{    
     if( !p_event.Dragging() )
     {
         return;
     }
-
+       
     wxCoord curr_xmouse = p_event.GetX();
     wxCoord curr_ymouse = p_event.GetY();
 
@@ -663,6 +737,15 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
 
     if( m_mousemove_script_enabled )
     {
+        if( m_mousemove_descr )
+        {
+            m_mousemove_descr->xmouse = m_last_xmouse;
+            m_mousemove_descr->ymouse = m_last_ymouse;
+
+            m_mousemove_descr->delta_xmouse = delta_x;
+            m_mousemove_descr->delta_ymouse = delta_y;
+        }
+
         bool status = m_scripting->ExecChunk( m_mousemove_script.c_str() );
         if( !status )
         {

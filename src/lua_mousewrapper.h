@@ -20,57 +20,43 @@
 *
 */
 
-#ifndef _DESCRIPTORS_H_
-#define _DESCRIPTORS_H_
+#ifndef _MOUSEWRAPPER_H_
+#define _MOUSEWRAPPER_H_
 
 #include "drawspace_commons.h"
-#include "renderingnode.h"
-#include "vector.h"
+#include "callback.h"
+#include "mediator.h"
+#include "luna.h"
+#include "descriptors.h"
 
-namespace DrawSpace
+class LuaMouseWrapper
 {
-namespace Utils
-{
+public:
 
-typedef struct
-{
-    dsstring                    id;
-    long                        shader_index;
-    long                        shader_register;
-    DrawSpace::Utils::Vector    value;
+    DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
 
-} PassShaderParam;
+protected:
 
-typedef struct 
-{
-    dsstring                        fx_name;
-    long                            rendering_order;
-    dsstring                        textures[6][DrawSpace::Core::RenderingNode::NbMaxTextures];
-    std::vector<PassShaderParam>    shader_params;
+    DrawSpace::Utils::MouseMovementsDescriptor  m_mouse_movements;
 
-} PassDescriptor;
+public:
 
-typedef struct
-{
-    dsstring                            scene_name;
-    std::map<dsstring, PassDescriptor>  passes_slots;
+    LuaMouseWrapper( lua_State* p_L );
+    ~LuaMouseWrapper( void );
 
-} SpaceboxDescriptor;
+    int Lua_GetLastXMouse( lua_State* p_L );
+    int Lua_GetLastYMouse( lua_State* p_L );
 
-/////////////////////////////////////////////////////////////////
+    int Lua_GetLastDeltaXMouse( lua_State* p_L );
+    int Lua_GetLastDeltaYMouse( lua_State* p_L );
 
-typedef struct
-{    
-    bool            leftbutton_down;
-    bool            rightbutton_down;
-    int             xmouse;
-    int             ymouse;
-    int             delta_xmouse;
-    int             delta_ymouse;
+    int Lua_IsLeftButtonDown( lua_State* p_L );
+    int Lua_IsRightButtonDown( lua_State* p_L );
 
-} MouseMovementsDescriptor;
 
-}
-}
+    static const char className[];
+    static const Luna2<LuaMouseWrapper>::RegType methods[];
+
+};
 
 #endif

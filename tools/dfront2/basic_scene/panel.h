@@ -95,7 +95,11 @@ class MainFrame : public wxFrame
 		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
 		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnKeyUp( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnMouseLeftDown( wxMouseEvent& event ) { event.Skip(); }
+		virtual void OnMouseLeftUp( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnMouseMotion( wxMouseEvent& event ) { event.Skip(); }
+		virtual void OnMouseRightDown( wxMouseEvent& event ) { event.Skip(); }
+		virtual void OnMouseRightUp( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnConsoleInSendButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConsoleInClearButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConsoleInLoadButtonClicked( wxCommandEvent& event ) { event.Skip(); }
