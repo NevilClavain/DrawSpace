@@ -21,6 +21,7 @@
 */
 
 #include "BasicSceneScriptEditFrame.h"
+#include <wx/filedlg.h>
 
 BasicSceneScriptEditFrame::BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, dsstring* p_text, bool* p_script_state )
 :ScriptEditFrame( p_parent, wxID_ANY, p_title.c_str() ),
@@ -50,4 +51,16 @@ void BasicSceneScriptEditFrame::OnApplyButtonClicked( wxCommandEvent& event )
 
 void BasicSceneScriptEditFrame::OnLoadButtonClicked( wxCommandEvent& event )
 {
+    wxFileDialog openFileDialog( this, "Open lua script", "", "", "lua files (*.lua)|*.lua", wxFD_OPEN | wxFD_FILE_MUST_EXIST );
+    if( wxID_CANCEL == openFileDialog.ShowModal() )
+    {
+        return;
+    }
+    wxString path = openFileDialog.GetPath();
+    m_script_textCtrl->LoadFile( path );
+}
+
+void BasicSceneScriptEditFrame::OnClearButtonClicked( wxCommandEvent& event )
+{
+    m_script_textCtrl->Clear();
 }

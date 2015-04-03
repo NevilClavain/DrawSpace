@@ -33,6 +33,7 @@ protected:
     virtual void OnCloseButtonClicked( wxCommandEvent& event );
     virtual void OnApplyButtonClicked( wxCommandEvent& event );
     virtual void OnLoadButtonClicked( wxCommandEvent& event );
+    virtual void OnClearButtonClicked( wxCommandEvent& event );
 
   
     wxFont      m_console_font;

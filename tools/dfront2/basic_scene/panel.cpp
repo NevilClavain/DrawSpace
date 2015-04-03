@@ -287,6 +287,9 @@ ScriptEditFrame::ScriptEditFrame( wxWindow* parent, wxWindowID id, const wxStrin
 	m_load_button = new wxButton( this, wxID_ANY, wxT("Load"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer18->Add( m_load_button, 0, wxALL, 5 );
 	
+	m_clear_button = new wxButton( this, wxID_ANY, wxT("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer18->Add( m_clear_button, 0, wxALL, 5 );
+	
 	
 	bSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
 	
@@ -306,6 +309,7 @@ ScriptEditFrame::ScriptEditFrame( wxWindow* parent, wxWindowID id, const wxStrin
 	m_close_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnCloseButtonClicked ), NULL, this );
 	m_apply_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnApplyButtonClicked ), NULL, this );
 	m_load_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnLoadButtonClicked ), NULL, this );
+	m_clear_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnClearButtonClicked ), NULL, this );
 }
 
 ScriptEditFrame::~ScriptEditFrame()
@@ -314,5 +318,6 @@ ScriptEditFrame::~ScriptEditFrame()
 	m_close_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnCloseButtonClicked ), NULL, this );
 	m_apply_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnApplyButtonClicked ), NULL, this );
 	m_load_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnLoadButtonClicked ), NULL, this );
+	m_clear_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ScriptEditFrame::OnClearButtonClicked ), NULL, this );
 	
 }

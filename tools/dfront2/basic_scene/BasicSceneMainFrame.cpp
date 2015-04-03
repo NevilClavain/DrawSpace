@@ -1607,6 +1607,13 @@ void BasicSceneMainFrame::OnConsoleInClearButtonClicked( wxCommandEvent& p_event
 
 void BasicSceneMainFrame::OnConsoleInLoadButtonClicked( wxCommandEvent& p_event )
 {
+    wxFileDialog openFileDialog( this, "Open lua script", "", "", "lua files (*.lua)|*.lua", wxFD_OPEN | wxFD_FILE_MUST_EXIST );
+    if( wxID_CANCEL == openFileDialog.ShowModal() )
+    {
+        return;
+    }
+    wxString path = openFileDialog.GetPath();
+    m_consoleinput_textCtrl->LoadFile( path );
 }
 
 wxArrayString BasicSceneMainFrame::get_passes_list( void )
