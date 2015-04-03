@@ -44,18 +44,7 @@ public:
      
     int Lua_DisplayFramerate( lua_State* p_L );
     int Lua_DisplayCurrentCamera( lua_State* p_L );
-
     int Lua_CreateSceneNodeGraph( lua_State* p_L );
-
-    int Lua_CreateConstRegister( lua_State* p_L );
-    int Lua_ModifyConstRegisterValue( lua_State* p_L );
-
-    int Lua_CreateVarRegister( lua_State* p_L );
-    int Lua_ResetVarRegister( lua_State* p_L );
-    int Lua_SetVarRegisterState( lua_State* p_L );
-    int Lua_SetVarRegisterInitVal( lua_State* p_L );
-    int Lua_SetVarRegisterSpeed( lua_State* p_L );
-    int Lua_SetVarRegisterRange( lua_State* p_L );
 
 
     static const char className[];
