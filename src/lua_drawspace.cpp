@@ -32,6 +32,8 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "DisplayFramerate", &LuaDrawSpace::Lua_DisplayFramerate },
   { "DisplayCurrentCamera", &LuaDrawSpace::Lua_DisplayCurrentCamera },
   { "CreateSceneNodeGraph", &LuaDrawSpace::Lua_CreateSceneNodeGraph },
+  { "LoadKeyboardScript", &LuaDrawSpace::Lua_LoadKeyboardScript },
+  { "LoadMouseScript", &LuaDrawSpace::Lua_LoadMouseScript },
   { 0 }
 };
 
@@ -113,3 +115,46 @@ int LuaDrawSpace::Lua_CreateSceneNodeGraph( lua_State* p_L )
     return 0;
 }
 
+int LuaDrawSpace::Lua_LoadKeyboardScript( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "LoadKeyboardScript : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* filepath = luaL_checkstring( p_L, 1 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:LoadKeyboardScript" );
+        props.AddPropValue<dsstring>( "filepath", filepath );
+
+        (*m_scriptcalls_handler)( props );
+    }
+    return 0;
+}
+
+int LuaDrawSpace::Lua_LoadMouseScript( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "LoadMouseScript : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* filepath = luaL_checkstring( p_L, 1 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:LoadMouseScript" );
+        props.AddPropValue<dsstring>( "filepath", filepath );
+
+        (*m_scriptcalls_handler)( props );
+    }
+    return 0;
+}

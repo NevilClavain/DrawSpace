@@ -537,6 +537,14 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     {
         m_mousemove_descr = p_propertypool.GetPropValue<DrawSpace::Utils::MouseMovementsDescriptor*>( "descriptor" );
     }
+    else if( "DrawSpace:LoadKeyboardScript" == script_call_id )
+    {
+        dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
+    }
+    else if( "DrawSpace:LoadMouseScript" == script_call_id )
+    {
+        dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
