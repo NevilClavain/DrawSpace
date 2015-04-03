@@ -46,7 +46,8 @@ public:
     int Lua_DisplayCurrentCamera( lua_State* p_L );
     int Lua_CreateSceneNodeGraph( lua_State* p_L );
 
-    int Lua_LoadKeyboardScript( lua_State* p_L );
+    int Lua_LoadKeyUpScript( lua_State* p_L );
+    int Lua_LoadKeyDownScript( lua_State* p_L );
     int Lua_LoadMouseScript( lua_State* p_L );
 
 

@@ -32,7 +32,8 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "DisplayFramerate", &LuaDrawSpace::Lua_DisplayFramerate },
   { "DisplayCurrentCamera", &LuaDrawSpace::Lua_DisplayCurrentCamera },
   { "CreateSceneNodeGraph", &LuaDrawSpace::Lua_CreateSceneNodeGraph },
-  { "LoadKeyboardScript", &LuaDrawSpace::Lua_LoadKeyboardScript },
+  { "LoadKeyUpScript", &LuaDrawSpace::Lua_LoadKeyUpScript },
+  { "LoadKeyDownScript", &LuaDrawSpace::Lua_LoadKeyDownScript },
   { "LoadMouseScript", &LuaDrawSpace::Lua_LoadMouseScript },
   { 0 }
 };
@@ -115,12 +116,12 @@ int LuaDrawSpace::Lua_CreateSceneNodeGraph( lua_State* p_L )
     return 0;
 }
 
-int LuaDrawSpace::Lua_LoadKeyboardScript( lua_State* p_L )
+int LuaDrawSpace::Lua_LoadKeyUpScript( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
 	{
-		lua_pushstring( p_L, "LoadKeyboardScript : bad number of args" );
+		lua_pushstring( p_L, "Lua_LoadKeyUpScript : bad number of args" );
 		lua_error( p_L );		
 	}
     const char* filepath = luaL_checkstring( p_L, 1 );
@@ -129,12 +130,35 @@ int LuaDrawSpace::Lua_LoadKeyboardScript( lua_State* p_L )
     {
         PropertyPool props;
 
-        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:LoadKeyboardScript" );
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:Lua_LoadKeyUpScript" );
         props.AddPropValue<dsstring>( "filepath", filepath );
 
         (*m_scriptcalls_handler)( props );
     }
     return 0;
+}
+
+int LuaDrawSpace::Lua_LoadKeyDownScript( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "Lua_LoadKeyDownScript : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* filepath = luaL_checkstring( p_L, 1 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:Lua_LoadKeyDownScript" );
+        props.AddPropValue<dsstring>( "filepath", filepath );
+
+        (*m_scriptcalls_handler)( props );
+    }
+    return 0;
+
 }
 
 int LuaDrawSpace::Lua_LoadMouseScript( lua_State* p_L )

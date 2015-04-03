@@ -537,13 +537,32 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     {
         m_mousemove_descr = p_propertypool.GetPropValue<DrawSpace::Utils::MouseMovementsDescriptor*>( "descriptor" );
     }
-    else if( "DrawSpace:LoadKeyboardScript" == script_call_id )
+    else if( "DrawSpace:LoadKeyUpScript" == script_call_id )
     {
-        dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
+
+    }
+    else if( "DrawSpace:LoadKeyDownScript" == script_call_id )
+    {
+
     }
     else if( "DrawSpace:LoadMouseScript" == script_call_id )
     {
         dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
+
+        long size;
+        void* data = File::LoadAndAllocBinaryFile( filepath, &size );
+        if( data )
+        {
+            char* script_text = new char[size + 1];
+            memcpy( script_text, data, size );
+            script_text[size] = 0;
+            m_mousemove_script = script_text;
+        }
+        else
+        {
+            wxMessageBox( "DrawSpace:LoadMouseScript : file not found", "Script error", wxICON_ERROR );
+        }
+
     }
 }
 
