@@ -586,8 +586,8 @@
             <event name="OnHibernate"></event>
             <event name="OnIconize"></event>
             <event name="OnIdle">OnIdle</event>
-            <event name="OnKeyDown">OnKeyDown</event>
-            <event name="OnKeyUp">OnKeyUp</event>
+            <event name="OnKeyDown"></event>
+            <event name="OnKeyUp"></event>
             <event name="OnKillFocus"></event>
             <event name="OnLeaveWindow"></event>
             <event name="OnLeftDClick"></event>

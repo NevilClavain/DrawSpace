@@ -539,11 +539,39 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "DrawSpace:LoadKeyUpScript" == script_call_id )
     {
+        dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
 
+        long size;
+        void* data = File::LoadAndAllocBinaryFile( filepath, &size );
+        if( data )
+        {
+            char* script_text = new char[size + 1];
+            memcpy( script_text, data, size );
+            script_text[size] = 0;
+            m_keyup_script = script_text;
+        }
+        else
+        {
+            wxMessageBox( "DrawSpace:LoadKeyUpScript : file not found", "Script error", wxICON_ERROR );
+        }
     }
     else if( "DrawSpace:LoadKeyDownScript" == script_call_id )
     {
+        dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
 
+        long size;
+        void* data = File::LoadAndAllocBinaryFile( filepath, &size );
+        if( data )
+        {
+            char* script_text = new char[size + 1];
+            memcpy( script_text, data, size );
+            script_text[size] = 0;
+            m_keydown_script = script_text;
+        }
+        else
+        {
+            wxMessageBox( "DrawSpace:LoadKeyDownScript : file not found", "Script error", wxICON_ERROR );
+        }
     }
     else if( "DrawSpace:LoadMouseScript" == script_call_id )
     {
@@ -562,7 +590,6 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( "DrawSpace:LoadMouseScript : file not found", "Script error", wxICON_ERROR );
         }
-
     }
 }
 

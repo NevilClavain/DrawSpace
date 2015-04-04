@@ -87,6 +87,8 @@ public:
     virtual bool OnCmdLineParsed( wxCmdLineParser& p_parser );
 
     virtual bool OnExceptionInMainLoop( void );
+
+    virtual int FilterEvent( wxEvent& p_event );
 };
 
 DECLARE_APP( DFrontApp )

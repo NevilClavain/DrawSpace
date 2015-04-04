@@ -43,6 +43,19 @@ DFrontApp::~DFrontApp( void )
 
 }
 
+int DFrontApp::FilterEvent( wxEvent& p_event )
+{
+    if( wxEVT_KEY_UP == p_event.GetEventType() )
+    {
+        m_mainframe->OnKeyUp( (wxKeyEvent&)p_event );
+    }
+    else if( wxEVT_KEY_DOWN == p_event.GetEventType() )
+    {
+        m_mainframe->OnKeyDown( (wxKeyEvent&)p_event );
+    }
+    return wxApp::FilterEvent( p_event );
+}
+
 bool DFrontApp::OnInit( void )
 {
     if( !wxApp::OnInit() )

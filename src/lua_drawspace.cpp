@@ -121,7 +121,7 @@ int LuaDrawSpace::Lua_LoadKeyUpScript( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
 	{
-		lua_pushstring( p_L, "Lua_LoadKeyUpScript : bad number of args" );
+		lua_pushstring( p_L, "LoadKeyUpScript : bad number of args" );
 		lua_error( p_L );		
 	}
     const char* filepath = luaL_checkstring( p_L, 1 );
@@ -130,7 +130,7 @@ int LuaDrawSpace::Lua_LoadKeyUpScript( lua_State* p_L )
     {
         PropertyPool props;
 
-        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:Lua_LoadKeyUpScript" );
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:LoadKeyUpScript" );
         props.AddPropValue<dsstring>( "filepath", filepath );
 
         (*m_scriptcalls_handler)( props );
@@ -143,7 +143,7 @@ int LuaDrawSpace::Lua_LoadKeyDownScript( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
 	{
-		lua_pushstring( p_L, "Lua_LoadKeyDownScript : bad number of args" );
+		lua_pushstring( p_L, "LoadKeyDownScript : bad number of args" );
 		lua_error( p_L );		
 	}
     const char* filepath = luaL_checkstring( p_L, 1 );
@@ -152,7 +152,7 @@ int LuaDrawSpace::Lua_LoadKeyDownScript( lua_State* p_L )
     {
         PropertyPool props;
 
-        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:Lua_LoadKeyDownScript" );
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:LoadKeyDownScript" );
         props.AddPropValue<dsstring>( "filepath", filepath );
 
         (*m_scriptcalls_handler)( props );

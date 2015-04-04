@@ -470,8 +470,6 @@ protected:
 
     virtual void OnClose( wxCloseEvent& p_event );
     virtual void OnIdle( wxIdleEvent& p_event );
-	virtual void OnKeyDown( wxKeyEvent& p_event );
-	virtual void OnKeyUp( wxKeyEvent& p_event );
 	virtual void OnMouseMotion( wxMouseEvent& p_event );
     virtual void OnAssetsListItemActivated( wxListEvent& p_event );
     virtual void OnConfigsListItemActivated( wxListEvent& p_event );
@@ -518,6 +516,10 @@ public:
 
     void ExecStartupScript( const dsstring& p_scriptfilepath );
     void PrintOutputConsole( const dsstring& p_text );
+
+    void OnKeyDown( wxKeyEvent& p_event );
+	void OnKeyUp( wxKeyEvent& p_event );
+
     
 };
 

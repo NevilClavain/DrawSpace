@@ -219,8 +219,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame::OnClose ) );
 	this->Connect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle ) );
-	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame::OnKeyDown ) );
-	this->Connect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::OnKeyUp ) );
 	this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MainFrame::OnMouseLeftDown ) );
 	this->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( MainFrame::OnMouseLeftUp ) );
 	this->Connect( wxEVT_MOTION, wxMouseEventHandler( MainFrame::OnMouseMotion ) );
@@ -242,8 +240,6 @@ MainFrame::~MainFrame()
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame::OnClose ) );
 	this->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle ) );
-	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame::OnKeyDown ) );
-	this->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::OnKeyUp ) );
 	this->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MainFrame::OnMouseLeftDown ) );
 	this->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( MainFrame::OnMouseLeftUp ) );
 	this->Disconnect( wxEVT_MOTION, wxMouseEventHandler( MainFrame::OnMouseMotion ) );

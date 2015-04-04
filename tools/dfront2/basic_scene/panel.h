@@ -93,8 +93,6 @@ class MainFrame : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
-		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
-		virtual void OnKeyUp( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnMouseLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnMouseLeftUp( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnMouseMotion( wxMouseEvent& event ) { event.Skip(); }

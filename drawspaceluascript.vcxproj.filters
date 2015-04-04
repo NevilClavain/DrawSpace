@@ -16,12 +16,6 @@
     <ClCompile Include="src\lua_movementbuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\lua_spaceboxnode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lua_transformnode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\lua_vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,6 +23,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\luascripting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua_keyboardwrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua_mousewrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua_spaceboxnodebuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua_transformnodebuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -42,12 +48,6 @@
     <ClInclude Include="src\lua_movementbuilder.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\lua_spaceboxnode.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lua_transformnode.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\lua_vector.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -58,6 +58,18 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luna.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_keyboardwrapper.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_mousewrapper.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_spaceboxnodebuilder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_transformnodebuilder.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
