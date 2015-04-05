@@ -37,6 +37,7 @@ tf0node:LinkTo( "scene0", "scene0" )
 mat = Matrix()
 mat:Scale( 25, 25, 25 )
 tf0node:AddMatrix( mat )
+tf0node:LoadScript( "tf_transformnode.lua" )
 
 sb0 = SpaceBoxNodeBuilder( "sb0" )
 sb0:RegisterPassSlot( "texture_pass" )
@@ -57,4 +58,4 @@ mouse = MouseWrapper()
 
 ds:LoadMouseScript( "mousehandler.lua" )
 ds:LoadKeyUpScript( "keyuphandler.lua" )
-ds:LoadKeyDownScript( "keyuphandler.lua" )
+ds:LoadKeyDownScript( "keydownhandler.lua" )

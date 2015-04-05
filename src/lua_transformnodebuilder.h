@@ -50,6 +50,8 @@ public:
     int Lua_ClearMatrixStack( lua_State* p_L );
     int Lua_AddMatrix( lua_State* p_L );
 
+    int Lua_LoadScript( lua_State* p_L );
+
     static const char className[];
     static const Luna2<LuaTransformationNodeBuilder>::RegType methods[];
 

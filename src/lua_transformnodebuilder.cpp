@@ -35,6 +35,7 @@ const Luna2<LuaTransformationNodeBuilder>::RegType LuaTransformationNodeBuilder:
   { "LinkTo", &LuaTransformationNodeBuilder::Lua_LinkTo },
   { "ClearMatrixStack", &LuaTransformationNodeBuilder::Lua_ClearMatrixStack },
   { "AddMatrix", &LuaTransformationNodeBuilder::Lua_AddMatrix },
+  { "LoadScript", &LuaTransformationNodeBuilder::Lua_LoadScript },
   { 0, 0 }
 };
 
@@ -103,3 +104,25 @@ int LuaTransformationNodeBuilder::Lua_AddMatrix( lua_State* p_L )
     return 0;
 }
 
+int LuaTransformationNodeBuilder::Lua_LoadScript( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "LoadScript : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* filepath = luaL_checkstring( p_L, 1 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        props.AddPropValue<dsstring>( "script_call_id", "TransformationNode:LoadScript" );
+        props.AddPropValue<dsstring>( "filepath", filepath );
+        props.AddPropValue<BaseSceneNode*>( "node", &m_transformation_node );
+
+        (*m_scriptcalls_handler)( props );
+    }
+    return 0;
+}

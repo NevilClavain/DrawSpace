@@ -591,6 +591,26 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             wxMessageBox( "DrawSpace:LoadMouseScript : file not found", "Script error", wxICON_ERROR );
         }
     }
+    else if( "TransformationNode:LoadScript" == script_call_id )
+    {
+        dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
+        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
+        void* id = m_inv_tree_nodes[node];
+
+        long size;
+        void* data = File::LoadAndAllocBinaryFile( filepath, &size );
+        if( data )
+        {
+            char* script_text = new char[size + 1];
+            memcpy( script_text, data, size );
+            script_text[size] = 0;
+            m_transformation_nodes[id].script = script_text;
+        }
+        else
+        {
+            wxMessageBox( "TransformationNode:LoadScript : file not found", "Script error", wxICON_ERROR );
+        }        
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
