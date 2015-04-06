@@ -41,6 +41,8 @@ protected:
 
 public:
 	Transformation( void );
+    Transformation( int p_nbmat );
+
 	~Transformation( void );
 
 	void    PushMatrix( const DrawSpace::Utils::Matrix& p_matrix );

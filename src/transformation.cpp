@@ -32,6 +32,17 @@ Transformation::Transformation( void )
     m_result.Identity();
 }
 
+Transformation::Transformation( int p_nbmat )
+{
+    m_result.Identity();
+    for( int i = 0; i < p_nbmat; i++ )
+    {
+        Matrix ident;
+        ident.Identity();
+        PushMatrix( ident );
+    }
+}
+
 Transformation::~Transformation( void )
 {
 }
