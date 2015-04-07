@@ -21,6 +21,7 @@
 */
 
 #include "lua_drawspace.h"
+#include "lua_real.h"
 #include "luacontext.h"
 
 using namespace DrawSpace;
@@ -35,6 +36,10 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "LoadKeyUpScript", &LuaDrawSpace::Lua_LoadKeyUpScript },
   { "LoadKeyDownScript", &LuaDrawSpace::Lua_LoadKeyDownScript },
   { "LoadMouseScript", &LuaDrawSpace::Lua_LoadMouseScript },
+  { "AngleSpeedInc", &LuaDrawSpace::Lua_AngleSpeedInc },
+  { "AngleSpeedDec", &LuaDrawSpace::Lua_AngleSpeedDec },
+  { "TranslationSpeedInc", &LuaDrawSpace::Lua_TranslationSpeedInc },
+  { "TranslationSpeedDec", &LuaDrawSpace::Lua_TranslationSpeedDec },
   { 0 }
 };
 
@@ -180,5 +185,81 @@ int LuaDrawSpace::Lua_LoadMouseScript( lua_State* p_L )
 
         (*m_scriptcalls_handler)( props );
     }
+    return 0;
+}
+
+int LuaDrawSpace::Lua_AngleSpeedInc( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "AngleSpeedInc : bad number of args" );
+		lua_error( p_L );		
+	}
+    LuaReal* real = Luna2<LuaReal>::check( p_L, 1 );
+    if( !real )
+    {
+		lua_pushstring( p_L, "AngleSpeedInc : Real expected for arg 1" );
+		lua_error( p_L );        
+    }
+    dsreal speed = luaL_checknumber( p_L, 2 );
+
+    return 0;
+}
+
+int LuaDrawSpace::Lua_AngleSpeedDec( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "AngleSpeedDec : bad number of args" );
+		lua_error( p_L );		
+	}
+    LuaReal* real = Luna2<LuaReal>::check( p_L, 1 );
+    if( !real )
+    {
+		lua_pushstring( p_L, "AngleSpeedDec : Real expected for arg 1" );
+		lua_error( p_L );        
+    }
+    dsreal speed = luaL_checknumber( p_L, 2 );
+
+    return 0;
+}
+
+int LuaDrawSpace::Lua_TranslationSpeedInc( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "TranslationSpeedInc : bad number of args" );
+		lua_error( p_L );		
+	}
+    LuaReal* real = Luna2<LuaReal>::check( p_L, 1 );
+    if( !real )
+    {
+		lua_pushstring( p_L, "TranslationSpeedInc : Real expected for arg 1" );
+		lua_error( p_L );        
+    }
+    dsreal speed = luaL_checknumber( p_L, 2 );
+
+    return 0;
+}
+
+int LuaDrawSpace::Lua_TranslationSpeedDec( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "TranslationSpeedDec : bad number of args" );
+		lua_error( p_L );		
+	}
+    LuaReal* real = Luna2<LuaReal>::check( p_L, 1 );
+    if( !real )
+    {
+		lua_pushstring( p_L, "TranslationSpeedDec : Real expected for arg 1" );
+		lua_error( p_L );        
+    }
+    dsreal speed = luaL_checknumber( p_L, 2 );
+
     return 0;
 }

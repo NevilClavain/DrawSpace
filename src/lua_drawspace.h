@@ -50,6 +50,11 @@ public:
     int Lua_LoadKeyDownScript( lua_State* p_L );
     int Lua_LoadMouseScript( lua_State* p_L );
 
+    int Lua_AngleSpeedInc( lua_State* p_L );
+    int Lua_AngleSpeedDec( lua_State* p_L );
+
+    int Lua_TranslationSpeedInc( lua_State* p_L );
+    int Lua_TranslationSpeedDec( lua_State* p_L );
 
     static const char className[];
     static const Luna2<LuaDrawSpace>::RegType methods[];

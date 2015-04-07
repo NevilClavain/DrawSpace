@@ -34,8 +34,6 @@ public:
 
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
 
-protected:
-
     dsreal m_value;
 
 public:
