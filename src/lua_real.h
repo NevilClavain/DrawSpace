@@ -36,12 +36,14 @@ public:
 
 protected:
 
-    dsreal m_real;
+    dsreal m_value;
 
 public:
 
     LuaReal( lua_State* p_L );
     ~LuaReal( void );
+
+    int Lua_GetValue( lua_State* p_L );
 
     static const char className[];
     static const Luna2<LuaReal>::RegType methods[];

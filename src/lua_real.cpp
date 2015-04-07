@@ -30,14 +30,28 @@ using namespace DrawSpace::Core;
 const char LuaReal::className[] = "Real";
 const Luna2<LuaReal>::RegType LuaReal::methods[] =
 {
+    { "GetValue", &LuaReal::Lua_GetValue },
     { 0, 0 }
 };
 
-LuaReal::LuaReal( lua_State* p_L )
-{    
+LuaReal::LuaReal( lua_State* p_L ):
+m_value( 0.0 )
+{
+    int argc = lua_gettop( p_L );
+    if( 1 == argc )
+    {
+        m_value = luaL_checknumber( p_L, 1 );
+    }
+
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
 }
 
 LuaReal::~LuaReal( void ) 
 {
+}
+
+int LuaReal::Lua_GetValue( lua_State* p_L )
+{
+    lua_pushnumber( p_L, m_value );
+    return 1;
 }

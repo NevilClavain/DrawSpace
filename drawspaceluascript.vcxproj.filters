@@ -75,6 +75,8 @@
     <ClInclude Include="src\lua_transformnodebuilder.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\lua_real.h" />
+    <ClInclude Include="src\lua_real.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
