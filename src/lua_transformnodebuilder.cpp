@@ -35,12 +35,14 @@ const Luna2<LuaTransformationNodeBuilder>::RegType LuaTransformationNodeBuilder:
   { "LinkTo", &LuaTransformationNodeBuilder::Lua_LinkTo },
   { "ClearMatrixStack", &LuaTransformationNodeBuilder::Lua_ClearMatrixStack },
   { "AddMatrix", &LuaTransformationNodeBuilder::Lua_AddMatrix },
+  { "UpdateMatrix", &LuaTransformationNodeBuilder::Lua_UpdateMatrix },
   { "LoadScript", &LuaTransformationNodeBuilder::Lua_LoadScript },
   { 0, 0 }
 };
 
 LuaTransformationNodeBuilder::LuaTransformationNodeBuilder( lua_State* p_L )
-: m_transformation_node( "transformation_node" )
+: m_transformation_node( "transformation_node" ),
+m_existing_transformation_node( NULL )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
@@ -52,7 +54,17 @@ LuaTransformationNodeBuilder::LuaTransformationNodeBuilder( lua_State* p_L )
     m_transformation_node.SetSceneName( scene_name );
     
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
-    //m_transformation_node.SetContent( &m_transformation );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "TransformationNode:TransformationNode" );
+        props.AddPropValue<dsstring>( "scene_name", scene_name );
+        props.AddPropValue<SceneNode<Transformation>**>( "existing_node", &m_existing_transformation_node );
+
+        (*m_scriptcalls_handler)( props );
+    }
+
 }
 
 LuaTransformationNodeBuilder::~LuaTransformationNodeBuilder( void ) 
@@ -90,17 +102,70 @@ int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
 
 int LuaTransformationNodeBuilder::Lua_ClearMatrixStack( lua_State* p_L )
 {
-    //m_transformation.ClearAll();
-    m_transformation_node.GetContent()->ClearAll();
+    if( m_existing_transformation_node )
+    {
+        m_existing_transformation_node->GetContent()->ClearAll();
+    }
+    else
+    {
+        m_transformation_node.GetContent()->ClearAll();
+    }
     return 0;
 }
 
 int LuaTransformationNodeBuilder::Lua_AddMatrix( lua_State* p_L )
 {
-    LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 1 );
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "AddMatrix : bad number of args" );
+		lua_error( p_L );		
+	}
 
-    //m_transformation.PushMatrix( mat->m_mat );
-    m_transformation_node.GetContent()->PushMatrix( mat->m_mat );
+    LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 1 );
+    if( !mat )
+    {
+		lua_pushstring( p_L, "AddMatrix : Matrix expected for arg 1" );
+		lua_error( p_L );        
+    }
+
+    if( m_existing_transformation_node )
+    {
+        m_existing_transformation_node->GetContent()->PushMatrix( mat->m_mat );
+    }
+    else
+    {
+        m_transformation_node.GetContent()->PushMatrix( mat->m_mat );
+    }
+
+    return 0;
+}
+
+int LuaTransformationNodeBuilder::Lua_UpdateMatrix( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "UpdateMatrix : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    long index = luaL_checkinteger( p_L, 1 );
+    LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 2 );
+    if( !mat )
+    {
+		lua_pushstring( p_L, "UpdateMatrix : Matrix expected for arg 1" );
+		lua_error( p_L );        
+    }
+
+    if( m_existing_transformation_node )
+    {
+        m_existing_transformation_node->GetContent()->UpdateMatrix( index, mat->m_mat );
+    }
+    else
+    {
+        m_transformation_node.GetContent()->UpdateMatrix( index, mat->m_mat );
+    }
     return 0;
 }
 

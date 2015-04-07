@@ -237,6 +237,21 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
         m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
     }
+    else if( "TransformationNode:TransformationNode" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        SceneNode<Transformation>** node_ptr = p_propertypool.GetPropValue<SceneNode<Transformation>**>( "existing_node" );
+
+        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>::iterator it = m_transformation_nodes.begin(); it != m_transformation_nodes.end(); ++it )
+        {
+            if( it->second.name == scene_name )
+            {
+                // node exists
+                *node_ptr = it->second.scene_node;
+                break;
+            }
+        }
+    }
     else if( "TransformationNode:LinkTo" == script_call_id )
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );

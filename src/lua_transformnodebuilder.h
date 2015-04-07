@@ -37,8 +37,8 @@ public:
 
 protected:
 
-    //DrawSpace::Core::Transformation                             m_transformation;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation> m_transformation_node;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>     m_transformation_node;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*    m_existing_transformation_node;
 
 public:
 
@@ -49,6 +49,7 @@ public:
 
     int Lua_ClearMatrixStack( lua_State* p_L );
     int Lua_AddMatrix( lua_State* p_L );
+    int Lua_UpdateMatrix( lua_State* p_L );
 
     int Lua_LoadScript( lua_State* p_L );
 
