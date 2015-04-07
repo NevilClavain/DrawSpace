@@ -53,13 +53,6 @@ m_mousemove_descr( NULL )
     m_consoleinput_textCtrl->SetFont( m_console_font );
     m_consoleoutput_textCtrl->SetFont( m_console_font );
 
-
-    m_timercb = new TimerCallback( this, &BasicSceneMainFrame::on_timer );
-
-    m_timer.AddTimer( "timer", 100, m_timercb );
-    m_timer.SetTimerState( "timer", true );
-
-    //m_scripting = DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface;
     m_scripting = new LuaScripting();
 
 
@@ -650,17 +643,8 @@ void BasicSceneMainFrame::SetWindowDims( long p_w_width, long p_w_height )
     m_w_height = p_w_height;
 }
 
-
-void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
-{
-    
-}
-
-
-
 void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 {
-    //DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->Shutdown();
     Destroy();
 }
 
@@ -2483,7 +2467,6 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
     if( m_inv_tree_nodes.count( p_node ) > 0 )
     {
         void* id = m_inv_tree_nodes[p_node];
-        m_nodescript_currentnode = p_node;
 
         dsstring script;
         bool* script_enabled;
