@@ -18,6 +18,7 @@
     <ClCompile Include="src\lua_matrix.cpp" />
     <ClCompile Include="src\lua_mousewrapper.cpp" />
     <ClCompile Include="src\lua_movementbuilder.cpp" />
+    <ClCompile Include="src\lua_real.cpp" />
     <ClCompile Include="src\lua_spaceboxnodebuilder.cpp" />
     <ClCompile Include="src\lua_transformnodebuilder.cpp" />
     <ClCompile Include="src\lua_vector.cpp" />
@@ -30,6 +31,7 @@
     <ClInclude Include="src\lua_matrix.h" />
     <ClInclude Include="src\lua_mousewrapper.h" />
     <ClInclude Include="src\lua_movementbuilder.h" />
+    <ClInclude Include="src\lua_real.h" />
     <ClInclude Include="src\lua_spaceboxnodebuilder.h" />
     <ClInclude Include="src\lua_transformnodebuilder.h" />
     <ClInclude Include="src\lua_vector.h" />

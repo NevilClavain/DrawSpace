@@ -20,16 +20,15 @@
 *
 */
 
-#ifndef _LUA_TRANSFORMNODEBUILDER_H_
-#define _LUA_TRANSFORMNODEBUILDER_H_
+#ifndef _LUA_REAL_H_
+#define _LUA_REAL_H_
 
 #include "drawspace_commons.h"
 #include "callback.h"
 #include "mediator.h"
-#include "transformation.h"
 #include "luna.h"
 
-class LuaTransformationNodeBuilder
+class LuaReal
 {
 public:
 
@@ -37,25 +36,15 @@ public:
 
 protected:
 
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>     m_transformation_node;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*    m_existing_transformation_node;
-    int                                                         m_nbmat;
+    dsreal m_real;
 
 public:
 
-    LuaTransformationNodeBuilder( lua_State* p_L );
-    ~LuaTransformationNodeBuilder( void );
-     
-    int Lua_LinkTo( lua_State* p_L );
-
-    int Lua_ClearMatrixStack( lua_State* p_L );
-    int Lua_AddMatrix( lua_State* p_L );
-    int Lua_UpdateMatrix( lua_State* p_L );
-
-    int Lua_LoadScript( lua_State* p_L );
+    LuaReal( lua_State* p_L );
+    ~LuaReal( void );
 
     static const char className[];
-    static const Luna2<LuaTransformationNodeBuilder>::RegType methods[];
+    static const Luna2<LuaReal>::RegType methods[];
 
 };
 

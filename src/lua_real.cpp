@@ -20,43 +20,24 @@
 *
 */
 
-#ifndef _LUA_TRANSFORMNODEBUILDER_H_
-#define _LUA_TRANSFORMNODEBUILDER_H_
+#include "lua_real.h"
+#include "luacontext.h"
+#include "exceptions.h"
 
-#include "drawspace_commons.h"
-#include "callback.h"
-#include "mediator.h"
-#include "transformation.h"
-#include "luna.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
-class LuaTransformationNodeBuilder
+const char LuaReal::className[] = "Real";
+const Luna2<LuaReal>::RegType LuaReal::methods[] =
 {
-public:
-
-    DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
-
-protected:
-
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>     m_transformation_node;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*    m_existing_transformation_node;
-    int                                                         m_nbmat;
-
-public:
-
-    LuaTransformationNodeBuilder( lua_State* p_L );
-    ~LuaTransformationNodeBuilder( void );
-     
-    int Lua_LinkTo( lua_State* p_L );
-
-    int Lua_ClearMatrixStack( lua_State* p_L );
-    int Lua_AddMatrix( lua_State* p_L );
-    int Lua_UpdateMatrix( lua_State* p_L );
-
-    int Lua_LoadScript( lua_State* p_L );
-
-    static const char className[];
-    static const Luna2<LuaTransformationNodeBuilder>::RegType methods[];
-
+    { 0, 0 }
 };
 
-#endif
+LuaReal::LuaReal( lua_State* p_L )
+{    
+    m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
+}
+
+LuaReal::~LuaReal( void ) 
+{
+}

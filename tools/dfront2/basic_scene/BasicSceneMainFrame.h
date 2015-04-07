@@ -341,32 +341,6 @@ protected:
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, DrawSpace::Core::BaseSceneNode*>   NodeUpdateBeginCallBack;
 
 
-    void on_timer( const dsstring& p_timername );
-    void on_scripting_error( const dsstring& p_error );
-    void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );
-
-    
-
-
-
-    void build_popupmenu( int p_level, wxMenu& p_menu );
-
-    wxArrayString get_passes_list( void );
-    wxArrayString get_finalpasses_list( void );
-    wxArrayString get_intermediatepasses_list( void );
-    wxArrayString get_fx_list( void );
-    wxArrayString get_textures_list( void );
-    wxArrayString get_shaders_list( void );
-    wxArrayString get_meshes_list( void );
-    wxArrayString get_fonts_list( void );
-    wxArrayString insert_void_choice( const wxArrayString& p_array );
-
-
-
-    void build_passes_infos_dialog( DrawSpace::Core::Configurable* p_config );
-
-    void* find_scenenodegraph_id( void );
-
        
 
     long                                                                                    m_w_width;
@@ -406,7 +380,7 @@ protected:
 
     
 
-    TimerCallback*                                          m_timercb;
+    
 
     wxCoord                                                 m_last_xmouse;
     wxCoord                                                 m_last_ymouse;
@@ -441,8 +415,6 @@ protected:
 
     NodeUpdateBeginCallBack*                                m_nodeupdatebegin_cb;
 
-    DrawSpace::Core::BaseSceneNode*                         m_nodescript_currentnode;
-
 
     dsstring                                                m_keydown_script;
     bool                                                    m_keydown_script_enabled;
@@ -458,6 +430,33 @@ protected:
     bool                                                    m_mousemove_script_enabled;
 
     DrawSpace::Utils::MouseMovementsDescriptor*             m_mousemove_descr;
+
+
+    void on_scripting_error( const dsstring& p_error );
+    void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );
+
+    
+
+
+
+    void build_popupmenu( int p_level, wxMenu& p_menu );
+
+    wxArrayString get_passes_list( void );
+    wxArrayString get_finalpasses_list( void );
+    wxArrayString get_intermediatepasses_list( void );
+    wxArrayString get_fx_list( void );
+    wxArrayString get_textures_list( void );
+    wxArrayString get_shaders_list( void );
+    wxArrayString get_meshes_list( void );
+    wxArrayString get_fonts_list( void );
+    wxArrayString insert_void_choice( const wxArrayString& p_array );
+
+
+
+    void build_passes_infos_dialog( DrawSpace::Core::Configurable* p_config );
+
+    void* find_scenenodegraph_id( void );
+
 
 
     void on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog );

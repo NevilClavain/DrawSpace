@@ -53,13 +53,6 @@ m_mousemove_descr( NULL )
     m_consoleinput_textCtrl->SetFont( m_console_font );
     m_consoleoutput_textCtrl->SetFont( m_console_font );
 
-
-    m_timercb = new TimerCallback( this, &BasicSceneMainFrame::on_timer );
-
-    m_timer.AddTimer( "timer", 100, m_timercb );
-    m_timer.SetTimerState( "timer", true );
-
-    //m_scripting = DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface;
     m_scripting = new LuaScripting();
 
 
@@ -236,6 +229,21 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
 
         m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
+    }
+    else if( "TransformationNode:TransformationNode" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        SceneNode<Transformation>** node_ptr = p_propertypool.GetPropValue<SceneNode<Transformation>**>( "existing_node" );
+
+        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>::iterator it = m_transformation_nodes.begin(); it != m_transformation_nodes.end(); ++it )
+        {
+            if( it->second.name == scene_name )
+            {
+                // node exists
+                *node_ptr = it->second.scene_node;
+                break;
+            }
+        }
     }
     else if( "TransformationNode:LinkTo" == script_call_id )
     {
@@ -635,17 +643,8 @@ void BasicSceneMainFrame::SetWindowDims( long p_w_width, long p_w_height )
     m_w_height = p_w_height;
 }
 
-
-void BasicSceneMainFrame::on_timer( const dsstring& p_timername )
-{
-    
-}
-
-
-
 void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 {
-    //DrawSpace::Core::SingletonPlugin<Scripting>::GetInstance()->m_interface->Shutdown();
     Destroy();
 }
 
@@ -2468,7 +2467,6 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
     if( m_inv_tree_nodes.count( p_node ) > 0 )
     {
         void* id = m_inv_tree_nodes[p_node];
-        m_nodescript_currentnode = p_node;
 
         dsstring script;
         bool* script_enabled;

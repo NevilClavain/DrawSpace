@@ -37,6 +37,9 @@
     <ClCompile Include="src\lua_transformnodebuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\lua_real.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\lua_drawspace.h">
@@ -72,5 +75,6 @@
     <ClInclude Include="src\lua_transformnodebuilder.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\lua_real.h" />
   </ItemGroup>
 </Project>

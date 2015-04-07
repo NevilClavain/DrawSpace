@@ -186,6 +186,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_real.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_real.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\lua_spaceboxnodebuilder.cpp"
 			>
 		</File>
