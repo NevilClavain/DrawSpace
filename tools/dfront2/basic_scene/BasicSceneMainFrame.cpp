@@ -135,6 +135,8 @@ m_mousemove_descr( NULL )
     m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newfreemvt );
     m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newspectatormvt );
 
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newcamera );
+
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newspacebox );
@@ -153,6 +155,7 @@ m_mousemove_descr( NULL )
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcircularmvt );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newlonglatmvt );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcamera );
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
 
