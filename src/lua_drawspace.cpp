@@ -204,6 +204,12 @@ int LuaDrawSpace::Lua_AngleSpeedInc( lua_State* p_L )
     }
     dsreal speed = luaL_checknumber( p_L, 2 );
 
+    PropertyPool props;
+    props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:AngleSpeedInc" );
+    props.AddPropValue<dsreal>( "speed", speed );
+    props.AddPropValue<dsreal*>( "realvar", &real->m_value );
+    (*m_scriptcalls_handler)( props );
+
     return 0;
 }
 
@@ -222,6 +228,12 @@ int LuaDrawSpace::Lua_AngleSpeedDec( lua_State* p_L )
 		lua_error( p_L );        
     }
     dsreal speed = luaL_checknumber( p_L, 2 );
+
+    PropertyPool props;
+    props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:AngleSpeedInc" );
+    props.AddPropValue<dsreal>( "speed", speed );
+    props.AddPropValue<dsreal*>( "realvar", &real->m_value );
+    (*m_scriptcalls_handler)( props );
 
     return 0;
 }
@@ -242,6 +254,12 @@ int LuaDrawSpace::Lua_TranslationSpeedInc( lua_State* p_L )
     }
     dsreal speed = luaL_checknumber( p_L, 2 );
 
+    PropertyPool props;
+    props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:TranslationSpeedInc" );
+    props.AddPropValue<dsreal>( "speed", speed );
+    props.AddPropValue<dsreal*>( "realvar", &real->m_value );
+    (*m_scriptcalls_handler)( props );
+
     return 0;
 }
 
@@ -260,6 +278,12 @@ int LuaDrawSpace::Lua_TranslationSpeedDec( lua_State* p_L )
 		lua_error( p_L );        
     }
     dsreal speed = luaL_checknumber( p_L, 2 );
+
+    PropertyPool props;
+    props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:TranslationSpeedDec" );
+    props.AddPropValue<dsreal>( "speed", speed );
+    props.AddPropValue<dsreal*>( "realvar", &real->m_value );
+    (*m_scriptcalls_handler)( props );
 
     return 0;
 }

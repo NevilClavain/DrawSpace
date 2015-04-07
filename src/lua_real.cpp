@@ -52,6 +52,6 @@ LuaReal::~LuaReal( void )
 
 int LuaReal::Lua_GetValue( lua_State* p_L )
 {
-   Ge lua_pushnumber( p_L, m_value );
+    lua_pushnumber( p_L, m_value );
     return 1;
 }

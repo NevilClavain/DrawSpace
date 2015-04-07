@@ -233,6 +233,34 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
         m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
     }
+    else if( "DrawSpace:AngleSpeedInc" == script_call_id )
+    {
+        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
+        dsreal* realvar = p_propertypool.GetPropValue<dsreal*>( "realvar" );
+
+        m_timer.AngleSpeedInc( realvar, speed );
+
+    }
+    else if( "DrawSpace:AngleSpeedDec" == script_call_id )
+    {
+        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
+        dsreal* realvar = p_propertypool.GetPropValue<dsreal*>( "realvar" );
+        m_timer.AngleSpeedDec( realvar, speed );
+
+    }
+    else if( "DrawSpace:TranslationSpeedInc" == script_call_id )
+    {
+        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
+        dsreal* realvar = p_propertypool.GetPropValue<dsreal*>( "realvar" );
+        m_timer.TranslationSpeedInc( realvar, speed );
+    }
+    else if( "DrawSpace:TranslationSpeedDec" == script_call_id )
+    {
+        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
+        dsreal* realvar = p_propertypool.GetPropValue<dsreal*>( "realvar" );
+        m_timer.TranslationSpeedDec( realvar, speed );
+    }
+
     else if( "TransformationNode:TransformationNode" == script_call_id )
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
