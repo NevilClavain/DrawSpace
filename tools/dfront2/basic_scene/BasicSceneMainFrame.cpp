@@ -243,7 +243,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
         dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
         BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
-
+        int nbmat = p_propertypool.GetPropValue<int>( "nbmat" );
        
         wxTreeItemId parent_tree_item;
         void* parent_id = NULL;
@@ -307,7 +307,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         }
 
         SceneNode<Transformation>* transfo_node = static_cast<SceneNode<Transformation>*>( node );
-        Transformation* tf = new Transformation();
+        Transformation* tf = new Transformation( nbmat );
         transfo_node->SetContent( tf );
 
         transfo_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );

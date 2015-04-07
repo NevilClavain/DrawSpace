@@ -40,16 +40,22 @@ const Luna2<LuaTransformationNodeBuilder>::RegType LuaTransformationNodeBuilder:
 };
 
 LuaTransformationNodeBuilder::LuaTransformationNodeBuilder( lua_State* p_L )
-: m_transformation_node( "transformation_node" )
+: m_transformation_node( "transformation_node" ),
+m_nbmat( 0 )
 {
 	int argc = lua_gettop( p_L );
-	if( argc != 1 )
+	if( argc < 1 )
 	{
 		lua_pushstring( p_L, "LuaTransformationNode ctor : bad number of args" );
 		lua_error( p_L );		
 	}
     const char* scene_name = luaL_checkstring( p_L, 1 );
     m_transformation_node.SetSceneName( scene_name );
+
+    if( 2 == argc )
+    {
+        m_nbmat = luaL_checkinteger( p_L, 2 );
+    }
     
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
     //m_transformation_node.SetContent( &m_transformation );
@@ -81,6 +87,7 @@ int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
         props.AddPropValue<dsstring>( "parent_name", parent_name );
         props.AddPropValue<dsstring>( "scene_name", scene_name );
         props.AddPropValue<BaseSceneNode*>( "node", &m_transformation_node );
+        props.AddPropValue<int>( "nbmat", m_nbmat );
 
         (*m_scriptcalls_handler)( props );
     }
