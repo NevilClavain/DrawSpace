@@ -1,1 +1,1 @@
-print( "key up : " .. keyboard:GetLastKeyupCode() )
+-- print( "key up : " .. keyboard:GetLastKeyupCode() )
