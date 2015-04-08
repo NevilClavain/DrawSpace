@@ -230,7 +230,7 @@ int LuaDrawSpace::Lua_AngleSpeedDec( lua_State* p_L )
     dsreal speed = luaL_checknumber( p_L, 2 );
 
     PropertyPool props;
-    props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:AngleSpeedInc" );
+    props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:AngleSpeedDec" );
     props.AddPropValue<dsreal>( "speed", speed );
     props.AddPropValue<dsreal*>( "realvar", &real->m_value );
     (*m_scriptcalls_handler)( props );
