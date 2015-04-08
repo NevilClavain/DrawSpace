@@ -94,4 +94,6 @@
 #include "planetoid_body.h"
 #include "inits.h"
 #include "descriptors.h"
+#include "ac3dmeshe.h"
+#include "cbfgfont.h"
 #endif

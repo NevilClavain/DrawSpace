@@ -230,6 +230,12 @@
       <Filter>logging</Filter>
     </ClCompile>
     <ClCompile Include="src\drawspace_commons.cpp" />
+    <ClCompile Include="src\ac3dmeshe.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cbfgfont.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -477,6 +483,12 @@
       <Filter>logging</Filter>
     </ClInclude>
     <ClInclude Include="src\descriptors.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ac3dmeshe.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cbfgfont.h">
       <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>

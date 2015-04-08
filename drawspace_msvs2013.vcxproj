@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ac3dmeshe.cpp" />
     <ClCompile Include="src\archive.cpp" />
     <ClCompile Include="src\asset.cpp" />
     <ClCompile Include="src\assetsbase.cpp" />
     <ClCompile Include="src\body.cpp" />
     <ClCompile Include="src\calendar.cpp" />
     <ClCompile Include="src\camerapoint.cpp" />
+    <ClCompile Include="src\cbfgfont.cpp" />
     <ClCompile Include="src\chunk.cpp" />
     <ClCompile Include="src\circularmovement.cpp" />
     <ClCompile Include="src\collider.cpp" />
@@ -87,6 +89,7 @@
     <ClCompile Include="src\world.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ac3dmeshe.h" />
     <ClInclude Include="src\archive.h" />
     <ClInclude Include="src\asset.h" />
     <ClInclude Include="src\assetsbase.h" />
@@ -94,6 +97,7 @@
     <ClInclude Include="src\calendar.h" />
     <ClInclude Include="src\callback.h" />
     <ClInclude Include="src\camerapoint.h" />
+    <ClInclude Include="src\cbfgfont.h" />
     <ClInclude Include="src\chunk.h" />
     <ClInclude Include="src\circularmovement.h" />
     <ClInclude Include="src\collider.h" />

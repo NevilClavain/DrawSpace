@@ -201,38 +201,6 @@ Interface::FontImport* DrawSpace::Utils::InstanciateFontImportFromPlugin( const 
     return NULL;
 }
 
-bool DrawSpace::Utils::LoadMesheImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias )
-{
-	dsstring complete_path = p_path;
-#ifdef _DEBUG
-	complete_path += ".dll";
-#else
-	complete_path += "_r.dll";
-#endif
-    PlugInManager<MesheImport>::Handle pihandle;
-	PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK )
-    {
-        return false;
-    }
-    m_mesheimportplugins[p_pluginalias] = pihandle;
-    return true;
-}
-
-Interface::MesheImport* DrawSpace::Utils::InstanciateMesheImportFromPlugin( const dsstring& p_pluginalias )
-{
-    MesheImport* mesheimp;
-
-    if( m_mesheimportplugins.count( p_pluginalias ) > 0 )
-    {
-        if( PIM_OK == PlugInManager<MesheImport>::Instanciate( m_mesheimportplugins[p_pluginalias], &mesheimp ) )
-        {
-            return mesheimp;
-        }        
-    }
-    return NULL;
-}
-
 void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, Pass* p_pass )
 {
     for( long i = 0; i < 6; i++ )

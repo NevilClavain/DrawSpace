@@ -38,9 +38,6 @@ Gui::TextWidget* BuildText( DrawSpace::Core::Font* p_font, long p_width, long p_
 bool LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias );
 Interface::FontImport* InstanciateFontImportFromPlugin( const dsstring& p_pluginalias );
 
-bool LoadMesheImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias );
-Interface::MesheImport* InstanciateMesheImportFromPlugin( const dsstring& p_pluginalias );
-
 void BuildSpaceboxFx( DrawSpace::Spacebox* p_spacebox, Pass* p_pass );
 
 long StringToInt( const dsstring& p_value );
