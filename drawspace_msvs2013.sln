@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspace", "drawspace_msvs
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "plugins\d3d9\d3d9.vcxproj", "{47F2BC30-BEB7-4968-9ED9-30129A5916BB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cbfgfont", "plugins\cbfgfont\cbfgfont.vcxproj", "{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspaceluascript", "drawspaceluascript.vcxproj", "{CABD34B4-7686-4078-B1CD-C4293F8B1392}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{47F2BC30-BEB7-4968-9ED9-30129A5916BB}.Debug|Win32.Build.0 = Debug|Win32
 		{47F2BC30-BEB7-4968-9ED9-30129A5916BB}.Release|Win32.ActiveCfg = Release|Win32
 		{47F2BC30-BEB7-4968-9ED9-30129A5916BB}.Release|Win32.Build.0 = Release|Win32
-		{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}.Debug|Win32.Build.0 = Debug|Win32
-		{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}.Release|Win32.ActiveCfg = Release|Win32
-		{5AA26EF9-2463-4B36-ADBC-2CAF42690B34}.Release|Win32.Build.0 = Release|Win32
 		{CABD34B4-7686-4078-B1CD-C4293F8B1392}.Debug|Win32.ActiveCfg = Debug|Win32
 		{CABD34B4-7686-4078-B1CD-C4293F8B1392}.Debug|Win32.Build.0 = Debug|Win32
 		{CABD34B4-7686-4078-B1CD-C4293F8B1392}.Release|Win32.ActiveCfg = Release|Win32

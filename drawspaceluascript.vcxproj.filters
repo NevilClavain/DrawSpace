@@ -25,19 +25,19 @@
     <ClCompile Include="src\luascripting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\lua_keyboardwrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lua_mousewrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lua_spaceboxnodebuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lua_transformnodebuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\lua_real.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua_keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua_mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua_spaceboxnode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua_transformnode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,19 +63,19 @@
     <ClInclude Include="src\luna.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\lua_keyboardwrapper.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lua_mousewrapper.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lua_spaceboxnodebuilder.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lua_transformnodebuilder.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\lua_real.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_keyboard.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_mouse.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_spaceboxnode.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_transformnode.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
