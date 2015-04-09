@@ -1655,6 +1655,16 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
+        case CONTEXTMENU_NEWCAMERA:
+            {
+                DIALOG_DECLARE( DIALOG_CAMERA_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+                DIALOG_APPLY
+                DIALOG_SHOW                
+            }
+            break;
+
  	}
  }
 
@@ -2371,7 +2381,85 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         
         DIALOG_CLOSE
     }
+    else if( DIALOG_CAMERA_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
 
+        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+        if( "" == alias )
+        {
+            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // create the camera node
+
+        SceneNode<CameraPoint>* camera_node;
+        camera_node = new SceneNode<CameraPoint>( alias );
+        camera_node->SetContent( new CameraPoint );
+
+        camera_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // now we must found the scenenodegraph we belong to make the RegisterNode() call
+        void* id = find_scenenodegraph_id();
+
+        BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+        entry = m_scenenodegraphs[id];
+        entry.scenenodegraph->RegisterNode( camera_node );
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        // link to the scenegraph hierarchy
+
+        wxTreeItemId current;
+        current = m_last_clicked_treeitem;
+        id = current.GetID();
+
+        if( m_scenenodegraphs.count( id ) > 0 )
+        {
+            // parent is a scenegraph : use SceneNodeGraph::Add() method
+            entry.scenenodegraph->AddNode( camera_node );
+        }
+        else
+        {
+            BaseSceneNode* parent_node = m_tree_nodes[id];
+            camera_node->LinkTo( parent_node );
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        // GUI : add item in the tree
+
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, CAMERA_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // record the new transformation node and associated metadata
+
+        BasicSceneMainFrame::SceneNodeEntry<CameraPoint> c_entry;
+
+        c_entry.name = alias;
+        c_entry.scene_node = camera_node;
+        c_entry.treeitemid = treeitemid;
+
+
+        m_camera_nodes[c_entry.treeitemid.GetID()] = c_entry;
+
+        m_tree_nodes[c_entry.treeitemid.GetID()] = camera_node;
+        m_inv_tree_nodes[camera_node] = c_entry.treeitemid.GetID();
+
+        DIALOG_CLOSE
+
+
+
+    }
 
   
 }
@@ -2444,31 +2532,6 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
 
         DIALOG_FINALIZE
     }
-
-
-
-    /*
-    DIALOG_GETGRID
-
-    if( "Spacebox node creation" == DIALOG_TITLE )
-    {
-        DIALOG_SPECIFIC0_LABEL( "PASS_%d", pass_label )
-
-        DIALOG_APPENDROOT_NODE( pass_label, pass_root )        
-        DIALOG_APPENDNODE_BOOL( pass_root, "enable", true );
-
-        DIALOG_BUILD_LABELS( 2, "texture_stage_%d", textures_stages_labels )
-
-        DIALOG_APPENDNODE_ITERATE_NODE_BEGIN( pass_root, i, textures_stages_labels, texture_stage )
-
-            DIALOG_APPENDNODE_ENUM( texture_stage, "source", get_textures_list() )
-            DIALOG_APPENDNODE_INTEGER( texture_stage, "order", 200 )
-
-        DIALOG_APPENDNODE_ITERATE_NODE_END
-                       
-        DIALOG_FINALIZE
-    }
-    */
 }
 
 void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2518,6 +2581,11 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
         {
             script = m_spacebox_nodes[id].script;
             script_enabled = &m_spacebox_nodes[id].script_enabled;
+        }
+        else if( m_camera_nodes.count( id ) > 0 )
+        {
+            script = m_camera_nodes[id].script;
+            script_enabled = &m_camera_nodes[id].script_enabled;
         }
 
         if( *script_enabled )

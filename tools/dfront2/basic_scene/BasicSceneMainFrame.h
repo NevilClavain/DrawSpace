@@ -110,6 +110,7 @@
 #define DIALOG_SPACEBOX_PROPS_TITLE         "Spacebox node properties"
 #define DIALOG_SPACEBOX_EDITION_TITLE       "Spacebox node properties"
 #define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
+#define DIALOG_CAMERA_CREATION_TITLE        "Camera node creation"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -363,6 +364,7 @@ protected:
    
     std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>                        m_transformation_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>                                    m_spacebox_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>                       m_camera_nodes;
 
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     
