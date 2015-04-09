@@ -350,7 +350,7 @@ protected:
     DrawSpace::Utils::TimeManager                                                           m_timer;
     
 
-    DrawSpace::Scenegraph                                                                   m_scenegraph;
+    //DrawSpace::Scenegraph                                                                   m_scenegraph;
     
 
 

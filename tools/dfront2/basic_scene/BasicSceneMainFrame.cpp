@@ -864,8 +864,9 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
     if( m_glready )
     {
         int index = m_cameraslist_comboBox->GetSelection();
-        CameraPoint* camera = (CameraPoint*)m_cameraslist_comboBox->GetClientData( index );
+        //CameraPoint* camera = (CameraPoint*)m_cameraslist_comboBox->GetClientData( index );
 
+        /*
         if( camera != m_current_camera )
         {
             if( NULL == camera )
@@ -880,6 +881,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
             }
             m_current_camera = camera;
         }
+        */
 
         
         
@@ -905,8 +907,10 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
             renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_timer.GetFPS() );
         }
 
+        
         if( m_display_currentcamera )
-        {            
+        {
+            /*
             dsstring camera_name;
             m_scenegraph.GetCurrentCameraName( camera_name );
             if( "" == camera_name )
@@ -915,6 +919,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
             }
 
             renderer->DrawText( 255, 0, 0, 10, 40, "current camera : %s", camera_name.c_str() );
+            */
         }
         
 
@@ -942,20 +947,22 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptAssetsList( m_assets_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptConfigsList( m_configs_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );        
-    wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
+    //wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
 
     
 
     ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
+    
     for( size_t i = 0; i < m_ordered_configs.size(); i++ )
     {
         Pass* pass = dynamic_cast<Pass*>( m_ordered_configs[i] );
         if( pass )
         {
-            m_scenegraph.RegisterPass( pass );
+            //m_scenegraph.RegisterPass( pass );
             pass->GetRenderingQueue()->UpdateOutputQueue();
         }
     }
+    
 
     
 
