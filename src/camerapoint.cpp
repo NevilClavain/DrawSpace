@@ -40,13 +40,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
-CameraPoint::CameraPoint( const dsstring& p_name, Body* p_body, const dsstring& p_body_alias ) : TransformNode( p_name ), 
-m_attached_body( p_body ),
-m_attached_body_alias( p_body_alias ),
-m_movement( NULL ),
+CameraPoint::CameraPoint( void ) :
 m_locked_body( NULL ),
 m_locked_node( NULL ),
-m_longlatmovement( NULL ),
 m_relative_orbiter( NULL ),
 m_relative_altitud( 0.0 ),
 m_znear( 1.0 ),
@@ -67,6 +63,8 @@ m_referent_body( NULL )
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rendercharacteristics );
     m_projection.Perspective( m_rendercharacteristics.width_viewport, m_rendercharacteristics.height_viewport, m_znear, 100000000000.0 );
+
+    m_globaltransformation.Identity();
 }
 
 
@@ -76,160 +74,38 @@ CameraPoint::~CameraPoint( void )
 }
 
 
-void CameraPoint::OnRegister( Scenegraph* p_scenegraph )
-{
-    std::map<dsstring, Core::TransformNode*>& camera_list = p_scenegraph->GetCamerasList();
-    camera_list[m_scenename] = this; 
-}
 
 void CameraPoint::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_node )
 {
     std::map<dsstring, Core::BaseSceneNode*>& camera_list = p_scenegraph->GetCamerasList();
-    camera_list[m_scenename] = p_node;
+    
+    //camera_list[m_scenename] = p_node;
+    dsstring scenename;
+    p_node->GetSceneName( scenename );
+    camera_list[scenename] = p_node;
 
     m_owner = static_cast<SceneNode<CameraPoint>*>( p_node );
 }
 
-void CameraPoint::RegisterMovement( const dsstring& p_alias, DrawSpace::Core::Movement* p_movement )
-{
-    m_movement          = p_movement;
-    m_movement_alias    = p_alias;
-}
-
-void CameraPoint::RegisterLongLatMovement( const dsstring& p_alias, DrawSpace::Core::LongLatMovement* p_longlatmovement )
-{
-    m_longlatmovement       = p_longlatmovement;
-    m_longlatmovement_alias = p_alias;
-}
 
 void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
 {
-    if( m_attached_body )
-    {
-        p_infos.attached_to_body = true;
-        p_infos.attached_body_alias = m_attached_body_alias;
-        Orbiter* orbiter = dynamic_cast<Orbiter*>( m_attached_body );
-        if( orbiter )
-        {
-            p_infos.attached_body_classname = "Orbiter";
-            p_infos.attached_to_body = true;
-
-        }
-        else
-        {
-            Rocket* rocket = dynamic_cast<Rocket*>( m_attached_body );
-            if( rocket )
-            {
-                p_infos.attached_body_classname = "Rocket";
-                p_infos.attached_to_body = true;
-            }
-            else
-            {
-                InertBody* inert_body = dynamic_cast<InertBody*>( m_attached_body );
-                if( inert_body )
-                {
-                    p_infos.attached_body_classname = "InertBody";
-                    p_infos.attached_to_body = true;
-                }
-                else
-                {
-                    Collider* collider = dynamic_cast<Collider*>( m_attached_body );
-
-                    if( collider )
-                    {
-                        p_infos.attached_body_classname = "Collider";
-                        p_infos.attached_to_body = true;
-                    }
-                    else
-                    {
-                        p_infos.attached_to_body = true;
-                        p_infos.attached_body_classname = "<Unknown body class>";
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        p_infos.attached_to_body = false;
-        p_infos.attached_body_classname = "";
-        p_infos.attached_body_alias = "";
-    }
-
     if( m_locked_body )
     {
         p_infos.locked_on_body = true;
-        p_infos.locked_on_transformnode = false;
-        p_infos.attached_body_alias = m_locked_object_alias;
+        p_infos.locked_on_transformnode = false;        
     }
     else if( m_locked_node )
     {
         p_infos.locked_on_body = false;
         p_infos.locked_on_transformnode = true;
-        p_infos.attached_body_alias = m_locked_object_alias;
     }
     else
     {
         p_infos.locked_on_body = false;
-        p_infos.locked_on_transformnode = false;
-        p_infos.attached_body_alias = "";
+        p_infos.locked_on_transformnode = false;       
     }
 
-    if( m_movement )
-    {
-        p_infos.has_movement = true;
-
-        if( dynamic_cast<FPSMovement*>( m_movement ) )
-        {
-            p_infos.movement_classname = "fps movement";
-        }
-        else if( dynamic_cast<FreeMovement*>( m_movement ) )
-        {
-            p_infos.movement_classname = "free movement";
-        }
-        else if( dynamic_cast<CircularMovement*>( m_movement ) )
-        {
-            p_infos.movement_classname = "circular movement";
-        }
-        else if( dynamic_cast<LinearMovement*>( m_movement ) )
-        {
-            p_infos.movement_classname = "linear movement";
-        }
-        else if( dynamic_cast<LongLatMovement*>( m_movement ) )
-        {
-            p_infos.movement_classname = "longlat movement";
-        }
-        else if( dynamic_cast<SpectatorMovement*>( m_movement ) )
-        {
-            p_infos.movement_classname = "spectator movement";
-        }
-        else if( dynamic_cast<HeadMovement*>( m_movement ) )
-        {
-            p_infos.movement_classname = "head movement";
-        }
-        else
-        {
-            p_infos.movement_classname = "<Unknown movement class>";
-        }
-        p_infos.movement_alias = m_movement_alias;
-    }
-    else
-    {
-        p_infos.has_movement = false;
-        p_infos.movement_classname = "";
-        p_infos.movement_alias = "";
-    }
-
-    if( m_longlatmovement )
-    {
-        p_infos.has_longlatmovement = true;
-        p_infos.longlatmovement_alias = m_longlatmovement_alias;
-    }
-    else
-    {
-        p_infos.has_longlatmovement = false;
-        p_infos.longlatmovement_alias = "";
-    }
 
     p_infos.relative_orbiter = m_relative_orbiter;
     p_infos.altitud = m_relative_altitud;
@@ -351,36 +227,11 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
 {
     Matrix body_transf;
 
-    if( m_movement )
-    {
-        m_movement->Compute( p_timemanager );
-        m_movement->GetResult( m_localtransformation );
-    }
-
-    if( m_longlatmovement )
-    {
-        m_longlatmovement->Compute( p_timemanager );
-
-        Matrix longlatmvtres;
-        m_longlatmovement->GetResult( longlatmvtres );
-
-        Matrix res = m_localtransformation * longlatmvtres;
-        m_localtransformation = res;
-    }
-
     if( m_locked_body || m_locked_node )
     {
         Matrix temp_global;
        
-        if( m_attached_body )
-        {            
-            m_attached_body->GetLastWorldTransformation( body_transf );
-            temp_global = m_localtransformation * body_transf;
-        }
-        else
-        {
-            temp_global = m_localtransformation;
-        }
+        temp_global = m_localtransformation;
 
         if( m_locked_body )
         {
@@ -428,16 +279,7 @@ void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
         m_localtransformation = final_res;        
     }
 
-    if( m_attached_body )
-    {
-        Matrix body_trans;            
-        m_attached_body->GetLastWorldTransformation( body_trans );
-        m_globaltransformation = m_localtransformation * body_trans;
-    }
-    else
-    {
-        m_globaltransformation = m_localtransformation;
-    }
+    m_globaltransformation = m_localtransformation;
 
     // calcul de la distance de l'objet suivi
     if( m_locked_body || m_locked_node )
@@ -477,11 +319,6 @@ void CameraPoint::GetLockedBodyCenter( Vector& p_vector )
 void CameraPoint::GetLocalTransform( DrawSpace::Utils::Matrix& p_localtransf )
 {
     p_localtransf = m_localtransformation;
-}
-
-Body* CameraPoint::GetAttachedBody( void )
-{
-    return m_attached_body;
 }
 
 void CameraPoint::SetRelativeOrbiter( DrawSpace::Dynamics::Orbiter* p_relative_orbiter )

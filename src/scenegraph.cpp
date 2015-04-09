@@ -139,7 +139,7 @@ void Scenegraph::GetCurrentCameraProj( Utils::Matrix& p_proj )
 {
     if( m_current_camera != "" )
     {       
-        DrawSpace::Dynamics::CameraPoint* camera = static_cast<DrawSpace::Dynamics::CameraPoint*>( m_cameras_list[m_current_camera] );
+        DrawSpace::Dynamics::CameraPoint* camera = NULL; //TEMP en attendant de virer la presente class Scenegraph static_cast<DrawSpace::Dynamics::CameraPoint*>( m_cameras_list[m_current_camera] );
         camera->GetProjection( p_proj );        
     }
     else

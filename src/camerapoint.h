@@ -23,7 +23,6 @@
 #ifndef _CAMERAPOINT_H_
 #define _CAMERAPOINT_H_
 
-#include "scenegraph.h"
 #include "scenenodegraph.h"
 #include "orbiter.h"
 #include "longlatmovement.h"
@@ -34,7 +33,7 @@ namespace DrawSpace
 {
 namespace Dynamics
 {
-class CameraPoint : public Core::TransformNode
+class CameraPoint
 {
 public:
 
@@ -43,37 +42,17 @@ public:
         DrawSpace::Dynamics::Orbiter*   relative_orbiter;      
         dsreal                          altitud;         // only if relative_planet != NULL
 
-        bool                            attached_to_body;
-        dsstring                        attached_body_classname; // only if attached_to_body == true
-        dsstring                        attached_body_alias;
-
         bool                            locked_on_body;
         bool                            locked_on_transformnode;
         dsstring                        locked_object_alias;
-
-        bool                            has_movement;
-        dsstring                        movement_classname; // only if has_movement == true
-        dsstring                        movement_alias;
-
-        bool                            has_longlatmovement;
-        dsstring                        longlatmovement_alias;
 
     } Infos;
 
 protected:
 
-    Body*                                           m_attached_body;
-    dsstring                                        m_attached_body_alias;
-
     Body*                                           m_locked_body;
     DrawSpace::Core::TransformNode*                 m_locked_node;
     dsstring                                        m_locked_object_alias;
-
-    DrawSpace::Core::Movement*                      m_movement;
-    dsstring                                        m_movement_alias;
-
-    DrawSpace::Core::LongLatMovement*               m_longlatmovement;
-    dsstring                                        m_longlatmovement_alias;
 
     DrawSpace::Utils::Vector                        m_locked_body_center;
 
@@ -93,22 +72,21 @@ protected:
     // NE PAS SUPPRIMER
     DrawSpace::Dynamics::Body*                      m_referent_body;
 
-
+    DrawSpace::Utils::Matrix                        m_localtransformation;
+    DrawSpace::Utils::Matrix                        m_globaltransformation;
 
 
 public:
 
-    CameraPoint( const dsstring& p_name, Body* p_body, const dsstring& p_body_alias );
+    CameraPoint( void );
     virtual ~CameraPoint( void );
 
-    virtual void OnRegister( Scenegraph* p_scenegraph );
+    
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
     virtual void Update( DrawSpace::Utils::TimeManager& p_timemanager );
     virtual void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
-    virtual void RegisterMovement( const dsstring& p_alias, DrawSpace::Core::Movement* p_movement );
-    virtual void RegisterLongLatMovement( const dsstring& p_alias, DrawSpace::Core::LongLatMovement* p_longlatmovement );
     virtual void ComputeFinalTransform( Utils::TimeManager& p_timemanager );
 
     virtual void LockOnBody( const dsstring& p_alias, Body* p_locked_body );
@@ -117,9 +95,7 @@ public:
 
     virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );
     virtual void GetLocalTransform( DrawSpace::Utils::Matrix& p_localtransf );
-
-    virtual Body* GetAttachedBody( void );
-
+   
     virtual void GetInfos( Infos& p_infos );
 
     virtual void SetRelativeOrbiter( DrawSpace::Dynamics::Orbiter* p_relative_orbiter );
