@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _MOUSEWRAPPER_H_
-#define _MOUSEWRAPPER_H_
+#ifndef _LUA_MOUSE_H_
+#define _LUA_MOUSE_H_
 
 #include "drawspace_commons.h"
 #include "callback.h"
@@ -29,7 +29,7 @@
 #include "luna.h"
 #include "descriptors.h"
 
-class LuaMouseWrapper
+class LuaMouse
 {
 public:
 
@@ -41,8 +41,8 @@ protected:
 
 public:
 
-    LuaMouseWrapper( lua_State* p_L );
-    ~LuaMouseWrapper( void );
+    LuaMouse( lua_State* p_L );
+    ~LuaMouse( void );
 
     int Lua_GetLastXMouse( lua_State* p_L );
     int Lua_GetLastYMouse( lua_State* p_L );
@@ -55,7 +55,7 @@ public:
 
 
     static const char className[];
-    static const Luna2<LuaMouseWrapper>::RegType methods[];
+    static const Luna2<LuaMouse>::RegType methods[];
 
 };
 

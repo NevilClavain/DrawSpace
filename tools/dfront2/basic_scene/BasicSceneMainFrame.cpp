@@ -567,12 +567,12 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         }
     }
 
-    else if( "KeyboardWrapper:KeyboardWrapper" == script_call_id )
+    else if( "Keyboard:Keyboard" == script_call_id )
     {
         m_keyup_code = p_propertypool.GetPropValue<int*>( "keyupcode" );
         m_keydown_code = p_propertypool.GetPropValue<int*>( "keydowncode" );
     }
-    else if( "MouseWrapper:MouseWrapper" == script_call_id )
+    else if( "Mouse:Mouse" == script_call_id )
     {
         m_mousemove_descr = p_propertypool.GetPropValue<DrawSpace::Utils::MouseMovementsDescriptor*>( "descriptor" );
     }

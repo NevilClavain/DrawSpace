@@ -20,7 +20,7 @@
 *
 */
 
-#include "lua_mousewrapper.h"
+#include "lua_mouse.h"
 #include "luacontext.h"
 #include "exceptions.h"
 
@@ -28,21 +28,21 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-const char LuaMouseWrapper::className[] = "MouseWrapper";
-const Luna2<LuaMouseWrapper>::RegType LuaMouseWrapper::methods[] =
+const char LuaMouse::className[] = "Mouse";
+const Luna2<LuaMouse>::RegType LuaMouse::methods[] =
 {
-    { "GetLastXMouse", &LuaMouseWrapper::Lua_GetLastXMouse },
-    { "GetLastYMouse", &LuaMouseWrapper::Lua_GetLastYMouse },
-    { "GetLastDeltaXMouse", &LuaMouseWrapper::Lua_GetLastDeltaXMouse },
-    { "GetLastDeltaYMouse", &LuaMouseWrapper::Lua_GetLastDeltaYMouse },
-    { "IsLeftButtonDown", &LuaMouseWrapper::Lua_IsLeftButtonDown },
-    { "IsRightButtonDown", &LuaMouseWrapper::Lua_IsRightButtonDown },
+    { "GetLastXMouse", &LuaMouse::Lua_GetLastXMouse },
+    { "GetLastYMouse", &LuaMouse::Lua_GetLastYMouse },
+    { "GetLastDeltaXMouse", &LuaMouse::Lua_GetLastDeltaXMouse },
+    { "GetLastDeltaYMouse", &LuaMouse::Lua_GetLastDeltaYMouse },
+    { "IsLeftButtonDown", &LuaMouse::Lua_IsLeftButtonDown },
+    { "IsRightButtonDown", &LuaMouse::Lua_IsRightButtonDown },
 
 
     { 0, 0 }
 };
 
-LuaMouseWrapper::LuaMouseWrapper( lua_State* p_L )
+LuaMouse::LuaMouse( lua_State* p_L )
 {    
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
 
@@ -56,7 +56,7 @@ LuaMouseWrapper::LuaMouseWrapper( lua_State* p_L )
     if( m_scriptcalls_handler )
     {
         PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "MouseWrapper:MouseWrapper" );
+        props.AddPropValue<dsstring>( "script_call_id", "Mouse:Mouse" );
         props.AddPropValue<MouseMovementsDescriptor*>( "descriptor", &m_mouse_movements );
 
         (*m_scriptcalls_handler)( props );
@@ -64,41 +64,41 @@ LuaMouseWrapper::LuaMouseWrapper( lua_State* p_L )
 
 }
 
-LuaMouseWrapper::~LuaMouseWrapper( void ) 
+LuaMouse::~LuaMouse( void ) 
 {
 }
 
-int LuaMouseWrapper::Lua_GetLastXMouse( lua_State* p_L )
+int LuaMouse::Lua_GetLastXMouse( lua_State* p_L )
 {
     lua_pushinteger( p_L, m_mouse_movements.xmouse );
     return 1;
 }
 
-int LuaMouseWrapper::Lua_GetLastYMouse( lua_State* p_L )
+int LuaMouse::Lua_GetLastYMouse( lua_State* p_L )
 {
     lua_pushinteger( p_L, m_mouse_movements.ymouse );
     return 1;
 }
 
-int LuaMouseWrapper::Lua_GetLastDeltaXMouse( lua_State* p_L )
+int LuaMouse::Lua_GetLastDeltaXMouse( lua_State* p_L )
 {
     lua_pushinteger( p_L, m_mouse_movements.delta_xmouse );
     return 1;
 }
 
-int LuaMouseWrapper::Lua_GetLastDeltaYMouse( lua_State* p_L )
+int LuaMouse::Lua_GetLastDeltaYMouse( lua_State* p_L )
 {
     lua_pushinteger( p_L, m_mouse_movements.delta_ymouse );
     return 1;
 }
 
-int LuaMouseWrapper::Lua_IsLeftButtonDown( lua_State* p_L )
+int LuaMouse::Lua_IsLeftButtonDown( lua_State* p_L )
 {
     lua_pushinteger( p_L, m_mouse_movements.leftbutton_down );
     return 1;
 }
 
-int LuaMouseWrapper::Lua_IsRightButtonDown( lua_State* p_L )
+int LuaMouse::Lua_IsRightButtonDown( lua_State* p_L )
 {
     lua_pushinteger( p_L, m_mouse_movements.rightbutton_down );
     return 1;

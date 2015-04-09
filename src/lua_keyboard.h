@@ -20,49 +20,36 @@
 *
 */
 
-#include "lua_keyboardwrapper.h"
-#include "luacontext.h"
-#include "exceptions.h"
+#ifndef _LUA_KEYBOARD_H_
+#define _LUA_KEYBOARD_H_
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
+#include "drawspace_commons.h"
+#include "callback.h"
+#include "mediator.h"
+#include "luna.h"
 
-const char LuaKeyboardWrapper::className[] = "KeyboardWrapper";
-const Luna2<LuaKeyboardWrapper>::RegType LuaKeyboardWrapper::methods[] =
+class LuaKeyboard
 {
-    { "GetLastKeyupCode", &LuaKeyboardWrapper::Lua_GetLastKeyupCode },
-    { "GetLastKeydownCode", &LuaKeyboardWrapper::Lua_GetLastKeydownCode },
-    { 0, 0 }
+public:
+
+    DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
+
+protected:
+
+    int m_keyupcode;
+    int m_keydowncode;
+
+public:
+
+    LuaKeyboard( lua_State* p_L );
+    ~LuaKeyboard( void );
+
+    int Lua_GetLastKeyupCode( lua_State* p_L );
+    int Lua_GetLastKeydownCode( lua_State* p_L );
+
+    static const char className[];
+    static const Luna2<LuaKeyboard>::RegType methods[];
+
 };
 
-LuaKeyboardWrapper::LuaKeyboardWrapper( lua_State* p_L )
-{    
-    m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "KeyboardWrapper:KeyboardWrapper" );
-        props.AddPropValue<int*>( "keyupcode", &m_keyupcode );
-        props.AddPropValue<int*>( "keydowncode", &m_keydowncode );
-
-        (*m_scriptcalls_handler)( props );
-    }
-
-}
-
-LuaKeyboardWrapper::~LuaKeyboardWrapper( void ) 
-{
-}
-
-int LuaKeyboardWrapper::Lua_GetLastKeyupCode( lua_State* p_L )
-{
-    lua_pushinteger( p_L, m_keyupcode );
-    return 1;
-}
-
-int LuaKeyboardWrapper::Lua_GetLastKeydownCode( lua_State* p_L )
-{
-    lua_pushinteger( p_L, m_keydowncode );
-    return 1;
-}
+#endif

@@ -24,8 +24,8 @@
 #include "lua_drawspace.h"
 #include "lua_spaceboxnode.h"
 #include "lua_transformnode.h"
-#include "lua_keyboardwrapper.h"
-#include "lua_mousewrapper.h"
+#include "lua_keyboard.h"
+#include "lua_mouse.h"
 #include "lua_matrix.h"
 #include "lua_vector.h"
 #include "lua_real.h"
@@ -43,8 +43,8 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaSpaceboxNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaTransformationNode>::Register( LuaContext::GetInstance()->GetLuaState() );
 
-    Luna2<LuaKeyboardWrapper>::Register( LuaContext::GetInstance()->GetLuaState() );
-    Luna2<LuaMouseWrapper>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaKeyboard>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaMouse>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaMatrix>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaVector>::Register( LuaContext::GetInstance()->GetLuaState() );

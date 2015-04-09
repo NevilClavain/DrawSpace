@@ -55,8 +55,8 @@ sb0:AddPassSlotShaderParam( "texture_pass", "intensity", 1, 12, Vector( 1.0, -2.
 sb0:LinkTo( "scene0", "mytf0" )
 
 
-keyboard = KeyboardWrapper()
-mouse = MouseWrapper()
+keyboard = Keyboard()
+mouse = Mouse()
 
 ds:LoadMouseScript( "mousehandler.lua" )
 ds:LoadKeyUpScript( "keyuphandler.lua" )
