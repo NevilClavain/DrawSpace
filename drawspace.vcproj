@@ -412,11 +412,27 @@
 			Name="utils"
 			>
 			<File
+				RelativePath=".\src\ac3dmeshe.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ac3dmeshe.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\archive.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\archive.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cbfgfont.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cbfgfont.h"
 				>
 			</File>
 			<File
