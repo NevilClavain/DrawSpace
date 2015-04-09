@@ -194,11 +194,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\lua_spaceboxnodebuilder.cpp"
+			RelativePath=".\src\lua_spaceboxnode.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\lua_spaceboxnodebuilder.h"
+			RelativePath=".\src\lua_spaceboxnode.h"
 			>
 		</File>
 		<File

@@ -20,7 +20,7 @@
 *
 */
 
-#include "lua_spaceboxnodebuilder.h"
+#include "lua_spaceboxnode.h"
 #include "luacontext.h"
 #include "lua_vector.h"
 #include "exceptions.h"
@@ -28,21 +28,21 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-const char LuaSpaceboxNodeBuilder::className[] = "SpaceBoxNodeBuilder";
-const Luna2<LuaSpaceboxNodeBuilder>::RegType LuaSpaceboxNodeBuilder::methods[] =
+const char LuaSpaceboxNode::className[] = "SpaceboxNode";
+const Luna2<LuaSpaceboxNode>::RegType LuaSpaceboxNode::methods[] =
 {  
-  { "RegisterPassSlot", &LuaSpaceboxNodeBuilder::Lua_RegisterPassSlot },
-  { "SetPassSlotFxName", &LuaSpaceboxNodeBuilder::Lua_SetPassSlotFxName },
-  { "SetPassSlotRenderingOrder", &LuaSpaceboxNodeBuilder::Lua_SetPassSlotRenderingOrder },
-  { "SetPassSlotTextureName", &LuaSpaceboxNodeBuilder::Lua_SetPassSlotTextureName },
-  { "AddPassSlotShaderParam", &LuaSpaceboxNodeBuilder::Lua_AddPassSlotShaderParam },
-  { "UpdateShaderParam", &LuaSpaceboxNodeBuilder::Lua_UpdateShaderParam },
-  { "LinkTo", &LuaSpaceboxNodeBuilder::Lua_LinkTo },
+  { "RegisterPassSlot", &LuaSpaceboxNode::Lua_RegisterPassSlot },
+  { "SetPassSlotFxName", &LuaSpaceboxNode::Lua_SetPassSlotFxName },
+  { "SetPassSlotRenderingOrder", &LuaSpaceboxNode::Lua_SetPassSlotRenderingOrder },
+  { "SetPassSlotTextureName", &LuaSpaceboxNode::Lua_SetPassSlotTextureName },
+  { "AddPassSlotShaderParam", &LuaSpaceboxNode::Lua_AddPassSlotShaderParam },
+  { "UpdateShaderParam", &LuaSpaceboxNode::Lua_UpdateShaderParam },
+  { "LinkTo", &LuaSpaceboxNode::Lua_LinkTo },
   { 0 }
 };
 
 
-LuaSpaceboxNodeBuilder::LuaSpaceboxNodeBuilder( lua_State* p_L ) :
+LuaSpaceboxNode::LuaSpaceboxNode( lua_State* p_L ) :
 m_spacebox_node( "spacebox_node" )
 {
 	int argc = lua_gettop( p_L );
@@ -58,12 +58,12 @@ m_spacebox_node( "spacebox_node" )
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();    
 }
 
-LuaSpaceboxNodeBuilder::~LuaSpaceboxNodeBuilder( void ) 
+LuaSpaceboxNode::~LuaSpaceboxNode( void ) 
 {
 }
 
 
-int LuaSpaceboxNodeBuilder::Lua_LinkTo( lua_State* p_L )
+int LuaSpaceboxNode::Lua_LinkTo( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -93,7 +93,7 @@ int LuaSpaceboxNodeBuilder::Lua_LinkTo( lua_State* p_L )
     return 0;
 }
 
-int LuaSpaceboxNodeBuilder::Lua_RegisterPassSlot( lua_State* p_L )
+int LuaSpaceboxNode::Lua_RegisterPassSlot( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
@@ -110,7 +110,7 @@ int LuaSpaceboxNodeBuilder::Lua_RegisterPassSlot( lua_State* p_L )
     return 0;
 }
 
-int LuaSpaceboxNodeBuilder::Lua_SetPassSlotFxName( lua_State* p_L )
+int LuaSpaceboxNode::Lua_SetPassSlotFxName( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -131,7 +131,7 @@ int LuaSpaceboxNodeBuilder::Lua_SetPassSlotFxName( lua_State* p_L )
     }
     return 0;
 }
-int LuaSpaceboxNodeBuilder::Lua_SetPassSlotRenderingOrder( lua_State* p_L )
+int LuaSpaceboxNode::Lua_SetPassSlotRenderingOrder( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -152,7 +152,7 @@ int LuaSpaceboxNodeBuilder::Lua_SetPassSlotRenderingOrder( lua_State* p_L )
     }
     return 0;
 }
-int LuaSpaceboxNodeBuilder::Lua_SetPassSlotTextureName( lua_State* p_L )
+int LuaSpaceboxNode::Lua_SetPassSlotTextureName( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 4 )
@@ -176,7 +176,7 @@ int LuaSpaceboxNodeBuilder::Lua_SetPassSlotTextureName( lua_State* p_L )
     return 0;
 }
 
-int LuaSpaceboxNodeBuilder::Lua_AddPassSlotShaderParam( lua_State* p_L )
+int LuaSpaceboxNode::Lua_AddPassSlotShaderParam( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 5 )
@@ -209,7 +209,7 @@ int LuaSpaceboxNodeBuilder::Lua_AddPassSlotShaderParam( lua_State* p_L )
     return 0;
 }
 
-int LuaSpaceboxNodeBuilder::Lua_UpdateShaderParam( lua_State* p_L )
+int LuaSpaceboxNode::Lua_UpdateShaderParam( lua_State* p_L )
 {
     int argc = lua_gettop( p_L );
 	if( argc != 3 )

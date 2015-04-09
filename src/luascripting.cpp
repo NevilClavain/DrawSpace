@@ -22,7 +22,7 @@
 
 #include "luascripting.h"
 #include "lua_drawspace.h"
-#include "lua_spaceboxnodebuilder.h"
+#include "lua_spaceboxnode.h"
 #include "lua_transformnode.h"
 #include "lua_keyboardwrapper.h"
 #include "lua_mousewrapper.h"
@@ -40,7 +40,7 @@ bool LuaScripting::Initialize( void )
     LuaContext::GetInstance()->Startup();
     Luna2<LuaDrawSpace>::Register( LuaContext::GetInstance()->GetLuaState() );
 
-    Luna2<LuaSpaceboxNodeBuilder>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaSpaceboxNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaTransformationNode>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaKeyboardWrapper>::Register( LuaContext::GetInstance()->GetLuaState() );

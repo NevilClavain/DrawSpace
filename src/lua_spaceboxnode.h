@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _LUA_SPACEBOXNODEBUILDER_H_
-#define _LUA_SPACEBOXNODEBUILDER_H_
+#ifndef _LUA_SPACEBOXNODE_H_
+#define _LUA_SPACEBOXNODE_H_
 
 
 #include "drawspace_commons.h"
@@ -32,7 +32,7 @@
 
 #include "luna.h"
 
-class LuaSpaceboxNodeBuilder
+class LuaSpaceboxNode
 {
 public:
 
@@ -44,8 +44,8 @@ protected:
     DrawSpace::Core::SceneNode<DrawSpace::Spacebox>             m_spacebox_node;
 
 public:
-    LuaSpaceboxNodeBuilder( lua_State* p_L );
-    ~LuaSpaceboxNodeBuilder( void );
+    LuaSpaceboxNode( lua_State* p_L );
+    ~LuaSpaceboxNode( void );
      
     int Lua_RegisterPassSlot( lua_State* p_L );
     int Lua_SetPassSlotFxName( lua_State* p_L );
@@ -57,7 +57,7 @@ public:
 
     
     static const char className[];
-    static const Luna2<LuaSpaceboxNodeBuilder>::RegType methods[];
+    static const Luna2<LuaSpaceboxNode>::RegType methods[];
 };
 
 #endif
