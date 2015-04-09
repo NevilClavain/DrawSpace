@@ -28,8 +28,6 @@
 #include <wx/statbox.h>
 #include <wx/panel.h>
 #include <wx/treectrl.h>
-#include <wx/stattext.h>
-#include <wx/combobox.h>
 #include <wx/notebook.h>
 #include <wx/frame.h>
 #include <wx/checkbox.h>
@@ -86,8 +84,6 @@ class MainFrame : public wxFrame
 		wxListCtrl* m_shadersparams_listCtrl;
 		wxPanel* m_scenePanel;
 		wxTreeCtrl* m_scenegraphs_treeCtrl;
-		wxStaticText* m_staticText2;
-		wxComboBox* m_cameraslist_comboBox;
 		wxTextCtrl* m_consoleoutput_textCtrl;
 		
 		// Virtual event handlers, overide them in your derived class

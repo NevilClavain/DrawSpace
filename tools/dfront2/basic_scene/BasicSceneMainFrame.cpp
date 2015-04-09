@@ -80,6 +80,8 @@ m_mousemove_descr( NULL )
     PopupMenuEntry pme_editkeydownscript = { CONTEXTMENU_EDIT_KEYDOWNSCRIPT, "Edit key down script..." };
     PopupMenuEntry pme_editkeyupscript = { CONTEXTMENU_EDIT_KEYUPSCRIPT, "Edit key up script..." };
 
+    PopupMenuEntry pme_selectcamera = { CONTEXTMENU_SELECT_CAMERA, "Select camera..." };
+
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
     PopupMenuEntry pme_newchunk = { CONTEXTMENU_NEWCHUNK, "New chunk..." };
@@ -169,6 +171,10 @@ m_mousemove_descr( NULL )
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editshaders );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editnodescript );
 
+    ///////////////////////////////////////////////////////////////////
+
+    m_scenegraphs_masks[CAMERA_MASK].push_back( pme_selectcamera );
+
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
     m_specificbutton0_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
@@ -229,6 +235,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         entry.name = alias;
         entry.scenenodegraph = new SceneNodeGraph();
         entry.treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, alias.c_str(), SCENEGRAPH_ICON_INDEX );
+        entry.current_camera_set = false;
         m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
 
         m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
@@ -863,7 +870,7 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
 {
     if( m_glready )
     {
-        int index = m_cameraslist_comboBox->GetSelection();
+        //int index = m_cameraslist_comboBox->GetSelection();
         //CameraPoint* camera = (CameraPoint*)m_cameraslist_comboBox->GetClientData( index );
 
         /*
@@ -985,6 +992,7 @@ void BasicSceneMainFrame::Update( void )
     wxBitmap bmp_drawspace( "icon_drawspace.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_keyboard( "icon_keyboard.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_mouse( "icon_mouse.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_camera_sel( "icon_camera_sel.bmp", wxBITMAP_TYPE_BMP );
 
 
     
@@ -1003,6 +1011,7 @@ void BasicSceneMainFrame::Update( void )
     pImageList->Add( bmp_drawspace );
     pImageList->Add( bmp_keyboard );
     pImageList->Add( bmp_mouse );
+    pImageList->Add( bmp_camera_sel );
     
 
     m_scenegraphs_treeCtrl->AssignImageList( pImageList );
@@ -1665,6 +1674,21 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
+        case CONTEXTMENU_SELECT_CAMERA:
+            {
+                void* id = find_scenenodegraph_id();
+
+                if( m_scenenodegraphs[id].current_camera_set )
+                {
+                    m_scenegraphs_treeCtrl->SetItemImage( m_scenenodegraphs[id].current_camera, CAMERA_ICON_INDEX );
+                }
+
+                m_scenegraphs_treeCtrl->SetItemImage( m_last_clicked_treeitem, CAMERASEL_ICON_INDEX );
+                m_scenenodegraphs[id].current_camera_set = true;
+                m_scenenodegraphs[id].current_camera = m_last_clicked_treeitem;
+            }
+            break;
+
  	}
  }
 
@@ -1703,6 +1727,10 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
         else if( m_spacebox_nodes.count( item.GetID() ) > 0 )
         {
             build_popupmenu( SPACEBOX_MASK, mnu );
+        }
+        else if( m_camera_nodes.count( item.GetID() ) > 0 )
+        {
+            build_popupmenu( CAMERA_MASK, mnu );
         }
 
     }
@@ -1934,6 +1962,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             entry.name = scenegraph_name2;
             entry.scenenodegraph = new SceneNodeGraph();
             entry.treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, scenegraph_name, SCENEGRAPH_ICON_INDEX );
+            entry.current_camera_set = false;
 
             m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
 
@@ -2438,7 +2467,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, CAMERA_ICON_INDEX );
         m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
-
+       
         /////////////////////////////////////////////////////////////////////////////////
 
         // record the new transformation node and associated metadata

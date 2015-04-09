@@ -47,6 +47,7 @@
 #define DRAWSPACE_ICON_INDEX                12
 #define KEYBOARD_ICON_INDEX                 13
 #define MOUSE_ICON_INDEX                    14
+#define CAMERASEL_ICON_INDEX                15
 
 
 #define CAMERA_MASK                         1
@@ -94,6 +95,8 @@
 #define CONTEXTMENU_EDIT_MOUSEMOVESCRIPT    2085
 #define CONTEXTMENU_EDIT_KEYDOWNSCRIPT      2086
 #define CONTEXTMENU_EDIT_KEYUPSCRIPT        2087
+
+#define CONTEXTMENU_SELECT_CAMERA           2088
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -307,6 +310,8 @@ public:
         dsstring                            name;
         DrawSpace::Core::SceneNodeGraph*    scenenodegraph;        
         wxTreeItemId                        treeitemid;
+        bool                                current_camera_set;
+        wxTreeItemId                        current_camera;
 
     } SceneNodeGraphEntry;
 
@@ -432,6 +437,7 @@ protected:
     bool                                                    m_mousemove_script_enabled;
 
     DrawSpace::Utils::MouseMovementsDescriptor*             m_mousemove_descr;
+
 
 
     void on_scripting_error( const dsstring& p_error );

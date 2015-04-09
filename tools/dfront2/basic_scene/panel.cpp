@@ -178,19 +178,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	bSizer11->Add( bSizer291, 1, wxEXPAND, 5 );
 	
-	wxBoxSizer* bSizer12;
-	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText2 = new wxStaticText( m_scenePanel, wxID_ANY, wxT("Current camera :"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText2->Wrap( -1 );
-	bSizer12->Add( m_staticText2, 0, wxALL, 5 );
-	
-	m_cameraslist_comboBox = new wxComboBox( m_scenePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
-	bSizer12->Add( m_cameraslist_comboBox, 0, wxALL, 5 );
-	
-	
-	bSizer11->Add( bSizer12, 0, wxEXPAND, 5 );
-	
 	
 	m_scenePanel->SetSizer( bSizer11 );
 	m_scenePanel->Layout();

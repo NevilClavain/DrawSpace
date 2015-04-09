@@ -392,27 +392,4 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
     p_dialog->Close();
 }
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-void wxWidgetAdapter::AdaptCameraListComboBox( DrawSpace::Scenegraph* p_scenegraph, wxComboBox* p_combobox )
-{
-    p_combobox->Clear();
-
-    p_combobox->Append( wxString( "..." ), (void *)NULL );
-
-    std::map<dsstring, Core::TransformNode*> cameras_list = p_scenegraph->GetCamerasList();
-    for( std::map<dsstring, Core::TransformNode*>::iterator it = cameras_list.begin(); it != cameras_list.end(); ++it )
-    {
-        p_combobox->Append( it->first.c_str(), (void *)it->second );
-    }
-
-    p_combobox->SetSelection( 0 );
-}
-
-
