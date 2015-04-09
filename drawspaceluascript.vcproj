@@ -202,11 +202,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\lua_transformnodebuilder.cpp"
+			RelativePath=".\src\lua_transformnode.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\lua_transformnodebuilder.h"
+			RelativePath=".\src\lua_transformnode.h"
 			>
 		</File>
 		<File

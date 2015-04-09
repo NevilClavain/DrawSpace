@@ -32,7 +32,7 @@ ds:DisplayFramerate( 1 )
 
 ds:CreateSceneNodeGraph( "scene0" )
 
-tf0node = TransformationNodeBuilder( "mytf0", 2 )
+tf0node = TransformationNode( "mytf0", 2 )
 tf0node:LinkTo( "scene0", "scene0" )
 
 -- mat = Matrix()
@@ -66,8 +66,12 @@ sb_roty_angle = Real()
 sb_scale = Matrix()
 sb_scale:Scale( 25, 25, 25 )
 
+sb_roty_axis = Vector( 0, 1, 0, 1 )
+
 sb_roty = Matrix()
-sb_roty:Rotation( Vector( 0, 1, 0, 1 ), 45 )
+sb_roty:Rotation( sb_roty_axis, 45 )
 
 tf0node:UpdateMatrix( 0, sb_roty )
 tf0node:UpdateMatrix( 1, sb_scale )
+
+

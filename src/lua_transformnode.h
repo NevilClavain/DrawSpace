@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _LUA_TRANSFORMNODEBUILDER_H_
-#define _LUA_TRANSFORMNODEBUILDER_H_
+#ifndef _LUA_TRANSFORMNODE_H_
+#define _LUA_TRANSFORMNODE_H_
 
 #include "drawspace_commons.h"
 #include "callback.h"
@@ -29,7 +29,7 @@
 #include "transformation.h"
 #include "luna.h"
 
-class LuaTransformationNodeBuilder
+class LuaTransformationNode
 {
 public:
 
@@ -37,14 +37,14 @@ public:
 
 protected:
 
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>     m_transformation_node;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*    m_existing_transformation_node;
-    int                                                         m_nbmat;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>             m_transformation_node;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*            m_existing_transformation_node;
+    int                                                                     m_nbmat;
 
 public:
 
-    LuaTransformationNodeBuilder( lua_State* p_L );
-    ~LuaTransformationNodeBuilder( void );
+    LuaTransformationNode( lua_State* p_L );
+    ~LuaTransformationNode( void );
      
     int Lua_LinkTo( lua_State* p_L );
 
@@ -55,7 +55,7 @@ public:
     int Lua_LoadScript( lua_State* p_L );
 
     static const char className[];
-    static const Luna2<LuaTransformationNodeBuilder>::RegType methods[];
+    static const Luna2<LuaTransformationNode>::RegType methods[];
 
 };
 

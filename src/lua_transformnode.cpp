@@ -20,7 +20,7 @@
 *
 */
 
-#include "lua_transformnodebuilder.h"
+#include "lua_transformnode.h"
 #include "luacontext.h"
 #include "exceptions.h"
 
@@ -29,18 +29,18 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-const char LuaTransformationNodeBuilder::className[] = "TransformationNodeBuilder";
-const Luna2<LuaTransformationNodeBuilder>::RegType LuaTransformationNodeBuilder::methods[] =
+const char LuaTransformationNode::className[] = "TransformationNode";
+const Luna2<LuaTransformationNode>::RegType LuaTransformationNode::methods[] =
 {
-  { "LinkTo", &LuaTransformationNodeBuilder::Lua_LinkTo },
-  { "ClearMatrixStack", &LuaTransformationNodeBuilder::Lua_ClearMatrixStack },
-  { "AddMatrix", &LuaTransformationNodeBuilder::Lua_AddMatrix },
-  { "UpdateMatrix", &LuaTransformationNodeBuilder::Lua_UpdateMatrix },
-  { "LoadScript", &LuaTransformationNodeBuilder::Lua_LoadScript },
+  { "LinkTo", &LuaTransformationNode::Lua_LinkTo },
+  { "ClearMatrixStack", &LuaTransformationNode::Lua_ClearMatrixStack },
+  { "AddMatrix", &LuaTransformationNode::Lua_AddMatrix },
+  { "UpdateMatrix", &LuaTransformationNode::Lua_UpdateMatrix },
+  { "LoadScript", &LuaTransformationNode::Lua_LoadScript },
   { 0, 0 }
 };
 
-LuaTransformationNodeBuilder::LuaTransformationNodeBuilder( lua_State* p_L )
+LuaTransformationNode::LuaTransformationNode( lua_State* p_L )
 : m_transformation_node( "transformation_node" ),
 m_nbmat( 0 ),
 m_existing_transformation_node( NULL )
@@ -73,11 +73,11 @@ m_existing_transformation_node( NULL )
 
 }
 
-LuaTransformationNodeBuilder::~LuaTransformationNodeBuilder( void ) 
+LuaTransformationNode::~LuaTransformationNode( void ) 
 {
 }
 
-int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
+int LuaTransformationNode::Lua_LinkTo( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -107,7 +107,7 @@ int LuaTransformationNodeBuilder::Lua_LinkTo( lua_State* p_L )
     return 0;
 }
 
-int LuaTransformationNodeBuilder::Lua_ClearMatrixStack( lua_State* p_L )
+int LuaTransformationNode::Lua_ClearMatrixStack( lua_State* p_L )
 {
     if( m_existing_transformation_node )
     {
@@ -120,7 +120,7 @@ int LuaTransformationNodeBuilder::Lua_ClearMatrixStack( lua_State* p_L )
     return 0;
 }
 
-int LuaTransformationNodeBuilder::Lua_AddMatrix( lua_State* p_L )
+int LuaTransformationNode::Lua_AddMatrix( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
@@ -148,7 +148,7 @@ int LuaTransformationNodeBuilder::Lua_AddMatrix( lua_State* p_L )
     return 0;
 }
 
-int LuaTransformationNodeBuilder::Lua_UpdateMatrix( lua_State* p_L )
+int LuaTransformationNode::Lua_UpdateMatrix( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -176,7 +176,7 @@ int LuaTransformationNodeBuilder::Lua_UpdateMatrix( lua_State* p_L )
     return 0;
 }
 
-int LuaTransformationNodeBuilder::Lua_LoadScript( lua_State* p_L )
+int LuaTransformationNode::Lua_LoadScript( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
