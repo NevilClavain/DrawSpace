@@ -40,6 +40,9 @@
     <ClCompile Include="src\lua_transformnode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\lua_camerapointnode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\lua_drawspace.h">
@@ -76,6 +79,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\lua_transformnode.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_camerapointnode.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

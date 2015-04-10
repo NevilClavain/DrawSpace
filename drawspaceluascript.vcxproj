@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\luacontext.cpp" />
     <ClCompile Include="src\luascripting.cpp" />
+    <ClCompile Include="src\lua_camerapointnode.cpp" />
     <ClCompile Include="src\lua_drawspace.cpp" />
     <ClCompile Include="src\lua_keyboard.cpp" />
     <ClCompile Include="src\lua_matrix.cpp" />
@@ -26,6 +27,7 @@
   <ItemGroup>
     <ClInclude Include="src\luacontext.h" />
     <ClInclude Include="src\luascripting.h" />
+    <ClInclude Include="src\lua_camerapointnode.h" />
     <ClInclude Include="src\lua_drawspace.h" />
     <ClInclude Include="src\lua_keyboard.h" />
     <ClInclude Include="src\lua_matrix.h" />
@@ -74,7 +76,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../DrawSpace_thirdparts/lua-1.5/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../DrawSpace_thirdparts/lua-1.5/include; ./../DrawSpace_thirdparts/bullet-2.82/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -93,7 +95,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../DrawSpace_thirdparts/lua-1.5/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../DrawSpace_thirdparts/lua-1.5/include; ./../DrawSpace_thirdparts/bullet-2.82/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

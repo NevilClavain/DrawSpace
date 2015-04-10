@@ -637,6 +637,70 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_tree_nodes[c_entry.treeitemid.GetID()] = cam_node;
         m_inv_tree_nodes[cam_node] = c_entry.treeitemid.GetID();
     }
+
+    else if( "DrawSpace:SetSceneNodeGraphCurrentCamera" == script_call_id )
+    {
+        dsstring scenegraphname = p_propertypool.GetPropValue<dsstring>( "scenegraphname" );
+        dsstring cameraname = p_propertypool.GetPropValue<dsstring>( "cameraname" );
+
+        bool sg_found = false;
+        SceneNodeGraphEntry s_entry;
+        
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            if( it->second.name == scenegraphname )
+            {
+                s_entry = it->second;
+                sg_found = true;
+                break;
+            }
+        }
+        if( !sg_found )
+        {
+            wxMessageBox( "DrawSpace:SetSceneNodeGraphCurrentCamera : unknown scenegraph name", "Script error", wxICON_ERROR );
+            return;
+        }
+
+        bool cam_found = false;
+        SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> c_entry;
+
+        for( std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>::iterator it = m_camera_nodes.begin(); it != m_camera_nodes.end(); ++it )
+        {
+            if( it->second.name == cameraname )
+            {
+                c_entry = it->second;
+                cam_found = true;
+                break;
+            }
+        }
+        if( !cam_found )
+        {
+            wxMessageBox( "DrawSpace:SetSceneNodeGraphCurrentCamera : unknown camera name", "Script error", wxICON_ERROR );
+            return;
+        }
+        
+        void* idsg;
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            if( it->second.name == scenegraphname )
+            {
+                if( it->second.current_camera_set )
+                {
+                    m_scenegraphs_treeCtrl->SetItemImage( it->second.current_camera, CAMERA_ICON_INDEX );
+                }
+                idsg = it->first;
+                break;
+            }
+        }
+
+        void* idcam = m_inv_tree_nodes[c_entry.scene_node];
+
+        m_scenegraphs_treeCtrl->SetItemImage( c_entry.treeitemid, CAMERASEL_ICON_INDEX );
+        m_scenenodegraphs[idsg].current_camera_set = true;
+        m_scenenodegraphs[idsg].current_camera = c_entry.treeitemid;
+
+
+    }
     else if( "SpaceboxNode:UpdateShaderParam" == script_call_id )
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
