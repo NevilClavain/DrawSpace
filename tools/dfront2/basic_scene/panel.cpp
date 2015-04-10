@@ -115,50 +115,26 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticBoxSizer* sbSizer3;
-	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( m_resourcesPanel, wxID_ANY, wxT("Assets") ), wxVERTICAL );
-	
 	m_assets_listCtrl = new wxListCtrl( m_resourcesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	sbSizer3->Add( m_assets_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer9->Add( sbSizer3, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer5;
-	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( m_resourcesPanel, wxID_ANY, wxT("Configurables") ), wxVERTICAL );
+	bSizer9->Add( m_assets_listCtrl, 1, 0, 5 );
 	
 	m_configs_listCtrl = new wxListCtrl( m_resourcesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	sbSizer5->Add( m_configs_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer9->Add( sbSizer5, 1, wxEXPAND, 5 );
+	bSizer9->Add( m_configs_listCtrl, 1, 0, 5 );
 	
 	
 	m_resourcesPanel->SetSizer( bSizer9 );
 	m_resourcesPanel->Layout();
 	bSizer9->Fit( m_resourcesPanel );
-	m_notebook2->AddPage( m_resourcesPanel, wxT("Resources"), false );
+	m_notebook2->AddPage( m_resourcesPanel, wxT("Resources"), true );
 	m_passesPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticBoxSizer* sbSizer31;
-	sbSizer31 = new wxStaticBoxSizer( new wxStaticBox( m_passesPanel, wxID_ANY, wxT("Passes") ), wxVERTICAL );
-	
 	m_passes_listCtrl = new wxListCtrl( m_passesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	sbSizer31->Add( m_passes_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer7->Add( sbSizer31, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer4;
-	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( m_passesPanel, wxID_ANY, wxT("Shaders parameters") ), wxVERTICAL );
+	bSizer7->Add( m_passes_listCtrl, 1, 0, 5 );
 	
 	m_shadersparams_listCtrl = new wxListCtrl( m_passesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	sbSizer4->Add( m_shadersparams_listCtrl, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer7->Add( sbSizer4, 1, wxEXPAND, 5 );
+	bSizer7->Add( m_shadersparams_listCtrl, 1, 0, 5 );
 	
 	
 	m_passesPanel->SetSizer( bSizer7 );
@@ -182,7 +158,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_scenePanel->SetSizer( bSizer11 );
 	m_scenePanel->Layout();
 	bSizer11->Fit( m_scenePanel );
-	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), true );
+	m_notebook2->AddPage( m_scenePanel, wxT("Scene"), false );
 	
 	bSizer33->Add( m_notebook2, 1, wxEXPAND, 0 );
 	

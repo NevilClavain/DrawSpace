@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/include&quot;;&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/include/msvc&quot;;./../../../src;&quot;./../../../../DrawSpace_thirdparts/bullet-2.82/src&quot;;&quot;./../../../.../DrawSpace_thirdparts/lua-1.5/include&quot;"
+				AdditionalIncludeDirectories="&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/include&quot;;&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/include/msvc&quot;;./../../../src;&quot;./../../../../DrawSpace_thirdparts/bullet-2.82/src&quot;;&quot;./../../../../DrawSpace_thirdparts/lua-1.5/include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;__WXMSW__;__WXDEBUG__;NOPCH;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

@@ -25,7 +25,6 @@
 #include <wx/dialog.h>
 #include <wx/textctrl.h>
 #include <wx/listctrl.h>
-#include <wx/statbox.h>
 #include <wx/panel.h>
 #include <wx/treectrl.h>
 #include <wx/notebook.h>
