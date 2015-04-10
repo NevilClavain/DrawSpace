@@ -283,6 +283,23 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             }
         }
     }
+    else if( "CameraPointNode:CameraPointNode" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        SceneNode<CameraPoint>** node_ptr = p_propertypool.GetPropValue<SceneNode<CameraPoint>**>( "existing_node" );
+
+        for( std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>::iterator it = m_camera_nodes.begin(); it != m_camera_nodes.end(); ++it )
+        {
+            if( it->second.name == scene_name )
+            {
+                // node exists
+                *node_ptr = it->second.scene_node;
+                break;
+            }
+        }
+    }
+
+
     else if( "TransformationNode:LinkTo" == script_call_id )
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
@@ -364,7 +381,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         if( parent )
         {            
             transfo_node->LinkTo( parent );
-            parent_tree_item = m_transformation_nodes[parent_id].treeitemid;
+            parent_tree_item = searchTreeItemIdInNodes( parent_id );
         }
         else
         {
@@ -390,6 +407,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
         m_inv_tree_nodes[transfo_node] = t_entry.treeitemid.GetID();
     }
+
+
 
     else if( "SpaceboxNode:LinkTo" == script_call_id )
     {
@@ -481,7 +500,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             if( parent )
             {            
                 sb_node->LinkTo( parent );
-                parent_tree_item = m_transformation_nodes[parent_id].treeitemid;
+                parent_tree_item = searchTreeItemIdInNodes( parent_id );
             }
             else
             {
@@ -517,6 +536,106 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
             m_spacebox_descriptors[t_entry.treeitemid.GetID()] = sb_descr;
         }
+    }
+    else if( "CameraPointNode:LinkTo" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
+        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
+        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
+
+        wxTreeItemId parent_tree_item;
+        void* parent_id = NULL;
+
+
+        bool scene_found = false;
+        SceneNodeGraphEntry scenenodegraph_entry;
+
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            if( it->second.name == scenegraph_name )
+            {
+                scenenodegraph_entry = it->second;
+                scene_found = true;                
+                break;
+            }
+        }
+
+        bool parent_found = false;
+        BaseSceneNode* parent = NULL;
+
+        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
+        {
+            dsstring node_scenename;
+            it->second->GetSceneName( node_scenename );
+
+            if( node_scenename == parent_name )
+            {
+                parent_found = true;
+                parent = it->second;
+                parent_id = it->first;
+                break;
+            }
+        }
+
+        if( !parent_found )
+        {
+            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+            {
+                if( it->second.name == parent_name )
+                {
+                    parent_found = true;
+                    parent_id = it->first;
+                    break;
+                }
+            }
+        }
+
+        if( !scene_found )
+        {
+            wxMessageBox( "CameraPoint node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
+            return;           
+        }
+
+        else if( !parent_found )
+        {
+            wxMessageBox( "CameraPoint node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
+            return;
+        }
+
+        SceneNode<CameraPoint>* cam_node = static_cast<SceneNode<CameraPoint>*>( node );
+        cam_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+        
+        cam_node->SetContent( new CameraPoint() );
+
+        scenenodegraph_entry.scenenodegraph->RegisterNode( node );
+
+        if( parent )
+        {            
+            cam_node->LinkTo( parent );
+            parent_tree_item = searchTreeItemIdInNodes( parent_id );
+        }
+        else
+        {
+            scenenodegraph_entry.scenenodegraph->AddNode( node );
+            parent_tree_item = scenenodegraph_entry.treeitemid;
+        }
+
+        // GUI : add item in the tree
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), CAMERA_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
+
+        // record the new transformation node and associated metadata
+
+        BasicSceneMainFrame::SceneNodeEntry<CameraPoint> c_entry;
+
+        c_entry.name = scene_name;
+        c_entry.scene_node = cam_node;
+        c_entry.treeitemid = treeitemid;
+
+        m_camera_nodes[c_entry.treeitemid.GetID()] = c_entry;
+        m_tree_nodes[c_entry.treeitemid.GetID()] = cam_node;
+        m_inv_tree_nodes[cam_node] = c_entry.treeitemid.GetID();
     }
     else if( "SpaceboxNode:UpdateShaderParam" == script_call_id )
     {
@@ -2625,5 +2744,21 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
                 *script_enabled = false;
             }
         }
+    }
+}
+
+wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
+{
+    if( m_transformation_nodes.count( p_id ) > 0 )
+    {
+        return m_transformation_nodes[p_id].treeitemid;
+    }
+    if( m_spacebox_nodes.count( p_id ) > 0 )
+    {
+        return m_spacebox_nodes[p_id].treeitemid;
+    }
+    if( m_camera_nodes.count( p_id ) > 0 )
+    {
+        return m_camera_nodes[p_id].treeitemid;
     }
 }

@@ -497,18 +497,12 @@ protected:
 
 	
     virtual void OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event );
-
-
-
-
-
-
-
-
-
     virtual void OnConsoleInSendButtonClicked( wxCommandEvent& p_event );
     virtual void OnConsoleInClearButtonClicked( wxCommandEvent& p_event );
     virtual void OnConsoleInLoadButtonClicked( wxCommandEvent& p_event );
+
+
+    wxTreeItemId searchTreeItemIdInNodes( void* p_id );
 
 
 public:

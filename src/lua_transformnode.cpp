@@ -48,7 +48,7 @@ m_existing_transformation_node( NULL )
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{
-		lua_pushstring( p_L, "LuaTransformationNode ctor : bad number of args" );
+		lua_pushstring( p_L, "TransformationNode ctor : bad number of args" );
 		lua_error( p_L );		
 	}
     const char* scene_name = luaL_checkstring( p_L, 1 );
@@ -70,7 +70,6 @@ m_existing_transformation_node( NULL )
 
         (*m_scriptcalls_handler)( props );
     }
-
 }
 
 LuaTransformationNode::~LuaTransformationNode( void ) 
@@ -103,7 +102,6 @@ int LuaTransformationNode::Lua_LinkTo( lua_State* p_L )
 
         (*m_scriptcalls_handler)( props );
     }
-
     return 0;
 }
 
@@ -144,7 +142,6 @@ int LuaTransformationNode::Lua_AddMatrix( lua_State* p_L )
     {
         m_transformation_node.GetContent()->PushMatrix( mat->m_mat );
     }
-
     return 0;
 }
 

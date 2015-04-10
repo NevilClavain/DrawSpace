@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./../DrawSpace_thirdparts/lua-1.5/include"
+				AdditionalIncludeDirectories="./../DrawSpace_thirdparts/lua-1.5/include; ./../DrawSpace_thirdparts/bullet-2.82/src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -104,7 +104,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="./../DrawSpace_thirdparts/lua-1.5/include"
+				AdditionalIncludeDirectories="./../DrawSpace_thirdparts/lua-1.5/include; ./../DrawSpace_thirdparts/bullet-2.82/src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -145,6 +145,14 @@
 	<References>
 	</References>
 	<Files>
+		<File
+			RelativePath=".\src\lua_camerapointnode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_camerapointnode.h"
+			>
+		</File>
 		<File
 			RelativePath="..\DrawSpace\src\lua_drawspace.cpp"
 			>

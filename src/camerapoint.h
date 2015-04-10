@@ -25,7 +25,6 @@
 
 #include "scenenodegraph.h"
 #include "orbiter.h"
-#include "longlatmovement.h"
 #include "scenenode.h"
 
 
