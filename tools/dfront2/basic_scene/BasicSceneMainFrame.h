@@ -97,6 +97,7 @@
 #define CONTEXTMENU_EDIT_KEYUPSCRIPT        2087
 
 #define CONTEXTMENU_SELECT_CAMERA           2088
+#define CONTEXTMENU_EDIT_CAMERA             2089
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

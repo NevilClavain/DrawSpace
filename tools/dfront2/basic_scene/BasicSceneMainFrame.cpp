@@ -81,6 +81,7 @@ m_mousemove_descr( NULL )
     PopupMenuEntry pme_editkeyupscript = { CONTEXTMENU_EDIT_KEYUPSCRIPT, "Edit key up script..." };
 
     PopupMenuEntry pme_selectcamera = { CONTEXTMENU_SELECT_CAMERA, "Select camera..." };
+    PopupMenuEntry pme_editcamera = { CONTEXTMENU_SELECT_CAMERA, "Edit camera..." };
 
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
@@ -168,12 +169,18 @@ m_mousemove_descr( NULL )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_separator );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editshaders );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
+    m_scenegraphs_masks[CAMERA_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_selectcamera );
+    m_scenegraphs_masks[CAMERA_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editcamera );    
+    m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editnodescript );
+    
 
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
@@ -1818,6 +1825,14 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                     script_text = &m_spacebox_nodes[id].script;
                     script_state = &m_spacebox_nodes[id].script_enabled;
+                }
+                else if( m_camera_nodes.count( id ) > 0 )
+                {
+                    title = "CameraPoint node: ";
+                    title += m_camera_nodes[id].name;
+
+                    script_text = &m_camera_nodes[id].script;
+                    script_state = &m_camera_nodes[id].script_enabled;
                 }
 
                 BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
