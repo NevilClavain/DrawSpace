@@ -599,7 +599,7 @@
             <event name="OnMotion">OnMouseMotion</event>
             <event name="OnMouseEvents"></event>
             <event name="OnMouseWheel"></event>
-            <event name="OnPaint"></event>
+            <event name="OnPaint">OnPaint</event>
             <event name="OnRightDClick"></event>
             <event name="OnRightDown">OnMouseRightDown</event>
             <event name="OnRightUp">OnMouseRightUp</event>

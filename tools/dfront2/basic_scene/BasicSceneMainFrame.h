@@ -23,7 +23,7 @@
 #ifndef __BasicSceneMainFrame__
 #define __BasicSceneMainFrame__
 
-
+#include <wx/timer.h>
 #include "panel.h"
 #include "drawspace.h"
 #include "scripting.h"
@@ -294,6 +294,17 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+class BasicSceneMainFrame;
+class RenderTimer : public wxTimer
+{
+    BasicSceneMainFrame* pane;
+public:
+    RenderTimer( BasicSceneMainFrame* p_pane );
+    void Notify( void );
+    void Start( void );
+    void Stop( void );
+};
+
 
 class BasicSceneMainFrame : public MainFrame
 {
@@ -356,7 +367,7 @@ protected:
     bool                                                                                    m_glready;
     DrawSpace::Utils::TimeManager                                                           m_timer;
     
-
+    RenderTimer*                                                                            m_rendertimer;
     //DrawSpace::Scenegraph                                                                   m_scenegraph;
     
 
@@ -466,7 +477,7 @@ protected:
 
     void* find_scenenodegraph_id( void );
 
-
+    void render( void );
 
     void on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
@@ -475,7 +486,7 @@ protected:
 
     void on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node );
 
-
+    virtual void OnPaint( wxPaintEvent& p_event );
     virtual void OnClose( wxCloseEvent& p_event );
     virtual void OnIdle( wxIdleEvent& p_event );
 	virtual void OnMouseMotion( wxMouseEvent& p_event );
@@ -522,7 +533,7 @@ public:
     void OnKeyDown( wxKeyEvent& p_event );
 	void OnKeyUp( wxKeyEvent& p_event );
 
-    
+    friend class RenderTimer;
 };
 
 #endif // __BasicSceneMainFrame__

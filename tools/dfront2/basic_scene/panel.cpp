@@ -185,6 +185,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MainFrame::OnMouseLeftDown ) );
 	this->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( MainFrame::OnMouseLeftUp ) );
 	this->Connect( wxEVT_MOTION, wxMouseEventHandler( MainFrame::OnMouseMotion ) );
+	this->Connect( wxEVT_PAINT, wxPaintEventHandler( MainFrame::OnPaint ) );
 	this->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( MainFrame::OnMouseRightDown ) );
 	this->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( MainFrame::OnMouseRightUp ) );
 	m_consoleinsend_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );
@@ -206,6 +207,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MainFrame::OnMouseLeftDown ) );
 	this->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( MainFrame::OnMouseLeftUp ) );
 	this->Disconnect( wxEVT_MOTION, wxMouseEventHandler( MainFrame::OnMouseMotion ) );
+	this->Disconnect( wxEVT_PAINT, wxPaintEventHandler( MainFrame::OnPaint ) );
 	this->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( MainFrame::OnMouseRightDown ) );
 	this->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( MainFrame::OnMouseRightUp ) );
 	m_consoleinsend_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnConsoleInSendButtonClicked ), NULL, this );

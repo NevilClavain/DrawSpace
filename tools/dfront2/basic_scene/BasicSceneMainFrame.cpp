@@ -32,6 +32,25 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
+//#define RENDER_IDLE
+
+RenderTimer::RenderTimer( BasicSceneMainFrame* p_pane ) : pane( p_pane )
+{
+}
+void RenderTimer::Notify( void )
+{
+    pane->render();
+}
+void RenderTimer::Start( void )
+{
+    wxTimer::Start( 5 );
+}
+
+void RenderTimer::Stop( void )
+{
+    wxTimer::Stop();
+}
+
 BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent, wxID_ANY, "DFront Basic Scene", wxDefaultPosition, wxSize( 1264,600 ), wxCAPTION | wxCLOSE_BOX ),
 m_glready( false ),
 m_scenegraphlistctrl_currentindex( -1 ),
@@ -189,6 +208,11 @@ m_mousemove_descr( NULL )
 
     m_nodeupdatebegin_cb = new NodeUpdateBeginCallBack( this, &BasicSceneMainFrame::on_nodeupdatebegin );
 
+#ifndef RENDER_IDLE
+    RenderTimer* timer = new RenderTimer(this);
+    timer->Start();
+    m_rendertimer = timer;
+#endif
 }
 
 void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
@@ -873,6 +897,10 @@ void BasicSceneMainFrame::SetWindowDims( long p_w_width, long p_w_height )
 
 void BasicSceneMainFrame::OnClose( wxCloseEvent& p_event )
 {
+#ifndef RENDER_IDLE
+    m_rendertimer->Stop();
+    delete m_rendertimer;
+#endif
     Destroy();
 }
 
@@ -1055,8 +1083,12 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
     }
 }
 
+void BasicSceneMainFrame::OnPaint( wxPaintEvent& p_event )
+{
+    render();
+}
 
-void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
+void BasicSceneMainFrame::render( void )
 {
     if( m_glready )
     {
@@ -1128,10 +1160,16 @@ void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
         {
 
         }
-
-        // wxWidget framework specific !
-        p_event.RequestMore( true );
     }
+}
+
+void BasicSceneMainFrame::OnIdle( wxIdleEvent& p_event )
+{
+#ifdef RENDER_IDLE
+    render();
+    //wxWidget framework specific !
+    p_event.RequestMore( true );
+#endif
 }
 
 void BasicSceneMainFrame::SetGLReady( void )
