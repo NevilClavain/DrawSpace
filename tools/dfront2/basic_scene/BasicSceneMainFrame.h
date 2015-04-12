@@ -115,6 +115,7 @@
 #define DIALOG_SPACEBOX_EDITION_TITLE       "Spacebox node properties"
 #define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
 #define DIALOG_CAMERA_CREATION_TITLE        "Camera node creation"
+#define DIALOG_CAMERA_PROPS_TITLE           "Camera node properties"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

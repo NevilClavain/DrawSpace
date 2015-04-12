@@ -1837,6 +1837,27 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                  
                     DIALOG_SHOW
                 }
+                else if( m_camera_nodes.count( id ) > 0 )
+                {
+                    CameraPoint* camera = m_camera_nodes[id].scene_node->GetContent();
+
+                    CameraPoint::Infos infos;
+                    camera->GetInfos( infos );
+
+                    DIALOG_DECLARE( DIALOG_CAMERA_PROPS_TITLE )
+
+                    DIALOG_APPENDROOT_STRING( "scene name", m_camera_nodes[id].name );
+
+                    DIALOG_APPENDROOT_BOOL( "relative to an orbiter", ( infos.relative_orbiter != NULL ? true : false ) );
+                    if( infos.relative_orbiter != NULL )
+                    {
+                        DIALOG_APPENDROOT_FLOAT( "altitud", infos.altitud );
+                    }
+
+
+
+                    DIALOG_SHOW
+                }
             }
             break;
 
