@@ -41,7 +41,7 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
 CameraPoint::CameraPoint( void ) :
-m_locked_body( NULL ),
+//m_locked_body( NULL ),
 m_locked_node( NULL ),
 m_relative_orbiter( NULL ),
 m_relative_altitud( 0.0 ),
@@ -90,6 +90,7 @@ void CameraPoint::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_nod
 
 void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
 {
+    /*
     if( m_locked_body )
     {
         p_infos.locked_on_body = true;
@@ -106,6 +107,21 @@ void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
         p_infos.locked_on_transformnode = false;       
     }
 
+    */
+
+
+    p_infos.locked_on_node = ( m_locked_node != NULL ? true : false );
+
+    if( m_locked_node )
+    {
+        dsstring scene_name;
+        m_locked_node->GetSceneName( scene_name );
+        p_infos.locked_node_alias = scene_name;
+    }
+    else
+    {
+        p_infos.locked_node_alias = "";
+    }
 
     p_infos.relative_orbiter = m_relative_orbiter;
     p_infos.altitud = m_relative_altitud;
@@ -117,7 +133,8 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 
     m_localtransformation.Identity();
 
-    if( m_locked_body || m_locked_node )
+    //if( m_locked_body || m_locked_node )
+    if( m_locked_node )
     {
         Matrix temp_global;
 
@@ -139,6 +156,7 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 
         //////////////////////
 
+        /*
         if( m_locked_body )
         {
             m_locked_body->GetLastWorldTransformation( body_transf );
@@ -147,6 +165,8 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
         {
             m_locked_node->GetSceneWorld( body_transf );
         }
+        */
+        m_locked_node->GetFinalTransform( body_transf );
 
         m_body_transf = body_transf;
 
@@ -206,7 +226,8 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 void CameraPoint::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     // calcul de la distance de l'objet suivi
-    if( m_locked_body || m_locked_node )
+    //if( m_locked_body || m_locked_node )
+    if( m_locked_node )
     {
         Vector body_center( 0.0, 0.0, 0.0, 1.0 );
         Vector body_center_2;
@@ -223,82 +244,7 @@ void CameraPoint::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
     }
 }
 
-void CameraPoint::ComputeFinalTransform( Utils::TimeManager& p_timemanager )
-{
-    Matrix body_transf;
-
-    if( m_locked_body || m_locked_node )
-    {
-        Matrix temp_global;
-       
-        temp_global = m_localtransformation;
-
-        if( m_locked_body )
-        {
-            m_locked_body->GetLastWorldTransformation( body_transf );
-        }
-        else if( m_locked_node )
-        {
-            m_locked_node->GetSceneWorld( body_transf );
-        }
-
-        Matrix camera_transf = temp_global;
-        camera_transf.Inverse();
-
-        Matrix res = body_transf * camera_transf;
-
-        // point (0,0,0) local au body, exprime dans le repère de la camera
-
-        Vector body_center( 0.0, 0.0, 0.0, 1.0 );
-        Vector body_center_2;
-
-        res.Transform( &body_center, &body_center_2 );
-
-        m_locked_body_center = body_center_2;
-
-
-        body_center_2.Normalize();
-
-        dsreal theta = atan2( body_center_2[0], body_center_2[2] );        
-        theta = 3.1415927 + theta;
- 
-        Matrix roty;
-        roty.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), theta );
-
-        Vector theta_dir( body_center_2[0], 0.0, body_center_2[2], 1.0 );
-
-        dsreal phi = atan2( body_center_2[1], theta_dir.Length() );
-        
-        Matrix rotx;
-        rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), phi );
-
-        Matrix final_lock;
-        final_lock = rotx * roty;
-
-        Matrix final_res = final_lock * m_localtransformation;
-        m_localtransformation = final_res;        
-    }
-
-    m_globaltransformation = m_localtransformation;
-
-    // calcul de la distance de l'objet suivi
-    if( m_locked_body || m_locked_node )
-    {
-        Vector body_center( 0.0, 0.0, 0.0, 1.0 );
-        Vector body_center_2;
-
-        Matrix view = m_globaltransformation;
-        view.Inverse();
-        Matrix final = body_transf * view;
-        final.Transform( &body_center, &body_center_2 );
-        m_lockedobject_distance = body_center_2.Length();
-    }
-    else
-    {
-        m_lockedobject_distance = 0.0;
-    }
-}
-
+/*
 void CameraPoint::LockOnBody( const dsstring& p_alias, Body* p_locked_body )
 {
     m_locked_body = p_locked_body;
@@ -306,6 +252,13 @@ void CameraPoint::LockOnBody( const dsstring& p_alias, Body* p_locked_body )
 }
 
 void CameraPoint::LockOnTransformNode( const dsstring& p_alias, TransformNode* p_locked_node )
+{
+    m_locked_node = p_locked_node;
+    m_locked_object_alias = p_alias;
+}
+*/
+
+void CameraPoint::Lock( const dsstring& p_alias, DrawSpace::Core::BaseSceneNode* p_locked_node )
 {
     m_locked_node = p_locked_node;
     m_locked_object_alias = p_alias;

@@ -100,7 +100,7 @@ m_mousemove_descr( NULL )
     PopupMenuEntry pme_editkeyupscript = { CONTEXTMENU_EDIT_KEYUPSCRIPT, "Edit key up script..." };
 
     PopupMenuEntry pme_selectcamera = { CONTEXTMENU_SELECT_CAMERA, "Select camera..." };
-    PopupMenuEntry pme_editcamera = { CONTEXTMENU_SELECT_CAMERA, "Edit camera..." };
+    PopupMenuEntry pme_editcamera = { CONTEXTMENU_EDIT_CAMERA, "Edit camera..." };
 
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
@@ -1854,8 +1854,12 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                         DIALOG_APPENDROOT_FLOAT( "altitud", infos.altitud );
                     }
 
-
-
+                    DIALOG_APPENDROOT_BOOL( "locked on node", infos.locked_on_node );
+                    if( infos.locked_on_node )
+                    {
+                        DIALOG_APPENDROOT_STRING( "locked on", infos.locked_node_alias );
+                    }
+                    
                     DIALOG_SHOW
                 }
             }
@@ -1927,7 +1931,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 DIALOG_APPENDROOT_STRING( "scene name", "" )
                 DIALOG_APPLY
-                DIALOG_SHOW                
+                DIALOG_SHOW
             }
             break;
 
@@ -1943,6 +1947,21 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 m_scenegraphs_treeCtrl->SetItemImage( m_last_clicked_treeitem, CAMERASEL_ICON_INDEX );
                 m_scenenodegraphs[id].current_camera_set = true;
                 m_scenenodegraphs[id].current_camera = m_last_clicked_treeitem;
+            }
+            break;
+
+        case CONTEXTMENU_EDIT_CAMERA:
+            {
+                void* id = m_last_clicked_treeitem.GetID();
+
+                SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[id];
+
+                DIALOG_DECLARE( DIALOG_CAMERA_EDIT_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", camera_node.name );
+                DIALOG_APPENDROOT_FLOAT( "znear", camera_node.scene_node->GetContent()->GetZNear() );
+                DIALOG_APPLY
+                DIALOG_SHOW
             }
             break;
 
@@ -2742,12 +2761,18 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_inv_tree_nodes[camera_node] = c_entry.treeitemid.GetID();
 
         DIALOG_CLOSE
-
-
-
     }
 
-  
+    else if( DIALOG_CAMERA_EDIT_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_FLOAT_PROPERTY( "znear", znear );
+
+        SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[m_last_clicked_treeitem.GetID()];
+
+        camera_node.scene_node->GetContent()->UpdateProjectionZNear( znear );
+
+        DIALOG_CLOSE
+    }
 }
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )

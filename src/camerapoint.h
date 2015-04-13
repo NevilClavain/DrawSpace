@@ -41,16 +41,24 @@ public:
         DrawSpace::Dynamics::Orbiter*   relative_orbiter;      
         dsreal                          altitud;         // only if relative_planet != NULL
 
+        /*
         bool                            locked_on_body;
         bool                            locked_on_transformnode;
-        dsstring                        locked_object_alias;
+        */
+
+        bool                            locked_on_node;
+        dsstring                        locked_node_alias; // nom de scene...
 
     } Infos;
 
 protected:
 
+    /*
     Body*                                           m_locked_body;
     DrawSpace::Core::TransformNode*                 m_locked_node;
+    */
+    DrawSpace::Core::BaseSceneNode*                 m_locked_node;
+
     dsstring                                        m_locked_object_alias;
 
     DrawSpace::Utils::Vector                        m_locked_body_center;
@@ -86,11 +94,12 @@ public:
     virtual void Update( DrawSpace::Utils::TimeManager& p_timemanager );
     virtual void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
-    virtual void ComputeFinalTransform( Utils::TimeManager& p_timemanager );
-
+    /*
     virtual void LockOnBody( const dsstring& p_alias, Body* p_locked_body );
     virtual void LockOnTransformNode( const dsstring& p_alias, DrawSpace::Core::TransformNode* p_locked_node );
+    */
 
+    virtual void Lock( const dsstring& p_alias, DrawSpace::Core::BaseSceneNode* p_locked_node );
 
     virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );
     virtual void GetLocalTransform( DrawSpace::Utils::Matrix& p_localtransf );
