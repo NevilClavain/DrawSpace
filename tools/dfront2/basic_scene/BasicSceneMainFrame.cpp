@@ -730,6 +730,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_scenenodegraphs[idsg].current_camera_set = true;
         m_scenenodegraphs[idsg].current_camera = c_entry.treeitemid;
 
+        m_scenenodegraphs[idsg].scenenodegraph->SetCurrentCamera( c_entry.name );
 
     }
     else if( "SpaceboxNode:UpdateShaderParam" == script_call_id )
@@ -1947,6 +1948,9 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 m_scenegraphs_treeCtrl->SetItemImage( m_last_clicked_treeitem, CAMERASEL_ICON_INDEX );
                 m_scenenodegraphs[id].current_camera_set = true;
                 m_scenenodegraphs[id].current_camera = m_last_clicked_treeitem;
+
+                m_scenenodegraphs[id].scenenodegraph->SetCurrentCamera( m_camera_nodes[m_last_clicked_treeitem.GetID()].name );
+
             }
             break;
 
@@ -2766,12 +2770,9 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     else if( DIALOG_CAMERA_EDIT_TITLE == DIALOG_TITLE )
     {
         DIALOG_GET_FLOAT_PROPERTY( "znear", znear );
-
         SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[m_last_clicked_treeitem.GetID()];
-
         camera_node.scene_node->GetContent()->UpdateProjectionZNear( znear );
-
-        DIALOG_CLOSE
+        //DIALOG_CLOSE
     }
 }
 
