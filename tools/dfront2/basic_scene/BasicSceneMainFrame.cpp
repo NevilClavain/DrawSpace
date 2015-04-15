@@ -2102,6 +2102,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 DIALOG_APPENDROOT_FLOAT( "initial theta", 0.0 );
                 DIALOG_APPENDROOT_FLOAT( "initial phi", 0.0 );
+                DIALOG_APPENDROOT_BOOL( "y movement", 0.0 );
 
                 DIALOG_APPLY             
                 DIALOG_SHOW
@@ -2938,6 +2939,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         DIALOG_GET_FLOAT_PROPERTY( "initial position.x", x );
         DIALOG_GET_FLOAT_PROPERTY( "initial position.y", y );
         DIALOG_GET_FLOAT_PROPERTY( "initial position.z", z );
+        DIALOG_GET_BOOL_PROPERTY( "y movement", ymvt );
 
         /////////////////////////////////////////////////////////////////////////////////
 
@@ -2945,9 +2947,11 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         SceneNode<FPSMovement>* fps_node;
         fps_node = new SceneNode<FPSMovement>( alias );
-        fps_node->SetContent( new FPSMovement );
+        fps_node->SetContent( new FPSMovement( ymvt ) );
 
         fps_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+
+        fps_node->GetContent()->Init( Vector( x, y, z, 1 ), init_theta, init_phi );
 
         /////////////////////////////////////////////////////////////////////////////////
 
