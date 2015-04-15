@@ -37,8 +37,13 @@ public:
 
 protected:
 
-    DrawSpace::Core::SceneNode<DrawSpace::Core::FPSMovement>             m_fps_node;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::FPSMovement>*            m_existing_fps_node;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::FPSMovement>                m_fps_node;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::FPSMovement>*               m_existing_fps_node;
+
+    DrawSpace::Utils::Vector                                                m_initpos;
+    dsreal                                                                  m_initial_theta;
+    dsreal                                                                  m_initial_phi;
+    bool                                                                    m_ymvt;
     
 
 public:
@@ -48,6 +53,12 @@ public:
      
     int Lua_LinkTo( lua_State* p_L );
     int Lua_LoadScript( lua_State* p_L );
+
+    int Lua_SetInitpos( lua_State* p_L );
+    int Lua_SetInitialTheta( lua_State* p_L );
+    int Lua_SetInitialPhi( lua_State* p_L );
+    int Lua_SetYMvt( lua_State* p_L );
+
 
     static const char className[];
     static const Luna2<LuaFpsMovementNode>::RegType methods[];

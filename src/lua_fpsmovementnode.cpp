@@ -26,18 +26,26 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 const char LuaFpsMovementNode::className[] = "FpsMovementNode";
 const Luna2<LuaFpsMovementNode>::RegType LuaFpsMovementNode::methods[] =
 {
   { "LinkTo", &LuaFpsMovementNode::Lua_LinkTo },
   { "LoadScript", &LuaFpsMovementNode::Lua_LoadScript },
+  { "SetInitpos", &LuaFpsMovementNode::Lua_SetInitpos },
+  { "SetInitialTheta", &LuaFpsMovementNode::Lua_SetInitialTheta },
+  { "SetInitialPhi", &LuaFpsMovementNode::Lua_SetInitialPhi },
+  { "SetYMvt", &LuaFpsMovementNode::Lua_SetYMvt },
   { 0, 0 }
 };
 
 LuaFpsMovementNode::LuaFpsMovementNode( lua_State* p_L )
 : m_fps_node( "fps_node" ),
-m_existing_fps_node( NULL )
+m_existing_fps_node( NULL ),
+m_ymvt( false ),
+m_initial_theta( 0.0 ),
+m_initial_phi( 0.0 )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
@@ -86,7 +94,11 @@ int LuaFpsMovementNode::Lua_LinkTo( lua_State* p_L )
         props.AddPropValue<dsstring>( "scenegraph_name", scenegraph_name );        
         props.AddPropValue<dsstring>( "parent_name", parent_name );
         props.AddPropValue<dsstring>( "scene_name", scene_name );
-        props.AddPropValue<BaseSceneNode*>( "node", &m_fps_node );        
+        props.AddPropValue<BaseSceneNode*>( "node", &m_fps_node );
+        props.AddPropValue<Vector>( "init_pos", m_initpos );
+        props.AddPropValue<dsreal>( "init_theta", m_initial_theta );
+        props.AddPropValue<dsreal>( "init_phi", m_initial_phi );
+        props.AddPropValue<bool>( "y_mvt", m_ymvt );
 
         (*m_scriptcalls_handler)( props );
     }
@@ -114,5 +126,61 @@ int LuaFpsMovementNode::Lua_LoadScript( lua_State* p_L )
 
         (*m_scriptcalls_handler)( props );
     }
+    return 0;
+}
+
+int LuaFpsMovementNode::Lua_SetInitpos( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "SetInitpos : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initpos[0] = luaL_checknumber( p_L, 1 );
+    m_initpos[1] = luaL_checknumber( p_L, 2 );
+    m_initpos[2] = luaL_checknumber( p_L, 3 );
+    m_initpos[3] = 1.0;
+
+    return true;
+}
+
+int LuaFpsMovementNode::Lua_SetInitialTheta( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetInitialTheta : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_theta = luaL_checknumber( p_L, 1 );
+    return 0;
+}
+
+int LuaFpsMovementNode::Lua_SetInitialPhi( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetInitialPhi : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_phi = luaL_checknumber( p_L, 1 );
+    return 0;
+}
+
+int LuaFpsMovementNode::Lua_SetYMvt( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetYMvt : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_ymvt = luaL_checkinteger( p_L, 1 );
     return 0;
 }

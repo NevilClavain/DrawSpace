@@ -898,6 +898,10 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
         BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
 
+        Vector init_pos = p_propertypool.GetPropValue<Vector>( "init_pos" );
+        dsreal init_theta = p_propertypool.GetPropValue<dsreal>( "init_theta" );
+        dsreal init_phi = p_propertypool.GetPropValue<dsreal>( "init_phi" );
+        bool y_mvt = p_propertypool.GetPropValue<bool>( "y_mvt" );
 
         wxTreeItemId parent_tree_item;
         void* parent_id = NULL;
@@ -961,7 +965,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         SceneNode<FPSMovement>* fps_node = static_cast<SceneNode<FPSMovement>*>( node );
         fps_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
         
-        fps_node->SetContent( new FPSMovement() );
+        fps_node->SetContent( new FPSMovement( y_mvt ) );
+        fps_node->GetContent()->Init( init_pos, init_theta, init_phi );
 
         scenenodegraph_entry.scenenodegraph->RegisterNode( node );
 
