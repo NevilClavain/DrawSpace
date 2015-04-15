@@ -41,6 +41,7 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "AngleSpeedDec", &LuaDrawSpace::Lua_AngleSpeedDec },
   { "TranslationSpeedInc", &LuaDrawSpace::Lua_TranslationSpeedInc },
   { "TranslationSpeedDec", &LuaDrawSpace::Lua_TranslationSpeedDec },
+  { "GetSceneCameraName", &LuaDrawSpace::Lua_GetSceneCameraName },
   { 0 }
 };
 
@@ -311,4 +312,30 @@ int LuaDrawSpace::Lua_TranslationSpeedDec( lua_State* p_L )
     (*m_scriptcalls_handler)( props );
 
     return 0;
+}
+
+int LuaDrawSpace::Lua_GetSceneCameraName( lua_State* p_L )
+{
+    dsstring result;
+
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "GetSceneCameraName : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* scenegraphname = luaL_checkstring( p_L, 1 );
+    
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:GetSceneCameraName" );
+        props.AddPropValue<dsstring>( "scenegraphname", scenegraphname );
+        props.AddPropValue<dsstring*>( "result", &result );
+
+        (*m_scriptcalls_handler)( props );
+    }
+
+    lua_pushstring( p_L, result.c_str() );
+    return 1;
 }
