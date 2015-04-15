@@ -759,9 +759,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_scenenodegraphs[idsg].scenenodegraph->SetCurrentCamera( c_entry.name );
 
     }
+    else if( "DrawSpace:IsCurrentCamera" == script_call_id )
     {
         dsstring scenegraphname = p_propertypool.GetPropValue<dsstring>( "scenegraphname" );
         bool* result = p_propertypool.GetPropValue<bool*>( "result" );
+        BaseSceneNode* camera_node = p_propertypool.GetPropValue<BaseSceneNode*>( "camera_node" );
 
         bool sg_found = false;
         SceneNodeGraphEntry s_entry;
