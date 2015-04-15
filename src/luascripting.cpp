@@ -25,6 +25,7 @@
 #include "lua_spaceboxnode.h"
 #include "lua_transformnode.h"
 #include "lua_camerapointnode.h"
+#include "lua_fpsmovementnode.h"
 #include "lua_keyboard.h"
 #include "lua_mouse.h"
 #include "lua_matrix.h"
@@ -44,6 +45,7 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaSpaceboxNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaTransformationNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaCameraPointNode>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaFpsMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaKeyboard>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaMouse>::Register( LuaContext::GetInstance()->GetLuaState() );

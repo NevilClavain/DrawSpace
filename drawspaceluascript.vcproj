@@ -162,6 +162,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_fpsmovementnode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_fpsmovementnode.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\lua_keyboard.cpp"
 			>
 		</File>

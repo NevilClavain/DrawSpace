@@ -54,8 +54,8 @@ sb0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 5, 0 )
 sb0:AddPassSlotShaderParam( "texture_pass", "intensity", 1, 12, Vector( 1.0, -2.0, 3.0, -4.0 ) )
 sb0:LinkTo( "scene0", "mytf0" )
 
-cam1 = CameraPointNode( "cam1" )
-cam1:LinkTo( "scene0", "scene0" ) 
+cam0 = CameraPointNode( "cam0" )
+cam0:LinkTo( "scene0", "scene0" )
 
 keyboard = Keyboard()
 mouse = Mouse()
@@ -75,5 +75,12 @@ sb_roty:Rotation( sb_roty_axis, 45 )
 
 tf0node:UpdateMatrix( 0, sb_roty )
 tf0node:UpdateMatrix( 1, sb_scale )
+
+
+fps0 = FpsMovementNode( "fps00" )
+fps0:LinkTo( "scene0", "scene0" )
+
+
+
 
 

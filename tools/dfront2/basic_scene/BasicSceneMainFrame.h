@@ -117,6 +117,7 @@
 #define DIALOG_CAMERA_CREATION_TITLE        "Camera node creation"
 #define DIALOG_CAMERA_PROPS_TITLE           "Camera node properties"
 #define DIALOG_CAMERA_EDIT_TITLE            "Camera node edition"
+#define DIALOG_FPSMVT_CREATION_TITLE        "FPS mvt node creation"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -384,6 +385,7 @@ protected:
     std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>                        m_transformation_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>                                    m_spacebox_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>                       m_camera_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Core::FPSMovement>>                           m_fps_nodes;
 
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     

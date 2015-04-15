@@ -199,7 +199,13 @@ m_mousemove_descr( NULL )
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editcamera );    
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editnodescript );
-    
+
+
+    ///////////////////////////////////////////////////////////////////
+       
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_showprops );    
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );        
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_editnodescript );
 
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
@@ -329,8 +335,6 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             }
         }
     }
-
-
     else if( "TransformationNode:LinkTo" == script_call_id )
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
@@ -871,6 +875,123 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         {
             wxMessageBox( "TransformationNode:LoadScript : file not found", "Script error", wxICON_ERROR );
         }        
+    }
+    else if( "FpsMovementNode:FpsMovementNode" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        SceneNode<FPSMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<FPSMovement>**>( "existing_node" );
+
+        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::FPSMovement>>::iterator it = m_fps_nodes.begin(); it != m_fps_nodes.end(); ++it )
+        {
+            if( it->second.name == scene_name )
+            {
+                // node exists
+                *node_ptr = it->second.scene_node;
+                break;
+            }
+        }
+    }
+    else if( "FpsMovementNode:LinkTo" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
+        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
+        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
+
+
+        wxTreeItemId parent_tree_item;
+        void* parent_id = NULL;
+
+
+        bool scene_found = false;
+        SceneNodeGraphEntry scenenodegraph_entry;
+
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            if( it->second.name == scenegraph_name )
+            {
+                scenenodegraph_entry = it->second;
+                scene_found = true;                
+                break;
+            }
+        }
+
+        bool parent_found = false;
+        BaseSceneNode* parent = NULL;
+
+        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
+        {
+            dsstring node_scenename;
+            it->second->GetSceneName( node_scenename );
+
+            if( node_scenename == parent_name )
+            {
+                parent_found = true;
+                parent = it->second;
+                parent_id = it->first;
+                break;
+            }
+        }
+
+        if( !parent_found )
+        {
+            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+            {
+                if( it->second.name == parent_name )
+                {
+                    parent_found = true;
+                    parent_id = it->first;
+                    break;
+                }
+            }
+        }
+
+        if( !scene_found )
+        {
+            wxMessageBox( "FpsMovement node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
+            return;           
+        }
+
+        else if( !parent_found )
+        {
+            wxMessageBox( "FpsMovement node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
+            return;
+        }
+
+        SceneNode<FPSMovement>* fps_node = static_cast<SceneNode<FPSMovement>*>( node );
+        fps_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+        
+        fps_node->SetContent( new FPSMovement() );
+
+        scenenodegraph_entry.scenenodegraph->RegisterNode( node );
+
+        if( parent )
+        {            
+            fps_node->LinkTo( parent );
+            parent_tree_item = searchTreeItemIdInNodes( parent_id );
+        }
+        else
+        {
+            scenenodegraph_entry.scenenodegraph->AddNode( node );
+            parent_tree_item = scenenodegraph_entry.treeitemid;
+        }
+
+        // GUI : add item in the tree
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), MOVEMENT_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
+
+        // record the new transformation node and associated metadata
+
+        BasicSceneMainFrame::SceneNodeEntry<FPSMovement> f_entry;
+
+        f_entry.name = scene_name;
+        f_entry.scene_node = fps_node;
+        f_entry.treeitemid = treeitemid;
+
+        m_fps_nodes[f_entry.treeitemid.GetID()] = f_entry;
+        m_tree_nodes[f_entry.treeitemid.GetID()] = fps_node;
+        m_inv_tree_nodes[fps_node] = f_entry.treeitemid.GetID();
+
     }
 }
 
@@ -1969,6 +2090,24 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
+        case CONTEXTMENU_NEWFPSMVT:
+            {
+                DIALOG_DECLARE( DIALOG_FPSMVT_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+                DIALOG_APPENDROOT_NODE( "initial position", init_pos_root )
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "x", 0.0 );
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "y", 0.0 );
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "z", 0.0 );
+
+                DIALOG_APPENDROOT_FLOAT( "initial theta", 0.0 );
+                DIALOG_APPENDROOT_FLOAT( "initial phi", 0.0 );
+
+                DIALOG_APPLY             
+                DIALOG_SHOW
+            }
+            break;
+
  	}
  }
 
@@ -2011,6 +2150,10 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
         else if( m_camera_nodes.count( item.GetID() ) > 0 )
         {
             build_popupmenu( CAMERA_MASK, mnu );
+        }
+        else if( m_fps_nodes.count( item.GetID() ) > 0 )
+        {
+            build_popupmenu( MOVEMENT_MASK, mnu );
         }
 
     }
@@ -2774,6 +2917,93 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         camera_node.scene_node->GetContent()->UpdateProjectionZNear( znear );
         //DIALOG_CLOSE
     }
+    else if( DIALOG_FPSMVT_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
+
+        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+        if( "" == alias )
+        {
+            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+
+        DIALOG_GET_FLOAT_PROPERTY( "initial theta", init_theta );
+        DIALOG_GET_FLOAT_PROPERTY( "initial phi", init_phi );
+
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.x", x );
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.y", y );
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.z", z );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // create the fps mvt node
+
+        SceneNode<FPSMovement>* fps_node;
+        fps_node = new SceneNode<FPSMovement>( alias );
+        fps_node->SetContent( new FPSMovement );
+
+        fps_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // now we must found the scenenodegraph we belong to make the RegisterNode() call
+        void* id = find_scenenodegraph_id();
+
+        BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+        entry = m_scenenodegraphs[id];
+        entry.scenenodegraph->RegisterNode( fps_node );
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        // link to the scenegraph hierarchy
+
+        wxTreeItemId current;
+        current = m_last_clicked_treeitem;
+        id = current.GetID();
+
+        if( m_scenenodegraphs.count( id ) > 0 )
+        {
+            // parent is a scenegraph : use SceneNodeGraph::Add() method
+            entry.scenenodegraph->AddNode( fps_node );
+        }
+        else
+        {
+            BaseSceneNode* parent_node = m_tree_nodes[id];
+            fps_node->LinkTo( parent_node );
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        // GUI : add item in the tree
+
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, MOVEMENT_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+       
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // record the new transformation node and associated metadata
+
+        BasicSceneMainFrame::SceneNodeEntry<FPSMovement> f_entry;
+
+        f_entry.name = alias;
+        f_entry.scene_node = fps_node;
+        f_entry.treeitemid = treeitemid;
+
+
+        m_fps_nodes[f_entry.treeitemid.GetID()] = f_entry;
+
+        m_tree_nodes[f_entry.treeitemid.GetID()] = fps_node;
+        m_inv_tree_nodes[fps_node] = f_entry.treeitemid.GetID();
+
+        DIALOG_CLOSE
+
+    }
 }
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -2899,6 +3129,11 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
             script = m_camera_nodes[id].script;
             script_enabled = &m_camera_nodes[id].script_enabled;
         }
+        else if( m_fps_nodes.count( id ) > 0 )
+        {
+            script = m_fps_nodes[id].script;
+            script_enabled = &m_fps_nodes[id].script_enabled;
+        }
 
         if( *script_enabled )
         {
@@ -2925,4 +3160,9 @@ wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
     {
         return m_camera_nodes[p_id].treeitemid;
     }
+    if( m_fps_nodes.count( p_id ) > 0 )
+    {
+        return m_fps_nodes[p_id].treeitemid;
+    }
+
 }
