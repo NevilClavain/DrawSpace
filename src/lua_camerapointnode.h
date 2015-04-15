@@ -35,7 +35,7 @@ public:
 
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
 
-protected:
+public:
 
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>             m_camera_node;
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*            m_existing_camera_node;

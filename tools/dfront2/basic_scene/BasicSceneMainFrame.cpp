@@ -759,6 +759,37 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_scenenodegraphs[idsg].scenenodegraph->SetCurrentCamera( c_entry.name );
 
     }
+    {
+        dsstring scenegraphname = p_propertypool.GetPropValue<dsstring>( "scenegraphname" );
+        bool* result = p_propertypool.GetPropValue<bool*>( "result" );
+
+        bool sg_found = false;
+        SceneNodeGraphEntry s_entry;
+        
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            if( it->second.name == scenegraphname )
+            {
+                s_entry = it->second;
+                sg_found = true;
+                break;
+            }
+        }
+        if( !sg_found )
+        {
+            wxMessageBox( "DrawSpace:SetSceneNodeGraphCurrentCamera : unknown scenegraph name", "Script error", wxICON_ERROR );
+            return;
+        }
+
+        if( s_entry.scenenodegraph->GetCurrentCamera() == camera_node )
+        {
+            *result = true;
+        }
+        else
+        {
+            *result = false;
+        }
+    }
     else if( "DrawSpace:GetSceneCameraName" == script_call_id )
     {
         dsstring scenegraphname = p_propertypool.GetPropValue<dsstring>( "scenegraphname" );

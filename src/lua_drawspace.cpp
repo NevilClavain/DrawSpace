@@ -23,6 +23,7 @@
 #include "lua_drawspace.h"
 #include "lua_real.h"
 #include "luacontext.h"
+#include "lua_camerapointnode.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -42,6 +43,7 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "TranslationSpeedInc", &LuaDrawSpace::Lua_TranslationSpeedInc },
   { "TranslationSpeedDec", &LuaDrawSpace::Lua_TranslationSpeedDec },
   { "GetSceneCameraName", &LuaDrawSpace::Lua_GetSceneCameraName },
+  { "IsCurrentCamera", &LuaDrawSpace::Lua_IsCurrentCamera },
   { 0 }
 };
 
@@ -337,5 +339,47 @@ int LuaDrawSpace::Lua_GetSceneCameraName( lua_State* p_L )
     }
 
     lua_pushstring( p_L, result.c_str() );
+    return 1;
+}
+
+int LuaDrawSpace::Lua_IsCurrentCamera( lua_State* p_L )
+{
+    bool result = false;
+
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "IsCurrentCamera : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* scenegraphname = luaL_checkstring( p_L, 1 );
+
+    LuaCameraPointNode* camnode = Luna2<LuaCameraPointNode>::check( p_L, 2 );
+    if( !camnode )
+    {
+		lua_pushstring( p_L, "IsCurrentCamera : CameraPointNode expected for arg 2" );
+		lua_error( p_L );        
+    }
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:IsCurrentCamera" );
+        props.AddPropValue<dsstring>( "scenegraphname", scenegraphname );
+
+        if( camnode->m_existing_camera_node )
+        {
+            props.AddPropValue<BaseSceneNode*>( "camera_node", camnode->m_existing_camera_node );
+        }
+        else
+        {
+            props.AddPropValue<BaseSceneNode*>( "camera_node", &camnode->m_camera_node );
+        }
+        props.AddPropValue<bool*>( "result", &result );
+
+        (*m_scriptcalls_handler)( props );
+    }
+
+    lua_pushinteger( p_L, result );
     return 1;
 }
