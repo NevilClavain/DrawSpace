@@ -163,6 +163,7 @@ m_mousemove_descr( NULL )
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newspacebox );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_neworbit );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newplanet );
@@ -175,8 +176,11 @@ m_mousemove_descr( NULL )
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newlinearmvt );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcircularmvt );
-    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newspectatormvt );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newlonglatmvt );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcamera );
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
@@ -202,10 +206,28 @@ m_mousemove_descr( NULL )
 
 
     ///////////////////////////////////////////////////////////////////
-       
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_showprops );    
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );        
+
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_neworbit );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newplanet );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newtransfo );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newspectatormvt );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newcamera );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_editnodescript );
+
 
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
