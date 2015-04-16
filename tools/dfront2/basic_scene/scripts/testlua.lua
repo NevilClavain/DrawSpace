@@ -80,6 +80,7 @@ tf0node:UpdateMatrix( 1, sb_scale )
 
 
 fps0 = FpsMovementNode( "fps0" )
+fps0:SetInitialTheta( 34 )
 fps0:LinkTo( "scene0", "scene0" )
 
 

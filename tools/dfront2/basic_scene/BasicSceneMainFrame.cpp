@@ -2095,6 +2095,28 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     
                     DIALOG_SHOW
                 }
+                else if( m_fps_nodes.count( id ) > 0 )
+                {
+                    FPSMovement* fps = m_fps_nodes[id].scene_node->GetContent();
+
+                    Vector pos;
+                    dsreal curr_yaw, curr_pitch;
+                    fps->GetCurrentPos( pos );
+                    curr_yaw = fps->GetCurrentYaw();
+                    curr_pitch = fps->GetCurrentPitch();
+                   
+                    DIALOG_DECLARE( DIALOG_FPSMVT_PROPS_TITLE )
+                    DIALOG_APPENDROOT_STRING( "scene name", m_fps_nodes[id].name );
+                    DIALOG_APPENDROOT_STRING( "movement type ", m_fps_nodes[id].name );
+                    DIALOG_APPENDROOT_FLOAT( "current yaw", curr_yaw );
+                    DIALOG_APPENDROOT_FLOAT( "current pitch", curr_pitch );
+                    DIALOG_APPENDROOT_NODE( "current position", curr_pos_root );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "x", pos[0] );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "y", pos[1] );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "z", pos[2] );
+
+                    DIALOG_SHOW
+                }
             }
             break;
 
