@@ -189,8 +189,14 @@ int LuaTransformationNode::Lua_LoadScript( lua_State* p_L )
 
         props.AddPropValue<dsstring>( "script_call_id", "TransformationNode:LoadScript" );
         props.AddPropValue<dsstring>( "filepath", filepath );
-        props.AddPropValue<BaseSceneNode*>( "node", &m_transformation_node );
-
+        if( m_existing_transformation_node )
+        {
+            props.AddPropValue<BaseSceneNode*>( "node", m_existing_transformation_node );
+        }
+        else
+        {
+            props.AddPropValue<BaseSceneNode*>( "node", &m_transformation_node );
+        }
         (*m_scriptcalls_handler)( props );
     }
     return 0;

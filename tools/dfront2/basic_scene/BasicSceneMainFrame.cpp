@@ -938,7 +938,10 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             wxMessageBox( "DrawSpace:LoadMouseScript : file not found", "Script error", wxICON_ERROR );
         }
     }
-    else if( "TransformationNode:LoadScript" == script_call_id )
+    else if( "TransformationNode:LoadScript" == script_call_id || 
+                "CameraPointNode:LoadScript" == script_call_id || 
+                "SpaceboxNode:LoadScript" == script_call_id || 
+                "FpsMovementNode:LoadScript" == script_call_id )
     {
         dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
         BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
@@ -951,13 +954,32 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             char* script_text = new char[size + 1];
             memcpy( script_text, data, size );
             script_text[size] = 0;
-            m_transformation_nodes[id].script = script_text;
+
+            if( "TransformationNode:LoadScript" == script_call_id )
+            {
+                m_transformation_nodes[id].script = script_text;
+            }
+            else if( "CameraPointNode:LoadScript" == script_call_id )
+            {
+                m_camera_nodes[id].script = script_text;
+            }
+            else if( "SpaceboxNode:LoadScript" == script_call_id )
+            {
+                m_spacebox_nodes[id].script = script_text;
+            }
+            else if( "FpsMovementNode:LoadScript" == script_call_id )
+            {
+                m_fps_nodes[id].script = script_text;
+            }            
         }
         else
         {
-            wxMessageBox( "TransformationNode:LoadScript : file not found", "Script error", wxICON_ERROR );
+            wxMessageBox( "LoadScript : file not found", "Script error", wxICON_ERROR );
         }        
     }
+   
+
+
     else if( "FpsMovementNode:FpsMovementNode" == script_call_id )
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
@@ -2105,6 +2127,14 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                     script_text = &m_camera_nodes[id].script;
                     script_state = &m_camera_nodes[id].script_enabled;
+                }
+                else if( m_fps_nodes.count( id ) > 0 )
+                {
+                    title = "FPS movement node: ";
+                    title += m_fps_nodes[id].name;
+
+                    script_text = &m_fps_nodes[id].script;
+                    script_state = &m_fps_nodes[id].script_enabled;
                 }
 
                 BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );

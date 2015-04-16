@@ -122,7 +122,14 @@ int LuaFpsMovementNode::Lua_LoadScript( lua_State* p_L )
 
         props.AddPropValue<dsstring>( "script_call_id", "FpsMovementNode:LoadScript" );
         props.AddPropValue<dsstring>( "filepath", filepath );
-        props.AddPropValue<BaseSceneNode*>( "node", &m_fps_node );
+        if( m_existing_fps_node )
+        {
+            props.AddPropValue<BaseSceneNode*>( "node", m_existing_fps_node );
+        }
+        else
+        {
+            props.AddPropValue<BaseSceneNode*>( "node", &m_fps_node );
+        }
 
         (*m_scriptcalls_handler)( props );
     }

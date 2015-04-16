@@ -38,6 +38,7 @@ const Luna2<LuaSpaceboxNode>::RegType LuaSpaceboxNode::methods[] =
   { "AddPassSlotShaderParam", &LuaSpaceboxNode::Lua_AddPassSlotShaderParam },
   { "UpdateShaderParam", &LuaSpaceboxNode::Lua_UpdateShaderParam },
   { "LinkTo", &LuaSpaceboxNode::Lua_LinkTo },
+  { "LoadScript", &LuaSpaceboxNode::Lua_LoadScript },
   { 0 }
 };
 
@@ -235,5 +236,28 @@ int LuaSpaceboxNode::Lua_UpdateShaderParam( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
     
+    return 0;
+}
+
+int LuaSpaceboxNode::Lua_LoadScript( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "LoadScript : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* filepath = luaL_checkstring( p_L, 1 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        props.AddPropValue<dsstring>( "script_call_id", "SpaceboxNode:LoadScript" );
+        props.AddPropValue<dsstring>( "filepath", filepath );
+        props.AddPropValue<BaseSceneNode*>( "node", &m_spacebox_node );
+
+        (*m_scriptcalls_handler)( props );
+    }
     return 0;
 }
