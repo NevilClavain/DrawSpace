@@ -27,6 +27,7 @@
 #include "drawspace_commons.h"
 #include "callback.h"
 #include "mediator.h"
+#include "timemanager.h"
 #include "luna.h"
 
 class LuaDrawSpace
@@ -34,6 +35,7 @@ class LuaDrawSpace
 public:
 
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
+    DrawSpace::Utils::TimeManager*                                          m_timer;
 
 protected:
 

@@ -275,6 +275,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         dsstring text = p_propertypool.GetPropValue<dsstring>( "text" );
         PrintOutputConsole( text );
     }
+    else if( "DrawSpace:DrawSpace" == script_call_id )
+    {
+        TimeManager** timer = p_propertypool.GetPropValue<TimeManager**>( "timer_ref" );
+        *timer = &m_timer;
+    }
     else if( "DrawSpace:DisplayFramerate" == script_call_id )
     {
         bool state = p_propertypool.GetPropValue<bool>( "state" );

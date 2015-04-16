@@ -48,9 +48,20 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
 };
 
 
-LuaDrawSpace::LuaDrawSpace( lua_State* p_L )
+LuaDrawSpace::LuaDrawSpace( lua_State* p_L ) :
+m_timer( NULL )
 {   
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:DrawSpace" );        
+        props.AddPropValue<DrawSpace::Utils::TimeManager**>( "timer_ref", &m_timer );
+
+        (*m_scriptcalls_handler)( props );
+    }
+
 }
 
 LuaDrawSpace::~LuaDrawSpace( void ) 
