@@ -30,7 +30,10 @@ print( "Lua version : " .. _VERSION )
 ds = DrawSpace()
 ds:DisplayFramerate( 1 )
 
+
 ds:CreateSceneNodeGraph( "scene0" )
+
+ds:DisplayCurrentCamera( "scene0", 1 )
 
 tf0node = TransformationNode( "mytf0", 2 )
 tf0node:LinkTo( "scene0", "scene0" )

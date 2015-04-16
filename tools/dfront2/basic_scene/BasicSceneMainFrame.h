@@ -418,6 +418,7 @@ protected:
 
     bool                                                    m_display_framerate;
     bool                                                    m_display_currentcamera;
+    SceneNodeGraphEntry                                     m_scenegraph_currentcameradisplay;
 
     wxFont                                                  m_console_font;
 

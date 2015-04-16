@@ -283,7 +283,23 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     else if( "DrawSpace:DisplayCurrentCamera" == script_call_id )
     {
         bool state = p_propertypool.GetPropValue<bool>( "state" );
-        m_display_currentcamera = state;
+        dsstring scenegraphname = p_propertypool.GetPropValue<dsstring>( "scenegraphname" );
+
+        bool found = false;
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            if( it->second.name == scenegraphname )
+            {
+                m_display_currentcamera = state;
+                m_scenegraph_currentcameradisplay = it->second;
+                found = true;
+                break;
+            }
+        }
+        if( !found )
+        {
+            wxMessageBox( "DrawSpace:DisplayCurrentCamera, unknown scenegraph name : " + scenegraphname, "Script error", wxICON_ERROR );
+        }
     }
     else if( "DrawSpace:CreateSceneNodeGraph" == script_call_id )
     {
@@ -1322,29 +1338,7 @@ void BasicSceneMainFrame::OnPaint( wxPaintEvent& p_event )
 void BasicSceneMainFrame::render( void )
 {
     if( m_glready )
-    {
-        //int index = m_cameraslist_comboBox->GetSelection();
-        //CameraPoint* camera = (CameraPoint*)m_cameraslist_comboBox->GetClientData( index );
-
-        /*
-        if( camera != m_current_camera )
-        {
-            if( NULL == camera )
-            {
-                m_scenegraph.SetCurrentCamera( "" );
-            }
-            else
-            {
-                dsstring camera_name;
-                camera->GetSceneName( camera_name );
-                m_scenegraph.SetCurrentCamera( camera_name );
-            }
-            m_current_camera = camera;
-        }
-        */
-
-        
-        
+    {           
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
        
 
@@ -1377,9 +1371,17 @@ void BasicSceneMainFrame::render( void )
             {
                 camera_name = "...";
             }
-
             renderer->DrawText( 255, 0, 0, 10, 40, "current camera : %s", camera_name.c_str() );
             */
+            
+            dsstring camera_name;
+            m_scenegraph_currentcameradisplay.scenenodegraph->GetCurrentCameraName( camera_name );
+
+            if( "" == camera_name )
+            {
+                camera_name = "...";
+            }
+            renderer->DrawText( 255, 0, 0, 10, 40, "scene %s current camera : %s", m_scenegraph_currentcameradisplay.name.c_str(), camera_name.c_str() );
         }
         
 
