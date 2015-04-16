@@ -60,6 +60,10 @@ public:
     int Lua_SetYMvt( lua_State* p_L );
 
 
+    int Lua_RotateYaw( lua_State* p_L );
+    int Lua_RotatePitch( lua_State* p_L );
+
+
     static const char className[];
     static const Luna2<LuaFpsMovementNode>::RegType methods[];
 };

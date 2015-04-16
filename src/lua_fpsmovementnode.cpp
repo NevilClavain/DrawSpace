@@ -24,6 +24,8 @@
 #include "luacontext.h"
 #include "exceptions.h"
 
+#include "lua_drawspace.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
@@ -37,6 +39,8 @@ const Luna2<LuaFpsMovementNode>::RegType LuaFpsMovementNode::methods[] =
   { "SetInitialTheta", &LuaFpsMovementNode::Lua_SetInitialTheta },
   { "SetInitialPhi", &LuaFpsMovementNode::Lua_SetInitialPhi },
   { "SetYMvt", &LuaFpsMovementNode::Lua_SetYMvt },
+  { "RotateYaw", &LuaFpsMovementNode::Lua_RotateYaw },
+  { "RotatePitch", &LuaFpsMovementNode::Lua_RotatePitch },
   { 0, 0 }
 };
 
@@ -189,5 +193,63 @@ int LuaFpsMovementNode::Lua_SetYMvt( lua_State* p_L )
 	}
 
     m_ymvt = luaL_checkinteger( p_L, 1 );
+    return 0;
+}
+
+int LuaFpsMovementNode::Lua_RotateYaw( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "RotateYaw : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal speed = luaL_checknumber( p_L, 1 );
+    LuaDrawSpace* ds = Luna2<LuaDrawSpace>::check( p_L, 2 );
+    if( !ds )
+    {
+		lua_pushstring( p_L, "RotatePitch : DrawSpace expected for arg 2" );
+		lua_error( p_L );        
+    }
+
+    if( m_existing_fps_node )
+    {
+        m_existing_fps_node->GetContent()->RotateYaw( speed, *ds->m_timer );
+    }
+    else
+    {
+        m_fps_node.GetContent()->RotateYaw( speed, *ds->m_timer );
+    }
+
+    return 0;
+}
+
+int LuaFpsMovementNode::Lua_RotatePitch( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "RotatePitch : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal speed = luaL_checknumber( p_L, 1 );
+    LuaDrawSpace* ds = Luna2<LuaDrawSpace>::check( p_L, 2 );
+    if( !ds )
+    {
+		lua_pushstring( p_L, "RotatePitch : DrawSpace expected for arg 2" );
+		lua_error( p_L );        
+    }
+
+    if( m_existing_fps_node )
+    {
+        m_existing_fps_node->GetContent()->RotatePitch( speed, *ds->m_timer );
+    }
+    else
+    {
+        m_fps_node.GetContent()->RotatePitch( speed, *ds->m_timer );
+    }
+
     return 0;
 }
