@@ -37,8 +37,6 @@ const Luna2<LuaMouse>::RegType LuaMouse::methods[] =
     { "GetLastDeltaYMouse", &LuaMouse::Lua_GetLastDeltaYMouse },
     { "IsLeftButtonDown", &LuaMouse::Lua_IsLeftButtonDown },
     { "IsRightButtonDown", &LuaMouse::Lua_IsRightButtonDown },
-
-
     { 0, 0 }
 };
 

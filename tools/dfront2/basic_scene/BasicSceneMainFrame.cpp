@@ -65,7 +65,8 @@ m_display_currentcamera( false ),
 m_console_font( 8, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false ),
 m_keyup_code( NULL ),
 m_keydown_code( NULL ),
-m_mousemove_descr( NULL )
+m_mousemove_descr( NULL ),
+m_delta_mouse_init( true )
 {
 
    
@@ -1267,6 +1268,7 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
 {    
     if( !p_event.Dragging() )
     {
+        m_delta_mouse_init = true;
         return;
     }
        
@@ -1307,10 +1309,24 @@ void BasicSceneMainFrame::OnMouseMotion( wxMouseEvent& p_event )
         return;
     }
 
-
+    /*
     int delta_x = curr_xmouse - m_last_xmouse;
     int delta_y = curr_ymouse - m_last_ymouse;
-    
+    */
+
+    int delta_x, delta_y;
+
+    if( m_delta_mouse_init )
+    {
+        delta_x = delta_y = 0;
+        m_delta_mouse_init = false;
+    }
+    else
+    {
+        delta_x = curr_xmouse - m_last_xmouse;
+        delta_y = curr_ymouse - m_last_ymouse;
+    }
+
 
     m_last_xmouse = curr_xmouse;
     m_last_ymouse = curr_ymouse;

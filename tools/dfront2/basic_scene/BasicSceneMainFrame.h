@@ -409,6 +409,8 @@ protected:
     wxCoord                                                 m_last_xmouse;
     wxCoord                                                 m_last_ymouse;
 
+    bool                                                    m_delta_mouse_init;
+
     DrawSpace::Dynamics::CameraPoint*                       m_current_camera;
 
     Scripting*                                              m_scripting;
