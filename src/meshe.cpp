@@ -26,7 +26,7 @@
 #include "exceptions.h"
 #include "misc_utils.h"
 #include "pimanager.h"
-#include "mesheimport.h"
+#include "ac3dmeshe.h"
 
 
 using namespace DrawSpace;
@@ -40,7 +40,7 @@ Meshe::Meshe( void ) : m_importer( NULL )
     m_properties["filepath"].AddPropValue<dsstring>( "" );
     m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
     m_properties["index"].AddPropValue<long>( 0 );
-    m_properties["plugin"].AddPropValue<dsstring>( "" );
+    m_properties["mode"].AddPropValue<dsstring>( "" );
 }
 
 Meshe::~Meshe( void )
@@ -80,7 +80,7 @@ bool Meshe::on_new_line( const dsstring& p_line, long p_line_num, std::vector<ds
 
         m_properties["index"].SetPropValue<long>( StringToInt( p_words[1] ) );
     }
-    else if( "plugin" == p_words[0] )
+    else if( "mode" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -88,7 +88,7 @@ bool Meshe::on_new_line( const dsstring& p_line, long p_line_num, std::vector<ds
             return false;
         }
 
-        m_properties["plugin"].SetPropValue<dsstring>( p_words[1] );
+        m_properties["mode"].SetPropValue<dsstring>( p_words[1] );
     }
     else
     {
@@ -231,30 +231,17 @@ bool Meshe::ApplyProperties( void )
     dsstring path = m_properties["filepath"].GetPropValue<dsstring>();
     long index = m_properties["index"].GetPropValue<long>();
 
-    dsstring plugin = m_properties["plugin"].GetPropValue<dsstring>();
-
-	dsstring complete_path = plugin;
-#ifdef _DEBUG
-	complete_path += ".dll";
-#else
-	complete_path += "_r.dll";
-#endif
-
-    PlugInManager<MesheImport>::Handle pihandle;
-	PluginManagerStatus pistatus = PlugInManager<MesheImport>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK && pistatus != PIM_OK_PIALREADYLOADED )
-    {
-        return false;
-    }
+    dsstring mode = m_properties["mode"].GetPropValue<dsstring>();
 
     MesheImport* mesheimp;
 
-    if( PIM_OK == PlugInManager<MesheImport>::Instanciate( pihandle, &mesheimp ) )
+    if( mode == "ac3d" )
     {
-        SetImporter( mesheimp );
-        return LoadFromFile( path, index );    
-    }    
-    return false;
+        mesheimp = new DrawSpace::Utils::AC3DMesheImport();
+    }
+
+    SetImporter( mesheimp );
+    return LoadFromFile( path, index );    
 }
 
 void Meshe::Serialize( Archive& p_archive  )

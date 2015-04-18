@@ -1587,14 +1587,14 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
         dsstring assetname = props["assetname"].GetPropValue<dsstring>();
         dsstring filepath = props["filepath"].GetPropValue<dsstring>();
         long index = props["index"].GetPropValue<long>();
-        dsstring plugin = props["plugin"].GetPropValue<dsstring>();
+        dsstring mode = props["mode"].GetPropValue<dsstring>();
 
         DIALOG_DECLARE( DIALOG_MESHE_PROPS_TITLE )
 
         DIALOG_APPENDROOT_STRING( "assetname", assetname )
         DIALOG_APPENDROOT_STRING( "filepath", filepath )
         DIALOG_APPENDROOT_INTEGER( "index", index )
-        DIALOG_APPENDROOT_STRING( "plugin", plugin )
+        DIALOG_APPENDROOT_STRING( "mode", mode )
 
         DIALOG_SHOW
     }
