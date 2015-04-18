@@ -41,7 +41,7 @@ end_asset
 declare_asset_instance Font
 assetname font01
 filespath mangalfont.bmp mangalfont.csv
-plugin cbfgfont
+mode cbfg
 end_asset
 
 declare_asset_instance Shader
@@ -61,7 +61,7 @@ declare_asset_instance Meshe
 assetname cube_meshe
 filepath object.ac
 index 0
-plugin ac3dmeshe
+mode ac3d
 end_asset
 
 

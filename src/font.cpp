@@ -26,6 +26,7 @@
 #include "plugin.h"
 #include "memalloc.h"
 #include "pimanager.h"
+#include "cbfgfont.h"
 
 
 using namespace DrawSpace;
@@ -39,7 +40,7 @@ Font::Font( void ) : m_importer( NULL )/*, m_texture( NULL )*/
     m_properties["filespath"].AddPropValue<dsstring>( "texturefilepath", "" );
     m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
     m_properties["filespath"].AddPropValue<dsstring>( "metricsfilepath", "" );
-    m_properties["plugin"].AddPropValue<dsstring>( "" );
+    m_properties["mode"].AddPropValue<dsstring>( "" );
 }
 
 Font::~Font( void )
@@ -69,7 +70,7 @@ bool Font::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
 
         m_properties["assetname"].SetPropValue<dsstring>( p_words[1] );
     }
-    else if( "plugin" == p_words[0] )
+    else if( "mode" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {
@@ -77,7 +78,7 @@ bool Font::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
             return false;
         }
 
-        m_properties["plugin"].SetPropValue<dsstring>( p_words[1] );
+        m_properties["mode"].SetPropValue<dsstring>( p_words[1] );
     }
     else
     {
@@ -170,31 +171,16 @@ bool Font::ApplyProperties( void )
     dsstring texturefilepath = m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
     dsstring metricsfilepath = m_properties["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
 
-    dsstring plugin = m_properties["plugin"].GetPropValue<dsstring>();
-
-	dsstring complete_path = plugin;
-#ifdef _DEBUG
-	complete_path += ".dll";
-#else
-	complete_path += "_r.dll";
-#endif
-
-    PlugInManager<FontImport>::Handle pihandle;
-	PluginManagerStatus pistatus = PlugInManager<FontImport>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK )
-    {
-        return false;
-    }
-
+    dsstring mode = m_properties["mode"].GetPropValue<dsstring>();
     FontImport* fontimp;
 
-    if( PIM_OK == PlugInManager<FontImport>::Instanciate( pihandle, &fontimp ) )
+    if( mode == "cbfg" )
     {
-        SetImporter( fontimp );
-        return Build( texturefilepath, metricsfilepath );
-    }        
+        fontimp = new CBFGFontImport();
+    }
 
-    return false;    
+    SetImporter( fontimp );
+    return Build( texturefilepath, metricsfilepath );
 }
 
 void Font::Serialize( Utils::Archive& p_archive  )
@@ -225,7 +211,7 @@ void Font::DumpProperties( dsstring& p_text )
     p_text += "\r\n";
 
     p_text += "plugin ";
-    p_text += m_properties["plugin"].GetPropValue<dsstring>();
+    p_text += m_properties["mode"].GetPropValue<dsstring>();
     p_text += "\r\n";
 
     //p_text += "end_asset\n";

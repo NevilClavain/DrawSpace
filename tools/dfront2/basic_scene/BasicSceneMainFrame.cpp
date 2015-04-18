@@ -1564,14 +1564,14 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
         font->GetPropertiesMap( props );
 
         dsstring assetname = props["assetname"].GetPropValue<dsstring>();
-        dsstring plugin = props["plugin"].GetPropValue<dsstring>();
+        dsstring mode = props["mode"].GetPropValue<dsstring>();
         dsstring texturefilepath = props["filespath"].GetPropValue<dsstring>( "texturefilepath" );
         dsstring metricsfilepath = props["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
 
         DIALOG_DECLARE( DIALOG_FONT_PROPS_TITLE )
 
         DIALOG_APPENDROOT_STRING( "assetname", assetname )
-        DIALOG_APPENDROOT_STRING( "plugin", plugin )
+        DIALOG_APPENDROOT_STRING( "mode", mode )
         DIALOG_APPENDROOT_STRING( "texturefilepath", texturefilepath )
         DIALOG_APPENDROOT_STRING( "metricsfilepath", metricsfilepath )
 
