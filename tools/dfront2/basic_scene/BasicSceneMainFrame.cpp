@@ -1926,8 +1926,21 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWSPACEBOX:
             {
-
                 DIALOG_DECLARE( DIALOG_SPACEBOX_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+
+                DIALOG_APPLY
+                DIALOG_SPECIFIC0( "New pass slot" )
+                DIALOG_SPECIFIC1( "New shaders param slot" )
+
+                DIALOG_SHOW
+            }
+            break;
+
+        case CONTEXTMENU_NEWCHUNK:
+            {
+                DIALOG_DECLARE( DIALOG_CHUNK_CREATION_TITLE )
 
                 DIALOG_APPENDROOT_STRING( "scene name", "" )
 
@@ -2557,7 +2570,6 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             DIALOG_CLOSE
         }
     }
-
     else if( DIALOG_TRANSFORM_CREATION_TITLE == DIALOG_TITLE )
     {
         DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
@@ -2959,6 +2971,20 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     }
 
+    else if( DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
+
+        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+        if( "" == alias )
+        {
+            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+    }
+
     else if( DIALOG_SPACEBOX_EDITION_TITLE == DIALOG_TITLE )
     {
 
@@ -3216,6 +3242,24 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
         DIALOG_FINALIZE
     }
 
+    else if( DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_SPECIFIC0_LABEL( "pass %d", pass_label )
+
+        DIALOG_APPENDROOT_NODE( pass_label, pass_root )
+
+        DIALOG_APPENDNODE_ENUM( pass_root, "pass", get_intermediatepasses_list() )
+        DIALOG_APPENDNODE_ENUM( pass_root, "fx", get_fx_list() )
+        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", 200 )
+      
+        DIALOG_APPENDNODE_NODE( pass_root, "textures", textures_label )
+
+        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", textures_stages_labels )
+        DIALOG_APPENDNODE_ITERATE( textures_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, textures_stages_labels )
+
+        DIALOG_FINALIZE
+    }
+
     else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
     {
         DIALOG_SPECIFIC0_LABEL( "matrix %d", matrix_label )
@@ -3252,7 +3296,7 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
         DIALOG_SETSPECIFIC0COUNTER( 0 )
     }
 
-    else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
+    else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE || DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
     {
         DIALOG_SPECIFIC1_LABEL( "shader params %d", param_label )
 
@@ -3267,7 +3311,6 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
         DIALOG_APPENDNODE_FLOAT( param_values, "z", 0.0 )
         DIALOG_APPENDNODE_FLOAT( param_values, "w", 0.0 )
         DIALOG_FINALIZE
-
     }
 }
 

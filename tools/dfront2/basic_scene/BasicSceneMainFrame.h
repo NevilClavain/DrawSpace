@@ -119,6 +119,7 @@
 #define DIALOG_CAMERA_EDIT_TITLE            "Camera node edition"
 #define DIALOG_FPSMVT_CREATION_TITLE        "FPS mvt node creation"
 #define DIALOG_FPSMVT_PROPS_TITLE           "FPS mvt node properties"
+#define DIALOG_CHUNK_CREATION_TITLE         "Chunk node creation"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
