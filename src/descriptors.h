@@ -48,12 +48,12 @@ typedef struct
     dsstring                        textures[6][DrawSpace::Core::RenderingNode::NbMaxTextures];
     std::vector<PassShaderParam>    shader_params;
 
-} PassDescriptor;
+} SpaceboxPassDescriptor;
 
 typedef struct
 {
-    dsstring                            scene_name;
-    std::map<dsstring, PassDescriptor>  passes_slots;
+    dsstring                                    scene_name;
+    std::map<dsstring, SpaceboxPassDescriptor>  passes_slots;
 
 } SpaceboxDescriptor;
 

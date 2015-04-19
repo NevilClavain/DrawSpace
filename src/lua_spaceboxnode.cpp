@@ -104,7 +104,7 @@ int LuaSpaceboxNode::Lua_RegisterPassSlot( lua_State* p_L )
 	}
     const char* pass_name = luaL_checkstring( p_L, 1 );
 
-    DrawSpace::Utils::PassDescriptor pass_descriptor;
+    DrawSpace::Utils::SpaceboxPassDescriptor pass_descriptor;
     pass_descriptor.rendering_order = 200;
     m_descriptor.passes_slots[pass_name] = pass_descriptor;
 

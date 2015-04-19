@@ -605,7 +605,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             m_inv_tree_nodes[sb_node] = t_entry.treeitemid.GetID();
 
             // update passes output queues
-            for( std::map<dsstring, PassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
+            for( std::map<dsstring, SpaceboxPassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
             {
                 Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
                 current_pass->GetRenderingQueue()->UpdateOutputQueue();
@@ -1964,9 +1964,9 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     
                     DIALOG_APPENDROOT_STRING( "scene name", sb_descr.scene_name )
 
-                    for( std::map<dsstring, PassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
+                    for( std::map<dsstring, SpaceboxPassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
                     {
-                        PassDescriptor pass_descr = it->second;                                                
+                        SpaceboxPassDescriptor pass_descr = it->second;                                                
 
                         DIALOG_BUILD_LABELS( pass_descr.shader_params.size(), "shader parameter %d", params_list )
 
@@ -2005,9 +2005,9 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                     DIALOG_APPENDROOT_STRING( "scene name", sb_descr.scene_name )
 
-                    for( std::map<dsstring, PassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
+                    for( std::map<dsstring, SpaceboxPassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
                     {
-                        PassDescriptor pass_descr = it->second;                        
+                        SpaceboxPassDescriptor pass_descr = it->second;                        
                         //DIALOG_APPENDROOT_NODE( pass_labels[label_index], pass_root )
 
                         DIALOG_APPENDROOT_NODE( it->first, pass_root )
@@ -2727,7 +2727,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
     {
         DrawSpace::Utils::SpaceboxDescriptor descr;
-        DrawSpace::Utils::PassDescriptor pass_descr;
+        DrawSpace::Utils::SpaceboxPassDescriptor pass_descr;
 
         DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
 
@@ -2952,7 +2952,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             m_inv_tree_nodes[sb_node] = t_entry.treeitemid.GetID();
 
             // update passes output queues
-            for( std::map<dsstring, PassDescriptor>::iterator it = descr.passes_slots.begin(); it != descr.passes_slots.end(); ++it )
+            for( std::map<dsstring, SpaceboxPassDescriptor>::iterator it = descr.passes_slots.begin(); it != descr.passes_slots.end(); ++it )
             {
                 Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
                 current_pass->GetRenderingQueue()->UpdateOutputQueue();

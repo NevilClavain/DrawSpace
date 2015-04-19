@@ -30,7 +30,7 @@ Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descripto
     Spacebox* spacebox = new Spacebox();
     spacebox->SetSceneName( p_descriptor.scene_name );
 
-    std::map<dsstring, DrawSpace::Utils::PassDescriptor> passes = p_descriptor.passes_slots;
+    std::map<dsstring, DrawSpace::Utils::SpaceboxPassDescriptor> passes = p_descriptor.passes_slots;
 
     if( 0 == passes.size() )
     {
@@ -38,7 +38,7 @@ Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descripto
         return NULL;
     }
 
-    for( std::map<dsstring, DrawSpace::Utils::PassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
+    for( std::map<dsstring, DrawSpace::Utils::SpaceboxPassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
     {
         Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
         if( !current_pass )
