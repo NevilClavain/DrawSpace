@@ -57,6 +57,24 @@ typedef struct
 
 } SpaceboxDescriptor;
 
+typedef struct
+{
+    dsstring                        fx_name;
+    long                            rendering_order;
+    dsstring                        textures[DrawSpace::Core::RenderingNode::NbMaxTextures];
+    std::vector<PassShaderParam>    shader_params;
+
+} ChunkPassDescriptor;
+
+typedef struct
+{
+    dsstring                                    scene_name;
+    dsstring                                    meshe;
+    std::map<dsstring, ChunkPassDescriptor>     passes_slots;
+
+} ChunkDescriptor;
+
+
 /////////////////////////////////////////////////////////////////
 
 typedef struct

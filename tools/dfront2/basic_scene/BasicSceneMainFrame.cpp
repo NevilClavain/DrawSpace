@@ -1944,6 +1944,8 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 DIALOG_APPENDROOT_STRING( "scene name", "" )
 
+                DIALOG_APPENDROOT_ENUM( "meshe",  insert_void_choice( get_meshes_list() ) )
+
                 DIALOG_APPLY
                 DIALOG_SPECIFIC0( "New pass slot" )
                 DIALOG_SPECIFIC1( "New shaders param slot" )
