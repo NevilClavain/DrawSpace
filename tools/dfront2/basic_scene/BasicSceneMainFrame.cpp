@@ -2729,8 +2729,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
     {
         DrawSpace::Utils::SpaceboxDescriptor descr;
-        DrawSpace::Utils::SpaceboxPassDescriptor pass_descr;
-
+        
         DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
 
         DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
@@ -2746,6 +2745,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         {
 
             DIALOG_EXPLORE_NODES_BEGIN( "", "pass %d", i, pass_slot )
+
+                DrawSpace::Utils::SpaceboxPassDescriptor pass_descr;
 
                 DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "pass" ), pass_name )
                 DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
@@ -2976,8 +2977,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     else if( DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
     {
         DrawSpace::Utils::ChunkDescriptor descr;
-        DrawSpace::Utils::ChunkPassDescriptor pass_descr;
-
+        
         DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
         DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
 
@@ -2992,8 +2992,12 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         DIALOG_GET_ENUM_PROPERTY( "meshe", meshe_name )
         DIALOG_WXSTRING_TO_DSSTRING( meshe_name, meshe_name2 )
 
+        descr.meshe = meshe_name2;
+
         {
             DIALOG_EXPLORE_NODES_BEGIN( "", "pass %d", i, pass_slot )
+
+                DrawSpace::Utils::ChunkPassDescriptor pass_descr;
 
                 DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "pass" ), pass_name )
                 DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
@@ -3018,6 +3022,9 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
                     }
                 DIALOG_EXPLORE_NODES_END( j )
 
+                pass_descr.fx_name = fx_name;
+                pass_descr.rendering_order = rendering_order;          
+                descr.passes_slots[pass_name2] = pass_descr;
 
             DIALOG_EXPLORE_NODES_END( i )
         }
@@ -3485,6 +3492,11 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
         {
             script = m_fps_nodes[id].script;
             script_enabled = &m_fps_nodes[id].script_enabled;
+        }
+        else if( m_chunk_nodes.count( id ) > 0 )
+        {
+            script = m_chunk_nodes[id].script;
+            script_enabled = &m_chunk_nodes[id].script_enabled;
         }
 
         if( *script_enabled )

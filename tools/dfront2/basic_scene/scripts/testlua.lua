@@ -44,6 +44,15 @@ tf0node:LinkTo( "scene0", "scene0" )
 -- tf0node:AddMatrix( mat )
 tf0node:LoadScript( "tf_transformnode.lua" )
 
+
+tf2 = TransformationNode( "tf2" )
+tf2:LinkTo( "scene0", "scene0" )
+
+mat = Matrix()
+mat:Translation( 0, 3, -8 )
+tf2:AddMatrix( mat )
+
+
 sb0 = SpaceboxNode( "sb0" )
 sb0:RegisterPassSlot( "texture_pass" )
 sb0:SetPassSlotFxName( "texture_pass", "texture_fx" )
