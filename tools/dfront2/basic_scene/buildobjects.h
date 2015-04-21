@@ -24,3 +24,4 @@
 #include "BasicSceneMainFrame.h"
 
 DrawSpace::Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descriptor, dsstring& p_error );
+DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descriptor, dsstring& p_error );
