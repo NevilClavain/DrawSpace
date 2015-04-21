@@ -386,10 +386,12 @@ protected:
    
     std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>                        m_transformation_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>                                    m_spacebox_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Chunk>>                                       m_chunk_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>                       m_camera_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Core::FPSMovement>>                           m_fps_nodes;
 
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
+    std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_chunk_descriptors;
     
 
 
