@@ -1615,6 +1615,22 @@ void BasicSceneMainFrame::OnConfigsListItemActivated( wxListEvent& p_event )
 
         DIALOG_DECLARE( DIALOG_FX_PROPS_TITLE )
 
+        ///////////////////////////////////////////////////
+
+        std::map<dsstring, DrawSpace::Core::Configurable*> config_list;
+        ConfigsBase::GetInstance()->GetConfigsInstancesList( config_list );
+        for( std::map<dsstring, DrawSpace::Core::Configurable*>::iterator it = config_list.begin(); it != config_list.end(); ++it )
+        {
+            if( it->second == config )
+            {
+                DIALOG_APPENDROOT_STRING( "configname", it->first )
+            }
+        }
+
+        
+
+        ///////////////////////////////////////////////////
+
         std::vector<dsstring> shaders_list = props["shaders"].GetPropValue<std::vector<dsstring>>();
 
         if( shaders_list.size() > 0 )
@@ -1701,7 +1717,7 @@ void BasicSceneMainFrame::build_passes_infos_dialog( DrawSpace::Core::Configurab
         DIALOG_DECLARE( title )
 
         dsstring passname = props["passname"].GetPropValue<dsstring>();
-        DIALOG_APPENDROOT_STRING( "name", passname )
+        DIALOG_APPENDROOT_STRING( "configname", passname )
 
         if( ipass )
         {
