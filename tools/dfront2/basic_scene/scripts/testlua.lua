@@ -49,7 +49,7 @@ tf2 = TransformationNode( "tf2" )
 tf2:LinkTo( "scene0", "scene0" )
 
 mat = Matrix()
-mat:Translation( 0, 3, -8 )
+mat:Translation( 0, 1, -10 )
 tf2:AddMatrix( mat )
 
 
