@@ -1092,7 +1092,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         fps_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
         
         fps_node->SetContent( new FPSMovement( y_mvt ) );
-        fps_node->GetContent()->Init( init_pos, init_theta, init_phi );
+        fps_node->GetContent()->Init( init_pos, Maths::DegToRad( init_theta ), Maths::DegToRad( init_phi ) );
 
         scenenodegraph_entry.scenenodegraph->RegisterNode( node );
 
@@ -2146,8 +2146,8 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_DECLARE( DIALOG_FPSMVT_PROPS_TITLE )
                     DIALOG_APPENDROOT_STRING( "scene name", m_fps_nodes[id].name );
                     DIALOG_APPENDROOT_STRING( "movement type ", m_fps_nodes[id].name );
-                    DIALOG_APPENDROOT_FLOAT( "current yaw", curr_yaw );
-                    DIALOG_APPENDROOT_FLOAT( "current pitch", curr_pitch );
+                    DIALOG_APPENDROOT_FLOAT( "current yaw", Maths::RadToDeg( curr_yaw ) );
+                    DIALOG_APPENDROOT_FLOAT( "current pitch", Maths::RadToDeg( curr_pitch ) );
                     DIALOG_APPENDROOT_NODE( "current position", curr_pos_root );
                     DIALOG_APPENDNODE_FLOAT( curr_pos_root, "x", pos[0] );
                     DIALOG_APPENDNODE_FLOAT( curr_pos_root, "y", pos[1] );
@@ -3291,7 +3291,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         fps_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
 
-        fps_node->GetContent()->Init( Vector( x, y, z, 1 ), init_theta, init_phi );
+        fps_node->GetContent()->Init( Vector( x, y, z, 1 ), Maths::DegToRad( init_theta ), Maths::DegToRad( init_phi ) );
 
         /////////////////////////////////////////////////////////////////////////////////
 
