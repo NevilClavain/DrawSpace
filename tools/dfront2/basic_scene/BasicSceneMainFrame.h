@@ -112,7 +112,7 @@
 #define DIALOG_TRANSFORM_EDITION_TITLE      "Transformation node edition"
 #define DIALOG_SPACEBOX_CREATION_TITLE      "Spacebox node creation"
 #define DIALOG_SPACEBOX_PROPS_TITLE         "Spacebox node properties"
-#define DIALOG_SPACEBOX_EDITION_TITLE       "Spacebox node properties"
+#define DIALOG_SPACEBOX_EDITION_TITLE       "Spacebox node edition"
 #define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
 #define DIALOG_CAMERA_CREATION_TITLE        "Camera node creation"
 #define DIALOG_CAMERA_PROPS_TITLE           "Camera node properties"
@@ -121,6 +121,7 @@
 #define DIALOG_FPSMVT_PROPS_TITLE           "FPS mvt node properties"
 #define DIALOG_CHUNK_CREATION_TITLE         "Chunk node creation"
 #define DIALOG_CHUNK_PROPS_TITLE            "Chunk node properties"
+#define DIALOG_CHUNK_EDITION_TITLE          "Chunk node edition"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

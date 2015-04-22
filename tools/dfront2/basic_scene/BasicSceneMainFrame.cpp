@@ -2021,6 +2021,40 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                     DIALOG_SHOW
                 }
+                else if( m_chunk_descriptors.count( id ) > 0 )
+                {
+                    DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[id];
+
+                    DIALOG_DECLARE( DIALOG_CHUNK_EDITION_TITLE )
+                   
+                    DIALOG_APPENDROOT_STRING( "scene name", chunk_descr.scene_name )
+
+                    for( std::map<dsstring, ChunkPassDescriptor>::iterator it = chunk_descr.passes_slots.begin(); it != chunk_descr.passes_slots.end(); ++it )
+                    {
+                        ChunkPassDescriptor pass_descr = it->second;                                                
+
+                        DIALOG_BUILD_LABELS( pass_descr.shader_params.size(), "shader parameter %d", params_list )
+
+                        DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( i, params_list, param_root )
+
+                            DIALOG_APPENDNODE_STRING( param_root, "pass name", it->first )
+
+                            DIALOG_APPENDNODE_STRING( param_root, "param id", pass_descr.shader_params[i].id );
+
+                            DIALOG_APPENDNODE_NODE( param_root, "values", shader_param_values_root )
+
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )                           
+
+                        DIALOG_APPENDROOT_ITERATE_NODE_END
+                    }
+
+                    DIALOG_APPLY
+
+                    DIALOG_SHOW
+                }
 
             }
             break;
@@ -3261,6 +3295,43 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         
         DIALOG_CLOSE
     }
+
+    else if( DIALOG_CHUNK_EDITION_TITLE == DIALOG_TITLE )
+    {
+
+        DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[m_last_clicked_treeitem.GetID()];
+        SceneNodeEntry<DrawSpace::Chunk> cne = m_chunk_nodes[m_last_clicked_treeitem.GetID()];
+
+        DIALOG_EXPLORE_NODES_BEGIN( "", "shader parameter %d", i, sp_slot )
+
+            DIALOG_GET_STRING_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "pass name" ), pass_name )
+            DIALOG_GET_STRING_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "param id" ), param_id )
+            
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.x" ), val_x )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.y" ), val_y )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.z" ), val_z )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.w" ), val_w )
+
+           
+
+            DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
+            DIALOG_WXSTRING_TO_DSSTRING( param_id, param_id2 )
+
+            Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_name2 ) );
+
+            cne.scene_node->GetContent()->GetNodeFromPass( current_pass )->SetShaderRealVector( param_id2, Vector( val_x, val_y, val_z, val_w ) );
+
+            // update descriptor
+            chunk_descr.passes_slots[pass_name2].shader_params[i].value = Vector( val_x, val_y, val_z, val_w );
+
+            m_chunk_descriptors[m_last_clicked_treeitem.GetID()] = chunk_descr;
+
+        DIALOG_EXPLORE_NODES_END( i )
+        
+        DIALOG_CLOSE
+    }
+
+
     else if( DIALOG_CAMERA_CREATION_TITLE == DIALOG_TITLE )
     {
         DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
