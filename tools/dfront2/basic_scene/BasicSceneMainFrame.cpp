@@ -230,6 +230,17 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_editnodescript );
 
 
+    ///////////////////////////////////////////////////////////////////
+
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editshaders );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editnodescript );
+
+    ///////////////////////////////////////////////////////////////////
+
+
+
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
     m_specificbutton0_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
@@ -2214,6 +2225,14 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     script_text = &m_fps_nodes[id].script;
                     script_state = &m_fps_nodes[id].script_enabled;
                 }
+                else if( m_chunk_nodes.count( id ) > 0 )
+                {
+                    title = "Chunk node: ";
+                    title += m_chunk_nodes[id].name;
+
+                    script_text = &m_chunk_nodes[id].script;
+                    script_state = &m_chunk_nodes[id].script_enabled;
+                }
 
                 BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
                 frame->Show();
@@ -2350,6 +2369,10 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
         else if( m_fps_nodes.count( item.GetID() ) > 0 )
         {
             build_popupmenu( MOVEMENT_MASK, mnu );
+        }
+        else if( m_chunk_nodes.count( item.GetID() ) > 0 )
+        {
+            build_popupmenu( CHUNK_MASK, mnu );
         }
 
     }
@@ -3418,7 +3441,7 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
 
         DIALOG_APPENDNODE_ENUM( pass_root, "pass", get_intermediatepasses_list() )
         DIALOG_APPENDNODE_ENUM( pass_root, "fx", get_fx_list() )
-        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", 200 )
+        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", 10000 )
       
         DIALOG_APPENDNODE_NODE( pass_root, "textures", textures_label )
 
