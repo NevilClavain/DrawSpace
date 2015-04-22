@@ -73,6 +73,15 @@ renderstates_out ENABLEZBUFFER false
 renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
+declare_config_instance Fx spacebox_fx
+shaders vertexshader_texture pixelshader_texture
+renderstates_in ENABLEZBUFFER false
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out ENABLEZBUFFER false
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
 declare_config_instance IntermediatePass texture_pass
 passname my_texture_pass
 enabledepthclear true

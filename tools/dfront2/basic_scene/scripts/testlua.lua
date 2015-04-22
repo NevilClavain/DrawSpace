@@ -55,7 +55,7 @@ tf2:AddMatrix( mat )
 
 sb0 = SpaceboxNode( "sb0" )
 sb0:RegisterPassSlot( "texture_pass" )
-sb0:SetPassSlotFxName( "texture_pass", "texture_fx" )
+sb0:SetPassSlotFxName( "texture_pass", "spacebox_fx" )
 sb0:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "texture_sb2", 1, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "texture_sb3", 2, 0 )
@@ -89,7 +89,7 @@ tf0node:UpdateMatrix( 1, sb_scale )
 
 
 fps0 = FpsMovementNode( "fps0" )
-fps0:SetInitialTheta( 34 )
+fps0:SetInitialTheta( 31 )
 fps0:LinkTo( "scene0", "scene0" )
 
 
