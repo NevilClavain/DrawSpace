@@ -1883,6 +1883,8 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     m_transformation_nodes[id].scene_node->GetContent()->GetMatrixChain( mat_chain );
 
 
+                    DIALOG_APPENDROOT_STRING( "scene name", m_transformation_nodes[id].name );
+
                     DIALOG_BUILD_LABELS( mat_chain.size(), "matrix %d", matrix_labels )
 
                     DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( i, matrix_labels, matrix_root )
