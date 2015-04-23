@@ -67,6 +67,15 @@ sb0:AddPassSlotShaderParam( "texture_pass", "intensity", 1, 12, Vector( 1.0, -2.
 sb0:LinkTo( "scene0", "mytf0" )
 
 
+cube0 = ChunkNode( "cube0" )
+cube0:SetMesheName( "cube_meshe" )
+cube0:RegisterPassSlot( "texture_pass" )
+cube0:SetPassSlotFxName( "texture_pass", "texture_fx" )
+cube0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
+
+cube0:LinkTo( "scene0", "tf2" )
+
+
 
 keyboard = Keyboard()
 mouse = Mouse()

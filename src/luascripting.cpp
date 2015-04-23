@@ -23,6 +23,7 @@
 #include "luascripting.h"
 #include "lua_drawspace.h"
 #include "lua_spaceboxnode.h"
+#include "lua_chunknode.h"
 #include "lua_transformnode.h"
 #include "lua_camerapointnode.h"
 #include "lua_fpsmovementnode.h"
@@ -43,6 +44,8 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaDrawSpace>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaSpaceboxNode>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaChunkNode>::Register( LuaContext::GetInstance()->GetLuaState() );
+
     Luna2<LuaTransformationNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaCameraPointNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaFpsMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );

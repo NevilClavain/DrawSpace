@@ -20,7 +20,7 @@
 *
 */
 
-#include "lua_spaceboxnode.h"
+#include "lua_chunknode.h"
 #include "luacontext.h"
 #include "lua_vector.h"
 #include "exceptions.h"
@@ -28,43 +28,42 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-const char LuaSpaceboxNode::className[] = "SpaceboxNode";
-const Luna2<LuaSpaceboxNode>::RegType LuaSpaceboxNode::methods[] =
+const char LuaChunkNode::className[] = "ChunkNode";
+const Luna2<LuaChunkNode>::RegType LuaChunkNode::methods[] =
 {  
-  { "RegisterPassSlot", &LuaSpaceboxNode::Lua_RegisterPassSlot },
-  { "SetPassSlotFxName", &LuaSpaceboxNode::Lua_SetPassSlotFxName },
-  { "SetPassSlotRenderingOrder", &LuaSpaceboxNode::Lua_SetPassSlotRenderingOrder },
-  { "SetPassSlotTextureName", &LuaSpaceboxNode::Lua_SetPassSlotTextureName },
-  { "AddPassSlotShaderParam", &LuaSpaceboxNode::Lua_AddPassSlotShaderParam },
-  { "UpdateShaderParam", &LuaSpaceboxNode::Lua_UpdateShaderParam },
-  { "LinkTo", &LuaSpaceboxNode::Lua_LinkTo },
-  { "LoadScript", &LuaSpaceboxNode::Lua_LoadScript },
+  { "SetMesheName", &LuaChunkNode::Lua_SetMesheName },
+  { "RegisterPassSlot", &LuaChunkNode::Lua_RegisterPassSlot },
+  { "SetPassSlotFxName", &LuaChunkNode::Lua_SetPassSlotFxName },
+  { "SetPassSlotRenderingOrder", &LuaChunkNode::Lua_SetPassSlotRenderingOrder },
+  { "SetPassSlotTextureName", &LuaChunkNode::Lua_SetPassSlotTextureName },
+  { "AddPassSlotShaderParam", &LuaChunkNode::Lua_AddPassSlotShaderParam },
+  { "UpdateShaderParam", &LuaChunkNode::Lua_UpdateShaderParam },
+  { "LinkTo", &LuaChunkNode::Lua_LinkTo },
+  { "LoadScript", &LuaChunkNode::Lua_LoadScript },
   { 0 }
 };
 
-
-LuaSpaceboxNode::LuaSpaceboxNode( lua_State* p_L ) :
-m_spacebox_node( "spacebox_node" )
+LuaChunkNode::LuaChunkNode( lua_State* p_L ) :
+m_chunk_node( "chunk_node" )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
 	{
-		lua_pushstring( p_L, "SpaceboxNode ctor : bad number of args" );
+		lua_pushstring( p_L, "ChunkNode ctor : bad number of args" );
 		lua_error( p_L );		
 	}
     const char* scene_name = luaL_checkstring( p_L, 1 );
-    m_spacebox_node.SetSceneName( scene_name );
+    m_chunk_node.SetSceneName( scene_name );
     m_descriptor.scene_name = scene_name;
 
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();    
 }
 
-LuaSpaceboxNode::~LuaSpaceboxNode( void ) 
+LuaChunkNode::~LuaChunkNode( void ) 
 {
 }
 
-
-int LuaSpaceboxNode::Lua_LinkTo( lua_State* p_L )
+int LuaChunkNode::Lua_LinkTo( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -76,17 +75,17 @@ int LuaSpaceboxNode::Lua_LinkTo( lua_State* p_L )
     const char* parent_name = luaL_checkstring( p_L, 2 );
 
     dsstring scene_name;
-    m_spacebox_node.GetSceneName( scene_name );
+    m_chunk_node.GetSceneName( scene_name );
 
     if( m_scriptcalls_handler )
     {
         PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "SpaceboxNode:LinkTo" );
+        props.AddPropValue<dsstring>( "script_call_id", "ChunkNode:LinkTo" );
         props.AddPropValue<dsstring>( "scenegraph_name", scenegraph_name );        
         props.AddPropValue<dsstring>( "parent_name", parent_name );
         props.AddPropValue<dsstring>( "scene_name", scene_name );
-        props.AddPropValue<BaseSceneNode*>( "node", &m_spacebox_node );
-        props.AddPropValue<DrawSpace::Utils::SpaceboxDescriptor>( "descriptor", m_descriptor );
+        props.AddPropValue<BaseSceneNode*>( "node", &m_chunk_node );
+        props.AddPropValue<DrawSpace::Utils::ChunkDescriptor>( "descriptor", m_descriptor );
 
         (*m_scriptcalls_handler)( props );
     }
@@ -94,7 +93,21 @@ int LuaSpaceboxNode::Lua_LinkTo( lua_State* p_L )
     return 0;
 }
 
-int LuaSpaceboxNode::Lua_RegisterPassSlot( lua_State* p_L )
+int LuaChunkNode::Lua_SetMesheName( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetMesheName : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* meshe_name = luaL_checkstring( p_L, 1 );
+    m_descriptor.meshe = meshe_name;
+
+    return 0;
+}
+
+int LuaChunkNode::Lua_RegisterPassSlot( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
@@ -104,14 +117,14 @@ int LuaSpaceboxNode::Lua_RegisterPassSlot( lua_State* p_L )
 	}
     const char* pass_name = luaL_checkstring( p_L, 1 );
 
-    DrawSpace::Utils::SpaceboxPassDescriptor pass_descriptor;
-    pass_descriptor.rendering_order = 200;
+    DrawSpace::Utils::ChunkPassDescriptor pass_descriptor;
+    pass_descriptor.rendering_order = 10000;
     m_descriptor.passes_slots[pass_name] = pass_descriptor;
 
     return 0;
 }
 
-int LuaSpaceboxNode::Lua_SetPassSlotFxName( lua_State* p_L )
+int LuaChunkNode::Lua_SetPassSlotFxName( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -132,7 +145,8 @@ int LuaSpaceboxNode::Lua_SetPassSlotFxName( lua_State* p_L )
     }
     return 0;
 }
-int LuaSpaceboxNode::Lua_SetPassSlotRenderingOrder( lua_State* p_L )
+
+int LuaChunkNode::Lua_SetPassSlotRenderingOrder( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
@@ -153,18 +167,18 @@ int LuaSpaceboxNode::Lua_SetPassSlotRenderingOrder( lua_State* p_L )
     }
     return 0;
 }
-int LuaSpaceboxNode::Lua_SetPassSlotTextureName( lua_State* p_L )
+
+int LuaChunkNode::Lua_SetPassSlotTextureName( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc != 4 )
+	if( argc != 3 )
 	{
 		lua_pushstring( p_L, "SetPassSlotTextureName : bad number of args" );
 		lua_error( p_L );		
 	}
     const char* pass_name = luaL_checkstring( p_L, 1 );
     const char* texture_name = luaL_checkstring( p_L, 2 );
-    long face_id = luaL_checkinteger( p_L, 3 );
-    long stage = luaL_checkinteger( p_L, 4 );
+    long stage = luaL_checkinteger( p_L, 3 );
     
     if( 0 == m_descriptor.passes_slots.count( pass_name ) )
     {
@@ -172,12 +186,12 @@ int LuaSpaceboxNode::Lua_SetPassSlotTextureName( lua_State* p_L )
     }
     else
     {
-        m_descriptor.passes_slots[pass_name].textures[face_id][stage] = texture_name;
+        m_descriptor.passes_slots[pass_name].textures[stage] = texture_name;
     }
     return 0;
 }
 
-int LuaSpaceboxNode::Lua_AddPassSlotShaderParam( lua_State* p_L )
+int LuaChunkNode::Lua_AddPassSlotShaderParam( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 5 )
@@ -210,7 +224,7 @@ int LuaSpaceboxNode::Lua_AddPassSlotShaderParam( lua_State* p_L )
     return 0;
 }
 
-int LuaSpaceboxNode::Lua_UpdateShaderParam( lua_State* p_L )
+int LuaChunkNode::Lua_UpdateShaderParam( lua_State* p_L )
 {
     int argc = lua_gettop( p_L );
 	if( argc != 3 )
@@ -226,7 +240,7 @@ int LuaSpaceboxNode::Lua_UpdateShaderParam( lua_State* p_L )
     if( m_scriptcalls_handler )
     {
         PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "SpaceboxNode:UpdateShaderParam" );
+        props.AddPropValue<dsstring>( "script_call_id", "ChunkNode:UpdateShaderParam" );
 
         props.AddPropValue<dsstring>( "scene_name", m_descriptor.scene_name );
         props.AddPropValue<dsstring>( "pass_name", pass_name );
@@ -239,7 +253,7 @@ int LuaSpaceboxNode::Lua_UpdateShaderParam( lua_State* p_L )
     return 0;
 }
 
-int LuaSpaceboxNode::Lua_LoadScript( lua_State* p_L )
+int LuaChunkNode::Lua_LoadScript( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
@@ -253,9 +267,9 @@ int LuaSpaceboxNode::Lua_LoadScript( lua_State* p_L )
     {
         PropertyPool props;
 
-        props.AddPropValue<dsstring>( "script_call_id", "SpaceboxNode:LoadScript" );
+        props.AddPropValue<dsstring>( "script_call_id", "ChunkNode:LoadScript" );
         props.AddPropValue<dsstring>( "filepath", filepath );
-        props.AddPropValue<BaseSceneNode*>( "node", &m_spacebox_node );
+        props.AddPropValue<BaseSceneNode*>( "node", &m_chunk_node );
 
         (*m_scriptcalls_handler)( props );
     }

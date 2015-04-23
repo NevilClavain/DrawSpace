@@ -154,6 +154,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_chunknode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_chunknode.h"
+			>
+		</File>
+		<File
 			RelativePath="..\DrawSpace\src\lua_drawspace.cpp"
 			>
 		</File>
@@ -191,14 +199,6 @@
 		</File>
 		<File
 			RelativePath=".\src\lua_mouse.h"
-			>
-		</File>
-		<File
-			RelativePath="..\DrawSpace\src\lua_movementbuilder.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\DrawSpace\src\lua_movementbuilder.h"
 			>
 		</File>
 		<File
