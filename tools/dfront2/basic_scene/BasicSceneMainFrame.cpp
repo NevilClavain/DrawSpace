@@ -1032,7 +1032,60 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             }
         }
     }
+    else if( "ChunkNode:UpdateShaderParam" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        dsstring pass_name = p_propertypool.GetPropValue<dsstring>( "pass_name" );
+        dsstring id = p_propertypool.GetPropValue<dsstring>( "id" );
+        Vector value = p_propertypool.GetPropValue<Vector>( "value" );
 
+
+        for( std::map<void*, SceneNodeEntry<DrawSpace::Chunk>>::iterator it = m_chunk_nodes.begin(); it != m_chunk_nodes.end(); ++it )
+        {
+            if( it->second.name == scene_name )
+            {
+                DrawSpace::Core::SceneNode<Chunk>* chunk = it->second.scene_node;
+                DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[it->first];
+
+                if( chunk_descr.passes_slots.count( pass_name ) > 0 )
+                {
+                    Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_name ) );
+
+                    int id_index = -1;
+
+                    for( size_t i = 0; i < chunk_descr.passes_slots[pass_name].shader_params.size(); i++ )
+                    {
+                        if( chunk_descr.passes_slots[pass_name].shader_params[i].id == id )
+                        {
+                            id_index = i;
+                            break;
+                        }
+                    }
+
+                    if( id_index == -1 )
+                    {
+                        wxMessageBox( "ChunkNode:UpdateShaderParam : unknown shader param id for this node", "Script error", wxICON_ERROR );
+                        return;
+                    }
+
+                    chunk->GetContent()->GetNodeFromPass( current_pass )->SetShaderRealVector( id, value );
+
+                    // update descriptor
+                    chunk_descr.passes_slots[pass_name].shader_params[id_index].value = value;
+
+                    m_chunk_descriptors[it->first] = chunk_descr;
+
+                    return;
+                }
+                else
+                {
+                    wxMessageBox( "ChunkNode:UpdateShaderParam : unknown pass name for this node", "Script error", wxICON_ERROR );
+                    return;
+                }
+            }
+        }
+
+    }
     else if( "Keyboard:Keyboard" == script_call_id )
     {
         m_keyup_code = p_propertypool.GetPropValue<int*>( "keyupcode" );
@@ -1099,7 +1152,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     else if( "TransformationNode:LoadScript" == script_call_id || 
                 "CameraPointNode:LoadScript" == script_call_id || 
                 "SpaceboxNode:LoadScript" == script_call_id || 
-                "FpsMovementNode:LoadScript" == script_call_id )
+                "FpsMovementNode:LoadScript" == script_call_id ||
+                "ChunkNode:LoadScript" == script_call_id )
     {
         dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
         BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
@@ -1128,7 +1182,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             else if( "FpsMovementNode:LoadScript" == script_call_id )
             {
                 m_fps_nodes[id].script = script_text;
-            }            
+            }
+            else if( "ChunkNode:LoadScript" == script_call_id )
+            {
+                m_chunk_nodes[id].script = script_text;
+            }
         }
         else
         {
