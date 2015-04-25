@@ -62,6 +62,7 @@ public:
 
     int Lua_RotateYaw( lua_State* p_L );
     int Lua_RotatePitch( lua_State* p_L );
+    int Lua_SetSpeed( lua_State* p_L );
 
 
     static const char className[];

@@ -43,6 +43,9 @@
     <ClCompile Include="src\lua_fpsmovementnode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\lua_chunknode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\lua_drawspace.h">
@@ -82,6 +85,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\lua_fpsmovementnode.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_chunknode.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

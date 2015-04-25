@@ -41,6 +41,7 @@ const Luna2<LuaFpsMovementNode>::RegType LuaFpsMovementNode::methods[] =
   { "SetYMvt", &LuaFpsMovementNode::Lua_SetYMvt },
   { "RotateYaw", &LuaFpsMovementNode::Lua_RotateYaw },
   { "RotatePitch", &LuaFpsMovementNode::Lua_RotatePitch },
+  { "SetSpeed", &LuaFpsMovementNode::Lua_SetSpeed },
   { 0, 0 }
 };
 
@@ -250,6 +251,30 @@ int LuaFpsMovementNode::Lua_RotatePitch( lua_State* p_L )
     {
         m_fps_node.GetContent()->RotatePitch( speed, *ds->m_timer );
     }
+
+    return 0;
+}
+
+int LuaFpsMovementNode::Lua_SetSpeed( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetSpeed : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal speed = luaL_checknumber( p_L, 1 );
+
+    if( m_existing_fps_node )
+    {
+        m_existing_fps_node->GetContent()->SetSpeed( speed );
+    }
+    else
+    {
+        m_fps_node.GetContent()->SetSpeed( speed );
+    }
+
 
     return 0;
 }

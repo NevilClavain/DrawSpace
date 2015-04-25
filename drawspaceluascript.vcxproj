@@ -14,6 +14,7 @@
     <ClCompile Include="src\luacontext.cpp" />
     <ClCompile Include="src\luascripting.cpp" />
     <ClCompile Include="src\lua_camerapointnode.cpp" />
+    <ClCompile Include="src\lua_chunknode.cpp" />
     <ClCompile Include="src\lua_drawspace.cpp" />
     <ClCompile Include="src\lua_fpsmovementnode.cpp" />
     <ClCompile Include="src\lua_keyboard.cpp" />
@@ -28,6 +29,7 @@
     <ClInclude Include="src\luacontext.h" />
     <ClInclude Include="src\luascripting.h" />
     <ClInclude Include="src\lua_camerapointnode.h" />
+    <ClInclude Include="src\lua_chunknode.h" />
     <ClInclude Include="src\lua_drawspace.h" />
     <ClInclude Include="src\lua_fpsmovementnode.h" />
     <ClInclude Include="src\lua_keyboard.h" />
