@@ -1,5 +1,5 @@
 
--- ds:AngleSpeedInc( sb_roty_angle, 10 )
-sb_roty:Rotation( sb_roty_axis, sb_roty_angle:GetValue() )
-tf0node:UpdateMatrix( 0, sb_roty )
+ds:AngleSpeedInc( roty_angle, 5 )
+roty:Rotation( roty_axis, roty_angle:GetValue() )
+tf2:UpdateMatrix( 1, roty )
 

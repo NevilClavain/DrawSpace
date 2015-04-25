@@ -35,22 +35,24 @@ ds:CreateSceneNodeGraph( "scene0" )
 
 ds:DisplayCurrentCamera( "scene0", 1 )
 
-tf0node = TransformationNode( "mytf0", 2 )
+tf0node = TransformationNode( "mytf0", 1 )
 tf0node:LinkTo( "scene0", "scene0" )
 
--- mat = Matrix()
--- mat:Scale( 25, 25, 25 )
-
--- tf0node:AddMatrix( mat )
-tf0node:LoadScript( "tf_transformnode.lua" )
 
 
-tf2 = TransformationNode( "tf2" )
+tf2 = TransformationNode( "tf2", 2 )
 tf2:LinkTo( "scene0", "scene0" )
+tf2:LoadScript( "tf_transformnode.lua" )
 
 mat = Matrix()
 mat:Translation( 0, 1, -10 )
-tf2:AddMatrix( mat )
+tf2:UpdateMatrix( 0, mat )
+
+roty_axis = Vector( 0, 1, 0, 1 )
+
+roty = Matrix()
+roty:Rotation( roty_axis, 0 )
+tf2:UpdateMatrix( 1, roty )
 
 
 sb0 = SpaceboxNode( "sb0" )
@@ -84,21 +86,14 @@ ds:LoadMouseScript( "mousehandler.lua" )
 ds:LoadKeyUpScript( "keyuphandler.lua" )
 ds:LoadKeyDownScript( "keydownhandler.lua" )
 
-sb_roty_angle = Real()
+roty_angle = Real()
 sb_scale = Matrix()
 sb_scale:Scale( 25, 25, 25 )
+tf0node:UpdateMatrix( 0, sb_scale )
 
-sb_roty_axis = Vector( 0, 1, 0, 1 )
-
-sb_roty = Matrix()
-sb_roty:Rotation( sb_roty_axis, 45 )
-
-tf0node:UpdateMatrix( 0, sb_roty )
-tf0node:UpdateMatrix( 1, sb_scale )
 
 
 fps0 = FpsMovementNode( "fps0" )
---fps0:SetInitialTheta( 31 )
 fps0:SetYMvt( 1 )
 fps0:LinkTo( "scene0", "scene0" )
 
