@@ -179,8 +179,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcircularmvt );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newfreemvt );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newfpsmvt );
-    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newspectatormvt );
-    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newspectatormvt );    
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newlonglatmvt );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcamera );
 
@@ -232,6 +231,20 @@ m_delta_mouse_init( true )
 
     ///////////////////////////////////////////////////////////////////
 
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newtransfo );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newspectatormvt );    
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newcamera );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editshaders );
@@ -3870,6 +3883,10 @@ wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
     if( m_fps_nodes.count( p_id ) > 0 )
     {
         return m_fps_nodes[p_id].treeitemid;
+    }
+    if( m_chunk_nodes.count( p_id ) > 0 )
+    {
+        return m_chunk_nodes[p_id].treeitemid;
     }
 
 }
