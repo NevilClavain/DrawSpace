@@ -54,7 +54,7 @@
 #define CHUNK_MASK                          2
 #define COLLIDER_MASK                       3
 #define INERTBODY_MASK                      4
-#define MOVEMENT_MASK                       5
+//#define MOVEMENT_MASK                       5
 #define ORBIT_MASK                          6
 #define ORBITER_MASK                        7
 #define PLANET_MASK                         8
@@ -65,6 +65,10 @@
 #define DRAWSPACE_MASK                      13
 #define KEYBOARD_MASK                       14
 #define MOUSE_MASK                          15
+
+
+#define FPSMOVEMENT_MASK                    500
+#define LINMOVEMENT_MASK                    501
 
 
 #define CONTEXTMENU_NEWSCENENODEGRAPH       2000
@@ -98,6 +102,8 @@
 
 #define CONTEXTMENU_SELECT_CAMERA           2088
 #define CONTEXTMENU_EDIT_CAMERA             2089
+
+#define CONTEXTMENU_EDIT_MVT                2090
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

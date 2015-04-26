@@ -103,6 +103,8 @@ m_delta_mouse_init( true )
     PopupMenuEntry pme_selectcamera = { CONTEXTMENU_SELECT_CAMERA, "Select camera..." };
     PopupMenuEntry pme_editcamera = { CONTEXTMENU_EDIT_CAMERA, "Edit camera..." };
 
+    PopupMenuEntry pme_editmvt = { CONTEXTMENU_EDIT_MVT, "Edit movement..." };
+
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
     PopupMenuEntry pme_newchunk = { CONTEXTMENU_NEWCHUNK, "New chunk..." };
@@ -207,26 +209,26 @@ m_delta_mouse_init( true )
 
     ///////////////////////////////////////////////////////////////////
 
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newchunk );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newcollider );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_neworbit );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newplanet );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newtransfo );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newlinearmvt );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newcircularmvt );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newfreemvt );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newfpsmvt );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newspectatormvt );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newheadmvt );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newlonglatmvt );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_newcamera );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_showprops );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[MOVEMENT_MASK].push_back( pme_editnodescript );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_neworbit );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newplanet );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newtransfo );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newspectatormvt );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newcamera );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_editnodescript );
 
 
     ///////////////////////////////////////////////////////////////////
@@ -241,7 +243,8 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newcircularmvt );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newfreemvt );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newfpsmvt );
-    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newspectatormvt );    
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newspectatormvt );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newheadmvt );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newlonglatmvt );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newcamera );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
@@ -251,6 +254,29 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
+
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_neworbit );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newplanet );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newtransfo );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newspectatormvt );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newcamera );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editmvt );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editnodescript );
+    
 
 
 
@@ -2511,6 +2537,14 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     script_text = &m_chunk_nodes[id].script;
                     script_state = &m_chunk_nodes[id].script_enabled;
                 }
+                else if( m_lin_nodes.count( id ) > 0 )
+                {
+                    title = "Linear movement node: ";
+                    title += m_lin_nodes[id].name;
+
+                    script_text = &m_lin_nodes[id].script;
+                    script_state = &m_lin_nodes[id].script_enabled;
+                }
 
                 BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
                 frame->Show();
@@ -2648,8 +2682,7 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
         build_popupmenu( MOUSE_MASK, mnu );
     }
     else
-    {
-        
+    {        
         if( m_scenenodegraphs.count( item.GetID() ) > 0 )
         {
             // clicked item belong to a registered scenenodegraph...
@@ -2669,11 +2702,15 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
         }
         else if( m_fps_nodes.count( item.GetID() ) > 0 )
         {
-            build_popupmenu( MOVEMENT_MASK, mnu );
+            build_popupmenu( FPSMOVEMENT_MASK, mnu );
         }
         else if( m_chunk_nodes.count( item.GetID() ) > 0 )
         {
             build_popupmenu( CHUNK_MASK, mnu );
+        }
+        else if( m_lin_nodes.count( item.GetID() ) > 0 )
+        {
+            build_popupmenu( LINMOVEMENT_MASK, mnu );
         }
 
     }
