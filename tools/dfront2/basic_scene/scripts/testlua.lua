@@ -77,6 +77,21 @@ cube0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
 
 cube0:LinkTo( "scene0", "tf2" )
 
+localtf = TransformationNode( "localtf" )
+localtf:LinkTo( "scene0", "cube0" )
+mat2 = Matrix()
+mat2:Translation( 0, 0, 3 )
+localtf:AddMatrix( mat2 )
+
+cube1 = ChunkNode( "cube1" )
+cube1:SetMesheName( "cube_meshe" )
+cube1:RegisterPassSlot( "texture_pass" )
+cube1:SetPassSlotFxName( "texture_pass", "texture_fx" )
+cube1:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0 )
+
+cube1:LinkTo( "scene0", "localtf" )
+
+
 
 
 keyboard = Keyboard()
