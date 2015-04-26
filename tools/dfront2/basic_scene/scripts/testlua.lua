@@ -62,7 +62,7 @@ sb0:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "texture_sb2", 1, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "texture_sb3", 2, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "texture_sb1", 3, 0 )
-sb0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 4, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "texture_sb4", 4, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 5, 0 )
 
 sb0:AddPassSlotShaderParam( "texture_pass", "intensity", 1, 12, Vector( 1.0, -2.0, 3.0, -4.0 ) )
