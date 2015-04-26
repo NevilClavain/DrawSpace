@@ -2051,7 +2051,7 @@ void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
 
     wxCharBuffer buffer = shader_name.ToAscii();
 
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader parameters modification" );
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, "Shader parameters modification", m_last_clicked_treeitem );
 
     dialog->SetData( "ctrl", m_shadersparams_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptPassShaderValuesPropsModification( pass, buffer.data(), dialog );
@@ -2551,7 +2551,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_SELECT_CAMERA:
             {
-                void* id = find_scenenodegraph_id();
+                void* id = find_scenenodegraph_id( m_last_clicked_treeitem );
 
                 if( m_scenenodegraphs[id].current_camera_set )
                 {
@@ -2836,10 +2836,10 @@ wxArrayString BasicSceneMainFrame::insert_void_choice( const wxArrayString& p_ar
     return completed_array;
 }
 
-void* BasicSceneMainFrame::find_scenenodegraph_id( void )
+void* BasicSceneMainFrame::find_scenenodegraph_id( wxTreeItemId p_item )
 {
     // now we must found the scenenodegraph we belong to make the RegisterNode() call
-    wxTreeItemId current = m_last_clicked_treeitem;
+    wxTreeItemId current = p_item;
 
     void* id;
 
@@ -2916,7 +2916,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         /////////////////////////////////////////////////////////////////////////////////
 
         // now we must found the scenenodegraph we belong to make the RegisterNode() call
-        void* id = find_scenenodegraph_id();
+        void* id = find_scenenodegraph_id( p_dialog->GetTreeItem() );
 
         BasicSceneMainFrame::SceneNodeGraphEntry entry;
 
@@ -2928,7 +2928,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         // link to the scenegraph hierarchy
 
         wxTreeItemId current;
-        current = m_last_clicked_treeitem;
+        current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
         id = current.GetID();
 
         if( m_scenenodegraphs.count( id ) > 0 )
@@ -2946,8 +2946,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         // GUI : add item in the tree
 
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, TRANSFO_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, TRANSFO_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
 
 
         /////////////////////////////////////////////////////////////////////////////////
@@ -3030,7 +3030,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         if( ok )
         {
-            Transformation* tdet = m_transformation_nodes[m_last_clicked_treeitem.GetID()].scene_node->GetContent();
+            Transformation* tdet = m_transformation_nodes[/*m_last_clicked_treeitem*/p_dialog->GetTreeItem().GetID()].scene_node->GetContent();
             //(*tdet) = new_chain;
 
             tdet->ClearAll();
@@ -3230,7 +3230,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             sb_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
             
             // now we must found the scenenodegraph we belong to make the RegisterNode() call
-            void* id = find_scenenodegraph_id();
+            void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
 
             BasicSceneMainFrame::SceneNodeGraphEntry entry;
 
@@ -3240,7 +3240,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             // link to the scenegraph hierarchy
 
             wxTreeItemId current;
-            current = m_last_clicked_treeitem;
+            current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
             id = current.GetID();
 
             if( m_scenenodegraphs.count( id ) > 0 )
@@ -3256,8 +3256,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
             // GUI : add item in the tree
 
-            wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, SPACEBOX_ICON_INDEX );
-            m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+            wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, SPACEBOX_ICON_INDEX );
+            m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
 
             // record the new spacebox node and associated metadata
 
@@ -3391,7 +3391,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             chunk_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
 
             // now we must found the scenenodegraph we belong to make the RegisterNode() call
-            void* id = find_scenenodegraph_id();
+            void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
 
             BasicSceneMainFrame::SceneNodeGraphEntry entry;
 
@@ -3401,7 +3401,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             // link to the scenegraph hierarchy
 
             wxTreeItemId current;
-            current = m_last_clicked_treeitem;
+            current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
             id = current.GetID();
 
             if( m_scenenodegraphs.count( id ) > 0 )
@@ -3417,8 +3417,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
             // GUI : add item in the tree
 
-            wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, CHUNK_ICON_INDEX );
-            m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+            wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, CHUNK_ICON_INDEX );
+            m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
 
             // record the new chunk node and associated metadata
 
@@ -3457,8 +3457,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     else if( DIALOG_SPACEBOX_EDITION_TITLE == DIALOG_TITLE )
     {
 
-        DrawSpace::Utils::SpaceboxDescriptor sb_descr = m_spacebox_descriptors[m_last_clicked_treeitem.GetID()];
-        SceneNodeEntry<DrawSpace::Spacebox> sne = m_spacebox_nodes[m_last_clicked_treeitem.GetID()];
+        DrawSpace::Utils::SpaceboxDescriptor sb_descr = m_spacebox_descriptors[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
+        SceneNodeEntry<DrawSpace::Spacebox> sne = m_spacebox_nodes[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
 
         DIALOG_EXPLORE_NODES_BEGIN( "", "shader parameter %d", i, sp_slot )
 
@@ -3485,7 +3485,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             // update descriptor
             sb_descr.passes_slots[pass_name2].shader_params[i].value = Vector( val_x, val_y, val_z, val_w );
 
-            m_spacebox_descriptors[m_last_clicked_treeitem.GetID()] = sb_descr;
+            m_spacebox_descriptors[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()] = sb_descr;
 
         DIALOG_EXPLORE_NODES_END( i )
         
@@ -3495,8 +3495,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     else if( DIALOG_CHUNK_EDITION_TITLE == DIALOG_TITLE )
     {
 
-        DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[m_last_clicked_treeitem.GetID()];
-        SceneNodeEntry<DrawSpace::Chunk> cne = m_chunk_nodes[m_last_clicked_treeitem.GetID()];
+        DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
+        SceneNodeEntry<DrawSpace::Chunk> cne = m_chunk_nodes[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
 
         DIALOG_EXPLORE_NODES_BEGIN( "", "shader parameter %d", i, sp_slot )
 
@@ -3520,7 +3520,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             // update descriptor
             chunk_descr.passes_slots[pass_name2].shader_params[i].value = Vector( val_x, val_y, val_z, val_w );
 
-            m_chunk_descriptors[m_last_clicked_treeitem.GetID()] = chunk_descr;
+            m_chunk_descriptors[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()] = chunk_descr;
 
         DIALOG_EXPLORE_NODES_END( i )
         
@@ -3553,7 +3553,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         /////////////////////////////////////////////////////////////////////////////////
 
         // now we must found the scenenodegraph we belong to make the RegisterNode() call
-        void* id = find_scenenodegraph_id();
+        void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
 
         BasicSceneMainFrame::SceneNodeGraphEntry entry;
 
@@ -3565,7 +3565,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         // link to the scenegraph hierarchy
 
         wxTreeItemId current;
-        current = m_last_clicked_treeitem;
+        current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
         id = current.GetID();
 
         if( m_scenenodegraphs.count( id ) > 0 )
@@ -3583,8 +3583,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         // GUI : add item in the tree
 
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, CAMERA_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, CAMERA_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
        
         /////////////////////////////////////////////////////////////////////////////////
 
@@ -3608,7 +3608,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     else if( DIALOG_CAMERA_EDIT_TITLE == DIALOG_TITLE )
     {
         DIALOG_GET_FLOAT_PROPERTY( "znear", znear );
-        SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[m_last_clicked_treeitem.GetID()];
+        SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
         camera_node.scene_node->GetContent()->UpdateProjectionZNear( znear );
         //DIALOG_CLOSE
     }
@@ -3650,7 +3650,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         /////////////////////////////////////////////////////////////////////////////////
 
         // now we must found the scenenodegraph we belong to make the RegisterNode() call
-        void* id = find_scenenodegraph_id();
+        void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
 
         BasicSceneMainFrame::SceneNodeGraphEntry entry;
 
@@ -3662,7 +3662,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         // link to the scenegraph hierarchy
 
         wxTreeItemId current;
-        current = m_last_clicked_treeitem;
+        current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
         id = current.GetID();
 
         if( m_scenenodegraphs.count( id ) > 0 )
@@ -3680,8 +3680,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         // GUI : add item in the tree
 
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_last_clicked_treeitem, alias2, MOVEMENT_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( m_last_clicked_treeitem );
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, MOVEMENT_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
        
         /////////////////////////////////////////////////////////////////////////////////
 

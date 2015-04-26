@@ -41,6 +41,7 @@ protected:
     long                                                                        m_specific0_counter;
     long                                                                        m_specific1_counter;
 
+    wxTreeItemId                                                                m_treeitem;
 
     virtual void OnCloseButtonClicked( wxCommandEvent& event );
     virtual void OnApplyButtonClicked( wxCommandEvent& event );
@@ -49,7 +50,6 @@ protected:
 
 public:
 
-    BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title );
     wxPropertyGrid* GetPropertyGrid( void );
 
     void EnableApplyButton( void );
@@ -69,6 +69,7 @@ public:
 
     void SetSpecific0Counter( long p_value );
     void SetSpecific1Counter( long p_value );
+
 };
 
 #endif // __BasicSceneObjectPropertiesDialog__

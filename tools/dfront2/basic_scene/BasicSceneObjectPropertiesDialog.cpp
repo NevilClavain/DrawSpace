@@ -25,14 +25,15 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title )
+BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title, wxTreeItemId p_treeitem ) 
 : ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 460, 318 ) ),
 m_applybutton_handler( NULL ),
 m_specificbutton0_handler( NULL ),
 m_specificbutton1_handler( NULL ),
 m_title( title ),
 m_specific0_counter( 0 ),
-m_specific1_counter( 0 )
+m_specific1_counter( 0 ),
+m_treeitem( p_treeitem )
 {
     m_apply_button->Show( false );
     m_specific_button_0->Show( false );
@@ -149,4 +150,9 @@ void BasicSceneObjectPropertiesDialog::SetSpecific0Counter( long p_value )
 void BasicSceneObjectPropertiesDialog::SetSpecific1Counter( long p_value )
 {
     m_specific1_counter = p_value;
+}
+
+wxTreeItemId BasicSceneObjectPropertiesDialog::GetTreeItem( void )
+{
+    return m_treeitem;
 }

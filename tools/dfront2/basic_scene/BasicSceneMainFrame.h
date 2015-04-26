@@ -127,7 +127,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define DIALOG_DECLARE( _title_ ) \
-    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, _title_ ); \
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( this, _title_, m_last_clicked_treeitem ); \
     wxPropertyGrid* propertygrid = dialog->GetPropertyGrid(); \
     dialog->RegisterApplyButtonHandler( m_applybutton_clicked_cb ); \
     dialog->RegisterSpecificButton0Handler( m_specificbutton0_clicked_cb ); \
@@ -488,7 +488,7 @@ protected:
 
     void build_passes_infos_dialog( DrawSpace::Core::Configurable* p_config );
 
-    void* find_scenenodegraph_id( void );
+    void* find_scenenodegraph_id( wxTreeItemId p_item );
 
     void render( void );
 
