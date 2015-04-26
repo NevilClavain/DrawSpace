@@ -50,6 +50,7 @@ protected:
 
 public:
 
+    BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title, wxTreeItemId p_treeitem );
     wxPropertyGrid* GetPropertyGrid( void );
 
     void EnableApplyButton( void );
@@ -70,6 +71,7 @@ public:
     void SetSpecific0Counter( long p_value );
     void SetSpecific1Counter( long p_value );
 
+    wxTreeItemId GetTreeItem( void );
 };
 
 #endif // __BasicSceneObjectPropertiesDialog__
