@@ -122,6 +122,7 @@
 #define DIALOG_CHUNK_CREATION_TITLE         "Chunk node creation"
 #define DIALOG_CHUNK_PROPS_TITLE            "Chunk node properties"
 #define DIALOG_CHUNK_EDITION_TITLE          "Chunk node edition"
+#define DIALOG_LINMVT_CREATION_TITLE        "Linear mvt node creation"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -391,6 +392,7 @@ protected:
     std::map<void*, SceneNodeEntry<DrawSpace::Chunk>>                                       m_chunk_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>                       m_camera_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Core::FPSMovement>>                           m_fps_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Core::LinearMovement>>                        m_lin_nodes;
 
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_chunk_descriptors;

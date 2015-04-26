@@ -2596,7 +2596,30 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 DIALOG_APPENDROOT_FLOAT( "initial phi", 0.0 );
                 DIALOG_APPENDROOT_BOOL( "y movement", 0.0 );
 
-                DIALOG_APPLY             
+                DIALOG_APPLY
+                DIALOG_SHOW
+            }
+            break;
+
+        case CONTEXTMENU_NEWLINEARMVT:
+            {
+                DIALOG_DECLARE( DIALOG_LINMVT_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+                DIALOG_APPENDROOT_NODE( "initial position", init_pos_root )
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "x", 0.0 );
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "y", 0.0 );
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "z", 0.0 );
+
+                DIALOG_APPENDROOT_NODE( "direction", dir_root )
+                DIALOG_APPENDNODE_FLOAT( dir_root, "x", 0.0 );
+                DIALOG_APPENDNODE_FLOAT( dir_root, "y", 0.0 );
+                DIALOG_APPENDNODE_FLOAT( dir_root, "z", 0.0 );
+
+                DIALOG_APPENDROOT_FLOAT( "initial theta", 0.0 );
+                DIALOG_APPENDROOT_FLOAT( "initial phi", 0.0 );
+
+                DIALOG_APPLY
                 DIALOG_SHOW
             }
             break;
@@ -3685,7 +3708,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
        
         /////////////////////////////////////////////////////////////////////////////////
 
-        // record the new transformation node and associated metadata
+        // record the new node and associated metadata
 
         BasicSceneMainFrame::SceneNodeEntry<FPSMovement> f_entry;
 
@@ -3701,6 +3724,96 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         DIALOG_CLOSE
 
+    }
+
+    else if( DIALOG_LINMVT_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
+
+        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+        if( "" == alias )
+        {
+            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        DIALOG_GET_FLOAT_PROPERTY( "initial theta", init_theta );
+        DIALOG_GET_FLOAT_PROPERTY( "initial phi", init_phi );
+
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.x", x );
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.y", y );
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.z", z );
+
+        DIALOG_GET_FLOAT_PROPERTY( "direction.x", xdir );
+        DIALOG_GET_FLOAT_PROPERTY( "direction.y", ydir );
+        DIALOG_GET_FLOAT_PROPERTY( "direction.z", zdir );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // create the linera mvt node
+
+        SceneNode<LinearMovement>* lin_node;
+        lin_node = new SceneNode<LinearMovement>( alias );
+        lin_node->SetContent( new LinearMovement() );
+
+        lin_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+        lin_node->GetContent()->Init( Vector( x, y, z, 1 ), Vector( xdir, ydir, zdir, 1 ), Maths::DegToRad( init_theta ), Maths::DegToRad( init_phi ) );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // now we must found the scenenodegraph we belong to make the RegisterNode() call
+        void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
+
+        BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+        entry = m_scenenodegraphs[id];
+        entry.scenenodegraph->RegisterNode( lin_node );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // link to the scenegraph hierarchy
+
+        wxTreeItemId current;
+        current = p_dialog->GetTreeItem();
+        id = current.GetID();
+
+        if( m_scenenodegraphs.count( id ) > 0 )
+        {
+            // parent is a scenegraph : use SceneNodeGraph::Add() method
+            entry.scenenodegraph->AddNode( lin_node );
+        }
+        else
+        {
+            BaseSceneNode* parent_node = m_tree_nodes[id];
+            lin_node->LinkTo( parent_node );
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        // GUI : add item in the tree
+
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( p_dialog->GetTreeItem(), alias2, MOVEMENT_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( p_dialog->GetTreeItem() );
+       
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // record the new node and associated metadata
+
+        BasicSceneMainFrame::SceneNodeEntry<LinearMovement> l_entry;
+
+        l_entry.name = alias;
+        l_entry.scene_node = lin_node;
+        l_entry.treeitemid = treeitemid;
+
+        m_lin_nodes[l_entry.treeitemid.GetID()] = l_entry;
+
+        m_tree_nodes[l_entry.treeitemid.GetID()] = lin_node;
+        m_inv_tree_nodes[lin_node] = l_entry.treeitemid.GetID();
+
+        DIALOG_CLOSE
     }
 }
 
@@ -3854,6 +3967,11 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
             script = m_chunk_nodes[id].script;
             script_enabled = &m_chunk_nodes[id].script_enabled;
         }
+        else if( m_lin_nodes.count( id ) > 0 )
+        {
+            script = m_lin_nodes[id].script;
+            script_enabled = &m_lin_nodes[id].script_enabled;
+        }
 
         if( *script_enabled )
         {
@@ -3888,5 +4006,8 @@ wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
     {
         return m_chunk_nodes[p_id].treeitemid;
     }
-
+    if( m_lin_nodes.count( p_id ) > 0 )
+    {
+        return m_lin_nodes[p_id].treeitemid;
+    }
 }
