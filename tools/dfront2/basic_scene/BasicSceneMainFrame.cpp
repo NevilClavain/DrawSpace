@@ -2658,6 +2658,30 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
+        case CONTEXTMENU_EDIT_MVT:
+            {
+                void* id = m_last_clicked_treeitem.GetID();
+                if( m_lin_nodes.count( id ) > 0 )
+                {
+                    SceneNodeEntry<LinearMovement> lin_node = m_lin_nodes[id];                    
+                    LinearMovement* linmvt = lin_node.scene_node->GetContent();
+
+                    dsreal curr_theta = linmvt->GetCurrentTheta();
+                    dsreal curr_phi = linmvt->GetCurrentPhi();
+                    dsreal curr_speed = linmvt->GetCurrentSpeed();
+
+                    DIALOG_DECLARE( DIALOG_LINMVT_EDITION_TITLE )
+
+                    DIALOG_APPENDROOT_FLOAT( "current speed", curr_speed );
+                    DIALOG_APPENDROOT_FLOAT( "current theta", curr_theta );
+                    DIALOG_APPENDROOT_FLOAT( "current phi", curr_phi );
+
+                    DIALOG_APPLY
+                    DIALOG_SHOW                    
+                }
+            }
+            break;
+
  	}
  }
 
@@ -3797,7 +3821,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         lin_node->SetContent( new LinearMovement() );
 
         lin_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-        lin_node->GetContent()->Init( Vector( x, y, z, 1 ), Vector( xdir, ydir, zdir, 1 ), Maths::DegToRad( init_theta ), Maths::DegToRad( init_phi ) );
+        lin_node->GetContent()->Init( Vector( x, y, z, 1 ), Vector( xdir, ydir, zdir, 1 ), init_theta, init_phi );
 
         /////////////////////////////////////////////////////////////////////////////////
 
@@ -3851,6 +3875,16 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_inv_tree_nodes[lin_node] = l_entry.treeitemid.GetID();
 
         DIALOG_CLOSE
+    }
+    else if( DIALOG_LINMVT_EDITION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_FLOAT_PROPERTY( "current theta", curr_theta );
+        DIALOG_GET_FLOAT_PROPERTY( "current phi", curr_phi );
+        DIALOG_GET_FLOAT_PROPERTY( "current speed", curr_speed );
+        SceneNodeEntry<DrawSpace::Core::LinearMovement> lin_node = m_lin_nodes[p_dialog->GetTreeItem().GetID()];
+        lin_node.scene_node->GetContent()->SetSpeed( curr_speed );
+        lin_node.scene_node->GetContent()->SetTheta( curr_theta );
+        lin_node.scene_node->GetContent()->SetPhi( curr_phi );
     }
 }
 

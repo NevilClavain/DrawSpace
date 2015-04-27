@@ -129,6 +129,7 @@
 #define DIALOG_CHUNK_PROPS_TITLE            "Chunk node properties"
 #define DIALOG_CHUNK_EDITION_TITLE          "Chunk node edition"
 #define DIALOG_LINMVT_CREATION_TITLE        "Linear mvt node creation"
+#define DIALOG_LINMVT_EDITION_TITLE         "Linear mvt node edition"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
