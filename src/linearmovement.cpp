@@ -146,6 +146,11 @@ dsreal LinearMovement::GetCurrentPhi( void )
     return Maths::RadToDeg( m_current_phi );
 }
 
+dsreal LinearMovement::GetCurrentSpeed( void )
+{
+    return m_speed;
+}
+
 void LinearMovement::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     Compute( p_timemanager );

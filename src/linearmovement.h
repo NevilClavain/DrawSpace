@@ -70,6 +70,7 @@ public:
     void GetDirection( Utils::Vector& p_direction );
     dsreal GetCurrentTheta( void );
     dsreal GetCurrentPhi( void );
+    dsreal GetCurrentSpeed( void );
 
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
