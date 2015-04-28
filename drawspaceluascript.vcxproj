@@ -18,6 +18,7 @@
     <ClCompile Include="src\lua_drawspace.cpp" />
     <ClCompile Include="src\lua_fpsmovementnode.cpp" />
     <ClCompile Include="src\lua_keyboard.cpp" />
+    <ClCompile Include="src\lua_linearmovementnode.cpp" />
     <ClCompile Include="src\lua_matrix.cpp" />
     <ClCompile Include="src\lua_mouse.cpp" />
     <ClCompile Include="src\lua_real.cpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="src\lua_drawspace.h" />
     <ClInclude Include="src\lua_fpsmovementnode.h" />
     <ClInclude Include="src\lua_keyboard.h" />
+    <ClInclude Include="src\lua_linearmovementnode.h" />
     <ClInclude Include="src\lua_matrix.h" />
     <ClInclude Include="src\lua_mouse.h" />
     <ClInclude Include="src\lua_real.h" />

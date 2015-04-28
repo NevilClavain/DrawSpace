@@ -155,7 +155,7 @@ int LuaFpsMovementNode::Lua_SetInitpos( lua_State* p_L )
     m_initpos[2] = luaL_checknumber( p_L, 3 );
     m_initpos[3] = 1.0;
 
-    return true;
+    return 0;
 }
 
 int LuaFpsMovementNode::Lua_SetInitialTheta( lua_State* p_L )

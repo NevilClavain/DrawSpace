@@ -40,6 +40,10 @@ protected:
     DrawSpace::Core::SceneNode<DrawSpace::Core::LinearMovement>             m_linear_node;
     DrawSpace::Core::SceneNode<DrawSpace::Core::LinearMovement>*            m_existing_linear_node;
 
+    DrawSpace::Utils::Vector                                                m_initpos;
+    DrawSpace::Utils::Vector                                                m_dir;
+    dsreal                                                                  m_initial_theta;
+    dsreal                                                                  m_initial_phi;
     
 
 public:
@@ -50,6 +54,10 @@ public:
     int Lua_LinkTo( lua_State* p_L );
     int Lua_LoadScript( lua_State* p_L );
 
+    int Lua_SetInitpos( lua_State* p_L );
+    int Lua_SetDirection( lua_State* p_L );
+    int Lua_SetInitialTheta( lua_State* p_L );
+    int Lua_SetInitialPhi( lua_State* p_L );
 
     static const char className[];
     static const Luna2<LuaLinearMovementNode>::RegType methods[];

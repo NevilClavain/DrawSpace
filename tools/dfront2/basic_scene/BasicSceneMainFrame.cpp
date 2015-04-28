@@ -1344,7 +1344,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), MOVEMENT_ICON_INDEX );
         m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
 
-        // record the new transformation node and associated metadata
+        // record the new node and associated metadata
 
         BasicSceneMainFrame::SceneNodeEntry<FPSMovement> f_entry;
 
@@ -1374,6 +1374,113 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         }
     }
 
+    else if( "LinearMovementNode:LinkTo" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
+        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
+        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
+
+        Vector init_pos = p_propertypool.GetPropValue<Vector>( "init_pos" );
+        Vector dir = p_propertypool.GetPropValue<Vector>( "dir" );
+        dsreal init_theta = p_propertypool.GetPropValue<dsreal>( "init_theta" );
+        dsreal init_phi = p_propertypool.GetPropValue<dsreal>( "init_phi" );
+
+        wxTreeItemId parent_tree_item;
+        void* parent_id = NULL;
+
+
+        bool scene_found = false;
+        SceneNodeGraphEntry scenenodegraph_entry;
+
+        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+        {
+            if( it->second.name == scenegraph_name )
+            {
+                scenenodegraph_entry = it->second;
+                scene_found = true;                
+                break;
+            }
+        }
+
+
+        bool parent_found = false;
+        BaseSceneNode* parent = NULL;
+
+        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
+        {
+            dsstring node_scenename;
+            it->second->GetSceneName( node_scenename );
+
+            if( node_scenename == parent_name )
+            {
+                parent_found = true;
+                parent = it->second;
+                parent_id = it->first;
+                break;
+            }
+        }
+
+        if( !parent_found )
+        {
+            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
+            {
+                if( it->second.name == parent_name )
+                {
+                    parent_found = true;
+                    parent_id = it->first;
+                    break;
+                }
+            }
+        }
+
+        if( !scene_found )
+        {
+            wxMessageBox( "LinearMovement node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
+            return;           
+        }
+
+        else if( !parent_found )
+        {
+            wxMessageBox( "LinearMovement node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
+            return;
+        }
+
+        SceneNode<LinearMovement>* lin_node = static_cast<SceneNode<LinearMovement>*>( node );
+        lin_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+
+        lin_node->SetContent( new LinearMovement() );
+        lin_node->GetContent()->Init( init_pos, dir, init_theta, init_phi );
+
+        scenenodegraph_entry.scenenodegraph->RegisterNode( node );
+
+        if( parent )
+        {            
+            lin_node->LinkTo( parent );
+            parent_tree_item = searchTreeItemIdInNodes( parent_id );
+        }
+        else
+        {
+            scenenodegraph_entry.scenenodegraph->AddNode( node );
+            parent_tree_item = scenenodegraph_entry.treeitemid;
+        }
+
+        // GUI : add item in the tree
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), MOVEMENT_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
+
+        // record the new node and associated metadata
+
+        BasicSceneMainFrame::SceneNodeEntry<LinearMovement> l_entry;
+
+        l_entry.name = scene_name;
+        l_entry.scene_node = lin_node;
+        l_entry.treeitemid = treeitemid;
+
+        m_lin_nodes[l_entry.treeitemid.GetID()] = l_entry;
+        m_tree_nodes[l_entry.treeitemid.GetID()] = lin_node;
+        m_inv_tree_nodes[lin_node] = l_entry.treeitemid.GetID();
+    }
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
