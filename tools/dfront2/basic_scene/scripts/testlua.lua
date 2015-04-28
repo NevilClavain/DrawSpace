@@ -117,3 +117,10 @@ fps0:LinkTo( "scene0", "scene0" )
 cam0 = CameraPointNode( "cam0" )
 cam0:LinkTo( "scene0", "fps0" )
 
+lin0 = LinearMovementNode( "lin0" )
+lin0:SetInitpos( -5, 0, 0 )
+lin0:SetDirection( 1, 0, 0 )
+lin0:LinkTo( "scene0", "scene0" )
+
+
+
