@@ -2476,7 +2476,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                    
                     DIALOG_DECLARE( DIALOG_FPSMVT_PROPS_TITLE )
                     DIALOG_APPENDROOT_STRING( "scene name", m_fps_nodes[id].name );
-                    DIALOG_APPENDROOT_STRING( "movement type ", m_fps_nodes[id].name );
+                    DIALOG_APPENDROOT_STRING( "movement type ", "fps" );
                     DIALOG_APPENDROOT_FLOAT( "current yaw", Maths::RadToDeg( curr_yaw ) );
                     DIALOG_APPENDROOT_FLOAT( "current pitch", Maths::RadToDeg( curr_pitch ) );
                     DIALOG_APPENDROOT_NODE( "current position", curr_pos_root );
@@ -2485,6 +2485,50 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_APPENDNODE_FLOAT( curr_pos_root, "z", pos[2] );
 
                     DIALOG_SHOW
+                }
+
+                else if( m_lin_nodes.count( id ) > 0 )
+                {
+                    LinearMovement* lin = m_lin_nodes[id].scene_node->GetContent();
+
+                    Vector init_pos;
+                    Vector curr_pos;
+                    Vector dir;
+
+                    dsreal curr_theta, curr_phi, curr_speed;
+
+                    lin->GetCurrentPos( curr_pos );
+                    lin->GetInitPos( init_pos );
+                    lin->GetDirection( dir );
+
+                    curr_theta = lin->GetCurrentTheta();
+                    curr_phi = lin->GetCurrentPhi();
+                    curr_speed = lin->GetCurrentSpeed();
+
+                    DIALOG_DECLARE( DIALOG_LINMVT_PROPS_TITLE )
+                    DIALOG_APPENDROOT_STRING( "scene name", m_lin_nodes[id].name );
+                    DIALOG_APPENDROOT_STRING( "movement type ", "linear" );
+
+                    DIALOG_APPENDROOT_FLOAT( "current theta", curr_theta );
+                    DIALOG_APPENDROOT_FLOAT( "current phi", curr_phi );
+                    DIALOG_APPENDROOT_FLOAT( "current speed", curr_speed );
+
+                    DIALOG_APPENDROOT_NODE( "initial position", init_pos_root );
+                    DIALOG_APPENDNODE_FLOAT( init_pos_root, "x", init_pos[0] );
+                    DIALOG_APPENDNODE_FLOAT( init_pos_root, "y", init_pos[1] );
+                    DIALOG_APPENDNODE_FLOAT( init_pos_root, "z", init_pos[2] );
+
+                    DIALOG_APPENDROOT_NODE( "current position", curr_pos_root );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "x", curr_pos[0] );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "y", curr_pos[1] );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "z", curr_pos[2] );
+
+                    DIALOG_APPENDROOT_NODE( "direction", dir_root );
+                    DIALOG_APPENDNODE_FLOAT( dir_root, "x", dir[0] );
+                    DIALOG_APPENDNODE_FLOAT( dir_root, "y", dir[1] );
+                    DIALOG_APPENDNODE_FLOAT( dir_root, "z", dir[2] );
+
+                    DIALOG_SHOW                    
                 }
             }
             break;
@@ -2672,6 +2716,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                     DIALOG_DECLARE( DIALOG_LINMVT_EDITION_TITLE )
 
+                    DIALOG_APPENDROOT_STRING( "scene name", lin_node.name );
                     DIALOG_APPENDROOT_FLOAT( "current speed", curr_speed );
                     DIALOG_APPENDROOT_FLOAT( "current theta", curr_theta );
                     DIALOG_APPENDROOT_FLOAT( "current phi", curr_phi );
