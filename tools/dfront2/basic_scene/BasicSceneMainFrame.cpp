@@ -1357,6 +1357,23 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_inv_tree_nodes[fps_node] = f_entry.treeitemid.GetID();
 
     }
+
+    else if( "LinearMovementNode:LinearMovementNode" == script_call_id )
+    {
+        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+        SceneNode<LinearMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<LinearMovement>**>( "existing_node" );
+
+        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::LinearMovement>>::iterator it = m_lin_nodes.begin(); it != m_lin_nodes.end(); ++it )
+        {
+            if( it->second.name == scene_name )
+            {
+                // node exists
+                *node_ptr = it->second.scene_node;
+                break;
+            }
+        }
+    }
+
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )

@@ -186,6 +186,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_linearmovementnode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_linearmovementnode.h"
+			>
+		</File>
+		<File
 			RelativePath="..\DrawSpace\src\lua_matrix.cpp"
 			>
 		</File>
