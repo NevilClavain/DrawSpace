@@ -130,4 +130,12 @@ cube2:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0 )
 
 cube2:LinkTo( "scene0", "lin0" )
 
+free0 = FreeMovementNode( "free0" )
+free0:SetInitpos( 0, 0, 25 )
+free0:LinkTo( "scene0", "scene0" )
+
+cam1 = CameraPointNode( "cam1" )
+cam1:LinkTo( "scene0", "free0" )
+
+
 

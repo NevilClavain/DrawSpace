@@ -17,6 +17,7 @@
     <ClCompile Include="src\lua_chunknode.cpp" />
     <ClCompile Include="src\lua_drawspace.cpp" />
     <ClCompile Include="src\lua_fpsmovementnode.cpp" />
+    <ClCompile Include="src\lua_freemovementnode.cpp" />
     <ClCompile Include="src\lua_keyboard.cpp" />
     <ClCompile Include="src\lua_linearmovementnode.cpp" />
     <ClCompile Include="src\lua_matrix.cpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="src\lua_chunknode.h" />
     <ClInclude Include="src\lua_drawspace.h" />
     <ClInclude Include="src\lua_fpsmovementnode.h" />
+    <ClInclude Include="src\lua_freemovementnode.h" />
     <ClInclude Include="src\lua_keyboard.h" />
     <ClInclude Include="src\lua_linearmovementnode.h" />
     <ClInclude Include="src\lua_matrix.h" />

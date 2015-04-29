@@ -275,6 +275,5 @@ int LuaFpsMovementNode::Lua_SetSpeed( lua_State* p_L )
         m_fps_node.GetContent()->SetSpeed( speed );
     }
 
-
     return 0;
 }

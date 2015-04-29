@@ -49,6 +49,9 @@
     <ClCompile Include="src\lua_linearmovementnode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\lua_freemovementnode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\lua_drawspace.h">
@@ -94,6 +97,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\lua_linearmovementnode.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua_freemovementnode.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
