@@ -118,9 +118,16 @@ cam0 = CameraPointNode( "cam0" )
 cam0:LinkTo( "scene0", "fps0" )
 
 lin0 = LinearMovementNode( "lin0" )
-lin0:SetInitpos( -5, 0, 0 )
+lin0:SetInitpos( -5, 0, -4 )
 lin0:SetDirection( 1, 0, 0 )
 lin0:LinkTo( "scene0", "scene0" )
 
+cube2 = ChunkNode( "cube2" )
+cube2:SetMesheName( "cube_meshe" )
+cube2:RegisterPassSlot( "texture_pass" )
+cube2:SetPassSlotFxName( "texture_pass", "texture_fx" )
+cube2:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0 )
+
+cube2:LinkTo( "scene0", "lin0" )
 
 
