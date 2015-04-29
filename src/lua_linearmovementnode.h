@@ -59,6 +59,10 @@ public:
     int Lua_SetInitialTheta( lua_State* p_L );
     int Lua_SetInitialPhi( lua_State* p_L );
 
+    int Lua_SetPhi( lua_State* p_L );
+    int Lua_SetTheta( lua_State* p_L );
+    int Lua_SetSpeed( lua_State* p_L );
+
     static const char className[];
     static const Luna2<LuaLinearMovementNode>::RegType methods[];
 };

@@ -39,6 +39,9 @@ const Luna2<LuaLinearMovementNode>::RegType LuaLinearMovementNode::methods[] =
   { "SetDirection", &LuaLinearMovementNode::Lua_SetDirection },
   { "SetInitialTheta", &LuaLinearMovementNode::Lua_SetInitialTheta },
   { "SetInitialPhi", &LuaLinearMovementNode::Lua_SetInitialPhi },
+  { "SetSpeed", &LuaLinearMovementNode::Lua_SetSpeed },
+  { "SetTheta", &LuaLinearMovementNode::Lua_SetTheta },
+  { "SetPhi", &LuaLinearMovementNode::Lua_SetPhi },
   { 0, 0 }
 };
 
@@ -180,7 +183,7 @@ int LuaLinearMovementNode::Lua_SetInitialTheta( lua_State* p_L )
 		lua_error( p_L );		
 	}
 
-    m_initial_phi = luaL_checknumber( p_L, 1 );
+    m_initial_theta = luaL_checknumber( p_L, 1 );
     return 0;
 }
 
@@ -194,5 +197,76 @@ int LuaLinearMovementNode::Lua_SetInitialPhi( lua_State* p_L )
 	}
 
     m_initial_phi = luaL_checknumber( p_L, 1 );
+    return 0;
+}
+
+
+int LuaLinearMovementNode::Lua_SetTheta( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetTheta : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal theta = luaL_checknumber( p_L, 1 );
+
+    if( m_existing_linear_node )
+    {
+        m_existing_linear_node->GetContent()->SetTheta( theta );
+    }
+    else
+    {
+        m_linear_node.GetContent()->SetTheta( theta );
+    }
+
+    return 0;
+}
+
+int LuaLinearMovementNode::Lua_SetPhi( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetPhi : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal phi = luaL_checknumber( p_L, 1 );
+
+    if( m_existing_linear_node )
+    {
+        m_existing_linear_node->GetContent()->SetPhi( phi );
+    }
+    else
+    {
+        m_linear_node.GetContent()->SetPhi( phi );
+    }
+
+    return 0;
+}
+
+
+int LuaLinearMovementNode::Lua_SetSpeed( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetSpeed : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal speed = luaL_checknumber( p_L, 1 );
+
+    if( m_existing_linear_node )
+    {
+        m_existing_linear_node->GetContent()->SetSpeed( speed );
+    }
+    else
+    {
+        m_linear_node.GetContent()->SetSpeed( speed );
+    }
+
     return 0;
 }
