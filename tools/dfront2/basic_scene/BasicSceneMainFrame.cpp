@@ -277,7 +277,29 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editmvt );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editnodescript );
     
+    ///////////////////////////////////////////////////////////////////
 
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_neworbit );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newplanet );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newtransfo );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newspectatormvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newcamera );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_editmvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_editnodescript );
 
 
 
@@ -2713,6 +2735,14 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     script_text = &m_lin_nodes[id].script;
                     script_state = &m_lin_nodes[id].script_enabled;
                 }
+                else if( m_free_nodes.count( id ) > 0 )
+                {
+                    title = "Free movement node: ";
+                    title += m_lin_nodes[id].name;
+
+                    script_text = &m_free_nodes[id].script;
+                    script_state = &m_free_nodes[id].script_enabled;
+                }
 
                 BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
                 frame->Show();
@@ -2826,6 +2856,22 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
+        case CONTEXTMENU_NEWFREEMVT:
+            {
+                DIALOG_DECLARE( DIALOG_FREEMVT_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+                DIALOG_APPENDROOT_NODE( "initial position", init_pos_root )
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "x", 0.0 );
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "y", 0.0 );
+                DIALOG_APPENDNODE_FLOAT( init_pos_root, "z", 0.0 );
+
+                DIALOG_APPLY
+                DIALOG_SHOW
+
+            }
+            break;
+
         case CONTEXTMENU_EDIT_MVT:
             {
                 void* id = m_last_clicked_treeitem.GetID();
@@ -2904,6 +2950,10 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
         else if( m_lin_nodes.count( item.GetID() ) > 0 )
         {
             build_popupmenu( LINMOVEMENT_MASK, mnu );
+        }
+        else if( m_free_nodes.count( item.GetID() ) > 0 )
+        {
+            build_popupmenu( FREEMOVEMENT_MASK, mnu );
         }
 
     }
@@ -3983,7 +4033,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         /////////////////////////////////////////////////////////////////////////////////
 
-        // create the linera mvt node
+        // create the linear mvt node
 
         SceneNode<LinearMovement>* lin_node;
         lin_node = new SceneNode<LinearMovement>( alias );
@@ -4054,6 +4104,91 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         lin_node.scene_node->GetContent()->SetSpeed( curr_speed );
         lin_node.scene_node->GetContent()->SetTheta( curr_theta );
         lin_node.scene_node->GetContent()->SetPhi( curr_phi );
+    }
+
+    else if( DIALOG_FREEMVT_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
+
+        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+        if( "" == alias )
+        {
+            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.x", x );
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.y", y );
+        DIALOG_GET_FLOAT_PROPERTY( "initial position.z", z );
+
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // create the free mvt node
+
+        SceneNode<FreeMovement>* free_node;
+        free_node = new SceneNode<FreeMovement>( alias );
+        free_node->SetContent( new FreeMovement() );
+
+        free_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
+        free_node->GetContent()->Init( Vector( x, y, z, 1 ) );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // now we must found the scenenodegraph we belong to make the RegisterNode() call
+        void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
+
+        BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+        entry = m_scenenodegraphs[id];
+        entry.scenenodegraph->RegisterNode( free_node );
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // link to the scenegraph hierarchy
+
+        wxTreeItemId current;
+        current = p_dialog->GetTreeItem();
+        id = current.GetID();
+
+        if( m_scenenodegraphs.count( id ) > 0 )
+        {
+            // parent is a scenegraph : use SceneNodeGraph::Add() method
+            entry.scenenodegraph->AddNode( free_node );
+        }
+        else
+        {
+            BaseSceneNode* parent_node = m_tree_nodes[id];
+            free_node->LinkTo( parent_node );
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        // GUI : add item in the tree
+
+        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( p_dialog->GetTreeItem(), alias2, MOVEMENT_ICON_INDEX );
+        m_scenegraphs_treeCtrl->ExpandAllChildren( p_dialog->GetTreeItem() );
+       
+        /////////////////////////////////////////////////////////////////////////////////
+
+        // record the new node and associated metadata
+
+        BasicSceneMainFrame::SceneNodeEntry<FreeMovement> f_entry;
+
+        f_entry.name = alias;
+        f_entry.scene_node = free_node;
+        f_entry.treeitemid = treeitemid;
+
+        m_free_nodes[f_entry.treeitemid.GetID()] = f_entry;
+
+        m_tree_nodes[f_entry.treeitemid.GetID()] = free_node;
+        m_inv_tree_nodes[free_node] = f_entry.treeitemid.GetID();
+
+        DIALOG_CLOSE
+
     }
 }
 
@@ -4212,6 +4347,11 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
             script = m_lin_nodes[id].script;
             script_enabled = &m_lin_nodes[id].script_enabled;
         }
+        else if( m_free_nodes.count( id ) > 0 )
+        {
+            script = m_free_nodes[id].script;
+            script_enabled = &m_free_nodes[id].script_enabled;
+        }
 
         if( *script_enabled )
         {
@@ -4250,4 +4390,9 @@ wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
     {
         return m_lin_nodes[p_id].treeitemid;
     }
+    if( m_free_nodes.count( p_id ) > 0 )
+    {
+        return m_free_nodes[p_id].treeitemid;
+    }
+
 }

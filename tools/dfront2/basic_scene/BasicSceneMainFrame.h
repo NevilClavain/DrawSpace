@@ -69,6 +69,7 @@
 
 #define FPSMOVEMENT_MASK                    500
 #define LINMOVEMENT_MASK                    501
+#define FREEMOVEMENT_MASK                   502
 
 
 #define CONTEXTMENU_NEWSCENENODEGRAPH       2000
@@ -131,6 +132,7 @@
 #define DIALOG_LINMVT_CREATION_TITLE        "Linear mvt node creation"
 #define DIALOG_LINMVT_EDITION_TITLE         "Linear mvt node edition"
 #define DIALOG_LINMVT_PROPS_TITLE           "Linear mvt node properties"
+#define DIALOG_FREEMVT_CREATION_TITLE       "Free mvt node creation"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -401,6 +403,7 @@ protected:
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>                       m_camera_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Core::FPSMovement>>                           m_fps_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Core::LinearMovement>>                        m_lin_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Core::FreeMovement>>                          m_free_nodes;
 
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_chunk_descriptors;
