@@ -2870,7 +2870,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 else if( m_free_nodes.count( id ) > 0 )
                 {
                     title = "Free movement node: ";
-                    title += m_lin_nodes[id].name;
+                    title += m_free_nodes[id].name;
 
                     script_text = &m_free_nodes[id].script;
                     script_state = &m_free_nodes[id].script_enabled;
