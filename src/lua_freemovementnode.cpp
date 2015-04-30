@@ -37,6 +37,9 @@ const Luna2<LuaFreeMovementNode>::RegType LuaFreeMovementNode::methods[] =
   { "LinkTo", &LuaFreeMovementNode::Lua_LinkTo },
   { "LoadScript", &LuaFreeMovementNode::Lua_LoadScript },
   { "SetInitpos", &LuaFreeMovementNode::Lua_SetInitpos },
+  { "RotateYaw", &LuaFreeMovementNode::Lua_RotateYaw },
+  { "RotatePitch", &LuaFreeMovementNode::Lua_RotatePitch },
+  { "RotateRoll", &LuaFreeMovementNode::Lua_RotateRoll },
   { "SetSpeed", &LuaFreeMovementNode::Lua_SetSpeed },
   { 0, 0 }
 };
@@ -166,6 +169,91 @@ int LuaFreeMovementNode::Lua_SetSpeed( lua_State* p_L )
     else
     {
         m_free_node.GetContent()->SetSpeed( speed );
+    }
+
+    return 0;
+}
+
+int LuaFreeMovementNode::Lua_RotateYaw( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "RotateYaw : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal speed = luaL_checknumber( p_L, 1 );
+    LuaDrawSpace* ds = Luna2<LuaDrawSpace>::check( p_L, 2 );
+    if( !ds )
+    {
+		lua_pushstring( p_L, "RotateYaw : Drawspace expected for arg 2" );
+		lua_error( p_L );        
+    }
+
+    if( m_existing_free_node )
+    {
+        m_existing_free_node->GetContent()->RotateYaw( speed, *ds->m_timer );
+    }
+    else
+    {
+        m_free_node.GetContent()->RotateYaw( speed, *ds->m_timer );
+    }
+
+    return 0;
+}
+int LuaFreeMovementNode::Lua_RotatePitch( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "RotatePitch : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal speed = luaL_checknumber( p_L, 1 );
+    LuaDrawSpace* ds = Luna2<LuaDrawSpace>::check( p_L, 2 );
+    if( !ds )
+    {
+		lua_pushstring( p_L, "RotatePitch : Drawspace expected for arg 2" );
+		lua_error( p_L );        
+    }
+
+    if( m_existing_free_node )
+    {
+        m_existing_free_node->GetContent()->RotatePitch( speed, *ds->m_timer );
+    }
+    else
+    {
+        m_free_node.GetContent()->RotatePitch( speed, *ds->m_timer );
+    }
+
+    return 0;
+}
+int LuaFreeMovementNode::Lua_RotateRoll( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "RotateRoll : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal speed = luaL_checknumber( p_L, 1 );
+    LuaDrawSpace* ds = Luna2<LuaDrawSpace>::check( p_L, 2 );
+    if( !ds )
+    {
+		lua_pushstring( p_L, "RotateRoll : Drawspace expected for arg 2" );
+		lua_error( p_L );        
+    }
+
+    if( m_existing_free_node )
+    {
+        m_existing_free_node->GetContent()->RotateRoll( speed, *ds->m_timer );
+    }
+    else
+    {
+        m_free_node.GetContent()->RotateRoll( speed, *ds->m_timer );
     }
 
     return 0;

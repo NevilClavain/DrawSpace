@@ -210,7 +210,7 @@ int LuaFpsMovementNode::Lua_RotateYaw( lua_State* p_L )
     LuaDrawSpace* ds = Luna2<LuaDrawSpace>::check( p_L, 2 );
     if( !ds )
     {
-		lua_pushstring( p_L, "RotatePitch : DrawSpace expected for arg 2" );
+		lua_pushstring( p_L, "RotateYaw : Drawspace expected for arg 2" );
 		lua_error( p_L );        
     }
 
@@ -239,7 +239,7 @@ int LuaFpsMovementNode::Lua_RotatePitch( lua_State* p_L )
     LuaDrawSpace* ds = Luna2<LuaDrawSpace>::check( p_L, 2 );
     if( !ds )
     {
-		lua_pushstring( p_L, "RotatePitch : DrawSpace expected for arg 2" );
+		lua_pushstring( p_L, "RotatePitch : Drawspace expected for arg 2" );
 		lua_error( p_L );        
     }
 

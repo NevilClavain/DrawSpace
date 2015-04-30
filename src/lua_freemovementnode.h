@@ -51,6 +51,10 @@ public:
     int Lua_LinkTo( lua_State* p_L );
     int Lua_LoadScript( lua_State* p_L );
     int Lua_SetInitpos( lua_State* p_L );
+
+    int Lua_RotateYaw( lua_State* p_L );
+    int Lua_RotatePitch( lua_State* p_L );
+    int Lua_RotateRoll( lua_State* p_L );
     int Lua_SetSpeed( lua_State* p_L );
 
     static const char className[];

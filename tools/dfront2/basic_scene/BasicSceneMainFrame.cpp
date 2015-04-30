@@ -297,8 +297,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newcamera );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_showprops );
-    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_editmvt );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );    
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_editnodescript );
 
 
