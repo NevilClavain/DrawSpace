@@ -133,6 +133,7 @@
 #define DIALOG_LINMVT_EDITION_TITLE         "Linear mvt node edition"
 #define DIALOG_LINMVT_PROPS_TITLE           "Linear mvt node properties"
 #define DIALOG_FREEMVT_CREATION_TITLE       "Free mvt node creation"
+#define DIALOG_FREEMVT_PROPS_TITLE          "Free mvt node properties"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

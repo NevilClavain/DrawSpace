@@ -2808,6 +2808,24 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                     DIALOG_SHOW                    
                 }
+                else if( m_free_nodes.count( id ) > 0 )
+                {
+                    FreeMovement* free = m_free_nodes[id].scene_node->GetContent();
+                    Vector curr_pos;
+
+                    free->GetCurrentPos( curr_pos );
+
+                    DIALOG_DECLARE( DIALOG_FREEMVT_PROPS_TITLE )
+                    DIALOG_APPENDROOT_STRING( "scene name", m_free_nodes[id].name );
+                    DIALOG_APPENDROOT_STRING( "movement type ", "free" );
+
+                    DIALOG_APPENDROOT_NODE( "current position", curr_pos_root );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "x", curr_pos[0] );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "y", curr_pos[1] );
+                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "z", curr_pos[2] );
+                
+                    DIALOG_SHOW
+                }
             }
             break;
 
