@@ -496,6 +496,7 @@ protected:
     wxArrayString get_shaders_list( void );
     wxArrayString get_meshes_list( void );
     wxArrayString get_fonts_list( void );
+    wxArrayString get_scenenodes_list( DrawSpace::Core::SceneNodeGraph* p_sc );
     wxArrayString insert_void_choice( const wxArrayString& p_array );
 
 

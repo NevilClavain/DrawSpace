@@ -258,10 +258,9 @@ void CameraPoint::LockOnTransformNode( const dsstring& p_alias, TransformNode* p
 }
 */
 
-void CameraPoint::Lock( const dsstring& p_alias, DrawSpace::Core::BaseSceneNode* p_locked_node )
+void CameraPoint::Lock( DrawSpace::Core::BaseSceneNode* p_locked_node )
 {
     m_locked_node = p_locked_node;
-    m_locked_object_alias = p_alias;
 }
 
 void CameraPoint::GetLockedBodyCenter( Vector& p_vector )

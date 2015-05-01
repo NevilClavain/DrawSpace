@@ -89,6 +89,10 @@ std::map<dsstring, BaseSceneNode*>& SceneNodeGraph::GetNodesList( void )
     return m_nodes;
 }
 
+std::vector<BaseSceneNode*>& SceneNodeGraph::GetAllNodesList( void )
+{
+    return m_all_nodes;
+}
 
 void SceneNodeGraph::RegisterNode( BaseSceneNode* p_node )
 {

@@ -2953,11 +2953,13 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 void* id = m_last_clicked_treeitem.GetID();
 
                 SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[id];
+                SceneNodeGraph* sc_owner = camera_node.scene_node->GetSceneNodeGraph();
 
                 DIALOG_DECLARE( DIALOG_CAMERA_EDIT_TITLE )
 
                 DIALOG_APPENDROOT_STRING( "scene name", camera_node.name );
                 DIALOG_APPENDROOT_FLOAT( "znear", camera_node.scene_node->GetContent()->GetZNear() );
+                DIALOG_APPENDROOT_ENUM( "lock on", insert_void_choice( get_scenenodes_list( sc_owner ) ) );
                 DIALOG_APPLY
                 DIALOG_SHOW
             }
@@ -3278,6 +3280,22 @@ wxArrayString BasicSceneMainFrame::get_fonts_list( void )
     }
 
     return availables_fonts_labels;
+}
+
+wxArrayString BasicSceneMainFrame::get_scenenodes_list( SceneNodeGraph* p_sc )
+{
+    wxArrayString availables_nodes_names;
+
+    std::vector<BaseSceneNode*> n_list = p_sc->GetAllNodesList();
+
+    for( size_t i = 0; i < n_list.size(); i++ )
+    {
+        dsstring node_name;
+        n_list[i]->GetSceneName( node_name );
+
+        availables_nodes_names.Add( node_name.c_str() );
+    }
+    return availables_nodes_names;
 }
 
 wxArrayString BasicSceneMainFrame::insert_void_choice( const wxArrayString& p_array )
@@ -4062,6 +4080,29 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         DIALOG_GET_FLOAT_PROPERTY( "znear", znear );
         SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
         camera_node.scene_node->GetContent()->UpdateProjectionZNear( znear );
+
+        DIALOG_GET_ENUM_PROPERTY( "lock on", locked_node );
+        if( locked_node != "..." )
+        {
+            DIALOG_WXSTRING_TO_DSSTRING( locked_node, locked_node2 )
+
+            SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[p_dialog->GetTreeItem().GetID()];
+            SceneNodeGraph* sc_owner = camera_node.scene_node->GetSceneNodeGraph();
+
+            std::vector<BaseSceneNode*> n_list = sc_owner->GetAllNodesList();
+            for( size_t i = 0; i < n_list.size(); i++ )
+            {
+                dsstring node_name;
+                n_list[i]->GetSceneName( node_name );
+
+                if( node_name == locked_node2 )
+                {
+                    camera_node.scene_node->GetContent()->Lock( n_list[i] );
+                }
+            }
+        
+        }
+
         //DIALOG_CLOSE
     }
     else if( DIALOG_FPSMVT_CREATION_TITLE == DIALOG_TITLE )

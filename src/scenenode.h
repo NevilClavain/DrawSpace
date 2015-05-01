@@ -43,12 +43,14 @@ protected:
     
     dsstring                    m_scenename;
     std::vector<BaseSceneNode*> m_children;
-    DrawSpace::Utils::Matrix    m_finaltransform;    
+    DrawSpace::Utils::Matrix    m_finaltransform;
+    SceneNodeGraph*             m_scenenodegraph;
     
 public:
 
     BaseSceneNode( const dsstring& p_scenename ) :
-    m_scenename( p_scenename )    
+    m_scenename( p_scenename ),
+    m_scenenodegraph( NULL )
     {
 
 
@@ -78,6 +80,11 @@ public:
     virtual void AddChild( BaseSceneNode* p_node )
     {
         m_children.push_back( p_node );
+    }
+
+    virtual SceneNodeGraph* GetSceneNodeGraph( void )
+    {
+        return m_scenenodegraph;
     }
     
     friend class SceneNodeGraph;
@@ -188,6 +195,7 @@ public:
 
     void OnRegister( SceneNodeGraph* p_scenegraph )
     {
+        m_scenenodegraph = p_scenegraph;
         if( m_content )
         {
             m_content->OnRegister( p_scenegraph, this );

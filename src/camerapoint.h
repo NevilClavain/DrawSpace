@@ -59,8 +59,6 @@ protected:
     */
     DrawSpace::Core::BaseSceneNode*                 m_locked_node;
 
-    dsstring                                        m_locked_object_alias;
-
     DrawSpace::Utils::Vector                        m_locked_body_center;
 
     DrawSpace::Utils::Matrix                        m_projection;
@@ -99,7 +97,7 @@ public:
     virtual void LockOnTransformNode( const dsstring& p_alias, DrawSpace::Core::TransformNode* p_locked_node );
     */
 
-    virtual void Lock( const dsstring& p_alias, DrawSpace::Core::BaseSceneNode* p_locked_node );
+    virtual void Lock( DrawSpace::Core::BaseSceneNode* p_locked_node );
 
     virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );
     virtual void GetLocalTransform( DrawSpace::Utils::Matrix& p_localtransf );
