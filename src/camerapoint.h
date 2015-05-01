@@ -98,6 +98,7 @@ public:
     */
 
     virtual void Lock( DrawSpace::Core::BaseSceneNode* p_locked_node );
+    virtual void Unlock( void );
 
     virtual void GetLockedBodyCenter( DrawSpace::Utils::Vector& p_vector );
     virtual void GetLocalTransform( DrawSpace::Utils::Matrix& p_localtransf );

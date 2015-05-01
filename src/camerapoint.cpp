@@ -263,6 +263,11 @@ void CameraPoint::Lock( DrawSpace::Core::BaseSceneNode* p_locked_node )
     m_locked_node = p_locked_node;
 }
 
+void CameraPoint::Unlock( void )
+{
+    m_locked_node = NULL;
+}
+
 void CameraPoint::GetLockedBodyCenter( Vector& p_vector )
 {
     p_vector = m_locked_body_center;

@@ -2737,6 +2737,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     if( infos.locked_on_node )
                     {
                         DIALOG_APPENDROOT_STRING( "locked on", infos.locked_node_alias );
+                        DIALOG_APPENDROOT_FLOAT( "locked object distance", camera->GetLockedObjectDistance() );
                     }
                     
                     DIALOG_SHOW
@@ -4099,8 +4100,11 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
                 {
                     camera_node.scene_node->GetContent()->Lock( n_list[i] );
                 }
-            }
-        
+            }        
+        }
+        else
+        {
+            camera_node.scene_node->GetContent()->Unlock();
         }
 
         //DIALOG_CLOSE

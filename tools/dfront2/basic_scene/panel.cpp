@@ -140,7 +140,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_passesPanel->SetSizer( bSizer7 );
 	m_passesPanel->Layout();
 	bSizer7->Fit( m_passesPanel );
-	m_notebook2->AddPage( m_passesPanel, wxT("Passes"), false );
+	m_notebook2->AddPage( m_passesPanel, wxT("Rendering passes"), false );
 	m_scenePanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
