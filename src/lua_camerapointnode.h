@@ -49,6 +49,10 @@ public:
     int Lua_LinkTo( lua_State* p_L );
     int Lua_LoadScript( lua_State* p_L );
 
+    int Lua_LockOn( lua_State* p_L );
+    int Lua_Unlock( lua_State* p_L );
+    int Lua_SetProjectionZNear( lua_State* p_L );
+
     static const char className[];
     static const Luna2<LuaCameraPointNode>::RegType methods[];
 };
