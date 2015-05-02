@@ -35,7 +35,7 @@ const Luna2<LuaCameraPointNode>::RegType LuaCameraPointNode::methods[] =
   { "LoadScript", &LuaCameraPointNode::Lua_LoadScript },
   { "LockOn", &LuaCameraPointNode::Lua_LockOn },
   { "Unlock", &LuaCameraPointNode::Lua_Unlock },
-  { "SetProjectionZNear", &LuaCameraPointNode::Lua_SetProjectionZNear },
+  { "UpdateProjectionZNear", &LuaCameraPointNode::Lua_UpdateProjectionZNear },
   { 0, 0 }
 };
 
@@ -183,7 +183,24 @@ int LuaCameraPointNode::Lua_Unlock( lua_State* p_L )
     return 0;
 }
 
-int LuaCameraPointNode::Lua_SetProjectionZNear( lua_State* p_L )
+int LuaCameraPointNode::Lua_UpdateProjectionZNear( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "UpdateProjectionZNear : bad number of args" );
+		lua_error( p_L );		
+	}
+    dsreal znear = luaL_checknumber( p_L, 1 );
+
+    if( m_existing_camera_node )
+    {
+        m_existing_camera_node->GetContent()->UpdateProjectionZNear( znear );
+    }
+    else
+    {
+        m_camera_node.GetContent()->UpdateProjectionZNear( znear );
+    }
+
     return 0;
 }
