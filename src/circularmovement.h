@@ -65,6 +65,7 @@ public:
     void SetTheta( dsreal p_theta );
     void SetPhi( dsreal p_phi );
 
+    dsreal GetAngularSpeed( void );
     void GetCenterPos( Utils::Vector& p_center_pos );
     void GetDeltaCenter( Utils::Vector& p_delta_center );
     void GetRotAxis( Utils::Vector& p_rotaxis );

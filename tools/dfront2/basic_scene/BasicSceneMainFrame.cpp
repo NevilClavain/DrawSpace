@@ -2855,6 +2855,52 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 
                     DIALOG_SHOW
                 }
+                else if( m_circ_nodes.count( id ) > 0 )
+                {
+                    CircularMovement* circ = m_circ_nodes[id].scene_node->GetContent();
+
+                    Vector center_pos;
+                    Vector delta_center_pos;
+                    Vector axis;
+
+                    dsreal angle, theta, phi, curr_speed;
+
+                    circ->GetCenterPos( center_pos );
+                    circ->GetDeltaCenter( delta_center_pos );
+                    circ->GetRotAxis( axis );
+
+                    theta = circ->GetCurrentTheta();
+                    phi = circ->GetCurrentPhi();
+                    angle = circ->GetCurrentAngle();
+
+                    curr_speed = circ->GetAngularSpeed();
+
+                    DIALOG_DECLARE( DIALOG_CIRCMVT_PROPS_TITLE )
+                    DIALOG_APPENDROOT_STRING( "scene name", m_circ_nodes[id].name );
+                    DIALOG_APPENDROOT_STRING( "movement type ", "circular" );
+
+                    DIALOG_APPENDROOT_FLOAT( "current theta", theta );
+                    DIALOG_APPENDROOT_FLOAT( "current phi", phi );
+                    DIALOG_APPENDROOT_FLOAT( "current angle", angle );
+                    DIALOG_APPENDROOT_FLOAT( "current angular speed", curr_speed );
+
+                    DIALOG_APPENDROOT_NODE( "center position", center_pos_root );
+                    DIALOG_APPENDNODE_FLOAT( center_pos_root, "x", center_pos[0] );
+                    DIALOG_APPENDNODE_FLOAT( center_pos_root, "y", center_pos[1] );
+                    DIALOG_APPENDNODE_FLOAT( center_pos_root, "z", center_pos[2] );
+
+                    DIALOG_APPENDROOT_NODE( "delta center position", dcenter_pos_root );
+                    DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "x", delta_center_pos[0] );
+                    DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "y", delta_center_pos[1] );
+                    DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "z", delta_center_pos[2] );
+
+                    DIALOG_APPENDROOT_NODE( "axis", axis_root );
+                    DIALOG_APPENDNODE_FLOAT( axis_root, "x", axis[0] );
+                    DIALOG_APPENDNODE_FLOAT( axis_root, "y", axis[1] );
+                    DIALOG_APPENDNODE_FLOAT( axis_root, "z", axis[2] );
+
+                    DIALOG_SHOW
+                }
             }
             break;
 

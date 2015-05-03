@@ -111,6 +111,11 @@ void CircularMovement::SetAngularSpeed( dsreal p_angular_speed )
     m_angular_speed = p_angular_speed;
 }
 
+dsreal CircularMovement::GetAngularSpeed( void )
+{
+    return m_angular_speed;
+}
+
 void CircularMovement::SetTheta( dsreal p_theta )
 {
     m_current_theta = DrawSpace::Utils::Maths::DegToRad( p_theta );

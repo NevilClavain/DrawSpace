@@ -136,6 +136,7 @@
 #define DIALOG_FREEMVT_CREATION_TITLE       "Free mvt node creation"
 #define DIALOG_FREEMVT_PROPS_TITLE          "Free mvt node properties"
 #define DIALOG_CIRCMVT_CREATION_TITLE       "Circular mvt node creation"
+#define DIALOG_CIRCMVT_PROPS_TITLE          "Circular mvt node properties"
 
 
 
