@@ -3159,7 +3159,26 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_APPENDROOT_FLOAT( "current phi", curr_phi );
 
                     DIALOG_APPLY
-                    DIALOG_SHOW                    
+                    DIALOG_SHOW
+                }
+                else if( m_circ_nodes.count( id ) > 0 )
+                {
+                    SceneNodeEntry<CircularMovement> circ_node = m_circ_nodes[id];                    
+                    CircularMovement* circmvt = circ_node.scene_node->GetContent();
+
+                    dsreal curr_theta = circmvt->GetCurrentTheta();
+                    dsreal curr_phi = circmvt->GetCurrentPhi();
+                    dsreal curr_speed = circmvt->GetAngularSpeed();
+
+                    DIALOG_DECLARE( DIALOG_CIRCMVT_EDITION_TITLE )
+
+                    DIALOG_APPENDROOT_STRING( "scene name", circ_node.name );
+                    DIALOG_APPENDROOT_FLOAT( "current angular speed", curr_speed );
+                    DIALOG_APPENDROOT_FLOAT( "current theta", curr_theta );
+                    DIALOG_APPENDROOT_FLOAT( "current phi", curr_phi );
+
+                    DIALOG_APPLY
+                    DIALOG_SHOW
                 }
             }
             break;
@@ -4594,8 +4613,19 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_inv_tree_nodes[circ_node] = c_entry.treeitemid.GetID();
 
         DIALOG_CLOSE
-
     }
+
+    else if( DIALOG_CIRCMVT_EDITION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_FLOAT_PROPERTY( "current theta", curr_theta );
+        DIALOG_GET_FLOAT_PROPERTY( "current phi", curr_phi );
+        DIALOG_GET_FLOAT_PROPERTY( "current angular speed", curr_speed );
+        SceneNodeEntry<DrawSpace::Core::CircularMovement> circ_node = m_circ_nodes[p_dialog->GetTreeItem().GetID()];
+        circ_node.scene_node->GetContent()->SetAngularSpeed( curr_speed );
+        circ_node.scene_node->GetContent()->SetTheta( curr_theta );
+        circ_node.scene_node->GetContent()->SetPhi( curr_phi );
+    }
+
 }
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
