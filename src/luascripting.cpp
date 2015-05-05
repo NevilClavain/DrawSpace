@@ -28,6 +28,7 @@
 #include "lua_camerapointnode.h"
 #include "lua_fpsmovementnode.h"
 #include "lua_linearmovementnode.h"
+#include "lua_circularmovementnode.h"
 #include "lua_freemovementnode.h"
 #include "lua_keyboard.h"
 #include "lua_mouse.h"
@@ -52,6 +53,7 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaCameraPointNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaFpsMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaLinearMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaCircularMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaFreeMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaKeyboard>::Register( LuaContext::GetInstance()->GetLuaState() );
