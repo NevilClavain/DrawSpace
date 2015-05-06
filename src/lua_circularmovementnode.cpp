@@ -49,7 +49,10 @@ const Luna2<LuaCircularMovementNode>::RegType LuaCircularMovementNode::methods[]
 
 LuaCircularMovementNode::LuaCircularMovementNode( lua_State* p_L )
 : m_circular_node( "circular_node" ),
-m_existing_circular_node( NULL )
+m_existing_circular_node( NULL ),
+m_initial_theta( 0.0 ),
+m_initial_phi( 0.0 ),
+m_initial_angle( 0.0 )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )

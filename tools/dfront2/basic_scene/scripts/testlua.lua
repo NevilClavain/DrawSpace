@@ -137,5 +137,19 @@ free0:LinkTo( "scene0", "scene0" )
 cam1 = CameraPointNode( "cam1" )
 cam1:LinkTo( "scene0", "free0" )
 
+circ0 = CircularMovementNode( "circ0" )
+circ0:SetCenterpos( 6, 0, -6 )
+circ0:SetDeltaCenterpos( -2, 0, 0 )
+circ0:SetAxis( 0, 1, 0 )
+circ0:LinkTo( "scene0", "scene0" )
+
+
+cube3 = ChunkNode( "cube3" )
+cube3:SetMesheName( "cube_meshe" )
+cube3:RegisterPassSlot( "texture_pass" )
+cube3:SetPassSlotFxName( "texture_pass", "texture_fx" )
+cube3:SetPassSlotTextureName( "texture_pass", "texture_sb1", 0 )
+
+cube3:LinkTo( "scene0", "circ0" )
 
 
