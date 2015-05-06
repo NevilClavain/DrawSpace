@@ -186,6 +186,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_freemovementnode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_freemovementnode.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\lua_keyboard.cpp"
 			>
 		</File>

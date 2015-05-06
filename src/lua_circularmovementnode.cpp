@@ -101,6 +101,7 @@ int LuaCircularMovementNode::Lua_LinkTo( lua_State* p_L )
         props.AddPropValue<BaseSceneNode*>( "node", &m_circular_node );
         props.AddPropValue<Vector>( "center_pos", m_centerpos );
         props.AddPropValue<Vector>( "delta_center_pos", m_deltacenterpos );
+        props.AddPropValue<Vector>( "axis", m_axis );
         props.AddPropValue<dsreal>( "init_theta", m_initial_theta );
         props.AddPropValue<dsreal>( "init_phi", m_initial_phi );
         props.AddPropValue<dsreal>( "init_angle", m_initial_angle );
