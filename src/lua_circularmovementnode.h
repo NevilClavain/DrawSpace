@@ -62,6 +62,11 @@ public:
     int Lua_SetInitialPhi( lua_State* p_L );
     int Lua_SetInitialAngle( lua_State* p_L );
 
+    int Lua_SetTheta( lua_State* p_L );
+    int Lua_SetPhi( lua_State* p_L );
+    int Lua_SetAngularSpeed( lua_State* p_L );
+
+
     static const char className[];
     static const Luna2<LuaCircularMovementNode>::RegType methods[];
 

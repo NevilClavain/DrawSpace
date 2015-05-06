@@ -35,12 +35,15 @@ const Luna2<LuaCircularMovementNode>::RegType LuaCircularMovementNode::methods[]
 {
   { "LinkTo", &LuaCircularMovementNode::Lua_LinkTo },
   { "LoadScript", &LuaCircularMovementNode::Lua_LoadScript },
-  { "SetCenterPos", &LuaCircularMovementNode::Lua_SetCenterpos },
-  { "SetDeltaCenterPos", &LuaCircularMovementNode::Lua_SetDeltaCenterpos },
+  { "SetCenterpos", &LuaCircularMovementNode::Lua_SetCenterpos },
+  { "SetDeltaCenterpos", &LuaCircularMovementNode::Lua_SetDeltaCenterpos },
   { "SetAxis", &LuaCircularMovementNode::Lua_SetAxis },
   { "SetInitialTheta", &LuaCircularMovementNode::Lua_SetInitialTheta },
   { "SetInitialPhi", &LuaCircularMovementNode::Lua_SetInitialPhi },
   { "SetInitialAngle", &LuaCircularMovementNode::Lua_SetInitialAngle },
+  { "SetTheta", &LuaCircularMovementNode::Lua_SetTheta },
+  { "SetPhi", &LuaCircularMovementNode::Lua_SetPhi },
+  { "SetAngularSpeed", &LuaCircularMovementNode::Lua_SetAngularSpeed },
   { 0, 0 }
 };
 
@@ -96,11 +99,12 @@ int LuaCircularMovementNode::Lua_LinkTo( lua_State* p_L )
         props.AddPropValue<dsstring>( "parent_name", parent_name );
         props.AddPropValue<dsstring>( "scene_name", scene_name );
         props.AddPropValue<BaseSceneNode*>( "node", &m_circular_node );
-        /*props.AddPropValue<Vector>( "init_pos", m_initpos );
-        props.AddPropValue<Vector>( "dir", m_dir );
+        props.AddPropValue<Vector>( "center_pos", m_centerpos );
+        props.AddPropValue<Vector>( "delta_center_pos", m_deltacenterpos );
         props.AddPropValue<dsreal>( "init_theta", m_initial_theta );
         props.AddPropValue<dsreal>( "init_phi", m_initial_phi );
-        */
+        props.AddPropValue<dsreal>( "init_angle", m_initial_angle );
+        
         (*m_scriptcalls_handler)( props );
     }
 
@@ -139,30 +143,162 @@ int LuaCircularMovementNode::Lua_LoadScript( lua_State* p_L )
 
 int LuaCircularMovementNode::Lua_SetCenterpos( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "SetCenterpos : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_centerpos[0] = luaL_checknumber( p_L, 1 );
+    m_centerpos[1] = luaL_checknumber( p_L, 2 );
+    m_centerpos[2] = luaL_checknumber( p_L, 3 );
+    m_centerpos[3] = 1.0;
+
     return 0;
 }
 
 int LuaCircularMovementNode::Lua_SetDeltaCenterpos( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "SetDeltaCenterpos : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_deltacenterpos[0] = luaL_checknumber( p_L, 1 );
+    m_deltacenterpos[1] = luaL_checknumber( p_L, 2 );
+    m_deltacenterpos[2] = luaL_checknumber( p_L, 3 );
+    m_deltacenterpos[3] = 1.0;
+
     return 0;
 }
 
 int LuaCircularMovementNode::Lua_SetAxis( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "SetAxis : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_axis[0] = luaL_checknumber( p_L, 1 );
+    m_axis[1] = luaL_checknumber( p_L, 2 );
+    m_axis[2] = luaL_checknumber( p_L, 3 );
+    m_axis[3] = 1.0;
+
     return 0;
 }
 
 int LuaCircularMovementNode::Lua_SetInitialTheta( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetInitialTheta : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_theta = luaL_checknumber( p_L, 1 );
+
     return 0;
 }
 
 int LuaCircularMovementNode::Lua_SetInitialPhi( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetInitialPhi : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_phi = luaL_checknumber( p_L, 1 );
+
     return 0;
 }
 
 int LuaCircularMovementNode::Lua_SetInitialAngle( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetInitialAngle : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_angle = luaL_checknumber( p_L, 1 );
+
+    return 0;
+}
+
+int LuaCircularMovementNode::Lua_SetTheta( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetTheta : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal theta = luaL_checknumber( p_L, 1 );
+
+    if( m_existing_circular_node )
+    {
+        m_existing_circular_node->GetContent()->SetTheta( theta );
+    }
+    else
+    {
+        m_circular_node.GetContent()->SetTheta( theta );
+    }
+
+    return 0;
+}
+
+int LuaCircularMovementNode::Lua_SetPhi( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetPhi : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal phi = luaL_checknumber( p_L, 1 );
+
+    if( m_existing_circular_node )
+    {
+        m_existing_circular_node->GetContent()->SetPhi( phi );
+    }
+    else
+    {
+        m_circular_node.GetContent()->SetPhi( phi );
+    }
+
+    return 0;
+}
+
+int LuaCircularMovementNode::Lua_SetAngularSpeed( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetAngularSpeed : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    dsreal speed = luaL_checknumber( p_L, 1 );
+
+    if( m_existing_circular_node )
+    {
+        m_existing_circular_node->GetContent()->SetAngularSpeed( speed );
+    }
+    else
+    {
+        m_circular_node.GetContent()->SetAngularSpeed( speed );
+    }
+
     return 0;
 }

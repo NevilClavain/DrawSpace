@@ -162,6 +162,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_circularmovementnode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_circularmovementnode.h"
+			>
+		</File>
+		<File
 			RelativePath="..\DrawSpace\src\lua_drawspace.cpp"
 			>
 		</File>
