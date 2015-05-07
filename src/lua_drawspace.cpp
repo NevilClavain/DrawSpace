@@ -119,21 +119,31 @@ int LuaDrawSpace::Lua_DisplayCurrentCamera( lua_State* p_L )
 int LuaDrawSpace::Lua_CreateSceneNodeGraph( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc != /* 2 */ 1 )
+	if( argc != 1 )
 	{
 		lua_pushstring( p_L, "CreateSceneNodeGraph : bad number of args" );
 		lua_error( p_L );		
 	}
-    const char* name = luaL_checkstring( p_L, /*2*/ 1 );
+    const char* name = luaL_checkstring( p_L, 1 );
 
     if( m_scriptcalls_handler )
     {
         PropertyPool props;
 
+        ScenegraphDescr new_sc_descr;
+
         props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:CreateSceneNodeGraph" );
         props.AddPropValue<dsstring>( "name", name );
+        props.AddPropValue<SceneNodeGraph**>( "newsc_ptr", &new_sc_descr.scenenodegraph );
+        props.AddPropValue<dsstring*>( "newsc_alias_ptr", &new_sc_descr.alias );
 
         (*m_scriptcalls_handler)( props );
+
+        new_sc_descr.cb = new NodesEventCallback( this, &LuaDrawSpace::on_scenenodegraph_evt );
+
+        new_sc_descr.scenenodegraph->RegisterNodesEvtHandler( new_sc_descr.cb );
+
+        m_nodesevent_callbacks.push_back( new_sc_descr );
     }
     return 0;
 }
@@ -395,4 +405,10 @@ int LuaDrawSpace::Lua_IsCurrentCamera( lua_State* p_L )
 
     lua_pushinteger( p_L, result );
     return 1;
+}
+
+void LuaDrawSpace::on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    // call here the lua callback
+    _asm nop
 }

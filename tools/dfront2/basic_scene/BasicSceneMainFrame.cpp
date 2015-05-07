@@ -405,6 +405,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     else if( "DrawSpace:CreateSceneNodeGraph" == script_call_id )
     {
         dsstring alias = p_propertypool.GetPropValue<dsstring>( "name" );
+        SceneNodeGraph** newsc_ptr = p_propertypool.GetPropValue<SceneNodeGraph**>( "newsc_ptr" );
+        dsstring* newsc_alias_ptr = p_propertypool.GetPropValue<dsstring*>( "newsc_alias_ptr" );
 
         SceneNodeGraphEntry entry;
 
@@ -415,6 +417,9 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
 
         m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
+
+        *newsc_ptr = entry.scenenodegraph;
+        *newsc_alias_ptr = alias;
     }
     else if( "DrawSpace:AngleSpeedInc" == script_call_id )
     {

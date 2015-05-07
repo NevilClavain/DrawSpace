@@ -28,16 +28,30 @@
 #include "callback.h"
 #include "mediator.h"
 #include "timemanager.h"
+#include "scenenodegraph.h"
 #include "luna.h"
 
 class LuaDrawSpace
 {
 public:
 
+    typedef DrawSpace::Core::CallBack2<LuaDrawSpace, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>    NodesEventCallback;
+
+    typedef struct
+    {
+        dsstring                            alias;
+        DrawSpace::Core::SceneNodeGraph*    scenenodegraph;
+        NodesEventCallback*                 cb;
+
+    } ScenegraphDescr;
+
+
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
     DrawSpace::Utils::TimeManager*                                          m_timer;
+    
+    std::vector<ScenegraphDescr>                                            m_nodesevent_callbacks;
 
-protected:
+    void on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node );
 
 
 public:
