@@ -49,7 +49,8 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
 
 
 LuaDrawSpace::LuaDrawSpace( lua_State* p_L ) :
-m_timer( NULL )
+m_timer( NULL ),
+m_L( p_L )
 {   
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
 
@@ -409,6 +410,34 @@ int LuaDrawSpace::Lua_IsCurrentCamera( lua_State* p_L )
 
 void LuaDrawSpace::on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    // call here the lua callback
-    _asm nop
+    dsstring node_alias;
+    p_node->GetSceneName( node_alias );
+    dsstring scenegraph_name;    
+    bool found = false;
+    for( size_t i = 0; i < m_nodesevent_callbacks.size() && !found; i++ )
+    {
+        std::vector<BaseSceneNode*> list = m_nodesevent_callbacks[i].scenenodegraph->GetAllNodesList();
+        for( size_t j = 0; j < list.size() && !found; j++ )
+        {
+            if( list[j] == p_node )
+            {
+                scenegraph_name = m_nodesevent_callbacks[i].alias;
+                found = true;
+            }
+        }
+    }
+
+    if( found )
+    {
+        // call here the lua callback   
+
+        lua_getglobal( m_L, "on_scenegraph_event" );
+
+	    lua_pushinteger( m_L, (int)p_evt );
+	    lua_pushstring( m_L, scenegraph_name.c_str() );
+        lua_pushstring( m_L, node_alias.c_str() );
+	    
+	    lua_call( m_L, 3, 0 );
+        
+    }
 }
