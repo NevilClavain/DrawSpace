@@ -50,6 +50,7 @@ public:
     DrawSpace::Utils::TimeManager*                                          m_timer;
     
     std::vector<ScenegraphDescr>                                            m_nodesevent_callbacks;
+    lua_State*                                                              m_L;
 
     void on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node );
 

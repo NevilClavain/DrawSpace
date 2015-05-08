@@ -25,6 +25,18 @@ function print_matrix( m )
 	end
 end
 
+function on_scenegraph_event( evt_type, scenegraph_name, node_alias )
+
+  local evt_type_name
+  
+  if evt_type == 0 then
+    evt_type_name = "NODE_ADDED"
+  end
+
+  print( "scenegraph event -> " .. node_alias .. " " .. evt_type_name .. " on " .. scenegraph_name )
+  
+end
+
 print( "Lua version : " .. _VERSION )
 
 ds = DrawSpace()
