@@ -47,8 +47,36 @@ ds:CreateSceneNodeGraph( "scene0" )
 
 ds:DisplayCurrentCamera( "scene0", 1 )
 
-tf0node = TransformationNode( "mytf0", 1 )
-tf0node:LinkTo( "scene0", "scene0" )
+
+keyboard = Keyboard()
+mouse = Mouse()
+
+ds:LoadMouseScript( "mousehandler.lua" )
+ds:LoadKeyUpScript( "keyuphandler.lua" )
+ds:LoadKeyDownScript( "keydownhandler.lua" )
+print( "keyboard and mouse handlers loaded..." )
+
+
+
+tf_spacebox = TransformationNode( "tf_spacebox", 1 )
+tf_spacebox:LinkTo( "scene0", "scene0" )
+sb_scale = Matrix()
+sb_scale:Scale( 25, 25, 25 )
+tf_spacebox:UpdateMatrix( 0, sb_scale )
+
+sb0 = SpaceboxNode( "sb0" )
+sb0:RegisterPassSlot( "texture_pass" )
+sb0:SetPassSlotFxName( "texture_pass", "spacebox_fx" )
+sb0:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "texture_sb2", 1, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "texture_sb3", 2, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "texture_sb1", 3, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "texture_sb4", 4, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 5, 0 )
+
+sb0:AddPassSlotShaderParam( "texture_pass", "intensity", 1, 12, Vector( 1.0, -2.0, 3.0, -4.0 ) )
+sb0:LinkTo( "scene0", "tf_spacebox" )
+print( "spacebox loaded..." )
 
 
 
@@ -66,20 +94,9 @@ roty = Matrix()
 roty:Rotation( roty_axis, 0 )
 tf2:UpdateMatrix( 1, roty )
 
+roty_angle = Real()
 
-sb0 = SpaceboxNode( "sb0" )
-sb0:RegisterPassSlot( "texture_pass" )
-sb0:SetPassSlotFxName( "texture_pass", "spacebox_fx" )
-sb0:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0, 0 )
-sb0:SetPassSlotTextureName( "texture_pass", "texture_sb2", 1, 0 )
-sb0:SetPassSlotTextureName( "texture_pass", "texture_sb3", 2, 0 )
-sb0:SetPassSlotTextureName( "texture_pass", "texture_sb1", 3, 0 )
-sb0:SetPassSlotTextureName( "texture_pass", "texture_sb4", 4, 0 )
-sb0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 5, 0 )
 
-sb0:AddPassSlotShaderParam( "texture_pass", "intensity", 1, 12, Vector( 1.0, -2.0, 3.0, -4.0 ) )
-sb0:LinkTo( "scene0", "mytf0" )
-print( "spacebox loaded..." )
 
 
 cube0 = ChunkNode( "cube0" )
@@ -109,30 +126,6 @@ print( "cube1 loaded..." )
 
 
 
-keyboard = Keyboard()
-mouse = Mouse()
-
-ds:LoadMouseScript( "mousehandler.lua" )
-ds:LoadKeyUpScript( "keyuphandler.lua" )
-ds:LoadKeyDownScript( "keydownhandler.lua" )
-print( "keyboard and mouse handlers loaded..." )
-
-roty_angle = Real()
-sb_scale = Matrix()
-sb_scale:Scale( 25, 25, 25 )
-tf0node:UpdateMatrix( 0, sb_scale )
-
-
-
-fps0 = FpsMovementNode( "fps0" )
-fps0:SetYMvt( 1 )
-fps0:LinkTo( "scene0", "scene0" )
-print( "fps0 loaded..." )
-
-cam0 = CameraPointNode( "cam0" )
-cam0:LinkTo( "scene0", "fps0" )
-print( "cam0 loaded..." )
-
 lin0 = LinearMovementNode( "lin0" )
 lin0:SetInitpos( -5, 0, -4 )
 lin0:SetDirection( 1, 0, 0 )
@@ -148,14 +141,10 @@ cube2:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0 )
 cube2:LinkTo( "scene0", "lin0" )
 print( "cube2 loaded..." )
 
-free0 = FreeMovementNode( "free0" )
-free0:SetInitpos( 0, 0, 25 )
-free0:LinkTo( "scene0", "scene0" )
-print( "free0 loaded..." )
 
-cam1 = CameraPointNode( "cam1" )
-cam1:LinkTo( "scene0", "free0" )
-print( "cam1 loaded..." )
+
+
+
 
 circ0 = CircularMovementNode( "circ0" )
 circ0:SetCenterpos( 6, 0, -6 )
@@ -193,6 +182,28 @@ teapot:AddPassSlotShaderParam( "texture_pass", "color", 1, 0, Vector( 1.0, 0.0, 
 teapot:LinkTo( "scene0", "tf_teapot" )
 print( "teapot loaded..." )
 
+
+
+
+fps0 = FpsMovementNode( "fps0" )
+fps0:SetYMvt( 1 )
+fps0:LinkTo( "scene0", "scene0" )
+print( "fps0 loaded..." )
+
+cam0 = CameraPointNode( "cam0" )
+cam0:LinkTo( "scene0", "fps0" )
+print( "cam0 loaded..." )
+
+
+
+free0 = FreeMovementNode( "free0" )
+free0:SetInitpos( 0, 0, 25 )
+free0:LinkTo( "scene0", "scene0" )
+print( "free0 loaded..." )
+
+cam1 = CameraPointNode( "cam1" )
+cam1:LinkTo( "scene0", "free0" )
+print( "cam1 loaded..." )
 
 
 
