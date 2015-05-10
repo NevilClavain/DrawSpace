@@ -66,7 +66,7 @@ bool TransformQueue::add( TransformNode* p_node )
         // mettre une trace warning
         //_DSWARN( logger, "a node with the same name exists!!!" )
 
-        _DSEXCEPTION( "a node with the same name exists!!!" );
+        _DSEXCEPTION( "a node with the same name exists ! " << name );
     }
     
 

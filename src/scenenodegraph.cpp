@@ -77,7 +77,7 @@ bool SceneNodeGraph::AddNode( BaseSceneNode* p_node )
 
     if( m_nodes.count( name ) > 0 )
     {
-        _DSEXCEPTION( "a node with the same name exists!!!" );
+        _DSEXCEPTION( "a node with the same name exists : " << name );
     }
     
     m_nodes[name] = p_node;
