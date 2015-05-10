@@ -123,6 +123,9 @@ bool DFrontApp::OnInit( void )
         {
             m_mainframe->PrintOutputConsole( "Resources file execution: OK (" + m_resource_filepath + ")" );
             m_mainframe->Update();
+
+            m_mainframe->ExecStartupScript( m_common_script_filepath );
+            m_mainframe->PrintOutputConsole( "Common script file execution: OK (" + m_common_script_filepath + ")" );
             m_mainframe->ExecStartupScript( m_script_filepath );
             m_mainframe->PrintOutputConsole( "Script file execution: OK (" + m_script_filepath + ")" );
         }
@@ -231,15 +234,21 @@ bool DFrontApp::OnCmdLineParsed( wxCmdLineParser& p_parser )
 {
     wxString path;
 
-    p_parser.Found( "r", &path );
+    p_parser.Found( "r1", &path );
 
     wxCharBuffer buffer = path.ToAscii();
     m_resource_filepath = buffer.data();
 
-    p_parser.Found( "s", &path );
+    p_parser.Found( "s1", &path );
+
+    buffer = path.ToAscii();
+    m_common_script_filepath = buffer.data();
+
+    p_parser.Found( "s2", &path );
 
     buffer = path.ToAscii();
     m_script_filepath = buffer.data();
+
 
     return true;
 }
