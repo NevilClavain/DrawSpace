@@ -57,26 +57,6 @@ compiled false
 end_asset
 
 
-declare_asset_instance Shader
-assetname vertexshader_color
-filepath color.vsh
-compiled false
-end_asset
-
-declare_asset_instance Shader
-assetname pixelshader_color
-filepath color.psh
-compiled false
-end_asset
-
-
-declare_asset_instance Meshe
-assetname cube_meshe
-filepath object.ac
-index 0
-mode ac3d
-end_asset
-
 declare_asset_instance Meshe
 assetname teapot_meshe
 filepath teapot.ac
@@ -100,14 +80,6 @@ renderstates_in ENABLEZBUFFER false
 renderstates_in SETTEXTUREFILTERTYPE linear
 renderstates_out ENABLEZBUFFER false
 renderstates_out SETTEXTUREFILTERTYPE none
-end_config
-
-declare_config_instance Fx wireframe_fx
-shaders vertexshader_color pixelshader_color
-renderstates_in ENABLEZBUFFER true
-renderstates_in SETFILLMODE line
-renderstates_out ENABLEZBUFFER false
-renderstates_out SETFILLMODE solid
 end_config
 
 

@@ -117,17 +117,33 @@ bool DFrontApp::OnInit( void )
 
     try
     {
+        bool status;
 
-        bool status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
+        status = Factory::GetInstance()->ExecuteFromTextFile( m_common_resource_filepath );
         if( status )
         {
-            m_mainframe->PrintOutputConsole( "Resources file execution: OK (" + m_resource_filepath + ")" );
-            m_mainframe->Update();
+            m_mainframe->PrintOutputConsole( "Common resources file execution: OK (" + m_common_resource_filepath + ")" );
 
-            m_mainframe->ExecStartupScript( m_common_script_filepath );
-            m_mainframe->PrintOutputConsole( "Common script file execution: OK (" + m_common_script_filepath + ")" );
-            m_mainframe->ExecStartupScript( m_script_filepath );
-            m_mainframe->PrintOutputConsole( "Script file execution: OK (" + m_script_filepath + ")" );
+            status = Factory::GetInstance()->ExecuteFromTextFile( m_resource_filepath );
+
+            if( status )
+            {
+                m_mainframe->PrintOutputConsole( "Resources file execution: OK (" + m_resource_filepath + ")" );
+                m_mainframe->Update();
+
+                m_mainframe->ExecStartupScript( m_common_script_filepath );
+                m_mainframe->PrintOutputConsole( "Common script file execution: OK (" + m_common_script_filepath + ")" );
+                m_mainframe->ExecStartupScript( m_script_filepath );
+                m_mainframe->PrintOutputConsole( "Script file execution: OK (" + m_script_filepath + ")" );
+            }
+            else
+            {
+                dsstring last_error;
+
+                Factory::GetInstance()->GetLastError( last_error );
+                wxMessageBox( last_error.c_str(), "DrawFront parsing error", wxICON_ERROR );
+                return false;
+            }
         }
         else
         {
@@ -233,19 +249,21 @@ void DFrontApp::OnInitCmdLine( wxCmdLineParser& p_parser )
 bool DFrontApp::OnCmdLineParsed( wxCmdLineParser& p_parser )
 {
     wxString path;
+    wxCharBuffer buffer;
 
     p_parser.Found( "r1", &path );
+    buffer = path.ToAscii();
+    m_common_resource_filepath = buffer.data();
 
-    wxCharBuffer buffer = path.ToAscii();
+    p_parser.Found( "r2", &path );
+    buffer = path.ToAscii();
     m_resource_filepath = buffer.data();
 
     p_parser.Found( "s1", &path );
-
     buffer = path.ToAscii();
     m_common_script_filepath = buffer.data();
 
     p_parser.Found( "s2", &path );
-
     buffer = path.ToAscii();
     m_script_filepath = buffer.data();
 
