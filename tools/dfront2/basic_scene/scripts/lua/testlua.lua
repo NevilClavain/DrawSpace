@@ -116,13 +116,13 @@ circ0:LinkTo( "scene0", "scene0" )
 print( "circ0 loaded..." )
 
 
-cube3 = ChunkNode( "cube3" )
-cube3:SetMesheName( "cube_meshe" )
-cube3:RegisterPassSlot( "texture_pass" )
-cube3:SetPassSlotFxName( "texture_pass", "wireframe_fx" )
-cube3:AddPassSlotShaderParam( "texture_pass", "color", 1, 0, Vector( 1.0, 0.0, 0.0, 1.0 ) )
-cube3:LinkTo( "scene0", "circ0" )
-print( "cube3 loaded..." )
+sphere0 = ChunkNode( "sphere0" )
+sphere0:SetMesheName( "sphere_meshe" )
+sphere0:RegisterPassSlot( "texture_pass" )
+sphere0:SetPassSlotFxName( "texture_pass", "wireframe_fx" )
+sphere0:AddPassSlotShaderParam( "texture_pass", "color", 1, 0, Vector( 1.0, 0.0, 0.0, 1.0 ) )
+sphere0:LinkTo( "scene0", "circ0" )
+print( "sphere0 loaded..." )
 
 
 

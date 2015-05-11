@@ -23,6 +23,12 @@ index 0
 mode ac3d
 end_asset
 
+declare_asset_instance Meshe
+assetname sphere_meshe
+filepath sphere.ac
+index 0
+mode ac3d
+end_asset
 
 declare_config_instance Fx wireframe_fx
 shaders vertexshader_color pixelshader_color
