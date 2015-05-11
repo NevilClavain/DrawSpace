@@ -45,12 +45,14 @@ public:
 
     } ScenegraphDescr;
 
+    lua_State*                                                              m_L;
 
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
     DrawSpace::Utils::TimeManager*                                          m_timer;
     
+    dsstring                                                                m_scenegrapheventcbname;
     std::vector<ScenegraphDescr>                                            m_nodesevent_callbacks;
-    lua_State*                                                              m_L;
+    
 
     void on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node );
 
@@ -78,6 +80,7 @@ public:
     int Lua_GetSceneCameraName( lua_State* p_L );
 
     int Lua_IsCurrentCamera( lua_State* p_L );
+    int Lua_SetScenegraphEventCallback( lua_State* p_L );
 
     static const char className[];
     static const Luna2<LuaDrawSpace>::RegType methods[];

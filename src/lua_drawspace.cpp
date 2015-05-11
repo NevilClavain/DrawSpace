@@ -44,6 +44,7 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "TranslationSpeedDec", &LuaDrawSpace::Lua_TranslationSpeedDec },
   { "GetSceneCameraName", &LuaDrawSpace::Lua_GetSceneCameraName },
   { "IsCurrentCamera", &LuaDrawSpace::Lua_IsCurrentCamera },
+  { "SetScenegraphEventCallback", &LuaDrawSpace::Lua_SetScenegraphEventCallback },
   { 0 }
 };
 
@@ -408,6 +409,21 @@ int LuaDrawSpace::Lua_IsCurrentCamera( lua_State* p_L )
     return 1;
 }
 
+int LuaDrawSpace::Lua_SetScenegraphEventCallback( lua_State* p_L )
+{
+    bool result = false;
+
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetScenegraphEventCallback : bad number of args" );
+		lua_error( p_L );		
+	}
+    m_scenegrapheventcbname = luaL_checkstring( p_L, 1 );
+
+    return 0;
+}
+
 void LuaDrawSpace::on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node )
 {
     dsstring node_alias;
@@ -427,11 +443,11 @@ void LuaDrawSpace::on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::Nodes
         }
     }
 
-    if( found )
+    if( found && m_scenegrapheventcbname != "")
     {
         // call here the lua callback   
 
-        lua_getglobal( m_L, "on_scenegraph_event" );
+        lua_getglobal( m_L, m_scenegrapheventcbname.c_str() );
 
 	    lua_pushinteger( m_L, (int)p_evt );
 	    lua_pushstring( m_L, scenegraph_name.c_str() );

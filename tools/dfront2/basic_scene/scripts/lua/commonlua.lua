@@ -40,3 +40,5 @@ end
 print( "Lua version : " .. _VERSION )
 
 ds = DrawSpace()
+
+ds:SetScenegraphEventCallback( "on_scenegraph_event" )
