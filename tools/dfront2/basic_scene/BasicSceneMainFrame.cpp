@@ -3272,6 +3272,26 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
+
+        case CONTEXTMENU_NEWLONGLATMVT:
+            {
+                DIALOG_DECLARE( DIALOG_LONGLATMVT_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+
+                DIALOG_APPENDROOT_FLOAT( "initial longitud", 0.0 );
+                DIALOG_APPENDROOT_FLOAT( "initial latitud", 0.0 );
+
+                DIALOG_APPENDROOT_FLOAT( "initial altitud", 0.0 );
+                DIALOG_APPENDROOT_FLOAT( "initial theta", 0.0 );
+                DIALOG_APPENDROOT_FLOAT( "initial phi", 0.0 );
+
+                DIALOG_APPLY
+                DIALOG_SHOW
+
+            }
+            break;
+
         case CONTEXTMENU_EDIT_MVT:
             {
                 void* id = m_last_clicked_treeitem.GetID();
