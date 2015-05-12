@@ -71,6 +71,7 @@
 #define LINMOVEMENT_MASK                    501
 #define FREEMOVEMENT_MASK                   502
 #define CIRCMOVEMENT_MASK                   503
+#define LONGLATMOVEMENT_MASK                504
 
 
 #define CONTEXTMENU_NEWSCENENODEGRAPH       2000
@@ -411,6 +412,7 @@ protected:
     std::map<void*, SceneNodeEntry<DrawSpace::Core::LinearMovement>>                        m_lin_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Core::CircularMovement>>                      m_circ_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Core::FreeMovement>>                          m_free_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Core::LongLatMovement>>                       m_ll_nodes;
 
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_chunk_descriptors;
