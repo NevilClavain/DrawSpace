@@ -3066,6 +3066,30 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                     DIALOG_SHOW
                 }
+                else if( m_ll_nodes.count( id ) > 0 )
+                {
+                    LongLatMovement* ll = m_ll_nodes[id].scene_node->GetContent();
+
+                    dsreal longitud, latitud, altitud, theta, phi;
+
+                    longitud = ll->GetCurrentLongitud();
+                    latitud = ll->GetCurrentLatitud();
+                    altitud = ll->GetCurrentAltitud();
+                    theta = ll->GetCurrentTheta();
+                    phi = ll->GetCurrentPhi();
+
+                    DIALOG_DECLARE( DIALOG_LONGLATMVT_PROPS_TITLE )
+                    DIALOG_APPENDROOT_STRING( "scene name", m_ll_nodes[id].name );
+                    DIALOG_APPENDROOT_STRING( "movement type ", "long/lat" );
+
+                    DIALOG_APPENDROOT_FLOAT( "current theta", theta );
+                    DIALOG_APPENDROOT_FLOAT( "current phi", phi );
+                    DIALOG_APPENDROOT_FLOAT( "current longitud", longitud );
+                    DIALOG_APPENDROOT_FLOAT( "current latitud", latitud );
+                    DIALOG_APPENDROOT_FLOAT( "current altitud", altitud );
+
+                    DIALOG_SHOW
+                }
             }
             break;
 
