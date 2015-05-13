@@ -3485,6 +3485,29 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_APPLY
                     DIALOG_SHOW
                 }
+                else if( m_ll_nodes.count( id ) > 0 )
+                {
+                    SceneNodeEntry<LongLatMovement> ll_node = m_ll_nodes[id];                    
+                    LongLatMovement* llmvt = ll_node.scene_node->GetContent();
+
+                    dsreal curr_theta = llmvt->GetCurrentTheta();
+                    dsreal curr_phi = llmvt->GetCurrentPhi();
+                    dsreal curr_alt = llmvt->GetCurrentAltitud();
+
+                    dsreal curr_longitud = llmvt->GetCurrentLongitud();
+                    dsreal curr_latitud = llmvt->GetCurrentLatitud();
+
+                    DIALOG_DECLARE( DIALOG_LONGLATMVT_EDITION_TITLE )
+
+                    DIALOG_APPENDROOT_FLOAT( "current theta", curr_theta );
+                    DIALOG_APPENDROOT_FLOAT( "current phi", curr_phi );                   
+                    DIALOG_APPENDROOT_FLOAT( "current longitud", curr_longitud );
+                    DIALOG_APPENDROOT_FLOAT( "current latitud", curr_latitud );
+                    DIALOG_APPENDROOT_FLOAT( "current altitud", curr_alt );
+
+                    DIALOG_APPLY
+                    DIALOG_SHOW
+                }
             }
             break;
 
@@ -5014,10 +5037,24 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_inv_tree_nodes[ll_node] = l_entry.treeitemid.GetID();
 
         DIALOG_CLOSE
-
-
     }
 
+    else if( DIALOG_LONGLATMVT_EDITION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_FLOAT_PROPERTY( "current theta", curr_theta );
+        DIALOG_GET_FLOAT_PROPERTY( "current phi", curr_phi );
+        DIALOG_GET_FLOAT_PROPERTY( "current altitud", curr_altitud );
+        DIALOG_GET_FLOAT_PROPERTY( "current longitud", curr_longitud );
+        DIALOG_GET_FLOAT_PROPERTY( "current latitud", curr_latitud );
+
+        SceneNodeEntry<DrawSpace::Core::LongLatMovement> ll_node = m_ll_nodes[p_dialog->GetTreeItem().GetID()];
+        
+        ll_node.scene_node->GetContent()->SetTheta( curr_theta );
+        ll_node.scene_node->GetContent()->SetPhi( curr_phi );
+        ll_node.scene_node->GetContent()->SetAlt( curr_altitud );
+        ll_node.scene_node->GetContent()->SetLongitud( curr_longitud );
+        ll_node.scene_node->GetContent()->SetLatitud( curr_latitud );
+    }
 }
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )

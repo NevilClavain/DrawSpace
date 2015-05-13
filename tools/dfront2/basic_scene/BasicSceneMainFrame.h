@@ -143,6 +143,7 @@
 #define DIALOG_CIRCMVT_EDITION_TITLE        "Circular mvt node edition"
 #define DIALOG_CIRCMVT_PROPS_TITLE          "Circular mvt node properties"
 #define DIALOG_LONGLATMVT_CREATION_TITLE    "Longlat mvt node creation"
+#define DIALOG_LONGLATMVT_EDITION_TITLE     "Longlat mvt node edition"
 #define DIALOG_LONGLATMVT_PROPS_TITLE       "Longlat mvt node properties"
 
 

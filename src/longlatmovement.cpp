@@ -99,6 +99,21 @@ void LongLatMovement::SetPhi( dsreal p_phi )
     m_current_phi = DrawSpace::Utils::Maths::DegToRad( p_phi );
 }
 
+void LongLatMovement::SetLatitud( dsreal p_latitud )
+{
+    m_latitud_phi = DrawSpace::Utils::Maths::DegToRad( p_latitud );
+}
+
+void LongLatMovement::SetLongitud( dsreal p_longitud )
+{
+    m_longitud_theta = DrawSpace::Utils::Maths::DegToRad( p_longitud );
+}
+
+void LongLatMovement::SetAlt( dsreal p_altitud )
+{
+    m_alt = p_altitud;
+}
+
 dsreal LongLatMovement::GetCurrentLongitud( void )
 {
     return DrawSpace::Utils::Maths::RadToDeg( m_longitud_theta );
@@ -133,3 +148,5 @@ void LongLatMovement::GetBaseTransform( Matrix& p_mat )
 {
     p_mat = m_result;
 }
+
+

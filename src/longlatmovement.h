@@ -57,12 +57,17 @@ public:
 
     void SetTheta( dsreal p_theta );
     void SetPhi( dsreal p_phi );
+    void SetLatitud( dsreal p_latitud );
+    void SetLongitud( dsreal p_longitud );
+    void SetAlt( dsreal p_altitud );
+
 
     dsreal GetCurrentLongitud( void );
     dsreal GetCurrentLatitud( void );
     dsreal GetCurrentAltitud( void );
     dsreal GetCurrentTheta( void );
     dsreal GetCurrentPhi( void );
+
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
