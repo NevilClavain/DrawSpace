@@ -95,7 +95,7 @@
 #define CONTEXTMENU_NEWSPECTATORMVT         2026
 #define CONTEXTMENU_SEPARATOR               2080
 #define CONTEXTMENU_EDIT_TRANSFORMNODE      2081
-#define CONTEXTMENU_EDIT_SHADERSPARAMS      2082
+//#define CONTEXTMENU_EDIT_SHADERSPARAMS      2082
 #define CONTEXTMENU_SHOW_PROPS              2083
 #define CONTEXTMENU_EDIT_NODESCRIPT         2084
 
@@ -107,6 +107,9 @@
 #define CONTEXTMENU_EDIT_CAMERA             2089
 
 #define CONTEXTMENU_EDIT_MVT                2090
+
+#define CONTEXTMENU_EDIT_CHUNKNODE          2091
+#define CONTEXTMENU_EDIT_SBNODE             2092
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

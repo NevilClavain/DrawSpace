@@ -92,7 +92,11 @@ m_delta_mouse_init( true )
 
     PopupMenuEntry pme_separator = { CONTEXTMENU_SEPARATOR, "" };
     PopupMenuEntry pme_edittransformnode = { CONTEXTMENU_EDIT_TRANSFORMNODE, "Edit transformation..." };
-    PopupMenuEntry pme_editshaders = { CONTEXTMENU_EDIT_SHADERSPARAMS, "Edit shaders params..." };
+    //PopupMenuEntry pme_editshaders = { CONTEXTMENU_EDIT_SHADERSPARAMS, "Edit shaders params..." };
+
+    PopupMenuEntry pme_editsb = { CONTEXTMENU_EDIT_SBNODE, "Edit spacebox..." };
+    PopupMenuEntry pme_editchunk = { CONTEXTMENU_EDIT_CHUNKNODE, "Edit chunk..." };
+
     PopupMenuEntry pme_showprops = { CONTEXTMENU_SHOW_PROPS, "Show properties..." };
     PopupMenuEntry pme_editnodescript = { CONTEXTMENU_EDIT_NODESCRIPT, "Edit script..." };
 
@@ -199,7 +203,7 @@ m_delta_mouse_init( true )
 
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editshaders );
+    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editsb );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
@@ -254,7 +258,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editshaders );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editchunk );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
@@ -2675,6 +2679,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
             break;
 
+            /*
         case CONTEXTMENU_EDIT_SHADERSPARAMS:
             {               
                 void* id = m_last_clicked_treeitem.GetID();
@@ -2748,6 +2753,89 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_SHOW
                 }
 
+            }
+            break;
+            */
+
+        case CONTEXTMENU_EDIT_SBNODE:
+            {               
+                void* id = m_last_clicked_treeitem.GetID();
+                if( m_spacebox_descriptors.count( id ) > 0 )
+                {
+                    DrawSpace::Utils::SpaceboxDescriptor sb_descr = m_spacebox_descriptors[id];
+
+                    DIALOG_DECLARE( DIALOG_SPACEBOX_EDITION_TITLE )
+
+                    
+                    DIALOG_APPENDROOT_STRING( "scene name", sb_descr.scene_name )
+
+                    for( std::map<dsstring, SpaceboxPassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
+                    {
+                        SpaceboxPassDescriptor pass_descr = it->second;                                                
+
+                        DIALOG_BUILD_LABELS( pass_descr.shader_params.size(), "shader parameter %d", params_list )
+
+                        DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( i, params_list, param_root )
+
+                            DIALOG_APPENDNODE_STRING( param_root, "pass name", it->first )
+
+                            DIALOG_APPENDNODE_STRING( param_root, "param id", pass_descr.shader_params[i].id );
+
+                            DIALOG_APPENDNODE_NODE( param_root, "values", shader_param_values_root )
+
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )                           
+
+                        DIALOG_APPENDROOT_ITERATE_NODE_END
+                    }
+
+                    DIALOG_APPLY
+
+                    DIALOG_SHOW
+                }
+            }
+            break;
+
+        case CONTEXTMENU_EDIT_CHUNKNODE:
+            {               
+                void* id = m_last_clicked_treeitem.GetID();
+
+                if( m_chunk_descriptors.count( id ) > 0 )
+                {
+                    DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[id];
+
+                    DIALOG_DECLARE( DIALOG_CHUNK_EDITION_TITLE )
+                   
+                    DIALOG_APPENDROOT_STRING( "scene name", chunk_descr.scene_name )
+
+                    for( std::map<dsstring, ChunkPassDescriptor>::iterator it = chunk_descr.passes_slots.begin(); it != chunk_descr.passes_slots.end(); ++it )
+                    {
+                        ChunkPassDescriptor pass_descr = it->second;                                                
+
+                        DIALOG_BUILD_LABELS( pass_descr.shader_params.size(), "shader parameter %d", params_list )
+
+                        DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( i, params_list, param_root )
+
+                            DIALOG_APPENDNODE_STRING( param_root, "pass name", it->first )
+
+                            DIALOG_APPENDNODE_STRING( param_root, "param id", pass_descr.shader_params[i].id );
+
+                            DIALOG_APPENDNODE_NODE( param_root, "values", shader_param_values_root )
+
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
+                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )                           
+
+                        DIALOG_APPENDROOT_ITERATE_NODE_END
+                    }
+
+                    DIALOG_APPLY
+
+                    DIALOG_SHOW
+                }
             }
             break;
 
@@ -4354,7 +4442,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         DIALOG_EXPLORE_NODES_END( i )
         
-        DIALOG_CLOSE
+        //DIALOG_CLOSE
     }
 
 
