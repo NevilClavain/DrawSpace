@@ -2868,6 +2868,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_DECLARE( DIALOG_CHUNK_PROPS_TITLE )
 
                     DIALOG_APPENDROOT_STRING( "scene name", chunk_descr.scene_name )
+                    DIALOG_APPENDROOT_STRING( "meshe", chunk_descr.meshe )
 
                     for( std::map<dsstring, ChunkPassDescriptor>::iterator it = chunk_descr.passes_slots.begin(); it != chunk_descr.passes_slots.end(); ++it )
                     {
