@@ -114,6 +114,7 @@ circ0:SetDeltaCenterpos( -2, 0, 0 )
 circ0:SetAxis( 0, 1, 0 )
 circ0:LinkTo( "scene0", "scene0" )
 print( "circ0 loaded..." )
+circ0:SetAngularSpeed( 45.0 )
 
 
 sphere0 = ChunkNode( "sphere0" )
@@ -167,6 +168,21 @@ cam1 = CameraPointNode( "cam1" )
 cam1:LinkTo( "scene0", "free0" )
 print( "cam1 loaded..." )
 
+lg0 = LongLatMovementNode( "lg0" )
+lg0:SetInitialAlt( 2.1 )
+lg0:SetInitialLongitud( 89.2 )
+lg0:SetInitialLatitud( 12.34 )
+lg0:LinkTo( "scene0", "sphere0" )
+
+
+cube3 = ChunkNode( "cube3" )
+cube3:SetMesheName( "cube_meshe" )
+cube3:RegisterPassSlot( "texture_pass" )
+cube3:SetPassSlotFxName( "texture_pass", "texture_fx" )
+cube3:SetPassSlotTextureName( "texture_pass", "texture_sb0", 0 )
+
+cube3:LinkTo( "scene0", "lg0" )
+print( "cube3 loaded..." )
 
 
 

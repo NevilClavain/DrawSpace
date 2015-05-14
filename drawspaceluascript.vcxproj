@@ -21,6 +21,7 @@
     <ClCompile Include="src\lua_freemovementnode.cpp" />
     <ClCompile Include="src\lua_keyboard.cpp" />
     <ClCompile Include="src\lua_linearmovementnode.cpp" />
+    <ClCompile Include="src\lua_longlatmovementnode.cpp" />
     <ClCompile Include="src\lua_matrix.cpp" />
     <ClCompile Include="src\lua_mouse.cpp" />
     <ClCompile Include="src\lua_real.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="src\lua_freemovementnode.h" />
     <ClInclude Include="src\lua_keyboard.h" />
     <ClInclude Include="src\lua_linearmovementnode.h" />
+    <ClInclude Include="src\lua_longlatmovementnode.h" />
     <ClInclude Include="src\lua_matrix.h" />
     <ClInclude Include="src\lua_mouse.h" />
     <ClInclude Include="src\lua_real.h" />
