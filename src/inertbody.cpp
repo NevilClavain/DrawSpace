@@ -805,3 +805,27 @@ Body* InertBody::GetReferentBody( void )
 {
     return m_referent_body;
 }
+
+void InertBody::Enable( bool p_state )
+{
+    if( m_rigidBody )
+    {
+        if( p_state )
+        {
+            m_rigidBody->activate();
+        }
+        else
+        {
+            m_rigidBody->forceActivationState( WANTS_DEACTIVATION );
+        }
+    }
+}
+
+bool InertBody::IsEnabled( void )
+{
+    if( m_rigidBody )
+    {
+        return m_rigidBody->isActive();
+    }
+    return false;
+}

@@ -144,6 +144,8 @@ public:
 
     DrawSpace::Core::BaseSceneNode* GetOwner( void );
     
+    void Enable( bool p_state );
+    bool IsEnabled( void );
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
