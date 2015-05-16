@@ -3567,7 +3567,6 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 DIALOG_APPLY
                 DIALOG_SHOW
-
             }
             break;
 
@@ -3635,6 +3634,36 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_APPLY
                     DIALOG_SHOW
                 }
+            }
+            break;
+
+        case CONTEXTMENU_NEWINERTBODY:
+            {
+                DIALOG_DECLARE( DIALOG_INERTBODY_CREATION_TITLE )
+
+                DIALOG_APPENDROOT_STRING( "scene name", "" )
+
+                DIALOG_APPENDROOT_FLOAT( "mass", 0.0 );
+                DIALOG_APPENDROOT_NODE( "shape description", shape_descr )
+                wxArrayString shape_types;
+                shape_types.Add( "box" );
+                shape_types.Add( "sphere" );
+                shape_types.Add( "meshe" );
+
+                DIALOG_APPENDNODE_ENUM( shape_descr, "shape type", shape_types )
+                DIALOG_APPENDNODE_FLOAT( shape_descr, "sphere radius", 0.5 )
+                DIALOG_APPENDNODE_NODE( shape_descr, "box dims", box_dims )
+                DIALOG_APPENDNODE_FLOAT( box_dims, "x", 0.5 )
+                DIALOG_APPENDNODE_FLOAT( box_dims, "y", 0.5 )
+                DIALOG_APPENDNODE_FLOAT( box_dims, "z", 0.5 )
+                DIALOG_APPENDNODE_ENUM( shape_descr, "meshe", get_meshes_list() )
+
+                DIALOG_APPENDROOT_BOOL( "active at creation", false );
+
+                DIALOG_SPECIFIC0( "Add matrix" )
+                DIALOG_APPLY
+                DIALOG_SHOW
+
             }
             break;
 
@@ -5182,6 +5211,136 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         ll_node.scene_node->GetContent()->SetLongitud( curr_longitud );
         ll_node.scene_node->GetContent()->SetLatitud( curr_latitud );
     }
+
+    else if( DIALOG_INERTBODY_CREATION_TITLE == DIALOG_TITLE )
+    {
+        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
+
+        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+        if( "" == alias )
+        {
+            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+
+        Body::Parameters params;
+
+        std::vector<Matrix> new_chain;
+        bool ok = true;
+        Vector values;
+
+        DIALOG_EXPLORE_NODES_BEGIN( "", "matrix %d", i, matrix_label )
+
+            DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "type" ), matrix_type )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "x" ), x )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "y" ), y )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "z" ), z )
+            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "angle" ), angle )
+
+            DIALOG_WXSTRING_TO_DSSTRING( matrix_type, matrix_type2 )
+
+            values[0] = x;
+            values[1] = y;
+            values[2] = z;
+            values[3] = angle;
+           
+            Matrix mat;
+
+            if( "identity" == matrix_type2 )
+            {
+                mat.Identity();            
+            }
+            else if( "translation" == matrix_type2 )
+            {
+                values[3] = 1.0;
+                mat.Translation( values );            
+            }
+            else if( "rotation" == matrix_type2 )
+            {
+                Vector axis = values;
+                axis[3] = 1.0;
+                mat.Rotation( axis, Maths::DegToRad( values[3] ) );
+            }
+            else if( "scaling" == matrix_type2 )
+            {
+                values[3] = 1.0;
+                mat.Scale( values );
+            }
+            else if( "zero" == matrix_type2 )
+            {
+                mat.Zero();            
+            }
+            else if( "undetermined" == matrix_type2 )
+            {
+                ok = false;
+                break;
+            }
+
+            new_chain.push_back( mat );      
+
+
+        DIALOG_EXPLORE_NODES_END( i )
+
+        Transformation tdet;
+        if( ok )
+        {            
+            for( size_t i = 0; i < new_chain.size(); i++ )
+            {
+                tdet.PushMatrix( new_chain[i] );
+            }         
+        }
+        else
+        {
+            wxMessageBox( "Edited matrix chain has a undetermined matrix", "DrawFront error", wxICON_ERROR );
+            return;
+        }
+
+        tdet.BuildResult();        
+        tdet.GetResult( &params.initial_attitude );
+
+        DIALOG_GET_FLOAT_PROPERTY( "mass", mass );
+        params.mass = mass;
+
+        DIALOG_GET_ENUM_PROPERTY( "shape description.shape type", shape_type )
+
+        if( shape_type == "box" )
+        {
+            DIALOG_GET_FLOAT_PROPERTY( "shape description.box dims.x", x )
+            DIALOG_GET_FLOAT_PROPERTY( "shape description.box dims.y", y )
+            DIALOG_GET_FLOAT_PROPERTY( "shape description.box dims.z", z )
+
+            params.shape_descr.box_dims[0] = x;
+            params.shape_descr.box_dims[1] = y;
+            params.shape_descr.box_dims[2] = z;
+            params.shape_descr.box_dims[3] = 1.0;
+
+            params.shape_descr.shape = Body::BOX_SHAPE;
+        }
+        else if( shape_type == "sphere" )
+        {
+            DIALOG_GET_FLOAT_PROPERTY( "shape description.sphere radius", r )
+            params.shape_descr.sphere_radius = r;
+
+            params.shape_descr.shape = Body::SPHERE_SHAPE;
+        }
+        else if( shape_type == "meshe" )
+        {
+            DIALOG_GET_STRING_PROPERTY( "shape description.meshe", meshe_name );  
+            DIALOG_WXSTRING_TO_DSSTRING( meshe_name, meshe_name2 );
+
+            Meshe* meshe = dynamic_cast<Meshe*>( AssetsBase::GetInstance()->GetAsset( meshe_name2 ) );
+
+            params.shape_descr.meshe = *meshe;
+
+            params.shape_descr.shape = Body::MESHE_SHAPE;
+        }
+
+        DIALOG_CLOSE
+        _asm nop
+    }
 }
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
@@ -5246,7 +5405,7 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
         DIALOG_FINALIZE
     }
 
-    else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
+    else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE || DIALOG_INERTBODY_CREATION_TITLE == DIALOG_TITLE )
     {
         DIALOG_SPECIFIC0_LABEL( "matrix %d", matrix_label )
 
