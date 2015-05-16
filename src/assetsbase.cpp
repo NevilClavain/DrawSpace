@@ -21,19 +21,25 @@
 */
 
 #include "assetsbase.h"
+#include "ac3dmeshe.h"
+#include "cbfgfont.h"
 
 DrawSpace::Core::AssetsBase* DrawSpace::Core::AssetsBase::m_instance = NULL;
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
-
+using namespace DrawSpace::Utils;
 
 AssetsBase::AssetsBase( void ) : m_assetreg_handler( NULL )
 {
+    m_ac3dimporter = new AC3DMesheImport();
+    m_cbfgimporter = new CBFGFontImport();
 }
 
 AssetsBase::~AssetsBase( void )
 {
+    delete m_ac3dimporter;
+    delete m_cbfgimporter;
 }
 
 void AssetsBase::RegisterAsset( const dsstring& p_id, DrawSpace::Asset* p_asset )
@@ -71,4 +77,14 @@ bool AssetsBase::AssetIdExists( const dsstring& p_id )
 void AssetsBase::GetAssetsList( std::map<dsstring, DrawSpace::Asset*>& p_list )
 {
     p_list = m_assets;
+}
+
+DrawSpace::Interface::MesheImport* AssetsBase::GetAC3CMesheImporter( void )
+{
+    return m_ac3dimporter;
+}
+
+DrawSpace::Interface::FontImport* AssetsBase::GetCBFGFontImporter( void )
+{
+    return m_cbfgimporter;
 }

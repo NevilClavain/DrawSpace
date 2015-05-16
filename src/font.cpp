@@ -27,6 +27,8 @@
 #include "memalloc.h"
 #include "pimanager.h"
 #include "cbfgfont.h"
+#include "exceptions.h"
+#include "assetsbase.h"
 
 
 using namespace DrawSpace;
@@ -176,8 +178,15 @@ bool Font::ApplyProperties( void )
 
     if( mode == "cbfg" )
     {
-        fontimp = new CBFGFontImport();
+        //fontimp = new CBFGFontImport();
+        //fontimp = _DRAWSPACE_NEW_( CBFGFontImport, CBFGFontImport );
+        fontimp = AssetsBase::GetInstance()->GetCBFGFontImporter();
     }
+    else
+    {
+        _DSEXCEPTION( "Bad font import name : " << mode )
+    }
+
 
     SetImporter( fontimp );
     return Build( texturefilepath, metricsfilepath );

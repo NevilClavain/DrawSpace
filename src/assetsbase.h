@@ -26,6 +26,8 @@
 
 #include "asset.h"
 #include "callback.h"
+#include "mesheimport.h"
+#include "fontimport.h"
 
 namespace DrawSpace
 {
@@ -41,6 +43,8 @@ protected:
 
     std::map<dsstring, DrawSpace::Asset*>   m_assets;
     AssetRegistrationHandler*               m_assetreg_handler;
+    DrawSpace::Interface::MesheImport*      m_ac3dimporter;
+    DrawSpace::Interface::FontImport*       m_cbfgimporter;
 
     static AssetsBase*                      m_instance;
 
@@ -62,12 +66,12 @@ public:
 
     void RegisterAsset( const dsstring& p_id, DrawSpace::Asset* p_asset );
     DrawSpace::Asset* GetAsset( const dsstring& p_id );
-
     void RegisterAssetRegistrationHandler( AssetRegistrationHandler* p_handler );
-
     bool AssetIdExists( const dsstring& p_id );
-
     void GetAssetsList( std::map<dsstring, DrawSpace::Asset*>& p_list );
+
+    DrawSpace::Interface::MesheImport* GetAC3CMesheImporter( void );
+    DrawSpace::Interface::FontImport* GetCBFGFontImporter( void );
 };
 }
 }

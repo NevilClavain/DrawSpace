@@ -27,6 +27,7 @@
 #include "misc_utils.h"
 #include "pimanager.h"
 #include "ac3dmeshe.h"
+#include "assetsbase.h"
 
 
 using namespace DrawSpace;
@@ -237,9 +238,14 @@ bool Meshe::ApplyProperties( void )
 
     if( mode == "ac3d" )
     {
-        mesheimp = new DrawSpace::Utils::AC3DMesheImport();
+        //mesheimp = new DrawSpace::Utils::AC3DMesheImport();
+        //mesheimp = _DRAWSPACE_NEW_( AC3DMesheImport, AC3DMesheImport );
+        mesheimp = AssetsBase::GetInstance()->GetAC3CMesheImporter();
     }
-
+    else
+    {
+        _DSEXCEPTION( "Bad meshe import name : " << mode )
+    }
     SetImporter( mesheimp );
     return LoadFromFile( path, index );    
 }
