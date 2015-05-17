@@ -77,7 +77,7 @@ bool DFrontApp::OnInit( void )
     */
 
 
-    m_mainframe = new BasicSceneMainFrame( NULL );
+    m_mainframe = BasicSceneMainFrame::GetInstance(); //new BasicSceneMainFrame( NULL );
     m_mainframe->Show();
    
     m_hwnd = (HWND)m_mainframe->GetHWND();

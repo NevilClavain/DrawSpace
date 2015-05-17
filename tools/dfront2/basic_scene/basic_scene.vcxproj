@@ -84,6 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionLongLatCreationDialog.cpp" />
     <ClCompile Include="adapters.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="BasicSceneMainFrame.cpp" />
@@ -93,6 +94,8 @@
     <ClCompile Include="panel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="action.h" />
+    <ClInclude Include="ActionLongLatCreationDialog.h" />
     <ClInclude Include="adapters.h" />
     <ClInclude Include="app.h" />
     <ClInclude Include="BasicSceneMainFrame.h" />

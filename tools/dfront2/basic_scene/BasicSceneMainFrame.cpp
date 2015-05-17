@@ -27,12 +27,16 @@
 #include "buildobjects.h"
 #include "luascripting.h"
 
+#include "ActionLongLatCreationDialog.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
 //#define RENDER_IDLE
+
+BasicSceneMainFrame* BasicSceneMainFrame::m_instance = NULL;
 
 RenderTimer::RenderTimer( BasicSceneMainFrame* p_pane ) : pane( p_pane )
 {
@@ -358,6 +362,8 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editmvt );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editnodescript );
 
+    m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
+
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
     m_specificbutton0_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
@@ -370,6 +376,15 @@ m_delta_mouse_init( true )
     timer->Start();
     m_rendertimer = timer;
 #endif
+}
+
+BasicSceneMainFrame* BasicSceneMainFrame::GetInstance( void )
+{
+    if( !m_instance )
+    {
+        m_instance = new BasicSceneMainFrame( NULL );
+    }
+    return m_instance;
 }
 
 void BasicSceneMainFrame::on_scripting_error( const dsstring& p_error )
@@ -3565,6 +3580,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWLONGLATMVT:
             {
+                /*
                 DIALOG_DECLARE( DIALOG_LONGLATMVT_CREATION_TITLE )
 
                 DIALOG_APPENDROOT_STRING( "scene name", "" )
@@ -3578,6 +3594,9 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 DIALOG_APPLY
                 DIALOG_SHOW
+                */
+
+                m_actions[CONTEXTMENU_NEWLONGLATMVT]->Execute();
             }
             break;
 

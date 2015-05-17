@@ -29,6 +29,7 @@
 #include "scripting.h"
 #include "BasicSceneObjectPropertiesDialog.h"
 #include "BasicSceneScriptEditFrame.h"
+#include "action.h"
 
 #define DFRONT_ICON_DIM                     22
 
@@ -159,6 +160,15 @@
     dialog->RegisterApplyButtonHandler( m_applybutton_clicked_cb ); \
     dialog->RegisterSpecificButton0Handler( m_specificbutton0_clicked_cb ); \
     dialog->RegisterSpecificButton1Handler( m_specificbutton1_clicked_cb ); \
+
+
+#define DIALOG_ACTION_DECLARE( _title_ ) \
+    BasicSceneObjectPropertiesDialog* dialog = new BasicSceneObjectPropertiesDialog( BasicSceneMainFrame::GetInstance(), _title_, BasicSceneMainFrame::GetInstance()->m_last_clicked_treeitem ); \
+    wxPropertyGrid* propertygrid = dialog->GetPropertyGrid(); \
+    dialog->RegisterApplyButtonHandler( BasicSceneMainFrame::GetInstance()->m_applybutton_clicked_cb ); \
+    dialog->RegisterSpecificButton0Handler( BasicSceneMainFrame::GetInstance()->m_specificbutton0_clicked_cb ); \
+    dialog->RegisterSpecificButton1Handler( BasicSceneMainFrame::GetInstance()->m_specificbutton1_clicked_cb ); \
+
 
 
 #define DIALOG_GETGRID wxPropertyGrid* propertygrid = p_dialog->GetPropertyGrid();
@@ -379,9 +389,6 @@ public:
     };
 
 
-
-protected:
-
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>                   TimerCallback;
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, const dsstring&>                   ScriptingErrorCallback;
 
@@ -393,7 +400,7 @@ protected:
     typedef DrawSpace::Core::CallBack<BasicSceneMainFrame, void, DrawSpace::Core::BaseSceneNode*>   NodeUpdateBeginCallBack;
 
 
-       
+    static BasicSceneMainFrame*                                                             m_instance;
 
     long                                                                                    m_w_width;
     long                                                                                    m_w_height;
@@ -428,7 +435,7 @@ protected:
     
 
 
-
+    std::map<int, Action*>                                                                  m_actions;
 
     //////////////////////////////////////////////////////////////////////////////////
 
@@ -559,9 +566,11 @@ protected:
 
     wxTreeItemId searchTreeItemIdInNodes( void* p_id );
 
+    BasicSceneMainFrame( wxWindow* parent );
 
 public:
-	BasicSceneMainFrame( wxWindow* parent );
+
+	static BasicSceneMainFrame* GetInstance( void );
 
     void SetGLReady( void );
     void Update( void );

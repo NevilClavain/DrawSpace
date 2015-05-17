@@ -8,6 +8,7 @@
     <ClCompile Include="buildobjects.cpp" />
     <ClCompile Include="panel.cpp" />
     <ClCompile Include="BasicSceneScriptEditFrame.cpp" />
+    <ClCompile Include="ActionLongLatCreationDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -17,5 +18,7 @@
     <ClInclude Include="buildobjects.h" />
     <ClInclude Include="panel.h" />
     <ClInclude Include="BasicSceneScriptEditFrame.h" />
+    <ClInclude Include="action.h" />
+    <ClInclude Include="ActionLongLatCreationDialog.h" />
   </ItemGroup>
 </Project>
