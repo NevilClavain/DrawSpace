@@ -75,6 +75,7 @@
 
 
 #define CONTEXTMENU_NEWSCENENODEGRAPH       2000
+#define CONTEXTMENU_NEWWORLD                2001
 
 #define CONTEXTMENU_NEWSPACEBOX             2010
 #define CONTEXTMENU_NEWCHUNK                2011
@@ -111,6 +112,7 @@
 #define CONTEXTMENU_EDIT_CHUNKNODE          2091
 #define CONTEXTMENU_EDIT_SBNODE             2092
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define DIALOG_TEXTURE_PROPS_TITLE          "Texture properties"
@@ -126,6 +128,7 @@
 #define DIALOG_SPACEBOX_PROPS_TITLE         "Spacebox node properties"
 #define DIALOG_SPACEBOX_EDITION_TITLE       "Spacebox node edition"
 #define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
+#define DIALOG_WORLD_CREATION_TITLE         "World creation"
 #define DIALOG_CAMERA_CREATION_TITLE        "Camera node creation"
 #define DIALOG_CAMERA_PROPS_TITLE           "Camera node properties"
 #define DIALOG_CAMERA_EDIT_TITLE            "Camera node edition"
@@ -549,8 +552,6 @@ protected:
     virtual void OnPopupClick(wxCommandEvent& p_evt);
     virtual void OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event );
 
-	
-    virtual void OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event );
     virtual void OnConsoleInSendButtonClicked( wxCommandEvent& p_event );
     virtual void OnConsoleInClearButtonClicked( wxCommandEvent& p_event );
     virtual void OnConsoleInLoadButtonClicked( wxCommandEvent& p_event );

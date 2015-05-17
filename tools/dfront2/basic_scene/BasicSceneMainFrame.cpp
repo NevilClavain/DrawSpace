@@ -110,6 +110,7 @@ m_delta_mouse_init( true )
     PopupMenuEntry pme_editmvt = { CONTEXTMENU_EDIT_MVT, "Edit movement..." };
 
     PopupMenuEntry pme_newscenenodegraph = { CONTEXTMENU_NEWSCENENODEGRAPH, "New scenenodegraph..." };
+    PopupMenuEntry pme_newworld = { CONTEXTMENU_NEWWORLD, "New world..." };
     PopupMenuEntry pme_newspacebox = { CONTEXTMENU_NEWSPACEBOX, "New spacebox..." };
     PopupMenuEntry pme_newchunk = { CONTEXTMENU_NEWCHUNK, "New chunk..." };
     PopupMenuEntry pme_newinertbody = { CONTEXTMENU_NEWINERTBODY, "New inertbody..." };
@@ -132,6 +133,7 @@ m_delta_mouse_init( true )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[DRAWSPACE_MASK].push_back( pme_newscenenodegraph );
+    m_scenegraphs_masks[DRAWSPACE_MASK].push_back( pme_newworld );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -2704,6 +2706,15 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             }
  			break;
 
+        case CONTEXTMENU_NEWWORLD:
+            {
+                DIALOG_DECLARE( DIALOG_WORLD_CREATION_TITLE )
+                DIALOG_APPENDROOT_STRING( "name", "" )
+                DIALOG_APPLY
+                DIALOG_SHOW
+            }
+            break;
+
         case CONTEXTMENU_NEWTRANSFO:
             {
 
@@ -3740,10 +3751,6 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
  	PopupMenu(&mnu);
 }
 
-
-void BasicSceneMainFrame::OnMouseKeyboardOutputCombobox( wxCommandEvent& p_event )
-{
-}
 
 void BasicSceneMainFrame::OnConsoleInSendButtonClicked( wxCommandEvent& p_event )
 {
