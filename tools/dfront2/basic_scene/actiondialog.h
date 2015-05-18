@@ -20,13 +20,16 @@
 *
 */
 
-#ifndef _ACTION_H_
-#define _ACTION_H_
+#ifndef _ACTIONDIALOG_H_
+#define _ACTIONDIALOG_H_
 
-class Action
+#include <stdio.h>
+#include "BasicSceneObjectPropertiesDialog.h"
+
+class ActionDialog
 {
 public:
-    virtual void Execute( void ) = 0;
+    virtual void Execute( BasicSceneObjectPropertiesDialog* p_dialog ) = 0;
 };
 
 #endif

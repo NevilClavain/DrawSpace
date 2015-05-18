@@ -210,6 +210,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_longlatmovementnode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_longlatmovementnode.h"
+			>
+		</File>
+		<File
 			RelativePath="..\DrawSpace\src\lua_matrix.cpp"
 			>
 		</File>

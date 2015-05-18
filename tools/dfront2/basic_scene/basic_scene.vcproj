@@ -185,6 +185,34 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\action.h"
+				>
+			</File>
+			<File
+				RelativePath=".\actiondialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLongLatCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLongLatCreationApply.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLongLatCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLongLatCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\actionscript.h"
+				>
+			</File>
+			<File
 				RelativePath=".\adapters.cpp"
 				>
 			</File>

@@ -30,6 +30,7 @@
 #include "BasicSceneObjectPropertiesDialog.h"
 #include "BasicSceneScriptEditFrame.h"
 #include "action.h"
+#include "actiondialog.h"
 
 #define DFRONT_ICON_DIM                     22
 
@@ -436,6 +437,7 @@ public:
 
 
     std::map<int, Action*>                                                                  m_actions;
+    std::map<dsstring, ActionDialog*>                                                       m_actiondialogs;
 
     //////////////////////////////////////////////////////////////////////////////////
 
@@ -584,6 +586,8 @@ public:
 
     void OnKeyDown( wxKeyEvent& p_event );
 	void OnKeyUp( wxKeyEvent& p_event );
+
+    wxTreeItemId AppendItem( const wxTreeItemId& p_parent_item, const wxString& p_text, int p_image );
 
     friend class RenderTimer;
 };

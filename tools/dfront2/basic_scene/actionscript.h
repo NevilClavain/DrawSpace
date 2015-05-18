@@ -20,13 +20,15 @@
 *
 */
 
-#ifndef _ACTION_H_
-#define _ACTION_H_
+#ifndef _ACTIONSCRIPT_H_
+#define _ACTIONSCRIPT_H_
 
-class Action
+#include "propertypool.h"
+
+class ActionDialog
 {
 public:
-    virtual void Execute( void ) = 0;
+    virtual void Execute( DrawSpace::Core::PropertyPool& p_propertypool ) = 0;
 };
 
 #endif

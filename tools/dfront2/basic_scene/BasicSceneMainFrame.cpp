@@ -28,6 +28,7 @@
 #include "luascripting.h"
 
 #include "ActionLongLatCreationDialog.h"
+#include "ActionLongLatCreationApply.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -363,7 +364,9 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editnodescript );
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
+    m_actiondialogs[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
     m_specificbutton0_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
@@ -3580,22 +3583,6 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWLONGLATMVT:
             {
-                /*
-                DIALOG_DECLARE( DIALOG_LONGLATMVT_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-
-                DIALOG_APPENDROOT_FLOAT( "initial longitud", 0.0 );
-                DIALOG_APPENDROOT_FLOAT( "initial latitud", 0.0 );
-
-                DIALOG_APPENDROOT_FLOAT( "initial altitud", 0.0 );
-                DIALOG_APPENDROOT_FLOAT( "initial theta", 0.0 );
-                DIALOG_APPENDROOT_FLOAT( "initial phi", 0.0 );
-
-                DIALOG_APPLY
-                DIALOG_SHOW
-                */
-
                 m_actions[CONTEXTMENU_NEWLONGLATMVT]->Execute();
             }
             break;
@@ -5141,6 +5128,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     }
     else if( DIALOG_LONGLATMVT_CREATION_TITLE == DIALOG_TITLE )
     {
+        /*
         DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
 
         DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
@@ -5219,6 +5207,9 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_inv_tree_nodes[ll_node] = l_entry.treeitemid.GetID();
 
         DIALOG_CLOSE
+        */
+        
+        m_actiondialogs[DIALOG_LONGLATMVT_CREATION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_LONGLATMVT_EDITION_TITLE == DIALOG_TITLE )
@@ -5591,4 +5582,11 @@ wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
         return m_ll_nodes[p_id].treeitemid;
     }
 
+}
+
+wxTreeItemId BasicSceneMainFrame::AppendItem( const wxTreeItemId& p_parent_item, const wxString& p_text, int p_image )
+{
+    wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( p_parent_item, p_text, p_image );
+    BasicSceneMainFrame::GetInstance()->m_scenegraphs_treeCtrl->ExpandAllChildren( p_parent_item );
+    return treeitemid;
 }

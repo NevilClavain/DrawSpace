@@ -20,13 +20,14 @@
 *
 */
 
-#ifndef _ACTION_H_
-#define _ACTION_H_
+#ifndef _ACTIONLONGLATCREATIONAPPLY_H_
+#define _ACTIONLONGLATCREATIONAPPLY_H_
+#include "actiondialog.h"
 
-class Action
+class ActionLongLatCreationApply : public ActionDialog
 {
 public:
-    virtual void Execute( void ) = 0;
+    void Execute( BasicSceneObjectPropertiesDialog* p_dialog );
 };
 
 #endif
