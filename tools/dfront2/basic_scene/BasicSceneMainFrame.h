@@ -31,6 +31,7 @@
 #include "BasicSceneScriptEditFrame.h"
 #include "action.h"
 #include "actiondialog.h"
+#include "actionscript.h"
 
 #define DFRONT_ICON_DIM                     22
 
@@ -438,6 +439,7 @@ public:
 
     std::map<int, Action*>                                                                  m_actions;
     std::map<dsstring, ActionDialog*>                                                       m_actiondialogs;
+    std::map<dsstring, ActionScript*>                                                       m_actionscripts;
 
     //////////////////////////////////////////////////////////////////////////////////
 

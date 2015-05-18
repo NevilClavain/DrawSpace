@@ -20,15 +20,14 @@
 *
 */
 
-#ifndef _ACTIONSCRIPT_H_
-#define _ACTIONSCRIPT_H_
+#ifndef _ACTIONLONGLATLINKTO_H_
+#define _ACTIONLONGLATLINKTO_H_
+#include "actionscript.h"
 
-#include "mediator.h"
-
-class ActionScript
+class ActionLongLatLinkTo : public ActionScript
 {
 public:
-    virtual void Execute( DrawSpace::Core::PropertyPool& p_propertypool ) = 0;
+    void Execute( DrawSpace::Core::PropertyPool& p_propertypool );
 };
 
 #endif
