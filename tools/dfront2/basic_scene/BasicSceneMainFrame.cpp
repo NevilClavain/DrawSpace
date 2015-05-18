@@ -30,6 +30,7 @@
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
 #include "ActionLongLatLinkTo.h"
+#include "ActionLongLatLongLat.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -367,6 +368,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
     m_actiondialogs[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
     m_actionscripts["LongLatMovementNode:LinkTo"] = new ActionLongLatLinkTo();
+    m_actionscripts["LongLatMovementNode:LongLatMovementNode"] = new ActionLongLatLongLat();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1856,6 +1858,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
     else if( "LongLatMovementNode:LongLatMovementNode" == script_call_id )
     {
+        /*
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
         SceneNode<LongLatMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<LongLatMovement>**>( "existing_node" );
 
@@ -1868,6 +1871,9 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 break;
             }
         }
+        */
+
+        m_actionscripts["LongLatMovementNode:LongLatMovementNode"]->Execute( p_propertypool );
     }
 
     else if( "LongLatMovementNode:LinkTo" == script_call_id )

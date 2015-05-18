@@ -217,6 +217,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionLongLatLongLat.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLongLatLongLat.h"
+				>
+			</File>
+			<File
 				RelativePath=".\actionscript.h"
 				>
 			</File>
