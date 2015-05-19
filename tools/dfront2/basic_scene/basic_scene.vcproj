@@ -189,6 +189,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionAddMatrix.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionAddMatrix.h"
+				>
+			</File>
+			<File
 				RelativePath=".\actiondialog.h"
 				>
 			</File>
@@ -198,6 +206,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionEditMvtDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyCreationDialog.h"
 				>
 			</File>
 			<File

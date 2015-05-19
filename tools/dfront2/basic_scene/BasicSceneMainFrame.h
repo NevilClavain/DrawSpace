@@ -438,7 +438,11 @@ public:
 
 
     std::map<int, Action*>                                                                  m_actions;
-    std::map<dsstring, ActionDialog*>                                                       m_actiondialogs;
+
+    std::map<dsstring, ActionDialog*>                                                       m_actiondialogs_apply;
+    std::map<dsstring, ActionDialog*>                                                       m_actiondialogs_specific0;
+    std::map<dsstring, ActionDialog*>                                                       m_actiondialogs_specific1;
+
     std::map<dsstring, ActionScript*>                                                       m_actionscripts;
 
     //////////////////////////////////////////////////////////////////////////////////

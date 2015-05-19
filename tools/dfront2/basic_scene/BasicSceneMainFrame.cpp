@@ -29,11 +29,15 @@
 
 #include "ActionPropsDialog.h"
 #include "ActionEditMvtDialog.h"
+#include "ActionAddMatrix.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
 #include "ActionLongLatLinkTo.h"
 #include "ActionLongLatLongLat.h"
+
+#include "ActionInertBodyCreationDialog.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -368,13 +372,23 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editmvt );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editnodescript );
 
+    ///////////////////////////////////////////////////////////////////
+
     m_actions[CONTEXTMENU_SHOW_PROPS] = new ActionPropsDialog();
     m_actions[CONTEXTMENU_EDIT_MVT] = new ActionEditMvtDialog();
 
+    
+    m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
+
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
-    m_actiondialogs[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
+    m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
     m_actionscripts["LongLatMovementNode:LinkTo"] = new ActionLongLatLinkTo();
     m_actionscripts["LongLatMovementNode:LongLatMovementNode"] = new ActionLongLatLongLat();
+
+
+    m_actions[CONTEXTMENU_NEWINERTBODY] = new ActionInertBodyCreationDialog();
+    m_actiondialogs_specific0[DIALOG_INERTBODY_CREATION_TITLE] = new ActionAddMatrix();
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -3092,31 +3106,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWINERTBODY:
             {
-                DIALOG_DECLARE( DIALOG_INERTBODY_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-
-                DIALOG_APPENDROOT_FLOAT( "mass", 0.0 );
-                DIALOG_APPENDROOT_NODE( "shape description", shape_descr )
-                wxArrayString shape_types;
-                shape_types.Add( "box" );
-                shape_types.Add( "sphere" );
-                shape_types.Add( "meshe" );
-
-                DIALOG_APPENDNODE_ENUM( shape_descr, "shape type", shape_types )
-                DIALOG_APPENDNODE_FLOAT( shape_descr, "sphere radius", 0.5 )
-                DIALOG_APPENDNODE_NODE( shape_descr, "box dims", box_dims )
-                DIALOG_APPENDNODE_FLOAT( box_dims, "x", 0.5 )
-                DIALOG_APPENDNODE_FLOAT( box_dims, "y", 0.5 )
-                DIALOG_APPENDNODE_FLOAT( box_dims, "z", 0.5 )
-                DIALOG_APPENDNODE_ENUM( shape_descr, "meshe", get_meshes_list() )
-
-                DIALOG_APPENDROOT_BOOL( "active at creation", false );
-
-                DIALOG_SPECIFIC0( "Add matrix" )
-                DIALOG_APPLY
-                DIALOG_SHOW
-
+                m_actions[CONTEXTMENU_NEWINERTBODY]->Execute();                
             }
             break;
 
@@ -3516,7 +3506,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     }
 
     else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
-    {               
+    {
         std::vector<Matrix> new_chain;
         bool ok = true;
         Vector values;
@@ -4564,7 +4554,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     }
     else if( DIALOG_LONGLATMVT_CREATION_TITLE == DIALOG_TITLE )
     {        
-        m_actiondialogs[DIALOG_LONGLATMVT_CREATION_TITLE]->Execute( p_dialog );
+        m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_LONGLATMVT_EDITION_TITLE == DIALOG_TITLE )
@@ -4776,30 +4766,13 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
 
         DIALOG_FINALIZE
     }
-
-    else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE || DIALOG_INERTBODY_CREATION_TITLE == DIALOG_TITLE )
+    else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_SPECIFIC0_LABEL( "matrix %d", matrix_label )
-
-        DIALOG_APPENDROOT_NODE( matrix_label, matrix_root )
-
-        wxArrayString matrix_type_labels;
-
-        matrix_type_labels.Add( "identity" );
-        matrix_type_labels.Add( "scaling" );
-        matrix_type_labels.Add( "translation" );
-        matrix_type_labels.Add( "rotation" );
-        matrix_type_labels.Add( "zero" );
-        matrix_type_labels.Add( "undetermined" );
-
-        DIALOG_APPENDNODE_ENUM( matrix_root, "type", matrix_type_labels )
-
-        DIALOG_APPENDNODE_FLOAT( matrix_root, "x", 0.0 )
-        DIALOG_APPENDNODE_FLOAT( matrix_root, "y", 0.0 )
-        DIALOG_APPENDNODE_FLOAT( matrix_root, "z", 0.0 )
-        DIALOG_APPENDNODE_FLOAT( matrix_root, "angle", 0.0 )
-
-        DIALOG_FINALIZE
+        m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE]->Execute( p_dialog );
+    }
+    else if( DIALOG_INERTBODY_CREATION_TITLE == DIALOG_TITLE )
+    {
+        m_actiondialogs_specific0[DIALOG_INERTBODY_CREATION_TITLE]->Execute( p_dialog );
     }
 }
 
