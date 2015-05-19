@@ -27,6 +27,9 @@
 #include "buildobjects.h"
 #include "luascripting.h"
 
+#include "ActionPropsDialog.h"
+#include "ActionEditMvtDialog.h"
+
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
 #include "ActionLongLatLinkTo.h"
@@ -364,6 +367,9 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editmvt );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editnodescript );
+
+    m_actions[CONTEXTMENU_SHOW_PROPS] = new ActionPropsDialog();
+    m_actions[CONTEXTMENU_EDIT_MVT] = new ActionEditMvtDialog();
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
     m_actiondialogs[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
@@ -2900,344 +2906,8 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
             break;
 
         case CONTEXTMENU_SHOW_PROPS:
-            {               
-                void* id = m_last_clicked_treeitem.GetID();
-                if( m_spacebox_descriptors.count( id ) > 0 )
-                {
-                    DrawSpace::Utils::SpaceboxDescriptor sb_descr = m_spacebox_descriptors[id];
-
-                    DIALOG_DECLARE( DIALOG_SPACEBOX_PROPS_TITLE )
-
-                    DIALOG_APPENDROOT_STRING( "scene name", sb_descr.scene_name )
-
-                    for( std::map<dsstring, SpaceboxPassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
-                    {
-                        SpaceboxPassDescriptor pass_descr = it->second;                        
-                        //DIALOG_APPENDROOT_NODE( pass_labels[label_index], pass_root )
-
-                        DIALOG_APPENDROOT_NODE( it->first, pass_root )
-
-                        DIALOG_APPENDNODE_STRING( pass_root, "fx name", pass_descr.fx_name )
-                        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", pass_descr.rendering_order )
-
-                        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", texture_stages )
-
-
-                        {
-                            DIALOG_APPENDNODE_NODE( pass_root, "front textures", front_root )
-                            for( size_t i = 0; i < texture_stages.size(); i++ )
-                            {
-                                if( pass_descr.textures[Spacebox::FrontQuad][i] != "" )
-                                {
-                                    DIALOG_APPENDNODE_STRING( front_root, texture_stages[i], pass_descr.textures[Spacebox::FrontQuad][i] )
-                                }
-                            }
-                        }
-
-                        {
-                            DIALOG_APPENDNODE_NODE( pass_root, "rear textures", rear_root )
-                            for( size_t i = 0; i < texture_stages.size(); i++ )
-                            {
-                                if( pass_descr.textures[Spacebox::RearQuad][i] != "" )
-                                {
-                                    DIALOG_APPENDNODE_STRING( rear_root, texture_stages[i], pass_descr.textures[Spacebox::RearQuad][i] )
-                                }
-                            }
-                        }
-
-                        {
-                            DIALOG_APPENDNODE_NODE( pass_root, "left textures", left_root )
-                            for( size_t i = 0; i < texture_stages.size(); i++ )
-                            {
-                                if( pass_descr.textures[Spacebox::LeftQuad][i] != "" )
-                                {
-                                    DIALOG_APPENDNODE_STRING( left_root, texture_stages[i], pass_descr.textures[Spacebox::LeftQuad][i] )
-                                }
-                            }
-                        }
-
-                        {
-                            DIALOG_APPENDNODE_NODE( pass_root, "right textures", right_root )
-                            for( size_t i = 0; i < texture_stages.size(); i++ )
-                            {
-                                if( pass_descr.textures[Spacebox::RightQuad][i] != "" )
-                                {
-                                    DIALOG_APPENDNODE_STRING( right_root, texture_stages[i], pass_descr.textures[Spacebox::RightQuad][i] )
-                                }
-                            }
-                        }
-
-                        {
-                            DIALOG_APPENDNODE_NODE( pass_root, "top textures", top_root )
-                            for( size_t i = 0; i < texture_stages.size(); i++ )
-                            {
-                                if( pass_descr.textures[Spacebox::TopQuad][i] != "" )
-                                {
-                                    DIALOG_APPENDNODE_STRING( top_root, texture_stages[i], pass_descr.textures[Spacebox::TopQuad][i] )
-                                }
-                            }
-                        }
-
-                        {
-                            DIALOG_APPENDNODE_NODE( pass_root, "bottom textures", bottom_root )
-                            for( size_t i = 0; i < texture_stages.size(); i++ )
-                            {
-                                if( pass_descr.textures[Spacebox::BottomQuad][i] != "" )
-                                {
-                                    DIALOG_APPENDNODE_STRING( bottom_root, texture_stages[i], pass_descr.textures[Spacebox::BottomQuad][i] )
-                                }
-                            }
-                        }
-
-
-                        for( size_t i = 0; i < pass_descr.shader_params.size(); i++ )
-                        {
-                            DIALOG_APPENDNODE_NODE( pass_root, pass_descr.shader_params[i].id, shader_param_root )
-
-                            DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader index", pass_descr.shader_params[i].shader_index )
-                            DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader register", pass_descr.shader_params[i].shader_register )
-
-                            DIALOG_APPENDNODE_NODE( shader_param_root, "values", shader_param_values_root )
-
-                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
-                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
-                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
-                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )
-
-                        }
-                    }
-                 
-                    DIALOG_SHOW
-                }
-                else if( m_chunk_descriptors.count( id ) > 0 )
-                {
-                    DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[id];
-
-                    DIALOG_DECLARE( DIALOG_CHUNK_PROPS_TITLE )
-
-                    DIALOG_APPENDROOT_STRING( "scene name", chunk_descr.scene_name )
-                    DIALOG_APPENDROOT_STRING( "meshe", chunk_descr.meshe )
-
-                    for( std::map<dsstring, ChunkPassDescriptor>::iterator it = chunk_descr.passes_slots.begin(); it != chunk_descr.passes_slots.end(); ++it )
-                    {
-                        ChunkPassDescriptor pass_descr = it->second;                        
-
-                        DIALOG_APPENDROOT_NODE( it->first, pass_root )
-
-                        DIALOG_APPENDNODE_STRING( pass_root, "fx name", pass_descr.fx_name )
-                        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", pass_descr.rendering_order )
-
-                        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", texture_stages )
-
-                        DIALOG_APPENDNODE_NODE( pass_root, "textures", textures_root )
-
-                        for( size_t i = 0; i < texture_stages.size(); i++ )
-                        {
-                            if( pass_descr.textures[i] != "" )
-                            {
-                                DIALOG_APPENDNODE_STRING( textures_root, texture_stages[i], pass_descr.textures[i] )
-                            }
-                        }
-
-                        for( size_t i = 0; i < pass_descr.shader_params.size(); i++ )
-                        {
-                            DIALOG_APPENDNODE_NODE( pass_root, pass_descr.shader_params[i].id, shader_param_root )
-
-                            DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader index", pass_descr.shader_params[i].shader_index )
-                            DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader register", pass_descr.shader_params[i].shader_register )
-
-                            DIALOG_APPENDNODE_NODE( shader_param_root, "values", shader_param_values_root )
-
-                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
-                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
-                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
-                            DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )
-
-                        }
-                    }
-
-                    DIALOG_SHOW
-                }
-                else if( m_camera_nodes.count( id ) > 0 )
-                {
-                    CameraPoint* camera = m_camera_nodes[id].scene_node->GetContent();
-
-                    CameraPoint::Infos infos;
-                    camera->GetInfos( infos );
-
-                    DIALOG_DECLARE( DIALOG_CAMERA_PROPS_TITLE )
-
-                    DIALOG_APPENDROOT_STRING( "scene name", m_camera_nodes[id].name );
-
-                    DIALOG_APPENDROOT_BOOL( "relative to an orbiter", ( infos.relative_orbiter != NULL ? true : false ) );
-                    if( infos.relative_orbiter != NULL )
-                    {
-                        DIALOG_APPENDROOT_FLOAT( "altitud", infos.altitud );
-                    }
-
-                    DIALOG_APPENDROOT_BOOL( "locked on node", infos.locked_on_node );
-                    if( infos.locked_on_node )
-                    {
-                        DIALOG_APPENDROOT_STRING( "locked on", infos.locked_node_alias );
-                        DIALOG_APPENDROOT_FLOAT( "locked object distance", camera->GetLockedObjectDistance() );
-                    }
-                    
-                    DIALOG_SHOW
-                }
-                else if( m_fps_nodes.count( id ) > 0 )
-                {
-                    FPSMovement* fps = m_fps_nodes[id].scene_node->GetContent();
-
-                    Vector pos;
-                    dsreal curr_yaw, curr_pitch;
-                    fps->GetCurrentPos( pos );
-                    curr_yaw = fps->GetCurrentYaw();
-                    curr_pitch = fps->GetCurrentPitch();
-                   
-                    DIALOG_DECLARE( DIALOG_FPSMVT_PROPS_TITLE )
-                    DIALOG_APPENDROOT_STRING( "scene name", m_fps_nodes[id].name );
-                    DIALOG_APPENDROOT_STRING( "movement type ", "fps" );
-                    DIALOG_APPENDROOT_FLOAT( "current yaw", Maths::RadToDeg( curr_yaw ) );
-                    DIALOG_APPENDROOT_FLOAT( "current pitch", Maths::RadToDeg( curr_pitch ) );
-                    DIALOG_APPENDROOT_NODE( "current position", curr_pos_root );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "x", pos[0] );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "y", pos[1] );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "z", pos[2] );
-
-                    DIALOG_SHOW
-                }
-
-                else if( m_lin_nodes.count( id ) > 0 )
-                {
-                    LinearMovement* lin = m_lin_nodes[id].scene_node->GetContent();
-
-                    Vector init_pos;
-                    Vector curr_pos;
-                    Vector dir;
-
-                    dsreal curr_theta, curr_phi, curr_speed;
-
-                    lin->GetCurrentPos( curr_pos );
-                    lin->GetInitPos( init_pos );
-                    lin->GetDirection( dir );
-
-                    curr_theta = lin->GetCurrentTheta();
-                    curr_phi = lin->GetCurrentPhi();
-                    curr_speed = lin->GetCurrentSpeed();
-
-                    DIALOG_DECLARE( DIALOG_LINMVT_PROPS_TITLE )
-                    DIALOG_APPENDROOT_STRING( "scene name", m_lin_nodes[id].name );
-                    DIALOG_APPENDROOT_STRING( "movement type ", "linear" );
-
-                    DIALOG_APPENDROOT_FLOAT( "current theta", curr_theta );
-                    DIALOG_APPENDROOT_FLOAT( "current phi", curr_phi );
-                    DIALOG_APPENDROOT_FLOAT( "current speed", curr_speed );
-
-                    DIALOG_APPENDROOT_NODE( "initial position", init_pos_root );
-                    DIALOG_APPENDNODE_FLOAT( init_pos_root, "x", init_pos[0] );
-                    DIALOG_APPENDNODE_FLOAT( init_pos_root, "y", init_pos[1] );
-                    DIALOG_APPENDNODE_FLOAT( init_pos_root, "z", init_pos[2] );
-
-                    DIALOG_APPENDROOT_NODE( "current position", curr_pos_root );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "x", curr_pos[0] );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "y", curr_pos[1] );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "z", curr_pos[2] );
-
-                    DIALOG_APPENDROOT_NODE( "direction", dir_root );
-                    DIALOG_APPENDNODE_FLOAT( dir_root, "x", dir[0] );
-                    DIALOG_APPENDNODE_FLOAT( dir_root, "y", dir[1] );
-                    DIALOG_APPENDNODE_FLOAT( dir_root, "z", dir[2] );
-
-                    DIALOG_SHOW                    
-                }
-                else if( m_free_nodes.count( id ) > 0 )
-                {
-                    FreeMovement* free = m_free_nodes[id].scene_node->GetContent();
-                    Vector curr_pos;
-
-                    free->GetCurrentPos( curr_pos );
-
-                    DIALOG_DECLARE( DIALOG_FREEMVT_PROPS_TITLE )
-                    DIALOG_APPENDROOT_STRING( "scene name", m_free_nodes[id].name );
-                    DIALOG_APPENDROOT_STRING( "movement type ", "free" );
-
-                    DIALOG_APPENDROOT_NODE( "current position", curr_pos_root );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "x", curr_pos[0] );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "y", curr_pos[1] );
-                    DIALOG_APPENDNODE_FLOAT( curr_pos_root, "z", curr_pos[2] );
-                
-                    DIALOG_SHOW
-                }
-                else if( m_circ_nodes.count( id ) > 0 )
-                {
-                    CircularMovement* circ = m_circ_nodes[id].scene_node->GetContent();
-
-                    Vector center_pos;
-                    Vector delta_center_pos;
-                    Vector axis;
-
-                    dsreal angle, theta, phi, curr_speed;
-
-                    circ->GetCenterPos( center_pos );
-                    circ->GetDeltaCenter( delta_center_pos );
-                    circ->GetRotAxis( axis );
-
-                    theta = circ->GetCurrentTheta();
-                    phi = circ->GetCurrentPhi();
-                    angle = circ->GetCurrentAngle();
-
-                    curr_speed = circ->GetAngularSpeed();
-
-                    DIALOG_DECLARE( DIALOG_CIRCMVT_PROPS_TITLE )
-                    DIALOG_APPENDROOT_STRING( "scene name", m_circ_nodes[id].name );
-                    DIALOG_APPENDROOT_STRING( "movement type ", "circular" );
-
-                    DIALOG_APPENDROOT_FLOAT( "current theta", theta );
-                    DIALOG_APPENDROOT_FLOAT( "current phi", phi );
-                    DIALOG_APPENDROOT_FLOAT( "current angle", angle );
-                    DIALOG_APPENDROOT_FLOAT( "current angular speed", curr_speed );
-
-                    DIALOG_APPENDROOT_NODE( "center position", center_pos_root );
-                    DIALOG_APPENDNODE_FLOAT( center_pos_root, "x", center_pos[0] );
-                    DIALOG_APPENDNODE_FLOAT( center_pos_root, "y", center_pos[1] );
-                    DIALOG_APPENDNODE_FLOAT( center_pos_root, "z", center_pos[2] );
-
-                    DIALOG_APPENDROOT_NODE( "delta center position", dcenter_pos_root );
-                    DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "x", delta_center_pos[0] );
-                    DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "y", delta_center_pos[1] );
-                    DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "z", delta_center_pos[2] );
-
-                    DIALOG_APPENDROOT_NODE( "axis", axis_root );
-                    DIALOG_APPENDNODE_FLOAT( axis_root, "x", axis[0] );
-                    DIALOG_APPENDNODE_FLOAT( axis_root, "y", axis[1] );
-                    DIALOG_APPENDNODE_FLOAT( axis_root, "z", axis[2] );
-
-                    DIALOG_SHOW
-                }
-                else if( m_ll_nodes.count( id ) > 0 )
-                {
-                    LongLatMovement* ll = m_ll_nodes[id].scene_node->GetContent();
-
-                    dsreal longitud, latitud, altitud, theta, phi;
-
-                    longitud = ll->GetCurrentLongitud();
-                    latitud = ll->GetCurrentLatitud();
-                    altitud = ll->GetCurrentAltitud();
-                    theta = ll->GetCurrentTheta();
-                    phi = ll->GetCurrentPhi();
-
-                    DIALOG_DECLARE( DIALOG_LONGLATMVT_PROPS_TITLE )
-                    DIALOG_APPENDROOT_STRING( "scene name", m_ll_nodes[id].name );
-                    DIALOG_APPENDROOT_STRING( "movement type ", "long/lat" );
-
-                    DIALOG_APPENDROOT_FLOAT( "current theta", theta );
-                    DIALOG_APPENDROOT_FLOAT( "current phi", phi );
-                    DIALOG_APPENDROOT_FLOAT( "current longitud", longitud );
-                    DIALOG_APPENDROOT_FLOAT( "current latitud", latitud );
-                    DIALOG_APPENDROOT_FLOAT( "current altitud", altitud );
-
-                    DIALOG_SHOW
-                }
+            {
+                m_actions[CONTEXTMENU_SHOW_PROPS]->Execute();
             }
             break;
 
@@ -3493,6 +3163,9 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_EDIT_MVT:
             {
+                m_actions[CONTEXTMENU_EDIT_MVT]->Execute();
+
+                /*
                 void* id = m_last_clicked_treeitem.GetID();
                 if( m_lin_nodes.count( id ) > 0 )
                 {
@@ -3555,6 +3228,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                     DIALOG_APPLY
                     DIALOG_SHOW
                 }
+                */
             }
             break;
 

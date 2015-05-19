@@ -193,6 +193,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionEditMvtDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionEditMvtDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionLongLatCreationApply.cpp"
 				>
 			</File>
@@ -222,6 +230,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionLongLatLongLat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionPropsDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionPropsDialog.h"
 				>
 			</File>
 			<File
