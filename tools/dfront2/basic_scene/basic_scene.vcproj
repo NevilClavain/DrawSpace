@@ -209,6 +209,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionInertBodyCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyCreationApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionInertBodyCreationDialog.cpp"
 				>
 			</File>
