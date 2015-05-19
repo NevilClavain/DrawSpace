@@ -84,7 +84,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionAddMatrix.cpp" />
+    <ClCompile Include="ActionEditMvtDialog.cpp" />
+    <ClCompile Include="ActionInertBodyCreationApply.cpp" />
+    <ClCompile Include="ActionInertBodyCreationDialog.cpp" />
+    <ClCompile Include="ActionLongLatCreationApply.cpp" />
     <ClCompile Include="ActionLongLatCreationDialog.cpp" />
+    <ClCompile Include="ActionLongLatLinkTo.cpp" />
+    <ClCompile Include="ActionLongLatLongLat.cpp" />
+    <ClCompile Include="ActionPropsDialog.cpp" />
+    <ClCompile Include="ActionScenenodeGraphCreationApply.cpp" />
+    <ClCompile Include="ActionScenenodeGraphCreationDialog.cpp" />
     <ClCompile Include="adapters.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="BasicSceneMainFrame.cpp" />
@@ -95,7 +105,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="action.h" />
+    <ClInclude Include="ActionAddMatrix.h" />
+    <ClInclude Include="actiondialog.h" />
+    <ClInclude Include="ActionEditMvtDialog.h" />
+    <ClInclude Include="ActionInertBodyCreationApply.h" />
+    <ClInclude Include="ActionInertBodyCreationDialog.h" />
+    <ClInclude Include="ActionLongLatCreationApply.h" />
     <ClInclude Include="ActionLongLatCreationDialog.h" />
+    <ClInclude Include="ActionLongLatLinkTo.h" />
+    <ClInclude Include="ActionLongLatLongLat.h" />
+    <ClInclude Include="ActionPropsDialog.h" />
+    <ClInclude Include="ActionScenenodeGraphCreationApply.h" />
+    <ClInclude Include="ActionScenenodeGraphCreationDialog.h" />
+    <ClInclude Include="actionscript.h" />
     <ClInclude Include="adapters.h" />
     <ClInclude Include="app.h" />
     <ClInclude Include="BasicSceneMainFrame.h" />

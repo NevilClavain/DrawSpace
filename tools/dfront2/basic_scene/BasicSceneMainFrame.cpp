@@ -31,6 +31,8 @@
 #include "ActionEditMvtDialog.h"
 #include "ActionAddMatrix.h"
 
+#include "ActionScenenodeGraphCreationDialog.h"
+
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
 #include "ActionLongLatLinkTo.h"
@@ -377,6 +379,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_SHOW_PROPS] = new ActionPropsDialog();
     m_actions[CONTEXTMENU_EDIT_MVT] = new ActionEditMvtDialog();
 
+    m_actions[CONTEXTMENU_NEWSCENENODEGRAPH] = new ActionScenenodeGraphCreationDialog();
     
     m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
 
@@ -2642,10 +2645,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
     {
  		case CONTEXTMENU_NEWSCENENODEGRAPH:
             {
-                DIALOG_DECLARE( DIALOG_SCENEGRAPH_CREATION_TITLE )
-                DIALOG_APPENDROOT_STRING( "name", "" )
-                DIALOG_APPLY
-                DIALOG_SHOW
+                m_actions[CONTEXTMENU_NEWSCENENODEGRAPH]->Execute();
             }
  			break;
 
