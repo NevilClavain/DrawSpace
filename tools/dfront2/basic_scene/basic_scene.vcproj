@@ -301,6 +301,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionTransformEditionDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformEditionDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionWorldCreationDialog.cpp"
 				>
 			</File>

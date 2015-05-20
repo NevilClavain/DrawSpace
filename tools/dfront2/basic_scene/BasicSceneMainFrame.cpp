@@ -39,6 +39,8 @@
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
 
+#include "ActionTransformEditionDialog.h"
+
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
 #include "ActionLongLatLinkTo.h"
@@ -393,6 +395,8 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
     m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE] = new ActionTransformCreationApply();
+
+    m_actions[CONTEXTMENU_EDIT_TRANSFORMNODE] = new ActionTransformEditionDialog();
 
     m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
 
@@ -2676,61 +2680,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_EDIT_TRANSFORMNODE:
             {
-                void* id = m_last_clicked_treeitem.GetID();
-
-                if( m_transformation_nodes.count( id ) > 0 )
-                {
-
-                    DIALOG_DECLARE( DIALOG_TRANSFORM_EDITION_TITLE )
-
-                    DIALOG_APPLY
-                    DIALOG_SPECIFIC0( "Add matrix" )
-                    DIALOG_SPECIFIC1( "Clear all" )
-
-                    std::vector<Matrix> mat_chain;
-                    m_transformation_nodes[id].scene_node->GetContent()->GetMatrixChain( mat_chain );
-
-
-                    DIALOG_APPENDROOT_STRING( "scene name", m_transformation_nodes[id].name );
-
-                    DIALOG_BUILD_LABELS( mat_chain.size(), "matrix %d", matrix_labels )
-
-                    DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( i, matrix_labels, matrix_root )
-
-
-                        Matrix::ConfigurationInfo mci;
-                        mat_chain[i].GetConfigInfos( mci );
-
-                        wxArrayString matrix_type_labels;
-
-                        matrix_type_labels.Add( "identity" );
-                        matrix_type_labels.Add( "scaling" );
-                        matrix_type_labels.Add( "translation" );
-                        matrix_type_labels.Add( "rotation" );
-                        matrix_type_labels.Add( "zero" );
-                        matrix_type_labels.Add( "undetermined" );
-
-                        wxArrayInt arrIds;
-                        arrIds.Add( Matrix::CONFIG_IDENTITY );
-                        arrIds.Add( Matrix::CONFIG_SCALING );
-                        arrIds.Add( Matrix::CONFIG_TRANSLATION );
-                        arrIds.Add( Matrix::CONFIG_ROTATION );
-                        arrIds.Add( Matrix::CONFIG_ZERO );
-                        arrIds.Add( Matrix::CONFIG_UNDETERMINED );
-
-                        DIALOG_APPENDNODE_ENUM_PRESELECTED( matrix_root, "type", matrix_type_labels, arrIds, mci.type )
-
-                        DIALOG_APPENDNODE_FLOAT( matrix_root, "x", mci.values[0] )
-                        DIALOG_APPENDNODE_FLOAT( matrix_root, "y", mci.values[1] )
-                        DIALOG_APPENDNODE_FLOAT( matrix_root, "z", mci.values[2] )
-                        DIALOG_APPENDNODE_FLOAT( matrix_root, "angle", Maths::RadToDeg( mci.values[3] ) )
-
-                    DIALOG_APPENDROOT_ITERATE_NODE_END
-                    DIALOG_SHOW
-
-
-                    dialog->SetSpecific0Counter( mat_chain.size() );
-                }
+                m_actions[CONTEXTMENU_EDIT_TRANSFORMNODE]->Execute();
             }
             break;
 
