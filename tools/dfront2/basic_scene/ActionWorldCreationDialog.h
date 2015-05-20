@@ -20,44 +20,14 @@
 *
 */
 
-#include <wx/wx.h>
-#include "BasicSceneMainFrame.h"
+#ifndef _ACTIONWORLDCREATIONDIALOG_H_
+#define _ACTIONWORLDCREATIONDIALOG_H_
+#include "action.h"
 
-#include "ActionScenenodeGraphCreationApply.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Dynamics;
-using namespace DrawSpace::Utils;
-
-void ActionScenenodeGraphCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
+class ActionWorldCreationDialog : public Action
 {
-    DIALOG_GETGRID
-    DIALOG_PROPERTIES_VARS
+public:
+    void Execute( void );
+};
 
-    DIALOG_GET_STRING_PROPERTY( "name", scenegraph_name )
-
-    DIALOG_WXSTRING_TO_DSSTRING( scenegraph_name, scenegraph_name2 )
-
-    if( "" == scenegraph_name2 )
-    {
-        wxMessageBox( "'name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-    }
-    else
-    {
-
-        BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-        entry.name = scenegraph_name2;
-        entry.scenenodegraph = new SceneNodeGraph();
-        
-        //entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( BasicSceneMainFrame::GetInstance()->m_scenegraphs_root_item, scenegraph_name, SCENEGRAPH_ICON_INDEX );
-        entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( p_dialog->GetTreeItem(), scenegraph_name, SCENEGRAPH_ICON_INDEX );
-        entry.current_camera_set = false;
-
-        BasicSceneMainFrame::GetInstance()->m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
-       
-        DIALOG_CLOSE
-    }
-
-}
+#endif

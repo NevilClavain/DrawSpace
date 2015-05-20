@@ -265,7 +265,47 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionScenenodeGraphCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionScenenodeGraphCreationApply.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionScenenodeGraphCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionScenenodeGraphCreationDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\actionscript.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformCreationApply.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionWorldCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionWorldCreationDialog.h"
 				>
 			</File>
 			<File

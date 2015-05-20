@@ -32,6 +32,12 @@
 #include "ActionAddMatrix.h"
 
 #include "ActionScenenodeGraphCreationDialog.h"
+#include "ActionScenenodeGraphCreationApply.h"
+
+#include "ActionWorldCreationDialog.h"
+
+#include "ActionTransformCreationDialog.h"
+#include "ActionTransformCreationApply.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -40,6 +46,7 @@
 
 #include "ActionInertBodyCreationDialog.h"
 #include "ActionInertBodyCreationApply.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -380,7 +387,13 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_MVT] = new ActionEditMvtDialog();
 
     m_actions[CONTEXTMENU_NEWSCENENODEGRAPH] = new ActionScenenodeGraphCreationDialog();
-    
+    m_actiondialogs_apply[DIALOG_SCENEGRAPH_CREATION_TITLE] = new ActionScenenodeGraphCreationApply();
+
+    m_actions[CONTEXTMENU_NEWWORLD] = new ActionWorldCreationDialog();
+
+    m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
+    m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE] = new ActionTransformCreationApply();
+
     m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
@@ -2651,22 +2664,13 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWWORLD:
             {
-                DIALOG_DECLARE( DIALOG_WORLD_CREATION_TITLE )
-                DIALOG_APPENDROOT_STRING( "name", "" )
-                DIALOG_APPLY
-                DIALOG_SHOW
+                m_actions[CONTEXTMENU_NEWWORLD]->Execute();
             }
             break;
 
         case CONTEXTMENU_NEWTRANSFO:
             {
-
-                DIALOG_DECLARE( DIALOG_TRANSFORM_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-                DIALOG_APPLY
-                DIALOG_SHOW
-
+                m_actions[CONTEXTMENU_NEWTRANSFO]->Execute();
             }
             break;
 
@@ -3400,110 +3404,13 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     DIALOG_GETGRID
     DIALOG_PROPERTIES_VARS
 
-
     if( DIALOG_SCENEGRAPH_CREATION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_STRING_PROPERTY( "name", scenegraph_name )
-
-        DIALOG_WXSTRING_TO_DSSTRING( scenegraph_name, scenegraph_name2 )
-
-        if( "" == scenegraph_name2 )
-        {
-            wxMessageBox( "'name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-        }
-        else
-        {
-
-            BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-            entry.name = scenegraph_name2;
-            entry.scenenodegraph = new SceneNodeGraph();
-            entry.treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, scenegraph_name, SCENEGRAPH_ICON_INDEX );
-            entry.current_camera_set = false;
-
-            m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
-
-            m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
-
-            DIALOG_CLOSE
-        }
+        m_actiondialogs_apply[DIALOG_SCENEGRAPH_CREATION_TITLE]->Execute( p_dialog );
     }
     else if( DIALOG_TRANSFORM_CREATION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
-
-        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
-
-        if( "" == alias )
-        {
-            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-            return;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // create the transformation node
-
-        SceneNode<Transformation>* transfo_node;
-        transfo_node = new SceneNode<Transformation>( alias );
-        transfo_node->SetContent( new Transformation );
-
-        transfo_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // now we must found the scenenodegraph we belong to make the RegisterNode() call
-        void* id = find_scenenodegraph_id( p_dialog->GetTreeItem() );
-
-        BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-        entry = m_scenenodegraphs[id];
-        entry.scenenodegraph->RegisterNode( transfo_node );
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        // link to the scenegraph hierarchy
-
-        wxTreeItemId current;
-        current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
-        id = current.GetID();
-
-        if( m_scenenodegraphs.count( id ) > 0 )
-        {
-            // parent is a scenegraph : use SceneNodeGraph::Add() method
-            entry.scenenodegraph->AddNode( transfo_node );
-        }
-        else
-        {
-            BaseSceneNode* parent_node = m_tree_nodes[id];
-            transfo_node->LinkTo( parent_node );
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        // GUI : add item in the tree
-
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, TRANSFO_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
-
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // record the new transformation node and associated metadata
-
-        BasicSceneMainFrame::SceneNodeEntry<Transformation> t_entry;
-
-        t_entry.name = alias;
-        t_entry.scene_node = transfo_node;
-        t_entry.treeitemid = treeitemid;
-
-
-        m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
-
-        m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
-        m_inv_tree_nodes[transfo_node] = t_entry.treeitemid.GetID();
-
-        DIALOG_CLOSE
+        m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )

@@ -23,41 +23,13 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionScenenodeGraphCreationApply.h"
+#include "ActionTransformCreationDialog.h"
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Dynamics;
-using namespace DrawSpace::Utils;
-
-void ActionScenenodeGraphCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
+void ActionTransformCreationDialog::Execute( void )
 {
-    DIALOG_GETGRID
-    DIALOG_PROPERTIES_VARS
+    DIALOG_ACTION_DECLARE( DIALOG_TRANSFORM_CREATION_TITLE )
 
-    DIALOG_GET_STRING_PROPERTY( "name", scenegraph_name )
-
-    DIALOG_WXSTRING_TO_DSSTRING( scenegraph_name, scenegraph_name2 )
-
-    if( "" == scenegraph_name2 )
-    {
-        wxMessageBox( "'name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-    }
-    else
-    {
-
-        BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-        entry.name = scenegraph_name2;
-        entry.scenenodegraph = new SceneNodeGraph();
-        
-        //entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( BasicSceneMainFrame::GetInstance()->m_scenegraphs_root_item, scenegraph_name, SCENEGRAPH_ICON_INDEX );
-        entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( p_dialog->GetTreeItem(), scenegraph_name, SCENEGRAPH_ICON_INDEX );
-        entry.current_camera_set = false;
-
-        BasicSceneMainFrame::GetInstance()->m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
-       
-        DIALOG_CLOSE
-    }
-
+    DIALOG_APPENDROOT_STRING( "scene name", "" )
+    DIALOG_APPLY
+    DIALOG_SHOW
 }
