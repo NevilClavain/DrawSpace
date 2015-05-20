@@ -40,6 +40,8 @@
 #include "ActionTransformCreationApply.h"
 
 #include "ActionTransformEditionDialog.h"
+#include "ActionTransformEditionApply.h"
+#include "ActionTransformEditionSpecific1.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -397,8 +399,9 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE] = new ActionTransformCreationApply();
 
     m_actions[CONTEXTMENU_EDIT_TRANSFORMNODE] = new ActionTransformEditionDialog();
-
+    m_actiondialogs_apply[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionApply();
     m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
+    m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionSpecific1();
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
     m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
@@ -3365,78 +3368,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
     {
-        std::vector<Matrix> new_chain;
-        bool ok = true;
-        Vector values;
-
-
-        DIALOG_EXPLORE_NODES_BEGIN( "", "matrix %d", i, matrix_label )
-
-            DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "type" ), matrix_type )
-            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "x" ), x )
-            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "y" ), y )
-            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "z" ), z )
-            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( matrix_label, "angle" ), angle )
-
-            DIALOG_WXSTRING_TO_DSSTRING( matrix_type, matrix_type2 )
-
-            values[0] = x;
-            values[1] = y;
-            values[2] = z;
-            values[3] = angle;
-           
-            Matrix mat;
-
-            if( "identity" == matrix_type2 )
-            {
-                mat.Identity();            
-            }
-            else if( "translation" == matrix_type2 )
-            {
-                values[3] = 1.0;
-                mat.Translation( values );            
-            }
-            else if( "rotation" == matrix_type2 )
-            {
-                Vector axis = values;
-                axis[3] = 1.0;
-                mat.Rotation( axis, Maths::DegToRad( values[3] ) );
-            }
-            else if( "scaling" == matrix_type2 )
-            {
-                values[3] = 1.0;
-                mat.Scale( values );
-            }
-            else if( "zero" == matrix_type2 )
-            {
-                mat.Zero();            
-            }
-            else if( "undetermined" == matrix_type2 )
-            {
-                ok = false;
-                break;
-            }
-
-            new_chain.push_back( mat );      
-
-
-        DIALOG_EXPLORE_NODES_END( i )
-
-        if( ok )
-        {
-            Transformation* tdet = m_transformation_nodes[/*m_last_clicked_treeitem*/p_dialog->GetTreeItem().GetID()].scene_node->GetContent();
-            //(*tdet) = new_chain;
-
-            tdet->ClearAll();
-            for( size_t i = 0; i < new_chain.size(); i++ )
-            {
-                tdet->PushMatrix( new_chain[i] );
-            }            
-        }
-        else
-        {
-            wxMessageBox( "Edited matrix chain has a undetermined matrix", "DrawFront error", wxICON_ERROR );
-        }
+        m_actiondialogs_apply[DIALOG_TRANSFORM_EDITION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
@@ -4515,8 +4447,7 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
 
     if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_CLEARGRID
-        DIALOG_SETSPECIFIC0COUNTER( 0 )
+        m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE || DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )

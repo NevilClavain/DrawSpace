@@ -301,11 +301,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionTransformEditionApply.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionTransformEditionDialog.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\ActionTransformEditionDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformEditionSpecific1.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformEditionSpecific1.h"
 				>
 			</File>
 			<File
@@ -379,6 +391,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<File
+			RelativePath=".\ActionTransformEditionApply.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
