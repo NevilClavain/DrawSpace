@@ -293,6 +293,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionSpaceBoxCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSpaceBoxCreationDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionTransformCreationApply.cpp"
 				>
 			</File>

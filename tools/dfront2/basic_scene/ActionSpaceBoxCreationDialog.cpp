@@ -23,13 +23,17 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionTransformCreationDialog.h"
+#include "ActionSpaceBoxCreationDialog.h"
 
-void ActionTransformCreationDialog::Execute( void )
+void ActionSpaceBoxCreationDialog::Execute( void )
 {
-    DIALOG_ACTION_DECLARE( DIALOG_TRANSFORM_CREATION_TITLE )
+    DIALOG_ACTION_DECLARE( DIALOG_SPACEBOX_CREATION_TITLE )
 
     DIALOG_APPENDROOT_STRING( "scene name", "" )
+
     DIALOG_APPLY
+    DIALOG_SPECIFIC0( "New pass slot" )
+    DIALOG_SPECIFIC1( "New shaders param slot" )
+
     DIALOG_SHOW
 }

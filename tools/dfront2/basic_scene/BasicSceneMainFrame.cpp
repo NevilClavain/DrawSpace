@@ -37,6 +37,8 @@
 
 #include "ActionWorldCreationDialog.h"
 
+#include "ActionSpaceBoxCreationDialog.h"
+
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
 
@@ -395,6 +397,8 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_SCENEGRAPH_CREATION_TITLE] = new ActionScenenodeGraphCreationApply();
 
     m_actions[CONTEXTMENU_NEWWORLD] = new ActionWorldCreationDialog();
+
+    m_actions[CONTEXTMENU_NEWSPACEBOX] = new ActionSpaceBoxCreationDialog();
 
     m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
     m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE] = new ActionTransformCreationApply();
@@ -2696,15 +2700,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWSPACEBOX:
             {
-                DIALOG_DECLARE( DIALOG_SPACEBOX_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-
-                DIALOG_APPLY
-                DIALOG_SPECIFIC0( "New pass slot" )
-                DIALOG_SPECIFIC1( "New shaders param slot" )
-
-                DIALOG_SHOW
+                m_actions[CONTEXTMENU_NEWSPACEBOX]->Execute();
             }
             break;
 
