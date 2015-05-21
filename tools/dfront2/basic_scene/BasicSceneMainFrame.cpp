@@ -41,6 +41,7 @@
 #include "ActionSpaceBoxCreationSpecific0.h"
 
 #include "ActionChunkCreationDialog.h"
+#include "ActionChunkCreationSpecific0.h"
 
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
@@ -405,6 +406,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific0[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionSpaceBoxCreationSpecific0();
 
     m_actions[CONTEXTMENU_NEWCHUNK] = new ActionChunkCreationDialog();
+    m_actiondialogs_specific0[DIALOG_CHUNK_CREATION_TITLE] = new ActionChunkCreationSpecific0();
 
     m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
     m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE] = new ActionTransformCreationApply();
@@ -4366,38 +4368,9 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
 {
-    DIALOG_GETGRID
-
-    if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_specific0[DIALOG_SPACEBOX_CREATION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
-    {
-        DIALOG_SPECIFIC0_LABEL( "pass %d", pass_label )
-
-        DIALOG_APPENDROOT_NODE( pass_label, pass_root )
-
-        DIALOG_APPENDNODE_ENUM( pass_root, "pass", get_intermediatepasses_list() )
-        DIALOG_APPENDNODE_ENUM( pass_root, "fx", get_fx_list() )
-        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", 10000 )
-      
-        DIALOG_APPENDNODE_NODE( pass_root, "textures", textures_label )
-
-        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", textures_stages_labels )
-        DIALOG_APPENDNODE_ITERATE( textures_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, textures_stages_labels )
-
-        DIALOG_FINALIZE
-    }
-    else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE]->Execute( p_dialog );
-    }
-    else if( DIALOG_INERTBODY_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_specific0[DIALOG_INERTBODY_CREATION_TITLE]->Execute( p_dialog );
-    }
+    wxCharBuffer buffer;
+    DIALOG_WXSTRING_TO_DSSTRING( DIALOG_TITLE, dialog_title )
+    m_actiondialogs_specific0[dialog_title]->Execute( p_dialog );
 }
 
 void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog )

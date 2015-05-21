@@ -213,6 +213,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionChunkCreationSpecific0.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionChunkCreationSpecific0.h"
+				>
+			</File>
+			<File
 				RelativePath=".\actiondialog.h"
 				>
 			</File>
