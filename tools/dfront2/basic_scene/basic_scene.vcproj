@@ -309,6 +309,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionSpaceBoxCreationSpecific0.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSpaceBoxCreationSpecific0.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionTransformCreationApply.cpp"
 				>
 			</File>

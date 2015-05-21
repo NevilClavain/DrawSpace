@@ -38,6 +38,7 @@
 #include "ActionWorldCreationDialog.h"
 
 #include "ActionSpaceBoxCreationDialog.h"
+#include "ActionSpaceBoxCreationSpecific0.h"
 
 #include "ActionChunkCreationDialog.h"
 
@@ -401,6 +402,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWWORLD] = new ActionWorldCreationDialog();
 
     m_actions[CONTEXTMENU_NEWSPACEBOX] = new ActionSpaceBoxCreationDialog();
+    m_actiondialogs_specific0[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionSpaceBoxCreationSpecific0();
 
     m_actions[CONTEXTMENU_NEWCHUNK] = new ActionChunkCreationDialog();
 
@@ -4368,42 +4370,7 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
 
     if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_SPECIFIC0_LABEL( "pass %d", pass_label )
-
-        DIALOG_APPENDROOT_NODE( pass_label, pass_root )
-
-        DIALOG_APPENDNODE_ENUM( pass_root, "pass", get_intermediatepasses_list() )
-        DIALOG_APPENDNODE_ENUM( pass_root, "fx", get_fx_list() )
-        DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", 200 )
-
-        DIALOG_APPENDNODE_NODE( pass_root, "textures", textures_label )
-
-        DIALOG_APPENDNODE_NODE( textures_label, "front", front_label )
-        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", front_textures_stages_labels )
-        DIALOG_APPENDNODE_ITERATE( front_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, front_textures_stages_labels )
-
-        DIALOG_APPENDNODE_NODE( textures_label, "rear", rear_label )
-        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", rear_textures_stages_labels )
-        DIALOG_APPENDNODE_ITERATE( rear_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, rear_textures_stages_labels )
-
-        DIALOG_APPENDNODE_NODE( textures_label, "left", left_label )
-        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", left_textures_stages_labels )
-        DIALOG_APPENDNODE_ITERATE( left_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, left_textures_stages_labels )
-
-        DIALOG_APPENDNODE_NODE( textures_label, "right", right_label )
-        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", right_textures_stages_labels )
-        DIALOG_APPENDNODE_ITERATE( right_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, right_textures_stages_labels )
-
-        DIALOG_APPENDNODE_NODE( textures_label, "top", top_label )
-        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", top_textures_stages_labels )
-        DIALOG_APPENDNODE_ITERATE( top_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, top_textures_stages_labels )
-
-        DIALOG_APPENDNODE_NODE( textures_label, "bottom", bottom_label )
-        DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", bottom_textures_stages_labels )
-        DIALOG_APPENDNODE_ITERATE( bottom_label, insert_void_choice( get_textures_list() ), DIALOG_APPENDNODE_ENUM, bottom_textures_stages_labels )
-
-
-        DIALOG_FINALIZE
+        m_actiondialogs_specific0[DIALOG_SPACEBOX_CREATION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
