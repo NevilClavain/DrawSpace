@@ -23,16 +23,29 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionTransformEditionSpecific1.h"
+#include "ActionAddShaderParam.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
-void ActionTransformEditionSpecific1::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
+
+void ActionAddShaderParam::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     DIALOG_GETGRID
-    DIALOG_CLEARGRID
-    DIALOG_SETSPECIFIC0COUNTER( 0 )
+
+    DIALOG_SPECIFIC1_LABEL( "shader params %d", param_label )
+
+    DIALOG_APPENDROOT_NODE( param_label, param_root )
+    DIALOG_APPENDNODE_ENUM( param_root, "pass", BasicSceneMainFrame::GetInstance()->get_intermediatepasses_list() )
+    DIALOG_APPENDNODE_INTEGER( param_root, "shader index", 0 )
+    DIALOG_APPENDNODE_STRING( param_root, "param id", "" )
+    DIALOG_APPENDNODE_INTEGER( param_root, "register", 0 )
+    DIALOG_APPENDNODE_NODE( param_root, "values", param_values )
+    DIALOG_APPENDNODE_FLOAT( param_values, "x", 0.0 )
+    DIALOG_APPENDNODE_FLOAT( param_values, "y", 0.0 )
+    DIALOG_APPENDNODE_FLOAT( param_values, "z", 0.0 )
+    DIALOG_APPENDNODE_FLOAT( param_values, "w", 0.0 )
+    DIALOG_FINALIZE
 }

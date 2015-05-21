@@ -197,6 +197,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionAddShaderParam.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionAddShaderParam.h"
+				>
+			</File>
+			<File
 				RelativePath=".\actiondialog.h"
 				>
 			</File>

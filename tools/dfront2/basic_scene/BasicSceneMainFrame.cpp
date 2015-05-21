@@ -30,6 +30,7 @@
 #include "ActionPropsDialog.h"
 #include "ActionEditMvtDialog.h"
 #include "ActionAddMatrix.h"
+#include "ActionAddShaderParam.h"
 
 #include "ActionScenenodeGraphCreationDialog.h"
 #include "ActionScenenodeGraphCreationApply.h"
@@ -402,6 +403,12 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionApply();
     m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
     m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionSpecific1();
+
+
+    m_actiondialogs_specific1[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionAddShaderParam();
+
+
+    m_actiondialogs_specific1[DIALOG_CHUNK_CREATION_TITLE] = new ActionAddShaderParam();
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
     m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
@@ -4443,29 +4450,9 @@ void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectProperties
 
 void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
 {
-    DIALOG_GETGRID
-
-    if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE || DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
-    {
-        DIALOG_SPECIFIC1_LABEL( "shader params %d", param_label )
-
-        DIALOG_APPENDROOT_NODE( param_label, param_root )
-        DIALOG_APPENDNODE_ENUM( param_root, "pass", get_intermediatepasses_list() )
-        DIALOG_APPENDNODE_INTEGER( param_root, "shader index", 0 )
-        DIALOG_APPENDNODE_STRING( param_root, "param id", "" )
-        DIALOG_APPENDNODE_INTEGER( param_root, "register", 0 )
-        DIALOG_APPENDNODE_NODE( param_root, "values", param_values )
-        DIALOG_APPENDNODE_FLOAT( param_values, "x", 0.0 )
-        DIALOG_APPENDNODE_FLOAT( param_values, "y", 0.0 )
-        DIALOG_APPENDNODE_FLOAT( param_values, "z", 0.0 )
-        DIALOG_APPENDNODE_FLOAT( param_values, "w", 0.0 )
-        DIALOG_FINALIZE
-    }
+    wxCharBuffer buffer;
+    DIALOG_WXSTRING_TO_DSSTRING( DIALOG_TITLE, dialog_title )
+    m_actiondialogs_specific1[dialog_title]->Execute( p_dialog );
 }
 
 void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node )
