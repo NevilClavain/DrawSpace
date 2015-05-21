@@ -205,6 +205,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionChunkCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionChunkCreationDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\actiondialog.h"
 				>
 			</File>

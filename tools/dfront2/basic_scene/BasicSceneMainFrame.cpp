@@ -39,6 +39,8 @@
 
 #include "ActionSpaceBoxCreationDialog.h"
 
+#include "ActionChunkCreationDialog.h"
+
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
 
@@ -399,6 +401,8 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWWORLD] = new ActionWorldCreationDialog();
 
     m_actions[CONTEXTMENU_NEWSPACEBOX] = new ActionSpaceBoxCreationDialog();
+
+    m_actions[CONTEXTMENU_NEWCHUNK] = new ActionChunkCreationDialog();
 
     m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
     m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE] = new ActionTransformCreationApply();
@@ -2665,11 +2669,6 @@ void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
     dialog->Show();
 }
 
-
-
-
-
-
 void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 {   
  	switch( p_evt.GetId() ) 
@@ -2706,17 +2705,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWCHUNK:
             {
-                DIALOG_DECLARE( DIALOG_CHUNK_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-
-                DIALOG_APPENDROOT_ENUM( "meshe",  get_meshes_list() )
-
-                DIALOG_APPLY
-                DIALOG_SPECIFIC0( "New pass slot" )
-                DIALOG_SPECIFIC1( "New shaders param slot" )
-
-                DIALOG_SHOW
+                m_actions[CONTEXTMENU_NEWCHUNK]->Execute();
             }
             break;
 
