@@ -46,6 +46,8 @@ public:
 
     BasicSceneScriptEditFrame( wxWindow* p_parent, const dsstring& p_title, dsstring* p_text, bool* p_script_state );
 
+    void Show( void );
+
 	
 };
 

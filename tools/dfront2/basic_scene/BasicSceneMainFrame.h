@@ -445,6 +445,8 @@ public:
 
     std::map<dsstring, ActionScript*>                                                       m_actionscripts;
 
+    std::map<void*, BasicSceneScriptEditFrame*>                                             m_script_edit_frames;
+
     //////////////////////////////////////////////////////////////////////////////////
 
     std::vector<DrawSpace::Core::Configurable*>             m_ordered_configs;

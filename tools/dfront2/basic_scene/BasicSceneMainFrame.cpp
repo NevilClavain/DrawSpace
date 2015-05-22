@@ -712,6 +712,17 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
         m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
         m_inv_tree_nodes[transfo_node] = t_entry.treeitemid.GetID();
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "Transformation node: ";
+        title += m_transformation_nodes[t_entry.treeitemid.GetID()].name;
+        script_text = &m_transformation_nodes[t_entry.treeitemid.GetID()].script;
+        script_state = &m_transformation_nodes[t_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
+
     }
 
 
@@ -841,6 +852,19 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             // store spacebox description
 
             m_spacebox_descriptors[t_entry.treeitemid.GetID()] = sb_descr;
+
+            //////////////////////////////////////
+
+            dsstring title;
+            dsstring* script_text;
+            bool * script_state;
+            title = "Spacebox node: ";
+            title += m_spacebox_nodes[t_entry.treeitemid.GetID()].name;
+            script_text = &m_spacebox_nodes[t_entry.treeitemid.GetID()].script;
+            script_state = &m_spacebox_nodes[t_entry.treeitemid.GetID()].script_enabled;
+            BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+            m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
+
         }
     }
     else if( "CameraPointNode:LinkTo" == script_call_id )
@@ -942,6 +966,19 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_camera_nodes[c_entry.treeitemid.GetID()] = c_entry;
         m_tree_nodes[c_entry.treeitemid.GetID()] = cam_node;
         m_inv_tree_nodes[cam_node] = c_entry.treeitemid.GetID();
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "CameraPoint node: ";
+        title += m_camera_nodes[c_entry.treeitemid.GetID()].name;
+        script_text = &m_camera_nodes[c_entry.treeitemid.GetID()].script;
+        script_state = &m_camera_nodes[c_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+
+
+
     }
     else if( "ChunkNode:LinkTo" == script_call_id )
     {
@@ -1066,6 +1103,18 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             // store chunk description
 
             m_chunk_descriptors[c_entry.treeitemid.GetID()] = chunk_descr;
+
+            /////////////////////////////////////////////
+
+            dsstring title;
+            dsstring* script_text;
+            bool * script_state;
+            title = "Chunk node: ";
+            title += m_chunk_nodes[c_entry.treeitemid.GetID()].name;
+            script_text = &m_chunk_nodes[c_entry.treeitemid.GetID()].script;
+            script_state = &m_chunk_nodes[c_entry.treeitemid.GetID()].script_enabled;
+            BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+            m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
             
         }
     }
@@ -1553,6 +1602,16 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_tree_nodes[f_entry.treeitemid.GetID()] = fps_node;
         m_inv_tree_nodes[fps_node] = f_entry.treeitemid.GetID();
 
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "FPS movement node: ";
+        title += m_fps_nodes[f_entry.treeitemid.GetID()].name;
+        script_text = &m_fps_nodes[f_entry.treeitemid.GetID()].script;
+        script_state = &m_fps_nodes[f_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
+
     }
 
     else if( "LinearMovementNode:LinearMovementNode" == script_call_id )
@@ -1677,6 +1736,17 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_lin_nodes[l_entry.treeitemid.GetID()] = l_entry;
         m_tree_nodes[l_entry.treeitemid.GetID()] = lin_node;
         m_inv_tree_nodes[lin_node] = l_entry.treeitemid.GetID();
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "Linear movement node: ";
+        title += m_lin_nodes[l_entry.treeitemid.GetID()].name;
+        script_text = &m_lin_nodes[l_entry.treeitemid.GetID()].script;
+        script_state = &m_lin_nodes[l_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
+
     }
 
     else if( "CircularMovementNode:CircularMovementNode" == script_call_id )
@@ -1805,6 +1875,18 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_tree_nodes[c_entry.treeitemid.GetID()] = circ_node;
         m_inv_tree_nodes[circ_node] = c_entry.treeitemid.GetID();
 
+        /////////////////////////////////////////////////////////////
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "Circular movement node: ";
+        title += m_circ_nodes[c_entry.treeitemid.GetID()].name;
+        script_text = &m_circ_nodes[c_entry.treeitemid.GetID()].script;
+        script_state = &m_circ_nodes[c_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+
     }
 
     else if( "FreeMovementNode:FreeMovementNode" == script_call_id )
@@ -1925,6 +2007,18 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
         m_free_nodes[f_entry.treeitemid.GetID()] = f_entry;
         m_tree_nodes[f_entry.treeitemid.GetID()] = free_node;
         m_inv_tree_nodes[free_node] = f_entry.treeitemid.GetID();
+
+        //////////////////////////////////
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "Free movement node: ";
+        title += m_free_nodes[f_entry.treeitemid.GetID()].name;
+        script_text = &m_free_nodes[f_entry.treeitemid.GetID()].script;
+        script_state = &m_free_nodes[f_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
 
     }
 
@@ -2743,7 +2837,14 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_EDIT_NODESCRIPT:
             {
+                void* id = m_last_clicked_treeitem.GetID();
 
+                if( m_script_edit_frames.count( id ) > 0 )
+                {
+                    m_script_edit_frames[id]->Show();
+                }
+
+                /*
                 dsstring title;
                 dsstring* script_text;
                 bool * script_state;
@@ -2825,6 +2926,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                 BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
                 frame->Show();
+                */
             }
             break;
 
@@ -3544,6 +3646,21 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             // store spacebox description
 
             m_spacebox_descriptors[t_entry.treeitemid.GetID()] = descr;
+
+            //////////////////////////////////////////////////////
+
+            dsstring title;
+            dsstring* script_text;
+            bool * script_state;
+            title = "Spacebox node: ";
+            title += m_spacebox_nodes[t_entry.treeitemid.GetID()].name;
+            script_text = &m_spacebox_nodes[t_entry.treeitemid.GetID()].script;
+            script_state = &m_spacebox_nodes[t_entry.treeitemid.GetID()].script_enabled;
+            BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+            m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
+
+
+            //////////////////////////////////////////////////////
             
             DIALOG_CLOSE
         }
@@ -3704,6 +3821,21 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
             // store chunk description
 
             m_chunk_descriptors[c_entry.treeitemid.GetID()] = descr;
+
+            /////////////////////////////////////////////////////////////////////////
+
+            dsstring title;
+            dsstring* script_text;
+            bool * script_state;
+            title = "Chunk node: ";
+            title += m_chunk_nodes[c_entry.treeitemid.GetID()].name;
+            script_text = &m_chunk_nodes[c_entry.treeitemid.GetID()].script;
+            script_state = &m_chunk_nodes[c_entry.treeitemid.GetID()].script_enabled;
+            BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+            m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+
+
+            /////////////////////////////////////////////////////////////////////////
             
             DIALOG_CLOSE
 
@@ -3863,6 +3995,19 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_tree_nodes[c_entry.treeitemid.GetID()] = camera_node;
         m_inv_tree_nodes[camera_node] = c_entry.treeitemid.GetID();
 
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "CameraPoint node: ";
+        title += m_camera_nodes[c_entry.treeitemid.GetID()].name;
+        script_text = &m_camera_nodes[c_entry.treeitemid.GetID()].script;
+        script_state = &m_camera_nodes[c_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+
+
+
         DIALOG_CLOSE
     }
 
@@ -3986,6 +4131,18 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_tree_nodes[f_entry.treeitemid.GetID()] = fps_node;
         m_inv_tree_nodes[fps_node] = f_entry.treeitemid.GetID();
 
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "FPS movement node: ";
+        title += m_fps_nodes[f_entry.treeitemid.GetID()].name;
+        script_text = &m_fps_nodes[f_entry.treeitemid.GetID()].script;
+        script_state = &m_fps_nodes[f_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
+
+
         DIALOG_CLOSE
 
     }
@@ -4029,7 +4186,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         /////////////////////////////////////////////////////////////////////////////////
 
         // now we must found the scenenodegraph we belong to make the RegisterNode() call
-        void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
+        void* id = find_scenenodegraph_id( p_dialog->GetTreeItem() );
 
         BasicSceneMainFrame::SceneNodeGraphEntry entry;
 
@@ -4076,6 +4233,21 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         m_tree_nodes[l_entry.treeitemid.GetID()] = lin_node;
         m_inv_tree_nodes[lin_node] = l_entry.treeitemid.GetID();
+
+        /////////////////////////////////////////////////////////////////////////
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "Linear movement node: ";
+        title += m_lin_nodes[l_entry.treeitemid.GetID()].name;
+        script_text = &m_lin_nodes[l_entry.treeitemid.GetID()].script;
+        script_state = &m_lin_nodes[l_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
+
+
+        /////////////////////////////////////////////////////////////////////////
 
         DIALOG_CLOSE
     }
@@ -4171,6 +4343,20 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         m_tree_nodes[f_entry.treeitemid.GetID()] = free_node;
         m_inv_tree_nodes[free_node] = f_entry.treeitemid.GetID();
 
+        ///////////////////////////////////////////////////////////////////////////
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "Free movement node: ";
+        title += m_free_nodes[f_entry.treeitemid.GetID()].name;
+        script_text = &m_free_nodes[f_entry.treeitemid.GetID()].script;
+        script_state = &m_free_nodes[f_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
+
+        ///////////////////////////////////////////////////////////////////////////
+
         DIALOG_CLOSE
 
     }
@@ -4263,6 +4449,20 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
         m_tree_nodes[c_entry.treeitemid.GetID()] = circ_node;
         m_inv_tree_nodes[circ_node] = c_entry.treeitemid.GetID();
+
+        ///////////////////////////////////////////////////////////////////////////////////
+
+        dsstring title;
+        dsstring* script_text;
+        bool * script_state;
+        title = "Circular movement node: ";
+        title += m_circ_nodes[c_entry.treeitemid.GetID()].name;
+        script_text = &m_circ_nodes[c_entry.treeitemid.GetID()].script;
+        script_state = &m_circ_nodes[c_entry.treeitemid.GetID()].script_enabled;
+        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
+        m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+
+        ///////////////////////////////////////////////////////////////////////////////////
 
         DIALOG_CLOSE
     }

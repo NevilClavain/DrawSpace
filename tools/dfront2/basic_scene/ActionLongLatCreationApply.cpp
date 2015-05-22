@@ -106,6 +106,20 @@ void ActionLongLatCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_di
     BasicSceneMainFrame::GetInstance()->m_tree_nodes[l_entry.treeitemid.GetID()] = ll_node;
     BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[ll_node] = l_entry.treeitemid.GetID();
 
+    ///////////////////////////////////////////////////////////////////
+
+    dsstring title;
+    dsstring* script_text;
+    bool * script_state;
+    title = "LongLat movement node: ";
+    title += BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].name;
+    script_text = &BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].script;
+    script_state = &BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].script_enabled;
+    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
+
+    ///////////////////////////////////////////////////////////////////
+
     DIALOG_CLOSE
 }
 

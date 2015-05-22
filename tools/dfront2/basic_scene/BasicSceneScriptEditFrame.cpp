@@ -30,15 +30,15 @@ m_text( p_text ),
 m_script_state( p_script_state )
 {
     m_script_textCtrl->SetFont( m_console_font );
-    m_script_textCtrl->SetValue( p_text->c_str() );
-
-    m_activation_checkBox->SetValue( *m_script_state );
+    //m_script_textCtrl->SetValue( p_text->c_str() );
+    //m_activation_checkBox->SetValue( *m_script_state );
 }
 
 void BasicSceneScriptEditFrame::OnCloseButtonClicked( wxCommandEvent& event )
 {
     *m_script_state = m_activation_checkBox->GetValue();
-    Close();
+    //Close();
+    ScriptEditFrame::Show( false );
 }
 
 void BasicSceneScriptEditFrame::OnApplyButtonClicked( wxCommandEvent& event )
@@ -63,4 +63,11 @@ void BasicSceneScriptEditFrame::OnLoadButtonClicked( wxCommandEvent& event )
 void BasicSceneScriptEditFrame::OnClearButtonClicked( wxCommandEvent& event )
 {
     m_script_textCtrl->Clear();
+}
+
+void BasicSceneScriptEditFrame::Show( void )
+{
+    m_script_textCtrl->SetValue( m_text->c_str() );
+    m_activation_checkBox->SetValue( *m_script_state );
+    ScriptEditFrame::Show();    
 }
