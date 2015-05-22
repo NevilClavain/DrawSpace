@@ -62,6 +62,8 @@
 #include "ActionInertBodyCreationDialog.h"
 #include "ActionInertBodyCreationApply.h"
 
+#include "ActionNodeScriptEditionDialog.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -440,6 +442,9 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWINERTBODY] = new ActionInertBodyCreationDialog();
     m_actiondialogs_specific0[DIALOG_INERTBODY_CREATION_TITLE] = new ActionAddMatrix();
     m_actiondialogs_apply[DIALOG_INERTBODY_CREATION_TITLE] = new ActionInertBodyCreationApply();
+
+
+    m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2837,96 +2842,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_EDIT_NODESCRIPT:
             {
-                void* id = m_last_clicked_treeitem.GetID();
-
-                if( m_script_edit_frames.count( id ) > 0 )
-                {
-                    m_script_edit_frames[id]->Show();
-                }
-
-                /*
-                dsstring title;
-                dsstring* script_text;
-                bool * script_state;
-                void* id = m_last_clicked_treeitem.GetID();
-
-                if( m_transformation_nodes.count( id ) > 0 )
-                {
-                    title = "Transformation node: ";
-                    title += m_transformation_nodes[id].name;
-
-                    script_text = &m_transformation_nodes[id].script;
-                    script_state = &m_transformation_nodes[id].script_enabled;
-                }
-                else if( m_spacebox_nodes.count( id ) > 0 )
-                {
-                    title = "Spacebox node: ";
-                    title += m_spacebox_nodes[id].name;
-
-                    script_text = &m_spacebox_nodes[id].script;
-                    script_state = &m_spacebox_nodes[id].script_enabled;
-                }
-                else if( m_camera_nodes.count( id ) > 0 )
-                {
-                    title = "CameraPoint node: ";
-                    title += m_camera_nodes[id].name;
-
-                    script_text = &m_camera_nodes[id].script;
-                    script_state = &m_camera_nodes[id].script_enabled;
-                }
-                else if( m_fps_nodes.count( id ) > 0 )
-                {
-                    title = "FPS movement node: ";
-                    title += m_fps_nodes[id].name;
-
-                    script_text = &m_fps_nodes[id].script;
-                    script_state = &m_fps_nodes[id].script_enabled;
-                }
-                else if( m_chunk_nodes.count( id ) > 0 )
-                {
-                    title = "Chunk node: ";
-                    title += m_chunk_nodes[id].name;
-
-                    script_text = &m_chunk_nodes[id].script;
-                    script_state = &m_chunk_nodes[id].script_enabled;
-                }
-                else if( m_lin_nodes.count( id ) > 0 )
-                {
-                    title = "Linear movement node: ";
-                    title += m_lin_nodes[id].name;
-
-                    script_text = &m_lin_nodes[id].script;
-                    script_state = &m_lin_nodes[id].script_enabled;
-                }
-                else if( m_free_nodes.count( id ) > 0 )
-                {
-                    title = "Free movement node: ";
-                    title += m_free_nodes[id].name;
-
-                    script_text = &m_free_nodes[id].script;
-                    script_state = &m_free_nodes[id].script_enabled;
-                }
-                else if( m_circ_nodes.count( id ) > 0 )
-                {
-                    title = "Circular movement node: ";
-                    title += m_circ_nodes[id].name;
-
-                    script_text = &m_circ_nodes[id].script;
-                    script_state = &m_circ_nodes[id].script_enabled;
-                }
-                else if( m_ll_nodes.count( id ) > 0 )
-                {
-                    title = "LongLat movement node: ";
-                    title += m_ll_nodes[id].name;
-
-                    script_text = &m_ll_nodes[id].script;
-                    script_state = &m_ll_nodes[id].script_enabled;
-                }
-
-
-                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-                frame->Show();
-                */
+                m_actions[CONTEXTMENU_EDIT_NODESCRIPT]->Execute();
             }
             break;
 

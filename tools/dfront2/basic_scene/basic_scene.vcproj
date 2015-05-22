@@ -289,6 +289,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionNodeScriptEditionDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionNodeScriptEditionDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionPropsDialog.cpp"
 				>
 			</File>
