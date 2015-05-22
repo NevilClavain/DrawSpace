@@ -40,6 +40,8 @@
 #include "ActionSpaceBoxCreationDialog.h"
 #include "ActionSpaceBoxCreationSpecific0.h"
 
+#include "ActionSpaceBoxEditionDialog.h"
+
 #include "ActionChunkCreationDialog.h"
 #include "ActionChunkCreationSpecific0.h"
 
@@ -418,6 +420,8 @@ m_delta_mouse_init( true )
 
 
     m_actiondialogs_specific1[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionAddShaderParam();
+
+    m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
 
 
     m_actiondialogs_specific1[DIALOG_CHUNK_CREATION_TITLE] = new ActionAddShaderParam();
@@ -2715,7 +2719,8 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
 
         case CONTEXTMENU_EDIT_SBNODE:
-            {               
+            {
+                /*
                 void* id = m_last_clicked_treeitem.GetID();
                 if( m_spacebox_descriptors.count( id ) > 0 )
                 {
@@ -2752,6 +2757,9 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
                     DIALOG_SHOW
                 }
+                */
+
+                m_actions[CONTEXTMENU_EDIT_SBNODE]->Execute();
             }
             break;
 
