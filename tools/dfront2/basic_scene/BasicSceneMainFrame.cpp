@@ -54,6 +54,8 @@
 #include "ActionTransformEditionApply.h"
 #include "ActionTransformEditionSpecific1.h"
 
+#include "ActionCameraPointCreationDialog.h"
+
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
 #include "ActionLongLatLinkTo.h"
@@ -427,7 +429,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
     m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionSpecific1();
 
-
+    m_actions[CONTEXTMENU_NEWCAMERA] = new ActionCameraPointCreationDialog();
 
     m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
 
@@ -2882,11 +2884,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWCAMERA:
             {
-                DIALOG_DECLARE( DIALOG_CAMERA_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-                DIALOG_APPLY
-                DIALOG_SHOW
+                m_actions[CONTEXTMENU_NEWCAMERA]->Execute();
             }
             break;
 
