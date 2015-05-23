@@ -23,14 +23,14 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionMouseMoveScriptEditionDialog.h"
+#include "ActionKeyupScriptEditionDialog.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
-void ActionMouseMoveScriptEditionDialog::Execute( void )
+void ActionKeyupScriptEditionDialog::Execute( void )
 {
-    BasicSceneMainFrame::GetInstance()->m_mousemovescripteditionframe->Show();
+    BasicSceneMainFrame::GetInstance()->m_keyupscripteditionframe->Show();
 }

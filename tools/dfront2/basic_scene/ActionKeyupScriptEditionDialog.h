@@ -20,17 +20,14 @@
 *
 */
 
-#include <wx/wx.h>
-#include "BasicSceneMainFrame.h"
+#ifndef _ACTIONKEYUPSCRIPTEDITIONDIALOG_H_
+#define _ACTIONKEYUPSCRIPTEDITIONDIALOG_H_
+#include "action.h"
 
-#include "ActionMouseMoveScriptEditionDialog.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Dynamics;
-using namespace DrawSpace::Utils;
-
-void ActionMouseMoveScriptEditionDialog::Execute( void )
+class ActionKeyupScriptEditionDialog : public Action
 {
-    BasicSceneMainFrame::GetInstance()->m_mousemovescripteditionframe->Show();
-}
+public:
+    void Execute( void );
+};
+
+#endif

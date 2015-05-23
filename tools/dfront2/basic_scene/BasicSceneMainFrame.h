@@ -513,6 +513,9 @@ public:
 
     BasicSceneScriptEditFrame*                              m_mousemovescripteditionframe;
 
+    BasicSceneScriptEditFrame*                              m_keydownscripteditionframe;
+    BasicSceneScriptEditFrame*                              m_keyupscripteditionframe;
+
     void on_scripting_error( const dsstring& p_error );
     void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );
 

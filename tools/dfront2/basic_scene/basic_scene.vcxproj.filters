@@ -34,6 +34,7 @@
     <ClCompile Include="ActionTransformEditionSpecific1.cpp" />
     <ClCompile Include="ActionWorldCreationDialog.cpp" />
     <ClCompile Include="ActionMouseMoveScriptEditionDialog.cpp" />
+    <ClCompile Include="ActionKeyupScriptEditionDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -72,5 +73,6 @@
     <ClInclude Include="ActionTransformEditionSpecific1.h" />
     <ClInclude Include="ActionWorldCreationDialog.h" />
     <ClInclude Include="ActionMouseMoveScriptEditionDialog.h" />
+    <ClInclude Include="ActionKeyupScriptEditionDialog.h" />
   </ItemGroup>
 </Project>
