@@ -55,6 +55,7 @@
 #include "ActionTransformEditionSpecific1.h"
 
 #include "ActionCameraPointCreationDialog.h"
+#include "ActionCameraPointSelection.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -430,6 +431,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionSpecific1();
 
     m_actions[CONTEXTMENU_NEWCAMERA] = new ActionCameraPointCreationDialog();
+    m_actions[CONTEXTMENU_SELECT_CAMERA] = new ActionCameraPointSelection();
 
     m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
 
@@ -2890,19 +2892,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_SELECT_CAMERA:
             {
-                void* id = find_scenenodegraph_id( m_last_clicked_treeitem );
-
-                if( m_scenenodegraphs[id].current_camera_set )
-                {
-                    m_scenegraphs_treeCtrl->SetItemImage( m_scenenodegraphs[id].current_camera, CAMERA_ICON_INDEX );
-                }
-
-                m_scenegraphs_treeCtrl->SetItemImage( m_last_clicked_treeitem, CAMERASEL_ICON_INDEX );
-                m_scenenodegraphs[id].current_camera_set = true;
-                m_scenenodegraphs[id].current_camera = m_last_clicked_treeitem;
-
-                m_scenenodegraphs[id].scenenodegraph->SetCurrentCamera( m_camera_nodes[m_last_clicked_treeitem.GetID()].name );
-
+                m_actions[CONTEXTMENU_SELECT_CAMERA]->Execute();
             }
             break;
 
@@ -4558,4 +4548,9 @@ wxTreeItemId BasicSceneMainFrame::AppendItem( const wxTreeItemId& p_parent_item,
     wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( p_parent_item, p_text, p_image );
     BasicSceneMainFrame::GetInstance()->m_scenegraphs_treeCtrl->ExpandAllChildren( p_parent_item );
     return treeitemid;
+}
+
+void BasicSceneMainFrame::SetItemImage( const wxTreeItemId& p_item, int p_image )
+{
+    m_scenegraphs_treeCtrl->SetItemImage( p_item, p_image );
 }

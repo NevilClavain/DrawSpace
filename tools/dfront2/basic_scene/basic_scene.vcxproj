@@ -87,6 +87,7 @@
     <ClCompile Include="ActionAddMatrix.cpp" />
     <ClCompile Include="ActionAddShaderParam.cpp" />
     <ClCompile Include="ActionCameraPointCreationDialog.cpp" />
+    <ClCompile Include="ActionCameraPointSelection.cpp" />
     <ClCompile Include="ActionChunkCreationDialog.cpp" />
     <ClCompile Include="ActionChunkCreationSpecific0.cpp" />
     <ClCompile Include="ActionChunkEditionDialog.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="ActionAddMatrix.h" />
     <ClInclude Include="ActionAddShaderParam.h" />
     <ClInclude Include="ActionCameraPointCreationDialog.h" />
+    <ClInclude Include="ActionCameraPointSelection.h" />
     <ClInclude Include="ActionChunkCreationDialog.h" />
     <ClInclude Include="ActionChunkCreationSpecific0.h" />
     <ClInclude Include="ActionChunkEditionDialog.h" />

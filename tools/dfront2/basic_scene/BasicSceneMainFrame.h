@@ -601,6 +601,8 @@ public:
 
     wxTreeItemId AppendItem( const wxTreeItemId& p_parent_item, const wxString& p_text, int p_image );
 
+    void SetItemImage( const wxTreeItemId& p_item, int p_image );
+
     friend class RenderTimer;
 };
 

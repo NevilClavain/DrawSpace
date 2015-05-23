@@ -37,6 +37,7 @@
     <ClCompile Include="ActionKeyupScriptEditionDialog.cpp" />
     <ClCompile Include="ActionKeydownScriptEditionDialogcpp.cpp" />
     <ClCompile Include="ActionCameraPointCreationDialog.cpp" />
+    <ClCompile Include="ActionCameraPointSelection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -78,5 +79,6 @@
     <ClInclude Include="ActionKeyupScriptEditionDialog.h" />
     <ClInclude Include="ActionKeydownScriptEditionDialog.h" />
     <ClInclude Include="ActionCameraPointCreationDialog.h" />
+    <ClInclude Include="ActionCameraPointSelection.h" />
   </ItemGroup>
 </Project>
