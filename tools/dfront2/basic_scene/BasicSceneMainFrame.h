@@ -511,7 +511,7 @@ public:
 
     DrawSpace::Utils::MouseMovementsDescriptor*             m_mousemove_descr;
 
-
+    BasicSceneScriptEditFrame*                              m_mousemovescripteditionframe;
 
     void on_scripting_error( const dsstring& p_error );
     void on_scripting_calls( DrawSpace::Core::PropertyPool& p_propertypool );

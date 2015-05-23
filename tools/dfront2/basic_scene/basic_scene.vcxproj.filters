@@ -19,6 +19,21 @@
     <ClCompile Include="ActionPropsDialog.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationDialog.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationApply.cpp" />
+    <ClCompile Include="ActionAddShaderParam.cpp" />
+    <ClCompile Include="ActionChunkCreationDialog.cpp" />
+    <ClCompile Include="ActionChunkCreationSpecific0.cpp" />
+    <ClCompile Include="ActionChunkEditionDialog.cpp" />
+    <ClCompile Include="ActionNodeScriptEditionDialog.cpp" />
+    <ClCompile Include="ActionSpaceBoxCreationDialog.cpp" />
+    <ClCompile Include="ActionSpaceBoxCreationSpecific0.cpp" />
+    <ClCompile Include="ActionSpaceBoxEditionDialog.cpp" />
+    <ClCompile Include="ActionTransformCreationApply.cpp" />
+    <ClCompile Include="ActionTransformCreationDialog.cpp" />
+    <ClCompile Include="ActionTransformEditionApply.cpp" />
+    <ClCompile Include="ActionTransformEditionDialog.cpp" />
+    <ClCompile Include="ActionTransformEditionSpecific1.cpp" />
+    <ClCompile Include="ActionWorldCreationDialog.cpp" />
+    <ClCompile Include="ActionMouseMoveScriptEditionDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -42,5 +57,20 @@
     <ClInclude Include="ActionPropsDialog.h" />
     <ClInclude Include="ActionScenenodeGraphCreationDialog.h" />
     <ClInclude Include="ActionScenenodeGraphCreationApply.h" />
+    <ClInclude Include="ActionAddShaderParam.h" />
+    <ClInclude Include="ActionChunkCreationDialog.h" />
+    <ClInclude Include="ActionChunkCreationSpecific0.h" />
+    <ClInclude Include="ActionChunkEditionDialog.h" />
+    <ClInclude Include="ActionNodeScriptEditionDialog.h" />
+    <ClInclude Include="ActionSpaceBoxCreationDialog.h" />
+    <ClInclude Include="ActionSpaceBoxCreationSpecific0.h" />
+    <ClInclude Include="ActionSpaceBoxEditionDialog.h" />
+    <ClInclude Include="ActionTransformCreationApply.h" />
+    <ClInclude Include="ActionTransformCreationDialog.h" />
+    <ClInclude Include="ActionTransformEditionApply.h" />
+    <ClInclude Include="ActionTransformEditionDialog.h" />
+    <ClInclude Include="ActionTransformEditionSpecific1.h" />
+    <ClInclude Include="ActionWorldCreationDialog.h" />
+    <ClInclude Include="ActionMouseMoveScriptEditionDialog.h" />
   </ItemGroup>
 </Project>

@@ -85,6 +85,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActionAddMatrix.cpp" />
+    <ClCompile Include="ActionAddShaderParam.cpp" />
+    <ClCompile Include="ActionChunkCreationDialog.cpp" />
+    <ClCompile Include="ActionChunkCreationSpecific0.cpp" />
+    <ClCompile Include="ActionChunkEditionDialog.cpp" />
     <ClCompile Include="ActionEditMvtDialog.cpp" />
     <ClCompile Include="ActionInertBodyCreationApply.cpp" />
     <ClCompile Include="ActionInertBodyCreationDialog.cpp" />
@@ -92,9 +96,20 @@
     <ClCompile Include="ActionLongLatCreationDialog.cpp" />
     <ClCompile Include="ActionLongLatLinkTo.cpp" />
     <ClCompile Include="ActionLongLatLongLat.cpp" />
+    <ClCompile Include="ActionMouseMoveScriptEditionDialog.cpp" />
+    <ClCompile Include="ActionNodeScriptEditionDialog.cpp" />
     <ClCompile Include="ActionPropsDialog.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationApply.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationDialog.cpp" />
+    <ClCompile Include="ActionSpaceBoxCreationDialog.cpp" />
+    <ClCompile Include="ActionSpaceBoxCreationSpecific0.cpp" />
+    <ClCompile Include="ActionSpaceBoxEditionDialog.cpp" />
+    <ClCompile Include="ActionTransformCreationApply.cpp" />
+    <ClCompile Include="ActionTransformCreationDialog.cpp" />
+    <ClCompile Include="ActionTransformEditionApply.cpp" />
+    <ClCompile Include="ActionTransformEditionDialog.cpp" />
+    <ClCompile Include="ActionTransformEditionSpecific1.cpp" />
+    <ClCompile Include="ActionWorldCreationDialog.cpp" />
     <ClCompile Include="adapters.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="BasicSceneMainFrame.cpp" />
@@ -106,6 +121,10 @@
   <ItemGroup>
     <ClInclude Include="action.h" />
     <ClInclude Include="ActionAddMatrix.h" />
+    <ClInclude Include="ActionAddShaderParam.h" />
+    <ClInclude Include="ActionChunkCreationDialog.h" />
+    <ClInclude Include="ActionChunkCreationSpecific0.h" />
+    <ClInclude Include="ActionChunkEditionDialog.h" />
     <ClInclude Include="actiondialog.h" />
     <ClInclude Include="ActionEditMvtDialog.h" />
     <ClInclude Include="ActionInertBodyCreationApply.h" />
@@ -114,10 +133,21 @@
     <ClInclude Include="ActionLongLatCreationDialog.h" />
     <ClInclude Include="ActionLongLatLinkTo.h" />
     <ClInclude Include="ActionLongLatLongLat.h" />
+    <ClInclude Include="ActionMouseMoveScriptEditionDialog.h" />
+    <ClInclude Include="ActionNodeScriptEditionDialog.h" />
     <ClInclude Include="ActionPropsDialog.h" />
     <ClInclude Include="ActionScenenodeGraphCreationApply.h" />
     <ClInclude Include="ActionScenenodeGraphCreationDialog.h" />
     <ClInclude Include="actionscript.h" />
+    <ClInclude Include="ActionSpaceBoxCreationDialog.h" />
+    <ClInclude Include="ActionSpaceBoxCreationSpecific0.h" />
+    <ClInclude Include="ActionSpaceBoxEditionDialog.h" />
+    <ClInclude Include="ActionTransformCreationApply.h" />
+    <ClInclude Include="ActionTransformCreationDialog.h" />
+    <ClInclude Include="ActionTransformEditionApply.h" />
+    <ClInclude Include="ActionTransformEditionDialog.h" />
+    <ClInclude Include="ActionTransformEditionSpecific1.h" />
+    <ClInclude Include="ActionWorldCreationDialog.h" />
     <ClInclude Include="adapters.h" />
     <ClInclude Include="app.h" />
     <ClInclude Include="BasicSceneMainFrame.h" />
