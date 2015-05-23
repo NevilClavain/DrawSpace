@@ -65,6 +65,7 @@
 #include "ActionNodeScriptEditionDialog.h"
 #include "ActionMouseMoveScriptEditionDialog.h"
 #include "ActionKeyupScriptEditionDialog.h"
+#include "ActionKeydownScriptEditionDialog.h"
 
 
 using namespace DrawSpace;
@@ -449,6 +450,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
 
     m_actions[CONTEXTMENU_EDIT_MOUSEMOVESCRIPT] = new ActionMouseMoveScriptEditionDialog();
+    m_actions[CONTEXTMENU_EDIT_KEYDOWNSCRIPT] = new ActionKeydownScriptEditionDialog();
     m_actions[CONTEXTMENU_EDIT_KEYUPSCRIPT] = new ActionKeyupScriptEditionDialog();
 
 
@@ -465,6 +467,7 @@ m_delta_mouse_init( true )
 
     m_mousemovescripteditionframe = new BasicSceneScriptEditFrame( this, "Mouse move", &m_mousemove_script, &m_mousemove_script_enabled );
     m_keyupscripteditionframe = new BasicSceneScriptEditFrame( this, "Key up", &m_keyup_script, &m_keyup_script_enabled );
+    m_keydownscripteditionframe = new BasicSceneScriptEditFrame( this, "Key down", &m_keydown_script, &m_keydown_script_enabled );
 
 
 #ifndef RENDER_IDLE
@@ -2867,16 +2870,12 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_EDIT_KEYDOWNSCRIPT:
             {
-                BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, "Key down", &m_keydown_script, &m_keydown_script_enabled );
-                frame->Show();
+                m_actions[CONTEXTMENU_EDIT_KEYDOWNSCRIPT]->Execute();
             }
             break;
 
         case CONTEXTMENU_EDIT_KEYUPSCRIPT:
             {
-                //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, "Key up", &m_keyup_script, &m_keyup_script_enabled );
-                //frame->Show();
-
                 m_actions[CONTEXTMENU_EDIT_KEYUPSCRIPT]->Execute();
             }
             break;
