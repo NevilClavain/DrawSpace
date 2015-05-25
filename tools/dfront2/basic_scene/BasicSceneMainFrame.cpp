@@ -59,6 +59,7 @@
 #include "ActionCameraPointEditionDialog.h"
 
 #include "ActionFPSMvtCreationDialog.h"
+#include "ActionLinearMvtCreationDialog.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -444,6 +445,8 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific1[DIALOG_CHUNK_CREATION_TITLE] = new ActionAddShaderParam();
 
     m_actions[CONTEXTMENU_NEWFPSMVT] = new ActionFPSMvtCreationDialog();
+
+    m_actions[CONTEXTMENU_NEWLINEARMVT] = new ActionLinearMvtCreationDialog();
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
     m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
@@ -2915,24 +2918,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWLINEARMVT:
             {
-                DIALOG_DECLARE( DIALOG_LINMVT_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-                DIALOG_APPENDROOT_NODE( "initial position", init_pos_root )
-                DIALOG_APPENDNODE_FLOAT( init_pos_root, "x", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( init_pos_root, "y", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( init_pos_root, "z", 0.0 );
-
-                DIALOG_APPENDROOT_NODE( "direction", dir_root )
-                DIALOG_APPENDNODE_FLOAT( dir_root, "x", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( dir_root, "y", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( dir_root, "z", 0.0 );
-
-                DIALOG_APPENDROOT_FLOAT( "initial theta", 0.0 );
-                DIALOG_APPENDROOT_FLOAT( "initial phi", 0.0 );
-
-                DIALOG_APPLY
-                DIALOG_SHOW
+                m_actions[CONTEXTMENU_NEWLINEARMVT]->Execute();
             }
             break;
 

@@ -98,6 +98,7 @@
     <ClCompile Include="ActionInertBodyCreationDialog.cpp" />
     <ClCompile Include="ActionKeydownScriptEditionDialogcpp.cpp" />
     <ClCompile Include="ActionKeyupScriptEditionDialog.cpp" />
+    <ClCompile Include="ActionLinearMvtCreationDialog.cpp" />
     <ClCompile Include="ActionLongLatCreationApply.cpp" />
     <ClCompile Include="ActionLongLatCreationDialog.cpp" />
     <ClCompile Include="ActionLongLatLinkTo.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="ActionInertBodyCreationDialog.h" />
     <ClInclude Include="ActionKeydownScriptEditionDialog.h" />
     <ClInclude Include="ActionKeyupScriptEditionDialog.h" />
+    <ClInclude Include="ActionLinearMvtCreationDialog.h" />
     <ClInclude Include="ActionLongLatCreationApply.h" />
     <ClInclude Include="ActionLongLatCreationDialog.h" />
     <ClInclude Include="ActionLongLatLinkTo.h" />
