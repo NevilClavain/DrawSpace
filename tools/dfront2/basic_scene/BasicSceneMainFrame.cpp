@@ -2062,30 +2062,13 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
     else if( "LongLatMovementNode:LongLatMovementNode" == script_call_id )
     {
-        /*
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        SceneNode<LongLatMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<LongLatMovement>**>( "existing_node" );
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::LongLatMovement>>::iterator it = m_ll_nodes.begin(); it != m_ll_nodes.end(); ++it )
-        {
-            if( it->second.name == scene_name )
-            {
-                // node exists
-                *node_ptr = it->second.scene_node;
-                break;
-            }
-        }
-        */
-
         m_actionscripts["LongLatMovementNode:LongLatMovementNode"]->Execute( p_propertypool );
     }
 
     else if( "LongLatMovementNode:LinkTo" == script_call_id )
     {
         m_actionscripts["LongLatMovementNode:LinkTo"]->Execute( p_propertypool );
-
     }
-
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
@@ -2815,150 +2798,9 @@ void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
 }
 
 void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
-{   
- 	switch( p_evt.GetId() ) 
-    {
- 		case CONTEXTMENU_NEWSCENENODEGRAPH:
-            {
-                m_actions[CONTEXTMENU_NEWSCENENODEGRAPH]->Execute();
-            }
- 			break;
-
-        case CONTEXTMENU_NEWWORLD:
-            {
-                m_actions[CONTEXTMENU_NEWWORLD]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWTRANSFO:
-            {
-                m_actions[CONTEXTMENU_NEWTRANSFO]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_EDIT_TRANSFORMNODE:
-            {
-                m_actions[CONTEXTMENU_EDIT_TRANSFORMNODE]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWSPACEBOX:
-            {
-                m_actions[CONTEXTMENU_NEWSPACEBOX]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWCHUNK:
-            {
-                m_actions[CONTEXTMENU_NEWCHUNK]->Execute();
-            }
-            break;
-
-
-        case CONTEXTMENU_EDIT_SBNODE:
-            {
-                m_actions[CONTEXTMENU_EDIT_SBNODE]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_EDIT_CHUNKNODE:
-            {
-                m_actions[CONTEXTMENU_EDIT_CHUNKNODE]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_SHOW_PROPS:
-            {
-                m_actions[CONTEXTMENU_SHOW_PROPS]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_EDIT_NODESCRIPT:
-            {
-                m_actions[CONTEXTMENU_EDIT_NODESCRIPT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_EDIT_MOUSEMOVESCRIPT:
-            {
-                m_actions[CONTEXTMENU_EDIT_MOUSEMOVESCRIPT]->Execute();
-            }
-            break;
-
-
-        case CONTEXTMENU_EDIT_KEYDOWNSCRIPT:
-            {
-                m_actions[CONTEXTMENU_EDIT_KEYDOWNSCRIPT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_EDIT_KEYUPSCRIPT:
-            {
-                m_actions[CONTEXTMENU_EDIT_KEYUPSCRIPT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWCAMERA:
-            {
-                m_actions[CONTEXTMENU_NEWCAMERA]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_SELECT_CAMERA:
-            {
-                m_actions[CONTEXTMENU_SELECT_CAMERA]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_EDIT_CAMERA:
-            {
-                m_actions[CONTEXTMENU_EDIT_CAMERA]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWFPSMVT:
-            {
-                m_actions[CONTEXTMENU_NEWFPSMVT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWLINEARMVT:
-            {
-                m_actions[CONTEXTMENU_NEWLINEARMVT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWFREEMVT:
-            {
-                m_actions[CONTEXTMENU_NEWFREEMVT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWCIRCULARMVT:
-            {
-                m_actions[CONTEXTMENU_NEWCIRCULARMVT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWLONGLATMVT:
-            {
-                m_actions[CONTEXTMENU_NEWLONGLATMVT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_EDIT_MVT:
-            {
-                m_actions[CONTEXTMENU_EDIT_MVT]->Execute();
-            }
-            break;
-
-        case CONTEXTMENU_NEWINERTBODY:
-            {
-                m_actions[CONTEXTMENU_NEWINERTBODY]->Execute();                
-            }
-            break;
- 	}
- }
+{
+    m_actions[p_evt.GetId()]->Execute();
+}
 
 void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event )
 {	
