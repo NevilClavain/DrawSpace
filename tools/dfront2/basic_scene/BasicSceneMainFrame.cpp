@@ -56,6 +56,7 @@
 
 #include "ActionCameraPointCreationDialog.h"
 #include "ActionCameraPointSelection.h"
+#include "ActionCameraPointEditionDialog.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -432,6 +433,8 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWCAMERA] = new ActionCameraPointCreationDialog();
     m_actions[CONTEXTMENU_SELECT_CAMERA] = new ActionCameraPointSelection();
+
+    m_actions[CONTEXTMENU_EDIT_CAMERA] = new ActionCameraPointEditionDialog();
 
     m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
 
@@ -2898,18 +2901,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_EDIT_CAMERA:
             {
-                void* id = m_last_clicked_treeitem.GetID();
-
-                SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[id];
-                SceneNodeGraph* sc_owner = camera_node.scene_node->GetSceneNodeGraph();
-
-                DIALOG_DECLARE( DIALOG_CAMERA_EDIT_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", camera_node.name );
-                DIALOG_APPENDROOT_FLOAT( "znear", camera_node.scene_node->GetContent()->GetZNear() );
-                DIALOG_APPENDROOT_ENUM( "lock on", insert_void_choice( get_scenenodes_list( sc_owner ) ) );
-                DIALOG_APPLY
-                DIALOG_SHOW
+                m_actions[CONTEXTMENU_EDIT_CAMERA]->Execute();
             }
             break;
 
