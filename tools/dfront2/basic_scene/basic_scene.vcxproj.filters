@@ -41,6 +41,7 @@
     <ClCompile Include="ActionCameraPointEditionDialog.cpp" />
     <ClCompile Include="ActionFPSMvtCreationDialog.cpp" />
     <ClCompile Include="ActionLinearMvtCreationDialog.cpp" />
+    <ClCompile Include="ActionFreeMvtCreationDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -86,5 +87,6 @@
     <ClInclude Include="ActionCameraPointEditionDialog.h" />
     <ClInclude Include="ActionFPSMvtCreationDialog.h" />
     <ClInclude Include="ActionLinearMvtCreationDialog.h" />
+    <ClInclude Include="ActionFreeMvtCreationDialog.h" />
   </ItemGroup>
 </Project>

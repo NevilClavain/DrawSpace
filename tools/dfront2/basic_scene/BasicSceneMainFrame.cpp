@@ -60,6 +60,7 @@
 
 #include "ActionFPSMvtCreationDialog.h"
 #include "ActionLinearMvtCreationDialog.h"
+#include "ActionFreeMvtCreationDialog.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -447,6 +448,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWFPSMVT] = new ActionFPSMvtCreationDialog();
 
     m_actions[CONTEXTMENU_NEWLINEARMVT] = new ActionLinearMvtCreationDialog();
+    m_actions[CONTEXTMENU_NEWFREEMVT] = new ActionFreeMvtCreationDialog();
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
     m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
@@ -2924,17 +2926,7 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWFREEMVT:
             {
-                DIALOG_DECLARE( DIALOG_FREEMVT_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-                DIALOG_APPENDROOT_NODE( "initial position", init_pos_root )
-                DIALOG_APPENDNODE_FLOAT( init_pos_root, "x", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( init_pos_root, "y", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( init_pos_root, "z", 0.0 );
-
-                DIALOG_APPLY
-                DIALOG_SHOW
-
+                m_actions[CONTEXTMENU_NEWFREEMVT]->Execute();
             }
             break;
 
