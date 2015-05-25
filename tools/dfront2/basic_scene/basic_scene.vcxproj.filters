@@ -42,6 +42,7 @@
     <ClCompile Include="ActionFPSMvtCreationDialog.cpp" />
     <ClCompile Include="ActionLinearMvtCreationDialog.cpp" />
     <ClCompile Include="ActionFreeMvtCreationDialog.cpp" />
+    <ClCompile Include="ActionCircularMvtCreationDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -88,5 +89,6 @@
     <ClInclude Include="ActionFPSMvtCreationDialog.h" />
     <ClInclude Include="ActionLinearMvtCreationDialog.h" />
     <ClInclude Include="ActionFreeMvtCreationDialog.h" />
+    <ClInclude Include="ActionCircularMvtCreationDialog.h" />
   </ItemGroup>
 </Project>

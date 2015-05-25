@@ -92,6 +92,7 @@
     <ClCompile Include="ActionChunkCreationDialog.cpp" />
     <ClCompile Include="ActionChunkCreationSpecific0.cpp" />
     <ClCompile Include="ActionChunkEditionDialog.cpp" />
+    <ClCompile Include="ActionCircularMvtCreationDialog.cpp" />
     <ClCompile Include="ActionEditMvtDialog.cpp" />
     <ClCompile Include="ActionFPSMvtCreationDialog.cpp" />
     <ClCompile Include="ActionFreeMvtCreationDialog.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="ActionChunkCreationDialog.h" />
     <ClInclude Include="ActionChunkCreationSpecific0.h" />
     <ClInclude Include="ActionChunkEditionDialog.h" />
+    <ClInclude Include="ActionCircularMvtCreationDialog.h" />
     <ClInclude Include="actiondialog.h" />
     <ClInclude Include="ActionEditMvtDialog.h" />
     <ClInclude Include="ActionFPSMvtCreationDialog.h" />

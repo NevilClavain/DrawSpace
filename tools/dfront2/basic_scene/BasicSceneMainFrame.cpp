@@ -61,6 +61,7 @@
 #include "ActionFPSMvtCreationDialog.h"
 #include "ActionLinearMvtCreationDialog.h"
 #include "ActionFreeMvtCreationDialog.h"
+#include "ActionCircularMvtCreationDialog.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -448,7 +449,10 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWFPSMVT] = new ActionFPSMvtCreationDialog();
 
     m_actions[CONTEXTMENU_NEWLINEARMVT] = new ActionLinearMvtCreationDialog();
+
     m_actions[CONTEXTMENU_NEWFREEMVT] = new ActionFreeMvtCreationDialog();
+
+    m_actions[CONTEXTMENU_NEWCIRCULARMVT] = new ActionCircularMvtCreationDialog();
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
     m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
@@ -2932,35 +2936,9 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 
         case CONTEXTMENU_NEWCIRCULARMVT:
             {
-                DIALOG_DECLARE( DIALOG_CIRCMVT_CREATION_TITLE )
-
-                DIALOG_APPENDROOT_STRING( "scene name", "" )
-
-                DIALOG_APPENDROOT_NODE( "center position", center_pos_root )
-                DIALOG_APPENDNODE_FLOAT( center_pos_root, "x", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( center_pos_root, "y", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( center_pos_root, "z", 0.0 );
-
-                DIALOG_APPENDROOT_NODE( "delta center position", dcenter_pos_root )
-                DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "x", 5.0 );
-                DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "y", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( dcenter_pos_root, "z", 0.0 );
-
-                DIALOG_APPENDROOT_NODE( "axis", axis_root )
-                DIALOG_APPENDNODE_FLOAT( axis_root, "x", 0.0 );
-                DIALOG_APPENDNODE_FLOAT( axis_root, "y", 1.0 );
-                DIALOG_APPENDNODE_FLOAT( axis_root, "z", 0.0 );
-
-                DIALOG_APPENDROOT_FLOAT( "initial angle", 0.0 );
-                DIALOG_APPENDROOT_FLOAT( "initial theta", 0.0 );
-                DIALOG_APPENDROOT_FLOAT( "initial phi", 0.0 );
-
-                DIALOG_APPLY
-                DIALOG_SHOW
-
+                m_actions[CONTEXTMENU_NEWCIRCULARMVT]->Execute();
             }
             break;
-
 
         case CONTEXTMENU_NEWLONGLATMVT:
             {
@@ -2979,7 +2957,6 @@ void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
                 m_actions[CONTEXTMENU_NEWINERTBODY]->Execute();                
             }
             break;
-
  	}
  }
 
