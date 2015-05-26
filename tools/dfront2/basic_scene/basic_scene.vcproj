@@ -205,6 +205,30 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCameraPointCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointEditionDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointEditionDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointSelection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointSelection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionChunkCreationDialog.cpp"
 				>
 			</File>
@@ -229,6 +253,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCircularMvtCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCircularMvtCreationDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\actiondialog.h"
 				>
 			</File>
@@ -238,6 +270,22 @@
 			</File>
 			<File
 				RelativePath=".\ActionEditMvtDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFPSMvtCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFPSMvtCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFreeMvtCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFreeMvtCreationDialog.h"
 				>
 			</File>
 			<File
@@ -254,6 +302,30 @@
 			</File>
 			<File
 				RelativePath=".\ActionInertBodyCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionKeydownScriptEditionDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionKeydownScriptEditionDialogcpp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionKeyupScriptEditionDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionKeyupScriptEditionDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLinearMvtCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLinearMvtCreationDialog.h"
 				>
 			</File>
 			<File
@@ -286,6 +358,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionLongLatLongLat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionMouseMoveScriptEditionDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionMouseMoveScriptEditionDialog.h"
 				>
 			</File>
 			<File
@@ -322,6 +402,14 @@
 			</File>
 			<File
 				RelativePath=".\actionscript.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSpaceBoxCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSpaceBoxCreationApply.h"
 				>
 			</File>
 			<File
