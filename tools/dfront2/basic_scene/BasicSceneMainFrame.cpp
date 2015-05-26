@@ -59,7 +59,10 @@
 #include "ActionTransformEditionSpecific1.h"
 
 #include "ActionCameraPointCreationDialog.h"
+#include "ActionCameraPointCreationApply.h"
+
 #include "ActionCameraPointSelection.h"
+
 #include "ActionCameraPointEditionDialog.h"
 
 #include "ActionFPSMvtCreationDialog.h"
@@ -445,6 +448,8 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionSpecific1();
 
     m_actions[CONTEXTMENU_NEWCAMERA] = new ActionCameraPointCreationDialog();
+    m_actiondialogs_apply[DIALOG_CAMERA_CREATION_TITLE] = new ActionCameraPointCreationApply();
+
     m_actions[CONTEXTMENU_SELECT_CAMERA] = new ActionCameraPointSelection();
 
     m_actions[CONTEXTMENU_EDIT_CAMERA] = new ActionCameraPointEditionDialog();
@@ -3133,92 +3138,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_CAMERA_CREATION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
-
-        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
-
-        if( "" == alias )
-        {
-            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-            return;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // create the camera node
-
-        SceneNode<CameraPoint>* camera_node;
-        camera_node = new SceneNode<CameraPoint>( alias );
-        camera_node->SetContent( new CameraPoint );
-
-        camera_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // now we must found the scenenodegraph we belong to make the RegisterNode() call
-        void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
-
-        BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-        entry = m_scenenodegraphs[id];
-        entry.scenenodegraph->RegisterNode( camera_node );
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        // link to the scenegraph hierarchy
-
-        wxTreeItemId current;
-        current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
-        id = current.GetID();
-
-        if( m_scenenodegraphs.count( id ) > 0 )
-        {
-            // parent is a scenegraph : use SceneNodeGraph::Add() method
-            entry.scenenodegraph->AddNode( camera_node );
-        }
-        else
-        {
-            BaseSceneNode* parent_node = m_tree_nodes[id];
-            camera_node->LinkTo( parent_node );
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        // GUI : add item in the tree
-
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, CAMERA_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
-       
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // record the new transformation node and associated metadata
-
-        BasicSceneMainFrame::SceneNodeEntry<CameraPoint> c_entry;
-
-        c_entry.name = alias;
-        c_entry.scene_node = camera_node;
-        c_entry.treeitemid = treeitemid;
-
-
-        m_camera_nodes[c_entry.treeitemid.GetID()] = c_entry;
-
-        m_tree_nodes[c_entry.treeitemid.GetID()] = camera_node;
-        m_inv_tree_nodes[camera_node] = c_entry.treeitemid.GetID();
-
-
-        dsstring title;
-        dsstring* script_text;
-        bool * script_state;
-        title = "CameraPoint node: ";
-        title += m_camera_nodes[c_entry.treeitemid.GetID()].name;
-        script_text = &m_camera_nodes[c_entry.treeitemid.GetID()].script;
-        script_state = &m_camera_nodes[c_entry.treeitemid.GetID()].script_enabled;
-        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-        m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
-
-
-
-        DIALOG_CLOSE
+        m_actiondialogs_apply[DIALOG_CAMERA_CREATION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_CAMERA_EDIT_TITLE == DIALOG_TITLE )
@@ -3250,9 +3170,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
         else
         {
             camera_node.scene_node->GetContent()->Unlock();
-        }
-
-        //DIALOG_CLOSE
+        }        
     }
     else if( DIALOG_FPSMVT_CREATION_TITLE == DIALOG_TITLE )
     {

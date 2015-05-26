@@ -205,6 +205,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCameraPointCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointCreationApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCameraPointCreationDialog.cpp"
 				>
 			</File>
