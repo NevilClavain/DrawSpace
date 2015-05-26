@@ -437,6 +437,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionSpaceBoxEditionApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSpaceBoxEditionApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionSpaceBoxEditionDialog.cpp"
 				>
 			</File>
@@ -462,6 +470,10 @@
 			</File>
 			<File
 				RelativePath=".\ActionTransformEditionApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformEditionApply.h"
 				>
 			</File>
 			<File
@@ -551,10 +563,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\ActionTransformEditionApply.h"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
