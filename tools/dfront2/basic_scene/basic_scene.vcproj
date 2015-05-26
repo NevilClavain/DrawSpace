@@ -253,6 +253,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionChunkEditionApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionChunkEditionApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionChunkEditionDialog.cpp"
 				>
 			</File>

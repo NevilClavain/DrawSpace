@@ -49,6 +49,7 @@
 #include "ActionChunkCreationApply.h"
 
 #include "ActionChunkEditionDialog.h"
+#include "ActionChunkEditionApply.h"
 
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
@@ -452,6 +453,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_SPACEBOX_EDITION_TITLE] = new ActionSpaceBoxEditionApply();
 
     m_actions[CONTEXTMENU_EDIT_CHUNKNODE] = new ActionChunkEditionDialog();
+    m_actiondialogs_apply[DIALOG_CHUNK_EDITION_TITLE] = new ActionChunkEditionApply();
 
     m_actions[CONTEXTMENU_NEWFPSMVT] = new ActionFPSMvtCreationDialog();
 
@@ -3126,39 +3128,8 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_CHUNK_EDITION_TITLE == DIALOG_TITLE )
     {
-
-        DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
-        SceneNodeEntry<DrawSpace::Chunk> cne = m_chunk_nodes[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
-
-        DIALOG_EXPLORE_NODES_BEGIN( "", "shader parameter %d", i, sp_slot )
-
-            DIALOG_GET_STRING_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "pass name" ), pass_name )
-            DIALOG_GET_STRING_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "param id" ), param_id )
-            
-            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.x" ), val_x )
-            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.y" ), val_y )
-            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.z" ), val_z )
-            DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.w" ), val_w )
-
-           
-
-            DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
-            DIALOG_WXSTRING_TO_DSSTRING( param_id, param_id2 )
-
-            Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_name2 ) );
-
-            cne.scene_node->GetContent()->GetNodeFromPass( current_pass )->SetShaderRealVector( param_id2, Vector( val_x, val_y, val_z, val_w ) );
-
-            // update descriptor
-            chunk_descr.passes_slots[pass_name2].shader_params[i].value = Vector( val_x, val_y, val_z, val_w );
-
-            m_chunk_descriptors[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()] = chunk_descr;
-
-        DIALOG_EXPLORE_NODES_END( i )
-        
-        //DIALOG_CLOSE
+        m_actiondialogs_apply[DIALOG_CHUNK_EDITION_TITLE]->Execute( p_dialog );
     }
-
 
     else if( DIALOG_CAMERA_CREATION_TITLE == DIALOG_TITLE )
     {

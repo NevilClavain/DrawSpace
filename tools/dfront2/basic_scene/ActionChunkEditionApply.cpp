@@ -23,20 +23,20 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionSpaceBoxEditionApply.h"
+#include "ActionChunkEditionApply.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
-void ActionSpaceBoxEditionApply::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
+void ActionChunkEditionApply::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     DIALOG_GETGRID
     DIALOG_PROPERTIES_VARS
 
-    DrawSpace::Utils::SpaceboxDescriptor sb_descr = BasicSceneMainFrame::GetInstance()->m_spacebox_descriptors[p_dialog->GetTreeItem().GetID()];
-    BasicSceneMainFrame::SceneNodeEntry<DrawSpace::Spacebox> sne = BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[p_dialog->GetTreeItem().GetID()];
+    DrawSpace::Utils::ChunkDescriptor chunk_descr = BasicSceneMainFrame::GetInstance()->m_chunk_descriptors[p_dialog->GetTreeItem().GetID()];
+    BasicSceneMainFrame::SceneNodeEntry<DrawSpace::Chunk> cne = BasicSceneMainFrame::GetInstance()->m_chunk_nodes[p_dialog->GetTreeItem().GetID()];
 
     DIALOG_EXPLORE_NODES_BEGIN( "", "shader parameter %d", i, sp_slot )
 
@@ -55,15 +55,12 @@ void ActionSpaceBoxEditionApply::Execute( BasicSceneObjectPropertiesDialog* p_di
 
         Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_name2 ) );
 
-        for( int j = 0; j < 6; j++ )
-        {
-            sne.scene_node->GetContent()->GetNodeFromPass( current_pass, j )->SetShaderRealVector( param_id2, Vector( val_x, val_y, val_z, val_w ) );
-        }
+        cne.scene_node->GetContent()->GetNodeFromPass( current_pass )->SetShaderRealVector( param_id2, Vector( val_x, val_y, val_z, val_w ) );
 
         // update descriptor
-        sb_descr.passes_slots[pass_name2].shader_params[i].value = Vector( val_x, val_y, val_z, val_w );
+        chunk_descr.passes_slots[pass_name2].shader_params[i].value = Vector( val_x, val_y, val_z, val_w );
 
-        BasicSceneMainFrame::GetInstance()->m_spacebox_descriptors[p_dialog->GetTreeItem().GetID()] = sb_descr;
+        BasicSceneMainFrame::GetInstance()->m_chunk_descriptors[p_dialog->GetTreeItem().GetID()] = chunk_descr;
 
-    DIALOG_EXPLORE_NODES_END( i )   
+    DIALOG_EXPLORE_NODES_END( i )
 }
