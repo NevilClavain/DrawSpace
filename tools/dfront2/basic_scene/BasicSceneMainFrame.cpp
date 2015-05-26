@@ -64,6 +64,7 @@
 #include "ActionCameraPointSelection.h"
 
 #include "ActionCameraPointEditionDialog.h"
+#include "ActionCameraPointEditionApply.h"
 
 #include "ActionFPSMvtCreationDialog.h"
 #include "ActionLinearMvtCreationDialog.h"
@@ -453,6 +454,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_SELECT_CAMERA] = new ActionCameraPointSelection();
 
     m_actions[CONTEXTMENU_EDIT_CAMERA] = new ActionCameraPointEditionDialog();
+    m_actiondialogs_apply[DIALOG_CAMERA_EDIT_TITLE] = new ActionCameraPointEditionApply();
 
     m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
     m_actiondialogs_apply[DIALOG_SPACEBOX_EDITION_TITLE] = new ActionSpaceBoxEditionApply();
@@ -3143,34 +3145,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_CAMERA_EDIT_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_FLOAT_PROPERTY( "znear", znear );
-        SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[/*m_last_clicked_treeitem*/ p_dialog->GetTreeItem().GetID()];
-        camera_node.scene_node->GetContent()->UpdateProjectionZNear( znear );
-
-        DIALOG_GET_ENUM_PROPERTY( "lock on", locked_node );
-        if( locked_node != "..." )
-        {
-            DIALOG_WXSTRING_TO_DSSTRING( locked_node, locked_node2 )
-
-            SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> camera_node = m_camera_nodes[p_dialog->GetTreeItem().GetID()];
-            SceneNodeGraph* sc_owner = camera_node.scene_node->GetSceneNodeGraph();
-
-            std::vector<BaseSceneNode*> n_list = sc_owner->GetAllNodesList();
-            for( size_t i = 0; i < n_list.size(); i++ )
-            {
-                dsstring node_name;
-                n_list[i]->GetSceneName( node_name );
-
-                if( node_name == locked_node2 )
-                {
-                    camera_node.scene_node->GetContent()->Lock( n_list[i] );
-                }
-            }        
-        }
-        else
-        {
-            camera_node.scene_node->GetContent()->Unlock();
-        }        
+        m_actiondialogs_apply[DIALOG_CAMERA_EDIT_TITLE]->Execute( p_dialog );
     }
     else if( DIALOG_FPSMVT_CREATION_TITLE == DIALOG_TITLE )
     {

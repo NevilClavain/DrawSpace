@@ -43,6 +43,12 @@
     <ClCompile Include="ActionLinearMvtCreationDialog.cpp" />
     <ClCompile Include="ActionFreeMvtCreationDialog.cpp" />
     <ClCompile Include="ActionCircularMvtCreationDialog.cpp" />
+    <ClCompile Include="ActionCameraPointCreationApply.cpp" />
+    <ClCompile Include="ActionChunkCreationApply.cpp" />
+    <ClCompile Include="ActionChunkEditionApply.cpp" />
+    <ClCompile Include="ActionSpaceBoxCreationApply.cpp" />
+    <ClCompile Include="ActionSpaceBoxEditionApply.cpp" />
+    <ClCompile Include="ActionCameraPointEditionApply.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -90,5 +96,11 @@
     <ClInclude Include="ActionLinearMvtCreationDialog.h" />
     <ClInclude Include="ActionFreeMvtCreationDialog.h" />
     <ClInclude Include="ActionCircularMvtCreationDialog.h" />
+    <ClInclude Include="ActionCameraPointCreationApply.h" />
+    <ClInclude Include="ActionChunkCreationApply.h" />
+    <ClInclude Include="ActionChunkEditionApply.h" />
+    <ClInclude Include="ActionSpaceBoxCreationApply.h" />
+    <ClInclude Include="ActionSpaceBoxEditionApply.h" />
+    <ClInclude Include="ActionCameraPointEditionApply.h" />
   </ItemGroup>
 </Project>

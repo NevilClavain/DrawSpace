@@ -86,11 +86,15 @@
   <ItemGroup>
     <ClCompile Include="ActionAddMatrix.cpp" />
     <ClCompile Include="ActionAddShaderParam.cpp" />
+    <ClCompile Include="ActionCameraPointCreationApply.cpp" />
     <ClCompile Include="ActionCameraPointCreationDialog.cpp" />
+    <ClCompile Include="ActionCameraPointEditionApply.cpp" />
     <ClCompile Include="ActionCameraPointEditionDialog.cpp" />
     <ClCompile Include="ActionCameraPointSelection.cpp" />
+    <ClCompile Include="ActionChunkCreationApply.cpp" />
     <ClCompile Include="ActionChunkCreationDialog.cpp" />
     <ClCompile Include="ActionChunkCreationSpecific0.cpp" />
+    <ClCompile Include="ActionChunkEditionApply.cpp" />
     <ClCompile Include="ActionChunkEditionDialog.cpp" />
     <ClCompile Include="ActionCircularMvtCreationDialog.cpp" />
     <ClCompile Include="ActionEditMvtDialog.cpp" />
@@ -110,8 +114,10 @@
     <ClCompile Include="ActionPropsDialog.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationApply.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationDialog.cpp" />
+    <ClCompile Include="ActionSpaceBoxCreationApply.cpp" />
     <ClCompile Include="ActionSpaceBoxCreationDialog.cpp" />
     <ClCompile Include="ActionSpaceBoxCreationSpecific0.cpp" />
+    <ClCompile Include="ActionSpaceBoxEditionApply.cpp" />
     <ClCompile Include="ActionSpaceBoxEditionDialog.cpp" />
     <ClCompile Include="ActionTransformCreationApply.cpp" />
     <ClCompile Include="ActionTransformCreationDialog.cpp" />
@@ -131,11 +137,15 @@
     <ClInclude Include="action.h" />
     <ClInclude Include="ActionAddMatrix.h" />
     <ClInclude Include="ActionAddShaderParam.h" />
+    <ClInclude Include="ActionCameraPointCreationApply.h" />
     <ClInclude Include="ActionCameraPointCreationDialog.h" />
+    <ClInclude Include="ActionCameraPointEditionApply.h" />
     <ClInclude Include="ActionCameraPointEditionDialog.h" />
     <ClInclude Include="ActionCameraPointSelection.h" />
+    <ClInclude Include="ActionChunkCreationApply.h" />
     <ClInclude Include="ActionChunkCreationDialog.h" />
     <ClInclude Include="ActionChunkCreationSpecific0.h" />
+    <ClInclude Include="ActionChunkEditionApply.h" />
     <ClInclude Include="ActionChunkEditionDialog.h" />
     <ClInclude Include="ActionCircularMvtCreationDialog.h" />
     <ClInclude Include="actiondialog.h" />
@@ -157,8 +167,10 @@
     <ClInclude Include="ActionScenenodeGraphCreationApply.h" />
     <ClInclude Include="ActionScenenodeGraphCreationDialog.h" />
     <ClInclude Include="actionscript.h" />
+    <ClInclude Include="ActionSpaceBoxCreationApply.h" />
     <ClInclude Include="ActionSpaceBoxCreationDialog.h" />
     <ClInclude Include="ActionSpaceBoxCreationSpecific0.h" />
+    <ClInclude Include="ActionSpaceBoxEditionApply.h" />
     <ClInclude Include="ActionSpaceBoxEditionDialog.h" />
     <ClInclude Include="ActionTransformCreationApply.h" />
     <ClInclude Include="ActionTransformCreationDialog.h" />
