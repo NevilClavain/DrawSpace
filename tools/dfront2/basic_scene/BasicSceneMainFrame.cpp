@@ -45,6 +45,7 @@
 
 #include "ActionChunkCreationDialog.h"
 #include "ActionChunkCreationSpecific0.h"
+#include "ActionChunkCreationApply.h"
 
 #include "ActionChunkEditionDialog.h"
 
@@ -429,6 +430,9 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWCHUNK] = new ActionChunkCreationDialog();
     m_actiondialogs_specific0[DIALOG_CHUNK_CREATION_TITLE] = new ActionChunkCreationSpecific0();
+    m_actiondialogs_specific1[DIALOG_CHUNK_CREATION_TITLE] = new ActionAddShaderParam();
+    m_actiondialogs_apply[DIALOG_CHUNK_CREATION_TITLE] = new ActionChunkCreationApply();
+
 
     m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
     m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE] = new ActionTransformCreationApply();
@@ -446,7 +450,6 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
 
     m_actions[CONTEXTMENU_EDIT_CHUNKNODE] = new ActionChunkEditionDialog();
-    m_actiondialogs_specific1[DIALOG_CHUNK_CREATION_TITLE] = new ActionAddShaderParam();
 
     m_actions[CONTEXTMENU_NEWFPSMVT] = new ActionFPSMvtCreationDialog();
 
@@ -3111,178 +3114,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
     {
-        DrawSpace::Utils::ChunkDescriptor descr;
-        
-        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
-        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
-
-        if( "" == alias )
-        {
-            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-            return;
-        }
-
-        descr.scene_name = alias;
-
-        DIALOG_GET_ENUM_PROPERTY( "meshe", meshe_name )
-        DIALOG_WXSTRING_TO_DSSTRING( meshe_name, meshe_name2 )
-
-        descr.meshe = meshe_name2;
-
-        {
-            DIALOG_EXPLORE_NODES_BEGIN( "", "pass %d", i, pass_slot )
-
-                DrawSpace::Utils::ChunkPassDescriptor pass_descr;
-
-                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "pass" ), pass_name )
-                DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
-
-                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "fx" ), fx_name )
-                DIALOG_GET_INT_PROPERTY( DIALOG_INCREMENT_STRING( pass_slot, "rendering order" ), rendering_order )
-
-                dsstring texture_root_name;
-                texture_root_name = DIALOG_INCREMENT_STRING( pass_slot, "textures" );
-
-                DIALOG_EXPLORE_NODES_BEGIN( texture_root_name, "stage %d", j, texture_stage )
-                    DIALOG_GET_ENUM_PROPERTY( texture_stage, texture_name )
-                    DIALOG_WXSTRING_TO_DSSTRING( texture_name, texture_name2 )
-
-                    if( texture_name2 != "..." )
-                    {
-                        pass_descr.textures[j] = texture_name2;
-                    }
-                    else
-                    {
-                        pass_descr.textures[j] = "";
-                    }
-                DIALOG_EXPLORE_NODES_END( j )
-
-                pass_descr.fx_name = fx_name;
-                pass_descr.rendering_order = rendering_order;          
-                descr.passes_slots[pass_name2] = pass_descr;
-
-            DIALOG_EXPLORE_NODES_END( i )
-        }
-        
-        {
-            DIALOG_EXPLORE_NODES_BEGIN( "", "shader params %d", i, sp_slot )
-
-                DIALOG_GET_ENUM_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "pass" ), pass_name )
-                DIALOG_WXSTRING_TO_DSSTRING( pass_name, pass_name2 )
-
-                DIALOG_GET_INT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "shader index" ), shader_index )
-                DIALOG_GET_STRING_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "param id" ), param_id )
-                DIALOG_GET_INT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "register" ), shader_register )
-
-                DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.x" ), val_x )
-                DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.y" ), val_y )
-                DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.z" ), val_z )
-                DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( sp_slot, "values.w" ), val_w )
-
-                if( descr.passes_slots.count( pass_name2 ) > 0 )
-                {
-                    PassShaderParam psp;
-
-                    psp.id = param_id;
-                    psp.shader_index = shader_index;
-                    psp.shader_register = shader_register;
-                    psp.value[0] = val_x;
-                    psp.value[1] = val_y;
-                    psp.value[2] = val_z;
-                    psp.value[3] = val_w;
-
-                    descr.passes_slots[pass_name2].shader_params.push_back( psp );
-                }
-
-            DIALOG_EXPLORE_NODES_END( i )
-        }
-
-        dsstring chunk_error;
-        Chunk* chunk = BuildChunk( descr, chunk_error );
-
-        if( chunk )
-        {
-            SceneNode<Chunk>* chunk_node = new SceneNode<Chunk>( alias );
-            chunk_node->SetContent( chunk );
-            chunk_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-
-            // now we must found the scenenodegraph we belong to make the RegisterNode() call
-            void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
-
-            BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-            entry = m_scenenodegraphs[id];
-            entry.scenenodegraph->RegisterNode( chunk_node );
-
-            // link to the scenegraph hierarchy
-
-            wxTreeItemId current;
-            current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
-            id = current.GetID();
-
-            if( m_scenenodegraphs.count( id ) > 0 )
-            {
-                // parent is a scenegraph : use SceneNodeGraph::Add() method
-                entry.scenenodegraph->AddNode( chunk_node );
-            }
-            else
-            {
-                BaseSceneNode* parent_node = m_tree_nodes[id];
-                chunk_node->LinkTo( parent_node );
-            }
-
-            // GUI : add item in the tree
-
-            wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, CHUNK_ICON_INDEX );
-            m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
-
-            // record the new chunk node and associated metadata
-
-            BasicSceneMainFrame::SceneNodeEntry<Chunk> c_entry;
-
-            c_entry.name = alias;
-            c_entry.scene_node = chunk_node;
-            c_entry.treeitemid = treeitemid;
-
-            m_chunk_nodes[c_entry.treeitemid.GetID()] = c_entry;
-
-            m_tree_nodes[c_entry.treeitemid.GetID()] = chunk_node;
-            m_inv_tree_nodes[chunk_node] = c_entry.treeitemid.GetID();
-
-            // update passes output queues
-            for( std::map<dsstring, ChunkPassDescriptor>::iterator it = descr.passes_slots.begin(); it != descr.passes_slots.end(); ++it )
-            {
-                Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
-                current_pass->GetRenderingQueue()->UpdateOutputQueue();
-            }
-
-            // store chunk description
-
-            m_chunk_descriptors[c_entry.treeitemid.GetID()] = descr;
-
-            /////////////////////////////////////////////////////////////////////////
-
-            dsstring title;
-            dsstring* script_text;
-            bool * script_state;
-            title = "Chunk node: ";
-            title += m_chunk_nodes[c_entry.treeitemid.GetID()].name;
-            script_text = &m_chunk_nodes[c_entry.treeitemid.GetID()].script;
-            script_state = &m_chunk_nodes[c_entry.treeitemid.GetID()].script_enabled;
-            BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-            m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
-
-
-            /////////////////////////////////////////////////////////////////////////
-            
-            DIALOG_CLOSE
-
-        }
-        else
-        {
-            wxMessageBox( wxString( "chunk creation failure : " ) + wxString( chunk_error.c_str() ) , "DrawFront error", wxICON_ERROR );
-        }
-        
+        m_actiondialogs_apply[DIALOG_CHUNK_CREATION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_SPACEBOX_EDITION_TITLE == DIALOG_TITLE )
