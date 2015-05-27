@@ -73,6 +73,9 @@
 #include "ActionLinearMvtCreationDialog.h"
 #include "ActionLinearMvtCreationApply.h"
 
+#include "ActionLinearMvtEditionApply.h"
+
+
 #include "ActionFreeMvtCreationDialog.h"
 
 #include "ActionCircularMvtCreationDialog.h"
@@ -481,6 +484,9 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWLINEARMVT] = new ActionLinearMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_LINMVT_CREATION_TITLE] = new ActionLinearMvtCreationApply();
+
+    m_actiondialogs_apply[DIALOG_LINMVT_EDITION_TITLE] = new ActionLinearMvtEditionApply();
+
 
     m_actions[CONTEXTMENU_NEWFREEMVT] = new ActionFreeMvtCreationDialog();
 
@@ -3183,13 +3189,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     }
     else if( DIALOG_LINMVT_EDITION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_FLOAT_PROPERTY( "current theta", curr_theta );
-        DIALOG_GET_FLOAT_PROPERTY( "current phi", curr_phi );
-        DIALOG_GET_FLOAT_PROPERTY( "current speed", curr_speed );
-        SceneNodeEntry<DrawSpace::Core::LinearMovement> lin_node = m_lin_nodes[p_dialog->GetTreeItem().GetID()];
-        lin_node.scene_node->GetContent()->SetSpeed( curr_speed );
-        lin_node.scene_node->GetContent()->SetTheta( curr_theta );
-        lin_node.scene_node->GetContent()->SetPhi( curr_phi );
+        m_actiondialogs_apply[DIALOG_LINMVT_EDITION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_FREEMVT_CREATION_TITLE == DIALOG_TITLE )

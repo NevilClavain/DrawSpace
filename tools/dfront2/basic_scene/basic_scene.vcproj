@@ -385,6 +385,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionLinearMvtEditionApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLinearMvtEditionApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionLongLatCreationApply.cpp"
 				>
 			</File>
