@@ -3138,91 +3138,9 @@ void* BasicSceneMainFrame::find_scenenodegraph_id( wxTreeItemId p_item )
 
 void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
 {
-    DIALOG_GETGRID
-    DIALOG_PROPERTIES_VARS
-
-    if( DIALOG_SCENEGRAPH_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_SCENEGRAPH_CREATION_TITLE]->Execute( p_dialog );
-    }
-    else if( DIALOG_TRANSFORM_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_TRANSFORM_EDITION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_TRANSFORM_EDITION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_SPACEBOX_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_SPACEBOX_CREATION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_CHUNK_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_CHUNK_CREATION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_SPACEBOX_EDITION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_SPACEBOX_EDITION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_CHUNK_EDITION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_CHUNK_EDITION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_CAMERA_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_CAMERA_CREATION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_CAMERA_EDIT_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_CAMERA_EDIT_TITLE]->Execute( p_dialog );
-    }
-    else if( DIALOG_FPSMVT_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_FPSMVT_CREATION_TITLE]->Execute( p_dialog );
-    }
-    else if( DIALOG_LINMVT_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_LINMVT_CREATION_TITLE]->Execute( p_dialog );
-    }
-    else if( DIALOG_LINMVT_EDITION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_LINMVT_EDITION_TITLE]->Execute( p_dialog );
-    }
-    else if( DIALOG_FREEMVT_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_FREEMVT_CREATION_TITLE]->Execute( p_dialog );
-    }
-    else if( DIALOG_CIRCMVT_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_CIRCMVT_CREATION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_CIRCMVT_EDITION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_CIRCMVT_EDITION_TITLE]->Execute( p_dialog );
-    }
-    else if( DIALOG_LONGLATMVT_CREATION_TITLE == DIALOG_TITLE )
-    {        
-        m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_LONGLATMVT_EDITION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_LONGLATMVT_EDITION_TITLE]->Execute( p_dialog );
-    }
-
-    else if( DIALOG_INERTBODY_CREATION_TITLE == DIALOG_TITLE )
-    {
-        m_actiondialogs_apply[DIALOG_INERTBODY_CREATION_TITLE]->Execute( p_dialog );
-    }
+    wxCharBuffer buffer;
+    DIALOG_WXSTRING_TO_DSSTRING( DIALOG_TITLE, dialog_title )
+    m_actiondialogs_apply[dialog_title]->Execute( p_dialog );
 }
 
 void BasicSceneMainFrame::on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
