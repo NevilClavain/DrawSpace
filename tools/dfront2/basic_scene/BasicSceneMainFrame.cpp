@@ -76,6 +76,8 @@
 #include "ActionLongLatLinkTo.h"
 #include "ActionLongLatLongLat.h"
 
+#include "ActionLongLatMvtEditionApply.h"
+
 #include "ActionInertBodyCreationDialog.h"
 #include "ActionInertBodyCreationApply.h"
 
@@ -434,10 +436,18 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionSpaceBoxCreationApply();
 
 
+    m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
+    m_actiondialogs_apply[DIALOG_SPACEBOX_EDITION_TITLE] = new ActionSpaceBoxEditionApply();
+
+
     m_actions[CONTEXTMENU_NEWCHUNK] = new ActionChunkCreationDialog();
     m_actiondialogs_specific0[DIALOG_CHUNK_CREATION_TITLE] = new ActionChunkCreationSpecific0();
     m_actiondialogs_specific1[DIALOG_CHUNK_CREATION_TITLE] = new ActionAddShaderParam();
     m_actiondialogs_apply[DIALOG_CHUNK_CREATION_TITLE] = new ActionChunkCreationApply();
+
+    m_actions[CONTEXTMENU_EDIT_CHUNKNODE] = new ActionChunkEditionDialog();
+    m_actiondialogs_apply[DIALOG_CHUNK_EDITION_TITLE] = new ActionChunkEditionApply();
+
 
 
     m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
@@ -456,11 +466,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_CAMERA] = new ActionCameraPointEditionDialog();
     m_actiondialogs_apply[DIALOG_CAMERA_EDIT_TITLE] = new ActionCameraPointEditionApply();
 
-    m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
-    m_actiondialogs_apply[DIALOG_SPACEBOX_EDITION_TITLE] = new ActionSpaceBoxEditionApply();
 
-    m_actions[CONTEXTMENU_EDIT_CHUNKNODE] = new ActionChunkEditionDialog();
-    m_actiondialogs_apply[DIALOG_CHUNK_EDITION_TITLE] = new ActionChunkEditionApply();
 
     m_actions[CONTEXTMENU_NEWFPSMVT] = new ActionFPSMvtCreationDialog();
 
@@ -474,6 +480,10 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
     m_actionscripts["LongLatMovementNode:LinkTo"] = new ActionLongLatLinkTo();
     m_actionscripts["LongLatMovementNode:LongLatMovementNode"] = new ActionLongLatLongLat();
+
+
+    m_actiondialogs_apply[DIALOG_LONGLATMVT_EDITION_TITLE] = new ActionLongLatMvtEditionApply();
+
 
 
     m_actions[CONTEXTMENU_NEWINERTBODY] = new ActionInertBodyCreationDialog();
@@ -3587,19 +3597,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_LONGLATMVT_EDITION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_FLOAT_PROPERTY( "current theta", curr_theta );
-        DIALOG_GET_FLOAT_PROPERTY( "current phi", curr_phi );
-        DIALOG_GET_FLOAT_PROPERTY( "current altitud", curr_altitud );
-        DIALOG_GET_FLOAT_PROPERTY( "current longitud", curr_longitud );
-        DIALOG_GET_FLOAT_PROPERTY( "current latitud", curr_latitud );
-
-        SceneNodeEntry<DrawSpace::Core::LongLatMovement> ll_node = m_ll_nodes[p_dialog->GetTreeItem().GetID()];
-        
-        ll_node.scene_node->GetContent()->SetTheta( curr_theta );
-        ll_node.scene_node->GetContent()->SetPhi( curr_phi );
-        ll_node.scene_node->GetContent()->SetAlt( curr_altitud );
-        ll_node.scene_node->GetContent()->SetLongitud( curr_longitud );
-        ll_node.scene_node->GetContent()->SetLatitud( curr_latitud );
+        m_actiondialogs_apply[DIALOG_LONGLATMVT_EDITION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_INERTBODY_CREATION_TITLE == DIALOG_TITLE )

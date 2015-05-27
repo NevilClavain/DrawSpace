@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCameraPointEditionApply.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCameraPointEditionDialog.cpp"
 				>
 			</File>
@@ -382,6 +386,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionLongLatLongLat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLongLatMvtEditionApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLongLatMvtEditionApply.h"
 				>
 			</File>
 			<File
@@ -579,6 +591,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<File
+			RelativePath=".\ActionCameraPointEditionApply.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
