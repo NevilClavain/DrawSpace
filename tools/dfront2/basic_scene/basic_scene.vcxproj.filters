@@ -49,6 +49,13 @@
     <ClCompile Include="ActionSpaceBoxCreationApply.cpp" />
     <ClCompile Include="ActionSpaceBoxEditionApply.cpp" />
     <ClCompile Include="ActionCameraPointEditionApply.cpp" />
+    <ClCompile Include="ActionCircularMvtCreationApply.cpp" />
+    <ClCompile Include="ActionCircularMvtEditionApply.cpp" />
+    <ClCompile Include="ActionFPSMvtCreationApply.cpp" />
+    <ClCompile Include="ActionFreeMvtCreationApply.cpp" />
+    <ClCompile Include="ActionLinearMvtCreationApply.cpp" />
+    <ClCompile Include="ActionLinearMvtEditionApply.cpp" />
+    <ClCompile Include="ActionLongLatMvtEditionApply.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -102,5 +109,12 @@
     <ClInclude Include="ActionSpaceBoxCreationApply.h" />
     <ClInclude Include="ActionSpaceBoxEditionApply.h" />
     <ClInclude Include="ActionCameraPointEditionApply.h" />
+    <ClInclude Include="ActionCircularMvtCreationApply.h" />
+    <ClInclude Include="ActionCircularMvtEditionApply.h" />
+    <ClInclude Include="ActionFPSMvtCreationApply.h" />
+    <ClInclude Include="ActionFreeMvtCreationApply.h" />
+    <ClInclude Include="ActionLinearMvtCreationApply.h" />
+    <ClInclude Include="ActionLinearMvtEditionApply.h" />
+    <ClInclude Include="ActionLongLatMvtEditionApply.h" />
   </ItemGroup>
 </Project>
