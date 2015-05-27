@@ -77,6 +77,8 @@
 
 
 #include "ActionFreeMvtCreationDialog.h"
+#include "ActionFreeMvtCreationApply.h"
+
 
 #include "ActionCircularMvtCreationDialog.h"
 
@@ -489,6 +491,7 @@ m_delta_mouse_init( true )
 
 
     m_actions[CONTEXTMENU_NEWFREEMVT] = new ActionFreeMvtCreationDialog();
+    m_actiondialogs_apply[DIALOG_FREEMVT_CREATION_TITLE] = new ActionFreeMvtCreationApply();
 
 
     m_actions[CONTEXTMENU_NEWCIRCULARMVT] = new ActionCircularMvtCreationDialog();
@@ -3194,101 +3197,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_FREEMVT_CREATION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
-
-        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
-
-        if( "" == alias )
-        {
-            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-            return;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        DIALOG_GET_FLOAT_PROPERTY( "initial position.x", x );
-        DIALOG_GET_FLOAT_PROPERTY( "initial position.y", y );
-        DIALOG_GET_FLOAT_PROPERTY( "initial position.z", z );
-
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // create the free mvt node
-
-        SceneNode<FreeMovement>* free_node;
-        free_node = new SceneNode<FreeMovement>( alias );
-        free_node->SetContent( new FreeMovement() );
-
-        free_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-        free_node->GetContent()->Init( Vector( x, y, z, 1 ) );
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // now we must found the scenenodegraph we belong to make the RegisterNode() call
-        void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
-
-        BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-        entry = m_scenenodegraphs[id];
-        entry.scenenodegraph->RegisterNode( free_node );
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // link to the scenegraph hierarchy
-
-        wxTreeItemId current;
-        current = p_dialog->GetTreeItem();
-        id = current.GetID();
-
-        if( m_scenenodegraphs.count( id ) > 0 )
-        {
-            // parent is a scenegraph : use SceneNodeGraph::Add() method
-            entry.scenenodegraph->AddNode( free_node );
-        }
-        else
-        {
-            BaseSceneNode* parent_node = m_tree_nodes[id];
-            free_node->LinkTo( parent_node );
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        // GUI : add item in the tree
-
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( p_dialog->GetTreeItem(), alias2, MOVEMENT_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( p_dialog->GetTreeItem() );
-       
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // record the new node and associated metadata
-
-        BasicSceneMainFrame::SceneNodeEntry<FreeMovement> f_entry;
-
-        f_entry.name = alias;
-        f_entry.scene_node = free_node;
-        f_entry.treeitemid = treeitemid;
-
-        m_free_nodes[f_entry.treeitemid.GetID()] = f_entry;
-
-        m_tree_nodes[f_entry.treeitemid.GetID()] = free_node;
-        m_inv_tree_nodes[free_node] = f_entry.treeitemid.GetID();
-
-        ///////////////////////////////////////////////////////////////////////////
-
-        dsstring title;
-        dsstring* script_text;
-        bool * script_state;
-        title = "Free movement node: ";
-        title += m_free_nodes[f_entry.treeitemid.GetID()].name;
-        script_text = &m_free_nodes[f_entry.treeitemid.GetID()].script;
-        script_state = &m_free_nodes[f_entry.treeitemid.GetID()].script_enabled;
-        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-        m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
-
-        ///////////////////////////////////////////////////////////////////////////
-
-        DIALOG_CLOSE
-
+        m_actiondialogs_apply[DIALOG_FREEMVT_CREATION_TITLE]->Execute( p_dialog );
     }
     else if( DIALOG_CIRCMVT_CREATION_TITLE == DIALOG_TITLE )
     {

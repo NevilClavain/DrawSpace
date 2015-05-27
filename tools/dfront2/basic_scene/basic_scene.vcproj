@@ -329,6 +329,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionFreeMvtCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFreeMvtCreationApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionFreeMvtCreationDialog.cpp"
 				>
 			</File>
