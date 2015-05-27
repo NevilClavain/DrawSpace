@@ -285,6 +285,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCircularMvtCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCircularMvtCreationApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCircularMvtCreationDialog.cpp"
 				>
 			</File>
