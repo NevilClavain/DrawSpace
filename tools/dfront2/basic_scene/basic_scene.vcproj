@@ -369,6 +369,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionLinearMvtCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLinearMvtCreationApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionLinearMvtCreationDialog.cpp"
 				>
 			</File>
