@@ -104,6 +104,8 @@
     <ClCompile Include="ActionFPSMvtCreationDialog.cpp" />
     <ClCompile Include="ActionFreeMvtCreationApply.cpp" />
     <ClCompile Include="ActionFreeMvtCreationDialog.cpp" />
+    <ClCompile Include="ActionFreeMvtFreeMvt.cpp" />
+    <ClCompile Include="ActionFreeMvtLinkTo.cpp" />
     <ClCompile Include="ActionInertBodyCreationApply.cpp" />
     <ClCompile Include="ActionInertBodyCreationDialog.cpp" />
     <ClCompile Include="ActionKeydownScriptEditionDialogcpp.cpp" />
@@ -163,6 +165,8 @@
     <ClInclude Include="ActionFPSMvtCreationDialog.h" />
     <ClInclude Include="ActionFreeMvtCreationApply.h" />
     <ClInclude Include="ActionFreeMvtCreationDialog.h" />
+    <ClInclude Include="ActionFreeMvtFreeMvt.h" />
+    <ClInclude Include="ActionFreeMvtLinkTo.h" />
     <ClInclude Include="ActionInertBodyCreationApply.h" />
     <ClInclude Include="ActionInertBodyCreationDialog.h" />
     <ClInclude Include="ActionKeydownScriptEditionDialog.h" />

@@ -56,6 +56,8 @@
     <ClCompile Include="ActionLinearMvtCreationApply.cpp" />
     <ClCompile Include="ActionLinearMvtEditionApply.cpp" />
     <ClCompile Include="ActionLongLatMvtEditionApply.cpp" />
+    <ClCompile Include="ActionFreeMvtFreeMvt.cpp" />
+    <ClCompile Include="ActionFreeMvtLinkTo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -116,5 +118,7 @@
     <ClInclude Include="ActionLinearMvtCreationApply.h" />
     <ClInclude Include="ActionLinearMvtEditionApply.h" />
     <ClInclude Include="ActionLongLatMvtEditionApply.h" />
+    <ClInclude Include="ActionFreeMvtFreeMvt.h" />
+    <ClInclude Include="ActionFreeMvtLinkTo.h" />
   </ItemGroup>
 </Project>

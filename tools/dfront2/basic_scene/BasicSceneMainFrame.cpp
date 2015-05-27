@@ -79,6 +79,8 @@
 #include "ActionFreeMvtCreationDialog.h"
 #include "ActionFreeMvtCreationApply.h"
 
+#include "ActionFreeMvtFreeMvt.h"
+#include "ActionFreeMvtLinkTo.h"
 
 #include "ActionCircularMvtCreationDialog.h"
 #include "ActionCircularMvtCreationApply.h"
@@ -494,7 +496,8 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWFREEMVT] = new ActionFreeMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_FREEMVT_CREATION_TITLE] = new ActionFreeMvtCreationApply();
-
+    m_actionscripts["FreeMovementNode:FreeMovementNode"] = new ActionFreeMvtFreeMvt();
+    m_actionscripts["FreeMovementNode:LinkTo"] = new ActionFreeMvtLinkTo();
 
     m_actions[CONTEXTMENU_NEWCIRCULARMVT] = new ActionCircularMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_CIRCMVT_CREATION_TITLE] = new ActionCircularMvtCreationApply();
@@ -1982,135 +1985,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
     else if( "FreeMovementNode:FreeMovementNode" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        SceneNode<FreeMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<FreeMovement>**>( "existing_node" );
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::FreeMovement>>::iterator it = m_free_nodes.begin(); it != m_free_nodes.end(); ++it )
-        {
-            if( it->second.name == scene_name )
-            {
-                // node exists
-                *node_ptr = it->second.scene_node;
-                break;
-            }
-        }        
+        m_actionscripts["FreeMovementNode:FreeMovementNode"]->Execute( p_propertypool );
     }
     else if( "FreeMovementNode:LinkTo" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
-        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
-        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
-
-        Vector init_pos = p_propertypool.GetPropValue<Vector>( "init_pos" );
-
-        wxTreeItemId parent_tree_item;
-        void* parent_id = NULL;
-
-
-        bool scene_found = false;
-        SceneNodeGraphEntry scenenodegraph_entry;
-
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraph_name )
-            {
-                scenenodegraph_entry = it->second;
-                scene_found = true;                
-                break;
-            }
-        }
-
-
-        bool parent_found = false;
-        BaseSceneNode* parent = NULL;
-
-        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
-        {
-            dsstring node_scenename;
-            it->second->GetSceneName( node_scenename );
-
-            if( node_scenename == parent_name )
-            {
-                parent_found = true;
-                parent = it->second;
-                parent_id = it->first;
-                break;
-            }
-        }
-
-        if( !parent_found )
-        {
-            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-            {
-                if( it->second.name == parent_name )
-                {
-                    parent_found = true;
-                    parent_id = it->first;
-                    break;
-                }
-            }
-        }
-
-        if( !scene_found )
-        {
-            wxMessageBox( "FreeMovement node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
-            return;           
-        }
-
-        else if( !parent_found )
-        {
-            wxMessageBox( "FreeMovement node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
-            return;
-        }
-
-        SceneNode<FreeMovement>* free_node = static_cast<SceneNode<FreeMovement>*>( node );
-        free_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-
-        free_node->SetContent( new FreeMovement() );
-        free_node->GetContent()->Init( init_pos );
-
-        scenenodegraph_entry.scenenodegraph->RegisterNode( node );
-
-        if( parent )
-        {            
-            free_node->LinkTo( parent );
-            parent_tree_item = searchTreeItemIdInNodes( parent_id );
-        }
-        else
-        {
-            scenenodegraph_entry.scenenodegraph->AddNode( node );
-            parent_tree_item = scenenodegraph_entry.treeitemid;
-        }
-
-        // GUI : add item in the tree
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), MOVEMENT_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
-
-        // record the new node and associated metadata
-
-        BasicSceneMainFrame::SceneNodeEntry<FreeMovement> f_entry;
-
-        f_entry.name = scene_name;
-        f_entry.scene_node = free_node;
-        f_entry.treeitemid = treeitemid;
-
-        m_free_nodes[f_entry.treeitemid.GetID()] = f_entry;
-        m_tree_nodes[f_entry.treeitemid.GetID()] = free_node;
-        m_inv_tree_nodes[free_node] = f_entry.treeitemid.GetID();
-
-        //////////////////////////////////
-
-        dsstring title;
-        dsstring* script_text;
-        bool * script_state;
-        title = "Free movement node: ";
-        title += m_free_nodes[f_entry.treeitemid.GetID()].name;
-        script_text = &m_free_nodes[f_entry.treeitemid.GetID()].script;
-        script_state = &m_free_nodes[f_entry.treeitemid.GetID()].script_enabled;
-        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-        m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
-
+        m_actionscripts["FreeMovementNode:LinkTo"]->Execute( p_propertypool );
     }
 
     else if( "LongLatMovementNode:LongLatMovementNode" == script_call_id )
