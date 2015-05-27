@@ -67,6 +67,9 @@
 #include "ActionCameraPointEditionApply.h"
 
 #include "ActionFPSMvtCreationDialog.h"
+#include "ActionFPSMvtCreationApply.h"
+
+
 #include "ActionLinearMvtCreationDialog.h"
 #include "ActionFreeMvtCreationDialog.h"
 
@@ -472,6 +475,7 @@ m_delta_mouse_init( true )
 
 
     m_actions[CONTEXTMENU_NEWFPSMVT] = new ActionFPSMvtCreationDialog();
+    m_actiondialogs_apply[DIALOG_FPSMVT_CREATION_TITLE] = new ActionFPSMvtCreationApply();
 
     m_actions[CONTEXTMENU_NEWLINEARMVT] = new ActionLinearMvtCreationDialog();
 
@@ -3167,105 +3171,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
     }
     else if( DIALOG_FPSMVT_CREATION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
-
-        DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
-
-        if( "" == alias )
-        {
-            wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
-            return;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-
-        DIALOG_GET_FLOAT_PROPERTY( "initial theta", init_theta );
-        DIALOG_GET_FLOAT_PROPERTY( "initial phi", init_phi );
-
-        DIALOG_GET_FLOAT_PROPERTY( "initial position.x", x );
-        DIALOG_GET_FLOAT_PROPERTY( "initial position.y", y );
-        DIALOG_GET_FLOAT_PROPERTY( "initial position.z", z );
-        DIALOG_GET_BOOL_PROPERTY( "y movement", ymvt );
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // create the fps mvt node
-
-        SceneNode<FPSMovement>* fps_node;
-        fps_node = new SceneNode<FPSMovement>( alias );
-        fps_node->SetContent( new FPSMovement( ymvt ) );
-
-        fps_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-
-        fps_node->GetContent()->Init( Vector( x, y, z, 1 ), Maths::DegToRad( init_theta ), Maths::DegToRad( init_phi ) );
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // now we must found the scenenodegraph we belong to make the RegisterNode() call
-        void* id = find_scenenodegraph_id(  p_dialog->GetTreeItem() );
-
-        BasicSceneMainFrame::SceneNodeGraphEntry entry;
-
-        entry = m_scenenodegraphs[id];
-        entry.scenenodegraph->RegisterNode( fps_node );
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        // link to the scenegraph hierarchy
-
-        wxTreeItemId current;
-        current = p_dialog->GetTreeItem(); //m_last_clicked_treeitem;
-        id = current.GetID();
-
-        if( m_scenenodegraphs.count( id ) > 0 )
-        {
-            // parent is a scenegraph : use SceneNodeGraph::Add() method
-            entry.scenenodegraph->AddNode( fps_node );
-        }
-        else
-        {
-            BaseSceneNode* parent_node = m_tree_nodes[id];
-            fps_node->LinkTo( parent_node );
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        // GUI : add item in the tree
-
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem(), alias2, MOVEMENT_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( /*m_last_clicked_treeitem*/ p_dialog->GetTreeItem() );
-       
-        /////////////////////////////////////////////////////////////////////////////////
-
-        // record the new node and associated metadata
-
-        BasicSceneMainFrame::SceneNodeEntry<FPSMovement> f_entry;
-
-        f_entry.name = alias;
-        f_entry.scene_node = fps_node;
-        f_entry.treeitemid = treeitemid;
-
-
-        m_fps_nodes[f_entry.treeitemid.GetID()] = f_entry;
-
-        m_tree_nodes[f_entry.treeitemid.GetID()] = fps_node;
-        m_inv_tree_nodes[fps_node] = f_entry.treeitemid.GetID();
-
-
-        dsstring title;
-        dsstring* script_text;
-        bool * script_state;
-        title = "FPS movement node: ";
-        title += m_fps_nodes[f_entry.treeitemid.GetID()].name;
-        script_text = &m_fps_nodes[f_entry.treeitemid.GetID()].script;
-        script_state = &m_fps_nodes[f_entry.treeitemid.GetID()].script_enabled;
-        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-        m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
-
-
-        DIALOG_CLOSE
-
+        m_actiondialogs_apply[DIALOG_FPSMVT_CREATION_TITLE]->Execute( p_dialog );
     }
 
     else if( DIALOG_LINMVT_CREATION_TITLE == DIALOG_TITLE )

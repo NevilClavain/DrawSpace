@@ -313,6 +313,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionFPSMvtCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFPSMvtCreationApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionFPSMvtCreationDialog.cpp"
 				>
 			</File>

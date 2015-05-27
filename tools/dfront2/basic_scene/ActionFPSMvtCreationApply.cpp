@@ -23,17 +23,18 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionCameraPointCreationApply.h"
+#include "ActionFPSMvtCreationApply.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
-void ActionCameraPointCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
+void ActionFPSMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
 {
     DIALOG_GETGRID
     DIALOG_PROPERTIES_VARS
+
 
     DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
 
@@ -47,23 +48,36 @@ void ActionCameraPointCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    // create the camera node
 
-    SceneNode<CameraPoint>* camera_node;
-    camera_node = new SceneNode<CameraPoint>( alias );
-    camera_node->SetContent( new CameraPoint );
+    DIALOG_GET_FLOAT_PROPERTY( "initial theta", init_theta );
+    DIALOG_GET_FLOAT_PROPERTY( "initial phi", init_phi );
 
-    camera_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    DIALOG_GET_FLOAT_PROPERTY( "initial position.x", x );
+    DIALOG_GET_FLOAT_PROPERTY( "initial position.y", y );
+    DIALOG_GET_FLOAT_PROPERTY( "initial position.z", z );
+    DIALOG_GET_BOOL_PROPERTY( "y movement", ymvt );
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    // create the fps mvt node
+
+    SceneNode<FPSMovement>* fps_node;
+    fps_node = new SceneNode<FPSMovement>( alias );
+    fps_node->SetContent( new FPSMovement( ymvt ) );
+
+    fps_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+
+    fps_node->GetContent()->Init( Vector( x, y, z, 1 ), Maths::DegToRad( init_theta ), Maths::DegToRad( init_phi ) );
 
     /////////////////////////////////////////////////////////////////////////////////
 
     // now we must found the scenenodegraph we belong to make the RegisterNode() call
-    void* id = BasicSceneMainFrame::GetInstance()->find_scenenodegraph_id(  p_dialog->GetTreeItem() );
+    void* id = BasicSceneMainFrame::GetInstance()->find_scenenodegraph_id( p_dialog->GetTreeItem() );
 
     BasicSceneMainFrame::SceneNodeGraphEntry entry;
 
     entry = BasicSceneMainFrame::GetInstance()->m_scenenodegraphs[id];
-    entry.scenenodegraph->RegisterNode( camera_node );
+    entry.scenenodegraph->RegisterNode( fps_node );
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -76,41 +90,41 @@ void ActionCameraPointCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
     if( BasicSceneMainFrame::GetInstance()->m_scenenodegraphs.count( id ) > 0 )
     {
         // parent is a scenegraph : use SceneNodeGraph::Add() method
-        entry.scenenodegraph->AddNode( camera_node );
+        entry.scenenodegraph->AddNode( fps_node );
     }
     else
     {
         BaseSceneNode* parent_node = BasicSceneMainFrame::GetInstance()->m_tree_nodes[id];
-        camera_node->LinkTo( parent_node );
+        fps_node->LinkTo( parent_node );
     }
 
-   
-    /////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    // record the new transformation node and associated metadata
+    // record the new node and associated metadata
 
-    BasicSceneMainFrame::SceneNodeEntry<CameraPoint> c_entry;
+    BasicSceneMainFrame::SceneNodeEntry<FPSMovement> f_entry;
 
-    c_entry.name = alias;
-    c_entry.scene_node = camera_node;
-    c_entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( p_dialog->GetTreeItem(), alias2, CAMERA_ICON_INDEX ); //treeitemid;
+    f_entry.name = alias;
+    f_entry.scene_node = fps_node;
+    f_entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( p_dialog->GetTreeItem(), alias2, MOVEMENT_ICON_INDEX ); //treeitemid;
 
 
-    BasicSceneMainFrame::GetInstance()->m_camera_nodes[c_entry.treeitemid.GetID()] = c_entry;
+    BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()] = f_entry;
 
-    BasicSceneMainFrame::GetInstance()->m_tree_nodes[c_entry.treeitemid.GetID()] = camera_node;
-    BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[camera_node] = c_entry.treeitemid.GetID();
+    BasicSceneMainFrame::GetInstance()->m_tree_nodes[f_entry.treeitemid.GetID()] = fps_node;
+    BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[fps_node] = f_entry.treeitemid.GetID();
 
 
     dsstring title;
     dsstring* script_text;
     bool * script_state;
-    title = "CameraPoint node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_camera_nodes[c_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_camera_nodes[c_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_camera_nodes[c_entry.treeitemid.GetID()].script_enabled;
+    title = "FPS movement node: ";
+    title += BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].name;
+    script_text = &BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].script;
+    script_state = &BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].script_enabled;
     BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
 
     DIALOG_CLOSE
+
 }
