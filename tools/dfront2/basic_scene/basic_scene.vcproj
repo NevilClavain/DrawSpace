@@ -225,6 +225,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCameraPointEditionApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCameraPointEditionDialog.cpp"
 				>
 			</File>
@@ -286,6 +290,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionCircularMvtCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCircularMvtEditionApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCircularMvtEditionApply.h"
 				>
 			</File>
 			<File
@@ -591,10 +603,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\ActionCameraPointEditionApply.h"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

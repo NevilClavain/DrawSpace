@@ -69,7 +69,10 @@
 #include "ActionFPSMvtCreationDialog.h"
 #include "ActionLinearMvtCreationDialog.h"
 #include "ActionFreeMvtCreationDialog.h"
+
 #include "ActionCircularMvtCreationDialog.h"
+
+#include "ActionCircularMvtEditionApply.h"
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -474,7 +477,12 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWFREEMVT] = new ActionFreeMvtCreationDialog();
 
+
     m_actions[CONTEXTMENU_NEWCIRCULARMVT] = new ActionCircularMvtCreationDialog();
+
+    m_actiondialogs_apply[DIALOG_CIRCMVT_EDITION_TITLE] = new ActionCircularMvtEditionApply();
+
+
 
     m_actions[CONTEXTMENU_NEWLONGLATMVT] = new ActionLongLatCreationDialog();
     m_actiondialogs_apply[DIALOG_LONGLATMVT_CREATION_TITLE] = new ActionLongLatCreationApply();
@@ -3582,13 +3590,7 @@ void BasicSceneMainFrame::on_applybutton_clicked( BasicSceneObjectPropertiesDial
 
     else if( DIALOG_CIRCMVT_EDITION_TITLE == DIALOG_TITLE )
     {
-        DIALOG_GET_FLOAT_PROPERTY( "current theta", curr_theta );
-        DIALOG_GET_FLOAT_PROPERTY( "current phi", curr_phi );
-        DIALOG_GET_FLOAT_PROPERTY( "current angular speed", curr_speed );
-        SceneNodeEntry<DrawSpace::Core::CircularMovement> circ_node = m_circ_nodes[p_dialog->GetTreeItem().GetID()];
-        circ_node.scene_node->GetContent()->SetAngularSpeed( curr_speed );
-        circ_node.scene_node->GetContent()->SetTheta( curr_theta );
-        circ_node.scene_node->GetContent()->SetPhi( curr_phi );
+        m_actiondialogs_apply[DIALOG_CIRCMVT_EDITION_TITLE]->Execute( p_dialog );
     }
     else if( DIALOG_LONGLATMVT_CREATION_TITLE == DIALOG_TITLE )
     {        
