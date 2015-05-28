@@ -88,6 +88,7 @@
 #include "ActionCircularMvtEditionApply.h"
 
 #include "ActionCircularMvtCircularMvt.h"
+#include "ActionCircularMvtLinkTo.h"
 
 
 #include "ActionLongLatCreationDialog.h"
@@ -504,6 +505,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWCIRCULARMVT] = new ActionCircularMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_CIRCMVT_CREATION_TITLE] = new ActionCircularMvtCreationApply();
     m_actionscripts["CircularMovementNode:CircularMovementNode"] = new ActionCircularMvtCircularMvt();
+    m_actionscripts["CircularMovementNode:LinkTo"] = new ActionCircularMvtLinkTo();
 
     m_actiondialogs_apply[DIALOG_CIRCMVT_EDITION_TITLE] = new ActionCircularMvtEditionApply();
 
@@ -1849,146 +1851,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     else if( "CircularMovementNode:CircularMovementNode" == script_call_id )
     {
         m_actionscripts["CircularMovementNode:CircularMovementNode"]->Execute( p_propertypool );
-
-
-        /*
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        SceneNode<CircularMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<CircularMovement>**>( "existing_node" );
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::CircularMovement>>::iterator it = m_circ_nodes.begin(); it != m_circ_nodes.end(); ++it )
-        {
-            if( it->second.name == scene_name )
-            {
-                // node exists
-                *node_ptr = it->second.scene_node;
-                break;
-            }
-        }
-        */
     }
 
     else if( "CircularMovementNode:LinkTo" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
-        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
-        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
-
-        Vector center_pos = p_propertypool.GetPropValue<Vector>( "center_pos" );
-        Vector delta_center_pos = p_propertypool.GetPropValue<Vector>( "delta_center_pos" );
-        Vector axis = p_propertypool.GetPropValue<Vector>( "axis" );
-        dsreal init_theta = p_propertypool.GetPropValue<dsreal>( "init_theta" );
-        dsreal init_phi = p_propertypool.GetPropValue<dsreal>( "init_phi" );
-        dsreal init_angle = p_propertypool.GetPropValue<dsreal>( "init_angle" );
-
-
-        wxTreeItemId parent_tree_item;
-        void* parent_id = NULL;
-
-
-        bool scene_found = false;
-        SceneNodeGraphEntry scenenodegraph_entry;
-
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraph_name )
-            {
-                scenenodegraph_entry = it->second;
-                scene_found = true;                
-                break;
-            }
-        }
-
-
-        bool parent_found = false;
-        BaseSceneNode* parent = NULL;
-
-        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
-        {
-            dsstring node_scenename;
-            it->second->GetSceneName( node_scenename );
-
-            if( node_scenename == parent_name )
-            {
-                parent_found = true;
-                parent = it->second;
-                parent_id = it->first;
-                break;
-            }
-        }
-
-        if( !parent_found )
-        {
-            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-            {
-                if( it->second.name == parent_name )
-                {
-                    parent_found = true;
-                    parent_id = it->first;
-                    break;
-                }
-            }
-        }
-
-        if( !scene_found )
-        {
-            wxMessageBox( "CircularMovement node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
-            return;           
-        }
-
-        else if( !parent_found )
-        {
-            wxMessageBox( "CircularMovement node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
-            return;
-        }
-
-        SceneNode<CircularMovement>* circ_node = static_cast<SceneNode<CircularMovement>*>( node );
-        circ_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-
-        circ_node->SetContent( new CircularMovement() );
-        circ_node->GetContent()->Init( center_pos, delta_center_pos, axis, init_angle, init_theta, init_phi );
-
-        scenenodegraph_entry.scenenodegraph->RegisterNode( node );
-
-        if( parent )
-        {            
-            circ_node->LinkTo( parent );
-            parent_tree_item = searchTreeItemIdInNodes( parent_id );
-        }
-        else
-        {
-            scenenodegraph_entry.scenenodegraph->AddNode( node );
-            parent_tree_item = scenenodegraph_entry.treeitemid;
-        }
-
-        // GUI : add item in the tree
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), MOVEMENT_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
-
-        // record the new node and associated metadata
-
-        BasicSceneMainFrame::SceneNodeEntry<CircularMovement> c_entry;
-
-        c_entry.name = scene_name;
-        c_entry.scene_node = circ_node;
-        c_entry.treeitemid = treeitemid;
-
-        m_circ_nodes[c_entry.treeitemid.GetID()] = c_entry;
-        m_tree_nodes[c_entry.treeitemid.GetID()] = circ_node;
-        m_inv_tree_nodes[circ_node] = c_entry.treeitemid.GetID();
-
-        /////////////////////////////////////////////////////////////
-
-        dsstring title;
-        dsstring* script_text;
-        bool * script_state;
-        title = "Circular movement node: ";
-        title += m_circ_nodes[c_entry.treeitemid.GetID()].name;
-        script_text = &m_circ_nodes[c_entry.treeitemid.GetID()].script;
-        script_state = &m_circ_nodes[c_entry.treeitemid.GetID()].script_enabled;
-        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-        m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
-
+        m_actionscripts["CircularMovementNode:LinkTo"]->Execute( p_propertypool );
     }
 
     else if( "FreeMovementNode:FreeMovementNode" == script_call_id )

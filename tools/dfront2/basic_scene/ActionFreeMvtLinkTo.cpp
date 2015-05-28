@@ -120,9 +120,6 @@ void ActionFreeMvtLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypool
         parent_tree_item = scenenodegraph_entry.treeitemid;
     }
 
-    // GUI : add item in the tree
-    //wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), MOVEMENT_ICON_INDEX );
-    //m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
 
     // record the new node and associated metadata
 

@@ -317,6 +317,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCircularMvtLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCircularMvtLinkTo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\actiondialog.h"
 				>
 			</File>
