@@ -71,3 +71,8 @@ void BasicSceneScriptEditFrame::Show( void )
     m_activation_checkBox->SetValue( *m_script_state );
     ScriptEditFrame::Show();    
 }
+
+dsstring* BasicSceneScriptEditFrame::GetTextRef( void )
+{
+    return m_text;
+}

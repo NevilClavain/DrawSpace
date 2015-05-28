@@ -521,6 +521,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionNodeLoadScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionNodeLoadScript.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionNodeScriptEditionDialog.cpp"
 				>
 			</File>

@@ -32,6 +32,8 @@
 #include "ActionAddMatrix.h"
 #include "ActionAddShaderParam.h"
 
+#include "ActionNodeLoadScript.h"
+
 #include "ActionScenenodeGraphCreationDialog.h"
 #include "ActionScenenodeGraphCreationApply.h"
 
@@ -461,6 +463,8 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific1[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionAddShaderParam();
     m_actiondialogs_apply[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionSpaceBoxCreationApply();
 
+    m_actionscripts["SpaceboxNode:LoadScript"] = new ActionNodeLoadScript();
+
 
     m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
     m_actiondialogs_apply[DIALOG_SPACEBOX_EDITION_TITLE] = new ActionSpaceBoxEditionApply();
@@ -474,6 +478,8 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_CHUNKNODE] = new ActionChunkEditionDialog();
     m_actiondialogs_apply[DIALOG_CHUNK_EDITION_TITLE] = new ActionChunkEditionApply();
 
+    m_actionscripts["ChunkNode:LoadScript"] = new ActionNodeLoadScript();
+
 
 
     m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
@@ -484,6 +490,8 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
     m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionSpecific1();
 
+    m_actionscripts["TransformationNode:LoadScript"] = new ActionNodeLoadScript();
+
     m_actions[CONTEXTMENU_NEWCAMERA] = new ActionCameraPointCreationDialog();
     m_actiondialogs_apply[DIALOG_CAMERA_CREATION_TITLE] = new ActionCameraPointCreationApply();
 
@@ -492,12 +500,16 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_CAMERA] = new ActionCameraPointEditionDialog();
     m_actiondialogs_apply[DIALOG_CAMERA_EDIT_TITLE] = new ActionCameraPointEditionApply();
 
+    m_actionscripts["CameraPointNode:LoadScript"] = new ActionNodeLoadScript();
+
 
 
     m_actions[CONTEXTMENU_NEWFPSMVT] = new ActionFPSMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_FPSMVT_CREATION_TITLE] = new ActionFPSMvtCreationApply();
     m_actionscripts["FpsMovementNode:FpsMovementNode"] = new ActionFPSMvtFPSMvt();
     m_actionscripts["FpsMovementNode:LinkTo"] = new ActionFPSMvtLinkTo();
+
+    m_actionscripts["FpsMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
     m_actions[CONTEXTMENU_NEWLINEARMVT] = new ActionLinearMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_LINMVT_CREATION_TITLE] = new ActionLinearMvtCreationApply();
@@ -506,11 +518,15 @@ m_delta_mouse_init( true )
 
     m_actiondialogs_apply[DIALOG_LINMVT_EDITION_TITLE] = new ActionLinearMvtEditionApply();
 
+    m_actionscripts["LinearMovementNode:LoadScript"] = new ActionNodeLoadScript();
+
 
     m_actions[CONTEXTMENU_NEWFREEMVT] = new ActionFreeMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_FREEMVT_CREATION_TITLE] = new ActionFreeMvtCreationApply();
     m_actionscripts["FreeMovementNode:FreeMovementNode"] = new ActionFreeMvtFreeMvt();
     m_actionscripts["FreeMovementNode:LinkTo"] = new ActionFreeMvtLinkTo();
+
+    m_actionscripts["FreeMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
     m_actions[CONTEXTMENU_NEWCIRCULARMVT] = new ActionCircularMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_CIRCMVT_CREATION_TITLE] = new ActionCircularMvtCreationApply();
@@ -518,6 +534,8 @@ m_delta_mouse_init( true )
     m_actionscripts["CircularMovementNode:LinkTo"] = new ActionCircularMvtLinkTo();
 
     m_actiondialogs_apply[DIALOG_CIRCMVT_EDITION_TITLE] = new ActionCircularMvtEditionApply();
+
+    m_actionscripts["CircularMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
 
 
@@ -529,6 +547,7 @@ m_delta_mouse_init( true )
 
     m_actiondialogs_apply[DIALOG_LONGLATMVT_EDITION_TITLE] = new ActionLongLatMvtEditionApply();
 
+    m_actionscripts["LongLatMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
 
     m_actions[CONTEXTMENU_NEWINERTBODY] = new ActionInertBodyCreationDialog();
@@ -1523,73 +1542,43 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
             wxMessageBox( "DrawSpace:LoadMouseScript : file not found", "Script error", wxICON_ERROR );
         }
     }
-    else if( "TransformationNode:LoadScript" == script_call_id || 
-                "CameraPointNode:LoadScript" == script_call_id || 
-                "SpaceboxNode:LoadScript" == script_call_id || 
-                "FpsMovementNode:LoadScript" == script_call_id ||
-                "LinearMovementNode:LoadScript" == script_call_id ||
-                "FreeMovementNode:LoadScript" == script_call_id ||
-                "ChunkNode:LoadScript" == script_call_id )
+
+    else if( "TransformationNode:LoadScript" == script_call_id )
     {
-        dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
-        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
-        void* id = m_inv_tree_nodes[node];
-
-        long size;
-        void* data = File::LoadAndAllocBinaryFile( filepath, &size );
-        if( data )
-        {
-            char* script_text = new char[size + 1];
-            memcpy( script_text, data, size );
-            script_text[size] = 0;
-
-            if( "TransformationNode:LoadScript" == script_call_id )
-            {
-                m_transformation_nodes[id].script = script_text;
-            }
-            else if( "CameraPointNode:LoadScript" == script_call_id )
-            {
-                m_camera_nodes[id].script = script_text;
-            }
-            else if( "SpaceboxNode:LoadScript" == script_call_id )
-            {
-                m_spacebox_nodes[id].script = script_text;
-            }
-            else if( "FpsMovementNode:LoadScript" == script_call_id )
-            {
-                m_fps_nodes[id].script = script_text;
-            }
-            else if( "ChunkNode:LoadScript" == script_call_id )
-            {
-                m_chunk_nodes[id].script = script_text;
-            }
-            else if( "LinearMovementNode:LoadScript" == script_call_id )
-            {
-                m_lin_nodes[id].script = script_text;
-            }
-            else if( "FreeMovementNode:LoadScript" == script_call_id )
-            {
-                m_free_nodes[id].script = script_text;
-            }
-            else if( "CircularMovementNode:LoadScript" == script_call_id )
-            {
-                m_circ_nodes[id].script = script_text;
-            }
-            else if( "LongLatMovementNode:LoadScript" == script_call_id )
-            {
-                m_ll_nodes[id].script = script_text;
-            }
-
-
-        }
-        else
-        {
-            wxMessageBox( "LoadScript : file not found", "Script error", wxICON_ERROR );
-        }        
+        m_actionscripts["TransformationNode:LoadScript"]->Execute( p_propertypool );
     }
-   
-
-
+    else if( "CameraPointNode:LoadScript" == script_call_id )
+    {
+        m_actionscripts["CameraPointNode:LoadScript"]->Execute( p_propertypool );
+    }
+    else if( "SpaceboxNode:LoadScript" == script_call_id )
+    {
+        m_actionscripts["SpaceboxNode:LoadScript"]->Execute( p_propertypool );
+    }
+    else if( "FpsMovementNode:LoadScript" == script_call_id )
+    {
+        m_actionscripts["FpsMovementNode:LoadScript"]->Execute( p_propertypool );
+    }
+    else if( "ChunkNode:LoadScript" == script_call_id )
+    {
+        m_actionscripts["ChunkNode:LoadScript"]->Execute( p_propertypool );
+    }
+    else if( "LinearMovementNode:LoadScript" == script_call_id )
+    {
+        m_actionscripts["LinearMovementNode:LoadScript"]->Execute( p_propertypool );
+    }
+    else if( "FreeMovementNode:LoadScript" == script_call_id )
+    {
+        m_actionscripts["FreeMovementNode:LoadScript"]->Execute( p_propertypool );
+    }
+    else if( "CircularMovementNode:LoadScript" == script_call_id )
+    {
+        m_actionscripts["CircularMovementNode:LoadScript"]->Execute( p_propertypool );
+    }
+    else if( "LongLatMovementNode:LoadScript" == script_call_id )
+    {
+        m_actionscripts["LongLatMovementNode:LoadScript"]->Execute( p_propertypool );
+    }
     else if( "FpsMovementNode:FpsMovementNode" == script_call_id )
     {
         m_actionscripts["FpsMovementNode:FpsMovementNode"]->Execute( p_propertypool );
