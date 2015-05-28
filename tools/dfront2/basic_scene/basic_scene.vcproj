@@ -417,6 +417,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionKeyDownLoadScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionKeyDownLoadScript.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionKeydownScriptEditionDialog.h"
 				>
 			</File>
