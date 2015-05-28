@@ -87,6 +87,8 @@
 
 #include "ActionCircularMvtEditionApply.h"
 
+#include "ActionCircularMvtCircularMvt.h"
+
 
 #include "ActionLongLatCreationDialog.h"
 #include "ActionLongLatCreationApply.h"
@@ -501,6 +503,7 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWCIRCULARMVT] = new ActionCircularMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_CIRCMVT_CREATION_TITLE] = new ActionCircularMvtCreationApply();
+    m_actionscripts["CircularMovementNode:CircularMovementNode"] = new ActionCircularMvtCircularMvt();
 
     m_actiondialogs_apply[DIALOG_CIRCMVT_EDITION_TITLE] = new ActionCircularMvtEditionApply();
 
@@ -1845,6 +1848,10 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
     else if( "CircularMovementNode:CircularMovementNode" == script_call_id )
     {
+        m_actionscripts["CircularMovementNode:CircularMovementNode"]->Execute( p_propertypool );
+
+
+        /*
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
         SceneNode<CircularMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<CircularMovement>**>( "existing_node" );
 
@@ -1857,6 +1864,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
                 break;
             }
         }
+        */
     }
 
     else if( "CircularMovementNode:LinkTo" == script_call_id )

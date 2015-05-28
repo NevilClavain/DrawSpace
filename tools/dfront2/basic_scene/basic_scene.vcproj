@@ -285,6 +285,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCircularMvtCircularMvt.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCircularMvtCircularMvt.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCircularMvtCreationApply.cpp"
 				>
 			</File>
@@ -350,6 +358,22 @@
 			</File>
 			<File
 				RelativePath=".\ActionFreeMvtCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFreeMvtFreeMvt.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFreeMvtFreeMvt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFreeMvtLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFreeMvtLinkTo.h"
 				>
 			</File>
 			<File

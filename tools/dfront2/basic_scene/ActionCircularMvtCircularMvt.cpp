@@ -23,7 +23,7 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionFreeMvtFreeMvt.h"
+#include "ActionCircularMvtCircularMvt.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -31,12 +31,12 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
 
-void ActionFreeMvtFreeMvt::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
+void ActionCircularMvtCircularMvt::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
 {
     dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-    SceneNode<FreeMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<FreeMovement>**>( "existing_node" );
+    SceneNode<CircularMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<CircularMovement>**>( "existing_node" );
 
-    for( std::map<void*, BasicSceneMainFrame::SceneNodeEntry<DrawSpace::Core::FreeMovement>>::iterator it = BasicSceneMainFrame::GetInstance()->m_free_nodes.begin(); it != BasicSceneMainFrame::GetInstance()->m_free_nodes.end(); ++it )
+    for( std::map<void*, BasicSceneMainFrame::SceneNodeEntry<DrawSpace::Core::CircularMovement>>::iterator it = BasicSceneMainFrame::GetInstance()->m_circ_nodes.begin(); it != BasicSceneMainFrame::GetInstance()->m_circ_nodes.end(); ++it )
     {
         if( it->second.name == scene_name )
         {

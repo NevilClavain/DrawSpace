@@ -20,29 +20,14 @@
 *
 */
 
-#include <wx/wx.h>
-#include "BasicSceneMainFrame.h"
+#ifndef _ACTIONCIRCULARMVTCIRCULARMVT_H_
+#define _ACTIONCIRCULARMVTCIRCULARMVT_H_
+#include "actionscript.h"
 
-#include "ActionFreeMvtFreeMvt.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Dynamics;
-using namespace DrawSpace::Utils;
-
-
-void ActionFreeMvtFreeMvt::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
+class ActionCircularMvtCircularMvt : public ActionScript
 {
-    dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-    SceneNode<FreeMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<FreeMovement>**>( "existing_node" );
+public:
+    void Execute( DrawSpace::Core::PropertyPool& p_propertypool );
+};
 
-    for( std::map<void*, BasicSceneMainFrame::SceneNodeEntry<DrawSpace::Core::FreeMovement>>::iterator it = BasicSceneMainFrame::GetInstance()->m_free_nodes.begin(); it != BasicSceneMainFrame::GetInstance()->m_free_nodes.end(); ++it )
-    {
-        if( it->second.name == scene_name )
-        {
-            // node exists
-            *node_ptr = it->second.scene_node;
-            break;
-        }
-    }
-}
+#endif
