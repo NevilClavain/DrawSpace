@@ -353,6 +353,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionFPSMvtFPSMvt.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFPSMvtFPSMvt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFPSMvtLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionFPSMvtLinkTo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionFreeMvtCreationApply.cpp"
 				>
 			</File>
