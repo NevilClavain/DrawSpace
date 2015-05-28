@@ -449,6 +449,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionLinearMvtLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionLinearMvtLinkTo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionLongLatCreationApply.cpp"
 				>
 			</File>
