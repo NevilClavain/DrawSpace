@@ -58,6 +58,16 @@
     <ClCompile Include="ActionLongLatMvtEditionApply.cpp" />
     <ClCompile Include="ActionFreeMvtFreeMvt.cpp" />
     <ClCompile Include="ActionFreeMvtLinkTo.cpp" />
+    <ClCompile Include="ActionCircularMvtCircularMvt.cpp" />
+    <ClCompile Include="ActionCircularMvtLinkTo.cpp" />
+    <ClCompile Include="ActionFPSMvtFPSMvt.cpp" />
+    <ClCompile Include="ActionFPSMvtLinkTo.cpp" />
+    <ClCompile Include="ActionKeyDownLoadScript.cpp" />
+    <ClCompile Include="ActionLinearMvtLinearMvt.cpp" />
+    <ClCompile Include="ActionLinearMvtLinkTo.cpp" />
+    <ClCompile Include="ActionMouseLoadScript.cpp" />
+    <ClCompile Include="ActionNodeLoadScript.cpp" />
+    <ClCompile Include="ActionKeyUpLoadScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -120,5 +130,15 @@
     <ClInclude Include="ActionLongLatMvtEditionApply.h" />
     <ClInclude Include="ActionFreeMvtFreeMvt.h" />
     <ClInclude Include="ActionFreeMvtLinkTo.h" />
+    <ClInclude Include="ActionCircularMvtCircularMvt.h" />
+    <ClInclude Include="ActionCircularMvtLinkTo.h" />
+    <ClInclude Include="ActionFPSMvtFPSMvt.h" />
+    <ClInclude Include="ActionFPSMvtLinkTo.h" />
+    <ClInclude Include="ActionKeyDownLoadScript.h" />
+    <ClInclude Include="ActionLinearMvtLinearMvt.h" />
+    <ClInclude Include="ActionLinearMvtLinkTo.h" />
+    <ClInclude Include="ActionMouseLoadScript.h" />
+    <ClInclude Include="ActionNodeLoadScript.h" />
+    <ClInclude Include="ActionKeyUpLoadScript.h" />
   </ItemGroup>
 </Project>
