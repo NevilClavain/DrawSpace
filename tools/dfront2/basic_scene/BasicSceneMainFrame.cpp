@@ -34,6 +34,8 @@
 
 #include "ActionNodeLoadScript.h"
 
+#include "ActionMouseLoadScript.h"
+
 #include "ActionScenenodeGraphCreationDialog.h"
 #include "ActionScenenodeGraphCreationApply.h"
 
@@ -558,6 +560,9 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
 
     m_actions[CONTEXTMENU_EDIT_MOUSEMOVESCRIPT] = new ActionMouseMoveScriptEditionDialog();
+    m_actionscripts["DrawSpace:LoadMouseScript"] = new ActionMouseLoadScript();
+
+
     m_actions[CONTEXTMENU_EDIT_KEYDOWNSCRIPT] = new ActionKeydownScriptEditionDialog();
     m_actions[CONTEXTMENU_EDIT_KEYUPSCRIPT] = new ActionKeyupScriptEditionDialog();
 
@@ -1526,21 +1531,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "DrawSpace:LoadMouseScript" == script_call_id )
     {
-        dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
-
-        long size;
-        void* data = File::LoadAndAllocBinaryFile( filepath, &size );
-        if( data )
-        {
-            char* script_text = new char[size + 1];
-            memcpy( script_text, data, size );
-            script_text[size] = 0;
-            m_mousemove_script = script_text;
-        }
-        else
-        {
-            wxMessageBox( "DrawSpace:LoadMouseScript : file not found", "Script error", wxICON_ERROR );
-        }
+        m_actionscripts["DrawSpace:LoadMouseScript"]->Execute( p_propertypool );
     }
 
     else if( "TransformationNode:LoadScript" == script_call_id )

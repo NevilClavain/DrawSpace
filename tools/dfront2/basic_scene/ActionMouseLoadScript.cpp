@@ -23,7 +23,7 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionNodeLoadScript.h"
+#include "ActionMouseLoadScript.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -31,11 +31,9 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
 
-void ActionNodeLoadScript::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
+void ActionMouseLoadScript::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
 {
     dsstring filepath = p_propertypool.GetPropValue<dsstring>( "filepath" );
-    BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
-    void* id = BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[node];
 
     long size;
     void* data = File::LoadAndAllocBinaryFile( filepath, &size );
@@ -44,12 +42,11 @@ void ActionNodeLoadScript::Execute( DrawSpace::Core::PropertyPool& p_propertypoo
         char* script_text = new char[size + 1];
         memcpy( script_text, data, size );
         script_text[size] = 0;
-
-        dsstring* text = BasicSceneMainFrame::GetInstance()->m_script_edit_frames[id]->GetTextRef();
-        *text = script_text;
+        BasicSceneMainFrame::GetInstance()->m_mousemove_script = script_text;
     }
     else
     {
-        wxMessageBox( "LoadScript : file not found", "Script error", wxICON_ERROR );
+        wxMessageBox( "DrawSpace:LoadMouseScript : file not found", "Script error", wxICON_ERROR );
     }
+
 }

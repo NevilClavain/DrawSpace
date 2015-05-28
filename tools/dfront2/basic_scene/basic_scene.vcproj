@@ -513,6 +513,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionMouseLoadScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionMouseLoadScript.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionMouseMoveScriptEditionDialog.cpp"
 				>
 			</File>
