@@ -73,6 +73,8 @@
 #include "ActionLinearMvtCreationDialog.h"
 #include "ActionLinearMvtCreationApply.h"
 
+#include "ActionLinearMvtLinearMvt.h"
+
 #include "ActionLinearMvtEditionApply.h"
 
 
@@ -493,6 +495,7 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWLINEARMVT] = new ActionLinearMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_LINMVT_CREATION_TITLE] = new ActionLinearMvtCreationApply();
+    m_actionscripts["LinearMovementNode:LinearMovementNode"] = new ActionLinearMvtLinearMvt();
 
     m_actiondialogs_apply[DIALOG_LINMVT_EDITION_TITLE] = new ActionLinearMvtEditionApply();
 
@@ -1715,18 +1718,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
     else if( "LinearMovementNode:LinearMovementNode" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        SceneNode<LinearMovement>** node_ptr = p_propertypool.GetPropValue<SceneNode<LinearMovement>**>( "existing_node" );
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::LinearMovement>>::iterator it = m_lin_nodes.begin(); it != m_lin_nodes.end(); ++it )
-        {
-            if( it->second.name == scene_name )
-            {
-                // node exists
-                *node_ptr = it->second.scene_node;
-                break;
-            }
-        }
+        m_actionscripts["LinearMovementNode:LinearMovementNode"]->Execute( p_propertypool );
     }
 
     else if( "LinearMovementNode:LinkTo" == script_call_id )
