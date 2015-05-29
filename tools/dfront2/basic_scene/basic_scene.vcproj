@@ -337,6 +337,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionDrawSpaceDrawSpace.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionDrawSpaceDrawSpace.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionEditMvtDialog.cpp"
 				>
 			</File>
@@ -414,6 +422,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionGetSceneCameraName.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionGlobalPrint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionGlobalPrint.h"
 				>
 			</File>
 			<File

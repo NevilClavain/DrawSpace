@@ -27,6 +27,8 @@
 #include "buildobjects.h"
 #include "luascripting.h"
 
+#include "ActionDrawSpaceDrawSpace.h"
+
 #include "ActionPropsDialog.h"
 #include "ActionEditMvtDialog.h"
 #include "ActionAddMatrix.h"
@@ -128,6 +130,8 @@
 #include "ActionGetSceneCameraName.h"
 #include "ActionIsCurrentCamera.h"
 #include "ActionSetSceneNodeGraphCurrentCamera.h"
+#include "ActionGlobalPrint.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -593,6 +597,9 @@ m_delta_mouse_init( true )
     m_actionscripts["DrawSpace:GetSceneCameraName"] = new ActionGetSceneCameraName();
     m_actionscripts["DrawSpace:IsCurrentCamera"] = new ActionIsCurrentCamera();
     m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"] = new ActionSetSceneNodeGraphCurrentCamera();
+    m_actionscripts["global:print"] = new ActionGlobalPrint();
+
+    m_actionscripts["DrawSpace:DrawSpace"] = new ActionDrawSpaceDrawSpace();
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -656,13 +663,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 
     if( "global:print" == script_call_id )
     {
-        dsstring text = p_propertypool.GetPropValue<dsstring>( "text" );
-        PrintOutputConsole( text );
+        m_actionscripts["global:print"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:DrawSpace" == script_call_id )
     {
-        TimeManager** timer = p_propertypool.GetPropValue<TimeManager**>( "timer_ref" );
-        *timer = &m_timer;
+        m_actionscripts["DrawSpace:DrawSpace"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:DisplayFramerate" == script_call_id )
     {
