@@ -68,6 +68,22 @@
     <ClCompile Include="ActionMouseLoadScript.cpp" />
     <ClCompile Include="ActionNodeLoadScript.cpp" />
     <ClCompile Include="ActionKeyUpLoadScript.cpp" />
+    <ClCompile Include="ActionAngleSpeedDec.cpp" />
+    <ClCompile Include="ActionAngleSpeedInc.cpp" />
+    <ClCompile Include="ActionChunkNodeUpdateShaderParam.cpp" />
+    <ClCompile Include="ActionCreateSceneNodeGraph.cpp" />
+    <ClCompile Include="ActionDisplayCurrentCamera.cpp" />
+    <ClCompile Include="ActionDisplayFramerate.cpp" />
+    <ClCompile Include="ActionDrawSpaceDrawSpace.cpp" />
+    <ClCompile Include="ActionGetSceneCameraName.cpp" />
+    <ClCompile Include="ActionGlobalPrint.cpp" />
+    <ClCompile Include="ActionIsCurrentCamera.cpp" />
+    <ClCompile Include="ActionKeyboardKeyboard.cpp" />
+    <ClCompile Include="ActionMouseMouse.cpp" />
+    <ClCompile Include="ActionSetSceneNodeGraphCurrentCamera.cpp" />
+    <ClCompile Include="ActionSpaceBoxNodeUpdateShaderParam.cpp" />
+    <ClCompile Include="ActionTranslationSpeedDec.cpp" />
+    <ClCompile Include="ActionTranslationSpeedInc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -140,5 +156,21 @@
     <ClInclude Include="ActionMouseLoadScript.h" />
     <ClInclude Include="ActionNodeLoadScript.h" />
     <ClInclude Include="ActionKeyUpLoadScript.h" />
+    <ClInclude Include="ActionAngleSpeedDec.h" />
+    <ClInclude Include="ActionAngleSpeedInc.h" />
+    <ClInclude Include="ActionChunkNodeUpdateShaderParam.h" />
+    <ClInclude Include="ActionCreateSceneNodeGraph.h" />
+    <ClInclude Include="ActionDisplayCurrentCamera.h" />
+    <ClInclude Include="ActionDisplayFramerate.h" />
+    <ClInclude Include="ActionDrawSpaceDrawSpace.h" />
+    <ClInclude Include="ActionGetSceneCameraName.h" />
+    <ClInclude Include="ActionGlobalPrint.h" />
+    <ClInclude Include="ActionIsCurrentCamera.h" />
+    <ClInclude Include="ActionKeyboardKeyboard.h" />
+    <ClInclude Include="ActionMouseMouse.h" />
+    <ClInclude Include="ActionSetSceneNodeGraphCurrentCamera.h" />
+    <ClInclude Include="ActionSpaceBoxNodeUpdateShaderParam.h" />
+    <ClInclude Include="ActionTranslationSpeedDec.h" />
+    <ClInclude Include="ActionTranslationSpeedInc.h" />
   </ItemGroup>
 </Project>

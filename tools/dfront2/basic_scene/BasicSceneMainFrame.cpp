@@ -2517,6 +2517,9 @@ wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
         return m_ll_nodes[p_id].treeitemid;
     }
 
+    // avoid MSVC C4715 warning
+    wxTreeItemId dummy;
+    return dummy;
 }
 
 wxTreeItemId BasicSceneMainFrame::AppendItem( const wxTreeItemId& p_parent_item, const wxString& p_text, int p_image )

@@ -33,6 +33,8 @@
 #include "actiondialog.h"
 #include "actionscript.h"
 
+#pragma warning( disable : 4101 )
+
 #define DFRONT_ICON_DIM                     22
 
 #define CAMERA_ICON_INDEX                   0
@@ -229,7 +231,7 @@
 
 #define DIALOG_BUILD_LABELS( _count_, _format_, _var_name_ ) \
     wxArrayString _var_name_; \
-    for( int i = 0; i < _count_; i++ ) \
+    for( size_t i = 0; i < (size_t)_count_; i++ ) \
     { \
         char comment[128]; \
         sprintf( comment, _format_, i ); \
