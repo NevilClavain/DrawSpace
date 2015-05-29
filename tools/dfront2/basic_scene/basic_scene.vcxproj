@@ -88,6 +88,7 @@
     <ClCompile Include="ActionAddShaderParam.cpp" />
     <ClCompile Include="ActionAngleSpeedDec.cpp" />
     <ClCompile Include="ActionAngleSpeedInc.cpp" />
+    <ClCompile Include="ActionCameraPointCameraPoint.cpp" />
     <ClCompile Include="ActionCameraPointCreationApply.cpp" />
     <ClCompile Include="ActionCameraPointCreationDialog.cpp" />
     <ClCompile Include="ActionCameraPointEditionApply.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="ActionAddShaderParam.h" />
     <ClInclude Include="ActionAngleSpeedDec.h" />
     <ClInclude Include="ActionAngleSpeedInc.h" />
+    <ClInclude Include="ActionCameraPointCameraPoint.h" />
     <ClInclude Include="ActionCameraPointCreationApply.h" />
     <ClInclude Include="ActionCameraPointCreationDialog.h" />
     <ClInclude Include="ActionCameraPointEditionApply.h" />

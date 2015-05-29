@@ -85,6 +85,7 @@
     <ClCompile Include="ActionTranslationSpeedDec.cpp" />
     <ClCompile Include="ActionTranslationSpeedInc.cpp" />
     <ClCompile Include="ActionTransformationTransformation.cpp" />
+    <ClCompile Include="ActionCameraPointCameraPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -174,5 +175,6 @@
     <ClInclude Include="ActionTranslationSpeedDec.h" />
     <ClInclude Include="ActionTranslationSpeedInc.h" />
     <ClInclude Include="ActionTransformationTransformation.h" />
+    <ClInclude Include="ActionCameraPointCameraPoint.h" />
   </ItemGroup>
 </Project>

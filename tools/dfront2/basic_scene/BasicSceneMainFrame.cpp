@@ -81,6 +81,8 @@
 #include "ActionCameraPointEditionDialog.h"
 #include "ActionCameraPointEditionApply.h"
 
+#include "ActionCameraPointCameraPoint.h"
+
 #include "ActionFPSMvtCreationDialog.h"
 #include "ActionFPSMvtCreationApply.h"
 
@@ -532,6 +534,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_CAMERA_EDIT_TITLE] = new ActionCameraPointEditionApply();
 
     m_actionscripts["CameraPointNode:LoadScript"] = new ActionNodeLoadScript();
+    m_actionscripts["CameraPointNode:CameraPointNode"] = new ActionCameraPointCameraPoint();
 
 
 
@@ -719,18 +722,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "CameraPointNode:CameraPointNode" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        SceneNode<CameraPoint>** node_ptr = p_propertypool.GetPropValue<SceneNode<CameraPoint>**>( "existing_node" );
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>::iterator it = m_camera_nodes.begin(); it != m_camera_nodes.end(); ++it )
-        {
-            if( it->second.name == scene_name )
-            {
-                // node exists
-                *node_ptr = it->second.scene_node;
-                break;
-            }
-        }
+        m_actionscripts["CameraPointNode:CameraPointNode"]->Execute( p_propertypool );
     }
     else if( "TransformationNode:LinkTo" == script_call_id )
     {
