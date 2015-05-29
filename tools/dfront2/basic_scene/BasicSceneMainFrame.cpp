@@ -72,6 +72,7 @@
 #include "ActionTransformEditionSpecific1.h"
 
 #include "ActionTransformationTransformation.h"
+#include "ActionTransformationLinkTo.h"
 
 #include "ActionCameraPointCreationDialog.h"
 #include "ActionCameraPointCreationApply.h"
@@ -524,6 +525,7 @@ m_delta_mouse_init( true )
 
     m_actionscripts["TransformationNode:LoadScript"] = new ActionNodeLoadScript();
     m_actionscripts["TransformationNode:TransformationNode"] = new ActionTransformationTransformation();
+    m_actionscripts["TransformationNode:LinkTo"] = new ActionTransformationLinkTo();
 
     m_actions[CONTEXTMENU_NEWCAMERA] = new ActionCameraPointCreationDialog();
     m_actiondialogs_apply[DIALOG_CAMERA_CREATION_TITLE] = new ActionCameraPointCreationApply();
@@ -726,125 +728,8 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "TransformationNode:LinkTo" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
-        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
-        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
-        int nbmat = p_propertypool.GetPropValue<int>( "nbmat" );
-       
-        wxTreeItemId parent_tree_item;
-        void* parent_id = NULL;
-
-        // search for scenenodegraph
-
-        bool scene_found = false;
-        SceneNodeGraphEntry scenenodegraph_entry;
-
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraph_name )
-            {
-                scenenodegraph_entry = it->second;
-                scene_found = true;                
-                break;
-            }
-        }
-
-        bool parent_found = false;
-        BaseSceneNode* parent = NULL;
-
-
-        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
-        {
-            dsstring node_scenename;
-            it->second->GetSceneName( node_scenename );
-
-            if( node_scenename == parent_name )
-            {
-                parent_found = true;
-                parent = it->second;
-                parent_id = it->first;
-                break;
-            }
-        }
-
-        if( !parent_found )
-        {
-            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-            {
-                if( it->second.name == parent_name )
-                {
-                    parent_found = true;
-                    parent_id = it->first;
-                    break;
-                }
-            }
-        }
-
-        if( !scene_found )
-        {
-            wxMessageBox( "Transformation node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
-            return;           
-        }
-
-        else if( !parent_found )
-        {
-            wxMessageBox( "Transformation node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
-            return;
-        }
-
-        SceneNode<Transformation>* transfo_node = static_cast<SceneNode<Transformation>*>( node );
-        Transformation* tf = new Transformation( nbmat );
-        transfo_node->SetContent( tf );
-
-        transfo_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-                
-
-        scenenodegraph_entry.scenenodegraph->RegisterNode( node );
-
-        if( parent )
-        {            
-            transfo_node->LinkTo( parent );
-            parent_tree_item = searchTreeItemIdInNodes( parent_id );
-        }
-        else
-        {
-            scenenodegraph_entry.scenenodegraph->AddNode( node );
-            parent_tree_item = scenenodegraph_entry.treeitemid;
-        }
-
-        
-        // GUI : add item in the tree
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), TRANSFO_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
-        
-        // record the new transformation node and associated metadata
-
-        BasicSceneMainFrame::SceneNodeEntry<Transformation> t_entry;
-
-        t_entry.name = scene_name;
-        t_entry.scene_node = transfo_node;
-        t_entry.treeitemid = treeitemid;
-
-
-        m_transformation_nodes[t_entry.treeitemid.GetID()] = t_entry;
-        m_tree_nodes[t_entry.treeitemid.GetID()] = transfo_node;
-        m_inv_tree_nodes[transfo_node] = t_entry.treeitemid.GetID();
-
-        dsstring title;
-        dsstring* script_text;
-        bool * script_state;
-        title = "Transformation node: ";
-        title += m_transformation_nodes[t_entry.treeitemid.GetID()].name;
-        script_text = &m_transformation_nodes[t_entry.treeitemid.GetID()].script;
-        script_state = &m_transformation_nodes[t_entry.treeitemid.GetID()].script_enabled;
-        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-        m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
-
+        m_actionscripts["TransformationNode:LinkTo"]->Execute( p_propertypool );
     }
-
-
-
     else if( "SpaceboxNode:LinkTo" == script_call_id )
     {
         dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );

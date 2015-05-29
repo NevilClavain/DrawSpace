@@ -153,6 +153,7 @@
     <ClCompile Include="ActionSpaceBoxEditionApply.cpp" />
     <ClCompile Include="ActionSpaceBoxEditionDialog.cpp" />
     <ClCompile Include="ActionSpaceBoxNodeUpdateShaderParam.cpp" />
+    <ClCompile Include="ActionTransformationLinkTo.cpp" />
     <ClCompile Include="ActionTransformationTransformation.cpp" />
     <ClCompile Include="ActionTransformCreationApply.cpp" />
     <ClCompile Include="ActionTransformCreationDialog.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="ActionSpaceBoxEditionApply.h" />
     <ClInclude Include="ActionSpaceBoxEditionDialog.h" />
     <ClInclude Include="ActionSpaceBoxNodeUpdateShaderParam.h" />
+    <ClInclude Include="ActionTransformationLinkTo.h" />
     <ClInclude Include="ActionTransformationTransformation.h" />
     <ClInclude Include="ActionTransformCreationApply.h" />
     <ClInclude Include="ActionTransformCreationDialog.h" />
