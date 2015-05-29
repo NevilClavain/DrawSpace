@@ -433,6 +433,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionIsCurrentCamera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionIsCurrentCamera.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionKeyboardKeyboard.cpp"
 				>
 			</File>
@@ -618,6 +626,14 @@
 			</File>
 			<File
 				RelativePath=".\actionscript.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSetSceneNodeGraphCurrentCamera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSetSceneNodeGraphCurrentCamera.h"
 				>
 			</File>
 			<File

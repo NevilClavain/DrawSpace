@@ -126,7 +126,8 @@
 #include "ActionKeydownScriptEditionDialog.h"
 
 #include "ActionGetSceneCameraName.h"
-
+#include "ActionIsCurrentCamera.h"
+#include "ActionSetSceneNodeGraphCurrentCamera.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -590,6 +591,8 @@ m_delta_mouse_init( true )
 
 
     m_actionscripts["DrawSpace:GetSceneCameraName"] = new ActionGetSceneCameraName();
+    m_actionscripts["DrawSpace:IsCurrentCamera"] = new ActionIsCurrentCamera();
+    m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"] = new ActionSetSceneNodeGraphCurrentCamera();
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1278,100 +1281,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "DrawSpace:SetSceneNodeGraphCurrentCamera" == script_call_id )
     {
-        dsstring scenegraphname = p_propertypool.GetPropValue<dsstring>( "scenegraphname" );
-        dsstring cameraname = p_propertypool.GetPropValue<dsstring>( "cameraname" );
-
-        bool sg_found = false;
-        SceneNodeGraphEntry s_entry;
-        
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraphname )
-            {
-                s_entry = it->second;
-                sg_found = true;
-                break;
-            }
-        }
-        if( !sg_found )
-        {
-            wxMessageBox( "DrawSpace:SetSceneNodeGraphCurrentCamera : unknown scenegraph name", "Script error", wxICON_ERROR );
-            return;
-        }
-
-        bool cam_found = false;
-        SceneNodeEntry<DrawSpace::Dynamics::CameraPoint> c_entry;
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>::iterator it = m_camera_nodes.begin(); it != m_camera_nodes.end(); ++it )
-        {
-            if( it->second.name == cameraname )
-            {
-                c_entry = it->second;
-                cam_found = true;
-                break;
-            }
-        }
-        if( !cam_found )
-        {
-            wxMessageBox( "DrawSpace:SetSceneNodeGraphCurrentCamera : unknown camera name", "Script error", wxICON_ERROR );
-            return;
-        }
-        
-        void* idsg;
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraphname )
-            {
-                if( it->second.current_camera_set )
-                {
-                    m_scenegraphs_treeCtrl->SetItemImage( it->second.current_camera, CAMERA_ICON_INDEX );
-                }
-                idsg = it->first;
-                break;
-            }
-        }
-
-        void* idcam = m_inv_tree_nodes[c_entry.scene_node];
-
-        m_scenegraphs_treeCtrl->SetItemImage( c_entry.treeitemid, CAMERASEL_ICON_INDEX );
-        m_scenenodegraphs[idsg].current_camera_set = true;
-        m_scenenodegraphs[idsg].current_camera = c_entry.treeitemid;
-
-        m_scenenodegraphs[idsg].scenenodegraph->SetCurrentCamera( c_entry.name );
-
+        m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:IsCurrentCamera" == script_call_id )
     {
-        dsstring scenegraphname = p_propertypool.GetPropValue<dsstring>( "scenegraphname" );
-        bool* result = p_propertypool.GetPropValue<bool*>( "result" );
-        BaseSceneNode* camera_node = p_propertypool.GetPropValue<BaseSceneNode*>( "camera_node" );
-
-        bool sg_found = false;
-        SceneNodeGraphEntry s_entry;
-        
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraphname )
-            {
-                s_entry = it->second;
-                sg_found = true;
-                break;
-            }
-        }
-        if( !sg_found )
-        {
-            wxMessageBox( "DrawSpace:SetSceneNodeGraphCurrentCamera : unknown scenegraph name", "Script error", wxICON_ERROR );
-            return;
-        }
-
-        if( s_entry.scenenodegraph->GetCurrentCamera() == camera_node )
-        {
-            *result = true;
-        }
-        else
-        {
-            *result = false;
-        }
+        m_actionscripts["DrawSpace:IsCurrentCamera"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:GetSceneCameraName" == script_call_id )
     {
