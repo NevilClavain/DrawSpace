@@ -409,6 +409,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionGetSceneCameraName.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionGetSceneCameraName.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionInertBodyCreationApply.cpp"
 				>
 			</File>
