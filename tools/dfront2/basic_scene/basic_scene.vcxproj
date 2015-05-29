@@ -100,6 +100,7 @@
     <ClCompile Include="ActionChunkCreationSpecific0.cpp" />
     <ClCompile Include="ActionChunkEditionApply.cpp" />
     <ClCompile Include="ActionChunkEditionDialog.cpp" />
+    <ClCompile Include="ActionChunkLinkTo.cpp" />
     <ClCompile Include="ActionChunkNodeUpdateShaderParam.cpp" />
     <ClCompile Include="ActionCircularMvtCircularMvt.cpp" />
     <ClCompile Include="ActionCircularMvtCreationApply.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="ActionChunkCreationSpecific0.h" />
     <ClInclude Include="ActionChunkEditionApply.h" />
     <ClInclude Include="ActionChunkEditionDialog.h" />
+    <ClInclude Include="ActionChunkLinkTo.h" />
     <ClInclude Include="ActionChunkNodeUpdateShaderParam.h" />
     <ClInclude Include="ActionCircularMvtCircularMvt.h" />
     <ClInclude Include="ActionCircularMvtCreationApply.h" />
