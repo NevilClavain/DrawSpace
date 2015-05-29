@@ -71,6 +71,8 @@
 #include "ActionTransformEditionApply.h"
 #include "ActionTransformEditionSpecific1.h"
 
+#include "ActionTransformationTransformation.h"
+
 #include "ActionCameraPointCreationDialog.h"
 #include "ActionCameraPointCreationApply.h"
 
@@ -519,6 +521,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionSpecific1();
 
     m_actionscripts["TransformationNode:LoadScript"] = new ActionNodeLoadScript();
+    m_actionscripts["TransformationNode:TransformationNode"] = new ActionTransformationTransformation();
 
     m_actions[CONTEXTMENU_NEWCAMERA] = new ActionCameraPointCreationDialog();
     m_actiondialogs_apply[DIALOG_CAMERA_CREATION_TITLE] = new ActionCameraPointCreationApply();
@@ -710,21 +713,9 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     {
         m_actionscripts["DrawSpace:TranslationSpeedDec"]->Execute( p_propertypool );
     }
-
     else if( "TransformationNode:TransformationNode" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        SceneNode<Transformation>** node_ptr = p_propertypool.GetPropValue<SceneNode<Transformation>**>( "existing_node" );
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>::iterator it = m_transformation_nodes.begin(); it != m_transformation_nodes.end(); ++it )
-        {
-            if( it->second.name == scene_name )
-            {
-                // node exists
-                *node_ptr = it->second.scene_node;
-                break;
-            }
-        }
+        m_actionscripts["TransformationNode:TransformationNode"]->Execute( p_propertypool );
     }
     else if( "CameraPointNode:CameraPointNode" == script_call_id )
     {

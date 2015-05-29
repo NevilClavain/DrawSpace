@@ -84,6 +84,7 @@
     <ClCompile Include="ActionSpaceBoxNodeUpdateShaderParam.cpp" />
     <ClCompile Include="ActionTranslationSpeedDec.cpp" />
     <ClCompile Include="ActionTranslationSpeedInc.cpp" />
+    <ClCompile Include="ActionTransformationTransformation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -172,5 +173,6 @@
     <ClInclude Include="ActionSpaceBoxNodeUpdateShaderParam.h" />
     <ClInclude Include="ActionTranslationSpeedDec.h" />
     <ClInclude Include="ActionTranslationSpeedInc.h" />
+    <ClInclude Include="ActionTransformationTransformation.h" />
   </ItemGroup>
 </Project>
