@@ -38,6 +38,9 @@
 #include "ActionKeyDownLoadScript.h"
 #include "ActionKeyUpLoadScript.h"
 
+#include "ActionKeyboardKeyboard.h"
+#include "ActionMouseMouse.h"
+
 #include "ActionScenenodeGraphCreationDialog.h"
 #include "ActionScenenodeGraphCreationApply.h"
 
@@ -49,6 +52,8 @@
 
 #include "ActionSpaceBoxEditionDialog.h"
 #include "ActionSpaceBoxEditionApply.h"
+
+#include "ActionSpaceBoxNodeUpdateShaderParam.h"
 
 #include "ActionChunkCreationDialog.h"
 #include "ActionChunkCreationSpecific0.h"
@@ -471,6 +476,8 @@ m_delta_mouse_init( true )
 
     m_actionscripts["SpaceboxNode:LoadScript"] = new ActionNodeLoadScript();
 
+    m_actionscripts["SpaceboxNode:UpdateShaderParam"] = new ActionSpaceBoxNodeUpdateShaderParam();
+
 
     m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
     m_actiondialogs_apply[DIALOG_SPACEBOX_EDITION_TITLE] = new ActionSpaceBoxEditionApply();
@@ -568,12 +575,15 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_MOUSEMOVESCRIPT] = new ActionMouseMoveScriptEditionDialog();
     m_actionscripts["DrawSpace:LoadMouseScript"] = new ActionMouseLoadScript();
 
+    m_actionscripts["Mouse:Mouse"] = new ActionMouseMouse();
 
     m_actions[CONTEXTMENU_EDIT_KEYDOWNSCRIPT] = new ActionKeydownScriptEditionDialog();
     m_actionscripts["DrawSpace:LoadKeyDownScript"] = new ActionKeyDownLoadScript();
 
     m_actions[CONTEXTMENU_EDIT_KEYUPSCRIPT] = new ActionKeyupScriptEditionDialog();
     m_actionscripts["DrawSpace:LoadKeyUpScript"] = new ActionKeyUpLoadScript();
+
+    m_actionscripts["Keyboard:Keyboard"] = new ActionKeyboardKeyboard();
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1386,58 +1396,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "SpaceboxNode:UpdateShaderParam" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        dsstring pass_name = p_propertypool.GetPropValue<dsstring>( "pass_name" );
-        dsstring id = p_propertypool.GetPropValue<dsstring>( "id" );
-        Vector value = p_propertypool.GetPropValue<Vector>( "value" );
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>::iterator it = m_spacebox_nodes.begin(); it != m_spacebox_nodes.end(); ++it )
-        {
-            if( it->second.name == scene_name )
-            {
-                DrawSpace::Core::SceneNode<Spacebox>* sb = it->second.scene_node;
-                DrawSpace::Utils::SpaceboxDescriptor sb_descr = m_spacebox_descriptors[it->first];
-
-                if( sb_descr.passes_slots.count( pass_name ) > 0 )
-                {
-                    Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_name ) );
-
-                    int id_index = -1;
-
-                    for( size_t i = 0; i < sb_descr.passes_slots[pass_name].shader_params.size(); i++ )
-                    {
-                        if( sb_descr.passes_slots[pass_name].shader_params[i].id == id )
-                        {
-                            id_index = i;
-                            break;
-                        }
-                    }
-
-                    if( id_index == -1 )
-                    {
-                        wxMessageBox( "SpaceboxNode:UpdateShaderParam : unknown shader param id for this node", "Script error", wxICON_ERROR );
-                        return;
-                    }
-
-                    for( int j = 0; j < 6; j++ )
-                    {
-                        sb->GetContent()->GetNodeFromPass( current_pass, j )->SetShaderRealVector( id, value );
-                    }
-
-                    // update descriptor
-                    sb_descr.passes_slots[pass_name].shader_params[id_index].value = value;
-
-                    m_spacebox_descriptors[it->first] = sb_descr;
-
-                    return;
-                }
-                else
-                {
-                    wxMessageBox( "SpaceboxNode:UpdateShaderParam : unknown pass name for this node", "Script error", wxICON_ERROR );
-                    return;
-                }
-            }
-        }
+        m_actionscripts["SpaceboxNode:UpdateShaderParam"]->Execute( p_propertypool );
     }
     else if( "ChunkNode:UpdateShaderParam" == script_call_id )
     {
@@ -1445,12 +1404,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "Keyboard:Keyboard" == script_call_id )
     {
-        m_keyup_code = p_propertypool.GetPropValue<int*>( "keyupcode" );
-        m_keydown_code = p_propertypool.GetPropValue<int*>( "keydowncode" );
+        m_actionscripts["Keyboard:Keyboard"]->Execute( p_propertypool );
     }
     else if( "Mouse:Mouse" == script_call_id )
     {
-        m_mousemove_descr = p_propertypool.GetPropValue<DrawSpace::Utils::MouseMovementsDescriptor*>( "descriptor" );
+        m_actionscripts["Mouse:Mouse"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:LoadKeyUpScript" == script_call_id )
     {

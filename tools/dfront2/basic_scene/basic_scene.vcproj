@@ -425,6 +425,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionKeyboardKeyboard.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionKeyboardKeyboard.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionKeyDownLoadScript.cpp"
 				>
 			</File>
@@ -545,6 +553,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionMouseMouse.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionMouseMouse.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionMouseMoveScriptEditionDialog.cpp"
 				>
 			</File>
@@ -634,6 +650,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionSpaceBoxEditionDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSpaceBoxNodeUpdateShaderParam.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSpaceBoxNodeUpdateShaderParam.h"
 				>
 			</File>
 			<File
