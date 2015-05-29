@@ -55,6 +55,8 @@
 
 #include "ActionSpaceBoxNodeUpdateShaderParam.h"
 
+#include "ActionSpaceBoxLinkTo.h"
+
 #include "ActionChunkCreationDialog.h"
 #include "ActionChunkCreationSpecific0.h"
 #include "ActionChunkCreationApply.h"
@@ -83,6 +85,7 @@
 #include "ActionCameraPointEditionApply.h"
 
 #include "ActionCameraPointCameraPoint.h"
+#include "ActionCameraPointLinkTo.h"
 
 #include "ActionFPSMvtCreationDialog.h"
 #include "ActionFPSMvtCreationApply.h"
@@ -496,6 +499,8 @@ m_delta_mouse_init( true )
 
     m_actionscripts["SpaceboxNode:UpdateShaderParam"] = new ActionSpaceBoxNodeUpdateShaderParam();
 
+    m_actionscripts["SpaceboxNode:LinkTo"] = new ActionSpaceBoxLinkTo();
+
 
     m_actions[CONTEXTMENU_EDIT_SBNODE] = new ActionSpaceBoxEditionDialog();
     m_actiondialogs_apply[DIALOG_SPACEBOX_EDITION_TITLE] = new ActionSpaceBoxEditionApply();
@@ -537,6 +542,7 @@ m_delta_mouse_init( true )
 
     m_actionscripts["CameraPointNode:LoadScript"] = new ActionNodeLoadScript();
     m_actionscripts["CameraPointNode:CameraPointNode"] = new ActionCameraPointCameraPoint();
+    m_actionscripts["CameraPointNode:LinkTo"] = new ActionCameraPointLinkTo();
 
 
 
@@ -732,256 +738,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "SpaceboxNode:LinkTo" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
-        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
-        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
-        DrawSpace::Utils::SpaceboxDescriptor sb_descr = p_propertypool.GetPropValue<DrawSpace::Utils::SpaceboxDescriptor>( "descriptor" );
-
-        wxTreeItemId parent_tree_item;
-        void* parent_id = NULL;
-
-
-        // search for scenenodegraph
-
-        bool scene_found = false;
-        SceneNodeGraphEntry scenenodegraph_entry;
-
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraph_name )
-            {
-                scenenodegraph_entry = it->second;
-                scene_found = true;                
-                break;
-            }
-        }
-
-        bool parent_found = false;
-        BaseSceneNode* parent = NULL;
-
-        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
-        {
-            dsstring node_scenename;
-            it->second->GetSceneName( node_scenename );
-
-            if( node_scenename == parent_name )
-            {
-                parent_found = true;
-                parent = it->second;
-                parent_id = it->first;
-                break;
-            }
-        }
-
-        if( !parent_found )
-        {
-            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-            {
-                if( it->second.name == parent_name )
-                {
-                    parent_found = true;
-                    parent_id = it->first;
-                    break;
-                }
-            }
-        }
-
-        if( !scene_found )
-        {
-            wxMessageBox( "Spacebox node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
-            return;           
-        }
-
-        else if( !parent_found )
-        {
-            wxMessageBox( "Spacebox node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
-            return;
-        }
-
-        SceneNode<Spacebox>* sb_node = static_cast<SceneNode<Spacebox>*>( node );
-
-        sb_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-        
-        //sb_node->SetContent( new Spacebox );
-        dsstring sb_error;
-        Spacebox* sb = BuildSpaceBox( sb_descr, sb_error );
-        if( NULL == sb )
-        {
-            wxMessageBox( "Spacebox node creation error : " + sb_error, "Script error", wxICON_ERROR );
-            return;
-        }
-        else
-        {
-            sb_node->SetContent( sb );
-
-            scenenodegraph_entry.scenenodegraph->RegisterNode( node );
-
-            if( parent )
-            {            
-                sb_node->LinkTo( parent );
-                parent_tree_item = searchTreeItemIdInNodes( parent_id );
-            }
-            else
-            {
-                scenenodegraph_entry.scenenodegraph->AddNode( node );
-                parent_tree_item = scenenodegraph_entry.treeitemid;
-            }
-
-        
-            // GUI : add item in the tree
-            wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), SPACEBOX_ICON_INDEX );
-            m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
-        
-            // record the new spacebox node and associated metadata
-
-            BasicSceneMainFrame::SceneNodeEntry<Spacebox> t_entry;
-
-            t_entry.name = scene_name;
-            t_entry.scene_node = sb_node;
-            t_entry.treeitemid = treeitemid;
-
-            m_spacebox_nodes[t_entry.treeitemid.GetID()] = t_entry;
-            m_tree_nodes[t_entry.treeitemid.GetID()] = sb_node;
-            m_inv_tree_nodes[sb_node] = t_entry.treeitemid.GetID();
-
-            // update passes output queues
-            for( std::map<dsstring, SpaceboxPassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
-            {
-                Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
-                current_pass->GetRenderingQueue()->UpdateOutputQueue();
-            }
-
-            // store spacebox description
-
-            m_spacebox_descriptors[t_entry.treeitemid.GetID()] = sb_descr;
-
-            //////////////////////////////////////
-
-            dsstring title;
-            dsstring* script_text;
-            bool * script_state;
-            title = "Spacebox node: ";
-            title += m_spacebox_nodes[t_entry.treeitemid.GetID()].name;
-            script_text = &m_spacebox_nodes[t_entry.treeitemid.GetID()].script;
-            script_state = &m_spacebox_nodes[t_entry.treeitemid.GetID()].script_enabled;
-            BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-            m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
-
-        }
+        m_actionscripts["SpaceboxNode:LinkTo"]->Execute( p_propertypool );
     }
     else if( "CameraPointNode:LinkTo" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        dsstring scenegraph_name = p_propertypool.GetPropValue<dsstring>( "scenegraph_name" );
-        dsstring parent_name = p_propertypool.GetPropValue<dsstring>( "parent_name" );
-        BaseSceneNode* node = p_propertypool.GetPropValue<BaseSceneNode*>( "node" );
-
-        wxTreeItemId parent_tree_item;
-        void* parent_id = NULL;
-
-
-        bool scene_found = false;
-        SceneNodeGraphEntry scenenodegraph_entry;
-
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraph_name )
-            {
-                scenenodegraph_entry = it->second;
-                scene_found = true;                
-                break;
-            }
-        }
-
-        bool parent_found = false;
-        BaseSceneNode* parent = NULL;
-
-        for( std::map<void*, DrawSpace::Core::BaseSceneNode*>::iterator it = m_tree_nodes.begin(); it != m_tree_nodes.end(); ++it )
-        {
-            dsstring node_scenename;
-            it->second->GetSceneName( node_scenename );
-
-            if( node_scenename == parent_name )
-            {
-                parent_found = true;
-                parent = it->second;
-                parent_id = it->first;
-                break;
-            }
-        }
-
-        if( !parent_found )
-        {
-            for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-            {
-                if( it->second.name == parent_name )
-                {
-                    parent_found = true;
-                    parent_id = it->first;
-                    break;
-                }
-            }
-        }
-
-        if( !scene_found )
-        {
-            wxMessageBox( "CameraPoint node, unknown scenegraph name : " + scenegraph_name, "Script error", wxICON_ERROR );
-            return;           
-        }
-
-        else if( !parent_found )
-        {
-            wxMessageBox( "CameraPoint node, unknown parent name : " + parent_name, "Script error", wxICON_ERROR );
-            return;
-        }
-
-        SceneNode<CameraPoint>* cam_node = static_cast<SceneNode<CameraPoint>*>( node );
-        cam_node->RegisterUpdateBeginEvtHandler( m_nodeupdatebegin_cb );
-        
-        cam_node->SetContent( new CameraPoint() );
-
-        scenenodegraph_entry.scenenodegraph->RegisterNode( node );
-
-        if( parent )
-        {            
-            cam_node->LinkTo( parent );
-            parent_tree_item = searchTreeItemIdInNodes( parent_id );
-        }
-        else
-        {
-            scenenodegraph_entry.scenenodegraph->AddNode( node );
-            parent_tree_item = scenenodegraph_entry.treeitemid;
-        }
-
-        // GUI : add item in the tree
-        wxTreeItemId treeitemid = m_scenegraphs_treeCtrl->AppendItem( parent_tree_item, scene_name.c_str(), CAMERA_ICON_INDEX );
-        m_scenegraphs_treeCtrl->ExpandAllChildren( parent_tree_item );
-
-        // record the new transformation node and associated metadata
-
-        BasicSceneMainFrame::SceneNodeEntry<CameraPoint> c_entry;
-
-        c_entry.name = scene_name;
-        c_entry.scene_node = cam_node;
-        c_entry.treeitemid = treeitemid;
-
-        m_camera_nodes[c_entry.treeitemid.GetID()] = c_entry;
-        m_tree_nodes[c_entry.treeitemid.GetID()] = cam_node;
-        m_inv_tree_nodes[cam_node] = c_entry.treeitemid.GetID();
-
-        dsstring title;
-        dsstring* script_text;
-        bool * script_state;
-        title = "CameraPoint node: ";
-        title += m_camera_nodes[c_entry.treeitemid.GetID()].name;
-        script_text = &m_camera_nodes[c_entry.treeitemid.GetID()].script;
-        script_state = &m_camera_nodes[c_entry.treeitemid.GetID()].script_enabled;
-        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( this, title, script_text, script_state );
-        m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
-
-
-
+        m_actionscripts["CameraPointNode:LinkTo"]->Execute( p_propertypool );
     }
     else if( "ChunkNode:LinkTo" == script_call_id )
     {

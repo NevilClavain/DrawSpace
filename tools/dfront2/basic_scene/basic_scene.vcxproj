@@ -93,6 +93,7 @@
     <ClCompile Include="ActionCameraPointCreationDialog.cpp" />
     <ClCompile Include="ActionCameraPointEditionApply.cpp" />
     <ClCompile Include="ActionCameraPointEditionDialog.cpp" />
+    <ClCompile Include="ActionCameraPointLinkTo.cpp" />
     <ClCompile Include="ActionCameraPointSelection.cpp" />
     <ClCompile Include="ActionChunkCreationApply.cpp" />
     <ClCompile Include="ActionChunkCreationDialog.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="ActionSpaceBoxCreationSpecific0.cpp" />
     <ClCompile Include="ActionSpaceBoxEditionApply.cpp" />
     <ClCompile Include="ActionSpaceBoxEditionDialog.cpp" />
+    <ClCompile Include="ActionSpaceBoxLinkTo.cpp" />
     <ClCompile Include="ActionSpaceBoxNodeUpdateShaderParam.cpp" />
     <ClCompile Include="ActionTransformationLinkTo.cpp" />
     <ClCompile Include="ActionTransformationTransformation.cpp" />
@@ -182,6 +184,7 @@
     <ClInclude Include="ActionCameraPointCreationDialog.h" />
     <ClInclude Include="ActionCameraPointEditionApply.h" />
     <ClInclude Include="ActionCameraPointEditionDialog.h" />
+    <ClInclude Include="ActionCameraPointLinkTo.h" />
     <ClInclude Include="ActionCameraPointSelection.h" />
     <ClInclude Include="ActionChunkCreationApply.h" />
     <ClInclude Include="ActionChunkCreationDialog.h" />
@@ -243,6 +246,7 @@
     <ClInclude Include="ActionSpaceBoxCreationSpecific0.h" />
     <ClInclude Include="ActionSpaceBoxEditionApply.h" />
     <ClInclude Include="ActionSpaceBoxEditionDialog.h" />
+    <ClInclude Include="ActionSpaceBoxLinkTo.h" />
     <ClInclude Include="ActionSpaceBoxNodeUpdateShaderParam.h" />
     <ClInclude Include="ActionTransformationLinkTo.h" />
     <ClInclude Include="ActionTransformationTransformation.h" />

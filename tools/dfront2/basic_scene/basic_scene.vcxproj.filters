@@ -87,6 +87,8 @@
     <ClCompile Include="ActionTransformationTransformation.cpp" />
     <ClCompile Include="ActionCameraPointCameraPoint.cpp" />
     <ClCompile Include="ActionTransformationLinkTo.cpp" />
+    <ClCompile Include="ActionSpaceBoxLinkTo.cpp" />
+    <ClCompile Include="ActionCameraPointLinkTo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -178,5 +180,7 @@
     <ClInclude Include="ActionTransformationTransformation.h" />
     <ClInclude Include="ActionCameraPointCameraPoint.h" />
     <ClInclude Include="ActionTransformationLinkTo.h" />
+    <ClInclude Include="ActionSpaceBoxLinkTo.h" />
+    <ClInclude Include="ActionCameraPointLinkTo.h" />
   </ItemGroup>
 </Project>
