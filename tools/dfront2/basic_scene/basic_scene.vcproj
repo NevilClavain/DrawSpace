@@ -205,6 +205,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionAngleSpeedDec.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionAngleSpeedDec.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionAngleSpeedInc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionAngleSpeedInc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCameraPointCreationApply.cpp"
 				>
 			</File>
@@ -330,6 +346,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionCircularMvtLinkTo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCreateSceneNodeGraph.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCreateSceneNodeGraph.h"
 				>
 			</File>
 			<File
@@ -754,6 +778,22 @@
 			</File>
 			<File
 				RelativePath=".\ActionTransformEditionSpecific1.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTranslationSpeedDec.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTranslationSpeedDec.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTranslationSpeedInc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTranslationSpeedInc.h"
 				>
 			</File>
 			<File

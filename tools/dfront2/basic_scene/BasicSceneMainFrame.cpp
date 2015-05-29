@@ -132,6 +132,12 @@
 #include "ActionGlobalPrint.h"
 #include "ActionDisplayFramerate.h"
 #include "ActionDisplayCurrentCamera.h"
+#include "ActionCreateSceneNodeGraph.h"
+#include "ActionAngleSpeedInc.h"
+#include "ActionAngleSpeedDec.h"
+#include "ActionTranslationSpeedInc.h"
+#include "ActionTranslationSpeedDec.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -602,6 +608,11 @@ m_delta_mouse_init( true )
     m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"] = new ActionSetSceneNodeGraphCurrentCamera();        
     m_actionscripts["DrawSpace:DisplayFramerate"] = new ActionDisplayFramerate();
     m_actionscripts["DrawSpace:DisplayCurrentCamera"] = new ActionDisplayCurrentCamera();
+    m_actionscripts["DrawSpace:CreateSceneNodeGraph"] = new ActionCreateSceneNodeGraph();
+    m_actionscripts["DrawSpace:AngleSpeedInc"] = new ActionAngleSpeedInc();
+    m_actionscripts["DrawSpace:AngleSpeedDec"] = new ActionAngleSpeedDec();
+    m_actionscripts["DrawSpace:TranslationSpeedInc"] = new ActionTranslationSpeedInc();
+    m_actionscripts["DrawSpace:TranslationSpeedDec"] = new ActionTranslationSpeedDec();
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -681,49 +692,23 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "DrawSpace:CreateSceneNodeGraph" == script_call_id )
     {
-        dsstring alias = p_propertypool.GetPropValue<dsstring>( "name" );
-        SceneNodeGraph** newsc_ptr = p_propertypool.GetPropValue<SceneNodeGraph**>( "newsc_ptr" );
-        dsstring* newsc_alias_ptr = p_propertypool.GetPropValue<dsstring*>( "newsc_alias_ptr" );
-
-        SceneNodeGraphEntry entry;
-
-        entry.name = alias;
-        entry.scenenodegraph = new SceneNodeGraph();
-        entry.treeitemid = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, alias.c_str(), SCENEGRAPH_ICON_INDEX );
-        entry.current_camera_set = false;
-        m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
-
-        m_scenegraphs_treeCtrl->ExpandAllChildren( m_scenegraphs_root_item );
-
-        *newsc_ptr = entry.scenenodegraph;
-        *newsc_alias_ptr = alias;
+        m_actionscripts["DrawSpace:CreateSceneNodeGraph"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:AngleSpeedInc" == script_call_id )
     {
-        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
-        dsreal* realvar = p_propertypool.GetPropValue<dsreal*>( "realvar" );
-
-        m_timer.AngleSpeedInc( realvar, speed );
-
+        m_actionscripts["DrawSpace:AngleSpeedInc"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:AngleSpeedDec" == script_call_id )
     {
-        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
-        dsreal* realvar = p_propertypool.GetPropValue<dsreal*>( "realvar" );
-        m_timer.AngleSpeedDec( realvar, speed );
-
+        m_actionscripts["DrawSpace:AngleSpeedDec"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:TranslationSpeedInc" == script_call_id )
     {
-        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
-        dsreal* realvar = p_propertypool.GetPropValue<dsreal*>( "realvar" );
-        m_timer.TranslationSpeedInc( realvar, speed );
+        m_actionscripts["DrawSpace:TranslationSpeedInc"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:TranslationSpeedDec" == script_call_id )
     {
-        dsreal speed = p_propertypool.GetPropValue<dsreal>( "speed" );
-        dsreal* realvar = p_propertypool.GetPropValue<dsreal*>( "realvar" );
-        m_timer.TranslationSpeedDec( realvar, speed );
+        m_actionscripts["DrawSpace:TranslationSpeedDec"]->Execute( p_propertypool );
     }
 
     else if( "TransformationNode:TransformationNode" == script_call_id )
