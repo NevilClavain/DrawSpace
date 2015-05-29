@@ -57,6 +57,8 @@
 #include "ActionChunkEditionDialog.h"
 #include "ActionChunkEditionApply.h"
 
+#include "ActionChunkNodeUpdateShaderParam.h"
+
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
 
@@ -483,6 +485,8 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_CHUNK_EDITION_TITLE] = new ActionChunkEditionApply();
 
     m_actionscripts["ChunkNode:LoadScript"] = new ActionNodeLoadScript();
+
+    m_actionscripts["ChunkNode:UpdateShaderParam"] = new ActionChunkNodeUpdateShaderParam();
 
 
 
@@ -1437,57 +1441,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "ChunkNode:UpdateShaderParam" == script_call_id )
     {
-        dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-        dsstring pass_name = p_propertypool.GetPropValue<dsstring>( "pass_name" );
-        dsstring id = p_propertypool.GetPropValue<dsstring>( "id" );
-        Vector value = p_propertypool.GetPropValue<Vector>( "value" );
-
-
-        for( std::map<void*, SceneNodeEntry<DrawSpace::Chunk>>::iterator it = m_chunk_nodes.begin(); it != m_chunk_nodes.end(); ++it )
-        {
-            if( it->second.name == scene_name )
-            {
-                DrawSpace::Core::SceneNode<Chunk>* chunk = it->second.scene_node;
-                DrawSpace::Utils::ChunkDescriptor chunk_descr = m_chunk_descriptors[it->first];
-
-                if( chunk_descr.passes_slots.count( pass_name ) > 0 )
-                {
-                    Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( pass_name ) );
-
-                    int id_index = -1;
-
-                    for( size_t i = 0; i < chunk_descr.passes_slots[pass_name].shader_params.size(); i++ )
-                    {
-                        if( chunk_descr.passes_slots[pass_name].shader_params[i].id == id )
-                        {
-                            id_index = i;
-                            break;
-                        }
-                    }
-
-                    if( id_index == -1 )
-                    {
-                        wxMessageBox( "ChunkNode:UpdateShaderParam : unknown shader param id for this node", "Script error", wxICON_ERROR );
-                        return;
-                    }
-
-                    chunk->GetContent()->GetNodeFromPass( current_pass )->SetShaderRealVector( id, value );
-
-                    // update descriptor
-                    chunk_descr.passes_slots[pass_name].shader_params[id_index].value = value;
-
-                    m_chunk_descriptors[it->first] = chunk_descr;
-
-                    return;
-                }
-                else
-                {
-                    wxMessageBox( "ChunkNode:UpdateShaderParam : unknown pass name for this node", "Script error", wxICON_ERROR );
-                    return;
-                }
-            }
-        }
-
+        m_actionscripts["ChunkNode:UpdateShaderParam"]->Execute( p_propertypool );
     }
     else if( "Keyboard:Keyboard" == script_call_id )
     {
@@ -1510,7 +1464,6 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     {
         m_actionscripts["DrawSpace:LoadMouseScript"]->Execute( p_propertypool );
     }
-
     else if( "TransformationNode:LoadScript" == script_call_id )
     {
         m_actionscripts["TransformationNode:LoadScript"]->Execute( p_propertypool );

@@ -285,6 +285,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionChunkNodeUpdateShaderParam.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionChunkNodeUpdateShaderParam.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCircularMvtCircularMvt.cpp"
 				>
 			</File>
@@ -430,6 +438,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionKeydownScriptEditionDialogcpp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionKeyUpLoadScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionKeyUpLoadScript.h"
 				>
 			</File>
 			<File
