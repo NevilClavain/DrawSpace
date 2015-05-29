@@ -337,6 +337,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionDisplayCurrentCamera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionDisplayCurrentCamera.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionDisplayFramerate.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionDisplayFramerate.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionDrawSpaceDrawSpace.cpp"
 				>
 			</File>

@@ -27,8 +27,6 @@
 #include "buildobjects.h"
 #include "luascripting.h"
 
-#include "ActionDrawSpaceDrawSpace.h"
-
 #include "ActionPropsDialog.h"
 #include "ActionEditMvtDialog.h"
 #include "ActionAddMatrix.h"
@@ -127,11 +125,13 @@
 #include "ActionKeyupScriptEditionDialog.h"
 #include "ActionKeydownScriptEditionDialog.h"
 
+#include "ActionDrawSpaceDrawSpace.h"
 #include "ActionGetSceneCameraName.h"
 #include "ActionIsCurrentCamera.h"
 #include "ActionSetSceneNodeGraphCurrentCamera.h"
 #include "ActionGlobalPrint.h"
-
+#include "ActionDisplayFramerate.h"
+#include "ActionDisplayCurrentCamera.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -593,13 +593,15 @@ m_delta_mouse_init( true )
     m_actionscripts["Keyboard:Keyboard"] = new ActionKeyboardKeyboard();
 
 
-
-    m_actionscripts["DrawSpace:GetSceneCameraName"] = new ActionGetSceneCameraName();
-    m_actionscripts["DrawSpace:IsCurrentCamera"] = new ActionIsCurrentCamera();
-    m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"] = new ActionSetSceneNodeGraphCurrentCamera();
     m_actionscripts["global:print"] = new ActionGlobalPrint();
 
+
     m_actionscripts["DrawSpace:DrawSpace"] = new ActionDrawSpaceDrawSpace();
+    m_actionscripts["DrawSpace:GetSceneCameraName"] = new ActionGetSceneCameraName();
+    m_actionscripts["DrawSpace:IsCurrentCamera"] = new ActionIsCurrentCamera();
+    m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"] = new ActionSetSceneNodeGraphCurrentCamera();        
+    m_actionscripts["DrawSpace:DisplayFramerate"] = new ActionDisplayFramerate();
+    m_actionscripts["DrawSpace:DisplayCurrentCamera"] = new ActionDisplayCurrentCamera();
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -671,29 +673,11 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
     }
     else if( "DrawSpace:DisplayFramerate" == script_call_id )
     {
-        bool state = p_propertypool.GetPropValue<bool>( "state" );
-        m_display_framerate = state;
+        m_actionscripts["DrawSpace:DisplayFramerate"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:DisplayCurrentCamera" == script_call_id )
     {
-        bool state = p_propertypool.GetPropValue<bool>( "state" );
-        dsstring scenegraphname = p_propertypool.GetPropValue<dsstring>( "scenegraphname" );
-
-        bool found = false;
-        for( std::map<void*, SceneNodeGraphEntry>::iterator it = m_scenenodegraphs.begin(); it != m_scenenodegraphs.end(); ++it )
-        {
-            if( it->second.name == scenegraphname )
-            {
-                m_display_currentcamera = state;
-                m_scenegraph_currentcameradisplay = it->second;
-                found = true;
-                break;
-            }
-        }
-        if( !found )
-        {
-            wxMessageBox( "DrawSpace:DisplayCurrentCamera, unknown scenegraph name : " + scenegraphname, "Script error", wxICON_ERROR );
-        }
+        m_actionscripts["DrawSpace:DisplayCurrentCamera"]->Execute( p_propertypool );
     }
     else if( "DrawSpace:CreateSceneNodeGraph" == script_call_id )
     {
