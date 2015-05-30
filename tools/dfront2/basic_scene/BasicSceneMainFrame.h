@@ -450,7 +450,7 @@ public:
     std::map<void*, BasicSceneScriptEditFrame*>                                             m_script_edit_frames;
 
     std::map<void*, int>                                                                    m_menubuild_table;
-
+  
     //////////////////////////////////////////////////////////////////////////////////
 
     std::vector<DrawSpace::Core::Configurable*>             m_ordered_configs;

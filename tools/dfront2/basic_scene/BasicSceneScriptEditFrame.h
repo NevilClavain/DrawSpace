@@ -48,6 +48,7 @@ public:
 
     void        Show( void );
 	dsstring*   GetTextRef( void );
+    bool*       GeScriptStateRef( void );
 };
 
 #endif // __BasicSceneScriptEditFrame__

@@ -76,3 +76,8 @@ dsstring* BasicSceneScriptEditFrame::GetTextRef( void )
 {
     return m_text;
 }
+
+bool* BasicSceneScriptEditFrame::GeScriptStateRef( void )
+{
+    return m_script_state;
+}

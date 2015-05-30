@@ -120,6 +120,8 @@ void ActionFreeMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_di
     BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
     BasicSceneMainFrame::GetInstance()->m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
 
+    BasicSceneMainFrame::GetInstance()->m_menubuild_table[f_entry.treeitemid.GetID()] = FREEMOVEMENT_MASK;
+
     ///////////////////////////////////////////////////////////////////////////
 
     DIALOG_CLOSE

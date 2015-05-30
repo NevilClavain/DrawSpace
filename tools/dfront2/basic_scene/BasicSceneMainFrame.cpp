@@ -1685,52 +1685,8 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
         dsstring script;
         bool* script_enabled;
 
-        if( m_transformation_nodes.count( id ) > 0 )
-        {
-            script = m_transformation_nodes[id].script;
-            script_enabled = &m_transformation_nodes[id].script_enabled;
-        }
-        else if( m_spacebox_nodes.count( id ) > 0 )
-        {
-            script = m_spacebox_nodes[id].script;
-            script_enabled = &m_spacebox_nodes[id].script_enabled;
-        }
-        else if( m_camera_nodes.count( id ) > 0 )
-        {
-            script = m_camera_nodes[id].script;
-            script_enabled = &m_camera_nodes[id].script_enabled;
-        }
-        else if( m_fps_nodes.count( id ) > 0 )
-        {
-            script = m_fps_nodes[id].script;
-            script_enabled = &m_fps_nodes[id].script_enabled;
-        }
-        else if( m_chunk_nodes.count( id ) > 0 )
-        {
-            script = m_chunk_nodes[id].script;
-            script_enabled = &m_chunk_nodes[id].script_enabled;
-        }
-        else if( m_lin_nodes.count( id ) > 0 )
-        {
-            script = m_lin_nodes[id].script;
-            script_enabled = &m_lin_nodes[id].script_enabled;
-        }
-        else if( m_free_nodes.count( id ) > 0 )
-        {
-            script = m_free_nodes[id].script;
-            script_enabled = &m_free_nodes[id].script_enabled;
-        }
-        else if( m_circ_nodes.count( id ) > 0 )
-        {
-            script = m_circ_nodes[id].script;
-            script_enabled = &m_circ_nodes[id].script_enabled;
-        }
-        else if( m_ll_nodes.count( id ) > 0 )
-        {
-            script = m_ll_nodes[id].script;
-            script_enabled = &m_ll_nodes[id].script_enabled;
-        }
-
+        script = *( m_script_edit_frames[id]->GetTextRef() );
+        script_enabled = m_script_edit_frames[id]->GeScriptStateRef();
 
         if( *script_enabled )
         {
