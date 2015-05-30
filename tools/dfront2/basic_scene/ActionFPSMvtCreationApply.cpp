@@ -127,6 +127,8 @@ void ActionFPSMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dia
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[f_entry.treeitemid.GetID()] = FPSMOVEMENT_MASK;
 
+    BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[f_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].treeitemid );
+
     DIALOG_CLOSE
 
 }

@@ -130,6 +130,8 @@ void ActionLinearMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[l_entry.treeitemid.GetID()] = LINMOVEMENT_MASK;
 
+    BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[l_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].treeitemid );
+
     DIALOG_CLOSE
 
 }

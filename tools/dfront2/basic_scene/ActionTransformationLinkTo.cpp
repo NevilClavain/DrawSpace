@@ -141,4 +141,6 @@ void ActionTransformationLinkTo::Execute( DrawSpace::Core::PropertyPool& p_prope
     BasicSceneMainFrame::GetInstance()->m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[t_entry.treeitemid.GetID()] = TRANSFO_MASK;
+
+    BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[t_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_transformation_nodes[t_entry.treeitemid.GetID()].treeitemid );
 }

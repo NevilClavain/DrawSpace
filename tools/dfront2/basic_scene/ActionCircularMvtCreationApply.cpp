@@ -131,6 +131,8 @@ void ActionCircularMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CIRCMOVEMENT_MASK;
 
+    BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[c_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_circ_nodes[c_entry.treeitemid.GetID()].treeitemid );
+
     ///////////////////////////////////////////////////////////////////////////////////
 
     DIALOG_CLOSE

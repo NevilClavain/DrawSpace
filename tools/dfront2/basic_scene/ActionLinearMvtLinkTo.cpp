@@ -147,4 +147,6 @@ void ActionLinearMvtLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypo
     BasicSceneMainFrame::GetInstance()->m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[l_entry.treeitemid.GetID()] = LINMOVEMENT_MASK;
+
+    BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[l_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].treeitemid );
 }

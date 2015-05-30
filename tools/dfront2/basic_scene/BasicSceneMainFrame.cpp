@@ -1701,46 +1701,7 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
 
 wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
 {
-    if( m_transformation_nodes.count( p_id ) > 0 )
-    {
-        return m_transformation_nodes[p_id].treeitemid;
-    }
-    if( m_spacebox_nodes.count( p_id ) > 0 )
-    {
-        return m_spacebox_nodes[p_id].treeitemid;
-    }
-    if( m_camera_nodes.count( p_id ) > 0 )
-    {
-        return m_camera_nodes[p_id].treeitemid;
-    }
-    if( m_fps_nodes.count( p_id ) > 0 )
-    {
-        return m_fps_nodes[p_id].treeitemid;
-    }
-    if( m_chunk_nodes.count( p_id ) > 0 )
-    {
-        return m_chunk_nodes[p_id].treeitemid;
-    }
-    if( m_lin_nodes.count( p_id ) > 0 )
-    {
-        return m_lin_nodes[p_id].treeitemid;
-    }
-    if( m_circ_nodes.count( p_id ) > 0 )
-    {
-        return m_circ_nodes[p_id].treeitemid;
-    }
-    if( m_free_nodes.count( p_id ) > 0 )
-    {
-        return m_free_nodes[p_id].treeitemid;
-    }
-    if( m_ll_nodes.count( p_id ) > 0 )
-    {
-        return m_ll_nodes[p_id].treeitemid;
-    }
-
-    // avoid MSVC C4715 warning
-    wxTreeItemId dummy;
-    return dummy;
+    return *( m_inv_treeitemid[p_id] );
 }
 
 wxTreeItemId BasicSceneMainFrame::AppendItem( const wxTreeItemId& p_parent_item, const wxString& p_text, int p_image )
