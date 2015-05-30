@@ -286,6 +286,8 @@ void ActionSpaceBoxCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_d
         BasicSceneMainFrame::GetInstance()->m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
 
         //////////////////////////////////////////////////////
+
+        BasicSceneMainFrame::GetInstance()->m_menubuild_table[t_entry.treeitemid.GetID()] = SPACEBOX_MASK;
         
         DIALOG_CLOSE
     }

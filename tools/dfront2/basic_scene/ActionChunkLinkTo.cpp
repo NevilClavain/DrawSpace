@@ -163,6 +163,8 @@ void ActionChunkLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
         script_text = &BasicSceneMainFrame::GetInstance()->m_chunk_nodes[c_entry.treeitemid.GetID()].script;
         script_state = &BasicSceneMainFrame::GetInstance()->m_chunk_nodes[c_entry.treeitemid.GetID()].script_enabled;
         BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-        BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;            
+        BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+
+        BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CHUNK_MASK;
     }
 }

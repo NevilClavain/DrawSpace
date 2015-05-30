@@ -631,7 +631,6 @@ m_delta_mouse_init( true )
     m_actionscripts["DrawSpace:TranslationSpeedInc"] = new ActionTranslationSpeedInc();
     m_actionscripts["DrawSpace:TranslationSpeedDec"] = new ActionTranslationSpeedDec();
 
-
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
@@ -691,189 +690,7 @@ void BasicSceneMainFrame::on_scripting_calls( DrawSpace::Core::PropertyPool& p_p
 {
     dsstring script_call_id = p_propertypool.GetPropValue<dsstring>( "script_call_id" );
 
-    if( "global:print" == script_call_id )
-    {
-        m_actionscripts["global:print"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:DrawSpace" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:DrawSpace"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:DisplayFramerate" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:DisplayFramerate"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:DisplayCurrentCamera" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:DisplayCurrentCamera"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:CreateSceneNodeGraph" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:CreateSceneNodeGraph"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:AngleSpeedInc" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:AngleSpeedInc"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:AngleSpeedDec" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:AngleSpeedDec"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:TranslationSpeedInc" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:TranslationSpeedInc"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:TranslationSpeedDec" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:TranslationSpeedDec"]->Execute( p_propertypool );
-    }
-    else if( "TransformationNode:TransformationNode" == script_call_id )
-    {
-        m_actionscripts["TransformationNode:TransformationNode"]->Execute( p_propertypool );
-    }
-    else if( "CameraPointNode:CameraPointNode" == script_call_id )
-    {
-        m_actionscripts["CameraPointNode:CameraPointNode"]->Execute( p_propertypool );
-    }
-    else if( "TransformationNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["TransformationNode:LinkTo"]->Execute( p_propertypool );
-    }
-    else if( "SpaceboxNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["SpaceboxNode:LinkTo"]->Execute( p_propertypool );
-    }
-    else if( "CameraPointNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["CameraPointNode:LinkTo"]->Execute( p_propertypool );
-    }
-    else if( "ChunkNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["ChunkNode:LinkTo"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:SetSceneNodeGraphCurrentCamera" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:IsCurrentCamera" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:IsCurrentCamera"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:GetSceneCameraName" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:GetSceneCameraName"]->Execute( p_propertypool );
-    }
-    else if( "SpaceboxNode:UpdateShaderParam" == script_call_id )
-    {
-        m_actionscripts["SpaceboxNode:UpdateShaderParam"]->Execute( p_propertypool );
-    }
-    else if( "ChunkNode:UpdateShaderParam" == script_call_id )
-    {
-        m_actionscripts["ChunkNode:UpdateShaderParam"]->Execute( p_propertypool );
-    }
-    else if( "Keyboard:Keyboard" == script_call_id )
-    {
-        m_actionscripts["Keyboard:Keyboard"]->Execute( p_propertypool );
-    }
-    else if( "Mouse:Mouse" == script_call_id )
-    {
-        m_actionscripts["Mouse:Mouse"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:LoadKeyUpScript" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:LoadKeyUpScript"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:LoadKeyDownScript" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:LoadKeyDownScript"]->Execute( p_propertypool );
-    }
-    else if( "DrawSpace:LoadMouseScript" == script_call_id )
-    {
-        m_actionscripts["DrawSpace:LoadMouseScript"]->Execute( p_propertypool );
-    }
-    else if( "TransformationNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["TransformationNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "CameraPointNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["CameraPointNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "SpaceboxNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["SpaceboxNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "FpsMovementNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["FpsMovementNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "ChunkNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["ChunkNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "LinearMovementNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["LinearMovementNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "FreeMovementNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["FreeMovementNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "CircularMovementNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["CircularMovementNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "LongLatMovementNode:LoadScript" == script_call_id )
-    {
-        m_actionscripts["LongLatMovementNode:LoadScript"]->Execute( p_propertypool );
-    }
-    else if( "FpsMovementNode:FpsMovementNode" == script_call_id )
-    {
-        m_actionscripts["FpsMovementNode:FpsMovementNode"]->Execute( p_propertypool );
-    }
-    else if( "FpsMovementNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["FpsMovementNode:LinkTo"]->Execute( p_propertypool );
-    }
-
-    else if( "LinearMovementNode:LinearMovementNode" == script_call_id )
-    {
-        m_actionscripts["LinearMovementNode:LinearMovementNode"]->Execute( p_propertypool );
-    }
-
-    else if( "LinearMovementNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["LinearMovementNode:LinkTo"]->Execute( p_propertypool );
-    }
-
-    else if( "CircularMovementNode:CircularMovementNode" == script_call_id )
-    {
-        m_actionscripts["CircularMovementNode:CircularMovementNode"]->Execute( p_propertypool );
-    }
-
-    else if( "CircularMovementNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["CircularMovementNode:LinkTo"]->Execute( p_propertypool );
-    }
-
-    else if( "FreeMovementNode:FreeMovementNode" == script_call_id )
-    {
-        m_actionscripts["FreeMovementNode:FreeMovementNode"]->Execute( p_propertypool );
-    }
-    else if( "FreeMovementNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["FreeMovementNode:LinkTo"]->Execute( p_propertypool );
-    }
-
-    else if( "LongLatMovementNode:LongLatMovementNode" == script_call_id )
-    {
-        m_actionscripts["LongLatMovementNode:LongLatMovementNode"]->Execute( p_propertypool );
-    }
-
-    else if( "LongLatMovementNode:LinkTo" == script_call_id )
-    {
-        m_actionscripts["LongLatMovementNode:LinkTo"]->Execute( p_propertypool );
-    }
+    m_actionscripts[script_call_id]->Execute( p_propertypool );
 }
 
 void BasicSceneMainFrame::ExecStartupScript( const dsstring& p_scriptfilepath )
@@ -1251,6 +1068,14 @@ void BasicSceneMainFrame::Update( void )
     m_scenegraphs_root_item = m_scenegraphs_treeCtrl->AddRoot( "DrawSpace", DRAWSPACE_ICON_INDEX );
     m_keyboard_item = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, "Keyboard", KEYBOARD_ICON_INDEX );
     m_mouse_item = m_scenegraphs_treeCtrl->AppendItem( m_scenegraphs_root_item, "Mouse", MOUSE_ICON_INDEX );
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    m_menubuild_table[m_scenegraphs_root_item.GetID()] = DRAWSPACE_MASK;
+    m_menubuild_table[m_keyboard_item.GetID()] = KEYBOARD_MASK;
+    m_menubuild_table[m_mouse_item.GetID()] = MOUSE_MASK;
+    
 }
 
 void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
@@ -1614,65 +1439,7 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
     wxTreeItemId item = p_event.GetItem();
 
     m_last_clicked_treeitem = item;
-
-    if( item.GetID() == m_scenegraphs_root_item.GetID() )
-    {
-        build_popupmenu( DRAWSPACE_MASK, mnu );
-    }
-    else if( item.GetID() == m_keyboard_item.GetID() )
-    {
-        build_popupmenu( KEYBOARD_MASK, mnu );
-    }
-    else if( item.GetID() == m_mouse_item.GetID() )
-    {
-        build_popupmenu( MOUSE_MASK, mnu );
-    }
-    else
-    {        
-        if( m_scenenodegraphs.count( item.GetID() ) > 0 )
-        {
-            // clicked item belong to a registered scenenodegraph...
-            build_popupmenu( SCENEGRAPH_MASK, mnu );
-        }
-        else if( m_transformation_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( TRANSFO_MASK, mnu );
-        }
-        else if( m_spacebox_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( SPACEBOX_MASK, mnu );
-        }
-        else if( m_camera_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( CAMERA_MASK, mnu );
-        }
-        else if( m_fps_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( FPSMOVEMENT_MASK, mnu );
-        }
-        else if( m_chunk_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( CHUNK_MASK, mnu );
-        }
-        else if( m_lin_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( LINMOVEMENT_MASK, mnu );
-        }
-        else if( m_free_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( FREEMOVEMENT_MASK, mnu );
-        }
-        else if( m_circ_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( CIRCMOVEMENT_MASK, mnu );
-        }
-        else if( m_ll_nodes.count( item.GetID() ) > 0 )
-        {
-            build_popupmenu( LONGLATMOVEMENT_MASK, mnu );
-        }
-
-    }
-
+    build_popupmenu( m_menubuild_table[item.GetID()], mnu );
  	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this );
  	PopupMenu(&mnu);
 }

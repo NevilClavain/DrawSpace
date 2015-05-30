@@ -45,6 +45,7 @@ void ActionCreateSceneNodeGraph::Execute( DrawSpace::Core::PropertyPool& p_prope
     entry.current_camera_set = false;
     BasicSceneMainFrame::GetInstance()->m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
 
+    BasicSceneMainFrame::GetInstance()->m_menubuild_table[entry.treeitemid.GetID()] = SCENEGRAPH_MASK;
     
     *newsc_ptr = entry.scenenodegraph;
     *newsc_alias_ptr = alias;

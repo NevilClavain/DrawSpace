@@ -204,6 +204,8 @@ void ActionChunkCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dial
         BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
 
         /////////////////////////////////////////////////////////////////////////
+
+        BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CHUNK_MASK;
         
         DIALOG_CLOSE
 

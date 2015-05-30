@@ -56,6 +56,7 @@ void ActionScenenodeGraphCreationApply::Execute( BasicSceneObjectPropertiesDialo
         entry.current_camera_set = false;
 
         BasicSceneMainFrame::GetInstance()->m_scenenodegraphs[entry.treeitemid.GetID()] = entry;
+        BasicSceneMainFrame::GetInstance()->m_menubuild_table[entry.treeitemid.GetID()] = SCENEGRAPH_MASK;
        
         DIALOG_CLOSE
     }

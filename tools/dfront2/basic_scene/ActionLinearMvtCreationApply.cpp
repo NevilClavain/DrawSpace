@@ -128,6 +128,8 @@ void ActionLinearMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     /////////////////////////////////////////////////////////////////////////
 
+    BasicSceneMainFrame::GetInstance()->m_menubuild_table[l_entry.treeitemid.GetID()] = LINMOVEMENT_MASK;
+
     DIALOG_CLOSE
 
 }

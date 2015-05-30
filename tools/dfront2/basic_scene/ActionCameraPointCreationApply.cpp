@@ -112,5 +112,7 @@ void ActionCameraPointCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
     BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
     BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
 
+    BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CAMERA_MASK;
+
     DIALOG_CLOSE
 }
