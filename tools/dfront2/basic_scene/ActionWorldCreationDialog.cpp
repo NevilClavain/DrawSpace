@@ -29,6 +29,12 @@ void ActionWorldCreationDialog::Execute( void )
 {
     DIALOG_ACTION_DECLARE( DIALOG_WORLD_CREATION_TITLE )
     DIALOG_APPENDROOT_STRING( "name", "" )
+
+    DIALOG_APPENDROOT_NODE( "gravity vector", gravity_vector )
+    DIALOG_APPENDNODE_FLOAT( gravity_vector, "x", 0.0 )
+    DIALOG_APPENDNODE_FLOAT( gravity_vector, "y", -9.81 )
+    DIALOG_APPENDNODE_FLOAT( gravity_vector, "z", 0.0 )
+
     DIALOG_APPLY
     DIALOG_SHOW
 }

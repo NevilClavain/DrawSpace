@@ -90,6 +90,7 @@
     <ClCompile Include="ActionSpaceBoxLinkTo.cpp" />
     <ClCompile Include="ActionCameraPointLinkTo.cpp" />
     <ClCompile Include="ActionChunkLinkTo.cpp" />
+    <ClCompile Include="ActionWorldCreationApply.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -184,5 +185,6 @@
     <ClInclude Include="ActionSpaceBoxLinkTo.h" />
     <ClInclude Include="ActionCameraPointLinkTo.h" />
     <ClInclude Include="ActionChunkLinkTo.h" />
+    <ClInclude Include="ActionWorldCreationApply.h" />
   </ItemGroup>
 </Project>

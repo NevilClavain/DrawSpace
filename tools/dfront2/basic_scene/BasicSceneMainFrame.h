@@ -53,6 +53,7 @@
 #define KEYBOARD_ICON_INDEX                 13
 #define MOUSE_ICON_INDEX                    14
 #define CAMERASEL_ICON_INDEX                15
+#define WORLD_ICON_INDEX                    16
 
 
 #define CAMERA_MASK                         1
@@ -70,6 +71,7 @@
 #define DRAWSPACE_MASK                      13
 #define KEYBOARD_MASK                       14
 #define MOUSE_MASK                          15
+#define WORLD_MASK                          16
 
 
 #define FPSMOVEMENT_MASK                    500
@@ -116,6 +118,7 @@
 
 #define CONTEXTMENU_EDIT_CHUNKNODE          2091
 #define CONTEXTMENU_EDIT_SBNODE             2092
+#define CONTEXTMENU_EDIT_WORLD              2093
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -375,6 +378,14 @@ public:
 
     } SceneNodeGraphEntry;
 
+    typedef struct
+    {
+        dsstring                            name;
+        DrawSpace::Dynamics::World*         world;
+        wxTreeItemId                        treeitemid;
+
+    } WorldEntry;
+
     template <typename Base>
     class SceneNodeEntry
     {
@@ -420,6 +431,7 @@ public:
     //////////////////////////////////////////////////////////////////////////////////
 
     std::map<void*, SceneNodeGraphEntry>                                                    m_scenenodegraphs;
+    std::map<void*, WorldEntry>                                                             m_worlds;
 
     std::map<void*, DrawSpace::Core::BaseSceneNode*>                                        m_tree_nodes;
     std::map<DrawSpace::Core::BaseSceneNode*, void*>                                        m_inv_tree_nodes;

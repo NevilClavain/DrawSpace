@@ -45,6 +45,7 @@
 #include "ActionScenenodeGraphCreationApply.h"
 
 #include "ActionWorldCreationDialog.h"
+#include "ActionWorldCreationApply.h"
 
 #include "ActionSpaceBoxCreationDialog.h"
 #include "ActionSpaceBoxCreationSpecific0.h"
@@ -218,6 +219,7 @@ m_delta_mouse_init( true )
     PopupMenuEntry pme_edittransformnode = { CONTEXTMENU_EDIT_TRANSFORMNODE, "Edit transformation..." };
     //PopupMenuEntry pme_editshaders = { CONTEXTMENU_EDIT_SHADERSPARAMS, "Edit shaders params..." };
 
+    PopupMenuEntry pme_editworld = { CONTEXTMENU_EDIT_WORLD, "Edit world..." };
     PopupMenuEntry pme_editsb = { CONTEXTMENU_EDIT_SBNODE, "Edit spacebox..." };
     PopupMenuEntry pme_editchunk = { CONTEXTMENU_EDIT_CHUNKNODE, "Edit chunk..." };
 
@@ -264,6 +266,10 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[KEYBOARD_MASK].push_back( pme_editkeydownscript );
     m_scenegraphs_masks[KEYBOARD_MASK].push_back( pme_editkeyupscript );
     m_scenegraphs_masks[MOUSE_MASK].push_back( pme_editmousemovescript );
+
+    ///////////////////////////////////////////////////////////////////
+
+    m_scenegraphs_masks[WORLD_MASK].push_back( pme_editworld );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -488,9 +494,10 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_MVT] = new ActionEditMvtDialog();
 
     m_actions[CONTEXTMENU_NEWSCENENODEGRAPH] = new ActionScenenodeGraphCreationDialog();
-    m_actiondialogs_apply[DIALOG_SCENEGRAPH_CREATION_TITLE] = new ActionScenenodeGraphCreationApply();
+    m_actiondialogs_apply[DIALOG_WORLD_CREATION_TITLE] = new ActionWorldCreationApply();
 
     m_actions[CONTEXTMENU_NEWWORLD] = new ActionWorldCreationDialog();
+    m_actiondialogs_apply[DIALOG_SCENEGRAPH_CREATION_TITLE] = new ActionScenenodeGraphCreationApply();
 
     m_actions[CONTEXTMENU_NEWSPACEBOX] = new ActionSpaceBoxCreationDialog();
     m_actiondialogs_specific0[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionSpaceBoxCreationSpecific0();
@@ -1042,25 +1049,27 @@ void BasicSceneMainFrame::Update( void )
     wxBitmap bmp_keyboard( "icon_keyboard.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_mouse( "icon_mouse.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_camera_sel( "icon_camera_sel.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_world( "icon_world.bmp", wxBITMAP_TYPE_BMP );
 
 
     
-    pImageList->Add( bmp_camera );
-    pImageList->Add( bmp_chunk );
-    pImageList->Add( bmp_collider );
-    pImageList->Add( bmp_inertbody );
-    pImageList->Add( bmp_movement );
-    pImageList->Add( bmp_orbit );
-    pImageList->Add( bmp_orbiter );
-    pImageList->Add( bmp_planet );
-    pImageList->Add( bmp_rocket );
-    pImageList->Add( bmp_spacebox );
-    pImageList->Add( bmp_transfo );
-    pImageList->Add( bmp_scenegraph );
-    pImageList->Add( bmp_drawspace );
-    pImageList->Add( bmp_keyboard );
-    pImageList->Add( bmp_mouse );
-    pImageList->Add( bmp_camera_sel );
+    pImageList->Add( bmp_camera );      // 0
+    pImageList->Add( bmp_chunk );       // 1
+    pImageList->Add( bmp_collider );    // 2
+    pImageList->Add( bmp_inertbody );   // 3
+    pImageList->Add( bmp_movement );    // 4
+    pImageList->Add( bmp_orbit );       // 5
+    pImageList->Add( bmp_orbiter );     // 6
+    pImageList->Add( bmp_planet );      // 7
+    pImageList->Add( bmp_rocket );      // 8
+    pImageList->Add( bmp_spacebox );    // 9
+    pImageList->Add( bmp_transfo );     // 10
+    pImageList->Add( bmp_scenegraph );  // 11
+    pImageList->Add( bmp_drawspace );   // 12
+    pImageList->Add( bmp_keyboard );    // 13
+    pImageList->Add( bmp_mouse );       // 14
+    pImageList->Add( bmp_camera_sel );  // 15
+    pImageList->Add( bmp_world );       // 16
     
 
     m_scenegraphs_treeCtrl->AssignImageList( pImageList );
