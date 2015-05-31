@@ -167,6 +167,7 @@
     <ClCompile Include="ActionTranslationSpeedInc.cpp" />
     <ClCompile Include="ActionWorldCreationApply.cpp" />
     <ClCompile Include="ActionWorldCreationDialog.cpp" />
+    <ClCompile Include="ActionWorldEditionDialogcpp.cpp" />
     <ClCompile Include="adapters.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="BasicSceneMainFrame.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="ActionTranslationSpeedInc.h" />
     <ClInclude Include="ActionWorldCreationApply.h" />
     <ClInclude Include="ActionWorldCreationDialog.h" />
+    <ClInclude Include="ActionWorldEditionDialog.h" />
     <ClInclude Include="adapters.h" />
     <ClInclude Include="app.h" />
     <ClInclude Include="BasicSceneMainFrame.h" />

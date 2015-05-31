@@ -47,6 +47,8 @@
 #include "ActionWorldCreationDialog.h"
 #include "ActionWorldCreationApply.h"
 
+#include "ActionWorldEditionDialog.h"
+
 #include "ActionSpaceBoxCreationDialog.h"
 #include "ActionSpaceBoxCreationSpecific0.h"
 #include "ActionSpaceBoxCreationApply.h"
@@ -495,6 +497,9 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWSCENENODEGRAPH] = new ActionScenenodeGraphCreationDialog();
     m_actiondialogs_apply[DIALOG_WORLD_CREATION_TITLE] = new ActionWorldCreationApply();
+
+    m_actions[CONTEXTMENU_EDIT_WORLD] = new ActionWorldEditionDialog();
+
 
     m_actions[CONTEXTMENU_NEWWORLD] = new ActionWorldCreationDialog();
     m_actiondialogs_apply[DIALOG_SCENEGRAPH_CREATION_TITLE] = new ActionScenenodeGraphCreationApply();

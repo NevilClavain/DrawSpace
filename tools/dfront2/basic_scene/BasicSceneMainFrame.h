@@ -137,6 +137,7 @@
 #define DIALOG_SPACEBOX_EDITION_TITLE       "Spacebox node edition"
 #define DIALOG_SCENEGRAPH_CREATION_TITLE    "Scenegraph creation"
 #define DIALOG_WORLD_CREATION_TITLE         "World creation"
+#define DIALOG_WORLD_EDITION_TITLE          "World edition"
 #define DIALOG_CAMERA_CREATION_TITLE        "Camera node creation"
 #define DIALOG_CAMERA_PROPS_TITLE           "Camera node properties"
 #define DIALOG_CAMERA_EDIT_TITLE            "Camera node edition"
