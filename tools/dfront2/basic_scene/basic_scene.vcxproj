@@ -108,6 +108,7 @@
     <ClCompile Include="ActionCircularMvtEditionApply.cpp" />
     <ClCompile Include="ActionCircularMvtLinkTo.cpp" />
     <ClCompile Include="ActionCreateSceneNodeGraph.cpp" />
+    <ClCompile Include="ActionCreateWorld.cpp" />
     <ClCompile Include="ActionDisplayCurrentCamera.cpp" />
     <ClCompile Include="ActionDisplayFramerate.cpp" />
     <ClCompile Include="ActionDrawSpaceDrawSpace.cpp" />
@@ -167,7 +168,7 @@
     <ClCompile Include="ActionTranslationSpeedInc.cpp" />
     <ClCompile Include="ActionWorldCreationApply.cpp" />
     <ClCompile Include="ActionWorldCreationDialog.cpp" />
-    <ClCompile Include="ActionWorldEditionDialogcpp.cpp" />
+    <ClCompile Include="ActionWorldEditionDialog.cpp" />
     <ClCompile Include="adapters.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="BasicSceneMainFrame.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="ActionCircularMvtEditionApply.h" />
     <ClInclude Include="ActionCircularMvtLinkTo.h" />
     <ClInclude Include="ActionCreateSceneNodeGraph.h" />
+    <ClInclude Include="ActionCreateWorld.h" />
     <ClInclude Include="actiondialog.h" />
     <ClInclude Include="ActionDisplayCurrentCamera.h" />
     <ClInclude Include="ActionDisplayFramerate.h" />

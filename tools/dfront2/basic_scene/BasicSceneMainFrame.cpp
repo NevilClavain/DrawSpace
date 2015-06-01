@@ -146,6 +146,7 @@
 #include "ActionDisplayFramerate.h"
 #include "ActionDisplayCurrentCamera.h"
 #include "ActionCreateSceneNodeGraph.h"
+#include "ActionCreateWorld.h"
 #include "ActionAngleSpeedInc.h"
 #include "ActionAngleSpeedDec.h"
 #include "ActionTranslationSpeedInc.h"
@@ -638,6 +639,7 @@ m_delta_mouse_init( true )
     m_actionscripts["DrawSpace:DisplayFramerate"] = new ActionDisplayFramerate();
     m_actionscripts["DrawSpace:DisplayCurrentCamera"] = new ActionDisplayCurrentCamera();
     m_actionscripts["DrawSpace:CreateSceneNodeGraph"] = new ActionCreateSceneNodeGraph();
+    m_actionscripts["DrawSpace:CreateWorld"] = new ActionCreateWorld();
     m_actionscripts["DrawSpace:AngleSpeedInc"] = new ActionAngleSpeedInc();
     m_actionscripts["DrawSpace:AngleSpeedDec"] = new ActionAngleSpeedDec();
     m_actionscripts["DrawSpace:TranslationSpeedInc"] = new ActionTranslationSpeedInc();

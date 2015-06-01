@@ -24,6 +24,7 @@
 #include "lua_real.h"
 #include "luacontext.h"
 #include "lua_camerapointnode.h"
+#include "lua_vector.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -34,6 +35,7 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "DisplayFramerate", &LuaDrawSpace::Lua_DisplayFramerate },
   { "DisplayCurrentCamera", &LuaDrawSpace::Lua_DisplayCurrentCamera },
   { "CreateSceneNodeGraph", &LuaDrawSpace::Lua_CreateSceneNodeGraph },
+  { "CreateWorld", &LuaDrawSpace::Lua_CreateWorld },
   { "SetSceneNodeGraphCurrentCamera", &LuaDrawSpace::Lua_SetSceneNodeGraphCurrentCamera },
   { "LoadKeyUpScript", &LuaDrawSpace::Lua_LoadKeyUpScript },
   { "LoadKeyDownScript", &LuaDrawSpace::Lua_LoadKeyDownScript },
@@ -147,6 +149,35 @@ int LuaDrawSpace::Lua_CreateSceneNodeGraph( lua_State* p_L )
 
         m_nodesevent_callbacks.push_back( new_sc_descr );
     }
+    return 0;
+}
+
+int LuaDrawSpace::Lua_CreateWorld( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "CreateWorld : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* name = luaL_checkstring( p_L, 1 );
+
+    LuaVector* vec = Luna2<LuaVector>::check( p_L, 2 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        ScenegraphDescr new_sc_descr;
+
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:CreateWorld" );
+        props.AddPropValue<dsstring>( "name", name );
+        props.AddPropValue<Utils::Vector>( "gravity", vec->m_vector );
+        
+        (*m_scriptcalls_handler)( props );
+    }
+
+
     return 0;
 }
 

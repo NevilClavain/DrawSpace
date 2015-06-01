@@ -6,6 +6,7 @@ ds:DisplayFramerate( 1 )
 
 
 ds:CreateSceneNodeGraph( "scene0" )
+ds:CreateWorld( "world0", Vector( 0.0, -9.81, 0.0, 0.0 ) )
 
 ds:DisplayCurrentCamera( "scene0", 1 )
 

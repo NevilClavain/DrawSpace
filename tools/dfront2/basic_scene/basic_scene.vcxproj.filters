@@ -91,7 +91,8 @@
     <ClCompile Include="ActionCameraPointLinkTo.cpp" />
     <ClCompile Include="ActionChunkLinkTo.cpp" />
     <ClCompile Include="ActionWorldCreationApply.cpp" />
-    <ClCompile Include="ActionWorldEditionDialogcpp.cpp" />
+    <ClCompile Include="ActionCreateWorld.cpp" />
+    <ClCompile Include="ActionWorldEditionDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -188,5 +189,6 @@
     <ClInclude Include="ActionChunkLinkTo.h" />
     <ClInclude Include="ActionWorldCreationApply.h" />
     <ClInclude Include="ActionWorldEditionDialog.h" />
+    <ClInclude Include="ActionCreateWorld.h" />
   </ItemGroup>
 </Project>

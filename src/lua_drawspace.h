@@ -64,6 +64,7 @@ public:
     int Lua_DisplayFramerate( lua_State* p_L );
     int Lua_DisplayCurrentCamera( lua_State* p_L );
     int Lua_CreateSceneNodeGraph( lua_State* p_L );
+    int Lua_CreateWorld( lua_State* p_L );
 
     int Lua_SetSceneNodeGraphCurrentCamera( lua_State* p_L );
 
