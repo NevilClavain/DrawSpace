@@ -59,7 +59,8 @@ public:
     virtual ~World( void );
 
     bool Initialize( void );
-    bool SetGravity( const DrawSpace::Utils::Vector p_gravity );
+    bool SetGravity( const DrawSpace::Utils::Vector& p_gravity );
+    bool GetGravity( DrawSpace::Utils::Vector& p_gravity );
 
     bool StepSimulation( dsreal p_fps, int p_nbsteps );
 
@@ -70,6 +71,8 @@ public:
 
     void AddBody( Body* p_body );
     void RemoveBody( Body* p_body );
+
+    
 
 };
 }

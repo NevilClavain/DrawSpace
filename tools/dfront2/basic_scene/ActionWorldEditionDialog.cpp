@@ -37,7 +37,16 @@ void ActionWorldEditionDialog::Execute( void )
     if( BasicSceneMainFrame::GetInstance()->m_worlds.count( id ) > 0 )
     {
         DIALOG_ACTION_DECLARE( DIALOG_WORLD_EDITION_TITLE )
-    
+
+        DIALOG_APPENDROOT_STRING( "name", BasicSceneMainFrame::GetInstance()->m_worlds[id].name );
+
+        Vector gravity;
+        BasicSceneMainFrame::GetInstance()->m_worlds[id].world->GetGravity( gravity );
+
+        DIALOG_APPENDROOT_NODE( "gravity", gravity_root );
+        DIALOG_APPENDNODE_FLOAT( gravity_root, "x", gravity[0] );
+        DIALOG_APPENDNODE_FLOAT( gravity_root, "y", gravity[1] );
+        DIALOG_APPENDNODE_FLOAT( gravity_root, "z", gravity[2] );    
         DIALOG_APPLY
         DIALOG_SHOW
     }

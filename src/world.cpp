@@ -58,11 +58,25 @@ bool World::Initialize( void )
     return true;
 }
 
-bool World::SetGravity( const DrawSpace::Utils::Vector p_gravity )
+bool World::SetGravity( const DrawSpace::Utils::Vector& p_gravity )
 {
     if( m_world )
     {
         m_world->setGravity( btVector3( p_gravity[0] * m_scale, p_gravity[1] * m_scale, p_gravity[2] * m_scale ) );
+        return true;
+    }
+    return false;
+}
+
+bool World::GetGravity( DrawSpace::Utils::Vector& p_gravity )
+{
+    if( m_world )
+    {
+        btVector3 gr = m_world->getGravity();
+
+        Vector gr2( gr.getX(), gr.getY(), gr.getZ(), 1.0 );
+        gr2.Scale( 1.0 / m_scale );
+        p_gravity = gr2;
         return true;
     }
     return false;
