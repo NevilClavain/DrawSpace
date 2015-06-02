@@ -143,6 +143,7 @@
 #include "ActionGetSceneCameraName.h"
 #include "ActionIsCurrentCamera.h"
 #include "ActionSetSceneNodeGraphCurrentCamera.h"
+#include "ActionSetWorldGravity.h"
 #include "ActionGlobalPrint.h"
 #include "ActionDisplayFramerate.h"
 #include "ActionDisplayCurrentCamera.h"
@@ -637,7 +638,8 @@ m_delta_mouse_init( true )
     m_actionscripts["DrawSpace:DrawSpace"] = new ActionDrawSpaceDrawSpace();
     m_actionscripts["DrawSpace:GetSceneCameraName"] = new ActionGetSceneCameraName();
     m_actionscripts["DrawSpace:IsCurrentCamera"] = new ActionIsCurrentCamera();
-    m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"] = new ActionSetSceneNodeGraphCurrentCamera();        
+    m_actionscripts["DrawSpace:SetSceneNodeGraphCurrentCamera"] = new ActionSetSceneNodeGraphCurrentCamera();
+    m_actionscripts["DrawSpace:SetWorldGravity"] = new ActionSetWorldGravity();
     m_actionscripts["DrawSpace:DisplayFramerate"] = new ActionDisplayFramerate();
     m_actionscripts["DrawSpace:DisplayCurrentCamera"] = new ActionDisplayCurrentCamera();
     m_actionscripts["DrawSpace:CreateSceneNodeGraph"] = new ActionCreateSceneNodeGraph();

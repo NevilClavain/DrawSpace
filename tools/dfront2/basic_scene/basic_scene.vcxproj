@@ -150,6 +150,7 @@
     <ClCompile Include="ActionScenenodeGraphCreationApply.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationDialog.cpp" />
     <ClCompile Include="ActionSetSceneNodeGraphCurrentCamera.cpp" />
+    <ClCompile Include="ActionSetWorldGravitycpp.cpp" />
     <ClCompile Include="ActionSpaceBoxCreationApply.cpp" />
     <ClCompile Include="ActionSpaceBoxCreationDialog.cpp" />
     <ClCompile Include="ActionSpaceBoxCreationSpecific0.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="ActionScenenodeGraphCreationDialog.h" />
     <ClInclude Include="actionscript.h" />
     <ClInclude Include="ActionSetSceneNodeGraphCurrentCamera.h" />
+    <ClInclude Include="ActionSetWorldGravity.h" />
     <ClInclude Include="ActionSpaceBoxCreationApply.h" />
     <ClInclude Include="ActionSpaceBoxCreationDialog.h" />
     <ClInclude Include="ActionSpaceBoxCreationSpecific0.h" />

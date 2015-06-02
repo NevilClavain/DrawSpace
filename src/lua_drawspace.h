@@ -67,6 +67,7 @@ public:
     int Lua_CreateWorld( lua_State* p_L );
 
     int Lua_SetSceneNodeGraphCurrentCamera( lua_State* p_L );
+    int Lua_SetWorldGravity( lua_State* p_L );
 
     int Lua_LoadKeyUpScript( lua_State* p_L );
     int Lua_LoadKeyDownScript( lua_State* p_L );

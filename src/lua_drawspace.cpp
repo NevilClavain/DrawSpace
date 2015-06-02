@@ -37,6 +37,7 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "CreateSceneNodeGraph", &LuaDrawSpace::Lua_CreateSceneNodeGraph },
   { "CreateWorld", &LuaDrawSpace::Lua_CreateWorld },
   { "SetSceneNodeGraphCurrentCamera", &LuaDrawSpace::Lua_SetSceneNodeGraphCurrentCamera },
+  { "SetWorldGravity", &LuaDrawSpace::Lua_SetWorldGravity },
   { "LoadKeyUpScript", &LuaDrawSpace::Lua_LoadKeyUpScript },
   { "LoadKeyDownScript", &LuaDrawSpace::Lua_LoadKeyDownScript },
   { "LoadMouseScript", &LuaDrawSpace::Lua_LoadMouseScript },
@@ -161,7 +162,6 @@ int LuaDrawSpace::Lua_CreateWorld( lua_State* p_L )
 		lua_error( p_L );		
 	}
     const char* name = luaL_checkstring( p_L, 1 );
-
     LuaVector* vec = Luna2<LuaVector>::check( p_L, 2 );
 
     if( m_scriptcalls_handler )
@@ -199,6 +199,30 @@ int LuaDrawSpace::Lua_SetSceneNodeGraphCurrentCamera( lua_State* p_L )
         props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:SetSceneNodeGraphCurrentCamera" );
         props.AddPropValue<dsstring>( "scenegraphname", scenegraphname );
         props.AddPropValue<dsstring>( "cameraname", cameraname );
+
+        (*m_scriptcalls_handler)( props );
+    }
+    return 0;
+}
+
+int LuaDrawSpace::Lua_SetWorldGravity( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 2 )
+	{
+		lua_pushstring( p_L, "SetWorldGravity : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* name = luaL_checkstring( p_L, 1 );
+    LuaVector* vec = Luna2<LuaVector>::check( p_L, 2 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:SetWorldGravity" );
+        props.AddPropValue<dsstring>( "worldname", name );
+        props.AddPropValue<Utils::Vector>( "gravity", vec->m_vector );
 
         (*m_scriptcalls_handler)( props );
     }
