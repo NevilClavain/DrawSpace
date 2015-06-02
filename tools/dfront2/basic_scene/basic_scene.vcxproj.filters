@@ -93,6 +93,7 @@
     <ClCompile Include="ActionWorldCreationApply.cpp" />
     <ClCompile Include="ActionCreateWorld.cpp" />
     <ClCompile Include="ActionWorldEditionDialog.cpp" />
+    <ClCompile Include="ActionWorldEditionApply.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -190,5 +191,6 @@
     <ClInclude Include="ActionWorldCreationApply.h" />
     <ClInclude Include="ActionWorldEditionDialog.h" />
     <ClInclude Include="ActionCreateWorld.h" />
+    <ClInclude Include="ActionWorldEditionApply.h" />
   </ItemGroup>
 </Project>

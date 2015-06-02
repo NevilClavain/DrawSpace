@@ -48,6 +48,7 @@
 #include "ActionWorldCreationApply.h"
 
 #include "ActionWorldEditionDialog.h"
+#include "ActionWorldEditionApply.h"
 
 #include "ActionSpaceBoxCreationDialog.h"
 #include "ActionSpaceBoxCreationSpecific0.h"
@@ -500,6 +501,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_WORLD_CREATION_TITLE] = new ActionWorldCreationApply();
 
     m_actions[CONTEXTMENU_EDIT_WORLD] = new ActionWorldEditionDialog();
+    m_actiondialogs_apply[DIALOG_WORLD_EDITION_TITLE] = new ActionWorldEditionApply();
 
 
     m_actions[CONTEXTMENU_NEWWORLD] = new ActionWorldCreationDialog();
