@@ -48,6 +48,8 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     /////////////////////////////////////////////////////////////////////////////////
 
+    DIALOG_GET_ENUM_PROPERTY( "world", world_name )
+
     Body::Parameters params;
 
     std::vector<Matrix> new_chain;

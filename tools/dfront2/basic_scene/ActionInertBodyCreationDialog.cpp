@@ -27,11 +27,18 @@
 
 void ActionInertBodyCreationDialog::Execute( void )
 {
+    if( 0 == BasicSceneMainFrame::GetInstance()->m_worlds.size() )
+    {
+        wxMessageBox( "You must first create a physical world", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
     DIALOG_ACTION_DECLARE( DIALOG_INERTBODY_CREATION_TITLE )
 
     DIALOG_APPENDROOT_STRING( "scene name", "" )
 
-    DIALOG_APPENDROOT_FLOAT( "mass", 0.0 );
+    DIALOG_APPENDROOT_ENUM( "world", BasicSceneMainFrame::GetInstance()->get_world_list() )
+    DIALOG_APPENDROOT_FLOAT( "mass", 10.0 )
     DIALOG_APPENDROOT_NODE( "shape description", shape_descr )
     wxArrayString shape_types;
     shape_types.Add( "box" );

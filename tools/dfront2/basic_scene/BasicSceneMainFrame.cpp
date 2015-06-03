@@ -1629,6 +1629,17 @@ wxArrayString BasicSceneMainFrame::get_fonts_list( void )
     return availables_fonts_labels;
 }
 
+wxArrayString BasicSceneMainFrame::get_world_list( void )
+{
+    wxArrayString availables_world_labels;
+
+    for( std::map<void*, WorldEntry>::iterator it = m_worlds.begin(); it != m_worlds.end(); ++it )
+    {
+        availables_world_labels.Add( it->second.name );
+    }
+    return availables_world_labels;
+}
+
 wxArrayString BasicSceneMainFrame::get_scenenodes_list( SceneNodeGraph* p_sc )
 {
     wxArrayString availables_nodes_names;

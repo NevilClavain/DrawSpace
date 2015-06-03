@@ -221,6 +221,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionCameraPointCameraPoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointCameraPoint.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCameraPointCreationApply.cpp"
 				>
 			</File>
@@ -250,6 +258,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionCameraPointEditionDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCameraPointLinkTo.h"
 				>
 			</File>
 			<File
@@ -298,6 +314,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionChunkEditionDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionChunkLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionChunkLinkTo.h"
 				>
 			</File>
 			<File
@@ -354,6 +378,14 @@
 			</File>
 			<File
 				RelativePath=".\ActionCreateSceneNodeGraph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCreateWorld.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionCreateWorld.h"
 				>
 			</File>
 			<File
@@ -693,6 +725,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionSetWorldGravity.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSetWorldGravitycpp.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionSpaceBoxCreationApply.cpp"
 				>
 			</File>
@@ -733,11 +773,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionSpaceBoxLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionSpaceBoxLinkTo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionSpaceBoxNodeUpdateShaderParam.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\ActionSpaceBoxNodeUpdateShaderParam.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformationLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformationLinkTo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformationTransformation.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTransformationTransformation.h"
 				>
 			</File>
 			<File
@@ -797,11 +861,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionWorldCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionWorldCreationApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionWorldCreationDialog.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\ActionWorldCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionWorldEditionApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionWorldEditionApply.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionWorldEditionDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionWorldEditionDialog.h"
 				>
 			</File>
 			<File
