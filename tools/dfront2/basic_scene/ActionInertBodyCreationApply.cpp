@@ -207,8 +207,38 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
         body_node->LinkTo( parent_node );
     }
 
+    BasicSceneMainFrame::SceneNodeEntry<InertBody> i_entry;
 
+    i_entry.name = alias;
+    i_entry.scene_node = body_node;
+    i_entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( p_dialog->GetTreeItem(), alias2, INERTBODY_ICON_INDEX ); 
 
+    BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()] = i_entry;
+
+    BasicSceneMainFrame::GetInstance()->m_tree_nodes[i_entry.treeitemid.GetID()] = body_node;
+    BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[body_node] = i_entry.treeitemid.GetID();
+
+    // store body description
+    BasicSceneMainFrame::GetInstance()->m_inertbody_descriptors[i_entry.treeitemid.GetID()] = params;
+
+    /////////////////////////////////////////////////////////////////////////
+
+    dsstring title;
+    dsstring* script_text;
+    bool * script_state;
+    title = "Inertbody node: ";
+    title += BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].name;
+    script_text = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script;
+    script_state = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script_enabled;
+    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[i_entry.treeitemid.GetID()] = frame;
+
+    /////////////////////////////////////////////////////////////////////////
+
+    BasicSceneMainFrame::GetInstance()->m_menubuild_table[i_entry.treeitemid.GetID()] = INERTBODY_MASK;
+
+    BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[i_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].treeitemid );
+        
     DIALOG_CLOSE
-    _asm nop
+
 }
