@@ -25,3 +25,4 @@
 
 DrawSpace::Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descriptor, dsstring& p_error );
 DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descriptor, dsstring& p_error );
+DrawSpace::Dynamics::InertBody* BuildInertBody( const DrawSpace::Dynamics::Body::Parameters& p_params, DrawSpace::Dynamics::World* p_world );

@@ -24,6 +24,7 @@
 #include "BasicSceneMainFrame.h"
 
 #include "ActionInertBodyCreationApply.h"
+#include "buildobjects.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -48,7 +49,7 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    DIALOG_GET_ENUM_PROPERTY( "world", world_name )
+    DIALOG_GET_ENUM_PROPERTY( "world", selected_world_name )
 
     Body::Parameters params;
 
@@ -161,6 +162,52 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
         params.shape_descr.shape = Body::MESHE_SHAPE;
     }
+
+    std::map<void*, BasicSceneMainFrame::WorldEntry> worlds = BasicSceneMainFrame::GetInstance()->m_worlds;
+    World* world;
+
+    // find world
+    for( std::map<void*, BasicSceneMainFrame::WorldEntry>::iterator it = worlds.begin(); it != worlds.end(); ++it )
+    {
+        if( it->second.name == selected_world_name )
+        {
+            world = it->second.world;
+            break;
+        }
+    }
+
+    InertBody* body = BuildInertBody( params, world );
+
+    SceneNode<InertBody>* body_node = new SceneNode<InertBody>( alias );
+    body_node->SetContent( body );
+    body_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+
+    // now we must found the scenenodegraph we belong to make the RegisterNode() call
+    void* id = BasicSceneMainFrame::GetInstance()->find_scenenodegraph_id( p_dialog->GetTreeItem() );
+
+    BasicSceneMainFrame::SceneNodeGraphEntry entry;
+
+    entry = BasicSceneMainFrame::GetInstance()->m_scenenodegraphs[id];
+    entry.scenenodegraph->RegisterNode( body_node );
+
+    // link to the scenegraph hierarchy
+
+    wxTreeItemId current;
+    current = p_dialog->GetTreeItem();
+    id = current.GetID();
+
+    if( BasicSceneMainFrame::GetInstance()->m_scenenodegraphs.count( id ) > 0 )
+    {
+        // parent is a scenegraph : use SceneNodeGraph::Add() method
+        entry.scenenodegraph->AddNode( body_node );
+    }
+    else
+    {
+        BaseSceneNode* parent_node = BasicSceneMainFrame::GetInstance()->m_tree_nodes[id];
+        body_node->LinkTo( parent_node );
+    }
+
+
 
     DIALOG_CLOSE
     _asm nop

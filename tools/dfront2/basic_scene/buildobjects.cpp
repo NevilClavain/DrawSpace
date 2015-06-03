@@ -24,6 +24,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Dynamics;
 
 Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descriptor, dsstring& p_error )
 {
@@ -197,4 +198,10 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
 
     p_error = "";
     return chunk;
+}
+
+InertBody* BuildInertBody( const Body::Parameters& p_params, World* p_world )
+{
+    InertBody* body = new InertBody( p_world, NULL, p_params );
+    return body;    
 }
