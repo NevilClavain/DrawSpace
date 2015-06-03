@@ -227,6 +227,8 @@ m_delta_mouse_init( true )
     PopupMenuEntry pme_editworld = { CONTEXTMENU_EDIT_WORLD, "Edit world..." };
     PopupMenuEntry pme_editsb = { CONTEXTMENU_EDIT_SBNODE, "Edit spacebox..." };
     PopupMenuEntry pme_editchunk = { CONTEXTMENU_EDIT_CHUNKNODE, "Edit chunk..." };
+    PopupMenuEntry pme_editinertbody = { CONTEXTMENU_EDIT_INERTBODY, "Edit inert body..." };
+    
 
     PopupMenuEntry pme_showprops = { CONTEXTMENU_SHOW_PROPS, "Show properties..." };
     PopupMenuEntry pme_editnodescript = { CONTEXTMENU_EDIT_NODESCRIPT, "Edit script..." };
@@ -399,6 +401,30 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
+
+
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newtransfo );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newspectatormvt );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newcamera );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_editinertbody );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_editnodescript );
+
+    ///////////////////////////////////////////////////////////////////
+
 
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newchunk );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
@@ -1449,7 +1475,8 @@ void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
 
 void BasicSceneMainFrame::OnPopupClick(wxCommandEvent& p_evt)
 {
-    m_actions[p_evt.GetId()]->Execute();
+    int id = p_evt.GetId();
+    m_actions[id]->Execute();
 }
 
 void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event )
@@ -1460,7 +1487,7 @@ void BasicSceneMainFrame::OnSceneNodeGraphsListRightClick( wxTreeEvent& p_event 
 
     m_last_clicked_treeitem = item;
     build_popupmenu( m_menubuild_table[item.GetID()], mnu );
- 	mnu.Connect(wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this );
+ 	mnu.Connect( wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&BasicSceneMainFrame::OnPopupClick, NULL, this );
  	PopupMenu(&mnu);
 }
 

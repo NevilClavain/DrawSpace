@@ -119,6 +119,7 @@
 #define CONTEXTMENU_EDIT_CHUNKNODE          2091
 #define CONTEXTMENU_EDIT_SBNODE             2092
 #define CONTEXTMENU_EDIT_WORLD              2093
+#define CONTEXTMENU_EDIT_INERTBODY          2094
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

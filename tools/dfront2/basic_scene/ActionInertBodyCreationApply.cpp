@@ -164,19 +164,20 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     }
 
     std::map<void*, BasicSceneMainFrame::WorldEntry> worlds = BasicSceneMainFrame::GetInstance()->m_worlds;
-    World* world;
+    
+    BasicSceneMainFrame::WorldEntry we;
 
     // find world
     for( std::map<void*, BasicSceneMainFrame::WorldEntry>::iterator it = worlds.begin(); it != worlds.end(); ++it )
     {
         if( it->second.name == selected_world_name )
-        {
-            world = it->second.world;
+        {            
+            we = it->second;
             break;
         }
     }
 
-    InertBody* body = BuildInertBody( params, world );
+    InertBody* body = BuildInertBody( params, we.world );
 
     SceneNode<InertBody>* body_node = new SceneNode<InertBody>( alias );
     body_node->SetContent( body );
@@ -213,6 +214,9 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     i_entry.scene_node = body_node;
     i_entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( p_dialog->GetTreeItem(), alias2, INERTBODY_ICON_INDEX ); 
 
+    // ajouter aussi l'icone sous l'icone du world associe
+    wxTreeItemId treeitemid_world = BasicSceneMainFrame::GetInstance()->AppendItem( we.treeitemid, alias2, INERTBODY_ICON_INDEX ); 
+
     BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()] = i_entry;
 
     BasicSceneMainFrame::GetInstance()->m_tree_nodes[i_entry.treeitemid.GetID()] = body_node;
@@ -233,9 +237,12 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
     BasicSceneMainFrame::GetInstance()->m_script_edit_frames[i_entry.treeitemid.GetID()] = frame;
 
+    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[treeitemid_world] = frame;
+
     /////////////////////////////////////////////////////////////////////////
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[i_entry.treeitemid.GetID()] = INERTBODY_MASK;
+    BasicSceneMainFrame::GetInstance()->m_menubuild_table[treeitemid_world] = INERTBODY_MASK;
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[i_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].treeitemid );
         
