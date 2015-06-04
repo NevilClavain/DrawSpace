@@ -731,10 +731,6 @@ bool InertBody::HasLanded( void )
     return status;
 }
 
-bool InertBody::IsActive( void )
-{
-    return m_rigidBody->isActive();
-}
 
 void InertBody::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 {

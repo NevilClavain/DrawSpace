@@ -128,8 +128,6 @@ public:
 
     bool HasLanded( void );
 
-    bool IsActive( void );
-
     Body* GetAttachedBody( void );
 
     DrawSpace::Core::TransformNode* GetDrawable( void );
