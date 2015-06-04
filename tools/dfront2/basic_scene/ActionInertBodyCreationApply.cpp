@@ -129,6 +129,8 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     DIALOG_GET_FLOAT_PROPERTY( "mass", mass );
     params.mass = mass;
 
+    DIALOG_GET_BOOL_PROPERTY( "active at creation", active );
+
     DIALOG_GET_ENUM_PROPERTY( "shape description.shape type", shape_type )
 
     if( shape_type == "box" )
@@ -153,7 +155,7 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     }
     else if( shape_type == "meshe" )
     {
-        DIALOG_GET_STRING_PROPERTY( "shape description.meshe", meshe_name );  
+        DIALOG_GET_ENUM_PROPERTY( "shape description.meshe", meshe_name );  
         DIALOG_WXSTRING_TO_DSSTRING( meshe_name, meshe_name2 );
 
         Meshe* meshe = dynamic_cast<Meshe*>( AssetsBase::GetInstance()->GetAsset( meshe_name2 ) );
@@ -178,6 +180,8 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     }
 
     InertBody* body = BuildInertBody( params, we.world );
+    body->Enable( active );
+
 
     SceneNode<InertBody>* body_node = new SceneNode<InertBody>( alias );
     body_node->SetContent( body );
@@ -218,12 +222,14 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     wxTreeItemId treeitemid_world = BasicSceneMainFrame::GetInstance()->AppendItem( we.treeitemid, alias2, INERTBODY_ICON_INDEX ); 
 
     BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()] = i_entry;
+    BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[treeitemid_world] = i_entry;
 
     BasicSceneMainFrame::GetInstance()->m_tree_nodes[i_entry.treeitemid.GetID()] = body_node;
     BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[body_node] = i_entry.treeitemid.GetID();
 
     // store body description
     BasicSceneMainFrame::GetInstance()->m_inertbody_descriptors[i_entry.treeitemid.GetID()] = params;
+    BasicSceneMainFrame::GetInstance()->m_inertbody_descriptors[treeitemid_world] = params;
 
     /////////////////////////////////////////////////////////////////////////
 

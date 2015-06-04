@@ -371,5 +371,59 @@ void ActionPropsDialog::Execute( void )
         DIALOG_SHOW
     }
 
+    else if( BasicSceneMainFrame::GetInstance()->m_inertbody_descriptors.count( id ) > 0 )
+    {
+        Body::Parameters params = BasicSceneMainFrame::GetInstance()->m_inertbody_descriptors[id];
+        BasicSceneMainFrame::SceneNodeEntry<InertBody> body_entry = BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[id];
+
+        DIALOG_ACTION_DECLARE( DIALOG_INERTBODY_PROPS_TITLE )
+
+        DIALOG_APPENDROOT_STRING( "scene name", body_entry.name );
+
+        DIALOG_APPENDROOT_BOOL( "active", body_entry.scene_node->GetContent()->IsEnabled() );
+        DIALOG_APPENDROOT_FLOAT( "mass", params.mass );
+
+        DIALOG_APPENDROOT_NODE( "shape description", shape_descr )
+
+        switch( params.shape_descr.shape )
+        {
+            case Body::BOX_SHAPE:
+                {
+
+                    DIALOG_APPENDNODE_STRING( shape_descr, "shape type", "box" );
+
+                    DIALOG_APPENDNODE_NODE( shape_descr, "box dims", box_dims )
+                    DIALOG_APPENDNODE_FLOAT( box_dims, "x", params.shape_descr.box_dims[0] );
+                    DIALOG_APPENDNODE_FLOAT( box_dims, "y", params.shape_descr.box_dims[1] );
+                    DIALOG_APPENDNODE_FLOAT( box_dims, "z", params.shape_descr.box_dims[2] );
+
+                }
+                break;
+
+            case Body::SPHERE_SHAPE:
+                {
+
+                    DIALOG_APPENDNODE_STRING( shape_descr, "shape type", "sphere" );
+                    DIALOG_APPENDNODE_FLOAT( shape_descr, "radius", params.shape_descr.sphere_radius );
+
+                }
+                break;
+
+            case Body::MESHE_SHAPE:
+                {
+                    DIALOG_APPENDNODE_STRING( shape_descr, "shape type", "meshe" );
+
+                    DrawSpace::Asset::PropertiesMap pm;
+                    params.shape_descr.meshe.GetPropertiesMap( pm );
+                    dsstring name = pm["assetname"].GetPropValue<dsstring>();
+
+                    DIALOG_APPENDNODE_STRING( shape_descr, "meshe name", name );
+
+                }
+                break;
+        }
+
+        DIALOG_SHOW
+    }
 }
 

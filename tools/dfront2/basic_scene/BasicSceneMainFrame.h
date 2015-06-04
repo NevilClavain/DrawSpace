@@ -159,6 +159,8 @@
 #define DIALOG_LONGLATMVT_EDITION_TITLE     "Longlat mvt node edition"
 #define DIALOG_LONGLATMVT_PROPS_TITLE       "Longlat mvt node properties"
 #define DIALOG_INERTBODY_CREATION_TITLE     "InertBody node creation"
+#define DIALOG_INERTBODY_PROPS_TITLE        "InertBody node properties"
+#define DIALOG_INERTBODY_EDITION_TITLE      "InertBody node edition"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
