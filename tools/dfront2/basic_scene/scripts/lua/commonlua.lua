@@ -29,15 +29,24 @@ function on_scenegraph_event( evt_type, scenegraph_name, node_alias )
 
   local evt_type_name
   
-  if evt_type == 0 then
-    evt_type_name = "NODE_ADDED"
+  if evt_type == 1 then
+    evt_type_name = "NODE_APP_READY"
+    
+    print( "scenegraph event -> " .. node_alias .. " " .. evt_type_name .. " on " .. scenegraph_name )
+        
+    local inert_body = InertBodyNode( node_alias )
+    
+    if inert_body:IsValid() == 1 then
+      print( "node " .. node_alias .. " is an inert body !!!" )
+    end
+    
   end
 
-  print( "scenegraph event -> " .. node_alias .. " " .. evt_type_name .. " on " .. scenegraph_name )
-  
 end
 
 print( "Lua version : " .. _VERSION )
+
+
 
 ds = DrawSpace()
 

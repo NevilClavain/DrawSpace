@@ -72,6 +72,8 @@
 
 #include "ActionChunkLinkTo.h"
 
+#include "ActionInertBodyInertBody.h"
+
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
 
@@ -641,6 +643,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific0[DIALOG_INERTBODY_CREATION_TITLE] = new ActionAddMatrix();
     m_actiondialogs_apply[DIALOG_INERTBODY_CREATION_TITLE] = new ActionInertBodyCreationApply();
 
+    m_actionscripts["InertBodyNode:InertBodyNode"] = new ActionInertBodyInertBody();
 
     m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
 
@@ -674,7 +677,7 @@ m_delta_mouse_init( true )
     m_actionscripts["DrawSpace:AngleSpeedDec"] = new ActionAngleSpeedDec();
     m_actionscripts["DrawSpace:TranslationSpeedInc"] = new ActionTranslationSpeedInc();
     m_actionscripts["DrawSpace:TranslationSpeedDec"] = new ActionTranslationSpeedDec();
-
+    
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );

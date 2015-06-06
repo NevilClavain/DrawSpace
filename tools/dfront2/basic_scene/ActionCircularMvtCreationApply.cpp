@@ -133,7 +133,10 @@ void ActionCircularMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[c_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_circ_nodes[c_entry.treeitemid.GetID()].treeitemid );
 
-    ///////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////
+
+    entry.scenenodegraph->SendNodeAppReadyEvent( circ_node );
+
 
     DIALOG_CLOSE
 }

@@ -237,3 +237,18 @@ void SceneNodeGraph::GetCurrentCameraName( dsstring& p_outname )
 {
     p_outname = m_current_camera;
 }
+
+void SceneNodeGraph::SendNodeAppReadyEvent( BaseSceneNode* p_node )
+{
+    for( size_t i = 0; i < m_all_nodes.size(); i++ )
+    {
+        if( m_all_nodes[i] == p_node )
+        {
+            for( size_t j = 0; j < m_nodesevt_handlers.size(); j++ )
+            {
+                ( *m_nodesevt_handlers[j] )( NODE_APP_READY, p_node );
+            }            
+            return;
+        }
+    }
+}

@@ -122,7 +122,10 @@ void ActionLongLatCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_di
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[l_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].treeitemid );
 
-    ///////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////
+
+    entry.scenenodegraph->SendNodeAppReadyEvent( ll_node );
+
 
     DIALOG_CLOSE
 }

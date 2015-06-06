@@ -124,7 +124,11 @@ void ActionFreeMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_di
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[f_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_free_nodes[f_entry.treeitemid.GetID()].treeitemid );
 
-    ///////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////
+
+    entry.scenenodegraph->SendNodeAppReadyEvent( free_node );
+
 
     DIALOG_CLOSE
 }

@@ -46,6 +46,7 @@ public:
     typedef enum
     {
         NODE_ADDED,
+        NODE_APP_READY,  // app client custom event
 
     } NodesEvent;
 
@@ -117,6 +118,8 @@ public:
     void PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
     void GetCurrentCameraName( dsstring& p_outname );
+
+    void SendNodeAppReadyEvent( BaseSceneNode* p_node );
     
 };
 }

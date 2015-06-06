@@ -150,5 +150,10 @@ void ActionLongLatLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypool
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[l_entry.treeitemid.GetID()] = LONGLATMOVEMENT_MASK;
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[l_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].treeitemid );
+
+    /////////////////////////////////////////////////////////////////////////
+
+    scenenodegraph_entry.scenenodegraph->SendNodeAppReadyEvent( ll_node );
+
 }
 

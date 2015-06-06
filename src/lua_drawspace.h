@@ -83,7 +83,7 @@ public:
 
     int Lua_IsCurrentCamera( lua_State* p_L );
     int Lua_SetScenegraphEventCallback( lua_State* p_L );
-
+    
     static const char className[];
     static const Luna2<LuaDrawSpace>::RegType methods[];
 };

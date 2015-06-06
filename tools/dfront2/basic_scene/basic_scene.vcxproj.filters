@@ -95,6 +95,7 @@
     <ClCompile Include="ActionWorldEditionDialog.cpp" />
     <ClCompile Include="ActionWorldEditionApply.cpp" />
     <ClCompile Include="ActionSetWorldGravitycpp.cpp" />
+    <ClCompile Include="ActionInertBodyInertBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -194,5 +195,6 @@
     <ClInclude Include="ActionCreateWorld.h" />
     <ClInclude Include="ActionWorldEditionApply.h" />
     <ClInclude Include="ActionSetWorldGravity.h" />
+    <ClInclude Include="ActionInertBodyInertBody.h" />
   </ItemGroup>
 </Project>

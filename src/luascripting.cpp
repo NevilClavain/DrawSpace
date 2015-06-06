@@ -31,6 +31,7 @@
 #include "lua_circularmovementnode.h"
 #include "lua_freemovementnode.h"
 #include "lua_longlatmovementnode.h"
+#include "lua_inertbodynode.h"
 #include "lua_keyboard.h"
 #include "lua_mouse.h"
 #include "lua_matrix.h"
@@ -57,6 +58,7 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaCircularMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaFreeMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaLongLatMovementNode>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaInertBodyNode>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaKeyboard>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaMouse>::Register( LuaContext::GetInstance()->GetLuaState() );

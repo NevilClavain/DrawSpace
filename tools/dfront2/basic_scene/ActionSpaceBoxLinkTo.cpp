@@ -167,6 +167,11 @@ void ActionSpaceBoxLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypoo
 
         BasicSceneMainFrame::GetInstance()->m_menubuild_table[t_entry.treeitemid.GetID()] = SPACEBOX_MASK;
         BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[t_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].treeitemid );
+
+        /////////////////////////////////////////////////////////////////////////
+
+        scenenodegraph_entry.scenenodegraph->SendNodeAppReadyEvent( sb_node );
+
     }
 
 }

@@ -251,6 +251,10 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[treeitemid_world] = INERTBODY_MASK;
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[i_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].treeitemid );
+
+    /////////////////////////////////////////////////////////////////////////
+
+    entry.scenenodegraph->SendNodeAppReadyEvent( body_node );
         
     DIALOG_CLOSE
 

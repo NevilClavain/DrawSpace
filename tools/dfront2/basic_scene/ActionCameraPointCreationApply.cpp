@@ -116,5 +116,10 @@ void ActionCameraPointCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[c_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_camera_nodes[c_entry.treeitemid.GetID()].treeitemid );
 
+    /////////////////////////////////////////////////////////////////////////
+
+    entry.scenenodegraph->SendNodeAppReadyEvent( camera_node );
+
+
     DIALOG_CLOSE
 }

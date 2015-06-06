@@ -116,6 +116,11 @@ void ActionTransformCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[t_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_transformation_nodes[t_entry.treeitemid.GetID()].treeitemid );
 
+    /////////////////////////////////////////////////////////////////////////
+
+    entry.scenenodegraph->SendNodeAppReadyEvent( transfo_node );
+
+
     DIALOG_CLOSE
 
 }

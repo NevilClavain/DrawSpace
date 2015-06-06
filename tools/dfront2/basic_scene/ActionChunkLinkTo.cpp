@@ -168,5 +168,10 @@ void ActionChunkLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
         BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CHUNK_MASK;
 
         BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[c_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_chunk_nodes[c_entry.treeitemid.GetID()].treeitemid );
+
+        /////////////////////////////////////////////////////////////////////////
+
+        scenenodegraph_entry.scenenodegraph->SendNodeAppReadyEvent( chunk_node );
+
     }
 }

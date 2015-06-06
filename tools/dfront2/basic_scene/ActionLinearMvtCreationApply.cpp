@@ -132,6 +132,11 @@ void ActionLinearMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[l_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].treeitemid );
 
+    /////////////////////////////////////////////////////////////////////////
+
+    entry.scenenodegraph->SendNodeAppReadyEvent( lin_node );
+
+
     DIALOG_CLOSE
 
 }
