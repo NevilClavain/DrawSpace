@@ -24,6 +24,7 @@
 #include "luacontext.h"
 #include "lua_vector.h"
 #include "exceptions.h"
+#include "lua_matrix.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -33,6 +34,17 @@ const char LuaInertBodyNode::className[] = "InertBodyNode";
 const Luna2<LuaInertBodyNode>::RegType LuaInertBodyNode::methods[] =
 { 
     { "IsValid", &LuaInertBodyNode::Lua_IsValid },
+    { "AddInitialAttitudeMatrix", &LuaInertBodyNode::Lua_AddInitialAttitudeMatrix },
+    { "SetShapeDescrSphere", &LuaInertBodyNode::Lua_SetShapeDescrSphere },
+    { "SetShapeDescrBox", &LuaInertBodyNode::Lua_SetShapeDescrBox },
+    { "SetMass", &LuaInertBodyNode::Lua_SetMass },
+
+    { "GetShapeDescrType", &LuaInertBodyNode::Lua_SetMass },
+    { "GetShapeDescrBoxDimX", &LuaInertBodyNode::Lua_SetMass },
+    { "GetShapeDescrBoxDimY", &LuaInertBodyNode::Lua_SetMass },
+    { "GetShapeDescrBoxDimZ", &LuaInertBodyNode::Lua_SetMass },
+    { "GetShapeDescrSphereRadius", &LuaInertBodyNode::Lua_SetMass },
+
     { "LinkTo", &LuaInertBodyNode::Lua_LinkTo },
     { 0 }
 };
@@ -60,6 +72,11 @@ m_existing_inertbody_node( NULL )
         props.AddPropValue<SceneNode<InertBody>**>( "existing_node", &m_existing_inertbody_node );
 
         (*m_scriptcalls_handler)( props );
+
+        if( m_existing_inertbody_node )
+        {
+            m_existing_inertbody_node->GetContent()->GetParameters( m_params );
+        }
     }
 }
 
@@ -70,7 +87,6 @@ LuaInertBodyNode::~LuaInertBodyNode( void )
 int LuaInertBodyNode::Lua_IsValid( lua_State* p_L )
 {
     int status = 0;
-
     if( m_existing_inertbody_node || m_inertbody_node.GetContent() )
     {
         status = 1;
@@ -79,6 +95,101 @@ int LuaInertBodyNode::Lua_IsValid( lua_State* p_L )
     lua_pushinteger( p_L, status );
     return 1;
 }
+
+int LuaInertBodyNode:: Lua_AddInitialAttitudeMatrix( lua_State* p_L )
+{
+    int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "AddInitialAttitudeMatrix : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    LuaMatrix* mat = Luna2<LuaMatrix>::check( p_L, 1 );
+    if( !mat )
+    {
+		lua_pushstring( p_L, "AddInitialAttitudeMatrix : Matrix expected for arg 1" );
+		lua_error( p_L );        
+    }
+
+    m_initial_att_transform.PushMatrix( mat->m_mat );
+    return 0;
+}
+
+int LuaInertBodyNode::Lua_SetShapeDescrSphere( lua_State* p_L )
+{    
+    int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetShapeDescrSphere : bad number of args" );
+		lua_error( p_L );		
+	}
+    m_params.shape_descr.sphere_radius = luaL_checknumber( p_L, 1 );    
+    m_params.shape_descr.shape = Body::SPHERE_SHAPE;    
+    return 0;
+}
+
+int LuaInertBodyNode::Lua_SetShapeDescrBox( lua_State* p_L )
+{
+    int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetShapeDescrBox : bad number of args" );
+		lua_error( p_L );		
+	}
+    LuaVector* vec = Luna2<LuaVector>::check( p_L, 1 );
+    if( !vec )
+    {
+		lua_pushstring( p_L, "SetShapeDescrBox : Vector expected for arg 1" );
+		lua_error( p_L );        
+    }
+
+    m_params.shape_descr.box_dims[0] = vec->m_vector[0];
+    m_params.shape_descr.box_dims[1] = vec->m_vector[1];
+    m_params.shape_descr.box_dims[2] = vec->m_vector[2];
+    m_params.shape_descr.box_dims[3] = 1.0;
+
+    return 0;
+}
+
+int LuaInertBodyNode::Lua_SetMass( lua_State* p_L )
+{
+    int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetMass : bad number of args" );
+		lua_error( p_L );		
+	}
+    m_params.mass = luaL_checknumber( p_L, 1 );
+    return 0;
+}
+
+
+int LuaInertBodyNode::Lua_GetShapeDescrType( lua_State* p_L )
+{
+    return 0;
+}
+
+int LuaInertBodyNode::Lua_GetShapeDescrBoxDimX( lua_State* p_L )
+{
+    return 0;
+}
+
+int LuaInertBodyNode::Lua_GetShapeDescrBoxDimY( lua_State* p_L )
+{
+    return 0;
+}
+
+int LuaInertBodyNode::Lua_GetShapeDescrBoxDimZ( lua_State* p_L )
+{
+    return 0;
+}
+
+int LuaInertBodyNode::Lua_GetShapeDescrSphereRadius( lua_State* p_L )
+{
+    return 0;
+}
+
 
 int LuaInertBodyNode::Lua_LinkTo( lua_State* p_L )
 {

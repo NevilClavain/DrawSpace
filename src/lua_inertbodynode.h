@@ -28,6 +28,7 @@
 #include "mediator.h"
 #include "inertbody.h"
 #include "descriptors.h"
+#include "transformation.h"
 
 #include "luna.h"
 
@@ -38,6 +39,9 @@ public:
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
 
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>              m_inertbody_node;
+    DrawSpace::Dynamics::Body::Parameters                                   m_params;
+    DrawSpace::Core::Transformation                                         m_initial_att_transform;
+
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>*             m_existing_inertbody_node;    
 
 protected:
@@ -48,6 +52,19 @@ public:
     ~LuaInertBodyNode( void );
      
     int Lua_IsValid( lua_State* p_L );
+
+    int Lua_AddInitialAttitudeMatrix( lua_State* p_L );
+    int Lua_SetShapeDescrSphere( lua_State* p_L );
+    int Lua_SetShapeDescrBox( lua_State* p_L );
+    int Lua_SetMass( lua_State* p_L );
+
+
+    int Lua_GetShapeDescrType( lua_State* p_L );
+    int Lua_GetShapeDescrBoxDimX( lua_State* p_L );
+    int Lua_GetShapeDescrBoxDimY( lua_State* p_L );
+    int Lua_GetShapeDescrBoxDimZ( lua_State* p_L );
+    int Lua_GetShapeDescrSphereRadius( lua_State* p_L );
+
     int Lua_LinkTo( lua_State* p_L );
     
     static const char className[];
