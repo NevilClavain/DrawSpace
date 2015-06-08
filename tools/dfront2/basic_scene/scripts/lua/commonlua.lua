@@ -38,10 +38,20 @@ function on_scenegraph_event( evt_type, scenegraph_name, node_alias )
     
     if inert_body:IsValid() == 1 then
       print( "node " .. node_alias .. " is an inert body !!!" )
-    end
-    
+      
+      local shape_type = inert_body:GetShapeType()
+      print( "shape type is " .. shape_type )
+      
+      if shape_type == 0 then        
+        print( "shape box = " .. inert_body:GetShapeDescrBoxDimX() .. " " .. inert_body:GetShapeDescrBoxDimY() .. " " .. inert_body:GetShapeDescrBoxDimZ() )
+          
+      elseif shape_type == 1 then
+        print( "shape sphere radius = " .. inert_body:GetShapeDescrSphereRadius() )
+        
+      end
+      
+    end    
   end
-
 end
 
 print( "Lua version : " .. _VERSION )
