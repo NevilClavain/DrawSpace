@@ -59,7 +59,7 @@ public:
     int Lua_SetMass( lua_State* p_L );
 
 
-    int Lua_GetShapeDescrType( lua_State* p_L );
+    int Lua_GetShapeType( lua_State* p_L );
     int Lua_GetShapeDescrBoxDimX( lua_State* p_L );
     int Lua_GetShapeDescrBoxDimY( lua_State* p_L );
     int Lua_GetShapeDescrBoxDimZ( lua_State* p_L );

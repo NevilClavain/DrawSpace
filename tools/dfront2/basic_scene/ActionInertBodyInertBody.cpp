@@ -33,7 +33,7 @@ using namespace DrawSpace::Utils;
 
 void ActionInertBodyInertBody::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
 {
-    dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
+   dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
     SceneNode<InertBody>** node_ptr = p_propertypool.GetPropValue<SceneNode<InertBody>**>( "existing_node" );
 
     for( std::map<void*, BasicSceneMainFrame::SceneNodeEntry<InertBody>>::iterator it = BasicSceneMainFrame::GetInstance()->m_inertbody_nodes.begin(); it != BasicSceneMainFrame::GetInstance()->m_inertbody_nodes.end(); ++it )

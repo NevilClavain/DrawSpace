@@ -39,11 +39,11 @@ const Luna2<LuaInertBodyNode>::RegType LuaInertBodyNode::methods[] =
     { "SetShapeDescrBox", &LuaInertBodyNode::Lua_SetShapeDescrBox },
     { "SetMass", &LuaInertBodyNode::Lua_SetMass },
 
-    { "GetShapeDescrType", &LuaInertBodyNode::Lua_SetMass },
-    { "GetShapeDescrBoxDimX", &LuaInertBodyNode::Lua_SetMass },
-    { "GetShapeDescrBoxDimY", &LuaInertBodyNode::Lua_SetMass },
-    { "GetShapeDescrBoxDimZ", &LuaInertBodyNode::Lua_SetMass },
-    { "GetShapeDescrSphereRadius", &LuaInertBodyNode::Lua_SetMass },
+    { "GetShapeType", &LuaInertBodyNode::Lua_GetShapeType },
+    { "GetShapeDescrBoxDimX", &LuaInertBodyNode::Lua_GetShapeDescrBoxDimX },
+    { "GetShapeDescrBoxDimY", &LuaInertBodyNode::Lua_GetShapeDescrBoxDimY },
+    { "GetShapeDescrBoxDimZ", &LuaInertBodyNode::Lua_GetShapeDescrBoxDimZ },
+    { "GetShapeDescrSphereRadius", &LuaInertBodyNode::Lua_GetShapeDescrSphereRadius },
 
     { "LinkTo", &LuaInertBodyNode::Lua_LinkTo },
     { 0 }
@@ -165,29 +165,34 @@ int LuaInertBodyNode::Lua_SetMass( lua_State* p_L )
 }
 
 
-int LuaInertBodyNode::Lua_GetShapeDescrType( lua_State* p_L )
+int LuaInertBodyNode::Lua_GetShapeType( lua_State* p_L )
 {
-    return 0;
+    lua_pushinteger( p_L, m_params.shape_descr.shape );
+    return 1;
 }
 
 int LuaInertBodyNode::Lua_GetShapeDescrBoxDimX( lua_State* p_L )
 {
-    return 0;
+    lua_pushnumber( p_L, m_params.shape_descr.box_dims[0] );
+    return 1;
 }
 
 int LuaInertBodyNode::Lua_GetShapeDescrBoxDimY( lua_State* p_L )
 {
-    return 0;
+    lua_pushnumber( p_L, m_params.shape_descr.box_dims[1] );
+    return 1;
 }
 
 int LuaInertBodyNode::Lua_GetShapeDescrBoxDimZ( lua_State* p_L )
 {
-    return 0;
+    lua_pushnumber( p_L, m_params.shape_descr.box_dims[2] );
+    return 1;
 }
 
 int LuaInertBodyNode::Lua_GetShapeDescrSphereRadius( lua_State* p_L )
 {
-    return 0;
+    lua_pushnumber( p_L, m_params.shape_descr.sphere_radius );
+    return 1;
 }
 
 
