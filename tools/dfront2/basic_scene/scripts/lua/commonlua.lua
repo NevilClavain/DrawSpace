@@ -1,6 +1,7 @@
 
 collisions_transforms = {}
 collisions_chunks = {}
+collisions_pass = {}
 
 function globals()
         for n,v in pairs(_G) do
@@ -59,9 +60,16 @@ function on_scenegraph_event( evt_type, scenegraph_name, node_alias )
                 
         collisions_chunks[collision_chunk_node_alias] = ChunkNode( collision_chunk_node_alias )
         collisions_chunks[collision_chunk_node_alias]:SetMesheName( "cube_meshe" )
-        collisions_chunks[collision_chunk_node_alias]:RegisterPassSlot( "texture_pass" )
-        collisions_chunks[collision_chunk_node_alias]:SetPassSlotFxName( "texture_pass", "wireframe_fx" )
-        collisions_chunks[collision_chunk_node_alias]:AddPassSlotShaderParam( "texture_pass", "color", 1, 0, Vector( 1.0, 0.0, 1.0, 1.0 ) )
+        
+        for i, pass_name in pairs( collisions_pass ) do
+        
+          collisions_chunks[collision_chunk_node_alias]:RegisterPassSlot( pass_name )
+          collisions_chunks[collision_chunk_node_alias]:SetPassSlotFxName( pass_name, "wireframe_fx" )
+          collisions_chunks[collision_chunk_node_alias]:AddPassSlotShaderParam( pass_name, "color", 1, 0, Vector( 1.0, 0.0, 1.0, 1.0 ) )
+        
+        end
+        
+        
 
         collisions_chunks[collision_chunk_node_alias]:LinkTo( scenegraph_name, collision_transform_node_alias )        
           
@@ -77,9 +85,14 @@ function on_scenegraph_event( evt_type, scenegraph_name, node_alias )
         
         collisions_chunks[collision_chunk_node_alias] = ChunkNode( collision_chunk_node_alias )
         collisions_chunks[collision_chunk_node_alias]:SetMesheName( "sphere_meshe" )
-        collisions_chunks[collision_chunk_node_alias]:RegisterPassSlot( "texture_pass" )
-        collisions_chunks[collision_chunk_node_alias]:SetPassSlotFxName( "texture_pass", "wireframe_fx" )
-        collisions_chunks[collision_chunk_node_alias]:AddPassSlotShaderParam( "texture_pass", "color", 1, 0, Vector( 1.0, 0.0, 1.0, 1.0 ) )
+        
+        for i, pass_name in pairs( collisions_pass ) do
+        
+          collisions_chunks[collision_chunk_node_alias]:RegisterPassSlot( pass_name )
+          collisions_chunks[collision_chunk_node_alias]:SetPassSlotFxName( pass_name, "wireframe_fx" )
+          collisions_chunks[collision_chunk_node_alias]:AddPassSlotShaderParam( pass_name, "color", 1, 0, Vector( 1.0, 0.0, 1.0, 1.0 ) )
+          
+        end
 
         collisions_chunks[collision_chunk_node_alias]:LinkTo( scenegraph_name, collision_transform_node_alias )        
         
@@ -90,9 +103,6 @@ function on_scenegraph_event( evt_type, scenegraph_name, node_alias )
 end
 
 print( "Lua version : " .. _VERSION )
-
-
-
 ds = DrawSpace()
-
 ds:SetScenegraphEventCallback( "on_scenegraph_event" )
+
