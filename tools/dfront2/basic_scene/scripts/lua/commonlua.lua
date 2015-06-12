@@ -29,7 +29,11 @@ function print_matrix( m )
 	end
 end
 
-function on_scenegraph_event( evt_type, scenegraph_name, node_alias )
+
+print( "Lua version : " .. _VERSION )
+ds = DrawSpace()
+
+ds:SetScenegraphEventCallback( function ( evt_type, scenegraph_name, node_alias )
 
   local evt_type_name
   
@@ -101,8 +105,5 @@ function on_scenegraph_event( evt_type, scenegraph_name, node_alias )
     end    
   end
 end
-
-print( "Lua version : " .. _VERSION )
-ds = DrawSpace()
-ds:SetScenegraphEventCallback( "on_scenegraph_event" )
+)
 

@@ -54,7 +54,8 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
 
 LuaDrawSpace::LuaDrawSpace( lua_State* p_L ) :
 m_timer( NULL ),
-m_L( p_L )
+m_L( p_L ),
+m_ref( -1 )
 {   
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
 
@@ -466,16 +467,28 @@ int LuaDrawSpace::Lua_IsCurrentCamera( lua_State* p_L )
 
 int LuaDrawSpace::Lua_SetScenegraphEventCallback( lua_State* p_L )
 {
-    bool result = false;
-
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
 	{
 		lua_pushstring( p_L, "SetScenegraphEventCallback : bad number of args" );
 		lua_error( p_L );		
 	}
-    m_scenegrapheventcbname = luaL_checkstring( p_L, 1 );
+    
+    int status = lua_isfunction( p_L, 1 );
 
+    if( status > 0 )
+    {
+        if( m_ref != -1 )
+        {
+            luaL_unref( p_L, LUA_REGISTRYINDEX, m_ref );
+        }
+        m_ref = luaL_ref( p_L, LUA_REGISTRYINDEX );
+    }
+    else
+    {
+		lua_pushstring( p_L, "SetScenegraphEventCallback : bad arg type, function expected" );
+		lua_error( p_L );		
+    }
     return 0;
 }
 
@@ -498,17 +511,15 @@ void LuaDrawSpace::on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::Nodes
         }
     }
 
-    if( found && m_scenegrapheventcbname != "")
+    if( found && m_ref != -1 )
     {
         // call here the lua callback   
-
-        lua_getglobal( m_L, m_scenegrapheventcbname.c_str() );
+        lua_rawgeti( m_L, LUA_REGISTRYINDEX, m_ref );
 
 	    lua_pushinteger( m_L, (int)p_evt );
 	    lua_pushstring( m_L, scenegraph_name.c_str() );
         lua_pushstring( m_L, node_alias.c_str() );
-	    
+        	   
 	    lua_call( m_L, 3, 0 );
-        
     }
 }

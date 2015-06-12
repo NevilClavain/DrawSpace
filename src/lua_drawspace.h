@@ -50,8 +50,9 @@ public:
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
     DrawSpace::Utils::TimeManager*                                          m_timer;
     
-    dsstring                                                                m_scenegrapheventcbname;
     std::vector<ScenegraphDescr>                                            m_nodesevent_callbacks;
+
+    int                                                                     m_ref;
     
 
     void on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node );
