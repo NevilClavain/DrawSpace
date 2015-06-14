@@ -120,6 +120,7 @@
 #define CONTEXTMENU_EDIT_SBNODE             2092
 #define CONTEXTMENU_EDIT_WORLD              2093
 #define CONTEXTMENU_EDIT_INERTBODY          2094
+#define CONTEXTMENU_EDIT_COLLIDER           2095
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,6 +162,9 @@
 #define DIALOG_INERTBODY_CREATION_TITLE     "InertBody node creation"
 #define DIALOG_INERTBODY_PROPS_TITLE        "InertBody node properties"
 #define DIALOG_INERTBODY_EDITION_TITLE      "InertBody node edition"
+#define DIALOG_COLLIDER_CREATION_TITLE      "Collider node creation"
+#define DIALOG_COLLIDER_PROPS_TITLE         "Collider node properties"
+#define DIALOG_COLLIDER_EDITION_TITLE       "Collider node edition"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
