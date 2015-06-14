@@ -29,6 +29,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Dynamics;
+using namespace DrawSpace::Utils;
 
 const char LuaInertBodyNode::className[] = "InertBodyNode";
 const Luna2<LuaInertBodyNode>::RegType LuaInertBodyNode::methods[] =
@@ -38,6 +39,7 @@ const Luna2<LuaInertBodyNode>::RegType LuaInertBodyNode::methods[] =
     { "SetShapeDescrSphere", &LuaInertBodyNode::Lua_SetShapeDescrSphere },
     { "SetShapeDescrBox", &LuaInertBodyNode::Lua_SetShapeDescrBox },
     { "SetMass", &LuaInertBodyNode::Lua_SetMass },
+    { "SetInitialState", &LuaInertBodyNode::Lua_SetInitialState },
 
     { "GetShapeType", &LuaInertBodyNode::Lua_GetShapeType },
     { "GetShapeDescrBoxDimX", &LuaInertBodyNode::Lua_GetShapeDescrBoxDimX },
@@ -51,7 +53,8 @@ const Luna2<LuaInertBodyNode>::RegType LuaInertBodyNode::methods[] =
 
 LuaInertBodyNode::LuaInertBodyNode( lua_State* p_L ) :
 m_inertbody_node( "inertbody_node" ),
-m_existing_inertbody_node( NULL )
+m_existing_inertbody_node( NULL ),
+m_initial_state( false )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
@@ -96,7 +99,7 @@ int LuaInertBodyNode::Lua_IsValid( lua_State* p_L )
     return 1;
 }
 
-int LuaInertBodyNode:: Lua_AddInitialAttitudeMatrix( lua_State* p_L )
+int LuaInertBodyNode::Lua_AddInitialAttitudeMatrix( lua_State* p_L )
 {
     int argc = lua_gettop( p_L );
 	if( argc != 1 )
@@ -125,7 +128,7 @@ int LuaInertBodyNode::Lua_SetShapeDescrSphere( lua_State* p_L )
 		lua_error( p_L );		
 	}
     m_params.shape_descr.sphere_radius = luaL_checknumber( p_L, 1 );    
-    m_params.shape_descr.shape = Body::SPHERE_SHAPE;    
+    m_params.shape_descr.shape = Body::SPHERE_SHAPE;
     return 0;
 }
 
@@ -148,6 +151,8 @@ int LuaInertBodyNode::Lua_SetShapeDescrBox( lua_State* p_L )
     m_params.shape_descr.box_dims[1] = vec->m_vector[1];
     m_params.shape_descr.box_dims[2] = vec->m_vector[2];
     m_params.shape_descr.box_dims[3] = 1.0;
+
+    m_params.shape_descr.shape = Body::BOX_SHAPE;
 
     return 0;
 }
@@ -195,9 +200,54 @@ int LuaInertBodyNode::Lua_GetShapeDescrSphereRadius( lua_State* p_L )
     return 1;
 }
 
+int LuaInertBodyNode::Lua_SetInitialState( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetInitialState : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    m_initial_state = luaL_checkinteger( p_L, 1 );
+    return 0;
+}
 
 int LuaInertBodyNode::Lua_LinkTo( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "LinkTo : bad number of args" );
+		lua_error( p_L );		
+	}
+    const char* scenegraph_name = luaL_checkstring( p_L, 1 );
+    const char* parent_name = luaL_checkstring( p_L, 2 );
+    const char* world_name = luaL_checkstring( p_L, 3 );
+
+    dsstring scene_name;
+    m_inertbody_node.GetSceneName( scene_name );
+
+    if( m_scriptcalls_handler )
+    {
+
+        Matrix mat;
+        m_initial_att_transform.BuildResult();
+        m_initial_att_transform.GetResult( &mat );
+        m_params.initial_attitude = mat;
+
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "InertBodyNode:LinkTo" );
+        props.AddPropValue<dsstring>( "scenegraph_name", scenegraph_name );        
+        props.AddPropValue<dsstring>( "parent_name", parent_name );
+        props.AddPropValue<dsstring>( "scene_name", scene_name );
+        props.AddPropValue<dsstring>( "world_name", world_name );
+        props.AddPropValue<bool>( "init_state", m_initial_state );
+        props.AddPropValue<BaseSceneNode*>( "node", &m_inertbody_node );
+        props.AddPropValue<DrawSpace::Dynamics::Body::Parameters>( "descriptor", m_params );
+
+        (*m_scriptcalls_handler)( props );
+    }
 
     return 0;
 }

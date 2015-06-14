@@ -186,6 +186,17 @@ cube3:LinkTo( "scene0", "lg0" )
 print( "cube3 loaded..." )
 
 
+collisions_pass[1] = "texture_pass"
 
+body0 = InertBodyNode( "body0" )
+body0:SetShapeDescrBox( Vector( 0.5, 0.5, 0.5, 1.0 ) )
+body0:SetMass( 10.0 )
+
+body0_pos = Matrix()
+body0_pos:Translation( 0, 10, -10 )
+body0:AddInitialAttitudeMatrix( body0_pos )
+
+body0:LinkTo( "scene0", "scene0", "world0" )
+        
 
 

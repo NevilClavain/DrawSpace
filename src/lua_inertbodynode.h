@@ -40,6 +40,7 @@ public:
 
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>              m_inertbody_node;
     DrawSpace::Dynamics::Body::Parameters                                   m_params;
+    bool                                                                    m_initial_state;
     DrawSpace::Core::Transformation                                         m_initial_att_transform;
 
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>*             m_existing_inertbody_node;    
@@ -57,6 +58,7 @@ public:
     int Lua_SetShapeDescrSphere( lua_State* p_L );
     int Lua_SetShapeDescrBox( lua_State* p_L );
     int Lua_SetMass( lua_State* p_L );
+    int Lua_SetInitialState( lua_State* p_L );
 
 
     int Lua_GetShapeType( lua_State* p_L );

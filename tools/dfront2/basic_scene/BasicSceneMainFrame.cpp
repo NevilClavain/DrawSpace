@@ -72,8 +72,6 @@
 
 #include "ActionChunkLinkTo.h"
 
-#include "ActionInertBodyInertBody.h"
-
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
 
@@ -135,6 +133,9 @@
 
 #include "ActionInertBodyCreationDialog.h"
 #include "ActionInertBodyCreationApply.h"
+
+#include "ActionInertBodyInertBody.h"
+#include "ActionInertBodyLinkTo.h"
 
 #include "ActionNodeScriptEditionDialog.h"
 #include "ActionMouseMoveScriptEditionDialog.h"
@@ -644,6 +645,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_INERTBODY_CREATION_TITLE] = new ActionInertBodyCreationApply();
 
     m_actionscripts["InertBodyNode:InertBodyNode"] = new ActionInertBodyInertBody();
+    m_actionscripts["InertBodyNode:LinkTo"] = new ActionInertBodyLinkTo();
 
     m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
 
