@@ -51,7 +51,7 @@ void Collider::SetKinematic( const Body::Parameters& p_parameters )
     btTransform bt_transform;
 
     btScalar btmat[16];
-
+    /*
     btmat[0] = p_parameters.initial_attitude( 0, 0 );
     btmat[1] = p_parameters.initial_attitude( 0, 1 );
     btmat[2] = p_parameters.initial_attitude( 0, 2 );
@@ -71,6 +71,27 @@ void Collider::SetKinematic( const Body::Parameters& p_parameters )
     btmat[13] = p_parameters.initial_attitude( 3, 1 ) * world_scale;
     btmat[14] = p_parameters.initial_attitude( 3, 2 ) * world_scale;
     btmat[15] = p_parameters.initial_attitude( 3, 3 );
+    */
+
+    btmat[0] = 1.0;
+    btmat[1] = 0.0;
+    btmat[2] = 0.0;
+    btmat[3] = 0.0;
+
+    btmat[4] = 0.0;
+    btmat[5] = 1.0;
+    btmat[6] = 0.0;
+    btmat[7] = 0.0;
+
+    btmat[8] = 0.0;
+    btmat[9] = 0.0;
+    btmat[10] = 1.0;
+    btmat[11] = 0.0;
+
+    btmat[12] = 0.0;
+    btmat[13] = 0.0;
+    btmat[14] = 0.0;
+    btmat[15] = 1.0;
 
     bt_transform.setFromOpenGLMatrix( btmat ); 
 
