@@ -107,6 +107,7 @@
     <ClCompile Include="ActionCircularMvtCreationDialog.cpp" />
     <ClCompile Include="ActionCircularMvtEditionApply.cpp" />
     <ClCompile Include="ActionCircularMvtLinkTo.cpp" />
+    <ClCompile Include="ActionColliderCreationDialog.cpp" />
     <ClCompile Include="ActionCreateSceneNodeGraph.cpp" />
     <ClCompile Include="ActionCreateWorld.cpp" />
     <ClCompile Include="ActionDisplayCurrentCamera.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="ActionCircularMvtCreationDialog.h" />
     <ClInclude Include="ActionCircularMvtEditionApply.h" />
     <ClInclude Include="ActionCircularMvtLinkTo.h" />
+    <ClInclude Include="ActionColliderCreationDialog.h" />
     <ClInclude Include="ActionCreateSceneNodeGraph.h" />
     <ClInclude Include="ActionCreateWorld.h" />
     <ClInclude Include="actiondialog.h" />

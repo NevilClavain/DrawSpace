@@ -450,6 +450,7 @@ public:
     std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>                                    m_spacebox_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Chunk>>                                       m_chunk_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::InertBody>>                         m_inertbody_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::Collider>>                          m_collider_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>                       m_camera_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Core::FPSMovement>>                           m_fps_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Core::LinearMovement>>                        m_lin_nodes;
@@ -460,6 +461,7 @@ public:
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_chunk_descriptors;
     std::map<void*, DrawSpace::Dynamics::Body::Parameters>                                  m_inertbody_descriptors;
+    std::map<void*, DrawSpace::Dynamics::Body::Parameters>                                  m_collider_descriptors;
     
 
 

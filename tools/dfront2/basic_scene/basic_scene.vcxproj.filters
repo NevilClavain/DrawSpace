@@ -97,6 +97,7 @@
     <ClCompile Include="ActionSetWorldGravitycpp.cpp" />
     <ClCompile Include="ActionInertBodyInertBody.cpp" />
     <ClCompile Include="ActionInertBodyLinkTo.cpp" />
+    <ClCompile Include="ActionColliderCreationDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -198,5 +199,6 @@
     <ClInclude Include="ActionSetWorldGravity.h" />
     <ClInclude Include="ActionInertBodyInertBody.h" />
     <ClInclude Include="ActionInertBodyLinkTo.h" />
+    <ClInclude Include="ActionColliderCreationDialog.h" />
   </ItemGroup>
 </Project>

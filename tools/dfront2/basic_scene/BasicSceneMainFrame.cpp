@@ -137,6 +137,9 @@
 #include "ActionInertBodyInertBody.h"
 #include "ActionInertBodyLinkTo.h"
 
+#include "ActionColliderCreationDialog.h"
+
+
 #include "ActionNodeScriptEditionDialog.h"
 #include "ActionMouseMoveScriptEditionDialog.h"
 #include "ActionKeyupScriptEditionDialog.h"
@@ -646,6 +649,11 @@ m_delta_mouse_init( true )
 
     m_actionscripts["InertBodyNode:InertBodyNode"] = new ActionInertBodyInertBody();
     m_actionscripts["InertBodyNode:LinkTo"] = new ActionInertBodyLinkTo();
+
+
+
+    m_actions[CONTEXTMENU_NEWCOLLIDER] = new ActionColliderCreationDialog();
+
 
     m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
 
