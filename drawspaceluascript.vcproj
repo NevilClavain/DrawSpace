@@ -194,6 +194,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_inertbodynode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_inertbodynode.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\lua_keyboard.cpp"
 			>
 		</File>

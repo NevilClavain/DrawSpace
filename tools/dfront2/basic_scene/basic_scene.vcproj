@@ -521,6 +521,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionInertBodyInertBody.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyInertBody.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyLinkTo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionIsCurrentCamera.cpp"
 				>
 			</File>
