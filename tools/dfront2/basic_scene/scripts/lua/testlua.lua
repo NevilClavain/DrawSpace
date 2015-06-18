@@ -45,7 +45,7 @@ print( "spacebox loaded..." )
 
 tf2 = TransformationNode( "tf2", 2 )
 tf2:LinkTo( "scene0", "scene0" )
-tf2:LoadScript( "tf_transformnode.lua" )
+
 
 mat = Matrix()
 mat:Translation( 0, 1, -10 )

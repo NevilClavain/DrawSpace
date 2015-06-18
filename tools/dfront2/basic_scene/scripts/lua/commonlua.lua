@@ -33,7 +33,7 @@ end
 print( "Lua version : " .. _VERSION )
 ds = DrawSpace()
 
-ds:SetScenegraphEventCallback( function ( evt_type, scenegraph_name, node_alias )
+ds:SetScenegraphNodeEventCallback( function ( evt_type, scenegraph_name, node_alias )
 
   local evt_type_name
   
