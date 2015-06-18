@@ -33,18 +33,20 @@
 
 class LuaDrawSpace
 {
-public:
+protected:
 
     typedef DrawSpace::Core::CallBack2<LuaDrawSpace, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>    NodesEventCallback;
+    typedef DrawSpace::Core::CallBack<LuaDrawSpace, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent>                                 ScenegraphEventCallback;
 
     typedef struct
     {
         dsstring                            alias;
         DrawSpace::Core::SceneNodeGraph*    scenenodegraph;
-        NodesEventCallback*                 cb;
+        NodesEventCallback*                 nodes_event_cb;
+        ScenegraphEventCallback*            sc_event_cb;
 
     } ScenegraphDescr;
-
+public:
     lua_State*                                                              m_L;
 
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
@@ -53,10 +55,11 @@ public:
     std::vector<ScenegraphDescr>                                            m_nodesevent_callbacks;
 
     int                                                                     m_ref;
+    int                                                                     m_ref2;
     
 
-    void on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node );
-
+    void on_scenenode_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node );
+    void on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_evt );
 
 public:
     LuaDrawSpace( lua_State* p_L );
@@ -83,6 +86,7 @@ public:
     int Lua_GetSceneCameraName( lua_State* p_L );
 
     int Lua_IsCurrentCamera( lua_State* p_L );
+    int Lua_SetScenegraphNodeEventCallback( lua_State* p_L );
     int Lua_SetScenegraphEventCallback( lua_State* p_L );
     
     static const char className[];

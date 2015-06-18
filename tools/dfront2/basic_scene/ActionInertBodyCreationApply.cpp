@@ -185,7 +185,7 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     SceneNode<InertBody>* body_node = new SceneNode<InertBody>( alias );
     body_node->SetContent( body );
-    body_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //body_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
 
     // now we must found the scenenodegraph we belong to make the RegisterNode() call
     void* id = BasicSceneMainFrame::GetInstance()->find_scenenodegraph_id( p_dialog->GetTreeItem() );
@@ -233,17 +233,17 @@ void ActionInertBodyCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     /////////////////////////////////////////////////////////////////////////
 
-    dsstring title;
-    dsstring* script_text;
-    bool * script_state;
-    title = "Inertbody node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[i_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool * script_state;
+    //title = "Inertbody node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[i_entry.treeitemid.GetID()] = frame;
 
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[treeitemid_world] = frame;
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[treeitemid_world] = frame;
 
     /////////////////////////////////////////////////////////////////////////
 

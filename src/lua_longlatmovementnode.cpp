@@ -34,7 +34,6 @@ const char LuaLongLatMovementNode::className[] = "LongLatMovementNode";
 const Luna2<LuaLongLatMovementNode>::RegType LuaLongLatMovementNode::methods[] =
 {
   { "LinkTo", &LuaLongLatMovementNode::Lua_LinkTo },
-  { "LoadScript", &LuaLongLatMovementNode::Lua_LoadScript },
   { "SetInitialTheta", &LuaLongLatMovementNode::Lua_SetInitialTheta },
   { "SetInitialPhi", &LuaLongLatMovementNode::Lua_SetInitialPhi },
   { "SetInitialAlt", &LuaLongLatMovementNode::Lua_SetInitialAlt },
@@ -114,36 +113,6 @@ int LuaLongLatMovementNode::Lua_LinkTo( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
 
-    return 0;
-}
-
-int LuaLongLatMovementNode::Lua_LoadScript( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 1 )
-	{
-		lua_pushstring( p_L, "LoadScript : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* filepath = luaL_checkstring( p_L, 1 );
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-
-        props.AddPropValue<dsstring>( "script_call_id", "LongLatMovementNode:LoadScript" );
-        props.AddPropValue<dsstring>( "filepath", filepath );
-        if( m_existing_longlat_node )
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", m_existing_longlat_node );
-        }
-        else
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", &m_longlat_node );
-        }
-
-        (*m_scriptcalls_handler)( props );
-    }
     return 0;
 }
 

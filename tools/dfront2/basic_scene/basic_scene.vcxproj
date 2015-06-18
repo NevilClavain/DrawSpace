@@ -147,8 +147,6 @@
     <ClCompile Include="ActionMouseLoadScript.cpp" />
     <ClCompile Include="ActionMouseMouse.cpp" />
     <ClCompile Include="ActionMouseMoveScriptEditionDialog.cpp" />
-    <ClCompile Include="ActionNodeLoadScript.cpp" />
-    <ClCompile Include="ActionNodeScriptEditionDialog.cpp" />
     <ClCompile Include="ActionPropsDialog.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationApply.cpp" />
     <ClCompile Include="ActionScenenodeGraphCreationDialog.cpp" />
@@ -248,8 +246,6 @@
     <ClInclude Include="ActionMouseLoadScript.h" />
     <ClInclude Include="ActionMouseMouse.h" />
     <ClInclude Include="ActionMouseMoveScriptEditionDialog.h" />
-    <ClInclude Include="ActionNodeLoadScript.h" />
-    <ClInclude Include="ActionNodeScriptEditionDialog.h" />
     <ClInclude Include="ActionPropsDialog.h" />
     <ClInclude Include="ActionScenenodeGraphCreationApply.h" />
     <ClInclude Include="ActionScenenodeGraphCreationDialog.h" />

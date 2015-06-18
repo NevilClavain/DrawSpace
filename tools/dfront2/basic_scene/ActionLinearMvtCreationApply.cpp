@@ -66,7 +66,7 @@ void ActionLinearMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     lin_node = new SceneNode<LinearMovement>( alias );
     lin_node->SetContent( new LinearMovement() );
 
-    lin_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //lin_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
     lin_node->GetContent()->Init( Vector( x, y, z, 1 ), Vector( xdir, ydir, zdir, 1 ), init_theta, init_phi );
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -115,15 +115,15 @@ void ActionLinearMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
 
     /////////////////////////////////////////////////////////////////////////
 
-    dsstring title;
-    dsstring* script_text;
-    bool * script_state;
-    title = "Linear movement node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool * script_state;
+    //title = "Linear movement node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
 
 
     /////////////////////////////////////////////////////////////////////////

@@ -70,7 +70,7 @@ void ActionCircularMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
     circ_node = new SceneNode<CircularMovement>( alias );
     circ_node->SetContent( new CircularMovement() );
 
-    circ_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //circ_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
     circ_node->GetContent()->Init( Vector( cx, cy, cz, 1 ), Vector( dx, dy, dz, 1 ), Vector( ax, ay, az, 1 ), init_angle, init_theta, init_phi );
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -119,15 +119,15 @@ void ActionCircularMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
 
     ///////////////////////////////////////////////////////////////////////////////////
 
-    dsstring title;
-    dsstring* script_text;
-    bool * script_state;
-    title = "Circular movement node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_circ_nodes[c_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_circ_nodes[c_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_circ_nodes[c_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool * script_state;
+    //title = "Circular movement node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_circ_nodes[c_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_circ_nodes[c_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_circ_nodes[c_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CIRCMOVEMENT_MASK;
 

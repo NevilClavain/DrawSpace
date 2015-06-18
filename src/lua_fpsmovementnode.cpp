@@ -33,8 +33,7 @@ using namespace DrawSpace::Utils;
 const char LuaFpsMovementNode::className[] = "FpsMovementNode";
 const Luna2<LuaFpsMovementNode>::RegType LuaFpsMovementNode::methods[] =
 {
-  { "LinkTo", &LuaFpsMovementNode::Lua_LinkTo },
-  { "LoadScript", &LuaFpsMovementNode::Lua_LoadScript },
+  { "LinkTo", &LuaFpsMovementNode::Lua_LinkTo },  
   { "SetInitpos", &LuaFpsMovementNode::Lua_SetInitpos },
   { "SetInitialTheta", &LuaFpsMovementNode::Lua_SetInitialTheta },
   { "SetInitialPhi", &LuaFpsMovementNode::Lua_SetInitialPhi },
@@ -108,36 +107,6 @@ int LuaFpsMovementNode::Lua_LinkTo( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
 
-    return 0;
-}
-
-int LuaFpsMovementNode::Lua_LoadScript( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 1 )
-	{
-		lua_pushstring( p_L, "LoadScript : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* filepath = luaL_checkstring( p_L, 1 );
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-
-        props.AddPropValue<dsstring>( "script_call_id", "FpsMovementNode:LoadScript" );
-        props.AddPropValue<dsstring>( "filepath", filepath );
-        if( m_existing_fps_node )
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", m_existing_fps_node );
-        }
-        else
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", &m_fps_node );
-        }
-
-        (*m_scriptcalls_handler)( props );
-    }
     return 0;
 }
 

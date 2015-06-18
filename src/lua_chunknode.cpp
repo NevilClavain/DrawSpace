@@ -39,7 +39,6 @@ const Luna2<LuaChunkNode>::RegType LuaChunkNode::methods[] =
   { "AddPassSlotShaderParam", &LuaChunkNode::Lua_AddPassSlotShaderParam },
   { "UpdateShaderParam", &LuaChunkNode::Lua_UpdateShaderParam },
   { "LinkTo", &LuaChunkNode::Lua_LinkTo },
-  { "LoadScript", &LuaChunkNode::Lua_LoadScript },
   { 0 }
 };
 
@@ -250,28 +249,5 @@ int LuaChunkNode::Lua_UpdateShaderParam( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
     
-    return 0;
-}
-
-int LuaChunkNode::Lua_LoadScript( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 1 )
-	{
-		lua_pushstring( p_L, "LoadScript : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* filepath = luaL_checkstring( p_L, 1 );
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-
-        props.AddPropValue<dsstring>( "script_call_id", "ChunkNode:LoadScript" );
-        props.AddPropValue<dsstring>( "filepath", filepath );
-        props.AddPropValue<BaseSceneNode*>( "node", &m_chunk_node );
-
-        (*m_scriptcalls_handler)( props );
-    }
     return 0;
 }

@@ -54,7 +54,7 @@ void ActionTransformCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     transfo_node = new SceneNode<Transformation>( alias );
     transfo_node->SetContent( new Transformation );
 
-    transfo_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //transfo_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -102,15 +102,15 @@ void ActionTransformCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_
     BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[transfo_node] = t_entry.treeitemid.GetID();
 
 
-    dsstring title;
-    dsstring* script_text;
-    bool* script_state;
-    title = "Transformation node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_transformation_nodes[t_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_transformation_nodes[t_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_transformation_nodes[t_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool* script_state;
+    //title = "Transformation node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_transformation_nodes[t_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_transformation_nodes[t_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_transformation_nodes[t_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[t_entry.treeitemid.GetID()] = TRANSFO_MASK;
 

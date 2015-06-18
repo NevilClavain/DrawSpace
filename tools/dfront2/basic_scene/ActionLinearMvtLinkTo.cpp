@@ -105,7 +105,7 @@ void ActionLinearMvtLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypo
     }
 
     SceneNode<LinearMovement>* lin_node = static_cast<SceneNode<LinearMovement>*>( node );
-    lin_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //lin_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
 
     lin_node->SetContent( new LinearMovement() );
     lin_node->GetContent()->Init( init_pos, dir, init_theta, init_phi );
@@ -136,15 +136,15 @@ void ActionLinearMvtLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypo
     BasicSceneMainFrame::GetInstance()->m_tree_nodes[l_entry.treeitemid.GetID()] = lin_node;
     BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[lin_node] = l_entry.treeitemid.GetID();
 
-    dsstring title;
-    dsstring* script_text;
-    bool * script_state;
-    title = "Linear movement node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool * script_state;
+    //title = "Linear movement node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_lin_nodes[l_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[l_entry.treeitemid.GetID()] = LINMOVEMENT_MASK;
 

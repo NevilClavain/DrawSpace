@@ -104,7 +104,7 @@ void ActionChunkLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
 
     SceneNode<Chunk>* chunk_node = static_cast<SceneNode<Chunk>*>( node );
 
-    chunk_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //chunk_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
 
     dsstring chunk_error;
     Chunk* chunk = BuildChunk( chunk_descr, chunk_error );
@@ -154,7 +154,7 @@ void ActionChunkLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
         BasicSceneMainFrame::GetInstance()->m_chunk_descriptors[c_entry.treeitemid.GetID()] = chunk_descr;
 
         /////////////////////////////////////////////
-
+        /*
         dsstring title;
         dsstring* script_text;
         bool * script_state;
@@ -164,7 +164,7 @@ void ActionChunkLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
         script_state = &BasicSceneMainFrame::GetInstance()->m_chunk_nodes[c_entry.treeitemid.GetID()].script_enabled;
         BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
         BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
-
+        */
         BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CHUNK_MASK;
 
         BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[c_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_chunk_nodes[c_entry.treeitemid.GetID()].treeitemid );

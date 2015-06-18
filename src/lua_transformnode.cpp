@@ -36,7 +36,6 @@ const Luna2<LuaTransformationNode>::RegType LuaTransformationNode::methods[] =
   { "ClearMatrixStack", &LuaTransformationNode::Lua_ClearMatrixStack },
   { "AddMatrix", &LuaTransformationNode::Lua_AddMatrix },
   { "UpdateMatrix", &LuaTransformationNode::Lua_UpdateMatrix },
-  { "LoadScript", &LuaTransformationNode::Lua_LoadScript },
   { 0, 0 }
 };
 
@@ -169,35 +168,6 @@ int LuaTransformationNode::Lua_UpdateMatrix( lua_State* p_L )
     else
     {
         m_transformation_node.GetContent()->UpdateMatrix( index, mat->m_mat );
-    }
-    return 0;
-}
-
-int LuaTransformationNode::Lua_LoadScript( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 1 )
-	{
-		lua_pushstring( p_L, "LoadScript : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* filepath = luaL_checkstring( p_L, 1 );
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-
-        props.AddPropValue<dsstring>( "script_call_id", "TransformationNode:LoadScript" );
-        props.AddPropValue<dsstring>( "filepath", filepath );
-        if( m_existing_transformation_node )
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", m_existing_transformation_node );
-        }
-        else
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", &m_transformation_node );
-        }
-        (*m_scriptcalls_handler)( props );
     }
     return 0;
 }

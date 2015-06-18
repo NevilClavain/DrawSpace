@@ -216,7 +216,7 @@ void ActionSpaceBoxCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_d
     {
         SceneNode<Spacebox>* sb_node = new SceneNode<Spacebox>( alias );
         sb_node->SetContent( sb );
-        sb_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+        //sb_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
         
         // now we must found the scenenodegraph we belong to make the RegisterNode() call
         void* id = BasicSceneMainFrame::GetInstance()->find_scenenodegraph_id( p_dialog->GetTreeItem() );
@@ -275,7 +275,7 @@ void ActionSpaceBoxCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_d
 
         //////////////////////////////////////////////////////
 
-        dsstring title;
+  /*      dsstring title;
         dsstring* script_text;
         bool * script_state;
         title = "Spacebox node: ";
@@ -283,7 +283,7 @@ void ActionSpaceBoxCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_d
         script_text = &BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].script;
         script_state = &BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].script_enabled;
         BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-        BasicSceneMainFrame::GetInstance()->m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
+        BasicSceneMainFrame::GetInstance()->m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;*/
 
         //////////////////////////////////////////////////////
 

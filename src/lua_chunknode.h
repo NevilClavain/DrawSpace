@@ -54,7 +54,7 @@ public:
     int Lua_AddPassSlotShaderParam( lua_State* p_L );
     int Lua_UpdateShaderParam( lua_State* p_L );
     int Lua_LinkTo( lua_State* p_L );
-    int Lua_LoadScript( lua_State* p_L );
+    
 
     
     static const char className[];

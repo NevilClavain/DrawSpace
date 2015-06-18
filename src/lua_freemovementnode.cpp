@@ -35,7 +35,6 @@ const char LuaFreeMovementNode::className[] = "FreeMovementNode";
 const Luna2<LuaFreeMovementNode>::RegType LuaFreeMovementNode::methods[] =
 {
   { "LinkTo", &LuaFreeMovementNode::Lua_LinkTo },
-  { "LoadScript", &LuaFreeMovementNode::Lua_LoadScript },
   { "SetInitpos", &LuaFreeMovementNode::Lua_SetInitpos },
   { "RotateYaw", &LuaFreeMovementNode::Lua_RotateYaw },
   { "RotatePitch", &LuaFreeMovementNode::Lua_RotatePitch },
@@ -101,36 +100,6 @@ int LuaFreeMovementNode::Lua_LinkTo( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
 
-    return 0;
-}
-
-int LuaFreeMovementNode::Lua_LoadScript( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 1 )
-	{
-		lua_pushstring( p_L, "LoadScript : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* filepath = luaL_checkstring( p_L, 1 );
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-
-        props.AddPropValue<dsstring>( "script_call_id", "FreeMovementNode:LoadScript" );
-        props.AddPropValue<dsstring>( "filepath", filepath );
-        if( m_existing_free_node )
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", m_existing_free_node );
-        }
-        else
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", &m_free_node );
-        }
-
-        (*m_scriptcalls_handler)( props );
-    }
     return 0;
 }
 

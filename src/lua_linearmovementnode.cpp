@@ -33,8 +33,7 @@ using namespace DrawSpace::Utils;
 const char LuaLinearMovementNode::className[] = "LinearMovementNode";
 const Luna2<LuaLinearMovementNode>::RegType LuaLinearMovementNode::methods[] =
 {
-  { "LinkTo", &LuaLinearMovementNode::Lua_LinkTo },
-  { "LoadScript", &LuaLinearMovementNode::Lua_LoadScript },
+  { "LinkTo", &LuaLinearMovementNode::Lua_LinkTo },  
   { "SetInitpos", &LuaLinearMovementNode::Lua_SetInitpos },
   { "SetDirection", &LuaLinearMovementNode::Lua_SetDirection },
   { "SetInitialTheta", &LuaLinearMovementNode::Lua_SetInitialTheta },
@@ -107,36 +106,6 @@ int LuaLinearMovementNode::Lua_LinkTo( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
 
-    return 0;
-}
-
-int LuaLinearMovementNode::Lua_LoadScript( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 1 )
-	{
-		lua_pushstring( p_L, "LoadScript : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* filepath = luaL_checkstring( p_L, 1 );
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-
-        props.AddPropValue<dsstring>( "script_call_id", "LinearMovementNode:LoadScript" );
-        props.AddPropValue<dsstring>( "filepath", filepath );
-        if( m_existing_linear_node )
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", m_existing_linear_node );
-        }
-        else
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", &m_linear_node );
-        }
-
-        (*m_scriptcalls_handler)( props );
-    }
     return 0;
 }
 

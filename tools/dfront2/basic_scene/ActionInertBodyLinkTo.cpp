@@ -125,7 +125,7 @@ void ActionInertBodyLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypo
     }
 
     SceneNode<InertBody>* body_node = static_cast<SceneNode<InertBody>*>( node );
-    body_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //body_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
 
     InertBody* body = BuildInertBody( params, we.world );
     body->Enable( init_state );
@@ -166,17 +166,17 @@ void ActionInertBodyLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypo
 
     /////////////////////////////////////////////
 
-    dsstring title;
-    dsstring* script_text;
-    bool * script_state;
-    title = "Chunk node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[i_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool * script_state;
+    //title = "Chunk node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_inertbody_nodes[i_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[i_entry.treeitemid.GetID()] = frame;
 
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[treeitemid_world] = frame;
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[treeitemid_world] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[i_entry.treeitemid.GetID()] = INERTBODY_MASK;
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[treeitemid_world] = INERTBODY_MASK;

@@ -48,8 +48,7 @@ public:
     LuaFreeMovementNode( lua_State* p_L );
     ~LuaFreeMovementNode( void );
      
-    int Lua_LinkTo( lua_State* p_L );
-    int Lua_LoadScript( lua_State* p_L );
+    int Lua_LinkTo( lua_State* p_L );    
     int Lua_SetInitpos( lua_State* p_L );
 
     int Lua_RotateYaw( lua_State* p_L );

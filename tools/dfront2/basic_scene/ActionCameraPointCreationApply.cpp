@@ -53,7 +53,7 @@ void ActionCameraPointCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
     camera_node = new SceneNode<CameraPoint>( alias );
     camera_node->SetContent( new CameraPoint );
 
-    camera_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //camera_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +101,7 @@ void ActionCameraPointCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
     BasicSceneMainFrame::GetInstance()->m_tree_nodes[c_entry.treeitemid.GetID()] = camera_node;
     BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[camera_node] = c_entry.treeitemid.GetID();
 
-
+    /*
     dsstring title;
     dsstring* script_text;
     bool * script_state;
@@ -111,6 +111,7 @@ void ActionCameraPointCreationApply::Execute( BasicSceneObjectPropertiesDialog* 
     script_state = &BasicSceneMainFrame::GetInstance()->m_camera_nodes[c_entry.treeitemid.GetID()].script_enabled;
     BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
     BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
+    */
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CAMERA_MASK;
 

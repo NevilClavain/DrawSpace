@@ -32,7 +32,7 @@
 #include "ActionAddMatrix.h"
 #include "ActionAddShaderParam.h"
 
-#include "ActionNodeLoadScript.h"
+//#include "ActionNodeLoadScript.h"
 
 #include "ActionMouseLoadScript.h"
 #include "ActionKeyDownLoadScript.h"
@@ -140,7 +140,7 @@
 #include "ActionColliderCreationDialog.h"
 
 
-#include "ActionNodeScriptEditionDialog.h"
+//#include "ActionNodeScriptEditionDialog.h"
 #include "ActionMouseMoveScriptEditionDialog.h"
 #include "ActionKeyupScriptEditionDialog.h"
 #include "ActionKeydownScriptEditionDialog.h"
@@ -237,7 +237,7 @@ m_delta_mouse_init( true )
     
 
     PopupMenuEntry pme_showprops = { CONTEXTMENU_SHOW_PROPS, "Show properties..." };
-    PopupMenuEntry pme_editnodescript = { CONTEXTMENU_EDIT_NODESCRIPT, "Edit script..." };
+    //PopupMenuEntry pme_editnodescript = { CONTEXTMENU_EDIT_NODESCRIPT, "Edit script..." };
 
     PopupMenuEntry pme_editmousemovescript = { CONTEXTMENU_EDIT_MOUSEMOVESCRIPT, "Edit mouse movement script..." };
     PopupMenuEntry pme_editkeydownscript = { CONTEXTMENU_EDIT_KEYDOWNSCRIPT, "Edit key down script..." };
@@ -342,14 +342,14 @@ m_delta_mouse_init( true )
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edittransformnode );
 
-    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_separator );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editsb );
-    m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -357,7 +357,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_selectcamera );
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editcamera );    
-    m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editnodescript );
 
 
     ///////////////////////////////////////////////////////////////////
@@ -381,7 +381,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_editnodescript );
 
 
     ///////////////////////////////////////////////////////////////////
@@ -404,7 +404,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editchunk );
-    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -427,7 +427,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_editinertbody );
-    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -452,7 +452,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editmvt );
-    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editnodescript );
     
     ///////////////////////////////////////////////////////////////////
 
@@ -475,7 +475,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );    
-    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -499,7 +499,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_editmvt );
-    m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -523,7 +523,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editmvt );
-    m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editnodescript );
+    //m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editnodescript );
 
     ///////////////////////////////////////////////////////////////////
 
@@ -545,7 +545,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific1[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionAddShaderParam();
     m_actiondialogs_apply[DIALOG_SPACEBOX_CREATION_TITLE] = new ActionSpaceBoxCreationApply();
 
-    m_actionscripts["SpaceboxNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["SpaceboxNode:LoadScript"] = new ActionNodeLoadScript();
 
     m_actionscripts["SpaceboxNode:UpdateShaderParam"] = new ActionSpaceBoxNodeUpdateShaderParam();
 
@@ -564,7 +564,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_CHUNKNODE] = new ActionChunkEditionDialog();
     m_actiondialogs_apply[DIALOG_CHUNK_EDITION_TITLE] = new ActionChunkEditionApply();
 
-    m_actionscripts["ChunkNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["ChunkNode:LoadScript"] = new ActionNodeLoadScript();
 
     m_actionscripts["ChunkNode:UpdateShaderParam"] = new ActionChunkNodeUpdateShaderParam();
     m_actionscripts["ChunkNode:LinkTo"] = new ActionChunkLinkTo();
@@ -579,7 +579,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific0[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionAddMatrix();
     m_actiondialogs_specific1[DIALOG_TRANSFORM_EDITION_TITLE] = new ActionTransformEditionSpecific1();
 
-    m_actionscripts["TransformationNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["TransformationNode:LoadScript"] = new ActionNodeLoadScript();
     m_actionscripts["TransformationNode:TransformationNode"] = new ActionTransformationTransformation();
     m_actionscripts["TransformationNode:LinkTo"] = new ActionTransformationLinkTo();
 
@@ -591,7 +591,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_CAMERA] = new ActionCameraPointEditionDialog();
     m_actiondialogs_apply[DIALOG_CAMERA_EDIT_TITLE] = new ActionCameraPointEditionApply();
 
-    m_actionscripts["CameraPointNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["CameraPointNode:LoadScript"] = new ActionNodeLoadScript();
     m_actionscripts["CameraPointNode:CameraPointNode"] = new ActionCameraPointCameraPoint();
     m_actionscripts["CameraPointNode:LinkTo"] = new ActionCameraPointLinkTo();
 
@@ -602,7 +602,7 @@ m_delta_mouse_init( true )
     m_actionscripts["FpsMovementNode:FpsMovementNode"] = new ActionFPSMvtFPSMvt();
     m_actionscripts["FpsMovementNode:LinkTo"] = new ActionFPSMvtLinkTo();
 
-    m_actionscripts["FpsMovementNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["FpsMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
     m_actions[CONTEXTMENU_NEWLINEARMVT] = new ActionLinearMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_LINMVT_CREATION_TITLE] = new ActionLinearMvtCreationApply();
@@ -611,7 +611,7 @@ m_delta_mouse_init( true )
 
     m_actiondialogs_apply[DIALOG_LINMVT_EDITION_TITLE] = new ActionLinearMvtEditionApply();
 
-    m_actionscripts["LinearMovementNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["LinearMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
 
     m_actions[CONTEXTMENU_NEWFREEMVT] = new ActionFreeMvtCreationDialog();
@@ -619,7 +619,7 @@ m_delta_mouse_init( true )
     m_actionscripts["FreeMovementNode:FreeMovementNode"] = new ActionFreeMvtFreeMvt();
     m_actionscripts["FreeMovementNode:LinkTo"] = new ActionFreeMvtLinkTo();
 
-    m_actionscripts["FreeMovementNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["FreeMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
     m_actions[CONTEXTMENU_NEWCIRCULARMVT] = new ActionCircularMvtCreationDialog();
     m_actiondialogs_apply[DIALOG_CIRCMVT_CREATION_TITLE] = new ActionCircularMvtCreationApply();
@@ -628,7 +628,7 @@ m_delta_mouse_init( true )
 
     m_actiondialogs_apply[DIALOG_CIRCMVT_EDITION_TITLE] = new ActionCircularMvtEditionApply();
 
-    m_actionscripts["CircularMovementNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["CircularMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
 
 
@@ -640,7 +640,7 @@ m_delta_mouse_init( true )
 
     m_actiondialogs_apply[DIALOG_LONGLATMVT_EDITION_TITLE] = new ActionLongLatMvtEditionApply();
 
-    m_actionscripts["LongLatMovementNode:LoadScript"] = new ActionNodeLoadScript();
+    //m_actionscripts["LongLatMovementNode:LoadScript"] = new ActionNodeLoadScript();
 
 
     m_actions[CONTEXTMENU_NEWINERTBODY] = new ActionInertBodyCreationDialog();
@@ -655,7 +655,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWCOLLIDER] = new ActionColliderCreationDialog();
 
 
-    m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
+    //m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
 
     m_actions[CONTEXTMENU_EDIT_MOUSEMOVESCRIPT] = new ActionMouseMoveScriptEditionDialog();
     m_actionscripts["DrawSpace:LoadMouseScript"] = new ActionMouseLoadScript();
@@ -694,7 +694,7 @@ m_delta_mouse_init( true )
     m_specificbutton0_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
     m_specificbutton1_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton1_clicked );
 
-    m_nodeupdatebegin_cb = new NodeUpdateBeginCallBack( this, &BasicSceneMainFrame::on_nodeupdatebegin );
+    //m_nodeupdatebegin_cb = new NodeUpdateBeginCallBack( this, &BasicSceneMainFrame::on_nodeupdatebegin );
 
 
     ////////////////////////////////////
@@ -1746,7 +1746,7 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
     DIALOG_WXSTRING_TO_DSSTRING( DIALOG_TITLE, dialog_title )
     m_actiondialogs_specific1[dialog_title]->Execute( p_dialog );
 }
-
+/*
 void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node )
 {
     if( m_inv_tree_nodes.count( p_node ) > 0 )
@@ -1769,7 +1769,7 @@ void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_
         }
     }
 }
-
+*/
 wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
 {
     return *( m_inv_treeitemid[p_id] );

@@ -103,9 +103,8 @@ void ActionSpaceBoxLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypoo
 
     SceneNode<Spacebox>* sb_node = static_cast<SceneNode<Spacebox>*>( node );
 
-    sb_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //sb_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
         
-    //sb_node->SetContent( new Spacebox );
     dsstring sb_error;
     Spacebox* sb = BuildSpaceBox( sb_descr, sb_error );
     if( NULL == sb )
@@ -155,15 +154,15 @@ void ActionSpaceBoxLinkTo::Execute( DrawSpace::Core::PropertyPool& p_propertypoo
 
         //////////////////////////////////////
 
-        dsstring title;
-        dsstring* script_text;
-        bool * script_state;
-        title = "Spacebox node: ";
-        title += BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].name;
-        script_text = &BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].script;
-        script_state = &BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].script_enabled;
-        BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-        BasicSceneMainFrame::GetInstance()->m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
+        //dsstring title;
+        //dsstring* script_text;
+        //bool * script_state;
+        //title = "Spacebox node: ";
+        //title += BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].name;
+        //script_text = &BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].script;
+        //script_state = &BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].script_enabled;
+        //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+        //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[t_entry.treeitemid.GetID()] = frame;
 
         BasicSceneMainFrame::GetInstance()->m_menubuild_table[t_entry.treeitemid.GetID()] = SPACEBOX_MASK;
         BasicSceneMainFrame::GetInstance()->m_inv_treeitemid[t_entry.treeitemid.GetID()] = &( BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[t_entry.treeitemid.GetID()].treeitemid );

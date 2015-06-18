@@ -105,7 +105,7 @@
 #define CONTEXTMENU_EDIT_TRANSFORMNODE      2081
 //#define CONTEXTMENU_EDIT_SHADERSPARAMS      2082
 #define CONTEXTMENU_SHOW_PROPS              2083
-#define CONTEXTMENU_EDIT_NODESCRIPT         2084
+//#define CONTEXTMENU_EDIT_NODESCRIPT         2084
 
 #define CONTEXTMENU_EDIT_MOUSEMOVESCRIPT    2085
 #define CONTEXTMENU_EDIT_KEYDOWNSCRIPT      2086
@@ -473,7 +473,7 @@ public:
 
     std::map<dsstring, ActionScript*>                                                       m_actionscripts;
 
-    std::map<void*, BasicSceneScriptEditFrame*>                                             m_script_edit_frames;
+    //std::map<void*, BasicSceneScriptEditFrame*>                                             m_script_edit_frames;
 
     std::map<void*, int>                                                                    m_menubuild_table;
   
@@ -523,7 +523,7 @@ public:
     DialogButtonCallback*                                   m_specificbutton1_clicked_cb;
 
 
-    NodeUpdateBeginCallBack*                                m_nodeupdatebegin_cb;
+    //NodeUpdateBeginCallBack*                                m_nodeupdatebegin_cb;
 
 
     dsstring                                                m_keydown_script;
@@ -581,7 +581,7 @@ public:
     void on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
 
 
-    void on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node );
+    //void on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node );
 
     virtual void OnPaint( wxPaintEvent& p_event );
     virtual void OnClose( wxCloseEvent& p_event );

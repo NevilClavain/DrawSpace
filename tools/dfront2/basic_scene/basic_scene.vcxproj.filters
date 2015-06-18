@@ -23,7 +23,6 @@
     <ClCompile Include="ActionChunkCreationDialog.cpp" />
     <ClCompile Include="ActionChunkCreationSpecific0.cpp" />
     <ClCompile Include="ActionChunkEditionDialog.cpp" />
-    <ClCompile Include="ActionNodeScriptEditionDialog.cpp" />
     <ClCompile Include="ActionSpaceBoxCreationDialog.cpp" />
     <ClCompile Include="ActionSpaceBoxCreationSpecific0.cpp" />
     <ClCompile Include="ActionSpaceBoxEditionDialog.cpp" />
@@ -66,7 +65,6 @@
     <ClCompile Include="ActionLinearMvtLinearMvt.cpp" />
     <ClCompile Include="ActionLinearMvtLinkTo.cpp" />
     <ClCompile Include="ActionMouseLoadScript.cpp" />
-    <ClCompile Include="ActionNodeLoadScript.cpp" />
     <ClCompile Include="ActionKeyUpLoadScript.cpp" />
     <ClCompile Include="ActionAngleSpeedDec.cpp" />
     <ClCompile Include="ActionAngleSpeedInc.cpp" />
@@ -125,7 +123,6 @@
     <ClInclude Include="ActionChunkCreationDialog.h" />
     <ClInclude Include="ActionChunkCreationSpecific0.h" />
     <ClInclude Include="ActionChunkEditionDialog.h" />
-    <ClInclude Include="ActionNodeScriptEditionDialog.h" />
     <ClInclude Include="ActionSpaceBoxCreationDialog.h" />
     <ClInclude Include="ActionSpaceBoxCreationSpecific0.h" />
     <ClInclude Include="ActionSpaceBoxEditionDialog.h" />
@@ -168,7 +165,6 @@
     <ClInclude Include="ActionLinearMvtLinearMvt.h" />
     <ClInclude Include="ActionLinearMvtLinkTo.h" />
     <ClInclude Include="ActionMouseLoadScript.h" />
-    <ClInclude Include="ActionNodeLoadScript.h" />
     <ClInclude Include="ActionKeyUpLoadScript.h" />
     <ClInclude Include="ActionAngleSpeedDec.h" />
     <ClInclude Include="ActionAngleSpeedInc.h" />

@@ -32,7 +32,6 @@ const char LuaCameraPointNode::className[] = "CameraPointNode";
 const Luna2<LuaCameraPointNode>::RegType LuaCameraPointNode::methods[] =
 {
   { "LinkTo", &LuaCameraPointNode::Lua_LinkTo },
-  { "LoadScript", &LuaCameraPointNode::Lua_LoadScript },
   { "LockOn", &LuaCameraPointNode::Lua_LockOn },
   { "Unlock", &LuaCameraPointNode::Lua_Unlock },
   { "UpdateProjectionZNear", &LuaCameraPointNode::Lua_UpdateProjectionZNear },
@@ -95,36 +94,6 @@ int LuaCameraPointNode::Lua_LinkTo( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
 
-    return 0;
-}
-
-int LuaCameraPointNode::Lua_LoadScript( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 1 )
-	{
-		lua_pushstring( p_L, "LoadScript : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* filepath = luaL_checkstring( p_L, 1 );
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-
-        props.AddPropValue<dsstring>( "script_call_id", "CameraPointNode:LoadScript" );
-        props.AddPropValue<dsstring>( "filepath", filepath );
-        if( m_existing_camera_node )
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", m_existing_camera_node );
-        }
-        else
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", &m_camera_node );
-        }
-
-        (*m_scriptcalls_handler)( props );
-    }
     return 0;
 }
 

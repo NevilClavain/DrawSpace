@@ -52,8 +52,7 @@ public:
     ~LuaCircularMovementNode( void );
 
     int Lua_LinkTo( lua_State* p_L );
-    int Lua_LoadScript( lua_State* p_L );
-
+    
     int Lua_SetCenterpos( lua_State* p_L );
     int Lua_SetDeltaCenterpos( lua_State* p_L );
     int Lua_SetAxis( lua_State* p_L );

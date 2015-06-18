@@ -59,7 +59,7 @@ void ActionLongLatCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_di
     ll_node = new SceneNode<LongLatMovement>( alias );
     ll_node->SetContent( new LongLatMovement() );
 
-    ll_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //ll_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
     ll_node->GetContent()->Init( init_long, init_lat, init_alt, init_theta, init_phi );
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -108,15 +108,15 @@ void ActionLongLatCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_di
 
     ///////////////////////////////////////////////////////////////////
 
-    dsstring title;
-    dsstring* script_text;
-    bool * script_state;
-    title = "LongLat movement node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool * script_state;
+    //title = "LongLat movement node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_ll_nodes[l_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[l_entry.treeitemid.GetID()] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[l_entry.treeitemid.GetID()] = LONGLATMOVEMENT_MASK;
 

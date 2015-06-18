@@ -61,7 +61,7 @@ void ActionFreeMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_di
     free_node = new SceneNode<FreeMovement>( alias );
     free_node->SetContent( new FreeMovement() );
 
-    free_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //free_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
     free_node->GetContent()->Init( Vector( x, y, z, 1 ) );
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -110,15 +110,15 @@ void ActionFreeMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_di
 
     ///////////////////////////////////////////////////////////////////////////
 
-    dsstring title;
-    dsstring* script_text;
-    bool * script_state;
-    title = "Free movement node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_free_nodes[f_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_free_nodes[f_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_free_nodes[f_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool * script_state;
+    //title = "Free movement node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_free_nodes[f_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_free_nodes[f_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_free_nodes[f_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[f_entry.treeitemid.GetID()] = FREEMOVEMENT_MASK;
 

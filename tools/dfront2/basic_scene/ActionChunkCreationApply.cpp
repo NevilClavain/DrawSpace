@@ -135,7 +135,7 @@ void ActionChunkCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dial
     {
         SceneNode<Chunk>* chunk_node = new SceneNode<Chunk>( alias );
         chunk_node->SetContent( chunk );
-        chunk_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+        //chunk_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
 
         // now we must found the scenenodegraph we belong to make the RegisterNode() call
         void* id = BasicSceneMainFrame::GetInstance()->find_scenenodegraph_id( p_dialog->GetTreeItem() );
@@ -192,7 +192,7 @@ void ActionChunkCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dial
         BasicSceneMainFrame::GetInstance()->m_chunk_descriptors[c_entry.treeitemid.GetID()] = descr;
 
         /////////////////////////////////////////////////////////////////////////
-
+        /*
         dsstring title;
         dsstring* script_text;
         bool * script_state;
@@ -202,7 +202,7 @@ void ActionChunkCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dial
         script_state = &BasicSceneMainFrame::GetInstance()->m_chunk_nodes[c_entry.treeitemid.GetID()].script_enabled;
         BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
         BasicSceneMainFrame::GetInstance()->m_script_edit_frames[c_entry.treeitemid.GetID()] = frame;
-
+        */
         /////////////////////////////////////////////////////////////////////////
 
         BasicSceneMainFrame::GetInstance()->m_menubuild_table[c_entry.treeitemid.GetID()] = CHUNK_MASK;

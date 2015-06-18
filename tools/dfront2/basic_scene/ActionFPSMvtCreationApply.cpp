@@ -65,7 +65,7 @@ void ActionFPSMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dia
     fps_node = new SceneNode<FPSMovement>( alias );
     fps_node->SetContent( new FPSMovement( ymvt ) );
 
-    fps_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
+    //fps_node->RegisterUpdateBeginEvtHandler( BasicSceneMainFrame::GetInstance()->m_nodeupdatebegin_cb );
 
     fps_node->GetContent()->Init( Vector( x, y, z, 1 ), Maths::DegToRad( init_theta ), Maths::DegToRad( init_phi ) );
 
@@ -115,15 +115,15 @@ void ActionFPSMvtCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dia
     BasicSceneMainFrame::GetInstance()->m_inv_tree_nodes[fps_node] = f_entry.treeitemid.GetID();
 
 
-    dsstring title;
-    dsstring* script_text;
-    bool * script_state;
-    title = "FPS movement node: ";
-    title += BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].name;
-    script_text = &BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].script;
-    script_state = &BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].script_enabled;
-    BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
-    BasicSceneMainFrame::GetInstance()->m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
+    //dsstring title;
+    //dsstring* script_text;
+    //bool * script_state;
+    //title = "FPS movement node: ";
+    //title += BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].name;
+    //script_text = &BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].script;
+    //script_state = &BasicSceneMainFrame::GetInstance()->m_fps_nodes[f_entry.treeitemid.GetID()].script_enabled;
+    //BasicSceneScriptEditFrame* frame = new BasicSceneScriptEditFrame( BasicSceneMainFrame::GetInstance(), title, script_text, script_state );
+    //BasicSceneMainFrame::GetInstance()->m_script_edit_frames[f_entry.treeitemid.GetID()] = frame;
 
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[f_entry.treeitemid.GetID()] = FPSMOVEMENT_MASK;
 

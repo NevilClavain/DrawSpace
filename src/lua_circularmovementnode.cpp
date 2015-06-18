@@ -33,8 +33,7 @@ using namespace DrawSpace::Utils;
 const char LuaCircularMovementNode::className[] = "CircularMovementNode";
 const Luna2<LuaCircularMovementNode>::RegType LuaCircularMovementNode::methods[] =
 {
-  { "LinkTo", &LuaCircularMovementNode::Lua_LinkTo },
-  { "LoadScript", &LuaCircularMovementNode::Lua_LoadScript },
+  { "LinkTo", &LuaCircularMovementNode::Lua_LinkTo },  
   { "SetCenterpos", &LuaCircularMovementNode::Lua_SetCenterpos },
   { "SetDeltaCenterpos", &LuaCircularMovementNode::Lua_SetDeltaCenterpos },
   { "SetAxis", &LuaCircularMovementNode::Lua_SetAxis },
@@ -112,36 +111,6 @@ int LuaCircularMovementNode::Lua_LinkTo( lua_State* p_L )
         (*m_scriptcalls_handler)( props );
     }
 
-    return 0;
-}
-
-int LuaCircularMovementNode::Lua_LoadScript( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc != 1 )
-	{
-		lua_pushstring( p_L, "LoadScript : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* filepath = luaL_checkstring( p_L, 1 );
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-
-        props.AddPropValue<dsstring>( "script_call_id", "CircularMovementNode:LoadScript" );
-        props.AddPropValue<dsstring>( "filepath", filepath );
-        if( m_existing_circular_node )
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", m_existing_circular_node );
-        }
-        else
-        {
-            props.AddPropValue<BaseSceneNode*>( "node", &m_circular_node );
-        }
-
-        (*m_scriptcalls_handler)( props );
-    }
     return 0;
 }
 

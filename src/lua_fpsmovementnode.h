@@ -52,8 +52,7 @@ public:
     ~LuaFpsMovementNode( void );
      
     int Lua_LinkTo( lua_State* p_L );
-    int Lua_LoadScript( lua_State* p_L );
-
+    
     int Lua_SetInitpos( lua_State* p_L );
     int Lua_SetInitialTheta( lua_State* p_L );
     int Lua_SetInitialPhi( lua_State* p_L );
