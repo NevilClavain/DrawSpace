@@ -12,9 +12,7 @@ ds:DisplayCurrentCamera( "scene0", 1 )
 
 
 
-ds:SetScenegraphEventCallback( function ( evt_type, scenegraph_name )
-
-  
+ds:SetScenegraphEventCallback( function( evt_type, scenegraph_name )
   
   if evt_type == 0 then
   
@@ -211,10 +209,20 @@ body0:SetShapeDescrBox( Vector( 0.5, 0.5, 0.5, 1.0 ) )
 body0:SetMass( 10.0 )
 
 body0_pos = Matrix()
-body0_pos:Translation( 0, 10, -10 )
+body0_pos:Translation( 0, 10, -18 )
 body0:AddInitialAttitudeMatrix( body0_pos )
 
 body0:LinkTo( "scene0", "scene0", "world0" )
+
+
+tf_coll = TransformationNode( "tf_coll", 2 )
+tf_coll:LinkTo( "scene0", "scene0" )
+
+
+mat_coll = Matrix()
+mat_coll:Translation( 0, 0, -18 )
+tf_coll:UpdateMatrix( 0, mat_coll )
+
         
 
 

@@ -33,7 +33,7 @@ end
 print( "Lua version : " .. _VERSION )
 ds = DrawSpace()
 
-ds:SetScenegraphNodeEventCallback( function ( evt_type, scenegraph_name, node_alias )
+ds:SetScenegraphNodeEventCallback( function( evt_type, scenegraph_name, node_alias )
 
   local evt_type_name
   
@@ -72,9 +72,7 @@ ds:SetScenegraphNodeEventCallback( function ( evt_type, scenegraph_name, node_al
           collisions_chunks[collision_chunk_node_alias]:AddPassSlotShaderParam( pass_name, "color", 1, 0, Vector( 1.0, 0.0, 1.0, 1.0 ) )
         
         end
-        
-        
-
+               
         collisions_chunks[collision_chunk_node_alias]:LinkTo( scenegraph_name, collision_transform_node_alias )        
           
       elseif shape_type == 1 then
@@ -98,10 +96,8 @@ ds:SetScenegraphNodeEventCallback( function ( evt_type, scenegraph_name, node_al
           
         end
 
-        collisions_chunks[collision_chunk_node_alias]:LinkTo( scenegraph_name, collision_transform_node_alias )        
-        
-      end
-      
+        collisions_chunks[collision_chunk_node_alias]:LinkTo( scenegraph_name, collision_transform_node_alias )                
+      end      
     end    
   end
 end

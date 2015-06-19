@@ -205,3 +205,13 @@ InertBody* BuildInertBody( const Body::Parameters& p_params, World* p_world )
     InertBody* body = new InertBody( p_world, NULL, p_params );
     return body;    
 }
+
+Collider* BuildCollider( const Body::Parameters& p_params, World* p_world )
+{
+    Collider* coll = new Collider( NULL );
+
+    coll->SetKinematic( p_params );
+    coll->AddToWorld( p_world );
+
+    return coll;
+}

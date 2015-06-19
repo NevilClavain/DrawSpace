@@ -373,6 +373,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionColliderCreationApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionColliderCreationApply.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionColliderCreationDialog.cpp"
 				>
 			</File>

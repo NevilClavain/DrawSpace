@@ -32,8 +32,6 @@
 #include "ActionAddMatrix.h"
 #include "ActionAddShaderParam.h"
 
-//#include "ActionNodeLoadScript.h"
-
 #include "ActionMouseLoadScript.h"
 #include "ActionKeyDownLoadScript.h"
 #include "ActionKeyUpLoadScript.h"
@@ -138,9 +136,8 @@
 #include "ActionInertBodyLinkTo.h"
 
 #include "ActionColliderCreationDialog.h"
+#include "ActionColliderCreationApply.h"
 
-
-//#include "ActionNodeScriptEditionDialog.h"
 #include "ActionMouseMoveScriptEditionDialog.h"
 #include "ActionKeyupScriptEditionDialog.h"
 #include "ActionKeydownScriptEditionDialog.h"
@@ -653,6 +650,7 @@ m_delta_mouse_init( true )
 
 
     m_actions[CONTEXTMENU_NEWCOLLIDER] = new ActionColliderCreationDialog();
+    m_actiondialogs_apply[DIALOG_COLLIDER_CREATION_TITLE] = new ActionColliderCreationApply();
 
 
     //m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
