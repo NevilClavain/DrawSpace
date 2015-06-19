@@ -35,13 +35,11 @@ class Body : public Dynamics::Orbiter
 {
 public:
 
-    //typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Scenegraph::CameraEvent, DrawSpace::Core::TransformNode*>           CameraEvtCb;
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*>         CameraEvtCb;
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>          NodesEventCb;
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>    ScenegraphEventCb;
 
-    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*> CameraEvtCb;
-    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>  NodesEventCb;
-    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent>                               ScenegraphEventCb;
-
-    typedef DrawSpace::Core::BaseCallback<void, DrawSpace::Planetoid::Body*>                                                                            PlanetRelativeEventHandler;
+    typedef DrawSpace::Core::BaseCallback<void, DrawSpace::Planetoid::Body*>                                                                                    PlanetRelativeEventHandler;
 
 protected:
 
@@ -108,7 +106,7 @@ protected:
 
     void on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
     void on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
-    void on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event );
+    void on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event, DrawSpace::Core::SceneNodeGraph* p_scenegraph );
 
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr );
 

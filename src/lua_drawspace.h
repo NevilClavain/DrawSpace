@@ -35,8 +35,8 @@ class LuaDrawSpace
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack2<LuaDrawSpace, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>    NodesEventCallback;
-    typedef DrawSpace::Core::CallBack<LuaDrawSpace, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent>                                 ScenegraphEventCallback;
+    typedef DrawSpace::Core::CallBack2<LuaDrawSpace, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>        NodesEventCallback;
+    typedef DrawSpace::Core::CallBack2<LuaDrawSpace, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>  ScenegraphEventCallback;
 
     typedef struct
     {
@@ -59,7 +59,7 @@ public:
     
 
     void on_scenenode_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node );
-    void on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_evt );
+    void on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_evt, DrawSpace::Core::SceneNodeGraph* p_scenegraph );
 
 public:
     LuaDrawSpace( lua_State* p_L );

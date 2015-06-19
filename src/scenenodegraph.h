@@ -41,7 +41,7 @@ public:
 
     } CameraEvent;
 
-    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, BaseSceneNode*>   CameraEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, BaseSceneNode*>       CameraEventHandler;
 
     typedef enum
     {
@@ -50,7 +50,7 @@ public:
 
     } NodesEvent;
 
-    typedef DrawSpace::Core::BaseCallback2<void, NodesEvent, BaseSceneNode*>    NodesEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, NodesEvent, BaseSceneNode*>        NodesEventHandler;
 
     typedef enum
     {
@@ -59,7 +59,7 @@ public:
 
     } ScenegraphEvent;
 
-    typedef DrawSpace::Core::BaseCallback<void, ScenegraphEvent>    ScenegraphEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, ScenegraphEvent, SceneNodeGraph*>  ScenegraphEventHandler;
 
 
 protected:

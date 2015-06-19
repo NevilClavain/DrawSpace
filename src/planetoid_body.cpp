@@ -338,7 +338,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
     }
 }
 
-void DrawSpace::Planetoid::Body::on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event )
+void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::ScenegraphEvent p_event, SceneNodeGraph* p_scenegraph )
 {
     if( DrawSpace::Core::SceneNodeGraph::TRANSFORMATIONS_BEGIN == p_event )
     {

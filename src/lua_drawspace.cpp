@@ -524,11 +524,11 @@ int LuaDrawSpace::Lua_SetScenegraphEventCallback( lua_State* p_L )
 }
 
 
-void LuaDrawSpace::on_scenenodegraph_evt( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_evt )
+void LuaDrawSpace::on_scenenodegraph_evt( SceneNodeGraph::ScenegraphEvent p_evt, SceneNodeGraph* p_scenegraph )
 {
 }
 
-void LuaDrawSpace::on_scenenode_evt( DrawSpace::Core::SceneNodeGraph::NodesEvent p_evt, DrawSpace::Core::BaseSceneNode* p_node )
+void LuaDrawSpace::on_scenenode_evt( SceneNodeGraph::NodesEvent p_evt, BaseSceneNode* p_node )
 {
     dsstring node_alias;
     p_node->GetSceneName( node_alias );
