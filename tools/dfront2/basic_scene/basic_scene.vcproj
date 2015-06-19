@@ -373,6 +373,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionColliderCreationDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionColliderCreationDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCreateSceneNodeGraph.cpp"
 				>
 			</File>
@@ -686,22 +694,6 @@
 			</File>
 			<File
 				RelativePath=".\ActionMouseMoveScriptEditionDialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ActionNodeLoadScript.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ActionNodeLoadScript.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ActionNodeScriptEditionDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ActionNodeScriptEditionDialog.h"
 				>
 			</File>
 			<File
