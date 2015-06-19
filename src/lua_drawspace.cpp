@@ -526,13 +526,34 @@ int LuaDrawSpace::Lua_SetScenegraphEventCallback( lua_State* p_L )
 
 void LuaDrawSpace::on_scenenodegraph_evt( SceneNodeGraph::ScenegraphEvent p_evt, SceneNodeGraph* p_scenegraph )
 {
+    bool found = false;
+    dsstring scenegraph_name;
+
+    for( size_t i = 0; i < m_nodesevent_callbacks.size() && !found; i++ )
+    {
+        if( m_nodesevent_callbacks[i].scenenodegraph == p_scenegraph )
+        {
+            found = true;
+            scenegraph_name = m_nodesevent_callbacks[i].alias;
+        }
+    }
+
+    if( found && m_ref2 != -1 )
+    {
+        // call here the lua callback   
+        lua_rawgeti( m_L, LUA_REGISTRYINDEX, m_ref2 );
+
+	    lua_pushinteger( m_L, (int)p_evt );
+	    lua_pushstring( m_L, scenegraph_name.c_str() );
+	    lua_call( m_L, 2, 0 );
+    }
 }
 
 void LuaDrawSpace::on_scenenode_evt( SceneNodeGraph::NodesEvent p_evt, BaseSceneNode* p_node )
 {
     dsstring node_alias;
     p_node->GetSceneName( node_alias );
-    dsstring scenegraph_name;    
+    dsstring scenegraph_name;
     bool found = false;
     for( size_t i = 0; i < m_nodesevent_callbacks.size() && !found; i++ )
     {

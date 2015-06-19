@@ -11,6 +11,24 @@ ds:CreateSceneNodeGraph( "scene0" )
 ds:DisplayCurrentCamera( "scene0", 1 )
 
 
+
+ds:SetScenegraphEventCallback( function ( evt_type, scenegraph_name )
+
+  
+  
+  if evt_type == 0 then
+  
+    ds:AngleSpeedInc( roty_angle, 25 )
+    roty:Rotation( roty_axis, roty_angle:GetValue() )
+    tf2:UpdateMatrix( 1, roty )
+  end
+
+end
+)
+
+
+
+
 keyboard = Keyboard()
 mouse = Mouse()
 
