@@ -1,4 +1,4 @@
--- print( "key up : " .. keyboard:GetLastKeyupCode() )
+--print( "key up : " .. keyboard:GetLastKeyupCode() )
 
 if ds:IsCurrentCamera( "scene0", cam0 ) > 0 then
  

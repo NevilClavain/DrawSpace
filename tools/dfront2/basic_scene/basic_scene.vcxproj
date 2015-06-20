@@ -127,6 +127,8 @@
     <ClCompile Include="ActionGlobalPrint.cpp" />
     <ClCompile Include="ActionInertBodyCreationApply.cpp" />
     <ClCompile Include="ActionInertBodyCreationDialog.cpp" />
+    <ClCompile Include="ActionInertBodyEditionApply.cpp" />
+    <ClCompile Include="ActionInertBodyEditionDialog.cpp" />
     <ClCompile Include="ActionInertBodyInertBody.cpp" />
     <ClCompile Include="ActionInertBodyLinkTo.cpp" />
     <ClCompile Include="ActionIsCurrentCamera.cpp" />
@@ -227,6 +229,8 @@
     <ClInclude Include="ActionGlobalPrint.h" />
     <ClInclude Include="ActionInertBodyCreationApply.h" />
     <ClInclude Include="ActionInertBodyCreationDialog.h" />
+    <ClInclude Include="ActionInertBodyEditionApply.h" />
+    <ClInclude Include="ActionInertBodyEditionDialog.h" />
     <ClInclude Include="ActionInertBodyInertBody.h" />
     <ClInclude Include="ActionInertBodyLinkTo.h" />
     <ClInclude Include="ActionIsCurrentCamera.h" />

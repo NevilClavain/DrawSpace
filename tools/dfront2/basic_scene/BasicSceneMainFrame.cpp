@@ -132,6 +132,9 @@
 #include "ActionInertBodyCreationDialog.h"
 #include "ActionInertBodyCreationApply.h"
 
+#include "ActionInertBodyEditionDialog.h"
+#include "ActionInertBodyEditionApply.h"
+
 #include "ActionInertBodyInertBody.h"
 #include "ActionInertBodyLinkTo.h"
 
@@ -671,7 +674,8 @@ m_delta_mouse_init( true )
     m_actionscripts["InertBodyNode:InertBodyNode"] = new ActionInertBodyInertBody();
     m_actionscripts["InertBodyNode:LinkTo"] = new ActionInertBodyLinkTo();
 
-
+    m_actions[CONTEXTMENU_EDIT_INERTBODY] = new ActionInertBodyEditionDialog();
+    m_actiondialogs_apply[DIALOG_INERTBODY_EDITION_TITLE] = new ActionInertBodyEditionApply();
 
     m_actions[CONTEXTMENU_NEWCOLLIDER] = new ActionColliderCreationDialog();
     m_actiondialogs_apply[DIALOG_COLLIDER_CREATION_TITLE] = new ActionColliderCreationApply();
@@ -725,6 +729,10 @@ m_delta_mouse_init( true )
     m_keyupscripteditionframe = new BasicSceneScriptEditFrame( this, "Key up", &m_keyup_script, &m_keyup_script_enabled );
     m_keydownscripteditionframe = new BasicSceneScriptEditFrame( this, "Key down", &m_keydown_script, &m_keydown_script_enabled );
 
+
+    m_calendar = new Calendar( 0, &m_timer );
+
+    m_calendar->Startup( 0 );
 
 #ifndef RENDER_IDLE
     RenderTimer* timer = new RenderTimer(this);
@@ -1055,11 +1063,15 @@ void BasicSceneMainFrame::render( void )
 
         renderer->FlipScreen();
 
+        m_calendar->Run();
+
+        /*
         m_timer.Update();
         if( m_timer.IsReady() )
         {
 
         }
+        */
     }
 }
 

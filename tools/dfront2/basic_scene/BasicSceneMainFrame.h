@@ -432,9 +432,7 @@ public:
     DrawSpace::Utils::TimeManager                                                           m_timer;
     
     RenderTimer*                                                                            m_rendertimer;
-    //DrawSpace::Scenegraph                                                                   m_scenegraph;
-    
-
+    DrawSpace::Dynamics::Calendar*                                                          m_calendar;
 
     //////////////////////////////////////////////////////////////////////////////////
 

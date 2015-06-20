@@ -63,6 +63,8 @@ void ActionWorldCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dial
     BasicSceneMainFrame::GetInstance()->m_worlds[entry.treeitemid.GetID()] = entry;
     BasicSceneMainFrame::GetInstance()->m_menubuild_table[entry.treeitemid.GetID()] = WORLD_MASK;
        
+    BasicSceneMainFrame::GetInstance()->m_calendar->RegisterWorld( entry.world );
+
     DIALOG_CLOSE
 
 }

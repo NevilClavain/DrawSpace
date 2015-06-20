@@ -20,35 +20,14 @@
 *
 */
 
-#include <wx/wx.h>
-#include "BasicSceneMainFrame.h"
+#ifndef _ACTIONINERTBODYEDITIONAPPLY_H_
+#define _ACTIONINERTBODYEDITIONAPPLY_H_
+#include "actiondialog.h"
 
-#include "ActionCreateWorld.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Dynamics;
-using namespace DrawSpace::Utils;
-
-
-void ActionCreateWorld::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
+class ActionInertBodyEditionApply : public ActionDialog
 {
-    dsstring alias = p_propertypool.GetPropValue<dsstring>( "name" );
-    Vector gravity = p_propertypool.GetPropValue<Vector>( "gravity" );
+public:
+    void Execute( BasicSceneObjectPropertiesDialog* p_dialog );
+};
 
-    BasicSceneMainFrame::WorldEntry entry;
-
-    World* world = new World;
-    world->Initialize();
-    world->SetGravity( Vector( gravity[0], gravity[1], gravity[2], 0.0 ) );
-
-    entry.name = alias;
-    entry.world = world;
-    entry.treeitemid = BasicSceneMainFrame::GetInstance()->AppendItem( BasicSceneMainFrame::GetInstance()->m_scenegraphs_root_item, alias.c_str(), WORLD_ICON_INDEX );
-
-    BasicSceneMainFrame::GetInstance()->m_worlds[entry.treeitemid.GetID()] = entry;
-    BasicSceneMainFrame::GetInstance()->m_menubuild_table[entry.treeitemid.GetID()] = WORLD_MASK;
-
-    BasicSceneMainFrame::GetInstance()->m_calendar->RegisterWorld( entry.world );
-
-}
+#endif

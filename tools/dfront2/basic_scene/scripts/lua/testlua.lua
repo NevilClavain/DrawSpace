@@ -206,13 +206,38 @@ collisions_pass[1] = "texture_pass"
 
 body0 = InertBodyNode( "body0" )
 body0:SetShapeDescrBox( Vector( 0.5, 0.5, 0.5, 1.0 ) )
-body0:SetMass( 10.0 )
+body0:SetMass( 50.0 )
 
 body0_pos = Matrix()
 body0_pos:Translation( 0, 10, -18 )
 body0:AddInitialAttitudeMatrix( body0_pos )
 
 body0:LinkTo( "scene0", "scene0", "world0" )
+
+
+
+body_ground = InertBodyNode( "ground" )
+body_ground:SetShapeDescrBox( Vector( 1000.0, 0.0, 1000.0, 1.0 ) )
+body_ground:SetMass( 0.0 )
+body_ground_pos = Matrix()
+body_ground_pos:Translation( 0, -5, 0 )
+body_ground:AddInitialAttitudeMatrix( body_ground_pos )
+
+
+body_ground:LinkTo( "scene0", "scene0", "world0" )
+
+
+
+ground_chunk = ChunkNode( "ground_chunk" )
+ground_chunk:SetMesheName( "grid_meshe" )
+ground_chunk:RegisterPassSlot( "texture_pass" )
+ground_chunk:SetPassSlotFxName( "texture_pass", "texture_fx" )
+ground_chunk:SetPassSlotTextureName( "texture_pass", "ground", 0 )
+
+ground_chunk:LinkTo( "scene0", "ground" )
+print( "ground_chunk loaded..." )
+
+
 
 
 tf_coll = TransformationNode( "tf_coll", 2 )
