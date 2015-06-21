@@ -38,6 +38,12 @@ rendertarget false
 end_asset
 
 
+declare_asset_instance Texture
+assetname ground
+filepath ground.bmp
+rendertarget false
+end_asset
+
 declare_asset_instance Font
 assetname font01
 filespath mangalfont.bmp mangalfont.csv
@@ -60,6 +66,13 @@ end_asset
 declare_asset_instance Meshe
 assetname teapot_meshe
 filepath teapot.ac
+index 0
+mode ac3d
+end_asset
+
+declare_asset_instance Meshe
+assetname grid_meshe
+filepath grid.ac
 index 0
 mode ac3d
 end_asset

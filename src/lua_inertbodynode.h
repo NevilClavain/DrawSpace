@@ -68,6 +68,8 @@ public:
     int Lua_GetShapeDescrSphereRadius( lua_State* p_L );
 
     int Lua_LinkTo( lua_State* p_L );
+
+    int Lua_UpdateState( lua_State* p_L );
     
     static const char className[];
     static const Luna2<LuaInertBodyNode>::RegType methods[];

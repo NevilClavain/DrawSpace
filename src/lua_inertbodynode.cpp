@@ -47,6 +47,8 @@ const Luna2<LuaInertBodyNode>::RegType LuaInertBodyNode::methods[] =
     { "GetShapeDescrBoxDimZ", &LuaInertBodyNode::Lua_GetShapeDescrBoxDimZ },
     { "GetShapeDescrSphereRadius", &LuaInertBodyNode::Lua_GetShapeDescrSphereRadius },
 
+    { "UpdateState", &LuaInertBodyNode::Lua_UpdateState },
+
     { "LinkTo", &LuaInertBodyNode::Lua_LinkTo },
     { 0 }
 };
@@ -247,6 +249,28 @@ int LuaInertBodyNode::Lua_LinkTo( lua_State* p_L )
         props.AddPropValue<DrawSpace::Dynamics::Body::Parameters>( "descriptor", m_params );
 
         (*m_scriptcalls_handler)( props );
+    }
+
+    return 0;
+}
+
+int LuaInertBodyNode::Lua_UpdateState( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "UpdateState : bad number of args" );
+		lua_error( p_L );		
+	}
+    bool state = luaL_checkinteger( p_L, 1 );
+
+    if( m_existing_inertbody_node )
+    {
+        m_existing_inertbody_node->GetContent()->Enable( state );
+    }
+    else
+    {
+        m_inertbody_node.GetContent()->Enable( state );
     }
 
     return 0;
