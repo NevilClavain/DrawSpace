@@ -102,9 +102,9 @@ ds:SetScenegraphNodeEventCallback( function( evt_type, scenegraph_name, node_ali
       local collision_transform_node_alias = node_alias .. "collisiontransform"
       
       create_collision_chunk( shape_type, collision_chunk_node_alias, collision_transform_node_alias, scenegraph_name, node_alias,
-                              inert_body:GetShapeDescrBoxDimX() * 2, 
-                              inert_body:GetShapeDescrBoxDimY() * 2, 
-                              inert_body:GetShapeDescrBoxDimZ() * 2,
+                              inert_body:GetShapeDescrBoxDimX(), 
+                              inert_body:GetShapeDescrBoxDimY(), 
+                              inert_body:GetShapeDescrBoxDimZ(),
                               inert_body:GetShapeDescrSphereRadius() )     
     end    
   end

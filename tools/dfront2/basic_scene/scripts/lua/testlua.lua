@@ -245,7 +245,7 @@ tf_coll:LinkTo( "scene0", "scene0" )
 
 
 mat_coll = Matrix()
-mat_coll:Translation( 0, 0, -18 )
+mat_coll:Translation( 0, 0, -19.3 )
 tf_coll:UpdateMatrix( 0, mat_coll )
 
         
