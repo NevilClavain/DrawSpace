@@ -58,7 +58,7 @@ function create_collision_chunk( shape_type, collision_chunk_node_alias, collisi
     collisions_transforms[collision_transform_node_alias] = TransformationNode( collision_transform_node_alias, 1 )
     collisions_transforms[collision_transform_node_alias]:LinkTo( scenegraph_name, node_alias )
     local scale = Matrix()
-    local radius = inert_body:GetShapeDescrSphereRadius();
+        
     scale:Scale( radius * 2, radius * 2, radius * 2 )
     collisions_transforms[collision_transform_node_alias]:UpdateMatrix( 0, scale )
     
@@ -101,11 +101,35 @@ ds:SetScenegraphNodeEventCallback( function( evt_type, scenegraph_name, node_ali
       local collision_chunk_node_alias = node_alias .. "collisionchunk"
       local collision_transform_node_alias = node_alias .. "collisiontransform"
       
+      
       create_collision_chunk( shape_type, collision_chunk_node_alias, collision_transform_node_alias, scenegraph_name, node_alias,
                               inert_body:GetShapeDescrBoxDimX(), 
                               inert_body:GetShapeDescrBoxDimY(), 
                               inert_body:GetShapeDescrBoxDimZ(),
-                              inert_body:GetShapeDescrSphereRadius() )     
+                              inert_body:GetShapeDescrSphereRadius() )
+      
+                              
+    else
+	  local collider = ColliderNode( node_alias )
+	  
+	  if( collider:IsValid() == 1 ) then	  
+	    print( "node " .. node_alias .. " is a collider !!!" )
+	    	          
+	    local shape_type = collider:GetShapeType()
+	    print( "shape type is " .. shape_type )
+      
+	    local collision_chunk_node_alias = node_alias .. "collisionchunk"
+	    local collision_transform_node_alias = node_alias .. "collisiontransform"
+      
+      
+	    create_collision_chunk( shape_type, collision_chunk_node_alias, collision_transform_node_alias, scenegraph_name, node_alias,
+							    collider:GetShapeDescrBoxDimX(), 
+							    collider:GetShapeDescrBoxDimY(), 
+							    collider:GetShapeDescrBoxDimZ(),
+							    collider:GetShapeDescrSphereRadius() )
+	        	 
+	  end
+	  	  	  
     end    
   end
 end

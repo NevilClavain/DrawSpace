@@ -1,5 +1,5 @@
 
-
+scene_ready = false
 
 
 ds:DisplayFramerate( 1 )
@@ -14,7 +14,7 @@ ds:DisplayCurrentCamera( "scene0", 1 )
 
 ds:SetScenegraphEventCallback( function( evt_type, scenegraph_name )
   
-  if evt_type == 0 then
+  if evt_type == 0 and scene_ready then
   
     ds:AngleSpeedInc( roty_angle, 25 )
     roty:Rotation( roty_axis, roty_angle:GetValue() )
@@ -205,7 +205,8 @@ print( "cube3 loaded..." )
 collisions_pass[1] = "texture_pass"
 
 body0 = InertBodyNode( "body0" )
-body0:SetShapeDescrBox( Vector( 0.5, 0.5, 0.5, 1.0 ) )
+--body0:SetShapeDescrBox( Vector( 0.5, 0.5, 0.5, 1.0 ) )
+body0:SetShapeDescrSphere( 0.5 )
 body0:SetMass( 50.0 )
 
 body0_pos = Matrix()
@@ -217,7 +218,7 @@ body0:LinkTo( "scene0", "scene0", "world0" )
 
 
 body_ground = InertBodyNode( "ground" )
-body_ground:SetShapeDescrBox( Vector( 1000.0, 0.0, 1000.0, 1.0 ) )
+body_ground:SetShapeDescrBox( Vector( 60.0, 0.0, 60.0, 1.0 ) )
 body_ground:SetMass( 0.0 )
 body_ground_pos = Matrix()
 body_ground_pos:Translation( 0, -5, 0 )
@@ -249,5 +250,5 @@ mat_coll:Translation( 0, 0, -19.3 )
 tf_coll:UpdateMatrix( 0, mat_coll )
 
         
-
+scene_ready = true
 
