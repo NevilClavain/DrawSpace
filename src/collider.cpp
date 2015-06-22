@@ -32,7 +32,8 @@ m_drawable( p_drawable ),
 m_orbiter( NULL ),
 m_movement( NULL ),
 m_referent_orbiter( NULL ),
-m_owner( NULL )
+m_owner( NULL ),
+m_parameters_set( false )
 {
     m_lastlocalworldtrans.Identity();
     m_finaltransformation.Identity();
@@ -108,6 +109,10 @@ void Collider::SetKinematic( const Body::Parameters& p_parameters )
     // switch the body to kinematic mode
     m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
+
+
+    m_parameters = p_parameters;
+    m_parameters_set = true;
 }
 
 void Collider::UnsetKinematic( void )
@@ -270,3 +275,11 @@ void Collider::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_node )
     m_owner = p_node;
 }
 
+bool Collider::GetParameters( Parameters& p_parameters )
+{
+    if( m_parameters_set )
+    {
+        p_parameters = m_parameters;
+    }
+    return m_parameters_set;
+}

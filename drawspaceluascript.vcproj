@@ -170,6 +170,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_collidernode.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_collidernode.h"
+			>
+		</File>
+		<File
 			RelativePath="..\DrawSpace\src\lua_drawspace.cpp"
 			>
 		</File>

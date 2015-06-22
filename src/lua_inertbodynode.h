@@ -27,7 +27,6 @@
 #include "callback.h"
 #include "mediator.h"
 #include "inertbody.h"
-#include "descriptors.h"
 #include "transformation.h"
 
 #include "luna.h"
@@ -45,10 +44,7 @@ public:
 
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>*             m_existing_inertbody_node;    
 
-protected:
-     
 
-public:
     LuaInertBodyNode( lua_State* p_L );
     ~LuaInertBodyNode( void );
      

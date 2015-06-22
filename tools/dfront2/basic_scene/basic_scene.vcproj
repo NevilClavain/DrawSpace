@@ -373,6 +373,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionColliderCollider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionColliderCollider.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionColliderCreationApply.cpp"
 				>
 			</File>
@@ -534,6 +542,22 @@
 			</File>
 			<File
 				RelativePath=".\ActionInertBodyCreationDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyEditionApply.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyEditionApply.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyEditionDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionInertBodyEditionDialog.h"
 				>
 			</File>
 			<File

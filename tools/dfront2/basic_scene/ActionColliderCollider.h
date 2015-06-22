@@ -20,29 +20,14 @@
 *
 */
 
-#include <wx/wx.h>
-#include "BasicSceneMainFrame.h"
+#ifndef _ACTIONCOLLIDERCOLLIDER_H_
+#define _ACTIONCOLLIDERCOLLIDER_H_
+#include "actionscript.h"
 
-#include "ActionInertBodyInertBody.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Dynamics;
-using namespace DrawSpace::Utils;
-
-
-void ActionInertBodyInertBody::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
+class ActionColliderCollider : public ActionScript
 {
-    dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-    SceneNode<InertBody>** node_ptr = p_propertypool.GetPropValue<SceneNode<InertBody>**>( "existing_node" );
+public:
+    void Execute( DrawSpace::Core::PropertyPool& p_propertypool );
+};
 
-    for( std::map<void*, BasicSceneMainFrame::SceneNodeEntry<InertBody>>::iterator it = BasicSceneMainFrame::GetInstance()->m_inertbody_nodes.begin(); it != BasicSceneMainFrame::GetInstance()->m_inertbody_nodes.end(); ++it )
-    {
-        if( it->second.name == scene_name )
-        {
-            // node exists
-            *node_ptr = it->second.scene_node;
-            break;
-        }
-    }
-}
+#endif

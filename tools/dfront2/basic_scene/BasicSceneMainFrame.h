@@ -120,7 +120,7 @@
 #define CONTEXTMENU_EDIT_SBNODE             2092
 #define CONTEXTMENU_EDIT_WORLD              2093
 #define CONTEXTMENU_EDIT_INERTBODY          2094
-#define CONTEXTMENU_EDIT_COLLIDER           2095
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

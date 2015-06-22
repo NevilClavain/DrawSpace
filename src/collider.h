@@ -55,6 +55,9 @@ protected:
 
     DrawSpace::Core::BaseSceneNode* m_owner;
 
+    bool                            m_parameters_set;
+    Parameters                      m_parameters;
+
     // NE PAS SUPPRIMER
     Orbiter*                        m_referent_orbiter;
 
@@ -89,6 +92,8 @@ public:
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
+    bool GetParameters( Parameters& p_parameters );
 
     // NE PAS SUPPRIMER
     virtual void SetReferentOrbiter( DrawSpace::Dynamics::Orbiter* p_reforbiter );

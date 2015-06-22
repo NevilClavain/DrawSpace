@@ -141,6 +141,8 @@
 #include "ActionColliderCreationDialog.h"
 #include "ActionColliderCreationApply.h"
 
+#include "ActionColliderCollider.h"
+
 #include "ActionMouseMoveScriptEditionDialog.h"
 #include "ActionKeyupScriptEditionDialog.h"
 #include "ActionKeydownScriptEditionDialog.h"
@@ -235,7 +237,6 @@ m_delta_mouse_init( true )
     PopupMenuEntry pme_editchunk = { CONTEXTMENU_EDIT_CHUNKNODE, "Edit chunk..." };
     PopupMenuEntry pme_editinertbody = { CONTEXTMENU_EDIT_INERTBODY, "Edit inert body..." };
 
-    PopupMenuEntry pme_editcollider = { CONTEXTMENU_EDIT_COLLIDER, "Edit collider..." };
     
 
     PopupMenuEntry pme_showprops = { CONTEXTMENU_SHOW_PROPS, "Show properties..." };
@@ -449,8 +450,6 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_newcamera );
     m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_separator );
     m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_showprops );
-    m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_separator );
-    m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_editcollider );
 
 
 
@@ -679,6 +678,8 @@ m_delta_mouse_init( true )
 
     m_actions[CONTEXTMENU_NEWCOLLIDER] = new ActionColliderCreationDialog();
     m_actiondialogs_apply[DIALOG_COLLIDER_CREATION_TITLE] = new ActionColliderCreationApply();
+
+    m_actionscripts["ColliderNode:ColliderNode"] = new ActionColliderCollider();
 
 
     //m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();

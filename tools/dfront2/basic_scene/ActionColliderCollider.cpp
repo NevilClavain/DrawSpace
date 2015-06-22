@@ -23,7 +23,7 @@
 #include <wx/wx.h>
 #include "BasicSceneMainFrame.h"
 
-#include "ActionInertBodyInertBody.h"
+#include "ActionColliderCollider.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -31,12 +31,12 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 
 
-void ActionInertBodyInertBody::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
+void ActionColliderCollider::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
 {
     dsstring scene_name = p_propertypool.GetPropValue<dsstring>( "scene_name" );
-    SceneNode<InertBody>** node_ptr = p_propertypool.GetPropValue<SceneNode<InertBody>**>( "existing_node" );
+    SceneNode<Collider>** node_ptr = p_propertypool.GetPropValue<SceneNode<Collider>**>( "existing_node" );
 
-    for( std::map<void*, BasicSceneMainFrame::SceneNodeEntry<InertBody>>::iterator it = BasicSceneMainFrame::GetInstance()->m_inertbody_nodes.begin(); it != BasicSceneMainFrame::GetInstance()->m_inertbody_nodes.end(); ++it )
+    for( std::map<void*, BasicSceneMainFrame::SceneNodeEntry<Collider>>::iterator it = BasicSceneMainFrame::GetInstance()->m_collider_nodes.begin(); it != BasicSceneMainFrame::GetInstance()->m_collider_nodes.end(); ++it )
     {
         if( it->second.name == scene_name )
         {
