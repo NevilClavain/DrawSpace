@@ -153,15 +153,11 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
 
 Drawing::Drawing( void ) :
 m_renderer( NULL ),
-m_scenegraph( NULL ),
 m_planetbody( NULL )
 {
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
     // prepare Fx
-
-    //m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
-    //m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
 
     m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
@@ -185,7 +181,6 @@ void Drawing::SetCurrentPlanetBody( Body* p_planetbody )
     m_planetbody = p_planetbody;
 
     // faces update
-    //for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     for( std::map<Pass*, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         for( long i = 0; i < 6; i++ )
@@ -200,49 +195,11 @@ void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
     m_renderer = p_renderer;
 }
 
-void Drawing::OnRegister( DrawSpace::Scenegraph* p_scenegraph )
-{
-    /*
-    for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-    {
-        Pass* current_pass = p_scenegraph->GetPass( (*it).first );
-
-        if( NULL == current_pass )
-        {
-            dsstring msg = "Planet Drawing : pass '";
-            msg += (*it).first;
-            msg += "' does not exists in scenegraph";
-
-            _DSEXCEPTION( msg )
-        }
-
-        for( long i = 0; i < 6; i++ )
-        {
-            current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
-        }
-    }
-    m_scenegraph = p_scenegraph;
-    */
-}
 
 void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
-{
-    //for( std::map<dsstring, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+{   
     for( std::map<Pass*, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
-        /*
-        Pass* current_pass = p_scenegraph->GetPass( (*it).first );
-
-        if( NULL == current_pass )
-        {
-            dsstring msg = "Planet Drawing : pass '";
-            msg += (*it).first;
-            msg += "' does not exists in scenegraph";
-
-            _DSEXCEPTION( msg )
-        }
-        */
-
         Pass* current_pass = it->first;
 
         for( long i = 0; i < 6; i++ )
@@ -268,17 +225,11 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
         m_scenenodegraph->GetCurrentCameraView( view );
         m_scenenodegraph->GetCurrentCameraProj( proj );
     }
-    else
-    {
-        m_scenegraph->GetCurrentCameraView( view );
-        m_scenegraph->GetCurrentCameraProj( proj );
-    }
 
     FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );
 }
 
-//void Drawing::RegisterPassSlot( const dsstring& p_passname )
 void Drawing::RegisterPassSlot( Pass* p_pass )
 {
     NodesSet nodeset;
@@ -291,20 +242,12 @@ void Drawing::RegisterPassSlot( Pass* p_pass )
         nodeset.nodes[i]->RegisterHandler( cb );
         m_callbacks.push_back( cb );
     }
-    //m_passesnodes[p_passname] = nodeset;
+
     m_passesnodes[p_pass] = nodeset;
 }
 
 DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_faceid )
 {
-    /*
-    if( 0 == m_passesnodes.count( p_passname ) )
-    {
-        return NULL;
-    }
-    NodesSet nodeset = m_passesnodes[p_passname];
-    */
-
     if( 0 == m_passesnodes.count( p_pass ) )
     {
         return NULL;
@@ -314,21 +257,14 @@ DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_fa
     return nodeset.nodes[p_faceid];
 }
 
-//void Drawing::SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname )
+
 void Drawing::SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname )
 {
-    /*
-    if( 0 == m_passesnodes.count( p_passname ) )
-    {
-        return;
-    }
-    */
     if( 0 == m_passesnodes.count( p_pass ) )
     {
         return;
     }
 
-    //NodesSet nodeset = m_passesnodes[p_passname];
     NodesSet nodeset = m_passesnodes[p_pass];
     
     if( "main_fx" == p_fxname )

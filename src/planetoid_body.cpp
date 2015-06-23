@@ -39,7 +39,6 @@ m_ray( p_ray * 1000.0 )
     m_world.Initialize();
        
     m_drawable = _DRAWSPACE_NEW_( SphericalLOD::Drawing, SphericalLOD::Drawing );
-    m_drawable->SetSceneName( p_scenename );
     m_drawable->SetRenderer( SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
     
     //m_orbiter = _DRAWSPACE_NEW_( Orbiter, Orbiter( &m_world, m_drawable ) );

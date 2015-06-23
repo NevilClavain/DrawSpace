@@ -23,8 +23,6 @@
 #ifndef _SPHERELOD_DRAWING_H_
 #define _SPHERELOD_DRAWING_H_
 
-#include "transformnode.h"
-#include "scenegraph.h"
 #include "renderer.h"
 
 #include "spherelod_body.h"
@@ -56,7 +54,7 @@ public:
 };
 
 
-class Drawing : public DrawSpace::Core::TransformNode
+class Drawing
 {
 protected:
 
@@ -71,13 +69,12 @@ protected:
     Body*                                                                       m_planetbody;
 
 
-    //std::map<dsstring, NodesSet>                                                m_passesnodes;
     std::map<Pass*, NodesSet>                                                   m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
     DrawSpace::Interface::Renderer*                                             m_renderer;
-    DrawSpace::Scenegraph*                                                      m_scenegraph;
     DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
     DrawSpace::Core::Fx*                                                        m_fx;
+    Utils::Matrix                                                               m_globaltransformation;
 
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
@@ -90,16 +87,15 @@ public:
     virtual void SetCurrentPlanetBody( Body* p_planetbody );
 
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
-    virtual void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
+
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    //virtual void RegisterPassSlot( const dsstring& p_passname );
+
     virtual void RegisterPassSlot( Pass* p_pass );
 
-    //DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_faceid );
+
     DrawSpace::Core::RenderingNode* GetNodeFromPass( Pass* p_pass, int p_faceid );
 
-    //void SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
     void SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname );
 
     Body* GetBody( void );
