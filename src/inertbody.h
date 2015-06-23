@@ -63,7 +63,6 @@ protected:
 
     DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
    
-    DrawSpace::Core::TransformNode* m_drawable;
 
     DrawSpace::Core::BaseSceneNode* m_owner;
 
@@ -83,7 +82,7 @@ protected:
 public:
 
     InertBody( void );
-    InertBody( World* p_world, DrawSpace::Core::TransformNode* p_drawable, const Body::Parameters& p_parameters );
+    InertBody( World* p_world, const Body::Parameters& p_parameters );
     virtual ~InertBody( void );
 
     void SetWorld( World* p_world );
@@ -135,9 +134,6 @@ public:
 
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
 
-    /*
-    void GetFinalTransform( DrawSpace::Utils::Matrix& p_mat );
-    */
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
 
     DrawSpace::Core::BaseSceneNode* GetOwner( void );

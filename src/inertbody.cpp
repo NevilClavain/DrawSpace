@@ -39,7 +39,6 @@ m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
 m_meshe_data( NULL ),
-m_drawable( NULL ),
 m_global_world_mem( NULL ),
 m_enable_dynamiclink( true ),
 m_enable_dynamiclink_initstate( false ),
@@ -49,14 +48,13 @@ m_referent_body( NULL )
     init();
 }
 
-InertBody::InertBody( World* p_world, TransformNode* p_drawable, const Body::Parameters& p_parameters ) : Body( p_world ),
+InertBody::InertBody( World* p_world, const Body::Parameters& p_parameters ) : Body( p_world ),
 m_attachedbody( NULL ),
 m_parameters( p_parameters ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
 m_meshe_data( NULL ),
-m_drawable( p_drawable ),
 m_enable_dynamiclink( true ),
 m_enable_dynamiclink_initstate( false ),
 m_owner( NULL ),
@@ -189,10 +187,6 @@ void InertBody::Update( DrawSpace::Utils::TimeManager& p_timemanager )
     if( NULL == m_attachedbody )
     {
         // not attached
-        if( m_drawable )
-        {
-            m_drawable->SetLocalTransform( updated_matrix );
-        }
         m_lastworldtrans = updated_matrix;
     }
     else
@@ -203,23 +197,9 @@ void InertBody::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 
         DrawSpace::Utils::Matrix res = updated_matrix * mat_b;
 
-        if( m_drawable )
-        {
-            m_drawable->SetLocalTransform( res );
-        }
         m_lastworldtrans = res;
     }
     
-}
-
-TransformNode* InertBody::GetDrawable( void )
-{
-    return m_drawable;
-}
-
-void InertBody::SetDrawable( DrawSpace::Core::TransformNode* p_drawable )
-{
-    m_drawable = p_drawable;
 }
 
 /*
