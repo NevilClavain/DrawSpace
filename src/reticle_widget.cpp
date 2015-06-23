@@ -35,7 +35,6 @@ ReticleWidget::ReticleWidget( const dsstring& p_name, long p_virtual_width, long
 Widget( p_name, p_virtual_width, p_virtual_height, p_parentwidget ),
 m_scenegraph( p_scenegraph ),
 m_locked_node( NULL ),
-m_locked_body( NULL ),
 m_distance( 0.0 )
 {
     // default clipping params
@@ -52,12 +51,7 @@ ReticleWidget::~ReticleWidget( void )
 {
 }
 
-void ReticleWidget::LockOnBody( Body* p_locked_body )
-{
-    m_locked_body = p_locked_body;
-}
-
-void ReticleWidget::LockOnTransformNode( DrawSpace::Core::TransformNode* p_locked_node )
+void ReticleWidget::Lock( DrawSpace::Core::BaseSceneNode* p_locked_node )
 {
     m_locked_node = p_locked_node;
 }
@@ -79,12 +73,7 @@ void ReticleWidget::Transform( void )
 
     if( m_locked_node )
     {
-        m_locked_node->GetSceneWorld( target_mat );
-        project = true;
-    }
-    else if( m_locked_body )
-    {
-        m_locked_body->GetLastWorldTransformation( target_mat );
+        m_locked_node->GetFinalTransform( target_mat );
         project = true;
     }
 
