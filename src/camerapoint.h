@@ -53,10 +53,6 @@ public:
 
 protected:
 
-    /*
-    Body*                                           m_locked_body;
-    DrawSpace::Core::TransformNode*                 m_locked_node;
-    */
     DrawSpace::Core::BaseSceneNode*                 m_locked_node;
 
     DrawSpace::Utils::Vector                        m_locked_body_center;
@@ -92,11 +88,6 @@ public:
     virtual void Update( DrawSpace::Utils::TimeManager& p_timemanager );
     virtual void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
-    /*
-    virtual void LockOnBody( const dsstring& p_alias, Body* p_locked_body );
-    virtual void LockOnTransformNode( const dsstring& p_alias, DrawSpace::Core::TransformNode* p_locked_node );
-    */
-
     virtual void Lock( DrawSpace::Core::BaseSceneNode* p_locked_node );
     virtual void Unlock( void );
 

@@ -56,10 +56,6 @@ public:
 
 protected:
 
-    /*
-    DrawSpace::Dynamics::Body*                      m_locked_body;
-    DrawSpace::Core::TransformNode*                 m_locked_node;
-    */
     DrawSpace::Core::BaseSceneNode*                 m_locked_node;
 
     DrawSpace::Core::SceneNodeGraph*                m_scenegraph;
@@ -72,11 +68,6 @@ protected:
 public:
     ReticleWidget( const dsstring& p_name, long p_virtual_width, long p_virtual_height, DrawSpace::Core::SceneNodeGraph* p_scenegraph, Widget* p_parentwidget );
     virtual ~ReticleWidget( void );
-
-    /*
-    virtual void LockOnBody( DrawSpace::Dynamics::Body* p_locked_body );
-    virtual void LockOnTransformNode( DrawSpace::Core::TransformNode* p_locked_node );
-    */
 
     virtual void Lock( DrawSpace::Core::BaseSceneNode* p_locked_node );
 

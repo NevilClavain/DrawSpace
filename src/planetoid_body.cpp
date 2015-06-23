@@ -125,8 +125,6 @@ void DrawSpace::Planetoid::Body::body_find_attached_camera( InertBody* p_body, s
     }
 }
 
-//void DrawSpace::Planetoid::Body::on_camera_event( Scenegraph::CameraEvent p_event, TransformNode* p_node )
-
 void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
 {
     if( DrawSpace::Scenegraph::ACTIVE == p_event )
@@ -431,10 +429,6 @@ void DrawSpace::Planetoid::Body::ManageBodies( void )
                 }
 
                 //////
-
-                DrawSpace::Core::TransformNode* node;                
-                node = it->second.body->GetDrawable();
-
 
                 Fragment* fragment = it->second.fragment;
                 fragment->RemoveColliderFromWorld();

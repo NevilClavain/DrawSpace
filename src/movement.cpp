@@ -25,26 +25,13 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-Movement::Movement( void )/* : m_transformnode( NULL )*/
+Movement::Movement( void )
 {
     m_result.Identity();
 }
 
-/*
-Movement::Movement( TransformNode* p_node ) : m_transformnode( p_node )
-{
-
-}
-*/
 
 Movement::~Movement( void )
 {
 
 }
-
-/*
-void Movement::SetTransformNode( TransformNode* p_node )
-{
-    m_transformnode = p_node;
-}
-*/

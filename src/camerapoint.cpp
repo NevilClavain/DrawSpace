@@ -50,15 +50,6 @@ m_lockedobject_distance( 0.0 ),
 m_owner( NULL ),
 m_referent_body( NULL )
 {
-    // properties array creation
-    /*
-    m_properties["configname"].AddPropValue<dsstring>( m_configname );
-    m_properties["refmovement"].AddProp<dsstring>();
-    m_properties["reflonglatmovement"].AddProp<dsstring>();
-    m_properties["reflock"].AddProp<std::pair<dsstring, dsstring>>();
-    m_properties["refattachedbody"].AddProp<dsstring>();
-    */
-
     // prepare projection matrix    
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( m_rendercharacteristics );
@@ -79,7 +70,6 @@ void CameraPoint::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_nod
 {
     std::map<dsstring, Core::BaseSceneNode*>& camera_list = p_scenegraph->GetCamerasList();
     
-    //camera_list[m_scenename] = p_node;
     dsstring scenename;
     p_node->GetSceneName( scenename );
     camera_list[scenename] = p_node;
@@ -90,26 +80,6 @@ void CameraPoint::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_nod
 
 void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
 {
-    /*
-    if( m_locked_body )
-    {
-        p_infos.locked_on_body = true;
-        p_infos.locked_on_transformnode = false;        
-    }
-    else if( m_locked_node )
-    {
-        p_infos.locked_on_body = false;
-        p_infos.locked_on_transformnode = true;
-    }
-    else
-    {
-        p_infos.locked_on_body = false;
-        p_infos.locked_on_transformnode = false;       
-    }
-
-    */
-
-
     p_infos.locked_on_node = ( m_locked_node != NULL ? true : false );
 
     if( m_locked_node )
@@ -133,7 +103,6 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 
     m_localtransformation.Identity();
 
-    //if( m_locked_body || m_locked_node )
     if( m_locked_node )
     {
         Matrix temp_global;
@@ -156,16 +125,6 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 
         //////////////////////
 
-        /*
-        if( m_locked_body )
-        {
-            m_locked_body->GetLastWorldTransformation( body_transf );
-        }
-        else if( m_locked_node )
-        {
-            m_locked_node->GetSceneWorld( body_transf );
-        }
-        */
         m_locked_node->GetFinalTransform( body_transf );
 
         m_body_transf = body_transf;
@@ -226,7 +185,6 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 void CameraPoint::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     // calcul de la distance de l'objet suivi
-    //if( m_locked_body || m_locked_node )
     if( m_locked_node )
     {
         Vector body_center( 0.0, 0.0, 0.0, 1.0 );
@@ -243,20 +201,6 @@ void CameraPoint::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
         m_lockedobject_distance = 0.0;
     }
 }
-
-/*
-void CameraPoint::LockOnBody( const dsstring& p_alias, Body* p_locked_body )
-{
-    m_locked_body = p_locked_body;
-    m_locked_object_alias = p_alias;
-}
-
-void CameraPoint::LockOnTransformNode( const dsstring& p_alias, TransformNode* p_locked_node )
-{
-    m_locked_node = p_locked_node;
-    m_locked_object_alias = p_alias;
-}
-*/
 
 void CameraPoint::Lock( DrawSpace::Core::BaseSceneNode* p_locked_node )
 {
@@ -321,12 +265,6 @@ void CameraPoint::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
     m_globaltransformation = p_mat;
 }
-/*
-void CameraPoint::GetFinalTransform( DrawSpace::Utils::Matrix& p_mat )
-{
-    p_mat = m_globaltransformation;
-}
-*/
 
 SceneNode<CameraPoint>* CameraPoint::GetOwner( void )
 {
