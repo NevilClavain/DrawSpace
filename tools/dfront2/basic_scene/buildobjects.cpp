@@ -29,8 +29,7 @@ using namespace DrawSpace::Dynamics;
 Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descriptor, dsstring& p_error )
 {
     Spacebox* spacebox = new Spacebox();
-    spacebox->SetSceneName( p_descriptor.scene_name );
-
+    
     std::map<dsstring, DrawSpace::Utils::SpaceboxPassDescriptor> passes = p_descriptor.passes_slots;
 
     if( 0 == passes.size() )
@@ -201,7 +200,7 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
 
 InertBody* BuildInertBody( const Body::Parameters& p_params, World* p_world )
 {
-    InertBody* body = new InertBody( p_world, NULL, p_params );
+    InertBody* body = new InertBody( p_world, p_params );
     return body;    
 }
 

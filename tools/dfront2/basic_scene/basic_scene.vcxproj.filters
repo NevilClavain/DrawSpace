@@ -99,6 +99,8 @@
     <ClCompile Include="ActionColliderCreationApply.cpp" />
     <ClCompile Include="ActionInertBodyEditionDialog.cpp" />
     <ClCompile Include="ActionInertBodyEditionApply.cpp" />
+    <ClCompile Include="ActionColliderCollider.cpp" />
+    <ClCompile Include="ActionColliderLinkTo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -202,5 +204,7 @@
     <ClInclude Include="ActionColliderCreationApply.h" />
     <ClInclude Include="ActionInertBodyEditionDialog.h" />
     <ClInclude Include="ActionInertBodyEditionApply.h" />
+    <ClInclude Include="ActionColliderCollider.h" />
+    <ClInclude Include="ActionColliderLinkTo.h" />
   </ItemGroup>
 </Project>

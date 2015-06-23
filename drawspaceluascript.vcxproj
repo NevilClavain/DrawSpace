@@ -16,6 +16,7 @@
     <ClCompile Include="src\lua_camerapointnode.cpp" />
     <ClCompile Include="src\lua_chunknode.cpp" />
     <ClCompile Include="src\lua_circularmovementnode.cpp" />
+    <ClCompile Include="src\lua_collidernode.cpp" />
     <ClCompile Include="src\lua_drawspace.cpp" />
     <ClCompile Include="src\lua_fpsmovementnode.cpp" />
     <ClCompile Include="src\lua_freemovementnode.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="src\lua_camerapointnode.h" />
     <ClInclude Include="src\lua_chunknode.h" />
     <ClInclude Include="src\lua_circularmovementnode.h" />
+    <ClInclude Include="src\lua_collidernode.h" />
     <ClInclude Include="src\lua_drawspace.h" />
     <ClInclude Include="src\lua_fpsmovementnode.h" />
     <ClInclude Include="src\lua_freemovementnode.h" />
