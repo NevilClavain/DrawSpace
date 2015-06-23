@@ -23,15 +23,13 @@
 #ifndef _SPACEBOX_H_
 #define _SPACEBOX_H_
 
-#include "transformnode.h"
-#include "scenegraph.h"
 #include "renderer.h"
 #include "scenenodegraph.h"
 
 
 namespace DrawSpace
 {
-class Spacebox : public Core::TransformNode
+class Spacebox
 {
 public:
 
@@ -61,13 +59,12 @@ protected:
 
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshes[6];
-    //std::map<dsstring, NodesSet>                            m_passesnodes;
     std::map<Pass*, NodesSet>                               m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
-    DrawSpace::Scenegraph*                                  m_scenegraph;
     DrawSpace::Core::SceneNodeGraph*                        m_scenenodegraph;
     bool                                                    m_enable_translations;
     bool                                                    m_ignore_camera;
+    Utils::Matrix                                           m_globaltransformation;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -75,19 +72,14 @@ public:
     Spacebox( void );
     virtual ~Spacebox( void );
 
-    //void SetDrawingState( const dsstring& p_passname, bool p_drawing );
     void SetDrawingState( Pass* p_pass, bool p_drawing );
     void SetQuadDrawingState( Pass* p_pass, int p_quad, bool p_drawing );
 
-    //void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
-    void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
     DrawSpace::Core::Meshe* GetMeshe( int p_mesheid );
 
-    //void RegisterPassSlot( const dsstring p_passname );
     void RegisterPassSlot( Pass* p_pass );
-    //DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname, int p_quadid );
     DrawSpace::Core::RenderingNode* GetNodeFromPass( Pass* p_pass, int p_quadid );
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};

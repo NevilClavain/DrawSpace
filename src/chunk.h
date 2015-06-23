@@ -28,7 +28,7 @@
 
 namespace DrawSpace
 {
-class Chunk // : public Core::TransformNode
+class Chunk
 {
 protected:
 
