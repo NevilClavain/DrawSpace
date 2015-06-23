@@ -98,7 +98,7 @@ m_owner( p_owner )
     Vector center_out;
     ConvertVertex( center, p_orientation, m_sidelength, p_ray, m_xpos, m_ypos, center_out );
 
-    m_vsphere = _DRAWSPACE_NEW_( DrawSpace::Core::VSphere, DrawSpace::Core::VSphere( m_name, center_out, 1.41 * m_sidelength * m_ray / 2.0 ) );
+    m_vsphere = _DRAWSPACE_NEW_( DrawSpace::Core::VSphere, DrawSpace::Core::VSphere( center_out, 1.41 * m_sidelength * m_ray / 2.0 ) );
 
 }
 

@@ -107,7 +107,6 @@ Spacebox* BuildSpaceBox( const DrawSpace::Utils::SpaceboxDescriptor& p_descripto
 DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descriptor, dsstring& p_error )
 {
     Chunk* chunk = new Chunk();
-    chunk->SetSceneName( p_descriptor.scene_name );
 
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     chunk->SetRenderer( renderer ); 

@@ -122,7 +122,7 @@ void Orbit::OrbitStep( const Matrix& p_centroidbase )
 
     if( m_drawable )
     {
-        m_drawable->SetLocalTransform( p_centroidbase );
+        //m_drawable->SetLocalTransform( p_centroidbase );
     }
     m_centroid->Update( p_centroidbase, local_orbit, local_planet );
 }

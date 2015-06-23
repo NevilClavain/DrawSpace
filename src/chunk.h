@@ -23,37 +23,31 @@
 #ifndef _CHUNK_H_
 #define _CHUNK_H_
 
-#include "transformnode.h"
-#include "scenegraph.h"
 #include "renderer.h"
 #include "scenenodegraph.h"
 
 namespace DrawSpace
 {
-class Chunk : public Core::TransformNode
+class Chunk // : public Core::TransformNode
 {
 protected:
 
     typedef DrawSpace::Core::CallBack<Chunk, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
-    typedef DrawSpace::Core::CallBack2<Chunk, void, DrawSpace::Core::LodStep*, DrawSpace::Core::LodStep::Event>     LodCallback;
+    
 
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshe;
-    //std::map<dsstring, DrawSpace::Core::RenderingNode*>     m_passesnodes;
+
     std::map<Pass*, DrawSpace::Core::RenderingNode*>        m_passesnodes;
 
     std::vector<RenderingNodeDrawCallback*>                 m_callbacks;
-    LodCallback*                                            m_lod_callback;
-    bool                                                    m_lod_draw;
-    DrawSpace::Scenegraph*                                  m_scenegraph; 
-    DrawSpace::Core::SceneNodeGraph*                        m_scenenodegraph;
-    DrawSpace::Core::VSphere*                               m_vsphere;
-    bool                                                    m_ignore_camera;
 
-    bool                                                    m_enable_lod;
+    DrawSpace::Core::SceneNodeGraph*                        m_scenenodegraph;
+    bool                                                    m_ignore_camera;
+    Utils::Matrix                                           m_globaltransformation;
+
    
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    void on_lod_event( DrawSpace::Core::LodStep*, DrawSpace::Core::LodStep::Event p_event );
 
 public:
     Chunk( void );
@@ -63,19 +57,14 @@ public:
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
     void SetRenderer( DrawSpace::Interface::Renderer* p_renderer );
-    //void SetDrawingState( const dsstring& p_passname, bool p_drawing );
     void SetDrawingState( Pass* p_passname, bool p_drawing );
 
-    void OnRegister( DrawSpace::Scenegraph* p_scenegraph );
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
     DrawSpace::Core::Meshe* GetMeshe( void );
     void SetMeshe( DrawSpace::Core::Meshe* p_meshe );
 
-    //void RegisterPassSlot( const dsstring p_passname );
     void RegisterPassSlot( Pass* p_pass );
-
-    //DrawSpace::Core::RenderingNode* GetNodeFromPass( const dsstring& p_passname );
 
     DrawSpace::Core::RenderingNode* GetNodeFromPass( Pass* p_pass );
 
@@ -83,10 +72,7 @@ public:
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
     void IgnoreCamera( bool p_ignore );
-
-    void EnableLod( bool p_enable );
-    
-
+   
 };
 }
 

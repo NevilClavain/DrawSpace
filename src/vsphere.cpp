@@ -25,11 +25,11 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-VSphere::VSphere( const dsstring& p_name ) : m_name( p_name ), m_ray( 1.0 )
+VSphere::VSphere( void ) : m_ray( 1.0 )
 {
 }
 
-VSphere::VSphere( const dsstring& p_name, const Vector& p_point, dsreal p_ray ) : m_name( p_name ), m_ray( p_ray ), m_point( p_point )
+VSphere::VSphere( const Vector& p_point, dsreal p_ray ) : m_ray( p_ray ), m_point( p_point )
 {
 }
 

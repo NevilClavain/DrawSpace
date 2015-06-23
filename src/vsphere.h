@@ -41,12 +41,11 @@ protected:
     Utils::Vector       m_transformed_point;
     dsreal              m_ray;
 
-    dsstring            m_name;
     Utils::Mutex        m_mutex;
 
 public:
-    VSphere( const dsstring& p_name );
-    VSphere( const dsstring& p_name, const Utils::Vector& p_point, dsreal p_ray );
+    VSphere();
+    VSphere( const Utils::Vector& p_point, dsreal p_ray );
 
     virtual ~VSphere( void );
 
