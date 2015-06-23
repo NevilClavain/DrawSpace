@@ -250,23 +250,47 @@ bool DFrontApp::OnCmdLineParsed( wxCmdLineParser& p_parser )
 {
     wxString path;
     wxCharBuffer buffer;
+    bool status;
 
-    p_parser.Found( "r1", &path );
+    status = p_parser.Found( "r1", &path );
+    if( !status )
+    {
+        wxMessageBox( "ressource file 1 missing! ", "DrawSpace error", wxICON_ERROR );
+        return false;
+    }
+
     buffer = path.ToAscii();
     m_common_resource_filepath = buffer.data();
 
-    p_parser.Found( "r2", &path );
+    status = p_parser.Found( "r2", &path );
+    if( !status )
+    {
+        wxMessageBox( "ressource file 2 missing! ", "DrawSpace error", wxICON_ERROR );
+        return false;
+    }
+
     buffer = path.ToAscii();
     m_resource_filepath = buffer.data();
 
-    p_parser.Found( "s1", &path );
+    status = p_parser.Found( "s1", &path );
+    if( !status )
+    {
+        wxMessageBox( "scripting file 1 missing! ", "DrawSpace error", wxICON_ERROR );
+        return false;
+    }
+
     buffer = path.ToAscii();
     m_common_script_filepath = buffer.data();
 
-    p_parser.Found( "s2", &path );
+    status = p_parser.Found( "s2", &path );
+    if( !status )
+    {
+        wxMessageBox( "scripting file 2 missing! ", "DrawSpace error", wxICON_ERROR );
+        return false;
+    }
+
     buffer = path.ToAscii();
     m_script_filepath = buffer.data();
-
 
     return true;
 }
