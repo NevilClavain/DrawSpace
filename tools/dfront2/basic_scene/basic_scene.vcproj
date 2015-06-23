@@ -397,6 +397,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionColliderLinkTo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionColliderLinkTo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionCreateSceneNodeGraph.cpp"
 				>
 			</File>

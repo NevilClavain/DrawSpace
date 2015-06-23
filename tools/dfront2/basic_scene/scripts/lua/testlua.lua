@@ -215,6 +215,7 @@ body0:AddInitialAttitudeMatrix( body0_pos )
 
 body0:LinkTo( "scene0", "scene0", "world0" )
 
+print( "body0 loaded..." )
 
 
 body_ground = InertBodyNode( "ground" )
@@ -227,7 +228,7 @@ body_ground:AddInitialAttitudeMatrix( body_ground_pos )
 
 body_ground:LinkTo( "scene0", "scene0", "world0" )
 
-
+print( "body_ground loaded..." )
 
 ground_chunk = ChunkNode( "ground_chunk" )
 ground_chunk:SetMesheName( "grid_meshe" )
@@ -249,6 +250,13 @@ mat_coll = Matrix()
 mat_coll:Translation( 0, 0, -19.3 )
 tf_coll:UpdateMatrix( 0, mat_coll )
 
-        
+
+
+coll0 = ColliderNode( "collider0" )
+coll0:SetShapeDescrSphere( 3.5 )
+coll0:LinkTo( "scene0", "tf_coll", "world0" )
+
+--print( "collider0 loaded..." )        
+
 scene_ready = true
 

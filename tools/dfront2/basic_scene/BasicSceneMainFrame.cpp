@@ -142,6 +142,7 @@
 #include "ActionColliderCreationApply.h"
 
 #include "ActionColliderCollider.h"
+#include "ActionColliderLinkTo.h"
 
 #include "ActionMouseMoveScriptEditionDialog.h"
 #include "ActionKeyupScriptEditionDialog.h"
@@ -680,9 +681,7 @@ m_delta_mouse_init( true )
     m_actiondialogs_apply[DIALOG_COLLIDER_CREATION_TITLE] = new ActionColliderCreationApply();
 
     m_actionscripts["ColliderNode:ColliderNode"] = new ActionColliderCollider();
-
-
-    //m_actions[CONTEXTMENU_EDIT_NODESCRIPT] = new ActionNodeScriptEditionDialog();
+    m_actionscripts["ColliderNode:LinkTo"] = new ActionColliderLinkTo();
 
     m_actions[CONTEXTMENU_EDIT_MOUSEMOVESCRIPT] = new ActionMouseMoveScriptEditionDialog();
     m_actionscripts["DrawSpace:LoadMouseScript"] = new ActionMouseLoadScript();
