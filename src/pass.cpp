@@ -453,7 +453,7 @@ void Pass::CreateViewportQuad( void )
     {
         _DSEXCEPTION( "pass name cannot be empty" );
     }
-    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_name + dsstring( "/viewportquad" ), renderer_characteristics.width_viewport, renderer_characteristics.height_viewport ) );
+    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport ) );
 
     m_renderingqueue->Add( m_viewportquad );
 }
@@ -465,7 +465,7 @@ void Pass::CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height
         _DSEXCEPTION( "pass name cannot be empty" );
     }
 
-    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( m_name + dsstring( "/viewportquad" ), p_viewport_width, p_viewport_height ) );
+    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( p_viewport_width, p_viewport_height ) );
     m_renderingqueue->Add( m_viewportquad );
 }
 

@@ -24,13 +24,12 @@
 #define _VIEWPORTQUAD_H_
 
 #include "renderingnode.h"
-#include "transformnode.h"
 #include "vertex.h"
 #include "triangle.h"
 
 namespace DrawSpace
 {
-class ViewportQuad : public Core::TransformNode, public Core::RenderingNode
+class ViewportQuad : public Core::RenderingNode
 {
 protected:
     dsreal                                  m_width;
@@ -41,11 +40,9 @@ protected:
     DrawSpace::Utils::Matrix                m_projection;
 
 public:
-    ViewportQuad( const dsstring& p_name, dsreal p_width, dsreal p_height );
+    ViewportQuad( dsreal p_width, dsreal p_height );
     virtual ~ViewportQuad( void );
-
     void OnDraw( void );
-    void OnRegister( Scenegraph* p_scenegraph ) { };
 };
 }
 #endif

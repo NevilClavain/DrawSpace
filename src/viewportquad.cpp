@@ -28,7 +28,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface;
 
-ViewportQuad::ViewportQuad( const dsstring& p_name, dsreal p_width, dsreal p_height ) : TransformNode( p_name ), m_width( p_width ), m_height( p_height )
+ViewportQuad::ViewportQuad( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( p_height )
 {
     Vertex v1, v2, v3, v4;
     v1.x = - m_width / 2.0;
@@ -72,7 +72,6 @@ ViewportQuad::ViewportQuad( const dsstring& p_name, dsreal p_width, dsreal p_hei
 
 ViewportQuad::~ViewportQuad( void )
 {
-    //_DRAWSPACE_DELETE_( m_meshe );
 }
 
 void ViewportQuad::OnDraw( void )
@@ -81,5 +80,8 @@ void ViewportQuad::OnDraw( void )
     DrawSpace::Utils::Matrix view;
     view.Identity();
 
-    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), m_globaltransformation, view, m_projection );
+    DrawSpace::Utils::Matrix pos;
+    pos.Identity();
+
+    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), pos, view, m_projection );
 }
