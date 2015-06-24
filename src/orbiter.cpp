@@ -120,10 +120,6 @@ void Orbit::OrbitStep( const Matrix& p_centroidbase )
     Matrix local_planet;
     orbit_step( m_orbit_angle, local_orbit, local_planet );
 
-    if( m_drawable )
-    {
-        //m_drawable->SetLocalTransform( p_centroidbase );
-    }
     m_centroid->Update( p_centroidbase, local_orbit, local_planet );
 }
 
@@ -194,12 +190,11 @@ void Orbit::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Orbiter::Orbiter( World* p_world, TransformNode* p_drawable ) : Body( p_world ),
+Orbiter::Orbiter( World* p_world ) : Body( p_world ),
 m_rigidBody( NULL ),
 m_collisionShape( NULL ),
 m_motionState( NULL ),
 m_meshe_data( NULL ),
-m_drawable( p_drawable ),
 m_orbit_duration( 0.0 ),
 m_revolution_duration( 0.0 ),
 m_revolution_tilt_angle( 0.0 ),
@@ -210,16 +205,6 @@ m_owner( NULL )
 Orbiter::~Orbiter( void )
 {
 }
-
-// deprecated !!! : to remove -*-later-*-
-void Orbiter::Update( const Matrix& p_mat )
-{
-    m_lastworldtrans = p_mat;
-
-    Matrix orbiter_transform = p_mat;
-    m_drawable->SetLocalTransform( orbiter_transform );
-}
-
 
 void Orbiter::SetKinematic( const Body::Parameters& p_parameters )
 {
@@ -299,10 +284,6 @@ btRigidBody* Orbiter::GetRigidBody( void )
     return m_rigidBody;
 }
 
-TransformNode* Orbiter::GetDrawable( void )
-{
-    return m_drawable;
-}
 
 void Orbiter::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 {
@@ -352,7 +333,7 @@ void Orbiter::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 
 ////////////////////////////////////////////////////////////////////////////
 
-Centroid::Centroid( void ) : m_orbiter( NULL )
+Centroid::Centroid( void )
 {
 }
 
@@ -370,16 +351,8 @@ void Centroid::Update( const Matrix& p_prevcentroidbase, const Matrix& p_localor
     {       
         m_sub_orbits[i]->OrbitStep( m_transformation );
     }
-    if( m_orbiter )
-    {
-        m_orbiter->Update( transformation2 );
-    }
 }
 
-void Centroid::SetOrbiter( Orbiter* p_orbiter )
-{
-    m_orbiter = p_orbiter;
-}
 
 void Centroid::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 {

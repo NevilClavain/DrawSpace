@@ -129,9 +129,6 @@ public:
 
     Body* GetAttachedBody( void );
 
-    DrawSpace::Core::TransformNode* GetDrawable( void );
-    void SetDrawable( DrawSpace::Core::TransformNode* p_drawable );
-
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };

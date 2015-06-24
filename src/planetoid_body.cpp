@@ -32,7 +32,7 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Planetoid;
 
 
-DrawSpace::Planetoid::Body::Body( const dsstring& p_scenename, dsreal p_ray ) : Orbiter( &m_world, NULL ),
+DrawSpace::Planetoid::Body::Body( const dsstring& p_scenename, dsreal p_ray ) : Orbiter( &m_world ),
 m_scenename( p_scenename ),
 m_ray( p_ray * 1000.0 )
 {
@@ -204,7 +204,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         inertbody->IncludeTo( this );
 
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
-                        Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
+                        Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
 
 
                         dsstring final_name = m_scenename + dsstring( " " ) + bodyname;
@@ -228,7 +228,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     reg_body.body = inertbody;
 
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
-                    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
+                    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
 
                     dsstring bodyname;                   
                     p_node->GetSceneName( bodyname );
@@ -581,7 +581,7 @@ void DrawSpace::Planetoid::Body::RegisterIncludedInertBody( const dsstring& p_bo
 void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr )
 {
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
-    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider( NULL ) );
+    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
 
     dsstring final_name = m_scenename + dsstring( " " ) + p_cameraname;
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, false ) );

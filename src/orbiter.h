@@ -117,8 +117,6 @@ protected:
     btTriangleMesh*                 m_meshe_data;
     btDefaultMotionState*           m_motionState;
 
-    DrawSpace::Core::TransformNode* m_drawable;
-
     dsreal                          m_orbit_angle;
     dsreal                          m_revolution_angle; // orbiter self rotation
 
@@ -134,10 +132,8 @@ protected:
 
 public:
 
-    Orbiter( World* p_world, DrawSpace::Core::TransformNode* p_drawable );
+    Orbiter( World* p_world );
     virtual ~Orbiter( void );
-
-    void Update( const DrawSpace::Utils::Matrix& p_mat );
 
     void SetKinematic( const Body::Parameters& p_parameters );
     void UnsetKinematic( void );
@@ -146,8 +142,6 @@ public:
     void RemoveFromWorld( void );
 
     virtual btRigidBody* GetRigidBody( void );
-
-    DrawSpace::Core::TransformNode* GetDrawable( void );
 
     void SetOrbitDuration( dsreal p_orbit_duration )
     {
@@ -182,7 +176,6 @@ class Centroid
 {
 protected:
 
-    Orbiter*                    m_orbiter;
     std::vector<Orbit*>         m_sub_orbits;
     DrawSpace::Utils::Matrix    m_transformation;
  
@@ -191,7 +184,6 @@ public:
     Centroid( void );
     void RegisterSubOrbit( Orbit* p_orbit );
     void Update( const DrawSpace::Utils::Matrix& p_prevcentroidbase, const DrawSpace::Utils::Matrix& p_localorbitmat, const DrawSpace::Utils::Matrix& p_localplanetmat );
-    void SetOrbiter( Orbiter* p_orbiter );
 
     void GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) {};

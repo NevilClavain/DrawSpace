@@ -41,8 +41,6 @@ protected:
     btTriangleMesh*                 m_meshe_data;
     btDefaultMotionState*           m_motionState;
 
-    DrawSpace::Core::TransformNode* m_drawable;
-
     Orbiter*                        m_orbiter;
 
     DrawSpace::Core::Movement*      m_movement;
@@ -63,7 +61,7 @@ protected:
 
 public:
 
-    Collider( DrawSpace::Core::TransformNode* p_drawable );
+    Collider( void );
     virtual ~Collider( void );
 
     virtual void Update( Utils::TimeManager& p_timemanager, const DrawSpace::Utils::Matrix& p_mat );

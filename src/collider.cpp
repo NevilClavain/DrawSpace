@@ -27,8 +27,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 
-Collider::Collider( DrawSpace::Core::TransformNode* p_drawable ) : Body( /*p_world*/ NULL ),
-m_drawable( p_drawable ),
+Collider::Collider( void ) : Body( NULL ),
 m_orbiter( NULL ),
 m_movement( NULL ),
 m_referent_orbiter( NULL ),
@@ -184,11 +183,6 @@ void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
     else
     {
         m_lastworldtrans = body_transf;
-    }
-
-    if( m_drawable )
-    {
-         m_drawable->SetLocalTransform( m_lastworldtrans );
     }
 }
 
