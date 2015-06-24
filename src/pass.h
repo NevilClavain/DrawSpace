@@ -24,7 +24,6 @@
 #define _PASS_H_
 
 #include "texture.h"
-#include "transformqueue.h"
 #include "renderingqueue.h"
 #include "viewportquad.h"
 #include "configurable.h"

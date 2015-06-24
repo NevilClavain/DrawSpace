@@ -127,7 +127,7 @@ void DrawSpace::Planetoid::Body::body_find_attached_camera( InertBody* p_body, s
 
 void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    if( DrawSpace::Scenegraph::ACTIVE == p_event )
+    if( DrawSpace::Core::SceneNodeGraph::ACTIVE == p_event )
     {
         if( !p_node )
         {

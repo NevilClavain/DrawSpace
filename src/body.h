@@ -23,9 +23,11 @@
 #ifndef _BODY_H_
 #define _BODY_H_
 
-#include "transformnode.h"
+
+#include "matrix.h"
 #include "meshe.h"
 #include "world.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {

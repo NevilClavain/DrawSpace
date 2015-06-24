@@ -25,7 +25,6 @@
 
 #include "widget.h"
 #include "body.h"
-#include "scenegraph.h"
 #include "scenenodegraph.h"
 
 namespace DrawSpace

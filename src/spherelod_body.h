@@ -23,8 +23,6 @@
 #ifndef _SPHERELOD_BODY_H_
 #define _SPHERELOD_BODY_H_
 
-#include "transformnode.h"
-#include "scenegraph.h"
 #include "renderer.h"
 #include "spherelod_face.h"
 

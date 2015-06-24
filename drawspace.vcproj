@@ -376,22 +376,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\transformnode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\transformnode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\transformqueue.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\transformqueue.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\triangle.h"
 				>
 			</File>
@@ -826,14 +810,6 @@
 		</File>
 		<File
 			RelativePath=".\src\pass.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\scenegraph.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\scenegraph.h"
 			>
 		</File>
 		<File

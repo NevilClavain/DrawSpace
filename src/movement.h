@@ -23,8 +23,8 @@
 #ifndef _MOVEMENT_H_
 #define _MOVEMENT_H_
 
-#include "transformnode.h"
 #include "timemanager.h"
+#include "Matrix.h"
 
 namespace DrawSpace
 {

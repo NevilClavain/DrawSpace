@@ -24,7 +24,6 @@
 #define _IMAGE_H_
 
 #include "renderingnode.h"
-#include "transformnode.h"
 #include "vertex.h"
 #include "triangle.h"
 #include "renderer.h"
