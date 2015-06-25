@@ -10,7 +10,7 @@ ds:CreateSceneNodeGraph( "scene0" )
 
 ds:DisplayCurrentCamera( "scene0", 1 )
 
-
+collisions_pass[1] = "texture_pass"
 
 ds:SetScenegraphEventCallback( function( evt_type, scenegraph_name )
   
@@ -202,7 +202,7 @@ cube3:LinkTo( "scene0", "lg0" )
 print( "cube3 loaded..." )
 
 
-collisions_pass[1] = "texture_pass"
+
 
 body0 = InertBodyNode( "body0" )
 --body0:SetShapeDescrBox( Vector( 0.5, 0.5, 0.5, 1.0 ) )

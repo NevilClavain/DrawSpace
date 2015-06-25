@@ -1,0 +1,113 @@
+
+
+declare_asset_instance Texture
+assetname texture_shelby
+filepath shelby.jpg
+rendertarget false
+end_asset
+
+
+declare_asset_instance Texture
+assetname texture_sb0
+filepath sb0.bmp
+rendertarget false
+end_asset
+
+declare_asset_instance Texture
+assetname texture_sb1
+filepath sb1.bmp
+rendertarget false
+end_asset
+
+declare_asset_instance Texture
+assetname texture_sb2
+filepath sb2.bmp
+rendertarget false
+end_asset
+
+declare_asset_instance Texture
+assetname texture_sb3
+filepath sb3.bmp
+rendertarget false
+end_asset
+
+declare_asset_instance Texture
+assetname texture_sb4
+filepath sb4.bmp
+rendertarget false
+end_asset
+
+
+declare_asset_instance Texture
+assetname ground
+filepath ground.bmp
+rendertarget false
+end_asset
+
+declare_asset_instance Font
+assetname font01
+filespath mangalfont.bmp mangalfont.csv
+mode cbfg
+end_asset
+
+declare_asset_instance Shader
+assetname vertexshader_texture
+filepath texture.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_texture
+filepath texture.psh
+compiled false
+end_asset
+
+
+declare_asset_instance Meshe
+assetname teapot_meshe
+filepath teapot.ac
+index 0
+mode ac3d
+end_asset
+
+declare_asset_instance Meshe
+assetname grid_meshe
+filepath grid.ac
+index 0
+mode ac3d
+end_asset
+
+
+
+declare_config_instance Fx texture_fx
+shaders vertexshader_texture pixelshader_texture
+renderstates_in ENABLEZBUFFER true
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out ENABLEZBUFFER false
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+declare_config_instance Fx spacebox_fx
+shaders vertexshader_texture pixelshader_texture
+renderstates_in ENABLEZBUFFER false
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out ENABLEZBUFFER false
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
+declare_config_instance IntermediatePass texture_pass
+passname my_texture_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 157 255 255
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
+declare_config_instance FinalPass final_pass
+passname my_final_pass
+viewportquad true
+viewportquad_fx texture_fx
+viewportquad_textures pass texture_pass 0
+end_config
