@@ -1,0 +1,1 @@
+basic_scene.exe /r1 common.txt /r2 fog_res.txt /s1 commonlua.lua /s2 fog.lua

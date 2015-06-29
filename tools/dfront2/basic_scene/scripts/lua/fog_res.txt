@@ -1,0 +1,130 @@
+
+
+declare_asset_instance Texture
+assetname texture_shelby
+filepath shelby.jpg
+rendertarget false
+end_asset
+
+
+declare_asset_instance Texture
+assetname ground
+filepath ground.bmp
+rendertarget false
+end_asset
+
+
+declare_asset_instance Shader
+assetname vertexshader_texture
+filepath texture.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_texture
+filepath texture.psh
+compiled false
+end_asset
+
+
+declare_asset_instance Shader
+assetname vertexshader_fogint
+filepath fogintensity.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_fogint
+filepath fogintensity.psh
+compiled false
+end_asset
+
+
+
+declare_asset_instance Shader
+assetname vertexshader_fogblend
+filepath fogblend.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_fogblend
+filepath fogblend.psh
+compiled false
+end_asset
+
+
+
+declare_asset_instance Meshe
+assetname teapot_meshe
+filepath teapot.ac
+index 0
+mode ac3d
+end_asset
+
+declare_asset_instance Meshe
+assetname grid_meshe
+filepath grid.ac
+index 0
+mode ac3d
+end_asset
+
+
+
+declare_config_instance Fx texture_fx
+shaders vertexshader_texture pixelshader_texture
+renderstates_in ENABLEZBUFFER true
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out ENABLEZBUFFER false
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
+declare_config_instance Fx fogint_fx
+shaders vertexshader_fogint pixelshader_fogint
+renderstates_in ENABLEZBUFFER true
+renderstates_out ENABLEZBUFFER false
+end_config
+
+
+declare_config_instance Fx fogblend_fx
+shaders vertexshader_fogblend pixelshader_fogblend
+end_config
+
+
+declare_config_instance IntermediatePass texture_pass
+passname my_texture_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 157 255 255
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
+
+declare_config_instance IntermediatePass fogint_pass
+passname fogint_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 255 0 0
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
+declare_config_instance IntermediatePass fogblend_pass
+passname fogblend_pass
+viewportquad true
+viewportquad_fx fogblend_fx
+viewportquad_textures pass texture_pass 0
+viewportquad_textures pass fogint_pass 1
+viewportquad_shaderparams fog_color 1 0 0.6156 1.0 1.0 1.0
+end_config
+
+
+
+declare_config_instance FinalPass final_pass
+passname my_final_pass
+viewportquad true
+viewportquad_fx texture_fx
+viewportquad_textures pass fogblend_pass 0
+end_config
