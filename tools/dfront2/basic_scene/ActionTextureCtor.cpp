@@ -20,46 +20,21 @@
 *
 */
 
-#include "lua_texture.h"
-#include "luacontext.h"
-#include "exceptions.h"
+#include <wx/wx.h>
+#include "BasicSceneMainFrame.h"
+
+#include "ActionTextureCtor.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Dynamics;
+using namespace DrawSpace::Utils;
 
-const char LuaTexture::className[] = "Texture";
-const Luna2<LuaTexture>::RegType LuaTexture::methods[] =
-{  
-    { 0 }
-};
 
-LuaTexture::LuaTexture( lua_State* p_L ) :
-m_texture( NULL )
+void ActionTextureCtor::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
 {
-	int argc = lua_gettop( p_L );
+    dsstring name = p_propertypool.GetPropValue<dsstring>( "name" );
+    Texture** texture_ptr = p_propertypool.GetPropValue<Texture**>( "texture_ptr" );
 
-    m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
-
-	if( argc < 1 )
-	{
-		lua_pushstring( p_L, "Texture ctor : bad number of args" );
-		lua_error( p_L );		
-	}
-    const char* name = luaL_checkstring( p_L, 1 );
-
-    m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();
-
-    if( m_scriptcalls_handler )
-    {
-        PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "Texture:Texture" );
-        props.AddPropValue<dsstring>( "name", name );
-        props.AddPropValue<Texture**>( "texture_ptr", &m_texture );
-
-        (*m_scriptcalls_handler)( props );
-    }
-}
-
-LuaTexture::~LuaTexture( void ) 
-{
+    
 }

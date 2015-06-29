@@ -837,6 +837,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionTextureCtor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionTextureCtor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionTransformationLinkTo.cpp"
 				>
 			</File>

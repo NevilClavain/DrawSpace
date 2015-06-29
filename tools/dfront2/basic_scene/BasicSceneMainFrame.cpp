@@ -144,6 +144,8 @@
 #include "ActionColliderCollider.h"
 #include "ActionColliderLinkTo.h"
 
+#include "ActionTextureCtor.h"
+
 #include "ActionMouseMoveScriptEditionDialog.h"
 #include "ActionKeyupScriptEditionDialog.h"
 #include "ActionKeydownScriptEditionDialog.h"
@@ -695,6 +697,9 @@ m_delta_mouse_init( true )
     m_actionscripts["DrawSpace:LoadKeyUpScript"] = new ActionKeyUpLoadScript();
 
     m_actionscripts["Keyboard:Keyboard"] = new ActionKeyboardKeyboard();
+
+
+    m_actionscripts["Texture:Texture"] = new ActionTextureCtor();
 
 
     m_actionscripts["global:print"] = new ActionGlobalPrint();
