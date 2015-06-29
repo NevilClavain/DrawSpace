@@ -37,6 +37,7 @@
 #include "lua_mouse.h"
 #include "lua_matrix.h"
 #include "lua_vector.h"
+#include "lua_texture.h"
 #include "lua_real.h"
 
 
@@ -68,6 +69,8 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaMatrix>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaVector>::Register( LuaContext::GetInstance()->GetLuaState() );
     Luna2<LuaReal>::Register( LuaContext::GetInstance()->GetLuaState() );
+
+    Luna2<LuaTexture>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     return true;
 }

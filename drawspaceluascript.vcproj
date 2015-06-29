@@ -266,6 +266,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_texture.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_texture.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\lua_transformnode.cpp"
 			>
 		</File>
