@@ -64,7 +64,6 @@
     <ClCompile Include="src\reticle_widget.cpp" />
     <ClCompile Include="src\rocket.cpp" />
     <ClCompile Include="src\runner.cpp" />
-    <ClCompile Include="src\scenegraph.cpp" />
     <ClCompile Include="src\scenenode.cpp" />
     <ClCompile Include="src\scenenodegraph.cpp" />
     <ClCompile Include="src\shader.cpp" />
@@ -80,8 +79,6 @@
     <ClCompile Include="src\text_widget.cpp" />
     <ClCompile Include="src\timemanager.cpp" />
     <ClCompile Include="src\transformation.cpp" />
-    <ClCompile Include="src\transformnode.cpp" />
-    <ClCompile Include="src\transformqueue.cpp" />
     <ClCompile Include="src\vector.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
     <ClCompile Include="src\vsphere.cpp" />
@@ -155,7 +152,6 @@
     <ClInclude Include="src\reticle_widget.h" />
     <ClInclude Include="src\rocket.h" />
     <ClInclude Include="src\runner.h" />
-    <ClInclude Include="src\scenegraph.h" />
     <ClInclude Include="src\scenenode.h" />
     <ClInclude Include="src\scenenodegraph.h" />
     <ClInclude Include="src\shader.h" />
@@ -173,8 +169,6 @@
     <ClInclude Include="src\timemanager.h" />
     <ClInclude Include="src\tracedefs.h" />
     <ClInclude Include="src\transformation.h" />
-    <ClInclude Include="src\transformnode.h" />
-    <ClInclude Include="src\transformqueue.h" />
     <ClInclude Include="src\triangle.h" />
     <ClInclude Include="src\vector.h" />
     <ClInclude Include="src\vertex.h" />

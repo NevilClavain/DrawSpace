@@ -28,6 +28,7 @@
     <ClCompile Include="src\lua_mouse.cpp" />
     <ClCompile Include="src\lua_real.cpp" />
     <ClCompile Include="src\lua_spaceboxnode.cpp" />
+    <ClCompile Include="src\lua_texture.cpp" />
     <ClCompile Include="src\lua_transformnode.cpp" />
     <ClCompile Include="src\lua_vector.cpp" />
   </ItemGroup>
@@ -49,6 +50,7 @@
     <ClInclude Include="src\lua_mouse.h" />
     <ClInclude Include="src\lua_real.h" />
     <ClInclude Include="src\lua_spaceboxnode.h" />
+    <ClInclude Include="src\lua_texture.h" />
     <ClInclude Include="src\lua_transformnode.h" />
     <ClInclude Include="src\lua_vector.h" />
     <ClInclude Include="src\luna.h" />

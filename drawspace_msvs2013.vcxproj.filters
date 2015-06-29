@@ -36,7 +36,6 @@
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\inits.cpp" />
     <ClCompile Include="src\pass.cpp" />
-    <ClCompile Include="src\scenegraph.cpp" />
     <ClCompile Include="src\spacebox.cpp" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
@@ -116,12 +115,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\transformation.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\transformnode.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\transformqueue.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\vsphere.cpp">
@@ -247,7 +240,6 @@
     <ClInclude Include="src\image.h" />
     <ClInclude Include="src\inits.h" />
     <ClInclude Include="src\pass.h" />
-    <ClInclude Include="src\scenegraph.h" />
     <ClInclude Include="src\spacebox.h" />
     <ClInclude Include="src\text.h" />
     <ClInclude Include="src\viewportquad.h" />
@@ -336,12 +328,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\transformation.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\transformnode.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\transformqueue.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\triangle.h">

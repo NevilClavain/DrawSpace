@@ -36,5 +36,23 @@ void ActionTextureCtor::Execute( DrawSpace::Core::PropertyPool& p_propertypool )
     dsstring name = p_propertypool.GetPropValue<dsstring>( "name" );
     Texture** texture_ptr = p_propertypool.GetPropValue<Texture**>( "texture_ptr" );
 
-    
+    // chercher si un asset texture existe avec ce nom
+
+    Texture* texture = dynamic_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( name ) );
+    if( texture )
+    {
+        *texture_ptr = texture;
+    }
+    else
+    {
+        IntermediatePass* pass = dynamic_cast<IntermediatePass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( name ) );
+        if( pass )
+        {
+            *texture_ptr = pass->GetTargetTexture();
+        }
+        else
+        {
+            wxMessageBox( wxString( "nor texture or pass with name : " ) + wxString( name.c_str() ) , "DrawFront error", wxICON_ERROR );
+        }
+    }
 }
