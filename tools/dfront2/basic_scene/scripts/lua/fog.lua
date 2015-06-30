@@ -1,3 +1,5 @@
+--[[ script combinant un effet de brouillard et un rendu sur texture ]]
+
 
 scene_ready = false
 
@@ -6,6 +8,8 @@ ds:DisplayFramerate( 1 )
 
 ds:CreateWorld( "world0", Vector( 0.0, -9.81, 0.0, 0.0 ) )
 ds:CreateSceneNodeGraph( "scene0" )
+
+ds:CreateSceneNodeGraph( "sub_scene" )
 
 
 ds:DisplayCurrentCamera( "scene0", 1 )
@@ -33,6 +37,8 @@ ds:LoadKeyUpScript( "keyuphandler.lua" )
 ds:LoadKeyDownScript( "keydownhandler.lua" )
 print( "keyboard and mouse handlers loaded..." )
 
+
+-- main scene construction
 
 fps0 = FpsMovementNode( "fps0" )
 fps0:SetYMvt( 1 )
@@ -89,7 +95,8 @@ cube0 = ChunkNode( "cube0" )
 cube0:SetMesheName( "cube_meshe" )
 cube0:RegisterPassSlot( "texture_pass" )
 cube0:SetPassSlotFxName( "texture_pass", "texture_fx" )
-cube0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
+
+-- cube0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
 
 cube0:RegisterPassSlot( "fogint_pass" )
 cube0:SetPassSlotFxName( "fogint_pass", "fogint_fx" )
@@ -99,6 +106,40 @@ cube0:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 12, Vector( 0.0
 cube0:LinkTo( "scene0", "body0" )
 print( "cube0 loaded..." )
 
+cube0:UpdatePassSlotTexture( "texture_pass", Texture( "subscene_pass" ), 0 )
+
+
+-- sub scene construction
+
+
+circ0 = CircularMovementNode( "circ0" )
+circ0:SetCenterpos( 0, 0, -12 )
+circ0:SetDeltaCenterpos( -5.5, 0, 0 )
+circ0:SetAxis( 0, 1, 0 )
+circ0:LinkTo( "sub_scene", "sub_scene" )
+print( "circ0 loaded..." )
+circ0:SetAngularSpeed( 45.0 )
+
+
+
+teapot = ChunkNode( "teapot" )
+teapot:SetMesheName( "teapot_meshe" )
+teapot:RegisterPassSlot( "subscene_pass" )
+teapot:SetPassSlotFxName( "subscene_pass", "wireframe_fx" )
+teapot:AddPassSlotShaderParam( "subscene_pass", "color", 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) )
+
+teapot:LinkTo( "sub_scene", "circ0" )
+print( "teapot loaded..." )
+
+
+cam1 = CameraPointNode( "cam1" )
+cam1:LinkTo( "sub_scene", "sub_scene" )
+print( "cam1 loaded..." )
+
+cam1:LockOn( "teapot" )
+
+
+ds:SetSceneNodeGraphCurrentCamera( "sub_scene", "cam1" )
 
 scene_ready = true
 
