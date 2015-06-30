@@ -158,3 +158,7 @@ void Chunk::IgnoreCamera( bool p_ignore )
     m_ignore_camera = p_ignore;
 }
 
+void Chunk::GetPassesNodesList( std::map<Pass*, DrawSpace::Core::RenderingNode*>& p_list )
+{
+    p_list = m_passesnodes;
+}

@@ -54,6 +54,8 @@ public:
     int Lua_AddPassSlotShaderParam( lua_State* p_L );
     int Lua_UpdateShaderParam( lua_State* p_L );
     int Lua_LinkTo( lua_State* p_L );
+
+    int Lua_UpdatePassSlotTexture( lua_State* p_L );
     
 
     

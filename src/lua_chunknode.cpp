@@ -23,6 +23,7 @@
 #include "lua_chunknode.h"
 #include "luacontext.h"
 #include "lua_vector.h"
+#include "lua_texture.h"
 #include "exceptions.h"
 
 using namespace DrawSpace;
@@ -39,6 +40,7 @@ const Luna2<LuaChunkNode>::RegType LuaChunkNode::methods[] =
   { "AddPassSlotShaderParam", &LuaChunkNode::Lua_AddPassSlotShaderParam },
   { "UpdateShaderParam", &LuaChunkNode::Lua_UpdateShaderParam },
   { "LinkTo", &LuaChunkNode::Lua_LinkTo },
+  { "UpdatePassSlotTexture", &LuaChunkNode::Lua_UpdatePassSlotTexture },
   { 0 }
 };
 
@@ -248,6 +250,49 @@ int LuaChunkNode::Lua_UpdateShaderParam( lua_State* p_L )
 
         (*m_scriptcalls_handler)( props );
     }
+    
+    return 0;
+}
+
+int LuaChunkNode::Lua_UpdatePassSlotTexture( lua_State* p_L )
+{
+    int argc = lua_gettop( p_L );
+	if( argc != 3 )
+	{
+		lua_pushstring( p_L, "UpdatePassSlotTexture : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    const char* pass_name = luaL_checkstring( p_L, 1 );
+    LuaTexture* lua_texture = Luna2<LuaTexture>::check( p_L, 2 );
+    long stage = luaL_checkinteger( p_L, 3 );
+
+    std::map<Pass*, DrawSpace::Core::RenderingNode*> passesnodes;
+    m_chunk_node.GetContent()->GetPassesNodesList( passesnodes );
+
+    RenderingNode* rn = NULL;
+    IntermediatePass* ipass;
+
+    for( std::map<Pass*, DrawSpace::Core::RenderingNode*>::iterator it = passesnodes.begin(); it != passesnodes.end(); ++it )
+    {
+        dsstring current_pass_name;
+        it->first->GetSpecificName( current_pass_name );
+
+        if( pass_name == current_pass_name )
+        {
+            ipass = static_cast<IntermediatePass*>( it->first );
+            rn = it->second;
+            break;
+        }
+    }
+
+    if( !rn )
+    {
+		lua_pushstring( p_L, "UpdatePassSlotTexture : unknown pass" );
+		lua_error( p_L );        
+    }
+    rn->SetTexture( lua_texture->m_texture, stage );
+    ipass->GetRenderingQueue()->UpdateOutputQueue();
     
     return 0;
 }

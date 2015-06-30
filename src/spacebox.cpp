@@ -356,3 +356,8 @@ void Spacebox::IgnoreCamera( bool p_ignore )
 {
     m_ignore_camera = p_ignore;
 }
+
+void Spacebox::GetPassesNodesList( std::map<Pass*, NodesSet>& p_list )
+{
+    p_list = m_passesnodes;
+}

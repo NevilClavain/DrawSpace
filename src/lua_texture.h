@@ -34,10 +34,7 @@ class LuaTexture
 public:
 
     DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
-
-protected:
-
-    DrawSpace::Core::Texture*               m_texture;
+    DrawSpace::Core::Texture*                                               m_texture;
 
 public:
     LuaTexture( lua_State* p_L );

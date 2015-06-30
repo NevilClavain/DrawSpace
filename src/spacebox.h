@@ -91,7 +91,7 @@ public:
     void EnableTranslations( bool p_enable );
     void IgnoreCamera( bool p_ignore );
 
-    
+    void GetPassesNodesList( std::map<Pass*, NodesSet>& p_list );
 };
 }
 

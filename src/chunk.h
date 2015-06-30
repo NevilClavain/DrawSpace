@@ -72,6 +72,8 @@ public:
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
     void IgnoreCamera( bool p_ignore );
+
+    void GetPassesNodesList( std::map<Pass*, DrawSpace::Core::RenderingNode*>& p_list );
    
 };
 }
