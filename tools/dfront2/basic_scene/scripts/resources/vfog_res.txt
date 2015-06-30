@@ -56,7 +56,6 @@ renderstates_out ENABLEZBUFFER false
 renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
-
 declare_config_instance IntermediatePass texture_pass
 passname my_texture_pass
 enabledepthclear true
