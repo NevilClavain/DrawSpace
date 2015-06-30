@@ -32,12 +32,20 @@ compiled false
 end_asset
 
 
-declare_asset_instance Meshe
-assetname teapot_meshe
-filepath teapot.ac
-index 0
-mode ac3d
+
+declare_asset_instance Shader
+assetname vertexshader_vfogmask
+filepath vfogmask.vsh
+compiled false
 end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_vfogmask
+filepath vfogmask.psh
+compiled false
+end_asset
+
+
 
 declare_asset_instance Meshe
 assetname grid_meshe
@@ -45,6 +53,13 @@ filepath grid.ac
 index 0
 mode ac3d
 end_asset
+
+
+declare_config_instance Fx vfogmask_fx
+shaders vertexshader_vfogmask pixelshader_vfogmask
+renderstates_in ENABLEZBUFFER true
+renderstates_out ENABLEZBUFFER false
+end_config
 
 
 
@@ -55,6 +70,18 @@ renderstates_in SETTEXTUREFILTERTYPE linear
 renderstates_out ENABLEZBUFFER false
 renderstates_out SETTEXTUREFILTERTYPE none
 end_config
+
+
+declare_config_instance IntermediatePass vfogmask_pass
+passname vfogmask_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 0 0 0
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
+
 
 declare_config_instance IntermediatePass texture_pass
 passname my_texture_pass
@@ -69,5 +96,5 @@ declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_fx
-viewportquad_textures pass texture_pass 0
+viewportquad_textures pass vfogmask_pass 0
 end_config

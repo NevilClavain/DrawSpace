@@ -109,8 +109,15 @@ localtf:AddMatrix( mat1 )
 
 bloc = ChunkNode( "bloc" )
 bloc:SetMesheName( "cube_meshe" )
-bloc:RegisterPassSlot( "texture_pass" )
-bloc:SetPassSlotFxName( "texture_pass", "texture_fx" )
+
+--bloc:RegisterPassSlot( "texture_pass" )
+--bloc:SetPassSlotFxName( "texture_pass", "texture_fx" )
+
+
+bloc:RegisterPassSlot( "vfogmask_pass" )
+bloc:SetPassSlotFxName( "vfogmask_pass", "vfogmask_fx" )
+bloc:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) )
+
 
 bloc:LinkTo( "scene0", "localtf" )
 

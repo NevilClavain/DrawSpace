@@ -31,14 +31,6 @@ filepath texture.psh
 compiled false
 end_asset
 
-
-declare_asset_instance Meshe
-assetname teapot_meshe
-filepath teapot.ac
-index 0
-mode ac3d
-end_asset
-
 declare_asset_instance Meshe
 assetname grid_meshe
 filepath grid.ac
