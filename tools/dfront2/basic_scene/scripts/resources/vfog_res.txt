@@ -47,6 +47,21 @@ end_asset
 
 
 
+declare_asset_instance Shader
+assetname vertexshader_vfogzback
+filepath vfogzback.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_vfogzback
+filepath vfogzback.psh
+compiled false
+end_asset
+
+
+
+
 declare_asset_instance Meshe
 assetname grid_meshe
 filepath grid.ac
@@ -59,6 +74,16 @@ declare_config_instance Fx vfogmask_fx
 shaders vertexshader_vfogmask pixelshader_vfogmask
 renderstates_in ENABLEZBUFFER true
 renderstates_out ENABLEZBUFFER false
+end_config
+
+
+
+declare_config_instance Fx vfogzback_fx
+shaders vertexshader_vfogzback pixelshader_vfogzback
+renderstates_in SETCULLING ccw
+renderstates_in ENABLEZBUFFER true
+renderstates_out ENABLEZBUFFER false
+renderstates_out SETCULLING cw
 end_config
 
 
@@ -82,6 +107,16 @@ targetdimsfromrenderer true
 end_config
 
 
+declare_config_instance IntermediatePass vfogzback_pass
+passname vfogzback_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 0 0 100
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
+
 
 declare_config_instance IntermediatePass texture_pass
 passname my_texture_pass
@@ -96,5 +131,5 @@ declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_fx
-viewportquad_textures pass vfogmask_pass 0
+viewportquad_textures pass vfogzback_pass 0
 end_config

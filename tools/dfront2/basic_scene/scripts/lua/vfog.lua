@@ -87,6 +87,12 @@ cube0:RegisterPassSlot( "texture_pass" )
 cube0:SetPassSlotFxName( "texture_pass", "texture_fx" )
 cube0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
 
+cube0:RegisterPassSlot( "vfogmask_pass" )
+cube0:SetPassSlotFxName( "vfogmask_pass", "vfogmask_fx" )
+cube0:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 0.0, 0.0, 0.0, 1.0 ) )
+
+
+
 cube0:LinkTo( "scene0", "body0" )
 print( "cube0 loaded..." )
 
@@ -110,14 +116,12 @@ localtf:AddMatrix( mat1 )
 bloc = ChunkNode( "bloc" )
 bloc:SetMesheName( "cube_meshe" )
 
---bloc:RegisterPassSlot( "texture_pass" )
---bloc:SetPassSlotFxName( "texture_pass", "texture_fx" )
-
-
 bloc:RegisterPassSlot( "vfogmask_pass" )
 bloc:SetPassSlotFxName( "vfogmask_pass", "vfogmask_fx" )
 bloc:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) )
 
+bloc:RegisterPassSlot( "vfogzback_pass" )
+bloc:SetPassSlotFxName( "vfogzback_pass", "vfogzback_fx" )
 
 bloc:LinkTo( "scene0", "localtf" )
 

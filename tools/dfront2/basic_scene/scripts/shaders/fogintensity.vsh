@@ -13,7 +13,7 @@ struct VS_INPUT
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
-   float  Fog      : FOG;   
+   float  Fog      : FOG;
 };
 
 float ComputeExp2Fog( float4 worldViewPos, float density )
