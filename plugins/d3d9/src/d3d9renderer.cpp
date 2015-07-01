@@ -798,6 +798,7 @@ bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
                 if( NULL != errors )
                 {
 					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)errors->GetBufferPointer() )
+                    _DSEXCEPTION( "D3DXCompileShader FAIL (vertex) : " << dsstring( (char *)errors->GetBufferPointer() ) )
                 }
                 return false;
             }
@@ -827,6 +828,7 @@ bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
                 if( NULL != errors )
                 {
 					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)errors->GetBufferPointer() )
+                    _DSEXCEPTION( "D3DXCompileShader FAIL (pixel) : " << dsstring( (char *)errors->GetBufferPointer() ) )
                 }
                 return false;
             }
