@@ -90,8 +90,6 @@ protected:
     m_depth_level( p_depth_level )
 	{
         (*m_insthandler)( this );
-		dsstring name;
-		m_content->GetName( name );
 	}
 
 public:
@@ -104,8 +102,6 @@ public:
     m_depth_level( 0 )
 	{
 		(*m_insthandler)( this );
-		dsstring name;
-		m_content->GetName( name );
 	}
 
 	virtual ~QuadtreeNode( void )
