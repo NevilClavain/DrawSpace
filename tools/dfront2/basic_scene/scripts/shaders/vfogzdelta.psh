@@ -23,7 +23,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 outputcolor = 0;
 	//if( mask.x > 0.0 )
 	{
-		outputcolor.x = clamp( 0.0, 1.0, ( zback - zfront ) * 5 );
+		outputcolor.x = clamp( 0.0, 1.0, ( zback - zfront ) * 10.0 );
 			
 		outputcolor.z = 1.0;
 	}	

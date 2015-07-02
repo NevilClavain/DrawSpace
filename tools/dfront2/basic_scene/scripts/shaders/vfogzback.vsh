@@ -20,7 +20,11 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    Output.Position = mul( Input.Position, matWorldViewProjection );   
    float4 Position = mul( Input.Position, matWorldView );
    
-   Output.Fog = -Position.z;
+   //Output.Fog = -Position.z;
+
+   float4 d = - Position.z;
+   float4 d2 = 1 / exp2( d * 0.10 );
+   Output.Fog = clamp( 0.0, 1.0, 1.0 - d2 );
       
    return( Output );   
 }

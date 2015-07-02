@@ -11,7 +11,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {   
    float4 color = 0;
                     
-   color = clamp( 0.0, 1.0, input.Fog / 20 );
+   color = clamp( 0.0, 1.0, input.Fog );
    
    return color;
 }
