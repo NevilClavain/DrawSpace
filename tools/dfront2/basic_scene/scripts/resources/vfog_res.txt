@@ -131,5 +131,14 @@ declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_fx
+viewportquad_textures pass texture_pass 0
+end_config
+
+declare_config_instance FinalPass showvfogzback_pass
+passname showvfogzback_pass
+viewportquad true
+viewportquad_fx texture_fx
 viewportquad_textures pass vfogzback_pass 0
 end_config
+
+
