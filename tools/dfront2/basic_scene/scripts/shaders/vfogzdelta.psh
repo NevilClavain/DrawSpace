@@ -1,0 +1,32 @@
+
+float4 fog_color: register(c0);
+
+
+sampler2D Texture0 : register(s0);
+sampler2D Texture1 : register(s1);
+sampler2D Texture2 : register(s2);
+
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+   float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 mask = tex2D( Texture0, input.TexCoord0 );
+	float4 zfront = tex2D( Texture1, input.TexCoord0 );
+	float4 zback = tex2D( Texture2, input.TexCoord0 );
+
+	float4 outputcolor = 0;
+	//if( mask.x > 0.0 )
+	{
+		outputcolor.x = clamp( 0.0, 1.0, ( zback - zfront ) * 5 );
+			
+		outputcolor.z = 1.0;
+	}	
+
+	return outputcolor;
+}
