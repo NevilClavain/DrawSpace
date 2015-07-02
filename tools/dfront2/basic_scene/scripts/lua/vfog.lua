@@ -123,6 +123,10 @@ bloc:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 1.0, 1.0, 1
 bloc:RegisterPassSlot( "vfogzback_pass" )
 bloc:SetPassSlotFxName( "vfogzback_pass", "vfogzback_fx" )
 
+bloc:RegisterPassSlot( "vfogzfront_pass" )
+bloc:SetPassSlotFxName( "vfogzfront_pass", "vfogzfront_fx" )
+
+
 bloc:LinkTo( "scene0", "localtf" )
 
 

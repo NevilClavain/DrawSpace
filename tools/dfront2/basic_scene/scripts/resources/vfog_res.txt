@@ -86,6 +86,11 @@ renderstates_out ENABLEZBUFFER false
 renderstates_out SETCULLING cw
 end_config
 
+declare_config_instance Fx vfogzfront_fx
+shaders vertexshader_vfogzback pixelshader_vfogzback
+renderstates_in ENABLEZBUFFER true
+renderstates_out ENABLEZBUFFER false
+end_config
 
 
 declare_config_instance Fx texture_fx
@@ -111,11 +116,20 @@ declare_config_instance IntermediatePass vfogzback_pass
 passname vfogzback_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 0 0 100
+targetclearcolor 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config
 
+
+declare_config_instance IntermediatePass vfogzfront_pass
+passname vfogfront_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 0 0 0
+viewportquad false
+targetdimsfromrenderer true
+end_config
 
 
 declare_config_instance IntermediatePass texture_pass
@@ -131,14 +145,8 @@ declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_fx
-viewportquad_textures pass texture_pass 0
+viewportquad_textures pass vfogzfront_pass 0
 end_config
 
-declare_config_instance FinalPass showvfogzback_pass
-passname showvfogzback_pass
-viewportquad true
-viewportquad_fx texture_fx
-viewportquad_textures pass vfogzback_pass 0
-end_config
 
 
