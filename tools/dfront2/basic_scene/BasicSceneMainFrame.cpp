@@ -192,7 +192,7 @@ void RenderTimer::Stop( void )
     wxTimer::Stop();
 }
 
-BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent, wxID_ANY, "DFront Basic Scene", wxDefaultPosition, wxSize( 1264,600 ), wxCAPTION | wxCLOSE_BOX ),
+BasicSceneMainFrame::BasicSceneMainFrame( wxWindow* parent ) : MainFrame( parent, wxID_ANY, "DrawFront", wxDefaultPosition, wxSize( 1264,600 ), wxCAPTION | wxCLOSE_BOX ),
 m_glready( false ),
 m_scenegraphlistctrl_currentindex( -1 ),
 m_mvtslistctrl_currentindex( -1 ),

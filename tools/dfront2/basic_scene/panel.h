@@ -107,7 +107,7 @@ class MainFrame : public wxFrame
 	
 	public:
 		
-		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("DFront Basic Scene"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1300,600 ), long style = wxCAPTION|wxCLOSE_BOX|wxTAB_TRAVERSAL );
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("DrawFront"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1300,600 ), long style = wxCAPTION|wxCLOSE_BOX|wxTAB_TRAVERSAL );
 		
 		~MainFrame();
 	
