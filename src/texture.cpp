@@ -36,7 +36,8 @@ m_filedata( NULL ),
 m_filedatasize( -1 ), 
 m_render_target( false ),
 m_render_target_width( 256 ),
-m_render_target_height( 256 )
+m_render_target_height( 256 ),
+m_renderpurpose( RENDERPURPOSE_COLOR )
 {
     // properties array creation
     m_properties["filepath"].AddPropValue<dsstring>( m_path );
@@ -44,15 +45,17 @@ m_render_target_height( 256 )
     m_properties["rendertarget"].AddPropValue<bool>( m_render_target );
     m_properties["rendertarget_size"].AddPropValue<unsigned long>( "width", m_render_target_width );
     m_properties["rendertarget_size"].AddPropValue<unsigned long>( "height", m_render_target_height );
+    m_properties["renderpurpose"].AddPropValue<RenderPurpose>( m_renderpurpose );
 }
 
-Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_target_width, unsigned long p_render_target_height ) : 
+Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_target_width, unsigned long p_render_target_height, RenderPurpose p_rp ) : 
 m_path( p_path ), 
 m_filedata( NULL ), 
 m_filedatasize( -1 ), 
 m_render_target( p_render_target ),
 m_render_target_width( p_render_target_width ),
-m_render_target_height( p_render_target_height )
+m_render_target_height( p_render_target_height ),
+m_renderpurpose( p_rp )
 {
     // properties array creation
     m_properties["filepath"].AddPropValue<dsstring>( m_path );
@@ -60,6 +63,7 @@ m_render_target_height( p_render_target_height )
     m_properties["rendertarget"].AddPropValue<bool>( m_render_target );
     m_properties["rendertarget_size"].AddPropValue<unsigned long>( "width", m_render_target_width );
     m_properties["rendertarget_size"].AddPropValue<unsigned long>( "height", m_render_target_height );
+    m_properties["renderpurpose"].AddPropValue<RenderPurpose>( m_renderpurpose );
 }
 
 Texture::~Texture( void )
@@ -126,6 +130,7 @@ bool Texture::ApplyProperties( void )
     m_render_target = m_properties["rendertarget"].GetPropValue<bool>();
     m_render_target_width = m_properties["rendertarget_size"].GetPropValue<unsigned long>( "width" );
     m_render_target_height = m_properties["rendertarget_size"].GetPropValue<unsigned long>( "height" );
+    m_renderpurpose = m_properties["renderpurpose"].GetPropValue<RenderPurpose>();
 
     return true;
 }
@@ -182,6 +187,19 @@ void Texture::DumpProperties( dsstring& p_text )
 
     p_text += "\r\n";
 
+    p_text += "renderpurpose ";
+
+    if( m_properties["renderpurpose"].GetPropValue<RenderPurpose>() == RENDERPURPOSE_COLOR )
+    {
+        p_text += "color";
+    }
+    else
+    {
+        p_text += "float";
+    }
+    p_text += "\r\n";
+
+
     //p_text += "end_asset\n";
 }
 
@@ -235,6 +253,16 @@ bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
         m_properties["rendertarget_size"].SetPropValue<unsigned long>( "width", StringToInt( p_words[2] ) );
         m_properties["rendertarget_size"].SetPropValue<unsigned long>( "height", StringToInt( p_words[4] ) );
     }
+    else if( "renderpurpose" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+    
+        m_properties["renderpurpose"].SetPropValue<RenderPurpose>( "color" == p_words[1] ? RENDERPURPOSE_COLOR : RENDERPURPOSE_FLOAT );        
+    }
     else
     {
         _PARSER_UNEXPECTED_KEYWORD_
@@ -249,10 +277,13 @@ void Texture::SetFormat( long p_width, long p_height, long p_bpp )
     m_width = p_width;
     m_height = p_height;
 
+    // bpp = -1 -> pas un format de couleur (texture floating point, ou format inconnu)
+    /*
     if( -1 == p_bpp )
     {
         _DSEXCEPTION( "Unsupported pixel format for texture" );
     }
+    */
 
     m_bpp = p_bpp;
 }
@@ -272,4 +303,9 @@ Asset* Texture::Instanciate( void )
 void Texture::GetKeyword( dsstring& p_outkeyword )
 {
     p_outkeyword = TEXTURE_TEXT_KEYWORD;
+}
+
+Texture::RenderPurpose Texture::GetRenderPurpose( void )
+{
+    return m_renderpurpose;
 }

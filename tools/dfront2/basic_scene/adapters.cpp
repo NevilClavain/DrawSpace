@@ -35,18 +35,6 @@ wxWidgetAdapter::wxWidgetAdapter( void )
 {
     m_applypassshadervalues_callback = new CallBack<wxWidgetAdapter, void, BasicSceneObjectPropertiesDialog*>( this, &wxWidgetAdapter::on_applypassshadervalues );
 
-    
-
-
-
-
-
-
-
-
-
-    
-
     m_register_index = 0;
 }
 

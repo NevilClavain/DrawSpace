@@ -1194,6 +1194,8 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
         unsigned long rendetarget_w = props["rendertarget_size"].GetPropValue<unsigned long>( "width" );
         unsigned long rendetarget_h = props["rendertarget_size"].GetPropValue<unsigned long>( "height" );
 
+        Texture::RenderPurpose renderpurpose = props["renderpurpose"].GetPropValue<Texture::RenderPurpose>();
+
         
         DIALOG_DECLARE( DIALOG_TEXTURE_PROPS_TITLE )
         DIALOG_APPENDROOT_STRING( "assetname", assetname )
@@ -1206,6 +1208,15 @@ void BasicSceneMainFrame::OnAssetsListItemActivated( wxListEvent& p_event )
 
             DIALOG_APPENDNODE_INTEGER( rendertarget_dimsnode, "width", rendetarget_w )
             DIALOG_APPENDNODE_INTEGER( rendertarget_dimsnode, "height", rendetarget_h )
+
+            if( Texture::RENDERPURPOSE_COLOR == renderpurpose )
+            {
+                DIALOG_APPENDNODE_STRING( rendertarget_dimsnode, "render purpose", "color" );
+            }
+            else
+            {
+                DIALOG_APPENDNODE_STRING( rendertarget_dimsnode, "render purpose", "float" );
+            }
         }
 
         DIALOG_SHOW
@@ -1406,6 +1417,17 @@ void BasicSceneMainFrame::build_passes_infos_dialog( DrawSpace::Core::Configurab
                 DIALOG_APPENDROOT_NODE( "target dims", targetdims_root )
                 DIALOG_APPENDNODE_INTEGER( targetdims_root, "width", targetdims_width )
                 DIALOG_APPENDNODE_INTEGER( targetdims_root, "height", targetdims_height )
+            }
+
+            Texture::RenderPurpose renderpurpose = props["renderpurpose"].GetPropValue<Texture::RenderPurpose>();
+
+            if( Texture::RENDERPURPOSE_COLOR == renderpurpose )
+            {
+                DIALOG_APPENDROOT_STRING( "render purpose", "color" );
+            }
+            else
+            {
+                DIALOG_APPENDROOT_STRING( "render purpose", "float" );
             }
         }
 

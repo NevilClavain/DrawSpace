@@ -107,7 +107,7 @@ mat0:Translation( 0, -4.5, 0 )
 localtf:AddMatrix( mat0 )
 
 mat1 = Matrix()
-mat1:Scale( 10, 10, 10 )
+mat1:Scale( 10, 2.5, 10 )
 localtf:AddMatrix( mat1 )
 
 

@@ -48,14 +48,14 @@ end_asset
 
 
 declare_asset_instance Shader
-assetname vertexshader_vfogzback
-filepath vfogzback.vsh
+assetname vertexshader_vfogzdepth
+filepath vfogzdepth.vsh
 compiled false
 end_asset
 
 declare_asset_instance Shader
-assetname pixelshader_vfogzback
-filepath vfogzback.psh
+assetname pixelshader_vfogzdepth
+filepath vfogzdepth.psh
 compiled false
 end_asset
 
@@ -86,14 +86,16 @@ end_asset
 
 declare_config_instance Fx vfogmask_fx
 shaders vertexshader_vfogmask pixelshader_vfogmask
+renderstates_in SETCULLING ccw
 renderstates_in ENABLEZBUFFER true
 renderstates_out ENABLEZBUFFER false
+renderstates_out SETCULLING cw
 end_config
 
 
 
 declare_config_instance Fx vfogzback_fx
-shaders vertexshader_vfogzback pixelshader_vfogzback
+shaders vertexshader_vfogzdepth pixelshader_vfogzdepth
 renderstates_in SETCULLING ccw
 renderstates_in ENABLEZBUFFER true
 renderstates_out ENABLEZBUFFER false
@@ -101,7 +103,7 @@ renderstates_out SETCULLING cw
 end_config
 
 declare_config_instance Fx vfogzfront_fx
-shaders vertexshader_vfogzback pixelshader_vfogzback
+shaders vertexshader_vfogzdepth pixelshader_vfogzdepth
 renderstates_in ENABLEZBUFFER true
 renderstates_out ENABLEZBUFFER false
 end_config
@@ -139,6 +141,7 @@ enabletargetclear true
 targetclearcolor 0 0 0
 viewportquad false
 targetdimsfromrenderer true
+renderpurpose float
 end_config
 
 
@@ -149,6 +152,7 @@ enabletargetclear true
 targetclearcolor 0 0 0
 viewportquad false
 targetdimsfromrenderer true
+renderpurpose float
 end_config
 
 

@@ -36,6 +36,15 @@ namespace Core
 
 class Texture : public Asset
 {
+public:
+
+    typedef enum
+    {
+        RENDERPURPOSE_COLOR,
+        RENDERPURPOSE_FLOAT,
+
+    } RenderPurpose;
+
 protected:
     dsstring        m_path;
     long            m_width;
@@ -49,11 +58,13 @@ protected:
     unsigned long   m_render_target_width;
     unsigned long   m_render_target_height;
 
+    RenderPurpose   m_renderpurpose;
+
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
     
 public:
     Texture( void );
-    Texture( const dsstring& p_path, bool p_render_target = false, unsigned long p_render_target_width = 256, unsigned long p_render_target_height = 256 );
+    Texture( const dsstring& p_path, bool p_render_target = false, unsigned long p_render_target_width = 256, unsigned long p_render_target_height = 256, RenderPurpose p_rp = RENDERPURPOSE_COLOR );
     ~Texture( void );
 
     bool LoadFromFile( void );
@@ -77,6 +88,8 @@ public:
 
     void SetFormat( long p_width, long p_height, long p_bpp );
     void GetFormat( long& p_width, long& p_height, long& p_bpp );
+
+    RenderPurpose GetRenderPurpose( void );
 
     void GetKeyword( dsstring& p_outkeyword );
 

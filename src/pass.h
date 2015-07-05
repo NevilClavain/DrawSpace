@@ -121,11 +121,13 @@ public:
 class IntermediatePass : public Pass
 {
 protected:
-    Core::Texture*          m_targettexture;
+    Core::Texture*                  m_targettexture;
 
-    bool                    m_targetdims_fromrenderer;
-    long                    m_targetdims_width;
-    long                    m_targetdims_height;
+    bool                            m_targetdims_fromrenderer;
+    long                            m_targetdims_width;
+    long                            m_targetdims_height;
+
+    Core::Texture::RenderPurpose    m_renderpurpose;
 
     void init_properties( void );
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );

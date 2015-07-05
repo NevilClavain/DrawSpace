@@ -568,7 +568,18 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         unsigned long rw, rh;
         p_texture->GetRenderTargetDims( rw, rh );
 
-        hRes = m_lpd3ddevice->CreateTexture( rw, rh, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &d3dt9, NULL );
+        D3DFORMAT format; 
+
+        if( Texture::RENDERPURPOSE_COLOR == p_texture->GetRenderPurpose() )
+        {
+            format = D3DFMT_A8R8G8B8;
+        }
+        else
+        {
+            format = D3DFMT_R16F;
+        }
+
+        hRes = m_lpd3ddevice->CreateTexture( rw, rh, 1, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &d3dt9, NULL );
         D3D9_CHECK( CreateTexture )
 
         d3dt9->GetSurfaceLevel( 0, &surface );
