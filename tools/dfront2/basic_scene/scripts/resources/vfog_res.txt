@@ -86,7 +86,13 @@ end_asset
 
 declare_config_instance Fx vfogmask_fx
 shaders vertexshader_vfogmask pixelshader_vfogmask
-renderstates_in SETCULLING ccw
+renderstates_in ENABLEZBUFFER true
+renderstates_out ENABLEZBUFFER false
+end_config
+
+declare_config_instance Fx vfogmasknocull_fx
+shaders vertexshader_vfogmask pixelshader_vfogmask
+renderstates_in SETCULLING none
 renderstates_in ENABLEZBUFFER true
 renderstates_out ENABLEZBUFFER false
 renderstates_out SETCULLING cw
@@ -122,6 +128,36 @@ renderstates_in SETTEXTUREFILTERTYPE linear
 renderstates_out ENABLEZBUFFER false
 renderstates_out SETTEXTUREFILTERTYPE none
 end_config
+
+
+declare_config_instance Fx texture_quad_fx
+shaders vertexshader_texture pixelshader_texture
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
+
+
+declare_config_instance Fx vfog_quad_fx
+shaders vertexshader_texture pixelshader_texture
+
+renderstates_in SETTEXTUREFILTERTYPE linear
+
+renderstates_in ALPHABLENDENABLE true
+renderstates_in ALPHABLENDOP add
+renderstates_in ALPHABLENDFUNC always
+renderstates_in ALPHABLENDDEST invsrcalpha
+renderstates_in ALPHABLENDSRC srcalpha
+
+renderstates_out SETTEXTUREFILTERTYPE none
+
+
+renderstates_out ALPHABLENDENABLE false
+end_config
+
+
+
 
 
 declare_config_instance IntermediatePass vfogmask_pass
@@ -176,12 +212,26 @@ viewportquad false
 targetdimsfromrenderer true
 end_config
 
+
+
+
 declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
-viewportquad_fx texture_fx
+viewportquad_fx texture_quad_fx
+viewportquad_textures pass texture_pass 0
+end_config
+
+
+declare_config_instance FinalPass final_pass_2
+passname my_final_pass_2
+viewportquad true
+viewportquad_fx vfog_quad_fx
 viewportquad_textures pass vfogzdelta_pass 0
 end_config
+
+
+
 
 
 

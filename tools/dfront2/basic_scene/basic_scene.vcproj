@@ -64,7 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/FORCE:MULTIPLE"
 				AdditionalDependencies="wxmsw30ud_core.lib wxbase30ud.lib rpcrt4.lib winmm.lib advapi32.lib wsock32.lib wxpngd.lib wxzlibd.lib wxjpegd.lib wxtiffd.lib drawspace.lib drawspaceluascript.lib BulletDynamics_vs2005_debug.lib BulletCollision_vs2005_debug.lib LinearMath_vs2005_debug.lib lua.lib"
-				OutputFile="./../../../../DrawSpace_Samples/bin/basic_scene.exe"
+				OutputFile="./../../../../DrawSpace_Samples/bin/dfront.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/lib/vc_lib&quot;;./../../../libs;&quot;./../../../../DrawSpace_thirdparts/bullet-2.82/lib&quot;;&quot;./../../../../DrawSpace_thirdparts/lua-1.5/lib/Debug&quot;"
 				GenerateDebugInformation="true"
@@ -141,7 +141,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw30u_core.lib wxbase30u.lib rpcrt4.lib winmm.lib advapi32.lib wsock32.lib wxpng.lib wxzlib.lib wxjpeg.lib wxtiff.lib drawspace_r.lib drawspaceluascript_r.lib BulletDynamics_vs2005.lib BulletCollision_vs2005.lib LinearMath_vs2005.lib lua.lib"
-				OutputFile="./../../../../DrawSpace_Samples/bin/basic_scene_r.exe"
+				OutputFile="./../../../../DrawSpace_Samples/bin/dfront_r.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/lib/vc_lib&quot;;./../../../libs;&quot;./../../../../DrawSpace_thirdparts/bullet-2.82/lib&quot;;&quot;./../../../../DrawSpace_thirdparts/lua-1.5/lib/Release&quot;"
 				GenerateDebugInformation="true"

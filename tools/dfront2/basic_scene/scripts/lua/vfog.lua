@@ -64,6 +64,13 @@ ground_chunk:RegisterPassSlot( "texture_pass" )
 ground_chunk:SetPassSlotFxName( "texture_pass", "texture_fx" )
 ground_chunk:SetPassSlotTextureName( "texture_pass", "ground", 0 )
 
+
+ground_chunk:RegisterPassSlot( "vfogmask_pass" )
+ground_chunk:SetPassSlotFxName( "vfogmask_pass", "vfogmask_fx" )
+ground_chunk:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 0.0, 0.0, 0.0, 1.0 ) )
+
+
+
 ground_chunk:LinkTo( "scene0", "ground" )
 print( "ground_chunk loaded..." )
 
@@ -102,7 +109,7 @@ localtf = TransformationNode( "localtf" )
 localtf:LinkTo( "scene0", "scene0" )
 
 mat0 = Matrix()
-mat0:Translation( 0, -4.5, 0 )
+mat0:Translation( 0, 0, 0 )
 
 localtf:AddMatrix( mat0 )
 
@@ -117,7 +124,7 @@ bloc = ChunkNode( "bloc" )
 bloc:SetMesheName( "cube_meshe" )
 
 bloc:RegisterPassSlot( "vfogmask_pass" )
-bloc:SetPassSlotFxName( "vfogmask_pass", "vfogmask_fx" )
+bloc:SetPassSlotFxName( "vfogmask_pass", "vfogmasknocull_fx" )
 bloc:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) )
 
 bloc:RegisterPassSlot( "vfogzback_pass" )
