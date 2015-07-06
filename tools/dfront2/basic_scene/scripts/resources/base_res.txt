@@ -13,12 +13,6 @@ filepath ground.bmp
 rendertarget false
 end_asset
 
-declare_asset_instance Font
-assetname font01
-filespath mangalfont.bmp mangalfont.csv
-mode cbfg
-end_asset
-
 declare_asset_instance Shader
 assetname vertexshader_texture
 filepath texture.vsh
