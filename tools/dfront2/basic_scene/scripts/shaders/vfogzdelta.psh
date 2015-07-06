@@ -1,5 +1,6 @@
 
 float4 fog_color: register(c0);
+float4 fog_scale: register(c1);
 
 
 sampler2D Texture0 : register(s0);
@@ -20,16 +21,10 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 zfront = tex2D( Texture1, input.TexCoord0 );
 	float4 zback = tex2D( Texture2, input.TexCoord0 );
 
-	float4 outputcolor = 0;
-	
-	
-	outputcolor.r = 0.8;
-	outputcolor.g = 0.8;
-	outputcolor.b = 0.8;
-	
+	float4 outputcolor = fog_color;
 	if( mask.x > 0.0 )
 	{
-		outputcolor.a = clamp( 0.0, 1.0, ( zback.x - zfront.x ) / 3.0 );
+		outputcolor.a = clamp( 0.0, 1.0, ( zback.x - zfront.x ) / fog_scale.x );
 	}	
 
 	return outputcolor;
