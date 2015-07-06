@@ -1,4 +1,11 @@
 
+declare_asset_instance Meshe
+assetname bellerophon_meshe
+filepath bellerophon.ac
+index 0
+mode ac3d
+end_asset
+
 
 declare_asset_instance Texture
 assetname texture_shelby
@@ -54,6 +61,13 @@ filepath spacebox_top3.png
 rendertarget false
 end_asset
 
+declare_asset_instance Texture
+assetname bellerophon_texture
+filepath bellerophon.jpg
+rendertarget false
+end_asset
+
+
 
 declare_asset_instance Shader
 assetname vertexshader_texture
@@ -67,12 +81,6 @@ filepath texture.psh
 compiled false
 end_asset
 
-declare_asset_instance Meshe
-assetname grid_meshe
-filepath grid.ac
-index 0
-mode ac3d
-end_asset
 
 
 

@@ -62,9 +62,19 @@ sb0:SetPassSlotTextureName( "texture_pass", "spacebox_left", 2, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "spacebox_right", 3, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "spacebox_top", 4, 0 )
 sb0:SetPassSlotTextureName( "texture_pass", "spacebox_bottom", 5, 0 )
+
 sb0:LinkTo( "scene0", "tf_spacebox" )
 print( "spacebox loaded..." )
 
+
+
+ship = ChunkNode( "bellerophon" )
+ship:SetMesheName( "bellerophon_meshe" )
+ship:RegisterPassSlot( "texture_pass" )
+ship:SetPassSlotFxName( "texture_pass", "texture_fx" )
+ship:SetPassSlotTextureName( "texture_pass", "bellerophon_texture", 0 )
+
+ship:LinkTo( "scene0", "scene0" )
 
 
 
