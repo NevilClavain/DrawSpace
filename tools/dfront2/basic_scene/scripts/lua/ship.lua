@@ -67,6 +67,20 @@ sb0:LinkTo( "scene0", "tf_spacebox" )
 print( "spacebox loaded..." )
 
 
+tf_ship = TransformationNode( "tf_ship", 2 )
+tf_ship:LinkTo( "scene0", "scene0" )
+
+ship_pos = Matrix()
+ship_pos:Translation( 0, 0, -500 )
+
+
+ship_rot = Matrix()
+ship_rot:Rotation( Vector( 0, 1, 0, 1 ), 270 )
+
+tf_ship:UpdateMatrix( 0, ship_pos )
+tf_ship:UpdateMatrix( 1, ship_rot )
+
+
 
 ship = ChunkNode( "bellerophon" )
 ship:SetMesheName( "bellerophon_meshe" )
@@ -74,7 +88,7 @@ ship:RegisterPassSlot( "texture_pass" )
 ship:SetPassSlotFxName( "texture_pass", "texture_fx" )
 ship:SetPassSlotTextureName( "texture_pass", "bellerophon_texture", 0 )
 
-ship:LinkTo( "scene0", "scene0" )
+ship:LinkTo( "scene0", "tf_ship" )
 
 
 
