@@ -28,9 +28,9 @@ end
 keyboard = Keyboard()
 mouse = Mouse()
 
-ds:LoadMouseScript( "mousehandler.lua" )
-ds:LoadKeyUpScript( "keyuphandler.lua" )
-ds:LoadKeyDownScript( "keydownhandler.lua" )
+ds:LoadMouseScript( "ship_mousehandler.lua" )
+ds:LoadKeyUpScript( "ship_keyuphandler.lua" )
+ds:LoadKeyDownScript( "ship_keydownhandler.lua" )
 print( "keyboard and mouse handlers loaded..." )
 
 
@@ -89,6 +89,30 @@ ship:SetPassSlotFxName( "texture_pass", "texture_fx" )
 ship:SetPassSlotTextureName( "texture_pass", "bellerophon_texture", 0 )
 
 ship:LinkTo( "scene0", "tf_ship" )
+
+
+
+tf_flame0 = TransformationNode( "tf_flame0", 2 )
+tf_flame0:LinkTo( "scene0", "tf_ship" )
+
+flame0_pos = Matrix()
+flame0_pos:Translation( 0, 0, 300 )
+
+flame0_scale = Matrix()
+flame0_scale:Scale( 20, 20, 20 )
+
+tf_flame0:UpdateMatrix( 0, flame0_pos )
+tf_flame0:UpdateMatrix( 1, flame0_scale )
+
+
+
+flame0 = ChunkNode( "flame0" )
+flame0:SetMesheName( "reactorflame_meshe" )
+flame0:RegisterPassSlot( "texture_pass" )
+flame0:SetPassSlotFxName( "texture_pass", "texture_fx" )
+flame0:SetPassSlotTextureName( "texture_pass", "bellerophon_texture", 0 )
+
+flame0:LinkTo( "scene0", "tf_flame0" )
 
 
 
