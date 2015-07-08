@@ -96,6 +96,7 @@ ship:SetPassSlotFxName( "vfogmask_pass", "vfogmasknocull_fx" )
 ship:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 0.0, 0.0, 0.0, 1.0 ) )
 
 
+
 ship:LinkTo( "scene0", "tf_ship" )
 
 

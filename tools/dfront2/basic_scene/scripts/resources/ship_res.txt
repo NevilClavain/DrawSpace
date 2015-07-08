@@ -131,6 +131,17 @@ compiled false
 end_asset
 
 
+declare_asset_instance Shader
+assetname vertexshader_blur
+filepath blur.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_blur
+filepath blur.psh
+compiled false
+end_asset
 
 
 
@@ -168,7 +179,21 @@ end_config
 
 declare_config_instance Fx vfogzdelta_fx
 shaders vertexshader_vfogzdelta pixelshader_vfogzdelta
+renderstates_in SETTEXTUREFILTERTYPE anisotropic
+renderstates_out SETTEXTUREFILTERTYPE none
 end_config
+
+
+
+declare_config_instance Fx blur_fx
+shaders vertexshader_blur pixelshader_blur
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
+
+
 
 
 declare_config_instance Fx texture_fx
@@ -205,7 +230,7 @@ renderstates_in SETTEXTUREFILTERTYPE linear
 renderstates_in ALPHABLENDENABLE true
 renderstates_in ALPHABLENDOP add
 renderstates_in ALPHABLENDFUNC always
-renderstates_in ALPHABLENDDEST one
+renderstates_in ALPHABLENDDEST invsrcalpha
 renderstates_in ALPHABLENDSRC srcalpha
 
 renderstates_out SETTEXTUREFILTERTYPE none
@@ -261,7 +286,6 @@ viewportquad_textures pass vfogzfront_pass 1
 viewportquad_textures pass vfogzback_pass 2
 viewportquad_shaderparams fog_color 1 0 1.0 1.0 1.0 0.0
 viewportquad_shaderparams fog_scale 1 1 16.0 0.0 0.0 0.0 
-
 end_config
 
 
@@ -274,6 +298,27 @@ enabledepthclear true
 enabletargetclear false
 viewportquad false
 targetdimsfromrenderer true
+end_config
+
+
+
+
+declare_config_instance IntermediatePass horizontalblur_pass
+passname horizontalblur_pass
+viewportquad true
+viewportquad_fx blur_fx
+viewportquad_textures pass vfogmask_pass 0
+viewportquad_shaderparams mode 1 0 1.0 0.005 0.0 0.0
+end_config
+
+
+
+declare_config_instance IntermediatePass verticallblur_pass
+passname verticallblur_pass
+viewportquad true
+viewportquad_fx blur_fx
+viewportquad_textures pass horizontalblur_pass 0
+viewportquad_shaderparams mode 1 0 0.0 0.005 0.0 0.0
 end_config
 
 
@@ -294,6 +339,13 @@ viewportquad_fx vfog_quad_fx
 viewportquad_textures pass vfogzdelta_pass 0
 end_config
 
+
+declare_config_instance FinalPass final_pass_3
+passname my_final_pass_3
+viewportquad true
+viewportquad_fx vfog_quad_fx
+viewportquad_textures pass verticallblur_pass 0
+end_config
 
 
 
