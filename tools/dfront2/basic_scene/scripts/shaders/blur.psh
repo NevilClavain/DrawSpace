@@ -1,0 +1,58 @@
+
+float4 Mode : register(c0);
+
+sampler2D Texture0;
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+};
+
+
+float4 BlurHorizontal( float2 Tex )
+{
+    float Color = 0.0f;
+
+    Color += tex2D(sampler, float2(Tex.x - 3.0*blurSizeX, Tex.y)) * 0.09f;
+    Color += tex2D(sampler, float2(Tex.x - 2.0*blurSizeX, Tex.y)) * 0.11f;
+    Color += tex2D(sampler, float2(Tex.x - blurSizeX, Tex.y)) * 0.18f;
+    Color += tex2D(sampler, Tex) * 0.24f;
+    Color += tex2D(sampler, float2(Tex.x + blurSizeX, Tex.y)) * 0.18f;
+    Color += tex2D(sampler, float2(Tex.x + 2.0*blurSizeX, Tex.y)) * 0.11f;
+    Color += tex2D(sampler, float2(Tex.x + 3.0*blurSizeX, Tex.y)) * 0.09f;
+
+    return Color;
+}
+
+float4 BlurVertical( float2 Tex )
+{
+    float Color = 0.0f;
+
+    Color += tex2D(sampler, float2(Tex.x, Tex.y - 3.0*blurSizeY)) * 0.09f;
+    Color += tex2D(sampler, float2(Tex.x, Tex.y - 2.0*blurSizeY)) * 0.11f;
+    Color += tex2D(sampler, float2(Tex.x, Tex.y - blurSizeY)) * 0.18f;
+    Color += tex2D(sampler, Tex) * 0.24f;
+    Color += tex2D(sampler, float2(Tex.x, Tex.y + blurSizeY)) * 0.18f;
+    Color += tex2D(sampler, float2(Tex.x, Tex.y + 2.0*blurSizeY)) * 0.11f;
+    Color += tex2D(sampler, float2(Tex.x, Tex.y + 3.0*blurSizeY)) * 0.09f;
+
+    return Color;
+}
+
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 color;
+
+	if( Mode.x == 1.0 )
+	{
+		color = BlurHorizontal( input.TexCoord0 );
+	}
+	else
+	{
+		color = BlurVertical( input.TexCoord0 );
+	}
+
+	return Color;
+}
