@@ -92,7 +92,7 @@ ship:SetPassSlotFxName( "texture_pass", "texture_fx" )
 ship:SetPassSlotTextureName( "texture_pass", "bellerophon_texture", 0 )
 
 ship:RegisterPassSlot( "vfogmask_pass" )
-ship:SetPassSlotFxName( "vfogmask_pass", "vfogmasknocull_fx" )
+ship:SetPassSlotFxName( "vfogmask_pass", "vfogmask_fx" )
 ship:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 0.0, 0.0, 0.0, 1.0 ) )
 
 
@@ -105,7 +105,7 @@ tf_flame0 = TransformationNode( "tf_flame0", 2 )
 tf_flame0:LinkTo( "scene0", "tf_ship" )
 
 flame0_pos = Matrix()
-flame0_pos:Translation( 100, 0, 300 )
+flame0_pos:Translation( 68, 49, 160 )
 
 flame0_scale = Matrix()
 flame0_scale:Scale( 20, 20, 20 )
@@ -121,7 +121,7 @@ tf_flame1 = TransformationNode( "tf_flame1", 2 )
 tf_flame1:LinkTo( "scene0", "tf_ship" )
 
 flame1_pos = Matrix()
-flame1_pos:Translation( -100, 0, 300 )
+flame1_pos:Translation( -68, 49, 160 )
 
 flame1_scale = Matrix()
 flame1_scale:Scale( 20, 20, 20 )
@@ -138,15 +138,8 @@ flame0:SetMesheName( "reactorflame_meshe" )
 
 
 flame0:RegisterPassSlot( "vfogmask_pass" )
-flame0:SetPassSlotFxName( "vfogmask_pass", "vfogmasknocull_fx" )
+flame0:SetPassSlotFxName( "vfogmask_pass", "vfogmask_fx" )
 flame0:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) )
-
-
-flame0:RegisterPassSlot( "vfogzback_pass" )
-flame0:SetPassSlotFxName( "vfogzback_pass", "vfogzback_fx" )
-
-flame0:RegisterPassSlot( "vfogzfront_pass" )
-flame0:SetPassSlotFxName( "vfogzfront_pass", "vfogzfront_fx" )
 
 
 flame0:LinkTo( "scene0", "tf_flame0" )
@@ -161,15 +154,9 @@ flame1:SetMesheName( "reactorflame_meshe" )
 
 
 flame1:RegisterPassSlot( "vfogmask_pass" )
-flame1:SetPassSlotFxName( "vfogmask_pass", "vfogmasknocull_fx" )
+flame1:SetPassSlotFxName( "vfogmask_pass", "vfogmask_fx" )
 flame1:AddPassSlotShaderParam( "vfogmask_pass", "color", 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) )
 
-
-flame1:RegisterPassSlot( "vfogzback_pass" )
-flame1:SetPassSlotFxName( "vfogzback_pass", "vfogzback_fx" )
-
-flame1:RegisterPassSlot( "vfogzfront_pass" )
-flame1:SetPassSlotFxName( "vfogzfront_pass", "vfogzfront_fx" )
 
 
 flame1:LinkTo( "scene0", "tf_flame1" )

@@ -105,30 +105,7 @@ compiled false
 end_asset
 
 
-declare_asset_instance Shader
-assetname vertexshader_vfogzdepth
-filepath vfogzdepth.vsh
-compiled false
-end_asset
 
-declare_asset_instance Shader
-assetname pixelshader_vfogzdepth
-filepath vfogzdepth.psh
-compiled false
-end_asset
-
-
-declare_asset_instance Shader
-assetname vertexshader_vfogzdelta
-filepath vfogzdelta.vsh
-compiled false
-end_asset
-
-declare_asset_instance Shader
-assetname pixelshader_vfogzdelta
-filepath vfogzdelta.psh
-compiled false
-end_asset
 
 
 declare_asset_instance Shader
@@ -160,28 +137,6 @@ renderstates_out ENABLEZBUFFER false
 renderstates_out SETCULLING cw
 end_config
 
-
-
-declare_config_instance Fx vfogzback_fx
-shaders vertexshader_vfogzdepth pixelshader_vfogzdepth
-renderstates_in SETCULLING ccw
-renderstates_in ENABLEZBUFFER true
-renderstates_out ENABLEZBUFFER false
-renderstates_out SETCULLING cw
-end_config
-
-declare_config_instance Fx vfogzfront_fx
-shaders vertexshader_vfogzdepth pixelshader_vfogzdepth
-renderstates_in ENABLEZBUFFER true
-renderstates_out ENABLEZBUFFER false
-end_config
-
-
-declare_config_instance Fx vfogzdelta_fx
-shaders vertexshader_vfogzdelta pixelshader_vfogzdelta
-renderstates_in SETTEXTUREFILTERTYPE anisotropic
-renderstates_out SETTEXTUREFILTERTYPE none
-end_config
 
 
 
@@ -230,7 +185,7 @@ renderstates_in SETTEXTUREFILTERTYPE linear
 renderstates_in ALPHABLENDENABLE true
 renderstates_in ALPHABLENDOP add
 renderstates_in ALPHABLENDFUNC always
-renderstates_in ALPHABLENDDEST invsrcalpha
+renderstates_in ALPHABLENDDEST one
 renderstates_in ALPHABLENDSRC srcalpha
 
 renderstates_out SETTEXTUREFILTERTYPE none
@@ -252,41 +207,7 @@ targetdimsfromrenderer true
 end_config
 
 
-declare_config_instance IntermediatePass vfogzback_pass
-passname vfogzback_pass
-enabledepthclear true
-enabletargetclear true
-targetclearcolor 0 0 0
-viewportquad false
-targetdimsfromrenderer true
 
-renderpurpose float
-end_config
-
-
-declare_config_instance IntermediatePass vfogzfront_pass
-passname vfogfront_pass
-enabledepthclear true
-enabletargetclear true
-targetclearcolor 0 0 0
-viewportquad false
-targetdimsfromrenderer true
-
-renderpurpose float
-end_config
-
-
-
-declare_config_instance IntermediatePass vfogzdelta_pass
-passname vfogzdelta_pass
-viewportquad true
-viewportquad_fx vfogzdelta_fx
-viewportquad_textures pass vfogmask_pass 0
-viewportquad_textures pass vfogzfront_pass 1
-viewportquad_textures pass vfogzback_pass 2
-viewportquad_shaderparams fog_color 1 0 1.0 1.0 1.0 0.0
-viewportquad_shaderparams fog_scale 1 1 16.0 0.0 0.0 0.0 
-end_config
 
 
 
@@ -332,12 +253,6 @@ end_config
 
 
 
-declare_config_instance FinalPass final_pass_2
-passname my_final_pass_2
-viewportquad true
-viewportquad_fx vfog_quad_fx
-viewportquad_textures pass vfogzdelta_pass 0
-end_config
 
 
 declare_config_instance FinalPass final_pass_3
