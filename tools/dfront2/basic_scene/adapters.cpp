@@ -279,7 +279,7 @@ void wxWidgetAdapter::AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxLi
             sprintf( param_register, "%d", it->second.param_register );
 
             char param_values[64];
-            sprintf( param_values, "%.2f %.2f %.2f %.2f", it->second.param_values[0], it->second.param_values[1], it->second.param_values[2], it->second.param_values[3] );
+            sprintf( param_values, "%f %f %f %f", it->second.param_values[0], it->second.param_values[1], it->second.param_values[2], it->second.param_values[3] );
 
             p_listctrl->SetItem( id, 1, shader_index );
             p_listctrl->SetItem( id, 2, param_register );
@@ -368,16 +368,14 @@ void wxWidgetAdapter::on_applypassshadervalues( BasicSceneObjectPropertiesDialog
 
     pass->SetPropertiesMap( props );
 
-
-    // release string allocated in wxWidgetAdapter::AdaptPassShaderValuesPropsModification()
-    delete[] param_id;
-
-
     // update mainframe list ctrl
     wxListCtrl* ctrl = (wxListCtrl*)p_dialog->GetData( "ctrl" );
     AdaptPassesShaderParamsList( pass, ctrl );
 
-    p_dialog->Close();
+    
+    // release string allocated in wxWidgetAdapter::AdaptPassShaderValuesPropsModification()
+    //delete[] param_id;
+    //p_dialog->Close();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
