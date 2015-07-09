@@ -230,6 +230,7 @@ viewportquad true
 viewportquad_fx blur_fx
 viewportquad_textures pass vfogmask_pass 0
 viewportquad_shaderparams mode 1 0 1.0 0.005 0.0 0.0
+viewportquad_shaderparams color 1 1 1.0 1.0 1.0 1.0
 end_config
 
 
@@ -240,6 +241,7 @@ viewportquad true
 viewportquad_fx blur_fx
 viewportquad_textures pass horizontalblur_pass 0
 viewportquad_shaderparams mode 1 0 0.0 0.005 0.0 0.0
+viewportquad_shaderparams color 1 1 0.0 1.0 1.0 1.0
 end_config
 
 

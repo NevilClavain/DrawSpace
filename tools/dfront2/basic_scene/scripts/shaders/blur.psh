@@ -1,5 +1,6 @@
 
 float4 Mode : register(c0);
+float4 BlurColor : register(c1);
 
 sampler2D Texture0 : register(s0);
 
@@ -26,8 +27,6 @@ float4 BlurHorizontal( float2 Tex )
     return Color;
 }
 
-
-
 float4 BlurVertical( float2 Tex )
 {
     float Color = 0.0f;
@@ -44,23 +43,22 @@ float4 BlurVertical( float2 Tex )
     return Color;
 }
 
-
-
-
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-	
-	float4 color = 0;
+	float4 blur = 0;
+	float4 final_color;
 
 	if( Mode.x > 0.5 )
 	{
-		color = BlurHorizontal( input.TexCoord0 );
+		blur = BlurHorizontal( input.TexCoord0 );
 	}
 	else
 	{
-		color = BlurVertical( input.TexCoord0 );
+		blur = BlurVertical( input.TexCoord0 );
 	}
 
-	return color;
-	
+	final_color = blur * BlurColor;
+	final_color.a = 1.0;
+
+	return final_color;	
 }
