@@ -37,7 +37,7 @@ Widget( p_name, p_virtual_width, p_virtual_height, p_parentwidget )
 
     m_pass->GetRenderingQueue()->EnableDepthClearing( false );
     m_pass->GetRenderingQueue()->EnableTargetClearing( true );
-    m_pass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0 );
+    m_pass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 0 );
 
     if( p_backgroundimage )
     {
@@ -102,9 +102,9 @@ void TextWidget::RegisterToPass( Pass* p_pass )
     p_pass->GetRenderingQueue()->Add( m_image );
 }
 
-void TextWidget::SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b )
+void TextWidget::SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a )
 {
-    m_pass->GetRenderingQueue()->SetTargetClearingColor( p_r, p_g, p_b );
+    m_pass->GetRenderingQueue()->SetTargetClearingColor( p_r, p_g, p_b, p_a );
 }
 
 IntermediatePass* TextWidget::GetInternalPass( void )

@@ -45,6 +45,7 @@ m_initialized( false )
     m_properties["targetclearcolor"].AddPropValue<unsigned char>( "r", 0 );
     m_properties["targetclearcolor"].AddPropValue<unsigned char>( "g", 0 );
     m_properties["targetclearcolor"].AddPropValue<unsigned char>( "b", 0 );
+    m_properties["targetclearcolor"].AddPropValue<unsigned char>( "a", 0 );
    
     m_properties["viewportquad"].AddPropValue<bool>( false );
     m_properties["viewportquad_fx"].AddPropValue<dsstring>( "" );
@@ -106,6 +107,10 @@ void Pass::DumpProperties( dsstring& p_text )
     p_text += " ";
 
     IntToString( m_properties["targetclearcolor"].GetPropValue<unsigned char>( "b" ), text_value );
+    p_text += text_value;
+    p_text += " ";
+
+    IntToString( m_properties["targetclearcolor"].GetPropValue<unsigned char>( "a" ), text_value );
     p_text += text_value;
     p_text += "\r\n";
 
@@ -192,8 +197,9 @@ void Pass::ApplyProperties( void )
     unsigned char r = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "r" );
     unsigned char g = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "g" );
     unsigned char b = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "b" );
+    unsigned char a = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "a" );
 
-    GetRenderingQueue()->SetTargetClearingColor( r, g, b );
+    GetRenderingQueue()->SetTargetClearingColor( r, g, b, a );
 
     bool viewportquad = m_properties["viewportquad"].GetPropValue<bool>();
 
@@ -275,7 +281,7 @@ void Pass::ApplyProperties( void )
         }
     }
      
-    GetRenderingQueue()->SetTargetClearingColor( r, g, b );
+    //GetRenderingQueue()->SetTargetClearingColor( r, g, b );
 }
 
 bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
@@ -311,7 +317,7 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
     }
     else if( "targetclearcolor" == p_words[0] )
     {
-        if( p_words.size() < 4 )
+        if( p_words.size() < 5 )
         {
             _PARSER_MISSING_ARG__
             return false;
@@ -320,6 +326,7 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
         m_properties["targetclearcolor"].SetPropValue<unsigned char>( "r", (unsigned char)StringToInt( p_words[1] ) );
         m_properties["targetclearcolor"].SetPropValue<unsigned char>( "g", (unsigned char)StringToInt( p_words[2] ) );
         m_properties["targetclearcolor"].SetPropValue<unsigned char>( "b", (unsigned char)StringToInt( p_words[3] ) );
+        m_properties["targetclearcolor"].SetPropValue<unsigned char>( "a", (unsigned char)StringToInt( p_words[4] ) );
     }
     else if( "passname" == p_words[0] )
     {

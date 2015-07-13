@@ -185,7 +185,7 @@ renderstates_in SETTEXTUREFILTERTYPE linear
 renderstates_in ALPHABLENDENABLE true
 renderstates_in ALPHABLENDOP add
 renderstates_in ALPHABLENDFUNC always
-renderstates_in ALPHABLENDDEST one
+renderstates_in ALPHABLENDDEST invsrcalpha
 renderstates_in ALPHABLENDSRC srcalpha
 
 renderstates_out SETTEXTUREFILTERTYPE none
@@ -201,7 +201,7 @@ declare_config_instance IntermediatePass vfogmask_pass
 passname vfogmask_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 0 0 0
+targetclearcolor 0 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config
@@ -241,7 +241,7 @@ viewportquad true
 viewportquad_fx blur_fx
 viewportquad_textures pass horizontalblur_pass 0
 viewportquad_shaderparams mode 1 0 0.0 0.005 0.0 0.0
-viewportquad_shaderparams color 1 1 0.0 1.0 1.0 1.0
+viewportquad_shaderparams color 1 1 0.7 1.0 1.0 1.0
 end_config
 
 

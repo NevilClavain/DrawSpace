@@ -96,7 +96,7 @@ declare_config_instance IntermediatePass subscene_pass
 passname subscene_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 0 255 0
+targetclearcolor 0 255 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config
@@ -108,7 +108,7 @@ declare_config_instance IntermediatePass texture_pass
 passname my_texture_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 157 255 255
+targetclearcolor 157 255 255 0
 viewportquad false
 targetdimsfromrenderer true
 end_config
@@ -118,7 +118,7 @@ declare_config_instance IntermediatePass fogint_pass
 passname fogint_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 255 0 0
+targetclearcolor 255 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config

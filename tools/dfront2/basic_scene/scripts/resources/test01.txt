@@ -100,7 +100,7 @@ declare_config_instance IntermediatePass texture_pass
 passname my_texture_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 0 0 0
+targetclearcolor 0 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config

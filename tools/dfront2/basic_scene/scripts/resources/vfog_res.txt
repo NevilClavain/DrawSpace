@@ -164,7 +164,7 @@ declare_config_instance IntermediatePass vfogmask_pass
 passname vfogmask_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 0 0 0
+targetclearcolor 0 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config
@@ -174,7 +174,7 @@ declare_config_instance IntermediatePass vfogzback_pass
 passname vfogzback_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 0 0 0
+targetclearcolor 0 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 renderpurpose float
@@ -185,7 +185,7 @@ declare_config_instance IntermediatePass vfogzfront_pass
 passname vfogfront_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 0 0 0
+targetclearcolor 0 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 renderpurpose float
@@ -209,7 +209,7 @@ declare_config_instance IntermediatePass texture_pass
 passname my_texture_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 157 255 255
+targetclearcolor 157 255 255 0
 viewportquad false
 targetdimsfromrenderer true
 end_config

@@ -61,7 +61,7 @@ public:
     virtual void RegisterToPass( Pass* p_pass );
 
 
-    virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
+    virtual void SetPassTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
 
     virtual IntermediatePass* GetInternalPass( void );
 

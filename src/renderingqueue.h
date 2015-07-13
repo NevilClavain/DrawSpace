@@ -104,6 +104,7 @@ protected:
     unsigned char                                       m_target_clear_color_r;
     unsigned char                                       m_target_clear_color_g;
     unsigned char                                       m_target_clear_color_b;
+    unsigned char                                       m_target_clear_color_a;
 
     std::map<RenderingNode*, void*>                     m_fx_datas;
     std::map<RenderingNode*, std::vector<void*> >       m_tx_datas;
@@ -136,7 +137,7 @@ public:
     
     void EnableDepthClearing( bool p_enable );
     void EnableTargetClearing( bool p_enable );
-    void SetTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b );
+    void SetTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
 
     void UpdateOutputQueue( void );
 

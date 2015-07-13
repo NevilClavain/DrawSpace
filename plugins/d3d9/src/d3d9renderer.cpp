@@ -344,9 +344,9 @@ void D3D9Renderer::FlipScreen( void )
     m_lpd3ddevice->Present( NULL, NULL, NULL, NULL );
 }
 
-void D3D9Renderer::ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b )
+void D3D9Renderer::ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a )
 {
-    m_lpd3ddevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( p_r, p_g, p_b ), 1.0f, 0 );
+    m_lpd3ddevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_RGBA( p_r, p_g, p_b, p_a ), 1.0f, 0 );
 }
 
 void D3D9Renderer::ClearDepth( dsreal p_value )

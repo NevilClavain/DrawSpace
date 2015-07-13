@@ -36,6 +36,7 @@ m_clear_target( false ),
 m_target_clear_color_r( 0 ),
 m_target_clear_color_g( 0 ),
 m_target_clear_color_b( 0 ),
+m_target_clear_color_a( 0 ),
 m_switches_cost( 0 )
 {
 
@@ -49,6 +50,7 @@ m_clear_target( false ),
 m_target_clear_color_r( 0 ),
 m_target_clear_color_g( 0 ),
 m_target_clear_color_b( 0 ),
+m_target_clear_color_a( 0 ),
 m_switches_cost( 0 )
 {
 
@@ -86,7 +88,7 @@ void RenderingQueue::Draw( void )
     }
     if( m_clear_target )
     {
-        renderer->ClearScreen( m_target_clear_color_r, m_target_clear_color_g, m_target_clear_color_b );
+        renderer->ClearScreen( m_target_clear_color_r, m_target_clear_color_g, m_target_clear_color_b, m_target_clear_color_a );
     }
 
     //for( size_t i = 0; i < m_outputqueue.size(); i++ )
@@ -181,11 +183,12 @@ void RenderingQueue::EnableTargetClearing( bool p_enable )
     m_clear_target = p_enable;
 }
 
-void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b )
+void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a )
 {
     m_target_clear_color_r = p_r;
     m_target_clear_color_g = p_g;
     m_target_clear_color_b = p_b;
+    m_target_clear_color_a = p_a;
 }
 
 void RenderingQueue::UpdateOutputQueue( void )

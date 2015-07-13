@@ -168,7 +168,7 @@ public:
     virtual void EndScreen( void );
     virtual void FlipScreen( void );
 
-    virtual void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b );
+    virtual void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
     virtual void ClearDepth( dsreal p_value = 1.0 );
 
     virtual void BeginTarget( DrawSpace::Core::Texture* p_texture );

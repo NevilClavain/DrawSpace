@@ -162,7 +162,7 @@ TextWidget* DrawSpace::Utils::BuildText( DrawSpace::Core::Font* p_font, long p_w
     text_widget->GetText()->AddShaderParameter( 1, "color", 0 );
     text_widget->GetText()->SetShaderRealVector( "color", Utils::Vector( 1.0, 1.0, 1.0, 0.0 ) );
 
-    text_widget->SetPassTargetClearingColor( 0, 0, 0 );
+    text_widget->SetPassTargetClearingColor( 0, 0, 0, 0 );
     
     text_widget->GetInternalPass()->GetRenderingQueue()->UpdateOutputQueue();
 
