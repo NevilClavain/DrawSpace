@@ -251,7 +251,12 @@ bool Meshe::ApplyProperties( void )
         _DSEXCEPTION( "Bad meshe import name : " << mode )
     }
     SetImporter( mesheimp );
-    return LoadFromFile( path, index );    
+    if( LoadFromFile( path, index ) )
+    {
+        ComputeNormales();
+        return true;
+    }
+    return false;
 }
 
 void Meshe::Serialize( Archive& p_archive  )
@@ -344,7 +349,7 @@ void Meshe::GetKeyword( dsstring& p_outkeyword )
     p_outkeyword = MESHE_TEXT_KEYWORD;
 }
 
-void Meshe::ComputeNormales( Meshe::NormalesMode p_mode )
+void Meshe::ComputeNormales( void )
 {
 
 }
