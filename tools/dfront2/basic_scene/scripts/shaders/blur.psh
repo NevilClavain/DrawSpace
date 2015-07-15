@@ -58,7 +58,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	}
 
 	final_color = blur * BlurColor;
-	final_color.a = 1.0;
-
+	
 	return final_color;	
 }
