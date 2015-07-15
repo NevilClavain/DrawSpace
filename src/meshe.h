@@ -44,11 +44,24 @@ namespace Core
 
 class Meshe : public Asset
 {
-protected:
-    std::vector<Vertex>                 m_vertices;
-    std::vector<Triangle>               m_triangles;
+public:
 
-    DrawSpace::Interface::MesheImport*  m_importer;
+    typedef enum
+    {
+        NORMALES_SPHERE,
+        NORMALES_TRIANGLESSUM,
+
+    } NormalesMode;
+
+
+protected:
+    std::vector<Vertex>                         m_vertices;
+    std::vector<Triangle>                       m_triangles;
+
+    // list of triangles for each vertex
+    std::map<long, std::vector<Triangle>>       m_triangles_for_vertex;
+
+    DrawSpace::Interface::MesheImport*          m_importer;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
@@ -59,6 +72,8 @@ public:
 
     void SetImporter( DrawSpace::Interface::MesheImport* p_importer );
     bool LoadFromFile( const dsstring& p_filepath, long p_index );
+
+    void ComputeNormales( NormalesMode p_mode );
 
     long GetVertexListSize( void );
     long GetTrianglesListSize( void );

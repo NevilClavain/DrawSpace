@@ -146,6 +146,10 @@ void Meshe::SetVertex( long p_index, const Vertex& p_vertex )
 void Meshe::AddTriangle( const Triangle& p_triangle )
 {
     m_triangles.push_back( p_triangle );
+
+    m_triangles_for_vertex[p_triangle.vertex1].push_back( p_triangle );
+    m_triangles_for_vertex[p_triangle.vertex2].push_back( p_triangle );
+    m_triangles_for_vertex[p_triangle.vertex3].push_back( p_triangle );
 }
 
 void Meshe::GetCenter( Vector& p_vector )
@@ -338,4 +342,9 @@ Asset* Meshe::Instanciate( void )
 void Meshe::GetKeyword( dsstring& p_outkeyword )
 {
     p_outkeyword = MESHE_TEXT_KEYWORD;
+}
+
+void Meshe::ComputeNormales( Meshe::NormalesMode p_mode )
+{
+
 }
