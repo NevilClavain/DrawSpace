@@ -1,0 +1,101 @@
+
+
+declare_asset_instance Texture
+assetname texture_shelby
+filepath shelby.jpg
+rendertarget false
+end_asset
+
+
+declare_asset_instance Texture
+assetname ground
+filepath ground.bmp
+rendertarget false
+end_asset
+
+declare_asset_instance Shader
+assetname vertexshader_texture
+filepath texture.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_texture
+filepath texture.psh
+compiled false
+end_asset
+
+
+declare_asset_instance Shader
+assetname vertexshader_normales
+filepath normales.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_normales
+filepath normales.psh
+compiled false
+end_asset
+
+
+
+declare_asset_instance Meshe
+assetname grid_meshe
+filepath grid.ac
+index 0
+mode ac3d
+end_asset
+
+
+
+declare_config_instance Fx texture_fx
+shaders vertexshader_texture pixelshader_texture
+renderstates_in ENABLEZBUFFER true
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out ENABLEZBUFFER false
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
+declare_config_instance Fx normales_fx
+shaders vertexshader_normales pixelshader_normales
+renderstates_in ENABLEZBUFFER true
+renderstates_out ENABLEZBUFFER false
+end_config
+
+
+declare_config_instance Fx texture_quad_fx
+shaders vertexshader_texture pixelshader_texture
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
+
+declare_config_instance IntermediatePass texture_pass
+passname my_texture_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 157 255 255 0
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
+
+declare_config_instance IntermediatePass normales_pass
+passname normales_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 0 0 0 0
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
+
+declare_config_instance FinalPass final_pass
+passname my_final_pass
+viewportquad true
+viewportquad_fx texture_quad_fx
+viewportquad_textures pass normales_pass 0
+end_config
