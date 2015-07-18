@@ -94,6 +94,16 @@ cube0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
 cube0:RegisterPassSlot( "normales_pass" )
 cube0:SetPassSlotFxName( "normales_pass", "normales_fx" )
 
+cube0:LinkTo( "scene0", "body0" )
+print( "cube0 loaded..." )
+
+
+spheretf = TransformationNode( "spheretf" )
+spheretf:LinkTo( "scene0", "scene0" )
+mat2 = Matrix()
+mat2:Translation( -4, -1, -8 )
+spheretf:AddMatrix( mat2 )
+
 
 
 sphere0 = ChunkNode( "sphere0" )
@@ -101,13 +111,26 @@ sphere0:SetMesheName( "sphere_meshe" )
 sphere0:RegisterPassSlot( "normales_pass" )
 sphere0:SetPassSlotFxName( "normales_pass", "normales_fx" )
 
-sphere0:LinkTo( "scene0", "scene0" )
+sphere0:LinkTo( "scene0", "spheretf" )
 print( "sphere0 loaded..." )
 
 
 
-cube0:LinkTo( "scene0", "body0" )
-print( "cube0 loaded..." )
+
+tf_teapot = TransformationNode( "tf_teapot" )
+tf_teapot:LinkTo( "scene0", "scene0" )
+mat3 = Matrix()
+mat3:Translation( 4, -1, -11 )
+tf_teapot:AddMatrix( mat3 )
+
+
+teapot = ChunkNode( "teapot" )
+teapot:SetMesheName( "teapot_meshe" )
+
+teapot:RegisterPassSlot( "normales_pass" )
+teapot:SetPassSlotFxName( "normales_pass", "normales_fx" )
+
+teapot:LinkTo( "scene0", "tf_teapot" )
 
 
 scene_ready = true

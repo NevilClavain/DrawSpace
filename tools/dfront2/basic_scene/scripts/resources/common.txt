@@ -28,6 +28,7 @@ assetname sphere_meshe
 filepath sphere.ac
 index 0
 mode ac3d
+spherical_normales 1
 end_asset
 
 declare_config_instance Fx wireframe_fx
