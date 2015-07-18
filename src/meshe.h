@@ -63,7 +63,7 @@ public:
     void SetImporter( DrawSpace::Interface::MesheImport* p_importer );
     bool LoadFromFile( const dsstring& p_filepath, long p_index );
 
-    void ComputeNormales( void );
+    void ComputeNormales( bool p_spherical_normales );
 
     long GetVertexListSize( void );
     long GetTrianglesListSize( void );

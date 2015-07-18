@@ -42,6 +42,7 @@ Meshe::Meshe( void ) : m_importer( NULL )
     m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
     m_properties["index"].AddPropValue<long>( 0 );
     m_properties["mode"].AddPropValue<dsstring>( "" );
+    m_properties["spherical_normales"].AddPropValue<bool>( false );
 }
 
 Meshe::~Meshe( void )
@@ -90,6 +91,16 @@ bool Meshe::on_new_line( const dsstring& p_line, long p_line_num, std::vector<ds
         }
 
         m_properties["mode"].SetPropValue<dsstring>( p_words[1] );
+    }
+    else if( "spherical_normales" == p_words[0] )
+    {
+        if( p_words.size() < 2 )
+        {
+            _PARSER_MISSING_ARG__
+            return false;
+        }
+
+        m_properties["spherical_normales"].SetPropValue<bool>( StringToInt( p_words[1] ) );
     }
     else
     {
@@ -237,6 +248,7 @@ bool Meshe::ApplyProperties( void )
     long index = m_properties["index"].GetPropValue<long>();
 
     dsstring mode = m_properties["mode"].GetPropValue<dsstring>();
+    
 
     MesheImport* mesheimp;
 
@@ -253,7 +265,7 @@ bool Meshe::ApplyProperties( void )
     SetImporter( mesheimp );
     if( LoadFromFile( path, index ) )
     {
-        ComputeNormales();
+        ComputeNormales( m_properties["spherical_normales"].GetPropValue<bool>() );
         return true;
     }
     return false;
@@ -292,8 +304,12 @@ void Meshe::DumpProperties( dsstring& p_text )
     p_text += text_value;
     p_text += "\r\n";
 
-    p_text += "plugin ";
+    p_text += "mode ";
     p_text += m_properties["plugin"].GetPropValue<dsstring>();
+    p_text += "\r\n";
+
+    IntToString( m_properties["spherical_normales"].GetPropValue<bool>(), text_value );
+    p_text += text_value;
     p_text += "\r\n";
 
 
@@ -349,35 +365,51 @@ void Meshe::GetKeyword( dsstring& p_outkeyword )
     p_outkeyword = MESHE_TEXT_KEYWORD;
 }
 
-void Meshe::ComputeNormales( void )
+void Meshe::ComputeNormales( bool p_spherical_normales )
 {
-    for( std::map<long, std::vector<Triangle>>::iterator it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it )
+    if( p_spherical_normales )
     {
-        Vector normales_sum;
-
-        std::vector<Triangle> triangles_list = it->second;
-
-        for( size_t i = 0; i < triangles_list.size(); i++ )
+        for( size_t i = 0; i < m_vertices.size(); i++ )
         {
-            Triangle triangle = triangles_list[i];
-            Vertex v1 = m_vertices[triangle.vertex1];
-            Vertex v2 = m_vertices[triangle.vertex2];
-            Vertex v3 = m_vertices[triangle.vertex3];
+            Vector v( m_vertices[i].x, m_vertices[i].y, m_vertices[i].z, 1.0 );
 
-            Vector d1( v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, 1.0 );
-            Vector d2( v3.x - v1.x, v3.y - v1.y, v3.z - v1.z, 1.0 );
+            v.Normalize();
 
-            Vector res = ProdVec( d1, d2 );
-            res.Normalize();
-
-            normales_sum = normales_sum + res;
+            m_vertices[i].nx = v[0];
+            m_vertices[i].ny = v[1];
+            m_vertices[i].nz = v[2];
         }
+    }
+    else
+    {
+        for( std::map<long, std::vector<Triangle>>::iterator it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it )
+        {
+            Vector normales_sum;
 
-        normales_sum.Scale( 1.0 / triangles_list.size() );
-        normales_sum.Normalize();
+            std::vector<Triangle> triangles_list = it->second;
 
-        m_vertices[it->first].nx = normales_sum[0];
-        m_vertices[it->first].ny = normales_sum[1];
-        m_vertices[it->first].nz = normales_sum[2];
+            for( size_t i = 0; i < triangles_list.size(); i++ )
+            {
+                Triangle triangle = triangles_list[i];
+                Vertex v1 = m_vertices[triangle.vertex1];
+                Vertex v2 = m_vertices[triangle.vertex2];
+                Vertex v3 = m_vertices[triangle.vertex3];
+
+                Vector d1( v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, 1.0 );
+                Vector d2( v3.x - v1.x, v3.y - v1.y, v3.z - v1.z, 1.0 );
+
+                Vector res = ProdVec( d1, d2 );
+                res.Normalize();
+
+                normales_sum = normales_sum + res;
+            }
+
+            normales_sum.Scale( 1.0 / triangles_list.size() );
+            normales_sum.Normalize();
+
+            m_vertices[it->first].nx = normales_sum[0];
+            m_vertices[it->first].ny = normales_sum[1];
+            m_vertices[it->first].nz = normales_sum[2];
+        }
     }
 }
