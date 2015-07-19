@@ -110,6 +110,10 @@ sphere0 = ChunkNode( "sphere0" )
 sphere0:SetMesheName( "sphere_meshe" )
 sphere0:RegisterPassSlot( "normales_pass" )
 sphere0:SetPassSlotFxName( "normales_pass", "normales_fx" )
+sphere0:RegisterPassSlot( "texture_pass" )
+sphere0:SetPassSlotFxName( "texture_pass", "texture_fx" )
+sphere0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
+
 
 sphere0:LinkTo( "scene0", "spheretf" )
 print( "sphere0 loaded..." )
@@ -129,6 +133,10 @@ teapot:SetMesheName( "teapot_meshe" )
 
 teapot:RegisterPassSlot( "normales_pass" )
 teapot:SetPassSlotFxName( "normales_pass", "normales_fx" )
+teapot:RegisterPassSlot( "texture_pass" )
+teapot:SetPassSlotFxName( "texture_pass", "texture_fx" )
+teapot:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
+
 
 teapot:LinkTo( "scene0", "tf_teapot" )
 

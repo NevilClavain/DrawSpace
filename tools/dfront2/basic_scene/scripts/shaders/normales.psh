@@ -12,25 +12,12 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 Color;
 	
-	/*
+	// set normales values from [-1.0 1.0] range to [0.0 1.0] range
+	// (with zero on 0.5)
 	float4 nnorm = ( normalize( input.Normales ) / 2.0 ) + 0.5;	
+
 	Color = nnorm;
-	Color.a = 1.0;
-	*/
-	
-	
-	float4 ldir;
-	
-	ldir.x = 1.0;
-	ldir.y = 1.0;
-	ldir.z = 0.0;
-	ldir.w = 0.0;
-	
-	float intensity = dot( normalize( ldir ), normalize( input.Normales ) );
-	
-	Color = intensity;
-	Color.a = 1.0;
-		
+	Color.a = 1.0;	
 	return Color;
-	
+
 }
