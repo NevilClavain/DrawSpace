@@ -40,6 +40,20 @@ end_asset
 
 
 declare_asset_instance Shader
+assetname vertexshader_ambient
+filepath ambient.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_ambient
+filepath ambient.psh
+compiled false
+end_asset
+
+
+
+declare_asset_instance Shader
 assetname vertexshader_phong
 filepath phong.vsh
 compiled false
@@ -50,6 +64,21 @@ assetname pixelshader_phong
 filepath phong.psh
 compiled false
 end_asset
+
+
+declare_asset_instance Shader
+assetname vertexshader_modulate
+filepath modulate.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_modulate
+filepath modulate.psh
+compiled false
+end_asset
+
+
 
 
 declare_asset_instance Meshe
@@ -88,6 +117,16 @@ shaders vertexshader_phong pixelshader_phong
 end_config
 
 
+declare_config_instance Fx ambient_fx
+shaders vertexshader_ambient pixelshader_ambient
+end_config
+
+
+declare_config_instance Fx modulate_fx
+shaders vertexshader_modulate pixelshader_modulate
+end_config
+
+
 
 declare_config_instance Fx texture_quad_fx
 shaders vertexshader_texture pixelshader_texture
@@ -117,16 +156,39 @@ targetdimsfromrenderer true
 end_config
 
 
+declare_config_instance IntermediatePass ambient_pass
+passname ambient_pass
+viewportquad true
+viewportquad_fx ambient_fx
+viewportquad_textures pass normales_pass 0
+viewportquad_shaderparams lcolor 1 0 0.05 0.05 0.05 1.0 
+
+end_config
+
+
+
 declare_config_instance IntermediatePass phong_pass
 passname phong_pass
 viewportquad true
 viewportquad_fx phong_fx
-viewportquad_textures pass texture_pass 0
+viewportquad_textures pass ambient_pass 0
 viewportquad_textures pass normales_pass 1
-viewportquad_shaderparams ldir 1 0 1.0 1.0 0.0 0.0
-viewportquad_shaderparams lcolor 1 1 1.0 1.0 1.0 0.0 
+viewportquad_shaderparams ldir 1 0 -1.0 -1.0 0.0 0.0
+viewportquad_shaderparams lcolor 1 1 1.0 1.0 1.0 1.0 
 
 end_config
+
+
+
+declare_config_instance IntermediatePass modulate_pass
+passname modulate_pass
+viewportquad true
+viewportquad_fx modulate_fx
+viewportquad_textures pass phong_pass 0
+viewportquad_textures pass texture_pass 1
+
+end_config
+
 
 
 
@@ -134,5 +196,5 @@ declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_quad_fx
-viewportquad_textures pass phong_pass 0
+viewportquad_textures pass modulate_pass 0
 end_config

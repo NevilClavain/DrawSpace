@@ -24,7 +24,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 outputcolor = fog_color;
 	if( mask.x > 0.0 )
 	{
-		outputcolor.a = clamp( 0.0, 1.0, ( zback.x - zfront.x ) / fog_scale.x );
+		outputcolor.a = clamp( ( zback.x - zfront.x ) / fog_scale.x, 0.0, 1.0 );
 	}	
 
 	return outputcolor;

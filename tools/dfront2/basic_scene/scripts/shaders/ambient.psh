@@ -1,0 +1,25 @@
+
+float4 lcolor: register(c0);
+
+sampler2D Texture0 : register(s0);
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+   float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 normale_color = tex2D( Texture0, input.TexCoord0 );
+
+	float4 Color = 0;
+	
+	if( normale_color.r > 0.0 && normale_color.g > 0.0 && normale_color.b > 0 )
+	{
+		Color = lcolor;
+	}		
+	Color.a = 1.0;
+	return Color;
+}

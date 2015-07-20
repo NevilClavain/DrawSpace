@@ -14,7 +14,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	
 	// set normales values from [-1.0 1.0] range to [0.0 1.0] range
 	// (with zero on 0.5)
-	float4 nnorm = ( normalize( input.Normales ) / 2.0 ) + 0.5;	
+	float4 nnorm = saturate( ( normalize( input.Normales ) / 2.0 ) + 0.5 );
 
 	Color = nnorm;
 	Color.a = 1.0;	

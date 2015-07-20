@@ -1,0 +1,21 @@
+
+sampler2D Texture0 : register(s0);
+sampler2D Texture1 : register(s1);
+
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+   float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 Color;
+	float4 texture1 = tex2D( Texture0, input.TexCoord0 );
+	float4 texture2 = tex2D( Texture1, input.TexCoord0 );
+	
+	Color = texture1 * texture2;
+	return Color;
+}
