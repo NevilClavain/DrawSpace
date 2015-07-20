@@ -203,6 +203,8 @@ void Pass::ApplyProperties( void )
 
     bool viewportquad = m_properties["viewportquad"].GetPropValue<bool>();
 
+    dsstring passname = m_properties["passname"].GetPropValue<dsstring>();
+
     if( viewportquad )
     {
         CreateViewportQuad();
@@ -211,7 +213,7 @@ void Pass::ApplyProperties( void )
 
         if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( viewportquad_fx ) )
         {
-            _DSEXCEPTION( "Config id unknown in ConfigsBase" );
+            _DSEXCEPTION( "Config id " + viewportquad_fx + " unknown in ConfigsBase for pass " + passname );
         }
 
         Configurable* config = ConfigsBase::GetInstance()->GetConfigurableInstance( viewportquad_fx );
@@ -219,7 +221,7 @@ void Pass::ApplyProperties( void )
         Fx* fx = dynamic_cast<Fx*>( config );
         if( !fx )
         {
-            _DSEXCEPTION( "Specified config is not an Fx" );
+            _DSEXCEPTION( "Specified config " + viewportquad_fx + " is not an Fx for pass " + passname );
         }
 
         GetViewportQuad()->SetFx( fx );
@@ -237,7 +239,7 @@ void Pass::ApplyProperties( void )
             {
                 if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( texture_source_name.name ) )
                 {
-                    _DSEXCEPTION( "Config id unknown in ConfigsBase" );
+                    _DSEXCEPTION( "Config id " + texture_source_name.name + " unknown in ConfigsBase for pass " + passname );
                 }
 
                 Configurable* pass = ConfigsBase::GetInstance()->GetConfigurableInstance( texture_source_name.name );
@@ -250,14 +252,14 @@ void Pass::ApplyProperties( void )
                 }
                 else
                 {
-                    _DSEXCEPTION( "Specified pass is not an Intermediate pass" );
+                    _DSEXCEPTION( "Specified pass is not an Intermediate pass for pass " + passname );
                 }
             }
             else
             {
                 if( false == AssetsBase::GetInstance()->AssetIdExists( texture_source_name.name ) )
                 {
-                    _DSEXCEPTION( "Asset id unknown in AssetsBase" );
+                    _DSEXCEPTION( "Asset id " + texture_source_name.name + " unknown in AssetsBase for pass " + passname );
                 }
 
                 Asset* asset = AssetsBase::GetInstance()->GetAsset( texture_source_name.name );
@@ -265,7 +267,7 @@ void Pass::ApplyProperties( void )
                 Texture* texture = dynamic_cast<Texture*>( asset);
                 if( !texture )
                 {
-                    _DSEXCEPTION( "Specified asset is not a texture" );
+                    _DSEXCEPTION( "Specified asset is not a texture for pass " + passname );
                 }
 
                 GetViewportQuad()->SetTexture( static_cast<Texture*>( asset ), stage );
@@ -286,18 +288,7 @@ void Pass::ApplyProperties( void )
 
 bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
-    /*
-    if( "configname" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["configname"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else*/ if( "enabledepthclear" == p_words[0] )
+    if( "enabledepthclear" == p_words[0] )
     {
         if( p_words.size() < 2 )
         {

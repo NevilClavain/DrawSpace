@@ -101,8 +101,12 @@ DrawSpace::Asset* Factory::BuildAssetFromText( const dsstring& p_keyword, const 
 bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
     if( m_capture_asset_props )
-    {        
-        if( DECLARE_END_ASSET_KEYWORD == p_words[0] )
+    {   
+        if( "#" == p_words[0] )
+        {
+            return true;
+        }
+        else if( DECLARE_END_ASSET_KEYWORD == p_words[0] )
         {
             m_capture_asset_props = false;
 
@@ -141,7 +145,11 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
     }
     else if( m_capture_config_props )
     {
-        if( DECLARE_END_CONFIG_KEYWORD == p_words[0] )
+        if( "#" == p_words[0] )
+        {
+            return true;
+        }
+        else if( DECLARE_END_CONFIG_KEYWORD == p_words[0] )
         {
             m_capture_config_props = false;
 
@@ -177,7 +185,11 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
     }
     else
     {
-        if( DECLARE_ASSET_INSTANCE_KEYWORD == p_words[0] )
+        if( "#" == p_words[0] )
+        {
+            return true;
+        }
+        else if( DECLARE_ASSET_INSTANCE_KEYWORD == p_words[0] )
         {
             if( p_words.size() < 2 )
             {
@@ -202,8 +214,6 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
             m_config_properties = "";
             m_config_keyword = p_words[1];
             m_config_name = p_words[2];
-
-
         }
         else
         {

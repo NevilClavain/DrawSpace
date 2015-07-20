@@ -372,7 +372,7 @@ void Fx::ApplyProperties( void )
 
         if( false == AssetsBase::GetInstance()->AssetIdExists( shader_name ) )
         {
-            _DSEXCEPTION( "Asset id unknown in AssetsBase" );
+            _DSEXCEPTION( "Asset id " + shader_name + " unknown in AssetsBase" );
         }
 
         Asset* asset = AssetsBase::GetInstance()->GetAsset( shader_name );
@@ -380,7 +380,7 @@ void Fx::ApplyProperties( void )
         Shader* shader = dynamic_cast<Shader*>( asset );
         if( !shader )
         {
-            _DSEXCEPTION( "Specified asset is not a shader" );
+            _DSEXCEPTION( "Specified asset " + shader_name + " is not a shader" );
         }
 
         AddShader( static_cast<Shader*>( shader ) );
