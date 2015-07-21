@@ -229,6 +229,17 @@ targetdimsfromrenderer true
 end_config
 
 
+declare_config_instance IntermediatePass texture_pass_2
+passname texture_pass_2
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 157 255 255 0
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
+
+
 declare_config_instance IntermediatePass normales_pass
 passname normales_pass
 enabledepthclear true
@@ -293,7 +304,7 @@ passname composition_pass
 viewportquad true
 viewportquad_fx compose_fx
 viewportquad_textures pass modulate_pass 0
-viewportquad_textures pass texture_pass 1
+viewportquad_textures pass texture_pass_2 1
 
 end_config
 
