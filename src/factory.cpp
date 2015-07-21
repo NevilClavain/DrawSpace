@@ -126,7 +126,7 @@ bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<
 
                 if( AssetsBase::GetInstance()->AssetIdExists( assetname ) )
                 {
-                    _DSEXCEPTION( "asset with same id already registered in AssetsBase" );
+                    _DSEXCEPTION( "asset with same id " + assetname + " already registered in AssetsBase" );
                 }
 
                 AssetsBase::GetInstance()->RegisterAsset( assetname, asset );
