@@ -17,13 +17,20 @@ ds:SetScenegraphEventCallback( function( evt_type, scenegraph_name )
   
   if evt_type == 0 and scene_ready then
   
+    ds:AngleSpeedInc( roty_angle, 25 )
+    
+    
+    teapot_roty_mat:Rotation( roty_axis, roty_angle:GetValue() )
+    
+    tf_teapot:UpdateMatrix( 1, teapot_roty_mat )
+    
   end
 
 end
 )
 
 
-
+roty_angle = Real()
 
 keyboard = Keyboard()
 mouse = Mouse()
@@ -123,9 +130,17 @@ print( "sphere0 loaded..." )
 
 tf_teapot = TransformationNode( "tf_teapot" )
 tf_teapot:LinkTo( "scene0", "scene0" )
+
 mat3 = Matrix()
 mat3:Translation( 4, -1, -11 )
 tf_teapot:AddMatrix( mat3 )
+
+roty_axis = Vector( 0, 1, 0, 1 )
+
+teapot_roty_mat = Matrix();
+teapot_roty_mat:Rotation( roty_axis, 0 );
+
+tf_teapot:AddMatrix( teapot_roty_mat )
 
 
 teapot = ChunkNode( "teapot" )
