@@ -166,6 +166,7 @@ viewportquad_shaderparams lcolor 1 0 0.05 0.05 0.05 1.0
 end_config
 
 
+# 1st light
 
 declare_config_instance IntermediatePass phong_pass
 passname phong_pass
@@ -174,9 +175,22 @@ viewportquad_fx phong_fx
 viewportquad_textures pass ambient_pass 0
 viewportquad_textures pass normales_pass 1
 viewportquad_shaderparams ldir 1 0 -1.0 -1.0 0.0 0.0
-viewportquad_shaderparams lcolor 1 1 1.0 1.0 1.0 1.0 
+viewportquad_shaderparams lcolor 1 1 0.0 0.0 1.0 1.0 
 
 end_config
+
+# 2nd light
+declare_config_instance IntermediatePass phong_pass_2
+passname phong_pass_2
+viewportquad true
+viewportquad_fx phong_fx
+viewportquad_textures pass phong_pass 0
+viewportquad_textures pass normales_pass 1
+viewportquad_shaderparams ldir 1 0 1.0 -0.6 0.0 0.0
+viewportquad_shaderparams lcolor 1 1 0.0 1.0 0.0 1.0 
+
+end_config
+
 
 
 
@@ -184,7 +198,7 @@ declare_config_instance IntermediatePass modulate_pass
 passname modulate_pass
 viewportquad true
 viewportquad_fx modulate_fx
-viewportquad_textures pass phong_pass 0
+viewportquad_textures pass phong_pass_2 0
 viewportquad_textures pass texture_pass 1
 
 end_config
