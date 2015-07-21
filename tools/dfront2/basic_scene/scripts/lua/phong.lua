@@ -40,7 +40,6 @@ ds:LoadKeyUpScript( "keyuphandler.lua" )
 ds:LoadKeyDownScript( "keydownhandler.lua" )
 print( "keyboard and mouse handlers loaded..." )
 
-
 fps0 = FpsMovementNode( "fps0" )
 fps0:SetYMvt( 1 )
 fps0:LinkTo( "scene0", "scene0" )
@@ -51,6 +50,45 @@ cam0:LinkTo( "scene0", "fps0" )
 print( "cam0 loaded..." )
 
 ds:SetSceneNodeGraphCurrentCamera( "scene0", "cam0" )
+
+
+
+
+
+
+
+tf_spacebox = TransformationNode( "tf_spacebox", 1 )
+tf_spacebox:LinkTo( "scene0", "scene0" )
+sb_scale = Matrix()
+sb_scale:Scale( 25, 25, 25 )
+tf_spacebox:UpdateMatrix( 0, sb_scale )
+
+sb0 = SpaceboxNode( "sb0" )
+sb0:RegisterPassSlot( "texture_pass" )
+sb0:SetPassSlotFxName( "texture_pass", "spacebox_fx" )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_front", 0, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_back", 1, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_left", 2, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_right", 3, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_top", 4, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_bottom", 5, 0 )
+
+--sb0:RegisterPassSlot( "normales_pass" )
+--sb0:SetPassSlotFxName( "normales_pass", "color_fx" )
+--sb0:AddPassSlotShaderParam( "normales_pass", "color", 1, 0, Vector( 0.0, 0.0, 0.0, 1.0 ) )
+
+
+
+sb0:LinkTo( "scene0", "tf_spacebox" )
+print( "spacebox loaded..." )
+
+
+
+
+
+
+
+
 
 body_ground = InertBodyNode( "ground" )
 body_ground:SetShapeDescrBox( Vector( 60.0, 0.0, 60.0, 1.0 ) )
@@ -99,7 +137,9 @@ cube0:SetPassSlotFxName( "texture_pass", "texture_fx" )
 cube0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
 
 cube0:RegisterPassSlot( "normales_pass" )
-cube0:SetPassSlotFxName( "normales_pass", "normales_fx" )
+cube0:SetPassSlotFxName( "normales_pass", "color_fx" )
+cube0:AddPassSlotShaderParam( "normales_pass", "color", 1, 0, Vector( 0.0, 0.0, 0.0, 1.0 ) )
+
 
 cube0:LinkTo( "scene0", "body0" )
 print( "cube0 loaded..." )

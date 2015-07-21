@@ -13,6 +13,53 @@ filepath ground.bmp
 rendertarget false
 end_asset
 
+
+
+
+declare_asset_instance Texture
+assetname spacebox_back
+filepath spacebox_back6.png
+rendertarget false
+end_asset
+
+declare_asset_instance Texture
+assetname spacebox_bottom
+filepath spacebox_bottom4.png
+rendertarget false
+end_asset
+
+declare_asset_instance Texture
+assetname spacebox_front
+filepath spacebox_front5.png
+rendertarget false
+end_asset
+
+
+declare_asset_instance Texture
+assetname spacebox_left
+filepath spacebox_left2.png
+rendertarget false
+end_asset
+
+
+declare_asset_instance Texture
+assetname spacebox_right
+filepath spacebox_right1.png
+rendertarget false
+end_asset
+
+
+declare_asset_instance Texture
+assetname spacebox_top
+filepath spacebox_top3.png
+rendertarget false
+end_asset
+
+
+
+
+
+
 declare_asset_instance Shader
 assetname vertexshader_texture
 filepath texture.vsh
@@ -35,6 +82,21 @@ end_asset
 declare_asset_instance Shader
 assetname pixelshader_normales
 filepath normales.psh
+compiled false
+end_asset
+
+
+
+
+declare_asset_instance Shader
+assetname vertexshader_compose
+filepath compose.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_compose
+filepath compose.psh
 compiled false
 end_asset
 
@@ -105,8 +167,24 @@ renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
 
+declare_config_instance Fx spacebox_fx
+shaders vertexshader_texture pixelshader_texture
+renderstates_in ENABLEZBUFFER false
+renderstates_in SETTEXTUREFILTERTYPE linear
+renderstates_out ENABLEZBUFFER false
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
 declare_config_instance Fx normales_fx
 shaders vertexshader_normales pixelshader_normales
+renderstates_in ENABLEZBUFFER true
+renderstates_out ENABLEZBUFFER false
+end_config
+
+
+declare_config_instance Fx color_fx
+shaders vertexshader_color pixelshader_color
 renderstates_in ENABLEZBUFFER true
 renderstates_out ENABLEZBUFFER false
 end_config
@@ -124,6 +202,11 @@ end_config
 
 declare_config_instance Fx modulate_fx
 shaders vertexshader_modulate pixelshader_modulate
+end_config
+
+
+declare_config_instance Fx compose_fx
+shaders vertexshader_compose pixelshader_compose
 end_config
 
 
@@ -205,10 +288,20 @@ end_config
 
 
 
+declare_config_instance IntermediatePass composition_pass
+passname composition_pass
+viewportquad true
+viewportquad_fx compose_fx
+viewportquad_textures pass modulate_pass 0
+viewportquad_textures pass texture_pass 1
+
+end_config
+
+
 
 declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_quad_fx
-viewportquad_textures pass modulate_pass 0
+viewportquad_textures pass composition_pass 0
 end_config
