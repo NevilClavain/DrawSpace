@@ -37,5 +37,23 @@ void ActionUpdatePassShaderParam::Execute( DrawSpace::Core::PropertyPool& p_prop
     dsstring paramid = p_propertypool.GetPropValue<dsstring>( "paramid" );
     Vector values = p_propertypool.GetPropValue<Vector>( "values" );
 
-    _asm nop
+    Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( passname ) );
+
+    if( !current_pass )
+    {
+        wxMessageBox( "DrawSpace:UpdatePassShaderParam : bad pass name (dont exists or is not a pass) : " + passname, "Script error", wxICON_ERROR );
+        return;
+    }
+
+    Configurable::PropertiesMap props;
+    current_pass->GetPropertiesMap( props );
+
+    std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = props["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
+
+    if( viewportquad_shaderparams.count( paramid ) == 0 )
+    {
+        wxMessageBox( "DrawSpace:UpdatePassShaderParam : unknown pass shader param id" + passname + " " + paramid, "Script error", wxICON_ERROR );
+    }
+
+    // to be continued...
 }

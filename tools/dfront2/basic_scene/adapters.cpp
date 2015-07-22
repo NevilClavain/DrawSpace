@@ -309,6 +309,7 @@ void wxWidgetAdapter::AdaptPassShaderValuesPropsModification( Pass* p_pass, char
     dsreal z = viewportquad_shaderparams[p_param_id].param_values[2];
     dsreal w = viewportquad_shaderparams[p_param_id].param_values[3];
 
+    propertygrid->Append( new wxStringProperty( "param id", wxPG_LABEL, p_param_id ) );
     propertygrid->Append( new wxFloatProperty( "x", wxPG_LABEL, x ) );
     propertygrid->Append( new wxFloatProperty( "y", wxPG_LABEL, y ) );
     propertygrid->Append( new wxFloatProperty( "z", wxPG_LABEL, z ) );
