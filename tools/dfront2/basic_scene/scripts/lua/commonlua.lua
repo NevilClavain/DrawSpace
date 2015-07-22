@@ -3,6 +3,8 @@ collisions_transforms = {}
 collisions_chunks = {}
 collisions_pass = {}
 
+create_collision_meshes = false
+
 function globals()
         for n,v in pairs(_G) do
                 print(n)
@@ -30,6 +32,11 @@ function print_matrix( m )
 end
 
 function create_collision_chunk( shape_type, collision_chunk_node_alias, collision_transform_node_alias, scenegraph_name, node_alias, bx, by, bz, radius )
+  
+  if create_collision_meshes == false then
+  
+    return
+  end
   
   if shape_type == 0 then        
         

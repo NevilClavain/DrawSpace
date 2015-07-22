@@ -1,5 +1,6 @@
 
 scene_ready = false
+create_collision_meshes = true
 
 
 ds:DisplayFramerate( 1 )
