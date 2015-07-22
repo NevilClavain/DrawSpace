@@ -73,12 +73,6 @@ sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_right", 3, 0 )
 sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_top", 4, 0 )
 sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_bottom", 5, 0 )
 
---sb0:RegisterPassSlot( "normales_pass" )
---sb0:SetPassSlotFxName( "normales_pass", "color_fx" )
---sb0:AddPassSlotShaderParam( "normales_pass", "color", 1, 0, Vector( 0.0, 0.0, 0.0, 1.0 ) )
-
-
-
 sb0:LinkTo( "scene0", "tf_spacebox" )
 print( "spacebox loaded..." )
 

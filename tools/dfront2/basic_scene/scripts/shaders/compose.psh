@@ -18,13 +18,13 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float4 Color = 0;
 	
-	if( base_color.r == 0.0 && base_color.g == 0.0 && base_color.b == 0.0 )
+	if( base_color.r > 0.0 && base_color.g > 0.0 && base_color.b > 0.0 )
 	{
-		Color = tex_color;
+		Color = base_color;
 	}
 	else
 	{
-		Color = base_color;
+		Color = tex_color;
 	}	
 	Color.a = 1.0;
 	return Color;

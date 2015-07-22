@@ -14,7 +14,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 normale_color = tex2D( Texture0, input.TexCoord0 );
 
-	float4 Color = 0;
+	float4 Color = 1;
 	
 	if( normale_color.r > 0.0 && normale_color.g > 0.0 && normale_color.b > 0 )
 	{

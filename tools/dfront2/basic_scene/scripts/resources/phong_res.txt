@@ -191,17 +191,23 @@ end_config
 
 
 declare_config_instance Fx phong_fx
+renderstates_in SETTEXTUREFILTERTYPE linear
 shaders vertexshader_phong pixelshader_phong
+renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
 
 declare_config_instance Fx ambient_fx
+renderstates_in SETTEXTUREFILTERTYPE linear
 shaders vertexshader_ambient pixelshader_ambient
+renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
 
 declare_config_instance Fx modulate_fx
+renderstates_in SETTEXTUREFILTERTYPE linear
 shaders vertexshader_modulate pixelshader_modulate
+renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
 
@@ -223,7 +229,7 @@ declare_config_instance IntermediatePass texture_pass
 passname my_texture_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 157 255 255 0
+targetclearcolor 0 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config
