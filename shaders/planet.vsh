@@ -1,12 +1,12 @@
 
 float4x4 matWorldViewProjection: register(c0);
-float4   flag0:				register(c8);
+float4   flag0:				register(c20);
 
 	// .x -> patch orientation enum integer
 	// .y -> patch sidelenght
 	// .z -> planet ray
 
-float4   patch_translation:	register(c9);
+float4   patch_translation:	register(c21);
 	/// .x, .y -> patch positionning
 
 

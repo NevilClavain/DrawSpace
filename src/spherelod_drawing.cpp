@@ -93,8 +93,8 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
         patch_pos[2] = 0.0;
         SetShaderRealVector( "patch_translation", patch_pos );
 
-        m_renderer->SetFxShaderParams( 0, 8, flag0 );
-        m_renderer->SetFxShaderParams( 0, 9, patch_pos );
+        m_renderer->SetFxShaderParams( 0, 20, flag0 );
+        m_renderer->SetFxShaderParams( 0, 21, patch_pos );
 
               
         m_renderer->SetTexture( p_patch->GetTexture( Maps::COLOR_TEXTURE ), 0 );
