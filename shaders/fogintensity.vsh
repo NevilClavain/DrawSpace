@@ -2,7 +2,7 @@
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView:           register(c4);
 
-float    fogDensity:             register(c12);
+float    fogDensity:             register(c20);
 
 
 struct VS_INPUT 
@@ -13,7 +13,7 @@ struct VS_INPUT
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
-   float  Fog      : FOG;   
+   float  Fog      : FOG;
 };
 
 float ComputeExp2Fog( float4 worldViewPos, float density )

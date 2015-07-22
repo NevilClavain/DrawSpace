@@ -2,7 +2,7 @@
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView:           register(c4);
 
-float    fogDensity:             register(c12);
+float    fogDensity:             register(c20);
 
 
 struct VS_INPUT 

@@ -100,7 +100,7 @@ cube0:SetPassSlotFxName( "texture_pass", "texture_fx" )
 
 cube0:RegisterPassSlot( "fogint_pass" )
 cube0:SetPassSlotFxName( "fogint_pass", "fogint_fx" )
-cube0:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 12, Vector( 0.08, 0.0, 0.0, 1.0 ) )
+cube0:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 20, Vector( 0.08, 0.0, 0.0, 1.0 ) )
 
 
 cube0:LinkTo( "scene0", "body0" )
