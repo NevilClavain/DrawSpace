@@ -175,6 +175,7 @@
     <ClCompile Include="ActionTransformEditionSpecific1.cpp" />
     <ClCompile Include="ActionTranslationSpeedDec.cpp" />
     <ClCompile Include="ActionTranslationSpeedInc.cpp" />
+    <ClCompile Include="ActionUpdatePassShaderParam.cpp" />
     <ClCompile Include="ActionWorldCreationApply.cpp" />
     <ClCompile Include="ActionWorldCreationDialog.cpp" />
     <ClCompile Include="ActionWorldEditionApply.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="ActionTransformEditionSpecific1.h" />
     <ClInclude Include="ActionTranslationSpeedDec.h" />
     <ClInclude Include="ActionTranslationSpeedInc.h" />
+    <ClInclude Include="ActionUpdatePassShaderParam.h" />
     <ClInclude Include="ActionWorldCreationApply.h" />
     <ClInclude Include="ActionWorldCreationDialog.h" />
     <ClInclude Include="ActionWorldEditionApply.h" />

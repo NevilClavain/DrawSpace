@@ -28,6 +28,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 const char LuaDrawSpace::className[] = "DrawSpace";
 const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
@@ -49,6 +50,7 @@ const Luna2<LuaDrawSpace>::RegType LuaDrawSpace::methods[] =
   { "IsCurrentCamera", &LuaDrawSpace::Lua_IsCurrentCamera },
   { "SetScenegraphNodeEventCallback", &LuaDrawSpace::Lua_SetScenegraphNodeEventCallback },
   { "SetScenegraphEventCallback", &LuaDrawSpace::Lua_SetScenegraphEventCallback },
+  { "UpdatePassShaderParam", &LuaDrawSpace::Lua_UpdatePassShaderParam },
   { 0 }
 };
 
@@ -523,6 +525,38 @@ int LuaDrawSpace::Lua_SetScenegraphEventCallback( lua_State* p_L )
     return 0;
 }
 
+
+int LuaDrawSpace::Lua_UpdatePassShaderParam( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 6 )
+	{
+		lua_pushstring( p_L, "UpdatePassShaderParam : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    const char* passname = luaL_checkstring( p_L, 1 );
+    const char* paramid = luaL_checkstring( p_L, 2 );
+
+    dsreal valx = luaL_checknumber( p_L, 3 );
+    dsreal valy = luaL_checknumber( p_L, 4 );
+    dsreal valz = luaL_checknumber( p_L, 5 );
+    dsreal valw = luaL_checknumber( p_L, 6 );
+
+    if( m_scriptcalls_handler )
+    {
+        PropertyPool props;
+        props.AddPropValue<dsstring>( "script_call_id", "DrawSpace:UpdatePassShaderParam" );
+        props.AddPropValue<dsstring>( "passname", passname );
+        props.AddPropValue<dsstring>( "paramid", paramid );
+        props.AddPropValue<Vector>( "values", Vector( valx, valy, valz, valw ) );
+
+        (*m_scriptcalls_handler)( props );
+    }
+
+
+    return 0;
+}
 
 void LuaDrawSpace::on_scenenodegraph_evt( SceneNodeGraph::ScenegraphEvent p_evt, SceneNodeGraph* p_scenegraph )
 {

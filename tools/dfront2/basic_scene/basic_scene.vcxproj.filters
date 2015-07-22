@@ -102,6 +102,7 @@
     <ClCompile Include="ActionColliderCollider.cpp" />
     <ClCompile Include="ActionColliderLinkTo.cpp" />
     <ClCompile Include="ActionTextureCtor.cpp" />
+    <ClCompile Include="ActionUpdatePassShaderParam.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -208,5 +209,6 @@
     <ClInclude Include="ActionColliderCollider.h" />
     <ClInclude Include="ActionColliderLinkTo.h" />
     <ClInclude Include="ActionTextureCtor.h" />
+    <ClInclude Include="ActionUpdatePassShaderParam.h" />
   </ItemGroup>
 </Project>

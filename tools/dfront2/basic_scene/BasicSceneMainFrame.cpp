@@ -164,7 +164,7 @@
 #include "ActionAngleSpeedDec.h"
 #include "ActionTranslationSpeedInc.h"
 #include "ActionTranslationSpeedDec.h"
-
+#include "ActionUpdatePassShaderParam.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -718,6 +718,7 @@ m_delta_mouse_init( true )
     m_actionscripts["DrawSpace:AngleSpeedDec"] = new ActionAngleSpeedDec();
     m_actionscripts["DrawSpace:TranslationSpeedInc"] = new ActionTranslationSpeedInc();
     m_actionscripts["DrawSpace:TranslationSpeedDec"] = new ActionTranslationSpeedDec();
+    m_actionscripts["DrawSpace:UpdatePassShaderParam"] = new ActionUpdatePassShaderParam();
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
