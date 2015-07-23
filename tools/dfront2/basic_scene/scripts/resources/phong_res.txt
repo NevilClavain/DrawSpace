@@ -248,7 +248,7 @@ viewportquad true
 viewportquad_fx phong_fx
 viewportquad_textures pass phong_pass 0
 viewportquad_textures pass normales_pass 1
-viewportquad_shaderparams ldir 1 0 1.0 -0.6 0.0 0.0
+viewportquad_shaderparams ldir 1 0 0.0 -1.0 0.0 0.0
 viewportquad_shaderparams lcolor 1 1 0.0 1.0 0.0 1.0 
 
 end_config

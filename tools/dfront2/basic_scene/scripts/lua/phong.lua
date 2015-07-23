@@ -17,12 +17,17 @@ ds:SetScenegraphEventCallback( function( evt_type, scenegraph_name )
   
   if evt_type == 0 and scene_ready then
   
-    ds:AngleSpeedInc( roty_angle, 25 )
-    
-    
-    teapot_roty_mat:Rotation( roty_axis, roty_angle:GetValue() )
-    
+    ds:AngleSpeedInc( roty_angle, 25 )       
+    teapot_roty_mat:Rotation( roty_axis, roty_angle:GetValue() )    
     tf_teapot:UpdateMatrix( 1, teapot_roty_mat )
+    
+    
+    ds:AngleSpeedInc( light_angle, light_rot_speed )
+    light_mat:Rotation( light_rot_axis, light_angle:GetValue() )
+    
+    light_mat:Transform( light_dir, light_tdir )
+    
+    ds:UpdatePassShaderParam( "phong_pass_2", "ldir", light_tdir:Get( 0 ), light_tdir:Get( 1 ), light_tdir:Get( 2 ), 1.0 )
     
   end
 
@@ -35,6 +40,18 @@ ambient_level_b = 0.05
 
 
 roty_angle = Real()
+
+light_angle = Real()
+
+light_rot_axis = Vector( 1, 0, 0, 1 )
+light_dir = Vector( 0, -1, 0, 1 )
+light_tdir = Vector()
+
+light_mat = Matrix()
+light_mat:Rotation( light_rot_axis, 0 )
+
+light_rot_speed = 0
+
 
 keyboard = Keyboard()
 mouse = Mouse()
