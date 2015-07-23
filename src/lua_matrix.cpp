@@ -210,7 +210,7 @@ int LuaMatrix::Lua_Transform( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc != 2 )
 	{
-		lua_pushstring( p_L, "Matrix Rotation : bad number of args" );
+		lua_pushstring( p_L, "Matrix Transform : bad number of args" );
 		lua_error( p_L );
     }
 
