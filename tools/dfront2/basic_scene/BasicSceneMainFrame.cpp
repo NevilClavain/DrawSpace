@@ -1531,6 +1531,11 @@ void BasicSceneMainFrame::OnPassesListItemSelected( wxListEvent& p_event )
     wxWidgetAdapter::GetInstance()->AdaptPassesShaderParamsList( static_cast<Pass*>( config ), m_shadersparams_listCtrl );
 }
 
+void BasicSceneMainFrame::AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass )
+{
+    wxWidgetAdapter::GetInstance()->AdaptPassesShaderParamsList( p_pass, m_shadersparams_listCtrl );
+}
+
 void BasicSceneMainFrame::OnShadersListItemActivated( wxListEvent& p_event )
 {
     long sel_index = p_event.GetIndex();

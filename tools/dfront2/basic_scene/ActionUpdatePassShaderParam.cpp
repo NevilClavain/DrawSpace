@@ -52,8 +52,20 @@ void ActionUpdatePassShaderParam::Execute( DrawSpace::Core::PropertyPool& p_prop
 
     if( viewportquad_shaderparams.count( paramid ) == 0 )
     {
-        wxMessageBox( "DrawSpace:UpdatePassShaderParam : unknown pass shader param id" + passname + " " + paramid, "Script error", wxICON_ERROR );
+        wxMessageBox( "DrawSpace:UpdatePassShaderParam : unknown pass shader param id " + passname + " " + paramid, "Script error", wxICON_ERROR );
     }
 
-    // to be continued...
+    // apply pass viewportquad shader values modifications
+    current_pass->GetViewportQuad()->SetShaderRealVector( paramid, values );
+
+    // update pass properties   
+    viewportquad_shaderparams[paramid].param_values = values;
+
+    props["viewportquad_shaderparams"].SetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>( viewportquad_shaderparams );
+
+    current_pass->SetPropertiesMap( props );
+
+    // update mainframe list ctrl
+    BasicSceneMainFrame::GetInstance()->AdaptPassesShaderParamsList( current_pass );
+
 }

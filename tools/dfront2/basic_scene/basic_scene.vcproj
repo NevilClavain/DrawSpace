@@ -917,6 +917,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionUpdatePassShaderParam.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionUpdatePassShaderParam.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionWorldCreationApply.cpp"
 				>
 			</File>

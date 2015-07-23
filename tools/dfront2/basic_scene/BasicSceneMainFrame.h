@@ -632,6 +632,8 @@ public:
 
     void SetItemImage( const wxTreeItemId& p_item, int p_image );
 
+    void AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass );
+
     friend class RenderTimer;
 };
 
