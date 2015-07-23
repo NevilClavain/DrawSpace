@@ -89,33 +89,6 @@ end_asset
 
 
 declare_asset_instance Shader
-assetname vertexshader_compose
-filepath compose.vsh
-compiled false
-end_asset
-
-declare_asset_instance Shader
-assetname pixelshader_compose
-filepath compose.psh
-compiled false
-end_asset
-
-
-declare_asset_instance Shader
-assetname vertexshader_ambient
-filepath ambient.vsh
-compiled false
-end_asset
-
-declare_asset_instance Shader
-assetname pixelshader_ambient
-filepath ambient.psh
-compiled false
-end_asset
-
-
-
-declare_asset_instance Shader
 assetname vertexshader_phong
 filepath phong.vsh
 compiled false
@@ -183,6 +156,7 @@ renderstates_out ENABLEZBUFFER false
 end_config
 
 
+
 declare_config_instance Fx color_fx
 shaders vertexshader_color pixelshader_color
 renderstates_in ENABLEZBUFFER true
@@ -190,16 +164,15 @@ renderstates_out ENABLEZBUFFER false
 end_config
 
 
-declare_config_instance Fx phong_fx
-renderstates_in SETTEXTUREFILTERTYPE linear
-shaders vertexshader_phong pixelshader_phong
-renderstates_out SETTEXTUREFILTERTYPE none
+declare_config_instance Fx color_spacebox_fx
+shaders vertexshader_color pixelshader_color
 end_config
 
 
-declare_config_instance Fx ambient_fx
+
+declare_config_instance Fx phong_fx
 renderstates_in SETTEXTUREFILTERTYPE linear
-shaders vertexshader_ambient pixelshader_ambient
+shaders vertexshader_phong pixelshader_phong
 renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
@@ -211,17 +184,14 @@ renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
 
-declare_config_instance Fx compose_fx
-shaders vertexshader_compose pixelshader_compose
-end_config
-
-
 
 declare_config_instance Fx texture_quad_fx
 shaders vertexshader_texture pixelshader_texture
 renderstates_in SETTEXTUREFILTERTYPE linear
 renderstates_out SETTEXTUREFILTERTYPE none
 end_config
+
+
 
 
 
@@ -235,15 +205,16 @@ targetdimsfromrenderer true
 end_config
 
 
-declare_config_instance IntermediatePass texture_pass_2
-passname texture_pass_2
+
+
+declare_config_instance IntermediatePass color_pass
+passname color_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 157 255 255 0
+targetclearcolor 0 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config
-
 
 
 declare_config_instance IntermediatePass normales_pass
@@ -256,15 +227,6 @@ targetdimsfromrenderer true
 end_config
 
 
-declare_config_instance IntermediatePass ambient_pass
-passname ambient_pass
-viewportquad true
-viewportquad_fx ambient_fx
-viewportquad_textures pass normales_pass 0
-viewportquad_shaderparams lcolor 1 0 0.05 0.05 0.05 1.0 
-
-end_config
-
 
 # 1st light
 
@@ -272,7 +234,7 @@ declare_config_instance IntermediatePass phong_pass
 passname phong_pass
 viewportquad true
 viewportquad_fx phong_fx
-viewportquad_textures pass ambient_pass 0
+viewportquad_textures pass color_pass 0
 viewportquad_textures pass normales_pass 1
 viewportquad_shaderparams ldir 1 0 -1.0 -1.0 0.0 0.0
 viewportquad_shaderparams lcolor 1 1 0.0 0.0 1.0 1.0 
@@ -305,20 +267,10 @@ end_config
 
 
 
-declare_config_instance IntermediatePass composition_pass
-passname composition_pass
-viewportquad true
-viewportquad_fx compose_fx
-viewportquad_textures pass modulate_pass 0
-viewportquad_textures pass texture_pass_2 1
-
-end_config
-
-
 
 declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_quad_fx
-viewportquad_textures pass composition_pass 0
+viewportquad_textures pass modulate_pass 0
 end_config

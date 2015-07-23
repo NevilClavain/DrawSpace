@@ -20,19 +20,17 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 prev_color = tex2D( Texture0, input.TexCoord0 );
 	float3 normale_color = tex2D( Texture1, input.TexCoord0 );
 	
-	if( normale_color.r > 0.0 && normale_color.g > 0.0 && normale_color.b > 0 )
-	{
-		// unpack normales values from [0.0 1.0] range to [-1.0 1.0] range
-		float3 unpack_normale_color = ( normale_color - 0.5 ) * 2.0;
-		
-		float3 invldir = -ldir;
-		
-		float intensity = clamp( dot( normalize( invldir ), unpack_normale_color ), 0.0, 1.0 );
-				
-		float4 color_phong = lcolor * intensity;				
-		Color = saturate( color_phong + prev_color );				
-		Color.a = 1.0;
-		
-	}	
+	// unpack normales values from [0.0 1.0] range to [-1.0 1.0] range
+	float3 unpack_normale_color = ( normale_color - 0.5 ) * 2.0;
+	
+	float3 invldir = -ldir;
+	
+	float intensity = clamp( dot( normalize( invldir ), unpack_normale_color ), 0.0, 1.0 );
+			
+	float4 color_phong = lcolor * intensity;				
+	Color = saturate( color_phong + prev_color );				
+	Color.a = 1.0;
+	
+
 	return Color;	
 }

@@ -29,6 +29,10 @@ ds:SetScenegraphEventCallback( function( evt_type, scenegraph_name )
 end
 )
 
+ambient_level_r = 0.05
+ambient_level_g = 0.05
+ambient_level_b = 0.05
+
 
 roty_angle = Real()
 
@@ -64,14 +68,20 @@ sb_scale:Scale( 25, 25, 25 )
 tf_spacebox:UpdateMatrix( 0, sb_scale )
 
 sb0 = SpaceboxNode( "sb0" )
-sb0:RegisterPassSlot( "texture_pass_2" )
-sb0:SetPassSlotFxName( "texture_pass_2", "spacebox_fx" )
-sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_front", 0, 0 )
-sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_back", 1, 0 )
-sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_left", 2, 0 )
-sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_right", 3, 0 )
-sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_top", 4, 0 )
-sb0:SetPassSlotTextureName( "texture_pass_2", "spacebox_bottom", 5, 0 )
+sb0:RegisterPassSlot( "texture_pass" )
+sb0:SetPassSlotFxName( "texture_pass", "spacebox_fx" )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_front", 0, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_back", 1, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_left", 2, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_right", 3, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_top", 4, 0 )
+sb0:SetPassSlotTextureName( "texture_pass", "spacebox_bottom", 5, 0 )
+
+
+sb0:RegisterPassSlot( "color_pass" )
+sb0:SetPassSlotFxName( "color_pass", "color_spacebox_fx" )
+sb0:AddPassSlotShaderParam( "color_pass", "color", 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) )
+
 
 sb0:LinkTo( "scene0", "tf_spacebox" )
 print( "spacebox loaded..." )
@@ -105,6 +115,11 @@ ground_chunk:SetPassSlotTextureName( "texture_pass", "ground", 0 )
 ground_chunk:RegisterPassSlot( "normales_pass" )
 ground_chunk:SetPassSlotFxName( "normales_pass", "normales_fx" )
 
+ground_chunk:RegisterPassSlot( "color_pass" )
+ground_chunk:SetPassSlotFxName( "color_pass", "color_fx" )
+ground_chunk:AddPassSlotShaderParam( "color_pass", "color", 1, 0, Vector( ambient_level_r, ambient_level_g, ambient_level_b, 1.0 ) )
+
+
 
 ground_chunk:LinkTo( "scene0", "ground" )
 print( "ground_chunk loaded..." )
@@ -125,14 +140,20 @@ print( "body0 loaded..." )
 
 cube0 = ChunkNode( "cube0" )
 cube0:SetMesheName( "cube_meshe" )
-cube0:RegisterPassSlot( "texture_pass_2" )
 
-cube0:SetPassSlotFxName( "texture_pass_2", "texture_fx" )
-cube0:SetPassSlotTextureName( "texture_pass_2", "texture_shelby", 0 )
+cube0:RegisterPassSlot( "texture_pass" )
+cube0:SetPassSlotFxName( "texture_pass", "texture_fx" )
+cube0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
+
+cube0:RegisterPassSlot( "color_pass" )
+cube0:SetPassSlotFxName( "color_pass", "color_fx" )
+cube0:AddPassSlotShaderParam( "color_pass", "color", 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) )
+
 
 cube0:RegisterPassSlot( "normales_pass" )
-cube0:SetPassSlotFxName( "normales_pass", "color_fx" )
-cube0:AddPassSlotShaderParam( "normales_pass", "color", 1, 0, Vector( 0.0, 0.0, 0.0, 1.0 ) )
+cube0:SetPassSlotFxName( "normales_pass", "normales_fx" )
+
+
 
 
 cube0:LinkTo( "scene0", "body0" )
@@ -149,10 +170,18 @@ spheretf:AddMatrix( mat2 )
 
 sphere0 = ChunkNode( "sphere0" )
 sphere0:SetMesheName( "sphere_meshe" )
+
 sphere0:RegisterPassSlot( "normales_pass" )
 sphere0:SetPassSlotFxName( "normales_pass", "normales_fx" )
+
 sphere0:RegisterPassSlot( "texture_pass" )
 sphere0:SetPassSlotFxName( "texture_pass", "texture_fx" )
+
+sphere0:RegisterPassSlot( "color_pass" )
+sphere0:SetPassSlotFxName( "color_pass", "color_fx" )
+sphere0:AddPassSlotShaderParam( "color_pass", "color", 1, 0, Vector( ambient_level_r, ambient_level_g, ambient_level_b, 1.0 ) )
+
+
 sphere0:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
 
 
@@ -182,8 +211,16 @@ teapot:SetMesheName( "teapot_meshe" )
 
 teapot:RegisterPassSlot( "normales_pass" )
 teapot:SetPassSlotFxName( "normales_pass", "normales_fx" )
+
 teapot:RegisterPassSlot( "texture_pass" )
 teapot:SetPassSlotFxName( "texture_pass", "texture_fx" )
+
+
+teapot:RegisterPassSlot( "color_pass" )
+teapot:SetPassSlotFxName( "color_pass", "color_fx" )
+teapot:AddPassSlotShaderParam( "color_pass", "color", 1, 0, Vector( ambient_level_r, ambient_level_g, ambient_level_b, 1.0 ) )
+
+
 teapot:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
 
 
