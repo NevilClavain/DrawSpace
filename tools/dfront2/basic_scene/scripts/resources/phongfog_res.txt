@@ -296,7 +296,7 @@ declare_config_instance IntermediatePass fogint_pass
 passname fogint_pass
 enabledepthclear true
 enabletargetclear true
-targetclearcolor 255 0 0 0
+targetclearcolor 0 0 0 0
 viewportquad false
 targetdimsfromrenderer true
 end_config
