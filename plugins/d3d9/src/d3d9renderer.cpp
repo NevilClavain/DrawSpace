@@ -954,24 +954,17 @@ bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::
     DrawSpace::Utils::Matrix world = p_world;
     DrawSpace::Utils::Matrix view = p_view;
     DrawSpace::Utils::Matrix worldview = world * view;
-    DrawSpace::Utils::Matrix worldview_nt = worldview;
     worldview.Transpose();
     
     set_vertexshader_constants( 4, worldview.GetArray(), 4 );
 
 	//////////////////////////////////////////////////////////////////////
-
-    worldview_nt.ClearTranslation();    
-    world.ClearTranslation();
-    view.ClearTranslation();
     
     world.Transpose();
     view.Transpose();
-    worldview_nt.Transpose();
 
-    set_vertexshader_constants( 8, worldview_nt.GetArray(), 4 );
-    set_vertexshader_constants( 12, world.GetArray(), 4 );
-    set_vertexshader_constants( 16, view.GetArray(), 4 );
+    set_vertexshader_constants( 8, world.GetArray(), 4 );
+    set_vertexshader_constants( 12, view.GetArray(), 4 );
 
 	//////////////////////////////////////////////////////////////////////
 
