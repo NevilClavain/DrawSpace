@@ -27,7 +27,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	Output.Position = mul( Input.Position, matWorldViewProjection );
 	Output.Normales = mul( Input.Normales, worldNoT );
-
       
-   return( Output );   
+	return( Output );   
 }
