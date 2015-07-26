@@ -86,6 +86,20 @@ compiled false
 end_asset
 
 
+declare_asset_instance Shader
+assetname vertexshader_hl
+filepath halflight.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_hl
+filepath halflight.psh
+compiled false
+end_asset
+
+
+
 
 
 declare_asset_instance Shader
@@ -191,6 +205,13 @@ renderstates_in ENABLEZBUFFER true
 renderstates_out ENABLEZBUFFER false
 end_config
 
+declare_config_instance Fx hl_fx
+shaders vertexshader_hl pixelshader_hl
+renderstates_in ENABLEZBUFFER true
+renderstates_out ENABLEZBUFFER false
+end_config
+
+
 
 
 declare_config_instance Fx color_fx
@@ -263,6 +284,15 @@ targetdimsfromrenderer true
 end_config
 
 
+declare_config_instance IntermediatePass hl_pass
+passname hl_pass
+enabledepthclear true
+enabletargetclear true
+targetclearcolor 0 0 0 0
+viewportquad false
+targetdimsfromrenderer true
+end_config
+
 
 # 1st light
 
@@ -316,5 +346,5 @@ declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_quad_fx
-viewportquad_textures pass fogblend_pass 0
+viewportquad_textures pass hl_pass 0
 end_config

@@ -164,6 +164,11 @@ teapot:SetMesheName( "teapot_meshe" )
 teapot:RegisterPassSlot( "normales_pass" )
 teapot:SetPassSlotFxName( "normales_pass", "normales_fx" )
 
+teapot:RegisterPassSlot( "hl_pass" )
+teapot:SetPassSlotFxName( "hl_pass", "hl_fx" )
+teapot:AddPassSlotShaderParam( "hl_pass", "ldir", 0, 20, Vector( -1.0, -1.0, 0.0, 0.0 ) )
+
+
 teapot:RegisterPassSlot( "texture_pass" )
 teapot:SetPassSlotFxName( "texture_pass", "texture_fx" )
 
