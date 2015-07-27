@@ -3,8 +3,9 @@
 
 struct PS_INTPUT 
 {
-	float4 Position : POSITION0;
-	float4 Half     : NORMAL0;
+	float4 Position : POSITION0;	
+	float4 Normales : TEXCOORD1;
+	float4 Half     : TEXCOORD2;
 };
 
 
@@ -12,11 +13,26 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 Color;
 	
+	/*
 	// set normales values from [-1.0 1.0] range to [0.0 1.0] range
 	// (with zero on 0.5)
-	float4 nnorm = saturate( ( normalize( input.Half ) / 2.0 ) + 0.5 );
+	float3 nnorm = saturate( ( normalize( input.Half ) / 2.0 ) + 0.5 );
+	Color.r = nnorm.r;
+	Color.g = nnorm.g;
+	Color.b = nnorm.b;
+	*/
+	
+	
+	input.Normales.w = 0.0;
+	input.Half.w = 0.0;
+	
+	float spec = pow( saturate( dot( normalize( input.Normales ), normalize( input.Half ) ) ), 10.0 );
+	
 
-	Color = nnorm;
+	Color = spec;
+	
+	
+		
 	Color.a = 1.0;	
 	return Color;
 
