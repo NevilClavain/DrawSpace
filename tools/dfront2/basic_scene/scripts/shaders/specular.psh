@@ -1,0 +1,46 @@
+
+float  specpower: register(c0);
+float4 lcolor: register(c1);
+
+
+sampler2D Texture0 : register(s0);
+sampler2D Texture1 : register(s1);
+sampler2D Texture2 : register(s2);
+
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+   float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 Color = 0;
+	float4 prev_color = tex2D( Texture0, input.TexCoord0 );
+	float3 normale_color = tex2D( Texture1, input.TexCoord0 );
+	float3 hl_color = tex2D( Texture2, input.TexCoord0 );
+	
+	// unpack normales values from [0.0 1.0] range to [-1.0 1.0] range
+	float3 unpack_normale_color = ( normale_color - 0.5 ) * 2.0;
+	float3 unpack_hl_color = ( hl_color - 0.5 ) * 2.0;
+	
+	/*
+	float3 invldir = -ldir;
+	
+	float intensity = clamp( dot( normalize( invldir ), unpack_normale_color ), 0.0, 1.0 );
+			
+	float4 color_phong = lcolor * intensity;
+	Color = saturate( color_phong + prev_color );		
+	*/
+
+	float spec = pow( saturate( dot( normalize( unpack_normale_color ), normalize( unpack_hl_color ) ) ), specpower.r );
+
+	float4 color_spec = lcolor * spec;
+	Color = saturate( color_spec + prev_color );
+
+	Color.a = 1.0;
+	
+	return Color;	
+}

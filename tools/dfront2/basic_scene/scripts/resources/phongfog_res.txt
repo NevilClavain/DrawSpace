@@ -116,6 +116,20 @@ end_asset
 
 
 declare_asset_instance Shader
+assetname vertexshader_spec
+filepath specular.vsh
+compiled false
+end_asset
+
+declare_asset_instance Shader
+assetname pixelshader_spec
+filepath specular.psh
+compiled false
+end_asset
+
+
+
+declare_asset_instance Shader
 assetname vertexshader_modulate
 filepath modulate.vsh
 compiled false
@@ -234,6 +248,14 @@ renderstates_out SETTEXTUREFILTERTYPE none
 end_config
 
 
+declare_config_instance Fx specular_fx
+renderstates_in SETTEXTUREFILTERTYPE linear
+shaders vertexshader_spec pixelshader_spec
+renderstates_out SETTEXTUREFILTERTYPE none
+end_config
+
+
+
 declare_config_instance Fx modulate_fx
 renderstates_in SETTEXTUREFILTERTYPE linear
 shaders vertexshader_modulate pixelshader_modulate
@@ -309,14 +331,26 @@ end_config
 
 
 
-
-
 declare_config_instance IntermediatePass modulate_pass
 passname modulate_pass
 viewportquad true
 viewportquad_fx modulate_fx
 viewportquad_textures pass phong_pass 0
 viewportquad_textures pass texture_pass 1
+
+end_config
+
+
+
+declare_config_instance IntermediatePass specular_pass
+passname specular_pass
+viewportquad true
+viewportquad_fx specular_fx
+viewportquad_textures pass modulate_pass 0
+viewportquad_textures pass normales_pass 1
+viewportquad_textures pass hl_pass 2
+viewportquad_shaderparams specpower 1 0 10.0 0.0 0.0 0.0 
+viewportquad_shaderparams lcolor 1 1 1.0 1.0 1.0 1.0 
 
 end_config
 
@@ -336,7 +370,7 @@ declare_config_instance IntermediatePass fogblend_pass
 passname fogblend_pass
 viewportquad true
 viewportquad_fx fogblend_fx
-viewportquad_textures pass modulate_pass 0
+viewportquad_textures pass specular_pass 0
 viewportquad_textures pass fogint_pass 1
 viewportquad_shaderparams fog_color 1 0 0.6156 1.0 1.0 1.0
 end_config
@@ -346,5 +380,5 @@ declare_config_instance FinalPass final_pass
 passname my_final_pass
 viewportquad true
 viewportquad_fx texture_quad_fx
-viewportquad_textures pass hl_pass 0
+viewportquad_textures pass fogblend_pass 0
 end_config
