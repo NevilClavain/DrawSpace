@@ -101,7 +101,7 @@ ground_chunk:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 20, Vect
 
 ground_chunk:RegisterPassSlot( "hl_pass" )
 ground_chunk:SetPassSlotFxName( "hl_pass", "hl_fx" )
-ground_chunk:AddPassSlotShaderParam( "hl_pass", "ldir", 0, 20, Vector( 0.0, -1.0, 0.0, 0.0 ) )
+ground_chunk:AddPassSlotShaderParam( "hl_pass", "ldir", 0, 20, Vector( -1.0, -1.0, 0.0, 0.0 ) )
 
 
 
@@ -141,7 +141,7 @@ sphere0:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 20, Vector( 0
 
 sphere0:RegisterPassSlot( "hl_pass" )
 sphere0:SetPassSlotFxName( "hl_pass", "hl_fx" )
-sphere0:AddPassSlotShaderParam( "hl_pass", "ldir", 0, 20, Vector( 0.0, -1.0, 0.0, 0.0 ) )
+sphere0:AddPassSlotShaderParam( "hl_pass", "ldir", 0, 20, Vector( -1.0, -1.0, 0.0, 0.0 ) )
 
 
 
@@ -178,7 +178,7 @@ teapot:SetPassSlotFxName( "normales_pass", "normales_fx" )
 
 teapot:RegisterPassSlot( "hl_pass" )
 teapot:SetPassSlotFxName( "hl_pass", "hl_fx" )
-teapot:AddPassSlotShaderParam( "hl_pass", "ldir", 0, 20, Vector( 0.0, -1.0, 0.0, 0.0 ) )
+teapot:AddPassSlotShaderParam( "hl_pass", "ldir", 0, 20, Vector( -1.0, -1.0, 0.0, 0.0 ) )
 
 
 teapot:RegisterPassSlot( "texture_pass" )
@@ -192,7 +192,7 @@ teapot:AddPassSlotShaderParam( "color_pass", "color", 1, 0, Vector( ambient_leve
 
 teapot:RegisterPassSlot( "fogint_pass" )
 teapot:SetPassSlotFxName( "fogint_pass", "fogint_fx" )
-teapot:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 12, Vector( 0.08, 0.0, 0.0, 1.0 ) )
+teapot:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 20, Vector( 0.08, 0.0, 0.0, 1.0 ) )
 
 
 

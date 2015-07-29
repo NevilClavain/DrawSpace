@@ -44,8 +44,27 @@ void ActionChunkEditionDialog::Execute( void )
 
         for( std::map<dsstring, ChunkPassDescriptor>::iterator it = chunk_descr.passes_slots.begin(); it != chunk_descr.passes_slots.end(); ++it )
         {
-            ChunkPassDescriptor pass_descr = it->second;                                                
+            ChunkPassDescriptor pass_descr = it->second;
 
+            DIALOG_APPENDROOT_NODE( it->first, pass_root );
+
+            DIALOG_BUILD_LABELS( pass_descr.shader_params.size(), "shader parameter %d", params_list )
+
+            DIALOG_APPENDNODE_ITERATE_NODE_BEGIN( pass_root, i, params_list, param_root )
+
+                DIALOG_APPENDNODE_STRING( param_root, "param id", pass_descr.shader_params[i].id );
+
+                DIALOG_APPENDNODE_NODE( param_root, "values", shader_param_values_root )
+
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )                           
+
+            DIALOG_APPENDNODE_ITERATE_NODE_END
+
+
+            /*
             DIALOG_BUILD_LABELS( pass_descr.shader_params.size(), "shader parameter %d", params_list )
 
             DIALOG_APPENDROOT_ITERATE_NODE_BEGIN( i, params_list, param_root )
@@ -62,6 +81,7 @@ void ActionChunkEditionDialog::Execute( void )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )                           
 
             DIALOG_APPENDROOT_ITERATE_NODE_END
+            */
         }
 
         DIALOG_APPLY
