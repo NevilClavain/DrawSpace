@@ -348,6 +348,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\shaderscontroller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\shaderscontroller.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\spectatormovement.cpp"
 				>
 			</File>

@@ -47,6 +47,7 @@
 #include "renderingqueue.h"
 #include "assetsbase.h"
 #include "configsbase.h"
+#include "shaderscontroller.h"
 #include "asset.h"
 #include "factory.h"
 #include "texture.h"
