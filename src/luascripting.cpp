@@ -39,6 +39,7 @@
 #include "lua_vector.h"
 #include "lua_texture.h"
 #include "lua_real.h"
+#include "lua_shaderscontroller.h"
 
 
 LuaScripting::LuaScripting( void )
@@ -71,6 +72,7 @@ bool LuaScripting::Initialize( void )
     Luna2<LuaReal>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     Luna2<LuaTexture>::Register( LuaContext::GetInstance()->GetLuaState() );
+    Luna2<LuaShadersController>::Register( LuaContext::GetInstance()->GetLuaState() );
 
     return true;
 }

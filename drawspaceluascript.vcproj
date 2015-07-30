@@ -258,6 +258,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\lua_shaderscontroller.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\lua_shaderscontroller.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\lua_spaceboxnode.cpp"
 			>
 		</File>
