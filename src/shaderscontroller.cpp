@@ -37,3 +37,26 @@ ShadersController::ShadersController( void )
 ShadersController::~ShadersController( void )
 {
 }
+
+void ShadersController::RegisterRenderingNode( DrawSpace::Core::RenderingNode* p_rnode )
+{
+    std::map<dsstring, RenderingNode::ShadersParams*> node_shaders_params;
+    p_rnode->GetShadersParams( node_shaders_params );
+
+    for( std::map<dsstring, RenderingNode::ShadersParams*>::iterator it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
+    {
+        m_shader_nodes[it->first] = p_rnode;
+    }
+}
+
+bool ShadersController::Update( const dsstring& p_id, const DrawSpace::Utils::Vector& p_value )
+{
+    if( m_shader_nodes.count( p_id )> 0 )
+    {
+        m_shader_nodes[p_id]->SetShaderRealVector( p_id, p_value );
+        return true;
+    }
+    return false;
+}
+
+

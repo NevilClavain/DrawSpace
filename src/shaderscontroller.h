@@ -23,7 +23,7 @@
 #ifndef _SHADERSCONTROLLER_H_
 #define _SHADERSCONTROLLER_H_
 
-#include "drawspace_commons.h"
+#include "renderingnode.h"
 
 namespace DrawSpace
 {
@@ -31,11 +31,12 @@ namespace Core
 {
 class ShadersController
 {
-
 protected:
 
 
-    static ShadersController*                      m_instance;
+
+    static ShadersController*                           m_instance;
+    std::map<dsstring, DrawSpace::Core::RenderingNode*> m_shader_nodes;
 
     ShadersController( void );
 
@@ -53,8 +54,9 @@ public:
         return m_instance;
     }
     
+    void RegisterRenderingNode( DrawSpace::Core::RenderingNode* p_rnode );
+    bool Update( const dsstring& p_id, const DrawSpace::Utils::Vector& p_value );
     
-
 };
 }
 }
