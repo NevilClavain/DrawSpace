@@ -80,7 +80,15 @@ int LuaShadersController::Lua_Update( lua_State* p_L )
 
 int LuaShadersController::Lua_Print( lua_State* p_L )
 {
+    LuaContext::GetInstance()->Print( "Shaders parameters list" );
 
+    std::map<dsstring, DrawSpace::Core::RenderingNode*> list;
+    ShadersController::GetInstance()->GetNodes( list );
+
+    for( std::map<dsstring, DrawSpace::Core::RenderingNode*>::iterator it = list.begin(); it != list.end(); ++it )
+    {
+        LuaContext::GetInstance()->Print( it->first );
+    }
     return 0;
 }
 

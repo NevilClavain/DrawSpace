@@ -56,6 +56,8 @@ public:
     
     void RegisterRenderingNode( DrawSpace::Core::RenderingNode* p_rnode );
     bool Update( const dsstring& p_id, const DrawSpace::Utils::Vector& p_value );
+
+    void GetNodes( std::map<dsstring, DrawSpace::Core::RenderingNode*>& p_list );
     
 };
 }

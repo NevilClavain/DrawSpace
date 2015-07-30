@@ -52,8 +52,7 @@ protected:
 
     static int lua_print( lua_State* p_L );
 
-    void print( const dsstring& p_text );
-
+    
     LuaContext( void );
 
 public:    
@@ -72,6 +71,8 @@ public:
     void Stop( void );
     bool Exec( const char* p_cmd );
     bool Execfile( const char* p_path );
+
+    void Print( const dsstring& p_text );
 
     void GetLastError( dsstring& p_str );
     void RegisterErrorHandler( DrawSpace::Core::BaseCallback<void, const dsstring&>* p_handler );

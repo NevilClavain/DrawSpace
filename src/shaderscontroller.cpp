@@ -59,4 +59,9 @@ bool ShadersController::Update( const dsstring& p_id, const DrawSpace::Utils::Ve
     return false;
 }
 
+void ShadersController::GetNodes( std::map<dsstring, DrawSpace::Core::RenderingNode*>& p_list )
+{
+    p_list = m_shader_nodes;
+}
+
 

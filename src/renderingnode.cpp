@@ -22,6 +22,7 @@
 
 #include "renderingnode.h"
 #include "memalloc.h"
+#include "shaderscontroller.h"
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
@@ -100,6 +101,8 @@ void RenderingNode::AddShaderParameter( long p_shader_index, const dsstring& p_i
     sp->param_register = p_register;
 
     m_shader_params[p_id] = sp;
+
+    ShadersController::GetInstance()->RegisterRenderingNode( this );
 }
 
 void RenderingNode::SetShaderReal( const dsstring& p_id, dsreal p_value )

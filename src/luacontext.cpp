@@ -124,7 +124,7 @@ lua_State* LuaContext::GetLuaState( void )
     return m_L;
 }
 
-void LuaContext::print( const dsstring& p_text )
+void LuaContext::Print( const dsstring& p_text )
 {
     if( m_scriptcalls_handler )
     {
@@ -151,7 +151,7 @@ int LuaContext::lua_print( lua_State* p_L )
 
 	arg = luaL_checkstring( p_L, 1 );
 	text = arg;
-    LuaContext::GetInstance()->print( text );
+    LuaContext::GetInstance()->Print( text );
 
     return 0;
 }
