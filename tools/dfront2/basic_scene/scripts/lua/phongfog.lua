@@ -13,6 +13,8 @@ ds:DisplayCurrentCamera( "scene0", 1 )
 collisions_pass[1] = "texture_pass"
 
 
+sc = ShadersController()
+
 ds:SetScenegraphEventCallback( function( evt_type, scenegraph_name )
   
   if evt_type == 0 and scene_ready then
