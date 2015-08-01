@@ -79,8 +79,7 @@ void ActionChunkEditionDialog::Execute( void )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", params_value[2] )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", params_value[3] )
 
-                
-
+               
             DIALOG_APPENDNODE_ITERATE_NODE_END
         }
 

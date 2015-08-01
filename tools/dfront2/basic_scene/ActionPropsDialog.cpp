@@ -37,6 +37,7 @@ void ActionPropsDialog::Execute( void )
     if( BasicSceneMainFrame::GetInstance()->m_spacebox_descriptors.count( id ) > 0 )
     {
         DrawSpace::Utils::SpaceboxDescriptor sb_descr = BasicSceneMainFrame::GetInstance()->m_spacebox_descriptors[id];
+        BasicSceneMainFrame::SceneNodeEntry<DrawSpace::Spacebox> sb_node = BasicSceneMainFrame::GetInstance()->m_spacebox_nodes[id];
 
         DIALOG_ACTION_DECLARE( DIALOG_SPACEBOX_PROPS_TITLE )
 
@@ -45,7 +46,8 @@ void ActionPropsDialog::Execute( void )
         for( std::map<dsstring, SpaceboxPassDescriptor>::iterator it = sb_descr.passes_slots.begin(); it != sb_descr.passes_slots.end(); ++it )
         {
             SpaceboxPassDescriptor pass_descr = it->second;                        
-            //DIALOG_APPENDROOT_NODE( pass_labels[label_index], pass_root )
+            IntermediatePass* ipass = static_cast<IntermediatePass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
+
 
             DIALOG_APPENDROOT_NODE( it->first, pass_root )
 
@@ -121,9 +123,17 @@ void ActionPropsDialog::Execute( void )
                 }
             }
 
+            // les 6 rendering_node ont tous les mêmes valeurs de shaders, on peut donc se contenter d'un lire
+            // un seul (ici le 0)
+            DrawSpace::Core::RenderingNode* rendering_node = sb_node.scene_node->GetContent()->GetNodeFromPass( ipass, 0 );
+
+            std::map<dsstring, RenderingNode::ShadersParams*> shaders_params_list;
+            rendering_node->GetShadersParams( shaders_params_list );
+
 
             for( size_t i = 0; i < pass_descr.shader_params.size(); i++ )
             {
+                
                 DIALOG_APPENDNODE_NODE( pass_root, pass_descr.shader_params[i].id, shader_param_root )
 
                 DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader index", pass_descr.shader_params[i].shader_index )
@@ -131,11 +141,20 @@ void ActionPropsDialog::Execute( void )
 
                 DIALOG_APPENDNODE_NODE( shader_param_root, "values", shader_param_values_root )
 
+                Vector params_value = shaders_params_list[pass_descr.shader_params[i].id]->param_values;
+
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", params_value[0] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", params_value[1] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", params_value[2] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", params_value[3] )
+
+
+                /*
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )
-
+                */
             }
         }
      
@@ -144,6 +163,7 @@ void ActionPropsDialog::Execute( void )
     else if( BasicSceneMainFrame::GetInstance()->m_chunk_descriptors.count( id ) > 0 )
     {
         DrawSpace::Utils::ChunkDescriptor chunk_descr = BasicSceneMainFrame::GetInstance()->m_chunk_descriptors[id];
+        BasicSceneMainFrame::SceneNodeEntry<DrawSpace::Chunk> chunk_node = BasicSceneMainFrame::GetInstance()->m_chunk_nodes[id];
 
         DIALOG_ACTION_DECLARE( DIALOG_CHUNK_PROPS_TITLE )
 
@@ -152,7 +172,13 @@ void ActionPropsDialog::Execute( void )
 
         for( std::map<dsstring, ChunkPassDescriptor>::iterator it = chunk_descr.passes_slots.begin(); it != chunk_descr.passes_slots.end(); ++it )
         {
-            ChunkPassDescriptor pass_descr = it->second;                        
+            ChunkPassDescriptor pass_descr = it->second; 
+            IntermediatePass* ipass = static_cast<IntermediatePass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
+            DrawSpace::Core::RenderingNode* rendering_node = chunk_node.scene_node->GetContent()->GetNodeFromPass( ipass );
+
+            std::map<dsstring, RenderingNode::ShadersParams*> shaders_params_list;
+            rendering_node->GetShadersParams( shaders_params_list );
+
 
             DIALOG_APPENDROOT_NODE( it->first, pass_root )
 
@@ -180,10 +206,19 @@ void ActionPropsDialog::Execute( void )
 
                 DIALOG_APPENDNODE_NODE( shader_param_root, "values", shader_param_values_root )
 
+                /*
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
                 DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )
+                */
+
+                Vector params_value = shaders_params_list[pass_descr.shader_params[i].id]->param_values;
+
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", params_value[0] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", params_value[1] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", params_value[2] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", params_value[3] )
 
             }
         }

@@ -229,6 +229,9 @@
     <ClCompile Include="src\cbfgfont.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\shaderscontroller.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -476,6 +479,9 @@
     </ClInclude>
     <ClInclude Include="src\cbfgfont.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaderscontroller.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

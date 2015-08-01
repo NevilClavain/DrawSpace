@@ -67,6 +67,7 @@
     <ClCompile Include="src\scenenode.cpp" />
     <ClCompile Include="src\scenenodegraph.cpp" />
     <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\shaderscontroller.cpp" />
     <ClCompile Include="src\spacebox.cpp" />
     <ClCompile Include="src\spectatormovement.cpp" />
     <ClCompile Include="src\spherelod_body.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="src\scenenode.h" />
     <ClInclude Include="src\scenenodegraph.h" />
     <ClInclude Include="src\shader.h" />
+    <ClInclude Include="src\shaderscontroller.h" />
     <ClInclude Include="src\spacebox.h" />
     <ClInclude Include="src\spectatormovement.h" />
     <ClInclude Include="src\spherelod_body.h" />
