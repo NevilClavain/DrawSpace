@@ -65,7 +65,4 @@ void ActionUpdatePassShaderParam::Execute( DrawSpace::Core::PropertyPool& p_prop
 
     current_pass->SetPropertiesMap( props );
 
-    // update mainframe list ctrl
-    BasicSceneMainFrame::GetInstance()->AdaptPassesShaderParamsList( current_pass );
-
 }

@@ -247,12 +247,13 @@ void wxWidgetAdapter::AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxLi
     col2.SetWidth( 100 );
     p_listctrl->InsertColumn( 2, col2 );
 
+    /*
     wxListItem col3;
     col3.SetId( 3 );
     col3.SetText( "Value" );
     col3.SetWidth( 150 );
     p_listctrl->InsertColumn( 3, col3 );
-
+    */
     ///
 
     Configurable::PropertiesMap props;
@@ -278,12 +279,12 @@ void wxWidgetAdapter::AdaptPassesShaderParamsList( DrawSpace::Pass* p_pass, wxLi
             char param_register[32];
             sprintf( param_register, "%d", it->second.param_register );
 
-            char param_values[64];
-            sprintf( param_values, "%f %f %f %f", it->second.param_values[0], it->second.param_values[1], it->second.param_values[2], it->second.param_values[3] );
+            //char param_values[64];
+            //sprintf( param_values, "%f %f %f %f", it->second.param_values[0], it->second.param_values[1], it->second.param_values[2], it->second.param_values[3] );
 
             p_listctrl->SetItem( id, 1, shader_index );
             p_listctrl->SetItem( id, 2, param_register );
-            p_listctrl->SetItem( id, 3, param_values );
+            //p_listctrl->SetItem( id, 3, param_values );
 
             p_listctrl->SetItemData( id, (long)p_pass );
         }
