@@ -303,12 +303,27 @@ void wxWidgetAdapter::AdaptPassShaderValuesPropsModification( Pass* p_pass, char
     Configurable::PropertiesMap props;
     p_pass->GetPropertiesMap( props );
 
-    std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = props["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
+    IntermediatePass* ipass = static_cast<IntermediatePass*>( p_pass );
 
+    ViewportQuad* vpq = ipass->GetViewportQuad();
+    std::map<dsstring, RenderingNode::ShadersParams*> shaders_params_list;
+    vpq->GetShadersParams( shaders_params_list );
+    Vector params_value = shaders_params_list[p_param_id]->param_values;
+
+    //std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = props["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
+
+    /*
     dsreal x = viewportquad_shaderparams[p_param_id].param_values[0];
     dsreal y = viewportquad_shaderparams[p_param_id].param_values[1];
     dsreal z = viewportquad_shaderparams[p_param_id].param_values[2];
     dsreal w = viewportquad_shaderparams[p_param_id].param_values[3];
+    */
+
+    dsreal x = params_value[0];
+    dsreal y = params_value[1];
+    dsreal z = params_value[2];
+    dsreal w = params_value[3];
+
 
     propertygrid->Append( new wxStringProperty( "param id", wxPG_LABEL, p_param_id ) );
     propertygrid->Append( new wxFloatProperty( "x", wxPG_LABEL, x ) );

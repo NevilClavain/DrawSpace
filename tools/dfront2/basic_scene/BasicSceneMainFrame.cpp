@@ -1484,15 +1484,16 @@ void BasicSceneMainFrame::build_passes_infos_dialog( DrawSpace::Core::Configurab
 
         if( viewportquad_shaderparams.size() )
         {
-            //wxPGProperty* vpqshaderparams_prop = p_propertygrid->Append( new wxStringProperty( "viewportquad_shaderparams", wxPG_LABEL, "<composed>" ) );
+            ViewportQuad* vpq = ipass->GetViewportQuad();
+            std::map<dsstring, RenderingNode::ShadersParams*> shaders_params_list;
+            vpq->GetShadersParams( shaders_params_list );
 
+            
             DIALOG_APPENDROOT_NODE( "viewport quad shader params", viewportquadshaderparams_root )
                            
             for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
             {
-
-                //wxPGProperty* vpqshaderparamname_prop = p_propertygrid->AppendIn( vpqshaderparams_prop, new wxStringProperty( it->first.c_str(), wxPG_LABEL, "<composed>" ) );
-
+               
                 DIALOG_APPENDNODE_NODE( viewportquadshaderparams_root, it->first, shaderparam )
 
                 DIALOG_APPENDNODE_INTEGER( shaderparam, "shader index", it->second.shader_index )
@@ -1500,11 +1501,20 @@ void BasicSceneMainFrame::build_passes_infos_dialog( DrawSpace::Core::Configurab
 
                 DIALOG_APPENDNODE_NODE( shaderparam, "values", shaderparamvalues )
 
+                Vector params_value = shaders_params_list[it->first]->param_values;
+
+                DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "x", params_value[0] )
+                DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "y", params_value[1] )
+                DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "z", params_value[2] )
+                DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "w", params_value[3] )
+
+
+                /*
                 DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "x", it->second.param_values[0] )
                 DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "y", it->second.param_values[1] )
                 DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "z", it->second.param_values[2] )
                 DIALOG_APPENDNODE_FLOAT( shaderparamvalues, "w", it->second.param_values[3] )
-
+                */
             }
             
         }
