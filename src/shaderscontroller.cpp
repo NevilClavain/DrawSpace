@@ -45,7 +45,7 @@ void ShadersController::RegisterRenderingNode( DrawSpace::Core::RenderingNode* p
 
     for( std::map<dsstring, RenderingNode::ShadersParams*>::iterator it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
     {
-        m_shader_nodes[it->first] = p_rnode;
+        m_shader_nodes[it->first].push_back( p_rnode );
     }
 }
 
@@ -53,13 +53,16 @@ bool ShadersController::Update( const dsstring& p_id, const DrawSpace::Utils::Ve
 {
     if( m_shader_nodes.count( p_id )> 0 )
     {
-        m_shader_nodes[p_id]->SetShaderRealVector( p_id, p_value );
+        for( size_t i = 0; i < m_shader_nodes[p_id].size(); i++ )
+        {
+            m_shader_nodes[p_id][i]->SetShaderRealVector( p_id, p_value );
+        }
         return true;
     }
     return false;
 }
 
-void ShadersController::GetNodes( std::map<dsstring, DrawSpace::Core::RenderingNode*>& p_list )
+void ShadersController::GetNodes( std::map<dsstring, std::vector<DrawSpace::Core::RenderingNode*> >& p_list )
 {
     p_list = m_shader_nodes;
 }

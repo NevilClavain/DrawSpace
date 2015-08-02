@@ -82,12 +82,14 @@ int LuaShadersController::Lua_Print( lua_State* p_L )
 {
     LuaContext::GetInstance()->Print( "Shaders parameters list" );
 
-    std::map<dsstring, DrawSpace::Core::RenderingNode*> list;
+    std::map<dsstring, std::vector<DrawSpace::Core::RenderingNode*> > list;
     ShadersController::GetInstance()->GetNodes( list );
 
-    for( std::map<dsstring, DrawSpace::Core::RenderingNode*>::iterator it = list.begin(); it != list.end(); ++it )
+    for( std::map<dsstring, std::vector<DrawSpace::Core::RenderingNode*> >::iterator it = list.begin(); it != list.end(); ++it )
     {
-        LuaContext::GetInstance()->Print( it->first );
+        char comment[64];
+        sprintf( comment, "argument '%s' -> %d client(s)", it->first.c_str(), it->second.size() );
+        LuaContext::GetInstance()->Print( comment );
     }
     return 0;
 }

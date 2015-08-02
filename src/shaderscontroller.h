@@ -35,8 +35,10 @@ protected:
 
 
 
-    static ShadersController*                           m_instance;
-    std::map<dsstring, DrawSpace::Core::RenderingNode*> m_shader_nodes;
+    static ShadersController*                                           m_instance;
+    //std::map<dsstring, DrawSpace::Core::RenderingNode*> m_shader_nodes;
+
+    std::map<dsstring, std::vector<DrawSpace::Core::RenderingNode*> >   m_shader_nodes;
 
     ShadersController( void );
 
@@ -57,7 +59,7 @@ public:
     void RegisterRenderingNode( DrawSpace::Core::RenderingNode* p_rnode );
     bool Update( const dsstring& p_id, const DrawSpace::Utils::Vector& p_value );
 
-    void GetNodes( std::map<dsstring, DrawSpace::Core::RenderingNode*>& p_list );
+    void GetNodes( std::map<dsstring, std::vector<DrawSpace::Core::RenderingNode*> >& p_list );
     
 };
 }
