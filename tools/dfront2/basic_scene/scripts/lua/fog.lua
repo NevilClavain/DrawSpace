@@ -71,7 +71,7 @@ ground_chunk:SetPassSlotTextureName( "texture_pass", "ground", 0 )
 
 ground_chunk:RegisterPassSlot( "fogint_pass" )
 ground_chunk:SetPassSlotFxName( "fogint_pass", "fogint_fx" )
-ground_chunk:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 12, Vector( 0.08, 0.0, 0.0, 1.0 ) )
+ground_chunk:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 24, Vector( 0.08, 0.0, 0.0, 1.0 ) )
 
 
 ground_chunk:LinkTo( "scene0", "ground" )
@@ -100,7 +100,7 @@ cube0:SetPassSlotFxName( "texture_pass", "texture_fx" )
 
 cube0:RegisterPassSlot( "fogint_pass" )
 cube0:SetPassSlotFxName( "fogint_pass", "fogint_fx" )
-cube0:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 20, Vector( 0.08, 0.0, 0.0, 1.0 ) )
+cube0:AddPassSlotShaderParam( "fogint_pass", "fog intensity", 0, 24, Vector( 0.08, 0.0, 0.0, 1.0 ) )
 
 
 cube0:LinkTo( "scene0", "body0" )

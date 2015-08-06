@@ -5,7 +5,7 @@ float4x4 matWorld: register(c8);
 float4x4 matView: register(c12);
 float4x4 matCam: register(c16);
 
-float4   ldir: register(c20);
+float4   ldir: register(c24);
 
 struct VS_INPUT 
 {
