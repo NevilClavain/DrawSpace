@@ -938,8 +938,7 @@ bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::
     inv( 2, 2 ) = -1.0;
     final_view = p_view * inv;
 
-    Transformation chain;
-    //chain.PushMatrix( m_projection );
+    Transformation chain;    
     chain.PushMatrix( p_proj );
     chain.PushMatrix( final_view );
     chain.PushMatrix( p_world );
@@ -951,6 +950,7 @@ bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::
     
     //////////////////////////////////////////////////////////////////////
 
+    DrawSpace::Utils::Matrix proj = p_proj;
     DrawSpace::Utils::Matrix world = p_world;
     DrawSpace::Utils::Matrix view = p_view;
     DrawSpace::Utils::Matrix cam = p_view;
@@ -972,6 +972,10 @@ bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::
 	//////////////////////////////////////////////////////////////////////
 
     set_vertexshader_constants( 16, cam.GetArray(), 4 );
+
+
+    proj.Transpose();
+    set_vertexshader_constants( 20, proj.GetArray(), 4 );
 
 
 	hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, p_nbvertices, 0, p_nbtriangles );
