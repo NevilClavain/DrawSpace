@@ -47,24 +47,28 @@ m_scenenodegraph( NULL )
     v1.z = 0.0;
     v1.tu[0] = 0.0;
     v1.tv[0] = 0.0;
+    v1.nx = 1.0;
 
     v2.x = 0.5;
     v2.y = 0.5;
     v2.z = 0.0;
     v2.tu[0] = 1.0;
     v2.tv[0] = 0.0;
+    v2.nx = 2.0;
 
     v3.x = 0.5;
     v3.y = -0.5;
     v3.z = 0.0;
     v3.tu[0] = 1.0;
     v3.tv[0] = 1.0;
+    v3.nx = 3.0;
 
     v4.x = -0.5;
     v4.y = -0.5;
     v4.z = 0.0;
     v4.tu[0] = 0.0;
     v4.tv[0] = 1.0;
+    v4.nx = 4.0;
     
     m_meshe->AddVertex( v1 );
     m_meshe->AddVertex( v2 );

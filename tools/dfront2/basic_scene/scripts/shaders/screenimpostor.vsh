@@ -10,6 +10,7 @@ float4x4 matProj: register(c20);
 struct VS_INPUT 
 {
    float4 Position : POSITION0;
+   float4 Normales : NORMAL0;
    float4 TexCoord0: TEXCOORD0;
 };
 
@@ -30,17 +31,17 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	vertexpos.z = 0.0;
 	vertexpos.w = 1.0;
 
-	if( Input.TexCoord0.x == 0.0 && Input.TexCoord0.y == 0.0 )
+	if( Input.Normales.x == 1.0 )
 	{
 		vertexpos.x = -0.5;
 		vertexpos.y = 0.5;
-	}
-	else if( Input.TexCoord0.x == 1.0 && Input.TexCoord0.y == 0.0 )
+	}	
+	else if( Input.Normales.x == 2.0 )
 	{
 		vertexpos.x = 0.5;
 		vertexpos.y = 0.5;
-	}
-	else if( Input.TexCoord0.x == 1.0 && Input.TexCoord0.y == 1.0 )
+	}	
+	else if( Input.Normales.x == 3.0 )
 	{
 		vertexpos.x = 0.5;
 		vertexpos.y = -0.5;
