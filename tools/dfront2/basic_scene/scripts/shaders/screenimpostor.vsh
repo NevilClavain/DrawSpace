@@ -9,15 +9,18 @@ float4x4 matProj: register(c20);
 
 struct VS_INPUT 
 {
-   float4 Position : POSITION0;
-   float4 Normales : NORMAL0;
-   float4 TexCoord0: TEXCOORD0;
+	float4 Position : POSITION0;
+	float4 Normales : NORMAL0;
+	float4 TexCoord0: TEXCOORD0;
+	float4 Pos:       TEXCOORD7;
+	float4 Scale:     TEXCOORD8;
+
 };
 
 struct VS_OUTPUT 
 {
-   float4 Position : POSITION0;
-   float4 TexCoord0: TEXCOORD0;
+	float4 Position : POSITION0;
+	float4 TexCoord0: TEXCOORD0;
 };
 
 VS_OUTPUT vs_main( VS_INPUT Input )
@@ -60,11 +63,26 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	inv[3][3] = 1.0;
 
 	float4x4 final_view = mul( matView, inv );
-	float4x4 world_view = mul( matWorld, final_view );
+
+	float4x4 localpos = 0;
+	localpos[0][0] = 1.0;
+	localpos[1][1] = 1.0;
+	localpos[2][2] = 1.0;
+	localpos[3][3] = 1.0;
+	localpos[3][0] = Input.Pos.x;
+	localpos[3][1] = Input.Pos.y;
+	localpos[3][2] = Input.Pos.z;
+
+
+	
+	float4x4 world_view = mul( mul( matWorld, localpos ), final_view );
+
+
+
 
 	float4 vertexpos2 = mul( centerpos, world_view );
-	vertexpos2.x += vertexpos.x;
-	vertexpos2.y += vertexpos.y;
+	vertexpos2.x += vertexpos.x * Input.Scale.x;
+	vertexpos2.y += vertexpos.y * Input.Scale.y;
 	vertexpos2.z += vertexpos.z;	
 	Output.Position = mul( vertexpos2, matProj );
 

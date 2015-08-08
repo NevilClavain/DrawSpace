@@ -34,12 +34,89 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 Impostor::Impostor( void ) :
-m_scenenodegraph( NULL )
+m_scenenodegraph( NULL ),
+m_meshe( NULL )
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
+
+}
+
+Impostor::~Impostor( void )
+{
+
+}
+
+void Impostor::Init( const Impostor::DisplayList& p_list )
+{
     m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
 
+
+    for( size_t i = 0; i < p_list.size(); i++ )
+    {
+        Vertex v1, v2, v3, v4;
+
+        v1.x = -0.5;
+        v1.y = 0.5;
+        v1.z = 0.0;
+        v1.tu[0] = p_list[i].u1;
+        v1.tv[0] = p_list[i].v1;
+        v1.nx = 1.0;
+        v1.tu[7] = p_list[i].localpos[0];
+        v1.tv[7] = p_list[i].localpos[1];
+        v1.tw[7] = p_list[i].localpos[2];
+        v1.tu[8] = p_list[i].width_scale;
+        v1.tv[8] = p_list[i].height_scale;
+
+        v2.x = 0.5;
+        v2.y = 0.5;
+        v2.z = 0.0;
+        v2.tu[0] = p_list[i].u2;
+        v2.tv[0] = p_list[i].v2;
+        v2.nx = 2.0;
+        v2.tu[7] = p_list[i].localpos[0];
+        v2.tv[7] = p_list[i].localpos[1];
+        v2.tw[7] = p_list[i].localpos[2];
+        v2.tu[8] = p_list[i].width_scale;
+        v2.tv[8] = p_list[i].height_scale;
+
+        v3.x = 0.5;
+        v3.y = -0.5;
+        v3.z = 0.0;
+        v3.tu[0] = p_list[i].u3;
+        v3.tv[0] = p_list[i].v3;
+        v3.nx = 3.0;
+        v3.tu[7] = p_list[i].localpos[0];
+        v3.tv[7] = p_list[i].localpos[1];
+        v3.tw[7] = p_list[i].localpos[2];
+        v3.tu[8] = p_list[i].width_scale;
+        v3.tv[8] = p_list[i].height_scale;
+
+        v4.x = -0.5;
+        v4.y = -0.5;
+        v4.z = 0.0;
+        v4.tu[0] = p_list[i].u4;
+        v4.tv[0] = p_list[i].v4;
+        v4.nx = 4.0;
+        v4.tu[7] = p_list[i].localpos[0];
+        v4.tv[7] = p_list[i].localpos[1];
+        v4.tw[7] = p_list[i].localpos[2];
+        v4.tu[8] = p_list[i].width_scale;
+        v4.tv[8] = p_list[i].height_scale;
+    
+        m_meshe->AddVertex( v1 );
+        m_meshe->AddVertex( v2 );
+        m_meshe->AddVertex( v3 );
+        m_meshe->AddVertex( v4 );
+
+        int index_base = 4 * i;
+
+        m_meshe->AddTriangle( Triangle( index_base, 3 + index_base, 1 + index_base ) );
+        m_meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );
+        
+    }
+
+    /*
     Vertex v1, v2, v3, v4;
 
     v1.x = -0.5;
@@ -48,6 +125,11 @@ m_scenenodegraph( NULL )
     v1.tu[0] = 0.0;
     v1.tv[0] = 0.0;
     v1.nx = 1.0;
+    v1.tu[7] = 0.0f;
+    v1.tv[7] = 1.0f;
+    v1.tw[7] = -2.0f;
+    v1.tu[8] = 0.2f;
+    v1.tv[8] = 0.2f;
 
     v2.x = 0.5;
     v2.y = 0.5;
@@ -55,6 +137,11 @@ m_scenenodegraph( NULL )
     v2.tu[0] = 1.0;
     v2.tv[0] = 0.0;
     v2.nx = 2.0;
+    v2.tu[7] = 0.0f;
+    v2.tv[7] = 1.0f;
+    v2.tw[7] = -2.0f;
+    v2.tu[8] = 0.2f;
+    v2.tv[8] = 0.2f;
 
     v3.x = 0.5;
     v3.y = -0.5;
@@ -62,6 +149,11 @@ m_scenenodegraph( NULL )
     v3.tu[0] = 1.0;
     v3.tv[0] = 1.0;
     v3.nx = 3.0;
+    v3.tu[7] = 0.0f;
+    v3.tv[7] = 1.0f;
+    v3.tw[7] = -2.0f;
+    v3.tu[8] = 0.2f;
+    v3.tv[8] = 0.2f;
 
     v4.x = -0.5;
     v4.y = -0.5;
@@ -69,6 +161,11 @@ m_scenenodegraph( NULL )
     v4.tu[0] = 0.0;
     v4.tv[0] = 1.0;
     v4.nx = 4.0;
+    v4.tu[7] = 0.0f;
+    v4.tv[7] = 1.0f;
+    v4.tw[7] = -2.0f;
+    v4.tu[8] = 0.2f;
+    v4.tv[8] = 0.2f;
     
     m_meshe->AddVertex( v1 );
     m_meshe->AddVertex( v2 );
@@ -77,12 +174,7 @@ m_scenenodegraph( NULL )
 
     m_meshe->AddTriangle( Triangle( 0, 3, 1 ) );
     m_meshe->AddTriangle( Triangle( 1, 3, 2 ) );
-
-}
-
-Impostor::~Impostor( void )
-{
-
+    */
 }
 
 void Impostor::Update( DrawSpace::Utils::TimeManager& p_timemanager )

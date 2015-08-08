@@ -30,6 +30,24 @@ namespace DrawSpace
 {
 class Impostor
 {
+public:
+
+    typedef struct
+    {
+        float width_scale;
+        float height_scale;
+        DrawSpace::Utils::Vector localpos;
+
+        dsreal u1, v1;
+        dsreal u2, v2;
+        dsreal u3, v3;
+        dsreal u4, v4;        
+
+    } DisplayListEntry;
+
+    
+    typedef std::vector<DisplayListEntry> DisplayList;
+
 protected:
 
     typedef DrawSpace::Core::CallBack<Impostor, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
@@ -47,6 +65,8 @@ public:
 
     Impostor( void );
     virtual ~Impostor( void );
+
+    void Init( const DisplayList& p_list );
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
