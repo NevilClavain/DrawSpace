@@ -115,66 +115,6 @@ void Impostor::Init( const Impostor::DisplayList& p_list )
         m_meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );
         
     }
-
-    /*
-    Vertex v1, v2, v3, v4;
-
-    v1.x = -0.5;
-    v1.y = 0.5;
-    v1.z = 0.0;
-    v1.tu[0] = 0.0;
-    v1.tv[0] = 0.0;
-    v1.nx = 1.0;
-    v1.tu[7] = 0.0f;
-    v1.tv[7] = 1.0f;
-    v1.tw[7] = -2.0f;
-    v1.tu[8] = 0.2f;
-    v1.tv[8] = 0.2f;
-
-    v2.x = 0.5;
-    v2.y = 0.5;
-    v2.z = 0.0;
-    v2.tu[0] = 1.0;
-    v2.tv[0] = 0.0;
-    v2.nx = 2.0;
-    v2.tu[7] = 0.0f;
-    v2.tv[7] = 1.0f;
-    v2.tw[7] = -2.0f;
-    v2.tu[8] = 0.2f;
-    v2.tv[8] = 0.2f;
-
-    v3.x = 0.5;
-    v3.y = -0.5;
-    v3.z = 0.0;
-    v3.tu[0] = 1.0;
-    v3.tv[0] = 1.0;
-    v3.nx = 3.0;
-    v3.tu[7] = 0.0f;
-    v3.tv[7] = 1.0f;
-    v3.tw[7] = -2.0f;
-    v3.tu[8] = 0.2f;
-    v3.tv[8] = 0.2f;
-
-    v4.x = -0.5;
-    v4.y = -0.5;
-    v4.z = 0.0;
-    v4.tu[0] = 0.0;
-    v4.tv[0] = 1.0;
-    v4.nx = 4.0;
-    v4.tu[7] = 0.0f;
-    v4.tv[7] = 1.0f;
-    v4.tw[7] = -2.0f;
-    v4.tu[8] = 0.2f;
-    v4.tv[8] = 0.2f;
-    
-    m_meshe->AddVertex( v1 );
-    m_meshe->AddVertex( v2 );
-    m_meshe->AddVertex( v3 );
-    m_meshe->AddVertex( v4 );
-
-    m_meshe->AddTriangle( Triangle( 0, 3, 1 ) );
-    m_meshe->AddTriangle( Triangle( 1, 3, 2 ) );
-    */
 }
 
 void Impostor::Update( DrawSpace::Utils::TimeManager& p_timemanager )
