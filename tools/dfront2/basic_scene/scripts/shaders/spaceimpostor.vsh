@@ -101,23 +101,23 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	if( Input.Normales.x == 1.0 )
 	{
-		vertexpos.x = -0.5;
-		vertexpos.y = 0.5;
+		vertexpos.x = -0.5 * Input.Scale.x;
+		vertexpos.y = 0.5 * Input.Scale.y;
 	}	
 	else if( Input.Normales.x == 2.0 )
 	{
-		vertexpos.x = 0.5;
-		vertexpos.y = 0.5;
+		vertexpos.x = 0.5 * Input.Scale.x;
+		vertexpos.y = 0.5 * Input.Scale.y;
 	}	
 	else if( Input.Normales.x == 3.0 )
 	{
-		vertexpos.x = 0.5;
-		vertexpos.y = -0.5;
+		vertexpos.x = 0.5 * Input.Scale.x;
+		vertexpos.y = -0.5 * Input.Scale.y;
 	}
 	else
 	{
-		vertexpos.x = -0.5;
-		vertexpos.y = -0.5;
+		vertexpos.x = -0.5 * Input.Scale.x;
+		vertexpos.y = -0.5 * Input.Scale.y;
 	}
 
 	float4x4 inv = 0;
