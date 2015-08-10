@@ -159,8 +159,6 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
         Matrix roty;
         roty.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), theta );
 
-        //roty.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( -45.0 ) );
-
         Vector theta_dir( body_center_2[0], 0.0, body_center_2[2], 1.0 );
 
         dsreal phi = atan2( body_center_2[1], theta_dir.Length() );
@@ -172,7 +170,6 @@ void CameraPoint::Update( DrawSpace::Utils::TimeManager& p_timemanager )
         
         Matrix rotx;
         rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), phi );
-        //rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), Maths::DegToRad( -5.0 ) );
 
         Matrix final_lock;
         final_lock = rotx * roty;
