@@ -75,7 +75,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 
 	
-	float4x4 world_view = mul( mul( matWorld, localpos ), final_view );
+	float4x4 world_view = mul( mul( localpos, matWorld ), final_view );
 
 
 

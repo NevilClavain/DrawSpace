@@ -143,15 +143,29 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	yaxis.z = 0;
 	yaxis.w = 0;
 
+	// local translation
+	float4x4 local_trans = 0;
+
+	local_trans[0][0] = 1.0;
+	local_trans[1][1] = 1.0;
+	local_trans[2][2] = 1.0;
+	local_trans[3][3] = 1.0;
+
+	local_trans[3][0] = Input.Pos.x;
+	local_trans[3][1] = Input.Pos.y;
+	local_trans[3][2] = Input.Pos.z;
+
+
+
 		
-	float4x4 world_view = mul( matWorld, final_view );
+	float4x4 world_view = mul( mul( local_trans, matWorld ), final_view );
 
 
 	// passer le point ( 0, 0, 0 ) du repere cam vers le repere world	
 	float4 centerpos2 = mul( centerpos, matCam );	
 
 	// passer le point obtenu du repere world vers le repere local a l'impostor
-	float4 centerpos3 = mul( centerpos2, InverseMatrix( matWorld ) );
+	float4 centerpos3 = mul( centerpos2, InverseMatrix( mul( local_trans, matWorld ) ) );
 
 	// il ne reste plus qu'à calculer theta et phi a partir du point obtenu (point 0 camera exprimé dans le repere local à l'impostor)
 
