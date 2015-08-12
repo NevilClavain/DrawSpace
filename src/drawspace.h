@@ -87,7 +87,6 @@
 #include "spherelod_drawing.h"
 #include "spherelod_maps.h"
 #include "chunk.h"
-#include "impostor.h"
 #include "mediator.h"
 #include "runner.h"
 #include "planetoid_body.h"

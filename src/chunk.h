@@ -30,6 +30,26 @@ namespace DrawSpace
 {
 class Chunk
 {
+
+public:
+
+    typedef struct
+    {
+        float width_scale;
+        float height_scale;
+        DrawSpace::Utils::Vector localpos;
+
+        dsreal u1, v1;
+        dsreal u2, v2;
+        dsreal u3, v3;
+        dsreal u4, v4;        
+
+    } ImpostorsDisplayListEntry;
+
+    
+    typedef std::vector<ImpostorsDisplayListEntry> ImpostorsDisplayList;
+
+
 protected:
 
     typedef DrawSpace::Core::CallBack<Chunk, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
@@ -53,10 +73,11 @@ public:
     Chunk( void );
     virtual ~Chunk( void );
 
+    void ImpostorsInit( const ImpostorsDisplayList& p_list );
+
     void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
    
-    void SetRenderer( DrawSpace::Interface::Renderer* p_renderer );
     void SetDrawingState( Pass* p_passname, bool p_drawing );
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );

@@ -232,7 +232,6 @@
     <ClCompile Include="src\shaderscontroller.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\impostor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -484,6 +483,5 @@
     <ClInclude Include="src\shaderscontroller.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\impostor.h" />
   </ItemGroup>
 </Project>
