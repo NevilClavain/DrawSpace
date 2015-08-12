@@ -108,7 +108,6 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
     Chunk* chunk = new Chunk();
 
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    chunk->SetRenderer( renderer ); 
 
     if( "" == p_descriptor.meshe )
     {
