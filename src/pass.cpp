@@ -545,7 +545,7 @@ m_targetdims_height( 256 ),
 m_renderpurpose( Texture::RENDERPURPOSE_COLOR )
 {
     init_properties();
-    }
+}
 
 
 

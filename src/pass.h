@@ -28,11 +28,11 @@
 #include "viewportquad.h"
 #include "configurable.h"
 
-#define FINALPASS_TEXT_KEYWORD      "FinalPass"
-#define FINALPASS_ARC_MAGICNUMBER   0x4041
+#define FINALPASS_TEXT_KEYWORD              "FinalPass"
+#define FINALPASS_ARC_MAGICNUMBER           0x4041
 
-#define INTERMEDIATEPASS_TEXT_KEYWORD      "IntermediatePass"
-#define INTERMEDIATEPASS_ARC_MAGICNUMBER   0x4042
+#define INTERMEDIATEPASS_TEXT_KEYWORD       "IntermediatePass"
+#define INTERMEDIATEPASS_ARC_MAGICNUMBER    0x4042
 
 namespace DrawSpace
 {
