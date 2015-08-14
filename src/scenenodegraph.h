@@ -79,7 +79,7 @@ protected:
 
     dsstring                                    m_current_camera;
 
-    Utils::Matrix                               m_view;
+    //Utils::Matrix                               m_view;
 
     std::vector<CameraEventHandler*>            m_cameraevt_handlers;
     std::vector<NodesEventHandler*>             m_nodesevt_handlers;

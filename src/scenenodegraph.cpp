@@ -33,7 +33,7 @@ using namespace DrawSpace::Utils;
 
 SceneNodeGraph::SceneNodeGraph( void )
 {
-    m_view.Identity();
+    //m_view.Identity();
 }
 
 SceneNodeGraph::~SceneNodeGraph( void )
@@ -55,14 +55,14 @@ void SceneNodeGraph::ComputeTransformations( Utils::TimeManager& p_timemanager )
         (* m_scenegraphevt_handlers[i] )( TRANSFORMATIONS_DONE, this );
     }
 
+    /*
     m_view.Identity();
-
     if( m_current_camera != "" )
-    {
-        //m_cameras_list[m_current_camera]->GetSceneWorld( m_view );
+    {        
         m_cameras_list[m_current_camera]->GetFinalTransform( m_view );        
         m_view.Inverse();
     }
+    */
 }
 
 bool SceneNodeGraph::AddNode( BaseSceneNode* p_node )
@@ -141,7 +141,14 @@ bool SceneNodeGraph::SetCurrentCamera( const dsstring& p_nodename )
 
 void SceneNodeGraph::GetCurrentCameraView( Utils::Matrix& p_view )
 {
-    p_view = m_view;
+    Matrix view;
+    view.Identity();    
+    if( m_current_camera != "" )
+    {        
+        m_cameras_list[m_current_camera]->GetFinalTransform( view );        
+        view.Inverse();
+    }
+    p_view = view;
 }
 
 void SceneNodeGraph::GetCurrentCameraTranform( Utils::Matrix& p_mat )
@@ -160,11 +167,6 @@ void SceneNodeGraph::GetCurrentCameraProj( Utils::Matrix& p_proj )
 {
     if( m_current_camera != "" )
     {
-        /*
-        DrawSpace::Dynamics::CameraPoint* camera = static_cast<DrawSpace::Dynamics::CameraPoint*>( m_cameras_list[m_current_camera] );
-        camera->GetProjection( p_proj );
-        */
-
         SceneNode<CameraPoint>* camera_node; 
 
         camera_node = dynamic_cast<SceneNode<CameraPoint>*>( m_cameras_list[m_current_camera] );
@@ -230,7 +232,10 @@ void SceneNodeGraph::PointProjection( const Vector& p_point, dsreal& p_outx, dsr
     Vector point = p_point;
 
     GetCurrentCameraProj( proj );
-    renderer->PointProjection( m_view, proj, point, p_outx, p_outy, p_outz );       
+
+    Matrix view;
+    GetCurrentCameraView( view );
+    renderer->PointProjection( view, proj, point, p_outx, p_outy, p_outz );
 }
 
 void SceneNodeGraph::GetCurrentCameraName( dsstring& p_outname )
