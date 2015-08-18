@@ -578,12 +578,27 @@ void IntermediatePass::init_properties( void )
 void IntermediatePass::SetTargetDimsFromRenderer( bool p_state )
 {
     m_targetdims_fromrenderer = p_state; 
+
+    // update property
+    m_properties["targetdimsfromrenderer"].SetPropValue<bool>( m_targetdims_fromrenderer );
 }
 
 void IntermediatePass::SetTargetDims( long p_width, long p_height )
 {
     m_targetdims_width = p_width;
     m_targetdims_height = p_height;
+
+    // update properties
+    m_properties["targetdims"].SetPropValue<long>( "width", m_targetdims_width );
+    m_properties["targetdims"].SetPropValue<long>( "height", m_targetdims_height );
+}
+
+void IntermediatePass::SetRenderPurpose( Core::Texture::RenderPurpose p_renderpurpose )
+{
+    m_renderpurpose = p_renderpurpose;
+
+    // update property
+    m_properties["renderpurpose"].SetPropValue<Texture::RenderPurpose>( m_renderpurpose );
 }
 
 

@@ -50,6 +50,7 @@ protected:
     long            m_width;
     long            m_height;
     long            m_bpp;
+    void*           m_render_data;
 
     void*           m_filedata;
     long            m_filedatasize;
@@ -87,11 +88,17 @@ public:
     void GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h );
 
     void SetFormat( long p_width, long p_height, long p_bpp );
+    void SetRenderData( void* p_renderdata );
     void GetFormat( long& p_width, long& p_height, long& p_bpp );
 
     RenderPurpose GetRenderPurpose( void );
 
     void GetKeyword( dsstring& p_outkeyword );
+
+    bool AllocTextureContent( void );
+    void ReleaseTextureContent( void );
+    void* GetTextureContentPtr( void );
+    bool CopyTextureContent( void );
 
     static Asset* Instanciate( void );
 

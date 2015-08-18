@@ -58,7 +58,9 @@ bool Maps::Initialize( void )
         return false;
     }
 
-    m_elevation_texture_bits = (unsigned char *)renderer->GetTextureContent( m_elevation_texture_data );
+    m_elevation_texture_bits = (unsigned char *)renderer->GetTextureContentPtr( m_elevation_texture_data );
+
+    renderer->CopyTextureContent( m_elevation_texture_data );
 
     return true;
 }

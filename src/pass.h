@@ -139,6 +139,7 @@ public:
 
     void SetTargetDimsFromRenderer( bool p_state );
     void SetTargetDims( long p_width, long p_height );
+    void SetRenderPurpose( Core::Texture::RenderPurpose p_renderpurpose );
 
     bool Initialize( void );
     

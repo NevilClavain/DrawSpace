@@ -75,8 +75,9 @@ public:
 	virtual bool UnsetTexture( int p_stage ) = 0;
     virtual bool UnsetVertexTexture( int p_stage ) = 0;
     virtual bool AllocTextureContent( void* p_texturedata ) = 0;
-    virtual void RemoveTextureContent( void* p_texturedata ) = 0;
-    virtual void* GetTextureContent( void* p_texturedata ) = 0;
+    virtual void ReleaseTextureContent( void* p_texturedata ) = 0;
+    virtual void* GetTextureContentPtr( void* p_texturedata ) = 0;
+    virtual bool CopyTextureContent( void* p_texturedata ) = 0;
 
 
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;

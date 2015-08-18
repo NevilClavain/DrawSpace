@@ -25,10 +25,14 @@
 #include "memalloc.h"
 #include "exceptions.h"
 #include "misc_utils.h"
+#include "renderer.h"
+#include "plugin.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface;
 
 
 Texture::Texture( void ) :
@@ -37,7 +41,8 @@ m_filedatasize( -1 ),
 m_render_target( false ),
 m_render_target_width( 256 ),
 m_render_target_height( 256 ),
-m_renderpurpose( RENDERPURPOSE_COLOR )
+m_renderpurpose( RENDERPURPOSE_COLOR ),
+m_render_data( NULL )
 {
     // properties array creation
     m_properties["filepath"].AddPropValue<dsstring>( m_path );
@@ -55,7 +60,8 @@ m_filedatasize( -1 ),
 m_render_target( p_render_target ),
 m_render_target_width( p_render_target_width ),
 m_render_target_height( p_render_target_height ),
-m_renderpurpose( p_rp )
+m_renderpurpose( p_rp ),
+m_render_data( NULL )
 {
     // properties array creation
     m_properties["filepath"].AddPropValue<dsstring>( m_path );
@@ -288,6 +294,11 @@ void Texture::SetFormat( long p_width, long p_height, long p_bpp )
     m_bpp = p_bpp;
 }
 
+void Texture::SetRenderData( void* p_render_data )
+{
+    m_render_data = p_render_data;
+}
+
 void Texture::GetFormat( long& p_width, long& p_height, long& p_bpp )
 {
     p_width = m_width;
@@ -308,4 +319,48 @@ void Texture::GetKeyword( dsstring& p_outkeyword )
 Texture::RenderPurpose Texture::GetRenderPurpose( void )
 {
     return m_renderpurpose;
+}
+
+bool Texture::AllocTextureContent( void )
+{
+    if( !m_render_data )
+    {
+        return false;
+    }
+
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    return renderer->AllocTextureContent( m_render_data );    
+}
+
+void Texture::ReleaseTextureContent( void )
+{
+    if( !m_render_data )
+    {
+        return;
+    }
+
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    renderer->ReleaseTextureContent( m_render_data );
+}
+
+void* Texture::GetTextureContentPtr( void )
+{
+    if( !m_render_data )
+    {
+        return false;
+    }
+
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    return renderer->GetTextureContentPtr( m_render_data );
+}
+
+bool Texture::CopyTextureContent( void )
+{
+    if( !m_render_data )
+    {
+        return false;
+    }
+
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    return renderer->CopyTextureContent( m_render_data );
 }

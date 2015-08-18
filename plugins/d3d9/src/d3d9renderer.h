@@ -78,6 +78,9 @@ protected:
     typedef struct
     {
         LPDIRECT3DTEXTURE9  texture;
+
+        // pour le cas des texture RENDER_TARGET : 2eme texture permettant d'acceder au contenu de la 1ere, via IDirect3DDevice9::GetRenderTargetData()
+        LPDIRECT3DTEXTURE9  texture2;
         D3DSURFACE_DESC     descr;
         bool                render_texture;
         void*               bits;
@@ -184,8 +187,9 @@ public:
 	virtual bool UnsetTexture( int p_stage );
     virtual bool UnsetVertexTexture( int p_stage );
     virtual bool AllocTextureContent( void* p_texturedata );
-    virtual void RemoveTextureContent( void* p_texturedata );
-    virtual void* GetTextureContent( void* p_texturedata );
+    virtual void ReleaseTextureContent( void* p_texturedata );
+    virtual void* GetTextureContentPtr( void* p_texturedata );
+    virtual bool CopyTextureContent( void* p_texturedata );
 
 
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data );
