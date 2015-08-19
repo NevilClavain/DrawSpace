@@ -5,6 +5,7 @@ float4x4 matWorld: register(c8);
 float4x4 matView: register(c12);
 float4x4 matCam: register(c16);
 float4x4 matProj: register(c20);
+float4   globalscale: register(c24);
 
 
 struct VS_INPUT 
@@ -81,8 +82,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 
 	float4 vertexpos2 = mul( centerpos, world_view );
-	vertexpos2.x += vertexpos.x * Input.Scale.x;
-	vertexpos2.y += vertexpos.y * Input.Scale.y;
+	vertexpos2.x += vertexpos.x * Input.Scale.x * globalscale;
+	vertexpos2.y += vertexpos.y * Input.Scale.y * globalscale;
 	vertexpos2.z += vertexpos.z;	
 	Output.Position = mul( vertexpos2, matProj );
 
