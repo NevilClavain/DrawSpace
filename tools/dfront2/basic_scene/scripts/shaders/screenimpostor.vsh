@@ -82,8 +82,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 
 	float4 vertexpos2 = mul( centerpos, world_view );
-	vertexpos2.x += vertexpos.x * Input.Scale.x * globalscale;
-	vertexpos2.y += vertexpos.y * Input.Scale.y * globalscale;
+	vertexpos2.x += vertexpos.x * Input.Scale.x * globalscale.x;
+	vertexpos2.y += vertexpos.y * Input.Scale.y * globalscale.y;
 	vertexpos2.z += vertexpos.z;	
 	Output.Position = mul( vertexpos2, matProj );
 
