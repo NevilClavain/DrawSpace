@@ -1,0 +1,26 @@
+
+
+sampler2D Texture0 : register(s0);
+sampler2D Texture1 : register(s1);
+
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+   float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 mask = tex2D( Texture0, input.TexCoord0 );
+	float4 color = tex2D( Texture1, input.TexCoord0 );
+
+	float4 outputcolor = 0;
+	if( mask.x > 0.0 )
+	{
+		outputcolor = color;
+	}	
+
+	return outputcolor;
+}
