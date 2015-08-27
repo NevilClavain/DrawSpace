@@ -14,13 +14,18 @@ struct PS_INTPUT
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 ret_color;
-	if( flags.x > 0.0 )
+	if( flags.x == 1.0 )
 	{
 		ret_color = color; 
 	}
-	else
+	else if( flags.x == 0.5 )
 	{
-		ret_color = tex2D( Texture0, input.TexCoord0 );
+		ret_color = color;
+		ret_color.a = tex2D( Texture0, input.TexCoord0 ).r;	
+	}	
+	else
+	{		
+		ret_color = tex2D( Texture0, input.TexCoord0 );			
 	}
 
 	return ret_color;

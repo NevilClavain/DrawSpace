@@ -6,6 +6,10 @@ float4x4 matView: register(c12);
 float4x4 matCam: register(c16);
 float4x4 matProj: register(c20);
 
+float4 flags: register(c24);
+float4 cloud_dims: register(c25); // .x => cloud top; y => cloud bottom; z => cloud color top; w => cloud color bottom
+
+
 
 struct VS_INPUT 
 {
@@ -21,6 +25,7 @@ struct VS_OUTPUT
 {
 	float4 Position : POSITION0;
 	float4 TexCoord0: TEXCOORD0;
+	float4 Color:	  TEXCOORD1;  //specifique aux nuages volumetriques
 };
 
 float4x4 InverseMatrix( float4x4 p_mat )
@@ -98,26 +103,47 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	vertexpos.z = 0.0;
 	vertexpos.w = 1.0;
+	
+	////// pour les nuages volumetriques
+	
+	float cloud_color_top;
+	float cloud_color_bottom;
+	
+	if( flags.x == 0.5 )
+	{	
+		cloud_color_top = lerp( cloud_dims.w, cloud_dims.z, ( Input.Pos.y + ( Input.Scale.y / 2.0 ) ) / ( cloud_dims.x - cloud_dims.y ) );
+		cloud_color_bottom = lerp( cloud_dims.w, cloud_dims.z, ( Input.Pos.y - ( Input.Scale.y / 2.0 ) ) / ( cloud_dims.x - cloud_dims.y ) );
+	}
+	else
+	{
+		cloud_color_top = cloud_color_bottom = 1.0;
+	}
+		
+	//
 
 	if( Input.Normales.x == 1.0 )
 	{
 		vertexpos.x = -0.5 * Input.Scale.x;
 		vertexpos.y = 0.5 * Input.Scale.y;
+		Output.Color = cloud_color_top;
 	}	
 	else if( Input.Normales.x == 2.0 )
 	{
 		vertexpos.x = 0.5 * Input.Scale.x;
 		vertexpos.y = 0.5 * Input.Scale.y;
+		Output.Color = cloud_color_top;
 	}	
 	else if( Input.Normales.x == 3.0 )
 	{
 		vertexpos.x = 0.5 * Input.Scale.x;
 		vertexpos.y = -0.5 * Input.Scale.y;
+		Output.Color = cloud_color_bottom;
 	}
 	else
 	{
 		vertexpos.x = -0.5 * Input.Scale.x;
 		vertexpos.y = -0.5 * Input.Scale.y;
+		Output.Color = cloud_color_bottom;
 	}
 
 	float4x4 inv = 0;
