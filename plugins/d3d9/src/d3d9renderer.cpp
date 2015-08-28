@@ -481,6 +481,8 @@ bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
 
     *p_data = (void *)meshe_data;
 
+    meshe->SetRenderData( (void *)meshe_data );
+
     m_meshes_base[hash] = meshe_data;
 
     return true;
@@ -517,6 +519,96 @@ bool D3D9Renderer::SetMeshe( void* p_data )
 
     hRes = m_lpd3ddevice->SetIndices( meshe_data->index_buffer );
 	D3D9_CHECK( SetIndices );
+
+    return true;
+}
+
+bool D3D9Renderer::UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data )
+{
+    MesheData* meshe_data = (MesheData*)p_data;
+
+    d3d9triangle *t;
+    meshe_data->index_buffer->Lock( 0, 0, (VOID **)&t, 0 );
+
+    long nb_triangles = p_meshe->GetTrianglesListSize();
+
+    for( long i = 0; i < nb_triangles; i++, t++ )
+    {
+        Core::Triangle triangle;
+        p_meshe->GetTriangles( i, triangle );
+
+        t->vertex1 = triangle.vertex1;
+        t->vertex2 = triangle.vertex2;
+        t->vertex3 = triangle.vertex3;
+    }   
+    meshe_data->index_buffer->Unlock();
+
+    return true;
+}
+
+bool D3D9Renderer::UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data )
+{
+    MesheData* meshe_data = (MesheData*)p_data;
+
+    d3d9vertex* v;
+    meshe_data->vertex_buffer->Lock( 0, 0, (VOID **)&v, 0 );
+
+    long nb_vertices = p_meshe->GetVertexListSize();
+
+    for( long i = 0; i < nb_vertices; i++, v++ )
+    {
+        Core::Vertex vertex;
+        p_meshe->GetVertex( i, vertex );
+
+        v->x = (float)vertex.x;
+        v->y = (float)vertex.y;
+        v->z = (float)vertex.z;
+
+        v->nx = (float)vertex.nx;
+        v->ny = (float)vertex.ny;
+        v->nz = (float)vertex.nz;
+
+        v->tu0 = vertex.tu[0];
+        v->tu1 = vertex.tu[1];
+        v->tu2 = vertex.tu[2];
+        v->tu3 = vertex.tu[3];
+        v->tu4 = vertex.tu[4];
+        v->tu5 = vertex.tu[5];
+        v->tu6 = vertex.tu[6];
+        v->tu7 = vertex.tu[7];
+        v->tu8 = vertex.tu[8];
+
+        v->tv0 = vertex.tv[0];
+        v->tv1 = vertex.tv[1];
+        v->tv2 = vertex.tv[2];
+        v->tv3 = vertex.tv[3];
+        v->tv4 = vertex.tv[4];
+        v->tv5 = vertex.tv[5];
+        v->tv6 = vertex.tv[6];
+        v->tv7 = vertex.tv[7];
+        v->tv8 = vertex.tv[8];
+        
+        v->tw0 = vertex.tw[0];
+        v->tw1 = vertex.tw[1];
+        v->tw2 = vertex.tw[2];
+        v->tw3 = vertex.tw[3];
+        v->tw4 = vertex.tw[4];
+        v->tw5 = vertex.tw[5];
+        v->tw6 = vertex.tw[6];
+        v->tw7 = vertex.tw[7];
+        v->tw8 = vertex.tw[8];
+        
+        v->ta0 = vertex.ta[0];
+        v->ta1 = vertex.ta[1];
+        v->ta2 = vertex.ta[2];
+        v->ta3 = vertex.ta[3];
+        v->ta4 = vertex.ta[4];
+        v->ta5 = vertex.ta[5];
+        v->ta6 = vertex.ta[6];
+        v->ta7 = vertex.ta[7];
+        v->ta8 = vertex.ta[8];
+    }
+    meshe_data->vertex_buffer->Unlock();
 
     return true;
 }

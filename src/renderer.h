@@ -68,6 +68,8 @@ public:
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data ) = 0;
     virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data ) = 0;
     virtual bool SetMeshe( void* p_data ) = 0;
+    virtual bool UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data ) = 0;
+    virtual bool UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data ) = 0;
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data ) = 0;
     virtual bool SetTexture( void* p_data, int p_stage ) = 0;

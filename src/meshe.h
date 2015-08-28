@@ -53,6 +53,8 @@ protected:
 
     DrawSpace::Interface::MesheImport*          m_importer;
 
+    void*                                       m_render_data;
+
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
@@ -75,6 +77,12 @@ public:
     void SetVertex( long p_index, const Vertex& p_vertex );
     void AddTriangle( const Triangle& p_triangle );
 
+    void ClearTriangles( void );
+    void ClearVertices( void );
+
+    bool UpdateIndexes( void );
+    bool UpdateVertices( void );
+
     void GetCenter( DrawSpace::Utils::Vector& p_vector );
     void GetAABB( Utils::Vector& p_min, Utils::Vector& p_max );
 
@@ -89,6 +97,8 @@ public:
     void GetMD5( dsstring& p_md5 );
 
     void GetKeyword( dsstring& p_outkeyword );
+
+    void SetRenderData( void* p_renderdata );
 
     static Asset* Instanciate( void );
 };

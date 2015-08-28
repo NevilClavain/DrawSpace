@@ -63,7 +63,8 @@ void Chunk::SetDrawingState( Pass* p_pass, bool p_drawing )
 
 void Chunk::ImpostorsInit( const ImpostorsDisplayList& p_list )
 {
-    m_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    m_meshe->ClearTriangles();
+    m_meshe->ClearVertices();
 
     for( size_t i = 0; i < p_list.size(); i++ )
     {
@@ -130,7 +131,7 @@ void Chunk::ImpostorsInit( const ImpostorsDisplayList& p_list )
         m_meshe->AddVertex( v3 );
         m_meshe->AddVertex( v4 );
 
-        int index_base = 4 * i;
+        size_t index_base = 4 * i;
 
         m_meshe->AddTriangle( Triangle( index_base, 3 + index_base, 1 + index_base ) );
         m_meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );

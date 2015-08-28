@@ -180,6 +180,8 @@ public:
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data );
     virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data );
     virtual bool SetMeshe( void* p_data );
+    virtual bool UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data );
+    virtual bool UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data );
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
     virtual bool SetTexture( void* p_data, int p_stage );

@@ -28,6 +28,9 @@
 #include "pimanager.h"
 #include "ac3dmeshe.h"
 #include "assetsbase.h"
+#include "renderer.h"
+#include "plugin.h"
+
 
 
 using namespace DrawSpace;
@@ -35,7 +38,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
-Meshe::Meshe( void ) : m_importer( NULL )
+Meshe::Meshe( void ) : 
+m_importer( NULL ), 
+m_render_data( NULL )
 {
     // properties array creation
     m_properties["filepath"].AddPropValue<dsstring>( "" );
@@ -161,6 +166,42 @@ void Meshe::AddTriangle( const Triangle& p_triangle )
     m_triangles_for_vertex[p_triangle.vertex1].push_back( p_triangle );
     m_triangles_for_vertex[p_triangle.vertex2].push_back( p_triangle );
     m_triangles_for_vertex[p_triangle.vertex3].push_back( p_triangle );
+}
+
+void Meshe::ClearTriangles( void )
+{
+    m_triangles.clear();
+    m_triangles_for_vertex.clear();
+}
+
+void Meshe::ClearVertices( void )
+{
+    m_vertices.clear();
+}
+
+
+bool Meshe::UpdateIndexes( void )
+{
+    if( !m_render_data )
+    {       
+        return false;
+    }
+
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    renderer->UpdateMesheIndexes( this, m_render_data );
+    return true;
+}
+
+bool Meshe::UpdateVertices( void )
+{
+    if( !m_render_data )
+    {       
+        return false;
+    }
+
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    renderer->UpdateMesheVertices( this, m_render_data );
+    return true;
 }
 
 void Meshe::GetCenter( Vector& p_vector )
@@ -412,4 +453,9 @@ void Meshe::ComputeNormales( bool p_spherical_normales )
             m_vertices[it->first].nz = normales_sum[2];
         }
     }
+}
+
+void Meshe::SetRenderData( void* p_renderdata )
+{
+    m_render_data = p_renderdata;
 }

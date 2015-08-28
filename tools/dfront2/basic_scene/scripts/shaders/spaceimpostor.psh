@@ -8,6 +8,7 @@ struct PS_INTPUT
 {
 	float4 Position : POSITION0;
 	float4 TexCoord0: TEXCOORD0;
+	float4 Color:	  TEXCOORD1; //specifique aux nuages volumetriques
 };
 
 
@@ -16,15 +17,20 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 ret_color;
 	if( flags.x == 1.0 )
 	{
+		// mode "couleur unie" (pour des passes de type "z mask")
 		ret_color = color; 
 	}
 	else if( flags.x == 0.5 )
 	{
-		ret_color = color;
+		// mode specifique pour les nuages volumetriques
+	
+		ret_color = input.Color;
 		ret_color.a = tex2D( Texture0, input.TexCoord0 ).r;	
 	}	
 	else
-	{		
+	{
+		// mode "normal"
+		
 		ret_color = tex2D( Texture0, input.TexCoord0 );			
 	}
 
