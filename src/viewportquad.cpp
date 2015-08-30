@@ -83,5 +83,5 @@ void ViewportQuad::OnDraw( void )
     DrawSpace::Utils::Matrix pos;
     pos.Identity();
 
-    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), pos, view, m_projection );
+    renderer->DrawMeshe( pos, view, m_projection );
 }

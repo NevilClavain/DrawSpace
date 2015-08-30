@@ -32,7 +32,9 @@ _DECLARE_DS_LOGGER( logger, "d3d9", NULL )
 D3D9Renderer::D3D9Renderer( void ) :
 m_lpd3d( NULL ),
 m_lpd3ddevice( NULL ),
-m_vertexdeclaration( NULL )
+m_vertexdeclaration( NULL ),
+m_next_nbvertices( 0 ),
+m_next_nbtriangles( 0 )
 {
 
 }
@@ -479,6 +481,9 @@ bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
     }   
     meshe_data->index_buffer->Unlock();
 
+    meshe_data->nb_vertices = nb_vertices;
+    meshe_data->nb_triangles = nb_triangles;
+
     *p_data = (void *)meshe_data;
 
     meshe->SetRenderData( (void *)meshe_data );
@@ -519,6 +524,9 @@ bool D3D9Renderer::SetMeshe( void* p_data )
 
     hRes = m_lpd3ddevice->SetIndices( meshe_data->index_buffer );
 	D3D9_CHECK( SetIndices );
+
+    m_next_nbvertices = meshe_data->nb_vertices;
+    m_next_nbtriangles = meshe_data->nb_triangles;
 
     return true;
 }
@@ -1116,7 +1124,7 @@ bool D3D9Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawS
 	return false;
 }
 
-bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
+bool D3D9Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
 {
 	DECLARE_D3D9ASSERT_VARS
 
@@ -1169,7 +1177,7 @@ bool D3D9Renderer::DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::
     set_vertexshader_constants( 20, proj.GetArray(), 4 );
 
 
-	hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, p_nbvertices, 0, p_nbtriangles );
+	hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, m_next_nbvertices, 0, m_next_nbtriangles );
 
 	return true;
 }

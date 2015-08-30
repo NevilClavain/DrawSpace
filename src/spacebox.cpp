@@ -307,7 +307,7 @@ void Spacebox::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_renderin
         m_scenenodegraph->GetCurrentCameraProj( proj );
     }
 
-    m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), world, view, proj );
+    m_renderer->DrawMeshe( world, view, proj );
 }
 
 void Spacebox::RegisterPassSlot( Pass* p_pass )

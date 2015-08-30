@@ -98,6 +98,8 @@ protected:
     {
         LPDIRECT3DVERTEXBUFFER9 vertex_buffer;
 		LPDIRECT3DINDEXBUFFER9	index_buffer;
+        int                     nb_vertices;
+        int                     nb_triangles;
 
     } MesheData;
 
@@ -131,7 +133,7 @@ protected:
     LPDIRECT3DDEVICE9                                           m_lpd3ddevice;
 
     D3DVIEWPORT9                                                m_viewport;
-    //DrawSpace::Utils::Matrix                                    m_projection;
+    
     LPDIRECT3DVERTEXDECLARATION9                                m_vertexdeclaration;
 
     D3DFORMAT                                                   m_depthbuffer_format;
@@ -149,7 +151,10 @@ protected:
 
 
     Characteristics                                             m_characteristics;
-        
+    
+    int                                                         m_next_nbvertices;
+    int                                                         m_next_nbtriangles;
+
     void set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
     void set_pixelshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
 
@@ -199,7 +204,7 @@ public:
 	virtual bool UnsetFx( void* p_data );
     virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector );
 
-	virtual bool DrawMeshe( long p_nbvertices, long p_nbtriangles, DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj );
+	virtual bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj );
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 

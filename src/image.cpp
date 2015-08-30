@@ -244,7 +244,7 @@ void Image::OnDraw( void )
     chain.GetResult( &world );
 
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
-    renderer->DrawMeshe( m_meshe->GetVertexListSize(), m_meshe->GetTrianglesListSize(), view, world, m_projection );
+    renderer->DrawMeshe( view, world, m_projection );
 }
 
 void Image::SetTranslation( dsreal p_x, dsreal p_y )

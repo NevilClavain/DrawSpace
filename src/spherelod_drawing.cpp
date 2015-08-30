@@ -101,7 +101,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
         m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
 
 
-        m_renderer->DrawMeshe( p_nbv, p_nbt, p_world, p_view, p_proj );
+        m_renderer->DrawMeshe( p_world, p_view, p_proj );
 
 
         m_renderer->UnsetTexture( 0 );

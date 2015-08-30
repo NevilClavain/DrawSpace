@@ -180,7 +180,7 @@ void Chunk::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_n
         }
         m_scenenodegraph->GetCurrentCameraProj( proj );
     }
-    m_renderer->DrawMeshe( p_rendering_node->GetMeshe()->GetVertexListSize(), p_rendering_node->GetMeshe()->GetTrianglesListSize(), m_globaltransformation, view, proj );
+    m_renderer->DrawMeshe( m_globaltransformation, view, proj );
 }
 
 void Chunk::RegisterPassSlot( Pass* p_pass )
