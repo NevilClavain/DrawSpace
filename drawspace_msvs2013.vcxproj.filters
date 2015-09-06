@@ -28,6 +28,9 @@
     <Filter Include="logging">
       <UniqueIdentifier>{929db6ab-c482-4431-a7b9-9cff1cc19bb0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="procedural">
+      <UniqueIdentifier>{56a6aed0-8cdc-4aaa-896a-041de23ca8b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\asset.cpp" />
@@ -231,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="src\shaderscontroller.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\procedural.cpp">
+      <Filter>procedural</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -482,6 +488,9 @@
     </ClInclude>
     <ClInclude Include="src\shaderscontroller.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\procedural.h">
+      <Filter>procedural</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -56,6 +56,7 @@
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\planetoid_body.cpp" />
     <ClCompile Include="src\planetoid_fragment.cpp" />
+    <ClCompile Include="src\procedural.cpp" />
     <ClCompile Include="src\quadtree.cpp" />
     <ClCompile Include="src\quaternion.cpp" />
     <ClCompile Include="src\renderingnode.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="src\planetoid_body.h" />
     <ClInclude Include="src\planetoid_fragment.h" />
     <ClInclude Include="src\plugin.h" />
+    <ClInclude Include="src\procedural.h" />
     <ClInclude Include="src\quadtree.h" />
     <ClInclude Include="src\quaternion.h" />
     <ClInclude Include="src\renderer.h" />

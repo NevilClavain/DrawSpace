@@ -94,4 +94,5 @@
 #include "descriptors.h"
 #include "ac3dmeshe.h"
 #include "cbfgfont.h"
+#include "procedural.h"
 #endif
