@@ -26,6 +26,8 @@
 #include "drawspace_commons.h"
 #include "vector.h"
 #include "callback.h"
+#include "memalloc.h"
+#include <random>
 
 namespace DrawSpace
 {
@@ -38,6 +40,10 @@ protected:
     dsstring m_id;
 
 public:
+
+    Atomic( void ) { }
+    virtual ~Atomic( void ) { };
+
     virtual void SetId( const dsstring& p_id );
     virtual void GetId( dsstring& p_id );
 
@@ -130,6 +136,21 @@ public:
     virtual void Apply( void );
     virtual Atomic* GetResultValue( void );
 
+};
+
+class UniformDistributionRandom : public Atomic
+{
+protected:
+    std::default_random_engine*             m_generator;
+    std::uniform_int_distribution<int>*     m_distribution;
+    DrawSpace::Procedural::Integer          m_integer;
+    
+public:
+    
+    UniformDistributionRandom( int p_seed, int p_min, int p_max );
+    virtual ~UniformDistributionRandom( void );
+    virtual void Apply( void );
+    virtual Atomic* GetResultValue( void );
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

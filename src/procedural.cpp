@@ -48,6 +48,7 @@ void Publisher::Apply( void )
 {
     if( m_handler && m_child )
     {
+        m_child->Apply();
         (*m_handler)( m_child->GetResultValue() );
     }
 }
@@ -55,6 +56,30 @@ void Publisher::Apply( void )
 Atomic* Publisher::GetResultValue( void )
 {
     return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UniformDistributionRandom::UniformDistributionRandom( int p_seed, int p_min, int p_max )
+{
+    m_generator = _DRAWSPACE_NEW_( std::default_random_engine, std::default_random_engine );
+    m_distribution = _DRAWSPACE_NEW_( std::uniform_int_distribution<int>,std::uniform_int_distribution<int>( p_min, p_max ) );
+    m_generator->seed( p_seed );
+}
+
+UniformDistributionRandom::~UniformDistributionRandom( void )
+{
+    _DRAWSPACE_DELETE_( m_generator );
+    _DRAWSPACE_DELETE_( m_distribution );
+}
+
+void UniformDistributionRandom::Apply( void )
+{
+    m_integer.SetValue( (*m_distribution)( *m_generator ) );
+}
+Atomic* UniformDistributionRandom::GetResultValue( void )
+{
+    return &m_integer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
