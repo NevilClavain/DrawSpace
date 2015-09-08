@@ -138,19 +138,35 @@ public:
 
 };
 
-class UniformDistributionRandom : public Atomic
+template <typename Base, typename DistributionType, typename AtomType>
+class RandomDistribution : public Atomic
 {
 protected:
-    std::default_random_engine*             m_generator;
-    std::uniform_int_distribution<int>*     m_distribution;
-    DrawSpace::Procedural::Integer          m_integer;
+    std::default_random_engine              m_generator;
+    DistributionType*                       m_distribution;
+    AtomType                                m_result;
     
 public:
     
-    UniformDistributionRandom( int p_seed, int p_min, int p_max );
-    virtual ~UniformDistributionRandom( void );
-    virtual void Apply( void );
-    virtual Atomic* GetResultValue( void );
+    RandomDistribution( DistributionType* p_distribution_type, int p_seed )
+    {
+        //m_distribution = _DRAWSPACE_NEW_( DistributionType, DistributionType( p_arg1, p_arg2 ) );
+        m_distribution = p_distribution_type;
+        m_generator.seed( p_seed );  
+    }
+    virtual ~RandomDistribution( void )
+    {
+        //_DRAWSPACE_DELETE_( m_distribution );    
+    }
+    virtual void Apply( void )
+    {
+        m_result.SetValue( (*m_distribution)( m_generator ) );
+    }
+
+    virtual Atomic* GetResultValue( void )
+    {
+        return &m_result;
+    }
 };
 
 
