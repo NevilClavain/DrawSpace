@@ -132,7 +132,8 @@ bool Shader::LoadFromFile( void )
     void* data = Utils::File::LoadAndAllocBinaryFile( m_path, &size );
     if( !data )
     {
-        return false;
+        //return false;
+        _DSEXCEPTION( "Unable to load shader " << m_path );
     }
     m_data = data;
     m_datasize = size;
