@@ -131,7 +131,7 @@ public:
 
     virtual void SetChild( Atomic* p_child ) { m_child = p_child; }
     virtual Atomic* GetChild( void ) { return m_child; }
-    virtual void SetHandler( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler ) { m_handler = p_handler; }
+    virtual void RegisterHandler( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler ) { m_handler = p_handler; }
 
     virtual void Apply( void );
     virtual Atomic* GetResultValue( void );
@@ -153,27 +153,26 @@ public:
     virtual Atomic* GetResultValue( void );
 };
 
-////////////////////////////////////////////////////////////////////////////////////////
 
-class Source
+class Repeat : public Atomic
 {
 protected:
-
-    Atomic*                                                 m_rules;
-    DrawSpace::Core::BaseCallback<void, Atomic*>*           m_handler;
-
-    void set_rules_handler( Atomic* p_atom );
+    Atomic*                                                 m_child;
+    Atomic*                                                 m_nbloops;
 
 public:
+    Repeat( void );
+    virtual ~Repeat( void );
+    
+    virtual void SetChild( Atomic* p_child ) { m_child = p_child; }
+    virtual void SetNbLoops( Atomic* p_nbloops ) { m_nbloops = p_nbloops; }
 
-    Source( void );
-    ~Source( void );
-
-    void SetRules( Atomic* p_rules );
-    void RegisterHandler( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler );
-    void Run( void );
+    virtual void Apply( void );
+    virtual Atomic* GetResultValue( void );
 
 };
+
+////////////////////////////////////////////////////////////////////////////////////////
 
 }
 }

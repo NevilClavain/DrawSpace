@@ -21,6 +21,7 @@
 */
 
 #include "procedural.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -84,49 +85,36 @@ Atomic* UniformDistributionRandom::GetResultValue( void )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Source::Source( void ) : m_rules( NULL )
+Repeat::Repeat( void ) : m_child( NULL ), m_nbloops( NULL )
 {
-
+    
 }
-
-Source::~Source( void )
+Repeat::~Repeat( void )
 {
-
 }
-
-void Source::RegisterHandler( BaseCallback<void, Atomic*>* p_handler )
+void Repeat::Apply( void )
 {
-    m_handler = p_handler;
-}
-
-void Source::SetRules( Atomic* p_rules )
-{
-    if( !m_handler )
+    if( m_child && m_nbloops )
     {
-        return;
-    }
-    m_rules = p_rules;
-    set_rules_handler( m_rules );
-}
+        Integer* result = dynamic_cast<Integer*>( m_nbloops->GetResultValue() );
 
-void Source::Run( void )
-{
-    if( !m_rules )
-    {
-        return;
-    }
-
-    m_rules->Apply();
-}
-
-void Source::set_rules_handler( Atomic* p_atom )
-{
-    Publisher* pub = dynamic_cast<Publisher*>( p_atom );
-    if( pub )
-    {
-        pub->SetHandler( m_handler );
-
-        // appel recursif
-        set_rules_handler( pub->GetChild() );
+        if( result )
+        {
+            for( int i = 0; i < result->GetValue(); i++ )
+            {
+                m_child->Apply();
+            }
+        }
+        else
+        {
+            _DSEXCEPTION( "Procedural Repeat bloc " << m_id << ": loop child result not of Integer type" );
+        }
     }
 }
+Atomic* Repeat::GetResultValue( void )
+{
+    return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
