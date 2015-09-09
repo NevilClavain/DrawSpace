@@ -96,3 +96,31 @@ Atomic* Repeat::GetResultValue( void )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+Batch::Batch( void )
+{
+}
+
+Batch::~Batch( void )
+{
+}
+
+void Batch::AddChild( Atomic* p_child )
+{
+    m_list.push_back( p_child );
+}
+
+void Batch::Apply( void )
+{
+    for( size_t i = 0; i < m_list.size(); i++ )
+    {
+        m_list[i]->Apply();
+    }
+}
+
+Atomic* Batch::GetResultValue( void )
+{
+    return NULL;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

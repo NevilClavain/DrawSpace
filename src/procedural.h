@@ -85,6 +85,22 @@ public:
     }
 };
 
+class String: public Atomic
+{
+protected:
+    dsstring  m_value;
+
+public:
+    virtual void GetValue( dsstring& p_value ) { p_value = m_value; }
+    virtual void SetValue( const dsstring &p_value ) { m_value = p_value; }
+
+    virtual void Apply( void ) {}
+    virtual Atomic* GetResultValue( void )
+    {
+        return this;
+    }
+};
+
 class Vector : public Atomic
 {
 protected:
@@ -182,6 +198,24 @@ public:
     
     virtual void SetChild( Atomic* p_child ) { m_child = p_child; }
     virtual void SetNbLoops( Atomic* p_nbloops ) { m_nbloops = p_nbloops; }
+
+    virtual void Apply( void );
+    virtual Atomic* GetResultValue( void );
+
+};
+
+
+class Batch : public Atomic
+{
+protected:
+
+    std::vector<Atomic*>                m_list;
+
+public:
+    Batch( void );
+    virtual ~Batch( void );
+
+    virtual void AddChild( Atomic* p_child );
 
     virtual void Apply( void );
     virtual Atomic* GetResultValue( void );
