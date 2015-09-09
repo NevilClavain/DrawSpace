@@ -123,8 +123,15 @@ protected:
     std::vector<Atomic*>        m_value;
 
 public:
+
+    /*
     virtual void GetValue( std::vector<Atomic*>& p_vec ) { p_vec = m_value; }
     virtual void SetValue( const std::vector<Atomic*> p_value ) { m_value = p_value; }
+    */
+
+    virtual int GetSize( void );
+    virtual Atomic* GetValueAt( int p_index );
+    virtual void AddValue( Atomic* p_value );
 
     virtual void Apply( void ) {}
     virtual Atomic* GetResultValue( void )
@@ -216,6 +223,28 @@ public:
     virtual ~Batch( void );
 
     virtual void AddChild( Atomic* p_child );
+
+    virtual void Apply( void );
+    virtual Atomic* GetResultValue( void );
+
+};
+
+class Index : public Atomic
+{
+protected:
+
+    Array*                  m_array;
+    Integer*                m_index;
+
+    Atomic*                 m_result;
+
+public:
+
+    Index( void );
+    virtual ~Index( void );
+
+    virtual void SetIndex( Integer* p_index );
+    virtual void SetArray( Array* p_array );
 
     virtual void Apply( void );
     virtual Atomic* GetResultValue( void );

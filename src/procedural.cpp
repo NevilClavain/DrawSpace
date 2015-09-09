@@ -39,7 +39,24 @@ void Atomic::SetId( const dsstring& p_id )
     m_id = p_id;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int Array::GetSize( void )
+{
+    return m_value.size();
+}
+Atomic* Array::GetValueAt( int p_index )
+{
+    return m_value[p_index];
+}
+void Array::AddValue( Atomic* p_value )
+{
+    m_value.push_back( p_value );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 Publisher::Publisher( void ) : m_child( NULL ), m_handler( NULL )
 {
@@ -120,6 +137,39 @@ void Batch::Apply( void )
 Atomic* Batch::GetResultValue( void )
 {
     return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Index::Index( void ) : m_array( NULL ), m_index( NULL ), m_result( NULL )
+{
+}
+
+Index::~Index( void )
+{
+}
+
+void Index::Apply( void )
+{
+    if( m_array && m_index )
+    {
+        m_result = m_array->GetValueAt( m_index->GetValue() );
+    }
+}
+
+Atomic* Index::GetResultValue( void )
+{
+    return m_result;
+}
+
+void Index::SetIndex( Integer* p_index )
+{
+    m_index = p_index;
+}
+
+void Index::SetArray( Array* p_array )
+{
+    m_array = p_array;
 }
 
 
