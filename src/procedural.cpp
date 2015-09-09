@@ -141,6 +141,45 @@ Atomic* Batch::GetResultValue( void )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+Loop::Loop( void ) : m_child( NULL ), m_count( NULL )
+{
+
+}
+
+Loop::~Loop( void )
+{
+
+}
+
+void Loop::Apply( void )
+{
+    if( m_child && m_count )
+    {
+        int nbloops = m_count->GetValue();
+        for( int i = 0; i < nbloops; i++ )
+        {
+            m_child->Apply();
+        }
+    }
+}
+
+Atomic* Loop::GetResultValue( void )
+{
+    return NULL;
+}
+
+void Loop::SetCount( Integer* p_count )
+{
+    m_count = p_count;
+}
+
+void Loop::SetChild( Atomic* p_child )
+{
+    m_child = p_child;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Index::Index( void ) : m_array( NULL ), m_index( NULL ), m_result( NULL )
 {
 }
