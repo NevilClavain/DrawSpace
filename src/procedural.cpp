@@ -73,6 +73,7 @@ void Repeat::Apply( void )
 {
     if( m_child && m_nbloops )
     {
+        m_nbloops->Apply();
         Integer* result = dynamic_cast<Integer*>( m_nbloops->GetResultValue() );
 
         if( result )
