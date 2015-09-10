@@ -229,26 +229,6 @@ public:
 
 };
 
-class Loop : public Atomic
-{
-protected:
-
-    Atomic*                 m_child;
-    Integer*                m_count;
-
-public:
-
-    Loop( void );
-    virtual ~Loop( void );
-    
-    virtual void Apply( void );
-    virtual Atomic* GetResultValue( void );
-
-    virtual void SetChild( Atomic* p_child );
-    virtual void SetCount( Integer* p_count );
-
-};
-
 class Index : public Atomic
 {
 protected:
