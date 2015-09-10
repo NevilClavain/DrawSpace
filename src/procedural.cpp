@@ -55,6 +55,15 @@ void Array::AddValue( Atomic* p_value )
     m_value.push_back( p_value );
 }
 
+void Array::Apply( void )
+{
+    for( size_t i = 0; i < m_value.size(); i++ )
+    {
+        m_value[i]->Apply();
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

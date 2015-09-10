@@ -91,7 +91,7 @@ protected:
     dsstring  m_value;
 
 public:
-    virtual void GetValue( dsstring& p_value ) { p_value = m_value; }
+    virtual dsstring GetValue( void ) { return m_value; }
     virtual void SetValue( const dsstring &p_value ) { m_value = p_value; }
 
     virtual void Apply( void ) {}
@@ -107,7 +107,8 @@ protected:
     DrawSpace::Utils::Vector    m_value;
 
 public:
-    virtual void GetValue( DrawSpace::Utils::Vector& p_vect ) { p_vect = m_value; }
+
+    virtual DrawSpace::Utils::Vector GetValue( void ) { return m_value; }
     virtual void SetValue( const DrawSpace::Utils::Vector p_value ) { m_value = p_value; }
 
     virtual void Apply( void ) {}
@@ -124,16 +125,12 @@ protected:
 
 public:
 
-    /*
-    virtual void GetValue( std::vector<Atomic*>& p_vec ) { p_vec = m_value; }
-    virtual void SetValue( const std::vector<Atomic*> p_value ) { m_value = p_value; }
-    */
-
     virtual int GetSize( void );
     virtual Atomic* GetValueAt( int p_index );
     virtual void AddValue( Atomic* p_value );
 
-    virtual void Apply( void ) {}
+    virtual void Apply( void );
+
     virtual Atomic* GetResultValue( void )
     {
         return this;
