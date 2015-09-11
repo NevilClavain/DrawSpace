@@ -162,8 +162,17 @@ Index::~Index( void )
 void Index::Apply( void )
 {
     if( m_array && m_index )
-    {
-        m_result = m_array->GetValueAt( m_index->GetValue() );
+    {        
+        m_index->Apply();
+        Integer* index = dynamic_cast<Integer*>( m_index->GetResultValue() );
+        if( index )
+        {
+            m_result = m_array->GetValueAt( index->GetValue() );
+        }
+        else
+        {
+            _DSEXCEPTION( "Procedural Index bloc " << m_id << ": index child result not of Integer type" );
+        }
     }
 }
 
@@ -172,7 +181,7 @@ Atomic* Index::GetResultValue( void )
     return m_result;
 }
 
-void Index::SetIndex( Integer* p_index )
+void Index::SetIndex( Atomic* p_index )
 {
     m_index = p_index;
 }

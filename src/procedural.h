@@ -231,7 +231,8 @@ class Index : public Atomic
 protected:
 
     Array*                  m_array;
-    Integer*                m_index;
+    //Integer*                m_index;
+    Atomic*                 m_index;
 
     Atomic*                 m_result;
 
@@ -240,7 +241,7 @@ public:
     Index( void );
     virtual ~Index( void );
 
-    virtual void SetIndex( Integer* p_index );
+    virtual void SetIndex( Atomic* p_index );
     virtual void SetArray( Array* p_array );
 
     virtual void Apply( void );
