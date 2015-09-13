@@ -511,7 +511,6 @@ void D3D9Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
     }
 }
 
-
 bool D3D9Renderer::SetMeshe( void* p_data )
 {
     DECLARE_D3D9ASSERT_VARS
@@ -615,6 +614,87 @@ bool D3D9Renderer::UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p
         v->ta6 = vertex.ta[6];
         v->ta7 = vertex.ta[7];
         v->ta8 = vertex.ta[8];
+    }
+    meshe_data->vertex_buffer->Unlock();
+
+    return true;
+}
+
+bool D3D9Renderer::UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsDisplayList& p_list, void* p_data )
+{
+    MesheData* meshe_data = (MesheData*)p_data;
+
+    d3d9vertex* v;
+    meshe_data->vertex_buffer->Lock( 0, 0, (VOID **)&v, 0 );
+
+    for( size_t i = 0; i < p_list.size(); i++ )
+    {
+   
+        // vertex x,y,z set by impostors shaders
+        v->x = 0.0;
+        v->y = 0.0;
+        v->z = 0.0;
+
+        
+
+        v->tu0 = p_list[i].u1;
+        v->tv0 = p_list[i].v1;
+        v->nx = 1.0;
+        v->tu7 = p_list[i].localpos[0];
+        v->tv7 = p_list[i].localpos[1];
+        v->tw7 = p_list[i].localpos[2];
+        v->tu8 = p_list[i].width_scale;
+        v->tv8 = p_list[i].height_scale;
+
+        v++;
+
+        // vertex x,y,z set by impostors shaders
+        v->x = 0.0;
+        v->y = 0.0;
+        v->z = 0.0;
+
+        v->tu0 = p_list[i].u2;
+        v->tv0 = p_list[i].v2;
+        v->nx = 2.0;
+        v->tu7 = p_list[i].localpos[0];
+        v->tv7 = p_list[i].localpos[1];
+        v->tw7 = p_list[i].localpos[2];
+        v->tu8 = p_list[i].width_scale;
+        v->tv8 = p_list[i].height_scale;
+
+        v++;
+
+        // vertex x,y,z set by impostors shaders
+        v->x = 0.0;
+        v->y = 0.0;
+        v->z = 0.0;
+
+        v->tu0 = p_list[i].u3;
+        v->tv0 = p_list[i].v3;
+        v->nx = 3.0;
+        v->tu7 = p_list[i].localpos[0];
+        v->tv7 = p_list[i].localpos[1];
+        v->tw7 = p_list[i].localpos[2];
+        v->tu8 = p_list[i].width_scale;
+        v->tv8 = p_list[i].height_scale;
+
+        v++;
+        
+        // vertex x,y,z set by impostors shaders
+        v->x = 0.0;
+        v->y = 0.0;
+        v->z = 0.0;
+
+        v->tu0 = p_list[i].u4;
+        v->tv0 = p_list[i].v4;
+        v->nx = 4.0;
+        v->tu7 = p_list[i].localpos[0];
+        v->tv7 = p_list[i].localpos[1];
+        v->tw7 = p_list[i].localpos[2];
+        v->tu8 = p_list[i].width_scale;
+        v->tv8 = p_list[i].height_scale;
+
+        v++;
     }
     meshe_data->vertex_buffer->Unlock();
 

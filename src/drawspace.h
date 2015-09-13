@@ -95,4 +95,5 @@
 #include "ac3dmeshe.h"
 #include "cbfgfont.h"
 #include "procedural.h"
+#include "impostorsdisplaylist.h"
 #endif

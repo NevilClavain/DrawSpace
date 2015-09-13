@@ -118,6 +118,7 @@
     <ClInclude Include="src\fx.h" />
     <ClInclude Include="src\headmovement.h" />
     <ClInclude Include="src\image.h" />
+    <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\inertbody.h" />
     <ClInclude Include="src\inits.h" />
     <ClInclude Include="src\linearmovement.h" />

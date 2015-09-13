@@ -100,6 +100,8 @@ public:
 
     void SetRenderData( void* p_renderdata );
 
+    void* GetRenderData( void );
+
     static Asset* Instanciate( void );
 };
 }

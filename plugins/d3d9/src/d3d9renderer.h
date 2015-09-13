@@ -183,10 +183,11 @@ public:
     virtual void EndTarget( DrawSpace::Core::Texture* p_texture );
 
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data );
-    virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data );
+    virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data );    
     virtual bool SetMeshe( void* p_data );
     virtual bool UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data );
     virtual bool UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data );
+    virtual bool UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsDisplayList& p_list, void* p_data );
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
     virtual bool SetTexture( void* p_data, int p_stage );

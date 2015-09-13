@@ -25,31 +25,12 @@
 
 #include "renderer.h"
 #include "scenenodegraph.h"
+#include "impostorsdisplaylist.h"
 
 namespace DrawSpace
 {
 class Chunk
 {
-
-public:
-
-    typedef struct
-    {
-        float width_scale;
-        float height_scale;
-        DrawSpace::Utils::Vector localpos;
-
-        dsreal u1, v1;
-        dsreal u2, v2;
-        dsreal u3, v3;
-        dsreal u4, v4;        
-
-    } ImpostorsDisplayListEntry;
-
-    
-    typedef std::vector<ImpostorsDisplayListEntry> ImpostorsDisplayList;
-
-
 protected:
 
     typedef DrawSpace::Core::CallBack<Chunk, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;

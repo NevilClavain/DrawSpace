@@ -459,3 +459,8 @@ void Meshe::SetRenderData( void* p_renderdata )
 {
     m_render_data = p_renderdata;
 }
+
+void* Meshe::GetRenderData( void )
+{
+    return m_render_data;
+}
