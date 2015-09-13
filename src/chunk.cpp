@@ -27,6 +27,8 @@
 #include "configsbase.h"
 #include "assetsbase.h"
 #include "misc_utils.h"
+#include "renderer.h"
+#include "plugin.h"
 
 
 using namespace DrawSpace;
@@ -61,12 +63,17 @@ void Chunk::SetDrawingState( Pass* p_pass, bool p_drawing )
 
 }
 
-void Chunk::ImpostorsInit( const ImpostorsDisplayList& p_list )
+void Chunk::SetImpostorsDisplayList( const DrawSpace::ImpostorsDisplayList& p_idl )
+{
+    m_idl = p_idl;
+}
+
+void Chunk::ImpostorsInit( /*const ImpostorsDisplayList& m_idl*/ void )
 {
     m_meshe->ClearTriangles();
     m_meshe->ClearVertices();
 
-    for( size_t i = 0; i < p_list.size(); i++ )
+    for( size_t i = 0; i < m_idl.size(); i++ )
     {
         Vertex v1, v2, v3, v4;
 
@@ -75,56 +82,56 @@ void Chunk::ImpostorsInit( const ImpostorsDisplayList& p_list )
         v1.y = 0.0;
         v1.z = 0.0;
 
-        v1.tu[0] = p_list[i].u1;
-        v1.tv[0] = p_list[i].v1;
+        v1.tu[0] = m_idl[i].u1;
+        v1.tv[0] = m_idl[i].v1;
         v1.nx = 1.0;
-        v1.tu[7] = p_list[i].localpos[0];
-        v1.tv[7] = p_list[i].localpos[1];
-        v1.tw[7] = p_list[i].localpos[2];
-        v1.tu[8] = p_list[i].width_scale;
-        v1.tv[8] = p_list[i].height_scale;
+        v1.tu[7] = m_idl[i].localpos[0];
+        v1.tv[7] = m_idl[i].localpos[1];
+        v1.tw[7] = m_idl[i].localpos[2];
+        v1.tu[8] = m_idl[i].width_scale;
+        v1.tv[8] = m_idl[i].height_scale;
 
         // vertex x,y,z set by impostors shaders
         v2.x = 0.0;
         v2.y = 0.0;
         v2.z = 0.0;
 
-        v2.tu[0] = p_list[i].u2;
-        v2.tv[0] = p_list[i].v2;
+        v2.tu[0] = m_idl[i].u2;
+        v2.tv[0] = m_idl[i].v2;
         v2.nx = 2.0;
-        v2.tu[7] = p_list[i].localpos[0];
-        v2.tv[7] = p_list[i].localpos[1];
-        v2.tw[7] = p_list[i].localpos[2];
-        v2.tu[8] = p_list[i].width_scale;
-        v2.tv[8] = p_list[i].height_scale;
+        v2.tu[7] = m_idl[i].localpos[0];
+        v2.tv[7] = m_idl[i].localpos[1];
+        v2.tw[7] = m_idl[i].localpos[2];
+        v2.tu[8] = m_idl[i].width_scale;
+        v2.tv[8] = m_idl[i].height_scale;
 
         // vertex x,y,z set by impostors shaders
         v3.x = 0.0;
         v3.y = 0.0;
         v3.z = 0.0;
 
-        v3.tu[0] = p_list[i].u3;
-        v3.tv[0] = p_list[i].v3;
+        v3.tu[0] = m_idl[i].u3;
+        v3.tv[0] = m_idl[i].v3;
         v3.nx = 3.0;
-        v3.tu[7] = p_list[i].localpos[0];
-        v3.tv[7] = p_list[i].localpos[1];
-        v3.tw[7] = p_list[i].localpos[2];
-        v3.tu[8] = p_list[i].width_scale;
-        v3.tv[8] = p_list[i].height_scale;
+        v3.tu[7] = m_idl[i].localpos[0];
+        v3.tv[7] = m_idl[i].localpos[1];
+        v3.tw[7] = m_idl[i].localpos[2];
+        v3.tu[8] = m_idl[i].width_scale;
+        v3.tv[8] = m_idl[i].height_scale;
 
         // vertex x,y,z set by impostors shaders
         v4.x = 0.0;
         v4.y = 0.0;
         v4.z = 0.0;
 
-        v4.tu[0] = p_list[i].u4;
-        v4.tv[0] = p_list[i].v4;
+        v4.tu[0] = m_idl[i].u4;
+        v4.tv[0] = m_idl[i].v4;
         v4.nx = 4.0;
-        v4.tu[7] = p_list[i].localpos[0];
-        v4.tv[7] = p_list[i].localpos[1];
-        v4.tw[7] = p_list[i].localpos[2];
-        v4.tu[8] = p_list[i].width_scale;
-        v4.tv[8] = p_list[i].height_scale;
+        v4.tu[7] = m_idl[i].localpos[0];
+        v4.tv[7] = m_idl[i].localpos[1];
+        v4.tw[7] = m_idl[i].localpos[2];
+        v4.tu[8] = m_idl[i].width_scale;
+        v4.tv[8] = m_idl[i].height_scale;
     
         m_meshe->AddVertex( v1 );
         m_meshe->AddVertex( v2 );
@@ -137,6 +144,12 @@ void Chunk::ImpostorsInit( const ImpostorsDisplayList& p_list )
         m_meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );
         
     }
+}
+
+void Chunk::ImpostorsUpdate( void )
+{
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    renderer->UpdateMesheVerticesFromImpostors( m_idl, m_meshe->GetRenderData() );
 }
 
 void Chunk::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
@@ -231,7 +244,7 @@ void Chunk::IgnoreCamera( bool p_ignore )
     m_ignore_camera = p_ignore;
 }
 
-void Chunk::GetPassesNodesList( std::map<Pass*, DrawSpace::Core::RenderingNode*>& p_list )
+void Chunk::GetPassesNodesList( std::map<Pass*, DrawSpace::Core::RenderingNode*>& m_idl )
 {
-    p_list = m_passesnodes;
+    m_idl = m_passesnodes;
 }

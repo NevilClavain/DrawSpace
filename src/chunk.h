@@ -38,6 +38,7 @@ protected:
 
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshe;
+    DrawSpace::ImpostorsDisplayList                         m_idl;
 
     std::map<Pass*, DrawSpace::Core::RenderingNode*>        m_passesnodes;
 
@@ -54,7 +55,9 @@ public:
     Chunk( void );
     virtual ~Chunk( void );
 
-    void ImpostorsInit( const ImpostorsDisplayList& p_list );
+    void SetImpostorsDisplayList( const DrawSpace::ImpostorsDisplayList& p_idl );
+    void ImpostorsInit( /*const ImpostorsDisplayList& p_list*/ void );
+    void ImpostorsUpdate( void );
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
