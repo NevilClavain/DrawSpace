@@ -21,6 +21,7 @@
     <ClCompile Include="src\cbfgfont.cpp" />
     <ClCompile Include="src\chunk.cpp" />
     <ClCompile Include="src\circularmovement.cpp" />
+    <ClCompile Include="src\clouds.cpp" />
     <ClCompile Include="src\collider.cpp" />
     <ClCompile Include="src\configsbase.cpp" />
     <ClCompile Include="src\configurable.cpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="src\cbfgfont.h" />
     <ClInclude Include="src\chunk.h" />
     <ClInclude Include="src\circularmovement.h" />
+    <ClInclude Include="src\clouds.h" />
     <ClInclude Include="src\collider.h" />
     <ClInclude Include="src\configsbase.h" />
     <ClInclude Include="src\configurable.h" />

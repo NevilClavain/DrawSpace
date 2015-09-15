@@ -238,6 +238,7 @@
     <ClCompile Include="src\procedural.cpp">
       <Filter>procedural</Filter>
     </ClCompile>
+    <ClCompile Include="src\clouds.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -493,5 +494,6 @@
       <Filter>procedural</Filter>
     </ClInclude>
     <ClInclude Include="src\impostorsdisplaylist.h" />
+    <ClInclude Include="src\clouds.h" />
   </ItemGroup>
 </Project>

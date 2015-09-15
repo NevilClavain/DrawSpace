@@ -96,4 +96,5 @@
 #include "cbfgfont.h"
 #include "procedural.h"
 #include "impostorsdisplaylist.h"
+#include "clouds.h"
 #endif
