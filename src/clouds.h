@@ -24,14 +24,86 @@
 #define _CLOUDS_H_
 
 #include "chunk.h"
+#include "callback.h"
+#include "procedural.h"
+#include "task.h"
+#include "runner.h"
+#include "camerapoint.h"
 
 namespace DrawSpace
 {
-class CLouds : public Chunk
+class Clouds : public Chunk
 {
+public:
+    typedef Core::CallBack<Clouds, void, Procedural::Atomic*>                                        ProceduralCb;
+
 protected:
+    typedef Core::CallBack<Clouds, void, Core::PropertyPool*>                                        RunnerMsgCb;    
+    typedef Core::CallBack2<Clouds, void, Core::SceneNodeGraph::CameraEvent, Core::BaseSceneNode*>   CameraEventCb;
 
 public:
+
+    
+
+    typedef struct
+    {
+        DrawSpace::ImpostorsDisplayList         impostors;
+
+        DrawSpace::Utils::Vector                position;
+        dsreal                                  distToView; // compute result for z qsort
+        
+    } CloudUnitDescriptor;
+
+protected:
+
+    void on_sort_request( Core::PropertyPool* p_args );
+    void on_camera_event( Core::SceneNodeGraph::CameraEvent p_event, Core::BaseSceneNode* p_node );
+    void on_procedural( Procedural::Atomic* p_atom );
+
+    void execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const DrawSpace::Utils::Matrix& p_cam_mat );
+    static bool nodes_comp( CloudUnitDescriptor* p_n1, CloudUnitDescriptor* p_n2 );
+
+
+    RunnerMsgCb*                                                        m_runnercb;
+    ProceduralCb*                                                       m_proceduralcb;
+    CameraEventCb*                                                      m_cameracb;
+
+    DrawSpace::Core::Mediator::MessageQueue*                            m_sort_msg;
+    DrawSpace::Core::Runner*                                            m_runner;
+    DrawSpace::Core::Task<DrawSpace::Core::Runner>*                     m_task;
+
+    DrawSpace::Utils::Mutex                                             m_runner_state_mutex;
+    int                                                                 m_runner_state;
+
+    bool                                                                m_update_clouds_meshes;
+    bool                                                                m_clouds_sort_request;
+
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_current_camera;
+
+    bool                                                                m_previous_camera_pos_avail;
+    DrawSpace::Utils::Vector                                            m_previous_camera_pos;
+
+    int                                                                 m_recompute_count;
+
+    std::vector<CloudUnitDescriptor*>                                   m_clouds;
+    CloudUnitDescriptor*                                                m_new_cloud;
+
+    DrawSpace::Utils::Mutex                                             m_update_mutex;
+
+    DrawSpace::Utils::Mutex                                             m_sort_run_mutex;
+    bool                                                                m_sort_running;
+
+    DrawSpace::Core::BaseSceneNode*                                     m_owner;
+
+
+public:
+
+    Clouds( void );
+    virtual ~Clouds( void );
+
+    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+    ProceduralCb* GetProceduralCallback( void );
+    void Update( DrawSpace::Utils::TimeManager& p_timemanager );
 
 };
 }

@@ -56,7 +56,7 @@ public:
     virtual ~Chunk( void );
 
     void SetImpostorsDisplayList( const DrawSpace::ImpostorsDisplayList& p_idl );
-    void ImpostorsInit( /*const ImpostorsDisplayList& p_list*/ void );
+    void ImpostorsInit( void );
     void ImpostorsUpdate( void );
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};
