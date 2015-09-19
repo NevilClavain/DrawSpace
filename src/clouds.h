@@ -64,6 +64,8 @@ protected:
     static bool nodes_comp( CloudUnitDescriptor* p_n1, CloudUnitDescriptor* p_n2 );
     void impostors_init( void );
 
+    void update_from_clouds( void );
+
 
     RunnerMsgCb*                                                        m_runnercb;
     ProceduralCb*                                                       m_proceduralcb;
@@ -99,6 +101,7 @@ protected:
     dsreal                                                              m_sorting_distance;
     bool                                                                m_details;
     
+    bool                                                                m_running;
 
 public:
 

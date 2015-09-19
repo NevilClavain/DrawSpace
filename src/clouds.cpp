@@ -38,7 +38,8 @@ m_recompute_count( 0 ),
 m_sort_running( false ),
 m_owner( NULL ),
 m_sorting_distance( 1000.0 ),
-m_details( true )
+m_details( true ),
+m_running( false )
 {
     m_proceduralcb = _DRAWSPACE_NEW_( ProceduralCb, ProceduralCb( this, &Clouds::on_procedural ) );
     m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
@@ -68,11 +69,7 @@ void Clouds::on_sort_request( PropertyPool* p_args )
 
     execsortz( ImpostorMat, CamMat );
 
-    impostors_init();
-   
-    m_update_mutex.WaitInfinite();
-    m_update_clouds_meshes = true;
-    m_update_mutex.Release();
+    update_from_clouds();
 
     m_sort_run_mutex.Release();
 
@@ -324,6 +321,15 @@ void Clouds::impostors_init( void )
     }    
 }
 
+void Clouds::update_from_clouds( void )
+{
+    impostors_init();
+   
+    m_update_mutex.WaitInfinite();
+    m_update_clouds_meshes = true;
+    m_update_mutex.Release();
+}
+
 void Clouds::ImpostorsInit( void )
 {
     m_clouds_sort_request = true;
@@ -354,6 +360,8 @@ void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
     {
         return;
     }
+
+    m_running = true;
 
     Chunk::Update2( p_timemanager );
 
