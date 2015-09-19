@@ -62,6 +62,7 @@ protected:
 
     void execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const DrawSpace::Utils::Matrix& p_cam_mat );
     static bool nodes_comp( CloudUnitDescriptor* p_n1, CloudUnitDescriptor* p_n2 );
+    void impostors_init( void );
 
 
     RunnerMsgCb*                                                        m_runnercb;
@@ -104,6 +105,10 @@ public:
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
     ProceduralCb* GetProceduralCallback( void );
     void Update( DrawSpace::Utils::TimeManager& p_timemanager );
+
+    int GetRunnerState( void );
+
+    void ImpostorsInit( void );
 
 };
 }

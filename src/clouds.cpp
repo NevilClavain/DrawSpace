@@ -58,6 +58,25 @@ Clouds::~Clouds( void )
 
 void Clouds::on_sort_request( PropertyPool* p_args )
 {
+    Matrix ImpostorMat, CamMat;
+    ImpostorMat = p_args->GetPropValue<Matrix>( "ImpostorMat" );
+    CamMat = p_args->GetPropValue<Matrix>( "CamMat" );
+
+    m_sort_run_mutex.WaitInfinite();
+
+    execsortz( ImpostorMat, CamMat );
+
+    impostors_init();
+   
+    m_update_mutex.WaitInfinite();
+    m_update_clouds_meshes = true;
+    m_update_mutex.Release();
+
+    m_sort_run_mutex.Release();
+
+    m_runner_state_mutex.WaitInfinite();
+    m_runner_state = 0;
+    m_runner_state_mutex.Release();
 }
 
 void Clouds::on_camera_event( SceneNodeGraph::CameraEvent p_event, BaseSceneNode* p_node )
@@ -286,6 +305,33 @@ bool Clouds::nodes_comp( CloudUnitDescriptor* p_n1, CloudUnitDescriptor* p_n2 )
     return ( p_n1->distToView > p_n2->distToView );
 }
 
+void Clouds::impostors_init( void )
+{
+    m_idl.clear();
+
+    m_runner_state_mutex.WaitInfinite();
+    m_runner_state = 3;
+    m_runner_state_mutex.Release();
+
+    for( size_t i = 0; i < m_clouds.size(); i++ )
+    {
+        for( size_t j = 0; j < m_clouds[i]->impostors.size(); j++ )
+        {     
+            m_idl.push_back( m_clouds[i]->impostors[j] );
+        }
+    }    
+}
+
+void Clouds::ImpostorsInit( void )
+{
+    impostors_init();
+    Chunk::ImpostorsInit();
+}
+
+int Clouds::GetRunnerState( void )
+{
+    return m_runner_state;
+}
 
 Clouds::ProceduralCb* Clouds::GetProceduralCallback( void )
 {
