@@ -96,6 +96,9 @@ protected:
 
     DrawSpace::Core::BaseSceneNode*                                     m_owner;
 
+    dsreal                                                              m_sorting_distance;
+    bool                                                                m_details;
+    
 
 public:
 
@@ -104,11 +107,14 @@ public:
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
     ProceduralCb* GetProceduralCallback( void );
-    void Update( DrawSpace::Utils::TimeManager& p_timemanager );
+    void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
 
     int GetRunnerState( void );
+    void SetSortingDistance( dsreal p_distance );
+    void EnableDetails( bool p_details );
 
     void ImpostorsInit( void );
+
 
 };
 }

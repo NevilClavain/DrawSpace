@@ -36,7 +36,9 @@ m_current_camera( NULL ),
 m_previous_camera_pos_avail( false ),
 m_recompute_count( 0 ),
 m_sort_running( false ),
-m_owner( NULL )
+m_owner( NULL ),
+m_sorting_distance( 1000.0 ),
+m_details( true )
 {
     m_proceduralcb = _DRAWSPACE_NEW_( ProceduralCb, ProceduralCb( this, &Clouds::on_procedural ) );
     m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
@@ -200,7 +202,7 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
         m_new_cloud->impostors.push_back( idle );
     
     }
-    else if( "add_impostor" == opcode->GetValue() )
+    else if( "add_impostor" == opcode->GetValue() && m_details )
     {
         ImpostorsDisplayListEntry idle;
 
@@ -324,6 +326,7 @@ void Clouds::impostors_init( void )
 
 void Clouds::ImpostorsInit( void )
 {
+    m_clouds_sort_request = true;
     impostors_init();
     Chunk::ImpostorsInit();
 }
@@ -345,14 +348,14 @@ void Clouds::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpac
     m_owner = p_node;
 }
 
-void Clouds::Update( DrawSpace::Utils::TimeManager& p_timemanager )
+void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     if( !m_owner )
     {
         return;
     }
 
-    Chunk::Update( p_timemanager );
+    Chunk::Update2( p_timemanager );
 
     m_update_mutex.WaitInfinite();
     if( m_update_clouds_meshes )
@@ -384,7 +387,7 @@ void Clouds::Update( DrawSpace::Utils::TimeManager& p_timemanager )
             delta_cam_pos[0] = current_camera_pos[2] - m_previous_camera_pos[2];
             delta_cam_pos[3] = 1.0;
 
-            if( delta_cam_pos.Length() > 4000.0 )
+            if( delta_cam_pos.Length() > m_sorting_distance )
             {
                 m_clouds_sort_request = true;
                 m_previous_camera_pos = current_camera_pos;
@@ -425,4 +428,9 @@ void Clouds::Update( DrawSpace::Utils::TimeManager& p_timemanager )
         }
         m_clouds_sort_request = false;
     }    
+}
+
+void Clouds::EnableDetails( bool p_details )
+{
+    m_details = p_details;
 }
