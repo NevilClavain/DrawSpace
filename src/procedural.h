@@ -248,24 +248,36 @@ public:
 class OpcodeParser
 {
 public:
-    virtual void Parse( void ) = 0;
+    virtual void Parse( const dsstring& p_line, OpcodeParser* p_parent ) = 0;
+    virtual void SubmitAtomic( Atomic* p_atomic ) = 0;
 };
 
 class RootParser : public OpcodeParser
 {
 public:
-    virtual void Parse( void );
+    Atomic* m_rules;
+
+    virtual void Parse( const dsstring& p_line, OpcodeParser* p_parent );
+    virtual void SubmitAtomic( Atomic* p_atomic );
 };
 
+class PubParser : public OpcodeParser
+{
+public:
+    virtual void Parse( const dsstring& p_line, OpcodeParser* p_parent );
+    virtual void SubmitAtomic( Atomic* p_atomic );
+
+};
 
 
 class RulesPackage : public Utils::Parser
 {
 protected:
 
-    Atomic*                                         m_rules;
+    
     DrawSpace::Core::BaseCallback<void, Atomic*>*   m_handler;
     std::map<dsstring, OpcodeParser*>               m_opcodes;
+    OpcodeParser*                                   m_currentparser;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 

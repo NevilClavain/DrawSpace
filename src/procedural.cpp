@@ -182,18 +182,38 @@ void Index::SetArray( Array* p_array )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-void RootParser::Parse( void )
+void RootParser::Parse( const dsstring& p_line, OpcodeParser* p_parent )
 {
+}
 
+void RootParser::SubmitAtomic( Atomic* p_atomic )
+{
+    m_rules = p_atomic;
+}
+
+void PubParser::Parse( const dsstring& p_line, OpcodeParser* p_parent )
+{
+    Publisher* pub = _DRAWSPACE_NEW_( Publisher, Publisher );
+
+    // TODO : register pub handler
+
+    if( p_parent )
+    {
+        p_parent->SubmitAtomic( pub );
+    }
+}
+
+void PubParser::SubmitAtomic( Atomic* p_atomic )
+{
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler ) :
 m_handler( p_handler )
 {
+    m_currentparser = _DRAWSPACE_NEW_( RootParser, RootParser );
+    m_opcodes["pub"] = new PubParser;
 }
     
 RulesPackage::~RulesPackage( void )
@@ -203,5 +223,23 @@ RulesPackage::~RulesPackage( void )
 
 bool RulesPackage::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    if( "end" == p_line )
+    {
+    
+    }
+    else
+    {
+        if( m_opcodes.count( p_words[0] ) > 0 )
+        {
+            OpcodeParser* parent = m_currentparser;
+            m_currentparser = m_opcodes[p_words[0]];
+            m_currentparser->Parse( p_line, parent );
+        }
+        else
+        {
+            // error : unknown opcode
+            return false;
+        }
+    }
     return true;
 }
