@@ -27,6 +27,7 @@
 #include "vector.h"
 #include "callback.h"
 #include "memalloc.h"
+#include "parser.h"
 #include <random>
 
 namespace DrawSpace
@@ -36,16 +37,10 @@ namespace Procedural
    
 class Atomic
 {
-protected:
-    dsstring m_id;
-
 public:
 
     Atomic( void ) { }
     virtual ~Atomic( void ) { };
-
-    virtual void SetId( const dsstring& p_id );
-    virtual void GetId( dsstring& p_id );
 
     virtual void Apply( void ) = 0;
     virtual Atomic* GetResultValue( void ) = 0;
@@ -246,6 +241,39 @@ public:
 
     virtual void Apply( void );
     virtual Atomic* GetResultValue( void );
+
+};
+
+
+class OpcodeParser
+{
+public:
+    virtual void Parse( void ) = 0;
+};
+
+class RootParser : public OpcodeParser
+{
+public:
+    virtual void Parse( void );
+};
+
+
+
+class RulesPackage : public Utils::Parser
+{
+protected:
+
+    Atomic*                                         m_rules;
+    DrawSpace::Core::BaseCallback<void, Atomic*>*   m_handler;
+    std::map<dsstring, OpcodeParser*>               m_opcodes;
+
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
+public:
+
+    RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler );
+    virtual ~RulesPackage( void );
+
 
 };
 

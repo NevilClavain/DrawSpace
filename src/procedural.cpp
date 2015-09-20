@@ -29,18 +29,6 @@ using namespace DrawSpace::Procedural;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Atomic::GetId( dsstring& p_id )
-{
-    p_id = m_id;
-}
-
-void Atomic::SetId( const dsstring& p_id )
-{
-    m_id = p_id;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int Array::GetSize( void )
 {
@@ -111,7 +99,7 @@ void Repeat::Apply( void )
         }
         else
         {
-            _DSEXCEPTION( "Procedural Repeat bloc " << m_id << ": loop child result not of Integer type" );
+            _DSEXCEPTION( "Procedural Repeat bloc: loop child result not of Integer type" );
         }
     }
 }
@@ -171,7 +159,7 @@ void Index::Apply( void )
         }
         else
         {
-            _DSEXCEPTION( "Procedural Index bloc " << m_id << ": index child result not of Integer type" );
+            _DSEXCEPTION( "Procedural Index bloc: index child result not of Integer type" );
         }
     }
 }
@@ -193,3 +181,27 @@ void Index::SetArray( Array* p_array )
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void RootParser::Parse( void )
+{
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler ) :
+m_handler( p_handler )
+{
+}
+    
+RulesPackage::~RulesPackage( void )
+{
+}
+
+
+bool RulesPackage::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+{
+    return true;
+}
