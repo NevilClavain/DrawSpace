@@ -248,6 +248,89 @@ bool IntegerParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std:
 void IntegerParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 {
 }
+
+bool RealParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+{
+    if( p_words.size() < 2 )
+    {        
+        return false;
+    }
+
+    Real* real = _DRAWSPACE_NEW_( Real, Real );
+    real->SetValue( StringToReal( p_words[1] ) );
+
+    OpcodeParser* parent_parser = p_stack.top().first;
+    parent_parser->SubmitAtomic( p_stack.top().second, real );
+
+    return true;
+}
+
+void RealParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+{
+}
+
+bool StringParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+{
+    if( p_words.size() < 2 )
+    {        
+        return false;
+    }
+
+    Procedural::String* string = _DRAWSPACE_NEW_( Procedural::String, Procedural::String );
+    string->SetValue( p_words[1] );
+
+    OpcodeParser* parent_parser = p_stack.top().first;
+    parent_parser->SubmitAtomic( p_stack.top().second, string );
+
+    return true;
+}
+
+void StringParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+{
+}
+
+
+bool VectorParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+{
+    if( p_words.size() < 5 )
+    {        
+        return false;
+    }
+
+    Procedural::Vector* vector = _DRAWSPACE_NEW_( Procedural::Vector, Procedural::Vector );
+    vector->SetValue( Utils::Vector( StringToReal( p_words[1] ), StringToReal( p_words[2] ), StringToReal( p_words[3] ), StringToReal( p_words[4] ) ) );
+
+    OpcodeParser* parent_parser = p_stack.top().first;
+    parent_parser->SubmitAtomic( p_stack.top().second, vector );
+
+    return true;
+}
+
+void VectorParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+{
+}
+
+
+bool ArrayParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+{
+    Array* array = _DRAWSPACE_NEW_( Array, Array );
+    
+    OpcodeParser* parent_parser = p_stack.top().first;
+    parent_parser->SubmitAtomic( p_stack.top().second, array );
+
+    p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, array ) );
+
+    return true;
+}
+
+void ArrayParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+{
+    // get associated array
+    Array* array = static_cast<Array*>( p_parent );
+    array->AddValue( p_child );
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler )
@@ -256,6 +339,10 @@ RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_hand
     m_stack.push( std::pair<OpcodeParser*, Atomic*>( m_root, NULL ) );
     m_opcodes["pub"] = _DRAWSPACE_NEW_( PubParser, PubParser( p_handler ) );
     m_opcodes["integer"] = _DRAWSPACE_NEW_( IntegerParser, IntegerParser );
+    m_opcodes["real"] = _DRAWSPACE_NEW_( RealParser, RealParser );
+    m_opcodes["string"] = _DRAWSPACE_NEW_( StringParser, StringParser );
+    m_opcodes["vector"] = _DRAWSPACE_NEW_( VectorParser, VectorParser );
+    m_opcodes["array"] = _DRAWSPACE_NEW_( ArrayParser, ArrayParser );
 }
     
 RulesPackage::~RulesPackage( void )
@@ -264,9 +351,14 @@ RulesPackage::~RulesPackage( void )
 
 bool RulesPackage::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
-    if( "end" == p_line )
+    if( "end" == p_words[0] )
     {
         m_stack.pop();
+    }
+    else if( "#" == p_words[0] )
+    {
+        // do nothin'
+        return true;
     }
     else
     {
@@ -276,7 +368,7 @@ bool RulesPackage::on_new_line( const dsstring& p_line, long p_line_num, std::ve
             {
                 _PARSER_MISSING_ARG__
                 return false;
-            }            
+            }    
         }
         else
         {            
