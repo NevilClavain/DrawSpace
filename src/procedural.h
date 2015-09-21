@@ -320,6 +320,16 @@ public:
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 };
 
+typedef Procedural::RandomDistribution<int, std::uniform_int_distribution<int>, Procedural::Integer> UniformIntegerRandom;
+
+class RandomDistributionParser : public OpcodeParser
+{
+public:
+
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
+};
+
 
 class RulesPackage : public Utils::Parser
 {

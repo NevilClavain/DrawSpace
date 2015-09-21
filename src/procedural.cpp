@@ -331,6 +331,43 @@ void ArrayParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 }
 
 
+bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+{
+    Atomic* random_source;
+
+    if( p_words.size() < 5 )
+    {        
+        return false;
+    }
+
+    if( "uniform" == p_words[1] )
+    {
+        if( "integer" == p_words[2] )
+        {
+            std::uniform_int_distribution<int>* source = _DRAWSPACE_NEW_( std::uniform_int_distribution<int>, std::uniform_int_distribution<int>( StringToInt( p_words[3] ), StringToInt( p_words[4] ) ) );
+            UniformIntegerRandom* random = _DRAWSPACE_NEW_( UniformIntegerRandom, UniformIntegerRandom( source, 12345 ) );
+
+            random_source = random;
+        }
+        else if( "real" == p_words[2] )
+        {
+        
+        }
+    }
+
+    OpcodeParser* parent_parser = p_stack.top().first;
+    parent_parser->SubmitAtomic( p_stack.top().second, random_source );
+
+    p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, random_source ) );
+
+    return true;
+}
+
+void RandomDistributionParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+{
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler )
@@ -343,6 +380,7 @@ RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_hand
     m_opcodes["string"] = _DRAWSPACE_NEW_( StringParser, StringParser );
     m_opcodes["vector"] = _DRAWSPACE_NEW_( VectorParser, VectorParser );
     m_opcodes["array"] = _DRAWSPACE_NEW_( ArrayParser, ArrayParser );
+    m_opcodes["random_distribution"] = _DRAWSPACE_NEW_( RandomDistributionParser, RandomDistributionParser );
 }
     
 RulesPackage::~RulesPackage( void )
