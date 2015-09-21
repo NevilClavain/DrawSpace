@@ -29,6 +29,7 @@
 #include "memalloc.h"
 #include "parser.h"
 #include <random>
+#include <stack>
 
 namespace DrawSpace
 {
@@ -248,24 +249,42 @@ public:
 class OpcodeParser
 {
 public:
-    virtual void Parse( const dsstring& p_line, OpcodeParser* p_parent ) = 0;
-    virtual void SubmitAtomic( Atomic* p_atomic ) = 0;
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack ) = 0;
+    virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child ) = 0;
 };
 
 class RootParser : public OpcodeParser
 {
-public:
+protected:
     Atomic* m_rules;
 
-    virtual void Parse( const dsstring& p_line, OpcodeParser* p_parent );
-    virtual void SubmitAtomic( Atomic* p_atomic );
+public:
+    
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
+    virtual Atomic* GetRules( void );
 };
 
 class PubParser : public OpcodeParser
 {
+protected:    
+    DrawSpace::Core::BaseCallback<void, Atomic*>*   m_handler;
+
 public:
-    virtual void Parse( const dsstring& p_line, OpcodeParser* p_parent );
-    virtual void SubmitAtomic( Atomic* p_atomic );
+    PubParser( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler );
+    virtual ~PubParser( void );
+
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
+
+};
+
+class IntegerParser : public OpcodeParser
+{
+public:
+
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 
 };
 
@@ -273,11 +292,10 @@ public:
 class RulesPackage : public Utils::Parser
 {
 protected:
-
     
-    DrawSpace::Core::BaseCallback<void, Atomic*>*   m_handler;
-    std::map<dsstring, OpcodeParser*>               m_opcodes;
-    OpcodeParser*                                   m_currentparser;
+    RootParser*                                     m_root;
+    std::map<dsstring, OpcodeParser*>               m_opcodes;    
+    std::stack<std::pair<OpcodeParser*, Atomic*>>   m_stack;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
@@ -286,6 +304,7 @@ public:
     RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler );
     virtual ~RulesPackage( void );
 
+    RootParser* GetRootParser( void );
 
 };
 
