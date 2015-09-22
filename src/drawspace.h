@@ -94,7 +94,8 @@
 #include "descriptors.h"
 #include "ac3dmeshe.h"
 #include "cbfgfont.h"
-#include "procedural.h"
+#include "procedural_blocs.h"
+#include "procedural_parser.h"
 #include "impostorsdisplaylist.h"
 #include "clouds.h"
 #endif

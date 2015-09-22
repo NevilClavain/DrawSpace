@@ -235,10 +235,13 @@
     <ClCompile Include="src\shaderscontroller.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\procedural.cpp">
+    <ClCompile Include="src\clouds.cpp" />
+    <ClCompile Include="src\procedural_blocs.cpp">
       <Filter>procedural</Filter>
     </ClCompile>
-    <ClCompile Include="src\clouds.cpp" />
+    <ClCompile Include="src\procedural_parser.cpp">
+      <Filter>procedural</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -490,10 +493,13 @@
     <ClInclude Include="src\shaderscontroller.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\procedural.h">
-      <Filter>procedural</Filter>
-    </ClInclude>
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\clouds.h" />
+    <ClInclude Include="src\procedural_blocs.h">
+      <Filter>procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="src\procedural_parser.h">
+      <Filter>procedural</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
