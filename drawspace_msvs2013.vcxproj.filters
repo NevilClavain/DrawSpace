@@ -242,6 +242,9 @@
     <ClCompile Include="src\procedural_parser.cpp">
       <Filter>procedural</Filter>
     </ClCompile>
+    <ClCompile Include="src\procedural_seeds.cpp">
+      <Filter>procedural</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -499,6 +502,9 @@
       <Filter>procedural</Filter>
     </ClInclude>
     <ClInclude Include="src\procedural_parser.h">
+      <Filter>procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="src\procedural_seeds.h">
       <Filter>procedural</Filter>
     </ClInclude>
   </ItemGroup>

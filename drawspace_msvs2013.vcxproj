@@ -59,6 +59,7 @@
     <ClCompile Include="src\planetoid_fragment.cpp" />
     <ClCompile Include="src\procedural_blocs.cpp" />
     <ClCompile Include="src\procedural_parser.cpp" />
+    <ClCompile Include="src\procedural_seeds.cpp" />
     <ClCompile Include="src\quadtree.cpp" />
     <ClCompile Include="src\quaternion.cpp" />
     <ClCompile Include="src\renderingnode.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="src\plugin.h" />
     <ClInclude Include="src\procedural_blocs.h" />
     <ClInclude Include="src\procedural_parser.h" />
+    <ClInclude Include="src\procedural_seeds.h" />
     <ClInclude Include="src\quadtree.h" />
     <ClInclude Include="src\quaternion.h" />
     <ClInclude Include="src\renderer.h" />

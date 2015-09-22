@@ -96,6 +96,7 @@
 #include "cbfgfont.h"
 #include "procedural_blocs.h"
 #include "procedural_parser.h"
+#include "procedural_seeds.h"
 #include "impostorsdisplaylist.h"
 #include "clouds.h"
 #endif
