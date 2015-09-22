@@ -402,7 +402,7 @@ bool RepeatParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
 
 void RepeatParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
-     // get associated repeater
+    // get associated repeater
     Repeat* rep = static_cast<Repeat*>( p_parent ); 
 
     switch( p_argcount )
@@ -418,6 +418,70 @@ void RepeatParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcou
             break;
     }
 }
+
+
+bool BatchParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
+{
+    Batch* batch = _DRAWSPACE_NEW_( Batch, Batch );
+    
+    notify_parent( p_stack, batch );
+
+    StackEntry se;
+    se.arg_counter = 0;
+    se.parser = this;
+    se.atomic = batch;
+    p_stack.push( se );
+
+    return true;
+}
+
+void BatchParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
+{
+    // get associated batch
+    Batch* batch = static_cast<Batch*>( p_parent ); 
+    batch->AddChild( p_child );
+}
+
+bool IndexParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
+{
+    Index* index = _DRAWSPACE_NEW_( Index, Index );
+    
+    notify_parent( p_stack, index );
+
+    StackEntry se;
+    se.arg_counter = 0;
+    se.parser = this;
+    se.atomic = index;
+    p_stack.push( se );
+
+    return true;
+}
+
+void IndexParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
+{
+    // get associated index
+    Index* index = static_cast<Index*>( p_parent ); 
+
+    switch( p_argcount )
+    {
+        case 0:
+
+            index->SetIndex( p_child );
+            break;
+
+        case 1:
+            {
+                Array* array = dynamic_cast<Array*>( p_child );
+                if( !array )
+                {
+                    _DSEXCEPTION( "Procedural rules parser : child 2 of an index must be an array" );
+                }
+                index->SetArray( array );
+            }            
+            break;
+    }
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -438,8 +502,10 @@ RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_hand
     m_opcodes["string"] = _DRAWSPACE_NEW_( StringParser, StringParser );
     m_opcodes["vector"] = _DRAWSPACE_NEW_( VectorParser, VectorParser );
     m_opcodes["array"] = _DRAWSPACE_NEW_( ArrayParser, ArrayParser );
-    m_opcodes["random_distribution"] = _DRAWSPACE_NEW_( RandomDistributionParser, RandomDistributionParser );
+    m_opcodes["random"] = _DRAWSPACE_NEW_( RandomDistributionParser, RandomDistributionParser );
     m_opcodes["repeat"] = _DRAWSPACE_NEW_( RepeatParser, RepeatParser );
+    m_opcodes["batch"] = _DRAWSPACE_NEW_( BatchParser, BatchParser );
+    m_opcodes["index"] = _DRAWSPACE_NEW_( IndexParser, IndexParser );
 }
     
 RulesPackage::~RulesPackage( void )

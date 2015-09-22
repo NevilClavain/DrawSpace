@@ -357,6 +357,23 @@ public:
 };
 
 
+class BatchParser : public OpcodeParser
+{
+public:
+
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
+    virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount );
+};
+
+class IndexParser : public OpcodeParser
+{
+public:
+
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
+    virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount );
+};
+
+
 class RulesPackage : public Utils::Parser
 {
 protected:
