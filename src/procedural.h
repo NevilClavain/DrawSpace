@@ -226,10 +226,8 @@ class Index : public Atomic
 {
 protected:
 
-    Array*                  m_array;
-    //Integer*                m_index;
+    Array*                  m_array;    
     Atomic*                 m_index;
-
     Atomic*                 m_result;
 
 public:
@@ -246,10 +244,23 @@ public:
 };
 
 
+class OpcodeParser;
+
+typedef struct
+{
+    OpcodeParser* parser;
+    Atomic*       atomic;
+    int           arg_counter;
+
+} StackEntry;
+
+typedef std::stack<StackEntry> Stack;
+
+
 class OpcodeParser
 {
 public:
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack ) = 0;
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack ) = 0;
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child ) = 0;
 };
 
@@ -260,7 +271,7 @@ protected:
 
 public:
     
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
     virtual Atomic* GetRules( void );
 };
@@ -274,7 +285,7 @@ public:
     PubParser( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler );
     virtual ~PubParser( void );
 
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 
 };
@@ -283,7 +294,7 @@ class IntegerParser : public OpcodeParser
 {
 public:
 
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 };
 
@@ -292,7 +303,7 @@ class RealParser : public OpcodeParser
 {
 public:
 
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 };
 
@@ -300,7 +311,7 @@ class StringParser : public OpcodeParser
 {
 public:
 
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 };
 
@@ -308,7 +319,7 @@ class VectorParser : public OpcodeParser
 {
 public:
 
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 };
 
@@ -316,17 +327,28 @@ class ArrayParser : public OpcodeParser
 {
 public:
 
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 };
 
 typedef Procedural::RandomDistribution<int, std::uniform_int_distribution<int>, Procedural::Integer> UniformIntegerRandom;
+typedef Procedural::RandomDistribution<int, std::uniform_real_distribution<dsreal>, Procedural::Real> UniformRealRandom;
 
 class RandomDistributionParser : public OpcodeParser
 {
 public:
 
-    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack );
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
+    virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
+};
+
+
+
+class RepeatParser : public OpcodeParser
+{
+public:
+
+    virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child );
 };
 
@@ -337,7 +359,7 @@ protected:
     
     RootParser*                                     m_root;
     std::map<dsstring, OpcodeParser*>               m_opcodes;    
-    std::stack<std::pair<OpcodeParser*, Atomic*>>   m_stack;
+    Stack                                           m_stack;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 

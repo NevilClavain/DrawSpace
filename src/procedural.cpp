@@ -184,7 +184,7 @@ void Index::SetArray( Array* p_array )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool RootParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+bool RootParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     return true;
 }
@@ -208,15 +208,22 @@ PubParser::~PubParser( void )
 {
 }
 
-bool PubParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+bool PubParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     Publisher* pub = _DRAWSPACE_NEW_( Publisher, Publisher );
     pub->RegisterHandler( m_handler );
 
-    OpcodeParser* parent_parser = p_stack.top().first;
-    parent_parser->SubmitAtomic( p_stack.top().second, pub );
+    OpcodeParser* parent_parser = p_stack.top().parser;
+    parent_parser->SubmitAtomic( p_stack.top().atomic, pub );
 
-    p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, pub ) );
+    //p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, pub ) );
+
+    StackEntry se;
+
+    se.arg_counter = 0;
+    se.parser = this;
+    se.atomic = pub;
+    p_stack.push( se );
 
     return true;
 }
@@ -229,7 +236,7 @@ void PubParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 }
 
 
-bool IntegerParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+bool IntegerParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     if( p_words.size() < 2 )
     {        
@@ -239,8 +246,8 @@ bool IntegerParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std:
     Integer* integer = _DRAWSPACE_NEW_( Integer, Integer );
     integer->SetValue( StringToInt( p_words[1] ) );
 
-    OpcodeParser* parent_parser = p_stack.top().first;
-    parent_parser->SubmitAtomic( p_stack.top().second, integer );
+    OpcodeParser* parent_parser = p_stack.top().parser;
+    parent_parser->SubmitAtomic( p_stack.top().atomic, integer );
 
     return true;
 }
@@ -249,7 +256,7 @@ void IntegerParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 {
 }
 
-bool RealParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+bool RealParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     if( p_words.size() < 2 )
     {        
@@ -259,8 +266,8 @@ bool RealParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::st
     Real* real = _DRAWSPACE_NEW_( Real, Real );
     real->SetValue( StringToReal( p_words[1] ) );
 
-    OpcodeParser* parent_parser = p_stack.top().first;
-    parent_parser->SubmitAtomic( p_stack.top().second, real );
+    OpcodeParser* parent_parser = p_stack.top().parser;
+    parent_parser->SubmitAtomic( p_stack.top().atomic, real );
 
     return true;
 }
@@ -269,7 +276,7 @@ void RealParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 {
 }
 
-bool StringParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+bool StringParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     if( p_words.size() < 2 )
     {        
@@ -279,8 +286,8 @@ bool StringParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::
     Procedural::String* string = _DRAWSPACE_NEW_( Procedural::String, Procedural::String );
     string->SetValue( p_words[1] );
 
-    OpcodeParser* parent_parser = p_stack.top().first;
-    parent_parser->SubmitAtomic( p_stack.top().second, string );
+    OpcodeParser* parent_parser = p_stack.top().parser;
+    parent_parser->SubmitAtomic( p_stack.top().atomic, string );
 
     return true;
 }
@@ -290,7 +297,7 @@ void StringParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 }
 
 
-bool VectorParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+bool VectorParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     if( p_words.size() < 5 )
     {        
@@ -300,8 +307,8 @@ bool VectorParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::
     Procedural::Vector* vector = _DRAWSPACE_NEW_( Procedural::Vector, Procedural::Vector );
     vector->SetValue( Utils::Vector( StringToReal( p_words[1] ), StringToReal( p_words[2] ), StringToReal( p_words[3] ), StringToReal( p_words[4] ) ) );
 
-    OpcodeParser* parent_parser = p_stack.top().first;
-    parent_parser->SubmitAtomic( p_stack.top().second, vector );
+    OpcodeParser* parent_parser = p_stack.top().parser;
+    parent_parser->SubmitAtomic( p_stack.top().atomic, vector );
 
     return true;
 }
@@ -311,14 +318,19 @@ void VectorParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 }
 
 
-bool ArrayParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+bool ArrayParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     Array* array = _DRAWSPACE_NEW_( Array, Array );
     
-    OpcodeParser* parent_parser = p_stack.top().first;
-    parent_parser->SubmitAtomic( p_stack.top().second, array );
+    OpcodeParser* parent_parser = p_stack.top().parser;
+    parent_parser->SubmitAtomic( p_stack.top().atomic, array );
 
-    p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, array ) );
+    //p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, array ) );
+    StackEntry se;
+    se.arg_counter = 0;
+    se.parser = this;
+    se.atomic = array;
+    p_stack.push( se );
 
     return true;
 }
@@ -331,7 +343,7 @@ void ArrayParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 }
 
 
-bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_words, std::stack<std::pair<OpcodeParser*, Atomic*>>& p_stack )
+bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     Atomic* random_source;
 
@@ -351,15 +363,16 @@ bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_
         }
         else if( "real" == p_words[2] )
         {
-        
+            std::uniform_real_distribution<dsreal>* source = _DRAWSPACE_NEW_( std::uniform_real_distribution<dsreal>, std::uniform_real_distribution<dsreal>( StringToReal( p_words[3] ), StringToReal( p_words[4] ) ) );
+            UniformRealRandom* random = _DRAWSPACE_NEW_( UniformRealRandom, UniformRealRandom( source, 12345 ) );
+            
+            random_source = random;
         }
     }
 
-    OpcodeParser* parent_parser = p_stack.top().first;
-    parent_parser->SubmitAtomic( p_stack.top().second, random_source );
-
-    p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, random_source ) );
-
+    OpcodeParser* parent_parser = p_stack.top().parser;
+    parent_parser->SubmitAtomic( p_stack.top().atomic, random_source );
+  
     return true;
 }
 
@@ -368,12 +381,44 @@ void RandomDistributionParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
 }
 
 
+bool RepeatParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
+{
+    Repeat* rep = _DRAWSPACE_NEW_( Repeat, Repeat );
+    
+
+    OpcodeParser* parent_parser = p_stack.top().parser;
+    parent_parser->SubmitAtomic( p_stack.top().atomic, rep );
+
+    //p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, rep ) );
+    StackEntry se;
+
+    se.arg_counter = 0;
+    se.parser = this;
+    se.atomic = rep;
+    p_stack.push( se );
+
+    return true;
+}
+
+void RepeatParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+{
+
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler )
 {
     m_root = _DRAWSPACE_NEW_( RootParser, RootParser );
-    m_stack.push( std::pair<OpcodeParser*, Atomic*>( m_root, NULL ) );
+    
+    //m_stack.push( std::pair<OpcodeParser*, Atomic*>( m_root, NULL ) );
+    StackEntry se;
+    se.arg_counter = 0;
+    se.parser = m_root;
+    se.atomic = NULL;
+    m_stack.push( se );
+
     m_opcodes["pub"] = _DRAWSPACE_NEW_( PubParser, PubParser( p_handler ) );
     m_opcodes["integer"] = _DRAWSPACE_NEW_( IntegerParser, IntegerParser );
     m_opcodes["real"] = _DRAWSPACE_NEW_( RealParser, RealParser );
