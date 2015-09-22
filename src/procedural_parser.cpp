@@ -375,12 +375,14 @@ bool RulesPackage::on_new_line( const dsstring& p_line, long p_line_num, std::ve
             if( false == m_opcodes[p_words[0]]->Parse( p_line_num, p_words, m_stack ) )
             {
                 _PARSER_MISSING_ARG__
+                _DSEXCEPTION( m_lasterror );
                 return false;
             }    
         }
         else
         {            
             _PARSER_UNEXPECTED_KEYWORD_
+            _DSEXCEPTION( m_lasterror );
             return false;
         }
     }
