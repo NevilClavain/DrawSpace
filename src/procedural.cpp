@@ -184,12 +184,25 @@ void Index::SetArray( Array* p_array )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void OpcodeParser::notify_parent( Stack& p_stack, Atomic* p_atomic )
+{
+    StackEntry se = p_stack.top();
+    OpcodeParser* parent_parser = se.parser;
+
+    parent_parser->SubmitAtomic( p_stack.top().atomic, p_atomic, se.arg_counter++ );
+
+    // on update l'element en haut de la pile ( car arg_counter a ete incremente )
+    p_stack.pop();
+    p_stack.push( se );
+}
+
+
 bool RootParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
     return true;
 }
 
-void RootParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void RootParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
     m_rules = p_child;
 }
@@ -213,10 +226,12 @@ bool PubParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p
     Publisher* pub = _DRAWSPACE_NEW_( Publisher, Publisher );
     pub->RegisterHandler( m_handler );
 
+    /*
     OpcodeParser* parent_parser = p_stack.top().parser;
     parent_parser->SubmitAtomic( p_stack.top().atomic, pub );
+    */
 
-    //p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, pub ) );
+    notify_parent( p_stack, pub );
 
     StackEntry se;
 
@@ -228,7 +243,7 @@ bool PubParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p
     return true;
 }
 
-void PubParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void PubParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
     // get associated publisher
     Publisher* pub = static_cast<Publisher*>( p_parent );
@@ -246,13 +261,17 @@ bool IntegerParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stac
     Integer* integer = _DRAWSPACE_NEW_( Integer, Integer );
     integer->SetValue( StringToInt( p_words[1] ) );
 
+    /*
     OpcodeParser* parent_parser = p_stack.top().parser;
     parent_parser->SubmitAtomic( p_stack.top().atomic, integer );
+    */
+
+    notify_parent( p_stack, integer );
 
     return true;
 }
 
-void IntegerParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void IntegerParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
 }
 
@@ -266,13 +285,17 @@ bool RealParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& 
     Real* real = _DRAWSPACE_NEW_( Real, Real );
     real->SetValue( StringToReal( p_words[1] ) );
 
+    /*
     OpcodeParser* parent_parser = p_stack.top().parser;
     parent_parser->SubmitAtomic( p_stack.top().atomic, real );
+    */
+
+    notify_parent( p_stack, real );
 
     return true;
 }
 
-void RealParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void RealParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
 }
 
@@ -286,13 +309,17 @@ bool StringParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
     Procedural::String* string = _DRAWSPACE_NEW_( Procedural::String, Procedural::String );
     string->SetValue( p_words[1] );
 
+    /*
     OpcodeParser* parent_parser = p_stack.top().parser;
     parent_parser->SubmitAtomic( p_stack.top().atomic, string );
+    */
+
+    notify_parent( p_stack, string );
 
     return true;
 }
 
-void StringParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void StringParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
 }
 
@@ -307,13 +334,17 @@ bool VectorParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
     Procedural::Vector* vector = _DRAWSPACE_NEW_( Procedural::Vector, Procedural::Vector );
     vector->SetValue( Utils::Vector( StringToReal( p_words[1] ), StringToReal( p_words[2] ), StringToReal( p_words[3] ), StringToReal( p_words[4] ) ) );
 
+    /*
     OpcodeParser* parent_parser = p_stack.top().parser;
     parent_parser->SubmitAtomic( p_stack.top().atomic, vector );
+    */
+
+    notify_parent( p_stack, vector );
 
     return true;
 }
 
-void VectorParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void VectorParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
 }
 
@@ -322,8 +353,12 @@ bool ArrayParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack&
 {
     Array* array = _DRAWSPACE_NEW_( Array, Array );
     
+    /*
     OpcodeParser* parent_parser = p_stack.top().parser;
     parent_parser->SubmitAtomic( p_stack.top().atomic, array );
+    */
+
+    notify_parent( p_stack, array );
 
     //p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, array ) );
     StackEntry se;
@@ -335,7 +370,7 @@ bool ArrayParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack&
     return true;
 }
 
-void ArrayParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void ArrayParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
     // get associated array
     Array* array = static_cast<Array*>( p_parent );
@@ -370,13 +405,17 @@ bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_
         }
     }
 
+    /*
     OpcodeParser* parent_parser = p_stack.top().parser;
     parent_parser->SubmitAtomic( p_stack.top().atomic, random_source );
-  
+    */
+
+    notify_parent( p_stack, random_source );
+
     return true;
 }
 
-void RandomDistributionParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void RandomDistributionParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
 }
 
@@ -385,13 +424,14 @@ bool RepeatParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
 {
     Repeat* rep = _DRAWSPACE_NEW_( Repeat, Repeat );
     
-
+    /*
     OpcodeParser* parent_parser = p_stack.top().parser;
     parent_parser->SubmitAtomic( p_stack.top().atomic, rep );
+    */
 
-    //p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, rep ) );
+    notify_parent( p_stack, rep );
+
     StackEntry se;
-
     se.arg_counter = 0;
     se.parser = this;
     se.atomic = rep;
@@ -400,9 +440,10 @@ bool RepeatParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
     return true;
 }
 
-void RepeatParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child )
+void RepeatParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
-
+     // get associated repeater
+    Repeat* rep = static_cast<Repeat*>( p_parent );  
 }
 
 
