@@ -226,11 +226,6 @@ bool PubParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p
     Publisher* pub = _DRAWSPACE_NEW_( Publisher, Publisher );
     pub->RegisterHandler( m_handler );
 
-    /*
-    OpcodeParser* parent_parser = p_stack.top().parser;
-    parent_parser->SubmitAtomic( p_stack.top().atomic, pub );
-    */
-
     notify_parent( p_stack, pub );
 
     StackEntry se;
@@ -261,11 +256,6 @@ bool IntegerParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stac
     Integer* integer = _DRAWSPACE_NEW_( Integer, Integer );
     integer->SetValue( StringToInt( p_words[1] ) );
 
-    /*
-    OpcodeParser* parent_parser = p_stack.top().parser;
-    parent_parser->SubmitAtomic( p_stack.top().atomic, integer );
-    */
-
     notify_parent( p_stack, integer );
 
     return true;
@@ -285,11 +275,6 @@ bool RealParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& 
     Real* real = _DRAWSPACE_NEW_( Real, Real );
     real->SetValue( StringToReal( p_words[1] ) );
 
-    /*
-    OpcodeParser* parent_parser = p_stack.top().parser;
-    parent_parser->SubmitAtomic( p_stack.top().atomic, real );
-    */
-
     notify_parent( p_stack, real );
 
     return true;
@@ -308,11 +293,6 @@ bool StringParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
 
     Procedural::String* string = _DRAWSPACE_NEW_( Procedural::String, Procedural::String );
     string->SetValue( p_words[1] );
-
-    /*
-    OpcodeParser* parent_parser = p_stack.top().parser;
-    parent_parser->SubmitAtomic( p_stack.top().atomic, string );
-    */
 
     notify_parent( p_stack, string );
 
@@ -334,11 +314,6 @@ bool VectorParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
     Procedural::Vector* vector = _DRAWSPACE_NEW_( Procedural::Vector, Procedural::Vector );
     vector->SetValue( Utils::Vector( StringToReal( p_words[1] ), StringToReal( p_words[2] ), StringToReal( p_words[3] ), StringToReal( p_words[4] ) ) );
 
-    /*
-    OpcodeParser* parent_parser = p_stack.top().parser;
-    parent_parser->SubmitAtomic( p_stack.top().atomic, vector );
-    */
-
     notify_parent( p_stack, vector );
 
     return true;
@@ -353,11 +328,6 @@ bool ArrayParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack&
 {
     Array* array = _DRAWSPACE_NEW_( Array, Array );
     
-    /*
-    OpcodeParser* parent_parser = p_stack.top().parser;
-    parent_parser->SubmitAtomic( p_stack.top().atomic, array );
-    */
-
     notify_parent( p_stack, array );
 
     //p_stack.push( std::pair<OpcodeParser*, Atomic*>( this, array ) );
@@ -405,11 +375,6 @@ bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_
         }
     }
 
-    /*
-    OpcodeParser* parent_parser = p_stack.top().parser;
-    parent_parser->SubmitAtomic( p_stack.top().atomic, random_source );
-    */
-
     notify_parent( p_stack, random_source );
 
     return true;
@@ -424,11 +389,6 @@ bool RepeatParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
 {
     Repeat* rep = _DRAWSPACE_NEW_( Repeat, Repeat );
     
-    /*
-    OpcodeParser* parent_parser = p_stack.top().parser;
-    parent_parser->SubmitAtomic( p_stack.top().atomic, rep );
-    */
-
     notify_parent( p_stack, rep );
 
     StackEntry se;
@@ -443,7 +403,20 @@ bool RepeatParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack
 void RepeatParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount )
 {
      // get associated repeater
-    Repeat* rep = static_cast<Repeat*>( p_parent );  
+    Repeat* rep = static_cast<Repeat*>( p_parent ); 
+
+    switch( p_argcount )
+    {
+        case 0:
+
+            rep->SetNbLoops( p_child );
+            break;
+
+        case 1:
+
+            rep->SetChild( p_child );
+            break;
+    }
 }
 
 
@@ -452,8 +425,7 @@ void RepeatParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcou
 RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_handler )
 {
     m_root = _DRAWSPACE_NEW_( RootParser, RootParser );
-    
-    //m_stack.push( std::pair<OpcodeParser*, Atomic*>( m_root, NULL ) );
+        
     StackEntry se;
     se.arg_counter = 0;
     se.parser = m_root;
@@ -467,6 +439,7 @@ RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_hand
     m_opcodes["vector"] = _DRAWSPACE_NEW_( VectorParser, VectorParser );
     m_opcodes["array"] = _DRAWSPACE_NEW_( ArrayParser, ArrayParser );
     m_opcodes["random_distribution"] = _DRAWSPACE_NEW_( RandomDistributionParser, RandomDistributionParser );
+    m_opcodes["repeat"] = _DRAWSPACE_NEW_( RepeatParser, RepeatParser );
 }
     
 RulesPackage::~RulesPackage( void )
