@@ -364,6 +364,11 @@ RulesPackage::~RulesPackage( void )
 
 bool RulesPackage::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
+    if( 0 == p_words.size() )
+    {
+        return true;
+    }
+
     if( "end" == p_words[0] )
     {
         m_stack.pop();
