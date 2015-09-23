@@ -21,6 +21,7 @@
 */
 
 #include "procedural_parser.h"
+#include "procedural_seeds.h"
 #include "exceptions.h"
 #include "misc_utils.h"
 
@@ -197,7 +198,7 @@ bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_
 {
     Atomic* random_source;
 
-    if( p_words.size() < 5 )
+    if( p_words.size() < 6 )
     {        
         return false;
     }
@@ -206,15 +207,19 @@ bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_
     {
         if( "integer" == p_words[2] )
         {
+            int sub_seed = SeedsBase::GetInstance()->GetSeed( StringToInt( p_words[5] ) );
+
             std::uniform_int_distribution<int>* source = _DRAWSPACE_NEW_( std::uniform_int_distribution<int>, std::uniform_int_distribution<int>( StringToInt( p_words[3] ), StringToInt( p_words[4] ) ) );
-            UniformIntegerRandom* random = _DRAWSPACE_NEW_( UniformIntegerRandom, UniformIntegerRandom( source, 12345 ) );
+            UniformIntegerRandom* random = _DRAWSPACE_NEW_( UniformIntegerRandom, UniformIntegerRandom( source, sub_seed ) );
 
             random_source = random;
         }
         else if( "real" == p_words[2] )
         {
+            int sub_seed = SeedsBase::GetInstance()->GetSeed( StringToInt( p_words[5] ) );
+
             std::uniform_real_distribution<dsreal>* source = _DRAWSPACE_NEW_( std::uniform_real_distribution<dsreal>, std::uniform_real_distribution<dsreal>( StringToReal( p_words[3] ), StringToReal( p_words[4] ) ) );
-            UniformRealRandom* random = _DRAWSPACE_NEW_( UniformRealRandom, UniformRealRandom( source, 12345 ) );
+            UniformRealRandom* random = _DRAWSPACE_NEW_( UniformRealRandom, UniformRealRandom( source, sub_seed ) );
             
             random_source = random;
         }
