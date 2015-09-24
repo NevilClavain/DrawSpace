@@ -116,13 +116,7 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
         return NULL;
     }
 
-    if( false == AssetsBase::GetInstance()->AssetIdExists( p_descriptor.meshe ) )
-    {
-        p_error = "BuildChunk : unknown meshe asset name (" + p_descriptor.meshe + dsstring( ")" );
-        return NULL;
-    }
-
-    if( "" == p_descriptor.meshe )
+    if( "..." == p_descriptor.meshe )
     {
         // no meshe file specified, search for impostors description
 
@@ -131,11 +125,20 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
             p_error = "BuildChunk: messhe asset name or impostors list required";
             return NULL;
         }
+
+        Meshe* meshe = new Meshe;
+        chunk->SetMeshe( meshe );
         chunk->SetImpostorsDisplayList( p_descriptor.impostors );
         chunk->ImpostorsInit();
     }
     else
     {
+        if( false == AssetsBase::GetInstance()->AssetIdExists( p_descriptor.meshe ) )
+        {
+            p_error = "BuildChunk : unknown meshe asset name (" + p_descriptor.meshe + dsstring( ")" );
+            return NULL;
+        }
+
         Meshe* meshe = dynamic_cast<Meshe*>( AssetsBase::GetInstance()->GetAsset( p_descriptor.meshe ) );
         if( NULL == meshe )
         {
