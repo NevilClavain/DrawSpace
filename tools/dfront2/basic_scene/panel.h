@@ -47,17 +47,19 @@ class ObjectPropertiesDialog : public wxDialog
 		wxButton* m_apply_button;
 		wxButton* m_specific_button_0;
 		wxButton* m_specific_button_1;
+		wxButton* m_specific_button_2;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnApplyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSpecificButton0Clicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSpecificButton1Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSpecificButton2Clicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		ObjectPropertiesDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 476,318 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		ObjectPropertiesDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 563,318 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~ObjectPropertiesDialog();
 	
 };

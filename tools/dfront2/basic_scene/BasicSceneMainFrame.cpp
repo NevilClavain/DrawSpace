@@ -61,6 +61,7 @@
 
 #include "ActionChunkCreationDialog.h"
 #include "ActionChunkCreationSpecific0.h"
+#include "ActionChunkCreationSpecific2.h"
 #include "ActionChunkCreationApply.h"
 
 #include "ActionChunkEditionDialog.h"
@@ -585,6 +586,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_NEWCHUNK] = new ActionChunkCreationDialog();
     m_actiondialogs_specific0[DIALOG_CHUNK_CREATION_TITLE] = new ActionChunkCreationSpecific0();
     m_actiondialogs_specific1[DIALOG_CHUNK_CREATION_TITLE] = new ActionAddShaderParam();
+    m_actiondialogs_specific2[DIALOG_CHUNK_CREATION_TITLE] = new ActionChunkCreationSpecific2();
     m_actiondialogs_apply[DIALOG_CHUNK_CREATION_TITLE] = new ActionChunkCreationApply();
 
     m_actions[CONTEXTMENU_EDIT_CHUNKNODE] = new ActionChunkEditionDialog();
@@ -725,6 +727,7 @@ m_delta_mouse_init( true )
     m_applybutton_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_applybutton_clicked );
     m_specificbutton0_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton0_clicked );
     m_specificbutton1_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton1_clicked );
+    m_specificbutton2_clicked_cb = new DialogButtonCallback( this, &BasicSceneMainFrame::on_specificbutton2_clicked );
 
     //m_nodeupdatebegin_cb = new NodeUpdateBeginCallBack( this, &BasicSceneMainFrame::on_nodeupdatebegin );
 
@@ -1823,30 +1826,15 @@ void BasicSceneMainFrame::on_specificbutton1_clicked( BasicSceneObjectProperties
     DIALOG_WXSTRING_TO_DSSTRING( DIALOG_TITLE, dialog_title )
     m_actiondialogs_specific1[dialog_title]->Execute( p_dialog );
 }
-/*
-void BasicSceneMainFrame::on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node )
+
+void BasicSceneMainFrame::on_specificbutton2_clicked( BasicSceneObjectPropertiesDialog* p_dialog )
 {
-    if( m_inv_tree_nodes.count( p_node ) > 0 )
-    {
-        void* id = m_inv_tree_nodes[p_node];
-
-        dsstring script;
-        bool* script_enabled;
-
-        script = *( m_script_edit_frames[id]->GetTextRef() );
-        script_enabled = m_script_edit_frames[id]->GeScriptStateRef();
-
-        if( *script_enabled )
-        {
-            bool status = m_scripting->ExecChunk( script.c_str() );
-            if( !status )
-            {
-                *script_enabled = false;
-            }
-        }
-    }
+    wxCharBuffer buffer;
+    DIALOG_WXSTRING_TO_DSSTRING( DIALOG_TITLE, dialog_title )
+    m_actiondialogs_specific2[dialog_title]->Execute( p_dialog );
 }
-*/
+
+
 wxTreeItemId BasicSceneMainFrame::searchTreeItemIdInNodes( void* p_id )
 {
     return *( m_inv_treeitemid[p_id] );

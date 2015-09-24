@@ -103,6 +103,7 @@
     <ClCompile Include="ActionColliderLinkTo.cpp" />
     <ClCompile Include="ActionTextureCtor.cpp" />
     <ClCompile Include="ActionUpdatePassShaderParam.cpp" />
+    <ClCompile Include="ActionChunkCreationSpecific2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -210,5 +211,6 @@
     <ClInclude Include="ActionColliderLinkTo.h" />
     <ClInclude Include="ActionTextureCtor.h" />
     <ClInclude Include="ActionUpdatePassShaderParam.h" />
+    <ClInclude Include="ActionChunkCreationSpecific2.h" />
   </ItemGroup>
 </Project>

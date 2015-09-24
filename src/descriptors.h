@@ -26,6 +26,7 @@
 #include "drawspace_commons.h"
 #include "renderingnode.h"
 #include "vector.h"
+#include "impostorsdisplaylist.h"
 
 namespace DrawSpace
 {
@@ -70,6 +71,7 @@ typedef struct
 {
     dsstring                                    scene_name;
     dsstring                                    meshe;
+    DrawSpace::ImpostorsDisplayList             impostors;
     std::map<dsstring, ChunkPassDescriptor>     passes_slots;
 
 } ChunkDescriptor;

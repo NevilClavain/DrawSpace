@@ -34,6 +34,9 @@ ObjectPropertiesDialog::ObjectPropertiesDialog( wxWindow* parent, wxWindowID id,
 	m_specific_button_1 = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer13->Add( m_specific_button_1, 0, wxALL, 5 );
 	
+	m_specific_button_2 = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer13->Add( m_specific_button_2, 0, wxALL, 5 );
+	
 	
 	bSizer12->Add( bSizer13, 1, wxEXPAND, 5 );
 	
@@ -48,6 +51,7 @@ ObjectPropertiesDialog::ObjectPropertiesDialog( wxWindow* parent, wxWindowID id,
 	m_apply_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjectPropertiesDialog::OnApplyButtonClicked ), NULL, this );
 	m_specific_button_0->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjectPropertiesDialog::OnSpecificButton0Clicked ), NULL, this );
 	m_specific_button_1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjectPropertiesDialog::OnSpecificButton1Clicked ), NULL, this );
+	m_specific_button_2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjectPropertiesDialog::OnSpecificButton2Clicked ), NULL, this );
 }
 
 ObjectPropertiesDialog::~ObjectPropertiesDialog()
@@ -57,6 +61,7 @@ ObjectPropertiesDialog::~ObjectPropertiesDialog()
 	m_apply_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjectPropertiesDialog::OnApplyButtonClicked ), NULL, this );
 	m_specific_button_0->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjectPropertiesDialog::OnSpecificButton0Clicked ), NULL, this );
 	m_specific_button_1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjectPropertiesDialog::OnSpecificButton1Clicked ), NULL, this );
+	m_specific_button_2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjectPropertiesDialog::OnSpecificButton2Clicked ), NULL, this );
 	
 }
 

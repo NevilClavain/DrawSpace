@@ -175,6 +175,7 @@
     dialog->RegisterApplyButtonHandler( m_applybutton_clicked_cb ); \
     dialog->RegisterSpecificButton0Handler( m_specificbutton0_clicked_cb ); \
     dialog->RegisterSpecificButton1Handler( m_specificbutton1_clicked_cb ); \
+    dialog->RegisterSpecificButton2Handler( m_specificbutton2_clicked_cb ); \
 
 
 #define DIALOG_ACTION_DECLARE( _title_ ) \
@@ -183,6 +184,7 @@
     dialog->RegisterApplyButtonHandler( BasicSceneMainFrame::GetInstance()->m_applybutton_clicked_cb ); \
     dialog->RegisterSpecificButton0Handler( BasicSceneMainFrame::GetInstance()->m_specificbutton0_clicked_cb ); \
     dialog->RegisterSpecificButton1Handler( BasicSceneMainFrame::GetInstance()->m_specificbutton1_clicked_cb ); \
+    dialog->RegisterSpecificButton2Handler( BasicSceneMainFrame::GetInstance()->m_specificbutton2_clicked_cb ); \
 
 
 
@@ -253,6 +255,7 @@
 #define DIALOG_APPLY                                            dialog->EnableApplyButton();
 #define DIALOG_SPECIFIC0( _text_ )                              dialog->EnableSpecificButton0( _text_ );
 #define DIALOG_SPECIFIC1( _text_ )                              dialog->EnableSpecificButton1( _text_ );
+#define DIALOG_SPECIFIC2( _text_ )                              dialog->EnableSpecificButton2( _text_ );
 
 #define DIALOG_TITLE                                            p_dialog->GetTitle()
 
@@ -264,6 +267,11 @@
 #define DIALOG_SPECIFIC1_LABEL( _format_, _var_name_ ) \
     char comment[128]; \
     sprintf( comment, _format_, p_dialog->GetSpecific1Counter() ); \
+    wxString _var_name_ = comment; \
+
+#define DIALOG_SPECIFIC2_LABEL( _format_, _var_name_ ) \
+    char comment[128]; \
+    sprintf( comment, _format_, p_dialog->GetSpecific2Counter() ); \
     wxString _var_name_ = comment; \
 
 
@@ -350,6 +358,7 @@
 
 #define DIALOG_SETSPECIFIC0COUNTER( _value_ )    p_dialog->SetSpecific0Counter( _value_ );
 #define DIALOG_SETSPECIFIC1COUNTER( _value_ )    p_dialog->SetSpecific1Counter( _value_ );
+#define DIALOG_SETSPECIFIC2COUNTER( _value_ )    p_dialog->SetSpecific2Counter( _value_ );
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -468,6 +477,7 @@ public:
     std::map<dsstring, ActionDialog*>                                                       m_actiondialogs_apply;
     std::map<dsstring, ActionDialog*>                                                       m_actiondialogs_specific0;
     std::map<dsstring, ActionDialog*>                                                       m_actiondialogs_specific1;
+    std::map<dsstring, ActionDialog*>                                                       m_actiondialogs_specific2;
 
     std::map<dsstring, ActionScript*>                                                       m_actionscripts;
 
@@ -519,6 +529,7 @@ public:
     DialogButtonCallback*                                   m_applybutton_clicked_cb;
     DialogButtonCallback*                                   m_specificbutton0_clicked_cb;
     DialogButtonCallback*                                   m_specificbutton1_clicked_cb;
+    DialogButtonCallback*                                   m_specificbutton2_clicked_cb;
 
 
     //NodeUpdateBeginCallBack*                                m_nodeupdatebegin_cb;
@@ -577,9 +588,7 @@ public:
     void on_applybutton_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_specificbutton0_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
     void on_specificbutton1_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
-
-
-    //void on_nodeupdatebegin( DrawSpace::Core::BaseSceneNode* p_node );
+    void on_specificbutton2_clicked( BasicSceneObjectPropertiesDialog* p_dialog );
 
     virtual void OnPaint( wxPaintEvent& p_event );
     virtual void OnClose( wxCloseEvent& p_event );

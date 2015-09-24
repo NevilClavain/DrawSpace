@@ -34,12 +34,14 @@ protected:
     DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>*     m_applybutton_handler;
     DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>*     m_specificbutton0_handler;
     DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>*     m_specificbutton1_handler;
+    DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>*     m_specificbutton2_handler;
     std::map<dsstring, void*>                                                   m_datas;
 
     wxString                                                                    m_title;
 
     long                                                                        m_specific0_counter;
     long                                                                        m_specific1_counter;
+    long                                                                        m_specific2_counter;
 
     wxTreeItemId                                                                m_treeitem;
 
@@ -47,6 +49,7 @@ protected:
     virtual void OnApplyButtonClicked( wxCommandEvent& event );
     virtual void OnSpecificButton0Clicked( wxCommandEvent& event );
     virtual void OnSpecificButton1Clicked( wxCommandEvent& event );
+    virtual void OnSpecificButton2Clicked( wxCommandEvent& event );
 
 public:
 
@@ -56,9 +59,11 @@ public:
     void EnableApplyButton( void );
     void EnableSpecificButton0( const dsstring& p_label );
     void EnableSpecificButton1( const dsstring& p_label );
+    void EnableSpecificButton2( const dsstring& p_label );
     void RegisterApplyButtonHandler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler );
     void RegisterSpecificButton0Handler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler );
     void RegisterSpecificButton1Handler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler );
+    void RegisterSpecificButton2Handler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler );
 
     void SetData( const dsstring& p_id, void* p_data );
     void* GetData( const dsstring& p_id );
@@ -67,9 +72,11 @@ public:
 
     long GetSpecific0Counter( void );
     long GetSpecific1Counter( void );
+    long GetSpecific2Counter( void );
 
     void SetSpecific0Counter( long p_value );
     void SetSpecific1Counter( long p_value );
+    void SetSpecific2Counter( long p_value );
 
     wxTreeItemId GetTreeItem( void );
 };

@@ -31,11 +31,12 @@ void ActionChunkCreationDialog::Execute( void )
 
     DIALOG_APPENDROOT_STRING( "scene name", "" )
 
-    DIALOG_APPENDROOT_ENUM( "meshe",  BasicSceneMainFrame::GetInstance()->get_meshes_list() )
+    DIALOG_APPENDROOT_ENUM( "meshe",  BasicSceneMainFrame::GetInstance()->insert_void_choice( BasicSceneMainFrame::GetInstance()->get_meshes_list() ) )
 
     DIALOG_APPLY
     DIALOG_SPECIFIC0( "New pass slot" )
     DIALOG_SPECIFIC1( "New shaders param slot" )
+    DIALOG_SPECIFIC2( "New impostor" )
 
     DIALOG_SHOW
 }

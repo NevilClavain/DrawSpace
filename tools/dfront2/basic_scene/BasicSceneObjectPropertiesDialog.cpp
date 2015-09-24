@@ -26,18 +26,21 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
 BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title, wxTreeItemId p_treeitem ) 
-: ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 460, 318 ) ),
+: ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 760, 318 ) ),
 m_applybutton_handler( NULL ),
 m_specificbutton0_handler( NULL ),
 m_specificbutton1_handler( NULL ),
+m_specificbutton2_handler( NULL ),
 m_title( title ),
 m_specific0_counter( 0 ),
 m_specific1_counter( 0 ),
+m_specific2_counter( 0 ),
 m_treeitem( p_treeitem )
 {
     m_apply_button->Show( false );
     m_specific_button_0->Show( false );
     m_specific_button_1->Show( false );
+    m_specific_button_2->Show( false );
 }
 
 wxPropertyGrid* BasicSceneObjectPropertiesDialog::GetPropertyGrid( void )
@@ -83,6 +86,17 @@ void BasicSceneObjectPropertiesDialog::OnSpecificButton1Clicked( wxCommandEvent&
     m_specific1_counter++;
 }
 
+void BasicSceneObjectPropertiesDialog::OnSpecificButton2Clicked( wxCommandEvent& event )
+{
+    if( m_specificbutton2_handler )
+    {
+        (*m_specificbutton2_handler)( this );
+    }
+
+    m_specific2_counter++;
+}
+
+
 void BasicSceneObjectPropertiesDialog::EnableApplyButton( void )
 {
     m_apply_button->Show( true );
@@ -100,6 +114,12 @@ void BasicSceneObjectPropertiesDialog::EnableSpecificButton1( const dsstring& p_
     m_specific_button_1->SetLabel( p_label );
 }
 
+void BasicSceneObjectPropertiesDialog::EnableSpecificButton2( const dsstring& p_label )
+{
+    m_specific_button_2->Show( true );
+    m_specific_button_2->SetLabel( p_label );
+}
+
 void BasicSceneObjectPropertiesDialog::RegisterApplyButtonHandler( BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )
 {
     m_applybutton_handler = p_handler;
@@ -114,6 +134,12 @@ void BasicSceneObjectPropertiesDialog::RegisterSpecificButton1Handler( DrawSpace
 {
     m_specificbutton1_handler = p_handler;
 }
+
+void BasicSceneObjectPropertiesDialog::RegisterSpecificButton2Handler( DrawSpace::Core::BaseCallback<void, BasicSceneObjectPropertiesDialog*>* p_handler )
+{
+    m_specificbutton2_handler = p_handler;
+}
+
 
 void BasicSceneObjectPropertiesDialog::SetData( const dsstring& p_id, void* p_data )
 {
@@ -142,6 +168,11 @@ long BasicSceneObjectPropertiesDialog::GetSpecific1Counter( void )
     return m_specific1_counter;
 }
 
+long BasicSceneObjectPropertiesDialog::GetSpecific2Counter( void )
+{
+    return m_specific2_counter;
+}
+
 void BasicSceneObjectPropertiesDialog::SetSpecific0Counter( long p_value )
 {
     m_specific0_counter = p_value;
@@ -150,6 +181,11 @@ void BasicSceneObjectPropertiesDialog::SetSpecific0Counter( long p_value )
 void BasicSceneObjectPropertiesDialog::SetSpecific1Counter( long p_value )
 {
     m_specific1_counter = p_value;
+}
+
+void BasicSceneObjectPropertiesDialog::SetSpecific2Counter( long p_value )
+{
+    m_specific2_counter = p_value;
 }
 
 wxTreeItemId BasicSceneObjectPropertiesDialog::GetTreeItem( void )
