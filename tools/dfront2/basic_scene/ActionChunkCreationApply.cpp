@@ -128,6 +128,50 @@ void ActionChunkCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dial
         DIALOG_EXPLORE_NODES_END( i )
     }
 
+    {
+        DIALOG_EXPLORE_NODES_BEGIN( "", "impostor %d", i, imp_slot )
+
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "scale.width" ), scale_width )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "scale.height" ), scale_height )
+
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "position.x" ), pos_x )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "position.y" ), pos_y )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "position.z" ), pos_z )
+
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "texture UV.u1" ), u1 )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "texture UV.v1" ), v1 )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "texture UV.u2" ), u2 )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "texture UV.v2" ), v2 )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "texture UV.u3" ), u3 )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "texture UV.v3" ), v3 )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "texture UV.u4" ), u4 )
+        DIALOG_GET_FLOAT_PROPERTY( DIALOG_INCREMENT_STRING( imp_slot, "texture UV.v4" ), v4 )
+
+        DrawSpace::ImpostorsDisplayListEntry idle;
+
+        idle.width_scale = scale_width;
+        idle.height_scale = scale_height;
+        idle.localpos[0] = pos_x;
+        idle.localpos[1] = pos_y;
+        idle.localpos[2] = pos_z;
+
+        idle.u1 = u1;
+        idle.v1 = v1;
+
+        idle.u2 = u2;
+        idle.v2 = v2;
+
+        idle.u3 = u3;
+        idle.v3 = v3;
+
+        idle.u4 = u4;
+        idle.v4 = v4;
+
+        descr.impostors.push_back( idle );
+
+        DIALOG_EXPLORE_NODES_END( i )
+    }
+
     dsstring chunk_error;
     Chunk* chunk = BuildChunk( descr, chunk_error );
 

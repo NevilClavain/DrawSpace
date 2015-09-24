@@ -109,12 +109,6 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
 
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
-    if( "" == p_descriptor.meshe )
-    {
-        p_error = "BuildChunk: messhe asset name required";
-        return NULL;
-    }
-
     std::map<dsstring, DrawSpace::Utils::ChunkPassDescriptor> passes = p_descriptor.passes_slots;
     if( 0 == passes.size() )
     {
@@ -128,13 +122,27 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
         return NULL;
     }
 
-    Meshe* meshe = dynamic_cast<Meshe*>( AssetsBase::GetInstance()->GetAsset( p_descriptor.meshe ) );
-    if( NULL == meshe )
+    if( "" == p_descriptor.meshe )
     {
-        p_error = "BuildChunk : specified asset is not a Meshe (" + p_descriptor.meshe + dsstring( ")" );
-    }
-    chunk->SetMeshe( meshe );
+        // no meshe file specified, search for impostors description
 
+        if( 0 == p_descriptor.impostors.size() )
+        {
+            p_error = "BuildChunk: messhe asset name or impostors list required";
+            return NULL;
+        }
+        chunk->SetImpostorsDisplayList( p_descriptor.impostors );
+        chunk->ImpostorsInit();
+    }
+    else
+    {
+        Meshe* meshe = dynamic_cast<Meshe*>( AssetsBase::GetInstance()->GetAsset( p_descriptor.meshe ) );
+        if( NULL == meshe )
+        {
+            p_error = "BuildChunk : specified asset is not a Meshe (" + p_descriptor.meshe + dsstring( ")" );
+        }
+        chunk->SetMeshe( meshe );    
+    }
 
     for( std::map<dsstring, DrawSpace::Utils::ChunkPassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
     {
