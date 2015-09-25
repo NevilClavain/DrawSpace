@@ -46,7 +46,8 @@ public:
     LuaChunkNode( lua_State* p_L );
     ~LuaChunkNode( void );
      
-    int Lua_SetMesheName( lua_State* p_L );
+    int Lua_SetMesheName( lua_State* p_L );    
+    int Lua_SetImpostorsDisplayList( lua_State* p_L );
     int Lua_RegisterPassSlot( lua_State* p_L );
     int Lua_SetPassSlotFxName( lua_State* p_L );
     int Lua_SetPassSlotRenderingOrder( lua_State* p_L );

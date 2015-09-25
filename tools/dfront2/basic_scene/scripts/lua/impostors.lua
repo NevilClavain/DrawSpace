@@ -113,5 +113,12 @@ cam1:LinkTo( "scene0", "free0" )
 print( "cam1 loaded..." )
 
 
+screenimpostors = { { { 0.0, 0.0, 0.0 } , { 1.0, 1.0 }, { 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0 } } }
+
+--screenimpostors = { 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0 }
+
+screenimp = ChunkNode( "screenimp" )
+screenimp:SetImpostorsDisplayList( screenimpostors )
+
 scene_ready = true
 

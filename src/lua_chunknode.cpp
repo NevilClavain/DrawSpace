@@ -33,6 +33,7 @@ const char LuaChunkNode::className[] = "ChunkNode";
 const Luna2<LuaChunkNode>::RegType LuaChunkNode::methods[] =
 {  
   { "SetMesheName", &LuaChunkNode::Lua_SetMesheName },
+  { "SetImpostorsDisplayList", &LuaChunkNode::Lua_SetImpostorsDisplayList },
   { "RegisterPassSlot", &LuaChunkNode::Lua_RegisterPassSlot },
   { "SetPassSlotFxName", &LuaChunkNode::Lua_SetPassSlotFxName },
   { "SetPassSlotRenderingOrder", &LuaChunkNode::Lua_SetPassSlotRenderingOrder },
@@ -108,13 +109,52 @@ int LuaChunkNode::Lua_SetMesheName( lua_State* p_L )
     return 0;
 }
 
+int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetImpostorsDisplayList : bad number of args" );
+		lua_error( p_L );		
+	}
+
+    if( !lua_istable( p_L, 1 ) )
+    {
+        lua_pushstring( p_L, "SetImpostorsDisplayList : table expected" );
+        lua_error( p_L );
+    }
+
+    // http://www.fxcodebase.com/documents/IndicoreSDK.fr/lua/lua_next.html
+    // http://www.lua.org/pil/25.1.html
+
+
+    lua_pushnil( p_L );  /* 1ère clé */
+    while( lua_next( p_L, 1 ) != 0 ) 
+    {
+        _asm nop
+
+        dsreal val = luaL_checknumber( p_L, -1 );
+
+       /* utilise la 'clé' (à l'index -2) et la 'valeur' (à l'index -1) */
+         /*
+       printf("%s - %s\n",
+              lua_typename(L, lua_type(L, -2)),
+              lua_typename(L, lua_type(L, -1)));
+              */
+       /* enlève la 'valeur' ; garde la 'clé' pour la prochaine itération */
+        lua_pop( p_L, 1 );
+    }
+
+    return 0;
+}
+
 int LuaChunkNode::Lua_RegisterPassSlot( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
 	{
 		lua_pushstring( p_L, "RegisterPassSlot : bad number of args" );
-		lua_error( p_L );		
+		lua_error( p_L );
 	}
     const char* pass_name = luaL_checkstring( p_L, 1 );
 
