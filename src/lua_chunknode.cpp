@@ -127,23 +127,102 @@ int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
     // http://www.fxcodebase.com/documents/IndicoreSDK.fr/lua/lua_next.html
     // http://www.lua.org/pil/25.1.html
 
+    int check = lua_gettop( p_L );
 
     lua_pushnil( p_L );  /* 1ère clé */
     while( lua_next( p_L, 1 ) != 0 ) 
-    {
-        _asm nop
-
-        dsreal val = luaL_checknumber( p_L, -1 );
-
+    {          
        /* utilise la 'clé' (à l'index -2) et la 'valeur' (à l'index -1) */
-         /*
-       printf("%s - %s\n",
-              lua_typename(L, lua_type(L, -2)),
-              lua_typename(L, lua_type(L, -1)));
-              */
-       /* enlève la 'valeur' ; garde la 'clé' pour la prochaine itération */
+        
+        if( !lua_istable( p_L, -1 ) )
+        {
+            lua_pushstring( p_L, "SetImpostorsDisplayList : unexpected table structure" );
+            lua_error( p_L );
+        }
+
+        // aller chercher l'entree "pos" de la sous table
+        lua_pushstring( p_L,  "pos" );
+        lua_gettable( p_L, -2 );  
+
+        if( !lua_istable( p_L, -1 ) )
+        {
+            lua_pushstring( p_L, "SetImpostorsDisplayList : unexpected table structure" );
+            lua_error( p_L );
+        }
+
+
+
+        // aller chercher l'entree "x" de la sous table pos
+        lua_pushstring( p_L,  "x" );
+        lua_gettable( p_L, -2 );  
+
+        dsreal x = luaL_checknumber( p_L, -1 );
+
+        lua_pop( p_L, 1 ); // pop x
+
+
+
+        lua_pushstring( p_L,  "y" );
+        lua_gettable( p_L, -2 );  
+
+        dsreal y = luaL_checknumber( p_L, -1 );
+
+        lua_pop( p_L, 1 ); // pop y
+
+
+
+
+        lua_pushstring( p_L,  "z" );
+        lua_gettable( p_L, -2 );  
+
+        dsreal z = luaL_checknumber( p_L, -1 );
+
+        lua_pop( p_L, 1 ); // pop z
+
+
+        lua_pop( p_L, 1 ); // pop sous table pos
+
+
+
+
+        // aller chercher l'entree "scale" de la sous table
+        lua_pushstring( p_L,  "scale" );
+        lua_gettable( p_L, -2 );  
+
+        if( !lua_istable( p_L, -1 ) )
+        {
+            lua_pushstring( p_L, "SetImpostorsDisplayList : unexpected table structure" );
+            lua_error( p_L );
+        }
+
+
+        lua_pushstring( p_L,  "width" );
+        lua_gettable( p_L, -2 );  
+
+        dsreal width = luaL_checknumber( p_L, -1 );
+
+        lua_pop( p_L, 1 ); // pop width
+
+
+
+        lua_pushstring( p_L,  "height" );
+        lua_gettable( p_L, -2 );  
+
+        dsreal height = luaL_checknumber( p_L, -1 );
+
+        lua_pop( p_L, 1 ); // pop height
+
+
+
+        lua_pop( p_L, 1 ); // pop sous table scale
+
+
+
+        /* enlève la 'valeur' ; garde la 'clé' pour la prochaine itération */
         lua_pop( p_L, 1 );
     }
+
+    check = lua_gettop( p_L );
 
     return 0;
 }
