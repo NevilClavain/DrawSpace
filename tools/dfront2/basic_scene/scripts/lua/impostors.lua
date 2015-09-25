@@ -103,6 +103,15 @@ imp_tf:AddMatrix( mat0 )
 
 
 
+free0 = FreeMovementNode( "free0" )
+free0:SetInitpos( 0, 0, 25 )
+free0:LinkTo( "scene0", "scene0" )
+print( "free0 loaded..." )
+
+cam1 = CameraPointNode( "cam1" )
+cam1:LinkTo( "scene0", "free0" )
+print( "cam1 loaded..." )
+
 
 scene_ready = true
 
