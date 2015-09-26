@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\luacontext.cpp" />
     <ClCompile Include="src\luascripting.cpp" />
+    <ClCompile Include="src\luautils.cpp" />
     <ClCompile Include="src\lua_camerapointnode.cpp" />
     <ClCompile Include="src\lua_chunknode.cpp" />
     <ClCompile Include="src\lua_circularmovementnode.cpp" />
@@ -36,6 +37,7 @@
   <ItemGroup>
     <ClInclude Include="src\luacontext.h" />
     <ClInclude Include="src\luascripting.h" />
+    <ClInclude Include="src\luautils.h" />
     <ClInclude Include="src\lua_camerapointnode.h" />
     <ClInclude Include="src\lua_chunknode.h" />
     <ClInclude Include="src\lua_circularmovementnode.h" />

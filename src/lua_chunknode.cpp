@@ -24,6 +24,7 @@
 #include "luacontext.h"
 #include "lua_vector.h"
 #include "lua_texture.h"
+#include "luautils.h"
 #include "exceptions.h"
 
 using namespace DrawSpace;
@@ -111,6 +112,10 @@ int LuaChunkNode::Lua_SetMesheName( lua_State* p_L )
 
 int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
 {
+    m_impostors.clear();
+
+    DrawSpace::ImpostorsDisplayListEntry idle;
+
 	int argc = lua_gettop( p_L );
 	if( argc != 1 )
 	{
@@ -126,9 +131,7 @@ int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
 
     // http://www.fxcodebase.com/documents/IndicoreSDK.fr/lua/lua_next.html
     // http://www.lua.org/pil/25.1.html
-
-    int check = lua_gettop( p_L );
-
+   
     lua_pushnil( p_L );  /* 1ère clé */
     while( lua_next( p_L, 1 ) != 0 ) 
     {          
@@ -140,90 +143,63 @@ int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
             lua_error( p_L );
         }
 
-        // aller chercher l'entree "pos" de la sous table
-        lua_pushstring( p_L,  "pos" );
-        lua_gettable( p_L, -2 );  
-
-        if( !lua_istable( p_L, -1 ) )
+        // aller chercher l'entree "pos" de la sous table 
+        if( !push_namedluatable( p_L, "pos" ) )
         {
             lua_pushstring( p_L, "SetImpostorsDisplayList : unexpected table structure" );
-            lua_error( p_L );
+            lua_error( p_L ); 
         }
-
-
-
-        // aller chercher l'entree "x" de la sous table pos
-        lua_pushstring( p_L,  "x" );
-        lua_gettable( p_L, -2 );  
-
-        dsreal x = luaL_checknumber( p_L, -1 );
-
-        lua_pop( p_L, 1 ); // pop x
-
-
-
-        lua_pushstring( p_L,  "y" );
-        lua_gettable( p_L, -2 );  
-
-        dsreal y = luaL_checknumber( p_L, -1 );
-
-        lua_pop( p_L, 1 ); // pop y
-
-
-
-
-        lua_pushstring( p_L,  "z" );
-        lua_gettable( p_L, -2 );  
-
-        dsreal z = luaL_checknumber( p_L, -1 );
-
-        lua_pop( p_L, 1 ); // pop z
+        
+        idle.localpos[0] = get_namedrealfromtable( p_L, "x" );
+        idle.localpos[1] = get_namedrealfromtable( p_L, "y" );
+        idle.localpos[2] = get_namedrealfromtable( p_L, "z" );
 
 
         lua_pop( p_L, 1 ); // pop sous table pos
 
 
 
-
-        // aller chercher l'entree "scale" de la sous table
-        lua_pushstring( p_L,  "scale" );
-        lua_gettable( p_L, -2 );  
-
-        if( !lua_istable( p_L, -1 ) )
+        if( !push_namedluatable( p_L, "scale" ) )
         {
             lua_pushstring( p_L, "SetImpostorsDisplayList : unexpected table structure" );
-            lua_error( p_L );
+            lua_error( p_L ); 
         }
 
 
-        lua_pushstring( p_L,  "width" );
-        lua_gettable( p_L, -2 );  
-
-        dsreal width = luaL_checknumber( p_L, -1 );
-
-        lua_pop( p_L, 1 ); // pop width
-
-
-
-        lua_pushstring( p_L,  "height" );
-        lua_gettable( p_L, -2 );  
-
-        dsreal height = luaL_checknumber( p_L, -1 );
-
-        lua_pop( p_L, 1 ); // pop height
-
-
+        idle.width_scale = get_namedrealfromtable( p_L, "width" );
+        idle.height_scale = get_namedrealfromtable( p_L, "height" );
 
         lua_pop( p_L, 1 ); // pop sous table scale
 
 
 
+        if( !push_namedluatable( p_L, "uv" ) )
+        {
+            lua_pushstring( p_L, "SetImpostorsDisplayList : unexpected table structure" );
+            lua_error( p_L ); 
+        }
+
+
+        idle.u1 = get_namedrealfromtable( p_L, "u1" );
+        idle.v1 = get_namedrealfromtable( p_L, "v1" );
+
+        idle.u2 = get_namedrealfromtable( p_L, "u2" );
+        idle.v2 = get_namedrealfromtable( p_L, "v2" );
+
+        idle.u3 = get_namedrealfromtable( p_L, "u3" );
+        idle.v3 = get_namedrealfromtable( p_L, "v3" );
+
+        idle.u4 = get_namedrealfromtable( p_L, "u4" );
+        idle.v4 = get_namedrealfromtable( p_L, "v4" );
+
+        lua_pop( p_L, 1 ); // pop sous table uv
+
         /* enlève la 'valeur' ; garde la 'clé' pour la prochaine itération */
         lua_pop( p_L, 1 );
+
+        m_impostors.push_back( idle );
     }
-
-    check = lua_gettop( p_L );
-
+    
     return 0;
 }
 

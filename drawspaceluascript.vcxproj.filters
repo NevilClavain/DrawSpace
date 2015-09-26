@@ -70,6 +70,9 @@
     <ClCompile Include="src\lua_shaderscontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\luautils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\lua_drawspace.h">
@@ -136,6 +139,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\lua_shaderscontroller.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luautils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
