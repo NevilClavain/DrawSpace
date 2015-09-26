@@ -112,7 +112,7 @@ int LuaChunkNode::Lua_SetMesheName( lua_State* p_L )
 
 int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
 {
-    m_impostors.clear();
+    m_descriptor.impostors.clear();
 
     DrawSpace::ImpostorsDisplayListEntry idle;
 
@@ -197,7 +197,7 @@ int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
         /* enlève la 'valeur' ; garde la 'clé' pour la prochaine itération */
         lua_pop( p_L, 1 );
 
-        m_impostors.push_back( idle );
+        m_descriptor.impostors.push_back( idle );
     }
     
     return 0;

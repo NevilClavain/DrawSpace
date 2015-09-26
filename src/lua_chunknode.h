@@ -41,7 +41,7 @@ protected:
 
     DrawSpace::Utils::ChunkDescriptor                           m_descriptor;    
     DrawSpace::Core::SceneNode<DrawSpace::Chunk>                m_chunk_node;
-    DrawSpace::ImpostorsDisplayList                             m_impostors;
+    
 
 public:
     LuaChunkNode( lua_State* p_L );
