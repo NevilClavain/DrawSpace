@@ -116,7 +116,7 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
         return NULL;
     }
 
-    if( "..." == p_descriptor.meshe )
+    if( "..." == p_descriptor.meshe || "" == p_descriptor.meshe )
     {
         // no meshe file specified, search for impostors description
 

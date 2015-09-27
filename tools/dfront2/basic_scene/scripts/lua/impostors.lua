@@ -114,18 +114,23 @@ print( "cam1 loaded..." )
 
 
 screenimpostors = { 
-					{ pos = { x = 0.0, y = 0.0, z = 0.0 } , scale = { width = 1.1, height = 1.2 }, 
+					{ 
+            pos = { x = -5.0, y = 0.0, z = 0.0 } , scale = { width = 1.0, height = 1.0 }, 
 					  uv = { u1 = 0.0, v1 = 0.0, u2 = 1.0, v2 = 0.0, u3 = 1.0, v3 = 1.0, u4 = 0.0, v4 = 1.0 } 
-					} 
-					,
-					{ pos = { x = 1.0, y = 0.0, z = 0.0 } , scale = { width = 3.0, height = 3.2 }, 
-					  uv = { u1 = 0.0, v1 = 0.0, u2 = 1.0, v2 = 0.0, u3 = 1.0, v3 = 1.0, u4 = 0.0, v4 = 1.0 } 
-					} 
-					
+					}     
 }
 
 screenimp = ChunkNode( "screenimp" )
 screenimp:SetImpostorsDisplayList( screenimpostors )
+screenimp:RegisterPassSlot( "texture_pass" )
+screenimp:SetPassSlotFxName( "texture_pass", "spaceimpostor_fx" )
+screenimp:SetPassSlotTextureName( "texture_pass", "texture_shelby", 0 )
+screenimp:AddPassSlotShaderParam( "texture_pass", "scale", 0, 24, Vector( 1.0, 1.0, 0.0, 0.0 ) )
+screenimp:AddPassSlotShaderParam( "texture_pass", "flags", 1, 0, Vector( 0.0, 0.0, 0.0, 0.0 ) )
+screenimp:AddPassSlotShaderParam( "texture_pass", "color", 1, 1, Vector( 0.0, 0.0, 0.0, 0.0 ) )
+screenimp:LinkTo( "scene0", "imp_tf" )
+
+
 
 scene_ready = true
 
