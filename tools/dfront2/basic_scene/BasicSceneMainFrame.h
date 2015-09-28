@@ -54,6 +54,7 @@
 #define MOUSE_ICON_INDEX                    14
 #define CAMERASEL_ICON_INDEX                15
 #define WORLD_ICON_INDEX                    16
+#define CLOUDS_ICON_INDEX                   17
 
 
 #define CAMERA_MASK                         1
@@ -72,6 +73,7 @@
 #define KEYBOARD_MASK                       14
 #define MOUSE_MASK                          15
 #define WORLD_MASK                          16
+#define CLOUDS_MASK                         17
 
 
 #define FPSMOVEMENT_MASK                    500
@@ -101,6 +103,7 @@
 #define CONTEXTMENU_NEWHEADMVT              2024
 #define CONTEXTMENU_NEWLONGLATMVT           2025
 #define CONTEXTMENU_NEWSPECTATORMVT         2026
+#define CONTEXTMENU_NEWCLOUDS               2027
 #define CONTEXTMENU_SEPARATOR               2080
 #define CONTEXTMENU_EDIT_TRANSFORMNODE      2081
 //#define CONTEXTMENU_EDIT_SHADERSPARAMS      2082
@@ -120,7 +123,7 @@
 #define CONTEXTMENU_EDIT_SBNODE             2092
 #define CONTEXTMENU_EDIT_WORLD              2093
 #define CONTEXTMENU_EDIT_INERTBODY          2094
-
+#define CONTEXTMENU_EDIT_CLOUDS             2095
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,6 +151,9 @@
 #define DIALOG_CHUNK_CREATION_TITLE         "Chunk node creation"
 #define DIALOG_CHUNK_PROPS_TITLE            "Chunk node properties"
 #define DIALOG_CHUNK_EDITION_TITLE          "Chunk node edition"
+#define DIALOG_CLOUDS_CREATION_TITLE        "Clouds node creation"
+#define DIALOG_CLOUDS_PROPS_TITLE           "Clouds node properties"
+#define DIALOG_CLOUDS_EDITION_TITLE         "Clouds node edition"
 #define DIALOG_LINMVT_CREATION_TITLE        "Linear mvt node creation"
 #define DIALOG_LINMVT_EDITION_TITLE         "Linear mvt node edition"
 #define DIALOG_LINMVT_PROPS_TITLE           "Linear mvt node properties"
@@ -456,6 +462,7 @@ public:
     std::map<void*, SceneNodeEntry<DrawSpace::Core::Transformation>>                        m_transformation_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Spacebox>>                                    m_spacebox_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Chunk>>                                       m_chunk_nodes;
+    std::map<void*, SceneNodeEntry<DrawSpace::Clouds>>                                      m_clouds_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::InertBody>>                         m_inertbody_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::Collider>>                          m_collider_nodes;
     std::map<void*, SceneNodeEntry<DrawSpace::Dynamics::CameraPoint>>                       m_camera_nodes;
@@ -467,6 +474,10 @@ public:
 
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_chunk_descriptors;
+
+    // ChunkDescriptor structure also fit for clouds
+    std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_clouds_descriptors;
+
     std::map<void*, DrawSpace::Dynamics::Body::Parameters>                                  m_inertbody_descriptors;
     std::map<void*, DrawSpace::Dynamics::Body::Parameters>                                  m_collider_descriptors;
     
