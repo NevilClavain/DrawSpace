@@ -274,6 +274,7 @@ m_delta_mouse_init( true )
     PopupMenuEntry pme_newheadmvt = { CONTEXTMENU_NEWHEADMVT, "New head movement..." };
     PopupMenuEntry pme_newlonglatmvt = { CONTEXTMENU_NEWLONGLATMVT, "New longlat movement..." };
     PopupMenuEntry pme_newspectatormvt = { CONTEXTMENU_NEWSPECTATORMVT, "New spectator movement..." };
+    PopupMenuEntry pme_newclouds = { CONTEXTMENU_NEWCLOUDS, "New clouds..." };
 
 
     ///////////////////////////////////////////////////////////////////
@@ -295,6 +296,7 @@ m_delta_mouse_init( true )
 
     m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newspacebox );
     m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_newclouds );
 
     m_scenegraphs_masks[SCENEGRAPH_MASK].push_back( pme_separator );
 
@@ -324,6 +326,7 @@ m_delta_mouse_init( true )
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newspacebox );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_separator );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_neworbit );
@@ -370,6 +373,7 @@ m_delta_mouse_init( true )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_neworbit );
@@ -394,6 +398,7 @@ m_delta_mouse_init( true )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
@@ -417,6 +422,7 @@ m_delta_mouse_init( true )
 
 
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
@@ -439,6 +445,7 @@ m_delta_mouse_init( true )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_separator );
     m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[COLLIDER_MASK].push_back( pme_separator );
@@ -460,6 +467,7 @@ m_delta_mouse_init( true )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_neworbit );
@@ -484,6 +492,7 @@ m_delta_mouse_init( true )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_neworbit );
@@ -507,6 +516,7 @@ m_delta_mouse_init( true )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_neworbit );
@@ -531,6 +541,7 @@ m_delta_mouse_init( true )
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_newclouds );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_newcollider );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_neworbit );
