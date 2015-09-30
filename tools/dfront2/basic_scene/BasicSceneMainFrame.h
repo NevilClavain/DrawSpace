@@ -284,6 +284,7 @@
 
 #define DIALOG_PROPERTIES_VARS \
         wxStringProperty* string_prop; \
+        wxFileProperty* file_prop; \
         wxFloatProperty* float_prop; \
         wxIntProperty* int_prop; \
         wxBoolProperty* bool_prop; \

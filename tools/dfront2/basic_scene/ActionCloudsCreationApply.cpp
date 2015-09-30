@@ -33,5 +33,21 @@ using namespace DrawSpace::Utils;
 
 void ActionCloudsCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dialog )
 {
+    DIALOG_GETGRID
+    DIALOG_PROPERTIES_VARS
 
+    DrawSpace::Utils::ChunkDescriptor descr;
+
+    DIALOG_GET_STRING_PROPERTY( "scene name", alias2 )
+    DIALOG_WXSTRING_TO_DSSTRING( alias2, alias )
+
+    if( "" == alias )
+    {
+        wxMessageBox( "'scene name' attribute cannot be void", "DrawFront error", wxICON_ERROR );
+        return;
+    }
+
+    descr.scene_name = alias;
+
+    DIALOG_GET_FILE_PROPERTY( "procedural rules", rules_filepath )
 }

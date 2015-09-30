@@ -27,6 +27,9 @@
 #include "renderingnode.h"
 #include "vector.h"
 #include "impostorsdisplaylist.h"
+#include "procedural_blocs.h"
+#include "procedural_parser.h"
+
 
 namespace DrawSpace
 {
@@ -75,6 +78,16 @@ typedef struct
     std::map<dsstring, ChunkPassDescriptor>     passes_slots;
 
 } ChunkDescriptor;
+
+
+typedef struct
+{
+    ChunkDescriptor                             chunk_descriptor;
+    bool                                        details;
+    dsstring                                    rules_filepath;
+    DrawSpace::Procedural::RulesPackage*        rules;
+
+} CloudsDescriptor;
 
 
 /////////////////////////////////////////////////////////////////
