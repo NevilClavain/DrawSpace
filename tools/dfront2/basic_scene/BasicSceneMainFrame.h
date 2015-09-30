@@ -482,9 +482,8 @@ public:
 
     std::map<void*, DrawSpace::Utils::SpaceboxDescriptor>                                   m_spacebox_descriptors;
     std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_chunk_descriptors;
-
-    // ChunkDescriptor structure also fit for clouds
-    std::map<void*, DrawSpace::Utils::ChunkDescriptor>                                      m_clouds_descriptors;
+    
+    std::map<void*, DrawSpace::Utils::CloudsDescriptor>                                     m_clouds_descriptors;
 
     std::map<void*, DrawSpace::Dynamics::Body::Parameters>                                  m_inertbody_descriptors;
     std::map<void*, DrawSpace::Dynamics::Body::Parameters>                                  m_collider_descriptors;
