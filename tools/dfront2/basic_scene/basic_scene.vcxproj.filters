@@ -104,6 +104,8 @@
     <ClCompile Include="ActionTextureCtor.cpp" />
     <ClCompile Include="ActionUpdatePassShaderParam.cpp" />
     <ClCompile Include="ActionChunkCreationSpecific2.cpp" />
+    <ClCompile Include="ActionCloudsCreationDialog.cpp" />
+    <ClCompile Include="ActionCloudsCreationApply.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -212,5 +214,7 @@
     <ClInclude Include="ActionTextureCtor.h" />
     <ClInclude Include="ActionUpdatePassShaderParam.h" />
     <ClInclude Include="ActionChunkCreationSpecific2.h" />
+    <ClInclude Include="ActionCloudsCreationDialog.h" />
+    <ClInclude Include="ActionCloudsCreationApply.h" />
   </ItemGroup>
 </Project>

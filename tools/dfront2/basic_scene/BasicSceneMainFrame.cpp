@@ -71,6 +71,9 @@
 
 #include "ActionChunkLinkTo.h"
 
+#include "ActionCloudsCreationDialog.h"
+#include "ActionCloudsCreationApply.h"
+
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
 
@@ -608,7 +611,16 @@ m_delta_mouse_init( true )
     m_actionscripts["ChunkNode:UpdateShaderParam"] = new ActionChunkNodeUpdateShaderParam();
     m_actionscripts["ChunkNode:LinkTo"] = new ActionChunkLinkTo();
 
+    //////////////
 
+    m_actions[CONTEXTMENU_NEWCLOUDS] = new ActionCloudsCreationDialog();
+    
+    m_actiondialogs_specific0[DIALOG_CLOUDS_CREATION_TITLE] = new ActionChunkCreationSpecific0();
+    m_actiondialogs_specific1[DIALOG_CLOUDS_CREATION_TITLE] = new ActionAddShaderParam();    
+    m_actiondialogs_apply[DIALOG_CLOUDS_CREATION_TITLE] = new ActionCloudsCreationApply();
+    
+
+    //////////////
 
     m_actions[CONTEXTMENU_NEWTRANSFO] = new ActionTransformCreationDialog();
     m_actiondialogs_apply[DIALOG_TRANSFORM_CREATION_TITLE] = new ActionTransformCreationApply();

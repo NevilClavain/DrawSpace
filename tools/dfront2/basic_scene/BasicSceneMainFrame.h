@@ -206,6 +206,7 @@
 #define DIALOG_APPENDROOT_FLOAT( _label_, _value_ )     propertygrid->Append( new wxFloatProperty( _label_, wxPG_LABEL, _value_ ) );
 #define DIALOG_APPENDROOT_ENUM( _label_, _value_ )      propertygrid->Append( new wxEnumProperty( _label_, wxPG_LABEL, _value_ ) );
 #define DIALOG_APPENDROOT_BOOL( _label_, _value_ )      propertygrid->Append( new wxBoolProperty( _label_, wxPG_LABEL, _value_ ) );
+#define DIALOG_APPENDROOT_FILE( _label_, _value_ )      propertygrid->Append( new wxFileProperty( _label_, wxPG_LABEL, _value_ ) );
 
 #define DIALOG_APPENDROOT_NODE( _label_, _var_name_ )   wxPGProperty* _var_name_ = propertygrid->Append( new wxStringProperty( _label_, wxPG_LABEL, "<composed>" ) );
 
@@ -219,7 +220,7 @@
 #define DIALOG_APPENDNODE_ENUM_PRESELECTED( _parent_, _label_, _value_, _array_ids_, _index_ )        propertygrid->AppendIn( _parent_, new wxEnumProperty( _label_, wxPG_LABEL, _value_, _array_ids_, _index_ ) );
 
 #define DIALOG_APPENDNODE_BOOL( _parent_, _label_, _value_ )        propertygrid->AppendIn( _parent_, new wxBoolProperty( _label_, wxPG_LABEL, _value_ ) );
-
+#define DIALOG_APPENDNODE_FILE( _label_, _value_ )                  propertygrid->AppendIn( _parent_, new wxFileProperty( _label_, wxPG_LABEL, _value_ ) );
 
 #define DIALOG_APPENDNODE_ITERATE( _parent_, _value_, _func_, _labels_ ) \
     for( size_t i = 0; i < _labels_.size(); i++ ) \
@@ -325,6 +326,12 @@
         dsstring _dst_var_name_; \
         buffer = _src_var_name_.ToAscii(); \
         _dst_var_name_ = buffer.data(); \
+
+#define DIALOG_GET_FILE_PROPERTY( _name_, _var_name_ ) \
+        wxString _var_name_; \
+        file_prop = static_cast<wxFileProperty*>( propertygrid->GetProperty( _name_ ) ); \
+        value = file_prop->GetValue(); \
+        value.GetAs<wxString>( &_var_name_ );
 
 
 #define DIALOG_EXPLORE_NODES_BEGIN( _root_, _format_, _counter_, _curr_label_ ) \
