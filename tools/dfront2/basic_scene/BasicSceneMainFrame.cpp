@@ -1126,9 +1126,6 @@ void BasicSceneMainFrame::Update( void )
     wxWidgetAdapter::GetInstance()->AdaptAssetsList( m_assets_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptConfigsList( m_configs_listCtrl );
     wxWidgetAdapter::GetInstance()->AdaptPassesList( m_passes_listCtrl );        
-    //wxWidgetAdapter::GetInstance()->AdaptCameraListComboBox( &m_scenegraph, m_cameraslist_comboBox );
-
-    
 
     ConfigsBase::GetInstance()->GetOrderedConfigsInstancesList( m_ordered_configs );
     
@@ -1166,6 +1163,7 @@ void BasicSceneMainFrame::Update( void )
     wxBitmap bmp_mouse( "icon_mouse.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_camera_sel( "icon_camera_sel.bmp", wxBITMAP_TYPE_BMP );
     wxBitmap bmp_world( "icon_world.bmp", wxBITMAP_TYPE_BMP );
+    wxBitmap bmp_clouds( "icon_clouds.bmp", wxBITMAP_TYPE_BMP );
 
 
     
@@ -1186,6 +1184,7 @@ void BasicSceneMainFrame::Update( void )
     pImageList->Add( bmp_mouse );       // 14
     pImageList->Add( bmp_camera_sel );  // 15
     pImageList->Add( bmp_world );       // 16
+    pImageList->Add( bmp_clouds );       // 17
     
 
     m_scenegraphs_treeCtrl->AssignImageList( pImageList );

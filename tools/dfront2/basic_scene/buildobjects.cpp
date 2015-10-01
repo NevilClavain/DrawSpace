@@ -208,6 +208,102 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
     return chunk;
 }
 
+DrawSpace::Clouds* BuildClouds( DrawSpace::Utils::CloudsDescriptor& p_descriptor, dsstring& p_error )
+{
+    Clouds* clouds = new Clouds();
+
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+    std::map<dsstring, DrawSpace::Utils::ChunkPassDescriptor> passes = p_descriptor.chunk_descriptor.passes_slots;
+    if( 0 == passes.size() )
+    {
+        p_error = "BuildClouds: at least one pass required";
+        return NULL;
+    }
+
+    Meshe* meshe = new Meshe;
+    clouds->SetMeshe( meshe );
+
+    p_descriptor.rules = new DrawSpace::Procedural::RulesPackage( clouds->GetProceduralCallback() );
+    bool parse = p_descriptor.rules->Run( p_descriptor.rules_filepath, " " );
+
+    if( !parse )
+    {
+        p_error = "BuildClouds: unable to parse procedural rules file";
+        return NULL;
+    }
+
+    p_descriptor.rules->GetRootParser()->GetRules()->Apply();
+
+    /////////////////////////////////////////////////
+    
+
+    clouds->ImpostorsInit();
+
+
+
+    for( std::map<dsstring, DrawSpace::Utils::ChunkPassDescriptor>::iterator it = passes.begin(); it != passes.end(); ++it )
+    {
+        Pass* current_pass = dynamic_cast<Pass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
+        if( !current_pass )
+        {
+            p_error = "BuildClouds : unknown Pass config name (" + dsstring( it->first.c_str() ) + dsstring( ")" );
+            return NULL;
+        }
+
+        clouds->RegisterPassSlot( current_pass );
+
+        if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( it->second.fx_name ) )
+        {
+            p_error = "BuildClouds : unknown Fx config name (" + it->second.fx_name + dsstring( ")" );
+            return NULL;
+        }
+
+        Fx* fx = dynamic_cast<Fx*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->second.fx_name ) );
+
+        if( NULL == fx )
+        {
+            p_error = "BuildClouds : specified config is not an Fx (" + it->second.fx_name + dsstring( ")" );
+            return NULL;
+        }
+
+        for( long j = 0; j < RenderingNode::NbMaxTextures; j++ )
+        {
+            if( it->second.textures[j] != "" )
+            {
+                if( false == AssetsBase::GetInstance()->AssetIdExists( it->second.textures[j] ) )
+                {
+                    p_error = "BuildClouds : unknown texture asset name (" + it->second.textures[j] + dsstring( ")" );
+                    return NULL;
+                }
+
+                Texture* texture = dynamic_cast<Texture*>( AssetsBase::GetInstance()->GetAsset( it->second.textures[j] ) );
+                if( NULL == texture )
+                {
+                    p_error = "BuildClouds : specified asset is not a Texture (" + it->second.textures[j] + dsstring( ")" );
+                    return NULL;
+                }
+                                   
+                clouds->GetNodeFromPass( current_pass )->SetTexture( texture, j );
+
+            }
+        }
+
+        clouds->GetNodeFromPass( current_pass )->SetFx( fx );
+        clouds->GetNodeFromPass( current_pass )->SetOrderNumber( it->second.rendering_order );
+
+        for( size_t j = 0; j < it->second.shader_params.size(); j++ )
+        {
+            clouds->GetNodeFromPass( current_pass )->AddShaderParameter( it->second.shader_params[j].shader_index, it->second.shader_params[j].id, it->second.shader_params[j].shader_register );
+            clouds->GetNodeFromPass( current_pass )->SetShaderRealVector( it->second.shader_params[j].id, it->second.shader_params[j].value );
+        }
+    }
+
+    p_error = "";
+    return clouds;
+
+}
+
 InertBody* BuildInertBody( const Body::Parameters& p_params, World* p_world )
 {
     InertBody* body = new InertBody( p_world, p_params );
