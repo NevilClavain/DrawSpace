@@ -26,7 +26,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
 BasicSceneObjectPropertiesDialog::BasicSceneObjectPropertiesDialog( wxWindow* parent, const wxString& title, wxTreeItemId p_treeitem ) 
-: ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 760, 318 ) ),
+: ObjectPropertiesDialog( parent, wxID_ANY, title, wxDefaultPosition, wxSize( 760, 500 ) ),
 m_applybutton_handler( NULL ),
 m_specificbutton0_handler( NULL ),
 m_specificbutton1_handler( NULL ),

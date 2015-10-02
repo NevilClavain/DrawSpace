@@ -210,6 +210,9 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
 
 DrawSpace::Clouds* BuildClouds( DrawSpace::Utils::CloudsDescriptor& p_descriptor, dsstring& p_error )
 {
+    // temporaire !
+    Procedural::SeedsBase::GetInstance()->Initialize( 170313 );
+
     Clouds* clouds = new Clouds();
 
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -285,7 +288,6 @@ DrawSpace::Clouds* BuildClouds( DrawSpace::Utils::CloudsDescriptor& p_descriptor
                 }
                                    
                 clouds->GetNodeFromPass( current_pass )->SetTexture( texture, j );
-
             }
         }
 
@@ -301,7 +303,6 @@ DrawSpace::Clouds* BuildClouds( DrawSpace::Utils::CloudsDescriptor& p_descriptor
 
     p_error = "";
     return clouds;
-
 }
 
 InertBody* BuildInertBody( const Body::Parameters& p_params, World* p_world )
