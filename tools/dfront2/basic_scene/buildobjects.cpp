@@ -227,6 +227,8 @@ DrawSpace::Clouds* BuildClouds( DrawSpace::Utils::CloudsDescriptor& p_descriptor
     Meshe* meshe = new Meshe;
     clouds->SetMeshe( meshe );
 
+    clouds->EnableDetails( p_descriptor.details );
+
     p_descriptor.rules = new DrawSpace::Procedural::RulesPackage( clouds->GetProceduralCallback() );
     bool parse = p_descriptor.rules->Run( p_descriptor.rules_filepath, " " );
 
