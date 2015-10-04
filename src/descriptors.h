@@ -85,6 +85,7 @@ typedef struct
     ChunkDescriptor                             chunk_descriptor;
     bool                                        details;
     dsstring                                    rules_filepath;
+    dsreal                                      sorting_distance;
     DrawSpace::Procedural::RulesPackage*        rules;
 
 } CloudsDescriptor;

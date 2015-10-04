@@ -62,6 +62,9 @@ void ActionCloudsCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dia
     DIALOG_GET_BOOL_PROPERTY( "details", details)
     descr.details = details;
 
+    DIALOG_GET_FLOAT_PROPERTY( "sorting distance", sorting_distance )
+    descr.sorting_distance = sorting_distance;
+
     {
         DIALOG_EXPLORE_NODES_BEGIN( "", "pass %d", i, pass_slot )
 

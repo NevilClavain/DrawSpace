@@ -20,23 +20,52 @@
 *
 */
 
-#include <wx/wx.h>
-#include "BasicSceneMainFrame.h"
+#ifndef _LUA_CLOUDSNODE_H_
+#define _LUA_CLOUDSNODE_H_
 
-#include "ActionCloudsCreationDialog.h"
+#include "drawspace_commons.h"
+#include "callback.h"
+#include "mediator.h"
+#include "clouds.h"
+#include "descriptors.h"
 
-void ActionCloudsCreationDialog::Execute( void )
+#include "luna.h"
+
+class LuaCloudsNode
 {
-    DIALOG_ACTION_DECLARE( DIALOG_CLOUDS_CREATION_TITLE )
+public:
 
-    DIALOG_APPENDROOT_STRING( "scene name", "" )
-    DIALOG_APPENDROOT_BOOL( "details", true )
-    DIALOG_APPENDROOT_FILE( "procedural rules", "" )
-    DIALOG_APPENDROOT_FLOAT( "sorting distance", 4000.0 )
+    DrawSpace::Core::BaseCallback<void, DrawSpace::Core::PropertyPool&>*    m_scriptcalls_handler;
 
-    DIALOG_APPLY
-    DIALOG_SPECIFIC0( "New pass slot" )
-    DIALOG_SPECIFIC1( "New shaders param slot" )
+protected:
 
-    DIALOG_SHOW
-}
+    DrawSpace::Utils::CloudsDescriptor                          m_descriptor;    
+    DrawSpace::Core::SceneNode<DrawSpace::Clouds>               m_clouds_node;
+    
+
+public:
+    LuaCloudsNode( lua_State* p_L );
+    ~LuaCloudsNode( void );
+    
+    int Lua_EnableDetails( lua_State* p_L );
+    int Lua_SetSortingDistance( lua_State* p_L );
+    int Lua_SetProceduralFilePath( lua_State* p_L );
+
+
+    int Lua_RegisterPassSlot( lua_State* p_L );
+    int Lua_SetPassSlotFxName( lua_State* p_L );
+    int Lua_SetPassSlotRenderingOrder( lua_State* p_L );
+    int Lua_SetPassSlotTextureName( lua_State* p_L );
+    int Lua_AddPassSlotShaderParam( lua_State* p_L );
+    int Lua_UpdateShaderParam( lua_State* p_L );
+    int Lua_LinkTo( lua_State* p_L );
+
+    int Lua_UpdatePassSlotTexture( lua_State* p_L );
+    
+
+    
+    static const char className[];
+    static const Luna2<LuaCloudsNode>::RegType methods[];
+};
+
+#endif

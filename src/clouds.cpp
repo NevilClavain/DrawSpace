@@ -442,3 +442,8 @@ void Clouds::EnableDetails( bool p_details )
 {
     m_details = p_details;
 }
+
+void Clouds::SetSortingDistance( dsreal p_distance )
+{
+    m_sorting_distance = p_distance;
+}
