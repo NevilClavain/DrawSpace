@@ -111,6 +111,7 @@
     <ClCompile Include="ActionCircularMvtLinkTo.cpp" />
     <ClCompile Include="ActionCloudsCreationApply.cpp" />
     <ClCompile Include="ActionCloudsCreationDialog.cpp" />
+    <ClCompile Include="ActionCloudsLinkTo.cpp" />
     <ClCompile Include="ActionColliderCollider.cpp" />
     <ClCompile Include="ActionColliderCreationApply.cpp" />
     <ClCompile Include="ActionColliderCreationDialog.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="ActionCircularMvtLinkTo.h" />
     <ClInclude Include="ActionCloudsCreationApply.h" />
     <ClInclude Include="ActionCloudsCreationDialog.h" />
+    <ClInclude Include="ActionCloudsLinkTo.h" />
     <ClInclude Include="ActionColliderCollider.h" />
     <ClInclude Include="ActionColliderCreationApply.h" />
     <ClInclude Include="ActionColliderCreationDialog.h" />
