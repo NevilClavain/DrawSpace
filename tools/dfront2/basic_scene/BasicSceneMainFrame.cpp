@@ -244,6 +244,7 @@ m_delta_mouse_init( true )
     PopupMenuEntry pme_editworld = { CONTEXTMENU_EDIT_WORLD, "Edit world..." };
     PopupMenuEntry pme_editsb = { CONTEXTMENU_EDIT_SBNODE, "Edit spacebox..." };
     PopupMenuEntry pme_editchunk = { CONTEXTMENU_EDIT_CHUNKNODE, "Edit chunk..." };
+    PopupMenuEntry pme_editclouds = { CONTEXTMENU_EDIT_CLOUDS, "Edit clouds..." };
     PopupMenuEntry pme_editinertbody = { CONTEXTMENU_EDIT_INERTBODY, "Edit inert body..." };
 
     
@@ -357,14 +358,14 @@ m_delta_mouse_init( true )
 
     m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_edittransformnode );
 
-    //m_scenegraphs_masks[TRANSFO_MASK].push_back( pme_editnodescript );
+    
 
     ///////////////////////////////////////////////////////////////////
 
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_separator );
     m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editsb );
-    //m_scenegraphs_masks[SPACEBOX_MASK].push_back( pme_editnodescript );
+    
 
     ///////////////////////////////////////////////////////////////////
 
@@ -372,7 +373,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_selectcamera );
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editcamera );    
-    //m_scenegraphs_masks[CAMERA_MASK].push_back( pme_editnodescript );
+    
 
 
     ///////////////////////////////////////////////////////////////////
@@ -397,7 +398,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_separator );
-    //m_scenegraphs_masks[FPSMOVEMENT_MASK].push_back( pme_editnodescript );
+    
 
 
     ///////////////////////////////////////////////////////////////////
@@ -421,7 +422,31 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editchunk );
-    //m_scenegraphs_masks[CHUNK_MASK].push_back( pme_editnodescript );
+    
+
+    ///////////////////////////////////////////////////////////////////
+
+
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newchunk );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newclouds );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newcollider );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newtransfo );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newlinearmvt );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newcircularmvt );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newfreemvt );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newfpsmvt );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newspectatormvt );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newheadmvt );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newlonglatmvt );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_newcamera );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_showprops );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_separator );
+    m_scenegraphs_masks[CLOUDS_MASK].push_back( pme_editclouds );
+    
 
     ///////////////////////////////////////////////////////////////////
 
@@ -445,7 +470,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_separator );
     m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_editinertbody );
-    //m_scenegraphs_masks[INERTBODY_MASK].push_back( pme_editnodescript );
+    
 
     ///////////////////////////////////////////////////////////////////
 
@@ -492,7 +517,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editmvt );
-    //m_scenegraphs_masks[LINMOVEMENT_MASK].push_back( pme_editnodescript );
+    
     
     ///////////////////////////////////////////////////////////////////
 
@@ -516,7 +541,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_separator );    
-    //m_scenegraphs_masks[FREEMOVEMENT_MASK].push_back( pme_editnodescript );
+    
 
     ///////////////////////////////////////////////////////////////////
 
@@ -541,7 +566,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_editmvt );
-    //m_scenegraphs_masks[CIRCMOVEMENT_MASK].push_back( pme_editnodescript );
+    
 
     ///////////////////////////////////////////////////////////////////
 
@@ -566,7 +591,7 @@ m_delta_mouse_init( true )
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_showprops );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_separator );
     m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editmvt );
-    //m_scenegraphs_masks[LONGLATMOVEMENT_MASK].push_back( pme_editnodescript );
+    
 
     ///////////////////////////////////////////////////////////////////
 

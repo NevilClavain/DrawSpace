@@ -68,6 +68,11 @@ void Chunk::SetImpostorsDisplayList( const DrawSpace::ImpostorsDisplayList& p_id
     m_idl = p_idl;
 }
 
+void Chunk::GetImpostorsDisplayList( DrawSpace::ImpostorsDisplayList& p_idl )
+{
+    p_idl = m_idl;
+}
+
 void Chunk::ImpostorsInit( /*const ImpostorsDisplayList& m_idl*/ void )
 {
     m_meshe->ClearTriangles();

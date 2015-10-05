@@ -226,6 +226,74 @@ void ActionPropsDialog::Execute( void )
 
         DIALOG_SHOW
     }
+
+    else if( BasicSceneMainFrame::GetInstance()->m_clouds_descriptors.count( id ) > 0 )
+    {
+        DrawSpace::Utils::CloudsDescriptor clouds_descr = BasicSceneMainFrame::GetInstance()->m_clouds_descriptors[id];
+        BasicSceneMainFrame::SceneNodeEntry<DrawSpace::Clouds> clouds_node = BasicSceneMainFrame::GetInstance()->m_clouds_nodes[id];
+
+        DIALOG_ACTION_DECLARE( DIALOG_CLOUDS_PROPS_TITLE )
+
+        DIALOG_APPENDROOT_STRING( "scene name", clouds_descr.chunk_descriptor.scene_name )
+
+        DrawSpace::ImpostorsDisplayList idl;
+        clouds_node.scene_node->GetContent()->GetImpostorsDisplayList( idl );
+        DIALOG_APPENDROOT_INTEGER( "impostors", idl.size() )       
+
+        DIALOG_APPENDROOT_BOOL( "details", clouds_descr.details )
+        DIALOG_APPENDROOT_STRING( "procedural rules", clouds_descr.rules_filepath )
+        DIALOG_APPENDROOT_FLOAT( "sorting distance", clouds_descr.sorting_distance )
+
+        for( std::map<dsstring, ChunkPassDescriptor>::iterator it = clouds_descr.chunk_descriptor.passes_slots.begin(); it != clouds_descr.chunk_descriptor.passes_slots.end(); ++it )
+        {
+            ChunkPassDescriptor pass_descr = it->second; 
+            IntermediatePass* ipass = static_cast<IntermediatePass*>( ConfigsBase::GetInstance()->GetConfigurableInstance( it->first ) );
+            DrawSpace::Core::RenderingNode* rendering_node = clouds_node.scene_node->GetContent()->GetNodeFromPass( ipass );
+
+            std::map<dsstring, RenderingNode::ShadersParams*> shaders_params_list;
+            rendering_node->GetShadersParams( shaders_params_list );
+
+
+            DIALOG_APPENDROOT_NODE( it->first, pass_root )
+
+            DIALOG_APPENDNODE_STRING( pass_root, "fx name", pass_descr.fx_name )
+            DIALOG_APPENDNODE_INTEGER( pass_root, "rendering order", pass_descr.rendering_order )
+
+            DIALOG_BUILD_LABELS( RenderingNode::NbMaxTextures, "stage %d", texture_stages )
+
+            DIALOG_APPENDNODE_NODE( pass_root, "textures", textures_root )
+
+            for( size_t i = 0; i < texture_stages.size(); i++ )
+            {
+                if( pass_descr.textures[i] != "" )
+                {
+                    DIALOG_APPENDNODE_STRING( textures_root, texture_stages[i], pass_descr.textures[i] )
+                }
+            }
+
+            for( size_t i = 0; i < pass_descr.shader_params.size(); i++ )
+            {
+                DIALOG_APPENDNODE_NODE( pass_root, pass_descr.shader_params[i].id, shader_param_root )
+
+                DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader index", pass_descr.shader_params[i].shader_index )
+                DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader register", pass_descr.shader_params[i].shader_register )
+
+                DIALOG_APPENDNODE_NODE( shader_param_root, "values", shader_param_values_root )
+
+                Vector params_value = shaders_params_list[pass_descr.shader_params[i].id]->param_values;
+
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", params_value[0] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", params_value[1] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", params_value[2] )
+                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", params_value[3] )
+
+            }
+        }
+
+        DIALOG_SHOW
+    }
+
+
     else if( BasicSceneMainFrame::GetInstance()->m_camera_nodes.count( id ) > 0 )
     {
         CameraPoint* camera = BasicSceneMainFrame::GetInstance()->m_camera_nodes[id].scene_node->GetContent();
