@@ -74,6 +74,8 @@
 #include "ActionCloudsCreationDialog.h"
 #include "ActionCloudsCreationApply.h"
 
+#include "ActionCloudsLinkTo.h"
+
 #include "ActionTransformCreationDialog.h"
 #include "ActionTransformCreationApply.h"
 
@@ -619,6 +621,8 @@ m_delta_mouse_init( true )
     m_actiondialogs_specific1[DIALOG_CLOUDS_CREATION_TITLE] = new ActionAddShaderParam();    
     m_actiondialogs_apply[DIALOG_CLOUDS_CREATION_TITLE] = new ActionCloudsCreationApply();
     
+
+    m_actionscripts["CloudsNode:LinkTo"] = new ActionCloudsLinkTo();
 
     //////////////
 

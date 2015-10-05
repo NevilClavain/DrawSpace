@@ -142,5 +142,20 @@ clouds_tf:AddMatrix( mat1 )
 
 
 
+clouds = CloudsNode( "clouds_0" )
+clouds:RegisterPassSlot( "texture_pass" )
+clouds:SetPassSlotFxName( "texture_pass", "spaceimpostor_fx" )
+clouds:SetPassSlotTextureName( "texture_pass", "clouds", 0 )
+clouds:AddPassSlotShaderParam( "texture_pass", "flagv", 0, 24, Vector( 0.5, 0.0, 0.0, 0.0 ) )
+clouds:AddPassSlotShaderParam( "texture_pass", "clouds_dims", 0, 25, Vector( 400, -200.0, 1.0, 0.76 ) )
+clouds:AddPassSlotShaderParam( "texture_pass", "flagp", 1, 0, Vector( 0.5, 0.0, 0.0, 0.0 ) )
+clouds:AddPassSlotShaderParam( "texture_pass", "clouds_color", 1, 1, Vector( 0.99, 0.99, 0.99, 0.99 ) )
+
+clouds:EnableDetails( 1 )
+clouds:SetSortingDistance( 4000.0 )
+clouds:SetProceduralFilePath( "clouds.rules" )
+
+clouds:LinkTo( "scene0", "clouds_tf" )
+
 scene_ready = true
 

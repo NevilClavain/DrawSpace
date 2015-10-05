@@ -30,9 +30,12 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-const char LuaCloudsNode::className[] = "Clouds";
+const char LuaCloudsNode::className[] = "CloudsNode";
 const Luna2<LuaCloudsNode>::RegType LuaCloudsNode::methods[] =
 {  
+  { "EnableDetails", &LuaCloudsNode::Lua_EnableDetails },
+  { "SetSortingDistance", &LuaCloudsNode::Lua_SetSortingDistance },
+  { "SetProceduralFilePath", &LuaCloudsNode::Lua_SetProceduralFilePath },
   { "RegisterPassSlot", &LuaCloudsNode::Lua_RegisterPassSlot },
   { "SetPassSlotFxName", &LuaCloudsNode::Lua_SetPassSlotFxName },
   { "SetPassSlotRenderingOrder", &LuaCloudsNode::Lua_SetPassSlotRenderingOrder },
@@ -56,6 +59,10 @@ m_clouds_node( "clouds_node" )
     const char* scene_name = luaL_checkstring( p_L, 1 );
     m_clouds_node.SetSceneName( scene_name );
     m_descriptor.chunk_descriptor.scene_name = scene_name;
+
+    // set some default values...
+    m_descriptor.details = true;
+    m_descriptor.sorting_distance = 4000.0;
 
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();    
 }
@@ -120,7 +127,7 @@ int LuaCloudsNode::Lua_LinkTo( lua_State* p_L )
     if( m_scriptcalls_handler )
     {
         PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "Clouds:LinkTo" );
+        props.AddPropValue<dsstring>( "script_call_id", "CloudsNode:LinkTo" );
         props.AddPropValue<dsstring>( "scenegraph_name", scenegraph_name );        
         props.AddPropValue<dsstring>( "parent_name", parent_name );
         props.AddPropValue<dsstring>( "scene_name", scene_name );
