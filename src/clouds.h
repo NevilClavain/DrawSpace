@@ -114,6 +114,7 @@ public:
 
     int GetRunnerState( void );
     void SetSortingDistance( dsreal p_distance );
+    dsreal GetSortingDistance( void );
     void EnableDetails( bool p_details );
 
     void ImpostorsInit( void );

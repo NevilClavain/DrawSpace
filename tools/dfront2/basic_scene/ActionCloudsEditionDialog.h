@@ -20,22 +20,14 @@
 *
 */
 
-#include <wx/wx.h>
-#include "BasicSceneMainFrame.h"
+#ifndef _ACTIONCLOUDSEDITIONDIALOG_H_
+#define _ACTIONCLOUDSEDITIONDIALOG_H_
+#include "action.h"
 
-#include "ActionCloudsCreationDialog.h"
-
-void ActionCloudsCreationDialog::Execute( void )
+class ActionCloudsEditionDialog : public Action
 {
-    DIALOG_ACTION_DECLARE( DIALOG_CLOUDS_CREATION_TITLE )
+public:
+    void Execute( void );
+};
 
-    DIALOG_APPENDROOT_STRING( "scene name", "" )
-    DIALOG_APPENDROOT_BOOL( "details", true )
-    DIALOG_APPENDROOT_FILE( "procedural rules", "" )
-    
-    DIALOG_APPLY
-    DIALOG_SPECIFIC0( "New pass slot" )
-    DIALOG_SPECIFIC1( "New shaders param slot" )
-
-    DIALOG_SHOW
-}
+#endif

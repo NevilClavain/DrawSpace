@@ -447,3 +447,8 @@ void Clouds::SetSortingDistance( dsreal p_distance )
 {
     m_sorting_distance = p_distance;
 }
+
+dsreal Clouds::GetSortingDistance( void )
+{
+    return m_sorting_distance;
+}

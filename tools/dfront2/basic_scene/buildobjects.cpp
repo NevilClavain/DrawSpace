@@ -228,8 +228,7 @@ DrawSpace::Clouds* BuildClouds( DrawSpace::Utils::CloudsDescriptor& p_descriptor
     clouds->SetMeshe( meshe );
 
     clouds->EnableDetails( p_descriptor.details );
-    clouds->SetSortingDistance( p_descriptor.sorting_distance );
-
+    
     p_descriptor.rules = new DrawSpace::Procedural::RulesPackage( clouds->GetProceduralCallback() );
     bool parse = p_descriptor.rules->Run( p_descriptor.rules_filepath, " " );
 

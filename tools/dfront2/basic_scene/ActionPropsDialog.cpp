@@ -242,7 +242,7 @@ void ActionPropsDialog::Execute( void )
 
         DIALOG_APPENDROOT_BOOL( "details", clouds_descr.details )
         DIALOG_APPENDROOT_STRING( "procedural rules", clouds_descr.rules_filepath )
-        DIALOG_APPENDROOT_FLOAT( "sorting distance", clouds_descr.sorting_distance )
+        DIALOG_APPENDROOT_FLOAT( "sorting distance", clouds_node.scene_node->GetContent()->GetSortingDistance() )
 
         for( std::map<dsstring, ChunkPassDescriptor>::iterator it = clouds_descr.chunk_descriptor.passes_slots.begin(); it != clouds_descr.chunk_descriptor.passes_slots.end(); ++it )
         {

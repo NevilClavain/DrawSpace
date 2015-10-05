@@ -107,6 +107,8 @@
     <ClCompile Include="ActionCloudsCreationDialog.cpp" />
     <ClCompile Include="ActionCloudsCreationApply.cpp" />
     <ClCompile Include="ActionCloudsLinkTo.cpp" />
+    <ClCompile Include="ActionCloudsEditionDialog.cpp" />
+    <ClCompile Include="ActionCloudsEditionApply.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters.h" />
@@ -218,5 +220,7 @@
     <ClInclude Include="ActionCloudsCreationDialog.h" />
     <ClInclude Include="ActionCloudsCreationApply.h" />
     <ClInclude Include="ActionCloudsLinkTo.h" />
+    <ClInclude Include="ActionCloudsEditionDialog.h" />
+    <ClInclude Include="ActionCloudsEditionApply.h" />
   </ItemGroup>
 </Project>

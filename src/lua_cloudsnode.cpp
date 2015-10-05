@@ -62,7 +62,6 @@ m_clouds_node( "clouds_node" )
 
     // set some default values...
     m_descriptor.details = true;
-    m_descriptor.sorting_distance = 4000.0;
 
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();    
 }
@@ -91,8 +90,8 @@ int LuaCloudsNode::Lua_SetSortingDistance( lua_State* p_L )
 		lua_pushstring( p_L, "SetSortingDistance : bad number of args" );
 		lua_error( p_L );		
 	}
-    m_descriptor.sorting_distance = luaL_checknumber( p_L, 1 );
 
+    m_clouds_node.GetContent()->SetSortingDistance( luaL_checknumber( p_L, 1 ) );
     return 0;
 }
 
