@@ -168,7 +168,15 @@ void ActionPropsDialog::Execute( void )
         DIALOG_ACTION_DECLARE( DIALOG_CHUNK_PROPS_TITLE )
 
         DIALOG_APPENDROOT_STRING( "scene name", chunk_descr.scene_name )
-        DIALOG_APPENDROOT_STRING( "meshe", chunk_descr.meshe )
+
+        if( chunk_descr.impostors.size() > 0 )
+        {
+            DIALOG_APPENDROOT_INTEGER( "impostors", chunk_descr.impostors.size() )
+        }
+        else
+        {
+            DIALOG_APPENDROOT_STRING( "meshe", chunk_descr.meshe )
+        }
 
         for( std::map<dsstring, ChunkPassDescriptor>::iterator it = chunk_descr.passes_slots.begin(); it != chunk_descr.passes_slots.end(); ++it )
         {
@@ -205,13 +213,6 @@ void ActionPropsDialog::Execute( void )
                 DIALOG_APPENDNODE_INTEGER( shader_param_root, "shader register", pass_descr.shader_params[i].shader_register )
 
                 DIALOG_APPENDNODE_NODE( shader_param_root, "values", shader_param_values_root )
-
-                /*
-                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "x", pass_descr.shader_params[i].value[0] )
-                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "y", pass_descr.shader_params[i].value[1] )
-                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "z", pass_descr.shader_params[i].value[2] )
-                DIALOG_APPENDNODE_FLOAT( shader_param_values_root, "w", pass_descr.shader_params[i].value[3] )
-                */
 
                 Vector params_value = shaders_params_list[pass_descr.shader_params[i].id]->param_values;
 
