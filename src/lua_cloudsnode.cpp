@@ -272,7 +272,7 @@ int LuaCloudsNode::Lua_UpdateShaderParam( lua_State* p_L )
     if( m_scriptcalls_handler )
     {
         PropertyPool props;
-        props.AddPropValue<dsstring>( "script_call_id", "Clouds:UpdateShaderParam" );
+        props.AddPropValue<dsstring>( "script_call_id", "CloudsNode:UpdateShaderParam" );
 
         props.AddPropValue<dsstring>( "scene_name", m_descriptor.chunk_descriptor.scene_name );
         props.AddPropValue<dsstring>( "pass_name", pass_name );

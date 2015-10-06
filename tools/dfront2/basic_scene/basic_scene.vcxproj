@@ -114,6 +114,7 @@
     <ClCompile Include="ActionCloudsEditionApply.cpp" />
     <ClCompile Include="ActionCloudsEditionDialog.cpp" />
     <ClCompile Include="ActionCloudsLinkTo.cpp" />
+    <ClCompile Include="ActionCloudsnodeUpdateShaderParam.cpp" />
     <ClCompile Include="ActionColliderCollider.cpp" />
     <ClCompile Include="ActionColliderCreationApply.cpp" />
     <ClCompile Include="ActionColliderCreationDialog.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="ActionCloudsEditionApply.h" />
     <ClInclude Include="ActionCloudsEditionDialog.h" />
     <ClInclude Include="ActionCloudsLinkTo.h" />
+    <ClInclude Include="ActionCloudsnodeUpdateShaderParam.h" />
     <ClInclude Include="ActionColliderCollider.h" />
     <ClInclude Include="ActionColliderCreationApply.h" />
     <ClInclude Include="ActionColliderCreationDialog.h" />

@@ -77,6 +77,8 @@
 #include "ActionCloudsEditionDialog.h"
 #include "ActionCloudsEditionApply.h"
 
+#include "ActionCloudsNodeUpdateShaderParam.h"
+
 #include "ActionCloudsLinkTo.h"
 
 #include "ActionTransformCreationDialog.h"
@@ -652,7 +654,7 @@ m_delta_mouse_init( true )
     m_actions[CONTEXTMENU_EDIT_CLOUDS] = new ActionCloudsEditionDialog();
     m_actiondialogs_apply[DIALOG_CLOUDS_EDITION_TITLE] = new ActionCloudsEditionApply();
 
-
+    m_actionscripts["CloudsNode:UpdateShaderParam"] = new ActionCloudsNodeUpdateShaderParam();
     m_actionscripts["CloudsNode:LinkTo"] = new ActionCloudsLinkTo();
 
     //////////////
