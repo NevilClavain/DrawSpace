@@ -84,7 +84,8 @@ typedef struct
 {
     ChunkDescriptor                             chunk_descriptor;
     bool                                        details;
-    dsstring                                    rules_filepath;    
+    dsstring                                    rules_filepath;
+    unsigned int                                seed;
     DrawSpace::Procedural::RulesPackage*        rules;
 
 } CloudsDescriptor;

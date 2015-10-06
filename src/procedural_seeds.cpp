@@ -26,8 +26,6 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Procedural;
 
-DrawSpace::Procedural::SeedsBase* DrawSpace::Procedural::SeedsBase::m_instance = NULL;
-
 SeedsBase::SeedsBase( void )
 {
     memset( m_base, 0, BaseSize * sizeof( int ) );
@@ -35,15 +33,6 @@ SeedsBase::SeedsBase( void )
 
 SeedsBase::~SeedsBase( void )
 {
-}
-
-SeedsBase* SeedsBase::GetInstance( void )
-{
-    if( !m_instance )
-    {
-        m_instance = new SeedsBase;
-    }
-    return m_instance;
 }
 
 void SeedsBase::Initialize( unsigned int p_globalseed )

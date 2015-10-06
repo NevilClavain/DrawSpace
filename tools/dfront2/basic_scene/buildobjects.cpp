@@ -210,8 +210,6 @@ DrawSpace::Chunk* BuildChunk( const DrawSpace::Utils::ChunkDescriptor& p_descrip
 
 DrawSpace::Clouds* BuildClouds( DrawSpace::Utils::CloudsDescriptor& p_descriptor, dsstring& p_error )
 {
-    // temporaire !
-    Procedural::SeedsBase::GetInstance()->Initialize( 170313 );
 
     Clouds* clouds = new Clouds();
 
@@ -230,6 +228,7 @@ DrawSpace::Clouds* BuildClouds( DrawSpace::Utils::CloudsDescriptor& p_descriptor
     clouds->EnableDetails( p_descriptor.details );
     
     p_descriptor.rules = new DrawSpace::Procedural::RulesPackage( clouds->GetProceduralCallback() );
+    p_descriptor.rules->InitializeSeedBase( p_descriptor.seed );
     bool parse = p_descriptor.rules->Run( p_descriptor.rules_filepath, " " );
 
     if( !parse )

@@ -32,6 +32,7 @@ void ActionCloudsCreationDialog::Execute( void )
     DIALOG_APPENDROOT_STRING( "scene name", "" )
     DIALOG_APPENDROOT_BOOL( "details", true )
     DIALOG_APPENDROOT_FILE( "procedural rules", "" )
+    DIALOG_APPENDROOT_INTEGER( "seed", 100 )
     
     DIALOG_APPLY
     DIALOG_SPECIFIC0( "New pass slot" )

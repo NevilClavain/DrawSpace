@@ -24,6 +24,7 @@
 #define _PROCEDURAL_PARSER_H_
 
 #include "procedural_blocs.h"
+#include "procedural_seeds.h"
 
 namespace DrawSpace
 {
@@ -126,7 +127,14 @@ typedef Procedural::RandomDistribution<int, std::uniform_real_distribution<dsrea
 
 class RandomDistributionParser : public OpcodeParser
 {
+protected:
+
+    DrawSpace::Procedural::SeedsBase* m_seedsbase;
+
 public:
+
+    RandomDistributionParser( DrawSpace::Procedural::SeedsBase* p_seedsbase );
+    virtual ~RandomDistributionParser( void );
 
     virtual bool Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack );
     virtual void SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcount );
@@ -167,6 +175,7 @@ protected:
     RootParser*                                     m_root;
     std::map<dsstring, OpcodeParser*>               m_opcodes;    
     Stack                                           m_stack;
+    DrawSpace::Procedural::SeedsBase                m_seedsbase;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
@@ -176,6 +185,7 @@ public:
     virtual ~RulesPackage( void );
 
     RootParser* GetRootParser( void );
+    void InitializeSeedBase( unsigned int p_seed );
 
 };
 

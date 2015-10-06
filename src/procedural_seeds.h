@@ -35,15 +35,11 @@ class SeedsBase
 protected:
     static const unsigned int BaseSize = 10000;
 
-    static SeedsBase*   m_instance;    
     unsigned int        m_base[BaseSize];
-
-    SeedsBase( void );
-
 public:
 
+    SeedsBase( void );
     ~SeedsBase( void );
-    static SeedsBase* GetInstance( void );
 
     void Initialize( unsigned int p_globalseed );
     int GetSeed( unsigned int p_index );

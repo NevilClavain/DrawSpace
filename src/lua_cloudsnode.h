@@ -48,6 +48,7 @@ public:
     ~LuaCloudsNode( void );
     
     int Lua_EnableDetails( lua_State* p_L );
+    int Lua_SetSeed( lua_State* p_L );
     int Lua_SetSortingDistance( lua_State* p_L );
     int Lua_SetProceduralFilePath( lua_State* p_L );
 

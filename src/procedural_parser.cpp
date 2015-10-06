@@ -193,6 +193,14 @@ void ArrayParser::SubmitAtomic( Atomic* p_parent, Atomic* p_child, int p_argcoun
     array->AddValue( p_child );
 }
 
+RandomDistributionParser::RandomDistributionParser( DrawSpace::Procedural::SeedsBase* p_seedsbase ) :
+m_seedsbase( p_seedsbase )
+{
+}
+
+RandomDistributionParser::~RandomDistributionParser( void )
+{
+}
 
 bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_words, Stack& p_stack )
 {
@@ -207,7 +215,7 @@ bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_
     {
         if( "integer" == p_words[2] )
         {
-            int sub_seed = SeedsBase::GetInstance()->GetSeed( StringToInt( p_words[5] ) );
+            int sub_seed = m_seedsbase->GetSeed( StringToInt( p_words[5] ) ); //SeedsBase::GetInstance()->GetSeed( StringToInt( p_words[5] ) );
 
             std::uniform_int_distribution<int>* source = _DRAWSPACE_NEW_( std::uniform_int_distribution<int>, std::uniform_int_distribution<int>( StringToInt( p_words[3] ), StringToInt( p_words[4] ) ) );
             UniformIntegerRandom* random = _DRAWSPACE_NEW_( UniformIntegerRandom, UniformIntegerRandom( source, sub_seed ) );
@@ -216,7 +224,7 @@ bool RandomDistributionParser::Parse( long p_line_num, std::vector<dsstring>& p_
         }
         else if( "real" == p_words[2] )
         {
-            int sub_seed = SeedsBase::GetInstance()->GetSeed( StringToInt( p_words[5] ) );
+            int sub_seed = m_seedsbase->GetSeed( StringToInt( p_words[5] ) ); //SeedsBase::GetInstance()->GetSeed( StringToInt( p_words[5] ) );
 
             std::uniform_real_distribution<dsreal>* source = _DRAWSPACE_NEW_( std::uniform_real_distribution<dsreal>, std::uniform_real_distribution<dsreal>( StringToReal( p_words[3] ), StringToReal( p_words[4] ) ) );
             UniformRealRandom* random = _DRAWSPACE_NEW_( UniformRealRandom, UniformRealRandom( source, sub_seed ) );
@@ -352,7 +360,7 @@ RulesPackage::RulesPackage( DrawSpace::Core::BaseCallback<void, Atomic*>* p_hand
     m_opcodes["string"] = _DRAWSPACE_NEW_( StringParser, StringParser );
     m_opcodes["vector"] = _DRAWSPACE_NEW_( VectorParser, VectorParser );
     m_opcodes["array"] = _DRAWSPACE_NEW_( ArrayParser, ArrayParser );
-    m_opcodes["random"] = _DRAWSPACE_NEW_( RandomDistributionParser, RandomDistributionParser );
+    m_opcodes["random"] = _DRAWSPACE_NEW_( RandomDistributionParser, RandomDistributionParser( &m_seedsbase ) );
     m_opcodes["repeat"] = _DRAWSPACE_NEW_( RepeatParser, RepeatParser );
     m_opcodes["batch"] = _DRAWSPACE_NEW_( BatchParser, BatchParser );
     m_opcodes["index"] = _DRAWSPACE_NEW_( IndexParser, IndexParser );
@@ -402,4 +410,9 @@ bool RulesPackage::on_new_line( const dsstring& p_line, long p_line_num, std::ve
 RootParser* RulesPackage::GetRootParser( void )
 {
     return m_root;
+}
+
+void RulesPackage::InitializeSeedBase( unsigned int p_seed )
+{
+    m_seedsbase.Initialize( p_seed );
 }

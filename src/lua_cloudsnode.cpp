@@ -34,6 +34,7 @@ const char LuaCloudsNode::className[] = "CloudsNode";
 const Luna2<LuaCloudsNode>::RegType LuaCloudsNode::methods[] =
 {  
   { "EnableDetails", &LuaCloudsNode::Lua_EnableDetails },
+  { "SetSeed", &LuaCloudsNode::Lua_SetSeed },
   { "SetSortingDistance", &LuaCloudsNode::Lua_SetSortingDistance },
   { "SetProceduralFilePath", &LuaCloudsNode::Lua_SetProceduralFilePath },
   { "RegisterPassSlot", &LuaCloudsNode::Lua_RegisterPassSlot },
@@ -62,6 +63,7 @@ m_clouds_node( "clouds_node" )
 
     // set some default values...
     m_descriptor.details = true;
+    m_descriptor.seed = 1000;
 
     m_scriptcalls_handler = LuaContext::GetInstance()->GetScriptCallsHandler();    
 }
@@ -79,6 +81,19 @@ int LuaCloudsNode::Lua_EnableDetails( lua_State* p_L )
 		lua_error( p_L );		
 	}
     m_descriptor.details = luaL_checkinteger( p_L, 1 );
+    return 0;
+}
+
+int LuaCloudsNode::Lua_SetSeed( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc != 1 )
+	{
+		lua_pushstring( p_L, "SetSeed : bad number of args" );
+		lua_error( p_L );		
+	}
+    m_descriptor.seed = luaL_checkinteger( p_L, 1 );
+
     return 0;
 }
 

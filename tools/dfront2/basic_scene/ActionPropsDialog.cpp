@@ -238,8 +238,9 @@ void ActionPropsDialog::Execute( void )
 
         DrawSpace::ImpostorsDisplayList idl;
         clouds_node.scene_node->GetContent()->GetImpostorsDisplayList( idl );
-        DIALOG_APPENDROOT_INTEGER( "impostors", idl.size() )       
+        DIALOG_APPENDROOT_INTEGER( "impostors", idl.size() )
 
+        DIALOG_APPENDROOT_INTEGER( "seed", clouds_descr.seed )
         DIALOG_APPENDROOT_BOOL( "details", clouds_descr.details )
         DIALOG_APPENDROOT_STRING( "procedural rules", clouds_descr.rules_filepath )
         DIALOG_APPENDROOT_FLOAT( "sorting distance", clouds_node.scene_node->GetContent()->GetSortingDistance() )

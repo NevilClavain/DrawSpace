@@ -59,8 +59,11 @@ void ActionCloudsCreationApply::Execute( BasicSceneObjectPropertiesDialog* p_dia
     }
     descr.rules_filepath = rules_filepath;
 
-    DIALOG_GET_BOOL_PROPERTY( "details", details)
+    DIALOG_GET_BOOL_PROPERTY( "details", details )
     descr.details = details;
+
+    DIALOG_GET_INT_PROPERTY( "seed", seed )
+    descr.seed = seed;
 
     {
         DIALOG_EXPLORE_NODES_BEGIN( "", "pass %d", i, pass_slot )
