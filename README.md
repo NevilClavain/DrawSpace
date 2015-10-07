@@ -15,3 +15,5 @@ DrawSpace currently rely on some 3rd-parts libraries:
 	** Lua 1.5 :                  http://www.lua.org/
 
 	** RSA Data Security, Inc. MD5 Message-Digest Algorithm
+
+	** Perlin noise & fractals functions from The Universe Development Kit Copyright (C) 2000  Sean O'Neil

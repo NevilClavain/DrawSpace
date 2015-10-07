@@ -245,6 +245,9 @@
     <ClCompile Include="src\procedural_seeds.cpp">
       <Filter>procedural</Filter>
     </ClCompile>
+    <ClCompile Include="src\noise.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -506,6 +509,9 @@
     </ClInclude>
     <ClInclude Include="src\procedural_seeds.h">
       <Filter>procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="src\noise.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
