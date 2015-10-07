@@ -38,13 +38,19 @@ class Maths
 {
 public:
 
+	static inline double	Square( dsreal a )						    { return a * a; };
+	static inline int		Floor( dsreal a )							{ return ((int)a - (a < 0 && a != (int)a)); };
+	static inline int		Ceiling( dsreal a )						    { return ((int)a + (a > 0 && a != (int)a)); };
+
 	static inline double	Min( dsreal a, dsreal b )					{ return (a < b ? a : b); };
 	static inline double	Max( dsreal a, dsreal b )					{ return (a > b ? a : b); };
-	
+	static inline double	Abs( dsreal a )							    { return (a < 0 ? -a : a); };
 	static inline double	Clamp( dsreal a, dsreal b, dsreal x )		{ return (x < a ? a : (x > b ? b : x)); };
 	static inline double	Lerp( dsreal a, dsreal b, dsreal x )		{ return a + x * (b - a); };
 	static inline double	Cubic( dsreal a )							{ return a * a * (3 - 2*a); };
-	
+	static inline double	Pulse( dsreal a, dsreal b, dsreal x )		    { return (double)((x >= a) - (x >= b)); };
+	static inline double	Gamma( dsreal a, dsreal g )				    { return pow(a, 1/g); };
+	static inline double	Expose( dsreal l, dsreal k )				    { return (1 - exp(-l * k)); };
 	static inline double	DegToRad( dsreal ang )					    { return ( ( ang * PI ) / 180.0 ); };
     static inline double	RadToDeg( dsreal ang )					    { return ( ( ang * 180.0 ) / PI ); };
 
