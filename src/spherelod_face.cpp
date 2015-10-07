@@ -47,7 +47,7 @@ Face::~Face( void )
 // create face's root patch
 bool Face::Init( int p_orientation )
 {
-    m_maps_factory.Initialize();
+    
 
     m_orientation = p_orientation;
 
@@ -71,10 +71,12 @@ Patch* Face::GetPatch( const dsstring& p_name )
     return NULL;
 }
 
+/*
 Maps* Face::GetMapsFactory( void )
 {
     return &m_maps_factory;
 }
+*/
 
 void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {
@@ -96,6 +98,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         m_patchesleafs[patch_name] = patch;
 
+        /*
         // request texture from maps factory
 
         void* color_texture;
@@ -106,6 +109,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         patch->SetTexture( Maps::COLOR_TEXTURE, color_texture );
         patch->SetTexture( Maps::ELEVATION_TEXTURE, elevation_texture );
+        */
 
     }
     else
@@ -134,6 +138,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         m_patchesleafs[patch_name] = patch;
 
+        /*
         // request texture from maps factory
 
         void* color_texture;
@@ -144,7 +149,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         patch->SetTexture( Maps::COLOR_TEXTURE, color_texture );
         patch->SetTexture( Maps::ELEVATION_TEXTURE, elevation_texture );
-
+        */
     }
 }
 

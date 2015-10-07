@@ -96,9 +96,11 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
         m_renderer->SetFxShaderParams( 0, 24, flag0 );
         m_renderer->SetFxShaderParams( 0, 25, patch_pos );
 
+        m_renderer->SetFxShaderParams( 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) );
+
               
-        m_renderer->SetTexture( p_patch->GetTexture( Maps::COLOR_TEXTURE ), 0 );
-        m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
+        //m_renderer->SetTexture( p_patch->GetTexture( Maps::COLOR_TEXTURE ), 0 );
+        //m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
 
 
         m_renderer->DrawMeshe( p_world, p_view, p_proj );
@@ -161,11 +163,13 @@ m_planetbody( NULL )
 
     m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
     m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+    m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
 
-    m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet.vsh", false ) ) );
-    m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet.psh", false ) ) );
+    m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet2.vsh", false ) ) );
+    m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet2.psh", false ) ) );
 
     m_fx->GetShader( 0 )->LoadFromFile();
     m_fx->GetShader( 1 )->LoadFromFile();
