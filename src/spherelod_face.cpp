@@ -34,7 +34,8 @@ m_rootpatch( NULL ),
 m_planet_diameter( 10.0 ),
 m_currentleaf( NULL ),
 m_ratio_split_threshold( 0.03 ),
-m_ratio_merge_threshold( 0.04 )
+m_ratio_merge_threshold( 0.04 ),
+m_fractal( NULL )
 {
 }
 
@@ -45,9 +46,9 @@ Face::~Face( void )
 }
 
 // create face's root patch
-bool Face::Init( int p_orientation )
+bool Face::Init( int p_orientation, DrawSpace::Utils::CFractal* p_fractal )
 {
-    
+    m_fractal = p_fractal;
 
     m_orientation = p_orientation;
 

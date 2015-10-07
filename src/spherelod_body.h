@@ -51,6 +51,7 @@ protected:
 
     int                                                                         m_current_face;
 
+    DrawSpace::Utils::CFractal*                                                 m_fractal;
 
 public:
 

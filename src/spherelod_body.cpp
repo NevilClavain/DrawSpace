@@ -55,9 +55,11 @@ Body::~Body( void )
 
 void Body::Initialize( void )
 {
+    m_fractal = _DRAWSPACE_NEW_( CFractal, CFractal( 3, 7789, 0.5, 2.0 ) );
+
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i]->Init( i );
+        m_faces[i]->Init( i, m_fractal );
     }
 }
 

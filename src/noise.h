@@ -47,8 +47,6 @@
 #define MAX_OCTAVES			128							// Maximum # of octaves in an fBm object
 
 #include <stdlib.h>
-
-
 #include <math.h>
 
 //..//
