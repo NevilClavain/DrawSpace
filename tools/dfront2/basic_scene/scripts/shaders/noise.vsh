@@ -24,8 +24,23 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.Position = mul( Input.Position, matWorldViewProjection );
 	Output.TexCoord0 = Input.TexCoord0;
 	   
-	float4 textcoord = 0.0;	
-	float4 col = tex2Dlod( Texture0, textcoord );
+	float4 textcoord = 0.0;
+	float4 col;
+	
+	textcoord[0] = 0.0;
+	textcoord[1] = 0.0;
+	col[0] = tex2Dlod( Texture0, textcoord );
+	
+	textcoord[0] = 0.003921;
+	textcoord[1] = 0.0;
+	col[1] = tex2Dlod( Texture0, textcoord );
+
+
+	textcoord[0]= 0.007843;
+	textcoord[1] = 0.0;	
+	col[2] = tex2Dlod( Texture0, textcoord );
+
+	col[3] = 1.0;
 
 	Output.TexCoord1 = col;
       

@@ -843,6 +843,20 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
             case Texture::PURPOSE_FLOAT:
                 {
+                    long w, h, bpp;
+                    p_texture->GetFormat( w, h, bpp );
+
+                    hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 0, D3DUSAGE_DYNAMIC, D3DFMT_R32F, D3DPOOL_DEFAULT, &d3dt9 );
+                    D3D9_CHECK( D3DXCreateTexture );
+
+                    texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+                    texture_infos->texture = d3dt9;
+                    texture_infos->texture2 = NULL;
+                    texture_infos->render_texture = false;
+                    texture_infos->bits = NULL;
+                    d3dt9->GetLevelDesc( 0, &texture_infos->descr );
+                    
+                    *p_data = (void*)texture_infos;
 
                     // inutile d'appeler SetFormat() sur la texture
                     setformat_call = false;
@@ -971,6 +985,10 @@ bool D3D9Renderer::AllocTextureContent( void* p_texturedata )
                 bpp = 2;
                 break;
 
+            case D3DFMT_R32F:
+                bpp = 4;
+                break;
+
             default:
                 bpp = -1;
                 break;
@@ -1031,6 +1049,10 @@ bool D3D9Renderer::CopyTextureContent( void* p_texturedata )
 
         case D3DFMT_R16F:
             bpp = 2;
+            break;
+
+        case D3DFMT_R32F:
+            bpp = 4;
             break;
 
         default:
@@ -1111,6 +1133,10 @@ bool D3D9Renderer::UpdateTextureContent( void* p_texturedata )
 
         case D3DFMT_R16F:
             bpp = 2;
+            break;
+
+        case D3DFMT_R32F:
+            bpp = 4;
             break;
 
         default:
