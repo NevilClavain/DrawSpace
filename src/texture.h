@@ -45,6 +45,14 @@ public:
 
     } RenderPurpose;
 
+    typedef enum
+    {
+        PURPOSE_COLORFROMFILE,
+        PURPOSE_COLOR,
+        PURPOSE_FLOAT
+
+    } Purpose;
+
 protected:
     dsstring        m_path;
     long            m_width;
@@ -60,6 +68,7 @@ protected:
     unsigned long   m_render_target_height;
 
     RenderPurpose   m_renderpurpose;
+    Purpose         m_purpose;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
     
@@ -92,6 +101,8 @@ public:
     void GetFormat( long& p_width, long& p_height, long& p_bpp );
 
     RenderPurpose GetRenderPurpose( void );
+    Purpose GetPurpose( void );
+    void SetPurpose( Purpose p_purpose );
 
     void GetKeyword( dsstring& p_outkeyword );
 
@@ -99,6 +110,7 @@ public:
     void ReleaseTextureContent( void );
     void* GetTextureContentPtr( void );
     bool CopyTextureContent( void );
+    bool UpdateTextureContent( void );
 
     static Asset* Instanciate( void );
 

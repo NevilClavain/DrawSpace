@@ -42,6 +42,7 @@ m_render_target( false ),
 m_render_target_width( 256 ),
 m_render_target_height( 256 ),
 m_renderpurpose( RENDERPURPOSE_COLOR ),
+m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL )
 {
     // properties array creation
@@ -61,6 +62,7 @@ m_render_target( p_render_target ),
 m_render_target_width( p_render_target_width ),
 m_render_target_height( p_render_target_height ),
 m_renderpurpose( p_rp ),
+m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL )
 {
     // properties array creation
@@ -321,6 +323,16 @@ Texture::RenderPurpose Texture::GetRenderPurpose( void )
     return m_renderpurpose;
 }
 
+Texture::Purpose Texture::GetPurpose( void )
+{
+    return m_purpose;
+}
+
+void Texture::SetPurpose( Texture::Purpose p_purpose )
+{
+    m_purpose = p_purpose;
+}
+
 bool Texture::AllocTextureContent( void )
 {
     if( !m_render_data )
@@ -363,4 +375,15 @@ bool Texture::CopyTextureContent( void )
 
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
     return renderer->CopyTextureContent( m_render_data );
+}
+
+bool Texture::UpdateTextureContent( void )
+{
+    if( !m_render_data )
+    {
+        return false;
+    }
+
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    return renderer->UpdateTextureContent( m_render_data );
 }

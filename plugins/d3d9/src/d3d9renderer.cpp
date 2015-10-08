@@ -744,6 +744,8 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         return true;
     }
 
+    bool setformat_call = true; // si true, appel SetFormat() sur la texture
+
     if( p_texture->IsRenderTarget() )
     {
         LPDIRECT3DSURFACE9		surface;
@@ -795,21 +797,58 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
     }
     else
     {
-        void* data = p_texture->GetData();
-        size_t data_size = p_texture->GetDataSize();
-        hRes = D3DXCreateTextureFromFileInMemory( m_lpd3ddevice, data, (UINT)data_size, &d3dt9 );
-        D3D9_CHECK( D3DXCreateTextureFromFileInMemory );
+        switch( p_texture->GetPurpose() )
+        {
+            case Texture::PURPOSE_COLORFROMFILE:
+                {
+                    void* data = p_texture->GetData();
+                    size_t data_size = p_texture->GetDataSize();
+                    hRes = D3DXCreateTextureFromFileInMemory( m_lpd3ddevice, data, (UINT)data_size, &d3dt9 );
+                    D3D9_CHECK( D3DXCreateTextureFromFileInMemory );
 
-        texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
-        texture_infos->texture = d3dt9;
-        texture_infos->texture2 = NULL;
-        texture_infos->render_texture = false;
-        texture_infos->bits = NULL;
-        d3dt9->GetLevelDesc( 0, &texture_infos->descr );
+                    texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+                    texture_infos->texture = d3dt9;
+                    texture_infos->texture2 = NULL;
+                    texture_infos->render_texture = false;
+                    texture_infos->bits = NULL;
+                    d3dt9->GetLevelDesc( 0, &texture_infos->descr );
 
-        m_textures_base[path] = texture_infos;
+                    m_textures_base[path] = texture_infos;
 
-        *p_data = (void*)texture_infos;
+                    *p_data = (void*)texture_infos;
+                }
+                break;
+
+            case Texture::PURPOSE_COLOR:
+                {
+                    long w, h, bpp;
+                    p_texture->GetFormat( w, h, bpp );
+
+                    hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 0, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &d3dt9 );
+                    D3D9_CHECK( D3DXCreateTexture );
+
+                    texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+                    texture_infos->texture = d3dt9;
+                    texture_infos->texture2 = NULL;
+                    texture_infos->render_texture = false;
+                    texture_infos->bits = NULL;
+                    d3dt9->GetLevelDesc( 0, &texture_infos->descr );
+                    
+                    *p_data = (void*)texture_infos;
+                   
+                    // inutile d'appeler SetFormat() sur la texture
+                    setformat_call = false;
+                }
+                break;
+
+            case Texture::PURPOSE_FLOAT:
+                {
+
+                    // inutile d'appeler SetFormat() sur la texture
+                    setformat_call = false;
+                }
+                break;
+        }
     }
 
     long width = texture_infos->descr.Width;
@@ -836,7 +875,10 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
             break;
     }
 
-    p_texture->SetFormat( width, height, bpp );
+    if( setformat_call )
+    {
+        p_texture->SetFormat( width, height, bpp );
+    }
     p_texture->SetRenderData( (void*)texture_infos );
 
     return true;
@@ -1037,6 +1079,67 @@ bool D3D9Renderer::CopyTextureContent( void* p_texturedata )
         D3D9_CHECK( LockRect );
 
         memcpy( ti->bits, dr.pBits, blocsize );
+
+        hRes = ti->texture->UnlockRect( 0 );    
+    }
+    return true;
+}
+
+bool D3D9Renderer::UpdateTextureContent( void* p_texturedata )
+{
+    DECLARE_D3D9ASSERT_VARS
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
+
+    if( NULL == ti->bits )
+    {
+        return false;
+    }
+
+
+    long blocsize;
+    int bpp;
+    switch( ti->descr.Format )
+    {
+        case D3DFMT_A8R8G8B8:
+        case D3DFMT_X8R8G8B8:
+            bpp = 4;
+            break;
+
+        case D3DFMT_R8G8B8:
+            bpp = 3;
+            break;
+
+        case D3DFMT_R16F:
+            bpp = 2;
+            break;
+
+        default:
+            bpp = -1;
+            break;
+    }
+
+    if( bpp != -1 )
+    {
+        blocsize = bpp * ti->descr.Width * ti->descr.Height;            
+    }
+    else
+    {
+        return false;
+    }
+
+    D3DLOCKED_RECT dr;
+
+    if( ti->render_texture )
+    {
+        // vouloir updater une render texture = non sens
+        return false;
+    }
+    else
+    {        
+        hRes = ti->texture->LockRect( 0, &dr, NULL, D3DLOCK_NOSYSLOCK | D3DLOCK_READONLY );
+        D3D9_CHECK( LockRect );
+        
+        memcpy( dr.pBits, ti->bits, blocsize );
 
         hRes = ti->texture->UnlockRect( 0 );    
     }

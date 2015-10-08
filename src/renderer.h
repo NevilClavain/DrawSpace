@@ -82,6 +82,7 @@ public:
     virtual void ReleaseTextureContent( void* p_texturedata ) = 0;
     virtual void* GetTextureContentPtr( void* p_texturedata ) = 0;
     virtual bool CopyTextureContent( void* p_texturedata ) = 0;
+    virtual bool UpdateTextureContent( void* p_texturedata ) = 0;
 
 
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
