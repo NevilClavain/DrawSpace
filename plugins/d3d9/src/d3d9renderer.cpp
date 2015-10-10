@@ -824,7 +824,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                     long w, h, bpp;
                     p_texture->GetFormat( w, h, bpp );
 
-                    hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 0, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &d3dt9 );
+                    hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &d3dt9 );
                     D3D9_CHECK( D3DXCreateTexture );
 
                     texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
@@ -846,7 +846,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                     long w, h, bpp;
                     p_texture->GetFormat( w, h, bpp );
 
-                    hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 0, D3DUSAGE_DYNAMIC, D3DFMT_R32F, D3DPOOL_DEFAULT, &d3dt9 );
+                    hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 1, D3DUSAGE_DYNAMIC, D3DFMT_R32F, D3DPOOL_DEFAULT, &d3dt9 );                   
                     D3D9_CHECK( D3DXCreateTexture );
 
                     texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
@@ -1162,7 +1162,7 @@ bool D3D9Renderer::UpdateTextureContent( void* p_texturedata )
     }
     else
     {        
-        hRes = ti->texture->LockRect( 0, &dr, NULL, D3DLOCK_NOSYSLOCK | D3DLOCK_READONLY );
+        hRes = ti->texture->LockRect( 0, &dr, NULL, D3DLOCK_NOSYSLOCK );
         D3D9_CHECK( LockRect );
         
         memcpy( dr.pBits, ti->bits, blocsize );
