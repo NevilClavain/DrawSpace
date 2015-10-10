@@ -164,6 +164,16 @@ double CNoise::Noise(double *f)
     return (double)Maths::Clamp( -0.999999f, 0.999999f, fValue );
 }
 
+unsigned char CNoise::GetNMap( int p_index )
+{
+    return m_nMap[p_index];
+}
+
+double CNoise::GetNBuffer( int p_index, int p_index2 )
+{
+    return m_nBuffer[p_index][p_index2];
+}
+
 double CFractal::fBm(double *f, double fOctaves)
 {
     

@@ -105,6 +105,9 @@ public:
 	
 	void Init(int nDimensions, unsigned int nSeed);
 	double Noise(double *f);
+    
+    unsigned char GetNMap( int p_index );
+    double        GetNBuffer( int p_index, int p_index2 );
 };
 
 /*******************************************************************************
