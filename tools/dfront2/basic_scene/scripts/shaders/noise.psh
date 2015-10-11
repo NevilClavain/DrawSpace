@@ -10,8 +10,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 color;
 	
-	color = input.TexCoord1;
-	color.a = 1.0;
+	color = 1.0;
 
 	return color;
 }
