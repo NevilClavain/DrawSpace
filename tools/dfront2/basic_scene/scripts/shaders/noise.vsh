@@ -35,14 +35,14 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz, i
 	{ 			
 		maptextcoord[0] = clamp( 0, 255, nIndex + n[i] ) + midinterval256;
 		float4 mapval = tex2Dlod( TextureMap, maptextcoord );
-		nIndex = mapval.x * 255;
+		nIndex = mapval.x * 255.0;
 	}
 
 	double fValue = 0;
 	for( i = 0; i < 3; i++ )
 	{ 
 		buffertextcoord[0] = i + midinterval3;		
-		buffertextcoord[1] = ( nIndex + n[i] ) + midinterval256;
+		buffertextcoord[1] = nIndex + midinterval256;
 		double buffval = tex2Dlod( TextureBuffer, buffertextcoord );
 		fValue += buffval * f[i];
 	}
@@ -94,8 +94,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.TexCoord0 = Input.TexCoord0;
 	 
 	//tex2Dlod( Texture0, textcoord );
-
-
 	
 	/*  
 	float4 textcoord = 0.0;
