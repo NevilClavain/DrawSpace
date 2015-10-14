@@ -44,7 +44,7 @@
 #define _NOISE_H_
 
 #define MAX_DIMENSIONS		4							// Maximum number of dimensions in a noise object
-#define MAX_OCTAVES			128							// Maximum # of octaves in an fBm object
+//#define MAX_OCTAVES			128							// Maximum # of octaves in an fBm object
 
 #include <stdlib.h>
 #include <math.h>
@@ -68,7 +68,7 @@ namespace Utils
 * there may be several instances of this class in use at the same time, each
 * initialized with different parameters.
 *******************************************************************************/
-class CNoise
+class Noise
 {
 protected:
 	int                 m_nDimensions;						// Number of dimensions used by this object
@@ -89,7 +89,7 @@ protected:
 		return fValue;
 	}
 
-    inline void CNoise::Normalize(double *f, int n)
+    inline void Normalize(double *f, int n)
     {
 	    int i;
 	    double fMagnitude = 0;
@@ -101,10 +101,10 @@ protected:
     }
 
 public:
-	CNoise( void ) {}
+	Noise( void ) {}
 	
 	void Init(int nDimensions, unsigned int nSeed);
-	double Noise(double *f);
+	double GetNoise(double *f);
     
     unsigned char GetNMap( int p_index );
     double        GetNBuffer( int p_index, int p_index2 );
@@ -120,32 +120,41 @@ public:
 * "Texturing & Modeling: A Procedural Approach". fBmTest() is my own creation,
 * and I created it to generate my first planet.
 *******************************************************************************/
-class CFractal : public CNoise
+class Fractal : public Noise
 {
+public:
+    static const int MaxOctaves = 128;
+
 protected:
 	double m_fH;
 	double m_fLacunarity;
-	double m_fExponent[MAX_OCTAVES];
+	double m_fExponent[MaxOctaves];
 
 public:
-	CFractal()	{}
-	CFractal(int nDimensions, unsigned int nSeed, double fH, double fLacunarity)
+	Fractal()	{}
+	Fractal(int nDimensions, unsigned int nSeed, double fH, double fLacunarity)
 	{
 		Init(nDimensions, nSeed, fH, fLacunarity);
 	}
 	void Init(int nDimensions, unsigned int nSeed, double fH, double fLacunarity)
 	{
-		CNoise::Init(nDimensions, nSeed);
+		Noise::Init(nDimensions, nSeed);
 		m_fH = fH;
 		m_fLacunarity = fLacunarity;
 		double f = 1;
-		for(int i=0; i<MAX_OCTAVES; i++) 
+		for(int i=0; i<MaxOctaves; i++) 
 		{
 			m_fExponent[i] = pow(f, -m_fH);
 			f *= m_fLacunarity;
 		}
 	}
 	double fBm(double *f, double fOctaves);
+    double GetExponent( int p_index ); 
+
+    double GetLacunarity( void )
+    {
+        return m_fLacunarity;
+    }
 };
 
 }

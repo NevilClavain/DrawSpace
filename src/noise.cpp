@@ -50,7 +50,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
 
-void CNoise::Init(int nDimensions, unsigned int nSeed)
+void Noise::Init(int nDimensions, unsigned int nSeed)
 {
     
     m_nDimensions = Maths::Min(nDimensions, MAX_DIMENSIONS);
@@ -79,7 +79,7 @@ void CNoise::Init(int nDimensions, unsigned int nSeed)
 	//_fpreset();	// Bug in rand! Causes messed up floating point operations!
 }
 
-double CNoise::Noise(double *f)
+double Noise::GetNoise(double *f)
 {
     
 	int n[MAX_DIMENSIONS];			// Indexes to pass to lattice function
@@ -164,17 +164,17 @@ double CNoise::Noise(double *f)
     return (double)Maths::Clamp( -0.999999f, 0.999999f, fValue );
 }
 
-unsigned char CNoise::GetNMap( int p_index )
+unsigned char Noise::GetNMap( int p_index )
 {
     return m_nMap[p_index];
 }
 
-double CNoise::GetNBuffer( int p_index, int p_index2 )
+double Noise::GetNBuffer( int p_index, int p_index2 )
 {
     return m_nBuffer[p_index][p_index2];
 }
 
-double CFractal::fBm(double *f, double fOctaves)
+double Fractal::fBm(double *f, double fOctaves)
 {
     
 	int i;
@@ -187,7 +187,7 @@ double CFractal::fBm(double *f, double fOctaves)
 	// Inner loop of spectral construction, where the fractal is built
 	for(i=0; i<fOctaves; i++)
 	{
-		fValue += Noise(fTemp) * m_fExponent[i];
+		fValue += GetNoise(fTemp) * m_fExponent[i];
 		for(int j=0; j<m_nDimensions; j++)
 			fTemp[j] *= m_fLacunarity;
 	}
@@ -196,7 +196,12 @@ double CFractal::fBm(double *f, double fOctaves)
 	fOctaves -= (int)fOctaves;
 	
 	if(fOctaves > DELTA)
-		fValue += fOctaves * Noise(fTemp) * m_fExponent[i];
+		fValue += fOctaves * GetNoise(fTemp) * m_fExponent[i];
 		
-	return Maths::Clamp(-1.0, 1.0, fValue);       
+	return Maths::Clamp(-1.0, 1.0, fValue);
+}
+
+double Fractal::GetExponent( int p_index )
+{
+    return m_fExponent[p_index];
 }

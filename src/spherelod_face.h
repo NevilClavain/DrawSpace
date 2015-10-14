@@ -77,7 +77,7 @@ protected:
 
     //Maps                                                        m_maps_factory;
 
-    DrawSpace::Utils::CFractal*                                 m_fractal;
+    DrawSpace::Utils::Fractal*                                  m_fractal;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -105,7 +105,7 @@ public:
     Face( void );
     virtual ~Face( void );
 
-    bool Init( int p_orientation, DrawSpace::Utils::CFractal* p_fractal );
+    bool Init( int p_orientation, DrawSpace::Utils::Fractal* p_fractal );
     virtual Patch* GetPatch( const dsstring& p_name );
     virtual void Split( const dsstring& p_name );
     virtual void Merge( const dsstring& p_name );

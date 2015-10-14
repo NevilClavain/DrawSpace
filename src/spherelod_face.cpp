@@ -46,7 +46,7 @@ Face::~Face( void )
 }
 
 // create face's root patch
-bool Face::Init( int p_orientation, DrawSpace::Utils::CFractal* p_fractal )
+bool Face::Init( int p_orientation, DrawSpace::Utils::Fractal* p_fractal )
 {
     m_fractal = p_fractal;
 

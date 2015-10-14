@@ -1,6 +1,9 @@
 
+float4 lacunarity: register(c0);
+
 sampler2D TextureBuffer : register(s0);
 sampler2D TextureMap : register(s1);
+sampler2D TextureExp : register(s2);
 
 struct PS_INTPUT 
 {
@@ -52,6 +55,7 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz, i
 
 double Noise_Noise( double3 f )
 {
+	
 	int n[3];			// Indexes to pass to lattice function
 	double r[3];		// Remainders to pass to lattice function
 	double w[3];		// Cubic values to pass to interpolation function
@@ -87,18 +91,64 @@ double Noise_Noise( double3 f )
 }
 
 
+double Fractal_fBm( double3 f, double fOctaves )
+{
+
+	double midinterval128 = 0.00390625;
+	double index128 = 0.0078125;
+	float4 buffertextexp = 0.0;
+    
+	int i;
+	// Initialize locals
+	double fValue = 0.0;
+	double3 fTemp;
+	for( i = 0; i < 3; i++ )
+	{
+		fTemp[i] = f[i];
+	}
+
+	double expvVal;
+
+	int nbOctaves = floor( fOctaves );		
+	// Inner loop of spectral construction, where the fractal is built
+	for( i = 0; i < nbOctaves; i++ )
+	{
+		buffertextexp[0] = ( index128 * i ) + midinterval128;
+		expvVal = tex2D( TextureExp, buffertextexp );
+		fValue += Noise_Noise( fTemp ) * expvVal;
+				
+		for( int j = 0; j < 3; j++ )
+		{
+			fTemp[j] *= lacunarity.x;
+		}			
+	}
+	
+	// Take care of remainder in fOctaves
+	
+	fOctaves -= nbOctaves;
+	
+	if( fOctaves > 0.0000006 )
+	{
+		fValue += fOctaves * Noise_Noise( fTemp ) * expvVal;
+	}
+	
+	return clamp( -1.0, 1.0, fValue );	
+}
+
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 color = 0;
 		
+	
 	double3 f = 0.0;
-	f[0] = input.TexCoord0.x * 16;
-	f[1] = input.TexCoord0.y * 16;
+	f[0] = input.TexCoord0.x * 16.0;
+	f[1] = input.TexCoord0.y * 16.0;
 	f[2] = 1.0;
 
-	float res = Noise_Noise( f );
+	//float res = Noise_Noise( f );
+	float res = Fractal_fBm( f, 8.0 );
 
-	color = ( res * 0.5 ) + 0.5;	
+	color = ( res * 0.5 ) + 0.5;
 	
 	return color;
 }
