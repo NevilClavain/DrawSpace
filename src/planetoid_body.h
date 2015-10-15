@@ -115,23 +115,9 @@ public:
     Body( const dsstring& p_scenename, dsreal p_ray );
     virtual ~Body( void );
 
-    /*
-    DrawSpace::SphericalLOD::Drawing*   GetDrawable( void );
-    DrawSpace::Dynamics::Orbiter*       GetOrbiter( void );
-    DrawSpace::Dynamics::World*         GetWorld( void );
-    */
-
-
     void                                ApplyGravity( void );
     void                                ManageBodies( void );
     void                                UpdateFragments( void );
-
-    /*
-    void                                RegisterInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body );
-    void                                RegisterCollider( DrawSpace::Dynamics::Collider* p_collider );
-    void                                RegisterIncludedInertBody( const dsstring& p_bodyname, DrawSpace::Dynamics::InertBody* p_body, const DrawSpace::Utils::Matrix& p_initmat );
-    bool                                RegisterCameraPoint( DrawSpace::Dynamics::CameraPoint* p_camera );
-    */
 
     void                                GetSceneName( dsstring& p_name );
     
@@ -139,29 +125,15 @@ public:
 
     Fragment*                           GetRegisteredBodyPlanetFragment( DrawSpace::Dynamics::InertBody* p_body );
 
-    //void                                RegisterPassSlot( const dsstring& p_passname );
-
     void                                RegisterPassSlot( Pass* p_pass );
 
-    //DrawSpace::Core::RenderingNode*     GetNodeFromPass( const dsstring& p_passname, int p_faceid );
     DrawSpace::Core::RenderingNode*     GetNodeFromPass( Pass* p_pass, int p_faceid );
 
-    //void                                SetNodeFromPassSpecificFx( const dsstring& p_passname, int p_faceid, const dsstring& p_fxname );
-    void                                SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname );
-
-
     void                                SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
-
     void                                OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
-
     void                                Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void                                Update2( DrawSpace::Utils::TimeManager& p_timemanager );
-
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
-
-
-
-
 };
 
 

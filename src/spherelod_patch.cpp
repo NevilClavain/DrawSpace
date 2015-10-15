@@ -93,20 +93,10 @@ m_owner( p_owner )
                 break;
         }       
     }
-
-    // build vsphere characteristics
-
-    Vector center( 0.0, 0.0, 0.0, 1.0 );
-    Vector center_out;
-    ConvertVertex( center, p_orientation, m_sidelength, p_ray, m_xpos, m_ypos, center_out );
-
-    m_vsphere = _DRAWSPACE_NEW_( DrawSpace::Core::VSphere, DrawSpace::Core::VSphere( center_out, 1.41 * m_sidelength * m_ray / 2.0 ) );
-
 }
 
 Patch::~Patch( void )
 {
-    _DRAWSPACE_DELETE_( m_vsphere );
 }
 
 void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )
@@ -271,11 +261,6 @@ BaseQuadtreeNode* Patch::GetOwner( void )
 int Patch::GetOrientation( void )
 {
     return m_orientation;
-}
-
-DrawSpace::Core::VSphere* Patch::GetVSphere( void )
-{
-    return m_vsphere;
 }
 
 void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientation, dsreal p_sidelength, dsreal p_ray, dsreal p_posx, dsreal p_posy, DrawSpace::Utils::Vector& p_out )

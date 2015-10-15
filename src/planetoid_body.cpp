@@ -746,11 +746,6 @@ DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetNodeFromPass( Pas
     return m_drawable->GetNodeFromPass( p_pass, p_faceid );
 }
 
-void DrawSpace::Planetoid::Body::SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname )
-{
-    m_drawable->SetNodeFromPassSpecificFx( p_pass, p_faceid, p_fxname );
-}
-
 
 void DrawSpace::Planetoid::Body::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {

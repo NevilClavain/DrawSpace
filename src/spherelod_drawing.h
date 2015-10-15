@@ -42,7 +42,7 @@ protected:
     Face*                           m_face;
 
     void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
-                                                            const DrawSpace::Utils::Matrix& p_proj, DrawSpace::Utils::Vector& p_color );
+                                                            const DrawSpace::Utils::Matrix& p_proj );
     
 public:
     FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer );
@@ -73,7 +73,7 @@ protected:
     std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
     DrawSpace::Interface::Renderer*                                             m_renderer;
     DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
-    DrawSpace::Core::Fx*                                                        m_fx;
+    
     Utils::Matrix                                                               m_globaltransformation;
 
 
@@ -93,10 +93,7 @@ public:
 
     virtual void RegisterPassSlot( Pass* p_pass );
 
-
     DrawSpace::Core::RenderingNode* GetNodeFromPass( Pass* p_pass, int p_faceid );
-
-    void SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname );
 
     Body* GetBody( void );
 

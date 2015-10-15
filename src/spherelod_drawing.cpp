@@ -50,69 +50,32 @@ void FaceDrawingNode::SetFace( Face* p_face )
     m_face = p_face;
 }
 
-void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, DrawSpace::Utils::Vector& p_color )
-{
-    m_renderer->SetFxShaderParams( 1, 0, p_color );
+void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
+{    
+    Vector flag0;
+    flag0[0] = p_patch->GetOrientation();
+    flag0[1] = p_patch->GetSideLength() / p_ray;
+    flag0[2] = p_ray;
 
-    VSphere* vsphere = p_patch->GetVSphere();
+    Vector patch_pos;
+    dsreal xp, yp;
+    p_patch->GetPos( xp, yp );
 
-    DrawSpace::Utils::Matrix res;
-    res = p_world * p_view;
-    vsphere->Transform( res );
+    patch_pos[0] = xp / p_ray;
+    patch_pos[1] = yp / p_ray;
+    patch_pos[2] = 0.0;
 
-    Utils::Vector transformed_vsphere_point;
-    vsphere->GetTransformedPoint( transformed_vsphere_point );
-    
-    bool draw = false;
-    if( vsphere->Collide( Utils::Vector( 0.0, 0.0, 0.0, 1.0 ) ) )
-    {
-        draw = true;
-    }
-    else
-    {
-        if( transformed_vsphere_point[2] <= 0.0 )
-        {
-            draw = true;
-        }
-    }
-    
-    if( draw )
-    {
-        Vector flag0;
-        flag0[0] = p_patch->GetOrientation();
-        flag0[1] = p_patch->GetSideLength() / p_ray;
-        flag0[2] = p_ray;
+    m_renderer->SetFxShaderParams( 0, 24, flag0 );
+    m_renderer->SetFxShaderParams( 0, 25, patch_pos );
+    m_renderer->SetFxShaderParams( 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) );
+                      
+    //m_renderer->SetTexture( p_patch->GetTexture( Maps::COLOR_TEXTURE ), 0 );
+    //m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
 
-        // inutile
-        //SetShaderRealVector( "flag0", flag0 );
+    m_renderer->DrawMeshe( p_world, p_view, p_proj );
 
-        Vector patch_pos;
-        dsreal xp, yp;
-        p_patch->GetPos( xp, yp );
-
-        patch_pos[0] = xp / p_ray;
-        patch_pos[1] = yp / p_ray;
-        patch_pos[2] = 0.0;
-
-        // inutile
-        //SetShaderRealVector( "patch_translation", patch_pos );
-
-        m_renderer->SetFxShaderParams( 0, 24, flag0 );
-        m_renderer->SetFxShaderParams( 0, 25, patch_pos );
-
-        m_renderer->SetFxShaderParams( 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) );
-
-              
-        //m_renderer->SetTexture( p_patch->GetTexture( Maps::COLOR_TEXTURE ), 0 );
-        //m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
-
-
-        m_renderer->DrawMeshe( p_world, p_view, p_proj );
-
-
-        m_renderer->UnsetTexture( 0 );
-        m_renderer->UnsetVertexTexture( 0 );
-    }       
+    m_renderer->UnsetTexture( 0 );
+    m_renderer->UnsetVertexTexture( 0 );        
 }
 
 void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
@@ -135,14 +98,14 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
 
         for( std::map<dsstring, Patch*>::iterator it = patchesleafs.begin(); it != patchesleafs.end(); ++it )
         {
-            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 0.0, 0.0, 1.0, 0.0 ) );
+            draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
         }
     }
     else
     {    
         QuadtreeNode<Patch>* current_leaf = m_face->GetCurrentLeaf();
 
-        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 0.0, 0.0, 1.0, 0.0 ) );
+        draw_single_patch( current_leaf->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
  
         for( long i = 0; i < 8; i++ )
         {
@@ -150,7 +113,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
 
             if( neighb )
             {
-                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, p_proj, Vector( 0.0, 0.0, 1.0, 0.0 ) );
+                draw_single_patch( neighb->GetContent(), p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
             }
         }  
     }
@@ -161,6 +124,7 @@ Drawing::Drawing( void ) :
 m_renderer( NULL ),
 m_planetbody( NULL )
 {
+    /*
     m_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
     // prepare Fx
@@ -177,11 +141,12 @@ m_planetbody( NULL )
 
     m_fx->GetShader( 0 )->LoadFromFile();
     m_fx->GetShader( 1 )->LoadFromFile();
+    */
 }
 
 Drawing::~Drawing( void )
 {
-    _DRAWSPACE_DELETE_( m_fx );
+    //_DRAWSPACE_DELETE_( m_fx );
 }
 
 void Drawing::SetCurrentPlanetBody( Body* p_planetbody )
@@ -265,22 +230,6 @@ DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_fa
     return nodeset.nodes[p_faceid];
 }
 
-
-void Drawing::SetNodeFromPassSpecificFx( Pass* p_pass, int p_faceid, const dsstring& p_fxname )
-{
-    if( 0 == m_passesnodes.count( p_pass ) )
-    {
-        return;
-    }
-
-    NodesSet nodeset = m_passesnodes[p_pass];
-    
-    if( "main_fx" == p_fxname )
-    {
-        Fx* fx = nodeset.nodes[p_faceid]->GetFx();
-        *fx = *m_fx;
-    }
-}
 
 DrawSpace::SphericalLOD::Body* Drawing::GetBody( void )
 {

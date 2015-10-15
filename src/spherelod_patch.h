@@ -69,9 +69,6 @@ protected:
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
     dsstring		                        m_name;
 
-    DrawSpace::Core::VSphere*               m_vsphere;
-
-
     //void*                                   m_textures_data[Maps::NB_TEXTURETYPE];
 
 public:
@@ -90,8 +87,6 @@ public:
     void GetPos( dsreal& p_xpos, dsreal& p_ypos );
 
     DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void );
-
-    DrawSpace::Core::VSphere* GetVSphere( void );
 
     //void SetTexture( Maps::TextureType p_type, void* p_texturedata );
     //void* GetTexture( Maps::TextureType p_type );
