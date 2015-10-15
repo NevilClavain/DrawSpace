@@ -82,7 +82,9 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
         flag0[0] = p_patch->GetOrientation();
         flag0[1] = p_patch->GetSideLength() / p_ray;
         flag0[2] = p_ray;
-        SetShaderRealVector( "flag0", flag0 );
+
+        // inutile
+        //SetShaderRealVector( "flag0", flag0 );
 
         Vector patch_pos;
         dsreal xp, yp;
@@ -91,7 +93,9 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
         patch_pos[0] = xp / p_ray;
         patch_pos[1] = yp / p_ray;
         patch_pos[2] = 0.0;
-        SetShaderRealVector( "patch_translation", patch_pos );
+
+        // inutile
+        //SetShaderRealVector( "patch_translation", patch_pos );
 
         m_renderer->SetFxShaderParams( 0, 24, flag0 );
         m_renderer->SetFxShaderParams( 0, 25, patch_pos );

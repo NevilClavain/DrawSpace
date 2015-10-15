@@ -75,7 +75,7 @@ protected:
     //void*                                   m_textures_data[Maps::NB_TEXTURETYPE];
 
 public:
-    Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
+    Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
     virtual ~Patch( void );
 
     void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );

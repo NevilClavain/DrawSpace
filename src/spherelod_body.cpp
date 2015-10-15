@@ -148,8 +148,11 @@ void Body::BuildMeshe( void )
             vertex.tu[0] = current_u0;
             vertex.tv[0] = current_v0;
 
+            // inutile
+            /*
             vertex.tu[1] = current_u0;
             vertex.tv[1] = current_v0;
+            */
 
             m_planetpatch_meshe->AddVertex( vertex );
 

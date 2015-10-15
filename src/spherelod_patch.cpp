@@ -27,7 +27,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Patch::Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_parentnodeid, BaseQuadtreeNode* p_owner ) : 
+Patch::Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner ) : 
 m_orientation( p_orientation ),
 m_name( p_name ),
 m_ray( p_ray ),
@@ -54,7 +54,7 @@ m_owner( p_owner )
     {
         m_sidelength = p_parent->m_sidelength / 2.0;
 
-        switch( p_parentnodeid )
+        switch( p_nodeid )
         {
             case BaseQuadtreeNode::NorthWestNode:
 
