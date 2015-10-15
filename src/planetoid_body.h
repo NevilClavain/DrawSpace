@@ -82,7 +82,6 @@ protected:
 
     DrawSpace::Dynamics::World                                              m_world;
     dsstring                                                                m_scenename;
-    //DrawSpace::Dynamics::Orbiter*                               m_orbiter;
         
     DrawSpace::SphericalLOD::Drawing*                                       m_drawable;
     
@@ -95,8 +94,6 @@ protected:
     dsstring                                                                m_current_camerapoint;
 
     std::vector<Fragment*>                                                  m_planetfragments_list;
-
-    //std::map<dsstring, DrawSpace::SphericalLOD::Body*>          m_sphericallod_body_list;
 
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -125,6 +122,8 @@ public:
     void                                RegisterPassSlot( Pass* p_pass );
 
     void                                BindExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
+    void                                CreateProceduralGlobalTexture( DrawSpace::Pass* p_pass, int p_faceid );
+
     void                                AddShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader );
 
     void                                CreateFx( DrawSpace::Pass* p_pass, int p_faceid );

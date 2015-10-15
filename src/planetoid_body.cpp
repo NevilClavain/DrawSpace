@@ -69,32 +69,10 @@ void DrawSpace::Planetoid::Body::GetCameraHotpoint( const dsstring& p_name, Matr
         camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
         p_outmat = res;
     }
-
-
-    /*
-    if( m_registered_camerapoints.count( p_name ) == 0 )
-    {
-        return;
-    }
-
-    if( INERTBODY_LINKED == m_registered_camerapoints[p_name].type )
-    {
-        m_registered_camerapoints[p_name].attached_body->GetLastLocalWorldTrans( p_outmat );
-    }
-    else if( COLLIDER_LINKED == m_registered_camerapoints[p_name].type )
-    {
-        m_registered_camerapoints[p_name].attached_collider->GetLastLocalWorldTrans( p_outmat );
-    }
-    else if( FREE_ON_PLANET == m_registered_camerapoints[p_name].type )
-    {
-        m_registered_camerapoints[p_name].camera->GetLocalTransform( p_outmat );
-    }
-    */
 }
 
 void DrawSpace::Planetoid::Body::attach_body( InertBody* p_body )
 {
-    //p_body->Attach( m_orbiter );
     p_body->Attach( this );
     m_registered_bodies[p_body].attached = true;
 }
@@ -111,13 +89,6 @@ void DrawSpace::Planetoid::Body::body_find_attached_camera( InertBody* p_body, s
 
     for( std::map<dsstring, RegisteredCamera>::iterator it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
     {
-        /*
-        if( it->second.camera->GetAttachedBody() == p_body )
-        {
-            p_name.push_back( it->first );            
-        }
-        */
-
         if( it->second.camera->GetReferentBody() == body )
         {
             p_name.push_back( it->first );
@@ -141,21 +112,8 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
         {
             m_current_camerapoint = current_camera_scenename;
 
-            /*
-            for( std::map<dsstring, RegisteredCamera>::iterator it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
-            {
-                if( it->second.camera == p_node )                
-                {
-                    Fragment* fragment = it->second.fragment;
-                    m_drawable->SetCurrentPlanetBody( fragment->GetPlanetBody() );
-                    
-                    break;
-                }
-            }
-            */
             Fragment* fragment = m_registered_camerapoints[current_camera_scenename].fragment;
             m_drawable->SetCurrentPlanetBody( fragment->GetPlanetBody() );
-
         }
         else
         {
@@ -580,4 +538,9 @@ void DrawSpace::Planetoid::Body::AddShader( DrawSpace::Pass* p_pass, int p_facei
 void DrawSpace::Planetoid::Body::CreateFx( DrawSpace::Pass* p_pass, int p_faceid )
 {
     m_drawable->GetNodeFromPass( p_pass, p_faceid )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+}
+
+void DrawSpace::Planetoid::Body::CreateProceduralGlobalTexture( DrawSpace::Pass* p_pass, int p_faceid )
+{
+
 }
