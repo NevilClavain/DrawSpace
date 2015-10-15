@@ -109,31 +109,33 @@ protected:
 
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr );
 
+    void apply_gravity( void );
+    void manage_bodies( void );
+    void update_fragments( void );
+
 
 public:
     
     Body( const dsstring& p_scenename, dsreal p_ray );
     virtual ~Body( void );
 
-    void                                ApplyGravity( void );
-    void                                ManageBodies( void );
-    void                                UpdateFragments( void );
-
-    void                                GetSceneName( dsstring& p_name );
-    
+    void                                GetSceneName( dsstring& p_name );    
     void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
-
-    Fragment*                           GetRegisteredBodyPlanetFragment( DrawSpace::Dynamics::InertBody* p_body );
 
     void                                RegisterPassSlot( Pass* p_pass );
 
-    DrawSpace::Core::RenderingNode*     GetNodeFromPass( Pass* p_pass, int p_faceid );
+    void                                BindExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
+    void                                AddShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader );
+
+    void                                CreateFx( DrawSpace::Pass* p_pass, int p_faceid );
+
+    void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 
     void                                SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
     void                                OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
     void                                Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void                                Update2( DrawSpace::Utils::TimeManager& p_timemanager );
-    void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
+    
 };
 
 

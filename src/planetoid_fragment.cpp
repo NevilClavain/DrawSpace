@@ -332,7 +332,6 @@ void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
 
             m_planetbody->UpdateHotPoint( hotpoint );
             m_planetbody->Compute();
-
         }
     }
 }
