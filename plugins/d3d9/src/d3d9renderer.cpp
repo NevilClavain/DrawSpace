@@ -257,6 +257,13 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     m_lpd3ddevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CW );
     */
 
+    for( long i = 0; i < 8; i++ )
+    {
+        m_lpd3ddevice->SetSamplerState( i, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP );
+        m_lpd3ddevice->SetSamplerState( i, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP );
+    }
+
+
     m_lpd3ddevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 
     //projection set, to automatically fit with the screen resolution
