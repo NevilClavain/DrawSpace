@@ -126,7 +126,7 @@ public:
 
     void                                AddShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader );
 
-    void                                CreateFx( DrawSpace::Pass* p_pass, int p_faceid );
+    DrawSpace::Core::Fx*                CreateFx( DrawSpace::Pass* p_pass, int p_faceid );
 
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 

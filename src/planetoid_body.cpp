@@ -535,9 +535,11 @@ void DrawSpace::Planetoid::Body::AddShader( DrawSpace::Pass* p_pass, int p_facei
     m_drawable->GetNodeFromPass( p_pass, p_faceid )->GetFx()->AddShader( p_shader );
 }
 
-void DrawSpace::Planetoid::Body::CreateFx( DrawSpace::Pass* p_pass, int p_faceid )
+DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreateFx( DrawSpace::Pass* p_pass, int p_faceid )
 {
-    m_drawable->GetNodeFromPass( p_pass, p_faceid )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+    Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
+    m_drawable->GetNodeFromPass( p_pass, p_faceid )->SetFx( fx );
+    return fx;
 }
 
 void DrawSpace::Planetoid::Body::CreateProceduralGlobalTexture( DrawSpace::Pass* p_pass, int p_faceid )
