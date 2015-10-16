@@ -27,7 +27,7 @@
 #include "quadtree.h"
 #include "renderer.h"
 #include "spherelod_patch.h"
-#include "noise.h"
+
 
 namespace DrawSpace
 {
@@ -77,8 +77,6 @@ protected:
 
     //Maps                                                        m_maps_factory;
 
-    DrawSpace::Utils::Fractal*                                  m_fractal;
-
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -105,7 +103,7 @@ public:
     Face( void );
     virtual ~Face( void );
 
-    bool Init( int p_orientation, DrawSpace::Utils::Fractal* p_fractal );
+    bool Init( int p_orientation );
     virtual Patch* GetPatch( const dsstring& p_name );
     virtual void Split( const dsstring& p_name );
     virtual void Merge( const dsstring& p_name );

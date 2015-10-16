@@ -25,6 +25,7 @@
 
 #include "planetoid_fragment.h"
 #include "scenenodegraph.h"
+#include "noise.h"
 
 namespace DrawSpace
 {
@@ -58,7 +59,6 @@ protected:
         FREE,
         FREE_ON_PLANET,
         INERTBODY_LINKED,
-        //COLLIDER_LINKED
 
     } CameraType;
 
@@ -77,6 +77,12 @@ protected:
 
     } RegisteredCamera;
 
+    typedef struct
+    {
+        DrawSpace::Core::Texture*   texture;
+        void*                       texture_content;
+    
+    } ProceduralTexture;
 
     dsreal                                                                  m_ray;
 
@@ -94,6 +100,10 @@ protected:
     dsstring                                                                m_current_camerapoint;
 
     std::vector<Fragment*>                                                  m_planetfragments_list;
+
+    DrawSpace::Utils::Fractal*                                              m_fractal;
+
+    std::map<DrawSpace::Pass*, std::vector<ProceduralTexture>>              m_procedural_global_textures;
 
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -122,7 +132,9 @@ public:
     void                                RegisterPassSlot( Pass* p_pass );
 
     void                                BindExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
-    void                                CreateProceduralGlobalTexture( DrawSpace::Pass* p_pass, int p_faceid );
+    void                                CreateProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_resol );
+    void                                InitProceduralGlobalTextures( void );
+    
 
     void                                AddShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader );
 

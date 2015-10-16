@@ -51,8 +51,6 @@ protected:
 
     int                                                                         m_current_face;
 
-    DrawSpace::Utils::Fractal*                                                  m_fractal;
-
 public:
 
     Body( dsreal p_diameter );

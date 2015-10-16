@@ -37,12 +37,12 @@ m_scenename( p_scenename ),
 m_ray( p_ray * 1000.0 )
 {
     m_world.Initialize();
+
+    m_fractal = new Fractal( 3, 17029, 0.65, 1.29 );
        
     m_drawable = _DRAWSPACE_NEW_( SphericalLOD::Drawing, SphericalLOD::Drawing );
     m_drawable->SetRenderer( SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
     
-    //m_orbiter = _DRAWSPACE_NEW_( Orbiter, Orbiter( &m_world, m_drawable ) );
-
     m_camera_evt_cb = _DRAWSPACE_NEW_( CameraEvtCb, CameraEvtCb( this, &DrawSpace::Planetoid::Body::on_camera_event ) );
     m_nodes_evt_cb = _DRAWSPACE_NEW_( NodesEventCb, NodesEventCb( this, &DrawSpace::Planetoid::Body::on_nodes_event ) );
     m_scenegraph_evt_cb = _DRAWSPACE_NEW_( ScenegraphEventCb, ScenegraphEventCb( this, &DrawSpace::Planetoid::Body::on_scenegraph_event ) );
@@ -527,7 +527,7 @@ void DrawSpace::Planetoid::Body::RegisterScenegraphCallbacks( DrawSpace::Core::S
 
 void DrawSpace::Planetoid::Body::BindExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid )
 {
-    m_drawable->GetNodeFromPass( p_pass, p_faceid )->SetTexture( p_texture, 0 );    
+    m_drawable->GetNodeFromPass( p_pass, p_faceid )->SetTexture( p_texture, 0 );
 }
 
 void DrawSpace::Planetoid::Body::AddShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader )
@@ -542,7 +542,160 @@ DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreateFx( DrawSpace::Pass* p_pa
     return fx;
 }
 
-void DrawSpace::Planetoid::Body::CreateProceduralGlobalTexture( DrawSpace::Pass* p_pass, int p_faceid )
+void DrawSpace::Planetoid::Body::CreateProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_resol )
 {
+    for( size_t i = 0; i < 6; i++ )
+    {
+        ProceduralTexture proc_texture;
 
+        Texture* globalproctexture = _DRAWSPACE_NEW_( Texture, Texture );
+        
+        globalproctexture->SetFormat( p_resol, p_resol, 4 );
+        globalproctexture->SetPurpose( Texture::PURPOSE_COLOR );
+   
+        m_drawable->GetNodeFromPass( p_pass, i )->SetTexture( globalproctexture, 0 );
+
+        proc_texture.texture = globalproctexture;
+        proc_texture.texture_content = NULL;
+
+        m_procedural_global_textures[p_pass].push_back( proc_texture );
+
+        /*
+        globalproctexture->AllocTextureContent();
+        m_global_proc_textures_content = globalproctexture->GetTextureContentPtr();
+
+        unsigned char* color_ptr = (unsigned char*)m_global_proc_textures_content;
+
+        globalproctexture->UpdateTextureContent();
+        */
+    }
 }
+
+void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
+{
+    for( auto it = m_procedural_global_textures.begin(); it != m_procedural_global_textures.end(); ++it )
+    {
+        for( size_t i = 0; i < it->second.size(); i++ )
+        {
+            ProceduralTexture proc_texture = it->second[i];
+            
+            if( false == proc_texture.texture->AllocTextureContent() )
+            {
+                _DSEXCEPTION( "AllocTextureContent FAILED" );
+            }
+
+            proc_texture.texture_content = proc_texture.texture->GetTextureContentPtr();
+            if( NULL == proc_texture.texture_content )
+            {
+                _DSEXCEPTION( "Texture content Ptr is NULL" );
+            }
+
+            unsigned char* color_ptr = (unsigned char*)proc_texture.texture_content;
+    
+            long tw, th, bpp;
+            proc_texture.texture->GetFormat( tw, th, bpp );
+
+            double fbm_scale = 2.0;
+
+            for( int y = 0; y < th; y++ )
+            {
+                for( int x = 0; x < tw; x++ )
+                {
+                    double f_array[3];
+                    unsigned char color;
+
+                    double fx = 2.0 * ( ( (double)x / (double)tw ) - 0.5 ) * fbm_scale;
+                    double fy = 2.0 * ( ( (double)y / (double)th ) - 0.5 ) * fbm_scale;
+
+                    switch( i )
+                    {
+                        case 0:
+                            // front
+                            f_array[0] = fx;
+                            f_array[1] = fy;
+                            f_array[2] = fbm_scale;
+                            break;
+
+                        case 1:
+                            // rear
+                            f_array[0] = -fx;
+                            f_array[1] = fy;
+                            f_array[2] = -fbm_scale;
+                            break;
+
+                        case 2:
+                            //left
+                            f_array[0] = -fbm_scale;
+                            f_array[1] = fy;
+                            f_array[2] = fx;
+                            break;
+
+                        case 3:
+                            //right
+                            f_array[0] = fbm_scale;
+                            f_array[1] = fy;
+                            f_array[2] = -fx;          
+                            break;
+
+                        case 4:
+                            // top
+                            f_array[0] = fx;
+                            f_array[1] = fbm_scale;
+                            f_array[2] = -fy;
+                            break;
+
+                        case 5:
+                            // bottom
+                            f_array[0] = fx;
+                            f_array[1] = -fbm_scale;
+                            f_array[2] = fy;          
+                            break;
+                    }
+
+                    double res = m_fractal->fBm( f_array, 15.0 );
+
+                    if( res >= 0.15 && res < 0.65 )
+                    {
+                        color = 255.0 * ( ( res * 0.5 ) + 0.5 );
+                        *color_ptr = color * 0.6; color_ptr++;
+                        *color_ptr = color * 0.8; color_ptr++;
+                        *color_ptr = color * 0.6; color_ptr++;
+                        *color_ptr = color; color_ptr++;
+
+                    }
+                    else if ( res >= 0.65 && res < 0.9 )
+                    {
+                        color = 255.0 * ( ( res * 0.5 ) + 0.5 );
+                        *color_ptr = color * 0.6; color_ptr++;
+                        *color_ptr = color * 0.6; color_ptr++;
+                        *color_ptr = color * 0.6; color_ptr++;
+                        *color_ptr = color; color_ptr++;
+                    }            
+                    else if( res >= 0.9 )
+                    {
+                        *color_ptr = 255; color_ptr++;
+                        *color_ptr = 255; color_ptr++;
+                        *color_ptr = 255; color_ptr++;
+                        *color_ptr = 255; color_ptr++;            
+                    }
+                    else
+                    {
+                        *color_ptr = 75; color_ptr++;
+                        *color_ptr = 0; color_ptr++;
+                        *color_ptr = 0; color_ptr++;
+                        *color_ptr = 0; color_ptr++;                
+                    }
+
+
+                }
+            }  
+
+            if( false == proc_texture.texture->UpdateTextureContent() )
+            {
+                _DSEXCEPTION( "Texture content update FAILED" );
+            }
+        }
+    }
+}
+
+
