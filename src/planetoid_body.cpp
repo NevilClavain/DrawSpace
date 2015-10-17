@@ -38,7 +38,7 @@ m_ray( p_ray * 1000.0 )
 {
     m_world.Initialize();
 
-    m_fractal = new Fractal( 3, 17029, 0.65, 1.29 );
+    m_fractal = new Fractal( 3, 3345764, /*0.65*/ 0.75, 1.29 );
        
     m_drawable = _DRAWSPACE_NEW_( SphericalLOD::Drawing, SphericalLOD::Drawing );
     m_drawable->SetRenderer( SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
@@ -559,15 +559,6 @@ void DrawSpace::Planetoid::Body::CreateProceduralGlobalTextures( DrawSpace::Pass
         proc_texture.texture_content = NULL;
 
         m_procedural_global_textures[p_pass].push_back( proc_texture );
-
-        /*
-        globalproctexture->AllocTextureContent();
-        m_global_proc_textures_content = globalproctexture->GetTextureContentPtr();
-
-        unsigned char* color_ptr = (unsigned char*)m_global_proc_textures_content;
-
-        globalproctexture->UpdateTextureContent();
-        */
     }
 }
 
@@ -595,17 +586,18 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
             long tw, th, bpp;
             proc_texture.texture->GetFormat( tw, th, bpp );
 
-            double fbm_scale = 2.0;
+            
 
             for( int y = 0; y < th; y++ )
             {
                 for( int x = 0; x < tw; x++ )
                 {
                     double f_array[3];
+                    double f_array2[3];
                     unsigned char color;
 
-                    double fx = 2.0 * ( ( (double)x / (double)tw ) - 0.5 ) * fbm_scale;
-                    double fy = 2.0 * ( ( (double)y / (double)th ) - 0.5 ) * fbm_scale;
+                    double fx = 2.0 * ( ( (double)x / (double)tw ) - 0.5 );
+                    double fy = 2.0 * ( ( (double)y / (double)th ) - 0.5 );
 
                     switch( i )
                     {
@@ -613,26 +605,26 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
                             // front
                             f_array[0] = fx;
                             f_array[1] = fy;
-                            f_array[2] = fbm_scale;
+                            f_array[2] = 1.0;
                             break;
 
                         case 1:
                             // rear
                             f_array[0] = -fx;
                             f_array[1] = fy;
-                            f_array[2] = -fbm_scale;
+                            f_array[2] = -1.0;
                             break;
 
                         case 2:
                             //left
-                            f_array[0] = -fbm_scale;
+                            f_array[0] = -1.0;
                             f_array[1] = fy;
                             f_array[2] = fx;
                             break;
 
                         case 3:
                             //right
-                            f_array[0] = fbm_scale;
+                            f_array[0] = 1.0;
                             f_array[1] = fy;
                             f_array[2] = -fx;          
                             break;
@@ -640,21 +632,29 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
                         case 4:
                             // top
                             f_array[0] = fx;
-                            f_array[1] = fbm_scale;
+                            f_array[1] = 1.0;
                             f_array[2] = -fy;
                             break;
 
                         case 5:
                             // bottom
                             f_array[0] = fx;
-                            f_array[1] = -fbm_scale;
+                            f_array[1] = -1.0;
                             f_array[2] = fy;          
                             break;
                     }
 
-                    double res = m_fractal->fBm( f_array, 15.0 );
+                    f_array2[0] = f_array[0] * sqrt( 1.0 - f_array[1] * f_array[1] * 0.5 - f_array[2] * f_array[2] * 0.5 + f_array[1] * f_array[1] * f_array[2] * f_array[2] / 3.0 );                    
+                    f_array2[1] = f_array[1] * sqrt( 1.0 - f_array[2] * f_array[2] * 0.5 - f_array[0] * f_array[0] * 0.5 + f_array[0] * f_array[0] * f_array[2] * f_array[2] / 3.0 );
+                    f_array2[2] = f_array[2] * sqrt( 1.0 - f_array[0] * f_array[0] * 0.5 - f_array[1] * f_array[1] * 0.5 + f_array[0] * f_array[0] * f_array[1] * f_array[1] / 3.0 );
 
-                    if( res >= 0.15 && res < 0.65 )
+                    f_array2[0] *= 2.0;
+                    f_array2[1] *= 2.0;
+                    f_array2[2] *= 2.0;
+
+                    double res = m_fractal->fBm( f_array2, 15.0 );
+
+                    if( res >= 0.20 && res < 0.65 )
                     {
                         color = 255.0 * ( ( res * 0.5 ) + 0.5 );
                         *color_ptr = color * 0.6; color_ptr++;
