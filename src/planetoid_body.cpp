@@ -602,52 +602,8 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
 
                     double fx = 2.0 * ( ( (double)x / (double)tw ) - 0.5 );
                     double fy = 2.0 * ( ( (double)y / (double)th ) - 0.5 );
-
-                    switch( i )
-                    {
-                        case 0:
-                            // front
-                            f_array[0] = fx;
-                            f_array[1] = fy;
-                            f_array[2] = 1.0;
-                            break;
-
-                        case 1:
-                            // rear
-                            f_array[0] = -fx;
-                            f_array[1] = fy;
-                            f_array[2] = -1.0;
-                            break;
-
-                        case 2:
-                            //left
-                            f_array[0] = -1.0;
-                            f_array[1] = fy;
-                            f_array[2] = fx;
-                            break;
-
-                        case 3:
-                            //right
-                            f_array[0] = 1.0;
-                            f_array[1] = fy;
-                            f_array[2] = -fx;          
-                            break;
-
-                        case 4:
-                            // top
-                            f_array[0] = fx;
-                            f_array[1] = 1.0;
-                            f_array[2] = -fy;
-                            break;
-
-                        case 5:
-                            // bottom
-                            f_array[0] = fx;
-                            f_array[1] = -1.0;
-                            f_array[2] = fy;          
-                            break;
-                    }
-                   
+                                  
+                    DrawSpace::SphericalLOD::Patch::XYToXYZ( i, fx, fy, f_array );
                     DrawSpace::SphericalLOD::Patch::CubeToSphere( f_array, f_array2 );
 
                     f_array2[0] *= 2.0;

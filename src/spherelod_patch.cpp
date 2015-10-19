@@ -263,6 +263,54 @@ int Patch::GetOrientation( void )
     return m_orientation;
 }
 
+void Patch::XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, Vector& p_out )
+{
+    switch( p_orientation )
+    {
+        case SphericalLOD::Patch::FrontPlanetFace:
+
+            p_out[0] = p_x;
+            p_out[1] = p_y;
+            p_out[2] = 1.0;
+            break;
+
+        case SphericalLOD::Patch::RearPlanetFace:
+
+            p_out[0] = -p_x;
+            p_out[1] = p_y;
+            p_out[2] = -1.0;
+            break;
+
+        case SphericalLOD::Patch::LeftPlanetFace:
+
+            p_out[0] = -1.0;
+            p_out[1] = p_y;
+            p_out[2] = p_x;
+            break;
+
+        case SphericalLOD::Patch::RightPlanetFace:
+
+            p_out[0] = 1.0;
+            p_out[1] = p_y;
+            p_out[2] = -p_x;
+            break;
+
+        case SphericalLOD::Patch::TopPlanetFace:
+
+            p_out[0] = p_x;
+            p_out[1] = 1.0;
+            p_out[2] = -p_y;
+            break;
+
+        case SphericalLOD::Patch::BottomPlanetFace:
+
+            p_out[0] = p_x;
+            p_out[1] = -1.0;
+            p_out[2] = p_y;
+            break;
+    }
+}
+
 void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientation, dsreal p_sidelength, dsreal p_ray, dsreal p_posx, dsreal p_posy, DrawSpace::Utils::Vector& p_out )
 {
     // effectue la meme transfo que le vertex shader
