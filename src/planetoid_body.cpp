@@ -592,8 +592,12 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
             {
                 for( int x = 0; x < tw; x++ )
                 {
-                    double f_array[3];
-                    double f_array2[3];
+                    //double f_array[3];
+                    Vector f_array;
+
+                    //double f_array2[3];
+                    Vector f_array2;
+
                     unsigned char color;
 
                     double fx = 2.0 * ( ( (double)x / (double)tw ) - 0.5 );
@@ -643,16 +647,14 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
                             f_array[2] = fy;          
                             break;
                     }
-
-                    f_array2[0] = f_array[0] * sqrt( 1.0 - f_array[1] * f_array[1] * 0.5 - f_array[2] * f_array[2] * 0.5 + f_array[1] * f_array[1] * f_array[2] * f_array[2] / 3.0 );                    
-                    f_array2[1] = f_array[1] * sqrt( 1.0 - f_array[2] * f_array[2] * 0.5 - f_array[0] * f_array[0] * 0.5 + f_array[0] * f_array[0] * f_array[2] * f_array[2] / 3.0 );
-                    f_array2[2] = f_array[2] * sqrt( 1.0 - f_array[0] * f_array[0] * 0.5 - f_array[1] * f_array[1] * 0.5 + f_array[0] * f_array[0] * f_array[1] * f_array[1] / 3.0 );
+                   
+                    DrawSpace::SphericalLOD::Patch::CubeToSphere( f_array, f_array2 );
 
                     f_array2[0] *= 2.0;
                     f_array2[1] *= 2.0;
                     f_array2[2] *= 2.0;
 
-                    double res = m_fractal->fBm( f_array2, 15.0 );
+                    double res = m_fractal->fBm( f_array2.GetArray(), 15.0 );
 
                     if( res >= 0.20 && res < 0.65 )
                     {

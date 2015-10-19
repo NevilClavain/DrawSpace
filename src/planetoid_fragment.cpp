@@ -239,17 +239,14 @@ void Fragment::build_meshe( Meshe& p_patchmeshe, int p_patch_orientation, dsreal
                 break;
         }
 
-        dsreal xtemp = v2.x;
-        dsreal ytemp = v2.y;
-        dsreal ztemp = v2.z;
+        Vector v_in( v2.x, v2.y, v2.z, 0.0 );
+        Vector v_out;
 
-        v2.x = xtemp * sqrt( 1.0 - ytemp * ytemp * 0.5 - ztemp * ztemp * 0.5 + ytemp * ytemp * ztemp * ztemp / 3.0 );
-        v2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
-        v2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
-
-        v3.x = v2.x * m_planetray;
-        v3.y = v2.y * m_planetray;
-        v3.z = v2.z * m_planetray;
+        DrawSpace::SphericalLOD::Patch::CubeToSphere( v_in, v_out );
+       
+        v3.x = v_out[0] * m_planetray;
+        v3.y = v_out[1] * m_planetray;
+        v3.z = v_out[2] * m_planetray;
 
         p_outmeshe.AddVertex( v3 );
     }

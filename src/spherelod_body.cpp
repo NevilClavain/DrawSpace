@@ -81,25 +81,6 @@ void Body::Compute( void )
 
     //////////////////////////////////////
 
-    /*
-    bool status = 0;
-
-    status = m_faces[Patch::FrontPlanetFace]->Compute() | status;
-    status = m_faces[Patch::RearPlanetFace]->Compute() | status;
-    status = m_faces[Patch::TopPlanetFace]->Compute() | status; 
-    status = m_faces[Patch::BottomPlanetFace]->Compute() | status;
-    status = m_faces[Patch::RightPlanetFace]->Compute() | status;
-    status = m_faces[Patch::LeftPlanetFace]->Compute() | status;
-
-    if( status )
-    {
-        for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
-        {
-            ( **it )( this, m_current_face );
-        }
-    }
-    */
-
     for( long i = 0; i < 6; i++ )
     {
         bool status = m_faces[i]->Compute();
