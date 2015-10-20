@@ -82,7 +82,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
     {
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, ".0", NULL, -1, root ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, ".0", NULL, -1, root, true, Vector( 0.0, 0.0, 1.0, 1.0 ) ) );
         root->SetContent( patch );
 
         dsstring patch_name;
@@ -122,7 +122,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         char dstbuf[32];
         node_name += dsstring( itoa( node->GetId(), dstbuf, 10 ) );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, node_name, parent->GetContent(), node->GetId(), node ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, node_name, parent->GetContent(), node->GetId(), node, false, Vector() ) );
         node->SetContent( patch );
 
         dsstring patch_name;
