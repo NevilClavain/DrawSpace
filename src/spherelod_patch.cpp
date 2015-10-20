@@ -322,6 +322,30 @@ void Patch::XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, Vector& p_out )
     }
 }
 
+void Patch::ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out )
+{
+    DrawSpace::Utils::Vector in = p_in;
+    DrawSpace::Utils::Vector v2, v3;
+
+    // sidelenght scaling
+    in.Scale( m_sidelength / 2.0 );
+
+    // patch positionning
+    in[0] = in[0] + m_xpos;
+    in[1] = in[1] + m_ypos;
+    in[2] = 0.0;
+    in[3] = 1.0;
+
+    // patch reorientation
+    XYToXYZ( m_orientation, in[0], in[1], v2 );
+    v2[3] = 1.0;
+
+    CubeToSphere( v2, v3 );
+    v3[3] = 1.0;
+    p_out = v3;
+}
+
+/*
 void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientation, dsreal p_sidelength, dsreal p_ray, dsreal p_posx, dsreal p_posy, DrawSpace::Utils::Vector& p_out )
 {
     // effectue la meme transfo que le vertex shader
@@ -350,6 +374,7 @@ void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientati
 
     p_out = v3;
 }
+*/
 
 /*
 void Patch::SetTexture( Maps::TextureType p_type, void* p_texturedata )

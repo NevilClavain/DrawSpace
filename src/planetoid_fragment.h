@@ -86,7 +86,9 @@ protected:
 
     void on_meshebuild_request( DrawSpace::Core::PropertyPool* p_args );
     void on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_currentface );
-    void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, int p_patch_orientation, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, DrawSpace::Core::Meshe& p_outmeshe );
+
+    //void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, int p_patch_orientation, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, DrawSpace::Core::Meshe& p_outmeshe );
+    void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe );
 
 public:
 

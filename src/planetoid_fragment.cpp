@@ -85,21 +85,15 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     //localy copy inputs
 
     DrawSpace::Core::Meshe patchmeshe;
-    int patch_orientation;
-    dsreal sidelength;
-    dsreal xpos, ypos;
-
 
     patchmeshe = *( p_args->GetPropValue<Meshe*>( "patchmeshe" ) );
-    patch_orientation = p_args->GetPropValue<int>( "orientation" );
-    sidelength = p_args->GetPropValue<dsreal>( "sidelength" );
-    xpos = p_args->GetPropValue<dsreal>( "xpos" );
-    ypos = p_args->GetPropValue<dsreal>( "ypos" );
+
+    SphericalLOD::Patch* patch = p_args->GetPropValue<SphericalLOD::Patch*>( "patch" );
 
     ////////////////////////////// do the work
 
     Meshe final_meshe;
-    build_meshe( patchmeshe, patch_orientation, sidelength, xpos, ypos, final_meshe );
+    build_meshe( patchmeshe, patch, final_meshe );
 
     m_nb_collisionmeshebuild_done++;
 
@@ -144,20 +138,11 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
         m_meshe_ready = false;
         m_meshe_ready_mutex.Release();
 
-
         SphericalLOD::Patch* curr_patch = p_body->GetFaceCurrentLeaf( p_currentface );
 
-        dsreal xpos, ypos;        
-        curr_patch->GetUnitPos( xpos, ypos );
-
         PropertyPool props;
-
-        props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );        
-        props.AddPropValue<dsreal>( "sidelength", curr_patch->GetUnitSideLenght() );
-        props.AddPropValue<dsreal>( "xpos", xpos );
-        props.AddPropValue<dsreal>( "ypos", ypos );
-        props.AddPropValue<int>( "orientation", curr_patch->GetOrientation() );
-        
+        props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
+        props.AddPropValue<SphericalLOD::Patch*>( "patch", curr_patch );
         m_buildmeshereq_msg->PushMessage( props );
 
         m_nb_collisionmeshebuild_req++;
@@ -177,78 +162,22 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
 
 }
 
-void Fragment::build_meshe( Meshe& p_patchmeshe, int p_patch_orientation, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, Meshe& p_outmeshe )
+void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe )
 {
     for( long i = 0; i < p_patchmeshe.GetVertexListSize(); i++ )
     {                
-
-        Vertex v, v2, v3;
+        Vertex v, vertex_out;
         p_patchmeshe.GetVertex( i, v );
       
-        ////////////////////////////////////
-
-        v.x = v.x * p_sidelength / 2.0;
-        v.y = v.y * p_sidelength / 2.0;
-        v.z = v.z * p_sidelength / 2.0;
-
-        v.x += p_xpos;
-        v.y += p_ypos;
-
-        switch( p_patch_orientation )
-        {
-            case SphericalLOD::Patch::FrontPlanetFace:
-
-                v2.x = v.x;
-                v2.y = v.y;
-                v2.z = 1.0;
-                break;
-
-            case SphericalLOD::Patch::RearPlanetFace:
-
-                v2.x = -v.x;
-                v2.y = v.y;
-                v2.z = -1.0;
-                break;
-
-            case SphericalLOD::Patch::LeftPlanetFace:
-
-                v2.x = -1.0;
-                v2.y = v.y;
-                v2.z = v.x;
-                break;
-
-            case SphericalLOD::Patch::RightPlanetFace:
-
-                v2.x = 1.0;
-                v2.y = v.y;
-                v2.z = -v.x;
-                break;
-
-            case SphericalLOD::Patch::TopPlanetFace:
-
-                v2.x = v.x;
-                v2.y = 1.0;
-                v2.z = -v.y;
-                break;
-
-            case SphericalLOD::Patch::BottomPlanetFace:
-
-                v2.x = v.x;
-                v2.y = -1.0;
-                v2.z = v.y;
-                break;
-        }
-
-        Vector v_in( v2.x, v2.y, v2.z, 0.0 );
         Vector v_out;
 
-        DrawSpace::SphericalLOD::Patch::CubeToSphere( v_in, v_out );
-       
-        v3.x = v_out[0] * m_planetray;
-        v3.y = v_out[1] * m_planetray;
-        v3.z = v_out[2] * m_planetray;
+        p_patch->ProjectVertex( Vector( v.x, v.y, v.z, 1.0 ), v_out );
+        v_out.Scale( m_planetray );
+        vertex_out.x = v_out[0];
+        vertex_out.y = v_out[1];
+        vertex_out.z = v_out[2];
 
-        p_outmeshe.AddVertex( v3 );
+        p_outmeshe.AddVertex( vertex_out );
     }
 
     for( long i = 0; i < p_patchmeshe.GetTrianglesListSize(); i++ )
