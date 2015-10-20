@@ -147,15 +147,15 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
 
         SphericalLOD::Patch* curr_patch = p_body->GetFaceCurrentLeaf( p_currentface );
 
-        dsreal xpos, ypos;
-        curr_patch->GetPos( xpos, ypos );
+        dsreal xpos, ypos;        
+        curr_patch->GetUnitPos( xpos, ypos );
 
         PropertyPool props;
 
-        props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
-        props.AddPropValue<dsreal>( "sidelength", curr_patch->GetSideLength() / m_planetray );
-        props.AddPropValue<dsreal>( "xpos", xpos / m_planetray );
-        props.AddPropValue<dsreal>( "ypos", ypos / m_planetray );
+        props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );        
+        props.AddPropValue<dsreal>( "sidelength", curr_patch->GetUnitSideLenght() );
+        props.AddPropValue<dsreal>( "xpos", xpos );
+        props.AddPropValue<dsreal>( "ypos", ypos );
         props.AddPropValue<int>( "orientation", curr_patch->GetOrientation() );
         
         m_buildmeshereq_msg->PushMessage( props );

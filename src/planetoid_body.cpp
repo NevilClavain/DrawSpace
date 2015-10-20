@@ -643,8 +643,6 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
                         *color_ptr = 0; color_ptr++;
                         *color_ptr = 0; color_ptr++;                
                     }
-
-
                 }
             }  
 

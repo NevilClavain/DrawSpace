@@ -80,11 +80,13 @@ public:
 
     void GetName( dsstring& p_name );
     dsreal GetSideLength( void );
+    dsreal GetUnitSideLenght( void );
     int GetOrientation( void );
 
     dsreal GetTriangleSideLength( void );
 
     void GetPos( dsreal& p_xpos, dsreal& p_ypos );
+    void GetUnitPos( dsreal& p_xpos, dsreal& p_ypos );
 
     DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void );
 

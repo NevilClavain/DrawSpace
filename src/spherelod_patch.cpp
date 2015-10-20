@@ -242,6 +242,11 @@ dsreal Patch::GetSideLength( void )
     return m_sidelength * m_ray;
 }
 
+dsreal Patch::GetUnitSideLenght( void )
+{
+    return m_sidelength;
+}
+
 dsreal Patch::GetTriangleSideLength( void )
 {
     return ( ( m_sidelength * m_ray ) / ( Patch::Resolution - 1 ) );
@@ -251,6 +256,12 @@ void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos )
 {
     p_xpos = m_xpos * m_ray;
     p_ypos = m_ypos * m_ray;
+}
+
+void Patch::GetUnitPos( dsreal& p_xpos, dsreal& p_ypos )
+{
+    p_xpos = m_xpos;
+    p_ypos = m_ypos;
 }
 
 BaseQuadtreeNode* Patch::GetOwner( void )
@@ -328,52 +339,7 @@ void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientati
     in[3] = 1.0;
 
     // patch reorientation
-
-    switch( p_orientation )
-    {
-        case FrontPlanetFace:
-
-            v2[0] = in[0];
-            v2[1] = in[1];
-            v2[2] = 1.0;
-            break;
-
-        case RearPlanetFace:
-
-            v2[0] = -in[0];
-            v2[1] = in[1];
-            v2[2] = -1.0;
-            break;
-
-        case LeftPlanetFace:
-
-            v2[0] = -1.0;
-            v2[1] = in[1];
-            v2[2] = in[0];
-            break;
-
-        case RightPlanetFace:
-
-            v2[0] = 1.0;
-            v2[1] = in[1];
-            v2[2] = -in[0];
-            break;
-
-        case TopPlanetFace:
-
-            v2[0] = in[0];
-            v2[1] = 1.0;
-            v2[2] = -in[1];
-            break;
-
-        case BottomPlanetFace:
-
-            v2[0] = in[0];
-            v2[1] = -1.0;
-            v2[2] = in[1];
-            break;
-    }
-
+    XYToXYZ( p_orientation, in[0], in[1], v2 );
     v2[3] = 1.0;
 
     CubeToSphere( v2, v3 );
