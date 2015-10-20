@@ -397,6 +397,14 @@ void Patch::ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Util
     p_out = v3;
 }
 
+void Patch::GetUVCoords( DrawSpace::Utils::Vector& p_uv )
+{
+    p_uv[0] = m_u1;
+    p_uv[1] = m_v1;
+    p_uv[2] = m_u2;
+    p_uv[3] = m_v2;
+}
+
 /*
 void Patch::SetTexture( Maps::TextureType p_type, void* p_texturedata )
 {

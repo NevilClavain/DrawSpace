@@ -9,6 +9,10 @@ float4   flag0:				register(c24);
 float4   patch_translation:	register(c25);
 	/// .x, .y -> patch positionning
 
+float4   base_uv: register(c26);
+	// .x, .y -> u1, v1
+	// .z, .w -> u2, v2
+
 struct VS_INPUT 
 {
    float4 Position : POSITION0;
@@ -93,7 +97,11 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	
 
 	Output.Position = mul( v_position3, matWorldViewProjection );
-	Output.TexCoord0 = Input.TexCoord0;
+	//Output.TexCoord0 = Input.TexCoord0;
+
+	Output.TexCoord0 = 0.0;
+	Output.TexCoord0.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
+	Output.TexCoord0.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
 			  
 	return( Output );   
 }

@@ -1,6 +1,7 @@
 
 float4 Color : register(c0);
 
+sampler2D Texture0 : register(s0);
 
 struct PS_INTPUT
 {
@@ -10,5 +11,7 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-	return Color;	
+	//return Color;	
+
+	return tex2D( Texture0, input.TexCoord0 );
 }

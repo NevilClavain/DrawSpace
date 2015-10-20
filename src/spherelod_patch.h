@@ -98,7 +98,7 @@ public:
 
     void ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
 
-    
+    void GetUVCoords( DrawSpace::Utils::Vector& p_uv );
 
 
     //void SetTexture( Maps::TextureType p_type, void* p_texturedata );
