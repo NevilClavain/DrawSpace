@@ -585,17 +585,12 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
     
             long tw, th, bpp;
             proc_texture.texture->GetFormat( tw, th, bpp );
-
-            
-
+           
             for( int y = 0; y < th; y++ )
             {
                 for( int x = 0; x < tw; x++ )
                 {
-                    //double f_array[3];
                     Vector f_array;
-
-                    //double f_array2[3];
                     Vector f_array2;
 
                     unsigned char color;

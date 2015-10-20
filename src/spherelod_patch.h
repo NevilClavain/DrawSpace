@@ -62,6 +62,11 @@ protected:
     dsreal                                  m_ypos;
     dsreal                                  m_ray;
 
+    dsreal                                  m_u1;
+    dsreal                                  m_v1;
+    dsreal                                  m_u2;
+    dsreal                                  m_v2;
+
     int                                     m_orientation;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_owner;
@@ -72,7 +77,8 @@ protected:
     //void*                                   m_textures_data[Maps::NB_TEXTURETYPE];
 
 public:
-    Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner );
+    Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner,
+            bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords );
     virtual ~Patch( void );
 
     void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );
@@ -92,18 +98,16 @@ public:
 
     void ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
 
+    
+
+
     //void SetTexture( Maps::TextureType p_type, void* p_texturedata );
     //void* GetTexture( Maps::TextureType p_type );
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, DrawSpace::Utils::Vector& p_out );
-
     
-    //static void ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientation, dsreal p_sidelength, dsreal p_ray, dsreal p_posx, dsreal p_posy, DrawSpace::Utils::Vector& p_out );
-
-    
-
 };
 }
 }

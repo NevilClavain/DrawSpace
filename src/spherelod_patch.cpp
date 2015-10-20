@@ -27,7 +27,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Patch::Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner ) : 
+Patch::Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords ) : 
 m_orientation( p_orientation ),
 m_name( p_name ),
 m_ray( p_ray ),
@@ -92,6 +92,58 @@ m_owner( p_owner )
                 m_xpos = 0.0; m_ypos = 0.0;
                 break;
         }       
+    }
+
+    if( p_forceuv )
+    {
+        m_u1 = p_uvcoords[0];
+        m_v1 = p_uvcoords[1];
+        m_u2 = p_uvcoords[2];
+        m_v2 = p_uvcoords[3];
+    }
+    else
+    {
+        if( p_parent )
+        {
+            dsreal ui, vi;
+           
+            dsreal x1, y1, x2, y2;
+
+            // calcul pour coin superieur gauche (u1, v1)
+
+            x1 = m_xpos - m_sidelength / 2.0;
+            y1 = m_ypos + m_sidelength / 2.0;
+
+            // passer du repere [- p_parent->m_sidelength / 2.0 ; + p_parent->m_sidelength / 2.0] au repere [0.0 ; +1.0] (coords texture uv)
+            ui = x1 + ( p_parent->m_sidelength / 2.0 );
+            vi = ( p_parent->m_sidelength / 2.0 ) - y1;
+
+            // ajuster pour prendre en compte les coords uv du parent
+            m_u1 = ( ui * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
+            m_v1 = ( vi * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+
+
+            // calcul pour coin inferieur droit (u2, v2)
+
+            x2 = m_xpos + m_sidelength / 2.0;
+            y2 = m_ypos - m_sidelength / 2.0;
+
+            // passer du repere [- p_parent->m_sidelength / 2.0 ; + p_parent->m_sidelength / 2.0] au repere [0.0 ; +1.0] (coords texture uv)
+            ui = x2 + ( p_parent->m_sidelength / 2.0 );
+            vi = ( p_parent->m_sidelength / 2.0 ) - y2;
+
+            // ajuster pour prendre en compte les coords uv du parent
+            m_u2 = ( ui * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
+            m_v2 = ( vi * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+
+        }
+        else
+        {
+            m_u1 = 0.0;
+            m_v1 = 0.0;
+            m_u2 = 1.0;
+            m_v2 = 1.0;
+        }
     }
 }
 
@@ -344,37 +396,6 @@ void Patch::ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Util
     v3[3] = 1.0;
     p_out = v3;
 }
-
-/*
-void Patch::ConvertVertex( const DrawSpace::Utils::Vector& p_in, int p_orientation, dsreal p_sidelength, dsreal p_ray, dsreal p_posx, dsreal p_posy, DrawSpace::Utils::Vector& p_out )
-{
-    // effectue la meme transfo que le vertex shader
-
-    DrawSpace::Utils::Vector in = p_in;
-    DrawSpace::Utils::Vector v2, v3;
-
-    // sidelenght scaling
-    in.Scale( p_sidelength / 2.0 );
-
-    // patch positionning
-    in[0] = in[0] + p_posx;
-    in[1] = in[1] + p_posy;
-    in[2] = 0.0;
-    in[3] = 1.0;
-
-    // patch reorientation
-    XYToXYZ( p_orientation, in[0], in[1], v2 );
-    v2[3] = 1.0;
-
-    CubeToSphere( v2, v3 );
-
-    // final scaling
-    v3.Scale( p_ray );
-    v3[3] = 1.0;
-
-    p_out = v3;
-}
-*/
 
 /*
 void Patch::SetTexture( Maps::TextureType p_type, void* p_texturedata )
