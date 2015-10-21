@@ -125,7 +125,7 @@ void Body::BuildMeshe( void )
 
             vertex.tu[0] = current_u0;
             vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
-
+                                            // le v des coords textures et le y du repere patch sont en sens opposés
             // inutile
             /*
             vertex.tu[1] = current_u0;

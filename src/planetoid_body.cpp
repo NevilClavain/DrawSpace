@@ -596,9 +596,10 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
                     unsigned char color;
 
                     double fx = 2.0 * ( ( (double)x / (double)tw ) - 0.5 );
-                    double fy = 2.0 * ( ( (double)y / (double)th ) - 0.5 );
+                    double fy = 2.0 * ( ( (double)( th - y ) / (double)th ) - 0.5 ); // le v des coords textures et le y du repere patch sont en sens opposés
                                   
                     DrawSpace::SphericalLOD::Patch::XYToXYZ( i, fx, fy, f_array );
+
                     DrawSpace::SphericalLOD::Patch::CubeToSphere( f_array, f_array2 );
 
                     f_array2[0] *= 2.0;
