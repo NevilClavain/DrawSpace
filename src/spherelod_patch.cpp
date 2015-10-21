@@ -45,6 +45,8 @@ m_owner( p_owner )
     }
     */
 
+    dsreal ui1, vi1, ui2, vi2;
+
     if( NULL == p_parent )
     {
         m_xpos = m_ypos = 0.0;
@@ -62,6 +64,12 @@ m_owner( p_owner )
                 m_xpos += p_parent->m_xpos;
                 m_ypos = p_parent->m_sidelength / 4.0;
                 m_ypos += p_parent->m_ypos;
+
+                ui1 = 0.0;
+                vi1 = 0.0;
+                ui2 = 0.5;
+                vi2 = 0.5;
+
                 break;
 
             case BaseQuadtreeNode::NorthEastNode:
@@ -70,6 +78,12 @@ m_owner( p_owner )
                 m_xpos += p_parent->m_xpos;
                 m_ypos = p_parent->m_sidelength / 4.0;
                 m_ypos += p_parent->m_ypos;
+
+                ui1 = 0.5;
+                vi1 = 0.0;
+                ui2 = 1.0;
+                vi2 = 0.5;
+
                 break;
 
             case BaseQuadtreeNode::SouthEastNode:
@@ -78,6 +92,12 @@ m_owner( p_owner )
                 m_xpos += p_parent->m_xpos;
                 m_ypos = -p_parent->m_sidelength / 4.0;
                 m_ypos += p_parent->m_ypos;
+
+                ui1 = 0.5;
+                vi1 = 0.5;
+                ui2 = 1.0;
+                vi2 = 1.0;
+
                 break;
 
             case BaseQuadtreeNode::SouthWestNode:
@@ -86,6 +106,12 @@ m_owner( p_owner )
                 m_xpos += p_parent->m_xpos;
                 m_ypos = -p_parent->m_sidelength / 4.0;
                 m_ypos += p_parent->m_ypos;
+
+                ui1 = 0.0;
+                vi1 = 0.5;
+                ui2 = 0.5;
+                vi2 = 1.0;
+
                 break;
 
             default:
@@ -105,37 +131,11 @@ m_owner( p_owner )
     {
         if( p_parent )
         {
-            dsreal ui, vi;
-           
-            dsreal x1, y1, x2, y2;
+            m_u1 = ( ui1 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
+            m_v1 = ( vi1 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
 
-            // calcul pour coin superieur gauche (u1, v1)
-
-            x1 = m_xpos - m_sidelength / 2.0;
-            y1 = m_ypos + m_sidelength / 2.0;
-
-            // passer du repere [- p_parent->m_sidelength / 2.0 ; + p_parent->m_sidelength / 2.0] au repere [0.0 ; +1.0] (coords texture uv)
-            ui = x1 + ( p_parent->m_sidelength / 2.0 );
-            vi = ( p_parent->m_sidelength / 2.0 ) - y1;
-
-            // ajuster pour prendre en compte les coords uv du parent
-            m_u1 = ( ui * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
-            m_v1 = ( vi * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
-
-
-            // calcul pour coin inferieur droit (u2, v2)
-
-            x2 = m_xpos + m_sidelength / 2.0;
-            y2 = m_ypos - m_sidelength / 2.0;
-
-            // passer du repere [- p_parent->m_sidelength / 2.0 ; + p_parent->m_sidelength / 2.0] au repere [0.0 ; +1.0] (coords texture uv)
-            ui = x2 + ( p_parent->m_sidelength / 2.0 );
-            vi = ( p_parent->m_sidelength / 2.0 ) - y2;
-
-            // ajuster pour prendre en compte les coords uv du parent
-            m_u2 = ( ui * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
-            m_v2 = ( vi * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
-
+            m_u2 = ( ui2 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
+            m_v2 = ( vi2 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;       
         }
         else
         {

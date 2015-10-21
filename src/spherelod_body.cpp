@@ -124,7 +124,7 @@ void Body::BuildMeshe( void )
             vertex.z = 0.0;
 
             vertex.tu[0] = current_u0;
-            vertex.tv[0] = current_v0;
+            vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
 
             // inutile
             /*
