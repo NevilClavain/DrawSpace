@@ -814,13 +814,6 @@ bool Face::Compute( void )
         return false;
     }
 
-    /*
-    if( 0.0 == m_movement.LengthPow2() )
-    {
-        return false;
-    }
-    */
-
     if( m_currentleaf == NULL )
     {
         if( m_rootpatch )
@@ -829,27 +822,7 @@ bool Face::Compute( void )
         }
     }
     else
-    {
-        /*
-        if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
-        {
-            if( m_movement * m_relative_hotpoint < 0.0 ) // on descend vers la surface
-            {
-                if( check_split( m_relative_hotpoint ) )
-                {
-                    status = true;
-                }
-            }
-            else if( m_movement * m_relative_hotpoint > 0.0 ) // on prend de l'altitude
-            {
-                if( check_merge( m_relative_hotpoint ) )
-                {
-                    status = true;
-                }
-            }              
-        }
-        */
-       
+    {       
         if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
         {
             dsreal lod = m_currentleaf->GetContent()->GetTriangleSideLength() / ( m_relative_hotpoint.Length() - ( m_planet_diameter / 2.0 ) );
