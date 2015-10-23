@@ -44,8 +44,8 @@ protected:
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
 
     dsreal                                                                      m_diameter;
-    DrawSpace::Utils::Vector                                                    m_hotpoint;
-    dsreal                                                                      m_altitud;
+    
+    dsreal                                                                      m_hotpoint_altitud;
 
     std::vector<EventHandler*>                                                  m_evt_handlers;
 
@@ -69,7 +69,7 @@ public:
 
     virtual Patch* GetFaceCurrentLeaf( int p_faceid );
 
-    virtual dsreal GetAltitud( void );
+    virtual dsreal GetHotPointAltitud( void );
 
     virtual void ResetMeshes( void );
 

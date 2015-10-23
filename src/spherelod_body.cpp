@@ -172,16 +172,15 @@ void Body::RegisterEventHandler( EventHandler* p_handler )
 }
 
 void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
-{
-    m_hotpoint = p_hotpoint;
-
+{    
+    DrawSpace::Utils::Vector hotpoint = p_hotpoint;
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i]->UpdateRelativeHotpoint( m_hotpoint );
+        m_faces[i]->UpdateRelativeHotpoint( hotpoint );
     }
 
     // compute altitud
-    m_altitud = m_hotpoint.Length() - ( m_diameter / 2.0 );
+    m_hotpoint_altitud = hotpoint.Length() - ( m_diameter / 2.0 );
 }
 
 
@@ -197,9 +196,9 @@ Patch* Body::GetFaceCurrentLeaf( int p_faceid )
     return current_leaf->GetContent();
 }
 
-dsreal Body::GetAltitud( void )
+dsreal Body::GetHotPointAltitud( void )
 {
-    return m_altitud;
+    return m_hotpoint_altitud;
 }
 
 void Body::ResetMeshes( void )

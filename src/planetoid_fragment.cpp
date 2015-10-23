@@ -127,7 +127,7 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
     }
 
     long tri_index = 0;
-    dsreal alt = p_body->GetAltitud();
+    dsreal alt = p_body->GetHotPointAltitud();
 
     if( alt < 9000.0 )
     {

@@ -96,6 +96,15 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
         currentleaf_depth = m_face->GetCurrentLeaf()->GetDepthLevel();
     }
     
+    // PROVISOIRE +@+
+    std::map<dsstring, Patch*> patchesleafs;
+    m_face->GetLeafs( patchesleafs );
+
+    for( std::map<dsstring, Patch*>::iterator it = patchesleafs.begin(); it != patchesleafs.end(); ++it )
+    {
+        draw_single_patch( (*it).second, p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
+    }
+    /*
     if( -1 == currentleaf_depth || currentleaf_depth < 3 )
     {
         std::map<dsstring, Patch*> patchesleafs;
@@ -122,6 +131,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
             }
         }  
     }
+    */
 }
 
 
