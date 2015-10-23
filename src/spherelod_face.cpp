@@ -34,7 +34,8 @@ m_rootpatch( NULL ),
 m_planet_diameter( 10.0 ),
 m_currentleaf( NULL ),
 m_ratio_split_threshold( 0.03 ),
-m_ratio_merge_threshold( 0.04 )
+m_ratio_merge_threshold( 0.04 ),
+m_currentLOD( 0.0 )
 {
 }
 
@@ -750,7 +751,6 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
 
 bool Face::Compute( void )
 {
-
     bool status = false;
 
     Vector face_dir;
@@ -813,7 +813,7 @@ bool Face::Compute( void )
     {
         return false;
     }
-
+          
     if( m_currentleaf == NULL )
     {
         if( m_rootpatch )
@@ -822,7 +822,10 @@ bool Face::Compute( void )
         }
     }
     else
-    {       
+    {  
+        m_currentLOD = ( m_relative_hotpoint.Length() - ( m_planet_diameter / 2.0 ) ) / m_currentleaf->GetContent()->GetTriangleSideLength();
+        // PROVISOIRE +@+
+        /*
         if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
         {
             dsreal lod = m_currentleaf->GetContent()->GetTriangleSideLength() / ( m_relative_hotpoint.Length() - ( m_planet_diameter / 2.0 ) );
@@ -856,9 +859,10 @@ bool Face::Compute( void )
             {
                 m_currentleaf = NULL;
             }
-
         }
+        */
     }
+
     return status;
 }
 
@@ -915,4 +919,9 @@ void Face::ResetMeshe( void )
 void Face::GetLeafs( std::map<dsstring, Patch*>& p_list )
 {
     p_list = m_patchesleafs;
+}
+
+dsreal Face::GetCurrentLOD( void )
+{
+    return m_currentLOD;
 }

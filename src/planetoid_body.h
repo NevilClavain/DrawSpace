@@ -135,6 +135,7 @@ public:
     void                                CreateProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_resol );
     void                                InitProceduralGlobalTextures( void );
     
+    Fragment*                           GetFragment( int p_index );
 
     void                                AddShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader );
 

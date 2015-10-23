@@ -51,6 +51,8 @@ protected:
 
     int                                                                         m_current_face;
 
+    
+
 public:
 
     Body( dsreal p_diameter );
@@ -68,10 +70,13 @@ public:
     virtual DrawSpace::Core::Meshe* GetPatcheMeshe( void );
 
     virtual Patch* GetFaceCurrentLeaf( int p_faceid );
+    virtual Face* GetFace( int p_faceid );
 
     virtual dsreal GetHotPointAltitud( void );
 
     virtual void ResetMeshes( void );
+    
+    virtual int GetCurrentFace (void );
 
     //virtual Maps* GetFaceMapsFactory( int p_faceid );
 

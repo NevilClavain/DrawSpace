@@ -36,7 +36,8 @@ Meshe* Body::m_planetpatch_meshe = NULL;
 
 
 Body::Body( dsreal p_diameter ) : 
-m_diameter( p_diameter )
+m_diameter( p_diameter ),
+m_current_face( -1 )
 {
     for( long i = 0; i < 6; i++ )
     {
@@ -78,13 +79,14 @@ void Body::Compute( void )
     }
 
     m_current_face = curr_face;
-
+    
     //////////////////////////////////////
-
     for( long i = 0; i < 6; i++ )
     {
         bool status = m_faces[i]->Compute();
 
+        // PROVISOIRE +@+
+        /*
         if( status && i == m_current_face )
         {
             for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
@@ -92,6 +94,7 @@ void Body::Compute( void )
                 ( **it )( this, m_current_face );
             }            
         }
+        */
     }
 }
 
@@ -208,6 +211,16 @@ void Body::ResetMeshes( void )
         m_faces[i]->ResetMeshe();
     }
 }
+
+int Body::GetCurrentFace (void )
+{
+    return m_current_face;
+}
+Face* Body::GetFace( int p_faceid )
+{
+    return m_faces[p_faceid];
+}
+
 /*
 Maps* Body::GetFaceMapsFactory( int p_faceid )
 {

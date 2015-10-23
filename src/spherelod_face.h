@@ -75,6 +75,8 @@ protected:
 
     std::map<dsstring, Patch*>                                  m_patchesleafs;
 
+    dsreal                                                      m_currentLOD;
+
     //Maps                                                        m_maps_factory;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -121,6 +123,8 @@ public:
     virtual void ResetMeshe( void );
 
     virtual void GetLeafs( std::map<dsstring, Patch*>& p_list );
+
+    virtual dsreal GetCurrentLOD( void );
 
     //virtual Maps* GetMapsFactory( void );
 };

@@ -267,6 +267,11 @@ void Fragment::SetHotState( bool p_hotstate )
     m_hot = p_hotstate;
 }
 
+bool Fragment::GetHotState( void )
+{
+    return m_hot;
+}
+
 void Fragment::SetCamera( CameraPoint* p_camera )
 {
     m_camera = p_camera;
@@ -304,7 +309,6 @@ DrawSpace::SphericalLOD::Body* Fragment::GetPlanetBody( void )
 {
     return m_planetbody;
 }
-
 
 void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done, long& p_nb_collisionmeshebuild_added )
 {

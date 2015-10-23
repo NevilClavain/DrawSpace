@@ -659,4 +659,7 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
     }
 }
 
-
+DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( int p_index )
+{
+    return m_planetfragments_list[p_index];
+}

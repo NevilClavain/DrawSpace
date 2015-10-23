@@ -98,6 +98,7 @@ public:
     void Update( DrawSpace::Dynamics::World* p_world, DrawSpace::Planetoid::Body* p_owner );
 
     void SetHotState( bool p_hotstate );
+    bool GetHotState( void );
     void SetCamera( DrawSpace::Dynamics::CameraPoint* p_camera );
     void SetInertBody( DrawSpace::Dynamics::InertBody* p_body );
 
