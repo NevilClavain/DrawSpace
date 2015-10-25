@@ -405,6 +405,62 @@ void Patch::GetUVCoords( DrawSpace::Utils::Vector& p_uv )
     p_uv[3] = m_v2;
 }
 
+void Patch::GetNormalVector( int p_orientation, DrawSpace::Utils::Vector& p_vector )
+{
+    Vector face_dir;
+    switch( p_orientation )
+    {
+        case Patch::FrontPlanetFace:
+
+            face_dir[0] = 0.0;
+            face_dir[1] = 0.0;
+            face_dir[2] = 1.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::RearPlanetFace:
+
+            face_dir[0] = 0.0;
+            face_dir[1] = 0.0;
+            face_dir[2] = -1.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::TopPlanetFace:
+
+            face_dir[0] = 0.0;
+            face_dir[1] = 1.0;
+            face_dir[2] = 0.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::BottomPlanetFace:
+
+            face_dir[0] = 0.0;
+            face_dir[1] = -1.0;
+            face_dir[2] = 0.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::RightPlanetFace:
+
+            face_dir[0] = 1.0;
+            face_dir[1] = 0.0;
+            face_dir[2] = 0.0;
+            face_dir[3] = 1.0;
+            break;
+
+        case Patch::LeftPlanetFace:
+
+            face_dir[0] = -1.0;
+            face_dir[1] = 0.0;
+            face_dir[2] = 0.0;
+            face_dir[3] = 1.0;
+            break;
+    }
+    p_vector = face_dir;
+}
+
 /*
 void Patch::SetTexture( Maps::TextureType p_type, void* p_texturedata )
 {

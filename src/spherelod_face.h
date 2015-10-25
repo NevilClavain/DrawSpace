@@ -111,6 +111,7 @@ public:
     virtual void Merge( const dsstring& p_name );
     virtual void SetPlanetDiameter( dsreal p_diameter );
     virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
+    virtual void ComputeLOD( void );
     virtual bool Compute( void );
 
     virtual void AddInstHandler( PatchInstanciationHandler* p_handler );

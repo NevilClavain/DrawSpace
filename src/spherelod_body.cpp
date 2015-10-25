@@ -96,6 +96,9 @@ void Body::Compute( void )
         }
         */
     }
+
+    // PROVISOIRE +@+
+    m_faces[m_current_face]->ComputeLOD();
 }
 
 

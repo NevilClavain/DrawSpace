@@ -747,73 +747,8 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
     return NULL;
 }
 
-
-
-bool Face::Compute( void )
+void Face::ComputeLOD( void )
 {
-    bool status = false;
-
-    Vector face_dir;
-    switch( m_orientation )
-    {
-        case Patch::FrontPlanetFace:
-
-            face_dir[0] = 0.0;
-            face_dir[1] = 0.0;
-            face_dir[2] = 1.0;
-            face_dir[3] = 1.0;
-            break;
-
-        case Patch::RearPlanetFace:
-
-            face_dir[0] = 0.0;
-            face_dir[1] = 0.0;
-            face_dir[2] = -1.0;
-            face_dir[3] = 1.0;
-            break;
-
-        case Patch::TopPlanetFace:
-
-            face_dir[0] = 0.0;
-            face_dir[1] = 1.0;
-            face_dir[2] = 0.0;
-            face_dir[3] = 1.0;
-            break;
-
-        case Patch::BottomPlanetFace:
-
-            face_dir[0] = 0.0;
-            face_dir[1] = -1.0;
-            face_dir[2] = 0.0;
-            face_dir[3] = 1.0;
-            break;
-
-        case Patch::RightPlanetFace:
-
-            face_dir[0] = 1.0;
-            face_dir[1] = 0.0;
-            face_dir[2] = 0.0;
-            face_dir[3] = 1.0;
-            break;
-
-        case Patch::LeftPlanetFace:
-
-            face_dir[0] = -1.0;
-            face_dir[1] = 0.0;
-            face_dir[2] = 0.0;
-            face_dir[3] = 1.0;
-            break;
-    }
-
-    Vector norm_hp = m_relative_hotpoint;
-    norm_hp.Normalize();
-    m_alignment_factor = norm_hp * face_dir;
-
-    if( m_alignment_factor < 0 )
-    {
-        return false;
-    }
-          
     if( m_currentleaf == NULL )
     {
         if( m_rootpatch )
@@ -824,8 +759,38 @@ bool Face::Compute( void )
     else
     {  
         m_currentLOD = ( m_relative_hotpoint.Length() - ( m_planet_diameter / 2.0 ) ) / m_currentleaf->GetContent()->GetTriangleSideLength();
-        // PROVISOIRE +@+
-        /*
+    }
+}
+
+bool Face::Compute( void )
+{
+    // PROVISOIRE +@+
+    //bool status = false;
+
+    Vector face_dir;
+
+    Patch::GetNormalVector( m_orientation, face_dir );
+    Vector norm_hp = m_relative_hotpoint;
+    norm_hp.Normalize();
+    m_alignment_factor = norm_hp * face_dir;
+
+    if( m_alignment_factor < 0 )
+    {
+        return false;
+    }
+    return true;
+      
+    // PROVISOIRE +@+
+    /*
+    if( m_currentleaf == NULL )
+    {
+        if( m_rootpatch )
+        {
+            m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
+        }
+    }
+    else
+    {          
         if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
         {
             dsreal lod = m_currentleaf->GetContent()->GetTriangleSideLength() / ( m_relative_hotpoint.Length() - ( m_planet_diameter / 2.0 ) );
@@ -860,10 +825,10 @@ bool Face::Compute( void )
                 m_currentleaf = NULL;
             }
         }
-        */
     }
-
+    
     return status;
+    */
 }
 
 void Face::AddInstHandler( Face::PatchInstanciationHandler* p_handler )
@@ -925,3 +890,4 @@ dsreal Face::GetCurrentLOD( void )
 {
     return m_currentLOD;
 }
+

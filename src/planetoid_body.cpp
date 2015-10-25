@@ -301,8 +301,15 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
     }
     else if( DrawSpace::Core::SceneNodeGraph::TRANSFORMATIONS_DONE == p_event )
     {
+        // PROVISOIRE +@+
+
+        manage_bodies();
+        update_fragments();
+
+        /*
         update_fragments();
         manage_bodies();
+        */
     }
 }
 

@@ -107,6 +107,7 @@ public:
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, DrawSpace::Utils::Vector& p_out );
+    static void GetNormalVector( int p_orientation, DrawSpace::Utils::Vector& p_vector );
     
 };
 }
