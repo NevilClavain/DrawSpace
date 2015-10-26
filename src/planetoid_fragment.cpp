@@ -59,7 +59,7 @@ m_nb_collisionmeshebuild_added( 0 )
        
         dsstring reqname = p_name + dsstring( "_ReqBuildMesheEvent" );
 
-        m_buildmeshereq_msg = mediator->CreateMessageQueue( reqname );
+        m_buildmeshereq_msg = mediator->CreateMessageQueue();
         
         m_runner->RegisterMsgHandler( m_buildmeshereq_msg, m_runner_msg_cb );
 

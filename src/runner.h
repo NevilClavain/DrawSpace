@@ -37,7 +37,7 @@ public:
 
 protected:
 
-    std::map<dsstring,MediatorEventHandler*>                        m_handlers; 
+    std::map<HANDLE, MediatorEventHandler*>                         m_handlers; 
 
 public:
     

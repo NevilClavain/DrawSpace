@@ -46,9 +46,9 @@ void Runner::Run( void )
         Mediator::MessageQueue* queue = mediator->Wait();
         if( queue )
         {
-            if( m_handlers.count( queue->m_name ) > 0 )
+            if( m_handlers.count( queue->GetHandle() ) > 0 )
             {
-                MediatorEventHandler* handler = m_handlers[queue->m_name];
+                MediatorEventHandler* handler = m_handlers[queue->GetHandle()];
 
                 PropertyPool props;
 
@@ -63,5 +63,5 @@ void Runner::Run( void )
 
 void Runner::RegisterMsgHandler( Mediator::MessageQueue* p_queue, MediatorEventHandler* p_handler )
 {
-    m_handlers[p_queue->m_name] = p_handler;
+    m_handlers[p_queue->GetHandle()] = p_handler;
 }

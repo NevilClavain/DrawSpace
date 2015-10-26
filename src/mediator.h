@@ -286,8 +286,6 @@ class Mediator
 public:
     class MessageQueue
     {
-    public:
-        dsstring                    m_name;
 
     protected:
         HANDLE                      m_system_event;
@@ -296,10 +294,14 @@ public:
 
     public:
 
-        MessageQueue( const dsstring& p_name, HANDLE p_handle ) :
-        m_name( p_name ),
+        MessageQueue( HANDLE p_handle ) :        
         m_system_event( p_handle )
         {
+        }
+
+        HANDLE GetHandle( void )
+        {
+            return m_system_event;
         }
 
         void PushMessage( const PropertyPool& p_msg )
@@ -342,8 +344,7 @@ protected:
     static Mediator* m_instance;
 
     int                                     m_nb_handles;
-    HANDLE                                  m_handles[512];
-    std::map<dsstring, MessageQueue*>       m_messages_by_name;
+    HANDLE                                  m_handles[512];    
     std::map<HANDLE, MessageQueue*>         m_messages_by_handle;
     
 
@@ -361,7 +362,7 @@ public:
         return m_instance;
     }
 
-    MessageQueue* CreateMessageQueue( const dsstring& p_messagequeueid );
+    MessageQueue* CreateMessageQueue( void );
     MessageQueue* Wait( void );
 
 };

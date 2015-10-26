@@ -39,12 +39,11 @@ Mediator::~Mediator( void )
 
 }
 
-Mediator::MessageQueue* Mediator::CreateMessageQueue( const dsstring& p_messagequeueid )
+Mediator::MessageQueue* Mediator::CreateMessageQueue( void )
 {
-    HANDLE evt = ::CreateEventA( NULL, TRUE, FALSE, p_messagequeueid.c_str() );
-    Mediator::MessageQueue* mq = _DRAWSPACE_NEW_( Mediator::MessageQueue, Mediator::MessageQueue( p_messagequeueid, evt ) );
-
-    m_messages_by_name[p_messagequeueid] = mq;
+    HANDLE evt = ::CreateEventA( NULL, TRUE, FALSE, NULL );
+    Mediator::MessageQueue* mq = _DRAWSPACE_NEW_( Mediator::MessageQueue, Mediator::MessageQueue( evt ) );
+    
     m_messages_by_handle[evt] = mq;
 
     m_handles[m_nb_handles] = evt;

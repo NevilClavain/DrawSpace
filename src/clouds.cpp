@@ -47,7 +47,7 @@ m_running( false )
 
     m_runner = _DRAWSPACE_NEW_( Runner, Runner );
     DrawSpace::Core::Mediator* mediator = Mediator::GetInstance();
-    m_sort_msg = mediator->CreateMessageQueue( "ReqSortEvent" );
+    m_sort_msg = mediator->CreateMessageQueue();
     
     m_runner->RegisterMsgHandler( m_sort_msg, m_runnercb );
 
