@@ -73,7 +73,7 @@ protected:
 
     DrawSpace::Core::Mediator::MessageQueue*                            m_sort_msg;
     DrawSpace::Core::Runner*                                            m_runner;
-    DrawSpace::Core::Task<DrawSpace::Core::Runner>*                     m_task;
+    //DrawSpace::Core::Task<DrawSpace::Core::Runner>*                     m_task;
 
     DrawSpace::Utils::Mutex                                             m_runner_state_mutex;
     int                                                                 m_runner_state;

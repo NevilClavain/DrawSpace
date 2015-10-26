@@ -25,6 +25,7 @@
 
 #include "mediator.h"
 #include "callback.h"
+#include "task.h"
 
 namespace DrawSpace
 {
@@ -37,14 +38,17 @@ public:
 
 protected:
 
-    std::map<HANDLE, MediatorEventHandler*>                         m_handlers; 
+    std::map<HANDLE, MediatorEventHandler*>                         m_handlers;
+    DrawSpace::Core::Task<DrawSpace::Core::Runner>*                 m_task;
 
 public:
     
     Runner( void );
     virtual ~Runner( void );
 
-    void Run( void );   
+    void Run( void );
+
+    void Startup( void );
     void RegisterMsgHandler( DrawSpace::Core::Mediator::MessageQueue* p_queue, MediatorEventHandler* p_handler );
 };
 }

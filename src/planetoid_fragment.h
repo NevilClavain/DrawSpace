@@ -53,7 +53,7 @@ protected:
     
     DrawSpace::Core::Mediator::MessageQueue*                    m_buildmeshereq_msg;
     DrawSpace::Core::Runner*                                    m_runner;
-    DrawSpace::Core::Task<DrawSpace::Core::Runner>*             m_task;
+    //DrawSpace::Core::Task<DrawSpace::Core::Runner>*             m_task;
 
     long                                                        m_nb_collisionmeshebuild_req;
     long                                                        m_nb_collisionmeshebuild_done;

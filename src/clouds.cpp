@@ -51,12 +51,15 @@ m_running( false )
     
     m_runner->RegisterMsgHandler( m_sort_msg, m_runnercb );
 
-    m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
-    m_task->Startup( m_runner );
+    //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
+    //m_task->Startup( m_runner );
+
+    m_runner->Startup();
 }
 
 Clouds::~Clouds( void )
 {
+    _DRAWSPACE_DELETE_( m_runner );
 }
 
 void Clouds::on_sort_request( PropertyPool* p_args )

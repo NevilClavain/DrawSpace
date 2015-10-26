@@ -29,12 +29,12 @@ using namespace DrawSpace::Utils;
 
 Runner::Runner( void )
 {
-
+    m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
 }
 
 Runner::~Runner( void )
 {
-    
+    _DRAWSPACE_DELETE_( m_task );
 }
 
 void Runner::Run( void )
@@ -64,4 +64,9 @@ void Runner::Run( void )
 void Runner::RegisterMsgHandler( Mediator::MessageQueue* p_queue, MediatorEventHandler* p_handler )
 {
     m_handlers[p_queue->GetHandle()] = p_handler;
+}
+
+void Runner::Startup( void )
+{
+    m_task->Startup( this );
 }
