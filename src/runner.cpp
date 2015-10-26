@@ -30,7 +30,8 @@ using namespace DrawSpace::Utils;
 Runner::Runner( void )
 {
     m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
-    m_message_queue = m_mediator.CreateMessageQueue();
+    m_task_message_queue = m_mediator.CreateMessageQueue();
+    m_client_message_queue = m_mediator.CreateMessageQueue();
 }
 
 Runner::~Runner( void )
@@ -45,9 +46,9 @@ void Runner::Run( void )
         Mediator::MessageQueue* queue = m_mediator.Wait();
         if( queue )
         {
-            if( m_handlers.count( queue->GetHandle() ) > 0 )
+            if( m_taskhandlers.count( queue->GetHandle() ) > 0 )
             {
-                MediatorEventHandler* handler = m_handlers[queue->GetHandle()];
+                MediatorEventHandler* handler = m_taskhandlers[queue->GetHandle()];
 
                 PropertyPool props;
 
@@ -60,14 +61,19 @@ void Runner::Run( void )
     }
 }
 
-void Runner::RegisterMsgHandler( MediatorEventHandler* p_handler )
+void Runner::RegisterTaskMsgHandler( MediatorEventHandler* p_handler )
 {
-    m_handlers[m_message_queue->GetHandle()] = p_handler;
+    m_taskhandlers[m_task_message_queue->GetHandle()] = p_handler;
 }
 
 void Runner::PushMessage( const PropertyPool& p_msg )
 {
-    m_message_queue->PushMessage( p_msg );
+    m_task_message_queue->PushMessage( p_msg );
+}
+
+void Runner::RegisterClientMsgHandler( MediatorEventHandler* p_handler )
+{
+    m_clienthandlers[m_client_message_queue->GetHandle()] = p_handler;
 }
 
 void Runner::Startup( void )

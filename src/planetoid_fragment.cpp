@@ -61,7 +61,7 @@ m_nb_collisionmeshebuild_added( 0 )
 
         //m_buildmeshereq_msg = mediator->CreateMessageQueue();        
         //m_runner->RegisterMsgHandler( m_buildmeshereq_msg, m_runner_msg_cb );
-        m_runner->RegisterMsgHandler( m_runner_msg_cb );
+        m_runner->RegisterTaskMsgHandler( m_runner_msg_cb );
 
 
         //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );

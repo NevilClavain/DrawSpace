@@ -54,7 +54,7 @@ m_running( false )
     m_runner->RegisterMsgHandler( m_sort_msg, m_runnercb );
     */
 
-    m_runner->RegisterMsgHandler( m_runnercb );
+    m_runner->RegisterTaskMsgHandler( m_runnercb );
 
 
     //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
