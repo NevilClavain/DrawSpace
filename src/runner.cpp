@@ -39,31 +39,36 @@ Runner::~Runner( void )
     _DRAWSPACE_DELETE_( m_task );
 }
 
+void Runner::unstack_messages( DrawSpace::Core::Mediator::MessageQueue* p_testqueue, DrawSpace::Core::Mediator::MessageQueue* p_signaledqueue, MediatorEventHandler* p_handler )
+{
+    if( p_testqueue == p_signaledqueue )
+    {
+        PropertyPool props;
+        while( p_signaledqueue->GetNextMessage( props ) )
+        {
+            (*p_handler)( &props );
+        }
+    }    
+}
+
 void Runner::Run( void )
 {
     while( 1 )
     {
-        Mediator::MessageQueue* queue = m_mediator.Wait();
-        if( queue )
-        {
-            if( m_taskhandlers.count( queue->GetHandle() ) > 0 )
-            {
-                MediatorEventHandler* handler = m_taskhandlers[queue->GetHandle()];
-
-                PropertyPool props;
-
-                while( queue->GetNextMessage( props ) )
-                {
-                    (*handler)( &props );
-                }
-            }
-        }
+        Mediator::MessageQueue* signaled_queue = m_mediator.Wait();
+        unstack_messages( m_task_message_queue, signaled_queue, m_taskhandler );
     }
 }
 
-void Runner::RegisterTaskMsgHandler( MediatorEventHandler* p_handler )
+void Runner::Check( void )
 {
-    m_taskhandlers[m_task_message_queue->GetHandle()] = p_handler;
+    Mediator::MessageQueue* signaled_queue = m_mediator.Check();
+    unstack_messages( m_client_message_queue, signaled_queue, m_clienthandler );
+}
+
+void Runner::RegisterTaskMsgHandler( MediatorEventHandler* p_handler )
+{    
+    m_taskhandler = p_handler;
 }
 
 void Runner::PushMessage( const PropertyPool& p_msg )
@@ -73,7 +78,7 @@ void Runner::PushMessage( const PropertyPool& p_msg )
 
 void Runner::RegisterClientMsgHandler( MediatorEventHandler* p_handler )
 {
-    m_clienthandlers[m_client_message_queue->GetHandle()] = p_handler;
+    m_clienthandler = p_handler;
 }
 
 void Runner::Startup( void )

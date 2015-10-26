@@ -42,11 +42,12 @@ protected:
     DrawSpace::Core::Mediator                                       m_mediator;
 
     DrawSpace::Core::Mediator::MessageQueue*                        m_task_message_queue;
-    std::map<HANDLE, MediatorEventHandler*>                         m_taskhandlers;
+    MediatorEventHandler*                                           m_taskhandler;
 
     DrawSpace::Core::Mediator::MessageQueue*                        m_client_message_queue;
-    std::map<HANDLE, MediatorEventHandler*>                         m_clienthandlers;
+    MediatorEventHandler*                                           m_clienthandler;
 
+    void unstack_messages( DrawSpace::Core::Mediator::MessageQueue* p_testqueue, DrawSpace::Core::Mediator::MessageQueue* p_signaledqueue, MediatorEventHandler* p_handler );
 
 public:
     
@@ -54,12 +55,13 @@ public:
     virtual ~Runner( void );
 
     void Run( void );
-
     void Startup( void );
+
     void RegisterTaskMsgHandler( MediatorEventHandler* p_handler );
     void PushMessage( const PropertyPool& p_msg );
 
     void RegisterClientMsgHandler( MediatorEventHandler* p_handler );
+    void Check( void );
 
 };
 }
