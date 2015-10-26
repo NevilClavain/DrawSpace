@@ -43,19 +43,6 @@ void Runner::Run( void )
 
     while( 1 )
     {
-        /*
-        Mediator::Event* evt = mediator->Wait();
-
-        if( evt )
-        {
-            if( m_handlers.count( evt->name ) > 0 )
-            {
-                MediatorEventHandler* handler = m_handlers[evt->name];
-                (*handler)( evt->args );
-            }
-        }
-        */
-
         Mediator::MessageQueue* queue = mediator->Wait();
         if( queue )
         {
@@ -73,13 +60,6 @@ void Runner::Run( void )
         }
     }
 }
-
-/*
-void Runner::RegisterEventHandler( Mediator::Event* p_event, MediatorEventHandler* p_handler )
-{
-    m_handlers[p_event->name] = p_handler;
-}
-*/
 
 void Runner::RegisterMsgHandler( Mediator::MessageQueue* p_queue, MediatorEventHandler* p_handler )
 {
