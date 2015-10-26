@@ -45,13 +45,12 @@ class Fragment
 protected:
 
     typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Body*, int>     SphereLODEvtCb;
-    typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>           RunnerMsgCb; //RunnerEvtCb;
+    typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>           RunnerMsgCb;
 
 
     DrawSpace::SphericalLOD::Body*                              m_planetbody;
     DrawSpace::Dynamics::Collider*                              m_collider;
-
-    //DrawSpace::Core::Mediator::Event*                           m_buildmeshe_event;
+    
     DrawSpace::Core::Mediator::MessageQueue*                    m_buildmeshereq_msg;
     DrawSpace::Core::Runner*                                    m_runner;
     DrawSpace::Core::Task<DrawSpace::Core::Runner>*             m_task;
@@ -61,8 +60,7 @@ protected:
     long                                                        m_nb_collisionmeshebuild_added;
 
 
-    SphereLODEvtCb*                                             m_spherelod_evt_cb;
-    //RunnerEvtCb*                                                m_runner_evt_cb;
+    SphereLODEvtCb*                                             m_spherelod_evt_cb;    
     RunnerMsgCb*                                                m_runner_msg_cb;
 
     bool                                                        m_suspend_update;
