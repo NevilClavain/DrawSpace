@@ -57,6 +57,7 @@ public:
 protected:
 
     void on_sort_request( Core::PropertyPool* p_args );
+    void on_sort_result( Core::PropertyPool* p_args );
     void on_camera_event( Core::SceneNodeGraph::CameraEvent p_event, Core::BaseSceneNode* p_node );
     void on_procedural( Procedural::Atomic* p_atom );
 
@@ -68,6 +69,7 @@ protected:
 
 
     RunnerMsgCb*                                                        m_runnercb;
+    RunnerMsgCb*                                                        m_runnercb_back;
     ProceduralCb*                                                       m_proceduralcb;
     CameraEventCb*                                                      m_cameracb;
 
@@ -86,8 +88,6 @@ protected:
     bool                                                                m_previous_camera_pos_avail;
     DrawSpace::Utils::Vector                                            m_previous_camera_pos;
 
-    int                                                                 m_recompute_count;
-
     std::vector<CloudUnitDescriptor*>                                   m_clouds;
     CloudUnitDescriptor*                                                m_new_cloud;
 
@@ -105,6 +105,10 @@ protected:
 
 public:
 
+    int                                                                 m_recompute_count;
+    int                                                                 m_recompute_count2;
+
+
     Clouds( void );
     virtual ~Clouds( void );
 
@@ -118,8 +122,6 @@ public:
     void EnableDetails( bool p_details );
 
     void ImpostorsInit( void );
-
-
 };
 }
 

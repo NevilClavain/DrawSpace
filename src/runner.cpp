@@ -76,6 +76,12 @@ void Runner::PushMessage( const PropertyPool& p_msg )
     m_task_message_queue->PushMessage( p_msg );
 }
 
+void Runner::PushClientMessage( const PropertyPool& p_msg )
+{
+    m_client_message_queue->PushMessage( p_msg );
+}
+
+
 void Runner::RegisterClientMsgHandler( MediatorEventHandler* p_handler )
 {
     m_clienthandler = p_handler;

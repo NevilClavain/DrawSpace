@@ -59,6 +59,7 @@ public:
 
     void RegisterTaskMsgHandler( MediatorEventHandler* p_handler );
     void PushMessage( const PropertyPool& p_msg );
+    void PushClientMessage( const PropertyPool& p_msg );
 
     void RegisterClientMsgHandler( MediatorEventHandler* p_handler );
     void Check( void );

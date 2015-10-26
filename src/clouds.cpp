@@ -35,6 +35,7 @@ m_clouds_sort_request( false ),
 m_current_camera( NULL ),
 m_previous_camera_pos_avail( false ),
 m_recompute_count( 0 ),
+m_recompute_count2( 0 ),
 m_sort_running( false ),
 m_owner( NULL ),
 m_sorting_distance( 1000.0 ),
@@ -44,6 +45,7 @@ m_running( false )
     m_proceduralcb = _DRAWSPACE_NEW_( ProceduralCb, ProceduralCb( this, &Clouds::on_procedural ) );
     m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
     m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Clouds::on_sort_request ) );
+    m_runnercb_back = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Clouds::on_sort_result ) );
 
     m_runner = _DRAWSPACE_NEW_( Runner, Runner );
 
@@ -55,6 +57,7 @@ m_running( false )
     */
 
     m_runner->RegisterTaskMsgHandler( m_runnercb );
+    m_runner->RegisterClientMsgHandler( m_runnercb_back );
 
 
     //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
@@ -85,7 +88,17 @@ void Clouds::on_sort_request( PropertyPool* p_args )
     m_runner_state_mutex.WaitInfinite();
     m_runner_state = 0;
     m_runner_state_mutex.Release();
+
+    PropertyPool props;
+    props.AddPropValue<dsstring>( "res", "testtesttest" );   
+    m_runner->PushClientMessage( props );
 }
+
+void Clouds::on_sort_result( PropertyPool* p_args )
+{
+    m_recompute_count2++;
+}
+
 
 void Clouds::on_camera_event( SceneNodeGraph::CameraEvent p_event, BaseSceneNode* p_node )
 {
@@ -369,6 +382,8 @@ void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
     {
         return;
     }
+
+    m_runner->Check();
 
     m_running = true;
 
