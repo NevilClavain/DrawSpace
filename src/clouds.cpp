@@ -46,10 +46,16 @@ m_running( false )
     m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Clouds::on_sort_request ) );
 
     m_runner = _DRAWSPACE_NEW_( Runner, Runner );
+
+    /*
     DrawSpace::Core::Mediator* mediator = Mediator::GetInstance();
     m_sort_msg = mediator->CreateMessageQueue();
     
     m_runner->RegisterMsgHandler( m_sort_msg, m_runnercb );
+    */
+
+    m_runner->RegisterMsgHandler( m_runnercb );
+
 
     //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
     //m_task->Startup( m_runner );
@@ -434,7 +440,9 @@ void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
             props.AddPropValue<Matrix>( "ImpostorMat", ImpostorMat );
             props.AddPropValue<Matrix>( "CamMat", CamMat );
 
-            m_sort_msg->PushMessage( props );
+            //m_sort_msg->PushMessage( props );
+
+            m_runner->PushMessage( props );
             m_recompute_count++;            
         }
         m_clouds_sort_request = false;

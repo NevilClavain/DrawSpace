@@ -38,6 +38,8 @@ public:
 
 protected:
 
+    DrawSpace::Core::Mediator                                       m_mediator;
+    DrawSpace::Core::Mediator::MessageQueue*                        m_message_queue;
     std::map<HANDLE, MediatorEventHandler*>                         m_handlers;
     DrawSpace::Core::Task<DrawSpace::Core::Runner>*                 m_task;
 
@@ -49,7 +51,9 @@ public:
     void Run( void );
 
     void Startup( void );
-    void RegisterMsgHandler( DrawSpace::Core::Mediator::MessageQueue* p_queue, MediatorEventHandler* p_handler );
+    void RegisterMsgHandler( MediatorEventHandler* p_handler );
+    void PushMessage( const PropertyPool& p_msg );
+
 };
 }
 }

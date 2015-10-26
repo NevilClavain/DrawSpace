@@ -71,7 +71,7 @@ protected:
     ProceduralCb*                                                       m_proceduralcb;
     CameraEventCb*                                                      m_cameracb;
 
-    DrawSpace::Core::Mediator::MessageQueue*                            m_sort_msg;
+    //DrawSpace::Core::Mediator::MessageQueue*                            m_sort_msg;
     DrawSpace::Core::Runner*                                            m_runner;
     //DrawSpace::Core::Task<DrawSpace::Core::Runner>*                     m_task;
 

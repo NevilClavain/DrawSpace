@@ -30,6 +30,7 @@ using namespace DrawSpace::Utils;
 Runner::Runner( void )
 {
     m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
+    m_message_queue = m_mediator.CreateMessageQueue();
 }
 
 Runner::~Runner( void )
@@ -39,11 +40,9 @@ Runner::~Runner( void )
 
 void Runner::Run( void )
 {
-    Mediator* mediator = Mediator::GetInstance();
-
     while( 1 )
     {
-        Mediator::MessageQueue* queue = mediator->Wait();
+        Mediator::MessageQueue* queue = m_mediator.Wait();
         if( queue )
         {
             if( m_handlers.count( queue->GetHandle() ) > 0 )
@@ -61,9 +60,14 @@ void Runner::Run( void )
     }
 }
 
-void Runner::RegisterMsgHandler( Mediator::MessageQueue* p_queue, MediatorEventHandler* p_handler )
+void Runner::RegisterMsgHandler( MediatorEventHandler* p_handler )
 {
-    m_handlers[p_queue->GetHandle()] = p_handler;
+    m_handlers[m_message_queue->GetHandle()] = p_handler;
+}
+
+void Runner::PushMessage( const PropertyPool& p_msg )
+{
+    m_message_queue->PushMessage( p_msg );
 }
 
 void Runner::Startup( void )

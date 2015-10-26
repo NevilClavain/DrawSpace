@@ -51,7 +51,7 @@ protected:
     DrawSpace::SphericalLOD::Body*                              m_planetbody;
     DrawSpace::Dynamics::Collider*                              m_collider;
     
-    DrawSpace::Core::Mediator::MessageQueue*                    m_buildmeshereq_msg;
+    //DrawSpace::Core::Mediator::MessageQueue*                    m_buildmeshereq_msg;
     DrawSpace::Core::Runner*                                    m_runner;
     //DrawSpace::Core::Task<DrawSpace::Core::Runner>*             m_task;
 

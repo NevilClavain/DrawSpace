@@ -27,9 +27,6 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-Mediator* Mediator::m_instance = NULL;
-
-
 Mediator::Mediator( void ) : m_nb_handles( 0 )
 {
 }

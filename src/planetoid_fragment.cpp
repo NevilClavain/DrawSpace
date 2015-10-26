@@ -48,7 +48,7 @@ m_nb_collisionmeshebuild_added( 0 )
     if( m_collisions )
     {
 
-        DrawSpace::Core::Mediator* mediator = Mediator::GetInstance();
+        //DrawSpace::Core::Mediator* mediator = Mediator::GetInstance();
 
         m_runner = _DRAWSPACE_NEW_( Runner, Runner );
 
@@ -59,9 +59,9 @@ m_nb_collisionmeshebuild_added( 0 )
        
         dsstring reqname = p_name + dsstring( "_ReqBuildMesheEvent" );
 
-        m_buildmeshereq_msg = mediator->CreateMessageQueue();
-        
-        m_runner->RegisterMsgHandler( m_buildmeshereq_msg, m_runner_msg_cb );
+        //m_buildmeshereq_msg = mediator->CreateMessageQueue();        
+        //m_runner->RegisterMsgHandler( m_buildmeshereq_msg, m_runner_msg_cb );
+        m_runner->RegisterMsgHandler( m_runner_msg_cb );
 
 
         //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
@@ -144,7 +144,8 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
         PropertyPool props;
         props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
         props.AddPropValue<SphericalLOD::Patch*>( "patch", curr_patch );
-        m_buildmeshereq_msg->PushMessage( props );
+        //m_buildmeshereq_msg->PushMessage( props );
+        m_runner->PushMessage( props );
 
         m_nb_collisionmeshebuild_req++;
     }

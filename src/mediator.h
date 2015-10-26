@@ -347,20 +347,10 @@ protected:
     HANDLE                                  m_handles[512];    
     std::map<HANDLE, MessageQueue*>         m_messages_by_handle;
     
-
-    Mediator( void );
 public:
 
+    Mediator( void );
     ~Mediator( void );
-
-    static Mediator* GetInstance( void )
-    {
-        if( NULL == m_instance )
-        {
-            m_instance = _DRAWSPACE_NEW_( Mediator, Mediator );
-        }
-        return m_instance;
-    }
 
     MessageQueue* CreateMessageQueue( void );
     MessageQueue* Wait( void );
