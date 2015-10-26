@@ -284,23 +284,6 @@ public:
 class Mediator
 {
 public:
-
-    /*
-    typedef struct
-    {
-    public:
-        dsstring                    name;
-        HANDLE                      system_event;
-        PropertyPool*               args;
-
-        void Notify( void )
-        {
-            SetEvent( system_event );
-        }
-
-    } Event;
-    */
-
     class MessageQueue
     {
     public:
@@ -358,11 +341,6 @@ public:
 protected:
     static Mediator* m_instance;
 
-    /*
-    std::map<dsstring, Event>       m_events_by_name;
-    std::map<HANDLE, Event>         m_events_by_handle;
-    */
-
     int                                     m_nb_handles;
     HANDLE                                  m_handles[512];
     std::map<dsstring, MessageQueue*>       m_messages_by_name;
@@ -383,21 +361,7 @@ public:
         return m_instance;
     }
 
-    /*
-
-    Event* CreateEvent( const dsstring& p_eventname );
-
-    void Notify( const dsstring& p_eventname );
-
-    Event* Wait( void );
-
-    PropertyPool* GetEventPropertyPool( const dsstring& p_eventname );
-
-    */
-
-
     MessageQueue* CreateMessageQueue( const dsstring& p_messagequeueid );
-
     MessageQueue* Wait( void );
 
 };
