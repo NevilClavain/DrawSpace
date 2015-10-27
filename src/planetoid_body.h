@@ -133,7 +133,7 @@ public:
 
     void                                BindExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
     void                                CreateProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_resol );
-    void                                InitProceduralGlobalTextures( void );
+    void                                InitProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_r, int p_g, int p_b );
     
     Fragment*                           GetFragment( int p_index );
 

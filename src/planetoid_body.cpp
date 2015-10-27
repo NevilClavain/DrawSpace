@@ -569,8 +569,49 @@ void DrawSpace::Planetoid::Body::CreateProceduralGlobalTextures( DrawSpace::Pass
     }
 }
 
-void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
+void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_r, int p_g, int p_b )
 {
+    if( m_procedural_global_textures.count( p_pass ) > 0 )
+    {
+        for( size_t i = 0; i < 6; i++ )
+        {
+            ProceduralTexture proc_texture = m_procedural_global_textures[p_pass][i];
+            
+            if( false == proc_texture.texture->AllocTextureContent() )
+            {
+                _DSEXCEPTION( "AllocTextureContent FAILED" );
+            }
+
+            proc_texture.texture_content = proc_texture.texture->GetTextureContentPtr();
+            if( NULL == proc_texture.texture_content )
+            {
+                _DSEXCEPTION( "Texture content Ptr is NULL" );
+            }
+
+            unsigned char* color_ptr = (unsigned char*)proc_texture.texture_content;
+    
+            long tw, th, bpp;
+            proc_texture.texture->GetFormat( tw, th, bpp );
+           
+            for( int y = 0; y < th; y++ )
+            {
+                for( int x = 0; x < tw; x++ )
+                {                    
+                    *color_ptr = p_b; color_ptr++;
+                    *color_ptr = p_g; color_ptr++;
+                    *color_ptr = p_r; color_ptr++;
+                    *color_ptr = 255; color_ptr++;
+                }
+            }  
+
+            if( false == proc_texture.texture->UpdateTextureContent() )
+            {
+                _DSEXCEPTION( "Texture content update FAILED" );
+            }
+        }        
+    }
+
+    /*
     for( auto it = m_procedural_global_textures.begin(); it != m_procedural_global_textures.end(); ++it )
     {
         for( size_t i = 0; i < it->second.size(); i++ )
@@ -597,6 +638,7 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
             {
                 for( int x = 0; x < tw; x++ )
                 {
+                    
                     Vector f_array;
                     Vector f_array2;
 
@@ -655,6 +697,7 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
             }
         }
     }
+    */
 }
 
 DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( int p_index )
