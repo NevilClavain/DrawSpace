@@ -29,14 +29,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 Clouds::Clouds( void ) : 
-m_runner_state( 0 ),
-m_update_clouds_meshes( false ),
 m_clouds_sort_request( false ),
 m_current_camera( NULL ),
 m_previous_camera_pos_avail( false ),
-m_recompute_count( 0 ),
-m_recompute_count2( 0 ),
-m_sort_running( false ),
 m_owner( NULL ),
 m_sorting_distance( 1000.0 ),
 m_details( true ),
@@ -49,19 +44,8 @@ m_running( false )
 
     m_runner = _DRAWSPACE_NEW_( Runner, Runner );
 
-    /*
-    DrawSpace::Core::Mediator* mediator = Mediator::GetInstance();
-    m_sort_msg = mediator->CreateMessageQueue();
-    
-    m_runner->RegisterMsgHandler( m_sort_msg, m_runnercb );
-    */
-
     m_runner->RegisterTaskMsgHandler( m_runnercb );
     m_runner->RegisterEventHandler( m_runnerevt );
-
-
-    //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
-    //m_task->Startup( m_runner );
 
     m_runner->Startup();
 }
@@ -77,24 +61,15 @@ void Clouds::on_sort_request( PropertyPool* p_args )
     ImpostorMat = p_args->GetPropValue<Matrix>( "ImpostorMat" );
     CamMat = p_args->GetPropValue<Matrix>( "CamMat" );
 
-    m_sort_run_mutex.WaitInfinite();
-
     execsortz( ImpostorMat, CamMat );
-
-    update_from_clouds();
-
-    m_sort_run_mutex.Release();
-
-    m_runner_state_mutex.WaitInfinite();
-    m_runner_state = 0;
-    m_runner_state_mutex.Release();
+    impostors_init();
 }
 
 void Clouds::on_sort_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
-        m_recompute_count2++;
+        ImpostorsUpdate();        
         m_runner->ResetState();
     }
 }
@@ -280,10 +255,6 @@ void Clouds::execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const Dr
 {
     // compute all camera-space z-depth
 
-    m_runner_state_mutex.WaitInfinite();
-    m_runner_state = 1;
-    m_runner_state_mutex.Release();
-
     for( size_t i = 0; i < m_clouds.size(); i++ )
     {
         Matrix local_trans;
@@ -313,10 +284,6 @@ void Clouds::execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const Dr
         m_clouds[i]->distToView = dist_imp.Length();
     }
 
-    m_runner_state_mutex.WaitInfinite();
-    m_runner_state = 2;
-    m_runner_state_mutex.Release();
-
     std::sort( m_clouds.begin(), m_clouds.end(), Clouds::nodes_comp );
 }
 
@@ -330,10 +297,6 @@ void Clouds::impostors_init( void )
 {
     m_idl.clear();
 
-    m_runner_state_mutex.WaitInfinite();
-    m_runner_state = 3;
-    m_runner_state_mutex.Release();
-
     for( size_t i = 0; i < m_clouds.size(); i++ )
     {
         for( size_t j = 0; j < m_clouds[i]->impostors.size(); j++ )
@@ -343,25 +306,11 @@ void Clouds::impostors_init( void )
     }    
 }
 
-void Clouds::update_from_clouds( void )
-{
-    impostors_init();
-   
-    m_update_mutex.WaitInfinite();
-    m_update_clouds_meshes = true;
-    m_update_mutex.Release();
-}
-
 void Clouds::ImpostorsInit( void )
 {
     m_clouds_sort_request = true;
     impostors_init();
     Chunk::ImpostorsInit();
-}
-
-int Clouds::GetRunnerState( void )
-{
-    return m_runner_state;
 }
 
 Clouds::ProceduralCb* Clouds::GetProceduralCallback( void )
@@ -382,20 +331,12 @@ void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
     {
         return;
     }
-
-    m_runner->Check();
-
+   
     m_running = true;
 
     Chunk::Update2( p_timemanager );
 
-    m_update_mutex.WaitInfinite();
-    if( m_update_clouds_meshes )
-    {
-        ImpostorsUpdate();
-        m_update_clouds_meshes = false;
-    }
-    m_update_mutex.Release();
+    m_runner->Check();
 
     if( m_current_camera )
     {
@@ -432,34 +373,22 @@ void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
         }
     }
 
-    bool busy = true;
-    if( m_sort_run_mutex.Wait( 0 ) )
-    {
-        busy = m_sort_running;
-    }
-    m_sort_run_mutex.Release();
-
     if( m_clouds_sort_request )
     {
-        if( !busy )
-        {
-            // get clouds node global transform
-            Matrix ImpostorMat;
-            m_owner->GetFinalTransform( ImpostorMat );
+        // get clouds node global transform
+        Matrix ImpostorMat;
+        m_owner->GetFinalTransform( ImpostorMat );
 
-            Matrix CamMat;
-            m_current_camera->GetFinalTransform( CamMat );
+        Matrix CamMat;
+        m_current_camera->GetFinalTransform( CamMat );
 
-            PropertyPool props;
+        PropertyPool props;
 
-            props.AddPropValue<Matrix>( "ImpostorMat", ImpostorMat );
-            props.AddPropValue<Matrix>( "CamMat", CamMat );
+        props.AddPropValue<Matrix>( "ImpostorMat", ImpostorMat );
+        props.AddPropValue<Matrix>( "CamMat", CamMat );
 
-            //m_sort_msg->PushMessage( props );
+        m_runner->PushMessage( props );
 
-            m_runner->PushMessage( props );
-            m_recompute_count++;            
-        }
         m_clouds_sort_request = false;
     }    
 }

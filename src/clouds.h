@@ -67,23 +67,15 @@ protected:
     void execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const DrawSpace::Utils::Matrix& p_cam_mat );
     static bool nodes_comp( CloudUnitDescriptor* p_n1, CloudUnitDescriptor* p_n2 );
     void impostors_init( void );
-
-    void update_from_clouds( void );
-
+   
 
     RunnerMsgCb*                                                        m_runnercb;
     RunnerEvtCb*                                                        m_runnerevt;
     ProceduralCb*                                                       m_proceduralcb;
     CameraEventCb*                                                      m_cameracb;
 
-    //DrawSpace::Core::Mediator::MessageQueue*                            m_sort_msg;
     DrawSpace::Core::Runner*                                            m_runner;
-    //DrawSpace::Core::Task<DrawSpace::Core::Runner>*                     m_task;
 
-    DrawSpace::Utils::Mutex                                             m_runner_state_mutex;
-    int                                                                 m_runner_state;
-
-    bool                                                                m_update_clouds_meshes;
     bool                                                                m_clouds_sort_request;
 
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_current_camera;
@@ -94,11 +86,6 @@ protected:
     std::vector<CloudUnitDescriptor*>                                   m_clouds;
     CloudUnitDescriptor*                                                m_new_cloud;
 
-    DrawSpace::Utils::Mutex                                             m_update_mutex;
-
-    DrawSpace::Utils::Mutex                                             m_sort_run_mutex;
-    bool                                                                m_sort_running;
-
     DrawSpace::Core::BaseSceneNode*                                     m_owner;
 
     dsreal                                                              m_sorting_distance;
@@ -108,10 +95,6 @@ protected:
 
 public:
 
-    int                                                                 m_recompute_count;
-    int                                                                 m_recompute_count2;
-
-
     Clouds( void );
     virtual ~Clouds( void );
 
@@ -119,7 +102,6 @@ public:
     ProceduralCb* GetProceduralCallback( void );
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
 
-    int GetRunnerState( void );
     void SetSortingDistance( dsreal p_distance );
     dsreal GetSortingDistance( void );
     void EnableDetails( bool p_details );
