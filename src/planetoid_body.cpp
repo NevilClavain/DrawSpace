@@ -46,6 +46,34 @@ m_ray( p_ray * 1000.0 )
     m_camera_evt_cb = _DRAWSPACE_NEW_( CameraEvtCb, CameraEvtCb( this, &DrawSpace::Planetoid::Body::on_camera_event ) );
     m_nodes_evt_cb = _DRAWSPACE_NEW_( NodesEventCb, NodesEventCb( this, &DrawSpace::Planetoid::Body::on_nodes_event ) );
     m_scenegraph_evt_cb = _DRAWSPACE_NEW_( ScenegraphEventCb, ScenegraphEventCb( this, &DrawSpace::Planetoid::Body::on_scenegraph_event ) );
+
+    for( size_t i = 0; i < 6; i++ )
+    {
+        m_proceduraltexture_runners[i] = _DRAWSPACE_NEW_( Runner, Runner );
+
+        m_proceduraltexture_runnercb[i] = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &DrawSpace::Planetoid::Body::on_proceduraltexture_request ) );
+
+        m_proceduraltexture_runners[i]->RegisterTaskMsgHandler( m_proceduraltexture_runnercb[i] );        
+    }
+
+    m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::FrontPlanetFace] = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &DrawSpace::Planetoid::Body::on_front_proceduraltexture_result ) );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::FrontPlanetFace]->RegisterEventHandler( m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::FrontPlanetFace] );
+
+    m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::RearPlanetFace] = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &DrawSpace::Planetoid::Body::on_rear_proceduraltexture_result ) );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::RearPlanetFace]->RegisterEventHandler( m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::RearPlanetFace] );
+
+    m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::LeftPlanetFace] = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &DrawSpace::Planetoid::Body::on_left_proceduraltexture_result ) );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::LeftPlanetFace]->RegisterEventHandler( m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::LeftPlanetFace] );
+
+    m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::RightPlanetFace] = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &DrawSpace::Planetoid::Body::on_right_proceduraltexture_result ) );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::RightPlanetFace]->RegisterEventHandler( m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::RightPlanetFace] );
+
+    m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::TopPlanetFace] = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &DrawSpace::Planetoid::Body::on_top_proceduraltexture_result ) );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::TopPlanetFace]->RegisterEventHandler( m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::TopPlanetFace] );
+
+    m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::BottomPlanetFace] = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &DrawSpace::Planetoid::Body::on_bottom_proceduraltexture_result ) );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::BottomPlanetFace]->RegisterEventHandler( m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::BottomPlanetFace] );
+
 }
 
 DrawSpace::Planetoid::Body::~Body( void )
@@ -703,4 +731,39 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( DrawSpace::Pass* 
 DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( int p_index )
 {
     return m_planetfragments_list[p_index];
+}
+
+void DrawSpace::Planetoid::Body::on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args )
+{
+
+}
+
+void DrawSpace::Planetoid::Body::on_front_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
+{
+
+}
+
+void DrawSpace::Planetoid::Body::on_rear_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
+{
+
+}
+
+void DrawSpace::Planetoid::Body::on_left_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
+{
+
+}
+
+void DrawSpace::Planetoid::Body::on_right_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
+{
+
+}
+
+void DrawSpace::Planetoid::Body::on_top_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
+{
+
+}
+
+void DrawSpace::Planetoid::Body::on_bottom_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
+{
+
 }

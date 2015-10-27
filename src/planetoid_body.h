@@ -39,6 +39,10 @@ public:
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*>         CameraEvtCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>          NodesEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>    ScenegraphEventCb;
+    
+    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::PropertyPool*>                                                         RunnerMsgCb;
+    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::Runner::State>                                                         RunnerEvtCb;
+
 
     typedef DrawSpace::Core::BaseCallback<void, DrawSpace::Planetoid::Body*>                                                                                    PlanetRelativeEventHandler;
 
@@ -105,6 +109,11 @@ protected:
 
     std::map<DrawSpace::Pass*, std::vector<ProceduralTexture>>              m_procedural_global_textures;
 
+    DrawSpace::Core::Runner*                                                m_proceduraltexture_runners[6];
+
+    RunnerMsgCb*                                                            m_proceduraltexture_runnercb[6];
+    RunnerEvtCb*                                                            m_proceduraltexture_runnerevt[6];
+
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -120,7 +129,15 @@ protected:
     void manage_bodies( void );
     void update_fragments( void );
 
+    void on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args );
 
+    void on_front_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
+    void on_rear_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
+    void on_left_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
+    void on_right_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
+    void on_top_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
+    void on_bottom_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
+    
 public:
     
     Body( const dsstring& p_scenename, dsreal p_ray );
