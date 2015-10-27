@@ -602,14 +602,6 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
 
                     unsigned char color;
 
-                    // PROVISOIRE +@+
-                    color = 255;
-                    *color_ptr = color; color_ptr++;
-                    *color_ptr = color; color_ptr++;
-                    *color_ptr = color; color_ptr++;
-                    *color_ptr = color; color_ptr++;
-
-                    /*
                     double fx = 2.0 * ( ( (double)x / (double)tw ) - 0.5 );
                     double fy = 2.0 * ( ( (double)( th - y ) / (double)th ) - 0.5 ); // le v des coords textures et le y du repere patch sont en sens opposés
                                   
@@ -654,7 +646,6 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( void )
                         *color_ptr = 0; color_ptr++;
                         *color_ptr = 0; color_ptr++;                
                     }
-                    */
                 }
             }  
 
