@@ -34,7 +34,17 @@ namespace Core
 class Runner
 {
 public:
+
+    typedef enum
+    {
+        TASK_WAIT,
+        TASK_RUNNING,
+        TASK_DONE,
+
+    } State;
+
     typedef DrawSpace::Core::BaseCallback<void, PropertyPool*>      MediatorEventHandler;
+    typedef DrawSpace::Core::BaseCallback<void, State>              EventHandler;
 
 protected:
 
@@ -44,10 +54,16 @@ protected:
     DrawSpace::Core::Mediator::MessageQueue*                        m_task_message_queue;
     MediatorEventHandler*                                           m_taskhandler;
 
-    DrawSpace::Core::Mediator::MessageQueue*                        m_client_message_queue;
-    MediatorEventHandler*                                           m_clienthandler;
+    EventHandler*                                                   m_clienthandler;
+
+    DrawSpace::Utils::Mutex                                         m_current_state_mutex;
+    State                                                           m_current_state;
+
+    State                                                           m_current_state_client_copy;
 
     void unstack_messages( DrawSpace::Core::Mediator::MessageQueue* p_testqueue, DrawSpace::Core::Mediator::MessageQueue* p_signaledqueue, MediatorEventHandler* p_handler );
+
+    void update_state( State p_state );
 
 public:
     
@@ -59,11 +75,11 @@ public:
 
     void RegisterTaskMsgHandler( MediatorEventHandler* p_handler );
     void PushMessage( const PropertyPool& p_msg );
-    void PushClientMessage( const PropertyPool& p_msg );
 
-    void RegisterClientMsgHandler( MediatorEventHandler* p_handler );
-    void Check( void );
+    void RegisterEventHandler( EventHandler* p_handler );
+    void Check( void );   
 
+    void ResetState( void );
 };
 }
 }

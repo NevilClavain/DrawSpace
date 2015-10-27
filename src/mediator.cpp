@@ -63,19 +63,3 @@ Mediator::MessageQueue* Mediator::Wait( void )
     return m_messages_by_handle[m_handles[wait]];
 }
 
-Mediator::MessageQueue* Mediator::Check( void )
-{
-    DWORD wait = WaitForMultipleObjects( m_nb_handles, m_handles, false, 0 ); // non blocking
-    if( WAIT_FAILED == wait )
-    {
-        _DSEXCEPTION( "unexpected error on WaitForMultipleObjects" )
-    }
-    if( WAIT_TIMEOUT == wait )
-    {
-        return NULL;
-    }
-    wait -= WAIT_OBJECT_0;
-
-    ResetEvent( m_messages_by_handle[m_handles[wait]]->m_system_event );
-    return m_messages_by_handle[m_handles[wait]];
-}

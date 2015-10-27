@@ -45,7 +45,7 @@ m_running( false )
     m_proceduralcb = _DRAWSPACE_NEW_( ProceduralCb, ProceduralCb( this, &Clouds::on_procedural ) );
     m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
     m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Clouds::on_sort_request ) );
-    m_runnercb_back = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Clouds::on_sort_result ) );
+    m_runnerevt = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Clouds::on_sort_result ) );
 
     m_runner = _DRAWSPACE_NEW_( Runner, Runner );
 
@@ -57,7 +57,7 @@ m_running( false )
     */
 
     m_runner->RegisterTaskMsgHandler( m_runnercb );
-    m_runner->RegisterClientMsgHandler( m_runnercb_back );
+    m_runner->RegisterEventHandler( m_runnerevt );
 
 
     //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
@@ -88,15 +88,15 @@ void Clouds::on_sort_request( PropertyPool* p_args )
     m_runner_state_mutex.WaitInfinite();
     m_runner_state = 0;
     m_runner_state_mutex.Release();
-
-    PropertyPool props;
-    props.AddPropValue<dsstring>( "res", "testtesttest" );   
-    m_runner->PushClientMessage( props );
 }
 
-void Clouds::on_sort_result( PropertyPool* p_args )
+void Clouds::on_sort_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
-    m_recompute_count2++;
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        m_recompute_count2++;
+        m_runner->ResetState();
+    }
 }
 
 

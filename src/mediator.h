@@ -354,8 +354,6 @@ public:
 
     MessageQueue* CreateMessageQueue( void );
     MessageQueue* Wait( void );
-    MessageQueue* Check( void );
-
 };
 }
 }

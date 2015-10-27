@@ -27,11 +27,14 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-Runner::Runner( void )
+Runner::Runner( void ) :
+m_current_state( TASK_WAIT ),
+m_current_state_client_copy( TASK_WAIT ),
+m_taskhandler( NULL ),
+m_clienthandler( NULL )
 {
     m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
     m_task_message_queue = m_mediator.CreateMessageQueue();
-    m_client_message_queue = m_mediator.CreateMessageQueue();
 }
 
 Runner::~Runner( void )
@@ -43,18 +46,24 @@ void Runner::unstack_messages( DrawSpace::Core::Mediator::MessageQueue* p_testqu
 {
     if( p_testqueue == p_signaledqueue )
     {
-        PropertyPool props;
+        update_state( TASK_RUNNING );
+        PropertyPool props;        
         while( p_signaledqueue->GetNextMessage( props ) )
         {
-            (*p_handler)( &props );
+            if( p_handler )
+            {
+                
+                (*p_handler)( &props );                
+            }
         }
+        update_state( TASK_DONE );
     }    
 }
 
 void Runner::Run( void )
 {
     while( 1 )
-    {
+    {        
         Mediator::MessageQueue* signaled_queue = m_mediator.Wait();
         unstack_messages( m_task_message_queue, signaled_queue, m_taskhandler );
     }
@@ -62,8 +71,15 @@ void Runner::Run( void )
 
 void Runner::Check( void )
 {
-    Mediator::MessageQueue* signaled_queue = m_mediator.Check();
-    unstack_messages( m_client_message_queue, signaled_queue, m_clienthandler );
+    m_current_state_mutex.WaitInfinite();
+    State current_state = m_current_state;
+    m_current_state_mutex.Release();
+
+    if( m_current_state_client_copy != current_state && m_clienthandler )
+    {
+        m_current_state_client_copy = current_state;
+        (*m_clienthandler)( m_current_state_client_copy );
+    }
 }
 
 void Runner::RegisterTaskMsgHandler( MediatorEventHandler* p_handler )
@@ -73,21 +89,37 @@ void Runner::RegisterTaskMsgHandler( MediatorEventHandler* p_handler )
 
 void Runner::PushMessage( const PropertyPool& p_msg )
 {
+    m_current_state_mutex.WaitInfinite();
+    State current_state = m_current_state;
+    m_current_state_mutex.Release();
+    
+    if( current_state != TASK_WAIT )
+    {
+        return;
+    }
     m_task_message_queue->PushMessage( p_msg );
 }
 
-void Runner::PushClientMessage( const PropertyPool& p_msg )
-{
-    m_client_message_queue->PushMessage( p_msg );
-}
 
-
-void Runner::RegisterClientMsgHandler( MediatorEventHandler* p_handler )
+void Runner::RegisterEventHandler( EventHandler* p_handler )
 {
     m_clienthandler = p_handler;
 }
 
 void Runner::Startup( void )
 {
+    ResetState();
     m_task->Startup( this );
+}
+
+void Runner::update_state( State p_state )
+{
+    m_current_state_mutex.WaitInfinite();
+    m_current_state = p_state;
+    m_current_state_mutex.Release();
+}
+
+void Runner::ResetState( void )
+{
+    update_state( TASK_WAIT );
 }
