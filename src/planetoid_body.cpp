@@ -52,7 +52,6 @@ m_ray( p_ray * 1000.0 )
         m_proceduraltexture_runners[i] = _DRAWSPACE_NEW_( Runner, Runner );
 
         m_proceduraltexture_runnercb[i] = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &DrawSpace::Planetoid::Body::on_proceduraltexture_request ) );
-
         m_proceduraltexture_runners[i]->RegisterTaskMsgHandler( m_proceduraltexture_runnercb[i] );        
     }
 
@@ -74,6 +73,17 @@ m_ray( p_ray * 1000.0 )
     m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::BottomPlanetFace] = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &DrawSpace::Planetoid::Body::on_bottom_proceduraltexture_result ) );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::BottomPlanetFace]->RegisterEventHandler( m_proceduraltexture_runnerevt[DrawSpace::SphericalLOD::Patch::BottomPlanetFace] );
 
+    for( size_t i = 0; i < 6; i++ )
+    {
+        m_proceduraltexture_runners[i]->Startup();
+    }
+
+    m_front_done = false;
+    m_rear_done = false;
+    m_left_done = false;
+    m_right_done = false;
+    m_top_done = false;
+    m_bottom_done = false;
 }
 
 DrawSpace::Planetoid::Body::~Body( void )
@@ -333,6 +343,11 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
 
         manage_bodies();
         update_fragments();
+
+        for( size_t i = 0; i < 6; i++ )
+        {
+            m_proceduraltexture_runners[i]->Check();
+        }
 
         /*
         update_fragments();
@@ -735,35 +750,116 @@ DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( int p_i
 
 void DrawSpace::Planetoid::Body::on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args )
 {
+    int dir = p_args->GetPropValue<int>( "direction" );
+
+    switch( dir )
+    {
+        case SphericalLOD::Patch::FrontPlanetFace:
+
+            Sleep( 900 );
+            break;
+
+        case SphericalLOD::Patch::RearPlanetFace:
+
+            Sleep( 1900 );
+            break;
+
+        case SphericalLOD::Patch::LeftPlanetFace:
+
+            Sleep( 1544 );
+            break;
+
+        case SphericalLOD::Patch::RightPlanetFace:
+
+            Sleep( 1033 );
+            break;
+
+        case SphericalLOD::Patch::TopPlanetFace:
+
+            Sleep( 2000 );
+            break;
+
+        case SphericalLOD::Patch::BottomPlanetFace:
+
+            Sleep( 1280 );
+            break;
+    }
 
 }
 
 void DrawSpace::Planetoid::Body::on_front_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
-
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        m_front_done = true;
+    }
 }
 
 void DrawSpace::Planetoid::Body::on_rear_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
-
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        m_rear_done = true;
+    }
 }
 
 void DrawSpace::Planetoid::Body::on_left_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
-
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        m_left_done = true;
+    }
 }
 
 void DrawSpace::Planetoid::Body::on_right_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
-
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        m_right_done = true;
+    }
 }
 
 void DrawSpace::Planetoid::Body::on_top_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
-
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        m_top_done = true;
+    }
 }
 
 void DrawSpace::Planetoid::Body::on_bottom_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        m_bottom_done = true;
+    }
+}
 
+
+void DrawSpace::Planetoid::Body::run_textures( void )
+{
+    PropertyPool frontrunner_props;
+    PropertyPool rearrunner_props;
+    PropertyPool leftrunner_props;
+    PropertyPool rightrunner_props;
+    PropertyPool toprunner_props;
+    PropertyPool bottomrunner_props;
+
+    frontrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::FrontPlanetFace );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::FrontPlanetFace]->PushMessage( frontrunner_props );
+
+    rearrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::RearPlanetFace );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::RearPlanetFace]->PushMessage( rearrunner_props );
+        
+    leftrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::LeftPlanetFace );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::LeftPlanetFace]->PushMessage( leftrunner_props );
+        
+    rightrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::RightPlanetFace );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::RightPlanetFace]->PushMessage( rightrunner_props );
+        
+    toprunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::TopPlanetFace );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::TopPlanetFace]->PushMessage( toprunner_props );
+        
+    bottomrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::BottomPlanetFace );
+    m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::BottomPlanetFace]->PushMessage( bottomrunner_props );
 }

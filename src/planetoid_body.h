@@ -36,6 +36,19 @@ class Body : public Dynamics::Orbiter
 {
 public:
 
+    ////////////////////////////////////////////////////////////////////
+    bool                    m_front_done;
+    bool                    m_rear_done;
+    bool                    m_left_done;
+    bool                    m_right_done;
+    bool                    m_top_done;
+    bool                    m_bottom_done;
+
+    void                    run_textures( void );
+
+    ////////////////////////////////////////////////////////////////////
+
+
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*>         CameraEvtCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>          NodesEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>    ScenegraphEventCb;
@@ -113,6 +126,10 @@ protected:
 
     RunnerMsgCb*                                                            m_proceduraltexture_runnercb[6];
     RunnerEvtCb*                                                            m_proceduraltexture_runnerevt[6];
+
+
+
+
 
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
