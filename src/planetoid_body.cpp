@@ -491,8 +491,7 @@ void DrawSpace::Planetoid::Body::update_fragments( void )
         CameraPoint* camera = curr->GetCamera();
 
         if( inertbody )
-        {
-            //if( inertbody->GetRefBody() == m_orbiter )
+        {            
             if( inertbody->GetAttachedBody() == this )
             {
                 std::vector<dsstring> cameras;
@@ -526,12 +525,9 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
     planet_fragment->SetHotState( true );
     planet_fragment->SetCamera( p_camera );
 
-    p_cameradescr.fragment = planet_fragment;
-
-    //p_cameradescr.camera->SetRelativeOrbiter( m_orbiter );
+    p_cameradescr.fragment = planet_fragment;    
     p_cameradescr.camera->SetRelativeOrbiter( this );
 
-    //m_sphericallod_body_list[p_cameraname] = slod_body;
     m_planetfragments_list.push_back( planet_fragment );    
 }
 
@@ -651,6 +647,8 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( DrawSpace::Pass* 
             {
                 _DSEXCEPTION( "Texture content update FAILED" );
             }
+
+            m_procedural_global_textures[p_pass][i] = proc_texture;
         }        
     }
 
@@ -743,6 +741,71 @@ void DrawSpace::Planetoid::Body::InitProceduralGlobalTextures( DrawSpace::Pass* 
     */
 }
 
+
+void DrawSpace::Planetoid::Body::fill_procedural_texture( int p_direction, const ProceduralTexture& p_procedural_texture, DrawSpace::Utils::Fractal* p_fractal )
+{
+    unsigned char* color_ptr = (unsigned char*)p_procedural_texture.texture_content;
+    
+    long tw, th, bpp;
+    p_procedural_texture.texture->GetFormat( tw, th, bpp );
+           
+    for( int y = 0; y < th; y++ )
+    {
+        for( int x = 0; x < tw; x++ )
+        {                    
+            Vector f_array;
+            Vector f_array2;
+
+            unsigned char color;
+
+            double fx = 2.0 * ( ( (double)x / (double)tw ) - 0.5 );
+            double fy = 2.0 * ( ( (double)( th - y ) / (double)th ) - 0.5 ); // le v des coords textures et le y du repere patch sont en sens opposés
+                                  
+            DrawSpace::SphericalLOD::Patch::XYToXYZ( p_direction, fx, fy, f_array );
+
+            DrawSpace::SphericalLOD::Patch::CubeToSphere( f_array, f_array2 );
+
+            f_array2[0] *= 2.0;
+            f_array2[1] *= 2.0;
+            f_array2[2] *= 2.0;
+
+            double res = p_fractal->fBm( f_array2.GetArray(), 15.0 );
+
+            if( res >= 0.20 && res < 0.65 )
+            {
+                color = 255.0 * ( ( res * 0.5 ) + 0.5 );
+                *color_ptr = color * 0.6; color_ptr++;
+                *color_ptr = color * 0.8; color_ptr++;
+                *color_ptr = color * 0.6; color_ptr++;
+                *color_ptr = color; color_ptr++;
+
+            }
+            else if ( res >= 0.65 && res < 0.9 )
+            {
+                color = 255.0 * ( ( res * 0.5 ) + 0.5 );
+                *color_ptr = color * 0.6; color_ptr++;
+                *color_ptr = color * 0.6; color_ptr++;
+                *color_ptr = color * 0.6; color_ptr++;
+                *color_ptr = color; color_ptr++;
+            }            
+            else if( res >= 0.9 )
+            {
+                *color_ptr = 255; color_ptr++;
+                *color_ptr = 255; color_ptr++;
+                *color_ptr = 255; color_ptr++;
+                *color_ptr = 255; color_ptr++;            
+            }
+            else
+            {
+                *color_ptr = 75; color_ptr++;
+                *color_ptr = 0; color_ptr++;
+                *color_ptr = 0; color_ptr++;
+                *color_ptr = 0; color_ptr++;                
+            }
+        }
+    }
+}
+
 DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( int p_index )
 {
     return m_planetfragments_list[p_index];
@@ -751,40 +814,10 @@ DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( int p_i
 void DrawSpace::Planetoid::Body::on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args )
 {
     int dir = p_args->GetPropValue<int>( "direction" );
+    Fractal fractal( 3, 3345764, 0.75, 1.29 );
+    DrawSpace::Pass* pass = p_args->GetPropValue<DrawSpace::Pass*>( "pass" );
 
-    switch( dir )
-    {
-        case SphericalLOD::Patch::FrontPlanetFace:
-
-            Sleep( 900 );
-            break;
-
-        case SphericalLOD::Patch::RearPlanetFace:
-
-            Sleep( 1900 );
-            break;
-
-        case SphericalLOD::Patch::LeftPlanetFace:
-
-            Sleep( 1544 );
-            break;
-
-        case SphericalLOD::Patch::RightPlanetFace:
-
-            Sleep( 1033 );
-            break;
-
-        case SphericalLOD::Patch::TopPlanetFace:
-
-            Sleep( 2000 );
-            break;
-
-        case SphericalLOD::Patch::BottomPlanetFace:
-
-            Sleep( 1280 );
-            break;
-    }
-
+    fill_procedural_texture( dir, m_procedural_global_textures[pass][dir], &fractal );
 }
 
 void DrawSpace::Planetoid::Body::on_front_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate )
@@ -792,6 +825,7 @@ void DrawSpace::Planetoid::Body::on_front_proceduraltexture_result( DrawSpace::C
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
         m_front_done = true;
+        m_procedural_global_textures[m_procedural_texture_currentpass][SphericalLOD::Patch::FrontPlanetFace].texture->UpdateTextureContent();
     }
 }
 
@@ -800,6 +834,7 @@ void DrawSpace::Planetoid::Body::on_rear_proceduraltexture_result( DrawSpace::Co
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
         m_rear_done = true;
+        m_procedural_global_textures[m_procedural_texture_currentpass][SphericalLOD::Patch::RearPlanetFace].texture->UpdateTextureContent();
     }
 }
 
@@ -808,6 +843,7 @@ void DrawSpace::Planetoid::Body::on_left_proceduraltexture_result( DrawSpace::Co
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
         m_left_done = true;
+        m_procedural_global_textures[m_procedural_texture_currentpass][SphericalLOD::Patch::LeftPlanetFace].texture->UpdateTextureContent();
     }
 }
 
@@ -816,6 +852,7 @@ void DrawSpace::Planetoid::Body::on_right_proceduraltexture_result( DrawSpace::C
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
         m_right_done = true;
+        m_procedural_global_textures[m_procedural_texture_currentpass][SphericalLOD::Patch::RightPlanetFace].texture->UpdateTextureContent();
     }
 }
 
@@ -824,6 +861,7 @@ void DrawSpace::Planetoid::Body::on_top_proceduraltexture_result( DrawSpace::Cor
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
         m_top_done = true;
+        m_procedural_global_textures[m_procedural_texture_currentpass][SphericalLOD::Patch::TopPlanetFace].texture->UpdateTextureContent();
     }
 }
 
@@ -832,12 +870,14 @@ void DrawSpace::Planetoid::Body::on_bottom_proceduraltexture_result( DrawSpace::
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
         m_bottom_done = true;
+        m_procedural_global_textures[m_procedural_texture_currentpass][SphericalLOD::Patch::BottomPlanetFace].texture->UpdateTextureContent();
     }
 }
 
-
-void DrawSpace::Planetoid::Body::run_textures( void )
+void DrawSpace::Planetoid::Body::run_textures( DrawSpace::Pass* p_pass )
 {
+    m_procedural_texture_currentpass = p_pass;
+
     PropertyPool frontrunner_props;
     PropertyPool rearrunner_props;
     PropertyPool leftrunner_props;
@@ -846,20 +886,26 @@ void DrawSpace::Planetoid::Body::run_textures( void )
     PropertyPool bottomrunner_props;
 
     frontrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::FrontPlanetFace );
+    frontrunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::FrontPlanetFace]->PushMessage( frontrunner_props );
-
+    
     rearrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::RearPlanetFace );
+    rearrunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::RearPlanetFace]->PushMessage( rearrunner_props );
         
     leftrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::LeftPlanetFace );
+    leftrunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::LeftPlanetFace]->PushMessage( leftrunner_props );
         
     rightrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::RightPlanetFace );
+    rightrunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::RightPlanetFace]->PushMessage( rightrunner_props );
         
     toprunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::TopPlanetFace );
+    toprunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::TopPlanetFace]->PushMessage( toprunner_props );
         
     bottomrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::BottomPlanetFace );
+    bottomrunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::BottomPlanetFace]->PushMessage( bottomrunner_props );
 }

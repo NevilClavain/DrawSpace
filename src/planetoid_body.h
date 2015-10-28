@@ -44,7 +44,7 @@ public:
     bool                    m_top_done;
     bool                    m_bottom_done;
 
-    void                    run_textures( void );
+    void                    run_textures( DrawSpace::Pass* p_pass );
 
     ////////////////////////////////////////////////////////////////////
 
@@ -128,7 +128,7 @@ protected:
     RunnerEvtCb*                                                            m_proceduraltexture_runnerevt[6];
 
 
-
+    DrawSpace::Pass*                                                        m_procedural_texture_currentpass;
 
 
 
@@ -145,6 +145,8 @@ protected:
     void apply_gravity( void );
     void manage_bodies( void );
     void update_fragments( void );
+
+    void fill_procedural_texture( int p_direction, const ProceduralTexture& p_procedural_texture, DrawSpace::Utils::Fractal* p_fractal );
 
     void on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args );
 
