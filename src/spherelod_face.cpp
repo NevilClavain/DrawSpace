@@ -90,11 +90,6 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         patch->GetName( patch_name );        
         m_patches[patch_name] = p_node;
 
-        for( size_t i = 0; i < m_inst_handlers.size(); i++ )
-        {
-            (*( m_inst_handlers[i] ) )( m_orientation, patch );
-        }
-
         m_patchesleafs[patch_name] = patch;
 
         /*
@@ -130,11 +125,6 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         patch->GetName( patch_name );
         m_patches[patch_name] = p_node;
 
-        for( size_t i = 0; i < m_inst_handlers.size(); i++ )
-        {
-            (*( m_inst_handlers[i] ) )( m_orientation, patch );
-        }
-
         m_patchesleafs[patch_name] = patch;
 
         /*
@@ -157,11 +147,6 @@ void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
     
     Patch* patch = node->GetContent();
-
-    for( size_t i = 0; i < m_del_handlers.size(); i++ )
-    {
-        (*( m_del_handlers[i] ) )( m_orientation, patch );
-    }
 
     dsstring patch_name;
     patch->GetName( patch_name );   
@@ -204,11 +189,6 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     set_border_neighbours( ne_child_node );
     set_border_neighbours( se_child_node );
     set_border_neighbours( sw_child_node );
-
-    for( size_t i = 0; i < m_split_handlers.size(); i++ )
-    {
-        (*( m_split_handlers[i] ) )( m_orientation, patch );
-    }
 
     dsstring patch_name;
     patch->GetName( patch_name );   
@@ -367,11 +347,6 @@ void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     unset_border_neighbours( ne_child_node );
     unset_border_neighbours( se_child_node );
     unset_border_neighbours( sw_child_node );
-
-    for( size_t i = 0; i < m_merge_handlers.size(); i++ )
-    {
-        (*( m_merge_handlers[i] ) )( m_orientation, patch );
-    }
 
     dsstring patch_name;
     patch->GetName( patch_name );
@@ -830,26 +805,6 @@ bool Face::ComputeAlignmentFactor( void )
     */
 }
 
-void Face::AddInstHandler( Face::PatchInstanciationHandler* p_handler )
-{
-    m_inst_handlers.push_back( p_handler );
-}
-
-void Face::AddSplitHandler( Face::PatchSplitHandler* p_handler )
-{
-    m_split_handlers.push_back( p_handler );
-}
-
-void Face::AddDelHandler( Face::PatchDeletionHandler* p_handler )
-{
-    m_del_handlers.push_back( p_handler );
-}
-
-void Face::AddMergeHandler( Face::PatchMergeHandler* p_handler )
-{
-    m_merge_handlers.push_back( p_handler );
-}
-
 DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
 {
     return m_currentleaf;
@@ -890,3 +845,23 @@ dsreal Face::GetCurrentLOD( void )
     return m_currentLOD;
 }
 
+void Face::recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node )
+{
+    DrawSpace::Utils::QuadtreeNode<Patch>* node = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( p_node );
+
+    if( 3 == node->GetDepthLevel() )
+    {
+        return;
+    }
+    p_node->Split();
+
+    for( size_t i = 0; i < 4; i++ )
+    {
+        recursive_split( node->GetChild( i ) );
+    }
+}
+
+void Face::RecursiveSplitFromRoot( void )
+{
+    recursive_split( m_rootpatch );
+}

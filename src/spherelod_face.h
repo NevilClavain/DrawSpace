@@ -36,12 +36,6 @@ namespace SphericalLOD
 
 class Face
 {
-public:
-    typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchInstanciationHandler;
-    typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchSplitHandler;
-    typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchDeletionHandler;
-    typedef DrawSpace::Core::BaseCallback2<void, int, Patch*>                            PatchMergeHandler;
-
 protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   InstanciationCallback;
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   DeletionCallback;
@@ -51,12 +45,6 @@ protected:
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
     std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
     int                                                         m_orientation;
-
-    std::vector<PatchInstanciationHandler*>                     m_inst_handlers;
-    std::vector<PatchSplitHandler*>                             m_split_handlers;
-    std::vector<PatchDeletionHandler*>                          m_del_handlers;
-    std::vector<PatchMergeHandler*>                             m_merge_handlers;
-
 
     dsreal                                                      m_planet_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
@@ -96,6 +84,7 @@ protected:
 
     DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under( DrawSpace::Utils::QuadtreeNode<Patch>* p_current, DrawSpace::Utils::Vector& p_point );
     
+    virtual void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
 public:
 
@@ -111,10 +100,6 @@ public:
     virtual void ComputeLOD( void );
     virtual bool ComputeAlignmentFactor( void );
 
-    virtual void AddInstHandler( PatchInstanciationHandler* p_handler );
-    virtual void AddSplitHandler( PatchSplitHandler* p_handler );
-    virtual void AddDelHandler( PatchDeletionHandler* p_handler );
-    virtual void AddMergeHandler( PatchMergeHandler* p_handler );
     virtual DrawSpace::Utils::QuadtreeNode<Patch>* GetCurrentLeaf( void );
     virtual dsreal GetAlignmentFactor( void );
 
@@ -123,6 +108,8 @@ public:
     virtual void GetLeafs( std::map<dsstring, Patch*>& p_list );
 
     virtual dsreal GetCurrentLOD( void );
+
+    virtual void RecursiveSplitFromRoot( void );
 
     //virtual Maps* GetMapsFactory( void );
 };
