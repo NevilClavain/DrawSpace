@@ -190,8 +190,8 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     if( inertbody->GetReferentBody() == this )
                     {
                         reg_body.attached = true;
-                        reg_body.body = inertbody;
-
+                        reg_body.body = inertbody;                        
+                        reg_body.relative_alt_valid = false;
                         
                         dsstring bodyname;
                         p_node->GetSceneName( bodyname );
@@ -222,6 +222,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                 {                    
                     reg_body.attached = false;
                     reg_body.body = inertbody;
+                    reg_body.relative_alt_valid = false;
 
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
@@ -399,6 +400,8 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
             bodypos2[2] = bodypos( 3, 2 );
 
             dsreal rel_alt = ( bodypos2.Length() / m_ray );
+            it->second.relative_alt_valid = true;
+            it->second.relative_alt = rel_alt;
 
             if( rel_alt >= 1.2 )
             {
@@ -454,6 +457,9 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
             delta[3] = 1.0;
 
             dsreal rel_alt = delta.Length() / m_ray;
+
+            it->second.relative_alt_valid = true;
+            it->second.relative_alt = rel_alt;
 
             if( rel_alt < 1.1 )
             {
@@ -908,4 +914,19 @@ void DrawSpace::Planetoid::Body::run_textures( DrawSpace::Pass* p_pass )
     bottomrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::BottomPlanetFace );
     bottomrunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::BottomPlanetFace]->PushMessage( bottomrunner_props );
+}
+
+bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude )
+{
+    if( m_registered_bodies.count( p_body ) > 0 )
+    {
+        RegisteredBody entry = m_registered_bodies[p_body];
+        if( entry.relative_alt_valid )
+        {
+            p_rel_altitude = entry.relative_alt;
+            return true;
+        }
+        return false;
+    }
+    return false;
 }

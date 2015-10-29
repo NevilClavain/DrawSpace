@@ -64,8 +64,11 @@ protected:
     typedef struct
     {
         bool                            attached;
-        DrawSpace::Dynamics::InertBody* body;
 
+        bool                            relative_alt_valid;
+        dsreal                          relative_alt;
+
+        DrawSpace::Dynamics::InertBody* body;
         Fragment*                       fragment;
 
     } RegisteredBody;
@@ -183,6 +186,8 @@ public:
     void                                OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
     void                                Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void                                Update2( DrawSpace::Utils::TimeManager& p_timemanager );
+
+    bool                                GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude );
     
 };
 
