@@ -529,8 +529,7 @@ void Face::split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
         {
             current_patch->GetNeighbour( i )->Split();
         }
-    }
-    
+    }    
 }
 
 void Face::merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
