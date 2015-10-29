@@ -403,7 +403,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
             it->second.relative_alt_valid = true;
             it->second.relative_alt = rel_alt;
 
-            if( rel_alt >= 1.2 )
+            if( rel_alt >= /*1.2*/ 2.1 )
             {
 
                 detach_body( it->second.body );
@@ -461,7 +461,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
             it->second.relative_alt_valid = true;
             it->second.relative_alt = rel_alt;
 
-            if( rel_alt < 1.1 )
+            if( rel_alt < /*1.1*/ 2.0 )
             {
 
                 attach_body( it->second.body );

@@ -112,7 +112,7 @@ public:
     virtual void SetPlanetDiameter( dsreal p_diameter );
     virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
     virtual void ComputeLOD( void );
-    virtual bool Compute( void );
+    virtual bool ComputeAlignmentFactor( void );
 
     virtual void AddInstHandler( PatchInstanciationHandler* p_handler );
     virtual void AddSplitHandler( PatchSplitHandler* p_handler );

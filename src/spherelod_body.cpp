@@ -65,6 +65,23 @@ void Body::Initialize( void )
 void Body::Compute( void )
 {
     // determiner la "face courante";
+    
+    //////////////////////////////////////
+    for( long i = 0; i < 6; i++ )
+    {
+        bool status = m_faces[i]->ComputeAlignmentFactor();
+
+        // PROVISOIRE +@+
+        /*
+        if( status && i == m_current_face )
+        {
+            for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
+            {
+                ( **it )( this, m_current_face );
+            }            
+        }
+        */
+    }
 
     int curr_face = 0;
     dsreal af = m_faces[0]->GetAlignmentFactor();
@@ -79,23 +96,6 @@ void Body::Compute( void )
     }
 
     m_current_face = curr_face;
-    
-    //////////////////////////////////////
-    for( long i = 0; i < 6; i++ )
-    {
-        bool status = m_faces[i]->Compute();
-
-        // PROVISOIRE +@+
-        /*
-        if( status && i == m_current_face )
-        {
-            for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
-            {
-                ( **it )( this, m_current_face );
-            }            
-        }
-        */
-    }
 
     // PROVISOIRE +@+
     m_faces[m_current_face]->ComputeLOD();

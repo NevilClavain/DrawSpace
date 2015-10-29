@@ -762,7 +762,7 @@ void Face::ComputeLOD( void )
     }
 }
 
-bool Face::Compute( void )
+bool Face::ComputeAlignmentFactor( void )
 {
     // PROVISOIRE +@+
     //bool status = false;
