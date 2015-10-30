@@ -211,9 +211,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         reg_body.fragment = planet_fragment;
 
                         planet_fragment->SetInertBody( inertbody );
-
-                        slod_body->Initialize();
-                        
+                                              
                         m_registered_bodies[inertbody] = reg_body;
                     }
 
@@ -238,9 +236,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     m_planetfragments_list.push_back( planet_fragment );
                     reg_body.fragment = planet_fragment;
 
-                    planet_fragment->SetInertBody( inertbody );
-
-                    slod_body->Initialize();
+                    planet_fragment->SetInertBody( inertbody );                    
 
                     m_registered_bodies[inertbody] = reg_body;
                 }
@@ -525,9 +521,7 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
 
     dsstring final_name = m_scenename + dsstring( " " ) + p_cameraname;
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, false ) );
-
-    slod_body->Initialize();
-
+   
     planet_fragment->SetHotState( true );
     planet_fragment->SetCamera( p_camera );
 

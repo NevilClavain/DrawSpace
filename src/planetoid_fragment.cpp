@@ -68,6 +68,8 @@ m_nb_collisionmeshebuild_added( 0 )
         //m_task->Startup( m_runner );
         m_runner->Startup();
     }
+
+    p_planetbody->Initialize();
 }
 
 Fragment::~Fragment( void )
@@ -267,6 +269,7 @@ void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
 void Fragment::SetHotState( bool p_hotstate )
 {
     m_hot = p_hotstate;
+    m_planetbody->SetHotState( m_hot );
 }
 
 bool Fragment::GetHotState( void )

@@ -44,12 +44,15 @@ protected:
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
     std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
-    int                                                         m_orientation;
+    std::map<dsstring, Patch*>                                  m_patchesleafs;
+    DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
+    std::vector<Patch*>                                         m_displaylist;
 
+    int                                                         m_orientation;
     dsreal                                                      m_planet_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::Vector                                    m_prev_relative_hotpoint;
-    DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
+    
 
     dsreal                                                      m_ratio_split_threshold;
     dsreal                                                      m_ratio_merge_threshold;
@@ -58,9 +61,11 @@ protected:
 
     dsreal                                                      m_alignment_factor;
 
-    std::map<dsstring, Patch*>                                  m_patchesleafs;
+    
 
     dsreal                                                      m_currentLOD;
+
+    bool                                                        m_hot;
 
     //Maps                                                        m_maps_factory;
 
@@ -73,14 +78,7 @@ protected:
     void unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node );
 
     bool is_hotpoint_bound_in_node( DrawSpace::Utils::BaseQuadtreeNode* p_node, const DrawSpace::Utils::Vector& p_hotpoint );
-    dsreal alt_ratio( dsreal p_altitud );
 
-    void split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node );
-    void merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node );
-
-    
-    bool check_split( DrawSpace::Utils::Vector& p_hotpoint );
-    bool check_merge( DrawSpace::Utils::Vector& p_hotpoint );
 
     DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under( DrawSpace::Utils::QuadtreeNode<Patch>* p_current, DrawSpace::Utils::Vector& p_point );
     
@@ -93,8 +91,6 @@ public:
 
     bool Init( int p_orientation );
     virtual Patch* GetPatch( const dsstring& p_name );
-    virtual void Split( const dsstring& p_name );
-    virtual void Merge( const dsstring& p_name );
     virtual void SetPlanetDiameter( dsreal p_diameter );
     virtual void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
     virtual void ComputeLOD( void );
@@ -102,14 +98,16 @@ public:
 
     virtual DrawSpace::Utils::QuadtreeNode<Patch>* GetCurrentLeaf( void );
     virtual dsreal GetAlignmentFactor( void );
-
-    virtual void ResetMeshe( void );
+    
 
     virtual void GetLeafs( std::map<dsstring, Patch*>& p_list );
+    virtual void GetDisplayList( std::vector<Patch*>& p_displaylist );
 
     virtual dsreal GetCurrentLOD( void );
 
     virtual void RecursiveSplitFromRoot( void );
+
+    void SetHotState( bool p_hotstate );
 
     //virtual Maps* GetMapsFactory( void );
 };

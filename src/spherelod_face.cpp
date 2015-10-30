@@ -35,7 +35,8 @@ m_planet_diameter( 10.0 ),
 m_currentleaf( NULL ),
 m_ratio_split_threshold( 0.03 ),
 m_ratio_merge_threshold( 0.04 ),
-m_currentLOD( 0.0 )
+m_currentLOD( 0.0 ),
+m_hot( false )
 {
 }
 
@@ -56,7 +57,6 @@ bool Face::Init( int p_orientation )
     DeletionCallback* cb_split = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodesplit ) );
 
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );
-
     return true;
 }
 
@@ -460,23 +460,6 @@ void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_nod
     }
 }
 
-
-void Face::Split( const dsstring& p_name )
-{
-    if( m_patches.count( p_name ) > 0 )
-    {
-        m_patches[p_name]->Split();
-    }
-}
-
-void Face::Merge( const dsstring& p_name )
-{
-    if( m_patches.count( p_name ) > 0 )
-    {
-        m_patches[p_name]->Merge();
-    }
-}
-
 void Face::SetPlanetDiameter( dsreal p_diameter )
 {
     m_planet_diameter = p_diameter;
@@ -492,35 +475,6 @@ void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
 
     m_prev_relative_hotpoint = m_relative_hotpoint;
 }
-
-void Face::split_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
-{
-    Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
-    p_node->Split();
-    
-    for( long i = 0; i < 8; i++ )
-    {
-        if( current_patch->GetNeighbour( i ) != NULL )
-        {
-            current_patch->GetNeighbour( i )->Split();
-        }
-    }    
-}
-
-void Face::merge_group( DrawSpace::Utils::BaseQuadtreeNode* p_node )
-{
-    Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
-    p_node->Merge();
-    
-    for( long i = 0; i < 8; i++ )
-    {
-        if( current_patch->GetNeighbour( i ) != NULL )
-        {
-            current_patch->GetNeighbour( i )->Merge();
-        }
-    }    
-}
-
 
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
 {
@@ -598,91 +552,6 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
     return false;
 }
 
-dsreal Face::alt_ratio( dsreal p_altitud )
-{
-    dsreal side_length = m_currentleaf->GetContent()->GetSideLength();
-    dsreal ratio = p_altitud / side_length;
-    return ratio;
-}
-
-bool Face::check_split( Vector& p_hotpoint )
-{
-    bool status = false;
-
-    Vector sphericals;
-    Maths::CartesiantoSpherical( p_hotpoint, sphericals );
-
-    dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
-    
-    if( alt >= 0.0 )
-    {
-        while( alt_ratio( alt ) < m_ratio_split_threshold )
-        {
-
-            long depth_level = m_currentleaf->GetDepthLevel();
-
-            if( depth_level >= /*11*/ 7 )
-            {
-                break;
-            }
-        
-            // split necessaire
-            split_group( m_currentleaf );
-
-            if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::NorthWestNode ), p_hotpoint ) )
-            {
-                m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::NorthWestNode ) );
-            }
-            else if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::NorthEastNode ), p_hotpoint ) )
-            {
-                m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::NorthEastNode ) );
-            }
-            else if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::SouthEastNode ), p_hotpoint ) )
-            {
-                m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::SouthEastNode ) );
-            }
-            else if( is_hotpoint_bound_in_node( m_currentleaf->GetChild( BaseQuadtreeNode::SouthWestNode ), p_hotpoint ) )
-            {
-                m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetChild( BaseQuadtreeNode::SouthWestNode ) );
-            }
-            
-            status = true;    
-        }
-    }
-        
-    return status;
-}
-
-bool Face::check_merge( Vector& p_hotpoint )
-{
-    bool status = false;
-
-    Vector sphericals;
-    Maths::CartesiantoSpherical( p_hotpoint, sphericals );
-
-    dsreal alt = sphericals[0] - m_planet_diameter / 2.0;
-    
-    while( alt_ratio( alt ) > m_ratio_merge_threshold )
-    {
-    
-        if( m_currentleaf->GetParent() )
-        {
-            m_currentleaf = static_cast<QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
-            merge_group( m_currentleaf );
-
-            status = true;
-        }
-        
-        else
-        {
-            break;
-        }
-        
-    }
-    return status;
-}
-
-
 
 QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vector& p_point )
 {
@@ -738,9 +607,6 @@ void Face::ComputeLOD( void )
 
 bool Face::ComputeAlignmentFactor( void )
 {
-    // PROVISOIRE +@+
-    //bool status = false;
-
     Vector face_dir;
 
     Patch::GetNormalVector( m_orientation, face_dir );
@@ -753,56 +619,6 @@ bool Face::ComputeAlignmentFactor( void )
         return false;
     }
     return true;
-      
-    // PROVISOIRE +@+
-    /*
-    if( m_currentleaf == NULL )
-    {
-        if( m_rootpatch )
-        {
-            m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
-        }
-    }
-    else
-    {          
-        if( is_hotpoint_bound_in_node( m_currentleaf, m_relative_hotpoint ) )
-        {
-            dsreal lod = m_currentleaf->GetContent()->GetTriangleSideLength() / ( m_relative_hotpoint.Length() - ( m_planet_diameter / 2.0 ) );
-
-            if( lod > 0.5 )
-            {
-                if( check_split( m_relative_hotpoint ) )
-                {
-                    status = true;
-                }
-            }
-            else if( lod < 0.1 )
-            {
-                if( check_merge( m_relative_hotpoint ) )
-                {
-                    status = true;
-                }
-            }
-        }
-        else
-        {
-            DrawSpace::Utils::QuadtreeNode<Patch>* bounding_parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
-
-            if( bounding_parent )
-            {
-                merge_group( bounding_parent );
-                m_currentleaf = bounding_parent;
-                status = true;
-            }
-            else
-            {
-                m_currentleaf = NULL;
-            }
-        }
-    }
-    
-    return status;
-    */
 }
 
 DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
@@ -815,29 +631,14 @@ dsreal Face::GetAlignmentFactor( void )
     return m_alignment_factor;
 }
 
-void Face::ResetMeshe( void )
-{
-    if( !m_currentleaf )
-    {
-        return;
-    }
-
-    DrawSpace::Utils::QuadtreeNode<Patch>* parent; 
-    do
-    {
-        parent = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( m_currentleaf->GetParent() );
-        if( parent )
-        {
-            merge_group( parent );
-            m_currentleaf = parent;
-        }
-
-    } while( parent );  
-}
-
 void Face::GetLeafs( std::map<dsstring, Patch*>& p_list )
 {
     p_list = m_patchesleafs;
+}
+
+void Face::GetDisplayList( std::vector<Patch*>& p_displaylist )
+{
+    p_displaylist = m_displaylist;
 }
 
 dsreal Face::GetCurrentLOD( void )
@@ -864,4 +665,17 @@ void Face::recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 void Face::RecursiveSplitFromRoot( void )
 {
     recursive_split( m_rootpatch );
+}
+
+void Face::SetHotState( bool p_hotstate )
+{
+    m_hot = p_hotstate;
+    if( m_hot )
+    {
+        m_displaylist.clear();
+    }
+    else
+    {
+        m_displaylist.push_back( m_rootpatch->GetContent() );
+    }
 }

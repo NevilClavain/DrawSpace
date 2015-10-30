@@ -207,14 +207,6 @@ dsreal Body::GetHotPointAltitud( void )
     return m_hotpoint_altitud;
 }
 
-void Body::ResetMeshes( void )
-{
-    for( long i = 0; i < 6; i++ )
-    {
-        m_faces[i]->ResetMeshe();
-    }
-}
-
 int Body::GetCurrentFace (void )
 {
     return m_current_face;
@@ -222,6 +214,14 @@ int Body::GetCurrentFace (void )
 Face* Body::GetFace( int p_faceid )
 {
     return m_faces[p_faceid];
+}
+
+void Body::SetHotState( bool p_hotstate )
+{
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i]->SetHotState( p_hotstate );
+    }
 }
 
 /*

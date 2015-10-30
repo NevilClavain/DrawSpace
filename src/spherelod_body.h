@@ -60,23 +60,24 @@ public:
 
     static void BuildMeshe( void );
     
-    virtual void Compute( void );
+    void Compute( void );
 
-    virtual void Initialize( void );
-    virtual void RegisterEventHandler( EventHandler* p_handler );
+    void Initialize( void );
+    void RegisterEventHandler( EventHandler* p_handler );
 
-    virtual void UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
+    void UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
 
-    virtual DrawSpace::Core::Meshe* GetPatcheMeshe( void );
+    DrawSpace::Core::Meshe* GetPatcheMeshe( void );
 
-    virtual Patch* GetFaceCurrentLeaf( int p_faceid );
-    virtual Face* GetFace( int p_faceid );
+    Patch* GetFaceCurrentLeaf( int p_faceid );
+    Face* GetFace( int p_faceid );
 
-    virtual dsreal GetHotPointAltitud( void );
-
-    virtual void ResetMeshes( void );
+    dsreal GetHotPointAltitud( void );
     
-    virtual int GetCurrentFace (void );
+    int GetCurrentFace (void );
+
+    void SetHotState( bool p_hotstate );
+
 
     //virtual Maps* GetFaceMapsFactory( int p_faceid );
 
