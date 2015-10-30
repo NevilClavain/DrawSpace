@@ -100,6 +100,8 @@ public:
 
     void GetUVCoords( DrawSpace::Utils::Vector& p_uv );
 
+    bool IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
+
 
     //void SetTexture( Maps::TextureType p_type, void* p_texturedata );
     //void* GetTexture( Maps::TextureType p_type );
@@ -107,6 +109,11 @@ public:
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, DrawSpace::Utils::Vector& p_out );
+    
+    // change les coords d'un vecteur pour obtenir son equivalent dans le repere face front, ou x et y du repere 2D correspondent
+    // bien au x et y du repere 3D
+    static void ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+
     static void GetNormalVector( int p_orientation, DrawSpace::Utils::Vector& p_vector );
     
 };

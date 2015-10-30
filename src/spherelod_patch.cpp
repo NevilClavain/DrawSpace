@@ -374,6 +374,58 @@ void Patch::XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, Vector& p_out )
     }
 }
 
+void Patch::ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out )
+{
+    if( p_orientation == Patch::FrontPlanetFace )
+    {
+        p_out[0] = p_in[0];
+        p_out[1] = p_in[1];
+        p_out[2] = p_in[2];
+        p_out[3] = 0.0;
+    }
+
+    if( p_orientation == Patch::RearPlanetFace )
+    {
+        p_out[0] = -p_in[0];
+        p_out[1] = p_in[1];
+        p_out[2] = -p_in[2];
+        p_out[3] = 0.0;
+    }
+
+    if( p_orientation == Patch::TopPlanetFace )
+    {
+        p_out[0] = p_in[0];
+        p_out[1] = -p_in[2];
+        p_out[2] = p_in[1];
+        p_out[3] = 0.0;
+    }
+
+    if( p_orientation == Patch::BottomPlanetFace )
+    {
+        p_out[0] = p_in[0];
+        p_out[1] = p_in[2];
+        p_out[2] = -p_in[1];
+        p_out[3] = 0.0;
+    }
+
+
+    if( p_orientation == Patch::RightPlanetFace )
+    {
+        p_out[0] = -p_in[2];
+        p_out[1] = p_in[1];
+        p_out[2] = p_in[0];
+        p_out[3] = 0.0;
+    }
+
+    if( p_orientation == Patch::LeftPlanetFace )
+    {
+        p_out[0] = p_in[2];
+        p_out[1] = p_in[1];
+        p_out[2] = -p_in[0];
+        p_out[3] = 0.0;
+    }
+}
+
 void Patch::ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out )
 {
     DrawSpace::Utils::Vector in = p_in;
@@ -459,6 +511,32 @@ void Patch::GetNormalVector( int p_orientation, DrawSpace::Utils::Vector& p_vect
             break;
     }
     p_vector = face_dir;
+}
+
+bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray )
+{
+    Utils::Vector v1( m_xpos - m_sidelength / 2.0, m_ypos + m_sidelength / 2.0, 0.0, 0.0 );
+    Utils::Vector v2( m_xpos + m_sidelength / 2.0, m_ypos + m_sidelength / 2.0, 0.0, 0.0 );
+    Utils::Vector v3( m_xpos + m_sidelength / 2.0, m_ypos - m_sidelength / 2.0, 0.0, 0.0 );
+    Utils::Vector v4( m_xpos - m_sidelength / 2.0, m_ypos - m_sidelength / 2.0, 0.0, 0.0 );
+
+    v1[0] -= p_centerx;
+    v1[1] -= p_centery;
+    
+    v2[0] -= p_centerx;
+    v2[1] -= p_centery;
+
+    v3[0] -= p_centerx;
+    v3[1] -= p_centery;
+
+    v4[0] -= p_centerx;
+    v4[1] -= p_centery;
+
+    if( v1.Length() < p_ray || v2.Length() < p_ray || v3.Length() < p_ray || v4.Length() < p_ray )
+    {
+        return true;
+    }
+    return false;
 }
 
 /*

@@ -33,8 +33,6 @@ Face::Face( void ) :
 m_rootpatch( NULL ), 
 m_planet_diameter( 10.0 ),
 m_currentleaf( NULL ),
-m_ratio_split_threshold( 0.03 ),
-m_ratio_merge_threshold( 0.04 ),
 m_currentLOD( 0.0 ),
 m_hot( false )
 {
@@ -474,68 +472,22 @@ void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
     m_movement[2] = m_relative_hotpoint[2] - m_prev_relative_hotpoint[2];
 
     m_prev_relative_hotpoint = m_relative_hotpoint;
+
+    compute_cubeface_hotpoint();
 }
 
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
 {
+    /*
     Vector viewer;
-
-    if( m_orientation == Patch::FrontPlanetFace )
-    {
-        viewer[0] = p_hotpoint[0];
-        viewer[1] = p_hotpoint[1];
-        viewer[2] = p_hotpoint[2];
-        viewer[3] = 0.0;
-    }
-
-    if( m_orientation == Patch::RearPlanetFace )
-    {
-        viewer[0] = -p_hotpoint[0];
-        viewer[1] = p_hotpoint[1];
-        viewer[2] = -p_hotpoint[2];
-        viewer[3] = 0.0;
-    }
-
-    if( m_orientation == Patch::TopPlanetFace )
-    {
-        viewer[0] = p_hotpoint[0];
-        viewer[1] = -p_hotpoint[2];
-        viewer[2] = p_hotpoint[1];
-        viewer[3] = 0.0;
-    }
-
-    if( m_orientation == Patch::BottomPlanetFace )
-    {
-        viewer[0] = p_hotpoint[0];
-        viewer[1] = p_hotpoint[2];
-        viewer[2] = -p_hotpoint[1];
-        viewer[3] = 0.0;
-    }
-
-
-    if( m_orientation == Patch::RightPlanetFace )
-    {
-        viewer[0] = -p_hotpoint[2];
-        viewer[1] = p_hotpoint[1];
-        viewer[2] = p_hotpoint[0];
-        viewer[3] = 0.0;
-    }
-
-    if( m_orientation == Patch::LeftPlanetFace )
-    {
-        viewer[0] = p_hotpoint[2];
-        viewer[1] = p_hotpoint[1];
-        viewer[2] = -p_hotpoint[0];
-        viewer[3] = 0.0;
-    }
-
- 
+    Patch::ConvertVectorToFrontFaceCoords( m_orientation, p_hotpoint, viewer );
     viewer.Normalize();
     Vector projected_viewer;
-    Patch::SphereToCube( viewer, projected_viewer );
-    //projected_viewer = viewer;
+    Patch::SphereToCube( viewer, projected_viewer );    
     projected_viewer.Scale( m_planet_diameter / 2.0 );
-   
+    */
+
+    Vector projected_viewer = m_cubeface_hotpoint;
 
     Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
 
@@ -619,6 +571,20 @@ bool Face::ComputeAlignmentFactor( void )
         return false;
     }
     return true;
+}
+
+void Face::compute_cubeface_hotpoint( void )
+{
+    Vector viewer;
+
+    Patch::ConvertVectorToFrontFaceCoords( m_orientation, m_relative_hotpoint, viewer );
+ 
+    viewer.Normalize();
+    Vector projected_viewer;
+    Patch::SphereToCube( viewer, projected_viewer );    
+    projected_viewer.Scale( m_planet_diameter / 2.0 );
+
+    m_cubeface_hotpoint = projected_viewer;
 }
 
 DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
