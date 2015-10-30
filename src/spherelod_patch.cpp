@@ -514,25 +514,14 @@ void Patch::GetNormalVector( int p_orientation, DrawSpace::Utils::Vector& p_vect
 }
 
 bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray )
-{
-    Utils::Vector v1( m_xpos - m_sidelength / 2.0, m_ypos + m_sidelength / 2.0, 0.0, 0.0 );
-    Utils::Vector v2( m_xpos + m_sidelength / 2.0, m_ypos + m_sidelength / 2.0, 0.0, 0.0 );
-    Utils::Vector v3( m_xpos + m_sidelength / 2.0, m_ypos - m_sidelength / 2.0, 0.0, 0.0 );
-    Utils::Vector v4( m_xpos - m_sidelength / 2.0, m_ypos - m_sidelength / 2.0, 0.0, 0.0 );
+{    
+    dsreal xpos = m_xpos * m_ray;
+    dsreal ypos = m_ypos * m_ray;
+    dsreal sidelength = m_sidelength * m_ray;
 
-    v1[0] -= p_centerx;
-    v1[1] -= p_centery;
-    
-    v2[0] -= p_centerx;
-    v2[1] -= p_centery;
+    Utils::Vector dist( xpos - p_centerx, ypos - p_centery, 0.0, 0.0 );
 
-    v3[0] -= p_centerx;
-    v3[1] -= p_centery;
-
-    v4[0] -= p_centerx;
-    v4[1] -= p_centery;
-
-    if( v1.Length() < p_ray || v2.Length() < p_ray || v3.Length() < p_ray || v4.Length() < p_ray )
+    if( dist.Length() < p_ray + sidelength )
     {
         return true;
     }

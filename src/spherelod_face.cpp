@@ -29,15 +29,14 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Face::Face( void ) : 
+Face::Face( dsreal p_diameter ) : 
 m_rootpatch( NULL ), 
-m_planet_diameter( 10.0 ),
+m_planet_diameter( p_diameter ),
 m_currentleaf( NULL ),
 m_currentLOD( 0.0 ),
 m_hot( false )
 {
 }
-
 
 Face::~Face( void )
 {
@@ -55,6 +54,16 @@ bool Face::Init( int p_orientation )
     DeletionCallback* cb_split = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodesplit ) );
 
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );
+
+
+    m_lodranges[6] = m_planet_diameter / 2.0;
+    m_lodranges[5] = 0.75 * m_planet_diameter / 2.0;
+    m_lodranges[4] = 0.5 * m_planet_diameter / 2.0;
+    m_lodranges[3] = 0.25 * m_planet_diameter / 2.0;
+    m_lodranges[2] = 0.12 * m_planet_diameter / 2.0;
+    m_lodranges[1] = 0.06 * m_planet_diameter / 2.0;
+    m_lodranges[0] = 0.03 * m_planet_diameter / 2.0;
+
     return true;
 }
 
@@ -458,11 +467,6 @@ void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_nod
     }
 }
 
-void Face::SetPlanetDiameter( dsreal p_diameter )
-{
-    m_planet_diameter = p_diameter;
-}
-
 void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
 {
     m_relative_hotpoint = p_point;
@@ -540,6 +544,15 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vect
         return p_current;
     }
     return NULL;
+}
+
+void Face::Compute( void )
+{
+    if( m_hot )
+    {
+        m_displaylist.clear();
+        recursive_build_displaylist( m_rootpatch, NB_LOD_RANGES - 1 );
+    }
 }
 
 void Face::ComputeLOD( void )
@@ -636,12 +649,56 @@ void Face::RecursiveSplitFromRoot( void )
 void Face::SetHotState( bool p_hotstate )
 {
     m_hot = p_hotstate;
-    if( m_hot )
+
+    if( !m_hot )
     {
         m_displaylist.clear();
+        m_displaylist.push_back( m_rootpatch->GetContent() );
+    }
+}
+
+bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_lodlevel )
+{
+    QuadtreeNode<Patch>* patch_node = static_cast<QuadtreeNode<Patch>*>( p_current_node );
+
+    if( !patch_node->GetContent()->IsCircleIntersection( m_cubeface_hotpoint[0], m_cubeface_hotpoint[1], m_lodranges[p_lodlevel] ) )
+    {
+        return false;
+    }
+
+    if( 0 == p_lodlevel )
+    {
+        m_displaylist.push_back( patch_node->GetContent() );
+        return true;
     }
     else
     {
-        m_displaylist.push_back( m_rootpatch->GetContent() );
+        if( !patch_node->GetContent()->IsCircleIntersection( m_cubeface_hotpoint[0], m_cubeface_hotpoint[1], m_lodranges[p_lodlevel - 1] ) )
+        {
+            m_displaylist.push_back( patch_node->GetContent() );
+        }
+        else
+        {
+            // explore les 4 fils
+
+            // si pas de fils, splitter...
+            if( !patch_node->HasChildren() )
+            {
+                patch_node->Split();
+            }
+
+            for( int i = 0; i < 4; i++ )
+            {
+                BaseQuadtreeNode* sub = patch_node->GetChild( i );
+
+                if( !recursive_build_displaylist( sub, p_lodlevel - 1 ) )
+                {
+                    QuadtreeNode<Patch>* sub_patch_node = static_cast<QuadtreeNode<Patch>*>( sub );
+                    m_displaylist.push_back( sub_patch_node->GetContent() );
+                }
+            }
+        }
     }
+
+    return true;
 }

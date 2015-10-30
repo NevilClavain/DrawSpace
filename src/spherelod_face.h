@@ -28,6 +28,7 @@
 #include "renderer.h"
 #include "spherelod_patch.h"
 
+#define NB_LOD_RANGES 7
 
 namespace DrawSpace
 {
@@ -52,15 +53,15 @@ protected:
     dsreal                                                      m_planet_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::Vector                                    m_cubeface_hotpoint;
-    DrawSpace::Utils::Vector                                    m_prev_relative_hotpoint;
-    
+    DrawSpace::Utils::Vector                                    m_prev_relative_hotpoint;    
     DrawSpace::Utils::Vector                                    m_movement;
-
     dsreal                                                      m_alignment_factor;
-
     dsreal                                                      m_currentLOD;
-
     bool                                                        m_hot;
+
+    
+
+    dsreal                                                      m_lodranges[NB_LOD_RANGES];
 
     //Maps                                                        m_maps_factory;
 
@@ -74,20 +75,25 @@ protected:
 
     bool is_hotpoint_bound_in_node( DrawSpace::Utils::BaseQuadtreeNode* p_node, const DrawSpace::Utils::Vector& p_hotpoint );
     DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under( DrawSpace::Utils::QuadtreeNode<Patch>* p_current, DrawSpace::Utils::Vector& p_point );
-    
-    virtual void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
     void compute_cubeface_hotpoint( void );
 
+    bool recursive_build_displaylist( DrawSpace::Utils::BaseQuadtreeNode* p_current_node, int p_lodlevel );
+
+    virtual void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node );
+
 public:
 
-    Face( void );
+    Face( dsreal p_diameter );
     virtual ~Face( void );
 
     bool Init( int p_orientation );
     Patch* GetPatch( const dsstring& p_name );
-    void SetPlanetDiameter( dsreal p_diameter );
+    
     void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
+
+    void Compute( void );
+
     void ComputeLOD( void );
     bool ComputeAlignmentFactor( void );
     
