@@ -68,9 +68,8 @@ void Body::Compute( void )
     //////////////////////////////////////
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i]->Compute();
-
-        //bool status = m_faces[i]->ComputeAlignmentFactor();
+        m_faces[i]->ResetDisplayList();
+        bool status = m_faces[i]->ComputeAlignmentFactor();
 
         // PROVISOIRE +@+
         /*
@@ -84,7 +83,7 @@ void Body::Compute( void )
         */
     }
 
-    /*
+    
     int curr_face = 0;
     dsreal af = m_faces[0]->GetAlignmentFactor();
 
@@ -96,12 +95,10 @@ void Body::Compute( void )
             af = m_faces[i]->GetAlignmentFactor();
         }
     }
-    */
+    
+    m_current_face = curr_face;
 
-    //m_current_face = curr_face;
-
-    // PROVISOIRE +@+
-    //m_faces[m_current_face]->ComputeLOD();    
+    m_faces[m_current_face]->Compute();
 }
 
 

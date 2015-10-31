@@ -56,7 +56,6 @@ protected:
     DrawSpace::Utils::Vector                                    m_prev_relative_hotpoint;    
     DrawSpace::Utils::Vector                                    m_movement;
     dsreal                                                      m_alignment_factor;
-    dsreal                                                      m_currentLOD;
     bool                                                        m_hot;
 
     
@@ -82,6 +81,8 @@ protected:
 
     void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
+    void init_lodranges( void );
+
 public:
 
     Face( dsreal p_diameter );
@@ -91,10 +92,10 @@ public:
     
     void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
 
-    void Compute( void );
-
-    void ComputeLOD( void );
+    void Compute( void );    
     bool ComputeAlignmentFactor( void );
+
+    void ResetDisplayList( void );
     
     DrawSpace::Utils::QuadtreeNode<Patch>* GetCurrentLeaf( void );
     dsreal GetAlignmentFactor( void );

@@ -33,7 +33,6 @@ Face::Face( dsreal p_diameter ) :
 m_rootpatch( NULL ), 
 m_planet_diameter( p_diameter ),
 m_currentleaf( NULL ),
-m_currentLOD( 0.0 ),
 m_hot( false )
 {
 }
@@ -55,7 +54,7 @@ bool Face::Init( int p_orientation )
 
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );
 
-
+    /*
     m_lodranges[6] = m_planet_diameter / 2.0;
     m_lodranges[5] = 0.75 * m_planet_diameter / 2.0;
     m_lodranges[4] = 0.5 * m_planet_diameter / 2.0;
@@ -63,8 +62,21 @@ bool Face::Init( int p_orientation )
     m_lodranges[2] = 0.12 * m_planet_diameter / 2.0;
     m_lodranges[1] = 0.06 * m_planet_diameter / 2.0;
     m_lodranges[0] = 0.03 * m_planet_diameter / 2.0;
+    */
+
+    init_lodranges();
 
     return true;
+}
+
+void Face::init_lodranges( void )
+{
+    dsreal k = 1.0;
+    for( int i = NB_LOD_RANGES - 1; i >= 0; i--)
+    {
+        m_lodranges[i] = k * m_planet_diameter / 2.0;        
+        k *= 0.5;
+    }
 }
 
 /*
@@ -481,24 +493,16 @@ void Face::Compute( void )
     {
         m_displaylist.clear();
         recursive_build_displaylist( m_rootpatch, NB_LOD_RANGES - 1 );
-    }
-}
 
-void Face::ComputeLOD( void )
-{
-    if( m_currentleaf == NULL )
-    {
-        if( m_rootpatch )
+        if( m_currentleaf == NULL )
         {
-            m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
+            if( m_rootpatch )
+            {
+                m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
+            }
         }
     }
-    else
-    {  
-        m_currentLOD = ( m_relative_hotpoint.Length() - ( m_planet_diameter / 2.0 ) ) / m_currentleaf->GetContent()->GetTriangleSideLength();
-    }
 }
-
 bool Face::ComputeAlignmentFactor( void )
 {
     Vector face_dir;
@@ -513,6 +517,12 @@ bool Face::ComputeAlignmentFactor( void )
         return false;
     }
     return true;
+}
+
+void Face::ResetDisplayList( void )
+{
+    m_displaylist.clear();
+    m_displaylist.push_back( m_rootpatch->GetContent() );
 }
 
 void Face::compute_cubeface_hotpoint( void )
@@ -544,10 +554,6 @@ void Face::GetDisplayList( std::vector<Patch*>& p_displaylist )
     p_displaylist = m_displaylist;
 }
 
-dsreal Face::GetCurrentLOD( void )
-{
-    return m_currentLOD;
-}
 
 void Face::recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 {
@@ -573,12 +579,7 @@ void Face::RecursiveSplitFromRoot( void )
 void Face::SetHotState( bool p_hotstate )
 {
     m_hot = p_hotstate;
-
-    if( !m_hot )
-    {
-        m_displaylist.clear();
-        m_displaylist.push_back( m_rootpatch->GetContent() );
-    }
+    ResetDisplayList();
 }
 
 bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_lodlevel )
