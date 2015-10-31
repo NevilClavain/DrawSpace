@@ -28,7 +28,7 @@
 #include "renderer.h"
 #include "spherelod_patch.h"
 
-#define NB_LOD_RANGES 7
+#define NB_LOD_RANGES 8
 
 namespace DrawSpace
 {

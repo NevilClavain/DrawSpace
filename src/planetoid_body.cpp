@@ -888,6 +888,7 @@ void DrawSpace::Planetoid::Body::run_textures( DrawSpace::Pass* p_pass )
     frontrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::FrontPlanetFace );
     frontrunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
     m_proceduraltexture_runners[DrawSpace::SphericalLOD::Patch::FrontPlanetFace]->PushMessage( frontrunner_props );
+    return;
     
     rearrunner_props.AddPropValue<int>( "direction", SphericalLOD::Patch::RearPlanetFace );
     rearrunner_props.AddPropValue<DrawSpace::Pass*>( "pass", p_pass );
