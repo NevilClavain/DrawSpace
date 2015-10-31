@@ -80,7 +80,7 @@ protected:
 
     bool recursive_build_displaylist( DrawSpace::Utils::BaseQuadtreeNode* p_current_node, int p_lodlevel );
 
-    virtual void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node );
+    void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node );
 
 public:
 
