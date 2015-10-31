@@ -44,7 +44,7 @@ protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   MergeCallback;
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
-    std::map<dsstring, DrawSpace::Utils::BaseQuadtreeNode*>     m_patches;
+
     std::map<dsstring, Patch*>                                  m_patchesleafs;
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     std::vector<Patch*>                                         m_displaylist;
@@ -88,7 +88,6 @@ public:
     virtual ~Face( void );
 
     bool Init( int p_orientation );
-    Patch* GetPatch( const dsstring& p_name );
     
     void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
 
@@ -100,17 +99,13 @@ public:
     DrawSpace::Utils::QuadtreeNode<Patch>* GetCurrentLeaf( void );
     dsreal GetAlignmentFactor( void );
     
-
-    void GetLeafs( std::map<dsstring, Patch*>& p_list );
     void GetDisplayList( std::vector<Patch*>& p_displaylist );
 
     dsreal GetCurrentLOD( void );
 
     void RecursiveSplitFromRoot( void );
-
     void SetHotState( bool p_hotstate );
-
-    //virtual Maps* GetMapsFactory( void );
+    
 };
 }
 }

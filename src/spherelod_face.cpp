@@ -67,16 +67,6 @@ bool Face::Init( int p_orientation )
     return true;
 }
 
-Patch* Face::GetPatch( const dsstring& p_name )
-{
-    if( m_patches.count( p_name ) > 0 )
-    {
-        QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( m_patches[p_name] );
-        return node->GetContent();
-    }
-    return NULL;
-}
-
 /*
 Maps* Face::GetMapsFactory( void )
 {
@@ -95,23 +85,6 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 
         dsstring patch_name;
         patch->GetName( patch_name );        
-        m_patches[patch_name] = p_node;
-
-        m_patchesleafs[patch_name] = patch;
-
-        /*
-        // request texture from maps factory
-
-        void* color_texture;
-        void* elevation_texture;
-        
-        color_texture = m_maps_factory.RequestTexture( Maps::COLOR_TEXTURE, patch );
-        elevation_texture = m_maps_factory.RequestTexture( Maps::ELEVATION_TEXTURE, patch );
-
-        patch->SetTexture( Maps::COLOR_TEXTURE, color_texture );
-        patch->SetTexture( Maps::ELEVATION_TEXTURE, elevation_texture );
-        */
-
     }
     else
     {
@@ -129,23 +102,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         node->SetContent( patch );
 
         dsstring patch_name;
-        patch->GetName( patch_name );
-        m_patches[patch_name] = p_node;
-
-        m_patchesleafs[patch_name] = patch;
-
-        /*
-        // request texture from maps factory
-
-        void* color_texture;
-        void* elevation_texture;
-        
-        color_texture = m_maps_factory.RequestTexture( Maps::COLOR_TEXTURE, patch );
-        elevation_texture = m_maps_factory.RequestTexture( Maps::ELEVATION_TEXTURE, patch );
-
-        patch->SetTexture( Maps::COLOR_TEXTURE, color_texture );
-        patch->SetTexture( Maps::ELEVATION_TEXTURE, elevation_texture );
-        */
+        patch->GetName( patch_name );        
     }
 }
 
@@ -153,17 +110,8 @@ void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 {    
     QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
     
-    Patch* patch = node->GetContent();
-
-    dsstring patch_name;
-    patch->GetName( patch_name );   
-    m_patches.erase( patch_name );
+    Patch* patch = node->GetContent();    
     _DRAWSPACE_DELETE_( patch );
-
-    if( m_patchesleafs.count( patch_name ) > 0 )
-    {
-        m_patchesleafs.erase( patch_name );
-    }
 }
 
 void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
@@ -196,13 +144,6 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     set_border_neighbours( ne_child_node );
     set_border_neighbours( se_child_node );
     set_border_neighbours( sw_child_node );
-
-    dsstring patch_name;
-    patch->GetName( patch_name );   
-    if( m_patchesleafs.count( patch_name ) > 0 )
-    {
-        m_patchesleafs.erase( patch_name );
-    }
 }
 
 void Face::set_border_neighbours( QuadtreeNode<Patch>* p_node )
@@ -354,10 +295,6 @@ void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     unset_border_neighbours( ne_child_node );
     unset_border_neighbours( se_child_node );
     unset_border_neighbours( sw_child_node );
-
-    dsstring patch_name;
-    patch->GetName( patch_name );
-    m_patchesleafs[patch_name] = patch;
 }
 
 void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node )
@@ -482,14 +419,6 @@ void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
 
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
 {
-    /*
-    Vector viewer;
-    Patch::ConvertVectorToFrontFaceCoords( m_orientation, p_hotpoint, viewer );
-    viewer.Normalize();
-    Vector projected_viewer;
-    Patch::SphereToCube( viewer, projected_viewer );    
-    projected_viewer.Scale( m_planet_diameter / 2.0 );
-    */
 
     Vector projected_viewer = m_cubeface_hotpoint;
 
@@ -608,11 +537,6 @@ DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
 dsreal Face::GetAlignmentFactor( void )
 {
     return m_alignment_factor;
-}
-
-void Face::GetLeafs( std::map<dsstring, Patch*>& p_list )
-{
-    p_list = m_patchesleafs;
 }
 
 void Face::GetDisplayList( std::vector<Patch*>& p_displaylist )
