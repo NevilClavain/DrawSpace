@@ -366,7 +366,7 @@ bool App::InitApp( HINSTANCE p_hInstance )
             _DSERROR( logger, "CreateWindow FAIL" )
         }
 
-        ShowWindow( m_hwnd, SW_SHOW );
+        ShowWindow( m_hwnd, SW_SHOWDEFAULT );
         UpdateWindow( m_hwnd );
 
         m_app_ready = true;
