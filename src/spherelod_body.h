@@ -77,7 +77,7 @@ public:
     int GetCurrentFace (void );
 
     void SetHotState( bool p_hotstate );
-
+    void UpdateRelativeAlt( dsreal p_alt );
 
     //virtual Maps* GetFaceMapsFactory( int p_faceid );
 

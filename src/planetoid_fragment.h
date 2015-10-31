@@ -106,6 +106,8 @@ public:
     void RemoveColliderFromWorld( void );
     DrawSpace::SphericalLOD::Body* GetPlanetBody( void );
 
+    void UpdateRelativeAlt( dsreal p_alt );
+
     void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done, long& p_nb_collisionmeshebuild_added );
 
 };

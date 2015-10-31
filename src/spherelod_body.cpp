@@ -224,6 +224,14 @@ void Body::SetHotState( bool p_hotstate )
     }
 }
 
+void Body::UpdateRelativeAlt( dsreal p_alt )
+{
+    for( long i = 0; i < 6; i++ )
+    {
+        m_faces[i]->UpdateRelativeAlt( p_alt );
+    }
+}
+
 /*
 Maps* Body::GetFaceMapsFactory( int p_faceid )
 {

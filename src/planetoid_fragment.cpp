@@ -321,3 +321,8 @@ void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, 
     p_nb_collisionmeshebuild_done = m_nb_collisionmeshebuild_done;
     p_nb_collisionmeshebuild_added = m_nb_collisionmeshebuild_added;
 }
+
+void Fragment::UpdateRelativeAlt( dsreal p_alt )
+{
+    m_planetbody->UpdateRelativeAlt( p_alt );
+}

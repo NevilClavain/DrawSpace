@@ -414,13 +414,17 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
                     Fragment* fragment = m_registered_camerapoints[cameras[i]].fragment;
                     fragment->SetHotState( false );
-
+                    fragment->UpdateRelativeAlt( rel_alt );
                 }
 
                 //////
 
-                Fragment* fragment = it->second.fragment;
-                fragment->RemoveColliderFromWorld();
+                Fragment* bodyfragment = it->second.fragment;
+                bodyfragment->RemoveColliderFromWorld();
+
+                // ajout 11/2015 : un oubli je pense...
+                bodyfragment->SetHotState( false );
+                bodyfragment->UpdateRelativeAlt( rel_alt );
 
                 //////
             }
@@ -475,7 +479,13 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
                     Fragment* fragment = m_registered_camerapoints[cameras[i]].fragment;
 
                     fragment->SetHotState( true );
+                    fragment->UpdateRelativeAlt( rel_alt );
                 }
+
+                // ajout 11/2015 : un oubli je pense...
+                Fragment* bodyfragment = it->second.fragment;
+                bodyfragment->SetHotState( true );
+                bodyfragment->UpdateRelativeAlt( rel_alt );
             }
         }
     }

@@ -28,7 +28,7 @@
 #include "renderer.h"
 #include "spherelod_patch.h"
 
-#define NB_LOD_RANGES 8
+#define NB_LOD_RANGES 9
 
 namespace DrawSpace
 {
@@ -57,6 +57,7 @@ protected:
     DrawSpace::Utils::Vector                                    m_movement;
     dsreal                                                      m_alignment_factor;
     bool                                                        m_hot;
+    dsreal                                                      m_relative_alt;
 
     
 
@@ -78,9 +79,7 @@ protected:
     void compute_cubeface_hotpoint( void );
 
     bool recursive_build_displaylist( DrawSpace::Utils::BaseQuadtreeNode* p_current_node, int p_lodlevel );
-
-    void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node );
-
+   
     void init_lodranges( void );
 
 public:
@@ -104,9 +103,8 @@ public:
 
     dsreal GetCurrentLOD( void );
 
-    void RecursiveSplitFromRoot( void );
     void SetHotState( bool p_hotstate );
-    
+    void UpdateRelativeAlt( dsreal p_alt );    
 };
 }
 }

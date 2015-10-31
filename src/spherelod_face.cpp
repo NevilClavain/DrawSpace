@@ -33,7 +33,8 @@ Face::Face( dsreal p_diameter ) :
 m_rootpatch( NULL ), 
 m_planet_diameter( p_diameter ),
 m_currentleaf( NULL ),
-m_hot( false )
+m_hot( false ),
+m_relative_alt( 0.0 )
 {
 }
 
@@ -554,28 +555,6 @@ void Face::GetDisplayList( std::vector<Patch*>& p_displaylist )
     p_displaylist = m_displaylist;
 }
 
-
-void Face::recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_node )
-{
-    DrawSpace::Utils::QuadtreeNode<Patch>* node = static_cast<DrawSpace::Utils::QuadtreeNode<Patch>*>( p_node );
-
-    if( 3 == node->GetDepthLevel() )
-    {
-        return;
-    }
-    p_node->Split();
-
-    for( size_t i = 0; i < 4; i++ )
-    {
-        recursive_split( node->GetChild( i ) );
-    }
-}
-
-void Face::RecursiveSplitFromRoot( void )
-{
-    recursive_split( m_rootpatch );
-}
-
 void Face::SetHotState( bool p_hotstate )
 {
     m_hot = p_hotstate;
@@ -624,6 +603,10 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
             }
         }
     }
-
     return true;
+}
+
+void Face::UpdateRelativeAlt( dsreal p_alt )
+{
+    m_relative_alt = p_alt;
 }
