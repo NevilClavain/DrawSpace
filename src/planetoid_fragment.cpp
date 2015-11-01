@@ -227,18 +227,15 @@ void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
         }
     }
 
-
     if( m_hot )
     {
-
         Matrix camera_pos;
         bool inject_hotpoint = false;
 
         if( m_camera )
         {
             dsstring camera_scenename;
-
-            //m_camera->GetSceneName( camera_scenename );
+            
             DrawSpace::Core::SceneNode<CameraPoint>* camera_node = m_camera->GetOwner();
             camera_node->GetSceneName( camera_scenename );
 

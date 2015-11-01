@@ -299,7 +299,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                             reg_camera.attached_body = NULL;
                             reg_camera.attached_collider = NULL;
 
-                            create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera );
+                            create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera, true );
 
                             m_registered_camerapoints[camera_scenename] = reg_camera;
 
@@ -320,7 +320,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
             {
                 reg_camera.type = FREE;
                 reg_camera.attached_body = NULL;
-                create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera );
+                create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera, false );
 
                 m_registered_camerapoints[camera_scenename] = reg_camera;
             }            
@@ -339,6 +339,7 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
         // PROVISOIRE +@+
 
         manage_bodies();
+        manage_camerapoints();
         update_fragments();
 
         for( size_t i = 0; i < 6; i++ )
@@ -384,6 +385,8 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 {
     for( std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>::iterator it = m_registered_bodies.begin(); it != m_registered_bodies.end(); ++it )
     {
+        Fragment* bodyfragment = it->second.fragment;
+
         if( it->second.attached )
         {
             DrawSpace::Utils::Matrix bodypos;
@@ -399,10 +402,15 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
             it->second.relative_alt_valid = true;
             it->second.relative_alt = rel_alt;
 
+            bodyfragment->UpdateRelativeAlt( rel_alt );
+
             if( rel_alt >= /*1.2*/ 2.1 )
             {
 
                 detach_body( it->second.body );
+
+                /*
+                // inutile : le fragment associé à la camera associee au body est le même que le fragment associé au body
 
                 // rechercher si une camera enregistree est associee a ce body
                 std::vector<dsstring> cameras;
@@ -414,17 +422,15 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
                     Fragment* fragment = m_registered_camerapoints[cameras[i]].fragment;
                     fragment->SetHotState( false );
-                    fragment->UpdateRelativeAlt( rel_alt );
                 }
-
+                */
                 //////
 
-                Fragment* bodyfragment = it->second.fragment;
+                
                 bodyfragment->RemoveColliderFromWorld();
 
                 // ajout 11/2015 : un oubli je pense...
-                bodyfragment->SetHotState( false );
-                bodyfragment->UpdateRelativeAlt( rel_alt );
+                bodyfragment->SetHotState( false );                
 
                 //////
             }
@@ -461,13 +467,16 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
             it->second.relative_alt_valid = true;
             it->second.relative_alt = rel_alt;
 
+            bodyfragment->UpdateRelativeAlt( rel_alt );
+
             if( rel_alt < /*1.1*/ 2.0 )
             {
 
                 attach_body( it->second.body );
 
                 /////
-
+                /*
+                // inutile : le fragment associé à la camera associee au body est le même que le fragment associé au body
                 std::vector<dsstring> cameras;
                 body_find_attached_camera( it->second.body, cameras );
 
@@ -477,18 +486,20 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
                     m_registered_camerapoints[cameras[i]].camera->SetRelativeOrbiter( this );
 
                     Fragment* fragment = m_registered_camerapoints[cameras[i]].fragment;
-
-                    fragment->SetHotState( true );
-                    fragment->UpdateRelativeAlt( rel_alt );
+                    fragment->SetHotState( true );                    
                 }
+                */
 
                 // ajout 11/2015 : un oubli je pense...
-                Fragment* bodyfragment = it->second.fragment;
                 bodyfragment->SetHotState( true );
-                bodyfragment->UpdateRelativeAlt( rel_alt );
             }
         }
     }
+}
+
+void DrawSpace::Planetoid::Body::manage_camerapoints( void )
+{
+    // to be continued...
 }
 
 void DrawSpace::Planetoid::Body::update_fragments( void )
@@ -524,7 +535,7 @@ void DrawSpace::Planetoid::Body::update_fragments( void )
     }
 }
 
-void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr )
+void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr, bool p_hotstate )
 {
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
@@ -532,8 +543,14 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
     dsstring final_name = m_scenename + dsstring( " " ) + p_cameraname;
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( final_name, slod_body, collider, m_ray, false ) );
    
-    planet_fragment->SetHotState( true );
-    planet_fragment->SetCamera( p_camera );
+    planet_fragment->SetHotState( p_hotstate );
+   
+    // si p_hotstate == false, il n'y a pas d'injection de hotpoint dans le spherelod body depuis Fragment::Update
+    // donc inutile de faire le SetCamera sur le fragment
+    if( p_hotstate )
+    {
+        planet_fragment->SetCamera( p_camera );
+    }
 
     p_cameradescr.fragment = planet_fragment;    
     p_cameradescr.camera->SetRelativeOrbiter( this );

@@ -34,7 +34,9 @@ m_rootpatch( NULL ),
 m_planet_diameter( p_diameter ),
 m_currentleaf( NULL ),
 m_hot( false ),
-m_relative_alt( 0.0 )
+m_relative_alt( 0.0 ),
+m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
+m_lod_delta( 1 )
 {
 }
 
@@ -55,16 +57,6 @@ bool Face::Init( int p_orientation )
 
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );
 
-    /*
-    m_lodranges[6] = m_planet_diameter / 2.0;
-    m_lodranges[5] = 0.75 * m_planet_diameter / 2.0;
-    m_lodranges[4] = 0.5 * m_planet_diameter / 2.0;
-    m_lodranges[3] = 0.25 * m_planet_diameter / 2.0;
-    m_lodranges[2] = 0.12 * m_planet_diameter / 2.0;
-    m_lodranges[1] = 0.06 * m_planet_diameter / 2.0;
-    m_lodranges[0] = 0.03 * m_planet_diameter / 2.0;
-    */
-
     init_lodranges();
 
     return true;
@@ -79,13 +71,6 @@ void Face::init_lodranges( void )
         k *= 0.5;
     }
 }
-
-/*
-Maps* Face::GetMapsFactory( void )
-{
-    return &m_maps_factory;
-}
-*/
 
 void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {
@@ -570,7 +555,8 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
         return false;
     }
 
-    if( 0 == p_lodlevel )
+    //if( 0 == p_lodlevel )
+    if( m_lod_slipping_sup - m_lod_delta == p_lodlevel )
     {
         m_displaylist.push_back( patch_node->GetContent() );
         return true;
@@ -579,7 +565,10 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
     {
         if( !patch_node->GetContent()->IsCircleIntersection( m_cubeface_hotpoint[0], m_cubeface_hotpoint[1], m_lodranges[p_lodlevel - 1] ) )
         {
-            m_displaylist.push_back( patch_node->GetContent() );
+            if( p_lodlevel <= m_lod_slipping_sup )
+            {
+                m_displaylist.push_back( patch_node->GetContent() );   
+            }
         }
         else
         {
@@ -597,8 +586,11 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 
                 if( !recursive_build_displaylist( sub, p_lodlevel - 1 ) )
                 {
-                    QuadtreeNode<Patch>* sub_patch_node = static_cast<QuadtreeNode<Patch>*>( sub );
-                    m_displaylist.push_back( sub_patch_node->GetContent() );
+                    if( p_lodlevel - 1 <= m_lod_slipping_sup )
+                    {
+                        QuadtreeNode<Patch>* sub_patch_node = static_cast<QuadtreeNode<Patch>*>( sub );
+                        m_displaylist.push_back( sub_patch_node->GetContent() );
+                    }
                 }
             }
         }
@@ -609,4 +601,28 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
     m_relative_alt = p_alt;
+    
+    if( m_relative_alt >= 1.7 )
+    {
+        m_lod_slipping_sup = NB_LOD_RANGES - 1;
+        m_lod_delta = 1;
+    }
+    else if( m_relative_alt < 1.7 && m_relative_alt >= 1.5 )
+    {
+        m_lod_slipping_sup = NB_LOD_RANGES - 1;
+        m_lod_slipping_sup--;
+        m_lod_delta = 3;
+    }
+    else if( m_relative_alt < 1.5 && m_relative_alt >= 1.2 )
+    {
+        m_lod_slipping_sup = NB_LOD_RANGES - 1;
+        m_lod_slipping_sup -= 2;
+        m_lod_delta = 3;
+    }
+    else
+    {
+        m_lod_slipping_sup = NB_LOD_RANGES - 1;
+        m_lod_slipping_sup -= 3;
+        m_lod_delta = 3;    
+    }
 }
