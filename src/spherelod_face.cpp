@@ -601,7 +601,14 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
     m_relative_alt = p_alt;
+    if( m_hot )
+    {
+        m_lod_slipping_sup = NB_LOD_RANGES - 1;
+        m_lod_delta = 4;
+    }
+
     
+    /*
     if( m_relative_alt >= 1.7 )
     {
         m_lod_slipping_sup = NB_LOD_RANGES - 1;
@@ -625,4 +632,5 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
         m_lod_slipping_sup -= 3;
         m_lod_delta = 3;    
     }
+    */
 }
