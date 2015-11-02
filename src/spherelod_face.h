@@ -28,7 +28,7 @@
 #include "renderer.h"
 #include "spherelod_patch.h"
 
-#define NB_LOD_RANGES       20
+#define NB_LOD_RANGES       14
 
 
 namespace DrawSpace
@@ -61,7 +61,7 @@ protected:
     dsreal                                                      m_relative_alt;
 
     int                                                         m_lod_slipping_sup;
-    int                                                         m_lod_delta;
+    int                                                         m_lod_slipping_inf;    
 
     dsreal                                                      m_lodranges[NB_LOD_RANGES];
 

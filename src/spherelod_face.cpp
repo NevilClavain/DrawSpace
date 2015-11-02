@@ -36,7 +36,7 @@ m_currentleaf( NULL ),
 m_hot( false ),
 m_relative_alt( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
-m_lod_delta( 1 )
+m_lod_slipping_inf( NB_LOD_RANGES - 4 )
 {
 }
 
@@ -556,7 +556,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
     }
 
     //if( 0 == p_lodlevel )
-    if( m_lod_slipping_sup - m_lod_delta == p_lodlevel )
+    if( m_lod_slipping_inf == p_lodlevel )
     {
         m_displaylist.push_back( patch_node->GetContent() );
         return true;
@@ -602,35 +602,16 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
 {
     m_relative_alt = p_alt;
     if( m_hot )
-    {
-        m_lod_slipping_sup = NB_LOD_RANGES - 1;
-        m_lod_delta = 4;
-    }
+    { 
+        // calcul de la fenetre glissante de lod (m_lod_slipping_sup et m_lod_slipping_inf) en fct de l'altitude relative
+        // c'est la fct atan qui est choisie pour son profil.
 
-    
-    /*
-    if( m_relative_alt >= 1.7 )
-    {
-        m_lod_slipping_sup = NB_LOD_RANGES - 1;
-        m_lod_delta = 1;
+        // ramener dans l'intervale 1.0 - 0.0
+        dsreal factor = Maths::Clamp( 0.0, 1.0, m_relative_alt - 1.0 );
+
+        dsreal factor2 = 2.0 * atan( 50.0 * factor ) / PI;
+
+        m_lod_slipping_sup = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 7, 19, factor2 ) );
+        m_lod_slipping_inf = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 0, 17, factor2 ) );
     }
-    else if( m_relative_alt < 1.7 && m_relative_alt >= 1.5 )
-    {
-        m_lod_slipping_sup = NB_LOD_RANGES - 1;
-        m_lod_slipping_sup--;
-        m_lod_delta = 3;
-    }
-    else if( m_relative_alt < 1.5 && m_relative_alt >= 1.2 )
-    {
-        m_lod_slipping_sup = NB_LOD_RANGES - 1;
-        m_lod_slipping_sup -= 2;
-        m_lod_delta = 3;
-    }
-    else
-    {
-        m_lod_slipping_sup = NB_LOD_RANGES - 1;
-        m_lod_slipping_sup -= 3;
-        m_lod_delta = 3;    
-    }
-    */
 }
