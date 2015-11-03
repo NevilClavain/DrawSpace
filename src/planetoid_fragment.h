@@ -83,8 +83,6 @@ protected:
 
     bool                                                        m_collisions;
 
-    dsstring                                                    m_name;
-
     Dynamics::InertBody::Body::Parameters                       m_params;
 
     SphericalLOD::Patch*                                        m_current_patch;
@@ -100,7 +98,7 @@ protected:
 
 public:
 
-    Fragment( const dsstring& p_name, DrawSpace::SphericalLOD::Body* p_planetbody, DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions );
+    Fragment( DrawSpace::SphericalLOD::Body* p_planetbody, DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions );
     virtual ~Fragment( void );
 
     void Update( DrawSpace::Dynamics::World* p_world, DrawSpace::Planetoid::Body* p_owner );
