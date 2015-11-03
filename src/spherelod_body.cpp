@@ -37,7 +37,8 @@ Meshe* Body::m_planetpatch_meshe = NULL;
 
 Body::Body( dsreal p_diameter ) : 
 m_diameter( p_diameter ),
-m_current_face( -1 )
+m_current_face( -1 ),
+m_current_patch( NULL )
 {
     for( long i = 0; i < 6; i++ )
     {
@@ -98,6 +99,8 @@ void Body::Compute( void )
     
     m_current_face = curr_face;
     m_faces[m_current_face]->Compute();
+
+    check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch() );
 }
 
 
@@ -171,9 +174,16 @@ void Body::BuildMeshe( void )
     }
 }
 
+/*
 void Body::RegisterEventHandler( EventHandler* p_handler )
 {
     m_evt_handlers.push_back( p_handler );
+}
+*/
+
+void Body::RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler )
+{
+    m_patchupdate_handlers.push_back( p_handler );
 }
 
 void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
@@ -217,6 +227,7 @@ Face* Body::GetFace( int p_faceid )
 
 void Body::SetHotState( bool p_hotstate )
 {
+    check_currentpatch_event( NULL );
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->SetHotState( p_hotstate );
@@ -228,6 +239,18 @@ void Body::UpdateRelativeAlt( dsreal p_alt )
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->UpdateRelativeAlt( p_alt );
+    }
+}
+
+void Body::check_currentpatch_event( Patch* p_newvalue )
+{
+    if( m_current_patch != p_newvalue )
+    {
+        m_current_patch = p_newvalue;
+        for( size_t i = 0; i < m_patchupdate_handlers.size(); i++ )
+        {
+            (*m_patchupdate_handlers[i])( m_current_patch ); 
+        }
     }
 }
 

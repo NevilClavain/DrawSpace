@@ -44,7 +44,11 @@ class Fragment
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Body*, int>     SphereLODEvtCb;
+    //typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Body*, int>     SphereLODEvtCb;
+
+    typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::SphericalLOD::Patch*>          PatchUpdateCb;
+
+
     typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>           RunnerMsgCb;
 
 
@@ -60,7 +64,9 @@ protected:
     long                                                        m_nb_collisionmeshebuild_added;
 
 
-    SphereLODEvtCb*                                             m_spherelod_evt_cb;    
+    //SphereLODEvtCb*                                             m_spherelod_evt_cb;
+
+    PatchUpdateCb*                                              m_patch_update_cb;
     RunnerMsgCb*                                                m_runner_msg_cb;
 
     bool                                                        m_suspend_update;
@@ -82,8 +88,12 @@ protected:
 
     Dynamics::InertBody::Body::Parameters                       m_params;
 
+    SphericalLOD::Patch*                                        m_current_patch;
+
     void on_meshebuild_request( DrawSpace::Core::PropertyPool* p_args );
     void on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_currentface );
+
+    void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch );
 
     //void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, int p_patch_orientation, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, DrawSpace::Core::Meshe& p_outmeshe );
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe );
@@ -108,8 +118,9 @@ public:
 
     void UpdateRelativeAlt( dsreal p_alt );
 
-    void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done, long& p_nb_collisionmeshebuild_added );
+    SphericalLOD::Patch* GetCurrentPatch( void );
 
+    void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done, long& p_nb_collisionmeshebuild_added );
 };
 
 }

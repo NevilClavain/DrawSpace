@@ -34,24 +34,27 @@ class Body
 {
 public:
 
-    typedef DrawSpace::Core::BaseCallback2<void, Body*, int> EventHandler;
+    //typedef DrawSpace::Core::BaseCallback2<void, Body*, int> EventHandler;
+
+    typedef DrawSpace::Core::BaseCallback<void, Patch*> PatchUpdateHandler;
 
 protected:
-
-    typedef DrawSpace::Core::CallBack2<Body, void, int, Patch*>                 PatchInstanciationCallback;    
 
     Face*                                                                       m_faces[6];
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
 
-    dsreal                                                                      m_diameter;
-    
+    dsreal                                                                      m_diameter;    
     dsreal                                                                      m_hotpoint_altitud;
 
-    std::vector<EventHandler*>                                                  m_evt_handlers;
+    //std::vector<EventHandler*>                                                  m_evt_handlers;
+
+    std::vector<PatchUpdateHandler*>                                            m_patchupdate_handlers;
 
     int                                                                         m_current_face;
-
     
+    Patch*                                                                      m_current_patch;
+
+    void check_currentpatch_event( Patch* p_newvalue );
 
 public:
 
@@ -63,7 +66,9 @@ public:
     void Compute( void );
 
     void Initialize( void );
-    void RegisterEventHandler( EventHandler* p_handler );
+    //void RegisterEventHandler( EventHandler* p_handler );
+
+    void RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler );
 
     void UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
 

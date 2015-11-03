@@ -41,7 +41,8 @@ m_inertbody( NULL ),
 m_collisions( p_collisions ),
 m_nb_collisionmeshebuild_req( 0 ),
 m_nb_collisionmeshebuild_done( 0 ),
-m_nb_collisionmeshebuild_added( 0 )
+m_nb_collisionmeshebuild_added( 0 ),
+m_current_patch( NULL )
 {
     m_name = p_name;
 
@@ -52,8 +53,13 @@ m_nb_collisionmeshebuild_added( 0 )
 
         m_runner = _DRAWSPACE_NEW_( Runner, Runner );
 
-        m_spherelod_evt_cb = _DRAWSPACE_NEW_( SphereLODEvtCb, SphereLODEvtCb( this, &Fragment::on_spherelod_event ) );
-        m_planetbody->RegisterEventHandler( m_spherelod_evt_cb );
+        //m_spherelod_evt_cb = _DRAWSPACE_NEW_( SphereLODEvtCb, SphereLODEvtCb( this, &Fragment::on_spherelod_event ) );
+
+        m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );
+
+        //m_planetbody->RegisterEventHandler( m_spherelod_evt_cb );
+
+        m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
        
         m_runner_msg_cb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Fragment::on_meshebuild_request ) );
        
@@ -164,6 +170,11 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
         }
     }
 
+}
+
+void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch )
+{
+    m_current_patch = p_patch;
 }
 
 void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe )
@@ -322,4 +333,9 @@ void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, 
 void Fragment::UpdateRelativeAlt( dsreal p_alt )
 {
     m_planetbody->UpdateRelativeAlt( p_alt );
+}
+
+SphericalLOD::Patch* Fragment::GetCurrentPatch( void )
+{
+    return m_current_patch;
 }

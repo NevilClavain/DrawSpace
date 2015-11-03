@@ -481,16 +481,6 @@ void Face::Compute( void )
         m_displaylist.clear();
         m_currentPatch = NULL;
         recursive_build_displaylist( m_rootpatch, NB_LOD_RANGES - 1 );
-
-        /*
-        if( m_currentleaf == NULL )
-        {
-            if( m_rootpatch )
-            {
-                m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
-            }
-        }
-        */
     }
 }
 bool Face::ComputeAlignmentFactor( void )
