@@ -97,7 +97,6 @@ void Body::Compute( void )
     }
     
     m_current_face = curr_face;
-
     m_faces[m_current_face]->Compute();
 }
 

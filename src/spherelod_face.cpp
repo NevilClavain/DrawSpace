@@ -33,6 +33,7 @@ Face::Face( dsreal p_diameter ) :
 m_rootpatch( NULL ), 
 m_planet_diameter( p_diameter ),
 m_currentleaf( NULL ),
+m_currentPatch( NULL ),
 m_hot( false ),
 m_relative_alt( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
@@ -415,7 +416,7 @@ void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
     compute_cubeface_hotpoint();
 }
 
-bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_hotpoint )
+bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node )
 {
 
     Vector projected_viewer = m_cubeface_hotpoint;
@@ -436,33 +437,33 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node, const Vector& p_
 }
 
 
-QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current, Vector& p_point )
+QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current )
 {
     QuadtreeNode<Patch>* child;
 
-    if( is_hotpoint_bound_in_node( p_current, p_point ) )
+    if( is_hotpoint_bound_in_node( p_current ) )
     {
         if( p_current->HasChildren() )
         {
-            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::NorthWestNode ) ), p_point );
+            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::NorthWestNode ) ) );
             if( child )
             {
                 return child;
             }
 
-            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::NorthEastNode ) ), p_point );
+            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::NorthEastNode ) ) );
             if( child )
             {
                 return child;
             }
 
-            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::SouthEastNode ) ), p_point );
+            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::SouthEastNode ) ) );
             if( child )
             {
                 return child;
             }
 
-            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::SouthWestNode ) ), p_point );
+            child = find_leaf_under( static_cast<QuadtreeNode<Patch>*>( p_current->GetChild( BaseQuadtreeNode::SouthWestNode ) ) );
             if( child )
             {
                 return child;
@@ -478,8 +479,10 @@ void Face::Compute( void )
     if( m_hot )
     {
         m_displaylist.clear();
+        m_currentPatch = NULL;
         recursive_build_displaylist( m_rootpatch, NB_LOD_RANGES - 1 );
 
+        /*
         if( m_currentleaf == NULL )
         {
             if( m_rootpatch )
@@ -487,6 +490,7 @@ void Face::Compute( void )
                 m_currentleaf = find_leaf_under( m_rootpatch, m_relative_hotpoint );
             }
         }
+        */
     }
 }
 bool Face::ComputeAlignmentFactor( void )
@@ -544,6 +548,10 @@ void Face::SetHotState( bool p_hotstate )
 {
     m_hot = p_hotstate;
     ResetDisplayList();
+    if( !m_hot )
+    {
+        m_currentPatch = NULL;
+    }
 }
 
 bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_lodlevel )
@@ -554,11 +562,16 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
     {
         return false;
     }
-
-    //if( 0 == p_lodlevel )
+    
     if( m_lod_slipping_inf == p_lodlevel )
     {
         m_displaylist.push_back( patch_node->GetContent() );
+        ///////////////////////////////////
+        if( is_hotpoint_bound_in_node( patch_node ) )
+        {
+            m_currentPatch = patch_node->GetContent();
+        }
+        ///////////////////////////////////
         return true;
     }
     else
@@ -614,4 +627,9 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
         m_lod_slipping_sup = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 7, 19, factor2 ) );
         m_lod_slipping_inf = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 0, 17, factor2 ) );
     }
+}
+
+Patch* Face::GetCurrentPatch( void )
+{
+    return m_currentPatch;
 }

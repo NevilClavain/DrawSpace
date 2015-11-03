@@ -48,6 +48,7 @@ protected:
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     std::vector<Patch*>                                         m_displaylist;
+    Patch*                                                      m_currentPatch;
 
     int                                                         m_orientation;
     dsreal                                                      m_planet_diameter;
@@ -74,8 +75,8 @@ protected:
     void set_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node );
     void unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node );
 
-    bool is_hotpoint_bound_in_node( DrawSpace::Utils::BaseQuadtreeNode* p_node, const DrawSpace::Utils::Vector& p_hotpoint );
-    DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under( DrawSpace::Utils::QuadtreeNode<Patch>* p_current, DrawSpace::Utils::Vector& p_point );
+    bool is_hotpoint_bound_in_node( DrawSpace::Utils::BaseQuadtreeNode* p_node );
+    DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under( DrawSpace::Utils::QuadtreeNode<Patch>* p_current );
 
     void compute_cubeface_hotpoint( void );
 
@@ -102,10 +103,10 @@ public:
     
     void GetDisplayList( std::vector<Patch*>& p_displaylist );
 
-    dsreal GetCurrentLOD( void );
-
     void SetHotState( bool p_hotstate );
-    void UpdateRelativeAlt( dsreal p_alt );    
+    void UpdateRelativeAlt( dsreal p_alt );   
+
+    Patch* GetCurrentPatch( void );
 };
 }
 }
