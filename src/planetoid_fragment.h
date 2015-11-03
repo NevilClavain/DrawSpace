@@ -86,11 +86,12 @@ protected:
     Dynamics::InertBody::Body::Parameters                       m_params;
 
     SphericalLOD::Patch*                                        m_current_patch;
+    dsreal                                                      m_relative_alt;
 
     void on_meshebuild_request( DrawSpace::Core::PropertyPool* p_args );
     void on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate );
 
-    void on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_currentface );
+    //void on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_currentface );
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch );
     

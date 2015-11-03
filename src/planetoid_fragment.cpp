@@ -42,7 +42,8 @@ m_collisions( p_collisions ),
 m_nb_collisionmeshebuild_req( 0 ),
 m_nb_collisionmeshebuild_done( 0 ),
 m_nb_collisionmeshebuild_added( 0 ),
-m_current_patch( NULL )
+m_current_patch( NULL ),
+m_relative_alt( 0.0 )
 {
     if( m_collisions )
     {
@@ -70,17 +71,10 @@ Fragment::~Fragment( void )
 
 void Fragment::on_meshebuild_request( PropertyPool* p_args )
 {
-    if( !m_collisions )
-    {
-        return;
-    }
-
     //localy copy inputs
 
     DrawSpace::Core::Meshe patchmeshe;
-
     patchmeshe = *( p_args->GetPropValue<Meshe*>( "patchmeshe" ) );
-
     SphericalLOD::Patch* patch = p_args->GetPropValue<SphericalLOD::Patch*>( "patch" );
 
     ////////////////////////////// do the work
@@ -100,16 +94,18 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
     params.shape_descr.meshe = final_meshe;
 
+    m_params = params;
     
 
     ////////////////////////////////////////////
-
+    /*
     m_meshe_ready_mutex.WaitInfinite();
     m_params = params;
     m_meshe_ready = true;
     m_meshe_ready_mutex.Release();
 
     Sleep( 25 );
+    */
 }
 
 void Fragment::on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate )
@@ -122,7 +118,7 @@ void Fragment::on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstat
         m_runner->ResetState();
     }
 }
-
+/*
 void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_currentface )
 {
     if( !m_collisions )
@@ -166,10 +162,26 @@ void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_
     }
 
 }
+*/
 
 void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch )
 {
     m_current_patch = p_patch;
+
+    if( m_collisions )
+    {
+        if( m_relative_alt < 1.0001 )
+        {
+            PropertyPool props;
+            props.AddPropValue<Meshe*>( "patchmeshe", m_planetbody->GetPatcheMeshe() );
+            props.AddPropValue<SphericalLOD::Patch*>( "patch", m_current_patch );            
+            m_runner->PushMessage( props );        
+        }
+        else
+        {
+            RemoveColliderFromWorld();
+        }
+    }
 }
 
 void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe )
@@ -200,6 +212,7 @@ void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::
 
 void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
 {
+    /*
     if( m_suspend_update )
     {
         bool read_status = m_meshe_ready_mutex.Wait( 0 );
@@ -232,6 +245,9 @@ void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
             }
         }
     }
+    */
+
+    m_runner->Check();
 
     if( m_hot )
     {
@@ -304,7 +320,7 @@ void Fragment::RemoveColliderFromWorld( void )
 {
     if( m_collision_state )
     {
-        if( !m_suspend_update )
+        //if( !m_suspend_update )
         {
             m_collider->RemoveFromWorld();
             m_collider->UnsetKinematic();
@@ -328,6 +344,7 @@ void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, 
 void Fragment::UpdateRelativeAlt( dsreal p_alt )
 {
     m_planetbody->UpdateRelativeAlt( p_alt );
+    m_relative_alt = p_alt;
 }
 
 SphericalLOD::Patch* Fragment::GetCurrentPatch( void )
