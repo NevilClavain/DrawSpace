@@ -69,7 +69,7 @@ void Clouds::on_sort_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
-        ImpostorsUpdate();        
+        ImpostorsUpdate();
         m_runner->ResetState();
     }
 }

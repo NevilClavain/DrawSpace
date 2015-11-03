@@ -49,39 +49,25 @@ m_current_patch( NULL )
     if( m_collisions )
     {
 
-        //DrawSpace::Core::Mediator* mediator = Mediator::GetInstance();
+        m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );
+        m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
+
+        m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Fragment::on_meshebuild_request ) );
+        m_runnerevt = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Fragment::on_meshebuild_result ) );
 
         m_runner = _DRAWSPACE_NEW_( Runner, Runner );
+              
+        m_runner->RegisterTaskMsgHandler( m_runnercb );
+        m_runner->RegisterEventHandler( m_runnerevt );
 
-        //m_spherelod_evt_cb = _DRAWSPACE_NEW_( SphereLODEvtCb, SphereLODEvtCb( this, &Fragment::on_spherelod_event ) );
-
-        m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );
-
-        //m_planetbody->RegisterEventHandler( m_spherelod_evt_cb );
-
-        m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
-       
-        m_runner_msg_cb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Fragment::on_meshebuild_request ) );
-       
-        dsstring reqname = p_name + dsstring( "_ReqBuildMesheEvent" );
-
-        //m_buildmeshereq_msg = mediator->CreateMessageQueue();        
-        //m_runner->RegisterMsgHandler( m_buildmeshereq_msg, m_runner_msg_cb );
-        m_runner->RegisterTaskMsgHandler( m_runner_msg_cb );
-
-
-        //m_task = _DRAWSPACE_NEW_( Task<Runner>, Task<Runner> );
-        //m_task->Startup( m_runner );
         m_runner->Startup();
     }
-
     p_planetbody->Initialize();
 }
 
 Fragment::~Fragment( void )
 {
-    _DRAWSPACE_DELETE_( m_runner );
-    //_DRAWSPACE_DELETE_( m_task );
+    _DRAWSPACE_DELETE_( m_runner );    
 }
 
 void Fragment::on_meshebuild_request( PropertyPool* p_args )
@@ -126,6 +112,17 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     m_meshe_ready_mutex.Release();
 
     Sleep( 25 );
+}
+
+void Fragment::on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate )
+{
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        // completer ici
+        // ...
+
+        m_runner->ResetState();
+    }
 }
 
 void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_currentface )

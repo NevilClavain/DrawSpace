@@ -407,29 +407,8 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
             if( rel_alt >= /*1.2*/ 2.1 )
             {
 
-                detach_body( it->second.body );
-
-                /*
-                // inutile : le fragment associé à la camera associee au body est le même que le fragment associé au body
-
-                // rechercher si une camera enregistree est associee a ce body
-                std::vector<dsstring> cameras;
-                body_find_attached_camera( it->second.body, cameras );
-
-                for( size_t i = 0; i < cameras.size(); i++ )
-                {
-                    m_registered_camerapoints[cameras[i]].camera->SetRelativeOrbiter( NULL );
-
-                    Fragment* fragment = m_registered_camerapoints[cameras[i]].fragment;
-                    fragment->SetHotState( false );
-                }
-                */
-                //////
-
-                
+                detach_body( it->second.body );                
                 bodyfragment->RemoveColliderFromWorld();
-
-                // ajout 11/2015 : un oubli je pense...
                 bodyfragment->SetHotState( false );                
 
                 //////
@@ -446,8 +425,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
             bodypos2[1] = bodypos( 3, 1 );
             bodypos2[2] = bodypos( 3, 2 );
 
-            DrawSpace::Utils::Matrix planetbodypos;
-            //m_orbiter->GetLastWorldTransformation( planetbodypos );
+            DrawSpace::Utils::Matrix planetbodypos;            
             GetLastWorldTransformation( planetbodypos );
 
             DrawSpace::Utils::Vector planetbodypos2;
@@ -471,26 +449,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
             if( rel_alt < /*1.1*/ 2.0 )
             {
-
                 attach_body( it->second.body );
-
-                /////
-                /*
-                // inutile : le fragment associé à la camera associee au body est le même que le fragment associé au body
-                std::vector<dsstring> cameras;
-                body_find_attached_camera( it->second.body, cameras );
-
-                for( size_t i = 0; i < cameras.size(); i++ )
-                {
-                    //m_registered_camerapoints[cameras[i]].camera->SetRelativeOrbiter( m_orbiter );
-                    m_registered_camerapoints[cameras[i]].camera->SetRelativeOrbiter( this );
-
-                    Fragment* fragment = m_registered_camerapoints[cameras[i]].fragment;
-                    fragment->SetHotState( true );                    
-                }
-                */
-
-                // ajout 11/2015 : un oubli je pense...
                 bodyfragment->SetHotState( true );
             }
         }

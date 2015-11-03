@@ -44,12 +44,10 @@ class Fragment
 {
 protected:
 
-    //typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Body*, int>     SphereLODEvtCb;
-
     typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::SphericalLOD::Patch*>          PatchUpdateCb;
 
-
     typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>           RunnerMsgCb;
+    typedef DrawSpace::Core::CallBack<Fragment, void, Core::Runner::State>                      RunnerEvtCb;
 
 
     DrawSpace::SphericalLOD::Body*                              m_planetbody;
@@ -67,7 +65,8 @@ protected:
     //SphereLODEvtCb*                                             m_spherelod_evt_cb;
 
     PatchUpdateCb*                                              m_patch_update_cb;
-    RunnerMsgCb*                                                m_runner_msg_cb;
+    RunnerMsgCb*                                                m_runnercb;
+    RunnerEvtCb*                                                m_runnerevt;
 
     bool                                                        m_suspend_update;
     bool                                                        m_collision_state;
@@ -91,11 +90,12 @@ protected:
     SphericalLOD::Patch*                                        m_current_patch;
 
     void on_meshebuild_request( DrawSpace::Core::PropertyPool* p_args );
+    void on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate );
+
     void on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_currentface );
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch );
-
-    //void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, int p_patch_orientation, dsreal p_sidelength, dsreal p_xpos, dsreal p_ypos, DrawSpace::Core::Meshe& p_outmeshe );
+    
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe );
 
 public:
