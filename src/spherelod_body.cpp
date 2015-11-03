@@ -107,7 +107,7 @@ void Body::BuildMeshe( void )
     m_planetpatch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
 
     dsreal xcurr, ycurr;
-    long patch_resolution = SphericalLOD::Patch::Resolution;
+    long patch_resolution = PATCH_RESOLUTION;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );

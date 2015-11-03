@@ -301,7 +301,7 @@ dsreal Patch::GetUnitSideLenght( void )
 
 dsreal Patch::GetTriangleSideLength( void )
 {
-    return ( ( m_sidelength * m_ray ) / ( Patch::Resolution - 1 ) );
+    return ( ( m_sidelength * m_ray ) / ( PATCH_RESOLUTION - 1 ) );
 }
 
 void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos )

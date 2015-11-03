@@ -29,6 +29,8 @@
 //#include "spherelod_maps.h"
 #include "texture.h"
 
+#define PATCH_RESOLUTION 16
+
 namespace DrawSpace
 {
 namespace SphericalLOD
@@ -36,8 +38,6 @@ namespace SphericalLOD
 class Patch
 {
 public:
-
-    static const int    Resolution          = 22;//55;
 
     static const int    NorthNeighbour      = 0;
     static const int    SouthNeighbour      = 1;
