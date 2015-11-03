@@ -46,7 +46,6 @@ protected:
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
 
-    std::map<dsstring, Patch*>                                  m_patchesleafs;
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     std::vector<Patch*>                                         m_displaylist;
 

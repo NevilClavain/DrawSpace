@@ -29,7 +29,7 @@
 //#include "spherelod_maps.h"
 #include "texture.h"
 
-#define PATCH_RESOLUTION 16
+#define PATCH_RESOLUTION 32
 
 namespace DrawSpace
 {
