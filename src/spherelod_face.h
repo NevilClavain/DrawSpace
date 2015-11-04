@@ -48,7 +48,9 @@ protected:
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     std::vector<Patch*>                                         m_displaylist;
+
     Patch*                                                      m_currentPatch;
+    int                                                         m_currentPatchLOD;
 
     int                                                         m_orientation;
     dsreal                                                      m_planet_diameter;
@@ -107,6 +109,7 @@ public:
     void UpdateRelativeAlt( dsreal p_alt );   
 
     Patch* GetCurrentPatch( void );
+    int GetCurrentPatchLOD( void );
 };
 }
 }

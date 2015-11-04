@@ -36,7 +36,7 @@ public:
 
     //typedef DrawSpace::Core::BaseCallback2<void, Body*, int> EventHandler;
 
-    typedef DrawSpace::Core::BaseCallback<void, Patch*> PatchUpdateHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, Patch*, int> PatchUpdateHandler;
 
 protected:
 
@@ -54,7 +54,7 @@ protected:
     
     Patch*                                                                      m_current_patch;
 
-    void check_currentpatch_event( Patch* p_newvalue );
+    void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
 public:
 

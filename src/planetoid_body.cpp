@@ -202,7 +202,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
-                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( slod_body, collider, m_ray, true ) );
+                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, true ) );
                         planet_fragment->SetHotState( true );
 
                         m_planetfragments_list.push_back( planet_fragment );
@@ -226,7 +226,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     dsstring bodyname;                   
                     p_node->GetSceneName( bodyname );
                    
-                    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( slod_body, collider, m_ray, true ) );
+                    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, true ) );
                     planet_fragment->SetHotState( false );
 
                     m_planetfragments_list.push_back( planet_fragment );
@@ -483,7 +483,7 @@ void DrawSpace::Planetoid::Body::update_fragments( void )
     {
         Fragment* curr = m_planetfragments_list[i];
 
-        curr->Update( &m_world, this );
+        curr->Update( this );
 
         InertBody* inertbody = curr->GetInertBody();
         CameraPoint* camera = curr->GetCamera();
@@ -515,7 +515,7 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
-    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( slod_body, collider, m_ray, false ) );
+    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, false ) );
    
     planet_fragment->SetHotState( p_hotstate );
    

@@ -34,6 +34,7 @@ m_rootpatch( NULL ),
 m_planet_diameter( p_diameter ),
 m_currentleaf( NULL ),
 m_currentPatch( NULL ),
+m_currentPatchLOD( -1 ),
 m_hot( false ),
 m_relative_alt( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
@@ -560,6 +561,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
         if( is_hotpoint_bound_in_node( patch_node ) )
         {
             m_currentPatch = patch_node->GetContent();
+            m_currentPatchLOD = m_lod_slipping_inf;
         }
         ///////////////////////////////////
         return true;
@@ -622,4 +624,9 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
 Patch* Face::GetCurrentPatch( void )
 {
     return m_currentPatch;
+}
+
+int Face::GetCurrentPatchLOD( void )
+{
+    return m_currentPatchLOD;
 }

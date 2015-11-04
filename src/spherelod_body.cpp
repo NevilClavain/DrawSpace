@@ -84,7 +84,6 @@ void Body::Compute( void )
         */
     }
 
-    
     int curr_face = 0;
     dsreal af = m_faces[0]->GetAlignmentFactor();
 
@@ -100,7 +99,7 @@ void Body::Compute( void )
     m_current_face = curr_face;
     m_faces[m_current_face]->Compute();
 
-    check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch() );
+    check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
 }
 
 
@@ -227,7 +226,7 @@ Face* Body::GetFace( int p_faceid )
 
 void Body::SetHotState( bool p_hotstate )
 {
-    check_currentpatch_event( NULL );
+    check_currentpatch_event( NULL, -1 );
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->SetHotState( p_hotstate );
@@ -242,14 +241,14 @@ void Body::UpdateRelativeAlt( dsreal p_alt )
     }
 }
 
-void Body::check_currentpatch_event( Patch* p_newvalue )
+void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
 {
     if( m_current_patch != p_newvalue )
     {
         m_current_patch = p_newvalue;
         for( size_t i = 0; i < m_patchupdate_handlers.size(); i++ )
         {
-            (*m_patchupdate_handlers[i])( m_current_patch ); 
+            (*m_patchupdate_handlers[i])( m_current_patch, p_currentpatch_lod ); 
         }
     }
 }

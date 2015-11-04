@@ -29,21 +29,19 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Planetoid;
 using namespace DrawSpace::Dynamics;
 
-Fragment::Fragment( DrawSpace::SphericalLOD::Body* p_planetbody, Collider* p_collider, dsreal p_planetray, bool p_collisions ) :
+Fragment::Fragment( DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, Collider* p_collider, dsreal p_planetray, bool p_collisions ) :
+m_world( p_world ),
 m_planetbody( p_planetbody ), 
 m_collider( p_collider ),
-m_suspend_update( false ),
 m_collision_state( false ),
 m_planetray( p_planetray ),
 m_hot( false ),
 m_camera( NULL ),
 m_inertbody( NULL ),
 m_collisions( p_collisions ),
-m_nb_collisionmeshebuild_req( 0 ),
 m_nb_collisionmeshebuild_done( 0 ),
-m_nb_collisionmeshebuild_added( 0 ),
 m_current_patch( NULL ),
-m_relative_alt( 0.0 )
+m_current_patch_lod( -1 )
 {
     if( m_collisions )
     {
@@ -82,9 +80,6 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     Meshe final_meshe;
     build_meshe( patchmeshe, patch, final_meshe );
 
-    m_nb_collisionmeshebuild_done++;
-
-
     Dynamics::InertBody::Body::Parameters params;
 
     params.mass = 0.0;
@@ -95,82 +90,32 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     params.shape_descr.meshe = final_meshe;
 
     m_params = params;
-    
-
-    ////////////////////////////////////////////
-    /*
-    m_meshe_ready_mutex.WaitInfinite();
-    m_params = params;
-    m_meshe_ready = true;
-    m_meshe_ready_mutex.Release();
-
-    Sleep( 25 );
-    */
 }
 
 void Fragment::on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
-        // completer ici
-        // ...
+        RemoveColliderFromWorld();
+
+        m_collider->SetKinematic( m_params );
+        m_collider->AddToWorld( m_world );
+
+        m_collision_state = true;
+        m_nb_collisionmeshebuild_done++;
 
         m_runner->ResetState();
     }
 }
-/*
-void Fragment::on_spherelod_event( DrawSpace::SphericalLOD::Body* p_body, int p_currentface )
-{
-    if( !m_collisions )
-    {
-        return;
-    }
 
-    long tri_index = 0;
-    dsreal alt = p_body->GetHotPointAltitud();
-
-    if( alt < 9000.0 )
-    {
-
-        m_suspend_update = true;
-
-        m_meshe_ready_mutex.WaitInfinite();
-        m_meshe_ready = false;
-        m_meshe_ready_mutex.Release();
-
-        SphericalLOD::Patch* curr_patch = p_body->GetFaceCurrentLeaf( p_currentface );
-
-        PropertyPool props;
-        props.AddPropValue<Meshe*>( "patchmeshe", p_body->GetPatcheMeshe() );
-        props.AddPropValue<SphericalLOD::Patch*>( "patch", curr_patch );
-        //m_buildmeshereq_msg->PushMessage( props );
-        m_runner->PushMessage( props );
-
-        m_nb_collisionmeshebuild_req++;
-    }
-    else
-    {
-        if( m_collision_state )
-        {
-            if( !m_suspend_update )
-            {
-                m_collider->RemoveFromWorld();
-                m_collider->UnsetKinematic();
-            }
-            m_collision_state = false;
-        }
-    }
-
-}
-*/
-
-void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch )
+void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod )
 {
     m_current_patch = p_patch;
+    m_current_patch_lod = p_patch_lod;
 
     if( m_collisions )
     {
-        if( m_relative_alt < 1.0001 )
+        if( p_patch_lod == 0 )
         {
             PropertyPool props;
             props.AddPropValue<Meshe*>( "patchmeshe", m_planetbody->GetPatcheMeshe() );
@@ -210,43 +155,8 @@ void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::
     }
 }
 
-void Fragment::Update( World* p_world, DrawSpace::Planetoid::Body* p_owner )
+void Fragment::Update( DrawSpace::Planetoid::Body* p_owner )
 {
-    /*
-    if( m_suspend_update )
-    {
-        bool read_status = m_meshe_ready_mutex.Wait( 0 );
-
-        if( read_status )
-        {
-            bool meshe_ready = m_meshe_ready;
-
-            Dynamics::InertBody::Body::Parameters params = m_params;
-            m_meshe_ready_mutex.Release();
-
-            if( meshe_ready )
-            {
-                
-                if( m_collision_state )
-                {
-                    m_collider->RemoveFromWorld();
-                    m_collider->UnsetKinematic();
-                }
-                
-
-                // bullet meshe build done
-
-                m_collider->SetKinematic( params );
-                m_collider->AddToWorld( p_world );
-                m_collision_state = true;
-                m_suspend_update = false;
-
-                m_nb_collisionmeshebuild_added++;
-            }
-        }
-    }
-    */
-
     m_runner->Check();
 
     if( m_hot )
@@ -289,6 +199,7 @@ void Fragment::SetHotState( bool p_hotstate )
 {
     m_hot = p_hotstate;
     m_planetbody->SetHotState( m_hot );
+    m_nb_collisionmeshebuild_done = 0;
 }
 
 bool Fragment::GetHotState( void )
@@ -320,11 +231,8 @@ void Fragment::RemoveColliderFromWorld( void )
 {
     if( m_collision_state )
     {
-        //if( !m_suspend_update )
-        {
-            m_collider->RemoveFromWorld();
-            m_collider->UnsetKinematic();
-        }
+        m_collider->RemoveFromWorld();
+        m_collider->UnsetKinematic();
         m_collision_state = false;
     }
 }
@@ -334,20 +242,22 @@ DrawSpace::SphericalLOD::Body* Fragment::GetPlanetBody( void )
     return m_planetbody;
 }
 
-void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_req, long& p_nb_collisionmeshebuild_done, long& p_nb_collisionmeshebuild_added )
+void Fragment::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done )
 {
-    p_nb_collisionmeshebuild_req = m_nb_collisionmeshebuild_req;
     p_nb_collisionmeshebuild_done = m_nb_collisionmeshebuild_done;
-    p_nb_collisionmeshebuild_added = m_nb_collisionmeshebuild_added;
 }
 
 void Fragment::UpdateRelativeAlt( dsreal p_alt )
 {
     m_planetbody->UpdateRelativeAlt( p_alt );
-    m_relative_alt = p_alt;
 }
 
 SphericalLOD::Patch* Fragment::GetCurrentPatch( void )
 {
     return m_current_patch;
+}
+
+int Fragment::GetCurrentPatchLOD( void )
+{
+    return m_current_patch_lod;
 }
