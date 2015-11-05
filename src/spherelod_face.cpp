@@ -468,15 +468,34 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current )
     return NULL;
 }
 
+void Face::UpdateLODComputationParams( void )
+{
+    m_work_cubeface_hotpoint = m_cubeface_hotpoint;
+    m_work_lod_slipping_sup = m_lod_slipping_sup;
+    m_work_lod_slipping_inf = m_lod_slipping_inf;
+}
+
 void Face::Compute( void )
 {
     if( m_hot )
     {
-        m_displaylist.clear();
-        m_currentPatch = NULL;
+        //m_displaylist.clear();
+        //m_currentPatch = NULL;
+
+        m_work_displaylist.clear();
+        m_work_currentPatch = NULL;
+
         recursive_build_displaylist( m_rootpatch, NB_LOD_RANGES - 1 );
     }
 }
+
+void Face::UpdateLODComputationResults( void )
+{
+    m_displaylist = m_work_displaylist;
+    m_currentPatch = m_work_currentPatch;
+    m_currentPatchLOD = m_work_currentPatchLOD;
+}
+
 bool Face::ComputeAlignmentFactor( void )
 {
     Vector face_dir;
@@ -542,30 +561,30 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 {
     QuadtreeNode<Patch>* patch_node = static_cast<QuadtreeNode<Patch>*>( p_current_node );
 
-    if( !patch_node->GetContent()->IsCircleIntersection( m_cubeface_hotpoint[0], m_cubeface_hotpoint[1], m_lodranges[p_lodlevel] ) )
+    if( !patch_node->GetContent()->IsCircleIntersection( m_work_cubeface_hotpoint[0], m_work_cubeface_hotpoint[1], m_lodranges[p_lodlevel] ) )
     {
         return false;
     }
     
-    if( m_lod_slipping_inf == p_lodlevel )
+    if( m_work_lod_slipping_inf == p_lodlevel )
     {
-        m_displaylist.push_back( patch_node->GetContent() );
+        m_work_displaylist.push_back( patch_node->GetContent() );
         ///////////////////////////////////
         if( is_hotpoint_bound_in_node( patch_node ) )
         {
-            m_currentPatch = patch_node->GetContent();
-            m_currentPatchLOD = m_lod_slipping_inf;
+            m_work_currentPatch = patch_node->GetContent();
+            m_work_currentPatchLOD = m_work_lod_slipping_inf;
         }
         ///////////////////////////////////
         return true;
     }
     else
     {
-        if( !patch_node->GetContent()->IsCircleIntersection( m_cubeface_hotpoint[0], m_cubeface_hotpoint[1], m_lodranges[p_lodlevel - 1] ) )
+        if( !patch_node->GetContent()->IsCircleIntersection( m_work_cubeface_hotpoint[0], m_work_cubeface_hotpoint[1], m_lodranges[p_lodlevel - 1] ) )
         {
-            if( p_lodlevel <= m_lod_slipping_sup )
+            if( p_lodlevel <= m_work_lod_slipping_sup )
             {
-                m_displaylist.push_back( patch_node->GetContent() );   
+                m_work_displaylist.push_back( patch_node->GetContent() );   
             }
         }
         else
@@ -584,10 +603,10 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 
                 if( !recursive_build_displaylist( sub, p_lodlevel - 1 ) )
                 {
-                    if( p_lodlevel - 1 <= m_lod_slipping_sup )
+                    if( p_lodlevel - 1 <= m_work_lod_slipping_sup )
                     {
                         QuadtreeNode<Patch>* sub_patch_node = static_cast<QuadtreeNode<Patch>*>( sub );
-                        m_displaylist.push_back( sub_patch_node->GetContent() );
+                        m_work_displaylist.push_back( sub_patch_node->GetContent() );
                     }
                 }
             }

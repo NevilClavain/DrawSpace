@@ -48,14 +48,20 @@ protected:
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     std::vector<Patch*>                                         m_displaylist;
+    std::vector<Patch*>                                         m_work_displaylist;
 
     Patch*                                                      m_currentPatch;
     int                                                         m_currentPatchLOD;
+
+    Patch*                                                      m_work_currentPatch;
+    int                                                         m_work_currentPatchLOD;
+
 
     int                                                         m_orientation;
     dsreal                                                      m_planet_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::Vector                                    m_cubeface_hotpoint;
+    DrawSpace::Utils::Vector                                    m_work_cubeface_hotpoint;
     dsreal                                                      m_alignment_factor;
     bool                                                        m_hot;
     dsreal                                                      m_relative_alt;
@@ -63,9 +69,10 @@ protected:
     int                                                         m_lod_slipping_sup;
     int                                                         m_lod_slipping_inf;    
 
-    dsreal                                                      m_lodranges[NB_LOD_RANGES];
+    int                                                         m_work_lod_slipping_sup;
+    int                                                         m_work_lod_slipping_inf;    
 
-    //Maps                                                        m_maps_factory;
+    dsreal                                                      m_lodranges[NB_LOD_RANGES];
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -92,6 +99,9 @@ public:
     bool Init( int p_orientation );
     
     void UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
+
+    void UpdateLODComputationParams( void );
+    void UpdateLODComputationResults( void );
 
     void Compute( void );    
     bool ComputeAlignmentFactor( void );

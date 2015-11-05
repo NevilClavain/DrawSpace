@@ -120,7 +120,7 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
             PropertyPool props;
             props.AddPropValue<Meshe*>( "patchmeshe", m_planetbody->GetPatcheMeshe() );
             props.AddPropValue<SphericalLOD::Patch*>( "patch", m_current_patch );            
-            m_runner->PushMessage( props );        
+            m_runner->PushMessage( props );
         }
         else
         {

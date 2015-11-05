@@ -55,7 +55,7 @@ m_current_patch( NULL )
 
     m_timercb = _DRAWSPACE_NEW_( BodyTimerCb, BodyTimerCb( this, &Body::on_timer ) );
 
-    m_timer.SetPeriod( 1500 );
+    m_timer.SetPeriod( 200 );
     m_timer.SetHandler( m_timercb );
     m_timemanager->RegisterTimer( &m_timer );
 }
@@ -75,6 +75,7 @@ void Body::Initialize( void )
     {
         m_faces[i]->Init( i );
     }
+    m_runner->Startup();
 }
 
 void Body::Compute( void )
@@ -84,7 +85,7 @@ void Body::Compute( void )
     //////////////////////////////////////
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i]->ResetDisplayList();
+        //m_faces[i]->ResetDisplayList();
         bool status = m_faces[i]->ComputeAlignmentFactor();
     }
 
@@ -100,10 +101,21 @@ void Body::Compute( void )
         }
     }
     
-    m_current_face = curr_face;
-    m_faces[m_current_face]->Compute();
+    if( m_current_face != curr_face )
+    {
+        if( m_current_face != -1 )
+        {
+            m_faces[m_current_face]->ResetDisplayList();
+        }
+        m_current_face = curr_face;
+    }
+
+    
+    //m_faces[m_current_face]->Compute();
 
     check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
+
+    m_runner->Check();
 }
 
 
@@ -224,12 +236,11 @@ Face* Body::GetFace( int p_faceid )
 void Body::SetHotState( bool p_hotstate )
 {
     check_currentpatch_event( NULL, -1 );
+    m_timer.SetState( p_hotstate );
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->SetHotState( p_hotstate );
     }
-
-    m_timer.SetState( p_hotstate );
 }
 
 void Body::UpdateRelativeAlt( dsreal p_alt )
@@ -254,20 +265,33 @@ void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
 
 void Body::on_runner_request( DrawSpace::Core::PropertyPool* p_args )
 {
+    std::vector<Face*> faces_list = p_args->GetPropValue<std::vector<Face*>>( "faces_list" );
+    for( size_t i = 0; i < faces_list.size(); i++ )
+    {
+        faces_list[i]->Compute();
+    }
 }
 
 void Body::on_runner_result( DrawSpace::Core::Runner::State p_runnerstate )
 {
     if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
     {
-        //
-        //...
-
+        m_faces[m_current_face]->UpdateLODComputationResults();
         m_runner->ResetState();
     }
 }
 
 void Body::on_timer( DrawSpace::Utils::Timer* p_timer )
 {
+    PropertyPool props;
+    std::vector<Face*> faces_list;
 
+    if( m_current_face != -1 )
+    {
+        m_faces[m_current_face]->UpdateLODComputationParams();
+        faces_list.push_back( m_faces[m_current_face] );
+
+        props.AddPropValue<std::vector<Face*>>( "faces_list", faces_list );            
+        m_runner->PushMessage( props );
+    }
 }
