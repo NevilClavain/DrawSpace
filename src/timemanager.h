@@ -30,6 +30,35 @@ namespace DrawSpace
 {
 namespace Utils
 {
+class Timer
+{
+public:
+    typedef Core::BaseCallback<void, Timer*> TimerHandler;
+
+protected:
+
+    bool            m_state;
+    long            m_period; // ms
+    TimerHandler*   m_handler;
+    long            m_tick_count;
+    long            m_prev_tick;
+    bool            m_freeze;
+
+    void expired( void );
+
+public:
+
+    Timer( void );
+    ~Timer( void );
+
+    void    SetState( bool p_state );
+    void    Suspend( bool p_suspend );
+    void    SetPeriod( long p_period );
+    void    SetHandler( TimerHandler* p_handler );
+
+    friend class TimeManager;
+};
+
 class TimeManager
 {
 protected:
@@ -42,20 +71,7 @@ protected:
 
     typedef Core::BaseCallback<void, const dsstring&> TimerHandler;
 
-    typedef struct
-    {
-        bool            state;
-        long            period; // ms
-        TimerHandler*   handler;
-        //long            start_tick;
-        long            tick_count;
-        long            prev_tick;
-        bool            freeze;
-
-    } timer_entry;
-
-
-    std::map<dsstring, timer_entry> m_timers;
+    std::set<Timer*>    m_timers;
 
 public:
     TimeManager( void ); 
@@ -79,11 +95,9 @@ public:
     bool    IsReady( void );
     long    GetLastDeltaTime( void );
 
-    void    AddTimer( const dsstring& p_id, long p_period, TimerHandler* p_handler );
-    void    SetTimerState( const dsstring& p_id, bool p_state );
-    void    SuspendTimer( const dsstring& p_id, bool p_suspend );
-    void    SetTimerPeriod( const dsstring& p_id, long p_period );
-    void    ClearAllTimers( void );
+    void    RegisterTimer( Timer* p_timer );
+    void    UnregisterTimer( Timer* p_timer );
+
 };
 }
 }

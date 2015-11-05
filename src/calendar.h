@@ -88,8 +88,8 @@ public:
     } TimeMode;
 
 protected:
-
-    typedef DrawSpace::Core::CallBack<Calendar, void, const dsstring& > CalendarTimer;
+    
+    typedef DrawSpace::Core::CallBack<Calendar, void, DrawSpace::Utils::Timer*> CalendarTimer;
 
     dstime                                      m_offset_time;
     dstime                                      m_current_time;
@@ -107,6 +107,7 @@ protected:
     long                                        m_sub_sec_count_lim;
 
     DrawSpace::Utils::TimeManager*              m_time_manager;
+    DrawSpace::Utils::Timer                     m_timer;
 
     std::vector<Orbit*>                         m_orbits;
     std::vector<Orbiter*>                       m_orbiters;
@@ -116,7 +117,7 @@ protected:
 
     std::vector<DrawSpace::Dynamics::World*>    m_worlds;
 
-    void on_timer( const dsstring& p_timername );
+    void on_timer( DrawSpace::Utils::Timer* p_timer );
 
     double compute_orbit_angle( double p_orbit_duration, dstime p_currtime );
     double compute_revolution_angle( double p_revolution_duration, dstime p_currtime );

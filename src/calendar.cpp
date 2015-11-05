@@ -45,11 +45,14 @@ m_world_nbsteps( 5 )
     m_current_time = m_offset_time;
     m_timercb = _DRAWSPACE_NEW_( CalendarTimer, CalendarTimer( this, &Calendar::on_timer ) );
 
-    p_tm->AddTimer( "calendar_timer", m_time_period, m_timercb );
+    m_timer.SetHandler( m_timercb );
+    m_timer.SetPeriod( m_time_period );
+    p_tm->RegisterTimer( &m_timer );
 }
 
 Calendar::~Calendar( void )
 {
+    m_time_manager->UnregisterTimer( &m_timer );
     _DRAWSPACE_DELETE_( m_timercb ); 
 }
 
@@ -222,11 +225,10 @@ void Calendar::SetTimeFactor( Calendar::TimeMode p_time_mode )
     m_time_mode = p_time_mode;
 
     if( m_active && !m_freeze )
-    {    
-        m_time_manager->SetTimerState( "calendar_timer", false );
-        m_time_manager->SetTimerPeriod( "calendar_timer", m_time_period );
-        m_time_manager->SetTimerState( "calendar_timer", true );
-
+    {
+        m_timer.SetState( false );
+        m_timer.SetPeriod( m_time_period );
+        m_timer.SetState( true );
     }
 }
 
@@ -338,15 +340,13 @@ bool Calendar::Startup( dstime p_start_time )
     }
 
     // demarre le timer...
-
     m_current_time = p_start_time;
-
     if( m_time_period != -1 )
     {
-        m_time_manager->SetTimerPeriod( "calendar_timer", m_time_period );
-        m_time_manager->SetTimerState( "calendar_timer", true );
-    }
 
+        m_timer.SetPeriod( m_time_period );
+        m_timer.SetState( true );
+    }
     m_active = true;
 
     return true;
@@ -354,12 +354,11 @@ bool Calendar::Startup( dstime p_start_time )
 
 void Calendar::Shutdown( void )
 {
-    m_time_manager->SetTimerState( "calendar_timer", false );
-
+    m_timer.SetState( false );
     m_active = false;
 }
 
-void Calendar::on_timer( const dsstring& p_timername )
+void Calendar::on_timer( DrawSpace::Utils::Timer* p_timer )
 {
     if( 0 == m_sub_sec_count_lim )
     {
@@ -368,14 +367,12 @@ void Calendar::on_timer( const dsstring& p_timername )
     else
     {
         m_sub_sec_count++;
-
         if( m_sub_sec_count == m_sub_sec_count_lim )
         {
             m_sub_sec_count = 0;
             m_current_time++;
         }
-    }
-    
+    }    
 }
 
 void Calendar::Run( void )
@@ -430,7 +427,7 @@ void Calendar::Suspend( bool p_suspend )
 {
     m_freeze = p_suspend;
 
-    m_time_manager->SuspendTimer( "calendar_timer", p_suspend );
+    m_timer.Suspend( p_suspend );
 }
 
 void Calendar::RegisterWorld( DrawSpace::Dynamics::World* p_world )

@@ -35,8 +35,8 @@ namespace Core
 class SpectatorMovement : public Movement
 {
 protected:
-
-    typedef DrawSpace::Core::CallBack<SpectatorMovement, void, const dsstring&> SpectatorTimer;
+    
+    typedef DrawSpace::Core::CallBack<SpectatorMovement, void, DrawSpace::Utils::Timer*> SpectatorTimer;
 
     dsreal                          m_scalepos;
     long                            m_posperiod;
@@ -51,9 +51,12 @@ protected:
 
     dsstring                        m_name; // just to give a name to the timer entry
 
+    DrawSpace::Utils::TimeManager*  m_time_manager;
+    DrawSpace::Utils::Timer         m_timer;
+
     void compute_pos( void );
 
-    void on_timer( const dsstring& p_timername );
+    void on_timer( DrawSpace::Utils::Timer* p_timer );
 
 public:
 

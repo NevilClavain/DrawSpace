@@ -23,6 +23,55 @@
 #include "timemanager.h"
 using namespace DrawSpace::Utils;
 
+Timer::Timer( void ) :
+m_handler( NULL ),
+m_state( false ),
+m_period( 1000 ),
+m_freeze( false )
+{
+
+}
+Timer::~Timer( void )
+{
+}
+
+void Timer::SetState( bool p_state )
+{
+    m_state = p_state;
+    m_prev_tick = -1;
+    m_tick_count = 0;
+    m_freeze = false;
+}
+
+void Timer::Suspend( bool p_suspend )
+{
+    m_freeze = p_suspend;
+    if( p_suspend )
+    {
+        m_prev_tick = -1;
+    }
+}
+
+void Timer::SetPeriod( long p_period )
+{
+    m_period = p_period;
+}
+
+void Timer::SetHandler( TimerHandler* p_handler )
+{
+    m_handler = p_handler;
+}
+
+void Timer::expired( void )
+{
+    if( m_handler )
+    {
+        (*m_handler )( this );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////
+
 TimeManager::TimeManager( void )
 {
     Reset();
@@ -67,30 +116,27 @@ void TimeManager::Update( void )
     if( m_ready )
     {
         // timers management
-        for( std::map<dsstring, timer_entry>::iterator it = m_timers.begin(); it != m_timers.end(); ++it )
+        for( auto it = m_timers.begin(); it != m_timers.end(); ++it )
         {
-            timer_entry current = (*it).second;
+            Timer* timer = (*it);
 
-            if( current.state && !current.freeze )
+            if( timer->m_state && !timer->m_freeze )
             {
-                if( -1 == current.prev_tick )
+                if( -1 == timer->m_prev_tick )
                 {                
-                    current.prev_tick = current_tick;
+                    timer->m_prev_tick = current_tick;
                 }
                 else
                 {
-                    current.tick_count += current_tick - current.prev_tick;
-
-                    if( current.tick_count >= current.period )
+                    timer->m_tick_count += current_tick - timer->m_prev_tick;
+                    if( timer->m_tick_count >= timer->m_period )
                     {
-                        current.tick_count = 0;                        
-                        ( *current.handler )( (*it).first );
+                        timer->m_tick_count = 0;                        
+                        timer->expired();
                     }
 
-                    current.prev_tick = current_tick;
-                }
-
-                (*it).second = current;
+                    timer->m_prev_tick = current_tick;
+                }                
             }
         }
     }
@@ -171,55 +217,15 @@ long TimeManager::GetLastDeltaTime( void )
     return m_last_deltatime;
 }
 
-void TimeManager::AddTimer( const dsstring& p_id, long p_period, TimerHandler* p_handler )
+void TimeManager::RegisterTimer( Timer* p_timer )
 {
-    timer_entry t_entry;
-
-    t_entry.state = false;
-    t_entry.period = p_period;
-    t_entry.handler = p_handler;
-    t_entry.freeze = false;
-
-    m_timers[p_id] = t_entry;
+    m_timers.insert( p_timer );
 }
 
-void TimeManager::SetTimerState( const dsstring& p_id, bool p_state )
+void TimeManager::UnregisterTimer( Timer* p_timer )
 {
-    if( 0 == m_timers.count( p_id ) )
+    if( m_timers.count( p_timer ) )
     {
-        return;
+        m_timers.erase( p_timer );
     }
-    m_timers[p_id].state = p_state;
-    m_timers[p_id].prev_tick = -1;
-    m_timers[p_id].tick_count = 0;
-    m_timers[p_id].freeze = false;
-
-}
-
-void TimeManager::SetTimerPeriod( const dsstring& p_id, long p_period )
-{
-    if( 0 == m_timers.count( p_id ) )
-    {
-        return;
-    }
-    m_timers[p_id].period = p_period;
-}
-
-void TimeManager::SuspendTimer( const dsstring& p_id, bool p_suspend )
-{
-    if( 0 == m_timers.count( p_id ) )
-    {
-        return;
-    }
-    m_timers[p_id].freeze = p_suspend;
-
-    if( p_suspend )
-    {
-        m_timers[p_id].prev_tick = -1;
-    }
-}
-
-void TimeManager::ClearAllTimers( void )
-{
-    m_timers.clear();
 }

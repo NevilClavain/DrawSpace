@@ -34,13 +34,19 @@ using namespace DrawSpace::Dynamics;
 
 SpectatorMovement::SpectatorMovement( void ) :
 m_attachedbody( NULL ),
-m_linked_to_orbiter( false )
+m_linked_to_orbiter( false ),
+m_time_manager( NULL )
 {
     m_timercb = _DRAWSPACE_NEW_( SpectatorTimer, SpectatorTimer( this, &SpectatorMovement::on_timer ) );
+    m_timer.SetHandler( m_timercb );
 }
 
 SpectatorMovement::~SpectatorMovement( void )
 {
+    if( m_time_manager )
+    {
+        m_time_manager->UnregisterTimer( &m_timer );
+    }
     _DRAWSPACE_DELETE_( m_timercb );
 }
 
@@ -138,8 +144,9 @@ void SpectatorMovement::Init( dsreal p_scalepos, long p_posperiod, bool p_orbite
 
     m_scalepos = p_scalepos;
     m_posperiod = p_posperiod;
+    m_timer.SetPeriod( m_posperiod );
 
-    // pour executer compute_pos() des le 1er appel a SpectatorMovement::Compute(); les appels suivants seront fait periodiquement
+    // pour executer compute_pos() des le 1er appel à SpectatorMovement::Compute(); les appels suivants seront fait periodiquement
     // sur appel timer manager a on_timer()
     m_compute = true;   
 }
@@ -151,30 +158,26 @@ void SpectatorMovement::SetRefBody( DrawSpace::Dynamics::InertBody* p_refbody )
 
 void SpectatorMovement::Compute( TimeManager& p_timemanager )
 {
+    if( !m_time_manager )
+    {
+        m_time_manager = &p_timemanager;
+        p_timemanager.RegisterTimer( &m_timer );
+    }
+    
     if( m_compute )
     {
-        
-        dsstring timer_name;
-
-        if( m_name != "" )
-        {
-            timer_name = m_name + "_spectatormvt";
-        }
-        else
-        {
-            _DSEXCEPTION( "spectator mvt name is empty !" );
-        }
-
+        /*
         p_timemanager.AddTimer( timer_name, m_posperiod, m_timercb );
-
         p_timemanager.SetTimerState( timer_name, true );
-
+        */
+                       
+        m_timer.SetState( true );
         compute_pos();
         m_compute = false;
     }    
 }
 
-void SpectatorMovement::on_timer( const dsstring& p_timername )
+void SpectatorMovement::on_timer( Timer* p_timer )
 {
     m_compute = true;
 }
