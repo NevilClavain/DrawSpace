@@ -71,17 +71,6 @@ void Body::Compute( void )
     {
         m_faces[i]->ResetDisplayList();
         bool status = m_faces[i]->ComputeAlignmentFactor();
-
-        // PROVISOIRE +@+
-        /*
-        if( status && i == m_current_face )
-        {
-            for( std::vector<EventHandler*>::iterator it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
-            {
-                ( **it )( this, m_current_face );
-            }            
-        }
-        */
     }
 
     int curr_face = 0;
@@ -173,13 +162,6 @@ void Body::BuildMeshe( void )
     }
 }
 
-/*
-void Body::RegisterEventHandler( EventHandler* p_handler )
-{
-    m_evt_handlers.push_back( p_handler );
-}
-*/
-
 void Body::RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler )
 {
     m_patchupdate_handlers.push_back( p_handler );
@@ -252,10 +234,3 @@ void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
         }
     }
 }
-
-/*
-Maps* Body::GetFaceMapsFactory( int p_faceid )
-{
-    return m_faces[p_faceid]->GetMapsFactory();
-}
-*/

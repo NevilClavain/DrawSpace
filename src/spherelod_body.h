@@ -33,9 +33,6 @@ namespace SphericalLOD
 class Body
 {
 public:
-
-    //typedef DrawSpace::Core::BaseCallback2<void, Body*, int> EventHandler;
-
     typedef DrawSpace::Core::BaseCallback2<void, Patch*, int> PatchUpdateHandler;
 
 protected:
@@ -45,8 +42,6 @@ protected:
 
     dsreal                                                                      m_diameter;    
     dsreal                                                                      m_hotpoint_altitud;
-
-    //std::vector<EventHandler*>                                                  m_evt_handlers;
 
     std::vector<PatchUpdateHandler*>                                            m_patchupdate_handlers;
 
@@ -64,27 +59,19 @@ public:
     static void BuildMeshe( void );
     
     void Compute( void );
-
     void Initialize( void );
-    //void RegisterEventHandler( EventHandler* p_handler );
-
     void RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler );
-
     void UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
-
     DrawSpace::Core::Meshe* GetPatcheMeshe( void );
 
     Patch* GetFaceCurrentLeaf( int p_faceid );
     Face* GetFace( int p_faceid );
 
     dsreal GetHotPointAltitud( void );
-    
     int GetCurrentFace (void );
 
     void SetHotState( bool p_hotstate );
     void UpdateRelativeAlt( dsreal p_alt );
-
-    //virtual Maps* GetFaceMapsFactory( int p_faceid );
 
     friend class Drawing;
 };
