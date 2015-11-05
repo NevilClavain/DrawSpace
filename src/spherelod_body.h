@@ -26,6 +26,7 @@
 #include "renderer.h"
 #include "spherelod_face.h"
 #include "runner.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
@@ -39,12 +40,16 @@ public:
     typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Core::PropertyPool*>               RunnerMsgCb;
     typedef DrawSpace::Core::CallBack<Body, void, Core::Runner::State>                          RunnerEvtCb;
 
+    typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Utils::Timer*>                     BodyTimerCb;
+
 protected:
 
     DrawSpace::Core::Runner*                                                    m_runner;
     RunnerMsgCb*                                                                m_runnercb;
     RunnerEvtCb*                                                                m_runnerevt;
 
+    DrawSpace::Utils::Timer                                                     m_timer;
+    BodyTimerCb*                                                                m_timercb;
 
     Face*                                                                       m_faces[6];
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
@@ -58,15 +63,18 @@ protected:
     int                                                                         m_current_face;    
     Patch*                                                                      m_current_patch;
 
+    DrawSpace::Utils::TimeManager*                                              m_timemanager;
+
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
     void on_runner_request( DrawSpace::Core::PropertyPool* p_args );
     void on_runner_result( DrawSpace::Core::Runner::State p_runnerstate );
+    void on_timer( DrawSpace::Utils::Timer* p_timer );
 
 
 public:
 
-    Body( dsreal p_diameter );
+    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time );
     virtual ~Body( void );
 
     static void BuildMeshe( void );

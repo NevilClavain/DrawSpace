@@ -35,7 +35,8 @@ using namespace DrawSpace::SphericalLOD;
 Meshe* Body::m_planetpatch_meshe = NULL;
 
 
-Body::Body( dsreal p_diameter ) : 
+Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time ) : 
+m_timemanager( p_time ),
 m_diameter( p_diameter ),
 m_current_face( -1 ),
 m_current_patch( NULL )
@@ -51,10 +52,17 @@ m_current_patch( NULL )
     m_runner = _DRAWSPACE_NEW_( Runner, Runner );              
     m_runner->RegisterTaskMsgHandler( m_runnercb );
     m_runner->RegisterEventHandler( m_runnerevt );
+
+    m_timercb = _DRAWSPACE_NEW_( BodyTimerCb, BodyTimerCb( this, &Body::on_timer ) );
+
+    m_timer.SetPeriod( 1500 );
+    m_timer.SetHandler( m_timercb );
+    m_timemanager->RegisterTimer( &m_timer );
 }
 
 Body::~Body( void )
 {
+    m_timemanager->UnregisterTimer( &m_timer );
     for( long i = 0; i < 6; i++ )
     {
         _DRAWSPACE_DELETE_( m_faces[i] );
@@ -220,6 +228,8 @@ void Body::SetHotState( bool p_hotstate )
     {
         m_faces[i]->SetHotState( p_hotstate );
     }
+
+    m_timer.SetState( p_hotstate );
 }
 
 void Body::UpdateRelativeAlt( dsreal p_alt )
@@ -255,4 +265,9 @@ void Body::on_runner_result( DrawSpace::Core::Runner::State p_runnerstate )
 
         m_runner->ResetState();
     }
+}
+
+void Body::on_timer( DrawSpace::Utils::Timer* p_timer )
+{
+
 }

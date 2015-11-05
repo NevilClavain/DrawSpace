@@ -32,9 +32,10 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Planetoid;
 
 
-DrawSpace::Planetoid::Body::Body( const dsstring& p_scenename, dsreal p_ray ) : Orbiter( &m_world ),
+DrawSpace::Planetoid::Body::Body( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time ) : Orbiter( &m_world ),
 m_scenename( p_scenename ),
-m_ray( p_ray * 1000.0 )
+m_ray( p_ray * 1000.0 ),
+m_timemanager( p_time )
 {
     m_world.Initialize();
 
@@ -199,7 +200,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                         inertbody->IncludeTo( this );
 
-                        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
+                        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager ) );
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
                         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, true ) );
@@ -220,7 +221,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     reg_body.body = inertbody;
                     reg_body.relative_alt_valid = false;
 
-                    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
+                    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager ) );
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
 
                     dsstring bodyname;                   
@@ -512,7 +513,7 @@ void DrawSpace::Planetoid::Body::update_fragments( void )
 
 void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr, bool p_hotstate )
 {
-    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0 ) );
+    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, false ) );

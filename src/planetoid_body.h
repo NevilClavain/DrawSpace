@@ -133,6 +133,7 @@ protected:
 
     DrawSpace::Pass*                                                        m_procedural_texture_currentpass;
 
+    DrawSpace::Utils::TimeManager*                                          m_timemanager;
 
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -163,7 +164,7 @@ protected:
     
 public:
     
-    Body( const dsstring& p_scenename, dsreal p_ray );
+    Body( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time );
     virtual ~Body( void );
 
     void                                GetSceneName( dsstring& p_name );    
