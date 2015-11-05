@@ -56,8 +56,6 @@ protected:
     dsreal                                                      m_planet_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::Vector                                    m_cubeface_hotpoint;
-    DrawSpace::Utils::Vector                                    m_prev_relative_hotpoint;    
-    DrawSpace::Utils::Vector                                    m_movement;
     dsreal                                                      m_alignment_factor;
     bool                                                        m_hot;
     dsreal                                                      m_relative_alt;

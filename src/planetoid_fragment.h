@@ -60,7 +60,7 @@ protected:
 
     PatchUpdateCb*                                              m_patch_update_cb;
     RunnerMsgCb*                                                m_runnercb;
-    RunnerEvtCb*                                                m_runnerevt;    
+    RunnerEvtCb*                                                m_runnerevt;
     bool                                                        m_collision_state;
 
     DrawSpace::Utils::Mutex                                     m_meshe_ready_mutex;

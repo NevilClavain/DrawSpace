@@ -407,13 +407,6 @@ void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_nod
 void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
 {
     m_relative_hotpoint = p_point;
-
-    m_movement[0] = m_relative_hotpoint[0] - m_prev_relative_hotpoint[0];
-    m_movement[1] = m_relative_hotpoint[1] - m_prev_relative_hotpoint[1];
-    m_movement[2] = m_relative_hotpoint[2] - m_prev_relative_hotpoint[2];
-
-    m_prev_relative_hotpoint = m_relative_hotpoint;
-
     compute_cubeface_hotpoint();
 }
 

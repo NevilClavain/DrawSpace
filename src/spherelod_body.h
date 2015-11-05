@@ -25,6 +25,7 @@
 
 #include "renderer.h"
 #include "spherelod_face.h"
+#include "runner.h"
 
 namespace DrawSpace
 {
@@ -33,9 +34,17 @@ namespace SphericalLOD
 class Body
 {
 public:
-    typedef DrawSpace::Core::BaseCallback2<void, Patch*, int> PatchUpdateHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, Patch*, int>                                   PatchUpdateHandler;
+
+    typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Core::PropertyPool*>               RunnerMsgCb;
+    typedef DrawSpace::Core::CallBack<Body, void, Core::Runner::State>                          RunnerEvtCb;
 
 protected:
+
+    DrawSpace::Core::Runner*                                                    m_runner;
+    RunnerMsgCb*                                                                m_runnercb;
+    RunnerEvtCb*                                                                m_runnerevt;
+
 
     Face*                                                                       m_faces[6];
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
@@ -43,13 +52,17 @@ protected:
     dsreal                                                                      m_diameter;    
     dsreal                                                                      m_hotpoint_altitud;
 
+
     std::vector<PatchUpdateHandler*>                                            m_patchupdate_handlers;
 
-    int                                                                         m_current_face;
-    
+    int                                                                         m_current_face;    
     Patch*                                                                      m_current_patch;
 
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
+
+    void on_runner_request( DrawSpace::Core::PropertyPool* p_args );
+    void on_runner_result( DrawSpace::Core::Runner::State p_runnerstate );
+
 
 public:
 

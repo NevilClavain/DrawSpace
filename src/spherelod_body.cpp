@@ -44,6 +44,13 @@ m_current_patch( NULL )
     {
         m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter ) );        
     }
+
+    m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Body::on_runner_request ) );
+    m_runnerevt = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Body::on_runner_result ) );
+
+    m_runner = _DRAWSPACE_NEW_( Runner, Runner );              
+    m_runner->RegisterTaskMsgHandler( m_runnercb );
+    m_runner->RegisterEventHandler( m_runnerevt );
 }
 
 Body::~Body( void )
@@ -232,5 +239,20 @@ void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
         {
             (*m_patchupdate_handlers[i])( m_current_patch, p_currentpatch_lod ); 
         }
+    }
+}
+
+void Body::on_runner_request( DrawSpace::Core::PropertyPool* p_args )
+{
+}
+
+void Body::on_runner_result( DrawSpace::Core::Runner::State p_runnerstate )
+{
+    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
+    {
+        //
+        //...
+
+        m_runner->ResetState();
     }
 }
