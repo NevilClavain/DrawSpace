@@ -46,6 +46,8 @@ protected:
     void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
     
+    void                            update_heightmap( void );
+
 public:
     FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer );
     virtual ~FaceDrawingNode( void );

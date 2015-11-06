@@ -52,7 +52,9 @@ void FaceDrawingNode::SetFace( Face* p_face )
 }
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
-{    
+{
+    update_heightmap();
+
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
     flag0[1] = p_patch->GetUnitSideLenght();
@@ -102,7 +104,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
 void FaceDrawingNode::CreateHeightMapTexture( void )
 {
     m_heighmap_texture = new Texture();    
-    m_heighmap_texture->SetFormat( 32, 32, 4 );
+    m_heighmap_texture->SetFormat( 16, 16, 4 );
     m_heighmap_texture->SetPurpose( Texture::PURPOSE_FLOAT );
     SetVertexTexture( m_heighmap_texture, 0 );
 }
@@ -112,15 +114,30 @@ void FaceDrawingNode::InitHeightMapTexture( void )
     m_heighmap_texture->AllocTextureContent();
     m_heighmaptexture_content = m_heighmap_texture->GetTextureContentPtr();
 
-    float* float_ptr = (float*)m_heighmaptexture_content;
-
-    for(long j = 0; j < 32; j++ )
+float* float_ptr = (float*)m_heighmaptexture_content;
+    
+    for(long j = 0; j < 16; j++ )
     {
-        for( long i = 0; i < 32; i++ )    
+        for( long i = 0; i < 16; i++ )    
         {
-            if( 10 < i && 10 < j && i < 20 && j < 20 )
+            *float_ptr = 0.0; 
+            float_ptr++;
+        }
+    }
+}
+
+void FaceDrawingNode::update_heightmap( void )
+{
+    /*
+    float* float_ptr = (float*)m_heighmaptexture_content;
+    
+    for(long j = 0; j < 16; j++ )
+    {
+        for( long i = 0; i < 16; i++ )    
+        {
+            if( 10 < i && 10 < j && i < 16 && j < 16 )
             {
-                *float_ptr = 500.0; 
+                *float_ptr = 100.0; 
             }
             else
             {
@@ -129,8 +146,8 @@ void FaceDrawingNode::InitHeightMapTexture( void )
             float_ptr++;
         }
     }
-
-    m_heighmap_texture->UpdateTextureContent();
+    */
+    //m_heighmap_texture->UpdateTextureContent();
 }
 
 Drawing::Drawing( void ) :
