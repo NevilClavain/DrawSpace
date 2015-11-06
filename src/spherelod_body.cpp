@@ -133,7 +133,6 @@ void Body::BuildMeshe( void )
     float current_u0 = 0.0f;
     float current_v0 = 0.0f;
 
-
     for( long i = 0; i < patch_resolution; i++ )
     {
         for( long j = 0; j < patch_resolution; j++ )
@@ -149,12 +148,6 @@ void Body::BuildMeshe( void )
             vertex.tu[0] = current_u0;
             vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
                                             // le v des coords textures et le y du repere patch sont en sens opposés
-            // inutile
-            /*
-            vertex.tu[1] = current_u0;
-            vertex.tv[1] = current_v0;
-            */
-
             m_planetpatch_meshe->AddVertex( vertex );
 
             current_u0 += delta_uv0;

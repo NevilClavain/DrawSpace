@@ -38,8 +38,10 @@ class FaceDrawingNode : public DrawSpace::Core::RenderingNode
 protected:
 
     DrawSpace::Interface::Renderer* m_renderer;
-
     Face*                           m_face;
+
+    DrawSpace::Core::Texture*       m_heighmap_texture;
+    void*                           m_heighmaptexture_content;
 
     void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
@@ -50,6 +52,8 @@ public:
 
     virtual void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
     virtual void SetFace( Face* p_face );
+    virtual void CreateHeightMapTexture( void );
+    virtual void InitHeightMapTexture( void );
 
 };
 
@@ -76,7 +80,6 @@ protected:
     
     Utils::Matrix                                                               m_globaltransformation;
 
-
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
 public:
@@ -98,6 +101,8 @@ public:
     Body* GetBody( void );
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+
+    void InitHeightMapTextures( void );
 
 };
 }

@@ -190,6 +190,8 @@ public:
     void                                Update2( DrawSpace::Utils::TimeManager& p_timemanager );
 
     bool                                GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude );
+
+    void                                InitHeightMapTextures( void );
     
 };
 

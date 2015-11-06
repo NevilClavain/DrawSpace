@@ -34,7 +34,8 @@ using namespace DrawSpace::SphericalLOD;
 
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer ) :
 m_renderer( p_renderer ),
-m_face( NULL )
+m_face( NULL ),
+m_heighmaptexture_content( NULL )
 {
 
 }
@@ -98,29 +99,44 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
     }
 }
 
+void FaceDrawingNode::CreateHeightMapTexture( void )
+{
+    m_heighmap_texture = new Texture();    
+    m_heighmap_texture->SetFormat( 32, 32, 4 );
+    m_heighmap_texture->SetPurpose( Texture::PURPOSE_FLOAT );
+    SetVertexTexture( m_heighmap_texture, 0 );
+}
+
+void FaceDrawingNode::InitHeightMapTexture( void )
+{
+    m_heighmap_texture->AllocTextureContent();
+    m_heighmaptexture_content = m_heighmap_texture->GetTextureContentPtr();
+
+    float* float_ptr = (float*)m_heighmaptexture_content;
+
+    for(long j = 0; j < 32; j++ )
+    {
+        for( long i = 0; i < 32; i++ )    
+        {
+            if( 10 < i && 10 < j && i < 20 && j < 20 )
+            {
+                *float_ptr = 500.0; 
+            }
+            else
+            {
+                *float_ptr = 0.0; 
+            }                       
+            float_ptr++;
+        }
+    }
+
+    m_heighmap_texture->UpdateTextureContent();
+}
 
 Drawing::Drawing( void ) :
 m_renderer( NULL ),
 m_planetbody( NULL )
 {
-    /*
-    m_fx = _DRAWSPACE_NEW_( Fx, Fx );
-
-    // prepare Fx
-
-    m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
-    m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    m_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
-    m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
-    m_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
-
-    m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet2.vsh", false ) ) );
-    m_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "planet2.psh", false ) ) );
-
-    m_fx->GetShader( 0 )->LoadFromFile();
-    m_fx->GetShader( 1 )->LoadFromFile();
-    */
 }
 
 Drawing::~Drawing( void )
@@ -189,6 +205,7 @@ void Drawing::RegisterPassSlot( Pass* p_pass )
     {            
         nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
         nodeset.nodes[i]->SetMeshe( Body::m_planetpatch_meshe );
+        nodeset.nodes[i]->CreateHeightMapTexture();
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
@@ -218,4 +235,16 @@ DrawSpace::SphericalLOD::Body* Drawing::GetBody( void )
 void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
     m_globaltransformation = p_mat;
+}
+
+void Drawing::InitHeightMapTextures( void )
+{
+    for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    {
+        NodesSet ns = it->second;
+        for( size_t i = 0; i < 6; i++ )
+        {
+            ns.nodes[i]->InitHeightMapTexture();
+        }
+    }
 }

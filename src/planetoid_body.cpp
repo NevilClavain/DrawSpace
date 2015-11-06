@@ -927,3 +927,8 @@ bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynami
     }
     return false;
 }
+
+void DrawSpace::Planetoid::Body::InitHeightMapTextures( void )
+{
+    m_drawable->InitHeightMapTextures();
+}
