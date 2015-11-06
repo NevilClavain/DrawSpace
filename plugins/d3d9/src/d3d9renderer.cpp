@@ -740,6 +740,10 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 bpp = 2;
                 break;
 
+            case D3DFMT_R32F:
+                bpp = 4;
+                break;
+
             default:
                 bpp = -1;
                 break;
@@ -889,6 +893,10 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
         case D3DFMT_R16F:
             bpp = 2;
+            break;
+
+        case D3DFMT_R32F:
+            bpp = 4;
             break;
 
         default:
