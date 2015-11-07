@@ -37,7 +37,7 @@ m_renderer( p_renderer ),
 m_face( NULL ),
 m_heighmaptexture_content( NULL )
 {
-
+    ZeroMemory( &m_stats, sizeof( Stats ) );
 }
 
 FaceDrawingNode::~FaceDrawingNode( void )
@@ -81,6 +81,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     //m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
 
     m_renderer->DrawMeshe( p_world, p_view, p_proj );
+    m_stats.nb_patchs++;
 
    // m_renderer->UnsetTexture( 0 );
    // m_renderer->UnsetVertexTexture( 0 );        
@@ -88,13 +89,14 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 
 void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
 {
+    ZeroMemory( &m_stats, sizeof( Stats ) );
     if( !m_face )
     {
         return;
     }
 
     std::vector<Patch*> display_list;
-    m_face->GetDisplayList( display_list );
+    m_face->GetDisplayList( display_list );    
     for( size_t i = 0; i < display_list.size(); i++ )
     {
         draw_single_patch( display_list[i], p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
@@ -126,11 +128,15 @@ float* float_ptr = (float*)m_heighmaptexture_content;
     }
 }
 
-void FaceDrawingNode::update_heightmap( void )
+void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
 {
-    /*
-    float* float_ptr = (float*)m_heighmaptexture_content;
-    
+    p_stats = m_stats;
+}
+
+void FaceDrawingNode::update_heightmap( void )
+{ 
+    float* float_ptr = (float*)m_heighmaptexture_content;   
+
     for(long j = 0; j < 16; j++ )
     {
         for( long i = 0; i < 16; i++ )    
@@ -146,8 +152,8 @@ void FaceDrawingNode::update_heightmap( void )
             float_ptr++;
         }
     }
-    */
-    //m_heighmap_texture->UpdateTextureContent();
+    m_heighmap_texture->UpdateTextureContent();
+    m_stats.nb_hm_updates++;
 }
 
 Drawing::Drawing( void ) :

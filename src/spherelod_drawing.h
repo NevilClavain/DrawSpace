@@ -34,7 +34,16 @@ namespace SphericalLOD
 {
 
 class FaceDrawingNode : public DrawSpace::Core::RenderingNode
-{    
+{
+public:
+
+    typedef struct
+    {
+        int                             nb_patchs;
+        int                             nb_hm_updates;
+
+    } Stats;
+
 protected:
 
     DrawSpace::Interface::Renderer* m_renderer;
@@ -43,19 +52,25 @@ protected:
     DrawSpace::Core::Texture*       m_heighmap_texture;
     void*                           m_heighmaptexture_content;
 
+    Stats                           m_stats;
+
     void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
     
     void                            update_heightmap( void );
 
+    
+
 public:
     FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer );
     virtual ~FaceDrawingNode( void );
 
-    virtual void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
-    virtual void SetFace( Face* p_face );
-    virtual void CreateHeightMapTexture( void );
-    virtual void InitHeightMapTexture( void );
+    void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
+    void SetFace( Face* p_face );
+    void CreateHeightMapTexture( void );
+    void InitHeightMapTexture( void );
+
+    void GetStats( Stats& p_stats );
 
 };
 

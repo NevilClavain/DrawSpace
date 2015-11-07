@@ -932,3 +932,8 @@ void DrawSpace::Planetoid::Body::InitHeightMapTextures( void )
 {
     m_drawable->InitHeightMapTextures();
 }
+
+DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetNodeFromPass( Pass* p_pass, int p_faceid )
+{
+    return m_drawable->GetNodeFromPass( p_pass, p_faceid );
+}

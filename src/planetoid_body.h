@@ -172,6 +172,8 @@ public:
 
     void                                RegisterPassSlot( Pass* p_pass );
 
+    DrawSpace::Core::RenderingNode*     GetNodeFromPass( Pass* p_pass, int p_faceid );
+
     void                                BindExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
     void                                CreateProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_resol );
     void                                InitProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_r, int p_g, int p_b );
