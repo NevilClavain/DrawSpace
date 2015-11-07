@@ -29,7 +29,8 @@
 #include "noise.h"
 
 
-#define PATCH_RESOLUTION 16
+#define PATCH_RESOLUTION        16
+#define PATCH_HM_RESOLUTION     16
 
 namespace DrawSpace
 {
@@ -72,8 +73,10 @@ protected:
     DrawSpace::Utils::BaseQuadtreeNode*     m_owner;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
+    
+    Patch*                                  m_hm_source;
 
-    DrawSpace::Utils::Fractal*              m_fractal;
+    dsreal                                  m_heighmap[PATCH_HM_RESOLUTION][PATCH_HM_RESOLUTION];
 
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner,
@@ -99,6 +102,8 @@ public:
     void GetUVCoords( DrawSpace::Utils::Vector& p_uv );
 
     bool IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
+
+    bool IsHmSource( void );
 
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

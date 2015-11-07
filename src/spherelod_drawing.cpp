@@ -42,8 +42,6 @@ m_heighmaptexture_content( NULL )
 
 FaceDrawingNode::~FaceDrawingNode( void )
 {
-
-
 }
 
 void FaceDrawingNode::SetFace( Face* p_face )
@@ -53,7 +51,10 @@ void FaceDrawingNode::SetFace( Face* p_face )
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
-    update_heightmap();
+    if( p_patch->IsHmSource() )
+    {
+        update_heightmap();
+    }
 
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -106,7 +107,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
 void FaceDrawingNode::CreateHeightMapTexture( void )
 {
     m_heighmap_texture = new Texture();    
-    m_heighmap_texture->SetFormat( 16, 16, 4 );
+    m_heighmap_texture->SetFormat( PATCH_HM_RESOLUTION, PATCH_HM_RESOLUTION, 4 );
     m_heighmap_texture->SetPurpose( Texture::PURPOSE_FLOAT );
     SetVertexTexture( m_heighmap_texture, 0 );
 }
@@ -116,11 +117,11 @@ void FaceDrawingNode::InitHeightMapTexture( void )
     m_heighmap_texture->AllocTextureContent();
     m_heighmaptexture_content = m_heighmap_texture->GetTextureContentPtr();
 
-float* float_ptr = (float*)m_heighmaptexture_content;
+    float* float_ptr = (float*)m_heighmaptexture_content;
     
-    for(long j = 0; j < 16; j++ )
+    for(long j = 0; j < PATCH_HM_RESOLUTION; j++ )
     {
-        for( long i = 0; i < 16; i++ )    
+        for( long i = 0; i < PATCH_HM_RESOLUTION; i++ )    
         {
             *float_ptr = 0.0; 
             float_ptr++;
@@ -137,9 +138,9 @@ void FaceDrawingNode::update_heightmap( void )
 { 
     float* float_ptr = (float*)m_heighmaptexture_content;   
 
-    for(long j = 0; j < 16; j++ )
+    for(long j = 0; j < PATCH_HM_RESOLUTION; j++ )
     {
-        for( long i = 0; i < 16; i++ )    
+        for( long i = 0; i < PATCH_HM_RESOLUTION; i++ )    
         {
             if( 10 < i && 10 < j && i < 16 && j < 16 )
             {

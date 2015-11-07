@@ -41,12 +41,22 @@ m_owner( p_owner )
 
     if( NULL == p_parent )
     {
+        m_hm_source = this;
         m_xpos = m_ypos = 0.0;
         m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     }
     else
-    {
+    {        
         m_sidelength = p_parent->m_sidelength / 2.0;
+
+        if( m_sidelength / p_parent->m_hm_source->m_sidelength < 0.10 )
+        {
+            m_hm_source = this;
+        }
+        else
+        {
+            m_hm_source = p_parent->m_hm_source;
+        }
 
         switch( p_nodeid )
         {
@@ -138,7 +148,33 @@ m_owner( p_owner )
         }
     }
 
-    m_fractal = new Fractal( 3, 3345764, 0.75, 1.29 );
+    if( m_hm_source == this )
+    {    
+        // build pach heightmap
+        Fractal fractal( 3, 3345764, 0.75, 1.29 );
+
+        for( int y = 0; y < PATCH_HM_RESOLUTION; y++ )
+        {
+            for( int x = 0; x < PATCH_HM_RESOLUTION; x++ )
+            {                    
+                Vector f_array;
+                Vector f_array2;
+           
+                double fx = 2.0 * ( ( (double)x / (double)PATCH_HM_RESOLUTION ) - 0.5 );
+                double fy = 2.0 * ( ( (double)( PATCH_HM_RESOLUTION - y ) / (double)PATCH_HM_RESOLUTION ) - 0.5 ); // le v des coords textures et le y du repere patch sont en sens opposés
+                                  
+                DrawSpace::SphericalLOD::Patch::XYToXYZ( m_orientation, fx, fy, f_array );
+
+                DrawSpace::SphericalLOD::Patch::CubeToSphere( f_array, f_array2 );
+
+                f_array2[0] *= 2.0;
+                f_array2[1] *= 2.0;
+                f_array2[2] *= 2.0;
+
+                double res = fractal.fBm( f_array2.GetArray(), 15.0 );
+            }
+        }
+    }    
 }
 
 Patch::~Patch( void )
@@ -516,3 +552,7 @@ bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_r
     return false;
 }
 
+bool Patch::IsHmSource( void )
+{
+    return (m_hm_source == this);
+}
