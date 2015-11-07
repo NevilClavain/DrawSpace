@@ -27,9 +27,8 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Patch::Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords ) : 
+Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords ) : 
 m_orientation( p_orientation ),
-m_name( p_name ),
 m_ray( p_ray ),
 m_owner( p_owner )
 {
@@ -37,13 +36,6 @@ m_owner( p_owner )
     {
         m_neighbours[i] = NULL;
     }
-
-    /*
-    for( long i = 0; i < Maps::NB_TEXTURETYPE; i++ )
-    {
-        m_textures_data[i] = NULL;
-    }
-    */
 
     dsreal ui1, vi1, ui2, vi2;
 
@@ -145,6 +137,8 @@ m_owner( p_owner )
             m_v2 = 1.0;
         }
     }
+
+    m_fractal = new Fractal( 3, 3345764, 0.75, 1.29 );
 }
 
 Patch::~Patch( void )
@@ -281,12 +275,6 @@ void Patch::SphereToCube( const Vector& p_in, Vector& p_out )
     p_out[0] = nx;
     p_out[1] = ny;
     p_out[2] = nz;
-}
-
-
-void Patch::GetName( dsstring& p_name )
-{
-    p_name = m_name;
 }
 
 dsreal Patch::GetSideLength( void )
@@ -528,14 +516,3 @@ bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_r
     return false;
 }
 
-/*
-void Patch::SetTexture( Maps::TextureType p_type, void* p_texturedata )
-{
-    m_textures_data[p_type] = p_texturedata;
-}
-
-void* Patch::GetTexture( Maps::TextureType p_type )
-{
-    return m_textures_data[p_type];
-}
-*/

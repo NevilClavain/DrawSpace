@@ -80,29 +80,16 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
     {
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, ".0", NULL, -1, root, true, Vector( 0.0, 0.0, 1.0, 1.0 ) ) );
-        root->SetContent( patch );
-
-        dsstring patch_name;
-        patch->GetName( patch_name );        
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, NULL, -1, root, true, Vector( 0.0, 0.0, 1.0, 1.0 ) ) );
+        root->SetContent( patch );      
     }
     else
     {
         QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
         QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
 
-        dsstring parent_name;
-        parent->GetContent()->GetName( parent_name );
-
-        dsstring node_name = parent_name + dsstring( "." );
-        char dstbuf[32];
-        node_name += dsstring( itoa( node->GetId(), dstbuf, 10 ) );
-
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, node_name, parent->GetContent(), node->GetId(), node, false, Vector() ) );
-        node->SetContent( patch );
-
-        dsstring patch_name;
-        patch->GetName( patch_name );        
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), node, false, Vector() ) );
+        node->SetContent( patch );      
     }
 }
 

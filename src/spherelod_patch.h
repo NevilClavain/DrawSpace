@@ -26,8 +26,8 @@
 #include "vector.h"
 #include "quadtree.h"
 #include "vsphere.h"
-//#include "spherelod_maps.h"
-#include "texture.h"
+#include "noise.h"
+
 
 #define PATCH_RESOLUTION 16
 
@@ -72,19 +72,17 @@ protected:
     DrawSpace::Utils::BaseQuadtreeNode*     m_owner;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
-    dsstring		                        m_name;
 
-    //void*                                   m_textures_data[Maps::NB_TEXTURETYPE];
+    DrawSpace::Utils::Fractal*              m_fractal;
 
 public:
-    Patch( dsreal p_ray, int p_orientation, const dsstring& p_name, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner,
+    Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner,
             bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords );
     virtual ~Patch( void );
 
     void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );
     DrawSpace::Utils::BaseQuadtreeNode* GetNeighbour( int p_id );
 
-    void GetName( dsstring& p_name );
     dsreal GetSideLength( void );
     dsreal GetUnitSideLenght( void );
     int GetOrientation( void );
@@ -102,9 +100,6 @@ public:
 
     bool IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
 
-
-    //void SetTexture( Maps::TextureType p_type, void* p_texturedata );
-    //void* GetTexture( Maps::TextureType p_type );
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
