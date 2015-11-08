@@ -28,9 +28,10 @@
 #include "vsphere.h"
 #include "noise.h"
 
+#define NB_LOD_RANGES           14
 
 #define PATCH_RESOLUTION        16
-#define PATCH_HM_RESOLUTION     16
+#define PATCH_HM_RESOLUTION     64
 
 namespace DrawSpace
 {
@@ -76,7 +77,9 @@ protected:
     
     Patch*                                  m_hm_source;
 
-    dsreal                                  m_heighmap[PATCH_HM_RESOLUTION][PATCH_HM_RESOLUTION];
+    float*                                  m_heighmap;
+
+    int                                     m_lod_level;
 
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner,
@@ -104,6 +107,10 @@ public:
     bool IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
 
     bool IsHmSource( void );
+
+    int GetLodLevel( void );
+
+    float* GetHeightMap( void );
 
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

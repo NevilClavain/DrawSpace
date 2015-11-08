@@ -629,3 +629,8 @@ int Face::GetCurrentPatchLOD( void )
 {
     return m_currentPatchLOD;
 }
+
+Patch* Face::GetRootPatch( void )
+{
+    return m_rootpatch->GetContent();
+}

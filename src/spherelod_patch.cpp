@@ -21,6 +21,7 @@
 */
 
 #include "spherelod_patch.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -41,15 +42,18 @@ m_owner( p_owner )
 
     if( NULL == p_parent )
     {
+        m_lod_level = NB_LOD_RANGES - 1;
         m_hm_source = this;
         m_xpos = m_ypos = 0.0;
         m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     }
     else
-    {        
+    {
+        m_lod_level = p_parent->m_lod_level - 1;
+
         m_sidelength = p_parent->m_sidelength / 2.0;
 
-        if( m_sidelength / p_parent->m_hm_source->m_sidelength < 0.10 )
+        if( /*m_sidelength / p_parent->m_hm_source->m_sidelength < 0.10 ||*/ m_lod_level <= 1 )
         {
             m_hm_source = this;
         }
@@ -131,7 +135,15 @@ m_owner( p_owner )
     }
     else
     {
-        if( p_parent )
+
+        if( m_hm_source == this )
+        {
+            m_u1 = 0.0;
+            m_v1 = 0.0;
+            m_u2 = 1.0;
+            m_v2 = 1.0;
+        }
+        else
         {
             m_u1 = ( ui1 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
             m_v1 = ( vi1 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
@@ -139,19 +151,23 @@ m_owner( p_owner )
             m_u2 = ( ui2 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
             m_v2 = ( vi2 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;       
         }
-        else
-        {
-            m_u1 = 0.0;
-            m_v1 = 0.0;
-            m_u2 = 1.0;
-            m_v2 = 1.0;
-        }
     }
 
+    m_heighmap = new float[PATCH_HM_RESOLUTION * PATCH_HM_RESOLUTION];
+
+    double xf1, yf1;
+    double xf2, yf2;
+    xf1 = m_xpos - m_sidelength / 2.0;
+    yf1 = m_ypos + m_sidelength / 2.0;
+
+    xf2 = m_xpos + m_sidelength / 2.0;
+    yf2 = m_ypos - m_sidelength / 2.0;
+
+    float* curr = m_heighmap;
     if( m_hm_source == this )
     {    
         // build pach heightmap
-        Fractal fractal( 3, 3345764, 0.75, 1.29 );
+        Fractal fractal( 3, 3345764, /*0.75*/ 0.5, /*1.29*/ 2.0 );
 
         for( int y = 0; y < PATCH_HM_RESOLUTION; y++ )
         {
@@ -160,18 +176,22 @@ m_owner( p_owner )
                 Vector f_array;
                 Vector f_array2;
            
-                double fx = 2.0 * ( ( (double)x / (double)PATCH_HM_RESOLUTION ) - 0.5 );
-                double fy = 2.0 * ( ( (double)( PATCH_HM_RESOLUTION - y ) / (double)PATCH_HM_RESOLUTION ) - 0.5 ); // le v des coords textures et le y du repere patch sont en sens opposés
-                                  
+                double fx = Utils::Maths::Lerp( xf1, xf2, ( (double)x / (double)PATCH_HM_RESOLUTION ) );
+                double fy = Utils::Maths::Lerp( yf1, yf2, ( (double)y / (double)PATCH_HM_RESOLUTION ) );
+
                 DrawSpace::SphericalLOD::Patch::XYToXYZ( m_orientation, fx, fy, f_array );
 
                 DrawSpace::SphericalLOD::Patch::CubeToSphere( f_array, f_array2 );
 
+                /*
                 f_array2[0] *= 2.0;
                 f_array2[1] *= 2.0;
                 f_array2[2] *= 2.0;
+                */
 
-                double res = fractal.fBm( f_array2.GetArray(), 15.0 );
+                float res = 5000.0 * fractal.fBm( f_array2.GetArray(), 15.0 );
+
+                *curr = res; curr++;
             }
         }
     }    
@@ -189,6 +209,11 @@ void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id 
 DrawSpace::Utils::BaseQuadtreeNode* Patch::GetNeighbour( int p_id )
 {
     return m_neighbours[p_id];
+}
+
+int Patch::GetLodLevel( void )
+{
+    return m_lod_level;
 }
 
 void Patch::CubeToSphere( const Vector& p_in, Vector& p_out )
@@ -555,4 +580,9 @@ bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_r
 bool Patch::IsHmSource( void )
 {
     return (m_hm_source == this);
+}
+
+float* Patch::GetHeightMap( void )
+{
+    return m_heighmap;
 }

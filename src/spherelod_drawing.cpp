@@ -50,12 +50,16 @@ void FaceDrawingNode::SetFace( Face* p_face )
 }
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
-{
+{    
     if( p_patch->IsHmSource() )
     {
-        update_heightmap();
+        if( m_curr_hm != p_patch )
+        {            
+            m_curr_hm = p_patch;
+            update_heightmap();
+        }
     }
-
+   
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
     flag0[1] = p_patch->GetUnitSideLenght();
@@ -95,6 +99,9 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
     {
         return;
     }
+    
+    m_curr_hm = m_face->GetRootPatch();
+    update_heightmap(); // update texture avec hm du root
 
     std::vector<Patch*> display_list;
     m_face->GetDisplayList( display_list );    
@@ -115,10 +122,15 @@ void FaceDrawingNode::CreateHeightMapTexture( void )
 void FaceDrawingNode::InitHeightMapTexture( void )
 {
     m_heighmap_texture->AllocTextureContent();
-    m_heighmaptexture_content = m_heighmap_texture->GetTextureContentPtr();
+    m_heighmaptexture_content = m_heighmap_texture->GetTextureContentPtr();    
+    ClearHeightMapTexture();
+}
 
+void FaceDrawingNode::ClearHeightMapTexture( void )
+{
     float* float_ptr = (float*)m_heighmaptexture_content;
-    
+
+    /*
     for(long j = 0; j < PATCH_HM_RESOLUTION; j++ )
     {
         for( long i = 0; i < PATCH_HM_RESOLUTION; i++ )    
@@ -127,6 +139,9 @@ void FaceDrawingNode::InitHeightMapTexture( void )
             float_ptr++;
         }
     }
+    */
+
+    ZeroMemory( float_ptr, PATCH_HM_RESOLUTION * PATCH_HM_RESOLUTION * 4 );
 }
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
@@ -136,23 +151,10 @@ void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
 
 void FaceDrawingNode::update_heightmap( void )
 { 
-    float* float_ptr = (float*)m_heighmaptexture_content;   
+    float* float_ptr = (float*)m_heighmaptexture_content;
 
-    for(long j = 0; j < PATCH_HM_RESOLUTION; j++ )
-    {
-        for( long i = 0; i < PATCH_HM_RESOLUTION; i++ )    
-        {
-            if( 10 < i && 10 < j && i < 16 && j < 16 )
-            {
-                *float_ptr = 100.0; 
-            }
-            else
-            {
-                *float_ptr = 0.0; 
-            }                       
-            float_ptr++;
-        }
-    }
+    memcpy( float_ptr, m_curr_hm->GetHeightMap(), PATCH_HM_RESOLUTION * PATCH_HM_RESOLUTION * 4 );
+    
     m_heighmap_texture->UpdateTextureContent();
     m_stats.nb_hm_updates++;
 }

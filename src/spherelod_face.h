@@ -28,9 +28,6 @@
 #include "renderer.h"
 #include "spherelod_patch.h"
 
-#define NB_LOD_RANGES       14
-
-
 namespace DrawSpace
 {
 namespace SphericalLOD
@@ -118,6 +115,8 @@ public:
 
     Patch* GetCurrentPatch( void );
     int GetCurrentPatchLOD( void );
+
+    Patch* GetRootPatch( void );
 };
 }
 }
