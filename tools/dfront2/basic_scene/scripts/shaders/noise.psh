@@ -37,6 +37,16 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz, i
 			indexTemp - 255;
 		}
 		maptextcoord[0] = ( index256 * indexTemp ) + midinterval256;
+		
+		if( maptextcoord[0] > 1.0 )
+		{
+			maptextcoord[0] -= 1.0;
+		}
+		else if( maptextcoord[0] < 0.0 )
+		{
+			maptextcoord[0] = 1.0 + maptextcoord[0];
+		}
+
 		maptextcoord[1] = 0.5;
 		float4 mapval = tex2D( TextureMap, maptextcoord );
 		nIndex = mapval.x * 255.0;
@@ -141,12 +151,14 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		
 	
 	double3 f = 0.0;
-	f[0] = input.TexCoord0.x * 16.0;
-	f[1] = input.TexCoord0.y * 16.0;
+	f[0] = lerp( -16.0, 16.0, input.TexCoord0.x );
+	f[1] = lerp( -16.0, 16.0, input.TexCoord0.y );
 	f[2] = 1.0;
 
+	
+
 	//float res = Noise_Noise( f );
-	float res = Fractal_fBm( f, 8.0 );
+	float res = Fractal_fBm( f, 5.0 );
 
 	color = ( res * 0.5 ) + 0.5;
 	
