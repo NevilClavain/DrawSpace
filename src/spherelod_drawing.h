@@ -40,7 +40,6 @@ public:
     typedef struct
     {
         int                             nb_patchs;
-        int                             nb_hm_updates;
 
     } Stats;
 
@@ -49,18 +48,16 @@ protected:
     DrawSpace::Interface::Renderer* m_renderer;
     Face*                           m_face;
 
+    /*
     DrawSpace::Core::Texture*       m_heighmap_texture;
     void*                           m_heighmaptexture_content;
+    */
 
     Stats                           m_stats;
-
-    Patch*                          m_curr_hm;
 
     void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
     
-    void                            update_heightmap( void );
-
     
 
 public:
@@ -69,9 +66,12 @@ public:
 
     void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
     void SetFace( Face* p_face );
+    
+    /*
     void CreateHeightMapTexture( void );
     void InitHeightMapTexture( void );
     void ClearHeightMapTexture( void );
+    */
 
     void GetStats( Stats& p_stats );
 
@@ -122,7 +122,7 @@ public:
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
-    void InitHeightMapTextures( void );
+    //void InitHeightMapTextures( void );
 
 };
 }

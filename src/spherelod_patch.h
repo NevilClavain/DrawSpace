@@ -29,9 +29,7 @@
 #include "noise.h"
 
 #define NB_LOD_RANGES           14
-
 #define PATCH_RESOLUTION        16
-#define PATCH_HM_RESOLUTION     64
 
 namespace DrawSpace
 {
@@ -75,10 +73,6 @@ protected:
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
     
-    Patch*                                  m_hm_source;
-
-    float*                                  m_heighmap;
-
     int                                     m_lod_level;
 
 public:

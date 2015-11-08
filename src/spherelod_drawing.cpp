@@ -34,8 +34,8 @@ using namespace DrawSpace::SphericalLOD;
 
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer ) :
 m_renderer( p_renderer ),
-m_face( NULL ),
-m_heighmaptexture_content( NULL )
+m_face( NULL )/*,
+m_heighmaptexture_content( NULL )*/
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -51,14 +51,6 @@ void FaceDrawingNode::SetFace( Face* p_face )
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {    
-    if( p_patch->IsHmSource() )
-    {
-        if( m_curr_hm != p_patch )
-        {            
-            m_curr_hm = p_patch;
-            update_heightmap();
-        }
-    }
    
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -100,9 +92,6 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
         return;
     }
     
-    m_curr_hm = m_face->GetRootPatch();
-    update_heightmap(); // update texture avec hm du root
-
     std::vector<Patch*> display_list;
     m_face->GetDisplayList( display_list );    
     for( size_t i = 0; i < display_list.size(); i++ )
@@ -111,6 +100,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
     }
 }
 
+/*
 void FaceDrawingNode::CreateHeightMapTexture( void )
 {
     m_heighmap_texture = new Texture();    
@@ -130,33 +120,13 @@ void FaceDrawingNode::ClearHeightMapTexture( void )
 {
     float* float_ptr = (float*)m_heighmaptexture_content;
 
-    /*
-    for(long j = 0; j < PATCH_HM_RESOLUTION; j++ )
-    {
-        for( long i = 0; i < PATCH_HM_RESOLUTION; i++ )    
-        {
-            *float_ptr = 0.0; 
-            float_ptr++;
-        }
-    }
-    */
-
     ZeroMemory( float_ptr, PATCH_HM_RESOLUTION * PATCH_HM_RESOLUTION * 4 );
 }
+*/
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
 {
     p_stats = m_stats;
-}
-
-void FaceDrawingNode::update_heightmap( void )
-{ 
-    float* float_ptr = (float*)m_heighmaptexture_content;
-
-    memcpy( float_ptr, m_curr_hm->GetHeightMap(), PATCH_HM_RESOLUTION * PATCH_HM_RESOLUTION * 4 );
-    
-    m_heighmap_texture->UpdateTextureContent();
-    m_stats.nb_hm_updates++;
 }
 
 Drawing::Drawing( void ) :
@@ -231,7 +201,7 @@ void Drawing::RegisterPassSlot( Pass* p_pass )
     {            
         nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
         nodeset.nodes[i]->SetMeshe( Body::m_planetpatch_meshe );
-        nodeset.nodes[i]->CreateHeightMapTexture();
+        //nodeset.nodes[i]->CreateHeightMapTexture();
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
@@ -263,6 +233,7 @@ void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_globaltransformation = p_mat;
 }
 
+/*
 void Drawing::InitHeightMapTextures( void )
 {
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
@@ -274,3 +245,4 @@ void Drawing::InitHeightMapTextures( void )
         }
     }
 }
+*/ 
