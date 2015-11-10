@@ -238,7 +238,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	
 	float res = Fractal_fBm( f );
 
-	v_alt = res * 4000.0;
+	v_alt = res * 12000.0;
 	if( v_alt < 0.0 )
 	{
 		v_alt = 0.0;

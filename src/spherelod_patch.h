@@ -28,8 +28,8 @@
 #include "vsphere.h"
 #include "noise.h"
 
-#define NB_LOD_RANGES           12
-#define PATCH_RESOLUTION        11//16
+#define NB_LOD_RANGES           13
+#define PATCH_RESOLUTION        11
 
 namespace DrawSpace
 {
