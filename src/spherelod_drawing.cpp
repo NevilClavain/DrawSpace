@@ -71,7 +71,14 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 
     noiseflags[0] = m_fractal->GetLacunarity();
 
-    noiseflags[1] = 9.0;
+    if( 4 <= p_patch->GetLodLevel() )
+    {
+        noiseflags[1] = 6.0;
+    }
+    else
+    {
+        noiseflags[1] = 9.0;
+    }
 
     noiseflags[2] = 0.0;
     noiseflags[3] = 1.0;
