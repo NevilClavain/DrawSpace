@@ -13,7 +13,16 @@ float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-sampler2D Texture0 : register(s0);
+
+float4 flags: register(c27);
+// .x -> lacunarity
+// .y -> number of octaves
+// .z -> range inf
+// .w -> range sup
+
+sampler2D TextureBuffer : register(s0);
+sampler2D TextureMap : register(s1);
+sampler2D TextureExp : register(s2);
 
 struct VS_INPUT 
 {
@@ -29,16 +38,138 @@ struct VS_OUTPUT
 };
 
 
+double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
+{
+	// ECH : texture index mid interval -> 1 /2N, N = 256 ou N = 3
+	double midinterval256 = 0.001953125; //1.0 / 512.0;
+	double midinterval3 = 0.166666; //1.0 / 6.0;
+	double index3 = 0.3333333; //1.0 / 3.0;
+	double index256 = 0.00390625; //1.0 / 256.0;
+	
+	float4 maptextcoord = 0.0;
+	float4 buffertextcoord = 0.0;
+
+	int i;	
+	int n[3] = { ix, iy, iz };
+	double f[3] = { fx, fy, fz };
+	
+	int nIndex = 0;
+	for( i = 0; i < 3; i++ )
+	{
+		int indexTemp = nIndex + n[i];		
+		if( indexTemp > 255 )
+		{
+			indexTemp - 255;
+		}
+		maptextcoord[0] = ( index256 * indexTemp ) + midinterval256;
+		
+		if( maptextcoord[0] > 1.0 )
+		{
+			maptextcoord[0] -= 1.0;
+		}
+		else if( maptextcoord[0] < 0.0 )
+		{
+			maptextcoord[0] = 1.0 + maptextcoord[0];
+		}
+
+		maptextcoord[1] = 0.5;
+		float4 mapval = tex2Dlod( TextureMap, maptextcoord );
+		nIndex = mapval.x * 255.0;
+	}
+	
+	double fValue = 0.0;
+	for( i = 0; i < 3; i++ )
+	{ 
+		buffertextcoord[0] = ( index256 * nIndex ) + midinterval256;
+		buffertextcoord[1] = ( index3 * i ) + midinterval3;		
+		double buffval = tex2Dlod( TextureBuffer, buffertextcoord );
+		fValue += ( buffval * f[i] );
+	}
+	return fValue;
+}
+
+double Noise_Noise( double3 f )
+{
+	int n[3];			// Indexes to pass to lattice function
+	double r[3];		// Remainders to pass to lattice function
+	double w[3];		// Cubic values to pass to interpolation function
+
+	int i;
+	for( i = 0; i < 3; i++ )
+	{
+        n[i] = floor( f[i] );		
+		r[i] = f[i] - n[i];
+		double temp = r[i];
+        w[i] = temp * temp * ( 3.0 - ( 2.0 * temp ) );		
+	}
+
+	double fValue;
+	
+	fValue = lerp(lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2], r[2] ),
+							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2], r[2] ),
+							w[0]),
+						lerp(Noise_Lattice(n[0], r[0], n[1]+1, r[1]-1.0, n[2], r[2] ),
+							Noise_Lattice(n[0]+1, r[0]-1, n[1]+1, r[1]-1.0, n[2], r[2] ),
+							w[0]),
+						w[1]),
+					lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2]+1, r[2]-1.0),
+							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2]+1, r[2]-1.0),
+							w[0]),
+						lerp(Noise_Lattice(n[0], r[0], n[1]+1, r[1]-1.0, n[2]+1, r[2]-1.0),
+							Noise_Lattice(n[0]+1, r[0]-1, n[1]+1, r[1]-1.0, n[2]+1, r[2]-1.0),
+							w[0]),
+						w[1]),
+					w[2]);
+
+	return clamp( -0.9999, 0.9999, fValue );
+}
+
+
+double Fractal_fBm( double3 f )
+{
+	double midinterval128 = 0.00390625;
+	double index128 = 0.0078125;
+	float4 buffertextexp = 0.0;
+    
+	int i;
+	// Initialize locals
+	double fValue = 0.0;
+	double3 fTemp;
+	for( i = 0; i < 3; i++ )
+	{
+		fTemp[i] = f[i];
+	}
+
+	double expvVal;
+
+	// Inner loop of spectral construction, where the fractal is built
+
+	for( i = 0; i < flags.y; i++ )
+	{
+		buffertextexp[0] = ( index128 * i ) + midinterval128;
+		expvVal = tex2Dlod( TextureExp, buffertextexp );
+		fValue += Noise_Noise( fTemp ) * expvVal;
+				
+		for( int j = 0; j < 3; j++ )
+		{
+			fTemp[j] *= flags.x;
+		}			
+	}	
+	return clamp( -1.0, 1.0, fValue );	
+}
+
+
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
 	VS_OUTPUT Output;
 
 	float4 v_position;
 
+	/*
 	float4 textcoord = Input.TexCoord0;
 	textcoord.w = 1.0;
-
 	float v_alt = tex2Dlod( Texture0, textcoord );
+	*/
 		
 	// sidelenght scaling
 
@@ -100,6 +231,26 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float4 v_position3;	
 	v_position3 = v_position2 * flag0.z;	
 	v_position3.w = 1.0;
+
+
+	float v_alt = 0.0;
+
+	double3 f = 0.0;
+	
+	/*
+	f[0] = lerp( -2.0, 2.0, ( v_position.x / 2.0 ) + 0.5 );
+	f[1] = lerp( -2.0, 2.0, ( v_position.y / 2.0 ) + 0.5 );
+	f[2] = 1.0;
+	*/
+
+	f[0] = lerp( -20.0, 20.0, ( v_position2.x / 2.0 ) + 0.5 );
+	f[1] = lerp( -20.0, 20.0, ( v_position2.y / 2.0 ) + 0.5 );
+	f[2] = lerp( -20.0, 20.0, ( v_position2.z / 2.0 ) + 0.5 );
+
+	
+	float res = Fractal_fBm( f );
+
+	v_alt = res * 4000.0;
 	
 	v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
 	v_position3.w = 1.0;

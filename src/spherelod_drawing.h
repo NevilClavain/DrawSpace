@@ -63,6 +63,8 @@ protected:
 
     Stats                           m_stats;
 
+    DrawSpace::Utils::Fractal*      m_fractal;
+
     void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
     

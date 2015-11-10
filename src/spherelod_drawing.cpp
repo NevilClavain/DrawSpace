@@ -67,9 +67,19 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     patch_pos[1] = yp;
     patch_pos[2] = 0.0;
 
+    Vector noiseflags;
+
+    noiseflags[0] = m_fractal->GetLacunarity();
+
+    noiseflags[1] = 9.0;
+
+    noiseflags[2] = 0.0;
+    noiseflags[3] = 1.0;
+
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
     m_renderer->SetFxShaderParams( 0, 26, uvcoords );
+    m_renderer->SetFxShaderParams( 0, 27, noiseflags );
 
     m_renderer->SetFxShaderParams( 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) );
                       
@@ -120,6 +130,8 @@ void FaceDrawingNode::CreateNoisingTextures( void )
 
 void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
 {
+    m_fractal = p_fractal;
+
     m_perlinnoisebuffer_texture->AllocTextureContent();
     m_pnbufftexture_content = m_perlinnoisebuffer_texture->GetTextureContentPtr();
 
@@ -273,7 +285,7 @@ void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 
 
 void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
-{
+{    
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         NodesSet ns = it->second;

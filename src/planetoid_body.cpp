@@ -39,7 +39,8 @@ m_timemanager( p_time )
 {
     m_world.Initialize();
 
-    m_fractal = new Fractal( 3, 3345764, 0.75, 1.29 );
+    //m_fractal = new Fractal( 3, 3345764, 0.75, 1.29 );
+    m_fractal = new Fractal( 3, 3345764, 0.5, 2.0 );
        
     m_drawable = _DRAWSPACE_NEW_( SphericalLOD::Drawing, SphericalLOD::Drawing );
     m_drawable->SetRenderer( SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
@@ -816,7 +817,8 @@ DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( int p_i
 void DrawSpace::Planetoid::Body::on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args )
 {
     int dir = p_args->GetPropValue<int>( "direction" );
-    Fractal fractal( 3, 3345764, 0.75, 1.29 );
+    //Fractal fractal( 3, 3345764, 0.75, 1.29 );
+    Fractal fractal( 3, 3345764, 0.5, 2.0 );
     DrawSpace::Pass* pass = p_args->GetPropValue<DrawSpace::Pass*>( "pass" );
 
     fill_procedural_texture( dir, m_procedural_global_textures[pass][dir], &fractal );
