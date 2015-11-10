@@ -61,10 +61,6 @@ protected:
     DrawSpace::Core::Texture*       m_perlinnoisemap_texture;
     DrawSpace::Core::Texture*       m_fbmexp_texture;
 
-    DrawSpace::Utils::Fractal*      m_fractal;
-
-
-
     Stats                           m_stats;
 
     void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
@@ -79,14 +75,8 @@ public:
     void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
     void SetFace( Face* p_face );
     
-    /*
-    void CreateHeightMapTexture( void );
-    void InitHeightMapTexture( void );
-    void ClearHeightMapTexture( void );
-    */
-
     void CreateNoisingTextures( void );
-    void InitNoisingTextures( void );
+    void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
 
     void GetStats( Stats& p_stats );
 
@@ -136,9 +126,8 @@ public:
     Body* GetBody( void );
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
-
-    //void InitHeightMapTextures( void );
-    void InitNoisingTextures( void );
+    
+    void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
 
 };
 }

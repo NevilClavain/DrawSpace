@@ -931,7 +931,7 @@ bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynami
 
 void DrawSpace::Planetoid::Body::InitNoisingTextures( void )
 {
-    m_drawable->InitNoisingTextures();
+    m_drawable->InitNoisingTextures( m_fractal );
 }
 
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetNodeFromPass( Pass* p_pass, int p_faceid )

@@ -37,7 +37,6 @@ m_renderer( p_renderer ),
 m_face( NULL )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
-    m_fractal = new Fractal( 3, 3345764, 0.75, 1.29 );
 }
 
 FaceDrawingNode::~FaceDrawingNode( void )
@@ -119,7 +118,7 @@ void FaceDrawingNode::CreateNoisingTextures( void )
     SetVertexTexture( m_fbmexp_texture, 2 );
 }
 
-void FaceDrawingNode::InitNoisingTextures( void )
+void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
 {
     m_perlinnoisebuffer_texture->AllocTextureContent();
     m_pnbufftexture_content = m_perlinnoisebuffer_texture->GetTextureContentPtr();
@@ -137,24 +136,24 @@ void FaceDrawingNode::InitNoisingTextures( void )
     {
         for( long i = 0; i < 256; i++ )    
         {
-            float temp = m_fractal->GetNBuffer( i, j );
+            float temp = p_fractal->GetNBuffer( i, j );
             *float_ptr = temp; float_ptr++;
         }
     }
 
     for( long i = 0; i < 256; i++ )
     {
-        *color_ptr = m_fractal->GetNMap( i ); color_ptr++;
-        *color_ptr = m_fractal->GetNMap( i ); color_ptr++;
-        *color_ptr = m_fractal->GetNMap( i ); color_ptr++;
-        *color_ptr = m_fractal->GetNMap( i ); color_ptr++;
+        *color_ptr = p_fractal->GetNMap( i ); color_ptr++;
+        *color_ptr = p_fractal->GetNMap( i ); color_ptr++;
+        *color_ptr = p_fractal->GetNMap( i ); color_ptr++;
+        *color_ptr = p_fractal->GetNMap( i ); color_ptr++;
     }
 
     float_ptr = (float*)m_fbmexptexture_content;
 
     for( long i = 0; i < Fractal::MaxOctaves; i++ )
     {
-        float temp = m_fractal->GetExponent( i );
+        float temp = p_fractal->GetExponent( i );
         *float_ptr = temp; float_ptr++;
     }
 
@@ -162,30 +161,6 @@ void FaceDrawingNode::InitNoisingTextures( void )
     m_perlinnoisebuffer_texture->UpdateTextureContent();
     m_fbmexp_texture->UpdateTextureContent();
 }
-
-/*
-void FaceDrawingNode::CreateHeightMapTexture( void )
-{
-    m_heighmap_texture = new Texture();    
-    m_heighmap_texture->SetFormat( PATCH_HM_RESOLUTION, PATCH_HM_RESOLUTION, 4 );
-    m_heighmap_texture->SetPurpose( Texture::PURPOSE_FLOAT );
-    SetVertexTexture( m_heighmap_texture, 0 );
-}
-
-void FaceDrawingNode::InitHeightMapTexture( void )
-{
-    m_heighmap_texture->AllocTextureContent();
-    m_heighmaptexture_content = m_heighmap_texture->GetTextureContentPtr();    
-    ClearHeightMapTexture();
-}
-
-void FaceDrawingNode::ClearHeightMapTexture( void )
-{
-    float* float_ptr = (float*)m_heighmaptexture_content;
-
-    ZeroMemory( float_ptr, PATCH_HM_RESOLUTION * PATCH_HM_RESOLUTION * 4 );
-}
-*/
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
 {
@@ -297,14 +272,14 @@ void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 }
 
 
-void Drawing::InitNoisingTextures( void )
+void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
 {
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         NodesSet ns = it->second;
         for( size_t i = 0; i < 6; i++ )
         {
-            ns.nodes[i]->InitNoisingTextures();
+            ns.nodes[i]->InitNoisingTextures( p_fractal );
         }
     }
 }
