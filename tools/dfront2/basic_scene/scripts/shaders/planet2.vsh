@@ -165,11 +165,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float4 v_position;
 
-	/*
-	float4 textcoord = Input.TexCoord0;
-	textcoord.w = 1.0;
-	float v_alt = tex2Dlod( Texture0, textcoord );
-	*/
 		
 	// sidelenght scaling
 
@@ -235,14 +230,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float v_alt = 0.0;
 
-	double3 f = 0.0;
-	
-	/*
-	f[0] = lerp( -2.0, 2.0, ( v_position.x / 2.0 ) + 0.5 );
-	f[1] = lerp( -2.0, 2.0, ( v_position.y / 2.0 ) + 0.5 );
-	f[2] = 1.0;
-	*/
-
+	double3 f;
 	f[0] = lerp( -20.0, 20.0, ( v_position2.x / 2.0 ) + 0.5 );
 	f[1] = lerp( -20.0, 20.0, ( v_position2.y / 2.0 ) + 0.5 );
 	f[2] = lerp( -20.0, 20.0, ( v_position2.z / 2.0 ) + 0.5 );
