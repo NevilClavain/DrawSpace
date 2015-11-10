@@ -39,7 +39,7 @@ m_timemanager( p_time )
 {
     m_world.Initialize();
 
-    m_fractal = new Fractal( 3, 3345764, /*0.65*/ 0.75, 1.29 );
+    m_fractal = new Fractal( 3, 3345764, 0.75, 1.29 );
        
     m_drawable = _DRAWSPACE_NEW_( SphericalLOD::Drawing, SphericalLOD::Drawing );
     m_drawable->SetRenderer( SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
@@ -928,11 +928,11 @@ bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynami
     return false;
 }
 
-/*
-void DrawSpace::Planetoid::Body::InitHeightMapTextures( void )
+
+void DrawSpace::Planetoid::Body::InitNoisingTextures( void )
 {
-    m_drawable->InitHeightMapTextures();
-}*/
+    m_drawable->InitNoisingTextures();
+}
 
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetNodeFromPass( Pass* p_pass, int p_faceid )
 {

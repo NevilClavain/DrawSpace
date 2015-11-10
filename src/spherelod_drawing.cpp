@@ -34,10 +34,10 @@ using namespace DrawSpace::SphericalLOD;
 
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer ) :
 m_renderer( p_renderer ),
-m_face( NULL )/*,
-m_heighmaptexture_content( NULL )*/
+m_face( NULL )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
+    m_fractal = new Fractal( 3, 3345764, 0.75, 1.29 );
 }
 
 FaceDrawingNode::~FaceDrawingNode( void )
@@ -98,6 +98,69 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
     {
         draw_single_patch( display_list[i], p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
     }
+}
+
+void FaceDrawingNode::CreateNoisingTextures( void )
+{
+    m_perlinnoisebuffer_texture = new Texture();    
+    m_perlinnoisebuffer_texture->SetFormat( 256, 3, 4 );
+    m_perlinnoisebuffer_texture->SetPurpose( Texture::PURPOSE_FLOAT );
+
+    m_perlinnoisemap_texture = new Texture();
+    m_perlinnoisemap_texture->SetFormat( 256, 1, 4 );
+    m_perlinnoisemap_texture->SetPurpose( Texture::PURPOSE_COLOR );
+
+    m_fbmexp_texture = new Texture();    
+    m_fbmexp_texture->SetFormat( Fractal::MaxOctaves, 1, 4 );
+    m_fbmexp_texture->SetPurpose( Texture::PURPOSE_FLOAT );
+
+    SetVertexTexture( m_perlinnoisebuffer_texture, 0 );
+    SetVertexTexture( m_perlinnoisemap_texture, 1 );
+    SetVertexTexture( m_fbmexp_texture, 2 );
+}
+
+void FaceDrawingNode::InitNoisingTextures( void )
+{
+    m_perlinnoisebuffer_texture->AllocTextureContent();
+    m_pnbufftexture_content = m_perlinnoisebuffer_texture->GetTextureContentPtr();
+
+    m_perlinnoisemap_texture->AllocTextureContent();
+    m_pnmaptexture_content = m_perlinnoisemap_texture->GetTextureContentPtr();
+
+    m_fbmexp_texture->AllocTextureContent();
+    m_fbmexptexture_content = m_fbmexp_texture->GetTextureContentPtr();
+    
+    unsigned char* color_ptr = (unsigned char*)m_pnmaptexture_content;
+    float* float_ptr = (float*)m_pnbufftexture_content;
+        
+    for(long j = 0; j < 3; j++ )
+    {
+        for( long i = 0; i < 256; i++ )    
+        {
+            float temp = m_fractal->GetNBuffer( i, j );
+            *float_ptr = temp; float_ptr++;
+        }
+    }
+
+    for( long i = 0; i < 256; i++ )
+    {
+        *color_ptr = m_fractal->GetNMap( i ); color_ptr++;
+        *color_ptr = m_fractal->GetNMap( i ); color_ptr++;
+        *color_ptr = m_fractal->GetNMap( i ); color_ptr++;
+        *color_ptr = m_fractal->GetNMap( i ); color_ptr++;
+    }
+
+    float_ptr = (float*)m_fbmexptexture_content;
+
+    for( long i = 0; i < Fractal::MaxOctaves; i++ )
+    {
+        float temp = m_fractal->GetExponent( i );
+        *float_ptr = temp; float_ptr++;
+    }
+
+    m_perlinnoisemap_texture->UpdateTextureContent();
+    m_perlinnoisebuffer_texture->UpdateTextureContent();
+    m_fbmexp_texture->UpdateTextureContent();
 }
 
 /*
@@ -201,7 +264,7 @@ void Drawing::RegisterPassSlot( Pass* p_pass )
     {            
         nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
         nodeset.nodes[i]->SetMeshe( Body::m_planetpatch_meshe );
-        //nodeset.nodes[i]->CreateHeightMapTexture();
+        nodeset.nodes[i]->CreateNoisingTextures();
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
@@ -233,16 +296,15 @@ void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_globaltransformation = p_mat;
 }
 
-/*
-void Drawing::InitHeightMapTextures( void )
+
+void Drawing::InitNoisingTextures( void )
 {
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         NodesSet ns = it->second;
         for( size_t i = 0; i < 6; i++ )
         {
-            ns.nodes[i]->InitHeightMapTexture();
+            ns.nodes[i]->InitNoisingTextures();
         }
     }
 }
-*/ 
