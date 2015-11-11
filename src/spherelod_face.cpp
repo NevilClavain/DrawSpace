@@ -616,7 +616,7 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
         dsreal factor2 = 2.0 * atan( 180.0 * factor ) / PI;
 
 
-        m_lod_slipping_sup = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 4, NB_LOD_RANGES - 1, factor2 ) );
+        m_lod_slipping_sup = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 5, NB_LOD_RANGES - 1, factor2 ) );
         m_lod_slipping_inf = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 0, NB_LOD_RANGES - 2, factor2 ) );
 
     }
