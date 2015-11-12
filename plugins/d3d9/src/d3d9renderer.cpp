@@ -774,7 +774,14 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         }
         else
         {
-            format = D3DFMT_R16F;
+            if( Texture::RENDERPURPOSE_FLOAT == p_texture->GetRenderPurpose() )
+            {
+                format = D3DFMT_R16F;
+            }
+            else
+            {
+                format = D3DFMT_R32F;
+            }
         }
 
         hRes = m_lpd3ddevice->CreateTexture( rw, rh, 1, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &d3dt9, NULL );

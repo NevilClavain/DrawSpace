@@ -42,6 +42,7 @@ public:
     {
         RENDERPURPOSE_COLOR,
         RENDERPURPOSE_FLOAT,
+        RENDERPURPOSE_FLOAT32,
 
     } RenderPurpose;
 
