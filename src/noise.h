@@ -148,7 +148,8 @@ public:
 			f *= m_fLacunarity;
 		}
 	}
-	double fBm(double *f, double fOctaves);
+	double fBm(double *f, int fOctaves);
+
     double GetExponent( int p_index ); 
 
     double GetLacunarity( void )

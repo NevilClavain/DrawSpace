@@ -111,6 +111,7 @@ double Noise::GetNoise(double *f)
 						  w[1]);
 			break;
 		case 3:
+
 			fValue = Maths::Lerp(Maths::Lerp(Maths::Lerp(Lattice(n[0], r[0], n[1], r[1], n[2], r[2]),
 									Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2], r[2]),
 									w[0]),
@@ -161,7 +162,7 @@ double Noise::GetNoise(double *f)
 						  w[3]);
 			break;
 	}	
-    return (double)Maths::Clamp( -0.999999f, 0.999999f, fValue );
+    return Maths::Clamp( -0.999999, 0.999999, fValue );
 }
 
 unsigned char Noise::GetNMap( int p_index )
@@ -174,7 +175,7 @@ double Noise::GetNBuffer( int p_index, int p_index2 )
     return m_nBuffer[p_index][p_index2];
 }
 
-double Fractal::fBm(double *f, double fOctaves)
+double Fractal::fBm(double *f, int fOctaves)
 {
     
 	int i;
@@ -191,12 +192,6 @@ double Fractal::fBm(double *f, double fOctaves)
 		for(int j=0; j<m_nDimensions; j++)
 			fTemp[j] *= m_fLacunarity;
 	}
-
-	// Take care of remainder in fOctaves
-	fOctaves -= (int)fOctaves;
-	
-	if(fOctaves > DELTA)
-		fValue += fOctaves * GetNoise(fTemp) * m_fExponent[i];
 		
 	return Maths::Clamp(-1.0, 1.0, fValue);
 }
