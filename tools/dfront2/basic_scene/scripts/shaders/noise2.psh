@@ -4,7 +4,6 @@ struct PS_INTPUT
 {
 	float4 Position : POSITION0;
 	float4 TexCoord0: TEXCOORD0;
-	float4 TexCoord1: TEXCOORD1;
 };
 
 
@@ -12,7 +11,6 @@ struct PS_INTPUT
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 color;
-
-	color = 0.1415927;
+	color = input.TexCoord0.x;
 	return color;
 }
