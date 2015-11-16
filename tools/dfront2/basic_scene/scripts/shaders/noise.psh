@@ -1,8 +1,7 @@
 
 //float4 lacunarity: register(c0);
 float4 flags: register(c0);
-// .x -> lacunarity
-// .y -> number of octaves
+
 // .z -> range inf
 // .w -> range sup
 
@@ -16,7 +15,6 @@ struct PS_INTPUT
 	float4 TexCoord0: TEXCOORD0;
 	float4 TexCoord1: TEXCOORD1;
 };
-
 
 double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 {
@@ -39,30 +37,26 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 		int indexTemp = nIndex + n[i];		
 		if( indexTemp > 255 )
 		{
-			indexTemp - 255;
+			indexTemp = indexTemp - 256;
+		}
+		else if( indexTemp < 0 )
+		{
+			indexTemp = 256 + indexTemp;
 		}
 		maptextcoord[0] = ( index256 * indexTemp ) + midinterval256;
 		
-		if( maptextcoord[0] > 1.0 )
-		{
-			maptextcoord[0] -= 1.0;
-		}
-		else if( maptextcoord[0] < 0.0 )
-		{
-			maptextcoord[0] = 1.0 + maptextcoord[0];
-		}
-
 		maptextcoord[1] = 0.5;
-		float4 mapval = tex2D( TextureMap, maptextcoord );
-		nIndex = mapval.x * 255.0;
+		float4 mapval = tex2Dlod( TextureMap, maptextcoord );
+		//nIndex = mapval.x * 256.0;
+		nIndex = mapval.x;
 	}
 	
+	buffertextcoord[0] = ( index256 * nIndex ) + midinterval256;
 	double fValue = 0.0;
 	for( i = 0; i < 3; i++ )
-	{ 
-		buffertextcoord[0] = ( index256 * nIndex ) + midinterval256;
-		buffertextcoord[1] = ( index3 * i ) + midinterval3;		
-		double buffval = tex2D( TextureBuffer, buffertextcoord );
+	{ 		
+		buffertextcoord[1] = ( index3 * i ) + midinterval3;
+		double buffval = tex2Dlod( TextureBuffer, buffertextcoord );
 		fValue += ( buffval * f[i] );
 	}
 	return fValue;
@@ -70,7 +64,6 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 
 double Noise_Noise( double3 f )
 {
-	
 	int n[3];			// Indexes to pass to lattice function
 	double r[3];		// Remainders to pass to lattice function
 	double w[3];		// Cubic values to pass to interpolation function
@@ -85,7 +78,7 @@ double Noise_Noise( double3 f )
 	}
 
 	double fValue;
-	
+
 	fValue = lerp(lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2], r[2] ),
 							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2], r[2] ),
 							w[0]),
@@ -101,14 +94,19 @@ double Noise_Noise( double3 f )
 							w[0]),
 						w[1]),
 					w[2]);
-
-	return clamp( -0.9999, 0.9999, fValue );
+	
+	return clamp( -0.9999, 0.9999, fValue );	
 }
-
 
 double Fractal_fBm( double3 f )
 {
+	int n[3];			// Indexes to pass to lattice function
+	double r[3];		// Remainders to pass to lattice function
+	double w[3];		// Cubic values to pass to interpolation function
 
+
+	int nbOctaves = 9;
+	double lacunarity = 2.0;
 	double midinterval128 = 0.00390625;
 	double index128 = 0.0078125;
 	float4 buffertextexp = 0.0;
@@ -117,29 +115,23 @@ double Fractal_fBm( double3 f )
 	// Initialize locals
 	double fValue = 0.0;
 	double3 fTemp;
-	for( i = 0; i < 3; i++ )
-	{
-		fTemp[i] = f[i];
-	}
+
+	fTemp = f;
 
 	double expvVal;
 
 	// Inner loop of spectral construction, where the fractal is built
-
-	for( i = 0; i < 15; i++ )
+	for( i = 0; i < nbOctaves; i++ )
 	{
 		buffertextexp[0] = ( index128 * i ) + midinterval128;
-		expvVal = tex2D( TextureExp, buffertextexp );
-		fValue += Noise_Noise( fTemp ) * expvVal;
-				
-		for( int j = 0; j < 3; j++ )
-		{
-			fTemp[j] *= flags.x;
-		}			
-	}	
-	return clamp( -1.0, 1.0, fValue );	
-}
+		expvVal = tex2Dlod( TextureExp, buffertextexp );
 
+		fValue += Noise_Noise( fTemp ) * expvVal;			
+		fTemp *= lacunarity;
+
+	}	
+	return clamp( -1.0, 1.0, fValue );		
+}
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 color = 0;
@@ -151,12 +143,20 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	f[2] = 1.0;
 
 	
-
-	//float res = Noise_Noise( f );
-	
 	float res = Fractal_fBm( f );
 
-	color = ( res * 0.5 ) + 0.5;
+	if( res < 0.0 )
+	{
+		color.x = 0.0;
+		color.y = 0.0;
+		color.z = 1.0;
+		color.w = 0.0;
+	}
+	else
+	{
+		color = ( res * 0.5 ) + 0.5;
+	}
+
 	
 	return color;
 }
