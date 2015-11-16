@@ -37,9 +37,13 @@ m_currentPatch( NULL ),
 m_currentPatchLOD( -1 ),
 m_hot( false ),
 m_relative_alt( 0.0 ),
+m_hotpoint_ground_altitud( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
 m_lod_slipping_inf( NB_LOD_RANGES - 4 )
 {
+    m_fractal = new Fractal( 3, 3345764, 0.5, 2.0 );
+    _asm nop
+
 }
 
 Face::~Face( void )
@@ -395,6 +399,7 @@ void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
 {
     m_relative_hotpoint = p_point;
     compute_cubeface_hotpoint();
+    compute_hotpoint_ground_altitud();
 }
 
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node )
@@ -519,6 +524,46 @@ void Face::compute_cubeface_hotpoint( void )
     m_cubeface_hotpoint = projected_viewer;
 }
 
+void Face::compute_hotpoint_ground_altitud( void )
+{
+    Vector cube_hp = m_cubeface_hotpoint;
+
+    cube_hp.Scale( 2.0 / m_planet_diameter );
+
+    Vector cube_vec, sphere_vec;
+    Patch::XYToXYZ( m_orientation, cube_hp[0], cube_hp[1], cube_vec );
+
+    
+
+    Patch::CubeToSphere( cube_vec, sphere_vec );
+
+    double finput[3];
+    double finput2[3];
+    /*
+	finput[0] = ( sphere_vec[0] / 2.0 ) + 0.5;
+	finput[1] = ( sphere_vec[1] / 2.0 ) + 0.5;
+    finput[2] = ( sphere_vec[2] / 2.0 ) + 0.5;
+
+	finput2[0] = Utils::Maths::Lerp( -1.0, 1.0, finput[0] );
+	finput2[1] = Utils::Maths::Lerp( -1.0, 1.0, finput[1] );
+    finput2[2] = Utils::Maths::Lerp( -1.0, 1.0, finput[2] );
+    */
+
+	finput2[0] = 0.960; //sphere_vec[0];
+	finput2[1] = -0.667; //sphere_vec[1];
+    finput2[2] = 0.590; //sphere_vec[2];
+
+    dsreal res = m_fractal->fBm( finput2, 9 );
+
+    m_hotpoint_ground_altitud = 12000.0 * res;
+    /*
+    if( m_hotpoint_ground_altitud < 0.0 )
+    {
+        m_hotpoint_ground_altitud = 0.0;
+    }
+    */
+}
+
 DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void )
 {
     return m_currentleaf;
@@ -635,4 +680,9 @@ int Face::GetCurrentPatchLOD( void )
 Patch* Face::GetRootPatch( void )
 {
     return m_rootpatch->GetContent();
+}
+
+dsreal Face::GetHotpointGroundAltitud( void )
+{
+    return m_hotpoint_ground_altitud;
 }

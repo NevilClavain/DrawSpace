@@ -228,18 +228,21 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float v_alt = 0.0;
 
 	double3 f;
-	f[0] = lerp( flags.z, flags.w, ( v_position2.x / 2.0 ) + 0.5 );
-	f[1] = lerp( flags.z, flags.w, ( v_position2.y / 2.0 ) + 0.5 );
-	f[2] = lerp( flags.z, flags.w, ( v_position2.z / 2.0 ) + 0.5 );
+	f[0] = 0.960; //v_position2.x; //lerp( -1.0, 1.0, ( v_position2.x / 2.0 ) + 0.5 );
+	f[1] = -0.667; //v_position2.y; //lerp( -1.0, 1.0, ( v_position2.y / 2.0 ) + 0.5 );
+	f[2] = 0.590; //v_position2.z; //lerp( -1.0, 1.0, ( v_position2.z / 2.0 ) + 0.5 );
 
 	
 	float res = Fractal_fBm( f );
 
 	v_alt = res * 12000.0;
+
+	/*
 	if( v_alt < 0.0 )
 	{
 		v_alt = 0.0;
 	}
+	*/
 	
 	v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
 	v_position3.w = 1.0;

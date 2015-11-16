@@ -41,7 +41,9 @@ protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   SplitCallback;
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   MergeCallback;
 
-    DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch;    
+    DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch; 
+
+    DrawSpace::Utils::Fractal*                                  m_fractal;
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     std::vector<Patch*>                                         m_displaylist;
@@ -71,6 +73,8 @@ protected:
 
     dsreal                                                      m_lodranges[NB_LOD_RANGES];
 
+    dsreal                                                      m_hotpoint_ground_altitud;
+
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -83,6 +87,7 @@ protected:
     DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under( DrawSpace::Utils::QuadtreeNode<Patch>* p_current );
 
     void compute_cubeface_hotpoint( void );
+    void compute_hotpoint_ground_altitud( void );
 
     bool recursive_build_displaylist( DrawSpace::Utils::BaseQuadtreeNode* p_current_node, int p_lodlevel );
    
@@ -117,6 +122,8 @@ public:
     int GetCurrentPatchLOD( void );
 
     Patch* GetRootPatch( void );
+
+    dsreal GetHotpointGroundAltitud( void );
 };
 }
 }

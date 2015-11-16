@@ -40,7 +40,7 @@ m_timemanager( p_time )
     m_world.Initialize();
 
     //m_fractal = new Fractal( 3, 3345764, 0.75, 1.29 );
-    m_fractal = new Fractal( 3, 3345764, 0.42, 2.0 );
+    m_fractal = new Fractal( 3, 3345764, 0.5, 2.0 );
        
     m_drawable = _DRAWSPACE_NEW_( SphericalLOD::Drawing, SphericalLOD::Drawing );
     m_drawable->SetRenderer( SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );

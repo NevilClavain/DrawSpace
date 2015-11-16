@@ -157,9 +157,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	finput[2] = -2.25;
 	*/
 
-	finput[0] = 3.031415;
-	finput[1] = 0.97;
-	finput[2] = -1.0025;
+	finput[0] = 0.360;
+	finput[1] = 0.667;
+	finput[2] = 0.590;
 
 
 	double val;
