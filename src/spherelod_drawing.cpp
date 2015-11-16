@@ -70,8 +70,8 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     Vector noiseflags;
 
    
-    noiseflags[2] = -5.0;
-    noiseflags[3] = 5.0;
+    noiseflags[2] = -10.0;
+    noiseflags[3] = 10.0;
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
