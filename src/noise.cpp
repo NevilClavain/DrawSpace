@@ -193,7 +193,7 @@ double Fractal::fBm(double *f, int fOctaves)
 			fTemp[j] *= m_fLacunarity;
 	}
 		
-	return Maths::Clamp(-1.0, 1.0, fValue);
+	return Maths::Clamp(-1.0, 1.0, fValue);    
 }
 
 double Fractal::GetExponent( int p_index )
