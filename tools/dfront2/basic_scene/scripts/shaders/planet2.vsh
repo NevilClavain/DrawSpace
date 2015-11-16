@@ -69,7 +69,8 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 		
 		maptextcoord[1] = 0.5;
 		float4 mapval = tex2Dlod( TextureMap, maptextcoord );
-		nIndex = mapval.x * 256.0;
+		//nIndex = mapval.x * 256.0;
+		nIndex = mapval.x;
 	}
 	
 	buffertextcoord[0] = ( index256 * nIndex ) + midinterval256;
@@ -81,11 +82,6 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 		fValue += ( buffval * f[i] );
 	}
 	return fValue;
-}
-
-double myfloor( double a )
-{
-
 }
 
 double Noise_Noise( double3 f )
@@ -154,8 +150,9 @@ double Fractal_fBm( double3 f )
 
 		fValue += Noise_Noise( fTemp ) * expvVal;			
 		fTemp *= lacunarity;
+
 	}	
-	return clamp( -1.0, 1.0, fValue );	
+	return clamp( -1.0, 1.0, fValue );		
 }
 
 

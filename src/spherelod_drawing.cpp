@@ -69,21 +69,9 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 
     Vector noiseflags;
 
-    noiseflags[0] = m_fractal->GetLacunarity();
-    /*
-    if( 4 <= p_patch->GetLodLevel() )
-    {
-        noiseflags[1] = 6.0;
-    }
-    else
-    {
-        noiseflags[1] = 9.0;
-    }
-    */
-    noiseflags[1] = 9.0;
-
-    noiseflags[2] = -10.0;
-    noiseflags[3] = 10.0;
+   
+    noiseflags[2] = -5.0;
+    noiseflags[3] = 5.0;
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
@@ -126,7 +114,7 @@ void FaceDrawingNode::CreateNoisingTextures( void )
 
     m_perlinnoisemap_texture = new Texture();
     m_perlinnoisemap_texture->SetFormat( 256, 1, 4 );
-    m_perlinnoisemap_texture->SetPurpose( Texture::PURPOSE_COLOR );
+    m_perlinnoisemap_texture->SetPurpose( Texture::PURPOSE_FLOAT );
 
     m_fbmexp_texture = new Texture();    
     m_fbmexp_texture->SetFormat( Fractal::MaxOctaves, 1, 4 );
@@ -162,12 +150,11 @@ void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal 
         }
     }
 
+    float_ptr = (float*)m_pnmaptexture_content;
+
     for( long i = 0; i < 256; i++ )
     {
-        *color_ptr = p_fractal->GetNMap( i ); color_ptr++;
-        *color_ptr = p_fractal->GetNMap( i ); color_ptr++;
-        *color_ptr = p_fractal->GetNMap( i ); color_ptr++;
-        *color_ptr = p_fractal->GetNMap( i ); color_ptr++;
+        *float_ptr = p_fractal->GetNMap( i ); color_ptr++;
     }
 
     float_ptr = (float*)m_fbmexptexture_content;
