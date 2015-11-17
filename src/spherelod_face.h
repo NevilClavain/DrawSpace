@@ -73,8 +73,6 @@ protected:
 
     dsreal                                                      m_lodranges[NB_LOD_RANGES];
 
-    dsreal                                                      m_hotpoint_ground_altitud;
-
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -87,8 +85,7 @@ protected:
     DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under( DrawSpace::Utils::QuadtreeNode<Patch>* p_current );
 
     void compute_cubeface_hotpoint( void );
-    void compute_hotpoint_ground_altitud( void );
-
+    
     bool recursive_build_displaylist( DrawSpace::Utils::BaseQuadtreeNode* p_current_node, int p_lodlevel );
    
     void init_lodranges( void );

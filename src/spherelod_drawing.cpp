@@ -67,16 +67,10 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     patch_pos[1] = yp;
     patch_pos[2] = 0.0;
 
-    Vector noiseflags;
-
-   
-    noiseflags[2] = -10.0;
-    noiseflags[3] = 10.0;
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
     m_renderer->SetFxShaderParams( 0, 26, uvcoords );
-    m_renderer->SetFxShaderParams( 0, 27, noiseflags );
 
     m_renderer->SetFxShaderParams( 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) );
                       
@@ -154,7 +148,7 @@ void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal 
 
     for( long i = 0; i < 256; i++ )
     {
-        *float_ptr = p_fractal->GetNMap( i ); color_ptr++;
+        *float_ptr = p_fractal->GetNMap( i ); float_ptr++;
     }
 
     float_ptr = (float*)m_fbmexptexture_content;

@@ -14,11 +14,6 @@ float4   base_uv: register(c26);
 	// .z, .w -> u2, v2
 
 
-float4 flags: register(c27);
-// .x -> lacunarity
-// .y -> number of octaves
-// .z -> range inf
-// .w -> range sup
 
 sampler2D TextureBuffer : register(s0);
 sampler2D TextureMap : register(s1);
@@ -228,21 +223,16 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float v_alt = 0.0;
 
 	double3 f;
-	f[0] = 0.960; //v_position2.x; //lerp( -1.0, 1.0, ( v_position2.x / 2.0 ) + 0.5 );
-	f[1] = -0.667; //v_position2.y; //lerp( -1.0, 1.0, ( v_position2.y / 2.0 ) + 0.5 );
-	f[2] = 0.590; //v_position2.z; //lerp( -1.0, 1.0, ( v_position2.z / 2.0 ) + 0.5 );
+	f[0] = lerp( -10.0, 10.0, ( v_position2.x / 2.0 ) + 0.5 );
+	f[1] = lerp( -10.0, 10.0, ( v_position2.y / 2.0 ) + 0.5 );
+	f[2] = lerp( -10.0, 10.0, ( v_position2.z / 2.0 ) + 0.5 );
 
-	
 	float res = Fractal_fBm( f );
-
 	v_alt = res * 12000.0;
-
-	/*
 	if( v_alt < 0.0 )
 	{
 		v_alt = 0.0;
 	}
-	*/
 	
 	v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
 	v_position3.w = 1.0;
