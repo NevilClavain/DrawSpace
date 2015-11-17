@@ -33,8 +33,7 @@ using namespace DrawSpace::SphericalLOD;
 
 
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer ) :
-m_renderer( p_renderer ),
-m_face( NULL )
+m_renderer( p_renderer )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -43,9 +42,9 @@ FaceDrawingNode::~FaceDrawingNode( void )
 {
 }
 
-void FaceDrawingNode::SetFace( Face* p_face )
+void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
 {
-    m_face = p_face;
+    m_display_list = p_list;
 }
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
@@ -87,16 +86,20 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
-    if( !m_face )
-    {
-        return;
-    }
     
-    std::vector<Patch*> display_list;
+    //std::vector<Patch*> display_list;
+    
+    /*
     m_face->GetDisplayList( display_list );    
     for( size_t i = 0; i < display_list.size(); i++ )
     {
         draw_single_patch( display_list[i], p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
+    }
+    */
+   
+    for( size_t i = 0; i < m_display_list.size(); i++ )
+    {
+        draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
     }
 }
 
@@ -177,29 +180,23 @@ m_planetbody( NULL )
 
 Drawing::~Drawing( void )
 {
-    //_DRAWSPACE_DELETE_( m_fx );
 }
 
 void Drawing::SetCurrentPlanetBody( Body* p_planetbody )
 {
     m_planetbody = p_planetbody;
 
+    /*
     // faces update
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
-        /*
-        for( long i = 0; i < 6; i++ )
-        {
-            it->second.nodes[i]->SetFace( m_planetbody->m_faces[i] );
-        }
-        */
-
         NodesSet ns = it->second;
         for( auto it2 = ns.begin(); it2 != ns.end(); ++it2 )
         {
             it2->first->SetFace( m_planetbody->m_faces[it2->second] );
         }
     }
+    */
 }
 
 void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
@@ -213,13 +210,6 @@ void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpa
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = it->first;
-
-        /*
-        for( long i = 0; i < 6; i++ )
-        {
-            current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
-        }
-        */
 
         NodesSet ns = it->second;
         for( auto it2 = ns.begin(); it2 != ns.end(); ++it2 )
@@ -247,23 +237,19 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     }
 
     FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
+
+    std::vector<Patch*> dl;
+ 
+    m_planetbody->m_faces[m_nodes[face_node]]->GetDisplayList( dl );
+ 
+    face_node->SetDisplayList( dl );
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );
 }
 
 void Drawing::RegisterPassSlot( Pass* p_pass )
 {
-    //NodesSet nodeset;
     for( long i = 0; i < 6; i++ )
     {   
-        /*
-        nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
-        nodeset.nodes[i]->SetMeshe( Body::m_planetpatch_meshe );
-        nodeset.nodes[i]->CreateNoisingTextures();
-
-        RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
-        nodeset.nodes[i]->RegisterHandler( cb );
-        */
-
         FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
         node->SetMeshe( Body::m_planetpatch_meshe );
         node->CreateNoisingTextures();
@@ -274,9 +260,8 @@ void Drawing::RegisterPassSlot( Pass* p_pass )
         m_callbacks.push_back( cb );
 
         m_passesnodes[p_pass][node] = i;
+        m_nodes[node] = i;
     }
-
-    //m_passesnodes[p_pass] = nodeset;
 }
 
 DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_faceid )
@@ -286,8 +271,6 @@ DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_fa
         return NULL;
     }
     NodesSet nodeset = m_passesnodes[p_pass];
-    //return nodeset.nodes[p_faceid];
-
     for( auto it = m_passesnodes[p_pass].begin(); it != m_passesnodes[p_pass].end(); ++it )
     {
         if( it->second == p_faceid )
@@ -297,7 +280,6 @@ DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_fa
     }
     return NULL;
 }
-
 
 DrawSpace::SphericalLOD::Body* Drawing::GetBody( void )
 {
@@ -314,14 +296,6 @@ void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         NodesSet ns = it->second;
-
-        /*
-        for( size_t i = 0; i < 6; i++ )
-        {
-            ns.nodes[i]->InitNoisingTextures( p_fractal );
-        }
-        */
-
         for( auto it2 = ns.begin(); it2 != ns.end(); ++it2 )
         {
             it2->first->InitNoisingTextures( p_fractal );

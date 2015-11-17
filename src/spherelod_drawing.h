@@ -46,12 +46,9 @@ public:
 protected:
 
     DrawSpace::Interface::Renderer* m_renderer;
-    Face*                           m_face;
+    //Face*                           m_face;
 
-    /*
-    DrawSpace::Core::Texture*       m_heighmap_texture;
-    void*                           m_heighmaptexture_content;
-    */
+    std::vector<Patch*>             m_display_list;
 
     void*                           m_pnbufftexture_content;
     void*                           m_pnmaptexture_content;
@@ -75,7 +72,9 @@ public:
     virtual ~FaceDrawingNode( void );
 
     void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
-    void SetFace( Face* p_face );
+    //void SetFace( Face* p_face );
+
+    void SetDisplayList( const std::vector<Patch*>& p_list );
     
     void CreateNoisingTextures( void );
     void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
@@ -89,14 +88,6 @@ class Drawing
 {
 protected:
 
-    /*
-    typedef struct
-    {
-        FaceDrawingNode*        nodes[6];
-
-    } NodesSet;
-    */
-
     typedef std::map<FaceDrawingNode*, int> NodesSet;
 
     typedef DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
@@ -104,6 +95,8 @@ protected:
     Body*                                                                       m_planetbody;
 
     std::map<Pass*, NodesSet>                                                   m_passesnodes;
+    NodesSet                                                                    m_nodes;
+
     std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
     DrawSpace::Interface::Renderer*                                             m_renderer;
     DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
