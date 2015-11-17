@@ -609,7 +609,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
-    m_relative_alt = p_alt;
+    m_relative_alt = p_alt - ( 12000.0 / ( m_planet_diameter / 2.0 ) );
     if( m_hot )
     { 
         // calcul de la fenetre glissante de lod (m_lod_slipping_sup et m_lod_slipping_inf) en fct de l'altitude relative
