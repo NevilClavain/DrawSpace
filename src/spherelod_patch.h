@@ -100,8 +100,6 @@ public:
 
     bool IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
 
-    bool IsHmSource( void );
-
     int GetLodLevel( void );
 
     float* GetHeightMap( void );

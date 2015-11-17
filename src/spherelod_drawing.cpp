@@ -87,16 +87,6 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
     
-    //std::vector<Patch*> display_list;
-    
-    /*
-    m_face->GetDisplayList( display_list );    
-    for( size_t i = 0; i < display_list.size(); i++ )
-    {
-        draw_single_patch( display_list[i], p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
-    }
-    */
-   
     for( size_t i = 0; i < m_display_list.size(); i++ )
     {
         draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
