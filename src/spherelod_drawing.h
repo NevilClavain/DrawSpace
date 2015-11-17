@@ -89,16 +89,19 @@ class Drawing
 {
 protected:
 
+    /*
     typedef struct
     {
         FaceDrawingNode*        nodes[6];
 
     } NodesSet;
+    */
+
+    typedef std::map<FaceDrawingNode*, int> NodesSet;
 
     typedef DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
 
     Body*                                                                       m_planetbody;
-
 
     std::map<Pass*, NodesSet>                                                   m_passesnodes;
     std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;

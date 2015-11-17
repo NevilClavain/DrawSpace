@@ -185,11 +185,19 @@ void Drawing::SetCurrentPlanetBody( Body* p_planetbody )
     m_planetbody = p_planetbody;
 
     // faces update
-    for( std::map<Pass*, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
+        /*
         for( long i = 0; i < 6; i++ )
         {
             it->second.nodes[i]->SetFace( m_planetbody->m_faces[i] );
+        }
+        */
+
+        NodesSet ns = it->second;
+        for( auto it2 = ns.begin(); it2 != ns.end(); ++it2 )
+        {
+            it2->first->SetFace( m_planetbody->m_faces[it2->second] );
         }
     }
 }
@@ -202,13 +210,21 @@ void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
 
 void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {   
-    for( std::map<Pass*, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = it->first;
 
+        /*
         for( long i = 0; i < 6; i++ )
         {
             current_pass->GetRenderingQueue()->Add( (*it).second.nodes[i] );
+        }
+        */
+
+        NodesSet ns = it->second;
+        for( auto it2 = ns.begin(); it2 != ns.end(); ++it2 )
+        {
+            current_pass->GetRenderingQueue()->Add( it2->first );
         }
     }
     m_scenenodegraph = p_scenegraph;
@@ -236,19 +252,31 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
 void Drawing::RegisterPassSlot( Pass* p_pass )
 {
-    NodesSet nodeset;
+    //NodesSet nodeset;
     for( long i = 0; i < 6; i++ )
-    {            
+    {   
+        /*
         nodeset.nodes[i] = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
         nodeset.nodes[i]->SetMeshe( Body::m_planetpatch_meshe );
         nodeset.nodes[i]->CreateNoisingTextures();
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         nodeset.nodes[i]->RegisterHandler( cb );
+        */
+
+        FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
+        node->SetMeshe( Body::m_planetpatch_meshe );
+        node->CreateNoisingTextures();
+
+        RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
+        node->RegisterHandler( cb );
+      
         m_callbacks.push_back( cb );
+
+        m_passesnodes[p_pass][node] = i;
     }
 
-    m_passesnodes[p_pass] = nodeset;
+    //m_passesnodes[p_pass] = nodeset;
 }
 
 DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_faceid )
@@ -258,8 +286,16 @@ DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_fa
         return NULL;
     }
     NodesSet nodeset = m_passesnodes[p_pass];
+    //return nodeset.nodes[p_faceid];
 
-    return nodeset.nodes[p_faceid];
+    for( auto it = m_passesnodes[p_pass].begin(); it != m_passesnodes[p_pass].end(); ++it )
+    {
+        if( it->second == p_faceid )
+        {
+            return it->first;
+        }
+    }
+    return NULL;
 }
 
 
@@ -273,15 +309,22 @@ void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_globaltransformation = p_mat;
 }
 
-
 void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
 {    
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         NodesSet ns = it->second;
+
+        /*
         for( size_t i = 0; i < 6; i++ )
         {
             ns.nodes[i]->InitNoisingTextures( p_fractal );
+        }
+        */
+
+        for( auto it2 = ns.begin(); it2 != ns.end(); ++it2 )
+        {
+            it2->first->InitNoisingTextures( p_fractal );
         }
     }
 }
