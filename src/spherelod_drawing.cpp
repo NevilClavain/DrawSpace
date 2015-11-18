@@ -175,18 +175,6 @@ Drawing::~Drawing( void )
 void Drawing::SetCurrentPlanetBody( Body* p_planetbody )
 {
     m_planetbody = p_planetbody;
-
-    /*
-    // faces update
-    for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-    {
-        NodesSet ns = it->second;
-        for( auto it2 = ns.begin(); it2 != ns.end(); ++it2 )
-        {
-            it2->first->SetFace( m_planetbody->m_faces[it2->second] );
-        }
-    }
-    */
 }
 
 void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )

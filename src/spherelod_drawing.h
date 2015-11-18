@@ -72,7 +72,6 @@ public:
     virtual ~FaceDrawingNode( void );
 
     void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
-    //void SetFace( Face* p_face );
 
     void SetDisplayList( const std::vector<Patch*>& p_list );
     
