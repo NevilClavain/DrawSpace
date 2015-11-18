@@ -224,7 +224,12 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );
 }
 
-void Drawing::RegisterPassSlot( Pass* p_pass )
+void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
+{
+
+}
+
+void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
 {
     for( long i = 0; i < 6; i++ )
     {   
@@ -242,7 +247,24 @@ void Drawing::RegisterPassSlot( Pass* p_pass )
     }
 }
 
-DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_faceid )
+void Drawing::RegisterSinglePassSlot( Pass* p_pass )
+{
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
+    node->SetMeshe( Body::m_planetpatch_meshe );
+    node->CreateNoisingTextures();
+
+    RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
+    node->RegisterHandler( cb );      
+    m_callbacks.push_back( cb );
+
+    m_passes_singlenodes[p_pass] = node;
+
+    // ces nodes ne sont pas destines a dependre d'un scenegraph
+    // donc on ajoute le node a la queue directement ici
+    p_pass->GetRenderingQueue()->Add( node );
+}
+
+DrawSpace::Core::RenderingNode* Drawing::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
 {
     if( 0 == m_passesnodes.count( p_pass ) )
     {
@@ -257,6 +279,15 @@ DrawSpace::Core::RenderingNode* Drawing::GetNodeFromPass( Pass* p_pass, int p_fa
         }
     }
     return NULL;
+}
+
+DrawSpace::Core::RenderingNode* Drawing::GetSingleNodeFromPass( Pass* p_pass )
+{
+    if( 0 == m_passes_singlenodes.count( p_pass ) )
+    {
+        return NULL;
+    }
+    return m_passes_singlenodes[p_pass];
 }
 
 DrawSpace::SphericalLOD::Body* Drawing::GetBody( void )
@@ -278,5 +309,10 @@ void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
         {
             it2->first->InitNoisingTextures( p_fractal );
         }
+    }
+
+    for( auto it = m_passes_singlenodes.begin(); it != m_passes_singlenodes.end(); ++it )
+    {
+        it->second->InitNoisingTextures( p_fractal );
     }
 }

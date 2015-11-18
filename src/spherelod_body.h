@@ -94,7 +94,7 @@ public:
     void SetHotState( bool p_hotstate );
     void UpdateRelativeAlt( dsreal p_alt );
 
-    friend class Drawing;
+    friend class Drawing;    
 };
 }
 }

@@ -134,7 +134,7 @@ protected:
     DrawSpace::Pass*                                                        m_procedural_texture_currentpass;
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
-
+    
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -161,7 +161,8 @@ protected:
     void on_right_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
     void on_top_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
     void on_bottom_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
-    
+        
+
 public:
     
     Body( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time );
@@ -174,17 +175,18 @@ public:
 
     void                                RegisterSinglePassSlot( Pass* p_pass );
 
-    DrawSpace::Core::RenderingNode*     GetNodeFromPass( Pass* p_pass, int p_faceid );
+    DrawSpace::Core::RenderingNode*     GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
 
-    void                                BindExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
+    void                                BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
     void                                CreateProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_resol );
     void                                InitProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_r, int p_g, int p_b );
     
     Fragment*                           GetFragment( int p_index );
 
-    void                                AddShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader );
+    //void                                AddPlanetBodyShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader );
 
-    DrawSpace::Core::Fx*                CreateFx( DrawSpace::Pass* p_pass, int p_faceid );
+    DrawSpace::Core::Fx*                CreatePlanetBodyFx( DrawSpace::Pass* p_pass, int p_faceid );
+    DrawSpace::Core::Fx*                CreateSingleNodeFx( DrawSpace::Pass* p_pass );
 
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 

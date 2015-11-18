@@ -96,6 +96,8 @@ protected:
     std::map<Pass*, NodesSet>                                                   m_passesnodes;
     NodesSet                                                                    m_nodes;
 
+    std::map<Pass*, SphericalLOD::FaceDrawingNode*>                             m_passes_singlenodes;
+
     std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
     DrawSpace::Interface::Renderer*                                             m_renderer;
     DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
@@ -103,6 +105,8 @@ protected:
     Utils::Matrix                                                               m_globaltransformation;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+
+    void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
 public:
 
@@ -115,10 +119,11 @@ public:
 
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
+    virtual void RegisterPlanetBodyPassSlot( Pass* p_pass );
+    virtual void RegisterSinglePassSlot( Pass* p_pass );
 
-    virtual void RegisterPassSlot( Pass* p_pass );
-
-    DrawSpace::Core::RenderingNode* GetNodeFromPass( Pass* p_pass, int p_faceid );
+    DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
+    DrawSpace::Core::RenderingNode* GetSingleNodeFromPass( Pass* p_pass );
 
     Body* GetBody( void );
 

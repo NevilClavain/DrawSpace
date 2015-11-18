@@ -541,12 +541,12 @@ void DrawSpace::Planetoid::Body::GetSceneName( dsstring& p_name )
 
 void DrawSpace::Planetoid::Body::RegisterPlanetBodyPassSlot( Pass* p_pass )
 {
-    m_drawable->RegisterPassSlot( p_pass );
+    m_drawable->RegisterPlanetBodyPassSlot( p_pass );
 }
 
 void DrawSpace::Planetoid::Body::RegisterSinglePassSlot( Pass* p_pass )
 {
-
+    m_drawable->RegisterSinglePassSlot( p_pass );
 }
 
 void DrawSpace::Planetoid::Body::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
@@ -579,20 +579,28 @@ void DrawSpace::Planetoid::Body::RegisterScenegraphCallbacks( DrawSpace::Core::S
     p_scenegraph.RegisterScenegraphEvtHandler( m_scenegraph_evt_cb );
 }
 
-void DrawSpace::Planetoid::Body::BindExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid )
+void DrawSpace::Planetoid::Body::BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid )
 {
-    m_drawable->GetNodeFromPass( p_pass, p_faceid )->SetTexture( p_texture, 0 );
+    m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->SetTexture( p_texture, 0 );
 }
-
-void DrawSpace::Planetoid::Body::AddShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader )
+/*
+void DrawSpace::Planetoid::Body::AddPlanetBodyShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader )
 {
-    m_drawable->GetNodeFromPass( p_pass, p_faceid )->GetFx()->AddShader( p_shader );
+    m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->GetFx()->AddShader( p_shader );
 }
+*/
 
-DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreateFx( DrawSpace::Pass* p_pass, int p_faceid )
+DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreatePlanetBodyFx( DrawSpace::Pass* p_pass, int p_faceid )
 {
     Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
-    m_drawable->GetNodeFromPass( p_pass, p_faceid )->SetFx( fx );
+    m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->SetFx( fx );
+    return fx;
+}
+
+DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreateSingleNodeFx( DrawSpace::Pass* p_pass )
+{
+    Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
+    m_drawable->GetSingleNodeFromPass( p_pass )->SetFx( fx );
     return fx;
 }
 
@@ -607,7 +615,7 @@ void DrawSpace::Planetoid::Body::CreateProceduralGlobalTextures( DrawSpace::Pass
         globalproctexture->SetFormat( p_resol, p_resol, 4 );
         globalproctexture->SetPurpose( Texture::PURPOSE_COLOR );
    
-        m_drawable->GetNodeFromPass( p_pass, i )->SetTexture( globalproctexture, 0 );
+        m_drawable->GetPlanetBodyNodeFromPass( p_pass, i )->SetTexture( globalproctexture, 0 );
 
         proc_texture.texture = globalproctexture;
         proc_texture.texture_content = NULL;
@@ -941,7 +949,7 @@ void DrawSpace::Planetoid::Body::InitNoisingTextures( void )
     m_drawable->InitNoisingTextures( m_fractal );
 }
 
-DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetNodeFromPass( Pass* p_pass, int p_faceid )
+DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
 {
-    return m_drawable->GetNodeFromPass( p_pass, p_faceid );
+    return m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid );
 }
