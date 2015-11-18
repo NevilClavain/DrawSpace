@@ -23,6 +23,7 @@
 #include "spherelod_face.h"
 #include "memalloc.h"
 #include "maths.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -481,6 +482,11 @@ void Face::Compute( void )
 
 void Face::UpdateLODComputationResults( void )
 {
+    if( NULL == m_work_currentPatch )
+    {
+        _DSEXCEPTION( "LOD computation result : no current patch found!" )
+    }
+
     m_displaylist = m_work_displaylist;
     m_currentPatch = m_work_currentPatch;
     m_currentPatchLOD = m_work_currentPatchLOD;
