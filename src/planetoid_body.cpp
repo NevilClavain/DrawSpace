@@ -539,9 +539,14 @@ void DrawSpace::Planetoid::Body::GetSceneName( dsstring& p_name )
     p_name = m_scenename;
 }
 
-void DrawSpace::Planetoid::Body::RegisterPassSlot( Pass* p_pass )
+void DrawSpace::Planetoid::Body::RegisterPlanetBodyPassSlot( Pass* p_pass )
 {
     m_drawable->RegisterPassSlot( p_pass );
+}
+
+void DrawSpace::Planetoid::Body::RegisterSinglePassSlot( Pass* p_pass )
+{
+
 }
 
 void DrawSpace::Planetoid::Body::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
