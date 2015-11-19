@@ -87,7 +87,7 @@ class Drawing
 {
 protected:
 
-    typedef std::map<FaceDrawingNode*, int> NodesSet;
+    typedef std::map<FaceDrawingNode*, int>                     NodesSet;
 
     typedef DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
 

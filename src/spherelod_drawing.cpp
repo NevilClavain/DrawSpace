@@ -234,17 +234,11 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     view.Identity();
     proj.Perspective( 2.0, 2.0, 1.0, 10.0 );
 
-    /*
-    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
+    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );    
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, world, view, proj );
-    */
 
-    m_renderer->SetFxShaderParams( 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) );
-                      
-    //m_renderer->SetTexture( p_patch->GetTexture( Maps::COLOR_TEXTURE ), 0 );
-    //m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
-
-    m_renderer->DrawMeshe( world, view, proj );
+    //m_renderer->SetFxShaderParams( 1, 0, Vector( 0.0, 1.0, 0.0, 1.0 ) );
+    //m_renderer->DrawMeshe( world, view, proj );
 
 }
 
@@ -278,6 +272,8 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass )
 
     m_passes_singlenodes[p_pass] = node;
 
+    std::vector<Patch*> dl;
+   
     // ces nodes ne sont pas destines a dependre d'un scenegraph
     // donc on ajoute le node a la queue directement ici
     p_pass->GetRenderingQueue()->Add( node );

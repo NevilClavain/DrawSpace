@@ -583,12 +583,6 @@ void DrawSpace::Planetoid::Body::BindPlanetBodyExternalGlobalTexture( DrawSpace:
 {
     m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->SetTexture( p_texture, 0 );
 }
-/*
-void DrawSpace::Planetoid::Body::AddPlanetBodyShader( DrawSpace::Pass* p_pass, int p_faceid, DrawSpace::Core::Shader* p_shader )
-{
-    m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->GetFx()->AddShader( p_shader );
-}
-*/
 
 DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreatePlanetBodyFx( DrawSpace::Pass* p_pass, int p_faceid )
 {
@@ -952,4 +946,9 @@ void DrawSpace::Planetoid::Body::InitNoisingTextures( void )
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
 {
     return m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid );
+}
+
+DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetSingleNodeFromPass( Pass* p_pass )
+{
+    return m_drawable->GetSingleNodeFromPass( p_pass );
 }
