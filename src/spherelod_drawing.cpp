@@ -33,7 +33,8 @@ using namespace DrawSpace::SphericalLOD;
 
 
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer ) :
-m_renderer( p_renderer )
+m_renderer( p_renderer ),
+m_current_patch( NULL )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -48,8 +49,7 @@ void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
 }
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
-{    
-   
+{
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
     flag0[1] = p_patch->GetUnitSideLenght();
@@ -66,12 +66,18 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     patch_pos[1] = yp;
     patch_pos[2] = 0.0;
 
-
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
     m_renderer->SetFxShaderParams( 0, 26, uvcoords );
 
-    m_renderer->SetFxShaderParams( 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) );
+    if( m_current_patch == p_patch )
+    {
+        m_renderer->SetFxShaderParams( 1, 0, Vector( 0.0, 1.0, 0.0, 1.0 ) );
+    }
+    else
+    {
+        m_renderer->SetFxShaderParams( 1, 0, Vector( 1.0, 1.0, 1.0, 1.0 ) );
+    }
                       
     //m_renderer->SetTexture( p_patch->GetTexture( Maps::COLOR_TEXTURE ), 0 );
     //m_renderer->SetVertexTexture( p_patch->GetTexture( Maps::ELEVATION_TEXTURE ), 0 );
@@ -162,6 +168,11 @@ void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
     p_stats = m_stats;
 }
 
+void FaceDrawingNode::SetCurrentPatch( DrawSpace::SphericalLOD::Patch* p_patch )
+{
+    m_current_patch = p_patch;
+}
+
 Drawing::Drawing( void ) :
 m_renderer( NULL ),
 m_planetbody( NULL )
@@ -219,7 +230,9 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     std::vector<Patch*> dl;
  
     m_planetbody->m_faces[m_nodes[face_node]]->GetDisplayList( dl );
- 
+    Patch* current_patch = m_planetbody->m_faces[m_nodes[face_node]]->GetCurrentPatch();
+    
+    face_node->SetCurrentPatch( current_patch );
     face_node->SetDisplayList( dl );
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );
 }
@@ -234,7 +247,8 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     view.Identity();
     proj.Perspective( 2.0, 2.0, 1.0, 10.0 );
 
-    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );    
+    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node ); 
+    face_node->SetCurrentPatch( NULL );
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, world, view, proj );
 
     //m_renderer->SetFxShaderParams( 1, 0, Vector( 0.0, 1.0, 0.0, 1.0 ) );

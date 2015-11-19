@@ -22,13 +22,14 @@ sampler2D TextureExp : register(s2);
 struct VS_INPUT 
 {
    float4 Position : POSITION0;
-   float4 TexCoord0: TEXCOORD0; 
+   float4 TexCoord0: TEXCOORD0;     
 };
 
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
-   float4 TexCoord0: TEXCOORD0;   
+   float4 TexCoord0: TEXCOORD0;
+   float4 TexCoord1: TEXCOORD1;
 };
 
 
@@ -146,7 +147,7 @@ double Fractal_fBm( double3 f )
 		fTemp *= lacunarity;
 
 	}	
-	return clamp( -1.0, 1.0, fValue );	
+	return clamp( -1.0, 1.0, fValue );		
 }
 
 
@@ -213,11 +214,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
 	v_position2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
       
-	// final scaling
-	float4 v_position3;	
-	v_position3 = v_position2 * flag0.z;	
-	v_position3.w = 1.0;
-
 
 	float v_alt = 0.0;
 
@@ -227,16 +223,15 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	f[2] = lerp( -10.0, 10.0, ( v_position2.z / 2.0 ) + 0.5 );
 
 	float res = Fractal_fBm( f );
-	v_alt = res * 12000.0;
-	if( v_alt < 0.0 )
+	if( res < 0.0 )
 	{
-		v_alt = 0.0;
+		res = 0.0;
 	}
 	
-	v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
-	v_position3.w = 1.0;
+	Output.TexCoord1 = 0.0;
+	Output.TexCoord1.x = res;
 
-	Output.Position = mul( v_position3, matWorldViewProjection );
+	Output.Position = mul( Input.Position, matWorldViewProjection );
 	
 	Output.TexCoord0 = 0.0;
 	Output.TexCoord0.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
