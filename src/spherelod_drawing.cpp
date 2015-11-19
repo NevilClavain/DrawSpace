@@ -230,9 +230,9 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     DrawSpace::Utils::Matrix view;
     DrawSpace::Utils::Matrix proj;
 
-    world.Translation( 0.0, 0.0, -1.1 );
+    world.Translation( 0.0, 0.0, -1.0 );
     view.Identity();
-    proj.Perspective( 1.0, 1.0, 1.0, 10.0 );
+    proj.Perspective( 2.0, 2.0, 1.0, 10.0 );
 
     /*
     FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
