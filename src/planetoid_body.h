@@ -55,21 +55,23 @@ public:
     
     typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::PropertyPool*>                                                         RunnerMsgCb;
     typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::Runner::State>                                                         RunnerEvtCb;
-
-
-    typedef DrawSpace::Core::BaseCallback<void, DrawSpace::Planetoid::Body*>                                                                                    PlanetRelativeEventHandler;
+    
+    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>& >                                   PatchsDrawRequestCb;
 
 protected:
 
     typedef struct
     {
-        bool                            attached;
+        bool                                        attached;
 
-        bool                            relative_alt_valid;
-        dsreal                          relative_alt;
+        bool                                        relative_alt_valid;
+        dsreal                                      relative_alt;
 
-        DrawSpace::Dynamics::InertBody* body;
-        Fragment*                       fragment;
+        DrawSpace::Dynamics::InertBody*             body;
+        Fragment*                                   fragment;
+        DrawSpace::IntermediatePass*                collidingheightmap_pass;
+        DrawSpace::SphericalLOD::FaceDrawingNode*   collidingheightmap_node;
+        void*                                       collidingheightmap_content;
 
     } RegisteredBody;
 
@@ -104,6 +106,13 @@ protected:
     
     } ProceduralTexture;
 
+    typedef struct
+    {
+        bool                            need_redraw;
+        DrawSpace::IntermediatePass*    pass;
+
+    } SubPass;
+
     dsreal                                                                  m_ray;
 
     DrawSpace::Dynamics::World                                              m_world;
@@ -114,6 +123,7 @@ protected:
     CameraEvtCb*                                                            m_camera_evt_cb;
     NodesEventCb*                                                           m_nodes_evt_cb;
     ScenegraphEventCb*                                                      m_scenegraph_evt_cb;
+    PatchsDrawRequestCb*                                                    m_patchsdraw_request_cb;
       
     std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>               m_registered_bodies;
     std::map<dsstring, RegisteredCamera>                                    m_registered_camerapoints;
@@ -134,7 +144,14 @@ protected:
     DrawSpace::Pass*                                                        m_procedural_texture_currentpass;
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
+
+    // list of some passes to render for internal stuff
+    // colliding heightmap, global textures ?
+    std::vector<SubPass>                                                    m_subpasses;
     
+    DrawSpace::IntermediatePass* create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename );    
+
+    void* create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -152,6 +169,8 @@ protected:
     void update_fragments( void );
 
     void fill_procedural_texture( int p_direction, const ProceduralTexture& p_procedural_texture, DrawSpace::Utils::Fractal* p_fractal );
+
+    void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist );
 
     void on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args );
 
@@ -199,6 +218,8 @@ public:
     bool                                GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude );
 
     void                                InitNoisingTextures( void );
+
+    void                                DrawSubPasses( void );
     
 };
 

@@ -115,6 +115,20 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
 
     if( m_collisions )
     {
+        std::vector<DrawSpace::SphericalLOD::Patch*> display_list;
+        if( m_current_patch && m_current_patch_lod == 0 )
+        {
+            display_list.push_back( m_current_patch );
+
+            for( size_t i = 0; i < m_patchsdrawrequest_handlers.size(); i++ )
+            {
+                (*m_patchsdrawrequest_handlers[i])( display_list );
+            }
+        }
+       
+
+        // desactive, pour intercaler le rendu HM collisions
+        /*
         if( p_patch_lod == 0 )
         {
             PropertyPool props;
@@ -126,6 +140,7 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
         {
             RemoveColliderFromWorld();
         }
+        */
     }
 }
 
@@ -195,6 +210,12 @@ void Fragment::Update( DrawSpace::Planetoid::Body* p_owner )
     }
 }
 
+void Fragment::RegisterPatchsDrawRequestHandler( Fragment::PatchsDrawRequestHandler* p_handler )
+{
+    m_patchsdrawrequest_handlers.push_back( p_handler );
+}
+
+
 void Fragment::SetHotState( bool p_hotstate )
 {
     m_hot = p_hotstate;
@@ -216,6 +237,7 @@ void Fragment::SetInertBody( DrawSpace::Dynamics::InertBody* p_body )
 {
     m_inertbody = p_body;
 }
+
 
 CameraPoint* Fragment::GetCamera( void )
 {

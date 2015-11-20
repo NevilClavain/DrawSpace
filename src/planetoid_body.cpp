@@ -49,6 +49,8 @@ m_timemanager( p_time )
     m_nodes_evt_cb = _DRAWSPACE_NEW_( NodesEventCb, NodesEventCb( this, &DrawSpace::Planetoid::Body::on_nodes_event ) );
     m_scenegraph_evt_cb = _DRAWSPACE_NEW_( ScenegraphEventCb, ScenegraphEventCb( this, &DrawSpace::Planetoid::Body::on_scenegraph_event ) );
 
+    m_patchsdraw_request_cb = _DRAWSPACE_NEW_( PatchsDrawRequestCb, PatchsDrawRequestCb( this, &DrawSpace::Planetoid::Body::on_patchsdraw_request ) );
+
     for( size_t i = 0; i < 6; i++ )
     {
         m_proceduraltexture_runners[i] = _DRAWSPACE_NEW_( Runner, Runner );
@@ -163,6 +165,69 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
     }
 }
 
+DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename )
+{
+    dsstring complete_name = m_scenename + dsstring( "_" ) + p_inertbody_scenename + dsstring( "_collisionheightmap_pass" );
+    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
+
+    ipass->SetTargetDimsFromRenderer( false );    
+    ipass->SetTargetDims( 11, 11 );
+    //ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOAT32 );
+
+    ipass->Initialize();
+    ipass->GetRenderingQueue()->EnableDepthClearing( true );
+    ipass->GetRenderingQueue()->EnableTargetClearing( true );
+    ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
+
+    return ipass;
+}
+
+void* DrawSpace::Planetoid::Body::create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode )
+{
+    SphericalLOD::FaceDrawingNode* node;
+
+    IntermediatePass* ipass = create_colliding_heightmap_pass( p_inertbody_scenename );
+
+    RegisterSinglePassSlot( ipass );
+    node = static_cast<SphericalLOD::FaceDrawingNode*>( GetSingleNodeFromPass( ipass ) );
+
+    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.vsh", false ) );
+    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.psh", false ) );
+    patch_vshader->LoadFromFile();
+    patch_pshader->LoadFromFile();
+
+    Fx* patch_fx = CreateSingleNodeFx( ipass );
+
+    patch_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    patch_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    patch_fx->AddShader( patch_vshader );
+    patch_fx->AddShader( patch_pshader );
+
+    ipass->GetRenderingQueue()->UpdateOutputQueue();
+
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+    void* tx_data;
+    if( false == renderer->CreateTexture( ipass->GetTargetTexture(), &tx_data ) )
+    {
+        _DSEXCEPTION( "failed to create colliding heightmap texture in renderer" );
+    }
+
+    ipass->GetTargetTexture()->AllocTextureContent();
+    void* content = ipass->GetTargetTexture()->GetTextureContentPtr();
+
+    SubPass sp;
+    sp.need_redraw = false;
+    sp.pass = ipass;
+    m_subpasses.push_back( sp );
+
+    *p_pass = ipass;
+    *p_renderingnode = node;
+
+    return content;
+}
+
 void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
 {
     if( SceneNodeGraph::NODE_ADDED == p_event )
@@ -182,7 +247,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
         }
 
         if( inertbody )
-        {            
+        {
             if( inertbody->IsDynamicLinkEnabled() )
             {
                 RegisteredBody reg_body;
@@ -191,14 +256,15 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                 {
                     if( inertbody->GetReferentBody() == this )
                     {
+                        dsstring bodyname;
+                        p_node->GetSceneName( bodyname );
+
                         reg_body.attached = true;
                         reg_body.body = inertbody;                        
                         reg_body.relative_alt_valid = false;
                         
-                        dsstring bodyname;
-                        p_node->GetSceneName( bodyname );
-                       
-
+                        reg_body.collidingheightmap_content = create_colliding_heightmap( bodyname, &reg_body.collidingheightmap_pass, &reg_body.collidingheightmap_node );
+                                                                                        
                         inertbody->IncludeTo( this );
 
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager ) );
@@ -206,6 +272,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         
                         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, true ) );
                         planet_fragment->SetHotState( true );
+                        planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
 
                         m_planetfragments_list.push_back( planet_fragment );
                         reg_body.fragment = planet_fragment;
@@ -214,22 +281,24 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                                               
                         m_registered_bodies[inertbody] = reg_body;
                     }
-
                 }
                 else
-                {                    
+                {
+                    dsstring bodyname;
+                    p_node->GetSceneName( bodyname );
+
                     reg_body.attached = false;
                     reg_body.body = inertbody;
                     reg_body.relative_alt_valid = false;
 
+                    reg_body.collidingheightmap_content = create_colliding_heightmap( bodyname, &reg_body.collidingheightmap_pass, &reg_body.collidingheightmap_node );
+
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager ) );
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
-
-                    dsstring bodyname;                   
-                    p_node->GetSceneName( bodyname );
                    
                     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, true ) );
                     planet_fragment->SetHotState( false );
+                    planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
 
                     m_planetfragments_list.push_back( planet_fragment );
                     reg_body.fragment = planet_fragment;
@@ -951,4 +1020,21 @@ DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetPlanetBodyNodeFro
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetSingleNodeFromPass( Pass* p_pass )
 {
     return m_drawable->GetSingleNodeFromPass( p_pass );
+}
+
+void DrawSpace::Planetoid::Body::DrawSubPasses( void )
+{
+    for( size_t i = 0; i < m_subpasses.size(); i++ )
+    {
+        if( m_subpasses[i].need_redraw )
+        {
+            m_subpasses[i].pass->GetRenderingQueue()->Draw();
+            m_subpasses[i].need_redraw = false;
+        }
+    }
+}
+
+void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist )
+{
+    
 }
