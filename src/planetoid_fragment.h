@@ -44,12 +44,12 @@ class Fragment
 {
 protected:
 
-    typedef DrawSpace::Core::BaseCallback<void, const std::vector<DrawSpace::SphericalLOD::Patch*>& >   PatchsDrawRequestHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int>  PatchsDrawRequestHandler;
 
-    typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Patch*, int>            PatchUpdateCb;
+    typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Patch*, int>                PatchUpdateCb;
 
-    typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>                   RunnerMsgCb;
-    typedef DrawSpace::Core::CallBack<Fragment, void, Core::Runner::State>                              RunnerEvtCb;
+    typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>                       RunnerMsgCb;
+    typedef DrawSpace::Core::CallBack<Fragment, void, Core::Runner::State>                                  RunnerEvtCb;
 
     DrawSpace::Dynamics::World*                                 m_world;
 
@@ -83,6 +83,7 @@ protected:
     int                                                         m_current_patch_lod;
 
     std::vector<PatchsDrawRequestHandler*>                      m_patchsdrawrequest_handlers;
+    int                                                         m_collidinghm_subpassindex;
 
     void on_meshebuild_request( DrawSpace::Core::PropertyPool* p_args );
     void on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate );
@@ -117,6 +118,7 @@ public:
     void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done );
 
     void RegisterPatchsDrawRequestHandler( PatchsDrawRequestHandler* p_handler );
+    void SetCollidingHMSubPassIndex( int p_index );
 };
 
 }

@@ -273,6 +273,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, true ) );
                         planet_fragment->SetHotState( true );
                         planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
+                        planet_fragment->SetCollidingHMSubPassIndex( m_subpasses.size() - 1 );
 
                         m_planetfragments_list.push_back( planet_fragment );
                         reg_body.fragment = planet_fragment;
@@ -299,6 +300,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( &m_world, slod_body, collider, m_ray, true ) );
                     planet_fragment->SetHotState( false );
                     planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
+                    planet_fragment->SetCollidingHMSubPassIndex( m_subpasses.size() - 1 );
 
                     m_planetfragments_list.push_back( planet_fragment );
                     reg_body.fragment = planet_fragment;
@@ -1034,7 +1036,7 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
     }
 }
 
-void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist )
+void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex )
 {
     
 }

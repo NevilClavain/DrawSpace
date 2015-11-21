@@ -56,7 +56,7 @@ public:
     typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::PropertyPool*>                                                         RunnerMsgCb;
     typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::Runner::State>                                                         RunnerEvtCb;
     
-    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>& >                                   PatchsDrawRequestCb;
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                             PatchsDrawRequestCb;
 
 protected:
 
@@ -170,7 +170,7 @@ protected:
 
     void fill_procedural_texture( int p_direction, const ProceduralTexture& p_procedural_texture, DrawSpace::Utils::Fractal* p_fractal );
 
-    void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist );
+    void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
 
     void on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args );
 

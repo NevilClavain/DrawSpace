@@ -41,7 +41,8 @@ m_inertbody( NULL ),
 m_collisions( p_collisions ),
 m_nb_collisionmeshebuild_done( 0 ),
 m_current_patch( NULL ),
-m_current_patch_lod( -1 )
+m_current_patch_lod( -1 ),
+m_collidinghm_subpassindex( -1 )
 {
     if( m_collisions )
     {
@@ -122,7 +123,7 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
 
             for( size_t i = 0; i < m_patchsdrawrequest_handlers.size(); i++ )
             {
-                (*m_patchsdrawrequest_handlers[i])( display_list );
+                (*m_patchsdrawrequest_handlers[i])( display_list, m_collidinghm_subpassindex );
             }
         }
        
@@ -282,4 +283,9 @@ SphericalLOD::Patch* Fragment::GetCurrentPatch( void )
 int Fragment::GetCurrentPatchLOD( void )
 {
     return m_current_patch_lod;
+}
+
+void Fragment::SetCollidingHMSubPassIndex( int p_index )
+{
+    m_collidinghm_subpassindex = p_index;
 }
