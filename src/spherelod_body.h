@@ -48,8 +48,10 @@ protected:
     RunnerMsgCb*                                                                m_runnercb;
     RunnerEvtCb*                                                                m_runnerevt;
 
+    /*
     DrawSpace::Utils::Timer                                                     m_timer;
     BodyTimerCb*                                                                m_timercb;
+    */
 
     Face*                                                                       m_faces[6];
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
@@ -69,7 +71,7 @@ protected:
 
     void on_runner_request( DrawSpace::Core::PropertyPool* p_args );
     void on_runner_result( DrawSpace::Core::Runner::State p_runnerstate );
-    void on_timer( DrawSpace::Utils::Timer* p_timer );
+    //void on_timer( DrawSpace::Utils::Timer* p_timer );
 
 
 public:

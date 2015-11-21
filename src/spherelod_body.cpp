@@ -52,17 +52,10 @@ m_current_patch( NULL )
     m_runner = _DRAWSPACE_NEW_( Runner, Runner );              
     m_runner->RegisterTaskMsgHandler( m_runnercb );
     m_runner->RegisterEventHandler( m_runnerevt );
-
-    m_timercb = _DRAWSPACE_NEW_( BodyTimerCb, BodyTimerCb( this, &Body::on_timer ) );
-
-    m_timer.SetPeriod( 200 );
-    m_timer.SetHandler( m_timercb );
-    m_timemanager->RegisterTimer( &m_timer );
 }
 
 Body::~Body( void )
 {
-    m_timemanager->UnregisterTimer( &m_timer );
     for( long i = 0; i < 6; i++ )
     {
         _DRAWSPACE_DELETE_( m_faces[i] );
@@ -111,7 +104,9 @@ void Body::Compute( void )
     }
 
     
-    //m_faces[m_current_face]->Compute();
+    m_faces[m_current_face]->UpdateLODComputationParams();
+    m_faces[m_current_face]->Compute();
+    m_faces[m_current_face]->UpdateLODComputationResults();
 
     check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
 
@@ -229,7 +224,7 @@ Face* Body::GetFace( int p_faceid )
 void Body::SetHotState( bool p_hotstate )
 {
     check_currentpatch_event( NULL, -1 );
-    m_timer.SetState( p_hotstate );
+    //m_timer.SetState( p_hotstate );
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->SetHotState( p_hotstate );
@@ -271,20 +266,5 @@ void Body::on_runner_result( DrawSpace::Core::Runner::State p_runnerstate )
     {
         m_faces[m_current_face]->UpdateLODComputationResults();
         m_runner->ResetState();
-    }
-}
-
-void Body::on_timer( DrawSpace::Utils::Timer* p_timer )
-{
-    PropertyPool props;
-    std::vector<Face*> faces_list;
-
-    if( m_current_face != -1 )
-    {
-        m_faces[m_current_face]->UpdateLODComputationParams();
-        faces_list.push_back( m_faces[m_current_face] );
-
-        props.AddPropValue<std::vector<Face*>>( "faces_list", faces_list );            
-        m_runner->PushMessage( props );
     }
 }
