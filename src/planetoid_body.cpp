@@ -220,6 +220,7 @@ void* DrawSpace::Planetoid::Body::create_colliding_heightmap( const dsstring& p_
     SubPass sp;
     sp.need_redraw = false;
     sp.pass = ipass;
+    sp.reneringpatches_node = node;
     m_subpasses.push_back( sp );
 
     *p_pass = ipass;
@@ -1037,6 +1038,7 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
 }
 
 void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex )
-{
-    
+{    
+    m_subpasses[p_subpassindex].need_redraw = true;
+    m_subpasses[p_subpassindex].reneringpatches_node->SetDisplayList( p_displaylist );
 }

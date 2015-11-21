@@ -101,15 +101,16 @@ protected:
 
     typedef struct
     {
-        DrawSpace::Core::Texture*   texture;
-        void*                       texture_content;
+        DrawSpace::Core::Texture*                   texture;
+        void*                                       texture_content;
     
     } ProceduralTexture;
 
     typedef struct
     {
-        bool                            need_redraw;
-        DrawSpace::IntermediatePass*    pass;
+        DrawSpace::SphericalLOD::FaceDrawingNode*   reneringpatches_node;
+        bool                                        need_redraw;
+        DrawSpace::IntermediatePass*                pass;
 
     } SubPass;
 
