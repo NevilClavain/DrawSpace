@@ -51,6 +51,8 @@ protected:
     typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>                       RunnerMsgCb;
     typedef DrawSpace::Core::CallBack<Fragment, void, Core::Runner::State>                                  RunnerEvtCb;
 
+    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Fragment, void, int>                            SubPassDoneCb;
+
     DrawSpace::Dynamics::World*                                 m_world;
 
     DrawSpace::SphericalLOD::Body*                              m_planetbody;
@@ -85,10 +87,17 @@ protected:
     std::vector<PatchsDrawRequestHandler*>                      m_patchsdrawrequest_handlers;
     int                                                         m_collidinghm_subpassindex;
 
+    SubPassDoneCb*                                              m_subpassdone_cb;
+
+    DrawSpace::Core::Texture*                                   m_collidingheightmap_texture;
+    void*                                                       m_collidingheightmap_content;
+
+
     void on_meshebuild_request( DrawSpace::Core::PropertyPool* p_args );
     void on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate );
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
+    void on_subpassdone( int p_subpassindex );
     
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe );
 
@@ -119,6 +128,10 @@ public:
 
     void RegisterPatchsDrawRequestHandler( PatchsDrawRequestHandler* p_handler );
     void SetCollidingHMSubPassIndex( int p_index );
+
+    void SetCollidingHeightMapTexture( DrawSpace::Core::Texture* p_texture );
+
+    SubPassDoneCb* GetSubPassDoneCb( void );
 };
 
 }

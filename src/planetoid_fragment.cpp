@@ -42,13 +42,16 @@ m_collisions( p_collisions ),
 m_nb_collisionmeshebuild_done( 0 ),
 m_current_patch( NULL ),
 m_current_patch_lod( -1 ),
-m_collidinghm_subpassindex( -1 )
+m_collidinghm_subpassindex( -1 ),
+m_collidingheightmap_texture( NULL ),
+m_collidingheightmap_content( NULL )
 {
     if( m_collisions )
     {
-
         m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );
         m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
+
+        m_subpassdone_cb = _DRAWSPACE_NEW_( SubPassDoneCb, SubPassDoneCb( this, &Fragment::on_subpassdone ) );
 
         m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Fragment::on_meshebuild_request ) );
         m_runnerevt = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Fragment::on_meshebuild_result ) );
@@ -288,4 +291,23 @@ int Fragment::GetCurrentPatchLOD( void )
 void Fragment::SetCollidingHMSubPassIndex( int p_index )
 {
     m_collidinghm_subpassindex = p_index;
+}
+
+Fragment::SubPassDoneCb* Fragment::GetSubPassDoneCb( void )
+{
+    return m_subpassdone_cb;
+}
+
+void Fragment::SetCollidingHeightMapTexture( DrawSpace::Core::Texture* p_texture )
+{
+    m_collidingheightmap_texture = p_texture;
+    m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
+}
+
+void Fragment::on_subpassdone( int p_subpassindex )
+{
+    if( p_subpassindex == m_collidinghm_subpassindex )
+    {
+        m_collidingheightmap_texture->CopyTextureContent();
+    }
 }

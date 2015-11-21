@@ -36,6 +36,18 @@ class Body : public Dynamics::Orbiter
 {
 public:
 
+    typedef DrawSpace::Core::BaseCallback<void, int>  SubPassDoneHandler;
+
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*>         CameraEvtCb;
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>          NodesEventCb;
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>    ScenegraphEventCb;
+    
+    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::PropertyPool*>                                                         RunnerMsgCb;
+    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::Runner::State>                                                         RunnerEvtCb;
+    
+    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                             PatchsDrawRequestCb;
+
+
     ////////////////////////////////////////////////////////////////////
     bool                    m_front_done;
     bool                    m_rear_done;
@@ -47,16 +59,6 @@ public:
     void                    run_textures( DrawSpace::Pass* p_pass );
 
     ////////////////////////////////////////////////////////////////////
-
-
-    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*>         CameraEvtCb;
-    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>          NodesEventCb;
-    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>    ScenegraphEventCb;
-    
-    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::PropertyPool*>                                                         RunnerMsgCb;
-    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::Runner::State>                                                         RunnerEvtCb;
-    
-    typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                             PatchsDrawRequestCb;
 
 protected:
 
@@ -71,8 +73,7 @@ protected:
         Fragment*                                   fragment;
         DrawSpace::IntermediatePass*                collidingheightmap_pass;
         DrawSpace::SphericalLOD::FaceDrawingNode*   collidingheightmap_node;
-        void*                                       collidingheightmap_content;
-
+        
     } RegisteredBody;
 
 
@@ -96,7 +97,6 @@ protected:
 
         Fragment*                           fragment;
 
-
     } RegisteredCamera;
 
     typedef struct
@@ -108,7 +108,7 @@ protected:
 
     typedef struct
     {
-        DrawSpace::SphericalLOD::FaceDrawingNode*   reneringpatches_node;
+        DrawSpace::SphericalLOD::FaceDrawingNode*   renderingpatches_node;
         bool                                        need_redraw;
         DrawSpace::IntermediatePass*                pass;
 
@@ -144,6 +144,8 @@ protected:
 
     DrawSpace::Pass*                                                        m_procedural_texture_currentpass;
 
+    std::vector<SubPassDoneHandler*>                                        m_subpassdone_handlers;
+
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
 
     // list of some passes to render for internal stuff
@@ -152,7 +154,7 @@ protected:
     
     DrawSpace::IntermediatePass* create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename );    
 
-    void* create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
+    void create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
