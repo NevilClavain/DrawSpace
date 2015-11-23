@@ -171,8 +171,8 @@ DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_colliding_height
     IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
 
     ipass->SetTargetDimsFromRenderer( false );    
-    ipass->SetTargetDims( 11, 11 );
-    //ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOAT32 );
+    ipass->SetTargetDims( PATCH_RESOLUTION, PATCH_RESOLUTION );
+    ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOAT32 );
 
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( true );

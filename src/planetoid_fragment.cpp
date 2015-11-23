@@ -78,11 +78,12 @@ void Fragment::on_meshebuild_request( PropertyPool* p_args )
     DrawSpace::Core::Meshe patchmeshe;
     patchmeshe = *( p_args->GetPropValue<Meshe*>( "patchmeshe" ) );
     SphericalLOD::Patch* patch = p_args->GetPropValue<SphericalLOD::Patch*>( "patch" );
+    float* heightmap = (float*)p_args->GetPropValue<void*>( "colliding_heightmap" );
 
     ////////////////////////////// do the work
 
     Meshe final_meshe;
-    build_meshe( patchmeshe, patch, final_meshe );
+    build_meshe( patchmeshe, patch, final_meshe, heightmap );
 
     Dynamics::InertBody::Body::Parameters params;
 
@@ -148,8 +149,9 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
     }
 }
 
-void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe )
+void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap )
 {
+    /*
     for( long i = 0; i < p_patchmeshe.GetVertexListSize(); i++ )
     {                
         Vertex v, vertex_out;
@@ -164,6 +166,34 @@ void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::
         vertex_out.z = v_out[2];
 
         p_outmeshe.AddVertex( vertex_out );
+    }
+    */
+
+    for( int y = 0; y < PATCH_RESOLUTION; y++ )
+    {
+        for( int x = 0; x < PATCH_RESOLUTION; x++ )
+        {
+            Vertex v, vertex_out;
+            int index = ( PATCH_RESOLUTION * y ) + x;
+
+            int index_hm = ( PATCH_RESOLUTION * ( PATCH_RESOLUTION - 1 - y ) ) + x;
+
+            p_patchmeshe.GetVertex( index, v );
+
+            double alt = *( p_heightmap + index_hm );
+            alt *= 12000.0;
+      
+            Vector v_out;
+
+            p_patch->ProjectVertex( Vector( v.x, v.y, v.z, 1.0 ), v_out );
+            v_out.Scale( m_planetray + alt );
+
+            vertex_out.x = v_out[0];
+            vertex_out.y = v_out[1];
+            vertex_out.z = v_out[2];
+
+            p_outmeshe.AddVertex( vertex_out );        
+        }
     }
 
     for( long i = 0; i < p_patchmeshe.GetTrianglesListSize(); i++ )
@@ -309,5 +339,40 @@ void Fragment::on_subpassdone( int p_subpassindex )
     if( p_subpassindex == m_collidinghm_subpassindex )
     {
         m_collidingheightmap_texture->CopyTextureContent();
+
+        /*
+        PropertyPool props;
+        props.AddPropValue<Meshe*>( "patchmeshe", m_planetbody->GetPatcheMeshe() );
+        props.AddPropValue<SphericalLOD::Patch*>( "patch", m_current_patch );
+        props.AddPropValue<void*>( "colliding_heightmap", m_collidingheightmap_content );
+        m_runner->PushMessage( props );
+        */
+
+
+        float* heightmap = (float*)m_collidingheightmap_content;
+        Meshe final_meshe;
+        build_meshe( *( m_planetbody->GetPatcheMeshe() ), m_current_patch, final_meshe, heightmap );
+
+        Dynamics::InertBody::Body::Parameters params;
+
+        params.mass = 0.0;
+
+        params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
+
+        params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
+        params.shape_descr.meshe = final_meshe;
+
+        m_params = params;
+
+
+        RemoveColliderFromWorld();
+
+        m_collider->SetKinematic( m_params );
+        m_collider->AddToWorld( m_world );
+
+        m_collision_state = true;
+        m_nb_collisionmeshebuild_done++;
+
+
     }
 }

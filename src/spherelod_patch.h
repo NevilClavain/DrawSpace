@@ -29,7 +29,7 @@
 #include "noise.h"
 
 #define NB_LOD_RANGES           13
-#define PATCH_RESOLUTION        11
+#define PATCH_RESOLUTION        12
 
 namespace DrawSpace
 {
