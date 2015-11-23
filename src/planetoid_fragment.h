@@ -58,13 +58,10 @@ protected:
     DrawSpace::SphericalLOD::Body*                              m_planetbody;
     DrawSpace::Dynamics::Collider*                              m_collider;
     
-    DrawSpace::Core::Runner*                                    m_runner;
-
     long                                                        m_nb_collisionmeshebuild_done;
 
     PatchUpdateCb*                                              m_patch_update_cb;
-    RunnerMsgCb*                                                m_runnercb;
-    RunnerEvtCb*                                                m_runnerevt;
+    
     bool                                                        m_collision_state;
 
     DrawSpace::Utils::Mutex                                     m_meshe_ready_mutex;
@@ -79,8 +76,6 @@ protected:
 
     bool                                                        m_collisions;
 
-    Dynamics::InertBody::Body::Parameters                       m_params;
-
     SphericalLOD::Patch*                                        m_current_patch;
     int                                                         m_current_patch_lod;
 
@@ -91,10 +86,6 @@ protected:
 
     DrawSpace::Core::Texture*                                   m_collidingheightmap_texture;
     void*                                                       m_collidingheightmap_content;
-
-
-    void on_meshebuild_request( DrawSpace::Core::PropertyPool* p_args );
-    void on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate );
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
     void on_subpassdone( int p_subpassindex );

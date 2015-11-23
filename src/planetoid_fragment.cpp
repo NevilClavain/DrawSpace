@@ -51,66 +51,13 @@ m_collidingheightmap_content( NULL )
         m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );
         m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
 
-        m_subpassdone_cb = _DRAWSPACE_NEW_( SubPassDoneCb, SubPassDoneCb( this, &Fragment::on_subpassdone ) );
-
-        m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Fragment::on_meshebuild_request ) );
-        m_runnerevt = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Fragment::on_meshebuild_result ) );
-
-        m_runner = _DRAWSPACE_NEW_( Runner, Runner );
-              
-        m_runner->RegisterTaskMsgHandler( m_runnercb );
-        m_runner->RegisterEventHandler( m_runnerevt );
-
-        m_runner->Startup();
+        m_subpassdone_cb = _DRAWSPACE_NEW_( SubPassDoneCb, SubPassDoneCb( this, &Fragment::on_subpassdone ) );              
     }
     p_planetbody->Initialize();
 }
 
 Fragment::~Fragment( void )
-{
-    _DRAWSPACE_DELETE_( m_runner );    
-}
-
-void Fragment::on_meshebuild_request( PropertyPool* p_args )
-{
-    //localy copy inputs
-
-    DrawSpace::Core::Meshe patchmeshe;
-    patchmeshe = *( p_args->GetPropValue<Meshe*>( "patchmeshe" ) );
-    SphericalLOD::Patch* patch = p_args->GetPropValue<SphericalLOD::Patch*>( "patch" );
-    float* heightmap = (float*)p_args->GetPropValue<void*>( "colliding_heightmap" );
-
-    ////////////////////////////// do the work
-
-    Meshe final_meshe;
-    build_meshe( patchmeshe, patch, final_meshe, heightmap );
-
-    Dynamics::InertBody::Body::Parameters params;
-
-    params.mass = 0.0;
-
-    params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
-
-    params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
-    params.shape_descr.meshe = final_meshe;
-
-    m_params = params;
-}
-
-void Fragment::on_meshebuild_result( DrawSpace::Core::Runner::State p_runnerstate )
-{
-    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
-    {
-        RemoveColliderFromWorld();
-
-        m_collider->SetKinematic( m_params );
-        m_collider->AddToWorld( m_world );
-
-        m_collision_state = true;
-        m_nb_collisionmeshebuild_done++;
-
-        m_runner->ResetState();
-    }
+{    
 }
 
 void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod )
@@ -206,8 +153,6 @@ void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::
 
 void Fragment::Update( DrawSpace::Planetoid::Body* p_owner )
 {
-    m_runner->Check();
-
     if( m_hot )
     {
         Matrix camera_pos;
@@ -340,15 +285,6 @@ void Fragment::on_subpassdone( int p_subpassindex )
     {
         m_collidingheightmap_texture->CopyTextureContent();
 
-        /*
-        PropertyPool props;
-        props.AddPropValue<Meshe*>( "patchmeshe", m_planetbody->GetPatcheMeshe() );
-        props.AddPropValue<SphericalLOD::Patch*>( "patch", m_current_patch );
-        props.AddPropValue<void*>( "colliding_heightmap", m_collidingheightmap_content );
-        m_runner->PushMessage( props );
-        */
-
-
         float* heightmap = (float*)m_collidingheightmap_content;
         Meshe final_meshe;
         build_meshe( *( m_planetbody->GetPatcheMeshe() ), m_current_patch, final_meshe, heightmap );
@@ -362,17 +298,12 @@ void Fragment::on_subpassdone( int p_subpassindex )
         params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
         params.shape_descr.meshe = final_meshe;
 
-        m_params = params;
-
-
         RemoveColliderFromWorld();
 
-        m_collider->SetKinematic( m_params );
+        m_collider->SetKinematic( params );
         m_collider->AddToWorld( m_world );
 
         m_collision_state = true;
         m_nb_collisionmeshebuild_done++;
-
-
     }
 }
