@@ -248,6 +248,9 @@
     <ClCompile Include="src\noise.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\spherelod_config.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -512,6 +515,9 @@
     </ClInclude>
     <ClInclude Include="src\noise.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spherelod_config.h">
+      <Filter>sphericalLOD</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

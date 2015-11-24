@@ -251,9 +251,6 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     face_node->SetCurrentPatch( NULL );
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, world, view, proj );
 
-    //m_renderer->SetFxShaderParams( 1, 0, Vector( 0.0, 1.0, 0.0, 1.0 ) );
-    //m_renderer->DrawMeshe( world, view, proj );
-
 }
 
 void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )

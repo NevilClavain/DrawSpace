@@ -51,6 +51,7 @@ m_timemanager( p_time )
 
     m_patchsdraw_request_cb = _DRAWSPACE_NEW_( PatchsDrawRequestCb, PatchsDrawRequestCb( this, &DrawSpace::Planetoid::Body::on_patchsdraw_request ) );
 
+    m_config = _DRAWSPACE_NEW_( SphericalLOD::Config, SphericalLOD::Config );
 }
 
 DrawSpace::Planetoid::Body::~Body( void )

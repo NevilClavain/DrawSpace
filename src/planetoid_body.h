@@ -138,6 +138,8 @@ protected:
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
 
+    DrawSpace::SphericalLOD::Config*                                        m_config;
+
     // list of some passes to render for internal stuff
     // colliding heightmap, global textures ?
     std::vector<SubPass>                                                    m_subpasses;

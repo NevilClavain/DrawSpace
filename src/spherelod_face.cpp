@@ -623,13 +623,10 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
 
         // ramener dans l'intervale 1.0 - 0.0
         dsreal factor = Maths::Clamp( 0.0, 1.0, m_relative_alt - 1.0 );
-
         dsreal factor2 = 2.0 * atan( 180.0 * factor ) / PI;
-
 
         m_lod_slipping_sup = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 8, NB_LOD_RANGES - 1, factor2 ) );
         m_lod_slipping_inf = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 0, NB_LOD_RANGES - 2, factor2 ) );
-
     }
 }
 
