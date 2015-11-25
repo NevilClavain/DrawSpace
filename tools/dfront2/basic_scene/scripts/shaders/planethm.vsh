@@ -5,6 +5,7 @@ float4   flag0:				register(c24);
 	// .x -> patch orientation enum integer
 	// .y -> patch sidelenght
 	// .z -> planet ray
+	// .w -> amplitude
 
 float4   patch_translation:	register(c25);
 	/// .x, .y -> patch positionning

@@ -54,6 +54,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     flag0[0] = p_patch->GetOrientation();
     flag0[1] = p_patch->GetUnitSideLenght();
     flag0[2] = p_ray;
+    flag0[3] = 12000.0;
 
     Vector patch_pos;
     dsreal xp, yp;

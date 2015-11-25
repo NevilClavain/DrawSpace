@@ -5,6 +5,7 @@ float4   flag0:				register(c24);
 	// .x -> patch orientation enum integer
 	// .y -> patch sidelenght
 	// .z -> planet ray
+	// .w -> amplitude
 
 float4   patch_translation:	register(c25);
 	/// .x, .y -> patch positionning
@@ -227,7 +228,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	f[2] = lerp( -10.0, 10.0, ( v_position2.z / 2.0 ) + 0.5 );
 
 	float res = Fractal_fBm( f );
-	v_alt = res * 12000.0;
+	v_alt = res * flag0.w;
 	if( v_alt < 0.0 )
 	{
 		v_alt = 0.0;

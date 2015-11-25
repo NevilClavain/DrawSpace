@@ -98,23 +98,6 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
 
 void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap )
 {
-    /*
-    for( long i = 0; i < p_patchmeshe.GetVertexListSize(); i++ )
-    {                
-        Vertex v, vertex_out;
-        p_patchmeshe.GetVertex( i, v );
-      
-        Vector v_out;
-
-        p_patch->ProjectVertex( Vector( v.x, v.y, v.z, 1.0 ), v_out );
-        v_out.Scale( m_planetray );
-        vertex_out.x = v_out[0];
-        vertex_out.y = v_out[1];
-        vertex_out.z = v_out[2];
-
-        p_outmeshe.AddVertex( vertex_out );
-    }
-    */
 
     for( int y = 0; y < PATCH_RESOLUTION; y++ )
     {
