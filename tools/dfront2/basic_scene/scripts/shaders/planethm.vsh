@@ -16,6 +16,7 @@ float4   base_uv: register(c26);
 
 float4 fbm_params: register(c27);
 	// .x -> lacunarity
+	// .y -> fbm input half-range
 
 
 sampler2D TextureBuffer : register(s0);
@@ -221,9 +222,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float v_alt = 0.0;
 
 	double3 f;
-	f[0] = lerp( -10.0, 10.0, ( v_position2.x / 2.0 ) + 0.5 );
-	f[1] = lerp( -10.0, 10.0, ( v_position2.y / 2.0 ) + 0.5 );
-	f[2] = lerp( -10.0, 10.0, ( v_position2.z / 2.0 ) + 0.5 );
+	f[0] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.x / 2.0 ) + 0.5 );
+	f[1] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.y / 2.0 ) + 0.5 );
+	f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
 
 	float res = Fractal_fBm( f );
 	if( res < 0.0 )
