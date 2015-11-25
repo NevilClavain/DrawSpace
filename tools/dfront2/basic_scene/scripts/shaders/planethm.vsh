@@ -141,6 +141,7 @@ double Fractal_fBm( double3 f )
 	fTemp = f;
 
 	double expvVal;
+	double prev = 1.0;
 
 	// Inner loop of spectral construction, where the fractal is built
 	for( i = 0; i < nbOctaves; i++ )
@@ -148,7 +149,15 @@ double Fractal_fBm( double3 f )
 		buffertextexp[0] = ( index128 * i ) + midinterval128;
 		expvVal = tex2Dlod( TextureExp, buffertextexp );
 
-		fValue += Noise_Noise( fTemp ) * expvVal;			
+		/* multi-ridged
+		double n = Noise_Noise( fTemp ) * expvVal;
+		double h = 1.0 - abs( n );
+		fValue += h * h * prev;
+		prev = fValue;
+		*/
+
+		fValue += Noise_Noise( fTemp ) * expvVal;
+
 		fTemp *= lacunarity;
 	}	
 
