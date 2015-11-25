@@ -60,16 +60,21 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     dsreal xp, yp;
     p_patch->GetUnitPos( xp, yp );
 
-    Vector uvcoords;
-    p_patch->GetUVCoords( uvcoords );
-
     patch_pos[0] = xp;
     patch_pos[1] = yp;
     patch_pos[2] = 0.0;
 
+
+    Vector uvcoords;
+    p_patch->GetUVCoords( uvcoords );
+
+    Vector fbm_params;
+    fbm_params[0] = m_fractal->GetLacunarity();
+
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
     m_renderer->SetFxShaderParams( 0, 26, uvcoords );
+    m_renderer->SetFxShaderParams( 0, 27, fbm_params );
 
     if( m_current_patch == p_patch )
     {

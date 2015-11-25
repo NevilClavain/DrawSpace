@@ -98,7 +98,6 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
 
 void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap )
 {
-
     for( int y = 0; y < PATCH_RESOLUTION; y++ )
     {
         for( int x = 0; x < PATCH_RESOLUTION; x++ )

@@ -14,6 +14,8 @@ float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
+float4 fbm_params: register(c27);
+	// .x -> lacunarity
 
 
 sampler2D TextureBuffer : register(s0);
@@ -124,7 +126,7 @@ double Fractal_fBm( double3 f )
 
 
 	int nbOctaves = 9;
-	double lacunarity = 2.0;
+	double lacunarity = fbm_params.x;
 	double midinterval128 = 0.00390625;
 	double index128 = 0.0078125;
 	float4 buffertextexp = 0.0;
