@@ -17,6 +17,7 @@ float4   base_uv: register(c26);
 float4 fbm_params: register(c27);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
+	// .z -> fbm clamp
 
 
 sampler2D TextureBuffer : register(s0);
@@ -149,9 +150,18 @@ double Fractal_fBm( double3 f )
 
 		fValue += Noise_Noise( fTemp ) * expvVal;			
 		fTemp *= lacunarity;
-
 	}	
-	return clamp( -1.0, 1.0, fValue );		
+
+	double res;	
+	if( fbm_params.z > 0.0 )
+	{
+		res = clamp( -1.0, 1.0, fValue );
+	}
+	else
+	{
+		res = fValue;
+	}
+	return res;
 }
 
 

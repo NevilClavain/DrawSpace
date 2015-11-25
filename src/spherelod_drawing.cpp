@@ -71,6 +71,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     Vector fbm_params;
     fbm_params[0] = m_fractal->GetLacunarity();
     fbm_params[1] = 10.0;
+    fbm_params[2] = 1.0;
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );

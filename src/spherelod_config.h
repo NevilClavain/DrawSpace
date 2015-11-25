@@ -37,6 +37,7 @@ public:
     int             m_nbLodRanges;
     int             m_bottomSlipping_sup;
     int             m_bottomSlipping_inf;
+    double          m_lod0base;
     double          m_amplitude;
     double          m_fbmInputMin;
     double          m_fbmInputMax;
@@ -45,6 +46,7 @@ public:
     bool            m_fbmClamp;
     bool            m_fbmClip;
     double          m_fbmClipValue;
+    
 
     Config( void );
     ~Config( void );
