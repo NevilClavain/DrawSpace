@@ -18,6 +18,11 @@ float4 fbm_params: register(c27);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
+	// .w -> reserve
+
+float4 fbm_params2: register(c28);
+	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
+	// .y -> clip value
 
 
 sampler2D TextureBuffer : register(s0);
@@ -237,18 +242,26 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
 	v_position2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
       
-
-	float v_alt = 0.0;
-
 	double3 f;
 	f[0] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.x / 2.0 ) + 0.5 );
 	f[1] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.y / 2.0 ) + 0.5 );
 	f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
 
 	float res = Fractal_fBm( f );
-	if( res < 0.0 )
+
+	if( fbm_params2.x > 0 )
 	{
-		res = 0.0;
+		if( res < fbm_params2.y )
+		{
+			res = fbm_params2.y;
+		}
+	}
+	else if( fbm_params2.x < 0 )
+	{
+		if( res > fbm_params2.y )
+		{
+			res = fbm_params2.y;
+		}	
 	}
 	
 	Output.TexCoord1 = 0.0;

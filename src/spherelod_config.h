@@ -39,8 +39,7 @@ public:
     int             m_bottomSlipping_inf;
     double          m_lod0base;
     double          m_amplitude;
-    double          m_fbmInputMin;
-    double          m_fbmInputMax;
+    double          m_fbmInputHalfRange;
     double          m_fbmLacunarity;
     double          m_fbmRoughness;
     bool            m_fbmClamp;

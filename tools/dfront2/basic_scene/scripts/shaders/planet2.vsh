@@ -18,6 +18,11 @@ float4 fbm_params: register(c27);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
+	// .w -> reserve
+
+float4 fbm_params2: register(c28);
+	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
+	// .y -> clip value
 
 
 sampler2D TextureBuffer : register(s0);
@@ -252,9 +257,20 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float res = Fractal_fBm( f );
 	v_alt = res * flag0.w;
-	if( v_alt < 0.0 )
+
+	if( fbm_params2.x > 0 )
 	{
-		v_alt = 0.0;
+		if( v_alt < fbm_params2.y )
+		{
+			v_alt = fbm_params2.y;
+		}
+	}
+	else if( fbm_params2.x < 0 )
+	{
+		if( v_alt > fbm_params2.y )
+		{
+			v_alt = fbm_params2.y;
+		}	
 	}
 	
 	v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
