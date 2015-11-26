@@ -32,9 +32,10 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 
-FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer ) :
+FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::SphericalLOD::Config* p_config ) :
 m_renderer( p_renderer ),
-m_current_patch( NULL )
+m_current_patch( NULL ),
+m_config( p_config )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -54,7 +55,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     flag0[0] = p_patch->GetOrientation();
     flag0[1] = p_patch->GetUnitSideLenght();
     flag0[2] = p_ray;
-    flag0[3] = 12000.0;
+    flag0[3] = m_config->m_amplitude;
 
     Vector patch_pos;
     dsreal xp, yp;
@@ -70,12 +71,12 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 
     Vector fbm_params;
     fbm_params[0] = m_fractal->GetLacunarity();
-    fbm_params[1] = 10.0;
-    fbm_params[2] = 1.0;
+    fbm_params[1] = m_config->m_fbmInputHalfRange;
+    fbm_params[2] = ( m_config->m_fbmClamp ? 1.0 : 0.0 );
 
     Vector fbm_params2;
-    fbm_params2[0] = 1.0;
-    fbm_params2[1] = 0.0;
+    fbm_params2[0] = m_config->m_fbmClipMode;
+    fbm_params2[1] = m_config->m_fbmClipValue;
 
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
@@ -187,9 +188,10 @@ void FaceDrawingNode::SetCurrentPatch( DrawSpace::SphericalLOD::Patch* p_patch )
     m_current_patch = p_patch;
 }
 
-Drawing::Drawing( void ) :
+Drawing::Drawing( SphericalLOD::Config* p_config ) :
 m_renderer( NULL ),
-m_planetbody( NULL )
+m_planetbody( NULL ),
+m_config( p_config )
 {
 }
 
@@ -271,7 +273,7 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
 {
     for( long i = 0; i < 6; i++ )
     {   
-        FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
+        FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
         node->SetMeshe( Body::m_planetpatch_meshe );
         node->CreateNoisingTextures();
 
@@ -287,7 +289,7 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
 
 void Drawing::RegisterSinglePassSlot( Pass* p_pass )
 {
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer ) );
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
     node->SetMeshe( Body::m_planetpatch_meshe );
     node->CreateNoisingTextures();
 

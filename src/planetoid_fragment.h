@@ -55,6 +55,8 @@ protected:
 
     DrawSpace::Dynamics::World*                                 m_world;
 
+    DrawSpace::SphericalLOD::Config*                            m_config;
+
     DrawSpace::SphericalLOD::Body*                              m_planetbody;
     DrawSpace::Dynamics::Collider*                              m_collider;
     
@@ -87,6 +89,7 @@ protected:
     DrawSpace::Core::Texture*                                   m_collidingheightmap_texture;
     void*                                                       m_collidingheightmap_content;
 
+
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
     void on_subpassdone( int p_subpassindex );
     
@@ -94,7 +97,7 @@ protected:
 
 public:
 
-    Fragment( DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions );
+    Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions );
     virtual ~Fragment( void );
 
     void Update( DrawSpace::Planetoid::Body* p_owner );

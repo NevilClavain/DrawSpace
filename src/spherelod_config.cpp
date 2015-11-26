@@ -25,16 +25,13 @@
 using namespace DrawSpace::SphericalLOD;
 
 Config::Config( void ) :
-m_patchResol( 11 ),
-m_nbLodRanges( 16 ),
-m_bottomSlipping_sup( 8 ),
-m_bottomSlipping_inf( 0 ),
 m_amplitude( 12000.0 ),
+m_lod0base( 12000.0 ),
 m_fbmInputHalfRange( 10.0 ),
 m_fbmLacunarity( 2.0 ),
 m_fbmRoughness( 0.5 ),
 m_fbmClamp( true ),
-m_fbmClip( true ),
+m_fbmClipMode( 1.0 ),
 m_fbmClipValue( 0.0 )
 {
 }

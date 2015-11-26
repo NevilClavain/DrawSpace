@@ -32,21 +32,15 @@ namespace SphericalLOD
 class Config
 {
 public:
-
-    int             m_patchResol;
-    int             m_nbLodRanges;
-    int             m_bottomSlipping_sup;
-    int             m_bottomSlipping_inf;
     double          m_lod0base;
     double          m_amplitude;
     double          m_fbmInputHalfRange;
     double          m_fbmLacunarity;
     double          m_fbmRoughness;
     bool            m_fbmClamp;
-    bool            m_fbmClip;
+    double          m_fbmClipMode;
     double          m_fbmClipValue;
     
-
     Config( void );
     ~Config( void );
 };

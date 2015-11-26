@@ -29,7 +29,7 @@
 #include "noise.h"
 #include "spherelod_config.h"
 
-#define NB_LOD_RANGES           16//13
+#define NB_LOD_RANGES           16
 #define PATCH_RESOLUTION        11
 
 namespace DrawSpace

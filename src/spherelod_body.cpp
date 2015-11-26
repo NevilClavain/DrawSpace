@@ -35,23 +35,17 @@ using namespace DrawSpace::SphericalLOD;
 Meshe* Body::m_planetpatch_meshe = NULL;
 
 
-Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time ) : 
+Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config ) : 
 m_timemanager( p_time ),
 m_diameter( p_diameter ),
 m_current_face( -1 ),
-m_current_patch( NULL )
+m_current_patch( NULL ),
+m_config( p_config )
 {
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter ) );        
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter, m_config ) );        
     }
-
-    m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Body::on_runner_request ) );
-    m_runnerevt = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Body::on_runner_result ) );
-
-    m_runner = _DRAWSPACE_NEW_( Runner, Runner );              
-    m_runner->RegisterTaskMsgHandler( m_runnercb );
-    m_runner->RegisterEventHandler( m_runnerevt );
 }
 
 Body::~Body( void )
@@ -68,7 +62,6 @@ void Body::Initialize( void )
     {
         m_faces[i]->Init( i );
     }
-    m_runner->Startup();
 }
 
 void Body::Compute( void )
@@ -109,8 +102,6 @@ void Body::Compute( void )
     m_faces[m_current_face]->UpdateLODComputationResults();
 
     check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
-
-    m_runner->Check();
 }
 
 
@@ -248,23 +239,5 @@ void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
         {
             (*m_patchupdate_handlers[i])( m_current_patch, p_currentpatch_lod ); 
         }
-    }
-}
-
-void Body::on_runner_request( DrawSpace::Core::PropertyPool* p_args )
-{
-    std::vector<Face*> faces_list = p_args->GetPropValue<std::vector<Face*>>( "faces_list" );
-    for( size_t i = 0; i < faces_list.size(); i++ )
-    {
-        faces_list[i]->Compute();
-    }
-}
-
-void Body::on_runner_result( DrawSpace::Core::Runner::State p_runnerstate )
-{
-    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
-    {
-        m_faces[m_current_face]->UpdateLODComputationResults();
-        m_runner->ResetState();
     }
 }

@@ -28,6 +28,7 @@
 #include "spherelod_body.h"
 #include "scenenodegraph.h"
 
+
 namespace DrawSpace
 {
 namespace SphericalLOD
@@ -45,24 +46,24 @@ public:
 
 protected:
 
-    DrawSpace::Interface::Renderer* m_renderer;
-    //Face*                           m_face;
+    DrawSpace::Interface::Renderer*     m_renderer;
+    DrawSpace::SphericalLOD::Config*    m_config;
 
-    std::vector<Patch*>             m_display_list;
+    std::vector<Patch*>                 m_display_list;
 
-    void*                           m_pnbufftexture_content;
-    void*                           m_pnmaptexture_content;
-    void*                           m_fbmexptexture_content;
+    void*                               m_pnbufftexture_content;
+    void*                               m_pnmaptexture_content;
+    void*                               m_fbmexptexture_content;
 
-    DrawSpace::Core::Texture*       m_perlinnoisebuffer_texture;
-    DrawSpace::Core::Texture*       m_perlinnoisemap_texture;
-    DrawSpace::Core::Texture*       m_fbmexp_texture;
+    DrawSpace::Core::Texture*           m_perlinnoisebuffer_texture;
+    DrawSpace::Core::Texture*           m_perlinnoisemap_texture;
+    DrawSpace::Core::Texture*           m_fbmexp_texture;
 
-    Stats                           m_stats;
+    Stats                               m_stats;
 
-    DrawSpace::Utils::Fractal*      m_fractal;
+    DrawSpace::Utils::Fractal*          m_fractal;
 
-    Patch*                          m_current_patch;  // le connaitre pour eventuellement le dessiner d'une facon differente
+    Patch*                              m_current_patch;  // le connaitre pour eventuellement le dessiner d'une facon differente
 
     void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
@@ -70,7 +71,7 @@ protected:
     
 
 public:
-    FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer );
+    FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::SphericalLOD::Config* p_config );
     virtual ~FaceDrawingNode( void );
 
     void Draw( long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
@@ -108,13 +109,15 @@ protected:
     
     Utils::Matrix                                                               m_globaltransformation;
 
+    DrawSpace::SphericalLOD::Config*                                            m_config;
+
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
     void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
 public:
 
-    Drawing( void );
+    Drawing( SphericalLOD::Config* p_config );
     virtual ~Drawing( void );
 
     virtual void SetCurrentPlanetBody( Body* p_planetbody );

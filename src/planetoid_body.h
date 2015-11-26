@@ -180,7 +180,7 @@ protected:
 
 public:
     
-    Body( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time );
+    Body( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time, const DrawSpace::SphericalLOD::Config& p_config );
     virtual ~Body( void );
 
     void                                GetSceneName( dsstring& p_name );    

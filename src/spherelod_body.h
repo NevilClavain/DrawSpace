@@ -37,16 +37,13 @@ class Body
 public:
     typedef DrawSpace::Core::BaseCallback2<void, Patch*, int>                                   PatchUpdateHandler;
 
-    typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Core::PropertyPool*>               RunnerMsgCb;
-    typedef DrawSpace::Core::CallBack<Body, void, Core::Runner::State>                          RunnerEvtCb;
+
 
     typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Utils::Timer*>                     BodyTimerCb;
 
 protected:
 
-    DrawSpace::Core::Runner*                                                    m_runner;
-    RunnerMsgCb*                                                                m_runnercb;
-    RunnerEvtCb*                                                                m_runnerevt;
+    DrawSpace::SphericalLOD::Config*                                            m_config;
 
     Face*                                                                       m_faces[6];
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
@@ -64,12 +61,9 @@ protected:
 
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
-    void on_runner_request( DrawSpace::Core::PropertyPool* p_args );
-    void on_runner_result( DrawSpace::Core::Runner::State p_runnerstate );
-
 public:
 
-    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time );
+    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config );
     virtual ~Body( void );
 
     static void BuildMeshe( void );

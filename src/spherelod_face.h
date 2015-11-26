@@ -43,7 +43,7 @@ protected:
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch; 
 
-    DrawSpace::Utils::Fractal*                                  m_fractal;
+    DrawSpace::SphericalLOD::Config*                            m_config;
 
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_currentleaf;
     std::vector<Patch*>                                         m_displaylist;
@@ -92,7 +92,7 @@ protected:
 
 public:
 
-    Face( dsreal p_diameter );
+    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config );
     virtual ~Face( void );
 
     bool Init( int p_orientation );

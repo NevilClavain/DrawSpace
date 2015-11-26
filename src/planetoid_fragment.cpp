@@ -29,8 +29,9 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Planetoid;
 using namespace DrawSpace::Dynamics;
 
-Fragment::Fragment( DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, Collider* p_collider, dsreal p_planetray, bool p_collisions ) :
+Fragment::Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, Collider* p_collider, dsreal p_planetray, bool p_collisions ) :
 m_world( p_world ),
+m_config( p_config ),
 m_planetbody( p_planetbody ), 
 m_collider( p_collider ),
 m_collision_state( false ),
@@ -110,7 +111,7 @@ void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::
             p_patchmeshe.GetVertex( index, v );
 
             double alt = *( p_heightmap + index_hm );
-            alt *= 12000.0;
+            alt *= m_config->m_amplitude;
       
             Vector v_out;
 

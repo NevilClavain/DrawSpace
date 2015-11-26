@@ -30,7 +30,8 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Face::Face( dsreal p_diameter ) : 
+Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config ) : 
+m_config( p_config ),
 m_rootpatch( NULL ), 
 m_planet_diameter( p_diameter ),
 m_currentleaf( NULL ),
@@ -41,9 +42,6 @@ m_relative_alt( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
 m_lod_slipping_inf( NB_LOD_RANGES - 4 )
 {
-    m_fractal = new Fractal( 3, 3345764, 0.5, 2.0 );
-    _asm nop
-
 }
 
 Face::~Face( void )
@@ -615,7 +613,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
-    m_relative_alt = p_alt - ( 12000.0 / ( m_planet_diameter / 2.0 ) );
+    m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_planet_diameter / 2.0 ) );
     if( m_hot )
     { 
         // calcul de la fenetre glissante de lod (m_lod_slipping_sup et m_lod_slipping_inf) en fct de l'altitude relative
