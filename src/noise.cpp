@@ -181,6 +181,7 @@ double Fractal::fBm(double *f, int fOctaves)
 	int i;
 	// Initialize locals
 	double fValue = 0;
+    double fexp = 1.0;
 	double fTemp[MAX_DIMENSIONS];
 	for(i=0; i<m_nDimensions; i++)
 		fTemp[i] = f[i];
@@ -188,15 +189,11 @@ double Fractal::fBm(double *f, int fOctaves)
 	// Inner loop of spectral construction, where the fractal is built
 	for(i=0; i<fOctaves; i++)
 	{
-		fValue += GetNoise(fTemp) * m_fExponent[i];
+		fValue += GetNoise(fTemp) * pow( fexp, -m_fH );
 		for(int j=0; j<m_nDimensions; j++)
 			fTemp[j] *= m_fLacunarity;
+        fexp *= m_fLacunarity;
 	}
 		
 	return Maths::Clamp(-1.0, 1.0, fValue);    
-}
-
-double Fractal::GetExponent( int p_index )
-{
-    return m_fExponent[p_index];
 }

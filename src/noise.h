@@ -128,7 +128,7 @@ public:
 protected:
 	double m_fH;
 	double m_fLacunarity;
-	double m_fExponent[MaxOctaves];
+	
 
 public:
 	Fractal()	{}
@@ -141,21 +141,9 @@ public:
 		Noise::Init(nDimensions, nSeed);
 		m_fH = fH;
 		m_fLacunarity = fLacunarity;
-		double f = 1;
-		for(int i=0; i<MaxOctaves; i++) 
-		{
-			m_fExponent[i] = pow(f, -m_fH);
-			f *= m_fLacunarity;
-		}
 	}
 	double fBm(double *f, int fOctaves);
 
-    double GetExponent( int p_index ); 
-
-    double GetLacunarity( void )
-    {
-        return m_fLacunarity;
-    }
 };
 
 }

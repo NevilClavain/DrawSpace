@@ -70,13 +70,14 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     p_patch->GetUVCoords( uvcoords );
 
     Vector fbm_params;
-    fbm_params[0] = m_fractal->GetLacunarity();
+    fbm_params[0] = m_config->m_fbmLacunarity;
     fbm_params[1] = m_config->m_fbmInputHalfRange;
     fbm_params[2] = ( m_config->m_fbmClamp ? 1.0 : 0.0 );
 
     Vector fbm_params2;
     fbm_params2[0] = m_config->m_fbmClipMode;
     fbm_params2[1] = m_config->m_fbmClipValue;
+    fbm_params2[2] = m_config->m_fbmRoughness;
 
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
@@ -124,13 +125,8 @@ void FaceDrawingNode::CreateNoisingTextures( void )
     m_perlinnoisemap_texture->SetFormat( 256, 1, 4 );
     m_perlinnoisemap_texture->SetPurpose( Texture::PURPOSE_FLOAT );
 
-    m_fbmexp_texture = new Texture();    
-    m_fbmexp_texture->SetFormat( Fractal::MaxOctaves, 1, 4 );
-    m_fbmexp_texture->SetPurpose( Texture::PURPOSE_FLOAT );
-
     SetVertexTexture( m_perlinnoisebuffer_texture, 0 );
     SetVertexTexture( m_perlinnoisemap_texture, 1 );
-    SetVertexTexture( m_fbmexp_texture, 2 );
 }
 
 void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
@@ -142,9 +138,6 @@ void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal 
 
     m_perlinnoisemap_texture->AllocTextureContent();
     m_pnmaptexture_content = m_perlinnoisemap_texture->GetTextureContentPtr();
-
-    m_fbmexp_texture->AllocTextureContent();
-    m_fbmexptexture_content = m_fbmexp_texture->GetTextureContentPtr();
     
     unsigned char* color_ptr = (unsigned char*)m_pnmaptexture_content;
     float* float_ptr = (float*)m_pnbufftexture_content;
@@ -165,17 +158,8 @@ void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal 
         *float_ptr = p_fractal->GetNMap( i ); float_ptr++;
     }
 
-    float_ptr = (float*)m_fbmexptexture_content;
-
-    for( long i = 0; i < Fractal::MaxOctaves; i++ )
-    {
-        float temp = p_fractal->GetExponent( i );
-        *float_ptr = temp; float_ptr++;
-    }
-
     m_perlinnoisemap_texture->UpdateTextureContent();
     m_perlinnoisebuffer_texture->UpdateTextureContent();
-    m_fbmexp_texture->UpdateTextureContent();
 }
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )

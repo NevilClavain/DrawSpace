@@ -23,11 +23,11 @@ float4 fbm_params: register(c27);
 float4 fbm_params2: register(c28);
 	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
 	// .y -> clip value
+	// .z -> roughness
 
 
 sampler2D TextureBuffer : register(s0);
 sampler2D TextureMap : register(s1);
-sampler2D TextureExp : register(s2);
 
 struct VS_INPUT 
 {
@@ -73,7 +73,6 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 		
 		maptextcoord[1] = 0.5;
 		float4 mapval = tex2Dlod( TextureMap, maptextcoord );
-		//nIndex = mapval.x * 256.0;
 		nIndex = mapval.x;
 	}
 	
@@ -144,14 +143,13 @@ double Fractal_fBm( double3 f )
 
 	fTemp = f;
 
-	double expvVal;
 	double prev = 1.0;
+
+	double fexp = 1.0;
 
 	// Inner loop of spectral construction, where the fractal is built
 	for( i = 0; i < nbOctaves; i++ )
 	{
-		buffertextexp[0] = ( index128 * i ) + midinterval128;
-		expvVal = tex2Dlod( TextureExp, buffertextexp );
 
 		/* multi-ridged
 		double n = Noise_Noise( fTemp ) * expvVal;
@@ -160,9 +158,10 @@ double Fractal_fBm( double3 f )
 		prev = fValue;
 		*/
 
-		fValue += Noise_Noise( fTemp ) * expvVal;
+		fValue += Noise_Noise( fTemp ) * pow( fexp, -fbm_params2.z );
 
 		fTemp *= lacunarity;
+		fexp *= lacunarity;
 
 	}
 

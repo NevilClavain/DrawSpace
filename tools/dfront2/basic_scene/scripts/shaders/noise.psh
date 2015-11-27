@@ -7,7 +7,6 @@ float4 flags: register(c0);
 
 sampler2D TextureBuffer : register(s0);
 sampler2D TextureMap : register(s1);
-sampler2D TextureExp : register(s2);
 
 struct PS_INTPUT 
 {
@@ -107,6 +106,7 @@ double Fractal_fBm( double3 f )
 
 	int nbOctaves = 9;
 	double lacunarity = 2.0;
+	double roughness = 0.5;
 	double midinterval128 = 0.00390625;
 	double index128 = 0.0078125;
 	float4 buffertextexp = 0.0;
@@ -118,16 +118,25 @@ double Fractal_fBm( double3 f )
 
 	fTemp = f;
 
-	double expvVal;
+	double prev = 1.0;
+
+	double fexp = 1.0;
 
 	// Inner loop of spectral construction, where the fractal is built
 	for( i = 0; i < nbOctaves; i++ )
 	{
-		buffertextexp[0] = ( index128 * i ) + midinterval128;
-		expvVal = tex2Dlod( TextureExp, buffertextexp );
 
-		fValue += Noise_Noise( fTemp ) * expvVal;			
+		/* multi-ridged
+		double n = Noise_Noise( fTemp ) * expvVal;
+		double h = 1.0 - abs( n );
+		fValue += h * h * prev;
+		prev = fValue;
+		*/
+
+		fValue += Noise_Noise( fTemp ) * pow( fexp, -roughness );
+
 		fTemp *= lacunarity;
+		fexp *= lacunarity;
 
 	}	
 	return clamp( -1.0, 1.0, fValue );		
