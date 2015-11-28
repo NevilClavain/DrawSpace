@@ -1,0 +1,27 @@
+
+
+sampler2D TextureBuffer : register(s0);
+sampler2D TextureMap : register(s1);
+
+sampler2D TextureBuffer2 : register(s2);
+sampler2D TextureMap2 : register(s3);
+
+struct PS_INTPUT 
+{
+	float4 Position : POSITION0;
+	float4 TexCoord0: TEXCOORD0;
+	float4 TexCoord1: TEXCOORD1;
+};
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 color = 0;
+		
+	
+	color.x = 0.0;
+	color.y = 0.0;
+	color.z = 1.0;
+	color.w = 0.0;	
+		
+	return color;
+}
