@@ -1,10 +1,7 @@
 
 
-sampler2D TextureBuffer : register(s0);
-sampler2D TextureMap : register(s1);
-
-sampler2D TextureBuffer2 : register(s2);
-sampler2D TextureMap2 : register(s3);
+sampler1D TexturePerm : register(s0);
+sampler1D TextureGrad : register(s1);
 
 struct PS_INTPUT 
 {
@@ -13,15 +10,80 @@ struct PS_INTPUT
 	float4 TexCoord1: TEXCOORD1;
 };
 
+float3 fade( float3 t )
+{
+	//return t * t * t * (t * (t * 6 - 15) + 10); // new curve
+    return t * t * (3 - 2 * t); // old curve
+}
+
+float perm( float x )
+{
+	return tex1Dlod( TexturePerm, x / 256.0 );// * 256;
+}
+
+float grad( float x, float3 p )
+{
+	float3 grad = tex1Dlod( TextureGrad, x );
+	float3 grad2 = 2 * ( grad - 0.5 );
+
+	return dot( grad2, p );
+}
+
+float inoise( float3 p )
+{
+
+	float3 P = fmod(floor(p), 256.0);
+
+	p -= floor(p);
+
+	float3 f = fade(p);
+
+	float A = perm(P.x) + P.y;
+
+	float AA = perm(A) + P.z;
+
+	float AB = perm(A + 1) + P.z;
+
+	float B =  perm(P.x + 1) + P.y;
+
+	float BA = perm(B) + P.z;
+
+	float BB = perm(B + 1) + P.z;
+
+	return lerp(
+
+	lerp(lerp(grad(perm(AA), p),
+
+				grad(perm(BA), p + float3(-1, 0, 0)), f.x),
+
+			lerp(grad(perm(AB), p + float3(0, -1, 0)),
+
+				grad(perm(BB), p + float3(-1, -1, 0)), f.x), f.y),
+
+	lerp(lerp(grad(perm(AA + 1), p + float3(0, 0, -1)),
+
+				grad(perm(BA + 1), p + float3(-1, 0, -1)), f.x),
+
+			lerp(grad(perm(AB + 1), p + float3(0, -1, -1)),
+
+				grad(perm(BB + 1), p + float3(-1, -1, -1)), f.x), f.y),
+
+	f.z);
+
+}
+
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 color = 0;
 		
+	double3 f = 0.0;
+	f[0] = lerp( -10.1, 10.1, input.TexCoord0.x );
+	f[1] = lerp( -10.1, 10.1, input.TexCoord0.y );
+	f[2] = 10.0;
+
+	float4 res = inoise( f );
 	
-	color.x = 0.0;
-	color.y = 0.0;
-	color.z = 1.0;
-	color.w = 0.0;	
-		
+	color = ( res * 0.5 ) + 0.5;
+
 	return color;
 }
