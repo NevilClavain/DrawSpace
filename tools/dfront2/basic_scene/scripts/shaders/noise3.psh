@@ -1,7 +1,6 @@
 
 
-sampler1D TexturePerm : register(s0);
-sampler1D TextureGrad : register(s1);
+sampler2D TexturePerlin : register(s0);
 
 struct PS_INTPUT 
 {
@@ -10,80 +9,61 @@ struct PS_INTPUT
 	float4 TexCoord1: TEXCOORD1;
 };
 
-float3 fade( float3 t )
+
+double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughness )
 {
-	//return t * t * t * (t * (t * 6 - 15) + 10); // new curve
-    return t * t * (3 - 2 * t); // old curve
+	int i;
+	// Initialize locals
+	double fValue = 0.0;
+	double3 fTemp;
+
+	fTemp = f;
+	double prev = 1.0;
+	double fexp = 1.0;
+
+	// Inner loop of spectral construction, where the fractal is built
+	for( i = 0; i < nbOctaves; i++ )
+	{	
+		float4 tc = 0.0;
+		tc[0] = fTemp[0];
+		tc[1] = fTemp[1];
+
+		fValue += tex2Dlod( TexturePerlin, tc ) * pow( fexp, -roughness );
+		
+		fTemp *= lacunarity;
+		fexp *= lacunarity;
+	}	
+	return clamp( -1.0, 1.0, fValue );
 }
 
-float perm( float x )
-{
-	return tex1Dlod( TexturePerm, x / 256.0 );// * 256;
-}
-
-float grad( float x, float3 p )
-{
-	float3 grad = tex1Dlod( TextureGrad, x );
-	float3 grad2 = 2 * ( grad - 0.5 );
-
-	return dot( grad2, p );
-}
-
-float inoise( float3 p )
-{
-
-	float3 P = fmod(floor(p), 256.0);
-
-	p -= floor(p);
-
-	float3 f = fade(p);
-
-	float A = perm(P.x) + P.y;
-
-	float AA = perm(A) + P.z;
-
-	float AB = perm(A + 1) + P.z;
-
-	float B =  perm(P.x + 1) + P.y;
-
-	float BA = perm(B) + P.z;
-
-	float BB = perm(B + 1) + P.z;
-
-	return lerp(
-
-	lerp(lerp(grad(perm(AA), p),
-
-				grad(perm(BA), p + float3(-1, 0, 0)), f.x),
-
-			lerp(grad(perm(AB), p + float3(0, -1, 0)),
-
-				grad(perm(BB), p + float3(-1, -1, 0)), f.x), f.y),
-
-	lerp(lerp(grad(perm(AA + 1), p + float3(0, 0, -1)),
-
-				grad(perm(BA + 1), p + float3(-1, 0, -1)), f.x),
-
-			lerp(grad(perm(AB + 1), p + float3(0, -1, -1)),
-
-				grad(perm(BB + 1), p + float3(-1, -1, -1)), f.x), f.y),
-
-	f.z);
-
-}
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 color = 0;
-		
-	double3 f = 0.0;
-	f[0] = lerp( -10.1, 10.1, input.TexCoord0.x );
-	f[1] = lerp( -10.1, 10.1, input.TexCoord0.y );
-	f[2] = 10.0;
-
-	float4 res = inoise( f );
 	
-	color = ( res * 0.5 ) + 0.5;
+	double3 f = 0.0;
+	
+
+	f[0] = lerp( 0.5, 0.85, input.TexCoord0.x );
+	f[1] = lerp( 0.5, 0.85, input.TexCoord0.y );
+	f[2] = 1.0;
+	
+	
+	float res;
+
+	res = Fractal_fBm( f, 19, 2.0, 0.75 );
+
+	if( res > 0.0 )
+	{
+		color = ( res * 0.5 ) + 0.5;
+	}
+	else
+	{
+		color.x = 0;
+		color.y = 0;
+		color.z = 1.0;
+		color.w = 0.0;
+	}
 
 	return color;
 }
