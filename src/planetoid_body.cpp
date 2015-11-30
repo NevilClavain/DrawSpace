@@ -53,6 +53,10 @@ m_timemanager( p_time )
 
     m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
 
+    for( long i = 0; i < 6; i++ )
+    {
+        create_perlinnoise_subpass( i );  
+    }
 }
 
 DrawSpace::Planetoid::Body::~Body( void )
@@ -129,6 +133,66 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
         }
     }
 }
+
+DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_perlinnoise_subpass( int p_orientation )
+{
+    dsstring orientation;
+
+    switch( p_orientation )
+    {
+        case SphericalLOD::Patch::FrontPlanetFace:
+
+            orientation = "FrontPlanetFace";
+            break;
+
+        case SphericalLOD::Patch::RearPlanetFace:
+
+            orientation = "_RearPlanetFace";
+            break;
+
+        case SphericalLOD::Patch::LeftPlanetFace:
+
+            orientation = "_LeftPlanetFace";
+            break;
+
+        case SphericalLOD::Patch::RightPlanetFace:
+
+            orientation = "_RightPlanetFace";
+            break;
+
+        case SphericalLOD::Patch::TopPlanetFace:
+
+            orientation = "_TopPlanetFace";
+            break;
+
+        case SphericalLOD::Patch::BottomPlanetFace:
+
+            orientation = "_BottomPlanetFace";
+            break;
+
+    }
+
+    dsstring complete_name = m_scenename + orientation + dsstring( "_perlinnoise_pass" );
+    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
+
+    ipass->SetTargetDimsFromRenderer( false );    
+    ipass->SetTargetDims( 1024, 1024 );
+    ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOAT32 );
+
+    ipass->Initialize();
+    ipass->CreateViewportQuad();
+
+    ipass->GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+    ipass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "perlin.vsh", false ) ) );
+    ipass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "perlin.psh", false ) ) );
+    ipass->GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
+    ipass->GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+    ipass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+    ipass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+
+    return ipass;
+}
+
 
 DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename )
 {
