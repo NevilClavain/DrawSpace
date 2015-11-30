@@ -134,7 +134,7 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
     }
 }
 
-DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_perlinnoise_subpass( int p_orientation )
+void DrawSpace::Planetoid::Body::create_perlinnoise_subpass( int p_orientation )
 {
     dsstring orientation;
 
@@ -190,7 +190,12 @@ DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_perlinnoise_subp
     ipass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
     ipass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
 
-    return ipass;
+
+    SubPass sp;
+    sp.need_redraw = true;   // render once, at startup time
+    sp.pass = ipass;
+    sp.renderingpatches_node = NULL;
+    m_subpasses.push_back( sp );
 }
 
 

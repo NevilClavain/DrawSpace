@@ -148,7 +148,7 @@ protected:
 
     void create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
 
-    DrawSpace::IntermediatePass* create_perlinnoise_subpass( int p_orientation );
+    void create_perlinnoise_subpass( int p_orientation );
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
