@@ -132,6 +132,13 @@ protected:
 
     DrawSpace::Utils::Fractal*                                              m_fractal;
 
+    // donnees d'entrees pour le perlin noise
+    void*                                                                   m_pnbufftexture_content;
+    void*                                                                   m_pnmaptexture_content;
+    DrawSpace::Core::Texture*                                               m_perlinnoisebuffer_texture;
+    DrawSpace::Core::Texture*                                               m_perlinnoisemap_texture;
+
+
     DrawSpace::Pass*                                                        m_procedural_texture_currentpass;
 
     std::vector<SubPassDoneHandler*>                                        m_subpassdone_handlers;
@@ -165,9 +172,10 @@ protected:
     void manage_camerapoints( void );
     void update_fragments( void );
 
-
     void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
 
+    void create_noising_textures( void );
+    void init_noising_textures( void );
 public:
     
     Body( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time, const DrawSpace::SphericalLOD::Config& p_config );
