@@ -163,20 +163,8 @@ protected:
     void manage_camerapoints( void );
     void update_fragments( void );
 
-    //void fill_procedural_texture( int p_direction, const ProceduralTexture& p_procedural_texture, DrawSpace::Utils::Fractal* p_fractal );
 
     void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
-
-    /*
-    void on_proceduraltexture_request( DrawSpace::Core::PropertyPool* p_args );
-
-    void on_front_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
-    void on_rear_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
-    void on_left_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
-    void on_right_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
-    void on_top_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
-    void on_bottom_proceduraltexture_result( DrawSpace::Core::Runner::State p_runnerstate );
-      */  
 
 public:
     
@@ -194,8 +182,6 @@ public:
     DrawSpace::Core::RenderingNode*     GetSingleNodeFromPass( Pass* p_pass );
 
     void                                BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
-    //void                                CreateProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_resol );
-    //void                                InitProceduralGlobalTextures( DrawSpace::Pass* p_pass, int p_r, int p_g, int p_b );
     
     Fragment*                           GetFragment( int p_index );
 
