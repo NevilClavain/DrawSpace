@@ -298,6 +298,11 @@ void Texture::SetFormat( long p_width, long p_height, long p_bpp )
 
 void Texture::SetRenderData( void* p_render_data )
 {
+    if( m_render_data != NULL )
+    {
+        // pas normal...
+        _DSEXCEPTION( "texture previously created in renderer !!" );
+    }
     m_render_data = p_render_data;
 }
 
