@@ -60,7 +60,9 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 	int nIndex = 0;
 	for( i = 0; i < 3; i++ )
 	{
-		int indexTemp = nIndex + n[i];		
+		int indexTemp = nIndex + n[i];	
+		
+		/*	
 		if( indexTemp > 255 )
 		{
 			indexTemp = indexTemp - 256;
@@ -69,6 +71,8 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 		{
 			indexTemp = 256 + indexTemp;
 		}
+		*/
+
 		maptextcoord[0] = ( index256 * indexTemp ) + midinterval256;
 		
 		maptextcoord[1] = 0.5;
@@ -125,11 +129,6 @@ double Noise_Noise( double3 f )
 
 double Fractal_fBm( double3 f )
 {
-	int n[3];			// Indexes to pass to lattice function
-	double r[3];		// Remainders to pass to lattice function
-	double w[3];		// Cubic values to pass to interpolation function
-
-
 	int nbOctaves = 9;
 	double lacunarity = fbm_params.x;
 	double midinterval128 = 0.00390625;
