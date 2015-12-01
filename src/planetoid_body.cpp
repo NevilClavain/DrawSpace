@@ -201,6 +201,8 @@ void DrawSpace::Planetoid::Body::create_perlinnoise_subpass( int p_orientation )
     m_subpasses.push_back( sp );
 
     ipass->GetRenderingQueue()->UpdateOutputQueue();
+
+    m_perlin_noise_textures.textures[p_orientation] = ipass->GetTargetTexture();
 }
 
 
@@ -304,7 +306,8 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                                                                                         
                         inertbody->IncludeTo( this );
 
-                        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config ) );
+                        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
+                            DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_perlin_noise_textures ) );
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
                         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_ray, true ) );
@@ -333,7 +336,9 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                     create_colliding_heightmap( bodyname, &reg_body.collidingheightmap_pass, &reg_body.collidingheightmap_node );
 
-                    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config ) );
+                    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
+                        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_perlin_noise_textures ) );
+
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
                     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_ray, true ) );
@@ -614,7 +619,8 @@ void DrawSpace::Planetoid::Body::update_fragments( void )
 
 void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr, bool p_hotstate )
 {
-    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config ) );
+    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
+        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_perlin_noise_textures ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_ray, false ) );

@@ -138,6 +138,7 @@ protected:
     DrawSpace::Core::Texture*                                               m_perlinnoisebuffer_texture;
     DrawSpace::Core::Texture*                                               m_perlinnoisemap_texture;
 
+    DrawSpace::SphericalLOD::Body::PerlinNoiseTexturesSet                   m_perlin_noise_textures;
 
     DrawSpace::Pass*                                                        m_procedural_texture_currentpass;
 

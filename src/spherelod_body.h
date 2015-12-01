@@ -36,10 +36,13 @@ class Body
 {
 public:
     typedef DrawSpace::Core::BaseCallback2<void, Patch*, int>                                   PatchUpdateHandler;
-
-
-
     typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Utils::Timer*>                     BodyTimerCb;
+
+    typedef struct
+    {
+        DrawSpace::Core::Texture* textures[6];
+
+    } PerlinNoiseTexturesSet;
 
 protected:
 
@@ -63,7 +66,7 @@ protected:
 
 public:
 
-    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config );
+    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, const PerlinNoiseTexturesSet& p_noise );
     virtual ~Body( void );
 
     static void BuildMeshe( void );

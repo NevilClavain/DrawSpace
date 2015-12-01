@@ -55,6 +55,8 @@ protected:
     Patch*                                                      m_work_currentPatch;
     int                                                         m_work_currentPatchLOD;
 
+    DrawSpace::Core::Texture*                                   m_perlinnoise_texture;
+
 
     int                                                         m_orientation;
     dsreal                                                      m_planet_diameter;
@@ -92,7 +94,7 @@ protected:
 
 public:
 
-    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config );
+    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Core::Texture* p_perlinnoise_texture );
     virtual ~Face( void );
 
     bool Init( int p_orientation );
@@ -121,6 +123,8 @@ public:
     Patch* GetRootPatch( void );
 
     dsreal GetHotpointGroundAltitud( void );
+
+    DrawSpace::Core::Texture* GetPerlinNoiseTexture( void );
 };
 }
 }
