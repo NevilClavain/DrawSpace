@@ -35,7 +35,7 @@ using namespace DrawSpace::SphericalLOD;
 Meshe* Body::m_planetpatch_meshe = NULL;
 
 
-Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, const PerlinNoiseTexturesSet& p_noise ) : 
+Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config ) : 
 m_timemanager( p_time ),
 m_diameter( p_diameter ),
 m_current_face( -1 ),
@@ -44,7 +44,7 @@ m_config( p_config )
 {
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter, m_config, p_noise.textures[i] ) );        
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter, m_config ) );        
     }
 }
 

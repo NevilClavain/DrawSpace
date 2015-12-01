@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Texture* p_perlinnoise_texture ) : 
+Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config ) : 
 m_config( p_config ),
 m_rootpatch( NULL ), 
 m_planet_diameter( p_diameter ),
@@ -40,8 +40,7 @@ m_currentPatchLOD( -1 ),
 m_hot( false ),
 m_relative_alt( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
-m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
-m_perlinnoise_texture( p_perlinnoise_texture )
+m_lod_slipping_inf( NB_LOD_RANGES - 4 )
 {
 }
 
@@ -642,9 +641,4 @@ int Face::GetCurrentPatchLOD( void )
 Patch* Face::GetRootPatch( void )
 {
     return m_rootpatch->GetContent();
-}
-
-DrawSpace::Core::Texture* Face::GetPerlinNoiseTexture( void )
-{
-    return m_perlinnoise_texture;
 }

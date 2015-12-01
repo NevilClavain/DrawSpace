@@ -387,3 +387,8 @@ bool Texture::UpdateTextureContent( void )
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
     return renderer->UpdateTextureContent( m_render_data );
 }
+
+void* Texture::GetRenderData( void )
+{
+    return m_render_data;
+}

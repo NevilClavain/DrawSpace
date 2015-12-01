@@ -94,7 +94,7 @@ protected:
 
 public:
 
-    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Core::Texture* p_perlinnoise_texture );
+    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config );
     virtual ~Face( void );
 
     bool Init( int p_orientation );
@@ -123,8 +123,6 @@ public:
     Patch* GetRootPatch( void );
 
     dsreal GetHotpointGroundAltitud( void );
-
-    DrawSpace::Core::Texture* GetPerlinNoiseTexture( void );
 };
 }
 }

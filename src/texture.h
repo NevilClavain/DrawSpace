@@ -113,6 +113,8 @@ public:
     bool CopyTextureContent( void );
     bool UpdateTextureContent( void );
 
+    void* GetRenderData( void );
+
     static Asset* Instanciate( void );
 
 };
