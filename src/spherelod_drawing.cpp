@@ -114,7 +114,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
         draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
     }
 }
-
+/*
 void FaceDrawingNode::CreateNoisingTextures( void )
 {
     m_perlinnoisebuffer_texture = new Texture();    
@@ -161,7 +161,7 @@ void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal 
     m_perlinnoisemap_texture->UpdateTextureContent();
     m_perlinnoisebuffer_texture->UpdateTextureContent();
 }
-
+*/
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
 {
@@ -261,7 +261,14 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
     {   
         FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
         node->SetMeshe( Body::m_planetpatch_meshe );
-        node->CreateNoisingTextures();
+        //node->CreateNoisingTextures();
+        /*
+        for( long j = 0; j < 6; j++ )
+        {
+            node->SetVertexTexture( m_perlinnoise_textures_set.textures[j], j );
+        }
+        */
+        node->SetVertexTexture( m_perlinnoise_textures_set.textures[0], 0 );
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         node->RegisterHandler( cb );
@@ -277,7 +284,15 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass )
 {
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
     node->SetMeshe( Body::m_planetpatch_meshe );
-    node->CreateNoisingTextures();
+    //node->CreateNoisingTextures();
+    /*
+    for( long j = 0; j < 6; j++ )
+    {
+        node->SetVertexTexture( m_perlinnoise_textures_set.textures[j], j );
+    }
+    */
+    node->SetVertexTexture( m_perlinnoise_textures_set.textures[0], 0 );
+
 
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
     node->RegisterHandler( cb );      
@@ -328,6 +343,7 @@ void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_globaltransformation = p_mat;
 }
 
+/*
 void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
 {    
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
@@ -343,4 +359,10 @@ void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
     {
         it->second->InitNoisingTextures( p_fractal );
     }
+}
+*/
+
+void Drawing::SetPerlinNoiseTextureSet( PerlinNoiseTexturesSet& p_textures )
+{
+    m_perlinnoise_textures_set = p_textures;
 }
