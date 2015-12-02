@@ -753,8 +753,11 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 break;
         }
 
+        // inutile, puisque cette texture est déja "passée" par ici...
+        /*
         p_texture->SetFormat( width, height, bpp );
         p_texture->SetRenderData( (void*)m_textures_base[path] );
+        */
 
         return true;
     }
