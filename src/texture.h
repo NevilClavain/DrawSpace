@@ -50,7 +50,8 @@ public:
     {
         PURPOSE_COLORFROMFILE,
         PURPOSE_COLOR,
-        PURPOSE_FLOAT
+        PURPOSE_FLOAT,
+        PURPOSE_FLOATVECTOR,
 
     } Purpose;
 

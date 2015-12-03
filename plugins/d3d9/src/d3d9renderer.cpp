@@ -748,6 +748,10 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 bpp = 4;
                 break;
 
+            case D3DFMT_A32B32G32R32F:
+                bpp = 16;
+                break;
+
             default:
                 bpp = -1;
                 break;
@@ -887,6 +891,28 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                     setformat_call = false;
                 }
                 break;
+
+            case Texture::PURPOSE_FLOATVECTOR:
+
+                long w, h, bpp;
+                p_texture->GetFormat( w, h, bpp );
+
+                hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 1, D3DUSAGE_DYNAMIC, D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT, &d3dt9 );                   
+                D3D9_CHECK( D3DXCreateTexture );
+
+                texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+                texture_infos->texture = d3dt9;
+                texture_infos->texture2 = NULL;
+                texture_infos->render_texture = false;
+                texture_infos->bits = NULL;
+                d3dt9->GetLevelDesc( 0, &texture_infos->descr );
+                    
+                *p_data = (void*)texture_infos;
+
+                // inutile d'appeler SetFormat() sur la texture
+                setformat_call = false;
+
+                break;
         }
     }
 
@@ -911,6 +937,10 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
         case D3DFMT_R32F:
             bpp = 4;
+            break;
+
+        case D3DFMT_A32B32G32R32F:
+            bpp = 16;
             break;
 
         default:
@@ -1018,6 +1048,10 @@ bool D3D9Renderer::AllocTextureContent( void* p_texturedata )
                 bpp = 4;
                 break;
 
+            case D3DFMT_A32B32G32R32F:
+                bpp = 16;
+                break;
+
             default:
                 bpp = -1;
                 break;
@@ -1082,6 +1116,10 @@ bool D3D9Renderer::CopyTextureContent( void* p_texturedata )
 
         case D3DFMT_R32F:
             bpp = 4;
+            break;
+
+        case D3DFMT_A32B32G32R32F:
+            bpp = 16;
             break;
 
         default:
@@ -1166,6 +1204,10 @@ bool D3D9Renderer::UpdateTextureContent( void* p_texturedata )
 
         case D3DFMT_R32F:
             bpp = 4;
+            break;
+
+        case D3DFMT_A32B32G32R32F:
+            bpp = 16;
             break;
 
         default:
