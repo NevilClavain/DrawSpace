@@ -52,17 +52,6 @@ m_timemanager( p_time )
     m_patchsdraw_request_cb = _DRAWSPACE_NEW_( PatchsDrawRequestCb, PatchsDrawRequestCb( this, &DrawSpace::Planetoid::Body::on_patchsdraw_request ) );
 
     m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
-
-    create_noising_textures();
-    /*
-    for( long i = 0; i < 6; i++ )
-    {
-        create_perlinnoise_subpass( i );
-    }
-    */
-    create_perlinnoise_subpass( 0 );
-
-    m_drawable->SetPerlinNoiseTextureSet( m_perlin_noise_textures );
 }
 
 DrawSpace::Planetoid::Body::~Body( void )
@@ -155,77 +144,6 @@ DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_colliding_height
 
     return ipass;
 }
-
-void DrawSpace::Planetoid::Body::create_perlinnoise_subpass( int p_orientation )
-{
-    dsstring orientation;
-
-    switch( p_orientation )
-    {
-        case SphericalLOD::Patch::FrontPlanetFace:
-
-            orientation = "_FrontPlanetFace";
-            break;
-
-        case SphericalLOD::Patch::RearPlanetFace:
-
-            orientation = "_RearPlanetFace";
-            break;
-
-        case SphericalLOD::Patch::LeftPlanetFace:
-
-            orientation = "_LeftPlanetFace";
-            break;
-
-        case SphericalLOD::Patch::RightPlanetFace:
-
-            orientation = "_RightPlanetFace";
-            break;
-
-        case SphericalLOD::Patch::TopPlanetFace:
-
-            orientation = "_TopPlanetFace";
-            break;
-
-        case SphericalLOD::Patch::BottomPlanetFace:
-
-            orientation = "_BottomPlanetFace";
-            break;
-
-    }
-
-    dsstring complete_name = m_scenename + orientation + dsstring( "_perlinnoise_pass" );
-    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
-
-    ipass->SetTargetDimsFromRenderer( false );    
-    ipass->SetTargetDims( 512, 512 );
-    ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOAT32 );
-
-    ipass->Initialize();
-    ipass->CreateViewportQuad();
-
-    ipass->GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-    ipass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "perlin.vsh", false ) ) );
-    ipass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "perlin.psh", false ) ) );
-    ipass->GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
-    ipass->GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
-    ipass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    ipass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
-
-    ipass->GetViewportQuad()->SetTexture( m_perlinnoisebuffer_texture, 0 );
-    ipass->GetViewportQuad()->SetTexture( m_perlinnoisemap_texture, 1 );
-
-    SubPass sp;
-    sp.need_redraw = true;   // render once, at startup time
-    sp.pass = ipass;
-    sp.renderingpatches_node = NULL;
-    m_subpasses.push_back( sp );
-
-    ipass->GetRenderingQueue()->UpdateOutputQueue();
-
-    m_perlin_noise_textures.textures[p_orientation] = ipass->GetTargetTexture();
-}
-
 
 void DrawSpace::Planetoid::Body::create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode )
 {
@@ -732,8 +650,7 @@ bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynami
 
 void DrawSpace::Planetoid::Body::InitNoisingTextures( void )
 {
-    //m_drawable->InitNoisingTextures( m_fractal );
-    init_noising_textures();
+    m_drawable->InitNoisingTextures( m_fractal );
 }
 
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
@@ -767,46 +684,4 @@ void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSp
 {    
     m_subpasses[p_subpassindex].need_redraw = true;
     m_subpasses[p_subpassindex].renderingpatches_node->SetDisplayList( p_displaylist );
-}
-
-void DrawSpace::Planetoid::Body::create_noising_textures( void )
-{
-    m_perlinnoisebuffer_texture = new Texture();    
-    m_perlinnoisebuffer_texture->SetFormat( 256, 3, 4 );
-    m_perlinnoisebuffer_texture->SetPurpose( Texture::PURPOSE_FLOAT );
-
-    m_perlinnoisemap_texture = new Texture();
-    m_perlinnoisemap_texture->SetFormat( 256, 1, 4 );
-    m_perlinnoisemap_texture->SetPurpose( Texture::PURPOSE_FLOAT );
-}
-
-void DrawSpace::Planetoid::Body::init_noising_textures( void )
-{
-    m_perlinnoisebuffer_texture->AllocTextureContent();
-    m_pnbufftexture_content = m_perlinnoisebuffer_texture->GetTextureContentPtr();
-
-    m_perlinnoisemap_texture->AllocTextureContent();
-    m_pnmaptexture_content = m_perlinnoisemap_texture->GetTextureContentPtr();
-    
-    unsigned char* color_ptr = (unsigned char*)m_pnmaptexture_content;
-    float* float_ptr = (float*)m_pnbufftexture_content;
-        
-    for(long j = 0; j < 3; j++ )
-    {
-        for( long i = 0; i < 256; i++ )    
-        {
-            float temp = m_fractal->GetNBuffer( i, j );
-            *float_ptr = temp; float_ptr++;
-        }
-    }
-
-    float_ptr = (float*)m_pnmaptexture_content;
-
-    for( long i = 0; i < 256; i++ )
-    {
-        *float_ptr = m_fractal->GetNMap( i ); float_ptr++;
-    }
-
-    m_perlinnoisemap_texture->UpdateTextureContent();
-    m_perlinnoisebuffer_texture->UpdateTextureContent();
 }

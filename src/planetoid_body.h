@@ -132,15 +132,6 @@ protected:
 
     DrawSpace::Utils::Fractal*                                              m_fractal;
 
-    // donnees d'entrees pour le perlin noise
-    void*                                                                   m_pnbufftexture_content;
-    void*                                                                   m_pnmaptexture_content;
-    DrawSpace::Core::Texture*                                               m_perlinnoisebuffer_texture;
-    DrawSpace::Core::Texture*                                               m_perlinnoisemap_texture;
-
-    DrawSpace::SphericalLOD::Drawing::PerlinNoiseTexturesSet                m_perlin_noise_textures;
-
-
     std::vector<SubPassDoneHandler*>                                        m_subpassdone_handlers;
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
@@ -154,8 +145,6 @@ protected:
     DrawSpace::IntermediatePass* create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename );    
 
     void create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
-    
-    void create_perlinnoise_subpass( int p_orientation );
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -173,9 +162,6 @@ protected:
     void update_fragments( void );
 
     void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
-
-    void create_noising_textures( void );
-    void init_noising_textures( void );
 
 public:
     

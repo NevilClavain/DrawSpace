@@ -51,13 +51,13 @@ protected:
 
     std::vector<Patch*>                 m_display_list;
 
-    /*
+    
     void*                               m_pnbufftexture_content;
     void*                               m_pnmaptexture_content;
 
     DrawSpace::Core::Texture*           m_perlinnoisebuffer_texture;
     DrawSpace::Core::Texture*           m_perlinnoisemap_texture;
-    */
+    
 
     Stats                               m_stats;
 
@@ -65,7 +65,7 @@ protected:
 
     Patch*                              m_current_patch;  // le connaitre pour eventuellement le dessiner d'une facon differente
 
-    void                            draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
+    void                                draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
     
     
@@ -78,8 +78,8 @@ public:
 
     void SetDisplayList( const std::vector<Patch*>& p_list );
     
-    //void CreateNoisingTextures( void );
-    //void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
+    void CreateNoisingTextures( void );
+    void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
 
     void GetStats( Stats& p_stats );
 
@@ -90,14 +90,6 @@ public:
 
 class Drawing
 {
-public:
-
-    typedef struct
-    {
-        DrawSpace::Core::Texture* textures[6];
-
-    } PerlinNoiseTexturesSet;
-
 protected:
 
     typedef std::map<FaceDrawingNode*, int>                     NodesSet;
@@ -116,8 +108,6 @@ protected:
     DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
     
     Utils::Matrix                                                               m_globaltransformation;
-
-    PerlinNoiseTexturesSet                                                      m_perlinnoise_textures_set;
 
     DrawSpace::SphericalLOD::Config*                                            m_config;
 
@@ -146,8 +136,7 @@ public:
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
     
-    //void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
-    void SetPerlinNoiseTextureSet( PerlinNoiseTexturesSet& p_textures );
+    void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
 
 };
 }
