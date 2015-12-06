@@ -44,7 +44,7 @@ m_config( p_config )
 {
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter, m_config ) );        
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter, m_config ) );
     }
 }
 

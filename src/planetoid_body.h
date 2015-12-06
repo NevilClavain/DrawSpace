@@ -130,6 +130,9 @@ protected:
 
     std::vector<Fragment*>                                                  m_planetfragments_list;
 
+
+    DrawSpace::SphericalLOD::Face*                                          m_faces[6];
+
     DrawSpace::Utils::Fractal*                                              m_fractal;
 
     std::vector<SubPassDoneHandler*>                                        m_subpassdone_handlers;
@@ -138,13 +141,19 @@ protected:
 
     DrawSpace::SphericalLOD::Config*                                        m_config;
 
+    // les index des subpass des textures globales
+    int                                                                     m_colortextures_subpasses[6];
+
     // list of some passes to render for internal stuff
     // colliding heightmap, global textures ?
     std::vector<SubPass>                                                    m_subpasses;
     
-    DrawSpace::IntermediatePass* create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename );    
+    DrawSpace::IntermediatePass* create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename );
+    DrawSpace::IntermediatePass* create_color_texture_pass( void );
 
     void create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
+
+    int create_colortexture( void );
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -198,6 +207,8 @@ public:
     void                                InitNoisingTextures( void );
 
     void                                DrawSubPasses( void );
+
+    DrawSpace::Core::Texture*           GetColorTexture( int p_index );
     
 };
 

@@ -78,22 +78,6 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
                 (*m_patchsdrawrequest_handlers[i])( display_list, m_collidinghm_subpassindex );
             }
         }
-       
-
-        // desactive, pour intercaler le rendu HM collisions
-        /*
-        if( p_patch_lod == 0 )
-        {
-            PropertyPool props;
-            props.AddPropValue<Meshe*>( "patchmeshe", m_planetbody->GetPatcheMeshe() );
-            props.AddPropValue<SphericalLOD::Patch*>( "patch", m_current_patch );            
-            m_runner->PushMessage( props );
-        }
-        else
-        {
-            RemoveColliderFromWorld();
-        }
-        */
     }
 }
 
