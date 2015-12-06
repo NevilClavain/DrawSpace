@@ -188,7 +188,9 @@ public:
     DrawSpace::Core::RenderingNode*     GetSingleNodeFromPass( Pass* p_pass );
 
     void                                BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
-    
+    void                                BindGlobalTexture( DrawSpace::Pass* p_pass );
+
+
     Fragment*                           GetFragment( int p_index );
 
 
@@ -209,6 +211,8 @@ public:
     void                                DrawSubPasses( void );
 
     DrawSpace::Core::Texture*           GetColorTexture( int p_index );
+
+    
     
 };
 

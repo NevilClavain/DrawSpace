@@ -235,8 +235,8 @@ int DrawSpace::Planetoid::Body::create_colortexture( void )
     patch_fx->AddShader( patch_vshader );
     patch_fx->AddShader( patch_pshader );
 
-    patch_fx->AddRenderStateIn(  DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
-    patch_fx->AddRenderStateOut(  DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+    //patch_fx->AddRenderStateIn(  DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    //patch_fx->AddRenderStateOut(  DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
 
     ipass->GetRenderingQueue()->UpdateOutputQueue();
 
@@ -761,4 +761,10 @@ void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSp
 DrawSpace::Core::Texture* DrawSpace::Planetoid::Body::GetColorTexture( int p_index )
 {
     return m_subpasses[m_colortextures_subpasses[p_index]].pass->GetTargetTexture();
+}
+
+void DrawSpace::Planetoid::Body::BindGlobalTexture( DrawSpace::Pass* p_pass )
+{
+    RenderingNode* node = m_drawable->GetPlanetBodyNodeFromPass( p_pass, 0 );
+    node->SetTexture( m_subpasses[m_colortextures_subpasses[0]].pass->GetTargetTexture(), 0 );
 }
