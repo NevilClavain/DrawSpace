@@ -75,7 +75,7 @@ public:
 
     void AddVertex( const Vertex& p_vertex );
     void SetVertex( long p_index, const Vertex& p_vertex );
-    void AddTriangle( const Triangle& p_triangle );
+    void AddTriangle( const Triangle& p_triangle, bool p_fastmode = false );
 
     void ClearTriangles( void );
     void ClearVertices( void );

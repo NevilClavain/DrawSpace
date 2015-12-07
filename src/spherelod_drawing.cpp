@@ -173,6 +173,7 @@ void FaceDrawingNode::SetCurrentPatch( DrawSpace::SphericalLOD::Patch* p_patch )
     m_current_patch = p_patch;
 }
 
+
 Drawing::Drawing( SphericalLOD::Config* p_config ) :
 m_renderer( NULL ),
 m_planetbody( NULL ),
@@ -276,7 +277,18 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
 void Drawing::RegisterSinglePassSlot( Pass* p_pass )
 {
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
-    node->SetMeshe( Body::m_planetpatch_meshe );
+
+    /*
+    if( m_highres_patch )
+    {
+        node->SetMeshe( Body::m_planetpatch2_meshe );
+    }
+    else
+    {
+        node->SetMeshe( Body::m_planetpatch_meshe );
+    }
+    */
+
     node->CreateNoisingTextures();
 
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );

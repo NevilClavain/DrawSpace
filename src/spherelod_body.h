@@ -45,6 +45,7 @@ protected:
     Face*                                                                       m_faces[6];
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
 
+
     dsreal                                                                      m_diameter;    
     dsreal                                                                      m_hotpoint_altitud;
 
@@ -60,10 +61,13 @@ protected:
 
 public:
 
+    static DrawSpace::Core::Meshe*                                              m_planetpatch2_meshe;
+
     Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config );
     virtual ~Body( void );
 
     static void BuildMeshe( void );
+    static void BuildMesheHigh( void );
     
     void Compute( void );
     void Initialize( void );
@@ -80,7 +84,7 @@ public:
     void SetHotState( bool p_hotstate );
     void UpdateRelativeAlt( dsreal p_alt );
 
-    friend class Drawing;    
+    friend class Drawing; 
 };
 }
 }

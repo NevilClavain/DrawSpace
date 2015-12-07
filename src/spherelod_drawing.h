@@ -84,7 +84,7 @@ public:
     void GetStats( Stats& p_stats );
 
     void SetCurrentPatch( DrawSpace::SphericalLOD::Patch* p_patch );
-
+    
 };
 
 
@@ -108,7 +108,7 @@ protected:
     DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
     
     Utils::Matrix                                                               m_globaltransformation;
-
+    
     DrawSpace::SphericalLOD::Config*                                            m_config;
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
@@ -137,7 +137,6 @@ public:
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
     
     void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
-
 };
 }
 }

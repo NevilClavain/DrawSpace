@@ -12,12 +12,18 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-	float4 color;
+	float4 color = 0.0;
 
-	color.x = 0.0;
-	color.y = 1.0;
-	color.z = 0.0;
-	color.w = 0.0;
+	float point_alt = input.TexCoord1.x;
+
+	if( point_alt == 0.0 )
+	{
+		color.z = 1.0;
+	}
+	else
+	{
+		color.y = ( point_alt * 0.5 ) + 0.5;
+	}
 
 	return color;	
 }

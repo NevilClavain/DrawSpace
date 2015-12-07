@@ -159,13 +159,16 @@ void Meshe::SetVertex( long p_index, const Vertex& p_vertex )
     m_vertices[p_index] = p_vertex;
 }
 
-void Meshe::AddTriangle( const Triangle& p_triangle )
+void Meshe::AddTriangle( const Triangle& p_triangle, bool p_fastmode )
 {
     m_triangles.push_back( p_triangle );
 
-    m_triangles_for_vertex[p_triangle.vertex1].push_back( p_triangle );
-    m_triangles_for_vertex[p_triangle.vertex2].push_back( p_triangle );
-    m_triangles_for_vertex[p_triangle.vertex3].push_back( p_triangle );
+    if( !p_fastmode )
+    {
+        m_triangles_for_vertex[p_triangle.vertex1].push_back( p_triangle );
+        m_triangles_for_vertex[p_triangle.vertex2].push_back( p_triangle );
+        m_triangles_for_vertex[p_triangle.vertex3].push_back( p_triangle );
+    }
 }
 
 void Meshe::ClearTriangles( void )

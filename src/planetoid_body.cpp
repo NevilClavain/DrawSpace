@@ -166,7 +166,7 @@ DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_color_texture_pa
     IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
 
     ipass->SetTargetDimsFromRenderer( false );    
-    ipass->SetTargetDims( 256, 256 );
+    ipass->SetTargetDims( 512, 512 );
     
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( true );
@@ -224,6 +224,8 @@ int DrawSpace::Planetoid::Body::create_colortexture( void )
 
     RegisterSinglePassSlot( ipass );
     node = static_cast<SphericalLOD::FaceDrawingNode*>( GetSingleNodeFromPass( ipass ) );
+
+    node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
 
     Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vsh", false ) );
     Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.psh", false ) );
