@@ -20,9 +20,14 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{
 		color.z = 1.0;
 	}
-	else
+	else if( point_alt < 0.7 )
 	{
 		color.y = ( point_alt * 0.5 ) + 0.5;
+	}
+	else
+	{
+		float gray = ( ( point_alt - 0.5 ) * 0.5 ) + 0.5;
+		color = gray;
 	}
 
 	return color;	
