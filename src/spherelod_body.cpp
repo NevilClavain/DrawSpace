@@ -106,12 +106,10 @@ void Body::Compute( void )
 }
 
 
-void Body::BuildMeshe( void )
+void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode )
 {
-    m_planetpatch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-
     dsreal xcurr, ycurr;
-    long patch_resolution = PATCH_RESOLUTION;
+    long patch_resolution = p_patch_resol;
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );
@@ -135,7 +133,7 @@ void Body::BuildMeshe( void )
             vertex.tu[0] = current_u0;
             vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
                                             // le v des coords textures et le y du repere patch sont en sens opposés
-            m_planetpatch_meshe->AddVertex( vertex );
+            p_meshe_dest->AddVertex( vertex );
 
             current_u0 += delta_uv0;
         }
@@ -157,79 +155,28 @@ void Body::BuildMeshe( void )
             triangle.vertex1 = current_index;
             triangle.vertex2 = current_index + 1;
             triangle.vertex3 = current_index + patch_resolution;
-            m_planetpatch_meshe->AddTriangle( triangle );
+            p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
             triangle.vertex1 = current_index + 1;
             triangle.vertex2 = current_index + 1 + patch_resolution;
             triangle.vertex3 = current_index + patch_resolution;
-            m_planetpatch_meshe->AddTriangle( triangle );
+            p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
             current_index++;
         }        
     }
 }
 
+void Body::BuildMeshe( void )
+{
+    m_planetpatch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    build_meshe( PATCH_RESOLUTION, m_planetpatch_meshe, false );
+}
+
 void Body::BuildMesheHigh( void )
 {
     m_planetpatch2_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-
-    dsreal xcurr, ycurr;
-    long patch_resolution = 660;
-
-    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
-    dsreal interval = 2.0 / ( patch_resolution - 1 );
-
-    float delta_uv0 = 1.0f / ( patch_resolution - 1 );
-    float current_u0 = 0.0f;
-    float current_v0 = 0.0f;
-
-    for( long i = 0; i < patch_resolution; i++ )
-    {
-        for( long j = 0; j < patch_resolution; j++ )
-        {
-            xcurr = j * interval - 1.0;
-            ycurr = i * interval - 1.0;
-                        
-            Vertex vertex;
-            vertex.x = xcurr;
-            vertex.y = ycurr;
-            vertex.z = 0.0;
-
-            vertex.tu[0] = current_u0;
-            vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
-                                            // le v des coords textures et le y du repere patch sont en sens opposés
-            m_planetpatch2_meshe->AddVertex( vertex );
-
-            current_u0 += delta_uv0;
-        }
-
-        current_v0 += delta_uv0;
-        current_u0 = 0.0;
-    }
-
-    long current_index = 0;
-
-    for( long i = 0; i < patch_resolution - 1; i++  )
-    {
-        current_index = i * patch_resolution;
-
-        for( long j = 0; j < patch_resolution - 1; j++ )
-        {
-            Triangle triangle;
-
-            triangle.vertex1 = current_index;
-            triangle.vertex2 = current_index + 1;
-            triangle.vertex3 = current_index + patch_resolution;
-            m_planetpatch2_meshe->AddTriangle( triangle, true );
-            
-            triangle.vertex1 = current_index + 1;
-            triangle.vertex2 = current_index + 1 + patch_resolution;
-            triangle.vertex3 = current_index + patch_resolution;
-            m_planetpatch2_meshe->AddTriangle( triangle, true );
-            
-            current_index++;
-        }        
-    }
+    build_meshe( PATCH_HIGH_RESOLUTION, m_planetpatch2_meshe, true );
 }
 
 
@@ -305,4 +252,9 @@ void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
             (*m_patchupdate_handlers[i])( m_current_patch, p_currentpatch_lod ); 
         }
     }
+}
+
+dsreal Body::GetDiameter( void )
+{
+    return m_diameter;
 }

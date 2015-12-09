@@ -138,11 +138,7 @@ double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughnes
 
 	// Inner loop of spectral construction, where the fractal is built
 	for( i = 0; i < nbOctaves; i++ )
-	{	
-		float4 tc = 0.0;
-		tc[0] = fTemp[0];
-		tc[1] = fTemp[1];
-
+	{
 		fValue += Noise_Noise( fTemp ) * pow( fexp, -roughness );
 		
 		fTemp *= lacunarity;

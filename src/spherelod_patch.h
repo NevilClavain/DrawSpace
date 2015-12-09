@@ -31,6 +31,7 @@
 
 #define NB_LOD_RANGES           16
 #define PATCH_RESOLUTION        11
+#define PATCH_HIGH_RESOLUTION   600
 
 namespace DrawSpace
 {

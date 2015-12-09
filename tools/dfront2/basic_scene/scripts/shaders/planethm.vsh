@@ -96,7 +96,6 @@ double Noise_Noise( double3 f )
 
 	double fValue;
 
-	/*
 	fValue = lerp(lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2], r[2] ),
 							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2], r[2] ),
 							w[0]),
@@ -112,15 +111,6 @@ double Noise_Noise( double3 f )
 							w[0]),
 						w[1]),
 					w[2]);
-	*/
-
-	fValue = lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2], r[2] ),
-							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2], r[2] ),
-							w[0]),
-						lerp(Noise_Lattice(n[0], r[0], n[1]+1, r[1]-1.0, n[2], r[2] ),
-							Noise_Lattice(n[0]+1, r[0]-1, n[1]+1, r[1]-1.0, n[2], r[2] ),
-							w[0]),
-						w[1]);
 
 	return clamp( -0.9999, 0.9999, fValue );	
 }
@@ -139,10 +129,6 @@ double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughnes
 	// Inner loop of spectral construction, where the fractal is built
 	for( i = 0; i < nbOctaves; i++ )
 	{	
-		float4 tc = 0.0;
-		tc[0] = fTemp[0];
-		tc[1] = fTemp[1];
-
 		fValue += Noise_Noise( fTemp ) * pow( fexp, -roughness );
 		
 		fTemp *= lacunarity;

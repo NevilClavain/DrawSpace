@@ -42,13 +42,11 @@ protected:
 
     DrawSpace::SphericalLOD::Config*                                            m_config;
 
-    Face*                                                                       m_faces[6];
-    static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
-
-
+    
     dsreal                                                                      m_diameter;    
     dsreal                                                                      m_hotpoint_altitud;
-
+    
+    Face*                                                                       m_faces[6];
 
     std::vector<PatchUpdateHandler*>                                            m_patchupdate_handlers;
 
@@ -59,9 +57,13 @@ protected:
 
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
+    static void build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode );
+
 public:
 
+    static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
     static DrawSpace::Core::Meshe*                                              m_planetpatch2_meshe;
+
 
     Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config );
     virtual ~Body( void );
@@ -84,7 +86,8 @@ public:
     void SetHotState( bool p_hotstate );
     void UpdateRelativeAlt( dsreal p_alt );
 
-    friend class Drawing; 
+    dsreal GetDiameter( void );
+
 };
 }
 }

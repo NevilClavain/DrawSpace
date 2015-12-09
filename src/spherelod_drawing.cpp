@@ -231,12 +231,12 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     std::vector<Patch*> dl;
  
-    m_planetbody->m_faces[m_nodes[face_node]]->GetDisplayList( dl );
-    Patch* current_patch = m_planetbody->m_faces[m_nodes[face_node]]->GetCurrentPatch();
+    m_planetbody->GetFace( m_nodes[face_node] )->GetDisplayList( dl );
+    Patch* current_patch = m_planetbody->GetFace( m_nodes[face_node] )->GetCurrentPatch();
  
     face_node->SetCurrentPatch( current_patch );
     face_node->SetDisplayList( dl );
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->m_diameter / 2.0, m_globaltransformation, view, proj );
+    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->GetDiameter() / 2.0, m_globaltransformation, view, proj );
 
 }
 
@@ -278,16 +278,7 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass )
 {
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
 
-    /*
-    if( m_highres_patch )
-    {
-        node->SetMeshe( Body::m_planetpatch2_meshe );
-    }
-    else
-    {
-        node->SetMeshe( Body::m_planetpatch_meshe );
-    }
-    */
+    node->SetMeshe( Body::m_planetpatch_meshe );
 
     node->CreateNoisingTextures();
 
