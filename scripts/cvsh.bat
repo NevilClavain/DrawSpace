@@ -1,0 +1,1 @@
+fxc /Tvs_3_0 /Fo%1.vso /Evs_main %1.vsh
