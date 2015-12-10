@@ -59,14 +59,17 @@ m_timemanager( p_time )
         m_faces[i]->Init( i );
     }
     
-    m_colortextures_subpasses[0] = create_colortexture();
+    for( long i = 0; i < 6; i++ )
+    {
+        m_colortextures_subpasses[i] = create_colortexture( i );
 
-    m_subpasses[m_colortextures_subpasses[0]].need_redraw = true;
+        m_subpasses[m_colortextures_subpasses[i]].need_redraw = true;
 
-    std::vector<DrawSpace::SphericalLOD::Patch*> dl;
-    dl.push_back( m_faces[0]->GetRootPatch() );
+        std::vector<DrawSpace::SphericalLOD::Patch*> dl;
+        dl.push_back( m_faces[i]->GetRootPatch() );
 
-    m_subpasses[m_colortextures_subpasses[0]].renderingpatches_node->SetDisplayList( dl );
+        m_subpasses[m_colortextures_subpasses[i]].renderingpatches_node->SetDisplayList( dl );
+    }
 }
 
 DrawSpace::Planetoid::Body::~Body( void )
@@ -160,9 +163,12 @@ DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_colliding_height
     return ipass;
 }
 
-DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_color_texture_pass( void )
+DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_color_texture_pass( int p_orientation )
 {
-    dsstring complete_name = m_scenename + dsstring( "_colortexture_pass" );
+    char orientation[9];
+    sprintf( orientation, "%d", p_orientation );
+
+    dsstring complete_name = m_scenename + dsstring( "_colortexture_pass_" ) + dsstring( orientation );
     IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
 
     ipass->SetTargetDimsFromRenderer( false );    
@@ -217,10 +223,10 @@ void DrawSpace::Planetoid::Body::create_colliding_heightmap( const dsstring& p_i
     *p_renderingnode = node;    
 }
 
-int DrawSpace::Planetoid::Body::create_colortexture( void )
+int DrawSpace::Planetoid::Body::create_colortexture( int p_orientation )
 {
     SphericalLOD::FaceDrawingNode* node;
-    IntermediatePass* ipass = create_color_texture_pass();
+    IntermediatePass* ipass = create_color_texture_pass( p_orientation );
 
     RegisterSinglePassSlot( ipass );
     node = static_cast<SphericalLOD::FaceDrawingNode*>( GetSingleNodeFromPass( ipass ) );
@@ -767,6 +773,9 @@ DrawSpace::Core::Texture* DrawSpace::Planetoid::Body::GetColorTexture( int p_ind
 
 void DrawSpace::Planetoid::Body::BindGlobalTexture( DrawSpace::Pass* p_pass )
 {
-    RenderingNode* node = m_drawable->GetPlanetBodyNodeFromPass( p_pass, 0 );
-    node->SetTexture( m_subpasses[m_colortextures_subpasses[0]].pass->GetTargetTexture(), 0 );
+    for( long i = 0; i < 6; i++ )
+    {
+        RenderingNode* node = m_drawable->GetPlanetBodyNodeFromPass( p_pass, i );
+        node->SetTexture( m_subpasses[m_colortextures_subpasses[i]].pass->GetTargetTexture(), 0 );
+    }
 }
