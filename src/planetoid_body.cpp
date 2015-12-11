@@ -172,7 +172,7 @@ DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_color_texture_pa
     IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
 
     ipass->SetTargetDimsFromRenderer( false );    
-    ipass->SetTargetDims( 512, 512 );
+    ipass->SetTargetDims( 256, 256 );
     
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( true );
@@ -191,8 +191,8 @@ void DrawSpace::Planetoid::Body::create_colliding_heightmap( const dsstring& p_i
     RegisterSinglePassSlot( ipass );
     node = static_cast<SphericalLOD::FaceDrawingNode*>( GetSingleNodeFromPass( ipass ) );
 
-    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.vsh", false ) );
-    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.psh", false ) );
+    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.vso", true ) );
+    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.pso", true ) );
     patch_vshader->LoadFromFile();
     patch_pshader->LoadFromFile();
 
@@ -233,8 +233,8 @@ int DrawSpace::Planetoid::Body::create_colortexture( int p_orientation )
 
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
 
-    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vsh", false ) );
-    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.psh", false ) );
+    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vso", true ) );
+    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.pso", true ) );
     patch_vshader->LoadFromFile();
     patch_pshader->LoadFromFile();
 
