@@ -111,7 +111,7 @@ protected:
     std::vector<Fragment*>                                                  m_planetfragments_list;
 
 
-    DrawSpace::SphericalLOD::Face*                                          m_faces[6];
+    //DrawSpace::SphericalLOD::Face*                                          m_faces[6];
 
     DrawSpace::Utils::Fractal*                                              m_fractal;
 
@@ -122,7 +122,7 @@ protected:
     DrawSpace::SphericalLOD::Config*                                        m_config;
 
     // les index des subpass des textures globales
-    int                                                                     m_colortextures_subpasses[6];
+    //int                                                                     m_colortextures_subpasses[6];
 
     // list of some passes to render for internal stuff
     // colliding heightmap, global textures ?
@@ -191,7 +191,7 @@ public:
 
     void                                DrawSubPasses( void );
 
-    DrawSpace::Core::Texture*           GetColorTexture( int p_index );
+    //DrawSpace::Core::Texture*           GetColorTexture( int p_index );
 
     
     
