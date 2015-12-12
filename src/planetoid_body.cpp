@@ -50,12 +50,13 @@ m_timemanager( p_time )
     m_scenegraph_evt_cb = _DRAWSPACE_NEW_( ScenegraphEventCb, ScenegraphEventCb( this, &DrawSpace::Planetoid::Body::on_scenegraph_event ) );
 
     m_patchsdraw_request_cb = _DRAWSPACE_NEW_( PatchsDrawRequestCb, PatchsDrawRequestCb( this, &DrawSpace::Planetoid::Body::on_patchsdraw_request ) );
+    m_subpass_creation_cb = _DRAWSPACE_NEW_( SubPassCreationCb, SubPassCreationCb( this, &DrawSpace::Planetoid::Body::on_subpasscreation ) );
 
     m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
 
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Face, DrawSpace::SphericalLOD::Face( m_ray * 2.0, m_config ) );
+        m_faces[i] = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Face, DrawSpace::SphericalLOD::Face( m_ray * 2.0, m_config, NULL ) );
         m_faces[i]->Init( i );
     }
     
@@ -309,7 +310,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         inertbody->IncludeTo( this );
 
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                            DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config ) );
+                            DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
                         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_ray, true ) );
@@ -339,7 +340,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     create_colliding_heightmap( bodyname, &reg_body.collidingheightmap_pass, &reg_body.collidingheightmap_node );
 
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config ) );
+                        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
 
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
@@ -622,7 +623,7 @@ void DrawSpace::Planetoid::Body::update_fragments( void )
 void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr, bool p_hotstate )
 {
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config ) );
+        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_ray, false ) );
@@ -778,4 +779,9 @@ void DrawSpace::Planetoid::Body::BindGlobalTexture( DrawSpace::Pass* p_pass )
         RenderingNode* node = m_drawable->GetPlanetBodyNodeFromPass( p_pass, i );
         node->SetTexture( m_subpasses[m_colortextures_subpasses[i]].pass->GetTargetTexture(), 0 );
     }
+}
+
+int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow )
+{
+    return 0;
 }

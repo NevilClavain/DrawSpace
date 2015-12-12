@@ -25,7 +25,7 @@
 
 #include "renderer.h"
 #include "spherelod_face.h"
-#include "runner.h"
+//#include "runner.h"
 #include "timemanager.h"
 
 namespace DrawSpace
@@ -65,7 +65,7 @@ public:
     static DrawSpace::Core::Meshe*                                              m_planetpatch2_meshe;
 
 
-    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config );
+    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler );
     virtual ~Body( void );
 
     static void BuildMeshe( void );

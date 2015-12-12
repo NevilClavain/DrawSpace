@@ -41,29 +41,8 @@ public:
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*>         CameraEvtCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>          NodesEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>    ScenegraphEventCb;
-    
-    /*
-    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::PropertyPool*>                                                         RunnerMsgCb;
-    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Core::Runner::State>                                                         RunnerEvtCb;
-    */
-
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                             PatchsDrawRequestCb;
-
-
-    ////////////////////////////////////////////////////////////////////
-
-    /*
-    bool                    m_front_done;
-    bool                    m_rear_done;
-    bool                    m_left_done;
-    bool                    m_right_done;
-    bool                    m_top_done;
-    bool                    m_bottom_done;
-
-    void                    run_textures( DrawSpace::Pass* p_pass );
-    */
-
-    ////////////////////////////////////////////////////////////////////
+    typedef DrawSpace::Core::CallBack2<Body, int, DrawSpace::IntermediatePass*, bool>                                                                           SubPassCreationCb;
 
 protected:
 
@@ -123,6 +102,7 @@ protected:
     NodesEventCb*                                                           m_nodes_evt_cb;
     ScenegraphEventCb*                                                      m_scenegraph_evt_cb;
     PatchsDrawRequestCb*                                                    m_patchsdraw_request_cb;
+    SubPassCreationCb*                                                      m_subpass_creation_cb;
       
     std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>               m_registered_bodies;
     std::map<dsstring, RegisteredCamera>                                    m_registered_camerapoints;
@@ -162,6 +142,8 @@ protected:
     void on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
     void on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
     void on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event, DrawSpace::Core::SceneNodeGraph* p_scenegraph );
+    void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
+    int on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow );
 
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr, bool p_hotstate );
 
@@ -170,7 +152,6 @@ protected:
     void manage_camerapoints( void );
     void update_fragments( void );
 
-    void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
 
 public:
     

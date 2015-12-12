@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config ) : 
+Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler ) : 
 m_config( p_config ),
 m_rootpatch( NULL ), 
 m_planet_diameter( p_diameter ),
@@ -40,7 +40,8 @@ m_currentPatchLOD( -1 ),
 m_hot( false ),
 m_relative_alt( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
-m_lod_slipping_inf( NB_LOD_RANGES - 4 )
+m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
+m_subpasscreation_handler( p_handler )
 {
 }
 
@@ -60,7 +61,7 @@ bool Face::Init( int p_orientation )
     DeletionCallback* cb_split = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodesplit ) );
 
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );
-
+    
     init_lodranges();
 
     return true;
@@ -82,7 +83,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
     {
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, NULL, -1, root, true, Vector( 0.0, 0.0, 1.0, 1.0 ) ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, NULL, -1, root, true, Vector( 0.0, 0.0, 1.0, 1.0 ), m_subpasscreation_handler ) );
         root->SetContent( patch );      
     }
     else
@@ -90,7 +91,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
         QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), node, false, Vector() ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), node, false, Vector(), m_subpasscreation_handler ) );
         node->SetContent( patch );      
     }
 }

@@ -28,6 +28,7 @@
 #include "vsphere.h"
 #include "noise.h"
 #include "spherelod_config.h"
+#include "pass.h"
 
 #define NB_LOD_RANGES           16
 #define PATCH_RESOLUTION        11
@@ -40,6 +41,8 @@ namespace SphericalLOD
 class Patch
 {
 public:
+    typedef DrawSpace::Core::BaseCallback2<int, DrawSpace::IntermediatePass*, bool>                   SubPassCreationHandler;
+
 
     static const int    NorthNeighbour      = 0;
     static const int    SouthNeighbour      = 1;
@@ -77,9 +80,15 @@ protected:
     
     int                                     m_lod_level;
 
+    DrawSpace::IntermediatePass*            m_colortexture_pass;
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    DrawSpace::IntermediatePass*            create_color_texture_pass( void );
+    
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner,
-            bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords );
+            bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords, Patch::SubPassCreationHandler* p_handler );
     virtual ~Patch( void );
 
     void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );
@@ -105,7 +114,6 @@ public:
     int GetLodLevel( void );
 
     float* GetHeightMap( void );
-
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

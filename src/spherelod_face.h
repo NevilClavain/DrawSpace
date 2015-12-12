@@ -75,6 +75,8 @@ protected:
 
     dsreal                                                      m_lodranges[NB_LOD_RANGES];
 
+    Patch::SubPassCreationHandler*                              m_subpasscreation_handler;
+
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -94,7 +96,7 @@ protected:
 
 public:
 
-    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config );
+    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler );
     virtual ~Face( void );
 
     bool Init( int p_orientation );

@@ -28,10 +28,13 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords ) : 
+Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
+                bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords, Patch::SubPassCreationHandler* p_handler ) : 
+
 m_orientation( p_orientation ),
 m_ray( p_ray ),
-m_owner( p_owner )
+m_owner( p_owner ),
+m_colortexture_pass( NULL )
 {
     for( long i = 0; i < 8; i++ )
     {
@@ -45,6 +48,15 @@ m_owner( p_owner )
         m_lod_level = NB_LOD_RANGES - 1;
         m_xpos = m_ypos = 0.0;
         m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
+
+        // ICI patch root creer une passe pour rendu texture couleur
+        m_colortexture_pass = create_color_texture_pass();
+        
+        // appel handler pour enregistrer et executer la passe
+        if( p_handler )
+        {
+            (*p_handler)( m_colortexture_pass, true );
+        }
     }
     else
     {
@@ -523,4 +535,24 @@ bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_r
         return true;
     }
     return false;
+}
+
+DrawSpace::IntermediatePass* Patch::create_color_texture_pass( void )
+{
+    char thisname[32];
+
+    sprintf( thisname, "patch_%x", this );
+
+    dsstring complete_name = dsstring( thisname ) + dsstring( "_colortexture_pass" );
+    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
+
+    ipass->SetTargetDimsFromRenderer( false );    
+    ipass->SetTargetDims( 256, 256 );
+    
+    ipass->Initialize();
+    ipass->GetRenderingQueue()->EnableDepthClearing( true );
+    ipass->GetRenderingQueue()->EnableTargetClearing( true );
+    ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
+
+    return ipass;
 }

@@ -174,9 +174,6 @@
     <ClCompile Include="src\spherelod_face.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
-    <ClCompile Include="src\spherelod_maps.cpp">
-      <Filter>sphericalLOD</Filter>
-    </ClCompile>
     <ClCompile Include="src\spherelod_patch.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
@@ -419,9 +416,6 @@
       <Filter>sphericalLOD</Filter>
     </ClInclude>
     <ClInclude Include="src\spherelod_face.h">
-      <Filter>sphericalLOD</Filter>
-    </ClInclude>
-    <ClInclude Include="src\spherelod_maps.h">
       <Filter>sphericalLOD</Filter>
     </ClInclude>
     <ClInclude Include="src\spherelod_patch.h">
