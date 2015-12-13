@@ -51,19 +51,24 @@ m_colortexture_pass( NULL )
 
         // ICI patch root creer une passe pour rendu texture couleur
         m_colortexture_pass = create_color_texture_pass();
+
+        std::vector<Patch*> dl;
+        dl.push_back( this );
         
         // appel handler pour enregistrer et executer la passe
         if( p_handler )
         {
-            (*p_handler)( m_colortexture_pass, true );
+            (*p_handler)( m_colortexture_pass, true, dl );
         }
+
+        m_texture_referent = this;
     }
     else
     {
+        m_texture_referent = p_parent->m_texture_referent;
+
         m_lod_level = p_parent->m_lod_level - 1;
-
         m_sidelength = p_parent->m_sidelength / 2.0;
-
 
         switch( p_nodeid )
         {
@@ -555,4 +560,18 @@ DrawSpace::IntermediatePass* Patch::create_color_texture_pass( void )
     ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
 
     return ipass;
+}
+
+DrawSpace::Core::Texture* Patch::GetColorTexture( void )
+{
+    if( m_colortexture_pass )
+    {
+        return m_colortexture_pass->GetTargetTexture();
+    }
+    return NULL;
+}
+
+Patch* Patch::GetTextureReferent( void )
+{
+    return m_texture_referent;
 }

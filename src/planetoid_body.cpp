@@ -792,10 +792,9 @@ void DrawSpace::Planetoid::Body::BindGlobalTexture( DrawSpace::Pass* p_pass )
     */
 }
 
-int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow )
+int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow, const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist )
 {
     // cb traitement d'une requete de creation d'une sub-pass
-
     
     SphericalLOD::FaceDrawingNode* node;
     IntermediatePass* ipass = p_subpass;
@@ -804,6 +803,7 @@ int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass*
     node = static_cast<SphericalLOD::FaceDrawingNode*>( GetSingleNodeFromPass( ipass ) );
 
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
+    node->SetDisplayList( p_displaylist );
 
     Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vso", true ) );
     Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.pso", true ) );

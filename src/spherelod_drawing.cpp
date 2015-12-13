@@ -108,9 +108,19 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
-    
+
+    Texture* current_texture = NULL;
+        
     for( size_t i = 0; i < m_display_list.size(); i++ )
     {
+        Patch* ref_patch = m_display_list[i]->GetTextureReferent();
+        Texture* refpatchtexture = ref_patch->GetColorTexture();
+
+        if( refpatchtexture != current_texture )
+        {
+            m_renderer->SetTexture( refpatchtexture->GetRenderData(), 0 );
+            current_texture = refpatchtexture;
+        }
         draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_world, p_view, p_proj );
     }
 }

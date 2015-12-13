@@ -41,7 +41,7 @@ namespace SphericalLOD
 class Patch
 {
 public:
-    typedef DrawSpace::Core::BaseCallback2<int, DrawSpace::IntermediatePass*, bool>                   SubPassCreationHandler;
+    typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, bool, const std::vector<Patch*>& >                   SubPassCreationHandler;
 
 
     static const int    NorthNeighbour      = 0;
@@ -82,6 +82,8 @@ protected:
 
     DrawSpace::IntermediatePass*            m_colortexture_pass;
 
+    Patch*                                  m_texture_referent;
+
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_color_texture_pass( void );
@@ -114,6 +116,10 @@ public:
     int GetLodLevel( void );
 
     float* GetHeightMap( void );
+
+    DrawSpace::Core::Texture* GetColorTexture( void );
+
+    Patch* GetTextureReferent( void );
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

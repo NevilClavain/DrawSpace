@@ -42,7 +42,7 @@ public:
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>          NodesEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>    ScenegraphEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                             PatchsDrawRequestCb;
-    typedef DrawSpace::Core::CallBack2<Body, int, DrawSpace::IntermediatePass*, bool>                                                                           SubPassCreationCb;
+    typedef DrawSpace::Core::CallBack3<Body, int, DrawSpace::IntermediatePass*, bool, const std::vector<DrawSpace::SphericalLOD::Patch*>& >                     SubPassCreationCb;
 
 protected:
 
@@ -143,7 +143,7 @@ protected:
     void on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
     void on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event, DrawSpace::Core::SceneNodeGraph* p_scenegraph );
     void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
-    int on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow );
+    int on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow, const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist );
 
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr, bool p_hotstate );
 

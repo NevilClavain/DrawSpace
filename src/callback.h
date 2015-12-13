@@ -113,7 +113,7 @@ template <class Class, typename ReturnType, typename Parameter, typename Paramet
 class CallBack3 : public BaseCallback3<ReturnType, Parameter, Parameter2, Parameter3>
 {
 public:
-    typedef ReturnType ( Class::*Method )( Parameter, Parameter2 );
+    typedef ReturnType ( Class::*Method )( Parameter, Parameter2, Parameter3 );
 
 protected:
     Class* m_class_instance;
