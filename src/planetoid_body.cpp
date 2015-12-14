@@ -319,7 +319,8 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                             DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
-                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_ray, true ) );
+                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
+                                                                        collider, m_ray, true, m_subpass_creation_cb ) );
                         planet_fragment->SetHotState( true );
                         planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
                         planet_fragment->SetCollidingHMSubPassIndex( subpass_index );
@@ -351,7 +352,9 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
-                    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_ray, true ) );
+                    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
+                                                                    collider, m_ray, true, m_subpass_creation_cb ) );
+
                     planet_fragment->SetHotState( false );
                     planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
                     planet_fragment->SetCollidingHMSubPassIndex( subpass_index );
@@ -633,7 +636,8 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
         DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
-    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_ray, false ) );
+    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
+                                                                        collider, m_ray, false, m_subpass_creation_cb ) );
    
     planet_fragment->SetHotState( p_hotstate );
    

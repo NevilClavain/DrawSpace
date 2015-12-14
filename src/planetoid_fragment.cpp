@@ -29,7 +29,8 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Planetoid;
 using namespace DrawSpace::Dynamics;
 
-Fragment::Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, Collider* p_collider, dsreal p_planetray, bool p_collisions ) :
+Fragment::Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
+                Collider* p_collider, dsreal p_planetray, bool p_collisions, Fragment::SubPassCreationHandler* p_handler ) :
 m_world( p_world ),
 m_config( p_config ),
 m_planetbody( p_planetbody ), 
@@ -55,6 +56,8 @@ m_collidingheightmap_content( NULL )
         m_subpassdone_cb = _DRAWSPACE_NEW_( SubPassDoneCb, SubPassDoneCb( this, &Fragment::on_subpassdone ) );              
     }
     p_planetbody->Initialize();
+
+    m_collidingheightmap_pass = create_colliding_heightmap_pass();
 }
 
 Fragment::~Fragment( void )
@@ -273,4 +276,24 @@ void Fragment::on_subpassdone( int p_subpassindex )
         m_collision_state = true;
         m_nb_collisionmeshebuild_done++;
     }
+}
+
+DrawSpace::IntermediatePass* Fragment::create_colliding_heightmap_pass( void )
+{
+    char thisname[32];
+    sprintf( thisname, "fragment_%x", this );
+
+    dsstring complete_name = dsstring( thisname ) + dsstring( "_collisionheightmap_pass" );
+    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
+
+    ipass->SetTargetDimsFromRenderer( false );    
+    ipass->SetTargetDims( PATCH_RESOLUTION, PATCH_RESOLUTION );
+    ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOAT32 );
+
+    ipass->Initialize();
+    ipass->GetRenderingQueue()->EnableDepthClearing( true );
+    ipass->GetRenderingQueue()->EnableTargetClearing( true );
+    ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
+
+    return ipass;
 }

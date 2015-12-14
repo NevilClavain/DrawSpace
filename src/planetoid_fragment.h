@@ -44,14 +44,15 @@ class Fragment
 {
 protected:
 
-    typedef DrawSpace::Core::BaseCallback2<void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int>  PatchsDrawRequestHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int>                                      PatchsDrawRequestHandler;
+    typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, bool, const std::vector<DrawSpace::SphericalLOD::Patch*>& >       SubPassCreationHandler;
 
-    typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Patch*, int>                PatchUpdateCb;
+    typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Patch*, int>                                                    PatchUpdateCb;
 
-    typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>                       RunnerMsgCb;
-    typedef DrawSpace::Core::CallBack<Fragment, void, Core::Runner::State>                                  RunnerEvtCb;
+    typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>                                                           RunnerMsgCb;
+    typedef DrawSpace::Core::CallBack<Fragment, void, Core::Runner::State>                                                                      RunnerEvtCb;
 
-    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Fragment, void, int>                            SubPassDoneCb;
+    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Fragment, void, int>                                                                SubPassDoneCb;
 
     DrawSpace::Dynamics::World*                                 m_world;
 
@@ -89,15 +90,20 @@ protected:
     DrawSpace::Core::Texture*                                   m_collidingheightmap_texture;
     void*                                                       m_collidingheightmap_content;
 
+    DrawSpace::IntermediatePass*                                m_collidingheightmap_pass;
+
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
     void on_subpassdone( int p_subpassindex );
     
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap );
 
+    DrawSpace::IntermediatePass* create_colliding_heightmap_pass( void );
+
 public:
 
-    Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions );
+    Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
+                DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions, Fragment::SubPassCreationHandler* p_handler );
     virtual ~Fragment( void );
 
     void Update( DrawSpace::Planetoid::Body* p_owner );
