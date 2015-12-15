@@ -58,6 +58,16 @@ m_collidingheightmap_content( NULL )
     p_planetbody->Initialize();
 
     m_collidingheightmap_pass = create_colliding_heightmap_pass();
+    m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
+    m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
+
+    std::vector<DrawSpace::SphericalLOD::Patch*> dl;
+    // appel handler pour enregistrer et executer la passe
+    if( p_handler )
+    {
+        // temporaire
+        //m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, false, dl );
+    }
 }
 
 Fragment::~Fragment( void )
@@ -69,7 +79,7 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
     m_current_patch = p_patch;
     m_current_patch_lod = p_patch_lod;
 
-    if( m_collisions )
+    if( m_collisions && m_collidinghm_subpassindex != -1 )
     {
         std::vector<DrawSpace::SphericalLOD::Patch*> display_list;
         if( m_current_patch && m_current_patch_lod == 0 )
@@ -232,22 +242,23 @@ int Fragment::GetCurrentPatchLOD( void )
 {
     return m_current_patch_lod;
 }
-
+/*
 void Fragment::SetCollidingHMSubPassIndex( int p_index )
 {
     m_collidinghm_subpassindex = p_index;
 }
-
+*/
 Fragment::SubPassDoneCb* Fragment::GetSubPassDoneCb( void )
 {
     return m_subpassdone_cb;
 }
-
+/*
 void Fragment::SetCollidingHeightMapTexture( DrawSpace::Core::Texture* p_texture )
 {
     m_collidingheightmap_texture = p_texture;
     m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
 }
+*/
 
 void Fragment::on_subpassdone( int p_subpassindex )
 {

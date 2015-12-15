@@ -127,9 +127,11 @@ public:
     void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done );
 
     void RegisterPatchsDrawRequestHandler( PatchsDrawRequestHandler* p_handler );
-    void SetCollidingHMSubPassIndex( int p_index );
 
+    /*
+    void SetCollidingHMSubPassIndex( int p_index );
     void SetCollidingHeightMapTexture( DrawSpace::Core::Texture* p_texture );
+    */
 
     SubPassDoneCb* GetSubPassDoneCb( void );
 };

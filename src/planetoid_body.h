@@ -128,12 +128,11 @@ protected:
     // colliding heightmap, global textures ?
     std::vector<SubPass>                                                    m_subpasses;
     
-    DrawSpace::IntermediatePass* create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename );
-    DrawSpace::IntermediatePass* create_color_texture_pass( int p_orientation );
+    //DrawSpace::IntermediatePass* create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename );
+    //DrawSpace::IntermediatePass* create_color_texture_pass( int p_orientation );
 
-    void create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
-
-    int create_colortexture( int p_orientation );
+    //void create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
+    //int create_colortexture( int p_orientation );
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
