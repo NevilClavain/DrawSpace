@@ -21,6 +21,9 @@
 */
 
 #include "spherelod_patch.h"
+#include "spherelod_drawing.h"
+#include "renderer.h"
+#include "plugin.h"
 #include "maths.h"
 
 using namespace DrawSpace;
@@ -29,12 +32,14 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
-                bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords, Patch::SubPassCreationHandler* p_handler ) : 
+                bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords, Patch::SubPassCreationHandler* p_handler,
+                DrawSpace::SphericalLOD::Config* p_config ) : 
 
 m_orientation( p_orientation ),
 m_ray( p_ray ),
 m_owner( p_owner ),
-m_colortexture_pass( NULL )
+m_colortexture_pass( NULL ),
+m_config( p_config )
 {
     for( long i = 0; i < 8; i++ )
     {
@@ -54,11 +59,40 @@ m_colortexture_pass( NULL )
 
         std::vector<Patch*> dl;
         dl.push_back( this );
+
+        // creation/preparation du node
+
+        DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
+        
+        node->CreateNoisingTextures();
+        node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
+        node->SetDisplayList( dl );
+
+        Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vso", true ) );
+        Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.pso", true ) );
+        patch_vshader->LoadFromFile();
+        patch_pshader->LoadFromFile();
+
+        Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
+        fx->AddShader( patch_vshader );
+        fx->AddShader( patch_pshader );
+        node->SetFx( fx );
+               
+        void* tx_data;
+        if( false == renderer->CreateTexture( m_colortexture_pass->GetTargetTexture(), &tx_data ) )
+        {
+            _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
+        }
+    
+        m_colortexture_pass->GetTargetTexture()->AllocTextureContent();
+        
+        ////////////////////////
         
         // appel handler pour enregistrer et executer la passe
         if( p_handler )
         {
-            (*p_handler)( m_colortexture_pass, true, dl );
+            (*p_handler)( m_colortexture_pass, true, node );
         }
 
         m_texture_referent = this;

@@ -166,7 +166,7 @@ public:
 
     virtual ReturnType Execute( Parameter p_parameter, Parameter2 p_parameter2, Parameter3 p_parameter3, Parameter4 p_parameter4 )
     {
-        return operator()( p_parameter, p_parameter2, p_parameter3, Parameter4 p_parameter4 );
+        return operator()( p_parameter, p_parameter2, p_parameter3, p_parameter4 );
     }
 };
 

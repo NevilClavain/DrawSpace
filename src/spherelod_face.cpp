@@ -83,7 +83,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
     {
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, NULL, -1, root, true, Vector( 0.0, 0.0, 1.0, 1.0 ), m_subpasscreation_handler ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, NULL, -1, root, true, Vector( 0.0, 0.0, 1.0, 1.0 ), m_subpasscreation_handler, m_config ) );
         root->SetContent( patch );      
     }
     else
@@ -91,7 +91,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
         QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), node, false, Vector(), m_subpasscreation_handler ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), node, false, Vector(), m_subpasscreation_handler, m_config ) );
         node->SetContent( patch );      
     }
 }

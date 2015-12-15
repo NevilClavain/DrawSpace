@@ -127,10 +127,11 @@ public:
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
     virtual void RegisterPlanetBodyPassSlot( Pass* p_pass );
-    virtual void RegisterSinglePassSlot( Pass* p_pass );
+
 
     DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
     DrawSpace::Core::RenderingNode* GetSingleNodeFromPass( Pass* p_pass );
+    void SetSinglePassSlot( Pass* p_pass, DrawSpace::SphericalLOD::FaceDrawingNode* p_node );
 
     Body* GetBody( void );
 

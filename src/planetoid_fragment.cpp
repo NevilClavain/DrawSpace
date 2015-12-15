@@ -66,7 +66,7 @@ m_collidingheightmap_content( NULL )
     if( p_handler )
     {
         // temporaire
-        //m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, false, dl );
+        //m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, false, NULL );
     }
 }
 

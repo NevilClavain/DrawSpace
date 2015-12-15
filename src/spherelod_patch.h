@@ -41,8 +41,7 @@ namespace SphericalLOD
 class Patch
 {
 public:
-    typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, bool, const std::vector<Patch*>& >                   SubPassCreationHandler;
-
+    typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, bool, DrawSpace::Core::RenderingNode*>     SubPassCreationHandler;
 
     static const int    NorthNeighbour      = 0;
     static const int    SouthNeighbour      = 1;
@@ -61,6 +60,8 @@ public:
     static const int    BottomPlanetFace   = 5;
 
 protected:
+
+    DrawSpace::SphericalLOD::Config*        m_config;
 
     dsreal                                  m_sidelength;
     dsreal                                  m_xpos;
@@ -90,7 +91,9 @@ protected:
     
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner,
-            bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords, Patch::SubPassCreationHandler* p_handler );
+            bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords, Patch::SubPassCreationHandler* p_handler,
+            DrawSpace::SphericalLOD::Config* p_config );
+
     virtual ~Patch( void );
 
     void SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id );

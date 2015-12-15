@@ -284,25 +284,17 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
     }
 }
 
-void Drawing::RegisterSinglePassSlot( Pass* p_pass )
+void Drawing::SetSinglePassSlot( Pass* p_pass, SphericalLOD::FaceDrawingNode* p_node )
 {
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
-
-    node->SetMeshe( Body::m_planetpatch_meshe );
-
-    node->CreateNoisingTextures();
-
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
-    node->RegisterHandler( cb );      
+    p_node->RegisterHandler( cb );      
     m_callbacks.push_back( cb );
 
-    m_passes_singlenodes[p_pass] = node;
-
-    std::vector<Patch*> dl;
+    m_passes_singlenodes[p_pass] = p_node;
    
     // ces nodes ne sont pas destines a dependre d'un scenegraph
     // donc on ajoute le node a la queue directement ici
-    p_pass->GetRenderingQueue()->Add( node );
+    p_pass->GetRenderingQueue()->Add( p_node );
 }
 
 DrawSpace::Core::RenderingNode* Drawing::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )

@@ -641,10 +641,7 @@ void DrawSpace::Planetoid::Body::RegisterPlanetBodyPassSlot( Pass* p_pass )
     m_drawable->RegisterPlanetBodyPassSlot( p_pass );
 }
 
-void DrawSpace::Planetoid::Body::RegisterSinglePassSlot( Pass* p_pass )
-{
-    m_drawable->RegisterSinglePassSlot( p_pass );
-}
+
 
 void DrawSpace::Planetoid::Body::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
@@ -688,12 +685,6 @@ DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreatePlanetBodyFx( DrawSpace::
     return fx;
 }
 
-DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreateSingleNodeFx( DrawSpace::Pass* p_pass )
-{
-    Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
-    m_drawable->GetSingleNodeFromPass( p_pass )->SetFx( fx );
-    return fx;
-}
 
 
 
@@ -773,46 +764,18 @@ void DrawSpace::Planetoid::Body::BindGlobalTexture( DrawSpace::Pass* p_pass )
     */
 }
 
-int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow, const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist )
+int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow, DrawSpace::Core::RenderingNode* p_node )
 {
     // cb traitement d'une requete de creation d'une sub-pass
-    
-    SphericalLOD::FaceDrawingNode* node;
-    IntermediatePass* ipass = p_subpass;
+ 
+    SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( p_node );
 
-    RegisterSinglePassSlot( ipass );
-    node = static_cast<SphericalLOD::FaceDrawingNode*>( GetSingleNodeFromPass( ipass ) );
-
-    node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
-    node->SetDisplayList( p_displaylist );
-
-    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vso", true ) );
-    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.pso", true ) );
-    patch_vshader->LoadFromFile();
-    patch_pshader->LoadFromFile();
-
-    Fx* patch_fx = CreateSingleNodeFx( ipass );
-
-    patch_fx->AddShader( patch_vshader );
-    patch_fx->AddShader( patch_pshader );
-
-    ipass->GetRenderingQueue()->UpdateOutputQueue();
-
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    
-    void* tx_data;
-    if( false == renderer->CreateTexture( ipass->GetTargetTexture(), &tx_data ) )
-    {
-        _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
-    }
-    
-    ipass->GetTargetTexture()->AllocTextureContent();
-
-    int index = m_subpasses.size();
+    m_drawable->SetSinglePassSlot( p_subpass, node );
+    p_subpass->GetRenderingQueue()->UpdateOutputQueue();
 
     SubPass sp;
     sp.need_redraw = p_drawnow;
-    sp.pass = ipass;
+    sp.pass = p_subpass;
     sp.renderingpatches_node = node;
     m_subpasses.push_back( sp );
     
