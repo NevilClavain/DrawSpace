@@ -22,12 +22,16 @@
 
 #include "planetoid_fragment.h"
 #include "planetoid_body.h"
+#include "spherelod_drawing.h"
+#include "renderer.h"
+#include "plugin.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Planetoid;
 using namespace DrawSpace::Dynamics;
+using namespace DrawSpace::SphericalLOD;
 
 Fragment::Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
                 Collider* p_collider, dsreal p_planetray, bool p_collisions, Fragment::SubPassCreationHandler* p_handler ) :
@@ -53,26 +57,55 @@ m_collidingheightmap_content( NULL )
         m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );
         m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
 
-        m_subpassdone_cb = _DRAWSPACE_NEW_( SubPassDoneCb, SubPassDoneCb( this, &Fragment::on_subpassdone ) );              
+        m_subpassdone_cb = _DRAWSPACE_NEW_( SubPassDoneCb, SubPassDoneCb( this, &Fragment::on_subpassdone ) );
+
+        m_collidingheightmap_pass = create_colliding_heightmap_pass();
+
+        // creation/preparation du node
+
+        DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
+        
+        node->CreateNoisingTextures();
+        node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
+
+        Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.vso", true ) );
+        Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.pso", true ) );
+        patch_vshader->LoadFromFile();
+        patch_pshader->LoadFromFile();
+
+        Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
+        fx->AddShader( patch_vshader );
+        fx->AddShader( patch_pshader );
+        node->SetFx( fx );
+
+        void* tx_data;
+        if( false == renderer->CreateTexture( m_collidingheightmap_pass->GetTargetTexture(), &tx_data ) )
+        {
+            _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
+        }
+    
+        m_collidingheightmap_pass->GetTargetTexture()->AllocTextureContent();
+
+        ////////////////////////
+
+        std::vector<DrawSpace::SphericalLOD::Patch*> dl;
+        // appel handler pour enregistrer et executer la passe
+        if( p_handler )
+        {
+            m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, false, node );
+
+            m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
+            m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
+        }
     }
     p_planetbody->Initialize();
-
-    m_collidingheightmap_pass = create_colliding_heightmap_pass();
-    m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
-    m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
-
-    std::vector<DrawSpace::SphericalLOD::Patch*> dl;
-    // appel handler pour enregistrer et executer la passe
-    if( p_handler )
-    {
-        // temporaire
-        //m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, false, NULL );
-    }
 }
 
 Fragment::~Fragment( void )
 {    
 }
+
 
 void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod )
 {

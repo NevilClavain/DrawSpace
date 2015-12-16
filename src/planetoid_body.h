@@ -121,19 +121,10 @@ protected:
 
     DrawSpace::SphericalLOD::Config*                                        m_config;
 
-    // les index des subpass des textures globales
-    //int                                                                     m_colortextures_subpasses[6];
-
     // list of some passes to render for internal stuff
     // colliding heightmap, global textures ?
     std::vector<SubPass>                                                    m_subpasses;
     
-    //DrawSpace::IntermediatePass* create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename );
-    //DrawSpace::IntermediatePass* create_color_texture_pass( int p_orientation );
-
-    //void create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode );
-    //int create_colortexture( int p_orientation );
-
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
     void body_find_attached_camera( DrawSpace::Dynamics::InertBody* p_body, std::vector<dsstring>& p_name );
@@ -166,8 +157,6 @@ public:
     DrawSpace::Core::RenderingNode*     GetSingleNodeFromPass( Pass* p_pass );
 
     void                                BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
-    void                                BindGlobalTexture( DrawSpace::Pass* p_pass );
-
 
     Fragment*                           GetFragment( int p_index );
 
@@ -185,12 +174,7 @@ public:
 
     void                                InitNoisingTextures( void );
 
-    void                                DrawSubPasses( void );
-
-    //DrawSpace::Core::Texture*           GetColorTexture( int p_index );
-
-    
-    
+    void                                DrawSubPasses( void );    
 };
 
 

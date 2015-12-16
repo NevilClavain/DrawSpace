@@ -129,129 +129,6 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
     }
 }
 
-/*
-DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_colliding_heightmap_pass( const dsstring& p_inertbody_scenename )
-{
-    dsstring complete_name = m_scenename + dsstring( "_" ) + p_inertbody_scenename + dsstring( "_collisionheightmap_pass" );
-    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
-
-    ipass->SetTargetDimsFromRenderer( false );    
-    ipass->SetTargetDims( PATCH_RESOLUTION, PATCH_RESOLUTION );
-    ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOAT32 );
-
-    ipass->Initialize();
-    ipass->GetRenderingQueue()->EnableDepthClearing( true );
-    ipass->GetRenderingQueue()->EnableTargetClearing( true );
-    ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
-
-    return ipass;
-}
-*/
-/*
-DrawSpace::IntermediatePass* DrawSpace::Planetoid::Body::create_color_texture_pass( int p_orientation )
-{
-    char orientation[9];
-    sprintf( orientation, "%d", p_orientation );
-
-    dsstring complete_name = m_scenename + dsstring( "_colortexture_pass_" ) + dsstring( orientation );
-    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
-
-    ipass->SetTargetDimsFromRenderer( false );    
-    ipass->SetTargetDims( 256, 256 );
-    
-    ipass->Initialize();
-    ipass->GetRenderingQueue()->EnableDepthClearing( true );
-    ipass->GetRenderingQueue()->EnableTargetClearing( true );
-    ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
-
-    return ipass;
-}
-*/
-/*
-void DrawSpace::Planetoid::Body::create_colliding_heightmap( const dsstring& p_inertbody_scenename, DrawSpace::IntermediatePass** p_pass, DrawSpace::SphericalLOD::FaceDrawingNode** p_renderingnode )
-{
-    SphericalLOD::FaceDrawingNode* node;
-
-    IntermediatePass* ipass = create_colliding_heightmap_pass( p_inertbody_scenename );
-
-    RegisterSinglePassSlot( ipass );
-    node = static_cast<SphericalLOD::FaceDrawingNode*>( GetSingleNodeFromPass( ipass ) );
-
-    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.vso", true ) );
-    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.pso", true ) );
-    patch_vshader->LoadFromFile();
-    patch_pshader->LoadFromFile();
-
-    Fx* patch_fx = CreateSingleNodeFx( ipass );
-
-    patch_fx->AddShader( patch_vshader );
-    patch_fx->AddShader( patch_pshader );
-
-    ipass->GetRenderingQueue()->UpdateOutputQueue();
-
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-
-    void* tx_data;
-    if( false == renderer->CreateTexture( ipass->GetTargetTexture(), &tx_data ) )
-    {
-        _DSEXCEPTION( "failed to create colliding heightmap texture in renderer" );
-    }
-
-    ipass->GetTargetTexture()->AllocTextureContent();
-    
-    SubPass sp;
-    sp.need_redraw = false;
-    sp.pass = ipass;
-    sp.renderingpatches_node = node;
-    m_subpasses.push_back( sp );
-
-    *p_pass = ipass;
-    *p_renderingnode = node;    
-}
-*/
-
-/*
-int DrawSpace::Planetoid::Body::create_colortexture( int p_orientation )
-{
-    SphericalLOD::FaceDrawingNode* node;
-    IntermediatePass* ipass = create_color_texture_pass( p_orientation );
-
-    RegisterSinglePassSlot( ipass );
-    node = static_cast<SphericalLOD::FaceDrawingNode*>( GetSingleNodeFromPass( ipass ) );
-
-    node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
-
-    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vso", true ) );
-    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.pso", true ) );
-    patch_vshader->LoadFromFile();
-    patch_pshader->LoadFromFile();
-
-    Fx* patch_fx = CreateSingleNodeFx( ipass );
-
-    patch_fx->AddShader( patch_vshader );
-    patch_fx->AddShader( patch_pshader );
-
-    //patch_fx->AddRenderStateIn(  DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
-    //patch_fx->AddRenderStateOut(  DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
-
-    ipass->GetRenderingQueue()->UpdateOutputQueue();
-
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-
-    ipass->GetTargetTexture()->AllocTextureContent();
-
-    int index = m_subpasses.size();
-
-    SubPass sp;
-    sp.need_redraw = false;
-    sp.pass = ipass;
-    sp.renderingpatches_node = node;
-    m_subpasses.push_back( sp );
-   
-    return index;
-}
-*/
-
 void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
 {
     if( SceneNodeGraph::NODE_ADDED == p_event )
@@ -286,10 +163,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         reg_body.attached = true;
                         reg_body.body = inertbody;                        
                         reg_body.relative_alt_valid = false;
-                        
-                        //create_colliding_heightmap( bodyname, &reg_body.collidingheightmap_pass, &reg_body.collidingheightmap_node );
-                        //int subpass_index = m_subpasses.size() - 1;
-                                                                                        
+                                                                                                                
                         inertbody->IncludeTo( this );
 
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
@@ -300,8 +174,6 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                                                                         collider, m_ray, true, m_subpass_creation_cb ) );
                         planet_fragment->SetHotState( true );
                         planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
-                        //planet_fragment->SetCollidingHMSubPassIndex( subpass_index );
-                        //planet_fragment->SetCollidingHeightMapTexture( reg_body.collidingheightmap_pass->GetTargetTexture() );
                         m_subpassdone_handlers.push_back( planet_fragment->GetSubPassDoneCb() );
 
                         m_planetfragments_list.push_back( planet_fragment );
@@ -321,9 +193,6 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     reg_body.body = inertbody;
                     reg_body.relative_alt_valid = false;
 
-                    //create_colliding_heightmap( bodyname, &reg_body.collidingheightmap_pass, &reg_body.collidingheightmap_node );
-                    //int subpass_index = m_subpasses.size() - 1;
-
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
                         DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
 
@@ -334,8 +203,6 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                     planet_fragment->SetHotState( false );
                     planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
-                    //planet_fragment->SetCollidingHMSubPassIndex( subpass_index );
-                    //planet_fragment->SetCollidingHeightMapTexture( reg_body.collidingheightmap_pass->GetTargetTexture() );
                     m_subpassdone_handlers.push_back( planet_fragment->GetSubPassDoneCb() );
 
                     m_planetfragments_list.push_back( planet_fragment );
@@ -746,23 +613,6 @@ void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSp
     m_subpasses[p_subpassindex].renderingpatches_node->SetDisplayList( p_displaylist );
 }
 
-/*
-DrawSpace::Core::Texture* DrawSpace::Planetoid::Body::GetColorTexture( int p_index )
-{
-    return m_subpasses[m_colortextures_subpasses[p_index]].pass->GetTargetTexture();
-}
-*/
-
-void DrawSpace::Planetoid::Body::BindGlobalTexture( DrawSpace::Pass* p_pass )
-{
-    /*
-    for( long i = 0; i < 6; i++ )
-    {
-        RenderingNode* node = m_drawable->GetPlanetBodyNodeFromPass( p_pass, i );
-        node->SetTexture( m_subpasses[m_colortextures_subpasses[i]].pass->GetTargetTexture(), 0 );
-    }
-    */
-}
 
 int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow, DrawSpace::Core::RenderingNode* p_node )
 {
