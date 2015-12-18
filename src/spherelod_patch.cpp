@@ -125,7 +125,7 @@ m_config( p_config )
 
     bool init_uv;
 
-    if( m_lod_level == NB_LOD_RANGES - 1 )
+    if( m_lod_level == NB_LOD_RANGES - 1 || m_lod_level == NB_LOD_RANGES - 2 )
     {
         prepare_color_texture( p_handler );
         init_uv = true;

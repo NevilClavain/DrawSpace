@@ -140,6 +140,7 @@ public:
     void SetTargetClearingColor( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
 
     void UpdateOutputQueue( void );
+    void UpdateOutputQueueNoOpt( void );
 
     long GetTheoricalSwitchesCost( void );
     long GetSwitchesCost( void );

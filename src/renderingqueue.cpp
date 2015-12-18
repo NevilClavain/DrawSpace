@@ -213,6 +213,24 @@ void RenderingQueue::UpdateOutputQueue( void )
     cleanup_output_list();
 }
 
+void RenderingQueue::UpdateOutputQueueNoOpt( void )
+{
+    m_nodes.clear();
+
+    for( std::map<long, std::vector<RenderingNode*>>::iterator it = m_renderingorder_nodes.begin(); it != m_renderingorder_nodes.end(); ++it )
+    {
+        for( size_t i = 0; i < (*it).second.size(); i++ )
+        {
+            m_nodes.push_back( (*it).second[i] );
+
+            // a chaque ajout, refaire un sort
+            std::sort( m_nodes.begin(), m_nodes.end(), RenderingQueue::nodes_comp );            
+        }
+    }
+    build_output_list( m_nodes );
+    cleanup_output_list();
+}
+
 double RenderingQueue::lists_score( std::map<dsstring, std::vector<RenderingNode*>>& p_lists )
 {
     long count = 0;

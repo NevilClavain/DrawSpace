@@ -621,7 +621,8 @@ int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass*
     SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( p_node );
 
     m_drawable->SetSinglePassSlot( p_subpass, node );
-    p_subpass->GetRenderingQueue()->UpdateOutputQueue();
+    //p_subpass->GetRenderingQueue()->UpdateOutputQueue();
+    p_subpass->GetRenderingQueue()->UpdateOutputQueueNoOpt();
 
     node->InitNoisingTextures( m_fractal );
 
