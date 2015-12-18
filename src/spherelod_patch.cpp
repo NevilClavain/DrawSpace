@@ -32,8 +32,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
-                bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords, Patch::SubPassCreationHandler* p_handler,
-                DrawSpace::SphericalLOD::Config* p_config ) : 
+                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config ) : 
 
 m_orientation( p_orientation ),
 m_ray( p_ray ),
@@ -54,53 +53,9 @@ m_config( p_config )
         m_xpos = m_ypos = 0.0;
         m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
 
-        // ICI patch root creer une passe pour rendu texture couleur
-        m_colortexture_pass = create_color_texture_pass();
-
-        std::vector<Patch*> dl;
-        dl.push_back( this );
-
-        // creation/preparation du node
-
-        DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-        FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
-        
-        node->CreateNoisingTextures();
-        node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
-        node->SetDisplayList( dl );
-
-        Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vso", true ) );
-        Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.pso", true ) );
-        patch_vshader->LoadFromFile();
-        patch_pshader->LoadFromFile();
-
-        Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
-        fx->AddShader( patch_vshader );
-        fx->AddShader( patch_pshader );
-        node->SetFx( fx );
-               
-        void* tx_data;
-        if( false == renderer->CreateTexture( m_colortexture_pass->GetTargetTexture(), &tx_data ) )
-        {
-            _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
-        }
-    
-        m_colortexture_pass->GetTargetTexture()->AllocTextureContent();
-        
-        ////////////////////////
-        
-        // appel handler pour enregistrer et executer la passe
-        if( p_handler )
-        {
-            (*p_handler)( m_colortexture_pass, true, node );
-        }
-
-        m_texture_referent = this;
     }
     else
     {
-        m_texture_referent = p_parent->m_texture_referent;
-
         m_lod_level = p_parent->m_lod_level - 1;
         m_sidelength = p_parent->m_sidelength / 2.0;
 
@@ -168,36 +123,84 @@ m_config( p_config )
         }       
     }
 
-    if( p_forceuv )
+    bool init_uv;
+
+    if( m_lod_level == NB_LOD_RANGES - 1 )
     {
-        m_u1 = p_uvcoords[0];
-        m_v1 = p_uvcoords[1];
-        m_u2 = p_uvcoords[2];
-        m_v2 = p_uvcoords[3];
+        prepare_color_texture( p_handler );
+        init_uv = true;
+        m_texture_referent = this;
     }
     else
     {
+        init_uv = false;
+        m_texture_referent = p_parent->m_texture_referent;
+    }
 
-        if( NULL == p_parent )
-        {
-            m_u1 = 0.0;
-            m_v1 = 0.0;
-            m_u2 = 1.0;
-            m_v2 = 1.0;
-        }
-        else
-        {
-            m_u1 = ( ui1 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
-            m_v1 = ( vi1 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
 
-            m_u2 = ( ui2 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
-            m_v2 = ( vi2 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;       
-        }
-    }   
+    if( init_uv )
+    {
+        m_u1 = 0.0;
+        m_v1 = 0.0;
+        m_u2 = 1.0;
+        m_v2 = 1.0;
+    }
+    else
+    {
+        m_u1 = ( ui1 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
+        m_v1 = ( vi1 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+
+        m_u2 = ( ui2 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
+        m_v2 = ( vi2 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+    }
 }
 
 Patch::~Patch( void )
 {
+}
+
+
+void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler )
+{
+    m_colortexture_pass = create_color_texture_pass();
+
+    std::vector<Patch*> dl;
+    dl.push_back( this );
+
+    // creation/preparation du node
+
+    DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
+        
+    node->CreateNoisingTextures();
+    node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
+    node->SetDisplayList( dl );
+
+    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vso", true ) );
+    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.pso", true ) );
+    patch_vshader->LoadFromFile();
+    patch_pshader->LoadFromFile();
+
+    Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
+    fx->AddShader( patch_vshader );
+    fx->AddShader( patch_pshader );
+    node->SetFx( fx );
+               
+    void* tx_data;
+    if( false == renderer->CreateTexture( m_colortexture_pass->GetTargetTexture(), &tx_data ) )
+    {
+        _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
+    }
+    
+    m_colortexture_pass->GetTargetTexture()->AllocTextureContent();
+        
+    ////////////////////////
+        
+    // appel handler pour enregistrer et executer la passe
+    if( p_handler )
+    {
+        (*p_handler)( m_colortexture_pass, true, node );
+    }
 }
 
 void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )

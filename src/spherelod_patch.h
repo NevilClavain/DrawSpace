@@ -88,11 +88,11 @@ protected:
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_color_texture_pass( void );
+    void                                    prepare_color_texture( Patch::SubPassCreationHandler* p_handler );
     
 public:
-    Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner,
-            bool p_forceuv, const DrawSpace::Utils::Vector& p_uvcoords, Patch::SubPassCreationHandler* p_handler,
-            DrawSpace::SphericalLOD::Config* p_config );
+    Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 
+                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config );
 
     virtual ~Patch( void );
 
