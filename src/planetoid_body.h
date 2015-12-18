@@ -140,6 +140,7 @@ protected:
     void apply_gravity( void );
     void manage_bodies( void );
     void manage_camerapoints( void );
+    void compute_fragments( void );
     void update_fragments( void );
 
 

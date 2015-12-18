@@ -106,7 +106,7 @@ public:
                 DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions, Fragment::SubPassCreationHandler* p_handler );
     virtual ~Fragment( void );
 
-    void Update( DrawSpace::Planetoid::Body* p_owner );
+    void Compute( DrawSpace::Planetoid::Body* p_owner );
 
     void SetHotState( bool p_hotstate );
     bool GetHotState( void );

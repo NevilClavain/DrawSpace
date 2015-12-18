@@ -295,7 +295,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                 create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera, false );
 
                 m_registered_camerapoints[camera_scenename] = reg_camera;
-            }            
+            }
         }
     }
 }
@@ -308,6 +308,7 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
     }
     else if( DrawSpace::Core::SceneNodeGraph::TRANSFORMATIONS_DONE == p_event )
     {
+        compute_fragments();
         manage_bodies();
         manage_camerapoints();
         update_fragments();
@@ -441,13 +442,20 @@ void DrawSpace::Planetoid::Body::manage_camerapoints( void )
     }
 }
 
+void DrawSpace::Planetoid::Body::compute_fragments( void )
+{
+    for( size_t i = 0; i < m_planetfragments_list.size(); i++ )
+    {
+        Fragment* curr = m_planetfragments_list[i];
+        curr->Compute( this );
+    }
+}
+
 void DrawSpace::Planetoid::Body::update_fragments( void )
 {
     for( size_t i = 0; i < m_planetfragments_list.size(); i++ )
     {
         Fragment* curr = m_planetfragments_list[i];
-
-        curr->Update( this );
 
         InertBody* inertbody = curr->GetInertBody();
         CameraPoint* camera = curr->GetCamera();

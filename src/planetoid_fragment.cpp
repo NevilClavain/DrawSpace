@@ -164,7 +164,7 @@ void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::
     }
 }
 
-void Fragment::Update( DrawSpace::Planetoid::Body* p_owner )
+void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
 {
     if( m_hot )
     {
