@@ -623,6 +623,8 @@ int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass*
     m_drawable->SetSinglePassSlot( p_subpass, node );
     p_subpass->GetRenderingQueue()->UpdateOutputQueue();
 
+    node->InitNoisingTextures( m_fractal );
+
     SubPass sp;
     sp.need_redraw = p_drawnow;
     sp.pass = p_subpass;

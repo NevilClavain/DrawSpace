@@ -344,9 +344,4 @@ void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
             it2->first->InitNoisingTextures( p_fractal );
         }
     }
-
-    for( auto it = m_passes_singlenodes.begin(); it != m_passes_singlenodes.end(); ++it )
-    {
-        it->second->InitNoisingTextures( p_fractal );
-    }
 }
