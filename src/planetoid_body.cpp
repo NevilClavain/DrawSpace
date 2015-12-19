@@ -52,7 +52,16 @@ m_timemanager( p_time )
     m_patchsdraw_request_cb = _DRAWSPACE_NEW_( PatchsDrawRequestCb, PatchsDrawRequestCb( this, &DrawSpace::Planetoid::Body::on_patchsdraw_request ) );
     m_subpass_creation_cb = _DRAWSPACE_NEW_( SubPassCreationCb, SubPassCreationCb( this, &DrawSpace::Planetoid::Body::on_subpasscreation ) );
 
+    m_timer_cb = _DRAWSPACE_NEW_( TimerCb, TimerCb( this, &DrawSpace::Planetoid::Body::on_timer ) );
+    m_timer = _DRAWSPACE_NEW_( DrawSpace::Utils::Timer, DrawSpace::Utils::Timer );
+
+    m_timer->SetHandler( m_timer_cb );
+    m_timer->SetPeriod( 4000 );
+    m_timemanager->RegisterTimer( m_timer );
+
     m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
+
+    m_timer->SetState( true );
 }
 
 DrawSpace::Planetoid::Body::~Body( void )
@@ -313,6 +322,11 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
         manage_camerapoints();
         update_fragments();
     }
+}
+
+void DrawSpace::Planetoid::Body::on_timer( DrawSpace::Utils::Timer* p_timer )
+{
+
 }
 
 void DrawSpace::Planetoid::Body::apply_gravity( void )

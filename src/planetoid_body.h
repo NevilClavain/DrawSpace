@@ -43,6 +43,7 @@ public:
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>        ScenegraphEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                                 PatchsDrawRequestCb;
     typedef DrawSpace::Core::CallBack3<Body, int, DrawSpace::IntermediatePass*, bool, DrawSpace::Core::RenderingNode* >                                             SubPassCreationCb;
+    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Utils::Timer*>                                                                   TimerCb;
 
 protected:
 
@@ -103,6 +104,7 @@ protected:
     ScenegraphEventCb*                                                      m_scenegraph_evt_cb;
     PatchsDrawRequestCb*                                                    m_patchsdraw_request_cb;
     SubPassCreationCb*                                                      m_subpass_creation_cb;
+    TimerCb*                                                                m_timer_cb;
       
     std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>               m_registered_bodies;
     std::map<dsstring, RegisteredCamera>                                    m_registered_camerapoints;
@@ -118,6 +120,7 @@ protected:
     std::vector<SubPassDoneHandler*>                                        m_subpassdone_handlers;
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
+    DrawSpace::Utils::Timer*                                                m_timer;
 
     DrawSpace::SphericalLOD::Config*                                        m_config;
 
@@ -134,6 +137,7 @@ protected:
     void on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event, DrawSpace::Core::SceneNodeGraph* p_scenegraph );
     void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
     int on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow, DrawSpace::Core::RenderingNode* p_node );
+    void on_timer( DrawSpace::Utils::Timer* p_timer );
 
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr, bool p_hotstate );
 
