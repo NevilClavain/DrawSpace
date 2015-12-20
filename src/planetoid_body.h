@@ -87,7 +87,7 @@ protected:
     typedef struct
     {
         DrawSpace::SphericalLOD::FaceDrawingNode*   renderingpatches_node;
-        bool                                        need_redraw;
+        //bool                                        need_redraw;
         DrawSpace::IntermediatePass*                pass;
 
     } SubPass;
@@ -130,7 +130,9 @@ protected:
     // list of some passes to render for internal stuff
     // colliding heightmap, global textures ?
     std::vector<SubPass>                                                    m_singleshot_subpasses;
-    std::vector<SubPass>                                                    m_permanent_subpasses;
+    //std::vector<SubPass>                                                    m_permanent_subpasses;
+
+    std::vector<std::pair<bool, SubPass>>                                   m_permanent_subpasses;
    
     
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
