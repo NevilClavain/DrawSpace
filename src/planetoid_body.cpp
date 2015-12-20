@@ -326,7 +326,12 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
 
 void DrawSpace::Planetoid::Body::on_timer( DrawSpace::Utils::Timer* p_timer )
 {
+    SubPass subpass;
 
+    if( pop_next_subpass( subpass ) )
+    {
+        // continuer ici
+    }
 }
 
 void DrawSpace::Planetoid::Body::apply_gravity( void )
@@ -614,12 +619,12 @@ DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetSingleNodeFromPas
 
 void DrawSpace::Planetoid::Body::DrawSubPasses( void )
 {  
-    for( size_t i = 0; i < m_subpasses.size(); i++ )
+    for( size_t i = 0; i < m_permanent_subpasses.size(); i++ )
     {
-        if( m_subpasses[i].need_redraw )
+        if( m_permanent_subpasses[i].need_redraw )
         {
-            m_subpasses[i].pass->GetRenderingQueue()->Draw();
-            m_subpasses[i].need_redraw = false;
+            m_permanent_subpasses[i].pass->GetRenderingQueue()->Draw();
+            m_permanent_subpasses[i].need_redraw = false;
 
             for( size_t j = 0; j < m_subpassdone_handlers.size(); j++ )
             {
@@ -631,8 +636,8 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
 
 void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex )
 {    
-    m_subpasses[p_subpassindex].need_redraw = true;
-    m_subpasses[p_subpassindex].renderingpatches_node->SetDisplayList( p_displaylist );
+    m_permanent_subpasses[p_subpassindex].need_redraw = true;
+    m_permanent_subpasses[p_subpassindex].renderingpatches_node->SetDisplayList( p_displaylist );
 }
 
 
@@ -652,7 +657,21 @@ int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass*
     sp.need_redraw = p_drawnow;
     sp.pass = p_subpass;
     sp.renderingpatches_node = node;
-    m_subpasses.push_back( sp );
+    m_permanent_subpasses.push_back( sp );
     
     return 0;
+}
+
+bool DrawSpace::Planetoid::Body::pop_next_subpass( SubPass& p_subpass )
+{
+    if( 0 == m_singleshot_subpasses_stack.size() )
+    {
+        return false;
+    }
+    else
+    {
+        p_subpass = m_singleshot_subpasses_stack.back();
+        m_singleshot_subpasses_stack.pop_back();
+        return true;  
+    }
 }

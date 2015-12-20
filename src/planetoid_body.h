@@ -124,9 +124,14 @@ protected:
 
     DrawSpace::SphericalLOD::Config*                                        m_config;
 
+
+    std::list<SubPass>                                                      m_singleshot_subpasses_stack;
+
     // list of some passes to render for internal stuff
     // colliding heightmap, global textures ?
-    std::vector<SubPass>                                                    m_subpasses;
+    std::vector<SubPass>                                                    m_singleshot_subpasses;
+    std::vector<SubPass>                                                    m_permanent_subpasses;
+   
     
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -146,6 +151,8 @@ protected:
     void manage_camerapoints( void );
     void compute_fragments( void );
     void update_fragments( void );
+
+    bool pop_next_subpass( SubPass& p_subpass );
 
 
 public:
@@ -179,7 +186,7 @@ public:
 
     void                                InitNoisingTextures( void );
 
-    void                                DrawSubPasses( void );    
+    void                                DrawSubPasses( void );
 };
 
 
