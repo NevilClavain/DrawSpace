@@ -248,6 +248,9 @@
     <ClCompile Include="src\spherelod_config.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
+    <ClCompile Include="src\spherelod_subpass.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -511,6 +514,9 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="src\spherelod_config.h">
+      <Filter>sphericalLOD</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spherelod_subpass.h">
       <Filter>sphericalLOD</Filter>
     </ClInclude>
   </ItemGroup>

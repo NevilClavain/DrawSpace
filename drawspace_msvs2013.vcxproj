@@ -80,6 +80,7 @@
     <ClCompile Include="src\spherelod_drawing.cpp" />
     <ClCompile Include="src\spherelod_face.cpp" />
     <ClCompile Include="src\spherelod_patch.cpp" />
+    <ClCompile Include="src\spherelod_subpass.cpp" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\text_widget.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="src\spherelod_drawing.h" />
     <ClInclude Include="src\spherelod_face.h" />
     <ClInclude Include="src\spherelod_patch.h" />
+    <ClInclude Include="src\spherelod_subpass.h" />
     <ClInclude Include="src\task.h" />
     <ClInclude Include="src\text.h" />
     <ClInclude Include="src\texture.h" />
