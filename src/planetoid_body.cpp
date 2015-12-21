@@ -384,7 +384,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
             bodyfragment->UpdateRelativeAlt( rel_alt );
 
-            if( rel_alt >= /*1.2*/ 2.1 )
+            if( rel_alt >= /*1.2*/ /*2.1*/ 3.0 )
             {
 
                 detach_body( it->second.body );                
@@ -427,7 +427,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
             bodyfragment->UpdateRelativeAlt( rel_alt );
 
-            if( rel_alt < /*1.1*/ 2.0 )
+            if( rel_alt < /*1.1*/ /*2.0*/ 2.7 )
             {
                 attach_body( it->second.body );
                 bodyfragment->SetHotState( true );
@@ -618,7 +618,21 @@ DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetSingleNodeFromPas
 }
 
 void DrawSpace::Planetoid::Body::DrawSubPasses( void )
-{  
+{
+    for( size_t i = 0; i < m_singleshot_subpasses.size(); i++ )
+    {
+        SubPass sp = m_singleshot_subpasses[i];
+        sp.pass->GetRenderingQueue()->Draw();
+
+        /*
+        for( size_t j = 0; j < m_subpassdone_handlers.size(); j++ )
+        {
+            (*m_subpassdone_handlers[j])( i );
+        }
+        */
+    }
+    m_singleshot_subpasses.clear();
+
     for( size_t i = 0; i < m_permanent_subpasses.size(); i++ )
     {
         if( m_permanent_subpasses[i].first )
@@ -633,36 +647,20 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
 
             m_permanent_subpasses[i].first = false;
         }
-
-        /*
-        if( m_permanent_subpasses[i].need_redraw )
-        {
-            m_permanent_subpasses[i].pass->GetRenderingQueue()->Draw();
-            m_permanent_subpasses[i].need_redraw = false;
-
-            for( size_t j = 0; j < m_subpassdone_handlers.size(); j++ )
-            {
-                (*m_subpassdone_handlers[j])( i );
-            }
-        }
-        */
     }
 }
 
 void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex )
 {
-    /*
-    m_permanent_subpasses[p_subpassindex].need_redraw = true;
-    m_permanent_subpasses[p_subpassindex].renderingpatches_node->SetDisplayList( p_displaylist );
-    */
-
     m_permanent_subpasses[p_subpassindex].first = true;
     m_permanent_subpasses[p_subpassindex].second.renderingpatches_node->SetDisplayList( p_displaylist );
 }
 
 
-int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow, DrawSpace::Core::RenderingNode* p_node )
+int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, int p_dest, DrawSpace::Core::RenderingNode* p_node )
 {
+    int index = -1;
+
     // cb traitement d'une requete de creation d'une sub-pass
  
     SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( p_node );
@@ -674,17 +672,38 @@ int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass*
     node->InitNoisingTextures( m_fractal );
 
     SubPass sp;
-    //sp.need_redraw = p_drawnow;
     sp.pass = p_subpass;
     sp.renderingpatches_node = node;
 
-    std::pair<bool, SubPass> sp_pair;
-    sp_pair.first = p_drawnow;
-    sp_pair.second = sp;
+    switch( p_dest )
+    {
+        case 0:
 
-    m_permanent_subpasses.push_back( sp_pair );
+            m_singleshot_subpasses_stack.push_front( sp );
+            break;
+
+        case 1:
+
+            m_singleshot_subpasses.push_back( sp );
+            break;
+
+        case 2:
+            {
+                std::pair<bool, SubPass> sp_pair;
+                sp_pair.first = false;
+                sp_pair.second = sp;
+                index = m_permanent_subpasses.size();
+                m_permanent_subpasses.push_back( sp_pair );                
+            }
+            break;
+
+        default:
+
+            _DSEXCEPTION( "unknow destination for subpass" );
+            break;
+    }
     
-    return 0;
+    return index;
 }
 
 bool DrawSpace::Planetoid::Body::pop_next_subpass( SubPass& p_subpass )

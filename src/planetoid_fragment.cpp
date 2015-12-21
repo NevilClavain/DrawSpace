@@ -93,7 +93,7 @@ m_collidingheightmap_content( NULL )
         // appel handler pour enregistrer et executer la passe
         if( p_handler )
         {
-            m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, false, node );
+            m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, 2, node );
 
             m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
             m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
@@ -275,23 +275,11 @@ int Fragment::GetCurrentPatchLOD( void )
 {
     return m_current_patch_lod;
 }
-/*
-void Fragment::SetCollidingHMSubPassIndex( int p_index )
-{
-    m_collidinghm_subpassindex = p_index;
-}
-*/
+
 Fragment::SubPassDoneCb* Fragment::GetSubPassDoneCb( void )
 {
     return m_subpassdone_cb;
 }
-/*
-void Fragment::SetCollidingHeightMapTexture( DrawSpace::Core::Texture* p_texture )
-{
-    m_collidingheightmap_texture = p_texture;
-    m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
-}
-*/
 
 void Fragment::on_subpassdone( int p_subpassindex )
 {

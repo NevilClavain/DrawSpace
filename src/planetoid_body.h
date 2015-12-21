@@ -42,7 +42,7 @@ public:
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>              NodesEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>        ScenegraphEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                                 PatchsDrawRequestCb;
-    typedef DrawSpace::Core::CallBack3<Body, int, DrawSpace::IntermediatePass*, bool, DrawSpace::Core::RenderingNode* >                                             SubPassCreationCb;
+    typedef DrawSpace::Core::CallBack3<Body, int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode* >                                              SubPassCreationCb;
     typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Utils::Timer*>                                                                   TimerCb;
 
 protected:
@@ -86,8 +86,7 @@ protected:
 
     typedef struct
     {
-        DrawSpace::SphericalLOD::FaceDrawingNode*   renderingpatches_node;
-        //bool                                        need_redraw;
+        DrawSpace::SphericalLOD::FaceDrawingNode*   renderingpatches_node;        
         DrawSpace::IntermediatePass*                pass;
 
     } SubPass;
@@ -113,8 +112,6 @@ protected:
     std::vector<Fragment*>                                                  m_planetfragments_list;
 
 
-    //DrawSpace::SphericalLOD::Face*                                          m_faces[6];
-
     DrawSpace::Utils::Fractal*                                              m_fractal;
 
     std::vector<SubPassDoneHandler*>                                        m_subpassdone_handlers;
@@ -130,8 +127,6 @@ protected:
     // list of some passes to render for internal stuff
     // colliding heightmap, global textures ?
     std::vector<SubPass>                                                    m_singleshot_subpasses;
-    //std::vector<SubPass>                                                    m_permanent_subpasses;
-
     std::vector<std::pair<bool, SubPass>>                                   m_permanent_subpasses;
    
     
@@ -143,7 +138,7 @@ protected:
     void on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
     void on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event, DrawSpace::Core::SceneNodeGraph* p_scenegraph );
     void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
-    int on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, bool p_drawnow, DrawSpace::Core::RenderingNode* p_node );
+    int on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, int p_dest, DrawSpace::Core::RenderingNode* p_node );
     void on_timer( DrawSpace::Utils::Timer* p_timer );
 
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr, bool p_hotstate );

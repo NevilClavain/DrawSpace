@@ -41,7 +41,7 @@ namespace SphericalLOD
 class Patch
 {
 public:
-    typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, bool, DrawSpace::Core::RenderingNode*>     SubPassCreationHandler;
+    typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode*>     SubPassCreationHandler;
 
     static const int    NorthNeighbour      = 0;
     static const int    SouthNeighbour      = 1;
@@ -88,7 +88,7 @@ protected:
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_color_texture_pass( void );
-    void                                    prepare_color_texture( Patch::SubPassCreationHandler* p_handler );
+    void                                    prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest );
     
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 

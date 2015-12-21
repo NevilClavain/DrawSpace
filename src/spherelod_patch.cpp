@@ -125,11 +125,17 @@ m_config( p_config )
 
     bool init_uv;
 
-    if( m_lod_level == NB_LOD_RANGES - 1 || m_lod_level == NB_LOD_RANGES - 2 )
+    if( m_lod_level == NB_LOD_RANGES - 1 )
     {
-        prepare_color_texture( p_handler );
+        prepare_color_texture( p_handler, 1 );
         init_uv = true;
         m_texture_referent = this;
+    }
+    else if( m_lod_level == NB_LOD_RANGES - 2 )
+    {
+        prepare_color_texture( p_handler, 1 );
+        init_uv = true;
+        m_texture_referent = this;    
     }
     else
     {
@@ -160,7 +166,7 @@ Patch::~Patch( void )
 }
 
 
-void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler )
+void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest )
 {
     m_colortexture_pass = create_color_texture_pass();
 
@@ -199,7 +205,7 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler )
     // appel handler pour enregistrer et executer la passe
     if( p_handler )
     {
-        (*p_handler)( m_colortexture_pass, true, node );
+        (*p_handler)( m_colortexture_pass, p_subpass_dest, node );
     }
 }
 
