@@ -133,7 +133,7 @@ m_config( p_config )
     }
     else if( m_lod_level == NB_LOD_RANGES - 2 )
     {
-        prepare_color_texture( p_handler, 1 );
+        prepare_color_texture( p_handler, 0 );
         init_uv = true;
         m_texture_referent = this;    
     }

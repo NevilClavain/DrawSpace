@@ -56,7 +56,7 @@ m_timemanager( p_time )
     m_timer = _DRAWSPACE_NEW_( DrawSpace::Utils::Timer, DrawSpace::Utils::Timer );
 
     m_timer->SetHandler( m_timer_cb );
-    m_timer->SetPeriod( 4000 );
+    m_timer->SetPeriod( 1000 );
     m_timemanager->RegisterTimer( m_timer );
 
     m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
@@ -329,8 +329,8 @@ void DrawSpace::Planetoid::Body::on_timer( DrawSpace::Utils::Timer* p_timer )
     SubPass subpass;
 
     if( pop_next_subpass( subpass ) )
-    {
-        // continuer ici
+    {      
+        m_singleshot_subpasses.push_back( subpass );
     }
 }
 
