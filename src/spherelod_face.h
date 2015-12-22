@@ -94,6 +94,8 @@ protected:
    
     void init_lodranges( void );
 
+    void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_currpatch, int p_dest_depth, int p_current_depth );
+
 public:
 
     Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler );
@@ -125,6 +127,8 @@ public:
     Patch* GetRootPatch( void );
 
     dsreal GetHotpointGroundAltitud( void );
+
+    void Split( int p_depth );
 };
 }
 }

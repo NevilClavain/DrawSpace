@@ -643,3 +643,28 @@ Patch* Face::GetRootPatch( void )
 {
     return m_rootpatch->GetContent();
 }
+
+void Face::recursive_split( BaseQuadtreeNode* p_currpatch, int p_dest_depth, int p_current_depth )
+{
+    if( p_dest_depth == p_current_depth )
+    {
+        return;
+    }
+
+    p_currpatch->Split();
+
+    for( int i = 0; i < 4; i++ )
+    {
+        BaseQuadtreeNode* child = p_currpatch->GetChild( i );
+        recursive_split( child, p_dest_depth, p_current_depth + 1 );
+    }
+}
+
+void Face::Split( int p_depth )
+{
+    if( !m_rootpatch )
+    {
+        return;
+    }
+    recursive_split( m_rootpatch, p_depth, 0 );
+}
