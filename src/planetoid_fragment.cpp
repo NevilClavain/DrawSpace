@@ -102,12 +102,12 @@ m_collidingheightmap_content( NULL )
     p_planetbody->Initialize();
 
     // ici "pre-splitter" les 6 faces
-    
+    /* 
     for( int i = 0; i < 6; i++ )
     {        
         p_planetbody->GetFace( i )->Split( 1 );
     }
-    
+    */ 
 }
 
 Fragment::~Fragment( void )
