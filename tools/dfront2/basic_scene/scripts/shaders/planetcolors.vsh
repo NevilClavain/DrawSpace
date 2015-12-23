@@ -61,6 +61,14 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 	for( i = 0; i < 3; i++ )
 	{
 		int indexTemp = nIndex + n[i];		
+		if( indexTemp > 255 )
+		{
+			indexTemp = indexTemp - 256;
+		}
+		else if( indexTemp < 0 )
+		{
+			indexTemp = 256 + indexTemp;
+		}			
 		maptextcoord[0] = ( index256 * indexTemp ) + midinterval256;
 		
 		maptextcoord[1] = 0.5;
