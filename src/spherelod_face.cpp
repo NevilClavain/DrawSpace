@@ -572,6 +572,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
             m_work_currentPatch = patch_node->GetContent();
             m_work_currentPatchLOD = m_work_lod_slipping_inf;
 
+            /*
             if( m_work_currentPatchLOD >= NB_LOD_RANGES - 6 )
             {
                 if( m_work_currentPatch->GetTextureReferent() != m_work_currentPatch )
@@ -598,6 +599,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
                     }
                 }
             }
+            */
         }
         ///////////////////////////////////
         return true;

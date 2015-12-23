@@ -132,6 +132,12 @@ m_subpasscreation_handler( p_handler )
         init_uv = true;
         m_texture_referent = this;
     }
+    else if( m_lod_level >= NB_LOD_RANGES - 6 )
+    {
+        prepare_color_texture( m_subpasscreation_handler, 0 );
+        init_uv = true;
+        m_texture_referent = this;        
+    }
     else
     {
         init_uv = false;
@@ -602,7 +608,8 @@ DrawSpace::IntermediatePass* Patch::create_color_texture_pass( void )
 
     ipass->SetTargetDimsFromRenderer( false );    
     //ipass->SetTargetDims( 512, 512 );
-    ipass->SetTargetDims( 256, 256 );
+    //ipass->SetTargetDims( 256, 256 );
+    ipass->SetTargetDims( 128, 128 );
     
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( true );
