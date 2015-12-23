@@ -85,6 +85,8 @@ protected:
 
     Patch*                                  m_texture_referent;
 
+    Patch::SubPassCreationHandler*          m_subpasscreation_handler;
+
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_color_texture_pass( void );
@@ -123,6 +125,8 @@ public:
     DrawSpace::Core::Texture* GetColorTexture( void );
 
     Patch* GetTextureReferent( void );
+
+    void ForceColorTexture( int p_dest_queue );
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

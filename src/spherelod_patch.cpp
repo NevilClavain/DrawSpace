@@ -38,7 +38,8 @@ m_orientation( p_orientation ),
 m_ray( p_ray ),
 m_owner( p_owner ),
 m_colortexture_pass( NULL ),
-m_config( p_config )
+m_config( p_config ),
+m_subpasscreation_handler( p_handler )
 {
     for( long i = 0; i < 8; i++ )
     {
@@ -127,22 +128,15 @@ m_config( p_config )
 
     if( m_lod_level == NB_LOD_RANGES - 1 )
     {
-        prepare_color_texture( p_handler, 1 );
+        prepare_color_texture( m_subpasscreation_handler, 1 );
         init_uv = true;
         m_texture_referent = this;
-    }
-    else if( m_lod_level == NB_LOD_RANGES - 2 )
-    {
-        prepare_color_texture( p_handler, 0 );
-        init_uv = true;
-        m_texture_referent = this;    
     }
     else
     {
         init_uv = false;
         m_texture_referent = p_parent->m_texture_referent;
     }
-
 
     if( init_uv )
     {
@@ -163,6 +157,18 @@ m_config( p_config )
 
 Patch::~Patch( void )
 {
+}
+
+void Patch::ForceColorTexture( int p_dest_queue )
+{
+    prepare_color_texture( m_subpasscreation_handler, p_dest_queue );
+    
+    m_u1 = 0.0;
+    m_v1 = 0.0;
+    m_u2 = 1.0;
+    m_v2 = 1.0;
+
+    m_texture_referent = this;
 }
 
 
