@@ -384,7 +384,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
             bodyfragment->UpdateRelativeAlt( rel_alt );
 
-            if( rel_alt >= /*1.2*/ /*2.1*/ 3.0 )
+            if( rel_alt >= /*1.2*/ /*2.1*/ 4.0 )
             {
 
                 detach_body( it->second.body );                
@@ -427,7 +427,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
             bodyfragment->UpdateRelativeAlt( rel_alt );
 
-            if( rel_alt < /*1.1*/ /*2.0*/ 2.7 )
+            if( rel_alt < /*1.1*/ /*2.0*/ 3.6 )
             {
                 attach_body( it->second.body );
                 bodyfragment->SetHotState( true );
