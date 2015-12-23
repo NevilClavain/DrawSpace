@@ -580,6 +580,23 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 
                     m_work_currentPatch->ForceColorTexture( 0 );  //forcer le patch a creer sa propre color texture         
                 }
+
+                for( int i = 0; i < 8; i++ )
+                {
+                    DrawSpace::Utils::QuadtreeNode<SphericalLOD::Patch>* neighb = static_cast<DrawSpace::Utils::QuadtreeNode<SphericalLOD::Patch>*>( m_work_currentPatch->GetNeighbour( i ) );
+
+                    if( neighb )
+                    {
+                        SphericalLOD::Patch* patch = neighb->GetContent();
+
+                        if( patch->GetTextureReferent() != patch )
+                        {
+                            // si le patch ne possede pas deja sa propre color texture
+
+                            patch->ForceColorTexture( 0 );  //forcer le patch a creer sa propre color texture         
+                        }
+                    }
+                }
             }
         }
         ///////////////////////////////////
