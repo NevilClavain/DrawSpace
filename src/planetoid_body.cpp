@@ -56,7 +56,7 @@ m_timemanager( p_time )
     m_timer = _DRAWSPACE_NEW_( DrawSpace::Utils::Timer, DrawSpace::Utils::Timer );
 
     m_timer->SetHandler( m_timer_cb );
-    m_timer->SetPeriod( 500 );
+    m_timer->SetPeriod( 100 );
     m_timemanager->RegisterTimer( m_timer );
 
     m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
@@ -384,7 +384,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
             bodyfragment->UpdateRelativeAlt( rel_alt );
 
-            if( rel_alt >= /*1.2*/ /*2.1*/ 4.0 )
+            if( rel_alt >= /*1.2*/ /*2.1*/ 4.5 )
             {
 
                 detach_body( it->second.body );                
@@ -427,7 +427,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
             bodyfragment->UpdateRelativeAlt( rel_alt );
 
-            if( rel_alt < /*1.1*/ /*2.0*/ 3.6 )
+            if( rel_alt < /*1.1*/ /*2.0*/ 4.2 )
             {
                 attach_body( it->second.body );
                 bodyfragment->SetHotState( true );
