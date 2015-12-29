@@ -21,22 +21,22 @@
 */
 
 #include "spherelod_subpass.h"
+#include "spherelod_drawing.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::SphericalLOD;
 
-SubPass::SubPass( DrawSpace::IntermediatePass* p_pass, DrawSpace::SphericalLOD::FaceDrawingNode* p_node ) :
-m_pass( p_pass ),
-m_renderingpatches_node( p_node )
+SubPass::SubPass( void ) :
+m_subpass( NULL ),
+m_subpass_node( NULL )
 {
 }
 
 SubPass::~SubPass( void )
 {
-
 }
 
-void SubPass::SetNodeDisplayList( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist )
+void SubPass::Draw( void )
 {
-    m_renderingpatches_node->SetDisplayList( p_displaylist );
+    m_subpass->GetRenderingQueue()->Draw();
 }

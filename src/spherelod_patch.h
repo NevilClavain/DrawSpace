@@ -28,6 +28,7 @@
 #include "vsphere.h"
 #include "noise.h"
 #include "spherelod_config.h"
+#include "spherelod_subpass.h"
 #include "pass.h"
 
 #define NB_LOD_RANGES           16
@@ -38,7 +39,7 @@ namespace DrawSpace
 {
 namespace SphericalLOD
 {
-class Patch
+class Patch : public DrawSpace::SphericalLOD::SubPass
 {
 public:
     typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode*>     SubPassCreationHandler;
@@ -127,6 +128,8 @@ public:
     Patch* GetTextureReferent( void );
 
     void ForceColorTexture( int p_dest_queue );
+
+    virtual void SubPassDone( void );
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     static void SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

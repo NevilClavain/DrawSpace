@@ -24,7 +24,7 @@
 #define _SPHERELOD_SUBPASS_H_
 
 #include "pass.h"
-#include "spherelod_drawing.h"
+#include "renderingnode.h"
 
 namespace DrawSpace
 {
@@ -34,17 +34,16 @@ class SubPass
 {
 protected:
 
-    DrawSpace::SphericalLOD::FaceDrawingNode*   m_renderingpatches_node;
-    DrawSpace::IntermediatePass*                m_pass;
+    DrawSpace::Core::RenderingNode*             m_subpass_node;
+    DrawSpace::IntermediatePass*                m_subpass;
 
 public:
 
-    SubPass( DrawSpace::IntermediatePass* p_pass, DrawSpace::SphericalLOD::FaceDrawingNode* p_node );
+    SubPass( void );
     virtual ~SubPass( void );
 
-    virtual void SetNodeDisplayList( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist );
-
-    virtual void Done( void ) = 0;
+    virtual void                                        Draw( void );
+    virtual void                                        SubPassDone( void ) = 0;
 };
 }
 }

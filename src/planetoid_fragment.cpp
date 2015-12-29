@@ -98,6 +98,9 @@ m_collidingheightmap_content( NULL )
             m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
             m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
         }
+
+        m_subpass = m_collidingheightmap_pass;
+        m_subpass_node = node;
     }
     p_planetbody->Initialize();
 
@@ -336,4 +339,9 @@ DrawSpace::IntermediatePass* Fragment::create_colliding_heightmap_pass( void )
     ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
 
     return ipass;
+}
+
+void Fragment::SubPassDone( void )
+{
+
 }

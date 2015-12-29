@@ -24,6 +24,7 @@
 #define _PLANETOID_FRAGMENT_H_
 
 #include "spherelod_drawing.h"
+#include "spherelod_subpass.h"
 #include "orbiter.h"
 #include "collider.h"
 #include "camerapoint.h"
@@ -40,7 +41,7 @@ namespace Planetoid
 
 class Body;
 
-class Fragment
+class Fragment : public DrawSpace::SphericalLOD::SubPass
 {
 protected:
 
@@ -128,12 +129,9 @@ public:
 
     void RegisterPatchsDrawRequestHandler( PatchsDrawRequestHandler* p_handler );
 
-    /*
-    void SetCollidingHMSubPassIndex( int p_index );
-    void SetCollidingHeightMapTexture( DrawSpace::Core::Texture* p_texture );
-    */
-
     SubPassDoneCb* GetSubPassDoneCb( void );
+
+    virtual void SubPassDone( void );
 };
 
 }

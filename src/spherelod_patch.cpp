@@ -219,6 +219,10 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     {
         (*p_handler)( m_colortexture_pass, p_subpass_dest, node );
     }
+
+    m_subpass = m_colortexture_pass;
+    m_subpass_node = node;
+
 }
 
 void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )
@@ -631,4 +635,8 @@ DrawSpace::Core::Texture* Patch::GetColorTexture( void )
 Patch* Patch::GetTextureReferent( void )
 {
     return m_texture_referent;
+}
+
+void Patch::SubPassDone( void )
+{
 }
