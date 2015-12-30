@@ -127,8 +127,6 @@ public:
 
     Patch* GetTextureReferent( void );
 
-    void ForceColorTexture( int p_dest_queue );
-
     virtual void SubPassDone( void );
 
     static void CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

@@ -165,19 +165,6 @@ Patch::~Patch( void )
 {
 }
 
-void Patch::ForceColorTexture( int p_dest_queue )
-{
-    prepare_color_texture( m_subpasscreation_handler, p_dest_queue );
-    
-    m_u1 = 0.0;
-    m_v1 = 0.0;
-    m_u2 = 1.0;
-    m_v2 = 1.0;
-
-    m_texture_referent = this;
-}
-
-
 void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest )
 {
     m_colortexture_pass = create_color_texture_pass();
