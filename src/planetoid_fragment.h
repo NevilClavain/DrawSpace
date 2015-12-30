@@ -45,16 +45,13 @@ class Fragment : public DrawSpace::SphericalLOD::SubPass
 {
 protected:
 
-    typedef DrawSpace::Core::BaseCallback2<void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int>                                      PatchsDrawRequestHandler;
-    //typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode*>                             SubPassCreationHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int>                                      PatchsDrawRequestHandler;    
     typedef DrawSpace::Core::BaseCallback2<int, DrawSpace::SphericalLOD::SubPass*, int>                                                         SubPassCreationHandler;
 
     typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Patch*, int>                                                    PatchUpdateCb;
 
     typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>                                                           RunnerMsgCb;
     typedef DrawSpace::Core::CallBack<Fragment, void, Core::Runner::State>                                                                      RunnerEvtCb;
-
-    typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Fragment, void, int>                                                                SubPassDoneCb;
 
     DrawSpace::Dynamics::World*                                 m_world;
 
@@ -87,8 +84,6 @@ protected:
     std::vector<PatchsDrawRequestHandler*>                      m_patchsdrawrequest_handlers;
     int                                                         m_collidinghm_subpassindex;
 
-    SubPassDoneCb*                                              m_subpassdone_cb;
-
     DrawSpace::Core::Texture*                                   m_collidingheightmap_texture;
     void*                                                       m_collidingheightmap_content;
 
@@ -96,7 +91,6 @@ protected:
 
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
-    void on_subpassdone( int p_subpassindex );
     
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap );
 
@@ -129,8 +123,6 @@ public:
     void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done );
 
     void RegisterPatchsDrawRequestHandler( PatchsDrawRequestHandler* p_handler );
-
-    SubPassDoneCb* GetSubPassDoneCb( void );
 
     virtual void SubPassDone( void );
 };

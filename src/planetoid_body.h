@@ -37,14 +37,10 @@ class Body : public Dynamics::Orbiter
 {
 public:
 
-    typedef DrawSpace::Core::BaseCallback<void, int>  SubPassDoneHandler;
-
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*>             CameraEvtCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>              NodesEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>        ScenegraphEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                                 PatchsDrawRequestCb;
-    //typedef DrawSpace::Core::CallBack3<Body, int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode* >                                              SubPassCreationCb;
-
     typedef DrawSpace::Core::CallBack2<Body, int, DrawSpace::SphericalLOD::SubPass*, int >                                                                          SubPassCreationCb;
 
 
@@ -89,14 +85,6 @@ protected:
 
     } RegisteredCamera;
 
-    /*
-    typedef struct
-    {
-        DrawSpace::SphericalLOD::FaceDrawingNode*   renderingpatches_node;        
-        DrawSpace::IntermediatePass*                pass;
-
-    } SubPass;
-    */
 
     dsreal                                                                  m_ray;
 
@@ -118,24 +106,12 @@ protected:
 
     std::vector<Fragment*>                                                  m_planetfragments_list;
 
-
     DrawSpace::Utils::Fractal*                                              m_fractal;
-
-    std::vector<SubPassDoneHandler*>                                        m_subpassdone_handlers;
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
     DrawSpace::Utils::Timer*                                                m_timer;
 
     DrawSpace::SphericalLOD::Config*                                        m_config;
-
-    /*
-    std::list<SubPass>                                                      m_singleshot_subpasses_stack;
-
-    // list of some passes to render for internal stuff
-    // colliding heightmap, global textures ?
-    std::vector<SubPass>                                                    m_singleshot_subpasses;
-    std::vector<std::pair<bool, SubPass>>                                   m_permanent_subpasses;
-    */
 
     std::list<SphericalLOD::SubPass*>                                       m_singleshot_subpasses_stack;
 
@@ -165,10 +141,7 @@ protected:
     void compute_fragments( void );
     void update_fragments( void );
 
-    //bool pop_next_subpass( SubPass& p_subpass );
-
     DrawSpace::SphericalLOD::SubPass* pop_next_subpass( void );
-
 
 public:
     

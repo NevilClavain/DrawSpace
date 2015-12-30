@@ -207,11 +207,8 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     // appel handler pour enregistrer et executer la passe
     if( p_handler )
     {
-        //(*p_handler)( m_colortexture_pass, p_subpass_dest, node );
         (*p_handler)( this, p_subpass_dest );
     }
-
-
 }
 
 void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )
