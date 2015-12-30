@@ -44,6 +44,10 @@ public:
 
     virtual void                                        Draw( void );
     virtual void                                        SubPassDone( void ) = 0;
+
+    virtual DrawSpace::Core::RenderingNode*             GetNode( void );
+    virtual DrawSpace::IntermediatePass*                GetPass( void );
+
 };
 }
 }

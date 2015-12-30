@@ -40,3 +40,13 @@ void SubPass::Draw( void )
 {
     m_subpass->GetRenderingQueue()->Draw();
 }
+
+DrawSpace::Core::RenderingNode* SubPass::GetNode( void )
+{
+    return m_subpass_node;
+}
+
+DrawSpace::IntermediatePass* SubPass::GetPass( void )
+{
+    return m_subpass;
+}

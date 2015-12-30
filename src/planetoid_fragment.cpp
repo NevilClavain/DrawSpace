@@ -89,18 +89,21 @@ m_collidingheightmap_content( NULL )
 
         ////////////////////////
 
+        m_subpass = m_collidingheightmap_pass;
+        m_subpass_node = node;
+
+
         std::vector<DrawSpace::SphericalLOD::Patch*> dl;
         // appel handler pour enregistrer et executer la passe
         if( p_handler )
         {
-            m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, 2, node );
+            //m_collidinghm_subpassindex = (*p_handler)( m_collidingheightmap_pass, 2, node );
+
+            m_collidinghm_subpassindex = (*p_handler)( this, 2 );
 
             m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
             m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
         }
-
-        m_subpass = m_collidingheightmap_pass;
-        m_subpass_node = node;
     }
     p_planetbody->Initialize();
 
@@ -132,6 +135,9 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
 
             for( size_t i = 0; i < m_patchsdrawrequest_handlers.size(); i++ )
             {
+                DrawSpace::SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( m_subpass_node );
+                node->SetDisplayList( display_list );
+
                 (*m_patchsdrawrequest_handlers[i])( display_list, m_collidinghm_subpassindex );
             }
         }
@@ -343,5 +349,26 @@ DrawSpace::IntermediatePass* Fragment::create_colliding_heightmap_pass( void )
 
 void Fragment::SubPassDone( void )
 {
+    m_collidingheightmap_texture->CopyTextureContent();
 
+    float* heightmap = (float*)m_collidingheightmap_content;
+    Meshe final_meshe;
+    build_meshe( *( m_planetbody->GetPatcheMeshe() ), m_current_patch, final_meshe, heightmap );
+
+    Dynamics::InertBody::Body::Parameters params;
+
+    params.mass = 0.0;
+
+    params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
+
+    params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
+    params.shape_descr.meshe = final_meshe;
+
+    RemoveColliderFromWorld();
+
+    m_collider->SetKinematic( params );
+    m_collider->AddToWorld( m_world );
+
+    m_collision_state = true;
+    m_nb_collisionmeshebuild_done++;
 }

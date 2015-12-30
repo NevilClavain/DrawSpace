@@ -23,6 +23,7 @@
 #ifndef _PLANETOID_BODY_H_
 #define _PLANETOID_BODY_H_
 
+#include "spherelod_subpass.h"
 #include "planetoid_fragment.h"
 #include "scenenodegraph.h"
 #include "noise.h"
@@ -42,7 +43,11 @@ public:
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>              NodesEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>        ScenegraphEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::Planetoid::Body, void, const std::vector<DrawSpace::SphericalLOD::Patch*>&, int >                                 PatchsDrawRequestCb;
-    typedef DrawSpace::Core::CallBack3<Body, int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode* >                                              SubPassCreationCb;
+    //typedef DrawSpace::Core::CallBack3<Body, int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode* >                                              SubPassCreationCb;
+
+    typedef DrawSpace::Core::CallBack2<Body, int, DrawSpace::SphericalLOD::SubPass*, int >                                                                          SubPassCreationCb;
+
+
     typedef DrawSpace::Core::CallBack<DrawSpace::Planetoid::Body, void, DrawSpace::Utils::Timer*>                                                                   TimerCb;
 
 protected:
@@ -84,12 +89,14 @@ protected:
 
     } RegisteredCamera;
 
+    /*
     typedef struct
     {
         DrawSpace::SphericalLOD::FaceDrawingNode*   renderingpatches_node;        
         DrawSpace::IntermediatePass*                pass;
 
     } SubPass;
+    */
 
     dsreal                                                                  m_ray;
 
@@ -121,15 +128,23 @@ protected:
 
     DrawSpace::SphericalLOD::Config*                                        m_config;
 
-
+    /*
     std::list<SubPass>                                                      m_singleshot_subpasses_stack;
 
     // list of some passes to render for internal stuff
     // colliding heightmap, global textures ?
     std::vector<SubPass>                                                    m_singleshot_subpasses;
     std::vector<std::pair<bool, SubPass>>                                   m_permanent_subpasses;
-   
-    
+    */
+
+    std::list<SphericalLOD::SubPass*>                                       m_singleshot_subpasses_stack;
+
+    // list of some passes to render for internal stuff
+    // colliding heightmap, global textures ?
+    std::vector<SphericalLOD::SubPass*>                                     m_singleshot_subpasses;
+    std::vector<std::pair<bool, SphericalLOD::SubPass*>>                    m_permanent_subpasses;
+
+
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
     void body_find_attached_camera( DrawSpace::Dynamics::InertBody* p_body, std::vector<dsstring>& p_name );
@@ -138,7 +153,8 @@ protected:
     void on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
     void on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event, DrawSpace::Core::SceneNodeGraph* p_scenegraph );
     void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
-    int on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, int p_dest, DrawSpace::Core::RenderingNode* p_node );
+    //int  on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, int p_dest, DrawSpace::Core::RenderingNode* p_node );
+    int  on_subpasscreation( DrawSpace::SphericalLOD::SubPass* p_pass, int p_dest );
     void on_timer( DrawSpace::Utils::Timer* p_timer );
 
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr, bool p_hotstate );
@@ -149,7 +165,9 @@ protected:
     void compute_fragments( void );
     void update_fragments( void );
 
-    bool pop_next_subpass( SubPass& p_subpass );
+    //bool pop_next_subpass( SubPass& p_subpass );
+
+    DrawSpace::SphericalLOD::SubPass* pop_next_subpass( void );
 
 
 public:

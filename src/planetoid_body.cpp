@@ -326,11 +326,19 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
 
 void DrawSpace::Planetoid::Body::on_timer( DrawSpace::Utils::Timer* p_timer )
 {
+    /*
     SubPass subpass;
 
     if( pop_next_subpass( subpass ) )
     {      
         m_singleshot_subpasses.push_back( subpass );
+    }
+    */
+
+    DrawSpace::SphericalLOD::SubPass* sp = pop_next_subpass();
+    if( sp )
+    {
+        m_singleshot_subpasses.push_back( sp );
     }
 }
 
@@ -621,15 +629,16 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
 {
     for( size_t i = 0; i < m_singleshot_subpasses.size(); i++ )
     {
+        /*
         SubPass sp = m_singleshot_subpasses[i];
         sp.pass->GetRenderingQueue()->Draw();
-
-        /*
-        for( size_t j = 0; j < m_subpassdone_handlers.size(); j++ )
-        {
-            (*m_subpassdone_handlers[j])( i );
-        }
         */
+
+        SphericalLOD::SubPass* sp = m_singleshot_subpasses[i];
+        //sp.pass->GetRenderingQueue()->Draw();
+        sp->Draw();
+        sp->SubPassDone();
+
     }
     m_singleshot_subpasses.clear();
 
@@ -637,6 +646,7 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
     {
         if( m_permanent_subpasses[i].first )
         {
+            /*
             SubPass sp = m_permanent_subpasses[i].second;
 
             sp.pass->GetRenderingQueue()->Draw();           
@@ -644,6 +654,11 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
             {
                 (*m_subpassdone_handlers[j])( i );
             }
+            */
+
+            SphericalLOD::SubPass* sp = m_permanent_subpasses[i].second;
+            sp->Draw();
+            sp->SubPassDone();
 
             m_permanent_subpasses[i].first = false;
         }
@@ -653,24 +668,30 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
 void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex )
 {
     m_permanent_subpasses[p_subpassindex].first = true;
-    m_permanent_subpasses[p_subpassindex].second.renderingpatches_node->SetDisplayList( p_displaylist );
+    //m_permanent_subpasses[p_subpassindex].second.renderingpatches_node->SetDisplayList( p_displaylist );
 }
 
 
-int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, int p_dest, DrawSpace::Core::RenderingNode* p_node )
+int DrawSpace::Planetoid::Body::on_subpasscreation( /*DrawSpace::IntermediatePass* p_subpass, int p_dest, DrawSpace::Core::RenderingNode* p_node*/ DrawSpace::SphericalLOD::SubPass* p_pass, int p_dest )
 {
     int index = -1;
 
     // cb traitement d'une requete de creation d'une sub-pass
  
-    SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( p_node );
+    //SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( p_node );
 
-    m_drawable->SetSinglePassSlot( p_subpass, node );
-    //p_subpass->GetRenderingQueue()->UpdateOutputQueue();
-    p_subpass->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+    //m_drawable->SetSinglePassSlot( p_subpass, node );    
+    //p_subpass->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+
+    SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( p_pass->GetNode() );
+    
+
+    m_drawable->SetSinglePassSlot( p_pass->GetPass(), node );    
+    p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
 
     node->InitNoisingTextures( m_fractal );
 
+    /*
     SubPass sp;
     sp.pass = p_subpass;
     sp.renderingpatches_node = node;
@@ -702,10 +723,55 @@ int DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::IntermediatePass*
             _DSEXCEPTION( "unknow destination for subpass" );
             break;
     }
+    */
+
+    switch( p_dest )
+    {
+        case 0:
+
+            m_singleshot_subpasses_stack.push_front( p_pass );
+            break;
+
+        case 1:
+
+            m_singleshot_subpasses.push_back( p_pass );
+            break;
+
+        case 2:
+            {
+                std::pair<bool, DrawSpace::SphericalLOD::SubPass*> sp_pair;
+                sp_pair.first = false;
+                sp_pair.second = p_pass;
+                index = m_permanent_subpasses.size();
+                m_permanent_subpasses.push_back( sp_pair );                
+            }
+            break;
+
+        default:
+
+            _DSEXCEPTION( "unknow destination for subpass" );
+            break;
+    }
+
     
     return index;
 }
 
+DrawSpace::SphericalLOD::SubPass* DrawSpace::Planetoid::Body::pop_next_subpass( void )
+{
+    if( 0 == m_singleshot_subpasses_stack.size() )
+    {
+        return NULL;
+    }
+    else
+    {
+        DrawSpace::SphericalLOD::SubPass* pass = m_singleshot_subpasses_stack.back();
+        m_singleshot_subpasses_stack.pop_back();
+        return pass;  
+    }
+}
+
+/*
 bool DrawSpace::Planetoid::Body::pop_next_subpass( SubPass& p_subpass )
 {
     if( 0 == m_singleshot_subpasses_stack.size() )
@@ -719,3 +785,4 @@ bool DrawSpace::Planetoid::Body::pop_next_subpass( SubPass& p_subpass )
         return true;  
     }
 }
+*/

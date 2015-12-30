@@ -42,7 +42,8 @@ namespace SphericalLOD
 class Patch : public DrawSpace::SphericalLOD::SubPass
 {
 public:
-    typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode*>     SubPassCreationHandler;
+    //typedef DrawSpace::Core::BaseCallback3<int, DrawSpace::IntermediatePass*, int, DrawSpace::Core::RenderingNode*>     SubPassCreationHandler;
+    typedef DrawSpace::Core::BaseCallback2<int, DrawSpace::SphericalLOD::SubPass*, int>                                 SubPassCreationHandler;
 
     static const int    NorthNeighbour      = 0;
     static const int    SouthNeighbour      = 1;
