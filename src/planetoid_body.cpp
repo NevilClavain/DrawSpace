@@ -49,7 +49,7 @@ m_timemanager( p_time )
     m_nodes_evt_cb = _DRAWSPACE_NEW_( NodesEventCb, NodesEventCb( this, &DrawSpace::Planetoid::Body::on_nodes_event ) );
     m_scenegraph_evt_cb = _DRAWSPACE_NEW_( ScenegraphEventCb, ScenegraphEventCb( this, &DrawSpace::Planetoid::Body::on_scenegraph_event ) );
 
-    m_patchsdraw_request_cb = _DRAWSPACE_NEW_( PatchsDrawRequestCb, PatchsDrawRequestCb( this, &DrawSpace::Planetoid::Body::on_patchsdraw_request ) );
+    //m_patchsdraw_request_cb = _DRAWSPACE_NEW_( PatchsDrawRequestCb, PatchsDrawRequestCb( this, &DrawSpace::Planetoid::Body::on_patchsdraw_request ) );
     m_subpass_creation_cb = _DRAWSPACE_NEW_( SubPassCreationCb, SubPassCreationCb( this, &DrawSpace::Planetoid::Body::on_subpasscreation ) );
 
     m_timer_cb = _DRAWSPACE_NEW_( TimerCb, TimerCb( this, &DrawSpace::Planetoid::Body::on_timer ) );
@@ -182,7 +182,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
                                                                         collider, m_ray, true, m_subpass_creation_cb ) );
                         planet_fragment->SetHotState( true );
-                        planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
+                        //planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
 
                         m_planetfragments_list.push_back( planet_fragment );
                         reg_body.fragment = planet_fragment;
@@ -210,7 +210,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                                                                     collider, m_ray, true, m_subpass_creation_cb ) );
 
                     planet_fragment->SetHotState( false );
-                    planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
+                    //planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
                     
                     m_planetfragments_list.push_back( planet_fragment );
                     reg_body.fragment = planet_fragment;
@@ -628,29 +628,36 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
     for( size_t i = 0; i < m_singleshot_subpasses.size(); i++ )
     {
         SphericalLOD::SubPass* sp = m_singleshot_subpasses[i];        
-        sp->Draw();
+        sp->DrawSubPass();
         sp->SubPassDone();
     }
     m_singleshot_subpasses.clear();
 
     for( size_t i = 0; i < m_permanent_subpasses.size(); i++ )
     {
+        /*
         if( m_permanent_subpasses[i].first )
         {
             SphericalLOD::SubPass* sp = m_permanent_subpasses[i].second;
-            sp->Draw();
+            sp->DrawSubPass();
             sp->SubPassDone();
 
             m_permanent_subpasses[i].first = false;
         }
+        */
+
+        SphericalLOD::SubPass* sp = m_permanent_subpasses[i];        
+        sp->DrawSubPass();
+        sp->SubPassDone();
     }
 }
 
+/*
 void DrawSpace::Planetoid::Body::on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex )
 {
     m_permanent_subpasses[p_subpassindex].first = true;    
 }
-
+*/
 
 int DrawSpace::Planetoid::Body::on_subpasscreation( /*DrawSpace::IntermediatePass* p_subpass, int p_dest, DrawSpace::Core::RenderingNode* p_node*/ DrawSpace::SphericalLOD::SubPass* p_pass, int p_dest )
 {
@@ -680,11 +687,15 @@ int DrawSpace::Planetoid::Body::on_subpasscreation( /*DrawSpace::IntermediatePas
 
         case 2:
             {
+                /*
                 std::pair<bool, DrawSpace::SphericalLOD::SubPass*> sp_pair;
                 sp_pair.first = false;
                 sp_pair.second = p_pass;
                 index = m_permanent_subpasses.size();
-                m_permanent_subpasses.push_back( sp_pair );                
+                m_permanent_subpasses.push_back( sp_pair );
+                */
+
+                m_permanent_subpasses.push_back( p_pass );
             }
             break;
 

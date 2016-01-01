@@ -42,7 +42,7 @@ public:
     SubPass( void );
     virtual ~SubPass( void );
 
-    virtual void                                        Draw( void );
+    virtual void                                        DrawSubPass( void );
     virtual void                                        SubPassDone( void ) = 0;
 
     virtual DrawSpace::Core::RenderingNode*             GetNode( void );

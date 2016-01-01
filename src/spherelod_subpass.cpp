@@ -36,7 +36,7 @@ SubPass::~SubPass( void )
 {
 }
 
-void SubPass::Draw( void )
+void SubPass::DrawSubPass( void )
 {
     m_subpass->GetRenderingQueue()->Draw();
 }

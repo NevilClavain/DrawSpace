@@ -48,9 +48,10 @@ m_collisions( p_collisions ),
 m_nb_collisionmeshebuild_done( 0 ),
 m_current_patch( NULL ),
 m_current_patch_lod( -1 ),
-m_collidinghm_subpassindex( -1 ),
+//m_collidinghm_subpassindex( -1 ),
 m_collidingheightmap_texture( NULL ),
-m_collidingheightmap_content( NULL )
+m_collidingheightmap_content( NULL ),
+m_draw_collidinghm( false )
 {
     if( m_collisions )
     {
@@ -95,7 +96,9 @@ m_collidingheightmap_content( NULL )
         // appel handler pour enregistrer et executer la passe
         if( p_handler )
         {
-            m_collidinghm_subpassindex = (*p_handler)( this, 2 );
+            //m_collidinghm_subpassindex = (*p_handler)( this, 2 );
+
+            (*p_handler)( this, 2 );
 
             m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
             m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
@@ -114,13 +117,19 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
     m_current_patch = p_patch;
     m_current_patch_lod = p_patch_lod;
 
-    if( m_collisions && m_collidinghm_subpassindex != -1 )
+    if( m_collisions /*&& m_collidinghm_subpassindex != -1*/ && m_subpass_node )
     {
         std::vector<DrawSpace::SphericalLOD::Patch*> display_list;
         if( m_current_patch && m_current_patch_lod == 0 )
         {
             display_list.push_back( m_current_patch );
 
+            m_draw_collidinghm = true;
+
+            DrawSpace::SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( m_subpass_node );
+            node->SetDisplayList( display_list );
+
+            /*
             for( size_t i = 0; i < m_patchsdrawrequest_handlers.size(); i++ )
             {
                 DrawSpace::SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( m_subpass_node );
@@ -128,6 +137,7 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
 
                 (*m_patchsdrawrequest_handlers[i])( display_list, m_collidinghm_subpassindex );
             }
+            */
         }
     }
 }
@@ -207,11 +217,12 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
     }
 }
 
+/*
 void Fragment::RegisterPatchsDrawRequestHandler( Fragment::PatchsDrawRequestHandler* p_handler )
 {
     m_patchsdrawrequest_handlers.push_back( p_handler );
 }
-
+*/
 
 void Fragment::SetHotState( bool p_hotstate )
 {
@@ -301,28 +312,41 @@ DrawSpace::IntermediatePass* Fragment::create_colliding_heightmap_pass( void )
     return ipass;
 }
 
+void Fragment::DrawSubPass( void )
+{
+    if( m_draw_collidinghm )
+    {
+        SubPass::DrawSubPass();
+    }
+}
+
 void Fragment::SubPassDone( void )
 {
-    m_collidingheightmap_texture->CopyTextureContent();
+    if( m_draw_collidinghm )
+    {
+        m_collidingheightmap_texture->CopyTextureContent();
 
-    float* heightmap = (float*)m_collidingheightmap_content;
-    Meshe final_meshe;
-    build_meshe( *( m_planetbody->GetPatcheMeshe() ), m_current_patch, final_meshe, heightmap );
+        float* heightmap = (float*)m_collidingheightmap_content;
+        Meshe final_meshe;
+        build_meshe( *( m_planetbody->GetPatcheMeshe() ), m_current_patch, final_meshe, heightmap );
 
-    Dynamics::InertBody::Body::Parameters params;
+        Dynamics::InertBody::Body::Parameters params;
 
-    params.mass = 0.0;
+        params.mass = 0.0;
 
-    params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
+        params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
 
-    params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
-    params.shape_descr.meshe = final_meshe;
+        params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
+        params.shape_descr.meshe = final_meshe;
 
-    RemoveColliderFromWorld();
+        RemoveColliderFromWorld();
 
-    m_collider->SetKinematic( params );
-    m_collider->AddToWorld( m_world );
+        m_collider->SetKinematic( params );
+        m_collider->AddToWorld( m_world );
 
-    m_collision_state = true;
-    m_nb_collisionmeshebuild_done++;
+        m_collision_state = true;
+        m_nb_collisionmeshebuild_done++;
+
+        m_draw_collidinghm = false;
+    }
 }
