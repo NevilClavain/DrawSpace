@@ -96,8 +96,6 @@ m_draw_collidinghm( false )
         // appel handler pour enregistrer et executer la passe
         if( p_handler )
         {
-            //m_collidinghm_subpassindex = (*p_handler)( this, 2 );
-
             (*p_handler)( this, 2 );
 
             m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
@@ -111,13 +109,12 @@ Fragment::~Fragment( void )
 {    
 }
 
-
 void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod )
 {
     m_current_patch = p_patch;
     m_current_patch_lod = p_patch_lod;
 
-    if( m_collisions /*&& m_collidinghm_subpassindex != -1*/ && m_subpass_node )
+    if( m_collisions && m_subpass_node )
     {
         std::vector<DrawSpace::SphericalLOD::Patch*> display_list;
         if( m_current_patch && m_current_patch_lod == 0 )
@@ -128,16 +125,6 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
 
             DrawSpace::SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( m_subpass_node );
             node->SetDisplayList( display_list );
-
-            /*
-            for( size_t i = 0; i < m_patchsdrawrequest_handlers.size(); i++ )
-            {
-                DrawSpace::SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( m_subpass_node );
-                node->SetDisplayList( display_list );
-
-                (*m_patchsdrawrequest_handlers[i])( display_list, m_collidinghm_subpassindex );
-            }
-            */
         }
     }
 }
@@ -216,13 +203,6 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
         }
     }
 }
-
-/*
-void Fragment::RegisterPatchsDrawRequestHandler( Fragment::PatchsDrawRequestHandler* p_handler )
-{
-    m_patchsdrawrequest_handlers.push_back( p_handler );
-}
-*/
 
 void Fragment::SetHotState( bool p_hotstate )
 {
