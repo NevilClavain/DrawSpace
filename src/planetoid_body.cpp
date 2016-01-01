@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -289,7 +289,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     }
                     else
                     {
-                        // le body referent de la camera ne peut pas être autre chose qu'un inertbody ou un orbiter
+                        // le body referent de la camera ne peut pas ï¿½tre autre chose qu'un inertbody ou un orbiter
                         _DSEXCEPTION( "camera referent body bad type" );
                     }
                 }

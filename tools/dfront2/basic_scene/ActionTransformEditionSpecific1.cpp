@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          

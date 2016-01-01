@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -123,7 +123,7 @@ void ActionPropsDialog::Execute( void )
                 }
             }
 
-            // les 6 rendering_node ont tous les mêmes valeurs de shaders, on peut donc se contenter d'un lire
+            // les 6 rendering_node ont tous les mï¿½mes valeurs de shaders, on peut donc se contenter d'un lire
             // un seul (ici le 0)
             DrawSpace::Core::RenderingNode* rendering_node = sb_node.scene_node->GetContent()->GetNodeFromPass( ipass, 0 );
 

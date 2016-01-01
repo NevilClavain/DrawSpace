@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -138,8 +138,8 @@ void Body::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     // inertbodies attaches a ce body : on deporte l'execution de leur transfo ici, dans Update2 du body
     // auquel ils sont attache, plutot que dans SceneNode::ComputeTransformation() des inertbodies
-    // et ce afin d'etre sur que les transfos de ces inertbodies sont toujours à jour par rapport
-    // a la transfo du body auquel ils sont attachés
+    // et ce afin d'etre sur que les transfos de ces inertbodies sont toujours ï¿½ jour par rapport
+    // a la transfo du body auquel ils sont attachï¿½s
 
     for( std::map<Body*, Body*>::iterator it = m_attached_inertbodies.begin(); it != m_attached_inertbodies.end(); ++it )
     {

@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -132,10 +132,10 @@ int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
     // http://www.fxcodebase.com/documents/IndicoreSDK.fr/lua/lua_next.html
     // http://www.lua.org/pil/25.1.html
    
-    lua_pushnil( p_L );  /* 1ère clé */
+    lua_pushnil( p_L );  /* 1ï¿½re clï¿½ */
     while( lua_next( p_L, 1 ) != 0 ) 
     {          
-       /* utilise la 'clé' (à l'index -2) et la 'valeur' (à l'index -1) */
+       /* utilise la 'clï¿½' (ï¿½ l'index -2) et la 'valeur' (ï¿½ l'index -1) */
         
         if( !lua_istable( p_L, -1 ) )
         {
@@ -194,7 +194,7 @@ int LuaChunkNode::Lua_SetImpostorsDisplayList( lua_State* p_L )
 
         lua_pop( p_L, 1 ); // pop sous table uv
 
-        /* enlève la 'valeur' ; garde la 'clé' pour la prochaine itération */
+        /* enlï¿½ve la 'valeur' ; garde la 'clï¿½' pour la prochaine itï¿½ration */
         lua_pop( p_L, 1 );
 
         m_descriptor.impostors.push_back( idle );

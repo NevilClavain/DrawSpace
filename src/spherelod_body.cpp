@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -132,7 +132,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
 
             vertex.tu[0] = current_u0;
             vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
-                                            // le v des coords textures et le y du repere patch sont en sens opposés
+                                            // le v des coords textures et le y du repere patch sont en sens opposï¿½s
             p_meshe_dest->AddVertex( vertex );
 
             current_u0 += delta_uv0;

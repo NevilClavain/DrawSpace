@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -757,7 +757,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 break;
         }
 
-        // inutile, puisque cette texture est déja "passée" par ici...
+        // inutile, puisque cette texture est dï¿½ja "passï¿½e" par ici...
         /*
         p_texture->SetFormat( width, height, bpp );
         p_texture->SetRenderData( (void*)m_textures_base[path] );

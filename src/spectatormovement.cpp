@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2015                              
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -146,7 +146,7 @@ void SpectatorMovement::Init( dsreal p_scalepos, long p_posperiod, bool p_orbite
     m_posperiod = p_posperiod;
     m_timer.SetPeriod( m_posperiod );
 
-    // pour executer compute_pos() des le 1er appel à SpectatorMovement::Compute(); les appels suivants seront fait periodiquement
+    // pour executer compute_pos() des le 1er appel ï¿½ SpectatorMovement::Compute(); les appels suivants seront fait periodiquement
     // sur appel timer manager a on_timer()
     m_compute = true;   
 }
