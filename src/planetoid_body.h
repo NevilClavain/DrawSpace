@@ -129,7 +129,7 @@ protected:
     void on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node );
     void on_scenegraph_event( DrawSpace::Core::SceneNodeGraph::ScenegraphEvent p_event, DrawSpace::Core::SceneNodeGraph* p_scenegraph );
     void on_patchsdraw_request( const std::vector<DrawSpace::SphericalLOD::Patch*>& p_displaylist, int p_subpassindex );
-    //int  on_subpasscreation( DrawSpace::IntermediatePass* p_subpass, int p_dest, DrawSpace::Core::RenderingNode* p_node );
+    
     int  on_subpasscreation( DrawSpace::SphericalLOD::SubPass* p_pass, int p_dest );
     void on_timer( DrawSpace::Utils::Timer* p_timer );
 

@@ -710,19 +710,3 @@ DrawSpace::SphericalLOD::SubPass* DrawSpace::Planetoid::Body::pop_next_subpass( 
         return pass;  
     }
 }
-
-/*
-bool DrawSpace::Planetoid::Body::pop_next_subpass( SubPass& p_subpass )
-{
-    if( 0 == m_singleshot_subpasses_stack.size() )
-    {
-        return false;
-    }
-    else
-    {
-        p_subpass = m_singleshot_subpasses_stack.back();
-        m_singleshot_subpasses_stack.pop_back();
-        return true;  
-    }
-}
-*/
