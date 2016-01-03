@@ -39,7 +39,8 @@ m_ray( p_ray ),
 m_owner( p_owner ),
 m_colortexture_pass( NULL ),
 m_config( p_config ),
-m_subpasscreation_handler( p_handler )
+m_subpasscreation_handler( p_handler ),
+m_parent( p_parent )
 {
     for( long i = 0; i < 8; i++ )
     {
@@ -124,6 +125,7 @@ m_subpasscreation_handler( p_handler )
         }       
     }
 
+    /*
     bool init_uv;
 
     if( m_lod_level == NB_LOD_RANGES - 1 )
@@ -158,6 +160,37 @@ m_subpasscreation_handler( p_handler )
 
         m_u2 = ( ui2 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
         m_v2 = ( vi2 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+    }
+    */
+
+    if( m_lod_level == NB_LOD_RANGES - 1 )
+    {
+        prepare_color_texture( m_subpasscreation_handler, 1 );
+    }
+    else if( m_lod_level >= NB_LOD_RANGES - 6 )
+    {
+        prepare_color_texture( m_subpasscreation_handler, 0 );
+    }
+
+    if( p_parent )
+    {
+        m_texture_referent = p_parent->m_texture_referent;
+
+        m_u1 = ( ui1 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
+        m_v1 = ( vi1 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+
+        m_u2 = ( ui2 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
+        m_v2 = ( vi2 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+
+    }
+    else
+    {
+        m_texture_referent = this;
+
+        m_u1 = 0.0;
+        m_v1 = 0.0;
+        m_u2 = 1.0;
+        m_v2 = 1.0;
     }
 }
 
@@ -625,4 +658,15 @@ Patch* Patch::GetTextureReferent( void )
 
 void Patch::SubPassDone( void )
 {
+    if( m_parent )
+    {
+        //m_texture_referent = m_parent->m_texture_referent;
+
+        m_texture_referent = this;
+
+        m_u1 = 0.0;
+        m_v1 = 0.0;
+        m_u2 = 1.0;
+        m_v2 = 1.0;
+    }
 }

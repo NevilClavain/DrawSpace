@@ -62,6 +62,8 @@ public:
 
 protected:
 
+    Patch*                                  m_parent;
+
     DrawSpace::SphericalLOD::Config*        m_config;
 
     dsreal                                  m_sidelength;
