@@ -26,6 +26,8 @@
 #include "spherelod_landscape.h"
 #include "noise.h"
 #include "texture.h"
+#include "renderer.h"
+#include "plugin.h"
 
 namespace DrawSpace
 {
@@ -40,12 +42,26 @@ protected:
     void*                               m_pnbufftexture_content;
     void*                               m_pnmaptexture_content;
 
+    void*                               m_pnbufftexture_data;
+    void*                               m_pnmaptexture_data;
+
     DrawSpace::Core::Texture*           m_perlinnoisebuffer_texture;
     DrawSpace::Core::Texture*           m_perlinnoisemap_texture;
 
+    DrawSpace::Interface::Renderer*     m_renderer;
 
 public:
-    LandscapeMultiFbm( DrawSpace::Utils::Fractal* p_fractal );
+
+    // fractal params
+    double                              m_fbmInputHalfRange;
+    double                              m_fbmLacunarity;
+    double                              m_fbmRoughness;
+    bool                                m_fbmClamp;
+    double                              m_fbmClipMode;
+    double                              m_fbmClipValue;
+
+
+    LandscapeMultiFbm( void );
     ~LandscapeMultiFbm( void );
 
     virtual void InitialiseResources( void );

@@ -89,6 +89,7 @@
 #include "mediator.h"
 #include "runner.h"
 #include "planetoid_body.h"
+#include "spherelod_landscapemultifbm.h"
 #include "inits.h"
 #include "descriptors.h"
 #include "ac3dmeshe.h"
