@@ -51,17 +51,17 @@ protected:
 
     std::vector<Patch*>                 m_display_list;
 
-    
+    /*
     void*                               m_pnbufftexture_content;
     void*                               m_pnmaptexture_content;
 
     DrawSpace::Core::Texture*           m_perlinnoisebuffer_texture;
     DrawSpace::Core::Texture*           m_perlinnoisemap_texture;
-    
+    */
 
     Stats                               m_stats;
 
-    DrawSpace::Utils::Fractal*          m_fractal;
+    //DrawSpace::Utils::Fractal*          m_fractal;
 
     Patch*                              m_current_patch;  // le connaitre pour eventuellement le dessiner d'une facon differente
 
@@ -78,8 +78,10 @@ public:
 
     void SetDisplayList( const std::vector<Patch*>& p_list );
     
+    /*
     void CreateNoisingTextures( void );
     void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
+    */
 
     void GetStats( Stats& p_stats );
 
@@ -137,7 +139,7 @@ public:
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
     
-    void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
+    //void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
 };
 }
 }

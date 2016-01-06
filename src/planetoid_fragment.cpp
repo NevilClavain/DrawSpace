@@ -65,7 +65,7 @@ m_draw_collidinghm( false )
         DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
         FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
         
-        node->CreateNoisingTextures();
+        //node->CreateNoisingTextures();
         node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
 
         Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.vso", true ) );

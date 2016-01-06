@@ -69,6 +69,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     Vector uvcoords;
     p_patch->GetUVCoords( uvcoords );
 
+    /*
     Vector fbm_params;
     fbm_params[0] = m_config->m_fbmLacunarity;
     fbm_params[1] = m_config->m_fbmInputHalfRange;
@@ -78,13 +79,14 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     fbm_params2[0] = m_config->m_fbmClipMode;
     fbm_params2[1] = m_config->m_fbmClipValue;
     fbm_params2[2] = m_config->m_fbmRoughness;
+    */
 
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
     m_renderer->SetFxShaderParams( 0, 26, uvcoords );
-    m_renderer->SetFxShaderParams( 0, 27, fbm_params );
-    m_renderer->SetFxShaderParams( 0, 28, fbm_params2 );
+    //m_renderer->SetFxShaderParams( 0, 27, fbm_params );
+    //m_renderer->SetFxShaderParams( 0, 28, fbm_params2 );
 
     if( m_current_patch == p_patch )
     {
@@ -125,6 +127,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, const Matrix& 
     }
 }
 
+/*
 void FaceDrawingNode::CreateNoisingTextures( void )
 {
     m_perlinnoisebuffer_texture = new Texture();    
@@ -171,7 +174,7 @@ void FaceDrawingNode::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal 
     m_perlinnoisemap_texture->UpdateTextureContent();
     m_perlinnoisebuffer_texture->UpdateTextureContent();
 }
-
+*/
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
 {
@@ -272,7 +275,7 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
     {   
         FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
         node->SetMeshe( Body::m_planetpatch_meshe );
-        node->CreateNoisingTextures();
+        //node->CreateNoisingTextures();
 
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         node->RegisterHandler( cb );
@@ -333,7 +336,7 @@ void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_globaltransformation = p_mat;
 }
 
-
+/*
 void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
 {    
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
@@ -345,3 +348,4 @@ void Drawing::InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal )
         }
     }
 }
+*/

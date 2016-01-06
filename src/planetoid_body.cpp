@@ -58,7 +58,7 @@ m_timemanager( p_time )
     m_timer->SetPeriod( 100 );
     m_timemanager->RegisterTimer( m_timer );
 
-    m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
+    //m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
 
     m_timer->SetState( true );
 }
@@ -598,10 +598,12 @@ bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynami
     return false;
 }
 
+/*
 void DrawSpace::Planetoid::Body::InitNoisingTextures( void )
 {
     m_drawable->InitNoisingTextures( m_fractal );
 }
+*/
 
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
 {
@@ -641,7 +643,7 @@ void DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::SphericalLOD::Su
     m_drawable->SetSinglePassSlot( p_pass->GetPass(), node );    
     p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
 
-    node->InitNoisingTextures( m_fractal );
+    //node->InitNoisingTextures( m_fractal );
 
     switch( p_dest )
     {

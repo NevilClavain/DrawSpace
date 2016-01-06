@@ -103,7 +103,7 @@ protected:
 
     std::vector<Fragment*>                                                  m_planetfragments_list;
 
-    DrawSpace::Utils::Fractal*                                              m_fractal;
+    //DrawSpace::Utils::Fractal*                                              m_fractal;
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
     DrawSpace::Utils::Timer*                                                m_timer;
@@ -168,7 +168,7 @@ public:
 
     bool                                GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude );
 
-    void                                InitNoisingTextures( void );
+    //void                                InitNoisingTextures( void );
 
     void                                DrawSubPasses( void );
 };

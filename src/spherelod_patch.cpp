@@ -210,7 +210,7 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
         
-    node->CreateNoisingTextures();
+    //node->CreateNoisingTextures();
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
     node->SetDisplayList( dl );
 

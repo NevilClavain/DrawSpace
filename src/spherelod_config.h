@@ -24,6 +24,7 @@
 #define _SPHERELOD_CONFIG_H_
 
 #include "drawspace_commons.h"
+#include "spherelod_landscape.h"
 
 namespace DrawSpace
 {
@@ -34,13 +35,17 @@ class Config
 public:
     double          m_lod0base;
     double          m_amplitude;
+    /*
     double          m_fbmInputHalfRange;
     double          m_fbmLacunarity;
     double          m_fbmRoughness;
     bool            m_fbmClamp;
     double          m_fbmClipMode;
     double          m_fbmClipValue;
-    
+    */
+
+    Landscape*      m_landscape;
+
     Config( void );
     ~Config( void );
 };
