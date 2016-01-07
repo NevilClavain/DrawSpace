@@ -37,6 +37,7 @@ public:
 
     virtual void BindShadersParams( void ) = 0;
     virtual void BindTextures( void ) = 0;
+    virtual void UnbindTextures( void ) = 0;
 };
 }
 }

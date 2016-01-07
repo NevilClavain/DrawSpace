@@ -249,8 +249,11 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
  
     face_node->SetCurrentPatch( current_patch );
     face_node->SetDisplayList( dl );
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->GetDiameter() / 2.0, m_globaltransformation, view, proj );
 
+    m_config->m_landscape->BindShadersParams();
+    m_config->m_landscape->BindTextures();
+    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->GetDiameter() / 2.0, m_globaltransformation, view, proj );
+    m_config->m_landscape->UnbindTextures();
 }
 
 void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
@@ -265,8 +268,11 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
 
     FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node ); 
     face_node->SetCurrentPatch( NULL );
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, world, view, proj );
 
+    m_config->m_landscape->BindShadersParams();
+    m_config->m_landscape->BindTextures();
+    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, world, view, proj );
+    m_config->m_landscape->UnbindTextures();
 }
 
 void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )

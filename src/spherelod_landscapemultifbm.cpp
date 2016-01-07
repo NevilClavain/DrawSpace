@@ -122,3 +122,9 @@ void LandscapeMultiFbm::BindTextures( void )
     m_renderer->SetVertexTexture( m_pnbufftexture_data, 0 );
     m_renderer->SetVertexTexture( m_pnmaptexture_data, 1 );
 }
+
+void LandscapeMultiFbm::UnbindTextures( void )
+{
+    m_renderer->UnsetVertexTexture( 0 );
+    m_renderer->UnsetVertexTexture( 1 );
+}

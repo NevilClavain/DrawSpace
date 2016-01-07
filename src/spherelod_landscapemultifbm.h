@@ -68,6 +68,7 @@ public:
 
     virtual void BindShadersParams( void );
     virtual void BindTextures( void );
+    virtual void UnbindTextures( void );
 };
 }
 }
