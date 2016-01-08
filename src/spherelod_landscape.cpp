@@ -20,42 +20,39 @@
 *
 */
 
-#ifndef _SPHERELOD_LANDSCAPE_H_
-#define _SPHERELOD_LANDSCAPE_H_
+#include "spherelod_landscape.h"
 
-#include "drawspace_commons.h"
-#include "shader.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::SphericalLOD;
 
-namespace DrawSpace
+void Landscape::AddCollisionsShaders( DrawSpace::Core::Shader* p_shader )
 {
-namespace SphericalLOD
-{
-class Landscape
-{
-protected:
-
-    std::vector<DrawSpace::Core::Shader*>   m_collisionsShaders;
-    std::vector<DrawSpace::Core::Shader*>   m_colorsTextureShaders;
-
-public:
-
-    virtual void InitialiseResources( void ) = 0;
-
-    virtual void BindShadersParams( void ) = 0;
-    virtual void BindTextures( void ) = 0;
-    virtual void UnbindTextures( void ) = 0;
-
-    virtual void AddCollisionsShaders( DrawSpace::Core::Shader* p_shader );
-    virtual void AddColorsTextureShaders( DrawSpace::Core::Shader* p_shader );
-
-    virtual DrawSpace::Core::Shader* GetCollisionsShader( int p_index );
-    virtual DrawSpace::Core::Shader* GetColorsTextureShader( int p_index );
-
-    virtual int GetCollisionsShadersListSize( void );
-    virtual int GetColorsTextureShadersListSize( void );
-
-};
-}
+    m_collisionsShaders.push_back( p_shader );
 }
 
-#endif
+void Landscape::AddColorsTextureShaders( DrawSpace::Core::Shader* p_shader )
+{
+    m_colorsTextureShaders.push_back( p_shader );
+}
+
+DrawSpace::Core::Shader* Landscape::GetCollisionsShader( int p_index )
+{
+    return m_collisionsShaders[p_index];
+}
+
+DrawSpace::Core::Shader* Landscape::GetColorsTextureShader( int p_index )
+{
+    return m_colorsTextureShaders[p_index];
+}
+
+int Landscape::GetCollisionsShadersListSize( void )
+{
+    return m_collisionsShaders.size();
+}
+
+int Landscape::GetColorsTextureShadersListSize( void )
+{
+    return m_colorsTextureShaders.size();
+}

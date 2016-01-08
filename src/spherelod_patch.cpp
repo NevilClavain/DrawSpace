@@ -125,44 +125,6 @@ m_parent( p_parent )
         }       
     }
 
-    /*
-    bool init_uv;
-
-    if( m_lod_level == NB_LOD_RANGES - 1 )
-    {
-        prepare_color_texture( m_subpasscreation_handler, 1 );
-        init_uv = true;
-        m_texture_referent = this;
-    }
-    else if( m_lod_level >= NB_LOD_RANGES - 6 )
-    {
-        prepare_color_texture( m_subpasscreation_handler, 0 );
-        init_uv = true;
-        m_texture_referent = this;        
-    }
-    else
-    {
-        init_uv = false;
-        m_texture_referent = p_parent->m_texture_referent;
-    }
-
-    if( init_uv )
-    {
-        m_u1 = 0.0;
-        m_v1 = 0.0;
-        m_u2 = 1.0;
-        m_v2 = 1.0;
-    }
-    else
-    {
-        m_u1 = ( ui1 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
-        m_v1 = ( vi1 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
-
-        m_u2 = ( ui2 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
-        m_v2 = ( vi2 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
-    }
-    */
-
     if( m_lod_level == NB_LOD_RANGES - 1 )
     {
         prepare_color_texture( m_subpasscreation_handler, 1 );
@@ -214,15 +176,23 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
     node->SetDisplayList( dl );
 
-    Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.vso", true ) );
-    Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planetcolors.pso", true ) );
-    patch_vshader->LoadFromFile();
-    patch_pshader->LoadFromFile();
 
     Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
-    fx->AddShader( patch_vshader );
-    fx->AddShader( patch_pshader );
+
+    int nb_colors_shaders = m_config->m_landscape->GetColorsTextureShadersListSize();
+
+    if( 0 == nb_colors_shaders )
+    {
+        _DSEXCEPTION( "no colors shaders setted..." )
+    }
+    for( int i = 0; i < nb_colors_shaders; i++ )
+    {
+        fx->AddShader( m_config->m_landscape->GetColorsTextureShader( i ) );
+    }
+
     node->SetFx( fx );
+
+
                
     void* tx_data;
     if( false == renderer->CreateTexture( m_colortexture_pass->GetTargetTexture(), &tx_data ) )

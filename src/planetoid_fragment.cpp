@@ -68,14 +68,21 @@ m_draw_collidinghm( false )
         //node->CreateNoisingTextures();
         node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
 
-        Shader* patch_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.vso", true ) );
-        Shader* patch_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planethm.pso", true ) );
-        patch_vshader->LoadFromFile();
-        patch_pshader->LoadFromFile();
+
 
         Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
-        fx->AddShader( patch_vshader );
-        fx->AddShader( patch_pshader );
+
+        int nb_collisions_shaders = m_config->m_landscape->GetCollisionsShadersListSize();
+
+        if( 0 == nb_collisions_shaders )
+        {
+            _DSEXCEPTION( "no collisions shaders setted..." )
+        }
+        for( int i = 0; i < nb_collisions_shaders; i++ )
+        {
+            fx->AddShader( m_config->m_landscape->GetCollisionsShader( i ) );
+        }
+
         node->SetFx( fx );
 
         void* tx_data;

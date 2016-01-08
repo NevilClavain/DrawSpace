@@ -37,28 +37,30 @@ class LandscapeMultiFbm : public Landscape
 {
 protected:
 
-    DrawSpace::Utils::Fractal*          m_fractal;
+    DrawSpace::Utils::Fractal*              m_fractal;
 
-    void*                               m_pnbufftexture_content;
-    void*                               m_pnmaptexture_content;
+    void*                                   m_pnbufftexture_content;
+    void*                                   m_pnmaptexture_content;
 
-    void*                               m_pnbufftexture_data;
-    void*                               m_pnmaptexture_data;
+    void*                                   m_pnbufftexture_data;
+    void*                                   m_pnmaptexture_data;
 
-    DrawSpace::Core::Texture*           m_perlinnoisebuffer_texture;
-    DrawSpace::Core::Texture*           m_perlinnoisemap_texture;
+    DrawSpace::Core::Texture*               m_perlinnoisebuffer_texture;
+    DrawSpace::Core::Texture*               m_perlinnoisemap_texture;
 
-    DrawSpace::Interface::Renderer*     m_renderer;
+    DrawSpace::Interface::Renderer*         m_renderer;
 
 public:
 
     // fractal params
-    double                              m_fbmInputHalfRange;
-    double                              m_fbmLacunarity;
-    double                              m_fbmRoughness;
-    bool                                m_fbmClamp;
-    double                              m_fbmClipMode;
-    double                              m_fbmClipValue;
+    double                                  m_fbmInputHalfRange;
+    double                                  m_fbmLacunarity;
+    double                                  m_fbmRoughness;
+    bool                                    m_fbmClamp;
+    double                                  m_fbmClipMode;
+    double                                  m_fbmClipValue;
+
+    int                                     m_fbmSeed;
 
 
     LandscapeMultiFbm( void );

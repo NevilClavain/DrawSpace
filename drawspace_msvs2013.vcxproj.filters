@@ -254,6 +254,9 @@
     <ClCompile Include="src\spherelod_landscapemultifbm.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
+    <ClCompile Include="src\spherelod_landscape.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />

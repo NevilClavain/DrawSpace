@@ -40,20 +40,26 @@ m_fbmLacunarity( 2.0 ),
 m_fbmRoughness( 0.5 ),
 m_fbmClamp( true ),
 m_fbmClipMode( 1.0 ),
-m_fbmClipValue( 0.0 )
+m_fbmClipValue( 0.0 ),
+m_fbmSeed( 1 ),
+m_fractal( NULL )
 {
     m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, 3345764, m_fbmRoughness, m_fbmLacunarity ) );
 }
 
 LandscapeMultiFbm::~LandscapeMultiFbm( void )
 {
-    _DRAWSPACE_DELETE_( m_fractal );
+    if( m_fractal )
+    {
+        _DRAWSPACE_DELETE_( m_fractal );
+    }
 }
 
 
 void LandscapeMultiFbm::InitialiseResources( void )
 {
+    m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_fbmSeed, m_fbmRoughness, m_fbmLacunarity ) );
+
     m_perlinnoisebuffer_texture = new Texture();    
     m_perlinnoisebuffer_texture->SetFormat( 256, 3, 4 );
     m_perlinnoisebuffer_texture->SetPurpose( Texture::PURPOSE_FLOAT );
