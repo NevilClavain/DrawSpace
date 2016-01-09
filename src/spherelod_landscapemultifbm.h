@@ -37,6 +37,11 @@ namespace SphericalLOD
 {
 class LandscapeMultiFbm : public Landscape
 {
+protected:
+
+    static const int                        nbFractalSource = 3;
+
+
 public:
 
     typedef struct
@@ -53,11 +58,11 @@ public:
 
 
 
-    FbmParams                                   m_fbmParams[NB_FBM];
+    FbmParams                                   m_fbmParams[nbFractalSource];
 
 protected:
 
-    DrawSpace::Utils::Fractal*              m_fractal;
+    DrawSpace::Utils::Fractal*              m_fractal[nbFractalSource];
 
     void*                                   m_pnbufftexture_content;
     void*                                   m_pnmaptexture_content;

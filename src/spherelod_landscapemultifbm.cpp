@@ -34,21 +34,11 @@ m_perlinnoisemap_texture( NULL ),
 m_pnbufftexture_content( NULL ),
 m_pnmaptexture_content( NULL ),
 m_pnbufftexture_data( NULL ),
-m_pnmaptexture_data( NULL ),
-/*
-m_fbmInputHalfRange( 10.0 ),
-m_fbmLacunarity( 2.0 ),
-m_fbmRoughness( 0.5 ),
-m_fbmClamp( true ),
-m_fbmClipMode( 1.0 ),
-m_fbmClipValue( 0.0 ),
-m_fbmSeed( 1 ),
-*/
-m_fractal( NULL )
+m_pnmaptexture_data( NULL )
 {
     m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
-    for( size_t i = 0; i < NB_FBM; i++ )
+    for( size_t i = 0; i < nbFractalSource; i++ )
     {
         m_fbmParams[i].m_fbmInputHalfRange = 10.0;
         m_fbmParams[i].m_fbmLacunarity = 2.0;
@@ -57,22 +47,30 @@ m_fractal( NULL )
         m_fbmParams[i].m_fbmClipMode = 1.0;
         m_fbmParams[i].m_fbmClipValue = 0.0;
         m_fbmParams[i].m_fbmSeed = 1;
+
+        m_fractal[i] = NULL;
     }
 }
 
 LandscapeMultiFbm::~LandscapeMultiFbm( void )
 {
-    if( m_fractal )
+    for( size_t i = 0; i < nbFractalSource; i++ )
     {
-        _DRAWSPACE_DELETE_( m_fractal );
+        if( m_fractal[i] )
+        {
+            _DRAWSPACE_DELETE_( m_fractal[i] );
+        }
     }
 }
 
 
 void LandscapeMultiFbm::InitialiseResources( void )
 {
-    m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_fbmParams[0].m_fbmSeed, 
-                                    m_fbmParams[0].m_fbmRoughness, m_fbmParams[0].m_fbmLacunarity ) );
+    for( size_t i = 0; i < nbFractalSource; i++ )
+    {
+        m_fractal[i] = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_fbmParams[i].m_fbmSeed, 
+                                    m_fbmParams[i].m_fbmRoughness, m_fbmParams[i].m_fbmLacunarity ) );    
+    }
 
     m_perlinnoisebuffer_texture = new Texture();    
     m_perlinnoisebuffer_texture->SetFormat( 256, 3, 4 );
@@ -105,7 +103,7 @@ void LandscapeMultiFbm::InitialiseResources( void )
     {
         for( long i = 0; i < 256; i++ )    
         {
-            float temp = m_fractal->GetNBuffer( i, j );
+            float temp = m_fractal[0]->GetNBuffer( i, j );
             *float_ptr = temp; float_ptr++;
         }
     }
@@ -114,7 +112,7 @@ void LandscapeMultiFbm::InitialiseResources( void )
 
     for( long i = 0; i < 256; i++ )
     {
-        *float_ptr = m_fractal->GetNMap( i ); float_ptr++;
+        *float_ptr = m_fractal[0]->GetNMap( i ); float_ptr++;
     }
 
     m_perlinnoisemap_texture->UpdateTextureContent();
