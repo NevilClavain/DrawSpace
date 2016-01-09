@@ -30,13 +30,13 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 Fbm::Fbm( void ) :
-m_fbmInputHalfRange( 10.0 ),
-m_fbmLacunarity( 2.0 ),
-m_fbmRoughness( 0.5 ),
-m_fbmClamp( true) ,
-m_fbmClipMode( 1.0 ),
-m_fbmClipValue( 0.0 ),
-m_fbmSeed( 1 ),
+m_InputHalfRange( 10.0 ),
+m_Lacunarity( 2.0 ),
+m_Roughness( 0.5 ),
+m_Clamp( true) ,
+m_ClipMode( 1.0 ),
+m_ClipValue( 0.0 ),
+m_Seed( 1 ),
 m_fractal( NULL )
 {
     m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -52,7 +52,7 @@ Fbm::~Fbm( void )
 
 void Fbm::Initialise( void )
 {
-    m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_fbmSeed, m_fbmRoughness, m_fbmLacunarity ) );
+    m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_Seed, m_Roughness, m_Lacunarity ) );
 
     m_perlinnoisebuffer_texture = new Texture();    
     m_perlinnoisebuffer_texture->SetFormat( 256, 3, 4 );

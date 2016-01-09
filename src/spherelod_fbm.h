@@ -36,13 +36,13 @@ class Fbm
 {
 public:
 
-    double                                  m_fbmInputHalfRange;
-    double                                  m_fbmLacunarity;
-    double                                  m_fbmRoughness;
-    bool                                    m_fbmClamp;
-    double                                  m_fbmClipMode;
-    double                                  m_fbmClipValue;
-    int                                     m_fbmSeed;
+    double                                  m_InputHalfRange;
+    double                                  m_Lacunarity;
+    double                                  m_Roughness;
+    bool                                    m_Clamp;
+    double                                  m_ClipMode;
+    double                                  m_ClipValue;
+    int                                     m_Seed;
 
     DrawSpace::Utils::Fractal*              m_fractal;
 
