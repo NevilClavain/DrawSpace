@@ -20,49 +20,31 @@
 *
 */
 
-#ifndef _SPHERELOD_LANDSCAPEMULTIFBM_H_
-#define _SPHERELOD_LANDSCAPEMULTIFBM_H_
+#ifndef _SPHERELOD_FBM_H_
+#define _SPHERELOD_FBM_H_
 
-#include "spherelod_landscape.h"
-#include "spherelod_fbm.h"
 #include "noise.h"
 #include "texture.h"
 #include "renderer.h"
 #include "plugin.h"
 
-
 namespace DrawSpace
 {
 namespace SphericalLOD
 {
-class LandscapeMultiFbm : public Landscape
+class Fbm
 {
-protected:
-
-    static const int                        nbFractalSource = 3;
-
-
 public:
 
-    typedef struct
-    {
-        double                                  m_fbmInputHalfRange;
-        double                                  m_fbmLacunarity;
-        double                                  m_fbmRoughness;
-        bool                                    m_fbmClamp;
-        double                                  m_fbmClipMode;
-        double                                  m_fbmClipValue;
-        int                                     m_fbmSeed;
-        
-    } FbmParams;
+    double                                  m_fbmInputHalfRange;
+    double                                  m_fbmLacunarity;
+    double                                  m_fbmRoughness;
+    bool                                    m_fbmClamp;
+    double                                  m_fbmClipMode;
+    double                                  m_fbmClipValue;
+    int                                     m_fbmSeed;
 
-
-
-    FbmParams                                   m_fbmParams[nbFractalSource];
-
-protected:
-
-    DrawSpace::Utils::Fractal*              m_fractal[nbFractalSource];
+    DrawSpace::Utils::Fractal*              m_fractal;
 
     void*                                   m_pnbufftexture_content;
     void*                                   m_pnmaptexture_content;
@@ -75,19 +57,10 @@ protected:
 
     DrawSpace::Interface::Renderer*         m_renderer;
 
-public:
+    Fbm( void );
+    ~Fbm( void );
 
-    // fractal params
-
-
-    LandscapeMultiFbm( void );
-    ~LandscapeMultiFbm( void );
-
-    virtual void InitialiseResources( void );
-
-    virtual void BindShadersParams( void );
-    virtual void BindTextures( void );
-    virtual void UnbindTextures( void );
+    void Initialise( void );
 };
 }
 }

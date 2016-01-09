@@ -79,6 +79,7 @@
     <ClCompile Include="src\spherelod_config.cpp" />
     <ClCompile Include="src\spherelod_drawing.cpp" />
     <ClCompile Include="src\spherelod_face.cpp" />
+    <ClCompile Include="src\spherelod_fbm.cpp" />
     <ClCompile Include="src\spherelod_landscape.cpp" />
     <ClCompile Include="src\spherelod_landscapemultifbm.cpp" />
     <ClCompile Include="src\spherelod_patch.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="src\spherelod_config.h" />
     <ClInclude Include="src\spherelod_drawing.h" />
     <ClInclude Include="src\spherelod_face.h" />
+    <ClInclude Include="src\spherelod_fbm.h" />
     <ClInclude Include="src\spherelod_landscapemultifbm.h" />
     <ClInclude Include="src\spherelod_patch.h" />
     <ClInclude Include="src\spherelod_subpass.h" />
