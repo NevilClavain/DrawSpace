@@ -35,6 +35,7 @@ m_pnbufftexture_content( NULL ),
 m_pnmaptexture_content( NULL ),
 m_pnbufftexture_data( NULL ),
 m_pnmaptexture_data( NULL ),
+/*
 m_fbmInputHalfRange( 10.0 ),
 m_fbmLacunarity( 2.0 ),
 m_fbmRoughness( 0.5 ),
@@ -42,9 +43,21 @@ m_fbmClamp( true ),
 m_fbmClipMode( 1.0 ),
 m_fbmClipValue( 0.0 ),
 m_fbmSeed( 1 ),
+*/
 m_fractal( NULL )
 {
     m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+    for( size_t i = 0; i < NB_FBM; i++ )
+    {
+        m_fbmParams[i].m_fbmInputHalfRange = 10.0;
+        m_fbmParams[i].m_fbmLacunarity = 2.0;
+        m_fbmParams[i].m_fbmRoughness = 0.5;
+        m_fbmParams[i].m_fbmClamp = true;
+        m_fbmParams[i].m_fbmClipMode = 1.0;
+        m_fbmParams[i].m_fbmClipValue = 0.0;
+        m_fbmParams[i].m_fbmSeed = 1;
+    }
 }
 
 LandscapeMultiFbm::~LandscapeMultiFbm( void )
@@ -58,7 +71,8 @@ LandscapeMultiFbm::~LandscapeMultiFbm( void )
 
 void LandscapeMultiFbm::InitialiseResources( void )
 {
-    m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_fbmSeed, m_fbmRoughness, m_fbmLacunarity ) );
+    m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_fbmParams[0].m_fbmSeed, 
+                                    m_fbmParams[0].m_fbmRoughness, m_fbmParams[0].m_fbmLacunarity ) );
 
     m_perlinnoisebuffer_texture = new Texture();    
     m_perlinnoisebuffer_texture->SetFormat( 256, 3, 4 );
@@ -110,14 +124,14 @@ void LandscapeMultiFbm::InitialiseResources( void )
 void LandscapeMultiFbm::BindShadersParams( void )
 {
     Vector fbm_params;
-    fbm_params[0] = m_fbmLacunarity;
-    fbm_params[1] = m_fbmInputHalfRange;
-    fbm_params[2] = ( m_fbmClamp ? 1.0 : 0.0 );
+    fbm_params[0] = m_fbmParams[0].m_fbmLacunarity;
+    fbm_params[1] = m_fbmParams[0].m_fbmInputHalfRange;
+    fbm_params[2] = ( m_fbmParams[0].m_fbmClamp ? 1.0 : 0.0 );
 
     Vector fbm_params2;
-    fbm_params2[0] = m_fbmClipMode;
-    fbm_params2[1] = m_fbmClipValue;
-    fbm_params2[2] = m_fbmRoughness;
+    fbm_params2[0] = m_fbmParams[0].m_fbmClipMode;
+    fbm_params2[1] = m_fbmParams[0].m_fbmClipValue;
+    fbm_params2[2] = m_fbmParams[0].m_fbmRoughness;
 
     m_renderer->SetFxShaderParams( 0, 27, fbm_params );
     m_renderer->SetFxShaderParams( 0, 28, fbm_params2 );

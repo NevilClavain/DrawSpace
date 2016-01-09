@@ -29,12 +29,32 @@
 #include "renderer.h"
 #include "plugin.h"
 
+#define NB_FBM                      3
+
 namespace DrawSpace
 {
 namespace SphericalLOD
 {
 class LandscapeMultiFbm : public Landscape
 {
+public:
+
+    typedef struct
+    {
+        double                                  m_fbmInputHalfRange;
+        double                                  m_fbmLacunarity;
+        double                                  m_fbmRoughness;
+        bool                                    m_fbmClamp;
+        double                                  m_fbmClipMode;
+        double                                  m_fbmClipValue;
+        int                                     m_fbmSeed;
+        
+    } FbmParams;
+
+
+
+    FbmParams                                   m_fbmParams[NB_FBM];
+
 protected:
 
     DrawSpace::Utils::Fractal*              m_fractal;
@@ -53,14 +73,6 @@ protected:
 public:
 
     // fractal params
-    double                                  m_fbmInputHalfRange;
-    double                                  m_fbmLacunarity;
-    double                                  m_fbmRoughness;
-    bool                                    m_fbmClamp;
-    double                                  m_fbmClipMode;
-    double                                  m_fbmClipValue;
-
-    int                                     m_fbmSeed;
 
 
     LandscapeMultiFbm( void );
