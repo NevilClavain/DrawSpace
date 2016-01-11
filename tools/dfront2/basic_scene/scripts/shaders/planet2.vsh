@@ -26,8 +26,41 @@ float4 fbm_params2: register(c28);
 	// .z -> roughness
 
 
+
+float4 fbm_params3: register(c29);
+	// .x -> lacunarity
+	// .y -> fbm input half-range
+	// .z -> fbm clamp
+	// .w -> reserve
+
+float4 fbm_params4: register(c30);
+	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
+	// .y -> clip value
+	// .z -> roughness
+
+
+float4 fbm_params5: register(c31);
+	// .x -> lacunarity
+	// .y -> fbm input half-range
+	// .z -> fbm clamp
+	// .w -> reserve
+
+float4 fbm_params6: register(c32);
+	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
+	// .y -> clip value
+	// .z -> roughness
+
+
 sampler2D TextureBuffer : register(s0);
 sampler2D TextureMap : register(s1);
+
+
+sampler2D TextureBuffer1 : register(s2);
+sampler2D TextureMap1 : register(s3);
+
+sampler2D TextureBuffer2 : register(s4);
+sampler2D TextureMap2 : register(s5);
+
 
 struct VS_INPUT 
 {
@@ -119,7 +152,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	f[1] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.y / 2.0 ) + 0.5 );
 	f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
 
-	float res = Fractal_fBm( f, 7, fbm_params.x, fbm_params2.z );
+	float res = Fractal_fBm( f, 7, fbm_params.x, fbm_params2.z, fbm_params.z );
 	v_alt = res * flag0.w;
 
 

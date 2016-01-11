@@ -83,7 +83,7 @@ double Noise_Noise( double3 f )
 }
 
 
-double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughness )
+double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughness, float clamp_res )
 {
 	int i;
 	// Initialize locals
@@ -104,7 +104,7 @@ double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughnes
 	}
 
 	double res;
-	if( fbm_params.z > 0.0 )
+	if( clamp_res > 0.0 )
 	{
 		res = clamp( -1.0, 1.0, fValue );
 	}
