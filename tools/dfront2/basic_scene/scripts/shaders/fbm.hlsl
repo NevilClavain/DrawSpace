@@ -1,5 +1,5 @@
 
-double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
+double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz, sampler2D TBuffer, sampler2D TMap )
 {
 	// ECH : texture index mid interval -> 1 /2N, N = 256 ou N = 3
 	double midinterval256 = 0.001953125; //1.0 / 512.0;
@@ -29,7 +29,7 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 		maptextcoord[0] = ( index256 * indexTemp ) + midinterval256;
 		
 		maptextcoord[1] = 0.5;
-		float4 mapval = tex2Dlod( TextureMap, maptextcoord );		
+		float4 mapval = tex2Dlod( TMap, maptextcoord );		
 		nIndex = mapval.x;
 	}
 	
@@ -38,13 +38,13 @@ double Noise_Lattice( int ix, double fx, int iy, double fy, int iz, double fz )
 	for( i = 0; i < 3; i++ )
 	{ 		
 		buffertextcoord[1] = ( index3 * i ) + midinterval3;
-		double buffval = tex2Dlod( TextureBuffer, buffertextcoord );
+		double buffval = tex2Dlod( TBuffer, buffertextcoord );
 		fValue += ( buffval * f[i] );
 	}
 	return fValue;
 }
 
-double Noise_Noise( double3 f )
+double Noise_Noise( double3 f, sampler2D TBuffer, sampler2D TMap )
 {
 	int n[3];			// Indexes to pass to lattice function
 	double r[3];		// Remainders to pass to lattice function
@@ -62,18 +62,18 @@ double Noise_Noise( double3 f )
 	double fValue;
 
 	
-	fValue = lerp(lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2], r[2] ),
-							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2], r[2] ),
+	fValue = lerp(lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2], r[2], TBuffer, TMap ),
+							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2], r[2], TBuffer, TMap ),
 							w[0]),
-						lerp(Noise_Lattice(n[0], r[0], n[1]+1, r[1]-1.0, n[2], r[2] ),
-							Noise_Lattice(n[0]+1, r[0]-1, n[1]+1, r[1]-1.0, n[2], r[2] ),
+						lerp(Noise_Lattice(n[0], r[0], n[1]+1, r[1]-1.0, n[2], r[2], TBuffer, TMap ),
+							Noise_Lattice(n[0]+1, r[0]-1, n[1]+1, r[1]-1.0, n[2], r[2], TBuffer, TMap ),
 							w[0]),
 						w[1]),
-					lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2]+1, r[2]-1.0),
-							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2]+1, r[2]-1.0),
+					lerp(lerp(Noise_Lattice(n[0], r[0], n[1], r[1], n[2]+1, r[2]-1.0, TBuffer, TMap ),
+							Noise_Lattice(n[0]+1, r[0]-1, n[1], r[1], n[2]+1, r[2]-1.0, TBuffer, TMap ),
 							w[0]),
-						lerp(Noise_Lattice(n[0], r[0], n[1]+1, r[1]-1.0, n[2]+1, r[2]-1.0),
-							Noise_Lattice(n[0]+1, r[0]-1, n[1]+1, r[1]-1.0, n[2]+1, r[2]-1.0),
+						lerp(Noise_Lattice(n[0], r[0], n[1]+1, r[1]-1.0, n[2]+1, r[2]-1.0, TBuffer, TMap),
+							Noise_Lattice(n[0]+1, r[0]-1, n[1]+1, r[1]-1.0, n[2]+1, r[2]-1.0, TBuffer, TMap),
 							w[0]),
 						w[1]),
 					w[2]);
@@ -83,7 +83,7 @@ double Noise_Noise( double3 f )
 }
 
 
-double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughness, float clamp_res )
+double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughness, float clamp_res, sampler2D TBuffer, sampler2D TMap )
 {
 	int i;
 	// Initialize locals
@@ -97,7 +97,7 @@ double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughnes
 	// Inner loop of spectral construction, where the fractal is built
 	for( i = 0; i < nbOctaves; i++ )
 	{	
-		fValue += Noise_Noise( fTemp ) * pow( fexp, -roughness );
+		fValue += Noise_Noise( fTemp, TBuffer, TMap ) * pow( fexp, -roughness );
 		
 		fTemp *= lacunarity;
 		fexp *= lacunarity;

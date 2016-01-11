@@ -144,7 +144,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	f[1] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.y / 2.0 ) + 0.5 );
 	f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
 
-	float res = Fractal_fBm( f, 7, fbm_params.x, fbm_params2.z, fbm_params.z );
+	float res = Fractal_fBm( f, 7, fbm_params.x, fbm_params2.z, fbm_params.z, TextureBuffer, TextureMap );
 
 	if( fbm_params2.x > 0 )
 	{
