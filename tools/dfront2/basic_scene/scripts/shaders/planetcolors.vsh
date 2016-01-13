@@ -163,6 +163,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	
 	Output.TexCoord1 = 0.0;
 	Output.TexCoord1.x = res;
+	// fournir l'amplitude au pixel shader
+	Output.TexCoord1.y = flag0.w;
 
 
 	Output.Position = mul( Input.Position, matWorldViewProjection );
@@ -170,6 +172,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.TexCoord0 = 0.0;
 	Output.TexCoord0.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
 	Output.TexCoord0.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
+
 			  
 	return( Output );   
 }
