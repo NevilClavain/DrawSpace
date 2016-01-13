@@ -150,7 +150,7 @@ void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::
             p_patchmeshe.GetVertex( index, v );
 
             double alt = *( p_heightmap + index_hm );
-            alt *= m_config->m_amplitude;
+            //alt *= m_config->m_amplitude;
       
             Vector v_out;
 

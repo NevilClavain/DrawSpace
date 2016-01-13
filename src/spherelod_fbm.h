@@ -42,6 +42,7 @@ public:
     bool                                    m_Clamp;
     double                                  m_ClipMode;
     double                                  m_ClipValue;
+    double                                  m_Amplitude;
     int                                     m_Seed;
 
     DrawSpace::Utils::Fractal*              m_fractal;

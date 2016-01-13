@@ -5,7 +5,7 @@ float4   flag0:				register(c24);
 	// .x -> patch orientation enum integer
 	// .y -> patch sidelenght
 	// .z -> planet ray
-	// .w -> amplitude
+	
 
 float4   patch_translation:	register(c25);
 	/// .x, .y -> patch positionning
@@ -18,7 +18,7 @@ float4 fbm_params: register(c27);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
-	// .w -> reserve
+	// .w -> amplitude
 
 float4 fbm_params2: register(c28);
 	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
@@ -31,7 +31,7 @@ float4 fbm_params3: register(c29);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
-	// .w -> reserve
+	// .w -> amplitude
 
 float4 fbm_params4: register(c30);
 	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
@@ -43,7 +43,7 @@ float4 fbm_params5: register(c31);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
-	// .w -> reserve
+	// .w -> amplitudes
 
 float4 fbm_params6: register(c32);
 	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
@@ -153,7 +153,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
 
 	float res = Fractal_fBm( f, 7, fbm_params.x, fbm_params2.z, fbm_params.z, TextureBuffer, TextureMap );
-	v_alt = res * flag0.w;
+	v_alt = res * fbm_params.w; // flag0.w;
 
 
 	if( fbm_params2.x > 0 )

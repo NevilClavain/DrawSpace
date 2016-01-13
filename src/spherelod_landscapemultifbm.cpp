@@ -59,15 +59,17 @@ void LandscapeMultiFbm::BindShadersParams( void )
     fbm_params[0] = m_fbm.m_Lacunarity;
     fbm_params[1] = m_fbm.m_InputHalfRange;
     fbm_params[2] = ( m_fbm.m_Clamp ? 1.0 : 0.0 );
+    fbm_params[3] = m_fbm.m_Amplitude;
 
     fbm_params2[0] = m_fbm.m_ClipMode;
     fbm_params2[1] = m_fbm.m_ClipValue;
-    fbm_params2[2] = m_fbm.m_Roughness;
+    fbm_params2[2] = m_fbm.m_Roughness;    
 
 
     fbm_params3[0] = m_fbm2.m_Lacunarity;
     fbm_params3[1] = m_fbm2.m_InputHalfRange;
     fbm_params3[2] = ( m_fbm2.m_Clamp ? 1.0 : 0.0 );
+    fbm_params3[3] = m_fbm.m_Amplitude;
 
     fbm_params4[0] = m_fbm2.m_ClipMode;
     fbm_params4[1] = m_fbm2.m_ClipValue;
@@ -77,6 +79,7 @@ void LandscapeMultiFbm::BindShadersParams( void )
     fbm_params5[0] = m_fbm3.m_Lacunarity;
     fbm_params5[1] = m_fbm3.m_InputHalfRange;
     fbm_params5[2] = ( m_fbm3.m_Clamp ? 1.0 : 0.0 );
+    fbm_params5[3] = m_fbm.m_Amplitude;
 
     fbm_params6[0] = m_fbm3.m_ClipMode;
     fbm_params6[1] = m_fbm3.m_ClipValue;

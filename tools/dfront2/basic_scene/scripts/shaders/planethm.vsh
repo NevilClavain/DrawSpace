@@ -5,7 +5,7 @@ float4   flag0:				register(c24);
 	// .x -> patch orientation enum integer
 	// .y -> patch sidelenght
 	// .z -> planet ray
-	// .w -> amplitude
+	
 
 float4   patch_translation:	register(c25);
 	/// .x, .y -> patch positionning
@@ -18,7 +18,7 @@ float4 fbm_params: register(c27);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
-	// .w -> reserve
+	// .w -> amplitude
 
 float4 fbm_params2: register(c28);
 	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
@@ -29,7 +29,7 @@ float4 fbm_params3: register(c29);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
-	// .w -> reserve
+	// .w -> amplitude
 
 float4 fbm_params4: register(c30);
 	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
@@ -41,7 +41,7 @@ float4 fbm_params5: register(c31);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
-	// .w -> reserve
+	// .w -> amplitude
 
 float4 fbm_params6: register(c32);
 	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
@@ -162,6 +162,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	
 	Output.TexCoord1 = 0.0;
 	Output.TexCoord1.x = res;
+	// fournir l'amplitude au pixel shader
+	Output.TexCoord1.y = fbm_params.w; //flag0.w;
 
 	Output.Position = mul( Input.Position, matWorldViewProjection );
 	

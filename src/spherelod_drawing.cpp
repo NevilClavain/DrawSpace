@@ -55,7 +55,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     flag0[0] = p_patch->GetOrientation();
     flag0[1] = p_patch->GetUnitSideLenght();
     flag0[2] = p_ray;
-    flag0[3] = m_config->m_amplitude;
+    //flag0[3] = m_config->m_amplitude;
 
     Vector patch_pos;
     dsreal xp, yp;
@@ -69,24 +69,10 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     Vector uvcoords;
     p_patch->GetUVCoords( uvcoords );
 
-    /*
-    Vector fbm_params;
-    fbm_params[0] = m_config->m_fbmLacunarity;
-    fbm_params[1] = m_config->m_fbmInputHalfRange;
-    fbm_params[2] = ( m_config->m_fbmClamp ? 1.0 : 0.0 );
-
-    Vector fbm_params2;
-    fbm_params2[0] = m_config->m_fbmClipMode;
-    fbm_params2[1] = m_config->m_fbmClipValue;
-    fbm_params2[2] = m_config->m_fbmRoughness;
-    */
-
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
     m_renderer->SetFxShaderParams( 0, 26, uvcoords );
-    //m_renderer->SetFxShaderParams( 0, 27, fbm_params );
-    //m_renderer->SetFxShaderParams( 0, 28, fbm_params2 );
 
     if( m_current_patch == p_patch )
     {

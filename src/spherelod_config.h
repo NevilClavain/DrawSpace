@@ -34,15 +34,7 @@ class Config
 {
 public:
     double          m_lod0base;
-    double          m_amplitude;
-    /*
-    double          m_fbmInputHalfRange;
-    double          m_fbmLacunarity;
-    double          m_fbmRoughness;
-    bool            m_fbmClamp;
-    double          m_fbmClipMode;
-    double          m_fbmClipValue;
-    */
+    //double          m_amplitude;
 
     Landscape*      m_landscape;
 

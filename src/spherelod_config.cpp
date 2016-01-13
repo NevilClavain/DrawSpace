@@ -25,7 +25,7 @@
 using namespace DrawSpace::SphericalLOD;
 
 Config::Config( void ) :
-m_amplitude( 12000.0 ),
+///m_amplitude( 12000.0 ),
 m_lod0base( 12000.0 ),
 /*
 m_fbmInputHalfRange( 10.0 ),
