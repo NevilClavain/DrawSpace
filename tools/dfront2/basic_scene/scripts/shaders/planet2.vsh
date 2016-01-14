@@ -21,8 +21,6 @@ float4 fbm_params: register(c27);
 	// .w -> amplitude
 
 float4 fbm_params2: register(c28);
-	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
-	// .y -> clip value
 	// .z -> roughness
 
 
@@ -34,8 +32,6 @@ float4 fbm_params3: register(c29);
 	// .w -> amplitude
 
 float4 fbm_params4: register(c30);
-	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
-	// .y -> clip value
 	// .z -> roughness
 
 
@@ -43,11 +39,9 @@ float4 fbm_params5: register(c31);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
-	// .w -> amplitudes
+	// .w -> amplitude
 
 float4 fbm_params6: register(c32);
-	// .x -> clip mode     0 -> none -1 -> clip sup 0 -> clip inf
-	// .y -> clip value
 	// .z -> roughness
 
 
@@ -146,30 +140,44 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 
 	float v_alt = 0.0;
+	float res;
+
+
+
+	double3 f2;
+	f2[0] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.x / 2.0 ) + 0.5 );
+	f2[1] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.y / 2.0 ) + 0.5 );
+	f2[2] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.z / 2.0 ) + 0.5 );
+
+	float fbm2 = Fractal_fBm( f2, 6, fbm_params3.x, fbm_params4.z, fbm_params3.z, TextureBuffer1, TextureMap1 );
+
+
+	double3 f3;
+	f3[0] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.x / 2.0 ) + 0.5 );
+	f3[1] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.y / 2.0 ) + 0.5 );
+	f3[2] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.z / 2.0 ) + 0.5 );
+
+	float fbm3 = Fractal_fBm( f3, 5, fbm_params5.x, fbm_params6.z, fbm_params5.z, TextureBuffer1, TextureMap1 );
 
 	double3 f;
-	f[0] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.x / 2.0 ) + 0.5 );
-	f[1] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.y / 2.0 ) + 0.5 );
-	f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
+	f[0] = lerp( -fbm_params.y, fbm_params2.y, ( v_position2.x / 2.0 ) + 0.5 );
+	f[1] = lerp( -fbm_params.y, fbm_params2.y, ( v_position2.y / 2.0 ) + 0.5 );
+	f[2] = lerp( -fbm_params.y, fbm_params2.y, ( v_position2.z / 2.0 ) + 0.5 );
 
-	float res = Fractal_fBm( f, 7, fbm_params.x, fbm_params2.z, fbm_params.z, TextureBuffer, TextureMap );
-	v_alt = res * fbm_params.w; // flag0.w;
+	float pn = Noise_Noise( f, TextureBuffer1, TextureMap1 );
 
 
-	if( fbm_params2.x > 0 )
-	{
-		if( v_alt < fbm_params2.y )
-		{
-			v_alt = fbm_params2.y;
-		}
-	}
-	else if( fbm_params2.x < 0 )
-	{
-		if( v_alt > fbm_params2.y )
-		{
-			v_alt = fbm_params2.y;
-		}	
-	}
+
+	//res = fbm3 * fbm_params5.w;
+
+	float pn2 = 7.0 * ( ( 0.5 * pn ) + 0.5 );
+	float weight = exp( pn2 ) / 1000.0;
+	res = lerp( fbm3 * fbm_params5.w, fbm2 * fbm_params3.w, weight );
+	
+	//res = fbm2 * fbm_params3.w;
+
+	v_alt = res;
+
 	
 	v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
 	v_position3.w = 1.0;

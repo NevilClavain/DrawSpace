@@ -12,6 +12,6 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-	float4 color = input.TexCoord1.x * input.TexCoord1.y;
+	float4 color = input.TexCoord1.x;
 	return color;	
 }

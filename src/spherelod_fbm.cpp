@@ -33,9 +33,7 @@ Fbm::Fbm( void ) :
 m_InputHalfRange( 10.0 ),
 m_Lacunarity( 2.0 ),
 m_Roughness( 0.5 ),
-m_Clamp( true) ,
-m_ClipMode( 1.0 ),
-m_ClipValue( 0.0 ),
+m_Clamp( true ) ,
 m_Amplitude( 10000.0 ),
 m_Seed( 1 ),
 m_fractal( NULL )
@@ -82,7 +80,7 @@ void Fbm::Initialise( void )
     unsigned char* color_ptr = (unsigned char*)m_pnmaptexture_content;
     float* float_ptr = (float*)m_pnbufftexture_content;
         
-    for(long j = 0; j < 3; j++ )
+    for( long j = 0; j < 3; j++ )
     {
         for( long i = 0; i < 256; i++ )    
         {

@@ -40,8 +40,6 @@ public:
     double                                  m_Lacunarity;
     double                                  m_Roughness;
     bool                                    m_Clamp;
-    double                                  m_ClipMode;
-    double                                  m_ClipValue;
     double                                  m_Amplitude;
     int                                     m_Seed;
 
