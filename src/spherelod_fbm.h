@@ -24,10 +24,11 @@
 #define _SPHERELOD_FBM_H_
 
 #include "noise.h"
+/*
 #include "texture.h"
 #include "renderer.h"
 #include "plugin.h"
-
+*/
 namespace DrawSpace
 {
 namespace SphericalLOD
@@ -45,6 +46,7 @@ public:
 
     DrawSpace::Utils::Fractal*              m_fractal;
 
+    /*
     void*                                   m_pnbufftexture_content;
     void*                                   m_pnmaptexture_content;
 
@@ -53,8 +55,9 @@ public:
 
     DrawSpace::Core::Texture*               m_perlinnoisebuffer_texture;
     DrawSpace::Core::Texture*               m_perlinnoisemap_texture;
+    */
 
-    DrawSpace::Interface::Renderer*         m_renderer;
+    //DrawSpace::Interface::Renderer*         m_renderer;
 
     Fbm( void );
     ~Fbm( void );

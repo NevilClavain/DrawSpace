@@ -25,11 +25,13 @@
 
 #include "spherelod_landscape.h"
 #include "spherelod_fbm.h"
+
+/*
 #include "noise.h"
 #include "texture.h"
+*/
 #include "renderer.h"
 #include "plugin.h"
-
 
 namespace DrawSpace
 {

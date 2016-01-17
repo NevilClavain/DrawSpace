@@ -23,9 +23,10 @@
 
 #include "spherelod_fbm.h"
 #include "exceptions.h"
+#include "memalloc.h"
 
 using namespace DrawSpace;
-using namespace DrawSpace::Core;
+//using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
@@ -38,7 +39,7 @@ m_Amplitude( 10000.0 ),
 m_Seed( 1 ),
 m_fractal( NULL )
 {
-    m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    //m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
 Fbm::~Fbm( void )
@@ -53,6 +54,7 @@ void Fbm::Initialise( void )
 {
     m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_Seed, m_Roughness, m_Lacunarity ) );
 
+    /*
     m_perlinnoisebuffer_texture = new Texture();    
     m_perlinnoisebuffer_texture->SetFormat( 256, 3, 4 );
     m_perlinnoisebuffer_texture->SetPurpose( Texture::PURPOSE_FLOAT );
@@ -98,4 +100,5 @@ void Fbm::Initialise( void )
 
     m_perlinnoisemap_texture->UpdateTextureContent();
     m_perlinnoisebuffer_texture->UpdateTextureContent();
+    */
 }
