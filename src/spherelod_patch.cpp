@@ -601,8 +601,8 @@ DrawSpace::IntermediatePass* Patch::create_color_texture_pass( void )
 
     ipass->SetTargetDimsFromRenderer( false );    
     //ipass->SetTargetDims( 512, 512 );
-    //ipass->SetTargetDims( 256, 256 );
-    ipass->SetTargetDims( 128, 128 );
+    ipass->SetTargetDims( 256, 256 );
+    //ipass->SetTargetDims( 128, 128 );
     
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( true );
