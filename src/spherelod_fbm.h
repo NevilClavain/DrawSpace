@@ -23,10 +23,7 @@
 #ifndef _SPHERELOD_FBM_H_
 #define _SPHERELOD_FBM_H_
 
-#include "noise.h"
-#include "texture.h"
-#include "renderer.h"
-#include "plugin.h"
+#include "drawspace_commons.h"
 
 namespace DrawSpace
 {
@@ -41,23 +38,9 @@ public:
     double                                  m_Roughness;
     bool                                    m_Clamp;
     double                                  m_Amplitude;
-    int                                     m_Seed;
 
     int                                     m_Seed1;
     int                                     m_Seed2;
-
-    DrawSpace::Utils::Fractal*              m_fractal;
-
-    void*                                   m_pnbufftexture_content;
-    void*                                   m_pnmaptexture_content;
-
-    void*                                   m_pnbufftexture_data;
-    void*                                   m_pnmaptexture_data;
-
-    DrawSpace::Core::Texture*               m_perlinnoisebuffer_texture;
-    DrawSpace::Core::Texture*               m_perlinnoisemap_texture;
-
-    DrawSpace::Interface::Renderer*         m_renderer;
 
     Fbm( void );
     ~Fbm( void );

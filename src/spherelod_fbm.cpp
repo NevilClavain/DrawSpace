@@ -22,11 +22,8 @@
 */
 
 #include "spherelod_fbm.h"
-#include "exceptions.h"
 
 using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 Fbm::Fbm( void ) :
@@ -35,69 +32,15 @@ m_Lacunarity( 2.0 ),
 m_Roughness( 0.5 ),
 m_Clamp( true ) ,
 m_Amplitude( 10000.0 ),
-m_Seed( 1 ),
 m_Seed1( 600 ),
-m_Seed2( 700 ),
-m_fractal( NULL )
+m_Seed2( 700 )
 {
-    m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
 Fbm::~Fbm( void )
 {
-    if( m_fractal )
-    {
-        _DRAWSPACE_DELETE_( m_fractal );
-    }   
 }
 
 void Fbm::Initialise( void )
 {
-    m_fractal = _DRAWSPACE_NEW_( Fractal, Fractal( 3, m_Seed, m_Roughness, m_Lacunarity ) );
-
-    m_perlinnoisebuffer_texture = new Texture();    
-    m_perlinnoisebuffer_texture->SetFormat( 256, 3, 4 );
-    m_perlinnoisebuffer_texture->SetPurpose( Texture::PURPOSE_FLOAT );
-
-    m_perlinnoisemap_texture = new Texture();
-    m_perlinnoisemap_texture->SetFormat( 256, 1, 4 );
-    m_perlinnoisemap_texture->SetPurpose( Texture::PURPOSE_FLOAT );
-
-    if( false == m_renderer->CreateTexture( m_perlinnoisebuffer_texture, &m_pnbufftexture_data ) )
-    {
-        _DSEXCEPTION( "failed to create perlin noise buffer texture in renderer" );
-    }
-
-    if( false == m_renderer->CreateTexture( m_perlinnoisemap_texture, &m_pnmaptexture_data ) )
-    {
-        _DSEXCEPTION( "failed to create perlin noise map texture in renderer" );
-    }
-
-    m_perlinnoisebuffer_texture->AllocTextureContent();
-    m_pnbufftexture_content = m_perlinnoisebuffer_texture->GetTextureContentPtr();
-
-    m_perlinnoisemap_texture->AllocTextureContent();
-    m_pnmaptexture_content = m_perlinnoisemap_texture->GetTextureContentPtr();
-    
-    unsigned char* color_ptr = (unsigned char*)m_pnmaptexture_content;
-    float* float_ptr = (float*)m_pnbufftexture_content;
-        
-    for( long j = 0; j < 3; j++ )
-    {
-        for( long i = 0; i < 256; i++ )    
-        {
-            float temp = m_fractal->GetNBuffer( i, j );
-            *float_ptr = temp; float_ptr++;
-        }
-    }
-
-    float_ptr = (float*)m_pnmaptexture_content;
-
-    for( long i = 0; i < 256; i++ )
-    {
-        *float_ptr = m_fractal->GetNMap( i ); float_ptr++;
-    }
-
-    m_perlinnoisemap_texture->UpdateTextureContent();
-    m_perlinnoisebuffer_texture->UpdateTextureContent();
 }

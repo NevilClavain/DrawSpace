@@ -94,28 +94,13 @@ void LandscapeMultiFbm::BindShadersParams( void )
 
     m_renderer->SetFxShaderParams( 0, 31, fbm_params5 );
     m_renderer->SetFxShaderParams( 0, 32, fbm_params6 );
-
 }
 
 void LandscapeMultiFbm::BindTextures( void )
 {
-    m_renderer->SetVertexTexture( m_fbm.m_pnbufftexture_data, 0 );
-    m_renderer->SetVertexTexture( m_fbm.m_pnmaptexture_data, 1 );
-
-    m_renderer->SetVertexTexture( m_fbm2.m_pnbufftexture_data, 2 );
-    m_renderer->SetVertexTexture( m_fbm2.m_pnmaptexture_data, 3 );
-
-    m_renderer->SetVertexTexture( m_fbm3.m_pnbufftexture_data, 4 );
-    m_renderer->SetVertexTexture( m_fbm3.m_pnmaptexture_data, 5 );
 }
 
 
 void LandscapeMultiFbm::UnbindTextures( void )
 {
-    m_renderer->UnsetVertexTexture( 0 );
-    m_renderer->UnsetVertexTexture( 1 );
-    m_renderer->UnsetVertexTexture( 2 );
-    m_renderer->UnsetVertexTexture( 3 );
-    m_renderer->UnsetVertexTexture( 4 );
-    m_renderer->UnsetVertexTexture( 5 );
 }
