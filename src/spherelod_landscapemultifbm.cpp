@@ -61,7 +61,9 @@ void LandscapeMultiFbm::BindShadersParams( void )
     fbm_params[2] = ( m_fbm.m_Clamp ? 1.0 : 0.0 );
     fbm_params[3] = m_fbm.m_Amplitude;
 
-    fbm_params2[2] = m_fbm.m_Roughness;    
+    fbm_params2[0] = m_fbm.m_Seed1;
+    fbm_params2[1] = m_fbm.m_Seed2;
+    fbm_params2[2] = m_fbm.m_Roughness;
 
 
     fbm_params3[0] = m_fbm2.m_Lacunarity;
@@ -69,6 +71,8 @@ void LandscapeMultiFbm::BindShadersParams( void )
     fbm_params3[2] = ( m_fbm2.m_Clamp ? 1.0 : 0.0 );
     fbm_params3[3] = m_fbm2.m_Amplitude;
 
+    fbm_params4[0] = m_fbm2.m_Seed1;
+    fbm_params4[1] = m_fbm2.m_Seed2;
     fbm_params4[2] = m_fbm2.m_Roughness;
 
 
@@ -77,6 +81,8 @@ void LandscapeMultiFbm::BindShadersParams( void )
     fbm_params5[2] = ( m_fbm3.m_Clamp ? 1.0 : 0.0 );
     fbm_params5[3] = m_fbm3.m_Amplitude;
 
+    fbm_params6[0] = m_fbm3.m_Seed1;
+    fbm_params6[1] = m_fbm3.m_Seed2;
     fbm_params6[2] = m_fbm3.m_Roughness;
 
 

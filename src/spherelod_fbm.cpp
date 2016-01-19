@@ -36,6 +36,8 @@ m_Roughness( 0.5 ),
 m_Clamp( true ) ,
 m_Amplitude( 10000.0 ),
 m_Seed( 1 ),
+m_Seed1( 600 ),
+m_Seed2( 700 ),
 m_fractal( NULL )
 {
     m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;

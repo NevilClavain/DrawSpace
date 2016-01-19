@@ -1,5 +1,5 @@
 
-float SimplexPerlin3D( float3 P )
+float SimplexPerlin3D( float3 P, double p_seed1, double p_seed2 )
 {
     //  https://github.com/BrianSharpe/Wombat/blob/master/SimplexPerlin3D.glsl
 
@@ -62,7 +62,9 @@ float SimplexPerlin3D( float3 P )
     Pt *= Pt;
     float4 V1xy_V2xy = lerp( Pt.xyxy, Pt.zwzw, float4( Pi_1.xy, Pi_2.xy ) );
     Pt = float4( Pt.x, V1xy_V2xy.xz, Pt.z ) * float4( Pt.y, V1xy_V2xy.yw, Pt.w );
-    float3 SOMELARGEFLOATS = float3( 635.298681, 682.357502, 668.926525 );
+    //float3 SOMELARGEFLOATS = float3( 635.298681, 682.357502, 668.926525 );
+    float3 SOMELARGEFLOATS = float3( p_seed1, p_seed2, 668.926525 );
+
     float3 ZINC = float3( 48.500388, 65.294118, 63.934599 );
     float3 lowz_mods = float3( 1.0 / ( SOMELARGEFLOATS.xyz + Pi.zzz * ZINC.xyz ) );
     float3 highz_mods = float3( 1.0 / ( SOMELARGEFLOATS.xyz + Pi_inc1.zzz * ZINC.xyz ) );
@@ -226,7 +228,7 @@ double Noise_Noise( double3 f, sampler2D TBuffer, sampler2D TMap )
 }
 
 
-double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughness, float clamp_res, sampler2D TBuffer, sampler2D TMap )
+double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughness, float clamp_res, double p_seed1, double p_seed2 )
 {
 	int i;
 	// Initialize locals
@@ -241,7 +243,7 @@ double Fractal_fBm( double3 f, int nbOctaves, double lacunarity, double roughnes
 	for( i = 0; i < nbOctaves; i++ )
 	{	
 		//fValue += Noise_Noise( fTemp, TBuffer, TMap ) * pow( fexp, -roughness );
-        fValue += SimplexPerlin3D( fTemp ) * pow( fexp, -roughness );
+        fValue += SimplexPerlin3D( fTemp, p_seed1, p_seed2 ) * pow( fexp, -roughness );
 		fTemp *= lacunarity;
 		fexp *= lacunarity;
 	}

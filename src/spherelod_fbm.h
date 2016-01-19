@@ -43,6 +43,9 @@ public:
     double                                  m_Amplitude;
     int                                     m_Seed;
 
+    int                                     m_Seed1;
+    int                                     m_Seed2;
+
     DrawSpace::Utils::Fractal*              m_fractal;
 
     void*                                   m_pnbufftexture_content;
