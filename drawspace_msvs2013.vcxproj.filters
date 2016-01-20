@@ -257,9 +257,6 @@
     <ClCompile Include="src\spherelod_landscape.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
-    <ClCompile Include="src\spherelod_fbm.cpp">
-      <Filter>sphericalLOD</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -532,9 +529,6 @@
       <Filter>sphericalLOD</Filter>
     </ClInclude>
     <ClInclude Include="src\spherelod_landscape.h">
-      <Filter>sphericalLOD</Filter>
-    </ClInclude>
-    <ClInclude Include="src\spherelod_fbm.h">
       <Filter>sphericalLOD</Filter>
     </ClInclude>
   </ItemGroup>

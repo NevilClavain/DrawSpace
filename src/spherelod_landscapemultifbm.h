@@ -24,11 +24,6 @@
 #define _SPHERELOD_LANDSCAPEMULTIFBM_H_
 
 #include "spherelod_landscape.h"
-#include "spherelod_fbm.h"
-
-
-#include "noise.h"
-#include "texture.h"
 #include "renderer.h"
 #include "plugin.h"
 
@@ -40,17 +35,31 @@ class LandscapeMultiFbm : public Landscape
 {
 public:
 
-    Fbm                                     m_fbm;
-    Fbm                                     m_fbm2;
-    Fbm                                     m_fbm3;
+    dsreal                                  m_mask_seed1;
+    dsreal                                  m_mask_seed2;
+    dsreal                                  m_mask_input_half_range;
+
+    dsreal                                  m_mountains_lacunarity;
+    dsreal                                  m_mountains_roughness;
+    dsreal                                  m_mountains_input_half_range;
+    dsreal                                  m_mountains_amplitude;
+    dsreal                                  m_mountains_seed1;
+    dsreal                                  m_mountains_seed2;
+
+
+    dsreal                                  m_plains_lacunarity;
+    dsreal                                  m_plains_roughness;
+    dsreal                                  m_plains_input_half_range;
+    dsreal                                  m_plains_amplitude;
+    dsreal                                  m_plains_seed1;
+    dsreal                                  m_plains_seed2;
+
 
 protected:
    
     DrawSpace::Interface::Renderer*         m_renderer;
 
 public:
-
-    // fractal params
 
     LandscapeMultiFbm( void );
     ~LandscapeMultiFbm( void );

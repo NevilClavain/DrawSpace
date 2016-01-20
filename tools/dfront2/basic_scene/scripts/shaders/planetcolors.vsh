@@ -16,20 +16,15 @@ float4   base_uv: register(c26);
 	// .z, .w -> u2, v2
 
 float4 fbm_params: register(c27);
-	// .x -> lacunarity
 	// .y -> fbm input half-range
-	// .z -> fbm clamp
-	// .w -> amplitude
 
 float4 fbm_params2: register(c28);
 	// .x -> seed1
 	// .y -> seed2
-	// .z -> roughness
 
 float4 fbm_params3: register(c29);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
-	// .z -> fbm clamp
 	// .w -> amplitude
 
 float4 fbm_params4: register(c30);
@@ -41,7 +36,6 @@ float4 fbm_params4: register(c30);
 float4 fbm_params5: register(c31);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
-	// .z -> fbm clamp
 	// .w -> amplitude
 
 float4 fbm_params6: register(c32);
@@ -148,7 +142,11 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	f2[1] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.y / 2.0 ) + 0.5 );
 	f2[2] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.z / 2.0 ) + 0.5 );
 
-	float fbm2 = clamp( Fractal_fBm( f2, 7, fbm_params3.x, fbm_params4.z, fbm_params3.z, fbm_params4.x, fbm_params4.y ), 0.0, 1.0 );
+	float fbm2 = Fractal_fBm( f2, 7, fbm_params3.x, fbm_params4.z, 0.0, fbm_params4.x, fbm_params4.y );
+	if( fbm2 < 0.0 )
+	{
+		fbm2 = 0.0;
+	}
 	
 
 	
@@ -157,7 +155,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	f3[1] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.y / 2.0 ) + 0.5 );
 	f3[2] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.z / 2.0 ) + 0.5 );
 
-	float fbm3 = Fractal_fBm( f3, 7, fbm_params5.x, fbm_params6.z, fbm_params5.z, fbm_params6.x, fbm_params6.y );
+	float fbm3 = Fractal_fBm( f3, 7, fbm_params5.x, fbm_params6.z, 1.0, fbm_params6.x, fbm_params6.y );
 	
 	double3 f;
 	f[0] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.x / 2.0 ) + 0.5 );

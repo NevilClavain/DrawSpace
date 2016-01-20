@@ -28,7 +28,22 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-LandscapeMultiFbm::LandscapeMultiFbm( void )
+LandscapeMultiFbm::LandscapeMultiFbm( void ) :
+m_mask_seed1( 500.0 ),
+m_mask_seed2( 600.0 ),
+m_mask_input_half_range( 20.0 ),
+m_mountains_lacunarity( 2.0 ),
+m_mountains_roughness( 0.25 ),
+m_mountains_input_half_range( 8.0 ),
+m_mountains_amplitude( 4000.0 ),
+m_mountains_seed1( 500 ),
+m_mountains_seed2( 600 ),
+m_plains_lacunarity( 2.6 ),
+m_plains_roughness( 0.5 ),
+m_plains_input_half_range( 0.8 ),
+m_plains_amplitude( 1000.0 ),
+m_plains_seed1( 500.0 ),
+m_plains_seed2( 600.0 )
 {
     m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
@@ -39,9 +54,6 @@ LandscapeMultiFbm::~LandscapeMultiFbm( void )
 
 void LandscapeMultiFbm::InitialiseResources( void )
 {
-    m_fbm.Initialise();
-    m_fbm2.Initialise();
-    m_fbm3.Initialise();
 }
 
 void LandscapeMultiFbm::BindShadersParams( void )
@@ -55,35 +67,29 @@ void LandscapeMultiFbm::BindShadersParams( void )
     Vector fbm_params5;
     Vector fbm_params6;
 
-
-    fbm_params[0] = m_fbm.m_Lacunarity;
-    fbm_params[1] = m_fbm.m_InputHalfRange;
-    fbm_params[2] = ( m_fbm.m_Clamp ? 1.0 : 0.0 );
-    fbm_params[3] = m_fbm.m_Amplitude;
-
-    fbm_params2[0] = m_fbm.m_Seed1;
-    fbm_params2[1] = m_fbm.m_Seed2;
-    fbm_params2[2] = m_fbm.m_Roughness;
+  
+    fbm_params[1] = m_mask_input_half_range;
+    fbm_params2[0] = m_mask_seed1;
+    fbm_params2[1] = m_mask_seed2;
 
 
-    fbm_params3[0] = m_fbm2.m_Lacunarity;
-    fbm_params3[1] = m_fbm2.m_InputHalfRange;
-    fbm_params3[2] = ( m_fbm2.m_Clamp ? 1.0 : 0.0 );
-    fbm_params3[3] = m_fbm2.m_Amplitude;
 
-    fbm_params4[0] = m_fbm2.m_Seed1;
-    fbm_params4[1] = m_fbm2.m_Seed2;
-    fbm_params4[2] = m_fbm2.m_Roughness;
+    fbm_params3[0] = m_mountains_lacunarity;
+    fbm_params3[1] = m_mountains_input_half_range;
+    fbm_params3[3] = m_mountains_amplitude;
+
+    fbm_params4[0] = m_mountains_seed1;
+    fbm_params4[1] = m_mountains_seed2;
+    fbm_params4[2] = m_mountains_roughness;
 
 
-    fbm_params5[0] = m_fbm3.m_Lacunarity;
-    fbm_params5[1] = m_fbm3.m_InputHalfRange;
-    fbm_params5[2] = ( m_fbm3.m_Clamp ? 1.0 : 0.0 );
-    fbm_params5[3] = m_fbm3.m_Amplitude;
+    fbm_params5[0] = m_plains_lacunarity;
+    fbm_params5[1] = m_plains_input_half_range;
+    fbm_params5[3] = m_plains_amplitude;
 
-    fbm_params6[0] = m_fbm3.m_Seed1;
-    fbm_params6[1] = m_fbm3.m_Seed2;
-    fbm_params6[2] = m_fbm3.m_Roughness;
+    fbm_params6[0] = m_plains_seed1;
+    fbm_params6[1] = m_plains_seed2;
+    fbm_params6[2] = m_plains_roughness;
 
 
     m_renderer->SetFxShaderParams( 0, 27, fbm_params );
