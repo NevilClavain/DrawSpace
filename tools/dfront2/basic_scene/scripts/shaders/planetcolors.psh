@@ -1,5 +1,4 @@
 
-float4 Color : register(c0);
 
 struct PS_INTPUT
 {
