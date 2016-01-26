@@ -2,6 +2,7 @@
 float4 Color : register(c0);
 
 sampler2D Texture0 : register(s0);
+sampler2D Texture1 : register(s1);
 
 struct PS_INTPUT
 {
@@ -11,5 +12,24 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-	return tex2D( Texture0, input.TexCoord0 );
+	//return tex2D( Texture0, input.TexCoord0 );
+
+	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
+
+
+	float4 final_color = 0.0;
+
+	if( temp_humidity.z > 0.0 )
+	{
+		final_color.z = 1.0;
+	}
+	else
+	{
+		float4 th_sampler = 0.0;
+		th_sampler.x = temp_humidity.x;
+		th_sampler.y = temp_humidity.y;
+
+		final_color = tex2D( Texture1, th_sampler );
+	}
+	return final_color;	
 }
