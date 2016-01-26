@@ -1,0 +1,68 @@
+
+
+struct PS_INTPUT
+{
+	float4 Position : POSITION0;
+	float4 TexCoord0: TEXCOORD0;
+	float4 TexCoord1: TEXCOORD1;	
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 color = 0.0;
+
+	float point_alt = input.TexCoord1.x;
+
+
+	if( point_alt <= 0.0 )
+	{
+		color.x = 0.0;
+		color.y = 0.0;
+		color.z = 1.0;
+	}
+	else
+	{
+		float color_temp = input.TexCoord1.y;
+		float color_humidity = input.TexCoord1.z;
+
+		color.x = color_temp;
+		color.y = color_humidity;
+		color.z = 0.0;	
+	}
+
+
+	/*
+	float4 green = 0.0;
+
+	if( point_alt <= 0.0 )
+	{
+		color.x = 0.0;
+		color.y = 0.5;
+		color.z = 0.75;
+	}
+	else if( point_alt < 1500.0 )
+	{		
+		green.x = clamp( 1.0 - ( point_alt / 400.0 ), 0.15, 0.55 );
+		green.y = 0.55;
+		green.z = 0.2;
+
+		color = green;
+	}
+	else
+	{
+		green.x = clamp( 1.0 - ( point_alt / 400.0 ), 0.15, 0.55 );
+		green.y = 0.55;
+		green.z = 0.2;
+
+		float snow_weight = clamp( ( ( point_alt - 1500.0 ) / 9000.0 ), 0.0, 1.0 );
+		float gray = clamp( snow_weight, 0.35, 0.85 );
+		//color = gray;
+
+		color = lerp( green, gray, atan( 4.0 * snow_weight ) / 1.3 );
+
+	}
+	*/
+
+	return color;	
+}
