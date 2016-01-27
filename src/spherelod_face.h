@@ -129,6 +129,8 @@ public:
     dsreal GetHotpointGroundAltitud( void );
 
     void Split( int p_depth );
+
+    dsreal GetRelativeAlt( void );
 };
 }
 }

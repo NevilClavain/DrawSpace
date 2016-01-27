@@ -612,6 +612,11 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
     return true;
 }
 
+dsreal Face::GetRelativeAlt( void )
+{
+    return m_relative_alt;
+}
+
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
     m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_planet_diameter / 2.0 ) );

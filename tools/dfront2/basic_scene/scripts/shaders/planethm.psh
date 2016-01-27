@@ -1,4 +1,4 @@
-
+float4 flags : register(c0);
 
 struct PS_INTPUT
 {

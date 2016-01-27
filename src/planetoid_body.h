@@ -103,8 +103,6 @@ protected:
 
     std::vector<Fragment*>                                                  m_planetfragments_list;
 
-    //DrawSpace::Utils::Fractal*                                              m_fractal;
-
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
     DrawSpace::Utils::Timer*                                                m_timer;
 
