@@ -67,7 +67,8 @@ struct VS_INPUT
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
-   float4 TexCoord0: TEXCOORD0;   
+   float4 TexCoord0: TEXCOORD0;
+   float4 TexCoord1: TEXCOORD1;
 };
 
 #include "fbm.hlsl"
@@ -196,6 +197,12 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.TexCoord0 = 0.0;
 	Output.TexCoord0.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
 	Output.TexCoord0.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
+
+	// conserver aussi les coords textures originales du patch
+	Output.TexCoord1 = 0.0;
+	Output.TexCoord1.x = Input.TexCoord0.x;
+	Output.TexCoord1.y = Input.TexCoord0.y;
+
 			  
 	return( Output );   
 }

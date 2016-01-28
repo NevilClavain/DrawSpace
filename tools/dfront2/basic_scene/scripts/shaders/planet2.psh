@@ -8,7 +8,8 @@ sampler2D Texture2 : register(s2);
 struct PS_INTPUT
 {
 	float4 Position : POSITION0;
-	float4 TexCoord0: TEXCOORD0;	
+	float4 TexCoord0: TEXCOORD0;
+	float4 TexCoord1: TEXCOORD1;
 };
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
@@ -20,7 +21,60 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	if( flags.x > 0.0 && flags.x < 1.05 )
 	{
-		final_color.x = 1.0;
+		// contracter legerement les coords patch pour eviter les effets de bords de couleurs
+		float4 patch_coords = ( 0.95 * ( input.TexCoord1 - 0.5 ) ) + 0.5;
+
+		float4 interval_base = 0.0;
+		interval_base.x = 0.25 * floor( temp_humidity.x / 0.25 );
+		interval_base.y = 0.25 * floor( temp_humidity.y / 0.25 );
+
+		float4 splat_coords_center = ( patch_coords * 0.25 );		
+		splat_coords_center += interval_base;
+
+
+
+		float4 splat_color_center = tex2D( Texture2, splat_coords_center );
+	
+		final_color = splat_color_center;
+
+
+
+
+
+		/*
+		float4 splat_coords_0 = input.TexCoord1 * 0.25;
+
+		float4 splat_coords_1 = input.TexCoord1 * 0.25;
+		splat_coords_1.x += 0.25;
+
+		float4 splat_coords_2 = input.TexCoord1 * 0.25;
+		splat_coords_2.x += 0.5;
+
+		float4 splat_coords_3 = input.TexCoord1 * 0.25;
+		splat_coords_3.x += 0.75;
+
+
+		float4 splat_color_0;
+		float4 splat_color_1;
+		float4 splat_color_2;
+		float4 splat_color_3;
+
+		splat_color_0 = tex2D( Texture2, splat_coords_0 );
+		splat_color_1 = tex2D( Texture2, splat_coords_1 );
+		splat_color_2 = tex2D( Texture2, splat_coords_2 );
+		splat_color_3 = tex2D( Texture2, splat_coords_3 );
+
+		float w_0, w_1, w_2, w_3;
+
+		w_0 = input.TexCoord1.x;
+		w_1 = 1.0 - w_0;
+
+		w_2 = input.TexCoord1.y;
+		w_3 = 1.0 - w_2;
+
+		final_color = w_0 * splat_color_0 + w_1 * splat_color_3;
+
+		*/
 	}
 	else
 	{
@@ -30,10 +84,10 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		}
 		else
 		{
-			float4 th_sampler = 0.0;
-			th_sampler = temp_humidity;
+			float4 th_coords = 0.0;
+			th_coords = temp_humidity;
 
-			final_color = tex2D( Texture1, th_sampler );
+			final_color = tex2D( Texture1, th_coords );
 		}
 	}
 

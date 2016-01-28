@@ -187,8 +187,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.Position = mul( Input.Position, matWorldViewProjection );
 	
 	Output.TexCoord0 = 0.0;
-	Output.TexCoord0.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
-	Output.TexCoord0.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
+
 			  
 	return( Output );   
 }
