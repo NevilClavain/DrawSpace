@@ -12,6 +12,22 @@ struct PS_INTPUT
 	float4 TexCoord1: TEXCOORD1;
 };
 
+float2 compute_sampling_params( float p_param, int p_splatting_resol )
+{
+	float3 res;
+
+	float interval = 1.0 / p_splatting_resol;
+	
+	float t_offset = interval * floor( p_param / interval );
+
+	float w2 = ( p_param - t_offset ) / interval;
+
+	res.x = w2;
+	res.y = t_offset;
+
+	return res;
+}
+
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	//return tex2D( Texture0, input.TexCoord0 );
@@ -19,65 +35,72 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 final_color = 0.0;
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
+	
 	if( flags.x > 0.0 && flags.x < 1.05 )
 	{
 		// contracter legerement les coords patch pour eviter les effets de bords de couleurs
 		float4 patch_coords = ( 0.95 * ( input.TexCoord1 - 0.5 ) ) + 0.5;
 
-		float4 interval_base = 0.0;
-		interval_base.x = 0.25 * floor( temp_humidity.x / 0.25 );
-		interval_base.y = 0.25 * floor( temp_humidity.y / 0.25 );
+		
+		float2 temperature_sampling = compute_sampling_params( temp_humidity.x, 4 );
+		float2 humidity_sampling = compute_sampling_params( temp_humidity.y, 4 );
 
-		float4 splat_coords_center = ( patch_coords * 0.25 );		
-		splat_coords_center += interval_base;
+		float4 coords_1 = patch_coords * 0.25;
+		coords_1.x += temperature_sampling.y;
+		coords_1.y += humidity_sampling.y;
 
+		float4 coords_2 = patch_coords * 0.25;
+		coords_2.x += temperature_sampling.y + 0.25;
+		coords_2.y += humidity_sampling.y;
 
+		float4 coords_3 = patch_coords * 0.25;
+		coords_3.x += temperature_sampling.y + 0.25;
+		coords_3.y += humidity_sampling.y + 0.25;
 
-		float4 splat_color_center = tex2D( Texture2, splat_coords_center );
-	
-		final_color = splat_color_center;
+		float4 coords_4 = patch_coords * 0.25;
+		coords_4.x += temperature_sampling.y;
+		coords_4.y += humidity_sampling.y + 0.25;
 
+		float4 color_1 = tex2D( Texture2, coords_1 );
+		float4 color_2 = tex2D( Texture2, coords_2 );
+		float4 color_3 = tex2D( Texture2, coords_3 );
+		float4 color_4 = tex2D( Texture2, coords_4 );
 
+		// calcul des poids splatting : calcul d'un "vecteur des distances"
 
+		float4 distances;
 
+		float2 point;
+		point.x = temperature_sampling.x;
+		point.y = humidity_sampling.x;
 
-		/*
-		float4 splat_coords_0 = input.TexCoord1 * 0.25;
+		float2 point_1;
+		float2 point_2;
+		float2 point_3;
+		float2 point_4;
 
-		float4 splat_coords_1 = input.TexCoord1 * 0.25;
-		splat_coords_1.x += 0.25;
+		point_1.x = 0.0;
+		point_1.y = 0.0;
 
-		float4 splat_coords_2 = input.TexCoord1 * 0.25;
-		splat_coords_2.x += 0.5;
+		point_2.x = 1.0;
+		point_2.y = 0.0;
 
-		float4 splat_coords_3 = input.TexCoord1 * 0.25;
-		splat_coords_3.x += 0.75;
+		point_3.x = 1.0;
+		point_3.y = 1.0;
 
+		point_4.x = 0.0;
+		point_4.y = 1.0;
 
-		float4 splat_color_0;
-		float4 splat_color_1;
-		float4 splat_color_2;
-		float4 splat_color_3;
-
-		splat_color_0 = tex2D( Texture2, splat_coords_0 );
-		splat_color_1 = tex2D( Texture2, splat_coords_1 );
-		splat_color_2 = tex2D( Texture2, splat_coords_2 );
-		splat_color_3 = tex2D( Texture2, splat_coords_3 );
-
-		float w_0, w_1, w_2, w_3;
-
-		w_0 = input.TexCoord1.x;
-		w_1 = 1.0 - w_0;
-
-		w_2 = input.TexCoord1.y;
-		w_3 = 1.0 - w_2;
-
-		final_color = w_0 * splat_color_0 + w_1 * splat_color_3;
-
-		*/
+		distances.x = 1.0 - clamp( sqrt( ( point_1.x - point.x ) * ( point_1.x - point.x ) + ( point_1.y - point.y ) * ( point_1.y - point.y ) ), 0.0, 1.0 );
+		distances.y = 1.0 - clamp( sqrt( ( point_2.x - point.x ) * ( point_2.x - point.x ) + ( point_2.y - point.y ) * ( point_2.y - point.y ) ), 0.0, 1.0 );
+		distances.z = 1.0 - clamp( sqrt( ( point_3.x - point.x ) * ( point_3.x - point.x ) + ( point_3.y - point.y ) * ( point_3.y - point.y ) ), 0.0, 1.0 );
+		distances.w = 1.0 - clamp( sqrt( ( point_4.x - point.x ) * ( point_4.x - point.x ) + ( point_4.y - point.y ) * ( point_4.y - point.y ) ), 0.0, 1.0 );
+		
+		final_color = distances.x * color_1 + distances.y * color_2 + distances.z * color_3 + distances.w * color_4;
 	}
 	else
 	{
+	
 		if( temp_humidity.z > 0.0 )
 		{
 			final_color.z = 1.0;
