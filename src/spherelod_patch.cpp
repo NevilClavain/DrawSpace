@@ -129,7 +129,7 @@ m_parent( p_parent )
     {
         prepare_color_texture( m_subpasscreation_handler, 1 );
     }
-    else if( m_lod_level >= NB_LOD_RANGES - 5 )
+    else if( m_lod_level >= NB_LOD_RANGES - 7 )
     {
         prepare_color_texture( m_subpasscreation_handler, 0 );
     }
