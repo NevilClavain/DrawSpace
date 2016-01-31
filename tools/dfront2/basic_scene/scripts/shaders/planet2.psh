@@ -36,7 +36,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	
 	if( flags.x > 0.0 && flags.x < 1.05 )
 	{
-		// Texture splatting
+		/////////////////////////// Texture splatting
 
 		if( temp_humidity.z > 0.0 )
 		{
@@ -48,25 +48,27 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 			float4 patch_coords = ( 0.95 * ( input.TexCoord1 - 0.5 ) ) + 0.5;
 
 			float interval = 1.0 / 4;
+
+			float limit_up = 1.0 - interval;
 		
 			float2 temperature_sampling = compute_sampling_params( temp_humidity.x, interval );
 			float2 humidity_sampling = compute_sampling_params( temp_humidity.y, interval );
 
-			float4 coords_1 = patch_coords * 0.25;
-			coords_1.x += clamp( temperature_sampling.y, 0.0, 0.75 );
-			coords_1.y += clamp( humidity_sampling.y, 0.0, 0.75 );
+			float4 coords_1 = patch_coords * interval;
+			coords_1.x += clamp( temperature_sampling.y, 0.0, limit_up );
+			coords_1.y += clamp( humidity_sampling.y, 0.0, limit_up );
 
-			float4 coords_2 = patch_coords * 0.25;
-			coords_2.x += clamp( temperature_sampling.y + 0.25, 0.0, 0.75 );
-			coords_2.y += clamp( humidity_sampling.y, 0.0, 0.75 );
+			float4 coords_2 = patch_coords * interval;
+			coords_2.x += clamp( temperature_sampling.y + interval, 0.0, limit_up );
+			coords_2.y += clamp( humidity_sampling.y, 0.0, limit_up );
 
-			float4 coords_3 = patch_coords * 0.25;
-			coords_3.x += clamp( temperature_sampling.y + 0.25, 0.0, 0.75 );
-			coords_3.y += clamp( humidity_sampling.y + 0.25, 0.0, 0.75 );
+			float4 coords_3 = patch_coords * interval;
+			coords_3.x += clamp( temperature_sampling.y + interval, 0.0, limit_up );
+			coords_3.y += clamp( humidity_sampling.y + interval, 0.0, limit_up );
 
-			float4 coords_4 = patch_coords * 0.25;
+			float4 coords_4 = patch_coords * interval;
 			coords_4.x += clamp( temperature_sampling.y, 0.0, 0.75 );
-			coords_4.y += clamp( humidity_sampling.y + 0.25, 0.0, 0.75 );
+			coords_4.y += clamp( humidity_sampling.y + interval, 0.0, limit_up );
 
 
 
