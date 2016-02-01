@@ -26,106 +26,106 @@ float2 compute_sampling_params( float p_param, float p_interval )
 	return res;
 }
 
+float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidity )
+{
+
+	// contracter legerement les coords patch pour eviter les effets de bords de couleurs
+	float4 patch_coords = ( 0.98 * ( p_textcoords - 0.5 ) ) + 0.5;
+
+	float interval = 1.0 / 16; //4;
+
+	float limit_up = 1.0 - interval;
+		
+	float2 temperature_sampling = compute_sampling_params( p_temperature, interval );
+	float2 humidity_sampling = compute_sampling_params( p_humidity, interval );
+
+	float4 coords_1 = patch_coords * interval;
+	coords_1.x += clamp( temperature_sampling.y, 0.0, limit_up );
+	coords_1.y += clamp( humidity_sampling.y, 0.0, limit_up );
+
+	float4 coords_2 = patch_coords * interval;
+	coords_2.x += clamp( temperature_sampling.y + interval, 0.0, limit_up );
+	coords_2.y += clamp( humidity_sampling.y, 0.0, limit_up );
+
+	float4 coords_3 = patch_coords * interval;
+	coords_3.x += clamp( temperature_sampling.y + interval, 0.0, limit_up );
+	coords_3.y += clamp( humidity_sampling.y + interval, 0.0, limit_up );
+
+	float4 coords_4 = patch_coords * interval;
+	coords_4.x += clamp( temperature_sampling.y, 0.0, 0.75 );
+	coords_4.y += clamp( humidity_sampling.y + interval, 0.0, limit_up );
+
+
+
+	float4 color_1 = tex2D( Texture2, coords_1 );
+	float4 color_2 = tex2D( Texture2, coords_2 );
+	float4 color_3 = tex2D( Texture2, coords_3 );
+	float4 color_4 = tex2D( Texture2, coords_4 );
+
+	// calcul des poids splatting : calcul d'un "vecteur des distances"
+
+	float4 distances;
+
+	float2 point;
+	point.x = temperature_sampling.x;
+	point.y = humidity_sampling.x;
+
+	float2 point_1;
+	float2 point_2;
+	float2 point_3;
+	float2 point_4;
+
+	point_1.x = 0.0;
+	point_1.y = 0.0;
+
+	point_2.x = 1.0;
+	point_2.y = 0.0;
+
+	point_3.x = 1.0;
+	point_3.y = 1.0;
+
+	point_4.x = 0.0;
+	point_4.y = 1.0;
+
+	distances.x = 1.0 - clamp( sqrt( ( point_1.x - point.x ) * ( point_1.x - point.x ) + ( point_1.y - point.y ) * ( point_1.y - point.y ) ), 0.0, 1.0 );
+	distances.y = 1.0 - clamp( sqrt( ( point_2.x - point.x ) * ( point_2.x - point.x ) + ( point_2.y - point.y ) * ( point_2.y - point.y ) ), 0.0, 1.0 );
+	distances.z = 1.0 - clamp( sqrt( ( point_3.x - point.x ) * ( point_3.x - point.x ) + ( point_3.y - point.y ) * ( point_3.y - point.y ) ), 0.0, 1.0 );
+	distances.w = 1.0 - clamp( sqrt( ( point_4.x - point.x ) * ( point_4.x - point.x ) + ( point_4.y - point.y ) * ( point_4.y - point.y ) ), 0.0, 1.0 );
+		
+	return distances.x * color_1 + distances.y * color_2 + distances.z * color_3 + distances.w * color_4;
+}
+
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-	//return tex2D( Texture0, input.TexCoord0 );
 
 	float4 final_color = 0.0;
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
-	
-	if( flags.x > 0.0 && flags.x < 1.05 )
+	if( temp_humidity.z > 0.0 )
 	{
-		/////////////////////////// Texture splatting
-
-		if( temp_humidity.z > 0.0 )
-		{
-			final_color.z = 1.0;
-		}
-		else
-		{
-			// contracter legerement les coords patch pour eviter les effets de bords de couleurs
-			float4 patch_coords = ( 0.95 * ( input.TexCoord1 - 0.5 ) ) + 0.5;
-
-			float interval = 1.0 / 4;
-
-			float limit_up = 1.0 - interval;
-		
-			float2 temperature_sampling = compute_sampling_params( temp_humidity.x, interval );
-			float2 humidity_sampling = compute_sampling_params( temp_humidity.y, interval );
-
-			float4 coords_1 = patch_coords * interval;
-			coords_1.x += clamp( temperature_sampling.y, 0.0, limit_up );
-			coords_1.y += clamp( humidity_sampling.y, 0.0, limit_up );
-
-			float4 coords_2 = patch_coords * interval;
-			coords_2.x += clamp( temperature_sampling.y + interval, 0.0, limit_up );
-			coords_2.y += clamp( humidity_sampling.y, 0.0, limit_up );
-
-			float4 coords_3 = patch_coords * interval;
-			coords_3.x += clamp( temperature_sampling.y + interval, 0.0, limit_up );
-			coords_3.y += clamp( humidity_sampling.y + interval, 0.0, limit_up );
-
-			float4 coords_4 = patch_coords * interval;
-			coords_4.x += clamp( temperature_sampling.y, 0.0, 0.75 );
-			coords_4.y += clamp( humidity_sampling.y + interval, 0.0, limit_up );
-
-
-
-			float4 color_1 = tex2D( Texture2, coords_1 );
-			float4 color_2 = tex2D( Texture2, coords_2 );
-			float4 color_3 = tex2D( Texture2, coords_3 );
-			float4 color_4 = tex2D( Texture2, coords_4 );
-
-			// calcul des poids splatting : calcul d'un "vecteur des distances"
-
-			float4 distances;
-
-			float2 point;
-			point.x = temperature_sampling.x;
-			point.y = humidity_sampling.x;
-
-			float2 point_1;
-			float2 point_2;
-			float2 point_3;
-			float2 point_4;
-
-			point_1.x = 0.0;
-			point_1.y = 0.0;
-
-			point_2.x = 1.0;
-			point_2.y = 0.0;
-
-			point_3.x = 1.0;
-			point_3.y = 1.0;
-
-			point_4.x = 0.0;
-			point_4.y = 1.0;
-
-			distances.x = 1.0 - clamp( sqrt( ( point_1.x - point.x ) * ( point_1.x - point.x ) + ( point_1.y - point.y ) * ( point_1.y - point.y ) ), 0.0, 1.0 );
-			distances.y = 1.0 - clamp( sqrt( ( point_2.x - point.x ) * ( point_2.x - point.x ) + ( point_2.y - point.y ) * ( point_2.y - point.y ) ), 0.0, 1.0 );
-			distances.z = 1.0 - clamp( sqrt( ( point_3.x - point.x ) * ( point_3.x - point.x ) + ( point_3.y - point.y ) * ( point_3.y - point.y ) ), 0.0, 1.0 );
-			distances.w = 1.0 - clamp( sqrt( ( point_4.x - point.x ) * ( point_4.x - point.x ) + ( point_4.y - point.y ) * ( point_4.y - point.y ) ), 0.0, 1.0 );
-		
-			final_color = distances.x * color_1 + distances.y * color_2 + distances.z * color_3 + distances.w * color_4;
-
-		}
+		final_color.z = 1.0;
 	}
 	else
 	{
-	
-		if( temp_humidity.z > 0.0 )
+		float lim_sup = 1.025;
+		float lim_inf = 1.005;
+
+		if( flags.x > 0.0 && flags.x <= lim_inf )
 		{
-			final_color.z = 1.0;
+			final_color = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
+		
+		}
+		else if( flags.x > lim_inf && flags.x <= lim_sup )
+		{
+			float4 color_splat = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
+			float4 color_pixel = tex2D( Texture1, temp_humidity );
+
+			final_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
 		}
 		else
 		{
-			float4 th_coords = 0.0;
-			th_coords = temp_humidity;
-
-			final_color = tex2D( Texture1, th_coords );
+			final_color = tex2D( Texture1, temp_humidity );
 		}
 	}
-
 	return final_color;	
 }
