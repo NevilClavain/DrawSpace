@@ -193,6 +193,13 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	f_humidity[2] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_z );
 
 	float pn_humidity_variation = SimplexPerlin3D( f_humidity, fbm_params2.x, fbm_params2.y );
+
+	double3 f_temperature;
+	f_temperature[0] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_z );
+	f_temperature[1] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_x );
+	f_temperature[2] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_y );
+
+	float pn_temperature_variation = SimplexPerlin3D( f_temperature, fbm_params2.y, fbm_params2.x );
 	
 
 
@@ -305,7 +312,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	temperature_lat = ( ( temperature_max - temperature_min ) * temp_x ) + temperature_min;
 	
 	// calcul de la baisse de temperature en fct de l'altitude
-	float temp_dec = temperature_alt_dec * res;
+	float temp_dec = temperature_alt_dec * clamp( 2.0 * pn_temperature_variation, 0.6, 2.0 ) * res;
 
 	temperature_alt = temperature_lat - temp_dec;
 	temperature_final = clamp( temperature_alt, temperature_min, temperature_max );
