@@ -97,35 +97,50 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-
 	float4 final_color = 0.0;
+
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
-	if( temp_humidity.z > 0.0 )
+	float lim_sup = 1.025;
+	float lim_inf = 1.005;
+
+	if( flags.x > 0.0 && flags.x <= lim_inf )
+	{			
+		if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
+		{
+			final_color.z = 1.0;
+		}
+		else
+		{
+			final_color = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );	
+		}
+
+	}
+	else if( flags.x > lim_inf && flags.x <= lim_sup )
 	{
-		final_color.z = 1.0;
+		float4 color_splat = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
+		float4 color_pixel = tex2D( Texture1, temp_humidity );
+
+		if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
+		{
+			final_color.z = 1.0;
+		}
+		else
+		{
+			final_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
+		}
 	}
 	else
 	{
-		float lim_sup = 1.025;
-		float lim_inf = 1.005;
-
-		if( flags.x > 0.0 && flags.x <= lim_inf )
+		if( temp_humidity.z > 0.0 )
 		{
-			final_color = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
-		
-		}
-		else if( flags.x > lim_inf && flags.x <= lim_sup )
-		{
-			float4 color_splat = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
-			float4 color_pixel = tex2D( Texture1, temp_humidity );
-
-			final_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
+			final_color.z = 1.0;
 		}
 		else
 		{
 			final_color = tex2D( Texture1, temp_humidity );
 		}
 	}
+
 	return final_color;	
 }

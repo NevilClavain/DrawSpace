@@ -15,21 +15,15 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float point_alt = input.TexCoord1.x;
 
+	float color_temp = input.TexCoord1.y;
+	float color_humidity = input.TexCoord1.z;
+
+	color.x = color_temp;
+	color.y = color_humidity;
 
 	if( point_alt <= 0.0 )
 	{
-		color.x = 0.0;
-		color.y = 0.0;
-		color.z = 1.0;
-	}
-	else
-	{
-		float color_temp = input.TexCoord1.y;
-		float color_humidity = input.TexCoord1.z;
-
-		color.x = color_temp;
-		color.y = color_humidity;
-		color.z = 0.0;	
+		color.z = 1.0;	
 	}
 
 	return color;	

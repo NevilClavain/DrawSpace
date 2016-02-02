@@ -129,7 +129,7 @@ m_parent( p_parent )
     {
         prepare_color_texture( m_subpasscreation_handler, 1 );
     }
-    else if( m_lod_level >= NB_LOD_RANGES - 7 )
+    else if( m_lod_level >= NB_LOD_RANGES - 8 )
     {
         prepare_color_texture( m_subpasscreation_handler, 0 );
     }
@@ -189,6 +189,9 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     {
         fx->AddShader( m_config->m_landscape->GetColorsTextureShader( i ) );
     }
+
+    fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
 
     node->SetFx( fx );
 
@@ -605,9 +608,9 @@ DrawSpace::IntermediatePass* Patch::create_color_texture_pass( void )
     //ipass->SetTargetDims( 128, 128 );
     
     ipass->Initialize();
-    ipass->GetRenderingQueue()->EnableDepthClearing( true );
-    ipass->GetRenderingQueue()->EnableTargetClearing( true );
-    ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
+    ipass->GetRenderingQueue()->EnableDepthClearing( false );
+    ipass->GetRenderingQueue()->EnableTargetClearing( false );
+    //ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
 
     return ipass;
 }

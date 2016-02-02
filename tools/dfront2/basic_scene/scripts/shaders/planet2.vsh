@@ -198,6 +198,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.TexCoord0.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
 	Output.TexCoord0.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
 
+	Output.TexCoord0.z = v_alt;
+
 	// conserver aussi les coords textures originales du patch
 	Output.TexCoord1 = 0.0;
 	Output.TexCoord1.x = Input.TexCoord0.x;
