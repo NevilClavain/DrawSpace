@@ -38,16 +38,15 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 
 	float t, h;
 
-	float li = 1/ 6.0;
-	t = p_temperature;
-	h = floor( p_humidity / li ) * li + li / 2.0;;
+	//float li = 1/ 6.0;
+	t = clamp( p_temperature, 0.0, 0.999 );
+	h = clamp( p_humidity, 0.0, 0.999 );
+	   
+	//h = floor( p_humidity / li ) * li + li / 2.0;
 		
-	// ICI
-	float2 temperature_sampling = compute_sampling_params( clamp( t, 0.0, 1.0 - ( 3.0 * interval ) ), interval );
-	float2 humidity_sampling = compute_sampling_params( clamp( h, 0.0, 1.0 - ( 3.0 * interval ) ), interval );
+	float2 temperature_sampling = compute_sampling_params( clamp( t, 0.0, 1.0 - ( 4.0 * interval ) ), interval );
+	float2 humidity_sampling = compute_sampling_params( clamp( h, 0.0, 1.0 - ( 4.0 * interval ) ), interval );
 
-	//float2 temperature_sampling = compute_sampling_params( t, interval );
-	//float2 humidity_sampling = compute_sampling_params( h, interval );
 
 	float4 res_color = 0.0;
 
@@ -126,7 +125,8 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		distances.z = 1.0 - clamp( sqrt( ( point_3.x - point.x ) * ( point_3.x - point.x ) + ( point_3.y - point.y ) * ( point_3.y - point.y ) ), 0.0, 1.0 );
 		distances.w = 1.0 - clamp( sqrt( ( point_4.x - point.x ) * ( point_4.x - point.x ) + ( point_4.y - point.y ) * ( point_4.y - point.y ) ), 0.0, 1.0 );
 		
-		res_color = distances.x * color_1 + distances.y * color_2 + distances.z * color_3 + distances.w * color_4;
+		res_color = distances.x * color_1 + distances.y * color_2 
+					+ distances.z * color_3 + distances.w * color_4;
 	}
 	else if( delta_u && !delta_v )
 	{
@@ -140,26 +140,8 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 
 		float4 color_1 = tex2D( Texture2, coords_1 );
 		float4 color_2 = tex2D( Texture2, coords_2 );
-
-		float4 distances;
-
-		float2 point;
-		point.x = temperature_sampling.x;
-		point.y = humidity_sampling.x;
-
-		float2 point_1;
-		float2 point_2;
-
-		point_1.x = 0.0;
-		point_1.y = 0.0;
-
-		point_2.x = 1.0;
-		point_2.y = 0.0;
-
-		distances.x = 1.0 - clamp( sqrt( ( point_1.x - point.x ) * ( point_1.x - point.x ) + ( point_1.y - point.y ) * ( point_1.y - point.y ) ), 0.0, 1.0 );
-		distances.y = 1.0 - clamp( sqrt( ( point_2.x - point.x ) * ( point_2.x - point.x ) + ( point_2.y - point.y ) * ( point_2.y - point.y ) ), 0.0, 1.0 );
 		
-		res_color = distances.x * color_1 + distances.y * color_2;			
+		res_color = ( ( 1.0 - temperature_sampling.x ) * color_1 ) + ( temperature_sampling.x * color_2 );
 	}
 	else if( !delta_u && delta_v )
 	{
@@ -174,28 +156,7 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		float4 color_1 = tex2D( Texture2, coords_1 );
 		float4 color_4 = tex2D( Texture2, coords_4 );
 
-		// calcul des poids splatting : calcul d'un "vecteur des distances"
-
-		float4 distances;
-
-		float2 point;
-		point.x = temperature_sampling.x;
-		point.y = humidity_sampling.x;
-
-		float2 point_1;
-		float2 point_4;
-
-		point_1.x = 0.0;
-		point_1.y = 0.0;
-
-
-		point_4.x = 0.0;
-		point_4.y = 1.0;
-
-		distances.x = 1.0 - clamp( sqrt( ( point_1.x - point.x ) * ( point_1.x - point.x ) + ( point_1.y - point.y ) * ( point_1.y - point.y ) ), 0.0, 1.0 );
-		distances.w = 1.0 - clamp( sqrt( ( point_4.x - point.x ) * ( point_4.x - point.x ) + ( point_4.y - point.y ) * ( point_4.y - point.y ) ), 0.0, 1.0 );
-		
-		res_color = distances.x * color_1 + distances.w * color_4;	
+		res_color = ( ( 1.0 - humidity_sampling.x ) * color_1 ) + ( humidity_sampling.x * color_4 );
 	}
 	else
 	{

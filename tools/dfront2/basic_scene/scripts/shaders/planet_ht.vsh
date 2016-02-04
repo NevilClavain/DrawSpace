@@ -230,7 +230,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 
 	// planete temperee
-
 	
 	float lim_polar = 0.48;
 	float lim_tropical = 0.75;
@@ -243,10 +242,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	// planete chaude et peu humide (aride) : desertique
 	/*
-	float lim_polar = 0.05;
-	float lim_tropical = 0.1;
-	float k_polar = 0.45;
-	float k_tropical = 0.48;
+	float lim_polar = 0.0;
+	float lim_tropical = 0.0;
+	float k_polar = 0.78; 
+	float k_tropical = 0.78;
 
 	float humidity_base = 10.0;
 	float humidity_k = 0.0;
@@ -268,7 +267,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	/*
 	float lim_polar = 1.4;
 	float lim_tropical = 1.5;
-	float k_polar = 0.45;
+	float k_polar = 0.28;
 	float k_tropical = 0.99;
 
 	float humidity_base = 80.0;
@@ -337,7 +336,11 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 		res2 = 0.0;
 	}
 	
-	color_humidity = 1.0 - ( res2 / humidity_alt_max );
+	//color_humidity = 1.0 - ( res2 / humidity_alt_max );
+
+	float hf = 1.0 - ( res2 / humidity_alt_max );
+	color_humidity = lerp( 1.0 - hf, hf, color_temp );
+
 
 	Output.TexCoord1.y = color_temp;
 	Output.TexCoord1.z = color_humidity;
