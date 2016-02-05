@@ -20,30 +20,39 @@
 *
 */
 
-#ifndef _SPHERELOD_CONFIG_H_
-#define _SPHERELOD_CONFIG_H_
-
-#include "drawspace_commons.h"
-#include "spherelod_landscape.h"
 #include "spherelod_binder.h"
 
-namespace DrawSpace
-{
-namespace SphericalLOD
-{
-class Config
-{
-public:
-    double          m_lod0base;
-    //double          m_amplitude;
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::SphericalLOD;
 
-    Landscape*      m_landscape;
-
-    Config( void );
-    ~Config( void );
-};
-
-}
+void Binder::SetTexture( Core::Texture* p_texture, long p_stage )
+{
+    m_textures[p_stage] = p_texture;
 }
 
-#endif
+void Binder::SetVertexTexture( Core::Texture* p_texture, long p_stage )
+{
+    m_vertextextures[p_stage] = p_texture;
+}
+
+void Binder::SetFx( Core::Fx* p_fx )
+{
+    m_fx = p_fx;
+}
+    
+Texture* Binder::GetTexture( long p_index )
+{
+    return m_textures[p_index];
+}
+
+Texture* Binder::GetVertexTexture( long p_index )
+{
+    return m_vertextextures[p_index];
+}
+
+Fx* Binder::GetFx( void )
+{
+    return m_fx;
+}

@@ -20,29 +20,42 @@
 *
 */
 
-#ifndef _SPHERELOD_CONFIG_H_
-#define _SPHERELOD_CONFIG_H_
+#ifndef _SPHERELOD_BINDER_H_
+#define _SPHERELOD_BINDER_H_
 
 #include "drawspace_commons.h"
-#include "spherelod_landscape.h"
-#include "spherelod_binder.h"
+#include "fx.h"
+#include "texture.h"
+#include "renderingnode.h"
 
 namespace DrawSpace
 {
 namespace SphericalLOD
 {
-class Config
+
+// cette classe peut être vue comme un "descripteur" de renderingNode de planete (SphericalLOD::FaceDrawingNode)
+class Binder
 {
+protected:
+    Core::Fx*                                     m_fx;
+    Core::Texture*                                m_textures[Core::RenderingNode::NbMaxTextures]; // 32 textures stages max
+    Core::Texture*                                m_vertextextures[Core::RenderingNode::NbMaxTextures];
+
 public:
-    double          m_lod0base;
-    //double          m_amplitude;
 
-    Landscape*      m_landscape;
+    virtual void Initialise( void ) = 0;
 
-    Config( void );
-    ~Config( void );
+    virtual void Bind( void ) = 0; // appelee juste avant le rendu du node
+    virtual void Unbind( void ) = 0; // appelee juste apres le rendu du node
+
+    virtual void SetTexture( Core::Texture* p_texture, long p_stage );
+    virtual void SetVertexTexture( Core::Texture* p_texture, long p_stage );
+    virtual void SetFx( Core::Fx* p_fx );
+    
+    virtual Core::Texture* GetTexture( long p_index );
+    virtual Core::Texture* GetVertexTexture( long p_index );
+    virtual Core::Fx* GetFx( void );
 };
-
 }
 }
 

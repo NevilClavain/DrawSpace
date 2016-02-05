@@ -75,6 +75,7 @@
     <ClCompile Include="src\shaderscontroller.cpp" />
     <ClCompile Include="src\spacebox.cpp" />
     <ClCompile Include="src\spectatormovement.cpp" />
+    <ClCompile Include="src\spherelod_binder.cpp" />
     <ClCompile Include="src\spherelod_body.cpp" />
     <ClCompile Include="src\spherelod_config.cpp" />
     <ClCompile Include="src\spherelod_drawing.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="src\shaderscontroller.h" />
     <ClInclude Include="src\spacebox.h" />
     <ClInclude Include="src\spectatormovement.h" />
+    <ClInclude Include="src\spherelod_binder.h" />
     <ClInclude Include="src\spherelod_body.h" />
     <ClInclude Include="src\spherelod_config.h" />
     <ClInclude Include="src\spherelod_drawing.h" />

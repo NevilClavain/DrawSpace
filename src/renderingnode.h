@@ -92,7 +92,7 @@ public:
     }
 
 
-    virtual long GetTextureListSize( void );
+    static  long GetTextureListSize( void );
     virtual Texture* GetTexture( long p_index );
     virtual Texture* GetVertexTexture( long p_index );
 
