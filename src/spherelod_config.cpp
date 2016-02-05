@@ -25,16 +25,10 @@
 using namespace DrawSpace::SphericalLOD;
 
 Config::Config( void ) :
-///m_amplitude( 12000.0 ),
 m_lod0base( 12000.0 ),
-/*
-m_fbmInputHalfRange( 10.0 ),
-m_fbmLacunarity( 2.0 ),
-m_fbmRoughness( 0.5 ),
-m_fbmClamp( true ),
-m_fbmClipMode( 1.0 ),
-m_fbmClipValue( 0.0 )
-*/
+m_mainRenderingBinder( NULL ),
+m_groundCollisionsBinder( NULL ),
+m_patchTexturesBinder( NULL ),
 m_landscape( NULL )
 {
 }

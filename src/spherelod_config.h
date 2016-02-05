@@ -35,9 +35,12 @@ class Config
 {
 public:
     double          m_lod0base;
-    //double          m_amplitude;
 
     Landscape*      m_landscape;
+
+    Binder*         m_mainRenderingBinder;
+    Binder*         m_groundCollisionsBinder;
+    Binder*         m_patchTexturesBinder;
 
     Config( void );
     ~Config( void );
