@@ -27,6 +27,8 @@
 #include "fx.h"
 #include "texture.h"
 #include "renderingnode.h"
+#include "plugin.h"
+#include "renderer.h"
 
 namespace DrawSpace
 {
@@ -37,24 +39,30 @@ namespace SphericalLOD
 class Binder
 {
 protected:
-    Core::Fx*                                     m_fx;
-    Core::Texture*                                m_textures[Core::RenderingNode::NbMaxTextures]; // 32 textures stages max
-    Core::Texture*                                m_vertextextures[Core::RenderingNode::NbMaxTextures];
+    Core::Fx*                                       m_fx;
+    Core::Texture*                                  m_textures[Core::RenderingNode::NbMaxTextures]; // 32 textures stages max
+    Core::Texture*                                  m_vertextextures[Core::RenderingNode::NbMaxTextures];
+
+    DrawSpace::Interface::Renderer*                 m_renderer;
 
 public:
+
+    Binder( void );
 
     virtual void Initialise( void ) = 0;
 
     virtual void Bind( void ) = 0; // appelee juste avant le rendu du node
     virtual void Unbind( void ) = 0; // appelee juste apres le rendu du node
 
-    virtual void SetTexture( Core::Texture* p_texture, long p_stage );
-    virtual void SetVertexTexture( Core::Texture* p_texture, long p_stage );
-    virtual void SetFx( Core::Fx* p_fx );
+    void SetRenderer( DrawSpace::Interface::Renderer* p_renderer );
+
+    void SetTexture( Core::Texture* p_texture, long p_stage );
+    void SetVertexTexture( Core::Texture* p_texture, long p_stage );
+    void SetFx( Core::Fx* p_fx );
     
-    virtual Core::Texture* GetTexture( long p_index );
-    virtual Core::Texture* GetVertexTexture( long p_index );
-    virtual Core::Fx* GetFx( void );
+    Core::Texture* GetTexture( long p_index );
+    Core::Texture* GetVertexTexture( long p_index );
+    Core::Fx* GetFx( void );
 };
 }
 }

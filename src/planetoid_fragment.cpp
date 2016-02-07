@@ -64,12 +64,11 @@ m_draw_collidinghm( false )
 
         DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
         FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
-        
-        //node->CreateNoisingTextures();
+                
         node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
 
 
-
+        /*
         Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
 
         int nb_collisions_shaders = m_config->m_landscape->GetCollisionsShadersListSize();
@@ -84,6 +83,17 @@ m_draw_collidinghm( false )
         }
 
         node->SetFx( fx );
+
+        void* tx_data;
+        if( false == renderer->CreateTexture( m_collidingheightmap_pass->GetTargetTexture(), &tx_data ) )
+        {
+            _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
+        }
+        */
+
+        Fx* fx = m_config->m_groundCollisionsBinder->GetFx();
+        node->SetFx( fx );
+        node->SetBinder( m_config->m_groundCollisionsBinder );
 
         void* tx_data;
         if( false == renderer->CreateTexture( m_collidingheightmap_pass->GetTargetTexture(), &tx_data ) )

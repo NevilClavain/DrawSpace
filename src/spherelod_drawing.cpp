@@ -35,7 +35,8 @@ using namespace DrawSpace::SphericalLOD;
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::SphericalLOD::Config* p_config ) :
 m_renderer( p_renderer ),
 m_current_patch( NULL ),
-m_config( p_config )
+m_config( p_config ),
+m_binder( NULL )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -112,6 +113,15 @@ void FaceDrawingNode::SetCurrentPatch( DrawSpace::SphericalLOD::Patch* p_patch )
     m_current_patch = p_patch;
 }
 
+void FaceDrawingNode::SetBinder( DrawSpace::SphericalLOD::Binder* p_binder )
+{
+    m_binder = p_binder;
+}
+
+DrawSpace::SphericalLOD::Binder* FaceDrawingNode::GetBinder( void )
+{
+    return m_binder;
+}
 
 Drawing::Drawing( SphericalLOD::Config* p_config ) :
 m_renderer( NULL ),
@@ -176,7 +186,17 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     face_node->SetCurrentPatch( current_patch );
     face_node->SetDisplayList( dl );
 
-    m_config->m_landscape->BindShadersParams();
+    Binder* node_binder = face_node->GetBinder();
+
+    if( node_binder )
+    {
+        node_binder->Bind();
+    }
+    else
+    {
+        m_config->m_landscape->BindShadersParams();
+    }
+    
     m_config->m_landscape->BindTextures();
 
     // recup relative alt de la face
@@ -184,6 +204,11 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->GetDiameter() / 2.0, rel_alt, m_globaltransformation, view, proj );
     m_config->m_landscape->UnbindTextures();
+
+    if( node_binder )
+    {
+        node_binder->Unbind();
+    }
 }
 
 void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
@@ -199,7 +224,18 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node ); 
     face_node->SetCurrentPatch( NULL );
 
-    m_config->m_landscape->BindShadersParams();
+    //m_config->m_landscape->BindShadersParams();
+
+    Binder* node_binder = face_node->GetBinder();
+    if( node_binder )
+    {
+        node_binder->Bind();
+    }
+    else
+    {
+        m_config->m_landscape->BindShadersParams();
+    }
+
     m_config->m_landscape->BindTextures();
 
     // recup relative alt de la face
@@ -207,6 +243,12 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
 
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, rel_alt, world, view, proj );
     m_config->m_landscape->UnbindTextures();
+
+    if( node_binder )
+    {
+        node_binder->Unbind();
+    }
+
 }
 
 void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )

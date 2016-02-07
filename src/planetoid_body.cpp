@@ -58,8 +58,6 @@ m_timemanager( p_time )
     m_timer->SetPeriod( 100 );
     m_timemanager->RegisterTimer( m_timer );
 
-    //m_fractal = new Fractal( 3, 3345764, m_config->m_fbmRoughness, m_config->m_fbmLacunarity );
-
     m_timer->SetState( true );
 }
 
@@ -683,3 +681,4 @@ DrawSpace::SphericalLOD::SubPass* DrawSpace::Planetoid::Body::pop_next_subpass( 
         return pass;  
     }
 }
+

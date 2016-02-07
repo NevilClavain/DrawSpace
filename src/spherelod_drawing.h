@@ -51,17 +51,9 @@ protected:
 
     std::vector<Patch*>                 m_display_list;
 
-    /*
-    void*                               m_pnbufftexture_content;
-    void*                               m_pnmaptexture_content;
-
-    DrawSpace::Core::Texture*           m_perlinnoisebuffer_texture;
-    DrawSpace::Core::Texture*           m_perlinnoisemap_texture;
-    */
+    DrawSpace::SphericalLOD::Binder*    m_binder;
 
     Stats                               m_stats;
-
-    //DrawSpace::Utils::Fractal*          m_fractal;
 
     Patch*                              m_current_patch;  // le connaitre pour eventuellement le dessiner d'une facon differente
 
@@ -78,14 +70,13 @@ public:
 
     void SetDisplayList( const std::vector<Patch*>& p_list );
     
-    /*
-    void CreateNoisingTextures( void );
-    void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
-    */
-
     void GetStats( Stats& p_stats );
 
     void SetCurrentPatch( DrawSpace::SphericalLOD::Patch* p_patch );
+
+    void SetBinder( DrawSpace::SphericalLOD::Binder* p_binder );
+
+    DrawSpace::SphericalLOD::Binder* GetBinder( void );
     
 };
 

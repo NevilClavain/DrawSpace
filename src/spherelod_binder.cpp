@@ -27,6 +27,17 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
+Binder::Binder( void ) : 
+m_renderer( NULL )
+{
+
+}
+
+void Binder::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
+{
+    m_renderer = p_renderer;
+}
+
 void Binder::SetTexture( Core::Texture* p_texture, long p_stage )
 {
     m_textures[p_stage] = p_texture;
