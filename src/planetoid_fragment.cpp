@@ -67,32 +67,6 @@ m_draw_collidinghm( false )
                 
         node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
 
-
-        /*
-        Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
-
-        int nb_collisions_shaders = m_config->m_landscape->GetCollisionsShadersListSize();
-
-        if( 0 == nb_collisions_shaders )
-        {
-            _DSEXCEPTION( "no collisions shaders setted..." )
-        }
-        for( int i = 0; i < nb_collisions_shaders; i++ )
-        {
-            fx->AddShader( m_config->m_landscape->GetCollisionsShader( i ) );
-        }
-
-        node->SetFx( fx );
-
-        void* tx_data;
-        if( false == renderer->CreateTexture( m_collidingheightmap_pass->GetTargetTexture(), &tx_data ) )
-        {
-            _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
-        }
-        */
-
-        Fx* fx = m_config->m_groundCollisionsBinder->GetFx();
-        node->SetFx( fx );
         node->SetBinder( m_config->m_groundCollisionsBinder );
 
         void* tx_data;

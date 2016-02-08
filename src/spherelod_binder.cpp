@@ -30,7 +30,11 @@ using namespace DrawSpace::SphericalLOD;
 Binder::Binder( void ) : 
 m_renderer( NULL )
 {
-
+    for( long i = 0; i < RenderingNode::GetTextureListSize(); i++ )
+    {
+        m_textures[i] = NULL;
+        m_vertextextures[i] = NULL;
+    }
 }
 
 void Binder::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )

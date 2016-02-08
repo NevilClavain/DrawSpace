@@ -116,6 +116,22 @@ void FaceDrawingNode::SetCurrentPatch( DrawSpace::SphericalLOD::Patch* p_patch )
 void FaceDrawingNode::SetBinder( DrawSpace::SphericalLOD::Binder* p_binder )
 {
     m_binder = p_binder;
+
+    SetFx( p_binder->GetFx() );
+    for( long i = 0; i < RenderingNode::GetTextureListSize(); i++ )
+    {
+        Texture* texture = p_binder->GetTexture( i );
+        if( texture )
+        {
+            SetTexture( texture, i );
+        }
+
+        Texture* vtexture = p_binder->GetVertexTexture( i );
+        if( vtexture )
+        {
+            SetVertexTexture( texture, i );
+        }
+    }
 }
 
 DrawSpace::SphericalLOD::Binder* FaceDrawingNode::GetBinder( void )
@@ -251,14 +267,13 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
 
 }
 
-void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
+void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder )
 {
     for( long i = 0; i < 6; i++ )
     {   
         FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
         node->SetMeshe( Body::m_planetpatch_meshe );
-        //node->SetTexture( )
-
+        
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         node->RegisterHandler( cb );
       
@@ -266,6 +281,8 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass )
 
         m_passesnodes[p_pass][node] = i;
         m_nodes[node] = i;
+
+        node->SetBinder( p_binder );
     }
 }
 

@@ -26,7 +26,6 @@ using namespace DrawSpace::SphericalLOD;
 
 Config::Config( void ) :
 m_lod0base( 12000.0 ),
-m_mainRenderingBinder( NULL ),
 m_groundCollisionsBinder( NULL ),
 m_patchTexturesBinder( NULL ),
 m_landscape( NULL )

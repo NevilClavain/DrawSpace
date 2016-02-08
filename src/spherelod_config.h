@@ -38,7 +38,6 @@ public:
 
     Landscape*      m_landscape;
 
-    Binder*         m_mainRenderingBinder;
     Binder*         m_groundCollisionsBinder;
     Binder*         m_patchTexturesBinder;
 

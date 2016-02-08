@@ -524,9 +524,9 @@ void DrawSpace::Planetoid::Body::GetSceneName( dsstring& p_name )
     p_name = m_scenename;
 }
 
-void DrawSpace::Planetoid::Body::RegisterPlanetBodyPassSlot( Pass* p_pass )
+void DrawSpace::Planetoid::Body::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder )
 {
-    m_drawable->RegisterPlanetBodyPassSlot( p_pass );
+    m_drawable->RegisterPlanetBodyPassSlot( p_pass, p_binder );
 }
 
 
@@ -566,12 +566,14 @@ void DrawSpace::Planetoid::Body::BindPlanetBodyExternalGlobalTexture( DrawSpace:
     m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->SetTexture( p_texture, 0 );
 }
 
+/*
 DrawSpace::Core::Fx* DrawSpace::Planetoid::Body::CreatePlanetBodyFx( DrawSpace::Pass* p_pass, int p_faceid )
 {
     Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
     m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->SetFx( fx );
     return fx;
 }
+*/
 
 
 

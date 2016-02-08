@@ -119,7 +119,7 @@ public:
 
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    virtual void RegisterPlanetBodyPassSlot( Pass* p_pass );
+    virtual void RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder );
 
 
     DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
@@ -129,8 +129,6 @@ public:
     Body* GetBody( void );
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
-    
-    //void InitNoisingTextures( DrawSpace::Utils::Fractal* p_fractal );
 };
 }
 }

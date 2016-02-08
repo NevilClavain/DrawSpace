@@ -176,28 +176,6 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
     node->SetDisplayList( dl );
 
-    /*
-    Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
-
-    int nb_colors_shaders = m_config->m_landscape->GetColorsTextureShadersListSize();
-
-    if( 0 == nb_colors_shaders )
-    {
-        _DSEXCEPTION( "no colors shaders setted..." )
-    }
-    for( int i = 0; i < nb_colors_shaders; i++ )
-    {
-        fx->AddShader( m_config->m_landscape->GetColorsTextureShader( i ) );
-    }
-
-    fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
-
-    node->SetFx( fx );
-    */
-
-    Fx* fx = m_config->m_patchTexturesBinder->GetFx();
-    node->SetFx( fx );
     node->SetBinder( m_config->m_patchTexturesBinder );
                
     void* tx_data;
@@ -636,8 +614,6 @@ void Patch::SubPassDone( void )
 {
     if( m_parent )
     {
-        //m_texture_referent = m_parent->m_texture_referent;
-
         m_texture_referent = this;
 
         m_u1 = 0.0;
