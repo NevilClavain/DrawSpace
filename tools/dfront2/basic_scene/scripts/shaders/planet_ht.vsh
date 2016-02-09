@@ -355,7 +355,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	color_humidity = lerp( 1.0 - hf, hf, color_temp );
 
 
-	float beach_lim = norm_latitude * 40.0 * ( lerp( 0.0, 1.0, pn_humidity_variation ) );
+	float beach_lim = norm_latitude * 25.0 * ( lerp( 0.0, 1.0, pn_humidity_variation ) );
 
 	if( res > beach_lim )
 	{
