@@ -44,6 +44,19 @@ float4 fbm_params6: register(c32);
 	// .z -> roughness
 
 
+float4 thparams: register(c33);
+	// .x -> humidity_k
+	// .y -> humidity_base
+	// .z -> temperature_alt_dec : nbre de degres centigrades perdus par km
+
+float4 thparams2: register(c43);
+	// .x -> lim_polar
+	// .y -> lim_tropical
+	// .z -> k_polar
+	// .w -> k_tropical
+
+
+
 sampler2D TextureBuffer : register(s0);
 sampler2D TextureMap : register(s1);
 
@@ -320,7 +333,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	// calcul facteur humidite
 
 	float color_humidity;
-	
+	float color_humidity_final;
+
 	float humidity_alt_max;
 	
 	humidity_alt_max = humidity_k * pn_humidity_variation + humidity_base;
@@ -336,14 +350,31 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 		res2 = 0.0;
 	}
 	
-	//color_humidity = 1.0 - ( res2 / humidity_alt_max );
-
 	float hf = 1.0 - ( res2 / humidity_alt_max );
+
 	color_humidity = lerp( 1.0 - hf, hf, color_temp );
 
 
+	float beach_lim = norm_latitude * 40.0 * ( lerp( 0.0, 1.0, pn_humidity_variation ) );
+
+	if( res > beach_lim )
+	{
+		color_humidity_final = color_humidity;
+	}
+	
+	else if( res <= beach_lim && res > 0.0 )
+	{
+		color_humidity_final = lerp( 0.0, color_humidity, res * 0.5 );
+	}
+	
+	else
+	{
+		color_humidity_final = 0.0;
+	}
+
+
 	Output.TexCoord1.y = color_temp;
-	Output.TexCoord1.z = color_humidity;
+	Output.TexCoord1.z = color_humidity_final;
 
 	Output.Position = mul( Input.Position, matWorldViewProjection );
 	

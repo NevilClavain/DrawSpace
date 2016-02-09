@@ -32,18 +32,15 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 	// contracter legerement les coords patch pour eviter les effets de bords de couleurs
 	float4 patch_coords = ( 0.98 * ( p_textcoords - 0.5 ) ) + 0.5;
 
-	float interval = 1.0 / 16; //4;
+	float interval = 1.0 / 16;
 
 	float limit_up = 1.0 - interval;
 
 	float t, h;
 
-	//float li = 1/ 6.0;
 	t = clamp( p_temperature, 0.0, 0.999 );
 	h = clamp( p_humidity, 0.0, 0.999 );
-	   
-	//h = floor( p_humidity / li ) * li + li / 2.0;
-		
+	   			
 	float2 temperature_sampling = compute_sampling_params( clamp( t, 0.0, 1.0 - ( 4.0 * interval ) ), interval );
 	float2 humidity_sampling = compute_sampling_params( clamp( h, 0.0, 1.0 - ( 4.0 * interval ) ), interval );
 
@@ -179,8 +176,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
-	float lim_sup = 1.025;
-	float lim_inf = 1.0020;
+	float lim_sup = 1.045;
+	float lim_inf = 1.0040;
 
 	if( flags.x > 0.0 && flags.x <= lim_inf )
 	{			
@@ -199,7 +196,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		float4 color_splat = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
 		float4 color_pixel = tex2D( Texture1, temp_humidity );
 
-		if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
+		//if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
+		if( temp_humidity.z > 0.0 )
 		{
 			final_color.z = 1.0;
 		}
