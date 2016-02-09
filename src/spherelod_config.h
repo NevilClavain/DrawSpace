@@ -24,7 +24,6 @@
 #define _SPHERELOD_CONFIG_H_
 
 #include "drawspace_commons.h"
-#include "spherelod_landscape.h"
 #include "spherelod_binder.h"
 
 namespace DrawSpace
@@ -35,8 +34,6 @@ class Config
 {
 public:
     double          m_lod0base;
-
-    Landscape*      m_landscape;
 
     Binder*         m_groundCollisionsBinder;
     Binder*         m_patchTexturesBinder;

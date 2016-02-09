@@ -251,12 +251,6 @@
     <ClCompile Include="src\spherelod_subpass.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
-    <ClCompile Include="src\spherelod_landscapemultifbm.cpp">
-      <Filter>sphericalLOD</Filter>
-    </ClCompile>
-    <ClCompile Include="src\spherelod_landscape.cpp">
-      <Filter>sphericalLOD</Filter>
-    </ClCompile>
     <ClCompile Include="src\spherelod_binder.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
@@ -526,12 +520,6 @@
       <Filter>sphericalLOD</Filter>
     </ClInclude>
     <ClInclude Include="src\spherelod_subpass.h">
-      <Filter>sphericalLOD</Filter>
-    </ClInclude>
-    <ClInclude Include="src\spherelod_landscapemultifbm.h">
-      <Filter>sphericalLOD</Filter>
-    </ClInclude>
-    <ClInclude Include="src\spherelod_landscape.h">
       <Filter>sphericalLOD</Filter>
     </ClInclude>
     <ClInclude Include="src\spherelod_binder.h">
