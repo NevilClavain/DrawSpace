@@ -1,5 +1,9 @@
 
 float4 flags : register(c0);
+float4 flags2 : register(c1);
+	// .x -> resol atlas textures splatting
+	// .y -> transition texture globale/texture splatting : borne sup
+	// .z -> transition texture globale/texture splatting : borne inf
 
 sampler2D Texture0 : register(s0);
 sampler2D Texture1 : register(s1);
@@ -32,7 +36,8 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 	// contracter legerement les coords patch pour eviter les effets de bords de couleurs
 	float4 patch_coords = ( 0.98 * ( p_textcoords - 0.5 ) ) + 0.5;
 
-	float interval = 1.0 / 16;
+	//float interval = 1.0 / 16;
+	float interval = 1.0 / flags2.x;
 
 	float limit_up = 1.0 - interval;
 
@@ -176,8 +181,12 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
-	float lim_sup = 1.055;
-	float lim_inf = 1.0040;
+	//float lim_sup = 1.055;
+	//float lim_inf = 1.0040;
+
+	float lim_sup = flags2.y;
+	float lim_inf = flags2.z;
+
 
 	if( flags.x > 0.0 && flags.x <= lim_inf )
 	{			
