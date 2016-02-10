@@ -48,8 +48,9 @@ float4 thparams: register(c33);
 	// .x -> humidity_k
 	// .y -> humidity_base
 	// .z -> temperature_alt_dec : nbre de degres centigrades perdus par km
+	// .w -> beach_limit
 
-float4 thparams2: register(c43);
+float4 thparams2: register(c34);
 	// .x -> lim_polar
 	// .y -> lim_tropical
 	// .z -> k_polar
@@ -95,8 +96,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float temperature_max = 27.0;
 
-	float temperature_alt_dec = 0.0064;  // INPUT 
-	//pente temperature fct de l'altitude : 6.4 ° perdus tout les 1000 metres 
+	//float temperature_alt_dec = 0.0064;  // INPUT 
+	float temperature_alt_dec = thparams.z / 1000.0;
+	//pente temperature fct de l'altitude : x ° perdus tout les 1000 metres 
 
 	float temperature_lat;
 	float temperature_alt;
@@ -241,62 +243,13 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	////////////////////////////////////////// INPUT
 
+	float lim_polar = thparams2.x;
+	float lim_tropical = thparams2.y;
+	float k_polar = thparams2.z;
+	float k_tropical = thparams2.w;
 
-	// planete temperee
-	
-	float lim_polar = 0.48;
-	float lim_tropical = 0.75;
-	float k_polar = 0.45;
-	float k_tropical = 0.55;
-
-	float humidity_base = 600.0;
-	float humidity_k = 300.0;
-	
-
-	// planete chaude et peu humide (aride) : desertique
-	/*
-	float lim_polar = 0.0;
-	float lim_tropical = 0.0;
-	float k_polar = 0.78; 
-	float k_tropical = 0.78;
-
-	float humidity_base = 10.0;
-	float humidity_k = 0.0;
-	*/
-
-	// planete chaude et tres humide : monde tropical
-
-	/*
-	float lim_polar = 0.05;
-	float lim_tropical = 0.1;
-	float k_polar = 0.45;
-	float k_tropical = 0.48;
-
-	float humidity_base = 1800.0;
-	float humidity_k = 2500.0;
-	*/
-
-	// monde glacé et plutot sec
-	/*
-	float lim_polar = 1.4;
-	float lim_tropical = 1.5;
-	float k_polar = 0.28;
-	float k_tropical = 0.99;
-
-	float humidity_base = 80.0;
-	float humidity_k = 50.0;
-	*/
-
-	// monde froid et plutot humide
-	/*
-	float lim_polar = 0.92;
-	float lim_tropical = 1.5;
-	float k_polar = 0.37;
-	float k_tropical = 0.99;
-
-	float humidity_base = 1900.0;
-	float humidity_k = 1400.0;
-	*/
+	float humidity_base = thparams.y;
+	float humidity_k = thparams.x;
 
 	//////////////////////////////////////////
 
@@ -355,7 +308,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	color_humidity = lerp( 1.0 - hf, hf, color_temp );
 
 
-	float beach_lim = norm_latitude * 25.0 * ( lerp( 0.0, 1.0, pn_humidity_variation ) );
+	//float beach_lim = norm_latitude * 25.0 * ( lerp( 0.0, 1.0, pn_humidity_variation ) );
+	float beach_lim = norm_latitude * thparams.w * ( lerp( 0.0, 1.0, pn_humidity_variation ) );
 
 	if( res > beach_lim )
 	{
