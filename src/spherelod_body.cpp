@@ -26,6 +26,7 @@
 #include "quadtree.h"
 #include "exceptions.h"
 #include "spherelod_body.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -41,6 +42,7 @@ m_timemanager( p_time ),
 m_diameter( p_diameter ),
 m_current_face( -1 ),
 m_current_patch( NULL ),
+m_relative_alt( 0.0 ),
 m_config( p_config )
 {
     for( long i = 0; i < 6; i++ )
@@ -67,12 +69,9 @@ void Body::Initialize( void )
 
 void Body::Compute( void )
 {
-    // determiner la "face courante";
-    
-    //////////////////////////////////////
+
     for( long i = 0; i < 6; i++ )
-    {
-        //m_faces[i]->ResetDisplayList();
+    {        
         bool status = m_faces[i]->ComputeAlignmentFactor();
     }
 
@@ -87,7 +86,57 @@ void Body::Compute( void )
             af = m_faces[i]->GetAlignmentFactor();
         }
     }
+
+    if( m_current_face != curr_face )
+    {
+        m_current_face = curr_face;
+    }
+
+    /////////////////////////////////////////
+
+    double alignment_factor_limit;
+
+    // alignment_factor_limit augmente au fur et a mesure qu'on approche l'altitude zero
+    alignment_factor_limit = 0.25 * DrawSpace::Utils::Maths::Clamp( 0.0, 1.0, ( 3.0 - m_relative_alt ) / 3.0 );
+
+
+    for( long i = 0; i < 6; i++ )
+    {
+        if( m_faces[i]->GetAlignmentFactor() > alignment_factor_limit )
+        {
+            m_faces[i]->UpdateLODComputationParams();
+            m_faces[i]->Compute();
+            m_faces[i]->UpdateLODComputationResults();    
+        }
+        else
+        {
+            m_faces[i]->ResetDisplayList();
+        }
+    }
+
+
+    check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
     
+    //////////////////////////////////////
+
+    /*
+    for( long i = 0; i < 6; i++ )
+    {        
+        bool status = m_faces[i]->ComputeAlignmentFactor();
+    }
+
+    int curr_face = 0;
+    dsreal af = m_faces[0]->GetAlignmentFactor();
+
+    for( long i = 1; i < 6; i++ )
+    {
+        if( m_faces[i]->GetAlignmentFactor() > af )
+        {
+            curr_face = i;
+            af = m_faces[i]->GetAlignmentFactor();
+        }
+    }
+   
     if( m_current_face != curr_face )
     {
         if( m_current_face != -1 )
@@ -103,6 +152,7 @@ void Body::Compute( void )
     m_faces[m_current_face]->UpdateLODComputationResults();
 
     check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
+    */
 }
 
 
@@ -226,8 +276,7 @@ Face* Body::GetFace( int p_faceid )
 
 void Body::SetHotState( bool p_hotstate )
 {
-    check_currentpatch_event( NULL, -1 );
-    //m_timer.SetState( p_hotstate );
+    check_currentpatch_event( NULL, -1 );    
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->SetHotState( p_hotstate );
@@ -236,6 +285,7 @@ void Body::SetHotState( bool p_hotstate )
 
 void Body::UpdateRelativeAlt( dsreal p_alt )
 {
+    m_relative_alt = p_alt;
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->UpdateRelativeAlt( p_alt );

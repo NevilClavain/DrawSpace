@@ -50,10 +50,13 @@ protected:
 
     std::vector<PatchUpdateHandler*>                                            m_patchupdate_handlers;
 
-    int                                                                         m_current_face;    
+    int                                                                         m_current_face;
+
     Patch*                                                                      m_current_patch;
 
     DrawSpace::Utils::TimeManager*                                              m_timemanager;
+
+    double                                                                      m_relative_alt;
 
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
