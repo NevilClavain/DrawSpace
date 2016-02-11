@@ -159,6 +159,10 @@ void Body::Compute( void )
 
 void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt )
 {
+    int main_patch_nbv = 0;
+    int right_skirt_nbv = 0;
+    int left_skirt_nbv = 0;
+
     dsreal xcurr, ycurr;
     long patch_resolution = p_patch_resol;
 
@@ -188,6 +192,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
             vertex.tw[0] = 0.0;
 
             p_meshe_dest->AddVertex( vertex );
+            main_patch_nbv++;
 
             current_u0 += delta_uv0;
         }
@@ -197,9 +202,12 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
-    // vertices jupe droite
+    
     if( p_skirt )
     {
+
+        // vertices jupe droite
+
         current_u0 = 0.0f;
         current_v0 = 0.0f;
 
@@ -207,7 +215,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
         {
             for( long j = 0; j < 2; j++ )
             {
-                xcurr = 1.0; //( j * interval * 0.5 ) + 1.0;
+                xcurr = 1.0;
                 ycurr = i * interval - 1.0;
                         
                 Vertex vertex;
@@ -221,19 +229,59 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
 
                 if( 1 == j )
                 {
-                    vertex.tw[0] = 1.0;
+                    vertex.tw[0] = 1.0; // info pour shader : ce vertex est en bord de jupe
                 }
                 else
                 {
                     vertex.tw[0] = 0.0;
                 }
 
-                p_meshe_dest->AddVertex( vertex );            
+                p_meshe_dest->AddVertex( vertex );  
+                right_skirt_nbv++;
+            }
+            current_v0 += delta_uv0;
+        }
+ 
+        // vertices jupe gauche
+        
+        current_u0 = 0.0f;
+        current_v0 = 0.0f;
+
+        for( long i = 0; i < patch_resolution; i++ )
+        {
+            for( long j = 0; j < 2; j++ )
+            {
+                xcurr = -1.0;
+                ycurr = i * interval - 1.0;
+                        
+                Vertex vertex;
+                vertex.x = xcurr;
+                vertex.y = ycurr;
+                vertex.z = 0.0;
+
+                vertex.tu[0] = 0.0;
+                vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
+                                                // le v des coords textures et le y du repere patch sont en sens oppos�s
+                if( 0 == j )
+                {
+                    vertex.tw[0] = 1.0; // info pour shader : ce vertex est en bord de jupe
+                }
+                else
+                {
+                    vertex.tw[0] = 0.0;
+                }
+
+                p_meshe_dest->AddVertex( vertex );  
+                left_skirt_nbv++;
             }
             current_v0 += delta_uv0;
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
 
     long current_index;
@@ -261,10 +309,14 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
     }
 
     ///////////////////////////////////////////////////////////
-    // triangles jupe droite
+    
     if( p_skirt )
     {
-        int right_skirt_base_index = patch_resolution * patch_resolution;
+
+        // triangles jupe droite
+
+        int right_skirt_base_index = main_patch_nbv;
+
         current_index = 0;
 
         for( long i = 0; i < patch_resolution - 1; i++  )
@@ -283,6 +335,29 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
             triangle.vertex3 = current_index + 2;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );            
         }
+
+        // triangles jupe gauche
+
+        int left_skirt_base_index = right_skirt_base_index + right_skirt_nbv;
+
+        for( long i = 0; i < patch_resolution - 1; i++  )
+        {
+            current_index = ( i * 2 ) + left_skirt_base_index;
+
+            Triangle triangle;
+
+            triangle.vertex1 = current_index;
+            triangle.vertex2 = current_index + 1;
+            triangle.vertex3 = current_index + 2;
+            p_meshe_dest->AddTriangle( triangle, p_fastmode );
+            
+            triangle.vertex1 = current_index + 1;
+            triangle.vertex2 = current_index + 3;
+            triangle.vertex3 = current_index + 2;
+            p_meshe_dest->AddTriangle( triangle, p_fastmode );            
+        }
+
+
     }
 }
 
