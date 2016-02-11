@@ -163,6 +163,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
     int right_skirt_nbv = 0;
     int left_skirt_nbv = 0;
     int up_skirt_nbv = 0;
+    int down_skirt_nbv = 0;
 
     dsreal xcurr, ycurr;
     long patch_resolution = p_patch_resol;
@@ -317,6 +318,46 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
         }
 
 
+        // vertices jupe down
+
+        current_u0 = 0.0f;
+        current_v0 = 0.0f;
+
+        for( long i = 0; i < 2; i++ )
+        {
+            for( long j = 0; j < patch_resolution; j++ )
+            {
+                xcurr = j * interval - 1.0;
+                ycurr = -1.0;
+                        
+                Vertex vertex;
+                vertex.x = xcurr;
+                vertex.y = ycurr;
+                vertex.z = 0.0;
+
+                vertex.tu[0] = current_u0;
+                vertex.tv[0] = 1.0;
+                            
+                if( 0 == i )
+                {
+                    vertex.tw[0] = 1.0; // info pour shader : ce vertex est en bord de jupe
+                }
+                else
+                {
+                    vertex.tw[0] = 0.0;
+                }
+
+                p_meshe_dest->AddVertex( vertex );  
+                down_skirt_nbv++;
+
+                current_u0 += delta_uv0;
+            }
+
+            current_u0 = 0.0;
+        }
+
+
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -398,7 +439,6 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
             p_meshe_dest->AddTriangle( triangle, p_fastmode );            
         }
 
-
         int up_skirt_base_index = left_skirt_base_index + left_skirt_nbv;
 
         for( long i = 0; i < patch_resolution - 1; i++ )
@@ -417,6 +457,27 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
             triangle.vertex3 = current_index + patch_resolution;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );            
         }
+
+
+        int down_skirt_base_index = up_skirt_base_index + up_skirt_nbv;
+
+        for( long i = 0; i < patch_resolution - 1; i++ )
+        {
+            current_index = i + down_skirt_base_index;
+
+            Triangle triangle;
+
+            triangle.vertex1 = current_index;
+            triangle.vertex2 = current_index + 1;
+            triangle.vertex3 = current_index + patch_resolution;
+            p_meshe_dest->AddTriangle( triangle, p_fastmode );
+            
+            triangle.vertex1 = current_index + 1;
+            triangle.vertex2 = current_index + 1 + patch_resolution;
+            triangle.vertex3 = current_index + patch_resolution;
+            p_meshe_dest->AddTriangle( triangle, p_fastmode );            
+        }
+
     }
 }
 
