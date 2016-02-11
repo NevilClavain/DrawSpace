@@ -35,6 +35,7 @@ using namespace DrawSpace::SphericalLOD;
 
 Meshe* Body::m_planetpatch_meshe = NULL;
 Meshe* Body::m_planetpatch2_meshe = NULL;
+Meshe* Body::m_planetpatch_skirt_meshe = NULL;
 
 
 Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler ) : 
@@ -156,7 +157,7 @@ void Body::Compute( void )
 }
 
 
-void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode )
+void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt )
 {
     dsreal xcurr, ycurr;
     long patch_resolution = p_patch_resol;
@@ -183,6 +184,9 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
             vertex.tu[0] = current_u0;
             vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
                                             // le v des coords textures et le y du repere patch sont en sens oppos�s
+
+            vertex.tw[0] = 0.0;
+
             p_meshe_dest->AddVertex( vertex );
 
             current_u0 += delta_uv0;
@@ -192,7 +196,47 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
         current_u0 = 0.0;
     }
 
-    long current_index = 0;
+    ///////////////////////////////////////////////////////////////////////////////////
+    // vertices jupe droite
+    if( p_skirt )
+    {
+        current_u0 = 0.0f;
+        current_v0 = 0.0f;
+
+        for( long i = 0; i < patch_resolution; i++ )
+        {
+            for( long j = 0; j < 2; j++ )
+            {
+                xcurr = 1.0; //( j * interval * 0.5 ) + 1.0;
+                ycurr = i * interval - 1.0;
+                        
+                Vertex vertex;
+                vertex.x = xcurr;
+                vertex.y = ycurr;
+                vertex.z = 0.0;
+
+                vertex.tu[0] = 1.0;
+                vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
+                                                // le v des coords textures et le y du repere patch sont en sens oppos�s
+
+                if( 1 == j )
+                {
+                    vertex.tw[0] = 1.0;
+                }
+                else
+                {
+                    vertex.tw[0] = 0.0;
+                }
+
+                p_meshe_dest->AddVertex( vertex );            
+            }
+            current_v0 += delta_uv0;
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    long current_index;
 
     for( long i = 0; i < patch_resolution - 1; i++  )
     {
@@ -215,20 +259,44 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
             current_index++;
         }        
     }
+
+    ///////////////////////////////////////////////////////////
+    // triangles jupe droite
+    if( p_skirt )
+    {
+        int right_skirt_base_index = patch_resolution * patch_resolution;
+        current_index = 0;
+
+        for( long i = 0; i < patch_resolution - 1; i++  )
+        {
+            current_index = ( i * 2 ) + right_skirt_base_index;
+
+            Triangle triangle;
+
+            triangle.vertex1 = current_index;
+            triangle.vertex2 = current_index + 1;
+            triangle.vertex3 = current_index + 2;
+            p_meshe_dest->AddTriangle( triangle, p_fastmode );
+            
+            triangle.vertex1 = current_index + 1;
+            triangle.vertex2 = current_index + 3;
+            triangle.vertex3 = current_index + 2;
+            p_meshe_dest->AddTriangle( triangle, p_fastmode );            
+        }
+    }
 }
 
-void Body::BuildMeshe( void )
+void Body::BuildMeshes( void )
 {
     m_planetpatch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_RESOLUTION, m_planetpatch_meshe, false );
-}
+    build_meshe( PATCH_RESOLUTION, m_planetpatch_meshe, false, false );
 
-void Body::BuildMesheHigh( void )
-{
     m_planetpatch2_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_HIGH_RESOLUTION, m_planetpatch2_meshe, true );
-}
+    build_meshe( PATCH_HIGH_RESOLUTION, m_planetpatch2_meshe, true, false );
 
+    m_planetpatch_skirt_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    build_meshe( PATCH_RESOLUTION, m_planetpatch_skirt_meshe, false, true );
+}
 
 void Body::RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler )
 {

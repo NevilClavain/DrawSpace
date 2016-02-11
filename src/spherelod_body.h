@@ -60,19 +60,20 @@ protected:
 
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
-    static void build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode );
+    static void build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt );
 
 public:
 
     static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
     static DrawSpace::Core::Meshe*                                              m_planetpatch2_meshe;
+    static DrawSpace::Core::Meshe*                                              m_planetpatch_skirt_meshe;
 
 
     Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler );
     virtual ~Body( void );
 
-    static void BuildMeshe( void );
-    static void BuildMesheHigh( void );
+    static void BuildMeshes( void );
+
     
     void Compute( void );
     void Initialize( void );

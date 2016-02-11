@@ -184,12 +184,14 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	double hl = clamp( fbm3, 0.0, 1.0 );
 	res = lerp( fbm3 * fbm_params5.w, fbm3 * fbm_params5.w + fbm2 * fbm_params3.w, hl * weight );
 
-
-
 	v_alt = res;
 
 	
-	v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
+	if( Input.TexCoord0.z == 0.0 )
+	{
+		v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
+	}
+
 	v_position3.w = 1.0;
 
 	Output.Position = mul( v_position3, matWorldViewProjection );

@@ -240,7 +240,7 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_
     for( long i = 0; i < 6; i++ )
     {   
         FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
-        node->SetMeshe( Body::m_planetpatch_meshe );
+        node->SetMeshe( Body::m_planetpatch_skirt_meshe );
         
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         node->RegisterHandler( cb );
