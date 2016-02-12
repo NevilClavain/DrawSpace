@@ -66,6 +66,7 @@ protected:
     dsreal                                                      m_alignment_factor;
     bool                                                        m_hot;
     dsreal                                                      m_relative_alt;
+    dsreal                                                      m_relative_alt_sphere;
 
     int                                                         m_lod_slipping_sup;
     int                                                         m_lod_slipping_inf;    
@@ -131,6 +132,7 @@ public:
     void Split( int p_depth );
 
     dsreal GetRelativeAlt( void );
+    dsreal GetRelativeAltSphere( void );
 };
 }
 }

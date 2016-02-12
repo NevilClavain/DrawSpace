@@ -1,10 +1,13 @@
 
 float4x4 matWorldViewProjection: register(c0);
+float4x4 matWorldView: register(c4);
+
 float4   flag0:				register(c24);
 
 	// .x -> patch orientation enum integer
 	// .y -> patch sidelenght
 	// .z -> planet ray
+	// .w -> relative alt
 	
 
 float4   patch_translation:	register(c25);
@@ -142,55 +145,64 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position3.w = 1.0;
 
 
+
+	float4 v_position4 = mul( v_position3, matWorldView );
+	float vertex_distance = sqrt( v_position4.x * v_position4.x + v_position4.y * v_position4.y + v_position4.z * v_position4.z );
+
+	float viewer_alt = flag0.w * flag0.z;
+	float horizon_limit = sqrt( viewer_alt * viewer_alt - flag0.z * flag0.z );
+
 	float v_alt = 0.0;
-	float res;
+
+	if( vertex_distance < 1.05 * horizon_limit )
+	{		
+		float res;
+
+		double3 f2;
+		f2[0] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.x / 2.0 ) + 0.5 );
+		f2[1] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.y / 2.0 ) + 0.5 );
+		f2[2] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.z / 2.0 ) + 0.5 );
+
+		float fbm2 = Fractal_fBm( f2, 7, fbm_params3.x, fbm_params4.z, 0.0, fbm_params4.x, fbm_params4.y );
+		if( fbm2 < 0.0 )
+		{
+			fbm2 = 0.0;
+		}
+
+		double3 f3;
+		f3[0] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.x / 2.0 ) + 0.5 );
+		f3[1] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.y / 2.0 ) + 0.5 );
+		f3[2] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.z / 2.0 ) + 0.5 );
+
+		float fbm3 = Fractal_fBm( f3, 7, fbm_params5.x, fbm_params6.z, 1.0, fbm_params6.x, fbm_params6.y );
+	
+		double3 f;
+		f[0] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.x / 2.0 ) + 0.5 );
+		f[1] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.y / 2.0 ) + 0.5 );
+		f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
+
+		float pn = SimplexPerlin3D( f, fbm_params2.x, fbm_params2.y );
+
+	
 
 
-	double3 f2;
-	f2[0] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.x / 2.0 ) + 0.5 );
-	f2[1] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.y / 2.0 ) + 0.5 );
-	f2[2] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.z / 2.0 ) + 0.5 );
+		float pn2 = 9.0 * ( ( 0.5 * pn ) + 0.5 );
+		float weight = exp( pn2 ) / 1000.0;
+	
 
-	float fbm2 = Fractal_fBm( f2, 7, fbm_params3.x, fbm_params4.z, 0.0, fbm_params4.x, fbm_params4.y );
-	if( fbm2 < 0.0 )
-	{
-		fbm2 = 0.0;
+		double hl = clamp( fbm3, 0.0, 1.0 );
+		res = lerp( fbm3 * fbm_params5.w, fbm3 * fbm_params5.w + fbm2 * fbm_params3.w, hl * weight );
+
+		v_alt = res;
+
+	
+		if( Input.TexCoord0.z == 0.0 )
+		{
+			v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
+		}
+
 	}
 
-	
-
-	
-	double3 f3;
-	f3[0] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.x / 2.0 ) + 0.5 );
-	f3[1] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.y / 2.0 ) + 0.5 );
-	f3[2] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.z / 2.0 ) + 0.5 );
-
-	float fbm3 = Fractal_fBm( f3, 7, fbm_params5.x, fbm_params6.z, 1.0, fbm_params6.x, fbm_params6.y );
-	
-	double3 f;
-	f[0] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.x / 2.0 ) + 0.5 );
-	f[1] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.y / 2.0 ) + 0.5 );
-	f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
-
-	float pn = SimplexPerlin3D( f, fbm_params2.x, fbm_params2.y );
-
-	
-
-
-	float pn2 = 9.0 * ( ( 0.5 * pn ) + 0.5 );
-	float weight = exp( pn2 ) / 1000.0;
-	
-
-	double hl = clamp( fbm3, 0.0, 1.0 );
-	res = lerp( fbm3 * fbm_params5.w, fbm3 * fbm_params5.w + fbm2 * fbm_params3.w, hl * weight );
-
-	v_alt = res;
-
-	
-	if( Input.TexCoord0.z == 0.0 )
-	{
-		v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
-	}
 
 	v_position3.w = 1.0;
 

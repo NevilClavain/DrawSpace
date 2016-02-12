@@ -39,6 +39,7 @@ m_currentPatch( NULL ),
 m_currentPatchLOD( -1 ),
 m_hot( false ),
 m_relative_alt( 0.0 ),
+m_relative_alt_sphere( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
 m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
 m_subpasscreation_handler( p_handler )
@@ -617,9 +618,16 @@ dsreal Face::GetRelativeAlt( void )
     return m_relative_alt;
 }
 
+dsreal Face::GetRelativeAltSphere( void )
+{
+    return m_relative_alt_sphere;
+}
+
+
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
     m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_planet_diameter / 2.0 ) );
+    m_relative_alt_sphere = p_alt;
     if( m_hot )
     { 
         // calcul de la fenetre glissante de lod (m_lod_slipping_sup et m_lod_slipping_inf) en fct de l'altitude relative

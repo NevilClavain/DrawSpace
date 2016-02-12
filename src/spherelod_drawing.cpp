@@ -56,6 +56,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     flag0[0] = p_patch->GetOrientation();
     flag0[1] = p_patch->GetUnitSideLenght();
     flag0[2] = p_ray;
+    flag0[3] = p_rel_alt;
 
     Vector patch_pos;
     dsreal xp, yp;
@@ -206,7 +207,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     node_binder->Bind();
     
     // recup relative alt de la face
-    dsreal rel_alt = m_planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
+    dsreal rel_alt = m_planetbody->GetFace( m_nodes[face_node] )->GetRelativeAltSphere();
 
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->GetDiameter() / 2.0, rel_alt, m_globaltransformation, view, proj );
     node_binder->Unbind();
