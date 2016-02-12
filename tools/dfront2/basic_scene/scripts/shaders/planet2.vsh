@@ -11,7 +11,7 @@ float4   flag0:				register(c24);
 	
 
 float4   patch_translation:	register(c25);
-	/// .x, .y -> patch positionning
+	// .x, .y -> patch positionning
 
 float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
@@ -19,6 +19,7 @@ float4   base_uv: register(c26);
 
 float4 fbm_params: register(c27);
 	// .y -> fbm input half-range
+	// .z -> terrain vertical offset
 
 float4 fbm_params2: register(c28);
 	// .x -> seed1
@@ -192,6 +193,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 		double hl = clamp( fbm3, 0.0, 1.0 );
 		res = lerp( fbm3 * fbm_params5.w, fbm3 * fbm_params5.w + fbm2 * fbm_params3.w, hl * weight );
+		res += fbm_params.z;
 
 		v_alt = res;
 
