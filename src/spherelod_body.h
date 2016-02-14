@@ -92,6 +92,8 @@ public:
 
     dsreal GetDiameter( void );
 
+    void Reset( void ); // merge all
+
 };
 }
 }

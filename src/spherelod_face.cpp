@@ -681,3 +681,22 @@ void Face::Split( int p_depth )
     }
     recursive_split( m_rootpatch, p_depth, 0 );
 }
+
+void Face::Reset( void )
+{
+    recursive_merge( m_rootpatch );
+}
+
+void Face::recursive_merge( DrawSpace::Utils::BaseQuadtreeNode* p_currpatch )
+{
+    if( p_currpatch->HasChildren() )
+    {
+        for( int i = 0; i < 4; i++ )
+        {
+            BaseQuadtreeNode* child = p_currpatch->GetChild( i );
+            recursive_merge( child );
+        }
+
+        p_currpatch->Merge();
+    }
+}

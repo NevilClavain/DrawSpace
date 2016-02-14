@@ -571,3 +571,11 @@ dsreal Body::GetDiameter( void )
 {
     return m_diameter;
 }
+
+void Body::Reset( void )
+{
+    for( int i = 0; i < 6; i++ )
+    {
+        m_faces[i]->Reset();
+    }
+}

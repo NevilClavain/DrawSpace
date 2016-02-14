@@ -97,6 +97,8 @@ protected:
 
     void recursive_split( DrawSpace::Utils::BaseQuadtreeNode* p_currpatch, int p_dest_depth, int p_current_depth );
 
+    void recursive_merge( DrawSpace::Utils::BaseQuadtreeNode* p_currpatch );
+
 public:
 
     Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler );
@@ -130,6 +132,8 @@ public:
     dsreal GetHotpointGroundAltitud( void );
 
     void Split( int p_depth );
+
+    void Reset( void ); // merge all
 
     dsreal GetRelativeAlt( void );
     dsreal GetRelativeAltSphere( void );
