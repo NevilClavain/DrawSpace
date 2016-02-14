@@ -563,7 +563,6 @@ IntermediatePass::~IntermediatePass( void )
 {
     _DRAWSPACE_DELETE_( m_renderingqueue );
     _DRAWSPACE_DELETE_( m_targettexture );
-
 }
 
 void IntermediatePass::init_properties( void )

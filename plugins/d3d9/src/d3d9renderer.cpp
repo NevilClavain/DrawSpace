@@ -813,6 +813,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
         texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
         texture_infos->path = path;
+        texture_infos->texture_instance = p_texture;
         texture_infos->texture = d3dt9;
         texture_infos->descr = desc;
         texture_infos->render_texture = true;
@@ -838,6 +839,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
                     texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
                     texture_infos->path = path;
+                    texture_infos->texture_instance = p_texture;
                     texture_infos->texture = d3dt9;
                     texture_infos->texture2 = NULL;
                     texture_infos->render_texture = false;
@@ -860,6 +862,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
                     texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
                     texture_infos->path = path;
+                    texture_infos->texture_instance = p_texture;
                     texture_infos->texture = d3dt9;
                     texture_infos->texture2 = NULL;
                     texture_infos->render_texture = false;
@@ -883,6 +886,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
                     texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
                     texture_infos->path = path;
+                    texture_infos->texture_instance = p_texture;
                     texture_infos->texture = d3dt9;
                     texture_infos->texture2 = NULL;
                     texture_infos->render_texture = false;
@@ -906,6 +910,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
                 texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
                 texture_infos->path = path;
+                texture_infos->texture_instance = p_texture;
                 texture_infos->texture = d3dt9;
                 texture_infos->texture2 = NULL;
                 texture_infos->render_texture = false;
@@ -964,8 +969,33 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
 void D3D9Renderer::DestroyTexture( void* p_data )
 {
+    TextureInfos* ti = (TextureInfos*)p_data;
+    ti->texture->Release();
 
+    if( ti->render_texture )
+    {
+        ti->texture2->Release();
 
+        if( m_targettextures_base.count( ti->texture_instance ) > 0 )
+        {
+            m_targettextures_base.erase( ti->texture_instance );
+        }
+    }
+
+    if( ti->bits )
+    {
+        _DRAWSPACE_DELETE_N_( ti->bits );
+        ti->bits = NULL;
+    }
+
+    if( m_textures_base.count( ti->path ) > 0 )
+    {
+        m_textures_base.erase( ti->path );
+    }
+
+    ti->texture_instance->SetRenderData( NULL );
+
+    _DRAWSPACE_DELETE_( ti );
 }
 
 bool D3D9Renderer::SetTexture( void* p_data, int p_stage )

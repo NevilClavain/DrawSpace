@@ -300,7 +300,7 @@ void Texture::SetRenderData( void* p_render_data )
 {
     if( m_render_data != NULL )
     {
-        if( p_render_data != m_render_data )
+        if( p_render_data && p_render_data != m_render_data )
         {
             // pas normal...
             _DSEXCEPTION( "texture previously created in renderer !!" );

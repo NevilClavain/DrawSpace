@@ -158,6 +158,7 @@ m_parent( p_parent )
 
 Patch::~Patch( void )
 {
+    destroy_color_texture();
 }
 
 void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest )
@@ -171,8 +172,7 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
 
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
-        
-    //node->CreateNoisingTextures();
+            
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
     node->SetDisplayList( dl );
 
@@ -196,6 +196,20 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     {
         (*p_handler)( this, p_subpass_dest );
     }
+}
+
+void Patch::destroy_color_texture( void )
+{
+    // remove texture on renderer side
+
+    DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    renderer->DestroyTexture( m_subpass->GetTargetTexture()->GetRenderData() );
+
+    // remove node
+    _DRAWSPACE_DELETE_( m_subpass_node );
+
+    // remove pass
+    _DRAWSPACE_DELETE_( m_subpass );
 }
 
 void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )

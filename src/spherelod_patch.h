@@ -94,6 +94,8 @@ protected:
 
     DrawSpace::IntermediatePass*            create_color_texture_pass( void );
     void                                    prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest );
+
+    void                                    destroy_color_texture( void );
     
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 

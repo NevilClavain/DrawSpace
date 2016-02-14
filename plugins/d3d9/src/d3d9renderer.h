@@ -77,14 +77,15 @@ protected:
 
     typedef struct
     {
-        LPDIRECT3DTEXTURE9  texture;
+        LPDIRECT3DTEXTURE9          texture;
 
         // pour le cas des texture RENDER_TARGET : 2eme texture permettant d'acceder au contenu de la 1ere, via IDirect3DDevice9::GetRenderTargetData()
-        LPDIRECT3DTEXTURE9  texture2;
-        D3DSURFACE_DESC     descr;
-        bool                render_texture;
-        void*               bits;
-        dsstring            path;
+        LPDIRECT3DTEXTURE9          texture2;
+        D3DSURFACE_DESC             descr;
+        bool                        render_texture;
+        void*                       bits;
+        dsstring                    path;
+        DrawSpace::Core::Texture*   texture_instance;
 
     } TextureInfos;
 
