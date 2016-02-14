@@ -84,6 +84,7 @@ protected:
         D3DSURFACE_DESC     descr;
         bool                render_texture;
         void*               bits;
+        dsstring            path;
 
     } TextureInfos;
 
@@ -190,6 +191,7 @@ public:
     virtual bool UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsDisplayList& p_list, void* p_data );
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
+    virtual void DestroyTexture( void* p_data );
     virtual bool SetTexture( void* p_data, int p_stage );
     virtual bool SetVertexTexture( void* p_data, int p_stage );
 	virtual bool UnsetTexture( int p_stage );

@@ -74,6 +74,7 @@ public:
     virtual bool UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsDisplayList& p_list, void* p_data ) = 0;
 
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data ) = 0;
+    virtual void DestroyTexture( void* p_data ) = 0;
     virtual bool SetTexture( void* p_data, int p_stage ) = 0;
     virtual bool SetVertexTexture( void* p_data, int p_stage ) = 0;
 	virtual bool UnsetTexture( int p_stage ) = 0;
