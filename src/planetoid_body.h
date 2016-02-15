@@ -169,6 +169,11 @@ public:
     //void                                InitNoisingTextures( void );
 
     void                                DrawSubPasses( void );
+
+
+    void                                ResetRegisteredBodyFragment( DrawSpace::Dynamics::InertBody* p_body );
+
+    int                                 GetSingleShotSubPassesStackSize();
 };
 
 

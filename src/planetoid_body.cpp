@@ -55,7 +55,7 @@ m_timemanager( p_time )
     m_timer = _DRAWSPACE_NEW_( DrawSpace::Utils::Timer, DrawSpace::Utils::Timer );
 
     m_timer->SetHandler( m_timer_cb );
-    m_timer->SetPeriod( 100 );
+    m_timer->SetPeriod( /*100*/ 50 );
     m_timemanager->RegisterTimer( m_timer );
 
     m_timer->SetState( true );
@@ -598,6 +598,15 @@ bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynami
     return false;
 }
 
+void DrawSpace::Planetoid::Body::ResetRegisteredBodyFragment( DrawSpace::Dynamics::InertBody* p_body )
+{
+    if( m_registered_bodies.count( p_body ) > 0 )
+    {
+        RegisteredBody entry = m_registered_bodies[p_body];
+        entry.fragment->GetPlanetBody()->Reset();
+    }
+}
+
 /*
 void DrawSpace::Planetoid::Body::InitNoisingTextures( void )
 {
@@ -684,3 +693,7 @@ DrawSpace::SphericalLOD::SubPass* DrawSpace::Planetoid::Body::pop_next_subpass( 
     }
 }
 
+int DrawSpace::Planetoid::Body::GetSingleShotSubPassesStackSize()
+{
+    return m_singleshot_subpasses_stack.size();
+}

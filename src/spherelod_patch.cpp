@@ -202,14 +202,17 @@ void Patch::destroy_color_texture( void )
 {
     // remove texture on renderer side
 
-    DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    renderer->DestroyTexture( m_subpass->GetTargetTexture()->GetRenderData() );
+    if( m_subpass && m_subpass_node )
+    {
+        DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        renderer->DestroyTexture( m_subpass->GetTargetTexture()->GetRenderData() );
 
-    // remove node
-    _DRAWSPACE_DELETE_( m_subpass_node );
+        // remove node
+        _DRAWSPACE_DELETE_( m_subpass_node );
 
-    // remove pass
-    _DRAWSPACE_DELETE_( m_subpass );
+        // remove pass
+        _DRAWSPACE_DELETE_( m_subpass );
+    }
 }
 
 void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )
