@@ -94,9 +94,11 @@ protected:
     std::map<Pass*, NodesSet>                                                   m_passesnodes;
     NodesSet                                                                    m_nodes;
 
-    std::map<Pass*, SphericalLOD::FaceDrawingNode*>                             m_passes_singlenodes;
+    //std::map<Pass*, SphericalLOD::FaceDrawingNode*>                             m_passes_singlenodes;
 
-    std::vector<RenderingNodeDrawCallback*>                                     m_callbacks;
+
+    RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler;
+    
     DrawSpace::Interface::Renderer*                                             m_renderer;
     DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
     
@@ -123,12 +125,14 @@ public:
 
 
     DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
-    DrawSpace::Core::RenderingNode* GetSingleNodeFromPass( Pass* p_pass );
-    void SetSinglePassSlot( Pass* p_pass, DrawSpace::SphericalLOD::FaceDrawingNode* p_node );
+    //DrawSpace::Core::RenderingNode* GetSingleNodeFromPass( Pass* p_pass );
+    //void SetSinglePassSlot( Pass* p_pass, DrawSpace::SphericalLOD::FaceDrawingNode* p_node );
 
     Body* GetBody( void );
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
+
+    RenderingNodeDrawCallback* GetSingleNodeDrawHandler( void );
 };
 }
 }

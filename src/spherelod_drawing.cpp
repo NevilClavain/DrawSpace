@@ -145,10 +145,12 @@ m_renderer( NULL ),
 m_planetbody( NULL ),
 m_config( p_config )
 {
+    m_singlenode_draw_handler = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
 }
 
 Drawing::~Drawing( void )
 {
+    _DRAWSPACE_DELETE_( m_singlenode_draw_handler );
 }
 
 void Drawing::SetCurrentPlanetBody( Body* p_planetbody )
@@ -246,8 +248,6 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_
         RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
         node->RegisterHandler( cb );
       
-        m_callbacks.push_back( cb );
-
         m_passesnodes[p_pass][node] = i;
         m_nodes[node] = i;
 
@@ -255,17 +255,20 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_
     }
 }
 
+/*
 void Drawing::SetSinglePassSlot( Pass* p_pass, SphericalLOD::FaceDrawingNode* p_node )
 {
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
-    p_node->RegisterHandler( cb );      
-    m_callbacks.push_back( cb );
+    p_node->RegisterHandler( cb );
 
-    m_passes_singlenodes[p_pass] = p_node;
-   
-    // ces nodes ne sont pas destines a dependre d'un scenegraph
-    // donc on ajoute le node a la queue directement ici
-    p_pass->GetRenderingQueue()->Add( p_node );
+
+    //m_passes_singlenodes[p_pass] = p_node;   
+}
+*/
+
+Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void )
+{
+    return m_singlenode_draw_handler;
 }
 
 DrawSpace::Core::RenderingNode* Drawing::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
@@ -285,6 +288,7 @@ DrawSpace::Core::RenderingNode* Drawing::GetPlanetBodyNodeFromPass( Pass* p_pass
     return NULL;
 }
 
+/*
 DrawSpace::Core::RenderingNode* Drawing::GetSingleNodeFromPass( Pass* p_pass )
 {
     if( 0 == m_passes_singlenodes.count( p_pass ) )
@@ -293,6 +297,7 @@ DrawSpace::Core::RenderingNode* Drawing::GetSingleNodeFromPass( Pass* p_pass )
     }
     return m_passes_singlenodes[p_pass];
 }
+*/
 
 DrawSpace::SphericalLOD::Body* Drawing::GetBody( void )
 {

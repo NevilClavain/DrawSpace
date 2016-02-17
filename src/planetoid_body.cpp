@@ -619,10 +619,12 @@ DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetPlanetBodyNodeFro
     return m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid );
 }
 
+/*
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetSingleNodeFromPass( Pass* p_pass )
 {
     return m_drawable->GetSingleNodeFromPass( p_pass );
 }
+*/
 
 void DrawSpace::Planetoid::Body::DrawSubPasses( void )
 {
@@ -649,7 +651,15 @@ void DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::SphericalLOD::Su
     SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( p_pass->GetNode() );
     
 
-    m_drawable->SetSinglePassSlot( p_pass->GetPass(), node );    
+    //m_drawable->SetSinglePassSlot( p_pass->GetPass(), node );
+
+    node->RegisterHandler( m_drawable->GetSingleNodeDrawHandler() );
+
+    // ces nodes ne sont pas destines a dependre d'un scenegraph
+    // donc on ajoute le node a la queue directement ici
+    p_pass->GetPass()->GetRenderingQueue()->Add( node );
+
+
     p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
 
    

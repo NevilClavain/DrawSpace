@@ -148,7 +148,7 @@ public:
     void                                RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder );
 
     DrawSpace::Core::RenderingNode*     GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
-    DrawSpace::Core::RenderingNode*     GetSingleNodeFromPass( Pass* p_pass );
+    //DrawSpace::Core::RenderingNode*     GetSingleNodeFromPass( Pass* p_pass );
 
     void                                BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
 
