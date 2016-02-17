@@ -652,8 +652,7 @@ void DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::SphericalLOD::Su
     m_drawable->SetSinglePassSlot( p_pass->GetPass(), node );    
     p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
 
-    //node->InitNoisingTextures( m_fractal );
-
+   
     switch( p_dest )
     {
         case 0:
@@ -667,9 +666,7 @@ void DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::SphericalLOD::Su
             break;
 
         case 2:
-            {
-                m_permanent_subpasses.push_back( p_pass );
-            }
+            m_permanent_subpasses.push_back( p_pass );
             break;
 
         default:
