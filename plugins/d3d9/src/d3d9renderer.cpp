@@ -25,6 +25,8 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+
 extern void TranslateD3DD9Error( HRESULT p_hRes, dsstring &p_str );
 
 _DECLARE_DS_LOGGER( logger, "d3d9", NULL )
@@ -91,6 +93,9 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
+
+    p_logconf->RegisterSink( MemAlloc::GetLogSink() );
+    MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
 
     if( true == m_config.Run( "appconfig.txt", "    " ) )
     {

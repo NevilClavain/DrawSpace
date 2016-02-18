@@ -21,7 +21,7 @@
 */
 
 #include "memalloc.h"
-#include "tracedefs.h"
+
 _DECLARE_DS_LOGGER( logger, "MemAlloc", DrawSpace::Logger::Configuration::GetInstance() )
 
 using namespace DrawSpace;
@@ -91,4 +91,9 @@ void MemAlloc::Unregister( void* p_ptr )
     {
 		_DSWARN(logger, dsstring("no mem bloc ") << p_ptr << dsstring( "(already unallocated ?)" ) )
     }
+}
+
+DrawSpace::Logger::Sink* MemAlloc::GetLogSink( void )
+{
+    return &logger;
 }
