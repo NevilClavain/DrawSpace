@@ -184,7 +184,7 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
         _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
     }
     
-    m_colortexture_pass->GetTargetTexture()->AllocTextureContent();
+    //m_colortexture_pass->GetTargetTexture()->AllocTextureContent();
         
     ////////////////////////
 
