@@ -81,12 +81,46 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
 
     m_renderer->DrawMeshe( p_world, p_view, p_proj );
-    m_stats.nb_patchs++;       
+    //m_stats.nb_patchs++;       
 }
+
+void FaceDrawingNode::draw_single_patch2( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
+{
+    Vector flag0;
+    flag0[0] = p_patch->GetOrientation();
+    flag0[1] = p_patch->GetUnitSideLenght();
+    flag0[2] = p_ray;
+    flag0[3] = p_rel_alt;
+
+    Vector patch_pos;
+    dsreal xp, yp;
+    p_patch->GetUnitPos( xp, yp );
+
+    patch_pos[0] = xp;
+    patch_pos[1] = yp;
+    patch_pos[2] = 0.0;
+
+
+    Vector uvcoords;
+    p_patch->GetUVCoords( uvcoords );
+
+
+    m_renderer->SetFxShaderParams( 0, 24, flag0 );
+    m_renderer->SetFxShaderParams( 0, 25, patch_pos );
+    m_renderer->SetFxShaderParams( 0, 26, uvcoords );
+
+    Vector pixels_flags;
+    pixels_flags[0] = p_rel_alt;
+
+    m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
+
+    m_renderer->DrawMeshe( p_world, p_view, p_proj );    
+}
+
 
 void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
 {
-    ZeroMemory( &m_stats, sizeof( Stats ) );
+    //ZeroMemory( &m_stats, sizeof( Stats ) );
 
     Texture* current_texture = NULL;
         
@@ -100,9 +134,19 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_a
             m_renderer->SetTexture( refpatchtexture->GetRenderData(), 0 );
             current_texture = refpatchtexture;
         }
+        
         draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_rel_alt, p_world, p_view, p_proj );
     }
 }
+
+void FaceDrawingNode::Draw2( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
+{        
+    for( size_t i = 0; i < m_display_list.size(); i++ )
+    {        
+        draw_single_patch2( m_display_list[i], p_nbv, p_nbt, p_ray, p_rel_alt, p_world, p_view, p_proj );
+    }
+}
+
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
 {
@@ -234,7 +278,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     // recup relative alt de la face
     dsreal rel_alt = m_planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
 
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, rel_alt, world, view, proj );   
+    face_node->Draw2( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, rel_alt, world, view, proj );   
     node_binder->Unbind();
 }
 

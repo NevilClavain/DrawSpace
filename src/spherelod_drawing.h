@@ -60,6 +60,8 @@ protected:
     void                                draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
     
+    void                                draw_single_patch2( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
+                                                            const DrawSpace::Utils::Matrix& p_proj );
     
 
 public:
@@ -67,6 +69,7 @@ public:
     virtual ~FaceDrawingNode( void );
 
     void Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
+    void Draw2( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj );
 
     void SetDisplayList( const std::vector<Patch*>& p_list );
     
