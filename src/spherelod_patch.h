@@ -78,6 +78,8 @@ protected:
 
     int                                     m_orientation;
 
+    int                                     m_nodeid;
+
     DrawSpace::Utils::BaseQuadtreeNode*     m_owner;
 
     DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
@@ -96,6 +98,8 @@ protected:
     void                                    prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest );
 
     void                                    destroy_color_texture( void );
+
+    void                                    recurs_update_texture_referent( Patch* p_texture_referent );
     
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 
