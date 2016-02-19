@@ -129,10 +129,12 @@ m_parent( p_parent )
     {
         prepare_color_texture( m_subpasscreation_handler, 1 );
     }
-    else if( m_lod_level >= NB_LOD_RANGES - 8 )
+    
+    else if( m_lod_level >= /*NB_LOD_RANGES - 8*/ NB_LOD_RANGES - 3 )
     {
         prepare_color_texture( m_subpasscreation_handler, 0 );
     }
+    
 
     if( p_parent )
     {
@@ -192,10 +194,12 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     m_subpass_node = node;
         
     // appel handler pour enregistrer et executer la passe
+    
     if( p_handler )
     {
         (*p_handler)( this, p_subpass_dest );
     }
+    
 }
 
 void Patch::destroy_color_texture( void )

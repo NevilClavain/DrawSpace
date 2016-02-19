@@ -188,9 +188,33 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float lim_inf = flags2.z;
 
 
+	bool sea = false;
+
+	if( flags.x <= 1.5 )
+	{
+		// si altitude relative < 1.5
+
+		// regarder l'altitude vertex interpole pour determiner si rendu mer
+		if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
+		{
+			sea = true;
+		}
+	}
+	else
+	{
+		// si altitude relative > 1.5
+
+		// regarder texture donnees temperature/humidite pour determiner si rendu mer
+		if( temp_humidity.z > 0.0 )
+		{
+			sea = true;
+		}
+	}
+
+
 	if( flags.x > 0.0 && flags.x <= lim_inf )
 	{			
-		if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
+		if( sea ) 
 		{
 			final_color.z = 1.0;
 		}
@@ -205,8 +229,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		float4 color_splat = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
 		float4 color_pixel = tex2D( Texture1, temp_humidity );
 
-		//if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
-		if( temp_humidity.z > 0.0 )
+		if( sea )
 		{
 			final_color.z = 1.0;
 		}
@@ -216,8 +239,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		}
 	}
 	else
-	{
-		if( temp_humidity.z > 0.0 )
+	{		
+		if( sea )
 		{
 			final_color.z = 1.0;
 		}
