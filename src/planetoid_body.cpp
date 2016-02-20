@@ -55,7 +55,7 @@ m_timemanager( p_time )
     m_timer = _DRAWSPACE_NEW_( DrawSpace::Utils::Timer, DrawSpace::Utils::Timer );
 
     m_timer->SetHandler( m_timer_cb );
-    m_timer->SetPeriod( 100 );
+    m_timer->SetPeriod( /*100*/ 60 );
     m_timemanager->RegisterTimer( m_timer );
 
     m_timer->SetState( true );

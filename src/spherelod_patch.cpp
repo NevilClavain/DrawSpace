@@ -131,7 +131,7 @@ m_nodeid( p_nodeid )
         prepare_color_texture( m_subpasscreation_handler, 1 );
     }
     
-    else if( m_lod_level >= /*NB_LOD_RANGES - 8*/ NB_LOD_RANGES - 3 )
+    else if( m_lod_level >= NB_LOD_RANGES - 8 /*NB_LOD_RANGES - 3*/ )
     {
         prepare_color_texture( m_subpasscreation_handler, 0 );
     }

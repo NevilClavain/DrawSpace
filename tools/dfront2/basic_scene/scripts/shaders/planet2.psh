@@ -190,9 +190,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	bool sea = false;
 
-	if( flags.x <= 1.5 )
+	if( flags.x <= lim_inf )
 	{
-		// si altitude relative < 1.5
+		// si altitude relative a un certain seuil
 
 		// regarder l'altitude vertex interpole pour determiner si rendu mer
 		if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
