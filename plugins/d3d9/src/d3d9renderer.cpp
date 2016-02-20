@@ -983,6 +983,10 @@ void D3D9Renderer::DestroyTexture( void* p_data )
 
         if( m_targettextures_base.count( ti->texture_instance ) > 0 )
         {
+            TargetTextureInfos tti = m_targettextures_base[ti->texture_instance];
+            tti.render_to_surface->Release();
+            tti.surface->Release();
+            
             m_targettextures_base.erase( ti->texture_instance );
         }
     }
