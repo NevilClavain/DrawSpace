@@ -32,6 +32,22 @@ namespace SphericalLOD
 {
 class SubPass
 {
+public:
+
+    typedef std::list<SphericalLOD::SubPass*>   singleshot_subpasses_stack;
+    typedef std::vector<SphericalLOD::SubPass*> singleshot_subpasses;
+    typedef std::vector<SphericalLOD::SubPass*> permanent_subpasses;
+
+    typedef struct
+    {    
+        int queue_id; // 0 ->singleshot_subpasses_stack 1 -> singleshot_subpasses 2 -> permanent_subpasses
+
+        singleshot_subpasses_stack::iterator    singleshot_subpasses_stack_position;
+        singleshot_subpasses::iterator          singleshot_subpasses_position;
+        permanent_subpasses::iterator           permanent_subpasses_position;
+
+    } EntryInfos;
+
 protected:
 
     DrawSpace::Core::RenderingNode*             m_subpass_node;
