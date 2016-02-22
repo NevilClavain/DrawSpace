@@ -210,6 +210,19 @@ void Patch::destroy_color_texture( void )
 
     if( m_subpass && m_subpass_node )
     {
+        if( m_subpass_entry_infos_valid )
+        {
+            try
+            {
+                remove_entry_from_queue( m_subpass_entry_infos );
+
+            } 
+            catch( ... )
+            {
+                _DSEXCEPTION( "unexpected error while trying to remove subpass queue entry" );
+            }
+        }
+
         DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
         renderer->DestroyTexture( m_subpass->GetTargetTexture()->GetRenderData() );
 
@@ -218,11 +231,6 @@ void Patch::destroy_color_texture( void )
 
         // remove pass
         _DRAWSPACE_DELETE_( m_subpass );
-
-        if( m_subpass_entry_infos_valid )
-        {
-            remove_entry_from_queue( m_subpass_entry_infos );
-        }
     }
 }
 
