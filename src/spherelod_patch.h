@@ -42,7 +42,7 @@ namespace SphericalLOD
 class Patch : public DrawSpace::SphericalLOD::SubPass
 {
 public:
-    typedef DrawSpace::Core::BaseCallback2<void, DrawSpace::SphericalLOD::SubPass*, int>                                 SubPassCreationHandler;
+    typedef DrawSpace::Core::BaseCallback2<DrawSpace::SphericalLOD::SubPass::EntryInfos, DrawSpace::SphericalLOD::SubPass*, int> SubPassCreationHandler;
 
     static const int    NorthNeighbour      = 0;
     static const int    SouthNeighbour      = 1;
@@ -91,6 +91,9 @@ protected:
     Patch*                                  m_texture_referent;
 
     Patch::SubPassCreationHandler*          m_subpasscreation_handler;
+
+    EntryInfos                              m_subpass_entry_infos;
+    bool                                    m_subpass_entry_infos_valid;
 
     /////////////////////////////////////////////////////////////////////////////////////
 

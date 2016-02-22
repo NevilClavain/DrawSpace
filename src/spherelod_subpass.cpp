@@ -50,3 +50,25 @@ DrawSpace::IntermediatePass* SubPass::GetPass( void )
 {
     return m_subpass;
 }
+
+void SubPass::remove_entry_from_queue( const EntryInfos& p_entryInfos )
+{
+    switch( p_entryInfos.queue_id )
+    {
+        case 0:
+
+            p_entryInfos.singleshot_subpasses_stack->erase( p_entryInfos.singleshot_subpasses_stack_position );
+            break;
+
+        case 1:
+
+            p_entryInfos.singleshot_subpasses->erase( p_entryInfos.singleshot_subpasses_position );
+            break;
+
+        case 2:
+
+            p_entryInfos.permanent_subpasses->erase( p_entryInfos.permanent_subpasses_position );
+            break;
+    
+    }
+}

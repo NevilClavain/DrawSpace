@@ -42,6 +42,10 @@ public:
     {    
         int queue_id; // 0 ->singleshot_subpasses_stack 1 -> singleshot_subpasses 2 -> permanent_subpasses
 
+        singleshot_subpasses_stack*             singleshot_subpasses_stack;
+        singleshot_subpasses*                   singleshot_subpasses;
+        permanent_subpasses*                    permanent_subpasses;
+
         singleshot_subpasses_stack::iterator    singleshot_subpasses_stack_position;
         singleshot_subpasses::iterator          singleshot_subpasses_position;
         permanent_subpasses::iterator           permanent_subpasses_position;
@@ -52,6 +56,9 @@ protected:
 
     DrawSpace::Core::RenderingNode*             m_subpass_node;
     DrawSpace::IntermediatePass*                m_subpass;
+
+
+    void remove_entry_from_queue( const EntryInfos& p_entryInfos );
 
 public:
 

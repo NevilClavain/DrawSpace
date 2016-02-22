@@ -41,7 +41,8 @@ m_colortexture_pass( NULL ),
 m_config( p_config ),
 m_subpasscreation_handler( p_handler ),
 m_parent( p_parent ),
-m_nodeid( p_nodeid )
+m_nodeid( p_nodeid ),
+m_subpass_entry_infos_valid( false )
 {
     for( long i = 0; i < 8; i++ )
     {
@@ -198,9 +199,9 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     
     if( p_handler )
     {
-        (*p_handler)( this, p_subpass_dest );
+        m_subpass_entry_infos = (*p_handler)( this, p_subpass_dest );
+        m_subpass_entry_infos_valid = true;
     }
-    
 }
 
 void Patch::destroy_color_texture( void )
@@ -217,6 +218,11 @@ void Patch::destroy_color_texture( void )
 
         // remove pass
         _DRAWSPACE_DELETE_( m_subpass );
+
+        if( m_subpass_entry_infos_valid )
+        {
+            remove_entry_from_queue( m_subpass_entry_infos );
+        }
     }
 }
 
@@ -636,9 +642,11 @@ Patch* Patch::GetTextureReferent( void )
 
 void Patch::SubPassDone( void )
 {
+    // subpass effectuee, l'entree dans la queue n'existe donc plus...
+    m_subpass_entry_infos_valid = false;
+
     if( m_parent )
     {
-
         m_texture_referent = this;
         m_u1 = 0.0;
         m_v1 = 0.0;

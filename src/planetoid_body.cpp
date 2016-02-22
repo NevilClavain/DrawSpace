@@ -644,7 +644,7 @@ void DrawSpace::Planetoid::Body::DrawSubPasses( void )
     }
 }
 
-void DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::SphericalLOD::SubPass* p_pass, int p_dest )
+DrawSpace::SphericalLOD::SubPass::EntryInfos DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::SphericalLOD::SubPass* p_pass, int p_dest )
 {
     // cb traitement d'une requete de creation d'une sub-pass
  
@@ -663,20 +663,29 @@ void DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::SphericalLOD::Su
     p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
 
    
+    DrawSpace::SphericalLOD::SubPass::EntryInfos ei;
+
+    ei.singleshot_subpasses_stack = &m_singleshot_subpasses_stack;
+    ei.singleshot_subpasses = &m_singleshot_subpasses;
+    ei.permanent_subpasses = &m_permanent_subpasses;
+
     switch( p_dest )
     {
         case 0:
 
             m_singleshot_subpasses_stack.push_front( p_pass );
+            ei.singleshot_subpasses_stack_position = m_singleshot_subpasses_stack.begin();
             break;
 
         case 1:
 
             m_singleshot_subpasses.push_back( p_pass );
+            ei.singleshot_subpasses_position = m_singleshot_subpasses.end() - 1;
             break;
 
         case 2:
             m_permanent_subpasses.push_back( p_pass );
+            ei.permanent_subpasses_position = m_permanent_subpasses.end() - 1;
             break;
 
         default:
@@ -684,6 +693,11 @@ void DrawSpace::Planetoid::Body::on_subpasscreation( DrawSpace::SphericalLOD::Su
             _DSEXCEPTION( "unknow destination for subpass" );
             break;
     }
+
+    ei.queue_id = p_dest;
+    
+
+    return ei;    
 }
 
 DrawSpace::SphericalLOD::SubPass* DrawSpace::Planetoid::Body::pop_next_subpass( void )

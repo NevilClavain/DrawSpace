@@ -45,7 +45,7 @@ class Fragment : public DrawSpace::SphericalLOD::SubPass
 {
 protected:
     
-    typedef DrawSpace::Core::BaseCallback2<void, DrawSpace::SphericalLOD::SubPass*, int>                                                        SubPassCreationHandler;
+    typedef DrawSpace::Core::BaseCallback2<DrawSpace::SphericalLOD::SubPass::EntryInfos, DrawSpace::SphericalLOD::SubPass*, int>                SubPassCreationHandler;
 
     typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Patch*, int>                                                    PatchUpdateCb;
 
