@@ -574,6 +574,8 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
             m_work_currentPatchLOD = m_work_lod_slipping_inf;
         }
         ///////////////////////////////////
+        recursive_merge( p_current_node );
+
         return true;
     }
     else
@@ -582,7 +584,8 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
         {
             if( p_lodlevel <= m_work_lod_slipping_sup )
             {
-                m_work_displaylist.push_back( patch_node->GetContent() );   
+                m_work_displaylist.push_back( patch_node->GetContent() );
+                recursive_merge( p_current_node );
             }
         }
         else
@@ -605,6 +608,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
                     {
                         QuadtreeNode<Patch>* sub_patch_node = static_cast<QuadtreeNode<Patch>*>( sub );
                         m_work_displaylist.push_back( sub_patch_node->GetContent() );
+                        recursive_merge( sub );
                     }
                 }
             }
