@@ -141,8 +141,6 @@ protected:
     void compute_fragments( void );
     void update_fragments( void );
 
-    DrawSpace::SphericalLOD::SubPass* pop_next_subpass( void );
-
 public:
     
     Body( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time, const DrawSpace::SphericalLOD::Config& p_config );

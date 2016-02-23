@@ -120,6 +120,8 @@ public:
 
     void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done );
 
+    void ResetPlanetBody( void );
+
     virtual void DrawSubPass( void );
     virtual void SubPassDone( void );
 };

@@ -56,6 +56,7 @@ protected:
 
     DrawSpace::Core::RenderingNode*             m_subpass_node;
     DrawSpace::IntermediatePass*                m_subpass;
+    bool                                        m_timer_ready_flag;
 
 
     void remove_entry_from_queue( const EntryInfos& p_entryInfos );
@@ -70,6 +71,9 @@ public:
 
     virtual DrawSpace::Core::RenderingNode*             GetNode( void );
     virtual DrawSpace::IntermediatePass*                GetPass( void );
+
+    virtual void                                        SetTimerReadyFlag( bool p_flag );
+    virtual bool                                        GetTimerReadyFlag( void );
 
 };
 }

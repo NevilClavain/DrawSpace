@@ -321,3 +321,8 @@ void Fragment::SubPassDone( void )
         m_draw_collidinghm = false;
     }
 }
+
+void Fragment::ResetPlanetBody( void )
+{
+    m_planetbody->Reset();
+}

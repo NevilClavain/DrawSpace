@@ -28,7 +28,8 @@ using namespace DrawSpace::SphericalLOD;
 
 SubPass::SubPass( void ) :
 m_subpass( NULL ),
-m_subpass_node( NULL )
+m_subpass_node( NULL ),
+m_timer_ready_flag( false )
 {
 }
 
@@ -71,4 +72,14 @@ void SubPass::remove_entry_from_queue( const EntryInfos& p_entryInfos )
             break;
     
     }
+}
+
+void SubPass::SetTimerReadyFlag( bool p_flag )
+{
+    m_timer_ready_flag = p_flag;
+}
+
+bool SubPass::GetTimerReadyFlag( void )
+{
+    return m_timer_ready_flag;
 }

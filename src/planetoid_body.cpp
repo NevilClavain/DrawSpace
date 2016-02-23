@@ -321,10 +321,18 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
 
 void DrawSpace::Planetoid::Body::on_timer( DrawSpace::Utils::Timer* p_timer )
 {
+    /*
     DrawSpace::SphericalLOD::SubPass* sp = pop_next_subpass();
     if( sp )
     {
         m_singleshot_subpasses.push_back( sp );
+    }
+    */
+
+    if( m_singleshot_subpasses_stack.size() > 0 )
+    {
+        DrawSpace::SphericalLOD::SubPass* pass = m_singleshot_subpasses_stack.back();
+        pass->SetTimerReadyFlag( true );
     }
 }
 
@@ -383,7 +391,8 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
                 detach_body( it->second.body );                
                 bodyfragment->RemoveColliderFromWorld();
-                bodyfragment->SetHotState( false );                
+                bodyfragment->SetHotState( false );
+                bodyfragment->ResetPlanetBody();
 
                 //////
             }
@@ -628,6 +637,18 @@ DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetSingleNodeFromPas
 
 void DrawSpace::Planetoid::Body::DrawSubPasses( void )
 {
+    if( m_singleshot_subpasses_stack.size() > 0 )
+    {
+        DrawSpace::SphericalLOD::SubPass* sp = m_singleshot_subpasses_stack.back();
+        
+        if( sp->GetTimerReadyFlag() )
+        {
+            m_singleshot_subpasses_stack.pop_back();
+            sp->DrawSubPass();
+            sp->SubPassDone();
+        }
+    }
+
     for( size_t i = 0; i < m_singleshot_subpasses.size(); i++ )
     {
         SphericalLOD::SubPass* sp = m_singleshot_subpasses[i];        
@@ -698,20 +719,6 @@ DrawSpace::SphericalLOD::SubPass::EntryInfos DrawSpace::Planetoid::Body::on_subp
     
 
     return ei;    
-}
-
-DrawSpace::SphericalLOD::SubPass* DrawSpace::Planetoid::Body::pop_next_subpass( void )
-{
-    if( 0 == m_singleshot_subpasses_stack.size() )
-    {
-        return NULL;
-    }
-    else
-    {
-        DrawSpace::SphericalLOD::SubPass* pass = m_singleshot_subpasses_stack.back();
-        m_singleshot_subpasses_stack.pop_back();
-        return pass;  
-    }
 }
 
 int DrawSpace::Planetoid::Body::GetSingleShotSubPassesStackSize()
