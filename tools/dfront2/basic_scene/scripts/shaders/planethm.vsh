@@ -72,6 +72,7 @@ struct VS_OUTPUT
 };
 
 #include "fbm.hlsl"
+#include "multifbm_height.hlsl"
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -135,52 +136,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position2.x = xtemp * sqrt( 1.0 - ytemp * ytemp * 0.5 - ztemp * ztemp * 0.5 + ytemp * ytemp * ztemp * ztemp / 3.0 );
 	v_position2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
 	v_position2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
+
+	float res = ComputeVertexHeight( v_position2 );
       
-
-	float res;
-
-	
-	double3 f2;
-	f2[0] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.x / 2.0 ) + 0.5 );
-	f2[1] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.y / 2.0 ) + 0.5 );
-	f2[2] = lerp( -fbm_params3.y, fbm_params3.y, ( v_position2.z / 2.0 ) + 0.5 );
-
-	float fbm2 = Fractal_fBm( f2, 7, fbm_params3.x, fbm_params4.z, 0.0, fbm_params4.x, fbm_params4.y );
-	if( fbm2 < 0.0 )
-	{
-		fbm2 = 0.0;
-	}
-
-	
-
-	
-	double3 f3;
-	f3[0] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.x / 2.0 ) + 0.5 );
-	f3[1] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.y / 2.0 ) + 0.5 );
-	f3[2] = lerp( -fbm_params5.y, fbm_params5.y, ( v_position2.z / 2.0 ) + 0.5 );
-
-	float fbm3 = Fractal_fBm( f3, 7, fbm_params5.x, fbm_params6.z, 1.0, fbm_params6.x, fbm_params6.y );
-	
-	double3 f;
-	f[0] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.x / 2.0 ) + 0.5 );
-	f[1] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.y / 2.0 ) + 0.5 );
-	f[2] = lerp( -fbm_params.y, fbm_params.y, ( v_position2.z / 2.0 ) + 0.5 );
-
-	float pn = SimplexPerlin3D( f, fbm_params2.x, fbm_params2.y );
-
-	
-
-
-	float pn2 = 9.0 * ( ( 0.5 * pn ) + 0.5 );
-	float weight = exp( pn2 ) / 1000.0;
-	
-
-	double hl = clamp( fbm3, 0.0, 1.0 );
-	res = lerp( fbm3 * fbm_params5.w, fbm3 * fbm_params5.w + fbm2 * fbm_params3.w, hl * weight );
-	res += fbm_params.z;
-
-
-
 	
 	Output.TexCoord1 = 0.0;
 	Output.TexCoord1.x = res;
