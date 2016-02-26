@@ -75,7 +75,7 @@ struct VS_OUTPUT
 };
 
 #include "fbm.hlsl"
-#include "multifbm_height.hlsl"
+#include "map_height.hlsl"
 
 
 VS_OUTPUT vs_main( VS_INPUT Input )

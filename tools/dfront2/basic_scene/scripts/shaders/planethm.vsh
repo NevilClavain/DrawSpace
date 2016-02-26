@@ -48,16 +48,6 @@ float4 fbm_params6: register(c32);
 
 
 
-sampler2D TextureBuffer : register(s0);
-sampler2D TextureMap : register(s1);
-
-sampler2D TextureBuffer1 : register(s2);
-sampler2D TextureMap1 : register(s3);
-
-sampler2D TextureBuffer2 : register(s4);
-sampler2D TextureMap2 : register(s5);
-
-
 struct VS_INPUT 
 {
    float4 Position : POSITION0;

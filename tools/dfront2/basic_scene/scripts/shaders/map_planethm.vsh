@@ -1,7 +1,5 @@
 
 float4x4 matWorldViewProjection: register(c0);
-float4x4 matWorldView: register(c4);
-
 float4   flag0:				register(c24);
 
 	// .x -> patch orientation enum integer
@@ -24,8 +22,6 @@ float4 fbm_params: register(c27);
 float4 fbm_params2: register(c28);
 	// .x -> seed1
 	// .y -> seed2
-
-
 
 float4 fbm_params3: register(c29);
 	// .x -> lacunarity
@@ -51,10 +47,11 @@ float4 fbm_params6: register(c32);
 	// .z -> roughness
 
 
+
 struct VS_INPUT 
 {
    float4 Position : POSITION0;
-   float4 TexCoord0: TEXCOORD0; 
+   float4 TexCoord0: TEXCOORD0;
 };
 
 struct VS_OUTPUT 
@@ -65,7 +62,7 @@ struct VS_OUTPUT
 };
 
 #include "fbm.hlsl"
-#include "multifbm_height.hlsl"
+#include "map_height.hlsl"
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -129,53 +126,17 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position2.x = xtemp * sqrt( 1.0 - ytemp * ytemp * 0.5 - ztemp * ztemp * 0.5 + ytemp * ytemp * ztemp * ztemp / 3.0 );
 	v_position2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
 	v_position2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
+
+	float res = ComputeVertexHeight( v_position2 );
       
-	// final scaling
-	float4 v_position3;	
-	v_position3 = v_position2 * flag0.z;	
-	v_position3.w = 1.0;
+	
+	Output.TexCoord1 = 0.0;
+	Output.TexCoord1.x = res;
 
 
-
-	float4 v_position4 = mul( v_position3, matWorldView );
-	float vertex_distance = sqrt( v_position4.x * v_position4.x + v_position4.y * v_position4.y + v_position4.z * v_position4.z );
-
-	float viewer_alt = flag0.w * flag0.z;
-	float horizon_limit = sqrt( viewer_alt * viewer_alt - flag0.z * flag0.z );
-
-	float v_alt = 0.0;
-
-	if( vertex_distance < 1.05 * horizon_limit )
-	{		
-		v_alt = ComputeVertexHeight( v_position2 );
-
-		if( v_alt >= 0.0 )
-		{
-			// seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
-			// les vertex "skirt" ont toujours une altitude de zero
-
-			if( Input.TexCoord0.z == 0.0 )
-			{
-				v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
-			}
-		}
-	}
-
-
-	v_position3.w = 1.0;
-
-	Output.Position = mul( v_position3, matWorldViewProjection );
+	Output.Position = mul( Input.Position, matWorldViewProjection );
 	
 	Output.TexCoord0 = 0.0;
-	Output.TexCoord0.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
-	Output.TexCoord0.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
-
-	Output.TexCoord0.z = v_alt;
-
-	// conserver aussi les coords textures originales du patch
-	Output.TexCoord1 = 0.0;
-	Output.TexCoord1.x = Input.TexCoord0.x;
-	Output.TexCoord1.y = Input.TexCoord0.y;
 
 			  
 	return( Output );   
