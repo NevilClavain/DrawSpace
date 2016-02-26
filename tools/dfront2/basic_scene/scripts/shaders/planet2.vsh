@@ -160,7 +160,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	{		
 		v_alt = ComputeVertexHeight( v_position2 );
 
-
 		if( v_alt >= 0.0 )
 		{
 			// seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
@@ -171,12 +170,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 				v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
 			}
 		}
-		else
-		{
-			// si alt < 0.0, les vertex "skirt" ont la meme altitude que les vertex "non skirt"
-
-			v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
-		}	
 	}
 
 
