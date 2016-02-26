@@ -62,7 +62,7 @@ struct VS_OUTPUT
 };
 
 #include "fbm.hlsl"
-#include "map_height.hlsl"
+//#include "map_height.hlsl"
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -127,7 +127,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
 	v_position2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
 
-	float res = ComputeVertexHeight( v_position2 );
+	float res = 558.0; //ComputeVertexHeight( v_position2 );
       
 	
 	Output.TexCoord1 = 0.0;

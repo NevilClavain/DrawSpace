@@ -65,7 +65,7 @@ struct VS_OUTPUT
 };
 
 #include "fbm.hlsl"
-#include "map_height.hlsl"
+//#include "map_height.hlsl"
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -147,7 +147,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	if( vertex_distance < 1.05 * horizon_limit )
 	{		
-		v_alt = ComputeVertexHeight( v_position2 );
+		v_alt = 558.0; //ComputeVertexHeight( v_position2 );
 
 		if( v_alt >= 0.0 )
 		{

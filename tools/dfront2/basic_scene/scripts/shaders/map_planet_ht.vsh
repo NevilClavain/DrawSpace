@@ -59,6 +59,7 @@ float4 thparams2: register(c34);
 	// .w -> k_tropical
 
 
+sampler2D TexturePlanetMap : register(s0);
 
 
 struct VS_INPUT 
@@ -159,7 +160,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float vertex_latitude = acos( h );
 
-	float res = ComputeVertexHeight( v_position2 );
+	float res = ComputeVertexHeight( v_position2, Input.TexCoord0 );
 
 
 	Output.TexCoord1 = 0.0;
