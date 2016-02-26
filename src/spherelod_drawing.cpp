@@ -132,7 +132,7 @@ void FaceDrawingNode::SetBinder( DrawSpace::SphericalLOD::Binder* p_binder )
         Texture* vtexture = p_binder->GetVertexTexture( i );
         if( vtexture )
         {
-            SetVertexTexture( texture, i );
+            SetVertexTexture( vtexture, i );
         }
     }
 }
