@@ -159,15 +159,24 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	if( vertex_distance < 1.05 * horizon_limit )
 	{		
 		v_alt = ComputeVertexHeight( v_position2 );
-	
 
-		// seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
-		// les vertex "skirt" on toujours une altitude de zero
 
-		if( Input.TexCoord0.z == 0.0 )
+		if( v_alt >= 0.0 )
 		{
-			v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
+			// seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
+			// les vertex "skirt" ont toujours une altitude de zero
+
+			if( Input.TexCoord0.z == 0.0 )
+			{
+				v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
+			}
 		}
+		else
+		{
+			// si alt < 0.0, les vertex "skirt" ont la meme altitude que les vertex "non skirt"
+
+			v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
+		}	
 	}
 
 
