@@ -142,21 +142,33 @@ m_subpass_entry_infos_valid( false )
     {
         m_texture_referent = p_parent->m_texture_referent;
 
-        m_u1 = ( ui1 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
-        m_v1 = ( vi1 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+        m_global_ref_u1 = ( ui1 * ( p_parent->m_global_ref_u2 - p_parent->m_global_ref_u1 ) ) + p_parent->m_global_ref_u1;
+        m_global_ref_v1 = ( vi1 * ( p_parent->m_global_ref_v2 - p_parent->m_global_ref_v1 ) ) + p_parent->m_global_ref_v1;
 
-        m_u2 = ( ui2 * ( p_parent->m_u2 - p_parent->m_u1 ) ) + p_parent->m_u1;
-        m_v2 = ( vi2 * ( p_parent->m_v2 - p_parent->m_v1 ) ) + p_parent->m_v1;
+        m_global_ref_u2 = ( ui2 * ( p_parent->m_global_ref_u2 - p_parent->m_global_ref_u1 ) ) + p_parent->m_global_ref_u1;
+        m_global_ref_v2 = ( vi2 * ( p_parent->m_global_ref_v2 - p_parent->m_global_ref_v1 ) ) + p_parent->m_global_ref_v1;
+
+
+        m_global_u1 = ( ui1 * ( p_parent->m_global_u2 - p_parent->m_global_u1 ) ) + p_parent->m_global_u1;
+        m_global_v1 = ( vi1 * ( p_parent->m_global_v2 - p_parent->m_global_v1 ) ) + p_parent->m_global_v1;
+
+        m_global_u2 = ( ui2 * ( p_parent->m_global_u2 - p_parent->m_global_u1 ) ) + p_parent->m_global_u1;
+        m_global_v2 = ( vi2 * ( p_parent->m_global_v2 - p_parent->m_global_v1 ) ) + p_parent->m_global_v1;
 
     }
     else
     {
         m_texture_referent = this;
 
-        m_u1 = 0.0;
-        m_v1 = 0.0;
-        m_u2 = 1.0;
-        m_v2 = 1.0;
+        m_global_ref_u1 = 0.0;
+        m_global_ref_v1 = 0.0;
+        m_global_ref_u2 = 1.0;
+        m_global_ref_v2 = 1.0;
+
+        m_global_u1 = 0.0;
+        m_global_v1 = 0.0;
+        m_global_u2 = 1.0;
+        m_global_v2 = 1.0;
     }
 }
 
@@ -531,12 +543,20 @@ void Patch::ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Util
     p_out = v3;
 }
 
-void Patch::GetUVCoords( DrawSpace::Utils::Vector& p_uv )
+void Patch::GetGlobalRelUVCoords( DrawSpace::Utils::Vector& p_uv )
 {
-    p_uv[0] = m_u1;
-    p_uv[1] = m_v1;
-    p_uv[2] = m_u2;
-    p_uv[3] = m_v2;
+    p_uv[0] = m_global_ref_u1;
+    p_uv[1] = m_global_ref_v1;
+    p_uv[2] = m_global_ref_u2;
+    p_uv[3] = m_global_ref_v2;
+}
+
+void Patch::GetGlobalUVCoords( DrawSpace::Utils::Vector& p_uv )
+{
+    p_uv[0] = m_global_u1;
+    p_uv[1] = m_global_v1;
+    p_uv[2] = m_global_u2;
+    p_uv[3] = m_global_v2;
 }
 
 void Patch::GetNormalVector( int p_orientation, DrawSpace::Utils::Vector& p_vector )
@@ -656,10 +676,10 @@ void Patch::SubPassDone( void )
     if( m_parent )
     {
         m_texture_referent = this;
-        m_u1 = 0.0;
-        m_v1 = 0.0;
-        m_u2 = 1.0;
-        m_v2 = 1.0;
+        m_global_ref_u1 = 0.0;
+        m_global_ref_v1 = 0.0;
+        m_global_ref_u2 = 1.0;
+        m_global_ref_v2 = 1.0;
 
         if( m_owner->HasChildren() )
         {
@@ -722,11 +742,11 @@ void Patch::recurs_update_texture_referent( Patch* p_texture_referent )
     }
 
 
-    m_u1 = ( ui1 * ( m_parent->m_u2 - m_parent->m_u1 ) ) + m_parent->m_u1;
-    m_v1 = ( vi1 * ( m_parent->m_v2 - m_parent->m_v1 ) ) + m_parent->m_v1;
+    m_global_ref_u1 = ( ui1 * ( m_parent->m_global_ref_u2 - m_parent->m_global_ref_u1 ) ) + m_parent->m_global_ref_u1;
+    m_global_ref_v1 = ( vi1 * ( m_parent->m_global_ref_v2 - m_parent->m_global_ref_v1 ) ) + m_parent->m_global_ref_v1;
 
-    m_u2 = ( ui2 * ( m_parent->m_u2 - m_parent->m_u1 ) ) + m_parent->m_u1;
-    m_v2 = ( vi2 * ( m_parent->m_v2 - m_parent->m_v1 ) ) + m_parent->m_v1;
+    m_global_ref_u2 = ( ui2 * ( m_parent->m_global_ref_u2 - m_parent->m_global_ref_u1 ) ) + m_parent->m_global_ref_u1;
+    m_global_ref_v2 = ( vi2 * ( m_parent->m_global_ref_v2 - m_parent->m_global_ref_v1 ) ) + m_parent->m_global_ref_v1;
 
     if( m_owner->HasChildren() )
     {

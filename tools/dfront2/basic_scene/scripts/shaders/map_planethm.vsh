@@ -15,38 +15,42 @@ float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4 fbm_params: register(c27);
+float4   base_uv2: register(c27);
+	// .x, .y -> u1, v1
+	// .z, .w -> u2, v2
+
+float4 fbm_params: register(c30);
 	// .y -> fbm input half-range
 	// .z -> terrain vertical offset
 
-float4 fbm_params2: register(c28);
+float4 fbm_params2: register(c31);
 	// .x -> seed1
 	// .y -> seed2
 
-float4 fbm_params3: register(c29);
+float4 fbm_params3: register(c32);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
 	// .w -> amplitude
 
-float4 fbm_params4: register(c30);
+float4 fbm_params4: register(c33);
 	// .x -> seed1
 	// .y -> seed2
 	// .z -> roughness
 
 
-float4 fbm_params5: register(c31);
+float4 fbm_params5: register(c34);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
 	// .w -> amplitude
 
-float4 fbm_params6: register(c32);
+float4 fbm_params6: register(c35);
 	// .x -> seed1
 	// .y -> seed2
 	// .z -> roughness
 
-
+sampler2D TexturePlanetMap : register(s0);
 
 struct VS_INPUT 
 {
@@ -62,7 +66,7 @@ struct VS_OUTPUT
 };
 
 #include "fbm.hlsl"
-//#include "map_height.hlsl"
+#include "map_height.hlsl"
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -127,7 +131,12 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
 	v_position2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
 
-	float res = 558.0; //ComputeVertexHeight( v_position2 );
+
+	float4 global_uv = 0.0;
+	global_uv.x = lerp( base_uv2.x, base_uv2.z, Input.TexCoord0.x );
+	global_uv.y = lerp( base_uv2.y, base_uv2.w, Input.TexCoord0.y );
+
+	float res = ComputeVertexHeight( v_position2, global_uv );
       
 	
 	Output.TexCoord1 = 0.0;

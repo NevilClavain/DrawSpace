@@ -16,43 +16,43 @@ float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4 fbm_params: register(c27);
+float4 fbm_params: register(c30);
 	// .y -> fbm input half-range
 	// .z -> terrain vertical offset
 
-float4 fbm_params2: register(c28);
+float4 fbm_params2: register(c31);
 	// .x -> seed1
 	// .y -> seed2
 
-float4 fbm_params3: register(c29);
+float4 fbm_params3: register(c32);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .w -> amplitude
 
-float4 fbm_params4: register(c30);
+float4 fbm_params4: register(c33);
 	// .x -> seed1
 	// .y -> seed2
 	// .z -> roughness
 
 
-float4 fbm_params5: register(c31);
+float4 fbm_params5: register(c34);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .w -> amplitude
 
-float4 fbm_params6: register(c32);
+float4 fbm_params6: register(c35);
 	// .x -> seed1
 	// .y -> seed2
 	// .z -> roughness
 
 
-float4 thparams: register(c33);
+float4 thparams: register(c36);
 	// .x -> humidity_k
 	// .y -> humidity_base
 	// .z -> temperature_alt_dec : nbre de degres centigrades perdus par km
 	// .w -> beach_limit
 
-float4 thparams2: register(c34);
+float4 thparams2: register(c37);
 	// .x -> lim_polar
 	// .y -> lim_tropical
 	// .z -> k_polar

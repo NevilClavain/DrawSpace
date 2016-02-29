@@ -17,38 +17,45 @@ float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4 fbm_params: register(c27);
+float4   base_uv2: register(c27);
+	// .x, .y -> u1, v1
+	// .z, .w -> u2, v2
+
+float4 fbm_params: register(c30);
 	// .y -> fbm input half-range
 	// .z -> terrain vertical offset
 
-float4 fbm_params2: register(c28);
+float4 fbm_params2: register(c31);
 	// .x -> seed1
 	// .y -> seed2
 
 
 
-float4 fbm_params3: register(c29);
+float4 fbm_params3: register(c32);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
 	// .w -> amplitude
 
-float4 fbm_params4: register(c30);
+float4 fbm_params4: register(c33);
 	// .x -> seed1
 	// .y -> seed2
 	// .z -> roughness
 
 
-float4 fbm_params5: register(c31);
+float4 fbm_params5: register(c34);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
 	// .w -> amplitude
 
-float4 fbm_params6: register(c32);
+float4 fbm_params6: register(c35);
 	// .x -> seed1
 	// .y -> seed2
 	// .z -> roughness
+
+
+sampler2D TexturePlanetMap : register(s0);
 
 
 struct VS_INPUT 
@@ -65,7 +72,7 @@ struct VS_OUTPUT
 };
 
 #include "fbm.hlsl"
-//#include "map_height.hlsl"
+#include "map_height.hlsl"
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -146,8 +153,13 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float v_alt = 0.0;
 
 	if( vertex_distance < 1.05 * horizon_limit )
-	{		
-		v_alt = 558.0; //ComputeVertexHeight( v_position2 );
+	{	
+	
+		float4 global_uv = 0.0;
+		global_uv.x = lerp( base_uv2.x, base_uv2.z, Input.TexCoord0.x );
+		global_uv.y = lerp( base_uv2.y, base_uv2.w, Input.TexCoord0.y );
+			
+		v_alt = ComputeVertexHeight( v_position2, global_uv );
 
 		if( v_alt >= 0.0 )
 		{

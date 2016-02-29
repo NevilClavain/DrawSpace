@@ -67,13 +67,18 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     patch_pos[2] = 0.0;
 
 
-    Vector uvcoords;
-    p_patch->GetUVCoords( uvcoords );
+    Vector globalrel_uvcoords;
+    p_patch->GetGlobalRelUVCoords( globalrel_uvcoords );
+
+    Vector global_uvcoords;
+    p_patch->GetGlobalUVCoords( global_uvcoords );
+
 
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
-    m_renderer->SetFxShaderParams( 0, 26, uvcoords );
+    m_renderer->SetFxShaderParams( 0, 26, globalrel_uvcoords );
+    m_renderer->SetFxShaderParams( 0, 27, global_uvcoords );
 
     Vector pixels_flags;
     pixels_flags[0] = p_rel_alt;

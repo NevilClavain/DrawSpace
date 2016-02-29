@@ -15,33 +15,33 @@ float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4 fbm_params: register(c27);
+float4 fbm_params: register(c30);
 	// .y -> fbm input half-range
 	// .z -> terrain vertical offset
 
-float4 fbm_params2: register(c28);
+float4 fbm_params2: register(c31);
 	// .x -> seed1
 	// .y -> seed2
 
-float4 fbm_params3: register(c29);
+float4 fbm_params3: register(c32);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
 	// .w -> amplitude
 
-float4 fbm_params4: register(c30);
+float4 fbm_params4: register(c33);
 	// .x -> seed1
 	// .y -> seed2
 	// .z -> roughness
 
 
-float4 fbm_params5: register(c31);
+float4 fbm_params5: register(c34);
 	// .x -> lacunarity
 	// .y -> fbm input half-range
 	// .z -> fbm clamp
 	// .w -> amplitude
 
-float4 fbm_params6: register(c32);
+float4 fbm_params6: register(c35);
 	// .x -> seed1
 	// .y -> seed2
 	// .z -> roughness

@@ -71,10 +71,16 @@ protected:
     dsreal                                  m_ypos;
     dsreal                                  m_ray;
 
-    dsreal                                  m_u1;
-    dsreal                                  m_v1;
-    dsreal                                  m_u2;
-    dsreal                                  m_v2;
+    dsreal                                  m_global_ref_u1;
+    dsreal                                  m_global_ref_v1;
+    dsreal                                  m_global_ref_u2;
+    dsreal                                  m_global_ref_v2;
+
+    dsreal                                  m_global_u1;
+    dsreal                                  m_global_v1;
+    dsreal                                  m_global_u2;
+    dsreal                                  m_global_v2;
+
 
     int                                     m_orientation;
 
@@ -126,7 +132,8 @@ public:
 
     void ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
 
-    void GetUVCoords( DrawSpace::Utils::Vector& p_uv );
+    void GetGlobalRelUVCoords( DrawSpace::Utils::Vector& p_uv );
+    void GetGlobalUVCoords( DrawSpace::Utils::Vector& p_uv );
 
     bool IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
 
