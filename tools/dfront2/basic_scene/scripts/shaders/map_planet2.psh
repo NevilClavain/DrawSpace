@@ -181,36 +181,36 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
-	//float lim_sup = 1.055;
-	//float lim_inf = 1.0040;
 
 	float lim_sup = flags2.y;
 	float lim_inf = flags2.z;
 
 
+	
 	bool sea = false;
-
+	
 	if( flags.x <= lim_inf )
 	{
 		// si altitude relative a un certain seuil
 
 		// regarder l'altitude vertex interpole pour determiner si rendu mer
-		if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
+		if( input.TexCoord0.z <= 1.0 ) // altitude vertex (interpolee)
 		{
 			sea = true;
 		}
 	}
 	else
 	{
+	
 		// si altitude relative > 1.5
 
 		// regarder texture donnees temperature/humidite pour determiner si rendu mer
-		if( temp_humidity.z > 0.0 )
+		if( temp_humidity.z == 1.0 )
 		{
 			sea = true;
 		}
 	}
-
+	
 
 	if( flags.x > 0.0 && flags.x <= lim_inf )
 	{			
@@ -249,6 +249,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 			final_color = tex2D( Texture1, temp_humidity );
 		}
 	}
-
+	
+	
 	return final_color;	
 }

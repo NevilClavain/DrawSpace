@@ -1,4 +1,6 @@
 
+
+
 float ComputeVertexHeight( float4 p_vpos, float4 p_uv )
 {
 	float res;
@@ -14,8 +16,8 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv )
 
 	float fbm3 = Fractal_fBm( f3, 7, fbm_params5.x, fbm_params6.z, 1.0, fbm_params6.x, fbm_params6.y );
 
-    //fbm3 += clamp( fbm3 + 0.75, -1.0, 1.0 );
 
+    
     ///////////////////////////////////////////////////////////////////////////////
 	double3 f4;
 	f4[0] = lerp( -fbm_params5.y, fbm_params5.y, n_vpos_z );
@@ -25,18 +27,18 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv )
 	float fbm4 = Fractal_fBm( f4, 7, fbm_params5.x, fbm_params6.z, 1.0, fbm_params6.x, fbm_params6.y ); 
     float4 uv_mod = 0.0;
 
-    uv_mod.x = p_uv.x + ( fbm4 * 0.02 );
-    uv_mod.y = p_uv.y + ( fbm3 * 0.02 );
-
+    uv_mod.x = p_uv.x + ( fbm4 * 0.03 );
+    uv_mod.y = p_uv.y + ( fbm3 * 0.03 );
+    
     float4 color = tex2Dlod( TexturePlanetMap, uv_mod );
     ////////////////////////////////////////////////////////////////////////////////////////
-    res = fbm_params5.w * color;
 
+    //res = ( fbm_params5.w * fbm3 );
 
+    res = ( fbm_params5.w * color );
 
-    //res = fbm3 * fbm_params5.w;
-
-
+    //res = lerp( 0.0, ( fbm_params5.w * fbm3 ), color );
+       
     return res;
 }
 
