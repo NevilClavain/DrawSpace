@@ -1576,6 +1576,36 @@ void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
             }
             break;
 
+
+        case DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE:
+            {
+                D3DTEXTUREFILTERTYPE ftype;
+
+                if( "none" == arg )
+                {
+                    ftype = D3DTEXF_NONE;
+                }
+                else if( "point" == arg )
+                {
+                    ftype = D3DTEXF_POINT;
+                }
+                else if( "linear" == arg )
+                {
+                    ftype = D3DTEXF_LINEAR;
+                }
+                else if( "anisotropic" == arg )
+                {
+                    ftype = D3DTEXF_ANISOTROPIC;
+                }
+
+                for( long i = 0; i < 8; i++ )
+                {
+                    m_lpd3ddevice->SetSamplerState( i + D3DVERTEXTEXTURESAMPLER0, D3DSAMP_MAGFILTER, ftype );
+                    m_lpd3ddevice->SetSamplerState( i + D3DVERTEXTEXTURESAMPLER0, D3DSAMP_MINFILTER, ftype );
+                }
+            }
+            break;
+
         case DrawSpace::Core::RenderState::SETFILLMODE:
             {
                 D3DFILLMODE fm;
