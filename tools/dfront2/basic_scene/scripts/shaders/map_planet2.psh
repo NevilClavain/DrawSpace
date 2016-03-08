@@ -14,6 +14,7 @@ struct PS_INTPUT
 	float4 Position : POSITION0;
 	float4 TexCoord0: TEXCOORD0;
 	float4 TexCoord1: TEXCOORD1;
+	float4 TexCoord2: TEXCOORD2;
 };
 
 float2 compute_sampling_params( float p_param, float p_interval )
@@ -194,7 +195,10 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		// si altitude relative a un certain seuil
 
 		// regarder l'altitude vertex interpole pour determiner si rendu mer
-		if( input.TexCoord0.z <= 1.0 ) // altitude vertex (interpolee)
+
+		float alt_lim = 100.0;
+		
+		if( input.TexCoord0.z <= alt_lim ) // altitude vertex (interpolee)
 		{
 			sea = true;
 		}

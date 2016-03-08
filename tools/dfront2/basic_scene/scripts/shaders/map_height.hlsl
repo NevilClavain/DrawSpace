@@ -33,8 +33,8 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv )
     /////////////////////////////////////////////////////////////////////////////// 
     float4 uv_mod = 0.0;
 
-    uv_mod.x = p_uv.x + ( fbm3 * 0.015 );
-    uv_mod.y = p_uv.y + ( -fbm3 * 0.015 );
+    uv_mod.x = p_uv.x + ( fbm3 * 0.025 );
+    uv_mod.y = p_uv.y + ( -fbm3 * 0.025 );
     
     float4 color = tex2Dlod( TexturePlanetMap, uv_mod );
     ////////////////////////////////////////////////////////////////////////////////////////

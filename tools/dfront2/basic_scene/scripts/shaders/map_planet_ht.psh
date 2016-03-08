@@ -21,7 +21,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	color.x = color_temp;
 	color.y = color_humidity;
 
-	if( point_alt <= 0.0 )
+	if( point_alt <= 100.0 )
 	{
 		color.z = 1.0;	
 	}
