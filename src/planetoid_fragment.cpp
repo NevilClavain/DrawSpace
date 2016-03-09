@@ -49,15 +49,20 @@ m_nb_collisionmeshebuild_done( 0 ),
 m_current_patch( NULL ),
 m_current_patch_lod( -1 ),
 //m_collidinghm_subpassindex( -1 ),
-m_collidingheightmap_texture( NULL ),
-m_collidingheightmap_content( NULL ),
-m_draw_collidinghm( false )
+//m_collidingheightmap_texture( NULL ),
+//m_collidingheightmap_content( NULL ),
+m_draw_collidinghm( false ),
+m_handler( p_handler )
 {
     if( m_collisions )
     {
         m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );
         m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
 
+        m_collisions_hm = _DRAWSPACE_NEW_( Collisions, Collisions( this, p_config ) );
+        m_collisions_hm->Disable();
+
+        /*
         m_collidingheightmap_pass = create_colliding_heightmap_pass();
 
         // creation/preparation du node
@@ -92,6 +97,7 @@ m_draw_collidinghm( false )
             m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
             m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
         }
+        */
     }
     p_planetbody->Initialize();
 }
@@ -100,11 +106,32 @@ Fragment::~Fragment( void )
 {    
 }
 
+Fragment::SubPassCreationHandler* Fragment::GetSubPassCreationHandler( void )
+{
+    return m_handler;
+}
+
 void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod )
 {
     m_current_patch = p_patch;
     m_current_patch_lod = p_patch_lod;
 
+    if( m_collisions )
+    {
+        std::vector<DrawSpace::SphericalLOD::Patch*> display_list;
+        if( m_current_patch && m_current_patch_lod == 0 )
+        {
+            display_list.push_back( m_current_patch );
+
+            m_draw_collidinghm = true;
+            m_collisions_hm->Enable();
+
+            DrawSpace::SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( m_collisions_hm->GetNode() );
+            node->SetDisplayList( display_list );
+        }
+    }
+
+    /*
     if( m_collisions && m_subpass_node )
     {
         std::vector<DrawSpace::SphericalLOD::Patch*> display_list;
@@ -118,6 +145,7 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
             node->SetDisplayList( display_list );
         }
     }
+    */
 }
 
 void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap )
@@ -282,7 +310,7 @@ DrawSpace::IntermediatePass* Fragment::create_colliding_heightmap_pass( void )
 
     return ipass;
 }
-
+/*
 void Fragment::DrawSubPass( void )
 {
     if( m_draw_collidinghm )
@@ -290,7 +318,8 @@ void Fragment::DrawSubPass( void )
         SubPass::DrawSubPass();
     }
 }
-
+*/
+/*
 void Fragment::SubPassDone( void )
 {
     if( m_draw_collidinghm )
@@ -319,6 +348,40 @@ void Fragment::SubPassDone( void )
         m_nb_collisionmeshebuild_done++;
 
         m_draw_collidinghm = false;
+    }
+}
+*/
+void Fragment::SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider )
+{
+    if( m_draw_collidinghm )
+    {        
+        m_collisions_hm->GetHMTexture()->CopyTextureContent();
+
+        float* heightmap = (float*)m_collisions_hm->GetHMTextureContent();;
+
+        Meshe final_meshe;
+        build_meshe( *( m_planetbody->GetPatcheMeshe() ), m_current_patch, final_meshe, heightmap );
+
+        Dynamics::InertBody::Body::Parameters params;
+
+        params.mass = 0.0;
+
+        params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
+
+        params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
+        params.shape_descr.meshe = final_meshe;
+
+        RemoveColliderFromWorld();
+
+        m_collider->SetKinematic( params );
+        m_collider->AddToWorld( m_world );
+
+        m_collision_state = true;
+        m_nb_collisionmeshebuild_done++;
+
+        m_draw_collidinghm = false;
+
+        m_collisions_hm->Disable();
     }
 }
 

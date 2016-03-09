@@ -24,7 +24,8 @@
 #define _PLANETOID_FRAGMENT_H_
 
 #include "spherelod_drawing.h"
-#include "spherelod_subpass.h"
+#include "spherelod_collisions.h"
+//#include "spherelod_subpass.h"
 #include "orbiter.h"
 #include "collider.h"
 #include "camerapoint.h"
@@ -41,12 +42,12 @@ namespace Planetoid
 
 class Body;
 
-class Fragment : public DrawSpace::SphericalLOD::SubPass
+class Fragment // : public DrawSpace::SphericalLOD::SubPass
 {
-protected:
-    
+public:    
     typedef DrawSpace::Core::BaseCallback2<DrawSpace::SphericalLOD::SubPass::EntryInfos, DrawSpace::SphericalLOD::SubPass*, int>                SubPassCreationHandler;
 
+protected:
     typedef DrawSpace::Core::CallBack2<Fragment, void, DrawSpace::SphericalLOD::Patch*, int>                                                    PatchUpdateCb;
 
     typedef DrawSpace::Core::CallBack<Fragment, void, DrawSpace::Core::PropertyPool*>                                                           RunnerMsgCb;
@@ -82,11 +83,15 @@ protected:
 
     bool                                                        m_draw_collidinghm;
 
+    /*
     DrawSpace::Core::Texture*                                   m_collidingheightmap_texture;
     void*                                                       m_collidingheightmap_content;
-
     DrawSpace::IntermediatePass*                                m_collidingheightmap_pass;
+    */
 
+    DrawSpace::SphericalLOD::Collisions*                        m_collisions_hm;
+
+    Fragment::SubPassCreationHandler*                           m_handler;
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
     
@@ -122,8 +127,14 @@ public:
 
     void ResetPlanetBody( void );
 
-    virtual void DrawSubPass( void );
-    virtual void SubPassDone( void );
+    Fragment::SubPassCreationHandler* GetSubPassCreationHandler( void );
+
+    //virtual void DrawSubPass( void );
+
+
+    //virtual void SubPassDone( void );
+
+    virtual void SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider );
 };
 
 }
