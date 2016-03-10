@@ -83,13 +83,11 @@ protected:
 
     bool                                                        m_draw_collidinghm;
 
-    /*
-    DrawSpace::Core::Texture*                                   m_collidingheightmap_texture;
-    void*                                                       m_collidingheightmap_content;
-    DrawSpace::IntermediatePass*                                m_collidingheightmap_pass;
-    */
+    //DrawSpace::SphericalLOD::Collisions*                        m_collisions_hm;
 
-    DrawSpace::SphericalLOD::Collisions*                        m_collisions_hm;
+
+    DrawSpace::SphericalLOD::Collisions*                        m_collisions_hms[6];
+    DrawSpace::SphericalLOD::Collisions*                        m_current_collisions_hm;
 
     Fragment::SubPassCreationHandler*                           m_handler;
 

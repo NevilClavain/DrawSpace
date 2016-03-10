@@ -107,7 +107,10 @@ void Collisions::DrawSubPass( void )
 
 void Collisions::SubPassDone( void )
 {
-    m_fragment->SubPassDone( this );
+    if( m_enable )
+    {
+        m_fragment->SubPassDone( this );
+    }
 }
 
 void Collisions::Enable( void )
