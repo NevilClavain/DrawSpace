@@ -28,7 +28,7 @@ using namespace DrawSpace::SphericalLOD;
 using namespace DrawSpace::Core;
 
 
-Collisions::Collisions( DrawSpace::Planetoid::Fragment* p_owner, DrawSpace::SphericalLOD::Config* p_config ) :
+Collisions::Collisions( DrawSpace::Planetoid::Fragment* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation ) :
 m_fragment( p_owner ),
 m_collidingheightmap_texture( NULL ),
 m_collidingheightmap_content( NULL ),
@@ -43,7 +43,7 @@ m_enable( true )
                 
     node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
 
-    node->SetBinder( p_config->m_groundCollisionsBinder );
+    node->SetBinder( p_config->m_groundCollisionsBinder[p_orientation] );
 
     void* tx_data;
     if( false == renderer->CreateTexture( m_collidingheightmap_pass->GetTargetTexture(), &tx_data ) )

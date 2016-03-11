@@ -53,7 +53,7 @@ protected:
 
 public:
 
-    Collisions( DrawSpace::Planetoid::Fragment* p_owner, DrawSpace::SphericalLOD::Config* p_config );
+    Collisions( DrawSpace::Planetoid::Fragment* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation );
     virtual ~Collisions( void );
 
     virtual void DrawSubPass( void );

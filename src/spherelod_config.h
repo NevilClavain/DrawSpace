@@ -35,8 +35,8 @@ class Config
 public:
     double          m_lod0base;
 
-    Binder*         m_groundCollisionsBinder;
-    Binder*         m_patchTexturesBinder;
+    Binder*         m_groundCollisionsBinder[6];
+    Binder*         m_patchTexturesBinder[6];
 
     Config( void );
     ~Config( void );

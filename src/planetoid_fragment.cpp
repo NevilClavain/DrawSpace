@@ -60,14 +60,9 @@ m_current_collisions_hm( NULL )
         m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );
         m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
 
-        /*
-        m_collisions_hm = _DRAWSPACE_NEW_( Collisions, Collisions( this, p_config ) );
-        m_collisions_hm->Disable();
-        */
-
         for( int i = 0; i < 6; i++ )
         {
-            m_collisions_hms[i] = _DRAWSPACE_NEW_( Collisions, Collisions( this, p_config ) );
+            m_collisions_hms[i] = _DRAWSPACE_NEW_( Collisions, Collisions( this, p_config, i ) );
             m_collisions_hms[i]->Disable();        
         }
 
