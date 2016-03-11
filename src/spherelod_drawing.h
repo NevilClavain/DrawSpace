@@ -83,9 +83,8 @@ class Drawing
 {
 protected:
 
-    typedef std::map<FaceDrawingNode*, int>                     NodesSet;
-
-    typedef DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*> RenderingNodeDrawCallback;
+    typedef std::map<FaceDrawingNode*, int>                                             NodesSet;
+    typedef DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*>   RenderingNodeDrawCallback;
 
     Body*                                                                       m_planetbody;
 
@@ -119,7 +118,8 @@ public:
 
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    virtual void RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder );
+    //virtual void RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder );
+    virtual void RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation );
 
 
     DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );

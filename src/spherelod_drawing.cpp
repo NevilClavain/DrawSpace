@@ -244,7 +244,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, rel_alt, world, view, proj );   
     node_binder->Unbind();
 }
-
+/*
 void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder )
 {
     for( long i = 0; i < 6; i++ )
@@ -261,6 +261,23 @@ void Drawing::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_
         node->SetBinder( p_binder );
     }
 }
+*/
+
+
+void Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation )
+{
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config ) );
+    node->SetMeshe( Body::m_planetpatch_skirt_meshe );
+        
+    RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
+    node->RegisterHandler( cb );
+      
+    m_passesnodes[p_pass][node] = p_orientation;
+    m_nodes[node] = p_orientation;
+
+    node->SetBinder( p_binder );
+}
+
 
 /*
 void Drawing::SetSinglePassSlot( Pass* p_pass, SphericalLOD::FaceDrawingNode* p_node )

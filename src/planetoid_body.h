@@ -149,7 +149,8 @@ public:
     void                                GetSceneName( dsstring& p_name );    
     void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
 
-    void                                RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder );
+    //void                                RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder );
+    void                                RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation );
 
     DrawSpace::Core::RenderingNode*     GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
     //DrawSpace::Core::RenderingNode*     GetSingleNodeFromPass( Pass* p_pass );

@@ -532,10 +532,16 @@ void DrawSpace::Planetoid::Body::GetSceneName( dsstring& p_name )
 {
     p_name = m_scenename;
 }
-
+/*
 void DrawSpace::Planetoid::Body::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder )
 {
     m_drawable->RegisterPlanetBodyPassSlot( p_pass, p_binder );
+}
+*/
+
+void DrawSpace::Planetoid::Body::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation )
+{
+    m_drawable->RegisterSinglePlanetBodyPassSlot( p_pass, p_binder, p_orientation );
 }
 
 
