@@ -32,8 +32,8 @@
 #include "pass.h"
 
 #define NB_LOD_RANGES           16
-#define PATCH_RESOLUTION        13//11
-#define PATCH_HIGH_RESOLUTION   256
+#define PATCH_RESOLUTION        15//13//11
+#define PATCH_HIGH_RESOLUTION   128//256
 
 namespace DrawSpace
 {
