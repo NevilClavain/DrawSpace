@@ -645,6 +645,8 @@ DrawSpace::IntermediatePass* Patch::create_color_texture_pass( void )
     //ipass->SetTargetDims( 128, 128 );
 
     ipass->SetTargetDims( PATCH_HIGH_RESOLUTION, PATCH_HIGH_RESOLUTION );
+
+    ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOATVECTOR );
     
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( false );

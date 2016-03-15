@@ -783,7 +783,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         p_texture->GetRenderTargetDims( rw, rh );
 
         D3DFORMAT format; 
-
+        /*
         if( Texture::RENDERPURPOSE_COLOR == p_texture->GetRenderPurpose() )
         {
             format = D3DFMT_A8R8G8B8;
@@ -798,6 +798,30 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
             {
                 format = D3DFMT_R32F;
             }
+        }
+        */
+        switch( p_texture->GetRenderPurpose() )
+        {
+            case Texture::RENDERPURPOSE_COLOR:
+
+                format = D3DFMT_A8R8G8B8;
+                break;
+
+            case Texture::RENDERPURPOSE_FLOAT:
+
+                format = D3DFMT_R16F;
+                break;
+
+            case Texture::RENDERPURPOSE_FLOAT32:
+
+                format = D3DFMT_R32F;
+                break;
+
+            case Texture::RENDERPURPOSE_FLOATVECTOR:
+
+                format = D3DFMT_A16B16G16R16F;
+                break;
+        
         }
 
         hRes = m_lpd3ddevice->CreateTexture( rw, rh, 1, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &d3dt9, NULL );
@@ -905,7 +929,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 }
                 break;
 
-            case Texture::PURPOSE_FLOATVECTOR:
+            case Texture::PURPOSE_FLOAT32VECTOR:
 
                 long w, h, bpp;
                 p_texture->GetFormat( w, h, bpp );
@@ -956,6 +980,11 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 
         case D3DFMT_A32B32G32R32F:
             bpp = 16;
+            break;
+
+        case D3DFMT_A16B16G16R16F:
+
+            bpp = 8;
             break;
 
         default:

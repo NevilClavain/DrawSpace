@@ -43,6 +43,7 @@ public:
         RENDERPURPOSE_COLOR,
         RENDERPURPOSE_FLOAT,
         RENDERPURPOSE_FLOAT32,
+        RENDERPURPOSE_FLOATVECTOR,
 
     } RenderPurpose;
 
@@ -51,7 +52,7 @@ public:
         PURPOSE_COLORFROMFILE,
         PURPOSE_COLOR,
         PURPOSE_FLOAT,
-        PURPOSE_FLOATVECTOR,
+        PURPOSE_FLOAT32VECTOR,
 
     } Purpose;
 

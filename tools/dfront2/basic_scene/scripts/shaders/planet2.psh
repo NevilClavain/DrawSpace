@@ -181,8 +181,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
-	//float lim_sup = 1.055;
-	//float lim_inf = 1.0040;
+
 
 	float lim_sup = flags2.y;
 	float lim_inf = flags2.z;
