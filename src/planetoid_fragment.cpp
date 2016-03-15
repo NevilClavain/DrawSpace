@@ -255,25 +255,6 @@ int Fragment::GetCurrentPatchLOD( void )
     return m_current_patch_lod;
 }
 
-DrawSpace::IntermediatePass* Fragment::create_colliding_heightmap_pass( void )
-{
-    char thisname[32];
-    sprintf( thisname, "fragment_%x", this );
-
-    dsstring complete_name = dsstring( thisname ) + dsstring( "_collisionheightmap_pass" );
-    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
-
-    ipass->SetTargetDimsFromRenderer( false );    
-    ipass->SetTargetDims( PATCH_RESOLUTION, PATCH_RESOLUTION );
-    ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOAT32 );
-
-    ipass->Initialize();
-    ipass->GetRenderingQueue()->EnableDepthClearing( true );
-    ipass->GetRenderingQueue()->EnableTargetClearing( true );
-    ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
-
-    return ipass;
-}
 
 void Fragment::SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider )
 {
