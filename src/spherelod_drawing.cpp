@@ -82,6 +82,8 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 
     Vector pixels_flags;
     pixels_flags[0] = p_rel_alt;
+    pixels_flags[1] = p_patch->GetUnitSideLenght();
+    pixels_flags[2] = p_ray;
 
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
 

@@ -62,6 +62,7 @@ struct VS_OUTPUT
    float4 Position : POSITION0;
    float4 TexCoord0: TEXCOORD0;
    float4 TexCoord1: TEXCOORD1;
+   float4 TexCoord2: TEXCOORD2;
 };
 
 #include "fbm.hlsl"
@@ -177,6 +178,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.TexCoord1.x = Input.TexCoord0.x;
 	Output.TexCoord1.y = Input.TexCoord0.y;
 
+	Output.TexCoord2 = normalize( v_position3 );
+			
 			  
 	return( Output );   
 }

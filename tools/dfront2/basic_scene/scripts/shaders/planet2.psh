@@ -1,5 +1,9 @@
 
 float4 flags : register(c0);
+	// .x -> relative altitude
+	// .y -> patch sidelenght
+	// .z -> planet ray
+
 float4 flags2 : register(c1);
 	// .x -> resol atlas textures splatting
 	// .y -> transition texture globale/texture splatting : borne sup
@@ -11,9 +15,10 @@ sampler2D Texture2 : register(s2);
 
 struct PS_INTPUT
 {
-	float4 Position : POSITION0;
+	
 	float4 TexCoord0: TEXCOORD0;
 	float4 TexCoord1: TEXCOORD1;
+	float4 TexCoord2: TEXCOORD2;
 };
 
 float2 compute_sampling_params( float p_param, float p_interval )
@@ -182,6 +187,78 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
 
+	float texel_size = 1.0 / 128.0;
+
+	float2 left_coords = input.TexCoord0;
+	left_coords.x -= texel_size;
+
+	float2 right_coords = input.TexCoord0;
+	right_coords.x += texel_size;
+
+	float2 up_coords = input.TexCoord0;
+	up_coords.y -= texel_size;
+
+	float2 down_coords = input.TexCoord0;
+	down_coords.y += texel_size;
+
+	float4 temp_humidity_left = tex2D( Texture0, left_coords );
+	float4 temp_humidity_right = tex2D( Texture0, right_coords );
+	float4 temp_humidity_up = tex2D( Texture0, up_coords );
+	float4 temp_humidity_down = tex2D( Texture0, down_coords );
+
+
+
+	float point_alt_center = temp_humidity.w;
+
+	float point_alt_left = temp_humidity_left.w;
+	float point_alt_right = temp_humidity_right.w;
+	float point_alt_up = temp_humidity_up.w;
+	float point_alt_down = temp_humidity_down.w;
+
+	float real_texel_size = 60.0; // controle de "l'intensité" du relief bump mapping
+
+	float3 vec_left;
+	vec_left.x = -real_texel_size;
+	vec_left.y = 0.0;
+	vec_left.z = ( point_alt_left - point_alt_center );
+
+	float3 vec_right;
+	vec_right.x = real_texel_size;
+	vec_right.y = 0.0;
+	vec_right.z = ( point_alt_right - point_alt_center );
+
+	float3 vec_up;
+	vec_up.x = 0.0;
+	vec_up.y = -real_texel_size;
+	vec_up.z = ( point_alt_up - point_alt_center );
+
+	float3 vec_down;
+	vec_down.x = 0.0;
+	vec_down.y = real_texel_size;
+	vec_down.z = ( point_alt_down - point_alt_center );
+
+	
+	float3 vec1 = normalize( cross( vec_right, vec_down ) );
+	float3 vec2 = normalize( cross( vec_down, vec_left ) );
+	float3 vec3 = normalize( cross( vec_left, vec_up ) );
+	float3 vec4 = normalize( cross( vec_up, vec_right ) );
+
+	float3 avg = normalize( 0.25 * ( vec1 + vec2 + vec3 + vec4 ) );
+	
+	//final_color = avg.z;
+
+	/*
+	final_color.x = 0.5 * avg.x + 0.5;
+	final_color.y = 0.5 * avg.y + 0.5;
+	final_color.z = 0.5 * avg.z + 0.5;
+	*/
+
+
+
+	//final_color = ( 0.5 * input.TexCoord2 ) + 0.5; 
+
+	
+	
 
 	float lim_sup = flags2.y;
 	float lim_inf = flags2.z;
@@ -249,5 +326,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		}
 	}
 
-	return final_color;	
+	
+
+	return final_color * avg.z;	
 }
