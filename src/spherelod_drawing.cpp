@@ -86,7 +86,11 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     pixels_flags[2] = p_ray;
     pixels_flags[3] = p_patch->GetOrientation();
 
+    Vector pixels_flags_2;
+    pixels_flags_2[0] = PATCH_HIGH_RESOLUTION;
+
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
+    m_renderer->SetFxShaderParams( 1, 1, pixels_flags_2 );
 
     m_renderer->DrawMeshe( p_world, p_view, p_proj );
     //m_stats.nb_patchs++;       

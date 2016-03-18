@@ -6,6 +6,9 @@ float4 flags : register(c0);
 	// .w -> patch orientation enum integer
 
 float4 flags2 : register(c1);
+	// .x -> ht textures resol
+
+float4 flags6 : register(c6);
 	// .x -> resol atlas textures splatting
 	// .y -> transition texture globale/texture splatting : borne sup
 	// .z -> transition texture globale/texture splatting : borne inf
@@ -42,7 +45,7 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 	float4 patch_coords = ( 0.98 * ( p_textcoords - 0.5 ) ) + 0.5;
 
 	//float interval = 1.0 / 16;
-	float interval = 1.0 / flags2.x;
+	float interval = 1.0 / flags6.x;
 
 	float limit_up = 1.0 - interval;
 
@@ -187,8 +190,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
 
 
-	float lim_sup = flags2.y;
-	float lim_inf = flags2.z;
+	float lim_sup = flags6.y;
+	float lim_inf = flags6.z;
 
 
 	bool sea = false;
@@ -220,7 +223,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	if( !sea )
 	{
 	
-		float texel_size = 1.0 / 128.0;
+		float texel_size = 1.0 / flags2.x;
 
 		float2 left_coords = input.TexCoord0;
 		left_coords.x -= texel_size;
@@ -297,7 +300,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	if( !sea )
 	{
-		float k = 0.666;  // poids du vecteur bump mapping
+		//float k = 0.666;  // poids du vecteur bump mapping
+
+		float k = clamp( ( 1.5708 - atan( 30.0 * ( flags.x - 1.0 ) ) ), 0.01, 0.4 );
 
 		texel_pos.x += k * avg.x;
 		texel_pos.y += k * avg.y;
