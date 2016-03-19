@@ -364,7 +364,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float3 light_dir;
 
-	light_dir.x = 1.0;
+	light_dir.x = -1.0;
 	light_dir.y = 0.0;
 	light_dir.z = 0.0;
 

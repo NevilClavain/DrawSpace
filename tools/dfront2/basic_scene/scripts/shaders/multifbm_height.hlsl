@@ -12,7 +12,8 @@ float ComputeVertexHeight( float4 p_vpos )
 	f2[1] = lerp( -fbm_params3.y, fbm_params3.y, n_vpos_y );
 	f2[2] = lerp( -fbm_params3.y, fbm_params3.y, n_vpos_z );
 
-	float fbm2 = Fractal_fBm( f2, 7, fbm_params3.x, fbm_params4.z, 0.0, fbm_params4.x, fbm_params4.y );
+	//float fbm2 = Fractal_fBm( f2, 7, fbm_params3.x, fbm_params4.z, 0.0, fbm_params4.x, fbm_params4.y );
+    float fbm2 = Fractal_fBm2( f2, 7, fbm_params3.x, fbm_params4.z, 0.0 );
 	if( fbm2 < 0.0 )
 	{
 		fbm2 = 0.0;
@@ -40,6 +41,8 @@ float ComputeVertexHeight( float4 p_vpos )
 
 	double hl = clamp( fbm3, 0.0, 1.0 );
 	res = lerp( fbm3 * fbm_params5.w, fbm3 * fbm_params5.w + fbm2 * fbm_params3.w, hl * weight );
+    
+
 	res += fbm_params.z;
 
     return res;

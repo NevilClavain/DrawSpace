@@ -151,7 +151,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float v_alt = 0.0;
 
-	if( vertex_distance < 1.05 * horizon_limit )
+	if( vertex_distance < 1.015 * horizon_limit )
 	{		
 		v_alt = ComputeVertexHeight( v_position2 );
 
