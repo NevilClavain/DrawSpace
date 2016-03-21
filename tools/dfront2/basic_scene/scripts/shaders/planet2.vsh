@@ -1,6 +1,7 @@
 
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
+float4x4 matWorld: register(c8);
 
 float4   flag0:				register(c24);
 
@@ -188,7 +189,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.TexCoord2 = 0.0;
 	Output.TexCoord2.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
 	Output.TexCoord2.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
-			
 			  
 	return( Output );   
 }

@@ -13,6 +13,9 @@ float4 flags6 : register(c6);
 	// .y -> transition texture globale/texture splatting : borne sup
 	// .z -> transition texture globale/texture splatting : borne inf
 
+
+float4 light0_dir_local : register(c7);
+
 sampler2D Texture0 : register(s0);
 sampler2D Texture1 : register(s1);
 sampler2D Texture2 : register(s2);
@@ -363,15 +366,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 
 	float3 light_dir;
+	light_dir = light0_dir_local;
 
-	light_dir.x = -1.0;
-	light_dir.y = 0.0;
-	light_dir.z = 0.0;
-
-	float lf = clamp( dot( texel_pos2, light_dir ), 0.0, 1.0 );
-
-	
-	
+	float lf = clamp( dot( texel_pos2, light_dir ), 0.0, 1.0 );	
 
 
 	////////////////////////////////////////////////////////////////////////////////////
