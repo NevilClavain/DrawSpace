@@ -12,21 +12,18 @@ float ComputeVertexHeight( float4 p_vpos )
 	f2[1] = lerp( -fbm_params3.y, fbm_params3.y, n_vpos_y );
 	f2[2] = lerp( -fbm_params3.y, fbm_params3.y, n_vpos_z );
 
-	//float fbm2 = Fractal_fBm( f2, 7, fbm_params3.x, fbm_params4.z, 0.0, fbm_params4.x, fbm_params4.y );
-    float fbm2 = Fractal_fBm2( f2, 7, fbm_params3.x, fbm_params4.z, 0.0 );
+    float fbm2 = Fractal_fBm_classic_perlin( f2, 7, fbm_params3.x, fbm_params4.z, 0.0 );
 	if( fbm2 < 0.0 )
 	{
 		fbm2 = 0.0;
 	}
-	
-
-	
+		
 	double3 f3;
 	f3[0] = lerp( -fbm_params5.y, fbm_params5.y, n_vpos_x );
 	f3[1] = lerp( -fbm_params5.y, fbm_params5.y, n_vpos_y );
 	f3[2] = lerp( -fbm_params5.y, fbm_params5.y, n_vpos_z );
 
-	float fbm3 = Fractal_fBm( f3, 7, fbm_params5.x, fbm_params6.z, 1.0, fbm_params6.x, fbm_params6.y );
+	float fbm3 = Fractal_fBm_wombat_perlin( f3, 7, fbm_params5.x, fbm_params6.z, 1.0, fbm_params6.x, fbm_params6.y );
 	
 	double3 f;
 	f[0] = lerp( -fbm_params.y, fbm_params.y, n_vpos_x );
