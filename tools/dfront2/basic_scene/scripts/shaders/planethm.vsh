@@ -127,7 +127,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	v_position2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
 	v_position2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
 
-	float res = ComputeVertexHeight( v_position2 );
+	float res = ComputeVertexHeight( v_position2, fbm_params5.w, fbm_params3.w, fbm_params.z, fbm_params6.x, fbm_params6.y, fbm_params2.x, fbm_params2.y );
       
 	
 	Output.TexCoord1 = 0.0;

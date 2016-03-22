@@ -159,7 +159,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float vertex_latitude = acos( h );
 
-	float res = ComputeVertexHeight( v_position2 );
+	float res = ComputeVertexHeight( v_position2, fbm_params5.w, fbm_params3.w, fbm_params.z, fbm_params6.x, fbm_params6.y, fbm_params2.x, fbm_params2.y );
 
 
 	Output.TexCoord1 = 0.0;

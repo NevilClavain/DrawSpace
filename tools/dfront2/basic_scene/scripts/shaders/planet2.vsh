@@ -154,7 +154,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	if( vertex_distance < 1.015 * horizon_limit )
 	{		
-		v_alt = ComputeVertexHeight( v_position2 );
+		v_alt = ComputeVertexHeight( v_position2, fbm_params5.w, fbm_params3.w, fbm_params.z, fbm_params6.x, fbm_params6.y, fbm_params2.x, fbm_params2.y );
 
 		if( v_alt >= 0.0 )
 		{
