@@ -136,7 +136,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	global_uv.x = lerp( base_uv2.x, base_uv2.z, Input.TexCoord0.x );
 	global_uv.y = lerp( base_uv2.y, base_uv2.w, Input.TexCoord0.y );
 
-	float res = ComputeVertexHeight( v_position2, global_uv );
+	float res = ComputeVertexHeight( v_position2, global_uv, fbm_params5.w, fbm_params3.w, fbm_params.z, fbm_params6.x, fbm_params6.y );
       
 	
 	Output.TexCoord1 = 0.0;
