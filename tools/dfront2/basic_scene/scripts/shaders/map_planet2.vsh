@@ -21,38 +21,16 @@ float4   base_uv2: register(c27);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4 fbm_params: register(c30);
-	// .y -> fbm input half-range
-	// .z -> terrain vertical offset
+float4 landscape_control: register(c30);
+	// .x -> plains amplitude
+	// .y -> mountains amplitude
+	// .z -> terrain offset
 
-float4 fbm_params2: register(c31);
-	// .x -> seed1
-	// .y -> seed2
-
-
-
-float4 fbm_params3: register(c32);
-	// .x -> lacunarity
-	// .y -> fbm input half-range
-	// .z -> fbm clamp
-	// .w -> amplitude
-
-float4 fbm_params4: register(c33);
-	// .x -> seed1
-	// .y -> seed2
-	// .z -> roughness
+float4 seeds: register(c31);
+	// .x -> uvnoise seed 1
+	// .y -> uvnoise seed 2
 
 
-float4 fbm_params5: register(c34);
-	// .x -> lacunarity
-	// .y -> fbm input half-range
-	// .z -> fbm clamp
-	// .w -> amplitude
-
-float4 fbm_params6: register(c35);
-	// .x -> seed1
-	// .y -> seed2
-	// .z -> roughness
 
 
 sampler2D TexturePlanetMap : register(s0);
@@ -160,7 +138,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 		global_uv.x = lerp( base_uv2.x, base_uv2.z, Input.TexCoord0.x );
 		global_uv.y = lerp( base_uv2.y, base_uv2.w, Input.TexCoord0.y );
 			
-		v_alt = ComputeVertexHeight( v_position2, global_uv, fbm_params5.w, fbm_params3.w, fbm_params.z, fbm_params6.x, fbm_params6.y );
+		v_alt = ComputeVertexHeight( v_position2, global_uv, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y );
 
 		if( v_alt >= 0.0 )
 		{

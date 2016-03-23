@@ -22,43 +22,23 @@ float4   base_uv2: register(c27);
 	// .z, .w -> u2, v2
 
 
-float4 fbm_params: register(c30);
-	// .y -> fbm input half-range
-	// .z -> terrain vertical offset
+float4 landscape_control: register(c30);
+	// .x -> plains amplitude
+	// .y -> mountains amplitude
+	// .z -> terrain offset
 
-float4 fbm_params2: register(c31);
-	// .x -> seed1
-	// .y -> seed2
-
-float4 fbm_params3: register(c32);
-	// .x -> lacunarity
-	// .y -> fbm input half-range
-	// .w -> amplitude
-
-float4 fbm_params4: register(c33);
-	// .x -> seed1
-	// .y -> seed2
-	// .z -> roughness
+float4 seeds: register(c31);
+	// .x -> uvnoise seed 1
+	// .y -> uvnoise seed 2
 
 
-float4 fbm_params5: register(c34);
-	// .x -> lacunarity
-	// .y -> fbm input half-range
-	// .w -> amplitude
-
-float4 fbm_params6: register(c35);
-	// .x -> seed1
-	// .y -> seed2
-	// .z -> roughness
-
-
-float4 thparams: register(c36);
+float4 thparams: register(c32);
 	// .x -> humidity_k
 	// .y -> humidity_base
 	// .z -> temperature_alt_dec : nbre de degres centigrades perdus par km
 	// .w -> beach_limit
 
-float4 thparams2: register(c37);
+float4 thparams2: register(c33);
 	// .x -> lim_polar
 	// .y -> lim_tropical
 	// .z -> k_polar
@@ -170,7 +150,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	global_uv.x = lerp( base_uv2.x, base_uv2.z, Input.TexCoord0.x );
 	global_uv.y = lerp( base_uv2.y, base_uv2.w, Input.TexCoord0.y );
 
-	float res = ComputeVertexHeight( v_position2, global_uv, fbm_params5.w, fbm_params3.w, fbm_params.z, fbm_params6.x, fbm_params6.y );
+	float res = ComputeVertexHeight( v_position2, global_uv, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y );
 
 
 	Output.TexCoord1 = 0.0;
@@ -181,20 +161,21 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	double n_vpos_y = ( v_position2.y / 2.0 ) + 0.5;
 	double n_vpos_z = ( v_position2.z / 2.0 ) + 0.5;
 
+	float mask_input_hl = 20.0;
 
 	double3 f_humidity;
-	f_humidity[0] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_x );
-	f_humidity[1] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_y );
-	f_humidity[2] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_z );
+	f_humidity[0] = lerp( -mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_x );
+	f_humidity[1] = lerp( -mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_y );
+	f_humidity[2] = lerp( -mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_z );
 
-	float pn_humidity_variation = SimplexPerlin3D( f_humidity, fbm_params2.x, fbm_params2.y );
+	float pn_humidity_variation = SimplexPerlin3D( f_humidity, seeds.x, seeds.y );
 
 	double3 f_temperature;
-	f_temperature[0] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_z );
-	f_temperature[1] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_x );
-	f_temperature[2] = lerp( -fbm_params.y * 0.5, fbm_params.y * 0.5, n_vpos_y );
+	f_temperature[0] = lerp( -mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_z );
+	f_temperature[1] = lerp( -mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_x );
+	f_temperature[2] = lerp( -mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_y );
 
-	float pn_temperature_variation = SimplexPerlin3D( f_temperature, fbm_params2.y, fbm_params2.x );
+	float pn_temperature_variation = SimplexPerlin3D( f_temperature, seeds.y, seeds.x );
 
 
 

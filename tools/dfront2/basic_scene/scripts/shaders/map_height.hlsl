@@ -19,7 +19,7 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude,
 	f2[1] = lerp( -fbm_mountains_hl, fbm_mountains_hl, n_vpos_y );
 	f2[2] = lerp( -fbm_mountains_hl, fbm_mountains_hl, n_vpos_z );
 
-	float fbm_mountains = Fractal_fBm_classic_perlin( f2, 7, 2.15, 0.25, 0.0 );
+	float fbm_mountains = Fractal_fBm_classic_perlin( f2, 7, 2.0, 0.35, 0.0 );
 	if( fbm_mountains < 0.0 )
 	{
 		fbm_mountains = 0.0;
@@ -31,7 +31,6 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude,
 	f3[1] = lerp( -fbm_uvnoise_hl, fbm_uvnoise_hl, n_vpos_y );
 	f3[2] = lerp( -fbm_uvnoise_hl, fbm_uvnoise_hl, n_vpos_z );
 
-	//float fbm_uvnoise = Fractal_fBm_wombat_perlin( f3, 7, 2.6, 0.5, 1.0, fbm_params6.x, fbm_params6.y );
     float fbm_uvnoise = Fractal_fBm_wombat_perlin( f3, 7, 2.6, 0.5, 1.0, p_uvnoise_seed1, p_uvnoise_seed2 );
 
     
@@ -47,7 +46,7 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude,
     //float plain = fbm_params5.w * color.y;
     float plain = p_plains_amplitude * color.y;
 
-    //float mountains = fbm_mountains * fbm_params3.w + 1000.0;
+    
     float mountains = fbm_mountains * p_mountains_amplitude + 1000.0;
     
 	float pn = color.z;
@@ -56,8 +55,7 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude,
 	
 	double hl = color.y;
 	res = lerp( plain, plain + mountains, hl * weight );
-
-	//res += fbm_params.z;
+	
     res += p_offset;
     
     return res;
