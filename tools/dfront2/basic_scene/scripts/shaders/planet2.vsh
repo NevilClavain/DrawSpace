@@ -1,7 +1,7 @@
 
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
-float4x4 matWorld: register(c8);
+
 
 float4   flag0:				register(c24);
 
@@ -23,39 +23,16 @@ float4   base_uv_global: register(c27);
 	// .z, .w -> u2, v2
 
 
-float4 fbm_params: register(c30);
-	// .y -> fbm input half-range
-	// .z -> terrain vertical offset
+float4 landscape_control: register(c30);
+	// .x -> plains amplitude
+	// .y -> mountains amplitude
+	// .z -> terrain offset
 
-float4 fbm_params2: register(c31);
-	// .x -> seed1
-	// .y -> seed2
-
-
-
-float4 fbm_params3: register(c32);
-	// .x -> lacunarity
-	// .y -> fbm input half-range
-	// .z -> fbm clamp
-	// .w -> amplitude
-
-float4 fbm_params4: register(c33);
-	// .x -> seed1
-	// .y -> seed2
-	// .z -> roughness
-
-
-float4 fbm_params5: register(c34);
-	// .x -> lacunarity
-	// .y -> fbm input half-range
-	// .z -> fbm clamp
-	// .w -> amplitude
-
-float4 fbm_params6: register(c35);
-	// .x -> seed1
-	// .y -> seed2
-	// .z -> roughness
-
+float4 seeds: register(c31);
+	// .x -> plains seed 1
+	// .y -> plains seed 2
+	// .z -> mix seed 1
+	// .w -> mix seed 2
 
 struct VS_INPUT 
 {
@@ -154,7 +131,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	if( vertex_distance < 1.015 * horizon_limit )
 	{		
-		v_alt = ComputeVertexHeight( v_position2, fbm_params5.w, fbm_params3.w, fbm_params.z, fbm_params6.x, fbm_params6.y, fbm_params2.x, fbm_params2.y );
+		v_alt = ComputeVertexHeight( v_position2, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y, seeds.z, seeds.w );
 
 		if( v_alt >= 0.0 )
 		{
