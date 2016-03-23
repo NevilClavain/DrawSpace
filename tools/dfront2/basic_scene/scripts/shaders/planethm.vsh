@@ -28,18 +28,6 @@ float4 seeds: register(c31);
 	// .w -> mix seed 2
 
 
-float4 fbm_params5: register(c34);
-	// .x -> lacunarity
-	// .y -> fbm input half-range
-	// .z -> fbm clamp
-	// .w -> amplitude
-
-float4 fbm_params6: register(c35);
-	// .x -> seed1
-	// .y -> seed2
-	// .z -> roughness
-
-
 
 struct VS_INPUT 
 {
