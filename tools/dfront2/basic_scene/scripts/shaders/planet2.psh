@@ -27,6 +27,8 @@ struct PS_INTPUT
 	float4 TexCoord2: TEXCOORD2;
 };
 
+#include "spherelod_commons.hlsl"
+
 float2 compute_sampling_params( float p_param, float p_interval )
 {
 	float3 res;
@@ -313,69 +315,16 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		texel_pos = normalize( texel_pos );
 	}
 
-
-
-
 	float3 texel_pos2;
-
-	if( 0.0 == flags.w ) // front
-	{
-		texel_pos2.x = texel_pos.x;
-		texel_pos2.y = texel_pos.y;
-		texel_pos2.z = texel_pos.z;   
-	}
-	else if( 1.0 == flags.w ) // rear
-	{
-		texel_pos2.x = -texel_pos.x;
-		texel_pos2.y = texel_pos.y;
-		texel_pos2.z = -texel_pos.z;   
-	}
-	else if( 2.0 == flags.w ) // left
-	{
-		texel_pos2.x = -texel_pos.z;
-		texel_pos2.y = texel_pos.y;
-		texel_pos2.z = texel_pos.x;   
-	}
-	else if( 3.0 == flags.w ) // right
-	{
-		texel_pos2.x = texel_pos.z;
-		texel_pos2.y = texel_pos.y;
-		texel_pos2.z = -texel_pos.x;   
-	}
-	else if( 4.0 == flags.w ) // top
-	{
-		texel_pos2.x = texel_pos.x;
-		texel_pos2.y = texel_pos.z;
-		texel_pos2.z = -texel_pos.y;   
-	}
-	else //if( 5.0 == flags.w ) // bottom
-	{
-		texel_pos2.x = texel_pos.x;
-		texel_pos2.y = -texel_pos.z;
-		texel_pos2.z = texel_pos.y;
-	}
-
-	float xtemp = texel_pos2.x;
-	float ytemp = texel_pos2.y;
-	float ztemp = texel_pos2.z;
-
-	texel_pos2.x = xtemp * sqrt( 1.0 - ytemp * ytemp * 0.5 - ztemp * ztemp * 0.5 + ytemp * ytemp * ztemp * ztemp / 3.0 );
-	texel_pos2.y = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
-	texel_pos2.z = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
-
-
+	texel_pos2 = CubeToSphere( ProjectVectorToCube( flags.w, texel_pos ) );
 
 	float3 light_dir;
 	light_dir = light0_dir_local;
 
 	float lf = clamp( dot( texel_pos2, light_dir ), 0.0, 1.0 );	
 
-
 	////////////////////////////////////////////////////////////////////////////////////
 	
-
-
-
 	if( flags.x > 0.0 && flags.x <= lim_inf )
 	{			
 		if( sea ) 
