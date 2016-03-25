@@ -58,8 +58,7 @@ struct VS_INPUT
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
-   float4 TexCoord0: TEXCOORD0;
-   float4 TexCoord1: TEXCOORD1;
+   float4 aht	   : TEXCOORD0;  // aht : altitude temperature humidity
 };
 
 #include "fbm.hlsl"
@@ -108,8 +107,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float res = ComputeVertexHeight( v_position2, global_uv, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y, landscape_control.w );
 
 
-	Output.TexCoord1 = 0.0;
-	Output.TexCoord1.x = res;
+	Output.aht = 0.0;
+	Output.aht.x = res;
 
 
 	double n_vpos_x = ( v_position2.x / 2.0 ) + 0.5;
@@ -231,12 +230,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	}
 
 
-	Output.TexCoord1.y = color_temp;
-	Output.TexCoord1.z = color_humidity_final;
+	Output.aht.y = color_temp;
+	Output.aht.z = color_humidity_final;
 
 	Output.Position = mul( Input.Position, matWorldViewProjection );
-	
-	Output.TexCoord0 = 0.0;
-				  
+					  
 	return( Output );   
 }
