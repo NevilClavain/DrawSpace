@@ -16,9 +16,9 @@ float4 flags6 : register(c6);
 
 float4 light0_dir_local : register(c7);
 
-sampler2D Texture0 : register(s0);
-sampler2D Texture1 : register(s1);
-sampler2D Texture2 : register(s2);
+sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
+sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
+sampler2D Splatting_HTMap_Texture	: register(s2);  // texture HT pour splatting
 
 struct PS_INTPUT
 {	
@@ -105,10 +105,10 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		coords_4.x += temperature_sampling.y;
 		coords_4.y += humidity_sampling.y + interval;
 
-		float4 color_1 = tex2D( Texture2, coords_1 );
-		float4 color_2 = tex2D( Texture2, coords_2 );
-		float4 color_3 = tex2D( Texture2, coords_3 );
-		float4 color_4 = tex2D( Texture2, coords_4 );
+		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
+		float4 color_2 = tex2D( Splatting_HTMap_Texture, coords_2 );
+		float4 color_3 = tex2D( Splatting_HTMap_Texture, coords_3 );
+		float4 color_4 = tex2D( Splatting_HTMap_Texture, coords_4 );
 
 		// calcul des poids splatting : calcul d'un "vecteur des distances"
 
@@ -153,8 +153,8 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		coords_2.x += temperature_sampling.y + interval;
 		coords_2.y += humidity_sampling.y;
 
-		float4 color_1 = tex2D( Texture2, coords_1 );
-		float4 color_2 = tex2D( Texture2, coords_2 );
+		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
+		float4 color_2 = tex2D( Splatting_HTMap_Texture, coords_2 );
 		
 		res_color = ( ( 1.0 - temperature_sampling.x ) * color_1 ) + ( temperature_sampling.x * color_2 );
 	}
@@ -168,8 +168,8 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		coords_4.x += temperature_sampling.y;
 		coords_4.y += humidity_sampling.y + interval;
 
-		float4 color_1 = tex2D( Texture2, coords_1 );
-		float4 color_4 = tex2D( Texture2, coords_4 );
+		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
+		float4 color_4 = tex2D( Splatting_HTMap_Texture, coords_4 );
 
 		res_color = ( ( 1.0 - humidity_sampling.x ) * color_1 ) + ( humidity_sampling.x * color_4 );
 	}
@@ -179,7 +179,7 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		coords_1.x += temperature_sampling.y;
 		coords_1.y += humidity_sampling.y;
 
-		float4 color_1 = tex2D( Texture2, coords_1 );
+		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
 		
 		res_color = color_1;	
 	}
@@ -192,7 +192,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 final_color = 0.0;
 
-	float4 temp_humidity = tex2D( Texture0, input.TexCoord0 );
+	float4 temp_humidity = tex2D( HT_Texture, input.TexCoord0 );
 
 
 	float lim_sup = flags6.y;
@@ -228,7 +228,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	if( !sea )
 	{
 
-		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, Texture0, input.TexCoord0, 100.0 );
+		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, HT_Texture, input.TexCoord0, 100.0 );
 	}
 	
 	float3 texel_pos = compute_front_face_point_vector( input.TexCoord2 );
@@ -268,7 +268,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	else if( flags.x > lim_inf && flags.x <= lim_sup )
 	{
 		float4 color_splat = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
-		float4 color_pixel = tex2D( Texture1, temp_humidity );
+		float4 color_pixel = tex2D( Pixels_HTMap_Texture, temp_humidity );
 
 		if( sea )
 		{
@@ -287,7 +287,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		}
 		else
 		{
-			final_color = tex2D( Texture1, temp_humidity );
+			final_color = tex2D( Pixels_HTMap_Texture, temp_humidity );
 		}
 	}
 	
