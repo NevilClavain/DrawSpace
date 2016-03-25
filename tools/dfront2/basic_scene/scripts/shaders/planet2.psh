@@ -22,9 +22,9 @@ sampler2D Splatting_HTMap_Texture	: register(s2);  // texture HT pour splatting
 
 struct PS_INTPUT
 {	
-	float4 TexCoord0: TEXCOORD0;
-	float4 TexCoord1: TEXCOORD1;
-	float4 TexCoord2: TEXCOORD2;
+	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
+	float4 UnitPatch_TexCoord		: TEXCOORD1;
+	float4 GlobalPatch_TexCoord		: TEXCOORD2;
 };
 
 #include "spherelod_commons.hlsl"
@@ -192,7 +192,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 final_color = 0.0;
 
-	float4 temp_humidity = tex2D( HT_Texture, input.TexCoord0 );
+	float4 temp_humidity = tex2D( HT_Texture, input.LODGlobalPatch_TexCoord );
 
 
 	float lim_sup = flags6.y;
@@ -206,7 +206,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		// si altitude relative a un certain seuil
 
 		// regarder l'altitude vertex interpole pour determiner si rendu mer
-		if( input.TexCoord0.z <= 0.0 ) // altitude vertex (interpolee)
+		if( input.LODGlobalPatch_TexCoord.z <= 0.0 ) // altitude vertex (interpolee)
 		{
 			sea = true;
 		}
@@ -227,11 +227,10 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	if( !sea )
 	{
-
-		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, HT_Texture, input.TexCoord0, 100.0 );
+		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, HT_Texture, input.LODGlobalPatch_TexCoord, 100.0 );
 	}
 	
-	float3 texel_pos = compute_front_face_point_vector( input.TexCoord2 );
+	float3 texel_pos = compute_front_face_point_vector( input.GlobalPatch_TexCoord );
 
 	if( !sea )
 	{
@@ -261,13 +260,13 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		}
 		else
 		{
-			final_color = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );	
+			final_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );	
 		}
 
 	}
 	else if( flags.x > lim_inf && flags.x <= lim_sup )
 	{
-		float4 color_splat = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
+		float4 color_splat = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );
 		float4 color_pixel = tex2D( Pixels_HTMap_Texture, temp_humidity );
 
 		if( sea )

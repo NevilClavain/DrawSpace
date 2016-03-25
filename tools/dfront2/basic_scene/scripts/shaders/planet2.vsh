@@ -43,9 +43,9 @@ struct VS_INPUT
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
-   float4 TexCoord0: TEXCOORD0;
-   float4 TexCoord1: TEXCOORD1;
-   float4 TexCoord2: TEXCOORD2;
+   float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
+   float4 UnitPatch_TexCoord		: TEXCOORD1;
+   float4 GlobalPatch_TexCoord		: TEXCOORD2;
 };
 
 #include "fbm.hlsl"
@@ -103,22 +103,22 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	Output.Position = mul( v_position3, matWorldViewProjection );
 	
-	Output.TexCoord0 = 0.0;
-	Output.TexCoord0.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
-	Output.TexCoord0.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
+	Output.LODGlobalPatch_TexCoord = 0.0;
+	Output.LODGlobalPatch_TexCoord.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
+	Output.LODGlobalPatch_TexCoord.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
 
-	Output.TexCoord0.z = v_alt;
+	Output.LODGlobalPatch_TexCoord.z = v_alt;
 
 	// conserver aussi les coords textures originales du patch
-	Output.TexCoord1 = 0.0;
-	Output.TexCoord1.x = Input.TexCoord0.x;
-	Output.TexCoord1.y = Input.TexCoord0.y;
+	Output.UnitPatch_TexCoord = 0.0;
+	Output.UnitPatch_TexCoord.x = Input.TexCoord0.x;
+	Output.UnitPatch_TexCoord.y = Input.TexCoord0.y;
 
 	//Output.TexCoord2 = normalize( v_position3 );
 
-	Output.TexCoord2 = 0.0;
-	Output.TexCoord2.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
-	Output.TexCoord2.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
+	Output.GlobalPatch_TexCoord = 0.0;
+	Output.GlobalPatch_TexCoord.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
+	Output.GlobalPatch_TexCoord.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
 			  
 	return( Output );   
 }

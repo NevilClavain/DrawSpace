@@ -18,11 +18,9 @@ sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
 sampler2D Splatting_HTMap_Texture	: register(s2);  // texture HT pour splatting
 
 struct PS_INTPUT
-{
-	float4 Position : POSITION0;
-	float4 TexCoord0: TEXCOORD0;
-	float4 TexCoord1: TEXCOORD1;
-	float4 TexCoord2: TEXCOORD2;
+{	
+	float4 LODGlobalPatch_TexCoord: TEXCOORD0;
+	float4 UnitPatch_TexCoord: TEXCOORD1;	
 };
 
 float2 compute_sampling_params( float p_param, float p_interval )
@@ -188,7 +186,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 final_color = 0.0;
 
-	float4 temp_humidity = tex2D( HT_Texture, input.TexCoord0 );
+	float4 temp_humidity = tex2D( HT_Texture, input.LODGlobalPatch_TexCoord );
 
 
 	float lim_sup = flags6.y;
@@ -206,7 +204,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 		float alt_lim = 100.0;
 		
-		if( input.TexCoord0.z <= alt_lim ) // altitude vertex (interpolee)
+		if( input.LODGlobalPatch_TexCoord.z <= alt_lim ) // altitude vertex (interpolee)
 		{
 			sea = true;
 		}
@@ -232,13 +230,13 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		}
 		else
 		{
-			final_color = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );	
+			final_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );	
 		}
 
 	}
 	else if( flags.x > lim_inf && flags.x <= lim_sup )
 	{
-		float4 color_splat = splatting_color( input.TexCoord1, temp_humidity.x, temp_humidity.y );
+		float4 color_splat = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );
 		float4 color_pixel = tex2D( Pixels_HTMap_Texture, temp_humidity );
 
 		if( sea )
