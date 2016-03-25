@@ -223,90 +223,18 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	}
 
 
-	float3 avg;
+	float3 avg = 0.0;
 
 	if( !sea )
 	{
-	
-		float texel_size = 1.0 / flags2.x;
 
-		float2 left_coords = input.TexCoord0;
-		left_coords.x -= texel_size;
-
-		float2 right_coords = input.TexCoord0;
-		right_coords.x += texel_size;
-
-		float2 up_coords = input.TexCoord0;
-		up_coords.y -= texel_size;
-
-		float2 down_coords = input.TexCoord0;
-		down_coords.y += texel_size;
-
-		float4 temp_humidity_left = tex2D( Texture0, left_coords );
-		float4 temp_humidity_right = tex2D( Texture0, right_coords );
-		float4 temp_humidity_up = tex2D( Texture0, up_coords );
-		float4 temp_humidity_down = tex2D( Texture0, down_coords );
-
-
-
-		float point_alt_center = temp_humidity.w;
-
-		float point_alt_left = temp_humidity_left.w;
-		float point_alt_right = temp_humidity_right.w;
-		float point_alt_up = temp_humidity_up.w;
-		float point_alt_down = temp_humidity_down.w;
-
-		float real_texel_size = 100.0; // controle de "l'intensité" du relief bump mapping
-
-		float3 vec_left;
-		vec_left.x = -real_texel_size;
-		vec_left.y = 0.0;
-		vec_left.z = ( point_alt_left - point_alt_center );
-
-		float3 vec_right;
-		vec_right.x = real_texel_size;
-		vec_right.y = 0.0;
-		vec_right.z = ( point_alt_right - point_alt_center );
-
-		float3 vec_up;
-		vec_up.x = 0.0;
-		vec_up.y = -real_texel_size;
-		vec_up.z = ( point_alt_up - point_alt_center );
-
-		float3 vec_down;
-		vec_down.x = 0.0;
-		vec_down.y = real_texel_size;
-		vec_down.z = ( point_alt_down - point_alt_center );
-
-	
-		float3 vec1 = normalize( cross( vec_right, vec_down ) );
-		float3 vec2 = normalize( cross( vec_down, vec_left ) );
-		float3 vec3 = normalize( cross( vec_left, vec_up ) );
-		float3 vec4 = normalize( cross( vec_up, vec_right ) );
-
-		avg = normalize( 0.25 * ( vec1 + vec2 + vec3 + vec4 ) );	
+		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, Texture0, input.TexCoord0, 100.0 );
 	}
 	
-
-
-
-
-
-	float3 texel_pos = 0.0;
-
-	// x - u -> passage de [0, 1] à [-1, 1]
-	texel_pos.x = ( 2.0 * input.TexCoord2.x ) - 1.0;
-
-	// y - v -> passage de [0, 1] à [+1,-1]
-	texel_pos.y = -( ( 2.0 * input.TexCoord2.y ) - 1.0 );
-
-	texel_pos.z = 1.0;
-
+	float3 texel_pos = compute_front_face_point_vector( input.TexCoord2 );
 
 	if( !sea )
 	{
-		//float k = 0.666;  // poids du vecteur bump mapping
-
 		float k = clamp( ( 1.5708 - atan( 30.0 * ( flags.x - 1.0 ) ) ), 0.01, 0.4 );
 
 		texel_pos.x += k * avg.x;
