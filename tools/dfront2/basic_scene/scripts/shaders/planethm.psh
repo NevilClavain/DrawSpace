@@ -3,12 +3,11 @@ float4 flags : register(c0);
 struct PS_INTPUT
 {
 	float4 Position : POSITION0;
-	float4 TexCoord0: TEXCOORD0;
-	float4 TexCoord1: TEXCOORD1;	
+	float4 alt		: TEXCOORD0;	
 };
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-	float4 color = input.TexCoord1.x;
+	float4 color = input.alt.x;
 	return color;	
 }
