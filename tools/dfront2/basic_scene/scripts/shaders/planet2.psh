@@ -13,8 +13,16 @@ float4 flags6 : register(c6);
 	// .y -> transition texture globale/texture splatting : borne sup
 	// .z -> transition texture globale/texture splatting : borne inf
 
+float4 flags7 : register(c7);
+	// .x -> ambient light
+	// .y -> color0 light
+	// .z -> color1 light
+	// .w -> color2 light
 
-float4 light0_dir_local : register(c7);
+float4 ambient_color    : register(c8);
+float4 light0_dir_local : register(c9);
+float4 light0_color :     register(c10);
+
 
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
 sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
