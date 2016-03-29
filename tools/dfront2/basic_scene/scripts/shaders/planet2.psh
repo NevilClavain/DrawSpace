@@ -21,7 +21,7 @@ float4 flags7 : register(c7);
 
 float4 ambient_color    : register(c8);
 float4 light0_dir_local : register(c9);
-float4 light0_color :     register(c10);
+float4 light0_color     : register(c10);
 
 
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
@@ -199,6 +199,7 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 final_color = 0.0;
+	float4 pixel_color = 0.0;
 
 	float4 temp_humidity = tex2D( HT_Texture, input.LODGlobalPatch_TexCoord );
 
@@ -264,11 +265,13 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{			
 		if( sea ) 
 		{
-			final_color.z = 1.0;
+			pixel_color.x = 0.17;
+			pixel_color.y = 0.36;
+			pixel_color.z = 0.48;
 		}
 		else
 		{
-			final_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );	
+			pixel_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );	
 		}
 
 	}
@@ -279,27 +282,41 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 		if( sea )
 		{
-			final_color.z = 1.0;
+			pixel_color.x = 0.17;
+			pixel_color.y = 0.36;
+			pixel_color.z = 0.48;
 		}
 		else
 		{
-			final_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
+			pixel_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
 		}
 	}
 	else
 	{		
 		if( sea )
 		{
-			final_color.z = 1.0;
+			pixel_color.x = 0.17;
+			pixel_color.y = 0.36;
+			pixel_color.z = 0.48;
 		}
 		else
 		{
-			final_color = tex2D( Pixels_HTMap_Texture, temp_humidity );
+			pixel_color = tex2D( Pixels_HTMap_Texture, temp_humidity );
 		}
 	}
 	
+	if( flags7.x )
+	{
+		final_color += ambient_color;
+	}
 	
+	if( flags7.y )
+	{
+		final_color += lf * light0_color;
 
-	return final_color * lf;
-	//return final_color;
+	}
+	
+	final_color *= pixel_color;
+
+	return final_color;
 }
