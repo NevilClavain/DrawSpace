@@ -20,9 +20,15 @@ float4 flags7 : register(c7);
 	// .w -> color2 light
 
 float4 ambient_color    : register(c8);
+
 float4 light0_dir_local : register(c9);
 float4 light0_color     : register(c10);
 
+float4 light1_dir_local : register(c11);
+float4 light1_color     : register(c12);
+
+float4 light2_dir_local : register(c13);
+float4 light2_color     : register(c14);
 
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
 sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
@@ -254,10 +260,23 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float3 texel_pos2;
 	texel_pos2 = CubeToSphere( ProjectVectorToCube( flags.w, texel_pos ) );
 
-	float3 light_dir;
-	light_dir = light0_dir_local;
+	float lf0, lf1, lf2;
 
-	float lf = clamp( dot( texel_pos2, light_dir ), 0.0, 1.0 );	
+	if( flags7.y )
+	{
+		lf0 = clamp( dot( texel_pos2, light0_dir_local.xyz ), 0.0, 1.0 );
+	}
+
+	if( flags7.z )
+	{
+		lf1 = clamp( dot( texel_pos2, light1_dir_local.xyz ), 0.0, 1.0 );
+	}
+
+	if( flags7.w )
+	{
+		lf2 = clamp( dot( texel_pos2, light2_dir_local ), 0.0, 1.0 );
+	}
+
 
 	////////////////////////////////////////////////////////////////////////////////////
 	
@@ -312,8 +331,17 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	
 	if( flags7.y )
 	{
-		final_color += lf * light0_color;
+		final_color += lf0 * light0_color;
+	}
 
+	if( flags7.z )
+	{
+		final_color += lf1 * light1_color;
+	}
+
+	if( flags7.w )
+	{
+		final_color += lf2 * light2_color;
 	}
 	
 	final_color *= pixel_color;
