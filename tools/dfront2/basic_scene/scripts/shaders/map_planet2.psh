@@ -139,13 +139,13 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		}
 		else
 		{
-			pixel_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );	
+			pixel_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture );	
 		}
 
 	}
 	else if( flags.x > lim_inf && flags.x <= lim_sup )
 	{
-		float4 color_splat = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );
+		float4 color_splat = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture );
 		float4 color_pixel = tex2D( Pixels_HTMap_Texture, temp_humidity );
 
 		if( sea )

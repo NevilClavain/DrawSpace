@@ -153,14 +153,14 @@ float2 compute_sampling_params( float p_param, float p_interval )
 	return res;
 }
 
-float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidity )
+float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidity, float p_splatting_atlas_resol, sampler2D p_Splatting_HTMap_Texture )
 {
 
 	// contracter legerement les coords patch pour eviter les effets de bords de couleurs
 	float4 patch_coords = ( 0.98 * ( p_textcoords - 0.5 ) ) + 0.5;
 
 	//float interval = 1.0 / 16;
-	float interval = 1.0 / flags6.x;
+	float interval = 1.0 / p_splatting_atlas_resol;
 
 	float limit_up = 1.0 - interval;
 
@@ -215,10 +215,10 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		coords_4.x += temperature_sampling.y;
 		coords_4.y += humidity_sampling.y + interval;
 
-		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
-		float4 color_2 = tex2D( Splatting_HTMap_Texture, coords_2 );
-		float4 color_3 = tex2D( Splatting_HTMap_Texture, coords_3 );
-		float4 color_4 = tex2D( Splatting_HTMap_Texture, coords_4 );
+		float4 color_1 = tex2D( p_Splatting_HTMap_Texture, coords_1 );
+		float4 color_2 = tex2D( p_Splatting_HTMap_Texture, coords_2 );
+		float4 color_3 = tex2D( p_Splatting_HTMap_Texture, coords_3 );
+		float4 color_4 = tex2D( p_Splatting_HTMap_Texture, coords_4 );
 
 		// calcul des poids splatting : calcul d'un "vecteur des distances"
 
@@ -263,8 +263,8 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		coords_2.x += temperature_sampling.y + interval;
 		coords_2.y += humidity_sampling.y;
 
-		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
-		float4 color_2 = tex2D( Splatting_HTMap_Texture, coords_2 );
+		float4 color_1 = tex2D( p_Splatting_HTMap_Texture, coords_1 );
+		float4 color_2 = tex2D( p_Splatting_HTMap_Texture, coords_2 );
 		
 		res_color = ( ( 1.0 - temperature_sampling.x ) * color_1 ) + ( temperature_sampling.x * color_2 );
 	}
@@ -278,8 +278,8 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		coords_4.x += temperature_sampling.y;
 		coords_4.y += humidity_sampling.y + interval;
 
-		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
-		float4 color_4 = tex2D( Splatting_HTMap_Texture, coords_4 );
+		float4 color_1 = tex2D( p_Splatting_HTMap_Texture, coords_1 );
+		float4 color_4 = tex2D( p_Splatting_HTMap_Texture, coords_4 );
 
 		res_color = ( ( 1.0 - humidity_sampling.x ) * color_1 ) + ( humidity_sampling.x * color_4 );
 	}
@@ -289,7 +289,7 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		coords_1.x += temperature_sampling.y;
 		coords_1.y += humidity_sampling.y;
 
-		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
+		float4 color_1 = tex2D( p_Splatting_HTMap_Texture, coords_1 );
 		
 		res_color = color_1;	
 	}
