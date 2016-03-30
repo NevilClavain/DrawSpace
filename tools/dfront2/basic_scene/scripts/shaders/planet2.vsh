@@ -114,8 +114,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.UnitPatch_TexCoord.x = Input.TexCoord0.x;
 	Output.UnitPatch_TexCoord.y = Input.TexCoord0.y;
 
-	//Output.TexCoord2 = normalize( v_position3 );
-
+	
 	Output.GlobalPatch_TexCoord = 0.0;
 	Output.GlobalPatch_TexCoord.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
 	Output.GlobalPatch_TexCoord.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );

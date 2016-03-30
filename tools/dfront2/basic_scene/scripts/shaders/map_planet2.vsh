@@ -17,7 +17,7 @@ float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4   base_uv2: register(c27);
+float4   base_uv_global: register(c27);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
@@ -47,7 +47,8 @@ struct VS_OUTPUT
 {
    float4 Position : POSITION0;
    float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
-   float4 UnitPatch_TexCoord		: TEXCOORD1;   
+   float4 UnitPatch_TexCoord		: TEXCOORD1;
+   float4 GlobalPatch_TexCoord		: TEXCOORD2; 
 };
 
 #include "fbm.hlsl"
@@ -92,8 +93,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	{	
 	
 		float4 global_uv = 0.0;
-		global_uv.x = lerp( base_uv2.x, base_uv2.z, Input.TexCoord0.x );
-		global_uv.y = lerp( base_uv2.y, base_uv2.w, Input.TexCoord0.y );
+		global_uv.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
+		global_uv.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
 			
 		v_alt = ComputeVertexHeight( v_position2, global_uv, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y, landscape_control.w );
 
@@ -125,6 +126,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.UnitPatch_TexCoord.x = Input.TexCoord0.x;
 	Output.UnitPatch_TexCoord.y = Input.TexCoord0.y;
 
+	Output.GlobalPatch_TexCoord = 0.0;
+	Output.GlobalPatch_TexCoord.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
+	Output.GlobalPatch_TexCoord.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
 			  
 	return( Output );   
 }

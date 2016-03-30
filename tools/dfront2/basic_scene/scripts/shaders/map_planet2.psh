@@ -13,187 +13,48 @@ float4 flags6 : register(c6);
 	// .y -> transition texture globale/texture splatting : borne sup
 	// .z -> transition texture globale/texture splatting : borne inf
 
+float4 flags7 : register(c7);
+	// .x -> ambient light
+	// .y -> color0 light
+	// .z -> color1 light
+	// .w -> color2 light
+
+float4 ambient_color    : register(c8);
+
+float4 light0_dir_local : register(c9);
+float4 light0_color     : register(c10);
+
+float4 light1_dir_local : register(c11);
+float4 light1_color     : register(c12);
+
+float4 light2_dir_local : register(c13);
+float4 light2_color     : register(c14);
+
+
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
 sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
 sampler2D Splatting_HTMap_Texture	: register(s2);  // texture HT pour splatting
 
 struct PS_INTPUT
 {	
-	float4 LODGlobalPatch_TexCoord: TEXCOORD0;
-	float4 UnitPatch_TexCoord: TEXCOORD1;	
+	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
+	float4 UnitPatch_TexCoord		: TEXCOORD1;	
+	float4 GlobalPatch_TexCoord		: TEXCOORD2;
 };
 
-float2 compute_sampling_params( float p_param, float p_interval )
-{
-	float3 res;
-	
-	float t_offset = p_interval * floor( p_param / p_interval );
+#include "spherelod_commons.hlsl"
 
-	float w2 = ( p_param - t_offset ) / p_interval;
-
-	res.x = w2;
-	res.y = t_offset;
-
-	return res;
-}
-
-float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidity )
-{
-
-	// contracter legerement les coords patch pour eviter les effets de bords de couleurs
-	float4 patch_coords = ( 0.98 * ( p_textcoords - 0.5 ) ) + 0.5;
-
-	//float interval = 1.0 / 16;
-	float interval = 1.0 / flags6.x;
-
-	float limit_up = 1.0 - interval;
-
-	float t, h;
-
-	t = clamp( p_temperature, 0.0, 0.999 );
-	h = clamp( p_humidity, 0.0, 0.999 );
-	   			
-	float2 temperature_sampling = compute_sampling_params( clamp( t, 0.0, 1.0 - ( 4.0 * interval ) ), interval );
-	float2 humidity_sampling = compute_sampling_params( clamp( h, 0.0, 1.0 - ( 4.0 * interval ) ), interval );
-
-
-	float4 res_color = 0.0;
-
-
-	bool delta_u = false;
-	bool delta_v = false;
-	
-	if( t < limit_up )
-	{
-		delta_u = true;		
-	}
-	else
-	{
-		delta_u = false;
-	}
-
-	if( h < limit_up )
-	{
-		delta_v = true;
-	}
-	else
-	{
-		delta_v = false;
-	}
-
-	if( delta_u && delta_v )
-	{
-		float4 coords_1 = patch_coords * interval;
-		coords_1.x += temperature_sampling.y;
-		coords_1.y += humidity_sampling.y;
-
-		float4 coords_2 = patch_coords * interval;
-		coords_2.x += temperature_sampling.y + interval;
-		coords_2.y += humidity_sampling.y;
-
-		float4 coords_3 = patch_coords * interval;
-		coords_3.x += temperature_sampling.y + interval;
-		coords_3.y += humidity_sampling.y + interval;
-
-		float4 coords_4 = patch_coords * interval;
-		coords_4.x += temperature_sampling.y;
-		coords_4.y += humidity_sampling.y + interval;
-
-		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
-		float4 color_2 = tex2D( Splatting_HTMap_Texture, coords_2 );
-		float4 color_3 = tex2D( Splatting_HTMap_Texture, coords_3 );
-		float4 color_4 = tex2D( Splatting_HTMap_Texture, coords_4 );
-
-		// calcul des poids splatting : calcul d'un "vecteur des distances"
-
-		float4 distances;
-
-		float2 point;
-		point.x = temperature_sampling.x;
-		point.y = humidity_sampling.x;
-
-		float2 point_1;
-		float2 point_2;
-		float2 point_3;
-		float2 point_4;
-
-		point_1.x = 0.0;
-		point_1.y = 0.0;
-
-		point_2.x = 1.0;
-		point_2.y = 0.0;
-
-		point_3.x = 1.0;
-		point_3.y = 1.0;
-
-		point_4.x = 0.0;
-		point_4.y = 1.0;
-
-		distances.x = 1.0 - clamp( sqrt( ( point_1.x - point.x ) * ( point_1.x - point.x ) + ( point_1.y - point.y ) * ( point_1.y - point.y ) ), 0.0, 1.0 );
-		distances.y = 1.0 - clamp( sqrt( ( point_2.x - point.x ) * ( point_2.x - point.x ) + ( point_2.y - point.y ) * ( point_2.y - point.y ) ), 0.0, 1.0 );
-		distances.z = 1.0 - clamp( sqrt( ( point_3.x - point.x ) * ( point_3.x - point.x ) + ( point_3.y - point.y ) * ( point_3.y - point.y ) ), 0.0, 1.0 );
-		distances.w = 1.0 - clamp( sqrt( ( point_4.x - point.x ) * ( point_4.x - point.x ) + ( point_4.y - point.y ) * ( point_4.y - point.y ) ), 0.0, 1.0 );
-		
-		res_color = distances.x * color_1 + distances.y * color_2 
-					+ distances.z * color_3 + distances.w * color_4;
-	}
-	else if( delta_u && !delta_v )
-	{
-		float4 coords_1 = patch_coords * interval;
-		coords_1.x += temperature_sampling.y;
-		coords_1.y += humidity_sampling.y;
-
-		float4 coords_2 = patch_coords * interval;
-		coords_2.x += temperature_sampling.y + interval;
-		coords_2.y += humidity_sampling.y;
-
-		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
-		float4 color_2 = tex2D( Splatting_HTMap_Texture, coords_2 );
-		
-		res_color = ( ( 1.0 - temperature_sampling.x ) * color_1 ) + ( temperature_sampling.x * color_2 );
-	}
-	else if( !delta_u && delta_v )
-	{
-		float4 coords_1 = patch_coords * interval;
-		coords_1.x += temperature_sampling.y;
-		coords_1.y += humidity_sampling.y;
-
-		float4 coords_4 = patch_coords * interval;
-		coords_4.x += temperature_sampling.y;
-		coords_4.y += humidity_sampling.y + interval;
-
-		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
-		float4 color_4 = tex2D( Splatting_HTMap_Texture, coords_4 );
-
-		res_color = ( ( 1.0 - humidity_sampling.x ) * color_1 ) + ( humidity_sampling.x * color_4 );
-	}
-	else
-	{
-		float4 coords_1 = patch_coords * interval;
-		coords_1.x += temperature_sampling.y;
-		coords_1.y += humidity_sampling.y;
-
-		float4 color_1 = tex2D( Splatting_HTMap_Texture, coords_1 );
-		
-		res_color = color_1;	
-	}
-
-	return res_color;
-
-}
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 final_color = 0.0;
+	float4 pixel_color = 0.0;
 
 	float4 temp_humidity = tex2D( HT_Texture, input.LODGlobalPatch_TexCoord );
 
-
 	float lim_sup = flags6.y;
 	float lim_inf = flags6.z;
-
-
-	
+		
 	bool sea = false;
 	
 	if( flags.x <= lim_inf )
@@ -220,17 +81,65 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 			sea = true;
 		}
 	}
+
+
+
+	float3 avg = 0.0;
+
+	if( !sea )
+	{
+		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, HT_Texture, input.LODGlobalPatch_TexCoord, 100.0 );
+	}
+	
+	float3 texel_pos = compute_front_face_point_vector( input.GlobalPatch_TexCoord );
+
+	if( !sea )
+	{
+		float k = clamp( ( 1.5708 - atan( 30.0 * ( flags.x - 1.0 ) ) ), 0.01, 0.4 );
+
+		texel_pos.x += k * avg.x;
+		texel_pos.y += k * avg.y;
+
+		texel_pos = normalize( texel_pos );
+	}
+
+	float3 texel_pos2;
+	texel_pos2 = CubeToSphere( ProjectVectorToCube( flags.w, texel_pos ) );
+
+	float lf0, lf1, lf2;
+
+	if( flags7.y )
+	{
+		lf0 = clamp( dot( texel_pos2, light0_dir_local.xyz ), 0.0, 1.0 );
+	}
+
+	if( flags7.z )
+	{
+		lf1 = clamp( dot( texel_pos2, light1_dir_local.xyz ), 0.0, 1.0 );
+	}
+
+	if( flags7.w )
+	{
+		lf2 = clamp( dot( texel_pos2, light2_dir_local ), 0.0, 1.0 );
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////
+
+
 	
 
 	if( flags.x > 0.0 && flags.x <= lim_inf )
 	{			
 		if( sea ) 
 		{
-			final_color.z = 1.0;
+			pixel_color.x = 0.17;
+			pixel_color.y = 0.36;
+			pixel_color.z = 0.48;
 		}
 		else
 		{
-			final_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );	
+			pixel_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y );	
 		}
 
 	}
@@ -241,25 +150,50 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 		if( sea )
 		{
-			final_color.z = 1.0;
+			pixel_color.x = 0.17;
+			pixel_color.y = 0.36;
+			pixel_color.z = 0.48;
 		}
 		else
 		{
-			final_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
+			pixel_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
 		}
 	}
 	else
 	{		
 		if( sea )
 		{
-			final_color.z = 1.0;
+			pixel_color.x = 0.17;
+			pixel_color.y = 0.36;
+			pixel_color.z = 0.48;
 		}
 		else
 		{
-			final_color = tex2D( Pixels_HTMap_Texture, temp_humidity );
+			pixel_color = tex2D( Pixels_HTMap_Texture, temp_humidity );
 		}
 	}
 	
+	if( flags7.x )
+	{
+		final_color += ambient_color;
+	}
+	
+	if( flags7.y )
+	{
+		final_color += lf0 * light0_color;
+	}
+
+	if( flags7.z )
+	{
+		final_color += lf1 * light1_color;
+	}
+
+	if( flags7.w )
+	{
+		final_color += lf2 * light2_color;
+	}
+	
+	final_color *= pixel_color;
 	
 	return final_color;	
 }
