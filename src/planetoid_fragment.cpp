@@ -47,10 +47,6 @@ m_inertbody( NULL ),
 m_collisions( p_collisions ),
 m_nb_collisionmeshebuild_done( 0 ),
 m_current_patch( NULL ),
-m_current_patch_lod( -1 ),
-//m_collidinghm_subpassindex( -1 ),
-//m_collidingheightmap_texture( NULL ),
-//m_collidingheightmap_content( NULL ),
 m_draw_collidinghm( false ),
 m_handler( p_handler ),
 m_current_collisions_hm( NULL )
@@ -82,17 +78,13 @@ Fragment::SubPassCreationHandler* Fragment::GetSubPassCreationHandler( void )
 void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod )
 {
     m_current_patch = p_patch;
-    m_current_patch_lod = p_patch_lod;
 
     if( m_collisions )
     {
         std::vector<DrawSpace::SphericalLOD::Patch*> display_list;
-        if( m_current_patch && m_current_patch_lod == 0 )
+        if( m_current_patch && p_patch_lod == 0 )
         {
             display_list.push_back( m_current_patch );
-
-            //m_draw_collidinghm = true;
-            //m_collisions_hm->Enable();
 
             if( p_patch->GetOrientation() == m_planetbody->GetCurrentFace() )
             {
@@ -102,9 +94,7 @@ void Fragment::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_pa
 
                 m_current_collisions_hm = m_collisions_hms[p_patch->GetOrientation()];
                 m_current_collisions_hm->Enable();
-
-                //DrawSpace::SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( m_collisions_hm->GetNode() );
-
+               
                 DrawSpace::SphericalLOD::FaceDrawingNode* node = static_cast<DrawSpace::SphericalLOD::FaceDrawingNode*>( m_current_collisions_hm->GetNode() );
                 node->SetDisplayList( display_list );
             }
@@ -245,26 +235,12 @@ void Fragment::UpdateRelativeAlt( dsreal p_alt )
     m_planetbody->UpdateRelativeAlt( p_alt );
 }
 
-SphericalLOD::Patch* Fragment::GetCurrentPatch( void )
-{
-    return m_current_patch;
-}
-
-int Fragment::GetCurrentPatchLOD( void )
-{
-    return m_current_patch_lod;
-}
-
-
 void Fragment::SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider )
 {
     if( m_draw_collidinghm )
     {        
-        //m_collisions_hm->GetHMTexture()->CopyTextureContent();
-
         m_current_collisions_hm->GetHMTexture()->CopyTextureContent();
 
-        //float* heightmap = (float*)m_collisions_hm->GetHMTextureContent();
         float* heightmap = (float*)m_current_collisions_hm->GetHMTextureContent();
 
         Meshe final_meshe;

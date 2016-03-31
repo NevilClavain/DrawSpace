@@ -58,6 +58,7 @@ protected:
     DrawSpace::SphericalLOD::Config*                            m_config;
 
     DrawSpace::SphericalLOD::Body*                              m_planetbody;
+
     DrawSpace::Dynamics::Collider*                              m_collider;
     
     long                                                        m_nb_collisionmeshebuild_done;
@@ -79,12 +80,8 @@ protected:
     bool                                                        m_collisions;
 
     SphericalLOD::Patch*                                        m_current_patch;
-    int                                                         m_current_patch_lod;
-
+    
     bool                                                        m_draw_collidinghm;
-
-    //DrawSpace::SphericalLOD::Collisions*                        m_collisions_hm;
-
 
     DrawSpace::SphericalLOD::Collisions*                        m_collisions_hms[6];
     DrawSpace::SphericalLOD::Collisions*                        m_current_collisions_hm;
@@ -116,19 +113,11 @@ public:
 
     void UpdateRelativeAlt( dsreal p_alt );
 
-    SphericalLOD::Patch* GetCurrentPatch( void );
-    int GetCurrentPatchLOD( void );
-
     void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done );
 
     void ResetPlanetBody( void );
 
     Fragment::SubPassCreationHandler* GetSubPassCreationHandler( void );
-
-    //virtual void DrawSubPass( void );
-
-
-    //virtual void SubPassDone( void );
 
     virtual void SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider );
 };
