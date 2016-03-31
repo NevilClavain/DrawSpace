@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "plugins\d3d9\d3d9.v
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspaceluascript", "drawspaceluascript.vcxproj", "{CABD34B4-7686-4078-B1CD-C4293F8B1392}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hlsl_30", "shaders\hlsl_30.vcxproj", "{39D4DD3C-8F0E-411B-A615-49CCA08BB6DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{CABD34B4-7686-4078-B1CD-C4293F8B1392}.Debug|Win32.Build.0 = Debug|Win32
 		{CABD34B4-7686-4078-B1CD-C4293F8B1392}.Release|Win32.ActiveCfg = Release|Win32
 		{CABD34B4-7686-4078-B1CD-C4293F8B1392}.Release|Win32.Build.0 = Release|Win32
+		{39D4DD3C-8F0E-411B-A615-49CCA08BB6DC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{39D4DD3C-8F0E-411B-A615-49CCA08BB6DC}.Debug|Win32.Build.0 = Debug|Win32
+		{39D4DD3C-8F0E-411B-A615-49CCA08BB6DC}.Release|Win32.ActiveCfg = Release|Win32
+		{39D4DD3C-8F0E-411B-A615-49CCA08BB6DC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

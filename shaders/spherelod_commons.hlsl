@@ -57,7 +57,7 @@ float3 CubeToSphere( float3 p_vector )
     return res;
 }
 
-// a partir des textures coords sur range [0 - 1], genere un point comme sur un patch front de vertex shader
+// a partir des textures coords sur range [0 - 1], genere un center_point comme sur un patch front de vertex shader
 float3 compute_front_face_point_vector( float2 p_tex_coords )
 {
 	float3 texel_pos = 0.0;
@@ -73,7 +73,7 @@ float3 compute_front_face_point_vector( float2 p_tex_coords )
     return texel_pos;
 }
 
-// genere un vecteur de bump mapping, c a d un vecteur biaise par le relief autour du point courant
+// genere un vecteur de bump mapping, c a d un vecteur biaise par le relief autour du center_point courant
 float3 compute_terrain_bump_vector( float p_point_alt, int p_texture_resol, sampler2D p_htmap_texture, float2 p_tex_coords, float p_vector_bias )
 {
     float3 avg;
@@ -224,9 +224,9 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 
 		float4 distances;
 
-		float2 point;
-		point.x = temperature_sampling.x;
-		point.y = humidity_sampling.x;
+		float2 center_point;
+		center_point.x = temperature_sampling.x;
+		center_point.y = humidity_sampling.x;
 
 		float2 point_1;
 		float2 point_2;
@@ -245,10 +245,10 @@ float4 splatting_color( float4 p_textcoords, float p_temperature, float p_humidi
 		point_4.x = 0.0;
 		point_4.y = 1.0;
 
-		distances.x = 1.0 - clamp( sqrt( ( point_1.x - point.x ) * ( point_1.x - point.x ) + ( point_1.y - point.y ) * ( point_1.y - point.y ) ), 0.0, 1.0 );
-		distances.y = 1.0 - clamp( sqrt( ( point_2.x - point.x ) * ( point_2.x - point.x ) + ( point_2.y - point.y ) * ( point_2.y - point.y ) ), 0.0, 1.0 );
-		distances.z = 1.0 - clamp( sqrt( ( point_3.x - point.x ) * ( point_3.x - point.x ) + ( point_3.y - point.y ) * ( point_3.y - point.y ) ), 0.0, 1.0 );
-		distances.w = 1.0 - clamp( sqrt( ( point_4.x - point.x ) * ( point_4.x - point.x ) + ( point_4.y - point.y ) * ( point_4.y - point.y ) ), 0.0, 1.0 );
+		distances.x = 1.0 - clamp( sqrt( ( point_1.x - center_point.x ) * ( point_1.x - center_point.x ) + ( point_1.y - center_point.y ) * ( point_1.y - center_point.y ) ), 0.0, 1.0 );
+		distances.y = 1.0 - clamp( sqrt( ( point_2.x - center_point.x ) * ( point_2.x - center_point.x ) + ( point_2.y - center_point.y ) * ( point_2.y - center_point.y ) ), 0.0, 1.0 );
+		distances.z = 1.0 - clamp( sqrt( ( point_3.x - center_point.x ) * ( point_3.x - center_point.x ) + ( point_3.y - center_point.y ) * ( point_3.y - center_point.y ) ), 0.0, 1.0 );
+		distances.w = 1.0 - clamp( sqrt( ( point_4.x - center_point.x ) * ( point_4.x - center_point.x ) + ( point_4.y - center_point.y ) * ( point_4.y - center_point.y ) ), 0.0, 1.0 );
 		
 		res_color = distances.x * color_1 + distances.y * color_2 
 					+ distances.z * color_3 + distances.w * color_4;

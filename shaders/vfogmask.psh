@@ -1,7 +1,6 @@
 
-float4 Color : register(c0);
 
-sampler2D Texture0;
+float4 Color : register(c0);
 
 struct PS_INTPUT 
 {

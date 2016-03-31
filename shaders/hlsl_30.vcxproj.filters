@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\commons">
+      <UniqueIdentifier>{c32214b5-9648-422b-9352-df22db828312}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vertex">
+      <UniqueIdentifier>{fa3e472f-e0c8-48f0-95b4-8aaee636c24a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pixel">
+      <UniqueIdentifier>{b8403a54-b64e-4684-88b2-ef90ad668382}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pixel\planet">
+      <UniqueIdentifier>{19287a31-9a10-49c9-b4f7-48eb35d7245c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vertex\planet">
+      <UniqueIdentifier>{12ad8808-27d6-462a-bee0-8bba10c4da0f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="fbm.hlsl">
+      <Filter>Source Files\commons</Filter>
+    </FxCompile>
+    <FxCompile Include="map_height.hlsl">
+      <Filter>Source Files\commons</Filter>
+    </FxCompile>
+    <FxCompile Include="multifbm_height.hlsl">
+      <Filter>Source Files\commons</Filter>
+    </FxCompile>
+    <FxCompile Include="spherelod_commons.hlsl">
+      <Filter>Source Files\commons</Filter>
+    </FxCompile>
+    <FxCompile Include="map_planet_ht.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="map_planet2.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="map_planethm.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_ht.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet2.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planethm.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="map_planet_ht.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="map_planet2.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="map_planethm.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_ht.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet2.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planethm.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

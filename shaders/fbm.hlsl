@@ -132,7 +132,7 @@ float cnoise(float3 P)
 //  Return value range of -1.0->1.0
 //
 
-float Perlin3D( float3 P, double p_seed1, double p_seed2 )
+float Perlin3D( float3 P, float p_seed1, float p_seed2 )
 {
     //  https://github.com/BrianSharpe/Wombat/blob/master/Perlin3D.glsl
 
@@ -198,7 +198,7 @@ float Perlin3D( float3 P, double p_seed1, double p_seed2 )
 //  Simplex Perlin Noise 3D
 //  Return value range of -1.0->1.0
 
-float SimplexPerlin3D( float3 P, double p_seed1, double p_seed2 )
+float SimplexPerlin3D( float3 P, float p_seed1, float p_seed2 )
 {
     //  https://github.com/BrianSharpe/Wombat/blob/master/SimplexPerlin3D.glsl
 
@@ -289,17 +289,17 @@ float SimplexPerlin3D( float3 P, double p_seed1, double p_seed2 )
     return dot( kernel_weights, grad_results ) * FINAL_NORMALIZATION;
 }
 
-double Fractal_fBm_wombat_perlin( double3 f, int nbOctaves, double lacunarity, double roughness, float clamp_res, double p_seed1, double p_seed2 )
+float Fractal_fBm_wombat_perlin( float3 f, int nbOctaves, float lacunarity, float roughness, float clamp_res, float p_seed1, float p_seed2 )
 {
 	int i;
 	// Initialize locals
-	double fValue = 0.0;
-	double3 fTemp;
+	float fValue = 0.0;
+	float3 fTemp;
 
 	fTemp = f;
 
-	double prev = 1.0;
-	double fexp = 1.0;
+	float prev = 1.0;
+	float fexp = 1.0;
 
 	// Inner loop of spectral construction, where the fractal is built
 	for( i = 0; i < nbOctaves; i++ )
@@ -309,7 +309,7 @@ double Fractal_fBm_wombat_perlin( double3 f, int nbOctaves, double lacunarity, d
 		fexp *= lacunarity;
 	}
 
-	double res;
+	float res;
 	if( clamp_res > 0.0 )
 	{
 		res = clamp( -1.0, 1.0, fValue );
@@ -321,17 +321,17 @@ double Fractal_fBm_wombat_perlin( double3 f, int nbOctaves, double lacunarity, d
 	return res;
 }
 
-double Fractal_fBm_classic_perlin( double3 f, int nbOctaves, double lacunarity, double roughness, float clamp_res )
+float Fractal_fBm_classic_perlin( float3 f, int nbOctaves, float lacunarity, float roughness, float clamp_res )
 {
 	int i;
 	// Initialize locals
-	double fValue = 0.0;
-	double3 fTemp;
+	float fValue = 0.0;
+	float3 fTemp;
 
 	fTemp = f;
 
-	double prev = 1.0;
-	double fexp = 1.0;
+	float prev = 1.0;
+	float fexp = 1.0;
 
 	// Inner loop of spectral construction, where the fractal is built
 	for( i = 0; i < nbOctaves; i++ )
@@ -341,7 +341,7 @@ double Fractal_fBm_classic_perlin( double3 f, int nbOctaves, double lacunarity, 
 		fexp *= lacunarity;
 	}
 
-	double res;
+	float res;
 	if( clamp_res > 0.0 )
 	{
 		res = clamp( -1.0, 1.0, fValue );
