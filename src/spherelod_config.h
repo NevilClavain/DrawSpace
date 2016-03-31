@@ -33,10 +33,22 @@ namespace SphericalLOD
 class Config
 {
 public:
-    double          m_lod0base;
 
-    Binder*         m_groundCollisionsBinder[6];
-    Binder*         m_patchTexturesBinder[6];
+    typedef struct
+    {
+        bool enable_collisions;
+        bool enable_lod;
+        long min_lodlevel;  // valable si enable_lod == true
+    
+    } FragmentDescriptor;
+
+
+    double                          m_lod0base;
+
+    Binder*                         m_groundCollisionsBinder[6];
+    Binder*                         m_patchTexturesBinder[6];
+
+    std::vector<FragmentDescriptor> m_fragments_descr;
 
     Config( void );
     ~Config( void );
