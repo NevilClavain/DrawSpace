@@ -39,13 +39,14 @@ Meshe* Body::m_planetpatch_skirt_meshe = NULL;
 
 
 Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, 
-            Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel ) : 
+            Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel, bool p_enable_cdlod ) : 
 m_timemanager( p_time ),
 m_diameter( p_diameter ),
 m_current_face( -1 ),
 m_current_patch( NULL ),
 m_relative_alt( 0.0 ),
-m_config( p_config )
+m_config( p_config ),
+m_enable_cdlod( p_enable_cdlod )
 {
     for( long i = 0; i < 6; i++ )
     {
@@ -101,60 +102,23 @@ void Body::Compute( void )
     // alignment_factor_limit augmente au fur et a mesure qu'on approche l'altitude zero
     alignment_factor_limit = 0.25 * DrawSpace::Utils::Maths::Clamp( 0.0, 1.0, ( 3.0 - m_relative_alt ) / 3.0 );
 
-
-    for( long i = 0; i < 6; i++ )
+    if( m_enable_cdlod )
     {
-        if( m_faces[i]->GetAlignmentFactor() > alignment_factor_limit )
+        for( long i = 0; i < 6; i++ )
         {
-            m_faces[i]->UpdateLODComputationParams();
-            m_faces[i]->Compute();
-            m_faces[i]->UpdateLODComputationResults();    
-        }
-        else
-        {
-            m_faces[i]->ResetDisplayList();
+            if( m_faces[i]->GetAlignmentFactor() > alignment_factor_limit )
+            {
+                m_faces[i]->UpdateLODComputationParams();
+                m_faces[i]->Compute();
+                m_faces[i]->UpdateLODComputationResults();    
+            }
+            else
+            {
+                m_faces[i]->ResetDisplayList();
+            }
         }
     }
-
-
     check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
-    
-    //////////////////////////////////////
-
-    /*
-    for( long i = 0; i < 6; i++ )
-    {        
-        bool status = m_faces[i]->ComputeAlignmentFactor();
-    }
-
-    int curr_face = 0;
-    dsreal af = m_faces[0]->GetAlignmentFactor();
-
-    for( long i = 1; i < 6; i++ )
-    {
-        if( m_faces[i]->GetAlignmentFactor() > af )
-        {
-            curr_face = i;
-            af = m_faces[i]->GetAlignmentFactor();
-        }
-    }
-   
-    if( m_current_face != curr_face )
-    {
-        if( m_current_face != -1 )
-        {
-            m_faces[m_current_face]->ResetDisplayList();
-        }
-        m_current_face = curr_face;
-    }
-
-    
-    m_faces[m_current_face]->UpdateLODComputationParams();
-    m_faces[m_current_face]->Compute();
-    m_faces[m_current_face]->UpdateLODComputationResults();
-
-    check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
-    */
 }
 
 

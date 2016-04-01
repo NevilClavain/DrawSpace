@@ -471,9 +471,6 @@ void Face::Compute( void )
 {
     if( m_hot )
     {
-        //m_displaylist.clear();
-        //m_currentPatch = NULL;
-
         m_work_displaylist.clear();
         m_work_currentPatch = NULL;
 

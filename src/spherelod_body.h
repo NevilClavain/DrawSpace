@@ -58,6 +58,8 @@ protected:
 
     double                                                                      m_relative_alt;
 
+    bool                                                                        m_enable_cdlod;
+
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
     static void build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt );
@@ -70,7 +72,7 @@ public:
 
 
     Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, 
-            Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel );
+            Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel, bool p_enable_cdlod );
 
     virtual ~Body( void );
 
