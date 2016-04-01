@@ -143,18 +143,13 @@ public:
     void                                GetSceneName( dsstring& p_name );    
     void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
 
-    //void                                RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder );
     void                                RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation );
 
     DrawSpace::Core::RenderingNode*     GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
-    //DrawSpace::Core::RenderingNode*     GetSingleNodeFromPass( Pass* p_pass );
 
     void                                BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
 
     Fragment*                           GetFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index );
-
-
-    //DrawSpace::Core::Fx*                CreatePlanetBodyFx( DrawSpace::Pass* p_pass, int p_faceid );
     
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 
@@ -165,12 +160,10 @@ public:
 
     bool                                GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude );
 
-    //void                                InitNoisingTextures( void );
-
     void                                DrawSubPasses( void );
 
 
-    void                                ResetRegisteredBodyFragment( DrawSpace::Dynamics::InertBody* p_body );
+    void                                ResetRegisteredBodyFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index );
 
     int                                 GetSingleShotSubPassesStackSize();
 };
