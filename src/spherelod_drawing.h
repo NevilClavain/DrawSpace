@@ -86,13 +86,11 @@ protected:
     typedef std::map<FaceDrawingNode*, int>                                             NodesSet;
     typedef DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*>   RenderingNodeDrawCallback;
 
-    Body*                                                                       m_planetbody;
+    //Body*                                                                       m_planetbody;
+    std::vector<Body*>                                                          m_planetbodies;
 
     std::map<Pass*, NodesSet>                                                   m_passesnodes;
     NodesSet                                                                    m_nodes;
-
-    //std::map<Pass*, SphericalLOD::FaceDrawingNode*>                             m_passes_singlenodes;
-
 
     RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler;
     
@@ -112,22 +110,19 @@ public:
     Drawing( SphericalLOD::Config* p_config );
     virtual ~Drawing( void );
 
-    virtual void SetCurrentPlanetBody( Body* p_planetbody );
+    //virtual void SetCurrentPlanetBody( Body* p_planetbody );
+
+    virtual void SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies );
 
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
 
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    //virtual void RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder );
     virtual void RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation );
 
 
     DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
-    //DrawSpace::Core::RenderingNode* GetSingleNodeFromPass( Pass* p_pass );
-    //void SetSinglePassSlot( Pass* p_pass, DrawSpace::SphericalLOD::FaceDrawingNode* p_node );
-
-    Body* GetBody( void );
-
+   
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
     RenderingNodeDrawCallback* GetSingleNodeDrawHandler( void );

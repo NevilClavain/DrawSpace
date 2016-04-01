@@ -125,8 +125,12 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
             m_current_camerapoint = current_camera_scenename;
 
             Fragment* fragment = m_registered_camerapoints[current_camera_scenename].fragment;
-            m_drawable->SetCurrentPlanetBody( fragment->GetPlanetBody() );
+            //m_drawable->SetCurrentPlanetBody( fragment->GetPlanetBody() );
             // TODO modif : m_drawable -> lui setter une liste de fragments et non plus un spherelod body (ou bien une liste de spherelod_body a construire a la volee)
+
+            std::vector<SphericalLOD::Body*> planet_bodies;
+            planet_bodies.push_back( fragment->GetPlanetBody() );
+            m_drawable->SetCurrentPlanetBodies( planet_bodies );
         }
         else
         {

@@ -156,7 +156,7 @@ DrawSpace::SphericalLOD::Binder* FaceDrawingNode::GetBinder( void )
 
 Drawing::Drawing( SphericalLOD::Config* p_config ) :
 m_renderer( NULL ),
-m_planetbody( NULL ),
+//m_planetbody( NULL ),
 m_config( p_config )
 {
     m_singlenode_draw_handler = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
@@ -167,9 +167,16 @@ Drawing::~Drawing( void )
     _DRAWSPACE_DELETE_( m_singlenode_draw_handler );
 }
 
+/*
 void Drawing::SetCurrentPlanetBody( Body* p_planetbody )
 {
     m_planetbody = p_planetbody;
+}
+*/
+
+void Drawing::SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies )
+{
+    m_planetbodies = p_planetbodies;
 }
 
 void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
@@ -195,7 +202,14 @@ void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpa
 
 void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
+    /*
     if( !m_planetbody )
+    {
+        return;
+    }
+    */
+
+    if( 0 == m_planetbodies.size() )
     {
         return;
     }
@@ -213,6 +227,23 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     std::vector<Patch*> dl;
  
+    Body* planetbody = m_planetbodies[0];
+
+    planetbody->GetFace( m_nodes[face_node] )->GetDisplayList( dl );
+    Patch* current_patch = planetbody->GetFace( m_nodes[face_node] )->GetCurrentPatch();
+ 
+    face_node->SetCurrentPatch( current_patch );
+    face_node->SetDisplayList( dl );
+
+    Binder* node_binder = face_node->GetBinder();
+    node_binder->Bind();
+    
+    // recup relative alt de la face
+    dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAltSphere();
+
+    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), planetbody->GetDiameter() / 2.0, rel_alt, m_globaltransformation, view, proj );
+    node_binder->Unbind();
+    /*
     m_planetbody->GetFace( m_nodes[face_node] )->GetDisplayList( dl );
     Patch* current_patch = m_planetbody->GetFace( m_nodes[face_node] )->GetCurrentPatch();
  
@@ -227,6 +258,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), m_planetbody->GetDiameter() / 2.0, rel_alt, m_globaltransformation, view, proj );
     node_binder->Unbind();
+    */
 }
 
 void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
@@ -246,7 +278,10 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Bind();
 
     // recup relative alt de la face
-    dsreal rel_alt = m_planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
+    //dsreal rel_alt = m_planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
+
+    Body* planetbody = m_planetbodies[0];
+    dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
 
     face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, rel_alt, world, view, proj );   
     node_binder->Unbind();
@@ -288,21 +323,7 @@ DrawSpace::Core::RenderingNode* Drawing::GetPlanetBodyNodeFromPass( Pass* p_pass
     return NULL;
 }
 
-/*
-DrawSpace::Core::RenderingNode* Drawing::GetSingleNodeFromPass( Pass* p_pass )
-{
-    if( 0 == m_passes_singlenodes.count( p_pass ) )
-    {
-        return NULL;
-    }
-    return m_passes_singlenodes[p_pass];
-}
-*/
 
-DrawSpace::SphericalLOD::Body* Drawing::GetBody( void )
-{
-    return m_planetbody;
-}
 
 void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {
