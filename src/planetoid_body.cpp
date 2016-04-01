@@ -126,6 +126,7 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
 
             Fragment* fragment = m_registered_camerapoints[current_camera_scenename].fragment;
             m_drawable->SetCurrentPlanetBody( fragment->GetPlanetBody() );
+            // TODO modif : m_drawable -> lui setter une liste de fragments et non plus un spherelod body (ou bien une liste de spherelod_body a construire a la volee)
         }
         else
         {
@@ -385,6 +386,8 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 {
     for( std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>::iterator it = m_registered_bodies.begin(); it != m_registered_bodies.end(); ++it )
     {
+        // TODO modif : ici parcourir la liste des fragments du registeredbody
+
         Fragment* bodyfragment = it->second.fragment;
 
         if( it->second.attached )
@@ -476,6 +479,7 @@ void DrawSpace::Planetoid::Body::manage_camerapoints( void )
             dsreal rel_alt = ( camera_pos2.Length() / m_ray );
 
             it->second.fragment->UpdateRelativeAlt( rel_alt );
+            // TODO modif : faire UpdateRelativeAlt sur l'ensemble des fragments de la liste
         }
         // les camera de type FREE ne sont jamais "hot", donc inutile de le fournir l'altitude relative
         // les cameras de type INERTBODY_LINKED : l'altitude relative est deja fournie au fragment via l'inertbody associe, dans manage_bodies()
@@ -510,6 +514,7 @@ void DrawSpace::Planetoid::Body::update_cameras_alt( void )
             if( m_registered_bodies.count( inertbody ) )
             {                
                 it->second.camera->SetRelativeAltitude( m_registered_bodies[inertbody].fragment->GetPlanetBody()->GetHotPointAltitud() );
+                // TODO modif : choisir quel fragment dans la liste fournit son hotpoint altitud a la camera (index dans FragmentDescriptor ?)
             }
         }
     }
@@ -604,6 +609,8 @@ DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( DrawSpa
     if( m_registered_bodies.count( p_body ) )
     {
         return m_registered_bodies[p_body].fragment;
+
+        // TODO modif : utiliser l'arg p_fragment_index pour designer quel fragment de la liste retourner
     }
     return NULL;
 }
@@ -623,12 +630,14 @@ bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynami
     return false;
 }
 
-void DrawSpace::Planetoid::Body::ResetRegisteredBodyFragment( DrawSpace::Dynamics::InertBody* p_body )
+void DrawSpace::Planetoid::Body::ResetRegisteredBodyFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index )
 {
     if( m_registered_bodies.count( p_body ) > 0 )
     {
         RegisteredBody entry = m_registered_bodies[p_body];
         entry.fragment->GetPlanetBody()->Reset();
+
+        // TODO modif : utiliser l'arg p_fragment_index pour designer quel fragment de la liste est a reseter
     }
 }
 
