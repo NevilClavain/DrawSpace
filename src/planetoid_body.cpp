@@ -333,7 +333,7 @@ void DrawSpace::Planetoid::Body::on_scenegraph_event( SceneNodeGraph::Scenegraph
         compute_fragments();
         manage_bodies();
         manage_camerapoints();
-        update_fragments();
+        update_cameras_alt();
     }
 }
 
@@ -491,7 +491,7 @@ void DrawSpace::Planetoid::Body::compute_fragments( void )
     }
 }
 
-void DrawSpace::Planetoid::Body::update_fragments( void )
+void DrawSpace::Planetoid::Body::update_cameras_alt( void )
 {
     // ECH 01/04/2016. Refonte - simplification de cet algo :
     // 
@@ -598,9 +598,14 @@ void DrawSpace::Planetoid::Body::BindPlanetBodyExternalGlobalTexture( DrawSpace:
     m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->SetTexture( p_texture, 0 );
 }
 
-DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( int p_index )
+DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index )
 {
-    return m_planetfragments_list[p_index];
+    //return m_planetfragments_list[p_index];
+    if( m_registered_bodies.count( p_body ) )
+    {
+        return m_registered_bodies[p_body].fragment;
+    }
+    return NULL;
 }
 
 bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude )

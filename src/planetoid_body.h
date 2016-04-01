@@ -111,12 +111,6 @@ protected:
     // lists of some passes to render for internal stuff
     // colliding heightmap, global textures ?
 
-    /*
-    std::list<SphericalLOD::SubPass*>                                       m_singleshot_subpasses_stack;
-    std::vector<SphericalLOD::SubPass*>                                     m_singleshot_subpasses;
-    std::vector<SphericalLOD::SubPass*>                                     m_permanent_subpasses;
-    */
-
     SphericalLOD::SubPass::singleshot_subpasses_stack                       m_singleshot_subpasses_stack;
     SphericalLOD::SubPass::singleshot_subpasses                             m_singleshot_subpasses;
     SphericalLOD::SubPass::permanent_subpasses                              m_permanent_subpasses;
@@ -139,7 +133,7 @@ protected:
     void manage_bodies( void );
     void manage_camerapoints( void );
     void compute_fragments( void );
-    void update_fragments( void );
+    void update_cameras_alt( void );
 
 public:
     
@@ -157,7 +151,7 @@ public:
 
     void                                BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid );
 
-    Fragment*                           GetFragment( int p_index );
+    Fragment*                           GetFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index );
 
 
     //DrawSpace::Core::Fx*                CreatePlanetBodyFx( DrawSpace::Pass* p_pass, int p_faceid );
