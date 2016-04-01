@@ -69,7 +69,9 @@ public:
     static DrawSpace::Core::Meshe*                                              m_planetpatch_skirt_meshe;
 
 
-    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler );
+    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, 
+            Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel );
+
     virtual ~Body( void );
 
     static void BuildMeshes( void );

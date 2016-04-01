@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler ) : 
+Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel ) : 
 m_config( p_config ),
 m_rootpatch( NULL ), 
 m_planet_diameter( p_diameter ),
@@ -42,7 +42,8 @@ m_relative_alt( 0.0 ),
 m_relative_alt_sphere( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
 m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
-m_subpasscreation_handler( p_handler )
+m_subpasscreation_handler( p_handler ),
+m_min_lodlevel( p_min_lodlevel )
 {
 }
 
@@ -555,6 +556,7 @@ void Face::SetHotState( bool p_hotstate )
     }
 }
 
+// coeur algo CDLOD
 bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_lodlevel )
 {
     QuadtreeNode<Patch>* patch_node = static_cast<QuadtreeNode<Patch>*>( p_current_node );
@@ -641,8 +643,8 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
         dsreal factor = Maths::Clamp( 0.0, 1.0, m_relative_alt - 1.0 );
         dsreal factor2 = atan( 18.0 * factor ) / 1.57;
 
-        m_lod_slipping_sup = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 12, NB_LOD_RANGES - 1, factor2 ) );
-        m_lod_slipping_inf = Maths::Clamp( 0, NB_LOD_RANGES - 1, Maths::Lerp( 0, NB_LOD_RANGES - 2, factor2 ) );
+        m_lod_slipping_sup = Maths::Clamp( m_min_lodlevel, NB_LOD_RANGES - 1, Maths::Lerp( 12, NB_LOD_RANGES - 1, factor2 ) );
+        m_lod_slipping_inf = Maths::Clamp( m_min_lodlevel, NB_LOD_RANGES - 1, Maths::Lerp( 0, NB_LOD_RANGES - 2, factor2 ) );
     }
 }
 

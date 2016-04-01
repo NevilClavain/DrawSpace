@@ -163,9 +163,6 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                 {
                     if( inertbody->GetReferentBody() == this )
                     {
-                        dsstring bodyname;
-                        p_node->GetSceneName( bodyname );
-
                         reg_body.attached = true;
                         reg_body.body = inertbody;                        
                         reg_body.relative_alt_valid = false;
@@ -173,13 +170,12 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         inertbody->IncludeTo( this );
 
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                            DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
+                            DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb, 0 ) );
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
                         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
                                                                         collider, m_ray, true, m_subpass_creation_cb ) );
                         planet_fragment->SetHotState( true );
-                        //planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
 
                         m_planetfragments_list.push_back( planet_fragment );
                         reg_body.fragment = planet_fragment;
@@ -191,15 +187,13 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                 }
                 else
                 {
-                    dsstring bodyname;
-                    p_node->GetSceneName( bodyname );
 
                     reg_body.attached = false;
                     reg_body.body = inertbody;
                     reg_body.relative_alt_valid = false;
 
                     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
+                        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb, 0 ) );
 
                     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
@@ -207,7 +201,6 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                                                                     collider, m_ray, true, m_subpass_creation_cb ) );
 
                     planet_fragment->SetHotState( false );
-                    //planet_fragment->RegisterPatchsDrawRequestHandler( m_patchsdraw_request_cb );
                     
                     m_planetfragments_list.push_back( planet_fragment );
                     reg_body.fragment = planet_fragment;
@@ -507,7 +500,7 @@ void DrawSpace::Planetoid::Body::update_fragments( void )
 void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr, bool p_hotstate )
 {
     DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb ) );
+        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb, 0 ) );
     Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
     Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 

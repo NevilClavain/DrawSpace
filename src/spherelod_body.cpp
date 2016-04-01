@@ -38,7 +38,8 @@ Meshe* Body::m_planetpatch2_meshe = NULL;
 Meshe* Body::m_planetpatch_skirt_meshe = NULL;
 
 
-Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler ) : 
+Body::Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, 
+            Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel ) : 
 m_timemanager( p_time ),
 m_diameter( p_diameter ),
 m_current_face( -1 ),
@@ -48,7 +49,7 @@ m_config( p_config )
 {
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter, m_config, p_handler ) );
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_diameter, m_config, p_handler, p_min_lodlevel ) );
     }
 }
 
