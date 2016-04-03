@@ -124,12 +124,15 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
         {
             m_current_camerapoint = current_camera_scenename;
 
-            Fragment* fragment = m_registered_camerapoints[current_camera_scenename].fragment;
-            //m_drawable->SetCurrentPlanetBody( fragment->GetPlanetBody() );
             // TODO modif : m_drawable -> lui setter une liste de fragments et non plus un spherelod body (ou bien une liste de spherelod_body a construire a la volee)
-
             std::vector<SphericalLOD::Body*> planet_bodies;
-            planet_bodies.push_back( fragment->GetPlanetBody() );
+
+            for( size_t i = 0; i < m_registered_camerapoints[current_camera_scenename].fragments.size(); i++ )
+            {
+                Fragment* fragment = m_registered_camerapoints[current_camera_scenename].fragments[i];
+            
+                planet_bodies.push_back( fragment->GetPlanetBody() );
+            }
             m_drawable->SetCurrentPlanetBodies( planet_bodies );
         }
         else
@@ -183,7 +186,8 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         planet_fragment->SetHotState( true );
 
                         m_planetfragments_list.push_back( planet_fragment );
-                        reg_body.fragment = planet_fragment;
+                        //reg_body.fragment = planet_fragment;
+                        reg_body.fragments.push_back( planet_fragment );
 
                         planet_fragment->SetInertBody( inertbody );
                                               
@@ -208,7 +212,8 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     planet_fragment->SetHotState( false );
                     
                     m_planetfragments_list.push_back( planet_fragment );
-                    reg_body.fragment = planet_fragment;
+                    //reg_body.fragment = planet_fragment;
+                    reg_body.fragments.push_back( planet_fragment );
 
                     planet_fragment->SetInertBody( inertbody );                    
 
@@ -250,7 +255,8 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         reg_camera.type = INERTBODY_LINKED;
                         reg_camera.attached_body = inert_body;
                         reg_camera.attached_collider = NULL;
-                        reg_camera.fragment = m_registered_bodies[inert_body].fragment;
+                        //reg_camera.fragment = m_registered_bodies[inert_body].fragment;
+                        reg_camera.fragments = m_registered_bodies[inert_body].fragments;
 
                         m_registered_camerapoints[camera_scenename] = reg_camera;
                     }
@@ -320,7 +326,9 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
         planet_fragment->SetCamera( p_camera );
     }
 
-    p_cameradescr.fragment = planet_fragment;    
+    //p_cameradescr.fragment = planet_fragment;
+    p_cameradescr.fragments.push_back( planet_fragment );
+
     p_cameradescr.camera->SetRelativeOrbiter( this );
 
     m_planetfragments_list.push_back( planet_fragment );    
@@ -392,74 +400,80 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
     {
         // TODO modif : ici parcourir la liste des fragments du registeredbody
 
-        Fragment* bodyfragment = it->second.fragment;
-
-        if( it->second.attached )
+        for( size_t i = 0; i < it->second.fragments.size(); i++ )
         {
-            DrawSpace::Utils::Matrix bodypos;
+            //Fragment* bodyfragment = it->second.fragment;
 
-            it->second.body->GetLastLocalWorldTrans( bodypos );
+            Fragment* bodyfragment = it->second.fragments[i];
 
-            DrawSpace::Utils::Vector bodypos2;
-            bodypos2[0] = bodypos( 3, 0 );
-            bodypos2[1] = bodypos( 3, 1 );
-            bodypos2[2] = bodypos( 3, 2 );
-
-            dsreal rel_alt = ( bodypos2.Length() / m_ray );
-            it->second.relative_alt_valid = true;
-            it->second.relative_alt = rel_alt;
-
-            bodyfragment->UpdateRelativeAlt( rel_alt );
-
-            if( rel_alt >= /*1.2*/ /*2.1*/ 4.5 )
+            if( it->second.attached )
             {
+                DrawSpace::Utils::Matrix bodypos;
 
-                detach_body( it->second.body );                
-                bodyfragment->RemoveColliderFromWorld();
-                bodyfragment->SetHotState( false );
-                bodyfragment->ResetPlanetBody();
+                it->second.body->GetLastLocalWorldTrans( bodypos );
 
-                //////
+                DrawSpace::Utils::Vector bodypos2;
+                bodypos2[0] = bodypos( 3, 0 );
+                bodypos2[1] = bodypos( 3, 1 );
+                bodypos2[2] = bodypos( 3, 2 );
+
+                dsreal rel_alt = ( bodypos2.Length() / m_ray );
+                it->second.relative_alt_valid = true;
+                it->second.relative_alt = rel_alt;
+
+                bodyfragment->UpdateRelativeAlt( rel_alt );
+
+                if( rel_alt >= /*1.2*/ /*2.1*/ 4.5 )
+                {
+
+                    detach_body( it->second.body );                
+                    bodyfragment->RemoveColliderFromWorld();
+                    bodyfragment->SetHotState( false );
+                    bodyfragment->ResetPlanetBody();
+
+                    //////
+                }
             }
-        }
-        else
-        {
-            DrawSpace::Utils::Matrix bodypos;
-
-            it->second.body->GetLastLocalWorldTrans( bodypos );
-
-            DrawSpace::Utils::Vector bodypos2;
-            bodypos2[0] = bodypos( 3, 0 );
-            bodypos2[1] = bodypos( 3, 1 );
-            bodypos2[2] = bodypos( 3, 2 );
-
-            DrawSpace::Utils::Matrix planetbodypos;            
-            GetLastWorldTransformation( planetbodypos );
-
-            DrawSpace::Utils::Vector planetbodypos2;
-            planetbodypos2[0] = planetbodypos( 3, 0 );
-            planetbodypos2[1] = planetbodypos( 3, 1 );
-            planetbodypos2[2] = planetbodypos( 3, 2 );
-
-            Vector delta;
-
-            delta[0] = planetbodypos2[0] - bodypos2[0];
-            delta[1] = planetbodypos2[1] - bodypos2[1];
-            delta[2] = planetbodypos2[2] - bodypos2[2];
-            delta[3] = 1.0;
-
-            dsreal rel_alt = delta.Length() / m_ray;
-
-            it->second.relative_alt_valid = true;
-            it->second.relative_alt = rel_alt;
-
-            bodyfragment->UpdateRelativeAlt( rel_alt );
-
-            if( rel_alt < /*1.1*/ /*2.0*/ 4.2 )
+            else
             {
-                attach_body( it->second.body );
-                bodyfragment->SetHotState( true );
+                DrawSpace::Utils::Matrix bodypos;
+
+                it->second.body->GetLastLocalWorldTrans( bodypos );
+
+                DrawSpace::Utils::Vector bodypos2;
+                bodypos2[0] = bodypos( 3, 0 );
+                bodypos2[1] = bodypos( 3, 1 );
+                bodypos2[2] = bodypos( 3, 2 );
+
+                DrawSpace::Utils::Matrix planetbodypos;            
+                GetLastWorldTransformation( planetbodypos );
+
+                DrawSpace::Utils::Vector planetbodypos2;
+                planetbodypos2[0] = planetbodypos( 3, 0 );
+                planetbodypos2[1] = planetbodypos( 3, 1 );
+                planetbodypos2[2] = planetbodypos( 3, 2 );
+
+                Vector delta;
+
+                delta[0] = planetbodypos2[0] - bodypos2[0];
+                delta[1] = planetbodypos2[1] - bodypos2[1];
+                delta[2] = planetbodypos2[2] - bodypos2[2];
+                delta[3] = 1.0;
+
+                dsreal rel_alt = delta.Length() / m_ray;
+
+                it->second.relative_alt_valid = true;
+                it->second.relative_alt = rel_alt;
+
+                bodyfragment->UpdateRelativeAlt( rel_alt );
+
+                if( rel_alt < /*1.1*/ /*2.0*/ 4.2 )
+                {
+                    attach_body( it->second.body );
+                    bodyfragment->SetHotState( true );
+                }
             }
+
         }
     }
 }
@@ -482,8 +496,12 @@ void DrawSpace::Planetoid::Body::manage_camerapoints( void )
 
             dsreal rel_alt = ( camera_pos2.Length() / m_ray );
 
-            it->second.fragment->UpdateRelativeAlt( rel_alt );
+            //it->second.fragment->UpdateRelativeAlt( rel_alt );
             // TODO modif : faire UpdateRelativeAlt sur l'ensemble des fragments de la liste
+            for( size_t i = 0; i < it->second.fragments.size(); i++ )
+            {
+                it->second.fragments[i]->UpdateRelativeAlt( rel_alt );
+            }
         }
         // les camera de type FREE ne sont jamais "hot", donc inutile de le fournir l'altitude relative
         // les cameras de type INERTBODY_LINKED : l'altitude relative est deja fournie au fragment via l'inertbody associe, dans manage_bodies()
@@ -517,8 +535,10 @@ void DrawSpace::Planetoid::Body::update_cameras_alt( void )
 
             if( m_registered_bodies.count( inertbody ) )
             {                
-                it->second.camera->SetRelativeAltitude( m_registered_bodies[inertbody].fragment->GetPlanetBody()->GetHotPointAltitud() );
+                //it->second.camera->SetRelativeAltitude( m_registered_bodies[inertbody].fragment->GetPlanetBody()->GetHotPointAltitud() );
                 // TODO modif : choisir quel fragment dans la liste fournit son hotpoint altitud a la camera (index dans FragmentDescriptor ?)
+
+                it->second.camera->SetRelativeAltitude( m_registered_bodies[inertbody].fragments[m_config->m_ground_fragment]->GetPlanetBody()->GetHotPointAltitud() );
             }
         }
     }
@@ -612,7 +632,9 @@ DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( DrawSpa
     //return m_planetfragments_list[p_index];
     if( m_registered_bodies.count( p_body ) )
     {
-        return m_registered_bodies[p_body].fragment;
+        //return m_registered_bodies[p_body].fragment;
+
+        return m_registered_bodies[p_body].fragments[p_fragment_index];
 
         // TODO modif : utiliser l'arg p_fragment_index pour designer quel fragment de la liste retourner
     }
@@ -639,7 +661,8 @@ void DrawSpace::Planetoid::Body::ResetRegisteredBodyFragment( DrawSpace::Dynamic
     if( m_registered_bodies.count( p_body ) > 0 )
     {
         RegisteredBody entry = m_registered_bodies[p_body];
-        entry.fragment->GetPlanetBody()->Reset();
+        //entry.fragment->GetPlanetBody()->Reset();
+        entry.fragments[p_fragment_index]->GetPlanetBody()->Reset();
 
         // TODO modif : utiliser l'arg p_fragment_index pour designer quel fragment de la liste est a reseter
     }

@@ -54,7 +54,10 @@ protected:
         dsreal                                      relative_alt;
 
         DrawSpace::Dynamics::InertBody*             body;
-        Fragment*                                   fragment;
+
+        //Fragment*                                   fragment;
+        std::vector<Fragment*>                      fragments;
+
         DrawSpace::IntermediatePass*                collidingheightmap_pass;
         DrawSpace::SphericalLOD::FaceDrawingNode*   collidingheightmap_node;
         
@@ -79,7 +82,8 @@ protected:
 
         DrawSpace::Dynamics::CameraPoint*   camera;
 
-        Fragment*                           fragment;
+        //Fragment*                           fragment;
+        std::vector<Fragment*>              fragments;
 
     } RegisteredCamera;
 
