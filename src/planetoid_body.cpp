@@ -174,22 +174,29 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         reg_body.attached = true;
                         reg_body.body = inertbody;                        
                         reg_body.relative_alt_valid = false;
-                                                                                                                
-                        inertbody->IncludeTo( this );
 
-                        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                            DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb, 0, true ) );
-                        Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
+                        for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
+                        {                                                                                                                
+                            inertbody->IncludeTo( this );
+
+                            DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
+                                DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
+                                                                m_subpass_creation_cb, 
+                                                                m_config->m_fragments_descr[i].min_lodlevel, 
+                                                                m_config->m_fragments_descr[i].enable_lod ) );
+
+                            Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
-                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
-                                                                        collider, m_ray, true, m_subpass_creation_cb ) );
-                        planet_fragment->SetHotState( true );
+                            Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
+                                                                            m_subpass_creation_cb ) );
+                            planet_fragment->SetHotState( true );
 
-                        m_planetfragments_list.push_back( planet_fragment );
-                        //reg_body.fragment = planet_fragment;
-                        reg_body.fragments.push_back( planet_fragment );
+                            m_planetfragments_list.push_back( planet_fragment );
+                        
+                            reg_body.fragments.push_back( planet_fragment );
 
-                        planet_fragment->SetInertBody( inertbody );
+                            planet_fragment->SetInertBody( inertbody );
+                        }
                                               
                         m_registered_bodies[inertbody] = reg_body;
                     }
@@ -201,21 +208,28 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     reg_body.body = inertbody;
                     reg_body.relative_alt_valid = false;
 
-                    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb, 0, true ) );
+                    for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
+                    {                                                                                                                
 
-                    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
+                        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
+                            DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
+                                                        m_subpass_creation_cb, 
+                                                        m_config->m_fragments_descr[i].min_lodlevel, 
+                                                        m_config->m_fragments_descr[i].enable_lod ) );
+
+                        Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
-                    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
-                                                                    collider, m_ray, true, m_subpass_creation_cb ) );
+                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
+                                                                        m_subpass_creation_cb ) );
 
-                    planet_fragment->SetHotState( false );
+                        planet_fragment->SetHotState( false );
                     
-                    m_planetfragments_list.push_back( planet_fragment );
-                    //reg_body.fragment = planet_fragment;
-                    reg_body.fragments.push_back( planet_fragment );
+                        m_planetfragments_list.push_back( planet_fragment );     
 
-                    planet_fragment->SetInertBody( inertbody );                    
+                        reg_body.fragments.push_back( planet_fragment );
+
+                        planet_fragment->SetInertBody( inertbody );  
+                    }
 
                     m_registered_bodies[inertbody] = reg_body;
                 }
@@ -255,7 +269,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         reg_camera.type = INERTBODY_LINKED;
                         reg_camera.attached_body = inert_body;
                         reg_camera.attached_collider = NULL;
-                        //reg_camera.fragment = m_registered_bodies[inert_body].fragment;
+                        
                         reg_camera.fragments = m_registered_bodies[inert_body].fragments;
 
                         m_registered_camerapoints[camera_scenename] = reg_camera;
@@ -310,28 +324,38 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
 void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr, bool p_hotstate )
 {
-    DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-        DrawSpace::SphericalLOD::Body( m_ray * 2.0, m_timemanager, m_config, m_subpass_creation_cb, 0, true ) );
-    Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
-    
-    Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
-                                                                        collider, m_ray, false, m_subpass_creation_cb ) );
-   
-    planet_fragment->SetHotState( p_hotstate );
-   
-    // si p_hotstate == false, il n'y a pas d'injection de hotpoint dans le spherelod body depuis Fragment::Update
-    // donc inutile de faire le SetCamera sur le fragment
-    if( p_hotstate )
+    for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
     {
-        planet_fragment->SetCamera( p_camera );
+        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
+            DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
+                                            m_subpass_creation_cb, 
+                                            m_config->m_fragments_descr[i].min_lodlevel,
+                                            m_config->m_fragments_descr[i].enable_lod ) );
+
+        Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
+    
+        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
+                                                                            collider, 
+                                                                            m_config->m_fragments_descr[i].ray * 2.0, 
+                                                                            false, 
+                                                                            m_subpass_creation_cb ) );
+   
+        planet_fragment->SetHotState( p_hotstate );
+   
+        // si p_hotstate == false, il n'y a pas d'injection de hotpoint dans le spherelod body depuis Fragment::Update
+        // donc inutile de faire le SetCamera sur le fragment
+        if( p_hotstate )
+        {
+            planet_fragment->SetCamera( p_camera );
+        }
+
+        //p_cameradescr.fragment = planet_fragment;
+        p_cameradescr.fragments.push_back( planet_fragment );
+
+        m_planetfragments_list.push_back( planet_fragment );    
     }
 
-    //p_cameradescr.fragment = planet_fragment;
-    p_cameradescr.fragments.push_back( planet_fragment );
-
-    p_cameradescr.camera->SetRelativeOrbiter( this );
-
-    m_planetfragments_list.push_back( planet_fragment );    
+    p_cameradescr.camera->SetRelativeOrbiter( this );   
 }
 
 
