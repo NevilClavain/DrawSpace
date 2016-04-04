@@ -527,7 +527,7 @@ void DrawSpace::Planetoid::Body::update_cameras_alt( void )
     //      -    injecter valeur hotpoint altitude dans la camera
 
 
-    for( std::map<dsstring, RegisteredCamera>::iterator it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
+    for( auto it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
     {
         if( it->second.camera->GetReferentBody() )
         {
@@ -622,10 +622,12 @@ void DrawSpace::Planetoid::Body::RegisterScenegraphCallbacks( DrawSpace::Core::S
     p_scenegraph.RegisterScenegraphEvtHandler( m_scenegraph_evt_cb );
 }
 
+/*
 void DrawSpace::Planetoid::Body::BindPlanetBodyExternalGlobalTexture( DrawSpace::Core::Texture* p_texture, DrawSpace::Pass* p_pass, int p_faceid )
 {
     m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid )->SetTexture( p_texture, 0 );
 }
+*/
 
 DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index )
 {
@@ -668,11 +670,12 @@ void DrawSpace::Planetoid::Body::ResetRegisteredBodyFragment( DrawSpace::Dynamic
     }
 }
 
-
+/*
 DrawSpace::Core::RenderingNode* DrawSpace::Planetoid::Body::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
 {
     return m_drawable->GetPlanetBodyNodeFromPass( p_pass, p_faceid );
 }
+*/
 
 
 void DrawSpace::Planetoid::Body::DrawSubPasses( void )

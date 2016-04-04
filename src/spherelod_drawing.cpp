@@ -186,7 +186,8 @@ void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
 
 
 void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
-{   
+{  
+    /*
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = it->first;
@@ -197,6 +198,15 @@ void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpa
             current_pass->GetRenderingQueue()->Add( it2->first );
         }
     }
+    */
+
+    for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    {
+        std::pair<Pass*, FaceDrawingNode*> curr_pair = *it;
+
+        curr_pair.first->GetRenderingQueue()->Add( curr_pair.second );
+    }
+
     m_scenenodegraph = p_scenegraph;
 }
 
@@ -295,7 +305,11 @@ void Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Bind
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
     node->RegisterHandler( cb );
       
-    m_passesnodes[p_pass][node] = p_orientation;
+    //m_passesnodes[p_pass][node] = p_orientation;
+
+    std::pair<Pass*, FaceDrawingNode*> p( p_pass, node );
+    m_passesnodes.push_back( p );
+
     m_nodes[node] = p_orientation;
 
     node->SetBinder( p_binder );
@@ -305,7 +319,7 @@ Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void )
 {
     return m_singlenode_draw_handler;
 }
-
+/*
 DrawSpace::Core::RenderingNode* Drawing::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
 {
     if( 0 == m_passesnodes.count( p_pass ) )
@@ -322,7 +336,7 @@ DrawSpace::Core::RenderingNode* Drawing::GetPlanetBodyNodeFromPass( Pass* p_pass
     }
     return NULL;
 }
-
+*/
 
 
 void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )

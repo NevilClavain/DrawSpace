@@ -89,7 +89,13 @@ protected:
     //Body*                                                                       m_planetbody;
     std::vector<Body*>                                                          m_planetbodies;
 
-    std::map<Pass*, NodesSet>                                                   m_passesnodes;
+    //std::map<Pass*, NodesSet>                                                   m_passesnodes;
+
+    //std::map<Pass*, std::vector<FaceDrawingNode*> >                             m_passesnodes;
+
+    std::vector<std::pair<Pass*, FaceDrawingNode*> >                            m_passesnodes;
+
+
     NodesSet                                                                    m_nodes;
 
     RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler;
@@ -121,7 +127,7 @@ public:
     virtual void RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation );
 
 
-    DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
+    //DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
    
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
