@@ -37,7 +37,7 @@ Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, Ba
 m_orientation( p_orientation ),
 m_ray( p_ray ),
 m_owner( p_owner ),
-m_colortexture_pass( NULL ),
+m_datatexture_pass( NULL ),
 m_config( p_config ),
 m_subpasscreation_handler( p_handler ),
 m_parent( p_parent ),
@@ -129,12 +129,12 @@ m_subpass_entry_infos_valid( false )
 
     if( m_lod_level == NB_LOD_RANGES - 1 )
     {
-        prepare_color_texture( m_subpasscreation_handler, 1, p_fragment_index );
+        prepare_data_texture( m_subpasscreation_handler, 1, p_fragment_index );
     }
     
     else if( m_lod_level >= NB_LOD_RANGES - 8 )
     {
-        prepare_color_texture( m_subpasscreation_handler, 0, p_fragment_index );
+        prepare_data_texture( m_subpasscreation_handler, 0, p_fragment_index );
     }
     
 
@@ -177,9 +177,9 @@ Patch::~Patch( void )
     destroy_color_texture();
 }
 
-void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_fragment_index )
+void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_fragment_index )
 {
-    m_colortexture_pass = create_color_texture_pass();
+    m_datatexture_pass = create_data_texture_pass();
 
     std::vector<Patch*> dl;
     dl.push_back( this );
@@ -195,16 +195,14 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     node->SetBinder( m_config->m_patchTexturesBinder[m_orientation] );
                
     void* tx_data;
-    if( false == renderer->CreateTexture( m_colortexture_pass->GetTargetTexture(), &tx_data ) )
+    if( false == renderer->CreateTexture( m_datatexture_pass->GetTargetTexture(), &tx_data ) )
     {
         _DSEXCEPTION( "failed to create subpasstarget texture in renderer" );
     }
-    
-    //m_colortexture_pass->GetTargetTexture()->AllocTextureContent();
-        
+            
     ////////////////////////
 
-    m_subpass = m_colortexture_pass;
+    m_subpass = m_datatexture_pass;
     m_subpass_node = node;
         
     // appel handler pour enregistrer et executer la passe
@@ -630,7 +628,7 @@ bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_r
     return false;
 }
 
-DrawSpace::IntermediatePass* Patch::create_color_texture_pass( void )
+DrawSpace::IntermediatePass* Patch::create_data_texture_pass( void )
 {
     char thisname[32];
 
@@ -658,9 +656,9 @@ DrawSpace::IntermediatePass* Patch::create_color_texture_pass( void )
 
 DrawSpace::Core::Texture* Patch::GetColorTexture( void )
 {
-    if( m_colortexture_pass )
+    if( m_datatexture_pass )
     {
-        return m_colortexture_pass->GetTargetTexture();
+        return m_datatexture_pass->GetTargetTexture();
     }
     return NULL;
 }

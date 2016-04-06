@@ -92,7 +92,7 @@ protected:
     
     int                                     m_lod_level;
 
-    DrawSpace::IntermediatePass*            m_colortexture_pass;
+    DrawSpace::IntermediatePass*            m_datatexture_pass;
 
     Patch*                                  m_texture_referent;
 
@@ -103,8 +103,8 @@ protected:
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    DrawSpace::IntermediatePass*            create_color_texture_pass( void );
-    void                                    prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_fragment_index );
+    DrawSpace::IntermediatePass*            create_data_texture_pass( void );
+    void                                    prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_fragment_index );
 
     void                                    destroy_color_texture( void );
 
