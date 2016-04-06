@@ -101,6 +101,8 @@ protected:
     EntryInfos                              m_subpass_entry_infos;
     bool                                    m_subpass_entry_infos_valid;
 
+    bool                                    m_enable_datatexture;
+
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
@@ -112,7 +114,7 @@ protected:
     
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 
-                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index );
+                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index, bool p_enable_datatexture );
 
     virtual ~Patch( void );
 
@@ -141,7 +143,7 @@ public:
 
     float* GetHeightMap( void );
 
-    DrawSpace::Core::Texture* GetColorTexture( void );
+    DrawSpace::Core::Texture* GetDataTexture( void );
 
     Patch* GetTextureReferent( void );
 

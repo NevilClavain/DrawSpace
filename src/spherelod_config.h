@@ -37,6 +37,7 @@ public:
     typedef struct
     {
         bool    enable_collisions;
+        bool    enable_datatextures;
         bool    enable_lod;
         long    min_lodlevel;  // valable si enable_lod == true
         dsreal  ray;        

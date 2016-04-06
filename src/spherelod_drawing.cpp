@@ -107,7 +107,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_a
     for( size_t i = 0; i < m_display_list.size(); i++ )
     {
         Patch* ref_patch = m_display_list[i]->GetTextureReferent();
-        Texture* refpatchtexture = ref_patch->GetColorTexture();
+        Texture* refpatchtexture = ref_patch->GetDataTexture();
 
         if( refpatchtexture != current_texture )
         {

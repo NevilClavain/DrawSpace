@@ -183,7 +183,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                                 DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
                                                                 m_subpass_creation_cb, 
                                                                 m_config->m_fragments_descr[i].min_lodlevel, 
-                                                                m_config->m_fragments_descr[i].enable_lod, i ) );
+                                                                m_config->m_fragments_descr[i].enable_lod, i, m_config->m_fragments_descr[i].enable_datatextures ) );
 
                             Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
@@ -212,12 +212,11 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                     for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
                     {                                                                                                                
-
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
                             DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
                                                         m_subpass_creation_cb, 
                                                         m_config->m_fragments_descr[i].min_lodlevel, 
-                                                        m_config->m_fragments_descr[i].enable_lod, i ) );
+                                                        m_config->m_fragments_descr[i].enable_lod, i, m_config->m_fragments_descr[i].enable_datatextures ) );
 
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
@@ -334,7 +333,7 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
             DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
                                             m_subpass_creation_cb, 
                                             m_config->m_fragments_descr[i].min_lodlevel,
-                                            m_config->m_fragments_descr[i].enable_lod, i ) );
+                                            m_config->m_fragments_descr[i].enable_lod, i, m_config->m_fragments_descr[i].enable_datatextures ) );
 
         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
