@@ -70,5 +70,11 @@
     <FxCompile Include="planethm.vsh">
       <Filter>Source Files\vertex\planet</Filter>
     </FxCompile>
+    <FxCompile Include="planet_atmosphere.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_atmosphere.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

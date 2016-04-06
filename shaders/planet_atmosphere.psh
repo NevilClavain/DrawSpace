@@ -1,0 +1,53 @@
+
+float4 flags : register(c0);
+	// .x -> relative altitude
+	// .y -> patch sidelenght
+	// .z -> planet ray
+	// .w -> patch orientation enum integer
+
+float4 flags2 : register(c1);
+	// .x -> ht textures resol
+
+float4 flags6 : register(c6);
+	// .x -> resol atlas textures splatting
+	// .y -> transition texture globale/texture splatting : borne sup
+	// .z -> transition texture globale/texture splatting : borne inf
+
+float4 flags7 : register(c7);
+	// .x -> ambient light
+	// .y -> color0 light
+	// .z -> color1 light
+	// .w -> color2 light
+
+float4 ambient_color    : register(c8);
+
+float4 light0_dir_local : register(c9);
+float4 light0_color     : register(c10);
+
+float4 light1_dir_local : register(c11);
+float4 light1_color     : register(c12);
+
+float4 light2_dir_local : register(c13);
+float4 light2_color     : register(c14);
+
+struct PS_INTPUT
+{	
+	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
+	float4 UnitPatch_TexCoord		: TEXCOORD1;
+	float4 GlobalPatch_TexCoord		: TEXCOORD2;
+};
+
+#include "spherelod_commons.hlsl"
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+	float4 final_color;
+
+    final_color.x = 1.0;
+    final_color.y = 1.0;
+    final_color.z = 1.0;
+    final_color.w = 1.0;
+
+	return final_color;
+}
