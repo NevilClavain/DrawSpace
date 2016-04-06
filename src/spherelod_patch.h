@@ -104,7 +104,7 @@ protected:
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_color_texture_pass( void );
-    void                                    prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest );
+    void                                    prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_fragment_index );
 
     void                                    destroy_color_texture( void );
 
@@ -112,7 +112,7 @@ protected:
     
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 
-                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config );
+                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index );
 
     virtual ~Patch( void );
 

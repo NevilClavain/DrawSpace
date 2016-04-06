@@ -32,7 +32,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
-                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config ) : 
+                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index ) : 
 
 m_orientation( p_orientation ),
 m_ray( p_ray ),
@@ -129,12 +129,12 @@ m_subpass_entry_infos_valid( false )
 
     if( m_lod_level == NB_LOD_RANGES - 1 )
     {
-        prepare_color_texture( m_subpasscreation_handler, 1 );
+        prepare_color_texture( m_subpasscreation_handler, 1, p_fragment_index );
     }
     
     else if( m_lod_level >= NB_LOD_RANGES - 8 )
     {
-        prepare_color_texture( m_subpasscreation_handler, 0 );
+        prepare_color_texture( m_subpasscreation_handler, 0, p_fragment_index );
     }
     
 
@@ -177,7 +177,7 @@ Patch::~Patch( void )
     destroy_color_texture();
 }
 
-void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest )
+void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_fragment_index )
 {
     m_colortexture_pass = create_color_texture_pass();
 
@@ -187,7 +187,7 @@ void Patch::prepare_color_texture( Patch::SubPassCreationHandler* p_handler, int
     // creation/preparation du node
 
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config ) );
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config, p_fragment_index ) );
             
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
     node->SetDisplayList( dl );

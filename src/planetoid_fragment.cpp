@@ -34,7 +34,7 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::SphericalLOD;
 
 Fragment::Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
-                Collider* p_collider, dsreal p_planetray, bool p_collisions, Fragment::SubPassCreationHandler* p_handler ) :
+                Collider* p_collider, dsreal p_planetray, bool p_collisions, Fragment::SubPassCreationHandler* p_handler, int p_index ) :
 m_world( p_world ),
 m_config( p_config ),
 m_planetbody( p_planetbody ), 
@@ -58,10 +58,9 @@ m_current_collisions_hm( NULL )
 
         for( int i = 0; i < 6; i++ )
         {
-            m_collisions_hms[i] = _DRAWSPACE_NEW_( Collisions, Collisions( this, p_config, i ) );
+            m_collisions_hms[i] = _DRAWSPACE_NEW_( Collisions, Collisions( this, p_config, i, p_index ) );
             m_collisions_hms[i]->Disable();        
         }
-
     }
     p_planetbody->Initialize();
 }

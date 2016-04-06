@@ -80,6 +80,8 @@ protected:
 
     int                                                         m_min_lodlevel;
 
+    int                                                         m_fragment_index;
+
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -103,7 +105,7 @@ protected:
 
 public:
 
-    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel );
+    Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel, int p_fragment_index );
     virtual ~Face( void );
 
     bool Init( int p_orientation );

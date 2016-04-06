@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel ) : 
+Face::Face( dsreal p_diameter, DrawSpace::SphericalLOD::Config* p_config, Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel, int p_fragment_index ) : 
 m_config( p_config ),
 m_rootpatch( NULL ), 
 m_planet_diameter( p_diameter ),
@@ -43,7 +43,8 @@ m_relative_alt_sphere( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
 m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
 m_subpasscreation_handler( p_handler ),
-m_min_lodlevel( p_min_lodlevel )
+m_min_lodlevel( p_min_lodlevel ),
+m_fragment_index( p_fragment_index )
 {
 }
 
@@ -85,7 +86,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
     {
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, NULL, -1, root, m_subpasscreation_handler, m_config ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, NULL, -1, root, m_subpasscreation_handler, m_config, m_fragment_index ) );
         root->SetContent( patch );      
     }
     else
@@ -93,7 +94,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
         QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), node, m_subpasscreation_handler, m_config ) );
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), node, m_subpasscreation_handler, m_config, m_fragment_index ) );
         node->SetContent( patch );      
     }
 }

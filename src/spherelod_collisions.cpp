@@ -28,7 +28,7 @@ using namespace DrawSpace::SphericalLOD;
 using namespace DrawSpace::Core;
 
 
-Collisions::Collisions( DrawSpace::Planetoid::Fragment* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation ) :
+Collisions::Collisions( DrawSpace::Planetoid::Fragment* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_fragment_index ) :
 m_fragment( p_owner ),
 m_collidingheightmap_texture( NULL ),
 m_collidingheightmap_content( NULL ),
@@ -39,7 +39,7 @@ m_enable( true )
     // creation/preparation du node
 
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, p_config ) );
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, p_config, p_node_fragment_index ) );
                 
     node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
 
