@@ -286,10 +286,28 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Unbind();
 }
 
-void Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, int p_fragment_index )
+void Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+                                                DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_fragment_index )
 {
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_fragment_index ) );
-    node->SetMeshe( Body::m_planetpatch_skirt_meshe );
+
+    switch( p_meshe_type )
+    {
+        case SphericalLOD::Body::LOWRES_MESHE:
+
+            node->SetMeshe( Body::m_planetpatch_meshe );
+            break;
+
+        case SphericalLOD::Body::LOWRES_SKIRT_MESHE:
+
+            node->SetMeshe( Body::m_planetpatch_skirt_meshe );
+            break;
+
+        case SphericalLOD::Body::HIRES_MESHE:
+
+            node->SetMeshe( Body::m_planetpatch2_meshe );
+            break;
+    }
         
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
     node->RegisterHandler( cb );
