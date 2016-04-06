@@ -38,6 +38,14 @@ public:
     typedef DrawSpace::Core::BaseCallback2<void, Patch*, int>                                   PatchUpdateHandler;
     typedef DrawSpace::Core::CallBack<Body, void, DrawSpace::Utils::Timer*>                     BodyTimerCb;
 
+    typedef enum
+    {
+        LOWRES_MESHE,
+        HIRES_MESHE,
+        LOWRES_SKIRT_MESHE,
+    
+    } MesheType;
+
 protected:
 
     DrawSpace::SphericalLOD::Config*                                            m_config;
