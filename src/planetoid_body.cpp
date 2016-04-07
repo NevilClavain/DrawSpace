@@ -594,10 +594,10 @@ void DrawSpace::Planetoid::Body::RegisterPlanetBodyPassSlot( Pass* p_pass, Spher
 }
 */
 
-void DrawSpace::Planetoid::Body::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+DrawSpace::SphericalLOD::FaceDrawingNode* DrawSpace::Planetoid::Body::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                                     DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_fragment_index )
 {
-    m_drawable->RegisterSinglePlanetBodyPassSlot( p_pass, p_binder, p_orientation, p_meshe_type, p_fragment_index );
+    return m_drawable->RegisterSinglePlanetBodyPassSlot( p_pass, p_binder, p_orientation, p_meshe_type, p_fragment_index );
 }
 
 

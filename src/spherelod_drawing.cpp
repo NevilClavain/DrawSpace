@@ -286,7 +286,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Unbind();
 }
 
-void Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+ DrawSpace::SphericalLOD::FaceDrawingNode* Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                 DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_fragment_index )
 {
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_fragment_index ) );
@@ -320,6 +320,8 @@ void Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Bind
     m_nodes[node] = p_orientation;
 
     node->SetBinder( p_binder );
+
+    return node;
 }
 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void )

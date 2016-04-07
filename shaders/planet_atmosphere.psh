@@ -44,8 +44,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 final_color;
 
-    final_color.x = 1.0;
-    final_color.y = 1.0;
+    final_color.x = 0.6;
+    final_color.y = 0.6;
     final_color.z = 1.0;
     final_color.w = 1.0;
 
