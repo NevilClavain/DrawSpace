@@ -35,6 +35,7 @@ struct PS_INTPUT
 	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
 	float4 UnitPatch_TexCoord		: TEXCOORD1;
 	float4 GlobalPatch_TexCoord		: TEXCOORD2;
+    float4 color                    : TEXCOORD3;
 };
 
 #include "spherelod_commons.hlsl"
@@ -42,12 +43,12 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-	float4 final_color;
-
+    float4 final_color = input.color;
+    /*
     final_color.x = 0.6;
     final_color.y = 0.6;
     final_color.z = 1.0;
     final_color.w = 1.0;
-
+    */
 	return final_color;
 }

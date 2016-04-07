@@ -34,6 +34,8 @@ float4 seeds: register(c31);
 	// .z -> mix seed 1
 	// .w -> mix seed 2
 
+sampler2D TextureLookupTable : register(s0);
+
 struct VS_INPUT 
 {
    float4 Position : POSITION0;
@@ -46,6 +48,7 @@ struct VS_OUTPUT
    float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
    float4 UnitPatch_TexCoord		: TEXCOORD1;
    float4 GlobalPatch_TexCoord		: TEXCOORD2;
+   float4 color                     : TEXCOORD3;
 };
 
 #include "fbm.hlsl"
@@ -90,6 +93,17 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.GlobalPatch_TexCoord = 0.0;
 	Output.GlobalPatch_TexCoord.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
 	Output.GlobalPatch_TexCoord.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
+
+    float v_coord_base = 1.0 / 128.0;
+
+    float4 uv_l = 0.0;
+
+    uv_l.x = 0.5;//1.0 / 256.0;
+    uv_l.y = 0.5;//1.0 / 256.0;
+
+    float4 color = tex2Dlod( TextureLookupTable, uv_l );
+
+    Output.color = color;
 			  
 	return( Output );   
 }

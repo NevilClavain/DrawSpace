@@ -49,8 +49,6 @@ public:
 
     Binder( void );
 
-    virtual void Initialise( void ) = 0;
-
     virtual void Bind( void ) = 0; // appelee juste avant le rendu du node
     virtual void Unbind( void ) = 0; // appelee juste apres le rendu du node
 
