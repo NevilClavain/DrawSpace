@@ -25,10 +25,7 @@
 using namespace DrawSpace::SphericalLOD;
 
 Config::Config( void ) :
-m_lod0base( 12000.0 )/*,s
-m_groundCollisionsBinder( NULL ),
-m_patchTexturesBinder( NULL )
-*/
+m_lod0base( 12000.0 )
 {
     for( int i = 0; i < 6; i++ )
     {
