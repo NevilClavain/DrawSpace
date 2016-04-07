@@ -196,7 +196,8 @@ void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int 
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
     node->SetDisplayList( dl );
 
-    node->SetBinder( m_config->m_patchTexturesBinder[m_orientation] );
+    //node->SetBinder( m_config->m_patchTexturesBinder[m_orientation] );
+    node->SetBinder( m_config->m_fragments_descr[p_fragment_index].patchTexturesBinder[m_orientation] );
                
     void* tx_data;
     if( false == renderer->CreateTexture( m_datatexture_pass->GetTargetTexture(), &tx_data ) )

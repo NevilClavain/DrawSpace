@@ -43,7 +43,8 @@ m_enable( true )
                 
     node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
 
-    node->SetBinder( p_config->m_groundCollisionsBinder[p_orientation] );
+    //node->SetBinder( p_config->m_groundCollisionsBinder[p_orientation] );
+    node->SetBinder( p_config->m_fragments_descr[p_node_fragment_index].groundCollisionsBinder[p_orientation] );
 
     void* tx_data;
     if( false == renderer->CreateTexture( m_collidingheightmap_pass->GetTargetTexture(), &tx_data ) )

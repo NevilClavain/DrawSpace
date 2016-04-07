@@ -40,15 +40,20 @@ public:
         bool    enable_datatextures;
         bool    enable_lod;
         long    min_lodlevel;  // valable si enable_lod == true
-        dsreal  ray;        
+        dsreal  ray;
+
+        Binder* groundCollisionsBinder[6];
+        Binder* patchTexturesBinder[6];
     
     } FragmentDescriptor;
 
 
     double                          m_lod0base;
 
+    /*
     Binder*                         m_groundCollisionsBinder[6];
     Binder*                         m_patchTexturesBinder[6];
+    */
 
     std::vector<FragmentDescriptor> m_fragments_descr;
     int                             m_ground_fragment;  // index dans m_fragments_descr
