@@ -411,78 +411,78 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
         for( size_t i = 0; i < it->second.fragments.size(); i++ )
         {
-            //Fragment* bodyfragment = it->second.fragment;
-
-            Fragment* bodyfragment = it->second.fragments[i];
-
-            if( it->second.attached )
+            if( i == m_config->m_ground_fragment )
             {
-                DrawSpace::Utils::Matrix bodypos;
+                Fragment* bodyfragment = it->second.fragments[i];
 
-                it->second.body->GetLastLocalWorldTrans( bodypos );
-
-                DrawSpace::Utils::Vector bodypos2;
-                bodypos2[0] = bodypos( 3, 0 );
-                bodypos2[1] = bodypos( 3, 1 );
-                bodypos2[2] = bodypos( 3, 2 );
-
-                dsreal rel_alt = ( bodypos2.Length() / m_ray );
-                it->second.relative_alt_valid = true;
-                it->second.relative_alt = rel_alt;
-
-                bodyfragment->UpdateRelativeAlt( rel_alt );
-
-                if( rel_alt >= /*1.2*/ /*2.1*/ 4.5 )
+                if( it->second.attached )
                 {
+                    DrawSpace::Utils::Matrix bodypos;
 
-                    detach_body( it->second.body );                
-                    bodyfragment->RemoveColliderFromWorld();
-                    bodyfragment->SetHotState( false );
-                    bodyfragment->ResetPlanetBody();
+                    it->second.body->GetLastLocalWorldTrans( bodypos );
 
-                    //////
+                    DrawSpace::Utils::Vector bodypos2;
+                    bodypos2[0] = bodypos( 3, 0 );
+                    bodypos2[1] = bodypos( 3, 1 );
+                    bodypos2[2] = bodypos( 3, 2 );
+
+                    dsreal rel_alt = ( bodypos2.Length() / m_ray );
+                    it->second.relative_alt_valid = true;
+                    it->second.relative_alt = rel_alt;
+
+                    bodyfragment->UpdateRelativeAlt( rel_alt );
+
+                    if( rel_alt >= /*1.2*/ /*2.1*/ 4.5 )
+                    {
+
+                        detach_body( it->second.body );                
+                        bodyfragment->RemoveColliderFromWorld();
+                        bodyfragment->SetHotState( false );
+                        bodyfragment->ResetPlanetBody();
+
+                        //////
+                    }
+                }
+                else
+                {
+                    DrawSpace::Utils::Matrix bodypos;
+
+                    it->second.body->GetLastLocalWorldTrans( bodypos );
+
+                    DrawSpace::Utils::Vector bodypos2;
+                    bodypos2[0] = bodypos( 3, 0 );
+                    bodypos2[1] = bodypos( 3, 1 );
+                    bodypos2[2] = bodypos( 3, 2 );
+
+                    DrawSpace::Utils::Matrix planetbodypos;            
+                    GetLastWorldTransformation( planetbodypos );
+
+                    DrawSpace::Utils::Vector planetbodypos2;
+                    planetbodypos2[0] = planetbodypos( 3, 0 );
+                    planetbodypos2[1] = planetbodypos( 3, 1 );
+                    planetbodypos2[2] = planetbodypos( 3, 2 );
+
+                    Vector delta;
+
+                    delta[0] = planetbodypos2[0] - bodypos2[0];
+                    delta[1] = planetbodypos2[1] - bodypos2[1];
+                    delta[2] = planetbodypos2[2] - bodypos2[2];
+                    delta[3] = 1.0;
+
+                    dsreal rel_alt = delta.Length() / m_ray;
+
+                    it->second.relative_alt_valid = true;
+                    it->second.relative_alt = rel_alt;
+
+                    bodyfragment->UpdateRelativeAlt( rel_alt );
+
+                    if( rel_alt < /*1.1*/ /*2.0*/ 4.2 )
+                    {
+                        attach_body( it->second.body );
+                        bodyfragment->SetHotState( true );
+                    }
                 }
             }
-            else
-            {
-                DrawSpace::Utils::Matrix bodypos;
-
-                it->second.body->GetLastLocalWorldTrans( bodypos );
-
-                DrawSpace::Utils::Vector bodypos2;
-                bodypos2[0] = bodypos( 3, 0 );
-                bodypos2[1] = bodypos( 3, 1 );
-                bodypos2[2] = bodypos( 3, 2 );
-
-                DrawSpace::Utils::Matrix planetbodypos;            
-                GetLastWorldTransformation( planetbodypos );
-
-                DrawSpace::Utils::Vector planetbodypos2;
-                planetbodypos2[0] = planetbodypos( 3, 0 );
-                planetbodypos2[1] = planetbodypos( 3, 1 );
-                planetbodypos2[2] = planetbodypos( 3, 2 );
-
-                Vector delta;
-
-                delta[0] = planetbodypos2[0] - bodypos2[0];
-                delta[1] = planetbodypos2[1] - bodypos2[1];
-                delta[2] = planetbodypos2[2] - bodypos2[2];
-                delta[3] = 1.0;
-
-                dsreal rel_alt = delta.Length() / m_ray;
-
-                it->second.relative_alt_valid = true;
-                it->second.relative_alt = rel_alt;
-
-                bodyfragment->UpdateRelativeAlt( rel_alt );
-
-                if( rel_alt < /*1.1*/ /*2.0*/ 4.2 )
-                {
-                    attach_body( it->second.body );
-                    bodyfragment->SetHotState( true );
-                }
-            }
-
         }
     }
 }
