@@ -905,7 +905,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 }
                 break;
 
-            case Texture::PURPOSE_FLOAT:
+            case Texture::PURPOSE_FLOAT32:
                 {
                     long w, h, bpp;
                     p_texture->GetFormat( w, h, bpp );
