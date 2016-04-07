@@ -180,17 +180,12 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                             inertbody->IncludeTo( this );
 
                             DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                                DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
-                                                                m_subpass_creation_cb, 
-                                                                m_config->m_fragments_descr[i].min_lodlevel, 
-                                                                m_config->m_fragments_descr[i].enable_lod, i, m_config->m_fragments_descr[i].enable_datatextures ) );
+                                DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb ) );
 
                             Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
                             Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
-                                                                            collider, 1000.0 * m_config->m_fragments_descr[i].ray, 
-                                                                            m_config->m_fragments_descr[i].enable_collisions, 
-                                                                            m_subpass_creation_cb, i ) );
+                                                                            collider, m_subpass_creation_cb, i ) );
                             planet_fragment->SetHotState( true );
 
                             m_planetfragments_list.push_back( planet_fragment );
@@ -213,17 +208,12 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
                     {                                                                                                                
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                            DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
-                                                        m_subpass_creation_cb, 
-                                                        m_config->m_fragments_descr[i].min_lodlevel, 
-                                                        m_config->m_fragments_descr[i].enable_lod, i, m_config->m_fragments_descr[i].enable_datatextures ) );
+                            DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb ) );
 
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
                         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
-                                                                        collider, 1000.0 * m_config->m_fragments_descr[i].ray, 
-                                                                        m_config->m_fragments_descr[i].enable_collisions, 
-                                                                        m_subpass_creation_cb, i ) );
+                                                                        collider, m_subpass_creation_cb, i ) );
 
                         planet_fragment->SetHotState( false );
                     
@@ -329,19 +319,11 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
 {
     for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
     {
-        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-            DrawSpace::SphericalLOD::Body( 1000.0 * m_config->m_fragments_descr[i].ray * 2.0, m_timemanager, m_config, 
-                                            m_subpass_creation_cb, 
-                                            m_config->m_fragments_descr[i].min_lodlevel,
-                                            m_config->m_fragments_descr[i].enable_lod, i, m_config->m_fragments_descr[i].enable_datatextures ) );
+        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb ) );
 
         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
-        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
-                                                                            collider, 
-                                                                            m_config->m_fragments_descr[i].ray * 2.0, 
-                                                                            false, 
-                                                                            m_subpass_creation_cb, i ) );
+        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_subpass_creation_cb, i ) );
    
         planet_fragment->SetHotState( p_hotstate );
    

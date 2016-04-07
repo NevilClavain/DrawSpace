@@ -34,23 +34,24 @@ using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::SphericalLOD;
 
 Fragment::Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
-                Collider* p_collider, dsreal p_planetray, bool p_collisions, Fragment::SubPassCreationHandler* p_handler, int p_index ) :
+                Collider* p_collider, Fragment::SubPassCreationHandler* p_handler, int p_index ) :
 m_world( p_world ),
 m_config( p_config ),
 m_planetbody( p_planetbody ), 
 m_collider( p_collider ),
 m_collision_state( false ),
-m_planetray( p_planetray ),
 m_hot( false ),
 m_camera( NULL ),
 m_inertbody( NULL ),
-m_collisions( p_collisions ),
 m_nb_collisionmeshebuild_done( 0 ),
 m_current_patch( NULL ),
 m_draw_collidinghm( false ),
 m_handler( p_handler ),
 m_current_collisions_hm( NULL )
 {
+    m_collisions = m_config->m_fragments_descr[p_index].enable_collisions;
+    m_planetray = 1000.0 * m_config->m_fragments_descr[p_index].ray;
+
     if( m_collisions )
     {
         m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Fragment::on_patchupdate ) );

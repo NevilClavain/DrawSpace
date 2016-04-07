@@ -79,8 +79,8 @@ public:
     static DrawSpace::Core::Meshe*                                              m_planetpatch_skirt_meshe;
 
 
-    Body( dsreal p_diameter, DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, 
-            Patch::SubPassCreationHandler* p_handler, int p_min_lodlevel, bool p_enable_cdlod, int p_fragment_index, bool p_enable_datatexture );
+    Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index,
+            Patch::SubPassCreationHandler* p_handler );
 
     virtual ~Body( void );
 

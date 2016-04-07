@@ -32,7 +32,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
-                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index, bool p_enable_datatexture ) : 
+                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index ) : 
 
 m_orientation( p_orientation ),
 m_ray( p_ray ),
@@ -42,9 +42,10 @@ m_config( p_config ),
 m_subpasscreation_handler( p_handler ),
 m_parent( p_parent ),
 m_nodeid( p_nodeid ),
-m_subpass_entry_infos_valid( false ),
-m_enable_datatexture( p_enable_datatexture )
+m_subpass_entry_infos_valid( false )
 {
+    m_enable_datatexture = m_config->m_fragments_descr[p_fragment_index].enable_datatextures;
+
     for( long i = 0; i < 8; i++ )
     {
         m_neighbours[i] = NULL;

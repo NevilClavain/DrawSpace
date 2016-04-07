@@ -95,7 +95,7 @@ protected:
 public:
 
     Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
-                DrawSpace::Dynamics::Collider* p_collider, dsreal p_planetray, bool p_collisions, Fragment::SubPassCreationHandler* p_handler, int p_index );
+                DrawSpace::Dynamics::Collider* p_collider, Fragment::SubPassCreationHandler* p_handler, int p_index );
     virtual ~Fragment( void );
 
     void Compute( DrawSpace::Planetoid::Body* p_owner );
