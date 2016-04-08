@@ -23,16 +23,13 @@ float4   base_uv_global: register(c27);
 	// .z, .w -> u2, v2
 
 
-float4 landscape_control: register(c30);
-	// .x -> plains amplitude
-	// .y -> mountains amplitude
-	// .z -> terrain offset
+float4 atmo_scattering_params: register(c30);
+	// .x -> OuterRadius
+	// .y -> InnerRadius
+	// .z -> light power
+    // .w -> optical lookup table side size
 
-float4 seeds: register(c31);
-	// .x -> plains seed 1
-	// .y -> plains seed 2
-	// .z -> mix seed 1
-	// .w -> mix seed 2
+
 
 sampler2D TextureLookupTable : register(s0);
 
@@ -57,8 +54,8 @@ struct VS_OUTPUT
 
 float4 getLookupTableValue(int p_index_u, int p_index_v)
 {
-    float v_int_center = 1.0 / 256.0;
-    float v_int = 1.0 / 128.0;
+    float v_int_center = 1.0 / (2.0 * atmo_scattering_params.w);
+    float v_int = 1.0 / atmo_scattering_params.w;
 
     float4 uv_l = 0.0;
 
@@ -66,6 +63,51 @@ float4 getLookupTableValue(int p_index_u, int p_index_v)
     uv_l.x = (p_index_u * v_int) + v_int_center;
 
     return tex2Dlod(TextureLookupTable, uv_l);
+}
+
+float4 interpolate( float p_x, float p_y )
+{
+    float4 res;
+    float fX = p_x * (atmo_scattering_params.w - 1);
+    float fY = p_y * (atmo_scattering_params.w - 1);
+
+    int nX = min((int)atmo_scattering_params.w - 2, max(0, (int) fX));
+
+    int nY = min((int)atmo_scattering_params.w - 2, max(0, (int) fY));
+    float fRatioX = fX - nX;
+    float fRatioY = fY - nY;
+
+    float4 point1 = getLookupTableValue(nX, nY);
+    float4 point2 = getLookupTableValue(nX + 1, nY);
+    float4 point3 = getLookupTableValue(nX, nY + 1);
+    float4 point4 = getLookupTableValue(nX + 1, nY + 1);
+
+    res.x = point1.x * (1 - fRatioX) * (1 - fRatioY) +
+				 point2.x * (fRatioX) * (1 - fRatioY) +
+				 point3.x * (1 - fRatioX) * (fRatioY) +
+				 point4.x * (fRatioX) * (fRatioY);
+
+    res.y = point1.y * (1 - fRatioX) * (1 - fRatioY) +
+				 point2.y * (fRatioX) * (1 - fRatioY) +
+				 point3.y * (1 - fRatioX) * (fRatioY) +
+				 point4.y * (fRatioX) * (fRatioY);
+
+    res.z = point1.z * (1 - fRatioX) * (1 - fRatioY) +
+				 point2.z * (fRatioX) * (1 - fRatioY) +
+				 point3.z * (1 - fRatioX) * (fRatioY) +
+				 point4.z * (fRatioX) * (fRatioY);
+
+    res.w = point1.w * (1 - fRatioX) * (1 - fRatioY) +
+				 point2.w * (fRatioX) * (1 - fRatioY) +
+				 point3.w * (1 - fRatioX) * (fRatioY) +
+				 point4.w * (fRatioX) * (fRatioY);
+
+    return res;
+}
+
+float4 scattering_color( float4 p_vertex, float4 p_viewpos, float4 p_ldir )
+{
+
 }
 
 VS_OUTPUT vs_main( VS_INPUT Input )
@@ -107,7 +149,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.GlobalPatch_TexCoord.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
 	Output.GlobalPatch_TexCoord.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
 
-    float4 color = getLookupTableValue(127, 127);
+    float4 color = getLookupTableValue(50, 50);
 
     Output.color = color;
 			  
