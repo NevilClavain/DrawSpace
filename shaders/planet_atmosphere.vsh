@@ -44,7 +44,7 @@ struct VS_INPUT
 
 struct VS_OUTPUT 
 {
-   float4 Position : POSITION0;
+   float4 Position                  : POSITION0;
    float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
    float4 UnitPatch_TexCoord		: TEXCOORD1;
    float4 GlobalPatch_TexCoord		: TEXCOORD2;
@@ -54,6 +54,19 @@ struct VS_OUTPUT
 #include "fbm.hlsl"
 #include "multifbm_height.hlsl"
 #include "spherelod_commons.hlsl"
+
+float4 getLookupTableValue(int p_index_u, int p_index_v)
+{
+    float v_int_center = 1.0 / 256.0;
+    float v_int = 1.0 / 128.0;
+
+    float4 uv_l = 0.0;
+
+    uv_l.y = (p_index_v * v_int) + v_int_center;
+    uv_l.x = (p_index_u * v_int) + v_int_center;
+
+    return tex2Dlod(TextureLookupTable, uv_l);
+}
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -94,14 +107,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.GlobalPatch_TexCoord.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
 	Output.GlobalPatch_TexCoord.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
 
-    float v_coord_base = 1.0 / 128.0;
-
-    float4 uv_l = 0.0;
-
-    uv_l.x = 0.5;//1.0 / 256.0;
-    uv_l.y = 0.5;//1.0 / 256.0;
-
-    float4 color = tex2Dlod( TextureLookupTable, uv_l );
+    float4 color = getLookupTableValue(127, 127);
 
     Output.color = color;
 			  
