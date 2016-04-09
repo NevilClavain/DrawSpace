@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{39D4DD3C-8F0E-411B-A615-49CCA08BB6DC}</ProjectGuid>
     <RootNamespace>hlsl_30</RootNamespace>
+    <ProjectName>GPU_hlsl_30</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
