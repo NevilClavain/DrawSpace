@@ -431,6 +431,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
                     it->second.relative_alt = rel_alt;
 
                     bodyfragment->UpdateRelativeAlt( rel_alt );
+                    bodyfragment->UpdateRelativeViewerPos( bodypos2 );
 
                     if( rel_alt >= /*1.2*/ /*2.1*/ 4.5 )
                     {
@@ -475,6 +476,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
                     it->second.relative_alt = rel_alt;
 
                     bodyfragment->UpdateRelativeAlt( rel_alt );
+                    bodyfragment->UpdateRelativeViewerPos( delta );
 
                     if( rel_alt < /*1.1*/ /*2.0*/ 4.2 )
                     {

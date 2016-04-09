@@ -274,3 +274,9 @@ void Fragment::ResetPlanetBody( void )
 {
     m_planetbody->Reset();
 }
+
+void Fragment::UpdateRelativeViewerPos( const Utils::Vector& p_pos )
+{
+    m_relative_viewerpos = p_pos;
+}
+

@@ -86,6 +86,10 @@ protected:
     DrawSpace::SphericalLOD::Collisions*                        m_collisions_hms[6];
     DrawSpace::SphericalLOD::Collisions*                        m_current_collisions_hm;
 
+    // pos point de vue camera par rapport au centre planete fragment
+    // toujours mis a jour, que l'on soit relatif (hot) ou non
+    DrawSpace::Utils::Vector                                    m_relative_viewerpos;
+
     Fragment::SubPassCreationHandler*                           m_handler;
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
@@ -116,6 +120,8 @@ public:
     void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done );
 
     void ResetPlanetBody( void );
+
+    void UpdateRelativeViewerPos( const Utils::Vector& p_pos );
 
     Fragment::SubPassCreationHandler* GetSubPassCreationHandler( void );
 
