@@ -68,6 +68,8 @@ protected:
 
     bool                                                                        m_enable_cdlod;
 
+    Utils::Vector                                                               m_invariant_viewerpos; //relatif au centre planete
+
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
     static void build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt );
@@ -101,6 +103,9 @@ public:
 
     void SetHotState( bool p_hotstate );
     void UpdateRelativeAlt( dsreal p_alt );
+
+    void UpdateInvariantViewerPos( const Utils::Vector& p_pos );
+    void GetInvariantViewerPos( DrawSpace::Utils::Vector& p_pos );
 
     dsreal GetDiameter( void );
 

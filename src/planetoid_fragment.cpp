@@ -187,6 +187,8 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
         delta[2] = pos_cam( 3, 2 ) - pos_planet( 3, 2 );
         delta[3] = 1.0;
 
+        m_planetbody->UpdateInvariantViewerPos( delta );
+
     }
     else if( m_inertbody )
     {        
@@ -216,6 +218,8 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
         delta[1] = pos_body( 3, 1 ) - pos_planet( 3, 1 );
         delta[2] = pos_body( 3, 2 ) - pos_planet( 3, 2 );
         delta[3] = 1.0;
+
+        m_planetbody->UpdateInvariantViewerPos( delta );
     }
 
     /*

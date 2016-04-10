@@ -476,6 +476,15 @@ void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
     m_hotpoint_altitud = hotpoint.Length() - ( m_diameter / 2.0 );
 }
 
+void Body::UpdateInvariantViewerPos( const DrawSpace::Utils::Vector& p_pos )
+{
+    m_invariant_viewerpos = p_pos;
+}
+
+void Body::GetInvariantViewerPos( DrawSpace::Utils::Vector& p_pos )
+{
+    p_pos = m_invariant_viewerpos;
+}
 
 DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void )
 {
