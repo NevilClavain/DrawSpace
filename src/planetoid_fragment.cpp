@@ -151,6 +151,8 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
         SceneNode<CameraPoint>* camera_node = m_camera->GetOwner();
 
         Orbiter* orbiter = static_cast<Orbiter*>( m_camera->GetReferentBody() );
+
+        res.Identity();
         camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
         Vector pos;
 
@@ -162,10 +164,11 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
         m_planetbody->UpdateHotPoint( pos );
     }
     else if( m_inertbody )
-    {
-        m_planetbody->UpdateHotPoint( m_relative_viewerpos );
+    {        
         if( m_hot )
         {
+            m_planetbody->UpdateHotPoint( m_relative_hotviewerpos ); // m_relative_hotviewerpos est mis à jour seulement 
+                                                                  // quand on est relatif (hot)
             m_planetbody->Compute();            
         }
     }
@@ -327,8 +330,8 @@ void Fragment::ResetPlanetBody( void )
     m_planetbody->Reset();
 }
 
-void Fragment::UpdateRelativeViewerPos( const Utils::Vector& p_pos )
+void Fragment::UpdateRelativeHotViewerPos( const Utils::Vector& p_pos )
 {
-    m_relative_viewerpos = p_pos;
+    m_relative_hotviewerpos = p_pos;
 }
 

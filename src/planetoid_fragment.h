@@ -87,8 +87,8 @@ protected:
     DrawSpace::SphericalLOD::Collisions*                        m_current_collisions_hm;
 
     // pos point de vue camera par rapport au centre planete fragment
-    // toujours mis a jour, que l'on soit relatif (hot) ou non
-    DrawSpace::Utils::Vector                                    m_relative_viewerpos;
+    // mis a jour quand on est relatif
+    DrawSpace::Utils::Vector                                    m_relative_hotviewerpos;
 
     Fragment::SubPassCreationHandler*                           m_handler;
 
@@ -121,7 +121,7 @@ public:
 
     void ResetPlanetBody( void );
 
-    void UpdateRelativeViewerPos( const Utils::Vector& p_pos );
+    void UpdateRelativeHotViewerPos( const Utils::Vector& p_pos );
 
     Fragment::SubPassCreationHandler* GetSubPassCreationHandler( void );
 
