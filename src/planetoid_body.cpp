@@ -65,6 +65,7 @@ DrawSpace::Planetoid::Body::~Body( void )
 {
 }
 
+/*
 void DrawSpace::Planetoid::Body::GetCameraHotpoint( const dsstring& p_name, Matrix& p_outmat )
 {
     if( INERTBODY_LINKED == m_registered_camerapoints[p_name].type )
@@ -82,6 +83,7 @@ void DrawSpace::Planetoid::Body::GetCameraHotpoint( const dsstring& p_name, Matr
         p_outmat = res;
     }
 }
+*/
 
 void DrawSpace::Planetoid::Body::attach_body( InertBody* p_body )
 {
@@ -497,7 +499,14 @@ void DrawSpace::Planetoid::Body::manage_camerapoints( void )
         {
             Matrix camera_pos;
 
+            /*
             GetCameraHotpoint( it->first, camera_pos );
+            */
+
+            SceneNode<CameraPoint>* camera_node = m_registered_camerapoints[it->first].camera->GetOwner();
+
+            Orbiter* orbiter = static_cast<Orbiter*>( m_registered_camerapoints[it->first].camera->GetReferentBody() );
+            camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), camera_pos );
 
 
             DrawSpace::Utils::Vector camera_pos2;
@@ -514,7 +523,7 @@ void DrawSpace::Planetoid::Body::manage_camerapoints( void )
                 it->second.fragments[i]->UpdateRelativeAlt( rel_alt );
             }
         }
-        // les camera de type FREE ne sont jamais "hot", donc inutile de le fournir l'altitude relative
+        // les camera de type FREE ne sont jamais "hot", donc inutile de leur fournir l'altitude relative
         // les cameras de type INERTBODY_LINKED : l'altitude relative est deja fournie au fragment via l'inertbody associe, dans manage_bodies()
     }
 }

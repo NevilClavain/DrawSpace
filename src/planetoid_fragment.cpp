@@ -140,6 +140,57 @@ void Fragment::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::
 
 void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
 {
+    // ECH 9/4/2016 modif algo
+
+    if( m_camera )
+    {
+        // c'est obligatoirement une camera de type FREE_ON_PLANET
+        // (il n'y a que sur ce type de camera que l'on fait Fragment::SetCamera() )
+
+        Matrix res;
+        SceneNode<CameraPoint>* camera_node = m_camera->GetOwner();
+
+        Orbiter* orbiter = static_cast<Orbiter*>( m_camera->GetReferentBody() );
+        camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
+        Vector pos;
+
+        pos[0] = res( 3, 0 );
+        pos[1] = res( 3, 1 );
+        pos[2] = res( 3, 2 );
+        pos[3] = 1.0;
+       
+        m_planetbody->UpdateHotPoint( pos );
+    }
+    else if( m_inertbody )
+    {
+        m_planetbody->UpdateHotPoint( m_relative_viewerpos );
+        if( m_hot )
+        {
+            m_planetbody->Compute();            
+        }
+    }
+    else
+    {
+        //ni m_inertbody, ni m_camera, alors c'est une camera de type FREE
+
+        Matrix res;
+        SceneNode<CameraPoint>* camera_node = m_camera->GetOwner();
+
+        //camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
+        camera_node->GetFinalTransform( res );
+        Vector pos;
+
+        pos[0] = res( 3, 0 );
+        pos[1] = res( 3, 1 );
+        pos[2] = res( 3, 2 );
+        pos[3] = 1.0;
+       
+        m_planetbody->UpdateHotPoint( pos );
+    }
+
+    // TODO finir avec le cas camera type FREE !!!
+
+    /*
     if( m_hot )
     {
         Matrix camera_pos;
@@ -174,6 +225,7 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
             m_planetbody->Compute();
         }
     }
+    */
 }
 
 void Fragment::SetHotState( bool p_hotstate )

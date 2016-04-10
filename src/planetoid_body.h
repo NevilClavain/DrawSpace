@@ -145,7 +145,7 @@ public:
     virtual ~Body( void );
 
     void                                GetSceneName( dsstring& p_name );    
-    void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
+    //void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
 
     SphericalLOD::FaceDrawingNode*      RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                                             DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_fragment_index );
