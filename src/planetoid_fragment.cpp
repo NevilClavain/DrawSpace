@@ -145,27 +145,48 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
 
     if( m_camera )
     {
-        // c'est obligatoirement une camera de type FREE_ON_PLANET
-        // (il n'y a que sur ce type de camera que l'on fait Fragment::SetCamera() )
-
-        Matrix res;
         SceneNode<CameraPoint>* camera_node = m_camera->GetOwner();
 
-        Orbiter* orbiter = static_cast<Orbiter*>( m_camera->GetReferentBody() );
+        if( m_hot )
+        {
+            // si hot, c'est une camera de type FREE_ON_PLANET
+            // donc faire un UpdateHotPoint
 
-        res.Identity();
-        camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
-        Vector pos;
+            Matrix res;
+            
+            Orbiter* orbiter = static_cast<Orbiter*>( m_camera->GetReferentBody() );
 
-        pos[0] = res( 3, 0 );
-        pos[1] = res( 3, 1 );
-        pos[2] = res( 3, 2 );
-        pos[3] = 1.0;
+            res.Identity();
+            camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
+            Vector pos;
+
+            pos[0] = res( 3, 0 );
+            pos[1] = res( 3, 1 );
+            pos[2] = res( 3, 2 );
+            pos[3] = 1.0;
        
-        m_planetbody->UpdateHotPoint( pos );
+            m_planetbody->UpdateHotPoint( pos );
+        }
 
         //////////////////////////////////////////////////////////////////
         // calcul invariant relative pos
+
+        Matrix pos_planet;
+        Matrix pos_cam;
+
+        SceneNode<DrawSpace::Dynamics::Orbiter>* orbiter_node = m_owner->GetOwner();
+
+
+        orbiter_node->GetFinalTransform( pos_planet );
+        camera_node->GetFinalTransform( pos_cam );
+
+        Vector delta;
+
+        delta[0] = pos_cam( 3, 0 ) - pos_planet( 3, 0 );
+        delta[1] = pos_cam( 3, 1 ) - pos_planet( 3, 1 );
+        delta[2] = pos_cam( 3, 2 ) - pos_planet( 3, 2 );
+        delta[3] = 1.0;
+
     }
     else if( m_inertbody )
     {        
@@ -196,32 +217,6 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
         delta[2] = pos_body( 3, 2 ) - pos_planet( 3, 2 );
         delta[3] = 1.0;
     }
-    else
-    {
-        //ni m_inertbody, ni m_camera, alors c'est une camera de type FREE
-
-        Matrix res;
-        SceneNode<CameraPoint>* camera_node = m_camera->GetOwner();
-
-        //camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), res );
-        camera_node->GetFinalTransform( res );
-        Vector pos;
-
-        pos[0] = res( 3, 0 );
-        pos[1] = res( 3, 1 );
-        pos[2] = res( 3, 2 );
-        pos[3] = 1.0;
-       
-        m_planetbody->UpdateHotPoint( pos );
-
-
-        //////////////////////////////////////////////////////////////////
-        // calcul invariant relative pos
-
-
-    }
-
-    // TODO finir avec le cas camera type FREE !!!
 
     /*
     if( m_hot )

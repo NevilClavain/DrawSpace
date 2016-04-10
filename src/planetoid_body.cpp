@@ -326,14 +326,8 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
     
         Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( this, m_config, &m_world, slod_body, collider, m_subpass_creation_cb, i ) );
    
-        planet_fragment->SetHotState( p_hotstate );
-   
-        // si p_hotstate == false, il n'y a pas d'injection de hotpoint dans le spherelod body depuis Fragment::Update
-        // donc inutile de faire le SetCamera sur le fragment
-        if( p_hotstate )
-        {
-            planet_fragment->SetCamera( p_camera );
-        }
+        planet_fragment->SetHotState( p_hotstate );   
+        planet_fragment->SetCamera( p_camera );
 
         //p_cameradescr.fragment = planet_fragment;
         p_cameradescr.fragments.push_back( planet_fragment );
