@@ -33,7 +33,7 @@ using namespace DrawSpace::Planetoid;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::SphericalLOD;
 
-Fragment::Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
+Fragment::Fragment( Dynamics::Orbiter* p_owner, DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
                 Collider* p_collider, Fragment::SubPassCreationHandler* p_handler, int p_index ) :
 m_world( p_world ),
 m_config( p_config ),
@@ -47,7 +47,8 @@ m_nb_collisionmeshebuild_done( 0 ),
 m_current_patch( NULL ),
 m_draw_collidinghm( false ),
 m_handler( p_handler ),
-m_current_collisions_hm( NULL )
+m_current_collisions_hm( NULL ),
+m_owner( p_owner )
 {
     m_collisions = m_config->m_fragments_descr[p_index].enable_collisions;
     m_planetray = 1000.0 * m_config->m_fragments_descr[p_index].ray;
@@ -162,6 +163,9 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
         pos[3] = 1.0;
        
         m_planetbody->UpdateHotPoint( pos );
+
+        //////////////////////////////////////////////////////////////////
+        // calcul invariant relative pos
     }
     else if( m_inertbody )
     {        
@@ -171,6 +175,26 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
                                                                   // quand on est relatif (hot)
             m_planetbody->Compute();            
         }
+
+        //////////////////////////////////////////////////////////////////
+        // calcul invariant relative pos
+
+        Matrix pos_planet;
+        Matrix pos_body;
+
+        SceneNode<DrawSpace::Dynamics::InertBody>* inertbody_node = m_inertbody->GetOwner();
+        SceneNode<DrawSpace::Dynamics::Orbiter>* orbiter_node = m_owner->GetOwner();
+
+
+        orbiter_node->GetFinalTransform( pos_planet );
+        inertbody_node->GetFinalTransform( pos_body );
+
+        Vector delta;
+
+        delta[0] = pos_body( 3, 0 ) - pos_planet( 3, 0 );
+        delta[1] = pos_body( 3, 1 ) - pos_planet( 3, 1 );
+        delta[2] = pos_body( 3, 2 ) - pos_planet( 3, 2 );
+        delta[3] = 1.0;
     }
     else
     {
@@ -189,6 +213,12 @@ void Fragment::Compute( DrawSpace::Planetoid::Body* p_owner )
         pos[3] = 1.0;
        
         m_planetbody->UpdateHotPoint( pos );
+
+
+        //////////////////////////////////////////////////////////////////
+        // calcul invariant relative pos
+
+
     }
 
     // TODO finir avec le cas camera type FREE !!!

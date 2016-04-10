@@ -318,10 +318,11 @@ void Orbiter::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 
 void Orbiter::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    m_owner = p_node;
+    m_owner = static_cast<SceneNode<Orbiter>*>( p_node );
 }
 
-BaseSceneNode* Orbiter::GetOwner( void )
+//BaseSceneNode* Orbiter::GetOwner( void )
+DrawSpace::Core::SceneNode<Orbiter>* Orbiter::GetOwner( void )
 {
     return m_owner;
 }

@@ -51,26 +51,27 @@ protected:
 
     } BodyInitialAttitudComponent;
 
-    Parameters                      m_parameters;
+    Parameters                                  m_parameters;
 
-    btRigidBody*                    m_rigidBody;
-    btCollisionShape*               m_collisionShape;
-    btTriangleMesh*                 m_meshe_data;
-    btDefaultMotionState*           m_motionState;
+    btRigidBody*                                m_rigidBody;
+    btCollisionShape*                           m_collisionShape;
+    btTriangleMesh*                             m_meshe_data;
+    btDefaultMotionState*                       m_motionState;
 
-    Body*                           m_attachedbody;
-    World*                          m_global_world_mem;
+    Body*                                       m_attachedbody;
+    World*                                      m_global_world_mem;
 
-    DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
+    DrawSpace::Utils::Matrix                    m_lastlocalworldtrans;
    
 
-    DrawSpace::Core::BaseSceneNode* m_owner;
+    //DrawSpace::Core::BaseSceneNode* m_owner;
+    DrawSpace::Core::SceneNode<InertBody>*      m_owner;
 
     // attribut d'infos pour les planetes et stations....
-    bool                            m_enable_dynamiclink;
-    bool                            m_enable_dynamiclink_initstate;
-    Body*                           m_referent_body;
-    DrawSpace::Utils::Matrix        m_dynamiclink_initial_matrix;
+    bool                                        m_enable_dynamiclink;
+    bool                                        m_enable_dynamiclink_initstate;
+    Body*                                       m_referent_body;
+    DrawSpace::Utils::Matrix                    m_dynamiclink_initial_matrix;
 
 
     void                            create_body( const btTransform& p_transform );
@@ -133,7 +134,8 @@ public:
 
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
 
-    DrawSpace::Core::BaseSceneNode* GetOwner( void );
+    //DrawSpace::Core::BaseSceneNode* GetOwner( void );
+    virtual DrawSpace::Core::SceneNode<InertBody>* GetOwner( void );
     
     void Enable( bool p_state );
     bool IsEnabled( void );

@@ -733,10 +733,12 @@ void InertBody::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 */
 void InertBody::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    m_owner = p_node;
+    //m_owner = p_node;
+    m_owner = static_cast<SceneNode<InertBody>*>( p_node );
 }
 
-BaseSceneNode* InertBody::GetOwner( void )
+//BaseSceneNode* InertBody::GetOwner( void )
+SceneNode<InertBody>* InertBody::GetOwner( void )
 {
     return m_owner;
 }

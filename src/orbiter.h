@@ -112,22 +112,23 @@ class Orbiter : public Body
 {
 protected:
 
-    btRigidBody*                    m_rigidBody;
-    btCollisionShape*               m_collisionShape;
-    btTriangleMesh*                 m_meshe_data;
-    btDefaultMotionState*           m_motionState;
+    btRigidBody*                                m_rigidBody;
+    btCollisionShape*                           m_collisionShape;
+    btTriangleMesh*                             m_meshe_data;
+    btDefaultMotionState*                       m_motionState;
 
-    dsreal                          m_orbit_angle;
-    dsreal                          m_revolution_angle; // orbiter self rotation
+    dsreal                                      m_orbit_angle;
+    dsreal                                      m_revolution_angle; // orbiter self rotation
 
 
-    dsreal                          m_orbit_duration; // unite : 1.0 = annee terrestre (365 jours)
-    dsreal                          m_revolution_duration; // unite : 1.0 jour terrestre (24h)
-    dsreal                          m_revolution_tilt_angle; // inclinaison axe de rotation planete
+    dsreal                                      m_orbit_duration; // unite : 1.0 = annee terrestre (365 jours)
+    dsreal                                      m_revolution_duration; // unite : 1.0 jour terrestre (24h)
+    dsreal                                      m_revolution_tilt_angle; // inclinaison axe de rotation planete
 
-    DrawSpace::Utils::Matrix        m_basetransform;
+    DrawSpace::Utils::Matrix                    m_basetransform;
 
-    DrawSpace::Core::BaseSceneNode* m_owner;
+    //DrawSpace::Core::BaseSceneNode* m_owner;
+    DrawSpace::Core::SceneNode<Orbiter>*        m_owner;
 
 
 public:
@@ -166,7 +167,8 @@ public:
     
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    DrawSpace::Core::BaseSceneNode* GetOwner( void );
+    //DrawSpace::Core::BaseSceneNode* GetOwner( void );
+    virtual DrawSpace::Core::SceneNode<Orbiter>* GetOwner( void );
 
     friend class Calendar;
 };

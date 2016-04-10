@@ -185,7 +185,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                             Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
-                            Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
+                            Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( this, m_config, &m_world, slod_body, 
                                                                             collider, m_subpass_creation_cb, i ) );
                             planet_fragment->SetHotState( true );
 
@@ -213,7 +213,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
-                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, 
+                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( this, m_config, &m_world, slod_body, 
                                                                         collider, m_subpass_creation_cb, i ) );
 
                         planet_fragment->SetHotState( false );
@@ -324,7 +324,7 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
 
         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
-        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( m_config, &m_world, slod_body, collider, m_subpass_creation_cb, i ) );
+        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( this, m_config, &m_world, slod_body, collider, m_subpass_creation_cb, i ) );
    
         planet_fragment->SetHotState( p_hotstate );
    

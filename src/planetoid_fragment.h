@@ -92,13 +92,15 @@ protected:
 
     Fragment::SubPassCreationHandler*                           m_handler;
 
+    Dynamics::Orbiter*                                          m_owner;
+
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
     
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap );
 
 public:
 
-    Fragment( DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
+    Fragment( Dynamics::Orbiter* p_owner, DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
                 DrawSpace::Dynamics::Collider* p_collider, Fragment::SubPassCreationHandler* p_handler, int p_index );
     virtual ~Fragment( void );
 
