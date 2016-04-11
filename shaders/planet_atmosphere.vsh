@@ -22,6 +22,8 @@ float4   base_uv_global: register(c27);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
+float4   viewer_pos : register(c28);
+
 
 float4 atmo_scattering_params: register(c30);
 	// .x -> OuterRadius
@@ -105,12 +107,178 @@ float4 interpolate( float p_x, float p_y )
     return res;
 }
 
-float4 scattering_color( float4 p_vertex, float4 p_viewpos, float4 p_ldir )
+float4 scattering_color( float3 p_vertex, float3 p_viewpos, float3 p_ldir )
 {
+    float4 res_color = 0.0;
+    res_color.w = 1;
 
+    float rayleighscattering = 0.0025;
+    float miescattering = 0.0015;
+
+    float Kr4Pi = 4.0 * 3.1415927 * rayleighscattering;
+    float Km4Pi = 4.0 * 3.1415927 * miescattering;
+
+    float3 lightwl4;
+
+    lightwl4.x = pow(0.650, 4.0); //REDSPECTRALCOMPONENT
+    lightwl4.y = pow(0.570, 4.0); //GREENSPECTRALCOMPONENT
+    lightwl4.z = pow(0.475, 4.0); //BLUESPECTRALCOMPONENT
+
+    float miephaseasymetry = -0.85;
+
+    int nSamples = 2;
+
+    float scale = 1.0 / (atmo_scattering_params.x - atmo_scattering_params.y);
+
+
+    float3 vPos;
+    vPos = p_vertex;
+
+    float3 vCamera = p_viewpos;    
+
+    float3 vRay = normalize( vPos - vCamera );
+
+    float localFar = length(vRay);
+    
+    float B = 2.0 * dot(vCamera, vRay);
+
+    float C = dot(vCamera, vCamera) - (atmo_scattering_params.x * atmo_scattering_params.x);
+    float det = max(0.0, B * B - 4.0 * C);
+    float localNear = 0.5 * (-B - sqrt(det));
+
+    bool bCameraInAtmosphere = false;
+    bool bCameraAbove = true;
+    float4 cameraDepth = 0.0;
+    float4 lightDepth;
+    float4 sampleDepth;
+
+    if (localNear <= 0)
+    {
+        bCameraInAtmosphere = true;
+        localNear = 0;
+        float CameraHeight = length( vCamera );
+        float CameraAltitude = (CameraHeight - atmo_scattering_params.y) * scale;
+
+        if (CameraHeight >= length(vPos))
+        {
+            bCameraAbove = true;
+        }
+        else
+        {
+            bCameraAbove = false;
+        }
+
+        float3 vRay2;
+
+        if (!bCameraAbove)
+        {
+            vRay2 = vRay;
+        }
+        else
+        {
+            vRay2 = -vRay;
+        }
+
+        float CameraAngle = dot(vRay2, vCamera) / CameraHeight;
+
+        cameraDepth = interpolate(CameraAltitude, 0.5 - CameraAngle * 0.5);
+    }
+    else
+    {
+        vCamera += vRay * localNear;
+
+        localFar -= localNear;
+        localNear = 0.0;
+    }
+
+    if( localFar > 0.000001 )
+    {
+
+        float3 rayleighSum = 0.0;
+        float3 mieSum = 0.0;
+
+        float sampleLength = localFar / nSamples;
+        float scaledLength = sampleLength * scale;
+
+        float3 vSampleRay = vRay * sampleLength;
+
+        vPos = vCamera + (vSampleRay * 0.5);
+
+        for (int i = 0; i < nSamples; i++)
+        {
+            float Height = length(vPos);
+            float LightAngle = dot(p_ldir, vPos) / Height;
+            float Altitude = (Height - atmo_scattering_params.y) * scale;
+       
+            lightDepth = interpolate(Altitude, 0.5 - LightAngle * 0.5);
+
+            if (lightDepth.x >= 0.000001)
+            {
+                float RayleighDensity = scaledLength * lightDepth.x;
+                float RayleighDepth = lightDepth.y;
+                float MieDensity = scaledLength * lightDepth.z;
+                float MieDepth = lightDepth.w;
+
+                if (bCameraAbove)
+                {
+                    float3 vRayNeg = -vRay;
+
+                    float SampleAngle = dot(vRayNeg, vPos) / Height;
+
+                    sampleDepth = interpolate(Altitude, 0.5 - SampleAngle * 0.5);
+                    RayleighDepth += sampleDepth.y - cameraDepth.y;
+                    MieDepth += sampleDepth.w - cameraDepth.w;
+                }
+                else
+                {
+                    float SampleAngle = dot(vRay, vPos) / Height;
+
+                    sampleDepth = interpolate(Altitude, 0.5 - SampleAngle * 0.5);
+                    RayleighDepth += cameraDepth.y - sampleDepth.y;
+                    MieDepth += cameraDepth.w - sampleDepth.w;
+                }
+
+                RayleighDepth *= Kr4Pi;
+                MieDepth *= Km4Pi;
+
+                float3 Attenuation;
+                Attenuation = exp(-RayleighDepth / lightwl4 - MieDepth);
+
+                rayleighSum += RayleighDensity * Attenuation;
+                mieSum += MieDensity * Attenuation;
+
+                vPos += vSampleRay;
+            }
+        }
+
+        float3 vRayNeg = -vRay;
+
+        float Angle = dot(vRayNeg, p_ldir);
+        float2 Phase;
+        float Angle2 = Angle * Angle;
+
+        float g2 = miephaseasymetry * miephaseasymetry;
+
+
+        Phase.x = 0.75 * (1.0 + Angle2);
+        Phase.y = 1.5 * ((1 - g2) / (2 + g2)) * (1.0 + Angle2) / pow(1 + g2 - 2.0 * miephaseasymetry * Angle, 1.5);
+        Phase.x *= rayleighscattering * atmo_scattering_params.z;
+        Phase.y *= miescattering * atmo_scattering_params.z;
+
+        float3 color = 0.0;
+
+        color = rayleighSum * Phase.x / lightwl4 + mieSum * Phase.y;
+
+        color = min(color, 1.0);
+
+        res_color.xyz = color;        
+
+    }
+
+    return res_color;
 }
 
-VS_OUTPUT vs_main( VS_INPUT Input )
+VS_OUTPUT vs_main(VS_INPUT Input)
 {
 	VS_OUTPUT Output;
 
@@ -149,9 +317,15 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.GlobalPatch_TexCoord.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
 	Output.GlobalPatch_TexCoord.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
 
-    float4 color = getLookupTableValue(50, 50);
+    //float4 color = getLookupTableValue(50, 50);
+    //Output.color = color;
 
-    Output.color = color;
+    float3 ldir;
+    ldir.x = 1.0;
+    ldir.y = 0.0;
+    ldir.z = 0.0;
+
+    Output.color = scattering_color(v_position3.xyz, viewer_pos.xyz, ldir);
 			  
 	return( Output );   
 }
