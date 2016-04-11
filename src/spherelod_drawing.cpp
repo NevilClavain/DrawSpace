@@ -51,7 +51,8 @@ void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
     m_display_list = p_list;
 }
 
-void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
+void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
+                                            const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -74,12 +75,13 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
     Vector global_uvcoords;
     p_patch->GetGlobalUVCoords( global_uvcoords );
 
-
+    Vector view_pos = p_invariant_view_pos;
 
     m_renderer->SetFxShaderParams( 0, 24, flag0 );
     m_renderer->SetFxShaderParams( 0, 25, patch_pos );
     m_renderer->SetFxShaderParams( 0, 26, globalrel_uvcoords );
     m_renderer->SetFxShaderParams( 0, 27, global_uvcoords );
+    m_renderer->SetFxShaderParams( 0, 28, view_pos );
 
     Vector pixels_flags;
     pixels_flags[0] = p_rel_alt;
@@ -98,7 +100,8 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 }
 
 
-void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
+void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+                            const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
 {
     //ZeroMemory( &m_stats, sizeof( Stats ) );
 
@@ -115,7 +118,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_a
             current_texture = refpatchtexture;
         }
         
-        draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_rel_alt, p_world, p_view, p_proj );
+        draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
     }
 }
 
@@ -259,7 +262,10 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     // recup relative alt de la face
     dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAltSphere();
 
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), planetbody->GetDiameter() / 2.0, rel_alt, m_globaltransformation, view, proj );
+    Vector view_pos;
+    planetbody->GetInvariantViewerPos( view_pos );
+
+    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj );
     node_binder->Unbind();
 }
 
@@ -282,7 +288,10 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     Body* planetbody = m_planetbodies[face_node->GetFragmentIndex()];
     dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
 
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, rel_alt, world, view, proj );   
+    Vector view_pos;
+    planetbody->GetInvariantViewerPos( view_pos );
+
+    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, rel_alt, view_pos, world, view, proj );   
     node_binder->Unbind();
 }
 
