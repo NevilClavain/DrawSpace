@@ -126,7 +126,7 @@ float4 scattering_color( float3 p_vertex, float3 p_viewpos, float3 p_ldir )
 
     float miephaseasymetry = -0.85;
 
-    int nSamples = 2;
+    int nSamples = 5;//2;
 
     float scale = 1.0 / (atmo_scattering_params.x - atmo_scattering_params.y);
 
@@ -325,7 +325,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     ldir.y = 0.0;
     ldir.z = 0.0;
 
-    Output.color = scattering_color(v_position3.xyz, viewer_pos.xyz, ldir);
+    Output.color = scattering_color(v_position2.xyz, normalize(viewer_pos.xyz), ldir);
 			  
 	return( Output );   
 }
