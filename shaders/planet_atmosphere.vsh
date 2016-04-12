@@ -109,6 +109,15 @@ float4 interpolate( float p_x, float p_y )
 
 float4 scattering_color( float3 p_vertex, float3 p_viewpos, float3 p_ldir )
 {
+
+    float fOuterRadius = 10.25;
+     //6100.0 * 1000.0; //* fOuterRadius;
+    float fInnerRadius = 10.0;
+     //6000.0 * 1000.0; //* fInnerRadius;
+
+    float fEmPower = 9.0;
+
+
     float4 res_color = 0.0;
     res_color.w = 1;
 
@@ -126,9 +135,9 @@ float4 scattering_color( float3 p_vertex, float3 p_viewpos, float3 p_ldir )
 
     float miephaseasymetry = -0.85;
 
-    int nSamples = 5;//2;
+    int nSamples = 2;
 
-    float scale = 1.0 / (atmo_scattering_params.x - atmo_scattering_params.y);
+    float scale = 1.0 / (fOuterRadius - fInnerRadius);
 
 
     float3 vPos;
@@ -142,22 +151,21 @@ float4 scattering_color( float3 p_vertex, float3 p_viewpos, float3 p_ldir )
     
     float B = 2.0 * dot(vCamera, vRay);
 
-    float C = dot(vCamera, vCamera) - (atmo_scattering_params.x * atmo_scattering_params.x);
+    float C = dot(vCamera, vCamera) - (fOuterRadius * fOuterRadius);
     float det = max(0.0, B * B - 4.0 * C);
     float localNear = 0.5 * (-B - sqrt(det));
 
-    bool bCameraInAtmosphere = false;
+
     bool bCameraAbove = true;
     float4 cameraDepth = 0.0;
     float4 lightDepth;
     float4 sampleDepth;
 
-    if (localNear <= 0)
+    if(localNear <= 0.0)
     {
-        bCameraInAtmosphere = true;
-        localNear = 0;
+        localNear = 0.0;
         float CameraHeight = length( vCamera );
-        float CameraAltitude = (CameraHeight - atmo_scattering_params.y) * scale;
+        float CameraAltitude = (CameraHeight - fInnerRadius) * scale;
 
         if (CameraHeight >= length(vPos))
         {
@@ -191,11 +199,11 @@ float4 scattering_color( float3 p_vertex, float3 p_viewpos, float3 p_ldir )
         localNear = 0.0;
     }
 
-    if( localFar > 0.000001 )
+    //if( localFar > 0.000001 )
     {
 
-        float3 rayleighSum = 0.0;
-        float3 mieSum = 0.0;
+        float3 rayleighSum = { 0.0, 0.0, 0.0 };
+        float3 mieSum = { 0.0, 0.0, 0.0 };
 
         float sampleLength = localFar / nSamples;
         float scaledLength = sampleLength * scale;
@@ -208,11 +216,11 @@ float4 scattering_color( float3 p_vertex, float3 p_viewpos, float3 p_ldir )
         {
             float Height = length(vPos);
             float LightAngle = dot(p_ldir, vPos) / Height;
-            float Altitude = (Height - atmo_scattering_params.y) * scale;
+            float Altitude = (Height - fInnerRadius) * scale;
        
             lightDepth = interpolate(Altitude, 0.5 - LightAngle * 0.5);
 
-            if (lightDepth.x >= 0.000001)
+            //if (lightDepth.x >= 0.000001)
             {
                 float RayleighDensity = scaledLength * lightDepth.x;
                 float RayleighDepth = lightDepth.y;
@@ -262,12 +270,12 @@ float4 scattering_color( float3 p_vertex, float3 p_viewpos, float3 p_ldir )
 
         Phase.x = 0.75 * (1.0 + Angle2);
         Phase.y = 1.5 * ((1 - g2) / (2 + g2)) * (1.0 + Angle2) / pow(1 + g2 - 2.0 * miephaseasymetry * Angle, 1.5);
-        Phase.x *= rayleighscattering * atmo_scattering_params.z;
-        Phase.y *= miescattering * atmo_scattering_params.z;
+        Phase.x *= rayleighscattering * fEmPower;
+        Phase.y *= miescattering * fEmPower;
 
         float3 color = 0.0;
 
-        color = rayleighSum * Phase.x / lightwl4 + mieSum * Phase.y;
+        color = ( rayleighSum * Phase.x / lightwl4 ) + ( mieSum * Phase.y );
 
         color = min(color, 1.0);
 
@@ -321,11 +329,11 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     //Output.color = color;
 
     float3 ldir;
-    ldir.x = 1.0;
+    ldir.x = -1.0;
     ldir.y = 0.0;
     ldir.z = 0.0;
 
-    Output.color = scattering_color(v_position2.xyz, normalize(viewer_pos.xyz), ldir);
+    Output.color = scattering_color(v_position2.xyz * 10.25, 10.0 * (viewer_pos / flag0.z), ldir);
 			  
 	return( Output );   
 }
