@@ -1,6 +1,8 @@
 
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
+float4x4 matWorld : register(c8);
+float4x4 matCam : register(c16);
 
 
 float4   flag0:				register(c24);
@@ -94,12 +96,23 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
 	Output.Position = mul( v_position3, matWorldViewProjection );
 
+    
     Output.t0.xyz = v_position2.xyz * 10.25;
     Output.t0.w = 1.0;
 
-    float3 v3CameraPos = 10.0 * (viewer_pos / flag0.z);
+    //float3 v3CameraPos = 10.0 * (viewer_pos / flag0.z);
+
+    float3 vc;
+    vc.x = matCam[3][0];
+    vc.y = matCam[3][1];
+    vc.z = matCam[3][2];
+
+    float3 v3CameraPos = 10.0 * (vc / flag0.z);
     Output.t1.xyz = v3CameraPos;
     Output.t1.w = 1.0;
+    
+
+
 
     /*
     ////////////////////////////////////////////////////////////

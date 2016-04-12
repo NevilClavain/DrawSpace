@@ -333,7 +333,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     ldir.y = 0.0;
     ldir.z = 0.0;
 
-    Output.color = scattering_color(v_position2.xyz * 10.25, 10.0 * (viewer_pos / flag0.z), ldir);
+    Output.color = scattering_color(v_position2.xyz * 1250000.0, 1000000.0 * (viewer_pos / flag0.z), ldir);
 			  
 	return( Output );   
 }

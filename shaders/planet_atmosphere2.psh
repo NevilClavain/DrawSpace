@@ -73,6 +73,26 @@ float getMiePhase(float fCos, float fCos2, float g, float g2)
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
     /*
+
+    float3 viewpos = normalize(input.t1);
+
+    float3 vertexpos = normalize(input.t0);
+
+    float3 base_color = { 0.5, 0.5, 0.8 };
+
+
+    float4 atmo_color;
+    
+    atmo_color.xyz = base_color * abs(dot(vertexpos, viewpos));
+
+
+    atmo_color.w = atmo_color.z;
+
+
+    return atmo_color;
+    */
+
+    /*
     float3 ldir;
     ldir.x = -1.0;
     ldir.y = 0.0;
@@ -92,7 +112,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     color.w = color.y;
     */
 
-
+    
     float3 ldir;
     ldir.x = -1.0;
     ldir.y = 0.0;
@@ -210,5 +230,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     color.w = color.z;
   
     return color;
+    
     
 }
