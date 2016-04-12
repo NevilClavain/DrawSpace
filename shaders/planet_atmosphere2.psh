@@ -32,18 +32,183 @@ float4 light2_color     : register(c14);
 
 struct PS_INTPUT
 {	
-	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
-	float4 UnitPatch_TexCoord		: TEXCOORD1;
-	float4 GlobalPatch_TexCoord		: TEXCOORD2;
-    float4 color                    : TEXCOORD3;
+    //float4 c0 : COLOR0;
+    //float4 c1 : COLOR1;
+    float4 t0 : TEXCOORD0;
+    float4 t1 : TEXCOORD1;
 };
 
 #include "spherelod_commons.hlsl"
 
+// Returns the near intersection point of a line and a sphere
+float getNearIntersection(float3 v3Pos, float3 v3Ray, float fDistance2, float fRadius2)
+{
+    float B = 2.0 * dot(v3Pos, v3Ray);
+    float C = fDistance2 - fRadius2;
+    float fDet = max(0.0, B * B - 4.0 * C);
+    return 0.5 * (-B - sqrt(fDet));
+}
+
+// The scale equation calculated by Vernier's Graphical Analysis
+float scale(float fCos)
+{
+    float fScaleDepth = 0.25;
+    float x = 1.0 - fCos;
+    return fScaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
+}
+
+// Calculates the Rayleigh phase function
+float getRayleighPhase(float fCos2)
+{
+	//return 1.0;
+    return 0.75 + 0.75 * fCos2;
+}
+
+// Calculates the Mie phase function
+float getMiePhase(float fCos, float fCos2, float g, float g2)
+{
+    return 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos2) / pow(1.0 + g2 - 2.0 * g * fCos, 1.5);
+}
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-    float4 final_color = input.color;
+    /*
+    float3 ldir;
+    ldir.x = -1.0;
+    ldir.y = 0.0;
+    ldir.z = 0.0;
 
-	return final_color;
+    /////////////////////////////////////////////////////////
+
+    float g = -0.990;
+    float g2 = g * g;
+
+    /////////////////////////////////////////////////////////
+
+    float fCos = dot(ldir, input.t0) / length(input.t0);
+    float fCos2 = fCos * fCos;
+    float4 color = getRayleighPhase(fCos2) * input.c0 + getMiePhase(fCos, fCos2, g, g2) * input.c1;
+
+    color.w = color.y;
+    */
+
+
+    float3 ldir;
+    ldir.x = -1.0;
+    ldir.y = 0.0;
+    ldir.z = 0.0;
+
+    float3 v3CameraPos = input.t1;
+
+    ////////////////////////////////////////////////////
+
+    // The number of sample points taken along the ray
+    int nSamples = 2;
+    float fSamples = (float) nSamples;
+
+    float fScaleDepth = 0.25;
+    float fInvScaleDepth = 1.0 / fScaleDepth;
+
+
+    /////////////////////////////////////////////////////
+
+    float fOuterRadius = 10.25;
+     //6100.0 * 1000.0; //* atmo_scattering_params.x;
+    float fInnerRadius = 10.0;
+     //6000.0 * 1000.0; //* atmo_scattering_params.y;
+
+    float fOuterRadius2 = fOuterRadius * fOuterRadius;
+    float fInnerRadius2 = fInnerRadius * fInnerRadius;
+
+    float fCameraHeight2 = length(v3CameraPos) * length(v3CameraPos);
+
+
+    float fScale = 1.0 / (fOuterRadius - fInnerRadius);
+
+    float fScaleOverScaleDepth = fScale / fScaleDepth;
+
+    float3 v3InvWavelength;
+
+    v3InvWavelength.x = 1.0 / pow(0.650, 4.0);
+    v3InvWavelength.y = 1.0 / pow(0.570, 4.0);
+    v3InvWavelength.z = 1.0 / pow(0.475, 4.0);
+
+    float fKr = 0.0025;
+    float fKm = 0.0010;
+
+    float fKr4PI = fKr * 4.0 * 3.1415927;
+
+    float fKm4PI = fKm * 4.0 * 3.1415927;
+
+    float ESun = 9.0;
+
+    float fKrESun = fKr * ESun;
+    float fKmESun = fKm * ESun;
+	  
+    //////////////////////////
+
+    
+
+    float3 v3Pos = input.t0;
+
+    float3 v3Ray = v3Pos - (v3CameraPos);
+    float fFar = length(v3Ray);
+    v3Ray /= fFar;
+
+
+	// Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
+    float fNear = getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);
+
+    
+	// Calculate the ray's start and end positions in the atmosphere, then calculate its scattering offset
+    float3 v3Start = (v3CameraPos) + v3Ray * fNear;
+    fFar -= fNear;
+    float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
+    float fStartDepth = exp(-fInvScaleDepth);
+    float fStartOffset = fStartDepth * scale(fStartAngle);
+
+	// Initialize the scattering loop variables
+    float fSampleLength = fFar / fSamples;
+    float fScaledLength = fSampleLength * fScale;
+    float3 v3SampleRay = v3Ray * fSampleLength;
+    float3 v3SamplePoint = v3Start + v3SampleRay * 0.5;
+
+	// Now loop through the sample rays
+    float3 v3FrontColor = float3(0.0, 0.0, 0.0);
+    for (int i = 0; i < nSamples; i++)
+    {
+        float fHeight = length(v3SamplePoint);
+        float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
+        float fLightAngle = dot(ldir, v3SamplePoint) / fHeight;
+        float fCameraAngle = dot(v3Ray, v3SamplePoint) / fHeight;
+
+        float fScatter = (fStartOffset + fDepth * (scale(fLightAngle) - scale(fCameraAngle)));
+        float3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));
+        v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
+        v3SamplePoint += v3SampleRay;
+    }
+
+	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
+
+    float3 c0 = v3FrontColor * (v3InvWavelength * fKrESun);
+    float3 c1 = v3FrontColor * fKmESun;
+    float3 v3Direction = (v3CameraPos) - v3Pos;
+
+
+    ///////////////////////////////////////////////////////////
+
+    float g = -0.990;
+    float g2 = g * g;
+
+    /////////////////////////////////////////////////////////
+
+    float fCos = dot(ldir, v3Direction) / length(v3Direction);
+    float fCos2 = fCos * fCos;
+    float4 color;
+    color.xyz = getRayleighPhase(fCos2) * c0 + getMiePhase(fCos, fCos2, g, g2) * c1;
+
+    color.w = color.z;
+  
+    return color;
+    
 }
