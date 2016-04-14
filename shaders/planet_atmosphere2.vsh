@@ -108,7 +108,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     float4 vertex_pos = mul(v_position2, matWorldRot);
 
-    // enfin, mise à l'échelle 10.25;
+    // enfin, mise à l'échelle
     vertex_pos *= 10.25;
 
     Output.t0 = vertex_pos;

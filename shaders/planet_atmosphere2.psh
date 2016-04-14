@@ -73,26 +73,6 @@ float getMiePhase(float fCos, float fCos2, float g, float g2)
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
     /*
-
-    float3 viewpos = normalize(input.t1);
-
-    float3 vertexpos = normalize(input.t0);
-
-    float3 base_color = { 0.5, 0.5, 0.8 };
-
-
-    float4 atmo_color;
-    
-    atmo_color.xyz = base_color * abs(dot(vertexpos, viewpos));
-
-
-    atmo_color.w = atmo_color.z;
-
-
-    return atmo_color;
-    */
-
-    /*
     float3 ldir;
     ldir.x = -1.0;
     ldir.y = 0.0;
@@ -133,9 +113,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     /////////////////////////////////////////////////////
 
     float fOuterRadius = 10.25;
-     //6100.0 * 1000.0; //* atmo_scattering_params.x;
+
     float fInnerRadius = 10.0;
-     //6000.0 * 1000.0; //* atmo_scattering_params.y;
 
     float fOuterRadius2 = fOuterRadius * fOuterRadius;
     float fInnerRadius2 = fInnerRadius * fInnerRadius;
@@ -160,7 +139,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float fKm4PI = fKm * 4.0 * 3.1415927;
 
-    float ESun = 9.0;
+    float ESun = 12.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -229,7 +208,5 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     color.w = color.z;
   
-    return color;
-    
-    
+    return color;    
 }
