@@ -198,6 +198,8 @@ m_meshe_data( NULL ),
 m_orbit_duration( 0.0 ),
 m_revolution_duration( 0.0 ),
 m_revolution_tilt_angle( 0.0 ),
+m_orbit_angle( 0.0 ),
+m_revolution_angle( 0.0 ),
 m_owner( NULL )
 {
 }
