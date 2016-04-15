@@ -148,6 +148,7 @@ atmo_scattering_sampling_result skyfromspace_atmo_scattering_sampling(float3 p_v
         v3SamplePoint += v3SampleRay;
     }
 
+    // Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
     res.c0 = v3FrontColor * (v3InvWavelength * fKrESun);
     res.c1 = v3FrontColor * fKmESun;
     res.v3Direction = (v3CameraPos) - v3Pos;
@@ -155,7 +156,7 @@ atmo_scattering_sampling_result skyfromspace_atmo_scattering_sampling(float3 p_v
     return res;
 }
 
-float3 skyfromspace_atmo_scattering_color_result(atmo_scattering_sampling_result p_sampling, float3 p_ldir)
+float3 atmo_scattering_color_result(atmo_scattering_sampling_result p_sampling, float3 p_ldir)
 {
     float g = -0.990;
     float g2 = g * g;
@@ -167,4 +168,99 @@ float3 skyfromspace_atmo_scattering_color_result(atmo_scattering_sampling_result
     color = getRayleighPhase(fCos2) * p_sampling.c0 + getMiePhase(fCos, fCos2, g, g2) * p_sampling.c1;
 
     return color;
+}
+
+atmo_scattering_sampling_result skyfromatmo_atmo_scattering_sampling(float3 p_vertex_pos, float3 p_camera_pos, float3 p_ldir)
+{
+    atmo_scattering_sampling_result res;
+
+    float3 v3CameraPos = p_camera_pos;
+
+    ////////////////////////////////////////////////////
+
+    // The number of sample points taken along the ray
+    int nSamples = 2;
+    float fSamples = (float) nSamples;
+
+    float fScaleDepth = 0.25;
+    float fInvScaleDepth = 1.0 / fScaleDepth;
+
+
+    /////////////////////////////////////////////////////
+
+    float fOuterRadius = 10.25;
+
+    float fInnerRadius = 10.0;
+
+    float fOuterRadius2 = fOuterRadius * fOuterRadius;
+    float fInnerRadius2 = fInnerRadius * fInnerRadius;
+
+    float fCameraHeight = length(v3CameraPos);
+    float fCameraHeight2 = fCameraHeight * fCameraHeight;
+
+
+    float fScale = 1.0 / (fOuterRadius - fInnerRadius);
+
+    float fScaleOverScaleDepth = fScale / fScaleDepth;
+
+    float3 v3InvWavelength;
+
+    v3InvWavelength.x = 1.0 / pow(0.650, 4.0);
+    v3InvWavelength.y = 1.0 / pow(0.570, 4.0);
+    v3InvWavelength.z = 1.0 / pow(0.475, 4.0);
+
+    float fKr = 0.0025;
+    float fKm = 0.0010;
+
+    float fKr4PI = fKr * 4.0 * 3.1415927;
+
+    float fKm4PI = fKm * 4.0 * 3.1415927;
+
+    float ESun = 12.0;
+
+    float fKrESun = fKr * ESun;
+    float fKmESun = fKm * ESun;
+	  
+    //////////////////////////
+
+    float3 v3Pos = p_vertex_pos;
+
+    float3 v3Ray = v3Pos - (v3CameraPos);
+    float fFar = length(v3Ray);
+    v3Ray /= fFar;
+
+	// Calculate the ray's starting position, then calculate its scattering offset
+    float3 v3Start = v3CameraPos;
+    float fHeight = length(v3Start);
+    float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
+    float fStartAngle = dot(v3Ray, v3Start) / fHeight;
+    float fStartOffset = fDepth * scale(fStartAngle);
+
+	// Initialize the scattering loop variables
+    float fSampleLength = fFar / fSamples;
+    float fScaledLength = fSampleLength * fScale;
+    float3 v3SampleRay = v3Ray * fSampleLength;
+    float3 v3SamplePoint = v3Start + v3SampleRay * 0.5;
+
+	// Now loop through the sample rays
+    float3 v3FrontColor = float3(0.0, 0.0, 0.0);
+    for (int i = 0; i < nSamples; i++)
+    {
+        float fHeight = length(v3SamplePoint);
+        float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
+        float fLightAngle = dot(p_ldir, v3SamplePoint) / fHeight;
+        float fCameraAngle = dot(v3Ray, v3SamplePoint) / fHeight;
+        float fScatter = (fStartOffset + fDepth * (scale(fLightAngle) - scale(fCameraAngle)));
+        float3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));
+        v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
+        v3SamplePoint += v3SampleRay;
+    }
+
+	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
+
+    res.c0 = v3FrontColor * (v3InvWavelength * fKrESun);
+    res.c1 = v3FrontColor * fKmESun;
+    res.v3Direction = v3CameraPos - v3Pos;
+
+    return res;
 }
