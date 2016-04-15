@@ -36,6 +36,7 @@ struct PS_INTPUT
 
 #include "spherelod_commons.hlsl"
 
+
 // Returns the near intersection point of a line and a sphere
 float getNearIntersection(float3 v3Pos, float3 v3Ray, float fDistance2, float fRadius2)
 {
@@ -66,40 +67,18 @@ float getMiePhase(float fCos, float fCos2, float g, float g2)
     return 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos2) / pow(1.0 + g2 - 2.0 * g * fCos, 1.5);
 }
 
-float4 ps_main( PS_INTPUT input ) : COLOR0
+struct atmo_scattering_sampling_result
 {
-    /*
-    float3 ldir;
-    ldir.x = -1.0;
-    ldir.y = 0.0;
-    ldir.z = 0.0;
+    float3 c0;
+    float3 c1;
+    float3 v3Direction;
+};
 
-    /////////////////////////////////////////////////////////
+atmo_scattering_sampling_result atmo_scattering_sampling( float3 p_vertex_pos, float3 p_camera_pos, float3 p_ldir )
+{
+    atmo_scattering_sampling_result res;
 
-    float g = -0.990;
-    float g2 = g * g;
-
-    /////////////////////////////////////////////////////////
-
-    float fCos = dot(ldir, input.t0) / length(input.t0);
-    float fCos2 = fCos * fCos;
-    float4 color = getRayleighPhase(fCos2) * input.c0 + getMiePhase(fCos, fCos2, g, g2) * input.c1;
-
-    color.w = color.y;
-    */
-
-    
-    float3 ldir;
-
-    /*
-    ldir.x = -1.0;
-    ldir.y = 0.0;
-    ldir.z = 0.0;
-    */
-
-    ldir = light0_dir_global.xyz;
-
-    float3 v3CameraPos = input.t1;
+    float3 v3CameraPos = p_camera_pos;
 
     ////////////////////////////////////////////////////
 
@@ -147,9 +126,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	  
     //////////////////////////
 
-    
-
-    float3 v3Pos = input.t0;
+    float3 v3Pos = p_vertex_pos;
 
     float3 v3Ray = v3Pos - (v3CameraPos);
     float fFar = length(v3Ray);
@@ -179,7 +156,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     {
         float fHeight = length(v3SamplePoint);
         float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
-        float fLightAngle = dot(ldir, v3SamplePoint) / fHeight;
+        float fLightAngle = dot(p_ldir, v3SamplePoint) / fHeight;
         float fCameraAngle = dot(v3Ray, v3SamplePoint) / fHeight;
 
         float fScatter = (fStartOffset + fDepth * (scale(fLightAngle) - scale(fCameraAngle)));
@@ -188,25 +165,32 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         v3SamplePoint += v3SampleRay;
     }
 
-	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
+    res.c0 = v3FrontColor * (v3InvWavelength * fKrESun);
+    res.c1 = v3FrontColor * fKmESun;
+    res.v3Direction = (v3CameraPos) - v3Pos;
 
-    float3 c0 = v3FrontColor * (v3InvWavelength * fKrESun);
-    float3 c1 = v3FrontColor * fKmESun;
-    float3 v3Direction = (v3CameraPos) - v3Pos;
+    return res;
+}
 
-
-    ///////////////////////////////////////////////////////////
-
+float3 atmo_scattering_color_result(atmo_scattering_sampling_result p_sampling, float3 p_ldir)
+{
     float g = -0.990;
     float g2 = g * g;
 
-    /////////////////////////////////////////////////////////
+    float3 color;
 
-    float fCos = dot(ldir, v3Direction) / length(v3Direction);
+    float fCos = dot(p_ldir, p_sampling.v3Direction) / length(p_sampling.v3Direction);
     float fCos2 = fCos * fCos;
-    float4 color;
-    color.xyz = getRayleighPhase(fCos2) * c0 + getMiePhase(fCos, fCos2, g, g2) * c1;
+    color = getRayleighPhase(fCos2) * p_sampling.c0 + getMiePhase(fCos, fCos2, g, g2) * p_sampling.c1;
 
+    return color;
+}
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+    atmo_scattering_sampling_result sampling = atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);    
+    float4 color; 
+    color.xyz = atmo_scattering_color_result(sampling, light0_dir_global);
     color.w = color.z;
   
     return color;    
