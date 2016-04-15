@@ -57,7 +57,7 @@ struct atmo_scattering_sampling_result
     float3 v3Direction;
 };
 
-atmo_scattering_sampling_result atmo_scattering_sampling(float3 p_vertex_pos, float3 p_camera_pos, float3 p_ldir)
+atmo_scattering_sampling_result skyfromspace_atmo_scattering_sampling(float3 p_vertex_pos, float3 p_camera_pos, float3 p_ldir)
 {
     atmo_scattering_sampling_result res;
 
@@ -155,7 +155,7 @@ atmo_scattering_sampling_result atmo_scattering_sampling(float3 p_vertex_pos, fl
     return res;
 }
 
-float3 atmo_scattering_color_result(atmo_scattering_sampling_result p_sampling, float3 p_ldir)
+float3 skyfromspace_atmo_scattering_color_result(atmo_scattering_sampling_result p_sampling, float3 p_ldir)
 {
     float g = -0.990;
     float g2 = g * g;
