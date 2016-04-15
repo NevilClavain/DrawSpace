@@ -22,13 +22,9 @@ float4 flags7 : register(c7);
 float4 ambient_color    : register(c8);
 
 float4 light0_dir_local : register(c9);
-float4 light0_color     : register(c10);
+float4 light0_dir_global : register(c10);
+float4 light0_color     : register(c11);
 
-float4 light1_dir_local : register(c11);
-float4 light1_color     : register(c12);
-
-float4 light2_dir_local : register(c13);
-float4 light2_color     : register(c14);
 
 struct PS_INTPUT
 {	
@@ -94,9 +90,14 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     
     float3 ldir;
+
+    /*
     ldir.x = -1.0;
     ldir.y = 0.0;
     ldir.z = 0.0;
+    */
+
+    ldir = light0_dir_global.xyz;
 
     float3 v3CameraPos = input.t1;
 
