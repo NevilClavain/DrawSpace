@@ -87,6 +87,7 @@
   <ItemGroup>
     <FxCompile Include="atmospheric_scattering.hlsl" />
     <FxCompile Include="fbm.hlsl" />
+    <FxCompile Include="landscapes.hlsl" />
     <FxCompile Include="map_height.hlsl" />
     <FxCompile Include="multifbm_height.hlsl" />
     <FxCompile Include="spherelod_commons.hlsl" />
