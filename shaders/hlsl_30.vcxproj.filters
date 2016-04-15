@@ -76,5 +76,8 @@
     <FxCompile Include="planet_atmosphere2.vsh">
       <Filter>Source Files\vertex\planet</Filter>
     </FxCompile>
+    <FxCompile Include="atmospheric_scattering.hlsl">
+      <Filter>Source Files\commons</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
