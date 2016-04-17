@@ -110,13 +110,17 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     matWorldRot[3][1] = 0.0;
     matWorldRot[3][2] = 0.0;
 
-    float4 vertex_pos = mul(v_position2, matWorldRot);
-
+    //float4 vertex_pos = mul(v_position2, matWorldRot);
     // enfin, mise à l'échelle
-    vertex_pos *= 10.25;
+    //vertex_pos *= 10.25;
+
+    float4 vertex_pos = mul(v_position3, matWorldRot);
     
     Output.t0 = vertex_pos;
-    Output.t1.xyz = 10.0 * (viewer_pos / flag0.z);
+    //Output.t1.xyz = 10.0 * (viewer_pos / flag0.z);
+
+
+    Output.t1.xyz = (viewer_pos);
     Output.t1.w = 1.0;
     
 	return( Output );   

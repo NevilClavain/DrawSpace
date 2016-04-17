@@ -75,9 +75,12 @@ atmo_scattering_sampling_result skyfromspace_atmo_scattering_sampling(float3 p_v
 
     /////////////////////////////////////////////////////
 
-    float fOuterRadius = 10.25;
+    //float fOuterRadius = 10.25;
+    //float fInnerRadius = 10.0;
 
-    float fInnerRadius = 10.0;
+    float fOuterRadius = 6085000.0;
+    float fInnerRadius = 6000000.0;
+
 
     float fOuterRadius2 = fOuterRadius * fOuterRadius;
     float fInnerRadius2 = fInnerRadius * fInnerRadius;
@@ -102,7 +105,8 @@ atmo_scattering_sampling_result skyfromspace_atmo_scattering_sampling(float3 p_v
 
     float fKm4PI = fKm * 4.0 * 3.1415927;
 
-    float ESun = 12.0;
+    float ESun = 4.0;
+     //12.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -188,9 +192,11 @@ atmo_scattering_sampling_result skyfromatmo_atmo_scattering_sampling(float3 p_ve
 
     /////////////////////////////////////////////////////
 
-    float fOuterRadius = 10.25;
+    //float fOuterRadius = 10.25;
+    //float fInnerRadius = 10.0;
 
-    float fInnerRadius = 10.0;
+    float fOuterRadius = 6085000.0;
+    float fInnerRadius = 6000000.0;
 
     float fOuterRadius2 = fOuterRadius * fOuterRadius;
     float fInnerRadius2 = fInnerRadius * fInnerRadius;
