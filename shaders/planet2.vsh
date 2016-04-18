@@ -22,6 +22,7 @@
 
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
+float4x4 matWorld : register(c8);
 
 
 float4   flag0:				register(c24);
@@ -42,6 +43,9 @@ float4   base_uv: register(c26);
 float4   base_uv_global: register(c27);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
+
+float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
+
 
 
 float4 landscape_control: register(c30);
@@ -67,11 +71,15 @@ struct VS_OUTPUT
    float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
    float4 UnitPatch_TexCoord		: TEXCOORD1;
    float4 GlobalPatch_TexCoord		: TEXCOORD2;
+
+   float4 c0 : COLOR0;
+    float4 c1 : COLOR1;
 };
 
 #include "fbm.hlsl"
 #include "multifbm_height.hlsl"
 #include "spherelod_commons.hlsl"
+#include "atmospheric_scattering.hlsl"
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -139,6 +147,29 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.GlobalPatch_TexCoord = 0.0;
 	Output.GlobalPatch_TexCoord.x = lerp( base_uv_global.x, base_uv_global.z, Input.TexCoord0.x );
 	Output.GlobalPatch_TexCoord.y = lerp( base_uv_global.y, base_uv_global.w, Input.TexCoord0.y );
-			  
+
+    ///////////////////////////////////////////////////
+
+    ////// atmo scattering : calcul vertex pos
+
+    float4x4 matWorldRot = matWorld;
+
+    // clear translations matWorld
+    matWorldRot[3][0] = 0.0;
+    matWorldRot[3][1] = 0.0;
+    matWorldRot[3][2] = 0.0;
+
+    float4 vertex_pos = mul(v_position3, matWorldRot);
+    /*
+    Output.t0 = vertex_pos;
+    Output.t1 = viewer_pos;
+    */
+    atmo_scattering_sampling_result sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+
+    Output.c0.xyz = sampling_res.c0;
+    Output.c0.w = 1.0;
+    Output.c1.xyz = sampling_res.c1;
+    Output.c1.w = 1.0;
+
 	return( Output );   
 }

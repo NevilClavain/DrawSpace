@@ -289,8 +289,6 @@ atmo_scattering_sampling_result groundfromspace_atmo_scattering_sampling(float3 
 
     /////////////////////////////////////////////////////
 
-    //float fOuterRadius = 10.25;
-    //float fInnerRadius = 10.0;
 
     float fOuterRadius = 6085000.0;
     float fInnerRadius = 6000000.0;
@@ -319,7 +317,7 @@ atmo_scattering_sampling_result groundfromspace_atmo_scattering_sampling(float3 
 
     float fKm4PI = fKm * 4.0 * 3.1415927;
 
-    float ESun = 12.0;
+    float ESun = 48.0; //12.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -368,5 +366,6 @@ atmo_scattering_sampling_result groundfromspace_atmo_scattering_sampling(float3 
 
     res.c0 = v3FrontColor * (v3InvWavelength * fKrESun + fKmESun);
     res.c1 = v3Attenuate;
+    res.v3Direction = 0.0;
     return res;
 }
