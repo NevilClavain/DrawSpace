@@ -59,7 +59,7 @@ protected:
 
 
     int                                                         m_orientation;
-    dsreal                                                      m_planet_diameter;
+    dsreal                                                      m_diameter;
     DrawSpace::Utils::Vector                                    m_relative_hotpoint;
     DrawSpace::Utils::Vector                                    m_cubeface_hotpoint;
     DrawSpace::Utils::Vector                                    m_work_cubeface_hotpoint;

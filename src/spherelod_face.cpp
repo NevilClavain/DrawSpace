@@ -44,7 +44,7 @@ m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
 m_subpasscreation_handler( p_handler ),
 m_fragment_index( p_fragment_index )
 {
-    m_planet_diameter = 1000.0 * m_config->m_fragments_descr[p_fragment_index].ray * 2.0;
+    m_diameter = 1000.0 * m_config->m_fragments_descr[p_fragment_index].ray * 2.0;
     m_min_lodlevel = m_config->m_fragments_descr[p_fragment_index].min_lodlevel;
 }
 
@@ -75,7 +75,7 @@ void Face::init_lodranges( void )
     dsreal k = 1.0;
     for( int i = NB_LOD_RANGES - 1; i >= 0; i--)
     {
-        m_lodranges[i] = k * m_planet_diameter / 2.0;        
+        m_lodranges[i] = k * m_diameter / 2.0;        
         k *= 0.5;
     }
 }
@@ -86,7 +86,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
     {
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, NULL, -1, 
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_diameter / 2.0, m_orientation, NULL, -1, 
                                                         root, m_subpasscreation_handler, m_config, m_fragment_index ) );
         root->SetContent( patch );      
     }
@@ -95,7 +95,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
         QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_planet_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), 
+        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), 
                                                         node, m_subpasscreation_handler, m_config, m_fragment_index ) );
         node->SetContent( patch );      
     }
@@ -524,7 +524,7 @@ void Face::compute_cubeface_hotpoint( void )
     viewer.Normalize();
     Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );    
-    projected_viewer.Scale( m_planet_diameter / 2.0 );
+    projected_viewer.Scale( m_diameter / 2.0 );
 
     m_cubeface_hotpoint = projected_viewer;
 }
@@ -632,7 +632,7 @@ dsreal Face::GetRelativeAltSphere( void )
 
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
-    m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_planet_diameter / 2.0 ) );
+    m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_diameter / 2.0 ) );
     m_relative_alt_sphere = p_alt;
     if( m_hot )
     { 

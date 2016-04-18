@@ -21,13 +21,16 @@
 */
 
 float4 flags : register(c0);
-	// .x -> relative altitude
+	// .x -> fragment/layout relative altitude
 	// .y -> patch sidelenght
-	// .z -> planet ray
+	// .z -> fragment/layout ray
 	// .w -> patch orientation enum integer
 
 float4 flags2 : register(c1);
 	// .x -> ht textures resol
+
+float4 viewer_pos : register(c2); // pos camera par rapport au centre sphere
+
 
 float4 flags6 : register(c6);
 	// .x -> resol atlas textures splatting
@@ -58,11 +61,19 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-    //atmo_scattering_sampling_result sampling = skyfromspace_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
-    atmo_scattering_sampling_result sampling = skyfromatmo_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
+    atmo_scattering_sampling_result sampling = skyfromspace_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
+    //atmo_scattering_sampling_result sampling = skyfromatmo_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
     float4 color; 
     color.xyz = 3.0 * atmo_scattering_color_result(sampling, light0_dir_global);
-    color.w = 1.0; // moduler alpha avec l'altitude
+
+    // alpha modulé en fct de l'altitude
+    float alt = length(viewer_pos) - 6000000.0;
+
+    float atmo_alpha_alt = 1.0 - clamp(alt / 85000.0, 0.0, 1.0);
+
+    color.w = 1.0 - atmo_alpha_alt; // moduler alpha avec l'altitude et le prod sca vecteur lumiere
+
+    
     
     return color;    
 }

@@ -45,7 +45,7 @@ float4   base_uv_global: register(c27);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4   viewer_pos : register(c28);
+float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
 
 float4 atmo_scattering_params: register(c30);

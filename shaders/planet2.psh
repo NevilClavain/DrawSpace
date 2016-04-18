@@ -21,9 +21,9 @@
 */
 
 float4 flags : register(c0);
-	// .x -> relative altitude
+	// .x -> fragment/layout relative altitude
 	// .y -> patch sidelenght
-	// .z -> planet ray
+	// .z -> fragment/layout ray
 	// .w -> patch orientation enum integer
 
 float4 flags2 : register(c1);
