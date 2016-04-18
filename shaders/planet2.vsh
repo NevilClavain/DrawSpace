@@ -160,11 +160,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     matWorldRot[3][2] = 0.0;
 
     float4 vertex_pos = mul(v_position3, matWorldRot);
-    /*
-    Output.t0 = vertex_pos;
-    Output.t1 = viewer_pos;
-    */
+    
     atmo_scattering_sampling_result sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+    //atmo_scattering_sampling_result sampling_res = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
 
     Output.c0.xyz = sampling_res.c0;
     Output.c0.w = 1.0;
