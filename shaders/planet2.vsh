@@ -113,7 +113,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float v_alt = 0.0;
 
-	if( vertex_distance < 1.015 * horizon_limit )
+	if( vertex_distance < /*1.015*/ 2.0 * horizon_limit )
 	{		
 		v_alt = ComputeVertexHeight( v_position2, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y, seeds.z, seeds.w );
 
@@ -163,8 +163,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     float4 vertex_pos = mul(v_position3, matWorldRot);
     
-    //atmo_scattering_sampling_result sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
-    atmo_scattering_sampling_result sampling_res = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+    atmo_scattering_sampling_result sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+    //atmo_scattering_sampling_result sampling_res = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
 
     Output.c0.xyz = sampling_res.c0;
     Output.c0.w = 1.0;
@@ -173,8 +173,13 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     ////////////////////////////
 
+    // fog modulé en fct de l'altitude
+    float alt = length(viewer_pos) - 6000000.0;
+
+    float fog_factor_alt = 1.0 - clamp(alt / 25000.0, 0.0, 1.0);
+
     float4 PositionWV = mul(v_position3, matWorldView);
-    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, /*0.08*/ 0.00005));
+    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, 0.000032, fog_factor_alt)));
 
 	return( Output );   
 }

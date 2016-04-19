@@ -61,8 +61,8 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-    //atmo_scattering_sampling_result sampling = skyfromspace_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
-    atmo_scattering_sampling_result sampling = skyfromatmo_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
+    atmo_scattering_sampling_result sampling = skyfromspace_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
+    //atmo_scattering_sampling_result sampling = skyfromatmo_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
     float4 color; 
     color.xyz = 3.0 * atmo_scattering_color_result(sampling, light0_dir_global);
 
