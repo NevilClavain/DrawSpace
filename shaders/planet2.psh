@@ -63,6 +63,8 @@ struct PS_INTPUT
 
     float4 c0 : COLOR0;
     float4 c1 : COLOR1;
+
+    float Fog : FOG;
 };
 
 #include "spherelod_commons.hlsl"
@@ -212,9 +214,18 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{
         lit_color += lf2 * light2_color;
     }
-	    
-    final_color.xyz = input.c0 + ( lit_color * pixel_color * input.c1 );
+	
+
+
+    //final_color.xyz = input.c0 + (lit_color * pixel_color * input.c1);
+    final_color.xyz = input.c0 + (lit_color * pixel_color);
     final_color.w = 1.0;
+
+    //float4 fog_color = saturate((input.Fog * lit_color * pixel_color) + (1.0 - input.Fog) * float4(0.45, 0.63, 0.78, 1.0));
+
+    float4 fog_color = saturate(lerp(float4(0.45, 0.63, 0.78, 1.0), lit_color * pixel_color, input.Fog));
+
+    final_color = fog_color;
     
 	return final_color;
 }

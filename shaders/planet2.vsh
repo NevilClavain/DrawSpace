@@ -73,7 +73,9 @@ struct VS_OUTPUT
    float4 GlobalPatch_TexCoord		: TEXCOORD2;
 
    float4 c0 : COLOR0;
-    float4 c1 : COLOR1;
+   float4 c1 : COLOR1;
+
+   float Fog : FOG;
 };
 
 #include "fbm.hlsl"
@@ -161,13 +163,18 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     float4 vertex_pos = mul(v_position3, matWorldRot);
     
-    atmo_scattering_sampling_result sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
-    //atmo_scattering_sampling_result sampling_res = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+    //atmo_scattering_sampling_result sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+    atmo_scattering_sampling_result sampling_res = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
 
     Output.c0.xyz = sampling_res.c0;
     Output.c0.w = 1.0;
     Output.c1.xyz = sampling_res.c1;
     Output.c1.w = 1.0;
+
+    ////////////////////////////
+
+    float4 PositionWV = mul(v_position3, matWorldView);
+    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, /*0.08*/ 0.00005));
 
 	return( Output );   
 }

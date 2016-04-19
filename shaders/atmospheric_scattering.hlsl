@@ -467,3 +467,18 @@ atmo_scattering_sampling_result groundfromatmo_atmo_scattering_sampling(float3 p
 
     return res;
 }
+
+float ComputeExp2Fog(float4 worldViewPos, float density)
+{
+    float4 org;
+   
+    org.x = 0.0;
+    org.y = 0.0;
+    org.z = 0.0;
+    org.w = 1.0;
+
+    float4 d = -worldViewPos[2];
+    return 1 / exp2(d * density);
+   
+   // retour a 0.0 -> brouillard au maximum
+}
