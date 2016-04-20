@@ -29,6 +29,8 @@ float4 flags : register(c0);
 float4 flags2 : register(c1);
 	// .x -> ht textures resol
 
+float4 viewer_pos : register(c2); // pos camera par rapport au centre sphere
+
 float4 flags6 : register(c6);
 	// .x -> resol atlas textures splatting
 	// .y -> transition texture globale/texture splatting : borne sup
@@ -220,10 +222,23 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         lit_color += lf2 * light2_color;
     }
 	
+    float viewer_alt = length(viewer_pos) - 6000000.0;
 
+    if (viewer_alt >= 215000.0)
+    {
+        final_color.xyz = input.c0 + (lit_color * pixel_color * input.c1);
+    }
+    else
+    {
+        // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
+        // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
 
-    final_color.xyz = input.c0 + (lit_color * pixel_color * input.c1);
-    //final_color.xyz = input.c0 + ( lit_color * pixel_color);
+        float factor_alt = 1.0 - clamp(viewer_alt / 215000.0, 0.0, 1.0);
+
+        float c1 = lerp(input.c1, 1.0, factor_alt);
+        final_color.xyz = input.c0 + (lit_color * pixel_color * c1);
+    }
+
     final_color.w = 1.0;
 
 	return final_color;

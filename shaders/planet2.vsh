@@ -152,6 +152,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     ///////////////////////////////////////////////////
 
+    float alt = length(viewer_pos) - 6000000.0;
+
     ////// atmo scattering : calcul vertex pos
 
     float4x4 matWorldRot = matWorld;
@@ -162,19 +164,39 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     matWorldRot[3][2] = 0.0;
 
     float4 vertex_pos = mul(v_position3, matWorldRot);
+
+    if (alt >= 215000.0)
+    {
+        atmo_scattering_sampling_result sampling_res;
+        sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+
+        Output.c0.xyz = sampling_res.c0;
+        Output.c0.w = 1.0;
+        Output.c1.xyz = sampling_res.c1;
+        Output.c1.w = 1.0;
+
+    }
+    else
+    {
+        // transition douce entre les couleurs calculees de l'exterieur de l'atmosphere et les couleurs calculees de l'interieur de l'atmosphere
+
+        atmo_scattering_sampling_result sampling_res_up;
+        atmo_scattering_sampling_result sampling_res_down;
+
+        sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+        sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+
+        float factor_alt = clamp(alt / 215000.0, 0.0, 1.0);
+
+        Output.c0.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
+        Output.c0.w = 1.0;
+        Output.c1.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
+        Output.c1.w = 1.0;
+    }
     
-    atmo_scattering_sampling_result sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
-    //atmo_scattering_sampling_result sampling_res = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
-
-    Output.c0.xyz = sampling_res.c0;
-    Output.c0.w = 1.0;
-    Output.c1.xyz = sampling_res.c1;
-    Output.c1.w = 1.0;
-
     ////////////////////////////
 
     // fog modulé en fct de l'altitude
-    float alt = length(viewer_pos) - 6000000.0;
 
     float fog_factor_alt = 1.0 - clamp(alt / 25000.0, 0.0, 1.0);
 
