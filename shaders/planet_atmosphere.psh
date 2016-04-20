@@ -63,8 +63,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
     float viewer_alt = length(viewer_pos) - 6000000.0;
     float4 color;
-
-    if(viewer_alt >= 85000.0)
+    
+    if(viewer_alt >= 220000.0)
     {
         atmo_scattering_sampling_result sampling = skyfromspace_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
         color.xyz = atmo_scattering_color_result(sampling, light0_dir_global);
@@ -72,23 +72,35 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     }
     else
     {
-        atmo_scattering_sampling_result sampling = skyfromatmo_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
-        color.xyz = /*3.0 * */atmo_scattering_color_result(sampling, light0_dir_global);
+        atmo_scattering_sampling_result sampling_up = skyfromspace_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
+           
+        atmo_scattering_sampling_result sampling_down = skyfromatmo_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
 
-        float alt_factor = clamp(viewer_alt / 285000.0, 0.0, 1.0);
-        float atmo_alpha_alt = 1.0 - alt_factor;
+        float3 color_up;
+        float3 color_down;
+
+        color_up = atmo_scattering_color_result(sampling_up, light0_dir_global);
+        color_down = atmo_scattering_color_result(sampling_down, light0_dir_global);
+
+        float alt_factor1 = clamp((viewer_alt - 85000.0) / (220000.0 - 85000.0), 0.0, 1.0);
+
+        color.xyz = lerp(color_down, color_up, alt_factor1);
+
+        float alt_factor2 = clamp(viewer_alt / 285000.0, 0.0, 1.0);
+        float atmo_alpha_alt = 1.0 - alt_factor2;
 
         // diminuer progressivement l'influence du bleu dans la composante alpha
         float blue = lerp(color.z, 1.0, atmo_alpha_alt);
 
-
-        // ne commencer a laisser apparaitre les etoiles que lorsque le prodsca est tres proche de 0.0
+        // ne commencer à laisser apparaitre les etoiles que lorsque le prodsca est tres proche de 0.0
         //float atmo_alpha_dir = clamp( dot(light0_dir_global, normalize(viewer_pos) )/ 0.001, 0.0, 1.0 );
 
         float atmo_alpha_dir = lerp(color.z, 1.0, atan(clamp(dot(light0_dir_global, normalize(viewer_pos)), 0.0, 1.0) * 4000.0) / 1.57);
 
-        color.w = atmo_alpha_dir * atmo_alpha_alt * blue; // moduler alpha avec le bleu et l'altitude et le prod sca vecteur lumiere
-    }
+        float atmo_alpha = atmo_alpha_dir * atmo_alpha_alt * blue; // moduler alpha avec le bleu et l'altitude et le prod sca vecteur lumiere
 
+        color.w = lerp(atmo_alpha, color.z, alt_factor1);
+    }
+   
     return color;    
 }
