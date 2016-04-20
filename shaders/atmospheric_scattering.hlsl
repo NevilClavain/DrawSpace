@@ -105,8 +105,7 @@ atmo_scattering_sampling_result skyfromspace_atmo_scattering_sampling(float3 p_v
 
     float fKm4PI = fKm * 4.0 * 3.1415927;
 
-    float ESun = 3.0;
-     //12.0;
+    float ESun = 9.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -222,7 +221,7 @@ atmo_scattering_sampling_result skyfromatmo_atmo_scattering_sampling(float3 p_ve
 
     float fKm4PI = fKm * 4.0 * 3.1415927;
 
-    float ESun = 12.0;
+    float ESun = 33.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -416,7 +415,7 @@ atmo_scattering_sampling_result groundfromatmo_atmo_scattering_sampling(float3 p
 
     float fKm4PI = fKm * 4.0 * 3.1415927;
 
-    float ESun = 10.0;
+    float ESun = 12.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
