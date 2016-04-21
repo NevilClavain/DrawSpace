@@ -80,11 +80,14 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         float3 color_down;
 
         color_up = atmo_scattering_color_result(sampling_up, light0_dir_global);
+
         color_down = atmo_scattering_color_result(sampling_down, light0_dir_global);
+
+        float3 hdr_color_down = 1.0 - exp(-0.91 * color_down); // added S. O'Neil HDR correction
 
         float alt_factor1 = clamp((viewer_alt - 85000.0) / (220000.0 - 85000.0), 0.0, 1.0);
 
-        color.xyz = lerp(color_down, color_up, alt_factor1);
+        color.xyz = lerp(hdr_color_down, color_up, alt_factor1);
 
         float alt_factor2 = clamp(viewer_alt / 285000.0, 0.0, 1.0);
         float atmo_alpha_alt = 1.0 - alt_factor2;

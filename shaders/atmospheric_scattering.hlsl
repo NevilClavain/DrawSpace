@@ -221,7 +221,8 @@ atmo_scattering_sampling_result skyfromatmo_atmo_scattering_sampling(float3 p_ve
 
     float fKm4PI = fKm * 4.0 * 3.1415927;
 
-    float ESun = 33.0;
+    float ESun = 50.0;
+    //33.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
