@@ -198,6 +198,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
                 if( 1 == j )
                 {
                     vertex.tw[0] = 1.0; // info pour shader : ce vertex est en bord de jupe
+                    vertex.x += 0.01;
                 }
                 else
                 {
@@ -233,6 +234,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
                 if( 0 == j )
                 {
                     vertex.tw[0] = 1.0; // info pour shader : ce vertex est en bord de jupe
+                    vertex.x -= 0.01;
                 }
                 else
                 {
@@ -268,6 +270,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
                 if( 1 == i )
                 {
                     vertex.tw[0] = 1.0; // info pour shader : ce vertex est en bord de jupe
+                    vertex.y += 0.01;
                 }
                 else
                 {
@@ -307,6 +310,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
                 if( 0 == i )
                 {
                     vertex.tw[0] = 1.0; // info pour shader : ce vertex est en bord de jupe
+                    vertex.y -= 0.01;
                 }
                 else
                 {
@@ -321,9 +325,6 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
 
             current_u0 = 0.0;
         }
-
-
-
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

@@ -126,7 +126,11 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 			{
 				v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
 			}
-		}
+            else
+            {
+                v_position3 *= (1.0 + (-100.0 / flag0.z));
+            }
+        }
 	}
 
 
