@@ -59,6 +59,12 @@ float4 seeds: register(c31);
 	// .z -> mix seed 1
 	// .w -> mix seed 2
 
+
+float4 atmo_scattering_flag_0 : register(c32);
+float4 atmo_scattering_flag_1 : register(c33);
+float4 atmo_scattering_flag_2 : register(c34);
+float4 atmo_scattering_flag_3 : register(c35);
+
 struct VS_INPUT 
 {
    float4 Position : POSITION0;

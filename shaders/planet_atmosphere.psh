@@ -32,10 +32,7 @@ float4 flags2 : register(c1);
 float4 viewer_pos : register(c2); // pos camera par rapport au centre sphere
 
 
-float4 flags6 : register(c6);
-	// .x -> resol atlas textures splatting
-	// .y -> transition texture globale/texture splatting : borne sup
-	// .z -> transition texture globale/texture splatting : borne inf
+
 
 float4 flags7 : register(c7);
 	// .x -> ambient light
@@ -48,6 +45,19 @@ float4 ambient_color    : register(c8);
 float4 light0_dir_local : register(c9);
 float4 light0_dir_global : register(c10);
 float4 light0_color     : register(c11);
+
+float4 light1_dir_local : register(c12);
+float4 light1_dir_global : register(c13);
+float4 light1_color : register(c14);
+
+float4 light2_dir_local : register(c15);
+float4 light2_dir_global : register(c16);
+float4 light2_color : register(c17);
+
+float4 atmo_scattering_flag_0 : register(c18);
+float4 atmo_scattering_flag_1 : register(c19);
+float4 atmo_scattering_flag_2 : register(c20);
+float4 atmo_scattering_flag_3 : register(c21);
 
 
 struct PS_INTPUT

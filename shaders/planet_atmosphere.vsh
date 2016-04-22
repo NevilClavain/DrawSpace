@@ -48,13 +48,6 @@ float4   base_uv_global: register(c27);
 float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
 
-float4 atmo_scattering_params: register(c30);
-	// .x -> OuterRadius
-	// .y -> InnerRadius
-	// .z -> light power
-    // .w -> optical lookup table side size
-
-
 struct VS_INPUT 
 {
    float4 Position : POSITION0;

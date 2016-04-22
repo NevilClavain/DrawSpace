@@ -68,47 +68,34 @@ atmo_scattering_sampling_result skyfromspace_atmo_scattering_sampling(float3 p_v
     // The number of sample points taken along the ray
     int nSamples = 2;
     float fSamples = (float) nSamples;
+    
+    float fScaleDepth = atmo_scattering_flag_1.x;
+    float fInvScaleDepth = atmo_scattering_flag_1.y;
 
-    float fScaleDepth = 0.25;
-    float fInvScaleDepth = 1.0 / fScaleDepth;
-
-
-    /////////////////////////////////////////////////////
-
-    //float fOuterRadius = 10.25;
-    //float fInnerRadius = 10.0;
-
-    float fOuterRadius = 6085000.0;
-    float fInnerRadius = 6000000.0;
-
-
-    float fOuterRadius2 = fOuterRadius * fOuterRadius;
-    float fInnerRadius2 = fInnerRadius * fInnerRadius;
+    float fOuterRadius = atmo_scattering_flag_0.x;
+    float fInnerRadius = atmo_scattering_flag_0.y;
+    float fOuterRadius2 = atmo_scattering_flag_0.z;
+    float fInnerRadius2 = atmo_scattering_flag_0.w;
 
     float fCameraHeight2 = length(v3CameraPos) * length(v3CameraPos);
 
-
-    float fScale = 1.0 / (fOuterRadius - fInnerRadius);
-
-    float fScaleOverScaleDepth = fScale / fScaleDepth;
+    float fScale = atmo_scattering_flag_1.z;
+    float fScaleOverScaleDepth = atmo_scattering_flag_1.w;
 
     float3 v3InvWavelength;
+    v3InvWavelength.xyz = atmo_scattering_flag_2.xyz;
 
-    v3InvWavelength.x = 1.0 / pow(0.650, 4.0);
-    v3InvWavelength.y = 1.0 / pow(0.570, 4.0);
-    v3InvWavelength.z = 1.0 / pow(0.475, 4.0);
+    float fKr = atmo_scattering_flag_3.x;
+    float fKm = atmo_scattering_flag_3.y;
 
-    float fKr = 0.0025;
-    float fKm = 0.0010;
-
-    float fKr4PI = fKr * 4.0 * 3.1415927;
-
-    float fKm4PI = fKm * 4.0 * 3.1415927;
+    float fKr4PI = atmo_scattering_flag_3.z;
+    float fKm4PI = atmo_scattering_flag_3.w;
 
     float ESun = 9.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
+    
 	  
     //////////////////////////
 
@@ -185,48 +172,35 @@ atmo_scattering_sampling_result skyfromatmo_atmo_scattering_sampling(float3 p_ve
     int nSamples = 2;
     float fSamples = (float) nSamples;
 
-    float fScaleDepth = 0.25;
-    float fInvScaleDepth = 1.0 / fScaleDepth;
+    float fScaleDepth = atmo_scattering_flag_1.x;
+    float fInvScaleDepth = atmo_scattering_flag_1.y;
 
-
-    /////////////////////////////////////////////////////
-
-    //float fOuterRadius = 10.25;
-    //float fInnerRadius = 10.0;
-
-    float fOuterRadius = 6085000.0;
-    float fInnerRadius = 6000000.0;
-
-    float fOuterRadius2 = fOuterRadius * fOuterRadius;
-    float fInnerRadius2 = fInnerRadius * fInnerRadius;
+    float fOuterRadius = atmo_scattering_flag_0.x;
+    float fInnerRadius = atmo_scattering_flag_0.y;
+    float fOuterRadius2 = atmo_scattering_flag_0.z;
+    float fInnerRadius2 = atmo_scattering_flag_0.w;
 
     float fCameraHeight = length(v3CameraPos);
     float fCameraHeight2 = fCameraHeight * fCameraHeight;
 
-
-    float fScale = 1.0 / (fOuterRadius - fInnerRadius);
-
-    float fScaleOverScaleDepth = fScale / fScaleDepth;
+    float fScale = atmo_scattering_flag_1.z;
+    float fScaleOverScaleDepth = atmo_scattering_flag_1.w;
 
     float3 v3InvWavelength;
+    v3InvWavelength.xyz = atmo_scattering_flag_2.xyz;
 
-    v3InvWavelength.x = 1.0 / pow(0.650, 4.0);
-    v3InvWavelength.y = 1.0 / pow(0.570, 4.0);
-    v3InvWavelength.z = 1.0 / pow(0.475, 4.0);
+    float fKr = atmo_scattering_flag_3.x;
+    float fKm = atmo_scattering_flag_3.y;
 
-    float fKr = 0.0025;
-    float fKm = 0.0010;
-
-    float fKr4PI = fKr * 4.0 * 3.1415927;
-
-    float fKm4PI = fKm * 4.0 * 3.1415927;
+    float fKr4PI = atmo_scattering_flag_3.z;
+    float fKm4PI = atmo_scattering_flag_3.w;
 
     float ESun = 50.0;
-    //33.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
-	  
+
+
     //////////////////////////
 
     float3 v3Pos = p_vertex_pos;
@@ -283,41 +257,31 @@ atmo_scattering_sampling_result groundfromspace_atmo_scattering_sampling(float3 
     int nSamples = 2;
     float fSamples = (float) nSamples;
 
-    float fScaleDepth = 0.25;
-    float fInvScaleDepth = 1.0 / fScaleDepth;
 
+    float fScaleDepth = atmo_scattering_flag_1.x;
+    float fInvScaleDepth = atmo_scattering_flag_1.y;
 
-    /////////////////////////////////////////////////////
-
-
-    float fOuterRadius = 6085000.0;
-    float fInnerRadius = 6000000.0;
-
-    float fOuterRadius2 = fOuterRadius * fOuterRadius;
-    float fInnerRadius2 = fInnerRadius * fInnerRadius;
+    float fOuterRadius = atmo_scattering_flag_0.x;
+    float fInnerRadius = atmo_scattering_flag_0.y;
+    float fOuterRadius2 = atmo_scattering_flag_0.z;
+    float fInnerRadius2 = atmo_scattering_flag_0.w;
 
     float fCameraHeight = length(v3CameraPos);
     float fCameraHeight2 = fCameraHeight * fCameraHeight;
 
-
-    float fScale = 1.0 / (fOuterRadius - fInnerRadius);
-
-    float fScaleOverScaleDepth = fScale / fScaleDepth;
+    float fScale = atmo_scattering_flag_1.z;
+    float fScaleOverScaleDepth = atmo_scattering_flag_1.w;
 
     float3 v3InvWavelength;
+    v3InvWavelength.xyz = atmo_scattering_flag_2.xyz;
 
-    v3InvWavelength.x = 1.0 / pow(0.650, 4.0);
-    v3InvWavelength.y = 1.0 / pow(0.570, 4.0);
-    v3InvWavelength.z = 1.0 / pow(0.475, 4.0);
+    float fKr = atmo_scattering_flag_3.x;
+    float fKm = atmo_scattering_flag_3.y;
 
-    float fKr = 0.0025;
-    float fKm = 0.0010;
+    float fKr4PI = atmo_scattering_flag_3.z;
+    float fKm4PI = atmo_scattering_flag_3.w;
 
-    float fKr4PI = fKr * 4.0 * 3.1415927;
-
-    float fKm4PI = fKm * 4.0 * 3.1415927;
-
-    float ESun = 24.0; //12.0;
+    float ESun = 24.0;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -382,39 +346,28 @@ atmo_scattering_sampling_result groundfromatmo_atmo_scattering_sampling(float3 p
     int nSamples = 2;
     float fSamples = (float) nSamples;
 
-    float fScaleDepth = 0.25;
-    float fInvScaleDepth = 1.0 / fScaleDepth;
+    float fScaleDepth = atmo_scattering_flag_1.x;
+    float fInvScaleDepth = atmo_scattering_flag_1.y;
 
-
-    /////////////////////////////////////////////////////
-
-
-    float fOuterRadius = 6085000.0;
-    float fInnerRadius = 6000000.0;
-
-    float fOuterRadius2 = fOuterRadius * fOuterRadius;
-    float fInnerRadius2 = fInnerRadius * fInnerRadius;
+    float fOuterRadius = atmo_scattering_flag_0.x;
+    float fInnerRadius = atmo_scattering_flag_0.y;
+    float fOuterRadius2 = atmo_scattering_flag_0.z;
+    float fInnerRadius2 = atmo_scattering_flag_0.w;
 
     float fCameraHeight = length(v3CameraPos);
     float fCameraHeight2 = fCameraHeight * fCameraHeight;
 
-
-    float fScale = 1.0 / (fOuterRadius - fInnerRadius);
-
-    float fScaleOverScaleDepth = fScale / fScaleDepth;
+    float fScale = atmo_scattering_flag_1.z;
+    float fScaleOverScaleDepth = atmo_scattering_flag_1.w;
 
     float3 v3InvWavelength;
+    v3InvWavelength.xyz = atmo_scattering_flag_2.xyz;
 
-    v3InvWavelength.x = 1.0 / pow(0.650, 4.0);
-    v3InvWavelength.y = 1.0 / pow(0.570, 4.0);
-    v3InvWavelength.z = 1.0 / pow(0.475, 4.0);
+    float fKr = atmo_scattering_flag_3.x;
+    float fKm = atmo_scattering_flag_3.y;
 
-    float fKr = 0.0025;
-    float fKm = 0.0010;
-
-    float fKr4PI = fKr * 4.0 * 3.1415927;
-
-    float fKm4PI = fKm * 4.0 * 3.1415927;
+    float fKr4PI = atmo_scattering_flag_3.z;
+    float fKm4PI = atmo_scattering_flag_3.w;
 
     float ESun = 12.0;
 
