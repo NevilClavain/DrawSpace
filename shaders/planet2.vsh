@@ -64,6 +64,7 @@ float4 atmo_scattering_flag_0 : register(c32);
 float4 atmo_scattering_flag_1 : register(c33);
 float4 atmo_scattering_flag_2 : register(c34);
 float4 atmo_scattering_flag_3 : register(c35);
+float4 atmo_scattering_flag_4 : register(c36);
 
 struct VS_INPUT 
 {

@@ -58,6 +58,7 @@ float4 atmo_scattering_flag_0 : register(c18);
 float4 atmo_scattering_flag_1 : register(c19);
 float4 atmo_scattering_flag_2 : register(c20);
 float4 atmo_scattering_flag_3 : register(c21);
+float4 atmo_scattering_flag_4 : register(c22);
 
 
 struct PS_INTPUT

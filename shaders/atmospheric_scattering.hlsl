@@ -91,7 +91,7 @@ atmo_scattering_sampling_result skyfromspace_atmo_scattering_sampling(float3 p_v
     float fKr4PI = atmo_scattering_flag_3.z;
     float fKm4PI = atmo_scattering_flag_3.w;
 
-    float ESun = 9.0;
+    float ESun = atmo_scattering_flag_4.x;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -195,7 +195,7 @@ atmo_scattering_sampling_result skyfromatmo_atmo_scattering_sampling(float3 p_ve
     float fKr4PI = atmo_scattering_flag_3.z;
     float fKm4PI = atmo_scattering_flag_3.w;
 
-    float ESun = 50.0;
+    float ESun = atmo_scattering_flag_4.y;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -281,7 +281,7 @@ atmo_scattering_sampling_result groundfromspace_atmo_scattering_sampling(float3 
     float fKr4PI = atmo_scattering_flag_3.z;
     float fKm4PI = atmo_scattering_flag_3.w;
 
-    float ESun = 24.0;
+    float ESun = atmo_scattering_flag_4.z;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
@@ -369,7 +369,7 @@ atmo_scattering_sampling_result groundfromatmo_atmo_scattering_sampling(float3 p
     float fKr4PI = atmo_scattering_flag_3.z;
     float fKm4PI = atmo_scattering_flag_3.w;
 
-    float ESun = 12.0;
+    float ESun = atmo_scattering_flag_4.w;
 
     float fKrESun = fKr * ESun;
     float fKmESun = fKm * ESun;
