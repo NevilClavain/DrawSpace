@@ -67,6 +67,28 @@ float4 atmo_scattering_flag_3 : register(c35);
 float4 atmo_scattering_flag_4 : register(c36);
 float4 atmo_scattering_flag_5 : register(c37);
 
+
+float4 flags_lights           : register(c38);
+	// .x -> ambient light
+	// .y -> color0 light
+	// .z -> color1 light
+	// .w -> color2 light
+
+float4 ambient_color          : register(c39);
+
+float4 light0_dir_local       : register(c40);
+float4 light0_dir             : register(c41);
+float4 light0_color           : register(c42);
+
+float4 light1_dir_local       : register(c43);
+float4 light1_dir             : register(c44);
+float4 light1_color           : register(c45);
+
+float4 light2_dir_local       : register(c46);
+float4 light2_dir             : register(c47);
+float4 light2_color           : register(c48);
+
+
 struct VS_INPUT 
 {
    float4 Position : POSITION0;
@@ -180,7 +202,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     if (alt >= atmo_scattering_flag_5.x)
     {
         atmo_scattering_sampling_result sampling_res;
-        sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+        sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
 
         Output.c0.xyz = sampling_res.c0;
         Output.c0.w = 1.0;
@@ -195,8 +217,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         atmo_scattering_sampling_result sampling_res_up;
         atmo_scattering_sampling_result sampling_res_down;
 
-        sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
-        sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
+        sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
+        sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
 
         float factor_alt = clamp(alt / atmo_scattering_flag_5.x, 0.0, 1.0);
 
