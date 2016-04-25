@@ -66,27 +66,28 @@ float4 atmo_scattering_flag_2 : register(c34);
 float4 atmo_scattering_flag_3 : register(c35);
 float4 atmo_scattering_flag_4 : register(c36);
 float4 atmo_scattering_flag_5 : register(c37);
+float4 atmo_scattering_flag_6 : register(c38);
 
 
-float4 flags_lights           : register(c38);
+float4 flags_lights           : register(c40);
 	// .x -> ambient light
 	// .y -> color0 light
 	// .z -> color1 light
 	// .w -> color2 light
 
-float4 ambient_color          : register(c39);
+float4 ambient_color          : register(c41);
 
-float4 light0_dir_local       : register(c40);
-float4 light0_dir             : register(c41);
-float4 light0_color           : register(c42);
+float4 light0_dir_local       : register(c42);
+float4 light0_dir             : register(c43);
+float4 light0_color           : register(c44);
 
-float4 light1_dir_local       : register(c43);
-float4 light1_dir             : register(c44);
-float4 light1_color           : register(c45);
+float4 light1_dir_local       : register(c45);
+float4 light1_dir             : register(c46);
+float4 light1_color           : register(c47);
 
-float4 light2_dir_local       : register(c46);
-float4 light2_dir             : register(c47);
-float4 light2_color           : register(c48);
+float4 light2_dir_local       : register(c48);
+float4 light2_dir             : register(c49);
+float4 light2_color           : register(c50);
 
 
 struct VS_INPUT 

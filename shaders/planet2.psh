@@ -36,7 +36,7 @@ float4 flags6 : register(c6);
 	// .y -> transition texture globale/texture splatting : borne sup
 	// .z -> transition texture globale/texture splatting : borne inf
 
-float4 flags7 : register(c7);
+float4 flags_lights : register(c7);
 	// .x -> ambient light
 	// .y -> color0 light
 	// .z -> color1 light
@@ -55,6 +55,14 @@ float4 light1_color     : register(c14);
 float4 light2_dir_local : register(c15);
 float4 light2_dir       : register(c16);
 float4 light2_color     : register(c17);
+
+float4 atmo_scattering_flag_0 : register(c18);
+float4 atmo_scattering_flag_1 : register(c19);
+float4 atmo_scattering_flag_2 : register(c20);
+float4 atmo_scattering_flag_3 : register(c21);
+float4 atmo_scattering_flag_4 : register(c22);
+float4 atmo_scattering_flag_5 : register(c23);
+float4 atmo_scattering_flag_6 : register(c24);
 
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
 sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
@@ -137,17 +145,17 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float lf0, lf1, lf2;
 
-	if( flags7.y )
+    if (flags_lights.y)
 	{
 		lf0 = clamp( dot( texel_pos2, light0_dir_local.xyz ), 0.0, 1.0 );
 	}
 
-	if( flags7.z )
+    if (flags_lights.z)
 	{
 		lf1 = clamp( dot( texel_pos2, light1_dir_local.xyz ), 0.0, 1.0 );
 	}
 
-	if( flags7.w )
+    if (flags_lights.w)
 	{
 		lf2 = clamp( dot( texel_pos2, light2_dir_local ), 0.0, 1.0 );
 	}
@@ -205,22 +213,22 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     /////////////////////
 	
-	if( flags7.x )
+    if (flags_lights.x)
 	{
         lit_color += ambient_color;
     }
 	
-	if( flags7.y )
+    if (flags_lights.y)
 	{
         lit_color += lf0 * light0_color;
     }
 
-	if( flags7.z )
+    if (flags_lights.z)
 	{
         lit_color += lf1 * light1_color;
     }
 
-	if( flags7.w )
+    if (flags_lights.w)
 	{
         lit_color += lf2 * light2_color;
     }
