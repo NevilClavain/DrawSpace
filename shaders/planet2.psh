@@ -209,7 +209,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     ///////////////////// inclure le "fog de surface" dans la couleur pixel
 
-    pixel_color = saturate(lerp(float4(0.45, 0.63, 0.78, 1.0), pixel_color, input.Fog));
+    pixel_color = saturate(lerp(atmo_scattering_flag_6, pixel_color, input.Fog));
 
     /////////////////////
 	
@@ -233,9 +233,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         lit_color += lf2 * light2_color;
     }
 	
-    float viewer_alt = length(viewer_pos) - 6000000.0;
+    float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
-    if (viewer_alt >= 215000.0)
+    if (viewer_alt >= atmo_scattering_flag_5.x)
     {
         final_color.xyz = input.c0 + (lit_color * pixel_color * input.c1);
     }
@@ -244,7 +244,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
         // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
 
-        float factor_alt = 1.0 - clamp(viewer_alt / 215000.0, 0.0, 1.0);
+        float factor_alt = 1.0 - clamp(viewer_alt / atmo_scattering_flag_5.x, 0.0, 1.0);
 
         float c1 = lerp(input.c1, 1.0, factor_alt);
         final_color.xyz = input.c0 + (lit_color * pixel_color * c1);

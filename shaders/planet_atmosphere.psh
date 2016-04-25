@@ -79,7 +79,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float4 color;
     
-    if (viewer_alt >= atmo_scattering_flag_6.x)
+    if (viewer_alt >= atmo_scattering_flag_5.x)
     {
         atmo_scattering_sampling_result sampling = skyfromspace_atmo_scattering_sampling(input.t0, input.t1, light0_dir_global);
         color.xyz = atmo_scattering_color_result(sampling, light0_dir_global);
@@ -100,11 +100,11 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
         float3 hdr_color_down = 1.0 - exp(-0.91 * color_down); // added S. O'Neil HDR correction
 
-        float alt_factor1 = clamp((viewer_alt - atmo_thickness) / (atmo_scattering_flag_6.x - atmo_thickness), 0.0, 1.0);
+        float alt_factor1 = clamp((viewer_alt - atmo_thickness) / (atmo_scattering_flag_5.x - atmo_thickness), 0.0, 1.0);
 
         color.xyz = lerp(hdr_color_down, color_up, alt_factor1);
 
-        float alt_factor2 = clamp(viewer_alt / atmo_scattering_flag_6.y, 0.0, 1.0);
+        float alt_factor2 = clamp(viewer_alt / atmo_scattering_flag_5.w, 0.0, 1.0);
         float atmo_alpha_alt = 1.0 - alt_factor2;
 
         // diminuer progressivement l'influence du bleu dans la composante alpha
