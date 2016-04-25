@@ -65,6 +65,7 @@ float4 atmo_scattering_flag_1 : register(c33);
 float4 atmo_scattering_flag_2 : register(c34);
 float4 atmo_scattering_flag_3 : register(c35);
 float4 atmo_scattering_flag_4 : register(c36);
+float4 atmo_scattering_flag_5 : register(c37);
 
 struct VS_INPUT 
 {
@@ -163,7 +164,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     ///////////////////////////////////////////////////
 
-    float alt = length(viewer_pos) - 6000000.0;
+    float alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
     ////// atmo scattering : calcul vertex pos
 
@@ -176,7 +177,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     float4 vertex_pos = mul(v_position3, matWorldRot);
 
-    if (alt >= 215000.0)
+    if (alt >= atmo_scattering_flag_5.x)
     {
         atmo_scattering_sampling_result sampling_res;
         sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
@@ -197,7 +198,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
         sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, float3(-1.0, 0.0, 0.0));
 
-        float factor_alt = clamp(alt / 215000.0, 0.0, 1.0);
+        float factor_alt = clamp(alt / atmo_scattering_flag_5.x, 0.0, 1.0);
 
         Output.c0.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
         Output.c0.w = 1.0;
@@ -209,10 +210,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     // fog modulé en fct de l'altitude
 
-    float fog_factor_alt = 1.0 - clamp(alt / 25000.0, 0.0, 1.0);
+    float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
 
     float4 PositionWV = mul(v_position3, matWorldView);
-    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, 0.000032, fog_factor_alt)));
+    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
 
 	return( Output );   
 }
