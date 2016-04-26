@@ -149,22 +149,25 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float3 texel_pos2;
 	texel_pos2 = CubeToSphere( ProjectVectorToCube( flags.w, texel_pos ) );
 
-	float lf0, lf1, lf2;
+    if (flags_lights.x > 0.0)
+    {
+        lit_color += ambient_color;
+    }
 
     if (flags_lights.y > 0.0)
 	{
-		lf0 = clamp( dot( texel_pos2, light0_dir_local.xyz ), 0.0, 1.0 );
-	}
+        lit_color += clamp(dot(texel_pos2, light0_dir_local.xyz), 0.0, 1.0) * light0_color;
+    }
 
     if (flags_lights.z > 0.0)
-	{
-		lf1 = clamp( dot( texel_pos2, light1_dir_local.xyz ), 0.0, 1.0 );
-	}
+	{		
+        lit_color += clamp(dot(texel_pos2, light1_dir_local.xyz), 0.0, 1.0) * light1_color;
+    }
 
     if (flags_lights.w > 0.0)
 	{
-		lf2 = clamp( dot( texel_pos2, light2_dir_local ), 0.0, 1.0 );
-	}
+        lit_color += clamp(dot(texel_pos2, light2_dir_local.xyz), 0.0, 1.0) * light2_color;
+    }
 
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -219,41 +222,62 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     /////////////////////
 	
-    if (flags_lights.x > 0.0)
-	{
-        lit_color += ambient_color;
-    }
-	
-    if (flags_lights.y > 0.0)
-	{
-        lit_color += lf0 * light0_color;
-    }
-
-    if (flags_lights.z > 0.0)
-	{
-        lit_color += lf1 * light1_color;
-    }
-
-    if (flags_lights.w > 0.0)
-	{
-        lit_color += lf2 * light2_color;
-    }
 	
     float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
+
+    float4 c0_final, c1_final;
+    c0_final = c1_final = 0.0;
+
     if (viewer_alt >= atmo_scattering_flag_5.x)
     {
-        final_color.xyz = input.c0 + (lit_color * pixel_color * input.c1);
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += input.c1;
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += input.c1_1;
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += input.c1_2;
+        }
+
+        final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
     }
     else
     {
+
         // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
         // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
 
         float factor_alt = 1.0 - clamp(viewer_alt / atmo_scattering_flag_5.x, 0.0, 1.0);
 
-        float c1 = lerp(input.c1, 1.0, factor_alt);
-        final_color.xyz = input.c0 + (lit_color * pixel_color * c1);
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += lerp(input.c1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += lerp(input.c1_1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += lerp(input.c1_2, 1.0, factor_alt);
+        }
+
+        final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
     }
 
     final_color.w = 1.0;

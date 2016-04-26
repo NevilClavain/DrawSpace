@@ -278,8 +278,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
         if (flags_lights.w > 0.0)
         {
-            sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
-            sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
+            sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light2_dir.xyz);
+            sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, light2_dir.xyz);
 
             Output.c0_2.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
             Output.c0_2.w = 1.0;
