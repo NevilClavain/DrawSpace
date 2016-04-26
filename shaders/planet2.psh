@@ -77,6 +77,12 @@ struct PS_INTPUT
     float4 c0 : COLOR0;
     float4 c1 : COLOR1;
 
+    float4 c0_1 : COLOR2;
+    float4 c1_1 : COLOR3;
+
+    float4 c0_2 : COLOR4;
+    float4 c1_2 : COLOR5;
+
     float Fog : FOG;
 };
 
@@ -145,17 +151,17 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	float lf0, lf1, lf2;
 
-    if (flags_lights.y)
+    if (flags_lights.y > 0.0)
 	{
 		lf0 = clamp( dot( texel_pos2, light0_dir_local.xyz ), 0.0, 1.0 );
 	}
 
-    if (flags_lights.z)
+    if (flags_lights.z > 0.0)
 	{
 		lf1 = clamp( dot( texel_pos2, light1_dir_local.xyz ), 0.0, 1.0 );
 	}
 
-    if (flags_lights.w)
+    if (flags_lights.w > 0.0)
 	{
 		lf2 = clamp( dot( texel_pos2, light2_dir_local ), 0.0, 1.0 );
 	}

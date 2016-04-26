@@ -106,6 +106,12 @@ struct VS_OUTPUT
    float4 c0 : COLOR0;
    float4 c1 : COLOR1;
 
+   float4 c0_1 : COLOR2;
+   float4 c1_1 : COLOR3;
+
+   float4 c0_2 : COLOR4;
+   float4 c1_2 : COLOR5;
+
    float Fog : FOG;
 };
 
@@ -200,15 +206,43 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     float4 vertex_pos = mul(v_position3, matWorldRot);
 
+    Output.c0 = 0.0;
+    Output.c1 = 0.0;
+    Output.c0_1 = 0.0;
+    Output.c1_1 = 0.0;
+    Output.c0_2 = 0.0;
+    Output.c1_2 = 0.0;
+
     if (alt >= atmo_scattering_flag_5.x)
     {
         atmo_scattering_sampling_result sampling_res;
-        sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
 
-        Output.c0.xyz = sampling_res.c0;
-        Output.c0.w = 1.0;
-        Output.c1.xyz = sampling_res.c1;
-        Output.c1.w = 1.0;
+        if (flags_lights.y > 0.0)
+        {
+            sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
+            Output.c0.xyz = sampling_res.c0;
+            Output.c0.w = 1.0;
+            Output.c1.xyz = sampling_res.c1;
+            Output.c1.w = 1.0;
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light1_dir.xyz);
+            Output.c0_1.xyz = sampling_res.c0;
+            Output.c0_1.w = 1.0;
+            Output.c1_1.xyz = sampling_res.c1;
+            Output.c1_1.w = 1.0;
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light2_dir.xyz);
+            Output.c0_2.xyz = sampling_res.c0;
+            Output.c0_2.w = 1.0;
+            Output.c1_2.xyz = sampling_res.c1;
+            Output.c1_2.w = 1.0;
+        }
 
     }
     else
@@ -218,15 +252,40 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         atmo_scattering_sampling_result sampling_res_up;
         atmo_scattering_sampling_result sampling_res_down;
 
-        sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
-        sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
-
         float factor_alt = clamp(alt / atmo_scattering_flag_5.x, 0.0, 1.0);
 
-        Output.c0.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
-        Output.c0.w = 1.0;
-        Output.c1.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
-        Output.c1.w = 1.0;
+        if (flags_lights.y > 0.0)
+        {
+            sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
+            sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
+
+            Output.c0.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
+            Output.c0.w = 1.0;
+            Output.c1.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
+            Output.c1.w = 1.0;
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light1_dir.xyz);
+            sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, light1_dir.xyz);
+
+            Output.c0_1.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
+            Output.c0_1.w = 1.0;
+            Output.c1_1.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
+            Output.c1_1.w = 1.0;
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
+            sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos, viewer_pos, light0_dir.xyz);
+
+            Output.c0_2.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
+            Output.c0_2.w = 1.0;
+            Output.c1_2.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
+            Output.c1_2.w = 1.0;
+        }
     }
     
     ////////////////////////////
