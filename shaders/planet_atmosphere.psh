@@ -34,7 +34,7 @@ float4 viewer_pos : register(c2); // pos camera par rapport au centre sphere
 
 
 
-float4 flags7 : register(c7);
+float4 flags_light : register(c7);
 	// .x -> ambient light
 	// .y -> color0 light
 	// .z -> color1 light
@@ -112,7 +112,7 @@ float4 compute_from_surface(float4 p_t0, float4 p_t1, float4 p_ldir )
 
         // ne commencer à laisser apparaitre les etoiles que lorsque le prodsca est tres proche de 0.0
         
-    float atmo_alpha_dir = lerp(color.z, 1.0, atan(clamp(dot(light0_dir_global, normalize(viewer_pos)), 0.0, 1.0) * 4000.0) / 1.57);
+    float atmo_alpha_dir = lerp(color.z, 1.0, atan(clamp(dot(p_ldir, normalize(viewer_pos)), 0.0, 1.0) * 4000.0) / 1.57);
 
     float atmo_alpha = atmo_alpha_dir * atmo_alpha_alt * blue; // moduler alpha avec le bleu et l'altitude et le prod sca vecteur lumiere
 
@@ -126,16 +126,41 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
     float atmo_thickness = atmo_scattering_flag_0.x - atmo_scattering_flag_0.y;
 
-    float4 color;
+    float4 color = 0.0;
     
     if (viewer_alt >= atmo_scattering_flag_5.x)
-    {
-        color = compute_from_space(input.t0, input.t1, light0_dir_global);
+    {        
+        if (flags_light.y)
+        {
+            color += compute_from_space(input.t0, input.t1, light0_dir_global);
+        }
+        
+        if (flags_light.z)
+        {
+            color += compute_from_space(input.t0, input.t1, light1_dir_global);
+        }
+
+        if (flags_light.w)
+        {
+            color += compute_from_space(input.t0, input.t1, light2_dir_global);
+        }
     }
     else
     {
-        color = compute_from_surface(input.t0, input.t1, light0_dir_global);
+        if (flags_light.y)
+        {
+            color += compute_from_surface(input.t0, input.t1, light0_dir_global);
+        }
+
+        if (flags_light.z)
+        {
+            color += compute_from_surface(input.t0, input.t1, light1_dir_global);
+        }
+
+        if (flags_light.w)
+        {
+            color += compute_from_surface(input.t0, input.t1, light2_dir_global);
+        }
     }
-   
     return color;    
 }

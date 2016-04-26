@@ -213,22 +213,22 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     /////////////////////
 	
-    if (flags_lights.x)
+    if (flags_lights.x > 0.0)
 	{
         lit_color += ambient_color;
     }
 	
-    if (flags_lights.y)
+    if (flags_lights.y > 0.0)
 	{
         lit_color += lf0 * light0_color;
     }
 
-    if (flags_lights.z)
+    if (flags_lights.z > 0.0)
 	{
         lit_color += lf1 * light1_color;
     }
 
-    if (flags_lights.w)
+    if (flags_lights.w > 0.0)
 	{
         lit_color += lf2 * light2_color;
     }
