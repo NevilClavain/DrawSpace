@@ -146,6 +146,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     }
 
+    int count_lights = 0;
+
 	float3 texel_pos2;
 	texel_pos2 = CubeToSphere( ProjectVectorToCube( flags.w, texel_pos ) );
 
@@ -157,16 +159,19 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     if (flags_lights.y > 0.0)
 	{
         lit_color += clamp(dot(texel_pos2, light0_dir_local.xyz), 0.0, 1.0) * light0_color;
+        count_lights++;
     }
 
     if (flags_lights.z > 0.0)
 	{		
         lit_color += clamp(dot(texel_pos2, light1_dir_local.xyz), 0.0, 1.0) * light1_color;
+        count_lights++;
     }
 
     if (flags_lights.w > 0.0)
 	{
         lit_color += clamp(dot(texel_pos2, light2_dir_local.xyz), 0.0, 1.0) * light2_color;
+        count_lights++;
     }
 
 
@@ -221,6 +226,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     pixel_color = saturate(lerp(atmo_scattering_flag_6, pixel_color, input.Fog));
 
     /////////////////////
+
+    
 	
 	
     float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
@@ -247,9 +254,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         {
             c0_final += input.c0_2;
             c1_final += input.c1_2;
-        }
-
-        final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+        }        
     }
     else
     {
@@ -276,8 +281,14 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
             c0_final += input.c0_2;
             c1_final += lerp(input.c1_2, 1.0, factor_alt);
         }
+    }
 
-        final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+    final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+
+    if (count_lights > 0)
+    {
+        // pour eviter la saturation des couleurs dues a l'additivité 
+        final_color.xyz = final_color.xyz / count_lights;
     }
 
     final_color.w = 1.0;
