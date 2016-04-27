@@ -351,7 +351,6 @@ float Fractal_fBm_classic_perlin( float3 f, int nbOctaves, float lacunarity, flo
 
 	fTemp = f;
 
-	float prev = 1.0;
 	float fexp = 1.0;
 
 	// Inner loop of spectral construction, where the fractal is built
@@ -372,4 +371,23 @@ float Fractal_fBm_classic_perlin( float3 f, int nbOctaves, float lacunarity, flo
 		res = fValue;
 	}		
 	return res;
+}
+
+
+
+float iqTurbulence(float3 p, int octaves,
+                   float lacunarity, float gain)
+{
+    float sum = 0.5;
+    float freq = 1.0, amp = 1.0;
+    float2 dsum = float2(0, 0);
+    for (int i = 0; i < octaves; i++)
+    {
+        float3 n = cnoise(p * freq);
+        dsum += n.yz;
+        sum += amp * n.x / (1 + dot(dsum, dsum));
+        freq *= lacunarity;
+        amp *= gain;
+    }
+    return sum;
 }
