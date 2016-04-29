@@ -137,7 +137,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	if( !sea )
 	{
-        float k = clamp((1.5708 - atan(30.0 * (flags.x - 1.0))), 0.01, 0.4);
+        float k = clamp((1.5708 - atan(30.0 * (flags.x - 1.0))), 0.01, 0.06);
         
 		texel_pos.x += k * avg.x;
 		texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
