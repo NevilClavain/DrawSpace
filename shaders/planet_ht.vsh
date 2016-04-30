@@ -41,6 +41,7 @@ float4 landscape_control: register(c30);
 	// .x -> plains amplitude
 	// .y -> mountains amplitude
 	// .z -> terrain offset
+    // .w -> mountains offset
 
 float4 seeds: register(c31);
 	// .x -> plains seed 1
@@ -114,7 +115,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float vertex_latitude = acos( h );
 
-	float res = ComputeVertexHeight( v_position2, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y, seeds.z, seeds.w );
+    float res = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
 
 	Output.aht = 0.0;

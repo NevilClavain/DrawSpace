@@ -52,6 +52,7 @@ float4 landscape_control: register(c30);
 	// .x -> plains amplitude
 	// .y -> mountains amplitude
 	// .z -> terrain offset
+    // .w -> mountains offset
 
 float4 seeds: register(c31);
 	// .x -> plains seed 1
@@ -152,7 +153,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	if( vertex_distance < /*1.015*/ 2.0 * horizon_limit )
 	{		
-		v_alt = ComputeVertexHeight( v_position2, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y, seeds.z, seeds.w );
+        v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
 		if( v_alt >= 0.0 )
 		{
