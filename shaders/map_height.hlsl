@@ -24,7 +24,9 @@
 float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude, float p_mountains_amplitude, 
                             float p_offset, float p_uvnoise_seed1, float p_uvnoise_seed2, float p_uvnoise_weight )
 {
-    float fbm_mountains_hl = 16.0;
+    //float fbm_mountains_hl = 16.0;
+
+    float iqturb_mountains_hl = 300.0;
     float fbm_uvnoise_hl = 0.8;
 
 	float res = 0.0;
@@ -33,17 +35,27 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude,
 	float n_vpos_y = ( p_vpos.y / 2.0 ) + 0.5;
 	float n_vpos_z = ( p_vpos.z / 2.0 ) + 0.5;
 
-
+    /*
 	float3 f2;
 	f2[0] = lerp( -fbm_mountains_hl, fbm_mountains_hl, n_vpos_x );
 	f2[1] = lerp( -fbm_mountains_hl, fbm_mountains_hl, n_vpos_y );
 	f2[2] = lerp( -fbm_mountains_hl, fbm_mountains_hl, n_vpos_z );
 
 	float fbm_mountains = Fractal_fBm_classic_perlin( f2, 7, 2.0, 0.35, 0.0 );
-	if( fbm_mountains < 0.0 )
+    */
+
+    float3 f22;
+    
+    f22[0] = lerp(-iqturb_mountains_hl, iqturb_mountains_hl, n_vpos_x);
+    f22[1] = lerp(-iqturb_mountains_hl, iqturb_mountains_hl, n_vpos_y);
+    f22[2] = lerp(-iqturb_mountains_hl, iqturb_mountains_hl, n_vpos_z);
+
+    float fbm_highmountains = iqTurbulence(f22, 7, 2.0, 0.46);
+
+    if (fbm_highmountains < 0.0)
 	{
-		fbm_mountains = 0.0;
-	}
+        fbm_highmountains = 0.0;
+    }
 
 
 	float3 f3;
@@ -67,7 +79,7 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude,
     float plain = p_plains_amplitude * color.y;
 
     
-    float mountains = fbm_mountains * p_mountains_amplitude + 500.0;// + 1000.0;
+    float mountains = fbm_highmountains * p_mountains_amplitude + 500.0; // + 1000.0;
     
 	float pn = color.z;
 	float pn2 = 9.0 * pn;
