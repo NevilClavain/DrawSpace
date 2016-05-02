@@ -21,7 +21,7 @@
 */
 
 
-float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude, float p_mountains_amplitude, 
+float ComputeVertexHeight(sampler2D p_mapSampler, float4 p_vpos, float4 p_uv, float p_plains_amplitude, float p_mountains_amplitude,
                             float p_offset, float p_uvnoise_seed1, float p_uvnoise_seed2, float p_uvnoise_weight )
 {
     //float fbm_mountains_hl = 16.0;
@@ -72,7 +72,7 @@ float ComputeVertexHeight( float4 p_vpos, float4 p_uv, float p_plains_amplitude,
     uv_mod.x = p_uv.x + ( fbm_uvnoise * p_uvnoise_weight );
     uv_mod.y = p_uv.y + ( -fbm_uvnoise * p_uvnoise_weight );
     
-    float4 color = tex2Dlod( TexturePlanetMap, uv_mod );
+    float4 color = tex2Dlod(p_mapSampler, uv_mod);
     ////////////////////////////////////////////////////////////////////////////////////////
     
     //float plain = fbm_params5.w * color.y;

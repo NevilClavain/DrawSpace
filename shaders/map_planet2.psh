@@ -29,12 +29,15 @@ float4 flags : register(c0);
 float4 flags2 : register(c1);
 	// .x -> ht textures resol
 
+float4 viewer_pos : register(c2); // pos camera par rapport au centre sphere
+
+
 float4 flags6 : register(c6);
 	// .x -> resol atlas textures splatting
 	// .y -> transition texture globale/texture splatting : borne sup
 	// .z -> transition texture globale/texture splatting : borne inf
 
-float4 flags7 : register(c7);
+float4 flags_lights : register(c7);
 	// .x -> ambient light
 	// .y -> color0 light
 	// .z -> color1 light
@@ -43,14 +46,24 @@ float4 flags7 : register(c7);
 float4 ambient_color    : register(c8);
 
 float4 light0_dir_local : register(c9);
-float4 light0_color     : register(c10);
+float4 light0_dir : register(c10);
+float4 light0_color : register(c11);
 
-float4 light1_dir_local : register(c11);
-float4 light1_color     : register(c12);
+float4 light1_dir_local : register(c12);
+float4 light1_dir : register(c13);
+float4 light1_color : register(c14);
 
-float4 light2_dir_local : register(c13);
-float4 light2_color     : register(c14);
+float4 light2_dir_local : register(c15);
+float4 light2_dir : register(c16);
+float4 light2_color : register(c17);
 
+float4 atmo_scattering_flag_0 : register(c18);
+float4 atmo_scattering_flag_1 : register(c19);
+float4 atmo_scattering_flag_2 : register(c20);
+float4 atmo_scattering_flag_3 : register(c21);
+float4 atmo_scattering_flag_4 : register(c22);
+float4 atmo_scattering_flag_5 : register(c23);
+float4 atmo_scattering_flag_6 : register(c24);
 
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
 sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
@@ -61,6 +74,17 @@ struct PS_INTPUT
 	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
 	float4 UnitPatch_TexCoord		: TEXCOORD1;	
 	float4 GlobalPatch_TexCoord		: TEXCOORD2;
+
+    float4 c0 : COLOR0;
+    float4 c1 : COLOR1;
+
+    float4 c0_1 : COLOR2;
+    float4 c1_1 : COLOR3;
+
+    float4 c0_2 : COLOR4;
+    float4 c1_2 : COLOR5;
+
+    float Fog : FOG;
 };
 
 #include "spherelod_commons.hlsl"
@@ -70,6 +94,7 @@ struct PS_INTPUT
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 final_color = 0.0;
+    float4 lit_color = 0.0;
 	float4 pixel_color = 0.0;
 
 	float4 temp_humidity = tex2D( HT_Texture, input.LODGlobalPatch_TexCoord );
@@ -125,31 +150,37 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		texel_pos = normalize( texel_pos );
 	}
 
+    int count_lights = 0;
+
 	float3 texel_pos2;
 	texel_pos2 = CubeToSphere( ProjectVectorToCube( flags.w, texel_pos ) );
 
-	float lf0, lf1, lf2;
+    if (flags_lights.x > 0.0)
+    {
+        lit_color += ambient_color;
+    }
 
-	if( flags7.y )
-	{
-		lf0 = clamp( dot( texel_pos2, light0_dir_local.xyz ), 0.0, 1.0 );
-	}
+    if (flags_lights.y > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2, light0_dir_local.xyz), 0.0, 1.0) * light0_color;
+        count_lights++;
+    }
 
-	if( flags7.z )
-	{
-		lf1 = clamp( dot( texel_pos2, light1_dir_local.xyz ), 0.0, 1.0 );
-	}
+    if (flags_lights.z > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2, light1_dir_local.xyz), 0.0, 1.0) * light1_color;
+        count_lights++;
+    }
 
-	if( flags7.w )
-	{
-		lf2 = clamp( dot( texel_pos2, light2_dir_local ), 0.0, 1.0 );
-	}
+    if (flags_lights.w > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2, light2_dir_local.xyz), 0.0, 1.0) * light2_color;
+        count_lights++;
+    }
 
 
 	////////////////////////////////////////////////////////////////////////////////////
 
-
-	
 
 	if( flags.x > 0.0 && flags.x <= lim_inf )
 	{			
@@ -194,28 +225,78 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 			pixel_color = tex2D( Pixels_HTMap_Texture, temp_humidity );
 		}
 	}
-	
-	if( flags7.x )
-	{
-		final_color += ambient_color;
-	}
-	
-	if( flags7.y )
-	{
-		final_color += lf0 * light0_color;
-	}
 
-	if( flags7.z )
-	{
-		final_color += lf1 * light1_color;
-	}
+    ///////////////////// inclure le "fog de surface" dans la couleur pixel
 
-	if( flags7.w )
-	{
-		final_color += lf2 * light2_color;
-	}
+    pixel_color = saturate(lerp(atmo_scattering_flag_6, pixel_color, input.Fog));
+
+    /////////////////////
+
 	
-	final_color *= pixel_color;
+
+	
+    float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
+
+
+    float4 c0_final, c1_final;
+    c0_final = c1_final = 0.0;
+
+    if (viewer_alt >= atmo_scattering_flag_5.x)
+    {
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += input.c1;
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += input.c1_1;
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += input.c1_2;
+        }
+    }
+    else
+    {
+
+        // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
+        // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
+
+        float factor_alt = 1.0 - clamp(viewer_alt / atmo_scattering_flag_5.x, 0.0, 1.0);
+
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += lerp(input.c1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += lerp(input.c1_1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += lerp(input.c1_2, 1.0, factor_alt);
+        }
+    }
+
+    final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+
+    if (count_lights > 0)
+    {
+        // pour eviter la saturation des couleurs dues a l'additivité 
+        final_color.xyz = final_color.xyz / count_lights;
+    }
+
+    final_color.w = 1.0;
 	
 	return final_color;	
 }

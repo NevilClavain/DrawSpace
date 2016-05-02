@@ -90,7 +90,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	global_uv.x = lerp( base_uv2.x, base_uv2.z, Input.TexCoord0.x );
 	global_uv.y = lerp( base_uv2.y, base_uv2.w, Input.TexCoord0.y );
 
-	float res = ComputeVertexHeight( v_position2, global_uv, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y, landscape_control.w );
+    float res = ComputeVertexHeight(TexturePlanetMap, v_position2, global_uv, landscape_control.x, landscape_control.y, landscape_control.z, seeds.x, seeds.y, landscape_control.w);
       
 	
 	Output.alt = 0.0;
