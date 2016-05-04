@@ -87,6 +87,60 @@ float3 compute_terrain_bump_vector(float p_point_alt, int p_texture_resol, sampl
     return avg;
 }
 
+float3 compute_water_bump_vector(int p_texture_resol, sampler2D p_water_bump_texture, float2 p_tex_coords, float p_vector_bias)
+{
+    float3 avg = 0.0;
+
+    float texel_size = 1.0 / p_texture_resol;
+
+    float2 left_coords = p_tex_coords;
+    left_coords.x -= texel_size;
+
+    float2 right_coords = p_tex_coords;
+    right_coords.x += texel_size;
+
+    float2 up_coords = p_tex_coords;
+    up_coords.y -= texel_size;
+
+    float2 down_coords = p_tex_coords;
+    down_coords.y += texel_size;
+
+    float4 wb_left = tex2D(p_water_bump_texture, left_coords);
+    float4 wb_right = tex2D(p_water_bump_texture, right_coords);
+    float4 wb_up = tex2D(p_water_bump_texture, up_coords);
+    float4 wb_down = tex2D(p_water_bump_texture, down_coords);
+    float4 wb_center = tex2D(p_water_bump_texture, p_tex_coords);
+
+    float3 vec_left;
+    vec_left.x = -p_vector_bias;
+    vec_left.y = 0.0;
+    vec_left.z = (wb_left.x - wb_center.x);
+
+    float3 vec_right;
+    vec_right.x = p_vector_bias;
+    vec_right.y = 0.0;
+    vec_right.z = (wb_right.x - wb_center.x);
+
+    float3 vec_up;
+    vec_up.x = 0.0;
+    vec_up.y = -p_vector_bias;
+    vec_up.z = (wb_up.x - wb_center.x);
+
+    float3 vec_down;
+    vec_down.x = 0.0;
+    vec_down.y = p_vector_bias;
+    vec_down.z = (wb_down.x - wb_center.x);
+
+    float3 vec1 = normalize(cross(vec_right, vec_down));
+    float3 vec2 = normalize(cross(vec_down, vec_left));
+    float3 vec3 = normalize(cross(vec_left, vec_up));
+    float3 vec4 = normalize(cross(vec_up, vec_right));
+
+    avg = normalize(0.25 * (vec1 + vec2 + vec3 + vec4));
+
+    return avg;
+}
+
 float2 compute_sampling_params(float p_param, float p_interval)
 {
     float3 res;

@@ -72,6 +72,8 @@ sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altit
 sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
 sampler2D Splatting_HTMap_Texture	: register(s2);  // texture HT pour splatting
 
+sampler2D Water_Bump_Texture        : register(s3);
+
 struct PS_INTPUT
 {	
 	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
@@ -102,6 +104,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 pixel_color = 0.0;
 
 	float4 temp_humidity = tex2D( HT_Texture, input.LODGlobalPatch_TexCoord );
+
+    float3 water_color = { 0.17, 0.36, 0.48 };
 
 	float lim_sup = flags6.y;
 	float lim_inf = flags6.z;
@@ -136,6 +140,10 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{
 		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, HT_Texture, input.LODGlobalPatch_TexCoord, 100.0 );
 	}
+    else
+    {
+        avg = compute_water_bump_vector(256, Water_Bump_Texture, input.UnitPatch_TexCoord, 0.9);
+    }
 	
 	float3 texel_pos = compute_front_face_point_vector( input.GlobalPatch_TexCoord );
 
@@ -148,6 +156,14 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         
 		texel_pos = normalize( texel_pos );
 
+    }
+    else
+    {
+        float k = 1.0;
+        texel_pos.x += k * avg.x;
+        texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+        
+        texel_pos = normalize(texel_pos);        
     }
 
     int count_lights = 0;
@@ -207,9 +223,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{			
 		if( sea ) 
 		{
-			pixel_color.x = 0.17;
-			pixel_color.y = 0.36;
-			pixel_color.z = 0.48;
+            pixel_color.xyz = water_color;
 		}
 		else
 		{
@@ -224,9 +238,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 		if( sea )
 		{
-			pixel_color.x = 0.17;
-			pixel_color.y = 0.36;
-			pixel_color.z = 0.48;
+            pixel_color.xyz = water_color;
 		}
 		else
 		{
@@ -237,10 +249,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{		
 		if( sea )
 		{
-			pixel_color.x = 0.17;
-			pixel_color.y = 0.36;
-			pixel_color.z = 0.48;
-		}
+            pixel_color.xyz = water_color;
+
+        }
 		else
 		{
 			pixel_color = tex2D( Pixels_HTMap_Texture, temp_humidity );
