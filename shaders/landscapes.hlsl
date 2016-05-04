@@ -244,3 +244,18 @@ float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidit
 
     return res_color;
 }
+
+float specular_light( float3 p_half_vector, float3 p_normale, float p_spec_power)
+{
+    return pow(saturate(dot(normalize(p_normale), p_half_vector)), p_spec_power);
+}
+
+float ocean_specular_from_space(float p_specular_val, float p_rel_alt, float3 p_ldir, float3 p_half_vector)
+{    
+    float spec_attenuation = 0.7;
+    float dir_spec_attenuation = saturate(dot(p_half_vector, normalize(p_ldir)));
+
+    float alt_spec_attenuation = saturate(p_rel_alt - 0.8);
+
+    return (p_specular_val * spec_attenuation * dir_spec_attenuation * alt_spec_attenuation);
+}
