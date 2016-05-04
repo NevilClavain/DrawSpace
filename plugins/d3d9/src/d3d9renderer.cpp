@@ -1469,11 +1469,33 @@ bool D3D9Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawS
 			set_vertexshader_constants( p_register, p_vector.GetArray(), 1 );
 			break;
 
-
 		case 1:
 
 			// pixel shader params application
 			set_pixelshader_constants( p_register, p_vector.GetArray(), 1 );
+			break;
+
+        default:
+            return false;
+	}
+
+	return false;
+}
+
+bool D3D9Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat )
+{
+	switch( p_shader_index )
+	{
+		case 0:
+
+			// vertex shader params application		
+			set_vertexshader_constants( p_register, p_mat.GetArray(), 4 );
+			break;
+
+		case 1:
+
+			// pixel shader params application
+			set_pixelshader_constants( p_register, p_mat.GetArray(), 4 );
 			break;
 
         default:
