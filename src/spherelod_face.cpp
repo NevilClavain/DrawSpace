@@ -485,7 +485,22 @@ void Face::UpdateLODComputationResults( void )
 {
     if( NULL == m_work_currentPatch )
     {
-        _DSEXCEPTION( "LOD computation result : no current patch found!" )
+        if( m_currentPatch == NULL )
+        {
+            // si c'est la 1ere exe du CDLOD apres passage en "HOT"
+
+            //_DSEXCEPTION( "LOD computation result : no current patch found!" )
+
+            m_work_displaylist.push_back( m_rootpatch->GetContent() );
+            m_displaylist = m_work_displaylist;
+            m_currentPatch = m_rootpatch->GetContent();
+            m_currentPatchLOD = NB_LOD_RANGES - 1;
+        }
+        else
+        {
+            // sinon, ne rien faire (on ne met rien a jour)
+            return;
+        }
     }
 
     m_displaylist = m_work_displaylist;
