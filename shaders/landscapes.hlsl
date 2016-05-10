@@ -309,7 +309,7 @@ float ocean_specular_from_space(float p_specular_val, float p_rel_alt, float3 p_
     float spec_attenuation = 0.7;
     float dir_spec_attenuation = saturate(dot(p_half_vector, normalize(p_ldir)));
 
-    float alt_spec_attenuation = saturate(p_rel_alt - 0.8);
+    float alt_spec_attenuation = saturate(p_rel_alt - 0.95);
 
     return (p_specular_val * spec_attenuation * dir_spec_attenuation * alt_spec_attenuation);
 }

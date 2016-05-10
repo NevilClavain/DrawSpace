@@ -181,6 +181,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.LODGlobalPatch_TexCoord.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
 
 	Output.LODGlobalPatch_TexCoord.z = v_alt;
+    Output.LODGlobalPatch_TexCoord.w = vertex_distance;
 
 	// conserver aussi les coords textures originales du patch
 	Output.UnitPatch_TexCoord = 0.0;

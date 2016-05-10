@@ -66,6 +66,8 @@ float4 atmo_scattering_flag_6 : register(c24);
 
 float4x4 matWorldRots : register(c25);
 
+float4 water_anim : register(c29);
+
 
 
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
@@ -112,6 +114,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	bool sea = false;
 
+    float pixel_distance = input.LODGlobalPatch_TexCoord.w;
+
 	if( flags.x <= lim_inf )
 	{
 		// si altitude relative a un certain seuil
@@ -142,7 +146,20 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	}
     else
     {
-        avg = compute_water_bump_vector(256, Water_Bump_Texture, input.UnitPatch_TexCoord, 0.33);
+        
+        float2 water_tex_coord_0;
+        float2 water_tex_coord_1;
+
+        water_tex_coord_0 = input.UnitPatch_TexCoord;
+        water_tex_coord_1.x = input.UnitPatch_TexCoord.x;
+        water_tex_coord_1.y = 1.0 - input.UnitPatch_TexCoord.y;
+
+
+        float avg0 = compute_water_bump_vector(256, Water_Bump_Texture, water_tex_coord_0, 0.09);
+        float avg1 = compute_water_bump_vector(256, Water_Bump_Texture, water_tex_coord_1, 0.09);
+
+        avg = lerp(avg0, avg1, water_anim.x);
+
     }
 	
 	float3 texel_pos = compute_front_face_point_vector( input.GlobalPatch_TexCoord );
@@ -159,9 +176,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     }
     else
     {
-        //float k = 1.0;
-
-        float k = clamp((1.5708 - atan(22000.0 * (flags.x - 1.0))), 0.0, 1.0);
+        float k = clamp((1.5708 - atan(30000.0 * (flags.x - 1.0))), 0.0, 1.0);
+        //diminuer progressivement l'effet bump jusqu'a 12000 metres. au dela, plus de bump map
+        k *= lerp(0.0, 1.0, 1.0 - saturate((pixel_distance / 12000.0)));
         texel_pos.x += k * avg.x;
         texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
         
