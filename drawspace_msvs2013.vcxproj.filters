@@ -162,9 +162,6 @@
     <ClCompile Include="src\planetoid_body.cpp">
       <Filter>planetoid</Filter>
     </ClCompile>
-    <ClCompile Include="src\planetoid_fragment.cpp">
-      <Filter>planetoid</Filter>
-    </ClCompile>
     <ClCompile Include="src\spherelod_body.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
@@ -255,6 +252,9 @@
       <Filter>sphericalLOD</Filter>
     </ClCompile>
     <ClCompile Include="src\spherelod_collisions.cpp">
+      <Filter>sphericalLOD</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spherelod_layer.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
   </ItemGroup>
@@ -415,9 +415,6 @@
     <ClInclude Include="src\planetoid_body.h">
       <Filter>planetoid</Filter>
     </ClInclude>
-    <ClInclude Include="src\planetoid_fragment.h">
-      <Filter>planetoid</Filter>
-    </ClInclude>
     <ClInclude Include="src\spherelod_body.h">
       <Filter>sphericalLOD</Filter>
     </ClInclude>
@@ -529,6 +526,9 @@
       <Filter>sphericalLOD</Filter>
     </ClInclude>
     <ClInclude Include="src\spherelod_collisions.h">
+      <Filter>sphericalLOD</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spherelod_layer.h">
       <Filter>sphericalLOD</Filter>
     </ClInclude>
   </ItemGroup>

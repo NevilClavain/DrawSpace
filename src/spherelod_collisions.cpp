@@ -20,7 +20,7 @@
 *
 */
 
-#include "planetoid_fragment.h"
+#include "spherelod_layer.h"
 #include "spherelod_collisions.h"
 
 using namespace DrawSpace;
@@ -28,7 +28,7 @@ using namespace DrawSpace::SphericalLOD;
 using namespace DrawSpace::Core;
 
 
-Collisions::Collisions( DrawSpace::Planetoid::Fragment* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_fragment_index ) :
+Collisions::Collisions( Layer* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_fragment_index ) :
 m_fragment( p_owner ),
 m_collidingheightmap_texture( NULL ),
 m_collidingheightmap_content( NULL ),
@@ -63,7 +63,7 @@ m_enable( true )
     std::vector<DrawSpace::SphericalLOD::Patch*> dl;
     // appel handler pour enregistrer et executer la passe
 
-    DrawSpace::Planetoid::Fragment::SubPassCreationHandler* handler = p_owner->GetSubPassCreationHandler();
+    Layer::SubPassCreationHandler* handler = p_owner->GetSubPassCreationHandler();
 
     if( handler )
     {

@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Planetoid;
-
+using namespace DrawSpace::SphericalLOD;
 
 DrawSpace::Planetoid::Body::Body( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time, const SphericalLOD::Config& p_config ) : Orbiter( &m_world ),
 m_scenename( p_scenename ),
@@ -130,7 +130,7 @@ void DrawSpace::Planetoid::Body::on_camera_event( DrawSpace::Core::SceneNodeGrap
 
             for( size_t i = 0; i < m_registered_camerapoints[current_camera_scenename].fragments.size(); i++ )
             {
-                Fragment* fragment = m_registered_camerapoints[current_camera_scenename].fragments[i];
+                SphericalLOD::Layer* fragment = m_registered_camerapoints[current_camera_scenename].fragments[i];
             
                 planet_bodies.push_back( fragment->GetPlanetBody() );
             }
@@ -185,7 +185,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                             Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
-                            Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( this, m_config, &m_world, slod_body, 
+                            SphericalLOD::Layer* planet_fragment = _DRAWSPACE_NEW_( SphericalLOD::Layer, SphericalLOD::Layer( this, m_config, &m_world, slod_body, 
                                                                             collider, m_subpass_creation_cb, i ) );
                             planet_fragment->SetHotState( true );
 
@@ -213,7 +213,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
-                        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( this, m_config, &m_world, slod_body, 
+                        SphericalLOD::Layer* planet_fragment = _DRAWSPACE_NEW_( SphericalLOD::Layer, SphericalLOD::Layer( this, m_config, &m_world, slod_body, 
                                                                         collider, m_subpass_creation_cb, i ) );
 
                         planet_fragment->SetHotState( false );
@@ -324,7 +324,7 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
 
         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
-        Fragment* planet_fragment = _DRAWSPACE_NEW_( Fragment, Fragment( this, m_config, &m_world, slod_body, collider, m_subpass_creation_cb, i ) );
+        SphericalLOD::Layer* planet_fragment = _DRAWSPACE_NEW_( SphericalLOD::Layer, SphericalLOD::Layer( this, m_config, &m_world, slod_body, collider, m_subpass_creation_cb, i ) );
    
         planet_fragment->SetHotState( p_hotstate );   
         planet_fragment->SetCamera( p_camera );
@@ -407,7 +407,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
         {
             if( i == m_config->m_ground_fragment )
             {
-                Fragment* bodyfragment = it->second.fragments[i];
+                SphericalLOD::Layer* bodyfragment = it->second.fragments[i];
 
                 ///////////////////////// calcul pos relative et passage/fin hot en se basant sur bullet
 
@@ -539,7 +539,7 @@ void DrawSpace::Planetoid::Body::compute_fragments( void )
 {
     for( size_t i = 0; i < m_planetfragments_list.size(); i++ )
     {
-        Fragment* curr = m_planetfragments_list[i];
+        SphericalLOD::Layer* curr = m_planetfragments_list[i];
         curr->Compute( this );
     }
 }
@@ -656,7 +656,7 @@ void DrawSpace::Planetoid::Body::BindPlanetBodyExternalGlobalTexture( DrawSpace:
 }
 */
 
-DrawSpace::Planetoid::Fragment* DrawSpace::Planetoid::Body::GetFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index )
+DrawSpace::SphericalLOD::Layer* DrawSpace::Planetoid::Body::GetFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index )
 {
     //return m_planetfragments_list[p_index];
     if( m_registered_bodies.count( p_body ) )

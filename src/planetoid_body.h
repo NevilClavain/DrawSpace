@@ -24,7 +24,7 @@
 #define _PLANETOID_BODY_H_
 
 #include "spherelod_subpass.h"
-#include "planetoid_fragment.h"
+#include "spherelod_layer.h"
 #include "scenenodegraph.h"
 #include "noise.h"
 
@@ -56,7 +56,7 @@ protected:
         DrawSpace::Dynamics::InertBody*             body;
 
         //Fragment*                                   fragment;
-        std::vector<Fragment*>                      fragments;
+        std::vector<SphericalLOD::Layer*>           fragments;
 
         DrawSpace::IntermediatePass*                collidingheightmap_pass;
         DrawSpace::SphericalLOD::FaceDrawingNode*   collidingheightmap_node;
@@ -83,7 +83,7 @@ protected:
         DrawSpace::Dynamics::CameraPoint*   camera;
 
         //Fragment*                           fragment;
-        std::vector<Fragment*>              fragments;
+        std::vector<SphericalLOD::Layer*>   fragments;
 
     } RegisteredCamera;
 
@@ -105,7 +105,7 @@ protected:
     std::map<dsstring, RegisteredCamera>                                    m_registered_camerapoints;
     dsstring                                                                m_current_camerapoint;
 
-    std::vector<Fragment*>                                                  m_planetfragments_list;
+    std::vector<SphericalLOD::Layer*>                                     m_planetfragments_list;
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
     DrawSpace::Utils::Timer*                                                m_timer;
@@ -150,7 +150,7 @@ public:
     SphericalLOD::FaceDrawingNode*      RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                                             DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_fragment_index );
 
-    Fragment*                           GetFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index );
+    SphericalLOD::Layer*                GetFragment( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index );
     
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 

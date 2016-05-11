@@ -28,21 +28,26 @@
 namespace DrawSpace
 {
 
+/*
 // fwd declaration
 namespace Planetoid
 {
-    class Fragment;
+    class Layer;
 }
+*/
 
 namespace SphericalLOD
 {
+// fwd declaration
+class Layer;
+
 class Collisions : public DrawSpace::SphericalLOD::SubPass
 {
 protected:
 
     bool                                    m_enable;
 
-    DrawSpace::Planetoid::Fragment*         m_fragment;
+    Layer*                                  m_fragment;
 
     DrawSpace::Core::Texture*               m_collidingheightmap_texture;
     void*                                   m_collidingheightmap_content;
@@ -53,7 +58,7 @@ protected:
 
 public:
 
-    Collisions( DrawSpace::Planetoid::Fragment* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_fragment_index );
+    Collisions( Layer* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_fragment_index );
     virtual ~Collisions( void );
 
     virtual void DrawSubPass( void );
