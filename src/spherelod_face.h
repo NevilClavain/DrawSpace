@@ -80,7 +80,7 @@ protected:
 
     int                                                         m_min_lodlevel;
 
-    int                                                         m_fragment_index;
+    int                                                         m_layer_index;
 
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -105,7 +105,7 @@ protected:
 
 public:
 
-    Face( DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index, Patch::SubPassCreationHandler* p_handler );
+    Face( DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler );
     virtual ~Face( void );
 
     bool Init( int p_orientation );

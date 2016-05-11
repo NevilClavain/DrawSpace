@@ -47,7 +47,7 @@ protected:
 
     bool                                    m_enable;
 
-    Layer*                                  m_fragment;
+    Layer*                                  m_layer;
 
     DrawSpace::Core::Texture*               m_collidingheightmap_texture;
     void*                                   m_collidingheightmap_content;
@@ -58,7 +58,7 @@ protected:
 
 public:
 
-    Collisions( Layer* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_fragment_index );
+    Collisions( Layer* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_layer_index );
     virtual ~Collisions( void );
 
     virtual void DrawSubPass( void );

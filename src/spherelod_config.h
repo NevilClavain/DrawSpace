@@ -45,14 +45,14 @@ public:
         Binder* groundCollisionsBinder[6];
         Binder* patchTexturesBinder[6];
     
-    } FragmentDescriptor;
+    } LayerDescriptor;
 
 
     double                          m_lod0base;
 
 
-    std::vector<FragmentDescriptor> m_fragments_descr;
-    int                             m_ground_fragment;  // index dans m_fragments_descr
+    std::vector<LayerDescriptor>    m_layers_descr;
+    int                             m_ground_layer;  // index dans m_layers_descr
 
     Config( void );
     ~Config( void );

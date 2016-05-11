@@ -91,7 +91,7 @@ protected:
     DrawSpace::SphericalLOD::Collisions*                        m_collisions_hms[6];
     DrawSpace::SphericalLOD::Collisions*                        m_current_collisions_hm;
 
-    // pos point de vue camera par rapport au centre planete fragment
+    // pos point de vue camera par rapport au centre layer
     // mis a jour quand on est relatif
     DrawSpace::Utils::Vector                                    m_relative_hotviewerpos;
 

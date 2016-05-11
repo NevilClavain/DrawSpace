@@ -50,8 +50,8 @@ m_handler( p_handler ),
 m_current_collisions_hm( NULL ),
 m_owner( p_owner )
 {
-    m_collisions = m_config->m_fragments_descr[p_index].enable_collisions;
-    m_planetray = 1000.0 * m_config->m_fragments_descr[p_index].ray;
+    m_collisions = m_config->m_layers_descr[p_index].enable_collisions;
+    m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
 
     if( m_collisions )
     {

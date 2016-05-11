@@ -81,7 +81,7 @@ public:
     static DrawSpace::Core::Meshe*                                              m_planetpatch_skirt_meshe;
 
 
-    Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index,
+    Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index,
             Patch::SubPassCreationHandler* p_handler );
 
     virtual ~Body( void );

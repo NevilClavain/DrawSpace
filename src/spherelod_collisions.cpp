@@ -28,8 +28,8 @@ using namespace DrawSpace::SphericalLOD;
 using namespace DrawSpace::Core;
 
 
-Collisions::Collisions( Layer* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_fragment_index ) :
-m_fragment( p_owner ),
+Collisions::Collisions( Layer* p_owner, DrawSpace::SphericalLOD::Config* p_config, int p_orientation, int p_node_layer_index ) :
+m_layer( p_owner ),
 m_collidingheightmap_texture( NULL ),
 m_collidingheightmap_content( NULL ),
 m_enable( true )
@@ -39,12 +39,12 @@ m_enable( true )
     // creation/preparation du node
 
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, p_config, p_node_fragment_index ) );
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, p_config, p_node_layer_index ) );
                 
     node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
 
     //node->SetBinder( p_config->m_groundCollisionsBinder[p_orientation] );
-    node->SetBinder( p_config->m_fragments_descr[p_node_fragment_index].groundCollisionsBinder[p_orientation] );
+    node->SetBinder( p_config->m_layers_descr[p_node_layer_index].groundCollisionsBinder[p_orientation] );
 
     void* tx_data;
     if( false == renderer->CreateTexture( m_collidingheightmap_pass->GetTargetTexture(), &tx_data ) )
@@ -81,7 +81,7 @@ Collisions::~Collisions( void )
 DrawSpace::IntermediatePass* Collisions::create_colliding_heightmap_pass( void )
 {
     char thisname[32];
-    sprintf( thisname, "fragment_%x", this );
+    sprintf( thisname, "layer_%x", this );
 
     dsstring complete_name = dsstring( thisname ) + dsstring( "_collisionheightmap_pass" );
     IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
@@ -110,7 +110,7 @@ void Collisions::SubPassDone( void )
 {
     if( m_enable )
     {
-        m_fragment->SubPassDone( this );
+        m_layer->SubPassDone( this );
     }
 }
 

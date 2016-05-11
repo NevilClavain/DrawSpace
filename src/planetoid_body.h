@@ -103,7 +103,7 @@ protected:
     std::map<dsstring, RegisteredCamera>                                    m_registered_camerapoints;
     dsstring                                                                m_current_camerapoint;
 
-    std::vector<SphericalLOD::Layer*>                                       m_planetfragments_list;
+    std::vector<SphericalLOD::Layer*>                                       m_layers_list;
 
     DrawSpace::Utils::TimeManager*                                          m_timemanager;
     DrawSpace::Utils::Timer*                                                m_timer;
@@ -146,9 +146,9 @@ public:
     //void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
 
     SphericalLOD::FaceDrawingNode*      RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
-                                                                            DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_fragment_index );
+                                                                            DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index );
 
-    SphericalLOD::Layer*                GetLayer( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index );
+    SphericalLOD::Layer*                GetLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index );
     
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 
@@ -162,7 +162,7 @@ public:
     void                                DrawSubPasses( void );
 
 
-    void                                ResetRegisteredBodyLayer( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index );
+    void                                ResetRegisteredBodyLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index );
 
     int                                 GetSingleShotSubPassesStackSize();
 };

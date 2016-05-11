@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Face::Face( DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index, Patch::SubPassCreationHandler* p_handler ) : 
+Face::Face( DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler ) : 
 m_config( p_config ),
 m_rootpatch( NULL ), 
 m_currentleaf( NULL ),
@@ -42,10 +42,10 @@ m_relative_alt_sphere( 0.0 ),
 m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
 m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
 m_subpasscreation_handler( p_handler ),
-m_fragment_index( p_fragment_index )
+m_layer_index( p_layer_index )
 {
-    m_diameter = 1000.0 * m_config->m_fragments_descr[p_fragment_index].ray * 2.0;
-    m_min_lodlevel = m_config->m_fragments_descr[p_fragment_index].min_lodlevel;
+    m_diameter = 1000.0 * m_config->m_layers_descr[p_layer_index].ray * 2.0;
+    m_min_lodlevel = m_config->m_layers_descr[p_layer_index].min_lodlevel;
 }
 
 Face::~Face( void )
@@ -87,7 +87,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
         Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_diameter / 2.0, m_orientation, NULL, -1, 
-                                                        root, m_subpasscreation_handler, m_config, m_fragment_index ) );
+                                                        root, m_subpasscreation_handler, m_config, m_layer_index ) );
         root->SetContent( patch );      
     }
     else
@@ -96,7 +96,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
 
         Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), 
-                                                        node, m_subpasscreation_handler, m_config, m_fragment_index ) );
+                                                        node, m_subpasscreation_handler, m_config, m_layer_index ) );
         node->SetContent( patch );      
     }
 }

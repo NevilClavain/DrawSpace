@@ -32,12 +32,12 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 
-FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index ) :
+FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index ) :
 m_renderer( p_renderer ),
 m_current_patch( NULL ),
 m_config( p_config ),
 m_binder( NULL ),
-m_fragment_index( p_fragment_index )
+m_layer_index( p_layer_index )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -159,9 +159,9 @@ DrawSpace::SphericalLOD::Binder* FaceDrawingNode::GetBinder( void )
     return m_binder;
 }
 
-int FaceDrawingNode::GetFragmentIndex( void )
+int FaceDrawingNode::GetLayerIndex( void )
 {
-    return m_fragment_index;
+    return m_layer_index;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -249,7 +249,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     std::vector<Patch*> dl;
    
-    Body* planetbody = m_planetbodies[face_node->GetFragmentIndex()];
+    Body* planetbody = m_planetbodies[face_node->GetLayerIndex()];
 
     planetbody->GetFace( m_nodes[face_node] )->GetDisplayList( dl );
     Patch* current_patch = planetbody->GetFace( m_nodes[face_node] )->GetCurrentPatch();
@@ -286,7 +286,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     Binder* node_binder = face_node->GetBinder();
     node_binder->Bind();
 
-    Body* planetbody = m_planetbodies[face_node->GetFragmentIndex()];
+    Body* planetbody = m_planetbodies[face_node->GetLayerIndex()];
     dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
 
     Vector view_pos;
@@ -297,9 +297,9 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
 }
 
  DrawSpace::SphericalLOD::FaceDrawingNode* Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
-                                                DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_fragment_index )
+                                                DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index )
 {
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_fragment_index ) );
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
 
     switch( p_meshe_type )
     {

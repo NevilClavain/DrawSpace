@@ -176,7 +176,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         reg_body.body = inertbody;                        
                         reg_body.relative_alt_valid = false;
 
-                        for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
+                        for( size_t i = 0; i < m_config->m_layers_descr.size(); i++ )
                         {                                                                                                                
                             inertbody->IncludeTo( this );
 
@@ -189,7 +189,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                                                                             collider, m_subpass_creation_cb, i ) );
                             layer->SetHotState( true );
 
-                            m_planetfragments_list.push_back( layer );                     
+                            m_layers_list.push_back( layer );                     
                             reg_body.layers.push_back( layer );
                             layer->SetInertBody( inertbody );
                         }
@@ -204,7 +204,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                     reg_body.body = inertbody;
                     reg_body.relative_alt_valid = false;
 
-                    for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
+                    for( size_t i = 0; i < m_config->m_layers_descr.size(); i++ )
                     {                                                                                                                
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
                             DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb ) );
@@ -214,7 +214,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
                         SphericalLOD::Layer* layer = _DRAWSPACE_NEW_( SphericalLOD::Layer, SphericalLOD::Layer( this, m_config, &m_world, slod_body, 
                                                                         collider, m_subpass_creation_cb, i ) );
                         layer->SetHotState( false );                   
-                        m_planetfragments_list.push_back( layer );
+                        m_layers_list.push_back( layer );
                         reg_body.layers.push_back( layer );
                         layer->SetInertBody( inertbody );  
                     }
@@ -312,7 +312,7 @@ void DrawSpace::Planetoid::Body::on_nodes_event( DrawSpace::Core::SceneNodeGraph
 
 void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, DrawSpace::Planetoid::Body::RegisteredCamera& p_cameradescr, bool p_hotstate )
 {
-    for( size_t i = 0; i < m_config->m_fragments_descr.size(); i++ )
+    for( size_t i = 0; i < m_config->m_layers_descr.size(); i++ )
     {
         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb ) );
 
@@ -324,7 +324,7 @@ void DrawSpace::Planetoid::Body::create_camera_collisions( const dsstring& p_cam
         layer->SetCamera( p_camera );
         
         p_cameradescr.layers.push_back( layer );
-        m_planetfragments_list.push_back( layer );    
+        m_layers_list.push_back( layer );    
     }
 
     p_cameradescr.camera->SetRelativeOrbiter( this );   
@@ -397,7 +397,7 @@ void DrawSpace::Planetoid::Body::manage_bodies( void )
 
         for( size_t i = 0; i < it->second.layers.size(); i++ )
         {
-            if( i == m_config->m_ground_fragment )
+            if( i == m_config->m_ground_layer )
             {
                 SphericalLOD::Layer* layer = it->second.layers[i];
 
@@ -528,9 +528,9 @@ void DrawSpace::Planetoid::Body::manage_camerapoints( void )
 
 void DrawSpace::Planetoid::Body::compute_layers( void )
 {
-    for( size_t i = 0; i < m_planetfragments_list.size(); i++ )
+    for( size_t i = 0; i < m_layers_list.size(); i++ )
     {
-        SphericalLOD::Layer* curr = m_planetfragments_list[i];
+        SphericalLOD::Layer* curr = m_layers_list[i];
         curr->Compute( this );
     }
 }
@@ -553,40 +553,10 @@ void DrawSpace::Planetoid::Body::update_cameras_alt( void )
 
             if( m_registered_bodies.count( inertbody ) )
             {                
-                it->second.camera->SetRelativeAltitude( m_registered_bodies[inertbody].layers[m_config->m_ground_fragment]->GetPlanetBody()->GetHotPointAltitud() );
+                it->second.camera->SetRelativeAltitude( m_registered_bodies[inertbody].layers[m_config->m_ground_layer]->GetPlanetBody()->GetHotPointAltitud() );
             }
         }
     }
-
-    /*
-    for( size_t i = 0; i < m_planetfragments_list.size(); i++ )
-    {
-        Fragment* curr = m_planetfragments_list[i];
-
-        InertBody* inertbody = curr->GetInertBody();
-        CameraPoint* camera = curr->GetCamera();
-
-        if( inertbody )
-        {            
-            if( inertbody->GetAttachedBody() == this )
-            {
-                std::vector<dsstring> cameras;
-                body_find_attached_camera( inertbody, cameras );
-
-                for( size_t i = 0; i < cameras.size(); i++ )
-                {
-                    m_registered_camerapoints[cameras[i]].camera->SetRelativeAltitude( curr->GetPlanetBody()->GetHotPointAltitud() );
-                }
-            }
-        }
-        else if( camera )
-        {
-            CameraPoint::Infos cam_infos;
-            camera->GetInfos( cam_infos );
-            camera->SetRelativeAltitude( curr->GetPlanetBody()->GetHotPointAltitud() );
-        }       
-    }
-    */
 }
 
 void DrawSpace::Planetoid::Body::GetSceneName( dsstring& p_name )
@@ -601,9 +571,9 @@ void DrawSpace::Planetoid::Body::RegisterPlanetBodyPassSlot( Pass* p_pass, Spher
 */
 
 DrawSpace::SphericalLOD::FaceDrawingNode* DrawSpace::Planetoid::Body::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
-                                                                    DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_fragment_index )
+                                                                    DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index )
 {
-    return m_drawable->RegisterSinglePlanetBodyPassSlot( p_pass, p_binder, p_orientation, p_meshe_type, p_fragment_index );
+    return m_drawable->RegisterSinglePlanetBodyPassSlot( p_pass, p_binder, p_orientation, p_meshe_type, p_layer_index );
 }
 
 
@@ -639,12 +609,12 @@ void DrawSpace::Planetoid::Body::RegisterScenegraphCallbacks( DrawSpace::Core::S
 }
 
 
-DrawSpace::SphericalLOD::Layer* DrawSpace::Planetoid::Body::GetLayer( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index )
+DrawSpace::SphericalLOD::Layer* DrawSpace::Planetoid::Body::GetLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index )
 {
     if( m_registered_bodies.count( p_body ) )
     {
 
-        return m_registered_bodies[p_body].layers[p_fragment_index];
+        return m_registered_bodies[p_body].layers[p_layer_index];
 
     }
     return NULL;
@@ -665,12 +635,12 @@ bool DrawSpace::Planetoid::Body::GetInertBodyRelativeAltitude( DrawSpace::Dynami
     return false;
 }
 
-void DrawSpace::Planetoid::Body::ResetRegisteredBodyLayer( DrawSpace::Dynamics::InertBody* p_body, int p_fragment_index )
+void DrawSpace::Planetoid::Body::ResetRegisteredBodyLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index )
 {
     if( m_registered_bodies.count( p_body ) > 0 )
     {
         RegisteredBody entry = m_registered_bodies[p_body];        
-        entry.layers[p_fragment_index]->GetPlanetBody()->Reset();
+        entry.layers[p_layer_index]->GetPlanetBody()->Reset();
     }
 }
 

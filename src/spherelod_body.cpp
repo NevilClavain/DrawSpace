@@ -38,7 +38,7 @@ Meshe* Body::m_planetpatch2_meshe = NULL;
 Meshe* Body::m_planetpatch_skirt_meshe = NULL;
 
 
-Body::Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index, 
+Body::Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, 
             Patch::SubPassCreationHandler* p_handler ) : 
 m_timemanager( p_time ),
 m_current_face( -1 ),
@@ -46,12 +46,12 @@ m_current_patch( NULL ),
 m_relative_alt( 0.0 ),
 m_config( p_config )
 {
-    m_enable_cdlod = p_config->m_fragments_descr[p_fragment_index].enable_lod;
-    m_diameter = 1000.0 * m_config->m_fragments_descr[p_fragment_index].ray * 2.0;
+    m_enable_cdlod = p_config->m_layers_descr[p_layer_index].enable_lod;
+    m_diameter = 1000.0 * m_config->m_layers_descr[p_layer_index].ray * 2.0;
 
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_config, p_fragment_index, p_handler ) );
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_config, p_layer_index, p_handler ) );
     }
 }
 

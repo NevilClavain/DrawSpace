@@ -32,7 +32,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
-                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_fragment_index ) : 
+                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index ) : 
 
 m_orientation( p_orientation ),
 m_ray( p_ray ),
@@ -44,7 +44,7 @@ m_parent( p_parent ),
 m_nodeid( p_nodeid ),
 m_subpass_entry_infos_valid( false )
 {
-    m_enable_datatexture = m_config->m_fragments_descr[p_fragment_index].enable_datatextures;
+    m_enable_datatexture = m_config->m_layers_descr[p_layer_index].enable_datatextures;
 
     for( long i = 0; i < 8; i++ )
     {
@@ -133,12 +133,12 @@ m_subpass_entry_infos_valid( false )
     {
         if( m_lod_level == NB_LOD_RANGES - 1 )
         {
-            prepare_data_texture( m_subpasscreation_handler, 1, p_fragment_index );
+            prepare_data_texture( m_subpasscreation_handler, 1, p_layer_index );
         }
     
         else if( m_lod_level >= NB_LOD_RANGES - 8 )
         {
-            prepare_data_texture( m_subpasscreation_handler, 0, p_fragment_index );
+            prepare_data_texture( m_subpasscreation_handler, 0, p_layer_index );
         }
     }
 
@@ -181,7 +181,7 @@ Patch::~Patch( void )
     destroy_color_texture();
 }
 
-void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_fragment_index )
+void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_layer_index )
 {
     m_datatexture_pass = create_data_texture_pass();
 
@@ -191,13 +191,13 @@ void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int 
     // creation/preparation du node
 
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config, p_fragment_index ) );
+    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config, p_layer_index ) );
             
     node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
     node->SetDisplayList( dl );
 
     //node->SetBinder( m_config->m_patchTexturesBinder[m_orientation] );
-    node->SetBinder( m_config->m_fragments_descr[p_fragment_index].patchTexturesBinder[m_orientation] );
+    node->SetBinder( m_config->m_layers_descr[p_layer_index].patchTexturesBinder[m_orientation] );
                
     void* tx_data;
     if( false == renderer->CreateTexture( m_datatexture_pass->GetTargetTexture(), &tx_data ) )
