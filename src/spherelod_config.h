@@ -50,10 +50,6 @@ public:
 
     double                          m_lod0base;
 
-    /*
-    Binder*                         m_groundCollisionsBinder[6];
-    Binder*                         m_patchTexturesBinder[6];
-    */
 
     std::vector<FragmentDescriptor> m_fragments_descr;
     int                             m_ground_fragment;  // index dans m_fragments_descr
