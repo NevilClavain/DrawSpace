@@ -88,7 +88,7 @@
 #include "chunk.h"
 #include "mediator.h"
 #include "runner.h"
-#include "planetoid_body.h"
+#include "spherelod_root.h"
 #include "inits.h"
 #include "descriptors.h"
 #include "ac3dmeshe.h"

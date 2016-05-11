@@ -28,14 +28,6 @@
 namespace DrawSpace
 {
 
-/*
-// fwd declaration
-namespace Planetoid
-{
-    class Layer;
-}
-*/
-
 namespace SphericalLOD
 {
 // fwd declaration

@@ -56,7 +56,7 @@
     <ClCompile Include="src\orbiter.cpp" />
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\pass.cpp" />
-    <ClCompile Include="src\planetoid_body.cpp" />
+    <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
     <ClCompile Include="src\procedural_blocs.cpp" />
     <ClCompile Include="src\procedural_parser.cpp" />
@@ -152,7 +152,7 @@
     <ClInclude Include="src\pass.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
-    <ClInclude Include="src\planetoid_body.h" />
+    <ClInclude Include="src\spherelod_root.h" />
     <ClInclude Include="src\spherelod_layer.h" />
     <ClInclude Include="src\plugin.h" />
     <ClInclude Include="src\procedural_blocs.h" />

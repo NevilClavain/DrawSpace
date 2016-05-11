@@ -25,7 +25,6 @@
 
 #include "spherelod_drawing.h"
 #include "spherelod_collisions.h"
-//#include "spherelod_subpass.h"
 #include "orbiter.h"
 #include "collider.h"
 #include "camerapoint.h"
@@ -38,14 +37,11 @@
 namespace DrawSpace
 {
 
-// fwd declaration
-namespace Planetoid
-{
-    class Body;
-}
-
 namespace SphericalLOD
 {
+
+// fwd declaration
+class Root;
 
 class Layer
 {
@@ -109,7 +105,7 @@ public:
                 DrawSpace::Dynamics::Collider* p_collider, Layer::SubPassCreationHandler* p_handler, int p_index );
     virtual ~Layer( void );
 
-    void Compute( DrawSpace::Planetoid::Body* p_owner );
+    void Compute( Root* p_owner );
 
     void SetHotState( bool p_hotstate );
     bool GetHotState( void );

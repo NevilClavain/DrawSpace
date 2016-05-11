@@ -21,7 +21,7 @@
 */
 
 #include "spherelod_layer.h"
-#include "planetoid_body.h"
+#include "spherelod_root.h"
 #include "spherelod_drawing.h"
 #include "renderer.h"
 #include "plugin.h"
@@ -29,7 +29,6 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
-using namespace DrawSpace::Planetoid;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::SphericalLOD;
 
@@ -139,7 +138,7 @@ void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Pat
     }
 }
 
-void Layer::Compute( DrawSpace::Planetoid::Body* p_owner )
+void Layer::Compute( Root* p_owner )
 {
     // ECH 9/4/2016 modif algo
 
