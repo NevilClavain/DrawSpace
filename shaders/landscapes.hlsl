@@ -306,10 +306,9 @@ float specular_light( float3 p_half_vector, float3 p_normale, float p_spec_power
 
 float ocean_specular_from_space(float p_specular_val, float p_rel_alt, float3 p_ldir, float3 p_half_vector)
 {    
-    float spec_attenuation = 0.7;
-    float dir_spec_attenuation = saturate(dot(p_half_vector, normalize(p_ldir)));
+    float spec_attenuation = 0.6;
 
     float alt_spec_attenuation = saturate(p_rel_alt - 0.95);
 
-    return (p_specular_val * spec_attenuation * dir_spec_attenuation * alt_spec_attenuation);
+    return (p_specular_val * spec_attenuation * alt_spec_attenuation);
 }

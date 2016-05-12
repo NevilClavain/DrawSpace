@@ -66,7 +66,7 @@ float4 atmo_scattering_flag_6 : register(c24);
 
 float4x4 matWorldRots : register(c25);
 
-float4 water_anim : register(c29);
+//float4 water_anim : register(c29);
 
 
 
@@ -144,23 +144,13 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{
 		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, HT_Texture, input.LODGlobalPatch_TexCoord, 100.0 );
 	}
+
+    /*
     else
-    {
-        
-        float2 water_tex_coord_0;
-        float2 water_tex_coord_1;
-
-        water_tex_coord_0 = input.UnitPatch_TexCoord;
-        water_tex_coord_1.x = input.UnitPatch_TexCoord.x;
-        water_tex_coord_1.y = 1.0 - input.UnitPatch_TexCoord.y;
-
-
-        float avg0 = compute_water_bump_vector(256, Water_Bump_Texture, water_tex_coord_0, 0.09);
-        float avg1 = compute_water_bump_vector(256, Water_Bump_Texture, water_tex_coord_1, 0.09);
-
-        avg = lerp(avg0, avg1, water_anim.x);
-
+    {        
+        avg = compute_water_bump_vector(256, Water_Bump_Texture, input.UnitPatch_TexCoord, 0.33);
     }
+    */
 	
 	float3 texel_pos = compute_front_face_point_vector( input.GlobalPatch_TexCoord );
 
@@ -174,16 +164,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		texel_pos = normalize( texel_pos );
 
     }
-    else
-    {
-        float k = clamp((1.5708 - atan(30000.0 * (flags.x - 1.0))), 0.0, 1.0);
-        //diminuer progressivement l'effet bump jusqu'a 12000 metres. au dela, plus de bump map
-        k *= lerp(0.0, 1.0, 1.0 - saturate((pixel_distance / 12000.0)));
-        texel_pos.x += k * avg.x;
-        texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
-        
-        texel_pos = normalize(texel_pos);        
-    }
 
     int count_lights = 0;
     float4 spec0 = 0;
@@ -195,7 +175,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float3 texel_pos2;
 	texel_pos2 = CubeToSphere( ProjectVectorToCube( flags.w, texel_pos ) );
 
-    float3 normale_world = mul(texel_pos2, matWorldRots);
+    float3 normale_world = mul(matWorldRots, texel_pos2);
+
+    float ocean_spec_power = 120.0;
 
     if (flags_lights.x > 0.0)
     {
@@ -206,9 +188,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{
         lit_color += clamp(dot(texel_pos2, light0_dir_local.xyz), 0.0, 1.0) * light0_color;
         if( sea )
-        {            
+        {
             float3 hv = normalize(light0_dir.xyz + nviewerpos);
-            spec0 = ocean_specular_from_space(specular_light(hv, normale_world, 120.0), flags.x, light0_dir.xyz, hv);
+            spec0 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light0_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -219,7 +201,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         if (sea)
         {
             float3 hv = normalize(light1_dir.xyz + nviewerpos);
-            spec1 = ocean_specular_from_space(specular_light(hv, normale_world, 120.0), flags.x, light1_dir.xyz, hv);
+            spec1 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light1_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -230,7 +212,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         if (sea)
         {
             float3 hv = normalize(light2_dir.xyz + nviewerpos);
-            spec2 = ocean_specular_from_space(specular_light(hv, normale_world, 120.0), flags.x, light2_dir.xyz, hv);
+            spec2 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light2_dir.xyz, hv);
         }
         count_lights++;
     }
