@@ -58,6 +58,11 @@ public:
     void AddShader( Shader* p_shader );
     void AddRenderStateIn( const RenderState& p_renderstate );
     void AddRenderStateOut( const RenderState& p_renderstate );
+
+    void UpdateRenderStateIn( int p_index,const RenderState& p_renderstate );
+    void UpdateRenderStateOut( int p_index, const RenderState& p_renderstate );
+
+
     void Serialize( Utils::Archive& p_archive  );
     bool Unserialize( Utils::Archive& p_archive );
     void GetMD5( dsstring& p_md5 );

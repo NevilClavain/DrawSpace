@@ -92,6 +92,16 @@ void Fx::AddRenderStateOut( const RenderState& p_renderstate )
     m_renderstates_out.push_back( p_renderstate );
 }
 
+void Fx::UpdateRenderStateIn( int p_index,const RenderState& p_renderstate )
+{
+    m_renderstates_in[p_index] = p_renderstate;
+}
+
+void Fx::UpdateRenderStateOut( int p_index, const RenderState& p_renderstate )
+{
+    m_renderstates_out[p_index] = p_renderstate;
+}
+
 void Fx::Serialize( Archive& p_archive )
 {
 
