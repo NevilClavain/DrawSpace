@@ -199,18 +199,6 @@ void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
 
 void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {  
-    /*
-    for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-    {
-        Pass* current_pass = it->first;
-
-        NodesSet ns = it->second;
-        for( auto it2 = ns.begin(); it2 != ns.end(); ++it2 )
-        {
-            current_pass->GetRenderingQueue()->Add( it2->first );
-        }
-    }
-    */
 
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
@@ -224,12 +212,6 @@ void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpa
 
 void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
-    /*
-    if( !m_planetbody )
-    {
-        return;
-    }
-    */
 
     if( 0 == m_planetbodies.size() )
     {
@@ -322,8 +304,6 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
     node->RegisterHandler( cb );
       
-    //m_passesnodes[p_pass][node] = p_orientation;
-
     std::pair<Pass*, FaceDrawingNode*> p( p_pass, node );
     m_passesnodes.push_back( p );
 
