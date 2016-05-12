@@ -168,7 +168,6 @@ int FaceDrawingNode::GetLayerIndex( void )
 
 Drawing::Drawing( SphericalLOD::Config* p_config ) :
 m_renderer( NULL ),
-//m_planetbody( NULL ),
 m_config( p_config )
 {
     m_singlenode_draw_handler = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
@@ -178,13 +177,6 @@ Drawing::~Drawing( void )
 {
     _DRAWSPACE_DELETE_( m_singlenode_draw_handler );
 }
-
-/*
-void Drawing::SetCurrentPlanetBody( Body* p_planetbody )
-{
-    m_planetbody = p_planetbody;
-}
-*/
 
 void Drawing::SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies )
 {
@@ -248,7 +240,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
 
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj );
+    face_node->Draw( Body::m_patch_meshe->GetVertexListSize(), Body::m_patch_meshe->GetTrianglesListSize(), planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj );
     node_binder->Unbind();
 }
 
@@ -274,34 +266,65 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
 
-    face_node->Draw( Body::m_planetpatch_meshe->GetVertexListSize(), Body::m_planetpatch_meshe->GetTrianglesListSize(), 1.0, rel_alt, view_pos, world, view, proj );   
+    face_node->Draw( Body::m_patch_meshe->GetVertexListSize(), Body::m_patch_meshe->GetTrianglesListSize(), 1.0, rel_alt, view_pos, world, view, proj );   
     node_binder->Unbind();
 }
 
- DrawSpace::SphericalLOD::FaceDrawingNode* Drawing::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
-                                                DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index )
+void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+                                                DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
 {
+
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+
+    FaceDrawingNode* node_skirts = NULL;
 
     switch( p_meshe_type )
     {
         case SphericalLOD::Body::LOWRES_MESHE:
 
-            node->SetMeshe( Body::m_planetpatch_meshe );
+            // node patch terrain
+            node->SetMeshe( Body::m_patch_meshe );
             break;
 
         case SphericalLOD::Body::LOWRES_SKIRT_MESHE:
 
-            node->SetMeshe( Body::m_planetpatch_skirt_meshe );
+            node_skirts = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+
+            // node patch terrain
+            node->SetMeshe( Body::m_patch_meshe ); 
+
+            // plus un node jupes terrain
+            node_skirts->SetMeshe( Body::m_skirt_meshe );
+
             break;
 
         case SphericalLOD::Body::HIRES_MESHE:
 
-            node->SetMeshe( Body::m_planetpatch2_meshe );
+            //node patch terrain
+            node->SetMeshe( Body::m_patch2_meshe );
             break;
     }
         
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
+
+
+    if( node_skirts )
+    {
+        // enregistrer le node jupes terrain
+        node_skirts->RegisterHandler( cb );
+      
+        std::pair<Pass*, FaceDrawingNode*> p_s( p_pass, node_skirts );
+        m_passesnodes.push_back( p_s );
+
+        m_nodes[node_skirts] = p_orientation;
+
+        node_skirts->SetBinder( p_binder );
+
+        // pour faire le rendu des nodes jupes terrains AVANT le rendu des nodes patch terrains
+        node_skirts->SetOrderNumber( p_rendering_order - 1 );
+    }
+
+    // enregistrer le node patch terrain
     node->RegisterHandler( cb );
       
     std::pair<Pass*, FaceDrawingNode*> p( p_pass, node );
@@ -310,33 +333,14 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     m_nodes[node] = p_orientation;
 
     node->SetBinder( p_binder );
+    node->SetOrderNumber( p_rendering_order );
 
-    return node;
 }
 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void )
 {
     return m_singlenode_draw_handler;
 }
-/*
-DrawSpace::Core::RenderingNode* Drawing::GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid )
-{
-    if( 0 == m_passesnodes.count( p_pass ) )
-    {
-        return NULL;
-    }
-    NodesSet nodeset = m_passesnodes[p_pass];
-    for( auto it = m_passesnodes[p_pass].begin(); it != m_passesnodes[p_pass].end(); ++it )
-    {
-        if( it->second == p_faceid )
-        {
-            return it->first;
-        }
-    }
-    return NULL;
-}
-*/
-
 
 void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
 {

@@ -76,9 +76,9 @@ protected:
 
 public:
 
-    static DrawSpace::Core::Meshe*                                              m_planetpatch_meshe;
-    static DrawSpace::Core::Meshe*                                              m_planetpatch2_meshe;
-    static DrawSpace::Core::Meshe*                                              m_planetpatch_skirt_meshe;
+    static DrawSpace::Core::Meshe*                                              m_patch_meshe; //patch terrains
+    static DrawSpace::Core::Meshe*                                              m_patch2_meshe; // patch terrains haute resolution
+    static DrawSpace::Core::Meshe*                                              m_skirt_meshe; //les jupes terrains
 
 
     Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index,

@@ -41,7 +41,7 @@ m_enable( true )
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, p_config, p_node_layer_index ) );
                 
-    node->SetMeshe( SphericalLOD::Body::m_planetpatch_meshe );
+    node->SetMeshe( SphericalLOD::Body::m_patch_meshe );
 
     //node->SetBinder( p_config->m_groundCollisionsBinder[p_orientation] );
     node->SetBinder( p_config->m_layers_descr[p_node_layer_index].groundCollisionsBinder[p_orientation] );

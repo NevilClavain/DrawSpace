@@ -33,9 +33,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Meshe* Body::m_planetpatch_meshe = NULL;
-Meshe* Body::m_planetpatch2_meshe = NULL;
-Meshe* Body::m_planetpatch_skirt_meshe = NULL;
+Meshe* Body::m_patch_meshe = NULL;  //patch terrains
+Meshe* Body::m_patch2_meshe = NULL;  // patch terrains haute resolution
+Meshe* Body::m_skirt_meshe = NULL;  //les jupes terrains
 
 
 Body::Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, 
@@ -141,38 +141,42 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
     float current_u0 = 0.0f;
     float current_v0 = 0.0f;
 
-    for( long i = 0; i < patch_resolution; i++ )
+    if( !p_skirt )
     {
-        for( long j = 0; j < patch_resolution; j++ )
+        for( long i = 0; i < patch_resolution; i++ )
         {
-            xcurr = j * interval - 1.0;
-            ycurr = i * interval - 1.0;
+            for( long j = 0; j < patch_resolution; j++ )
+            {
+                xcurr = j * interval - 1.0;
+                ycurr = i * interval - 1.0;
                         
-            Vertex vertex;
-            vertex.x = xcurr;
-            vertex.y = ycurr;
-            vertex.z = 0.0;
+                Vertex vertex;
+                vertex.x = xcurr;
+                vertex.y = ycurr;
+                vertex.z = 0.0;
 
-            vertex.tu[0] = current_u0;
-            vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
-                                            // le v des coords textures et le y du repere patch sont en sens oppos�s
+                vertex.tu[0] = current_u0;
+                vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
+                                                // le v des coords textures et le y du repere patch sont en sens oppos�s
 
-            vertex.tw[0] = 0.0;
+                vertex.tw[0] = 0.0;
 
-            p_meshe_dest->AddVertex( vertex );
-            main_patch_nbv++;
+                p_meshe_dest->AddVertex( vertex );
+                main_patch_nbv++;
 
-            current_u0 += delta_uv0;
+                current_u0 += delta_uv0;
+            }
+
+            current_v0 += delta_uv0;
+            current_u0 = 0.0;
         }
-
-        current_v0 += delta_uv0;
-        current_u0 = 0.0;
     }
-
     ///////////////////////////////////////////////////////////////////////////////////
     
-    if( p_skirt )
+    //if( p_skirt )
+    else
     {
+        
 
         // vertices jupe droite
 
@@ -335,31 +339,35 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
 
     long current_index;
 
-    for( long i = 0; i < patch_resolution - 1; i++  )
+    if( !p_skirt )
     {
-        current_index = i * patch_resolution;
-
-        for( long j = 0; j < patch_resolution - 1; j++ )
+        for( long i = 0; i < patch_resolution - 1; i++  )
         {
-            Triangle triangle;
+            current_index = i * patch_resolution;
 
-            triangle.vertex1 = current_index;
-            triangle.vertex2 = current_index + 1;
-            triangle.vertex3 = current_index + patch_resolution;
-            p_meshe_dest->AddTriangle( triangle, p_fastmode );
+            for( long j = 0; j < patch_resolution - 1; j++ )
+            {
+                Triangle triangle;
+
+                triangle.vertex1 = current_index;
+                triangle.vertex2 = current_index + 1;
+                triangle.vertex3 = current_index + patch_resolution;
+                p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
-            triangle.vertex1 = current_index + 1;
-            triangle.vertex2 = current_index + 1 + patch_resolution;
-            triangle.vertex3 = current_index + patch_resolution;
-            p_meshe_dest->AddTriangle( triangle, p_fastmode );
+                triangle.vertex1 = current_index + 1;
+                triangle.vertex2 = current_index + 1 + patch_resolution;
+                triangle.vertex3 = current_index + patch_resolution;
+                p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
-            current_index++;
-        }        
+                current_index++;
+            }        
+        }
     }
 
     ///////////////////////////////////////////////////////////
     
-    if( p_skirt )
+    //if( p_skirt )
+    else
     {
 
         // triangles jupe droite
@@ -450,14 +458,14 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
 
 void Body::BuildMeshes( void )
 {
-    m_planetpatch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_RESOLUTION, m_planetpatch_meshe, false, false );
+    m_patch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    build_meshe( PATCH_RESOLUTION, m_patch_meshe, false, false );
 
-    m_planetpatch2_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_HIGH_RESOLUTION, m_planetpatch2_meshe, true, false );
+    m_patch2_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    build_meshe( PATCH_HIGH_RESOLUTION, m_patch2_meshe, true, false );
 
-    m_planetpatch_skirt_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_RESOLUTION, m_planetpatch_skirt_meshe, false, true );
+    m_skirt_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    build_meshe( PATCH_RESOLUTION, m_skirt_meshe, false, true );
 }
 
 void Body::RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler )
@@ -489,7 +497,7 @@ void Body::GetInvariantViewerPos( DrawSpace::Utils::Vector& p_pos )
 
 DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void )
 {
-    return m_planetpatch_meshe;
+    return m_patch_meshe;
 }
 
 

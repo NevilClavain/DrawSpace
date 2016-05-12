@@ -145,8 +145,14 @@ public:
     void                                GetSceneName( dsstring& p_name );    
     //void                                GetCameraHotpoint( const dsstring& p_name, DrawSpace::Utils::Matrix& p_outmat );
 
+    /*
     SphericalLOD::FaceDrawingNode*      RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                                             DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index );
+                                                                            */
+
+    void                                RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+                                                                            DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
+
 
     SphericalLOD::Layer*                GetLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index );
     

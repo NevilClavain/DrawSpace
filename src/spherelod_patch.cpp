@@ -193,7 +193,7 @@ void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int 
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config, p_layer_index ) );
             
-    node->SetMeshe( SphericalLOD::Body::m_planetpatch2_meshe );
+    node->SetMeshe( SphericalLOD::Body::m_patch2_meshe );
     node->SetDisplayList( dl );
 
     //node->SetBinder( m_config->m_patchTexturesBinder[m_orientation] );

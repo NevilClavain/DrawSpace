@@ -549,12 +549,19 @@ void DrawSpace::SphericalLOD::Body::RegisterPlanetBodyPassSlot( Pass* p_pass, Sp
 }
 */
 
+/*
 DrawSpace::SphericalLOD::FaceDrawingNode* Root::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                                     DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index )
 {
     return m_drawable->RegisterSinglePlanetBodyPassSlot( p_pass, p_binder, p_orientation, p_meshe_type, p_layer_index );
 }
+*/
 
+void Root::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+                                    DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
+{
+    m_drawable->RegisterSinglePassSlot( p_pass, p_binder, p_orientation, p_meshe_type, p_layer_index, p_rendering_order );
+}
 
 
 void Root::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
