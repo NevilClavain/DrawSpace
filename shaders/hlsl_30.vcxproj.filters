@@ -85,5 +85,13 @@
     <FxCompile Include="landscapes.hlsl">
       <Filter>Source Files\commons\planet</Filter>
     </FxCompile>
+    <FxCompile Include="texture.psh">
+      <Filter>Source Files\pixel</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="texture.vsh">
+      <Filter>Source Files\vertex</Filter>
+    </None>
   </ItemGroup>
 </Project>
