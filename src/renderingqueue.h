@@ -37,7 +37,9 @@ protected:
 
     typedef enum
     {        
-        FX_LIST,
+        //FX_LIST,
+        SHADERS_LIST,
+        RS_LIST,
         MESHE_LIST,
         TEXTURE_LIST
 
@@ -55,13 +57,16 @@ protected:
     {
         SET_TEXTURE,
         SET_VERTEXTEXTURE,
-        SET_FX,
+        //SET_FX,
+        SET_SHADERS,
+        SET_RENDERSTATES_IN,
+        SET_RENDERSTATES_OUT,
         SET_MESHE,
         SET_SHADERS_PARAMS,
         DRAW_NODE,
         UNSET_TEXTURE,
         UNSET_VERTEXTEXTURE,
-        UNSET_FX,
+        //UNSET_FX,
 
     } OperationType;
 
@@ -106,7 +111,11 @@ protected:
     unsigned char                                       m_target_clear_color_b;
     unsigned char                                       m_target_clear_color_a;
 
-    std::map<RenderingNode*, void*>                     m_fx_datas;
+    //std::map<RenderingNode*, void*>                     m_fx_datas;
+
+    std::map<RenderingNode*, void*>                     m_sh_datas;
+    std::map<RenderingNode*, void*>                     m_rs_datas;
+
     std::map<RenderingNode*, std::vector<void*> >       m_tx_datas;
     std::map<RenderingNode*, std::vector<void*> >       m_vtx_datas;
     std::map<RenderingNode*, void* >                    m_meshe_datas;

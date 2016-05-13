@@ -1322,6 +1322,7 @@ bool D3D9Renderer::UpdateTextureContent( void* p_texturedata )
     return true;
 }
 
+/*
 bool D3D9Renderer::CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data )
 {
     DECLARE_D3D9ASSERT_VARS
@@ -1458,6 +1459,163 @@ bool D3D9Renderer::UnsetFx( void* p_data )
 
 	return true;
 }
+
+*/
+
+bool D3D9Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
+{
+    DECLARE_D3D9ASSERT_VARS
+
+    dsstring hash;
+    p_fx->GetShadersMD5( hash );
+
+    if( m_shaders_bases.count( hash ) > 0 )
+    {
+        *p_data = (void *)m_shaders_bases[hash];
+        return true;
+    }
+
+    ShadersData* sdata = _DRAWSPACE_NEW_( ShadersData, ShadersData );
+
+    if( p_fx->GetShadersListSize() )
+    {
+        LPDIRECT3DVERTEXSHADER9		vs;
+        LPDIRECT3DPIXELSHADER9		ps;
+
+        /////////////////// Shaders loading
+
+        Core::Shader* vertex_shader = p_fx->GetShader( 0 );
+        Core::Shader* pixel_shader = p_fx->GetShader( 1 );
+
+        LPD3DXBUFFER vbuff;
+        LPD3DXBUFFER pbuff;
+        LPD3DXBUFFER errors; 
+
+        if( !vertex_shader->IsCompiled() )
+        {
+            if( NULL == vertex_shader->GetData() )
+            {
+                _DSFATAL( logger, "no data in vertex shader !" )
+                return false;
+            }
+
+            hRes = D3DXCompileShader( (LPCSTR)vertex_shader->GetData(), (UINT)vertex_shader->GetDataSize(), NULL, NULL, "vs_main", "vs_3_0", 0, &vbuff, &errors, NULL );
+            if( D3D_OK != hRes )
+            {
+                if( NULL != errors )
+                {
+					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)errors->GetBufferPointer() )
+                    _DSEXCEPTION( "D3DXCompileShader FAIL (vertex) : " << dsstring( (char *)errors->GetBufferPointer() ) )
+                }
+                return false;
+            }
+
+            hRes = m_lpd3ddevice->CreateVertexShader( (DWORD *)vbuff->GetBufferPointer(), &vs );
+            D3D9_CHECK( CreateVertexShader );
+        }
+        else
+        {
+            hRes = m_lpd3ddevice->CreateVertexShader( (DWORD *)vertex_shader->GetData(), &vs );
+            D3D9_CHECK( CreateVertexShader );		
+        }
+
+        sdata->vertex_shader = vs;
+
+        if( !pixel_shader->IsCompiled() )
+        {
+            if( NULL == pixel_shader->GetData() )
+            {
+                _DSFATAL( logger, "no data in pixel shader !" )
+                return false;
+            }
+
+            hRes = D3DXCompileShader( (LPCSTR)pixel_shader->GetData(), (UINT)pixel_shader->GetDataSize(), NULL, NULL, "ps_main", "ps_3_0", 0, &pbuff, &errors, NULL );
+            if( D3D_OK != hRes )
+            {
+                if( NULL != errors )
+                {
+					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)errors->GetBufferPointer() )
+                    _DSEXCEPTION( "D3DXCompileShader FAIL (pixel) : " << dsstring( (char *)errors->GetBufferPointer() ) )
+                }
+                return false;
+            }
+
+            hRes = m_lpd3ddevice->CreatePixelShader( (DWORD *)pbuff->GetBufferPointer(), &ps );
+            D3D9_CHECK( CreatePixelShader );
+        }
+        else
+        {
+            hRes = m_lpd3ddevice->CreatePixelShader( (DWORD *)pixel_shader->GetData(), &ps );
+            D3D9_CHECK( CreatePixelShader );
+        }
+
+        sdata->pixel_shader = ps;
+    }
+
+    *p_data = (void*)sdata;
+
+    m_shaders_bases[hash] = sdata;
+
+    return true;
+}
+
+bool D3D9Renderer::SetShaders( void* p_data )
+{
+    DECLARE_D3D9ASSERT_VARS
+
+	ShadersData* sdata = (ShadersData*)p_data;
+
+    hRes = m_lpd3ddevice->SetVertexShader( sdata->vertex_shader );
+    D3D9_CHECK( SetVertexShader );
+
+    hRes = m_lpd3ddevice->SetPixelShader( sdata->pixel_shader );
+    D3D9_CHECK( SetPixelShader );
+
+    return true;
+}
+
+
+bool D3D9Renderer::CreateRenderStatesSet( DrawSpace::Core::Fx* p_fx, void** p_data )
+{
+    dsstring hash;
+    p_fx->GetRenderStatesSetMD5( hash );
+
+    if( m_fx_bases.count( hash ) > 0 )
+    {
+        *p_data = (void *)m_fx_bases[hash];
+        return true;
+    }
+
+    *p_data = (void*)p_fx;
+    m_fx_bases[hash] = p_fx;
+    return true;
+}
+bool D3D9Renderer::ApplyRenderStatesIn( void* p_data )
+{	
+	DrawSpace::Core::Fx* fx = (DrawSpace::Core::Fx*)p_data;
+
+    long nb_rs_in = fx->GetRenderStatesInListSize();
+    for( long i = 0; i < nb_rs_in; i++ )
+    {
+        DrawSpace::Core::RenderState rs = fx->GetRenderStateIn( i );
+        SetRenderState( &rs );
+    }
+    return true;
+}
+
+bool D3D9Renderer::ApplyRenderStatesOut( void* p_data )
+{
+	DrawSpace::Core::Fx* fx = (DrawSpace::Core::Fx*)p_data;
+
+    long nb_rs_out = fx->GetRenderStatesOutListSize();
+    for( long i = 0; i < nb_rs_out; i++ )
+    {
+        DrawSpace::Core::RenderState rs = fx->GetRenderStateOut( i );
+        SetRenderState( &rs );
+    }
+    return true;
+}
+
 
 bool D3D9Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector )
 {

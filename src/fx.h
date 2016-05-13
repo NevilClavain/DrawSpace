@@ -43,6 +43,13 @@ protected:
     std::vector<RenderState>                    m_renderstates_in;
     std::vector<RenderState>                    m_renderstates_out;
 
+    dsstring                                    m_renderstate_unique_queue_id; //si non vide, permet de forcer la rendering queue à garder
+                                                                                // une entree setrenderstates spécialement dédiée au node associée
+                                                                                // au lieu d'utiliser celle issue du regroupement
+                                                                                // Utile pour le cas ou on doit updater un ou plusieurs renderstate
+                                                                                // pour ce node pendant le rendu
+                                                                                
+
     bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
@@ -65,7 +72,10 @@ public:
 
     void Serialize( Utils::Archive& p_archive  );
     bool Unserialize( Utils::Archive& p_archive );
-    void GetMD5( dsstring& p_md5 );
+    //void GetMD5( dsstring& p_md5 );
+
+    void GetShadersMD5( dsstring& p_md5 );
+    void GetRenderStatesSetMD5( dsstring& p_md5 );
 
     void DumpProperties( dsstring& p_text );
     bool ParseProperties( const dsstring& p_text );
@@ -73,6 +83,8 @@ public:
     void ApplyProperties( void );
 
     void GetKeyword( dsstring& p_outkeyword );
+
+    void SetRenderStateUniqueQueueID( const dsstring& p_id );
 
     static Configurable* Instanciate( void );
 

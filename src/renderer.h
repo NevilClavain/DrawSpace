@@ -85,10 +85,21 @@ public:
     virtual bool CopyTextureContent( void* p_texturedata ) = 0;
     virtual bool UpdateTextureContent( void* p_texturedata ) = 0;
 
-
+    /*
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool SetFx( void* p_data ) = 0;
 	virtual bool UnsetFx( void* p_data ) = 0;
+    */
+
+    virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
+    virtual bool SetShaders( void* p_data ) = 0;
+
+    virtual bool CreateRenderStatesSet( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
+    virtual bool ApplyRenderStatesIn( void* p_data ) = 0;
+    virtual bool ApplyRenderStatesOut( void* p_data ) = 0;
+
+
+
     virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector ) = 0;
     virtual bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat ) = 0;
 

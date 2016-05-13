@@ -105,6 +105,7 @@ protected:
 
     } MesheData;
 
+    /*
     typedef struct
     {
         LPDIRECT3DVERTEXSHADER9         vertex_shader;
@@ -113,6 +114,16 @@ protected:
         DrawSpace::Core::Fx*            fx;
 
     } FxData;
+    */
+
+    typedef struct
+    {
+        LPDIRECT3DVERTEXSHADER9         vertex_shader;
+        LPDIRECT3DPIXELSHADER9          pixel_shader;
+
+    } ShadersData;
+    
+    
 
     typedef struct
     {
@@ -149,7 +160,10 @@ protected:
     std::map<DrawSpace::Core::Texture*, TargetTextureInfos>     m_targettextures_base;
     
     std::map<dsstring, MesheData*>                              m_meshes_base;
-    std::map<dsstring, FxData*>                                 m_fx_bases;
+    
+    //std::map<dsstring, FxData*>                                 m_fx_bases;
+    std::map<dsstring, ShadersData*>                            m_shaders_bases;
+    std::map<dsstring, DrawSpace::Core::Fx*>                    m_fx_bases;
 
 
     Characteristics                                             m_characteristics;
@@ -203,10 +217,20 @@ public:
     virtual bool CopyTextureContent( void* p_texturedata );
     virtual bool UpdateTextureContent( void* p_texturedata );
 
-
+    /*
     virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data );
     virtual bool SetFx( void* p_data );
 	virtual bool UnsetFx( void* p_data );
+    */
+
+    virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data );
+    virtual bool SetShaders( void* p_data );
+
+    virtual bool CreateRenderStatesSet( DrawSpace::Core::Fx* p_fx, void** p_data );
+    virtual bool ApplyRenderStatesIn( void* p_data );
+    virtual bool ApplyRenderStatesOut( void* p_data );
+
+
     virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector );
     virtual bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat );
 

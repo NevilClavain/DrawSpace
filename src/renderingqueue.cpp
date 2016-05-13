@@ -124,7 +124,7 @@ void RenderingQueue::Draw( void )
                 m_switches_cost++;
                 break;
 
-
+                /*
             case SET_FX:
 
                 renderer->SetFx( curr_operation.data );
@@ -134,6 +134,25 @@ void RenderingQueue::Draw( void )
             case UNSET_FX:
 
                 renderer->UnsetFx( curr_operation.data );
+                m_switches_cost++;
+                break;
+                */
+
+            case SET_SHADERS:
+
+                renderer->SetShaders( curr_operation.data );
+                m_switches_cost++;
+                break;
+
+            case SET_RENDERSTATES_IN:
+
+                renderer->ApplyRenderStatesIn( curr_operation.data );
+                m_switches_cost++;
+                break;
+
+            case SET_RENDERSTATES_OUT:
+
+                renderer->ApplyRenderStatesOut( curr_operation.data );
                 m_switches_cost++;
                 break;
 
@@ -210,7 +229,7 @@ void RenderingQueue::UpdateOutputQueue( void )
     }
     
     build_output_list( m_nodes );
-    cleanup_output_list();
+    //cleanup_output_list();
 }
 
 void RenderingQueue::UpdateOutputQueueNoOpt( void )
@@ -282,7 +301,15 @@ void RenderingQueue::sort_list( std::vector<RenderingNode*>& p_input_list, std::
     std::vector<SortCategory> todo;
     SortCategory category;
 
+    /*
     category.type = FX_LIST;
+    todo.push_back( category );
+    */
+
+    category.type = SHADERS_LIST;
+    todo.push_back( category );
+
+    category.type = RS_LIST;
     todo.push_back( category );
 
     category.type = MESHE_LIST;
@@ -300,7 +327,10 @@ void RenderingQueue::sort_list( std::vector<RenderingNode*>& p_input_list, std::
 
 void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list )
 {
-    std::map<dsstring, std::vector<RenderingNode*>>     fx_lists;
+    //std::map<dsstring, std::vector<RenderingNode*>>     fx_lists;
+
+    std::map<dsstring, std::vector<RenderingNode*>>     shaders_lists;
+    std::map<dsstring, std::vector<RenderingNode*>>     rs_lists;
     std::map<dsstring, std::vector<RenderingNode*>>     meshe_lists;
     std::map<dsstring, std::vector<RenderingNode*>>     texture_lists;
     
@@ -315,6 +345,7 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
     {
         switch( p_todo[i].type )
         {
+            /*
             case FX_LIST:
                 {
                     //long local_occ = 0;
@@ -330,6 +361,40 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
                     }
                 }
                 break;
+                */
+
+            case SHADERS_LIST:
+                {
+                    //long local_occ = 0;
+                    sort_list_by( SHADERS_LIST, 0, p_input_list, shaders_lists );
+
+                    double local_score = lists_score( shaders_lists );
+                    if( local_score > max_score )
+                    {
+                        max_score = local_score;
+                        selected_lists = shaders_lists;
+                        sel_type = SHADERS_LIST;
+                        sel_flag = true;
+                    }
+                }
+                break;
+
+            case RS_LIST:
+                {
+                    //long local_occ = 0;
+                    sort_list_by( RS_LIST, 0, p_input_list, rs_lists );
+
+                    double local_score = lists_score( rs_lists );
+                    if( local_score > max_score )
+                    {
+                        max_score = local_score;
+                        selected_lists = rs_lists;
+                        sel_type = RS_LIST;
+                        sel_flag = true;
+                    }
+                }
+                break;
+
 
             case MESHE_LIST:
                 {
@@ -438,6 +503,8 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
 
         switch( p_type )
         {
+
+            /*
             case FX_LIST:
                 {
                     Fx* curr_fx = curr_node->GetFx();
@@ -447,6 +514,50 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                         dsstring curr_fx_md5;
                         curr_fx->GetMD5( curr_fx_md5 );
                         out_lists[curr_fx_md5].push_back( curr_node );
+                    }
+                    else
+                    {
+                        // pas de fx : ne doit pas influer sur les comptages de redondances
+                        // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
+                        sprintf( buff, "%x", (long long)curr_node );
+                        dsstring id = dsstring( "void_fx:" ) + dsstring( buff );
+                        out_lists[id].push_back( curr_node );
+                    }
+                }
+                break;
+
+            */
+
+            case SHADERS_LIST:
+                {
+                    Fx* curr_fx = curr_node->GetFx();
+
+                    if( curr_fx )
+                    {
+                        dsstring curr_md5;
+                        curr_fx->GetShadersMD5( curr_md5 );
+                        out_lists[curr_md5].push_back( curr_node );
+                    }
+                    else
+                    {
+                        // pas de fx : ne doit pas influer sur les comptages de redondances
+                        // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
+                        sprintf( buff, "%x", (long long)curr_node );
+                        dsstring id = dsstring( "void_fx:" ) + dsstring( buff );
+                        out_lists[id].push_back( curr_node );
+                    }
+                }
+                break;
+
+            case RS_LIST:
+                {
+                    Fx* curr_fx = curr_node->GetFx();
+
+                    if( curr_fx )
+                    {
+                        dsstring curr_md5;
+                        curr_fx->GetRenderStatesSetMD5( curr_md5 );
+                        out_lists[curr_md5].push_back( curr_node );
                     }
                     else
                     {
@@ -513,13 +624,19 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 {
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
-    void* fx_data;
+    //void* fx_data;
+
+    void* sh_data;
+    void* rs_data;
     void* tx_data;
     void* meshe_data;
 
     m_tx_datas.clear();
     m_vtx_datas.clear();
-    m_fx_datas.clear();
+    //m_fx_datas.clear();
+    m_sh_datas.clear();
+    m_rs_datas.clear();
+
     m_meshe_datas.clear();
 
     for( size_t i = 0; i < p_input_list.size(); i++ )
@@ -528,11 +645,22 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
         Fx* current_fx = node->GetFx();
 
+        /*
         if( false == renderer->CreateFx( current_fx, &fx_data ) )
         {
             _DSEXCEPTION( "Cannot create FX" )
         }
         m_fx_datas[node] = fx_data;
+        */
+
+        if( false == renderer->CreateShaders( current_fx, &sh_data ) )
+        {
+            _DSEXCEPTION( "Cannot create Shaders" )
+        }
+        m_sh_datas[node] = sh_data;
+
+        renderer->CreateRenderStatesSet( current_fx, &rs_data );
+        m_rs_datas[node] = rs_data;
 
         for( long j = 0; j < node->GetTextureListSize(); j++ )
         {
@@ -607,10 +735,26 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         Operation operation;
         RenderingNode* node = p_input_list[i];
 
+        /*
         if( m_fx_datas.count( node ) )
         {
             operation.type = SET_FX;
             operation.data = m_fx_datas[node];
+            m_outputqueue.push_back( operation );
+        }
+        */
+
+        if( m_sh_datas.count( node ) )
+        {
+            operation.type = SET_SHADERS;
+            operation.data = m_sh_datas[node];
+            m_outputqueue.push_back( operation );
+        }
+
+        if( m_rs_datas.count( node ) )
+        {
+            operation.type = SET_RENDERSTATES_IN;
+            operation.data = m_rs_datas[node];
             m_outputqueue.push_back( operation );
         }
 
@@ -698,11 +842,19 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             }
         }
 
-
+        /*
         if( m_fx_datas.count( node ) )
         {
             operation.type = UNSET_FX;
             operation.data = m_fx_datas[node];
+            m_outputqueue.push_back( operation );
+        }
+        */
+
+        if( m_rs_datas.count( node ) )
+        {
+            operation.type = SET_RENDERSTATES_OUT;
+            operation.data = m_rs_datas[node];
             m_outputqueue.push_back( operation );
         }
     }
@@ -713,8 +865,17 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
 void RenderingQueue::cleanup_output_list( void )
 {
+    /*
     Operation                current_setfx_ope;
     bool                     current_setfx_ope_set = false;
+    */
+
+    Operation                current_setsh_ope;
+    bool                     current_setsh_ope_set = false;
+
+    Operation                current_setrs_ope;
+    bool                     current_setrs_ope_set = false;
+
 
     Operation                current_settex_ope[RenderingNode::NbMaxTextures];
     bool                     current_settex_ope_set[RenderingNode::NbMaxTextures];
@@ -758,7 +919,7 @@ void RenderingQueue::cleanup_output_list( void )
 
                         to_erase_list.push_back( ei );
 
-                        // remonter pour rechercher le unset_tx precedent
+                        // remonter pour rechercher le unset precedent
                         
                         std::list<Operation>::iterator it2 = it;
                         long index2 = index;
@@ -831,7 +992,7 @@ void RenderingQueue::cleanup_output_list( void )
                     }
                 }
                 break;
-
+/*
             case SET_FX:
 
                 if( !current_setfx_ope_set )
@@ -877,6 +1038,7 @@ void RenderingQueue::cleanup_output_list( void )
                 }
                 
                 break;
+*/
 
             case SET_MESHE:
 
@@ -903,6 +1065,76 @@ void RenderingQueue::cleanup_output_list( void )
 
                 break;
 
+
+            case SET_SHADERS:
+
+                if( !current_setsh_ope_set )
+                {
+                    current_setsh_ope = curr_operation;
+                    current_setsh_ope_set = true;                    
+                }
+                else
+                {
+                    if( current_setsh_ope.data == curr_operation.data )
+                    {
+                        erase_infos ei;
+                        ei.index = index;
+                        ei.pos = it;
+
+                        to_erase_list.push_back( ei );
+                    }
+                    else
+                    {
+                        current_setsh_ope = curr_operation;
+                    }
+                }
+                break;
+
+            case SET_RENDERSTATES_IN:
+
+                if( !current_setrs_ope_set )
+                {
+                    current_setrs_ope = curr_operation;
+                    current_setrs_ope_set = true;                    
+                }
+                else
+                {
+                    if( current_setrs_ope.data == curr_operation.data )
+                    {
+                        erase_infos ei;
+                        ei.index = index;
+                        ei.pos = it;
+
+                        to_erase_list.push_back( ei );
+
+                        // remonter pour rechercher le set rs out precedent
+                        
+                        std::list<Operation>::iterator it2 = it;
+                        long index2 = index;
+
+                        while( it2 != m_outputqueue.begin() )
+                        {
+                            Operation curr_operation_2 = (*it2);
+
+                            if( SET_RENDERSTATES_OUT == curr_operation_2.type && current_setrs_ope.data == curr_operation_2.data )
+                            {
+                                ei.index = index2;
+                                ei.pos = it2;
+                                to_erase_list.push_back( ei );  
+
+                                break;
+                            }
+                            it2--;
+                            index2--;
+                        }
+                    }
+                    else
+                    {
+                        current_setrs_ope = curr_operation;
+                    }
+                }
+                
+                break;
         }
     }
 
