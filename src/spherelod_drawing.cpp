@@ -286,6 +286,12 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
             node->SetMeshe( Body::m_patch_meshe );
             break;
 
+        case SphericalLOD::Body::AVGRES_MESHE:
+
+            // node patch terrain
+            node->SetMeshe( Body::m_patch3_meshe );
+            break;
+
         case SphericalLOD::Body::LOWRES_SKIRT_MESHE:
 
             node_skirts = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );

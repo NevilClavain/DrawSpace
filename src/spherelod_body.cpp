@@ -35,6 +35,7 @@ using namespace DrawSpace::SphericalLOD;
 
 Meshe* Body::m_patch_meshe = NULL;  //patch terrains
 Meshe* Body::m_patch2_meshe = NULL;  // patch terrains haute resolution
+Meshe* Body::m_patch3_meshe = NULL;  // patch terrains moyenne resolution
 Meshe* Body::m_skirt_meshe = NULL;  //les jupes terrains
 
 
@@ -463,6 +464,9 @@ void Body::BuildMeshes( void )
 
     m_patch2_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     build_meshe( PATCH_HIGH_RESOLUTION, m_patch2_meshe, true, false );
+
+    m_patch3_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
+    build_meshe( PATCH_AVG_RESOLUTION, m_patch3_meshe, true, false );
 
     m_skirt_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
     build_meshe( PATCH_RESOLUTION, m_skirt_meshe, false, true );

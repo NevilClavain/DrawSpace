@@ -41,6 +41,7 @@ public:
     typedef enum
     {
         LOWRES_MESHE,
+        AVGRES_MESHE,
         HIRES_MESHE,
         LOWRES_SKIRT_MESHE,
     
@@ -78,6 +79,7 @@ public:
 
     static DrawSpace::Core::Meshe*                                              m_patch_meshe; //patch terrains
     static DrawSpace::Core::Meshe*                                              m_patch2_meshe; // patch terrains haute resolution
+     static DrawSpace::Core::Meshe*                                             m_patch3_meshe; // patch terrains moyenne resolution
     static DrawSpace::Core::Meshe*                                              m_skirt_meshe; //les jupes terrains
 
 

@@ -88,10 +88,12 @@
     <FxCompile Include="texture.psh">
       <Filter>Source Files\pixel</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="texture.vsh">
-      <Filter>Source Files\vertex</Filter>
-    </None>
+    <FxCompile Include="texture.vsh" />
+    <FxCompile Include="planet_clouds.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_clouds.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

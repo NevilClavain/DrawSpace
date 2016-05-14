@@ -1,0 +1,227 @@
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+
+float4 flags : register(c0);
+	// .x -> fragment/layout relative altitude
+	// .y -> patch sidelenght
+	// .z -> fragment/layout ray
+	// .w -> patch orientation enum integer
+
+float4 flags2 : register(c1);
+	// .x -> ht textures resol
+
+float4 viewer_pos : register(c2); // pos camera par rapport au centre sphere
+
+
+
+
+float4 flags_lights : register(c7);
+	// .x -> ambient light
+	// .y -> color0 light
+	// .z -> color1 light
+	// .w -> color2 light
+
+float4 ambient_color : register(c8);
+
+float4 light0_dir_local : register(c9);
+float4 light0_dir : register(c10);
+float4 light0_color : register(c11);
+
+float4 light1_dir_local : register(c12);
+float4 light1_dir : register(c13);
+float4 light1_color : register(c14);
+
+float4 light2_dir_local : register(c15);
+float4 light2_dir : register(c16);
+float4 light2_color : register(c17);
+
+float4 atmo_scattering_flag_0 : register(c18);
+float4 atmo_scattering_flag_1 : register(c19);
+float4 atmo_scattering_flag_2 : register(c20);
+float4 atmo_scattering_flag_3 : register(c21);
+float4 atmo_scattering_flag_4 : register(c22);
+float4 atmo_scattering_flag_5 : register(c23);
+float4 atmo_scattering_flag_6 : register(c24);
+
+
+sampler2D Clouds_Texture : register(s0);
+
+struct PS_INTPUT
+{
+    float4 TexCoord0 : TEXCOORD0;
+
+    float4 GlobalPatch_TexCoord : TEXCOORD2;
+
+    float4 c0 : COLOR0;
+    float4 c1 : COLOR1;
+
+    float4 c0_1 : COLOR2;
+    float4 c1_1 : COLOR3;
+
+    float4 c0_2 : COLOR4;
+    float4 c1_2 : COLOR5;
+};
+
+#include "spherelod_commons.hlsl"
+
+
+float3 CtoS(float3 p_v)
+{
+    float3 res;
+
+    if (p_v.y > 0.0 && p_v.x == 0.0 && p_v.z == 0.0)
+    {
+        res.x = p_v.y;
+        res.z = 3.1415927 / 2.0;
+        res.y = 0.0;
+        return res;
+    }
+    else if (p_v.y < 0.0 && p_v.x == 0.0 && p_v.z == 0.0)
+    {
+        res.x = -p_v.y;
+        res.z = -3.1415927 / 2.0;
+        res.y = 0.0;
+        return res;
+    }
+    else
+    {
+
+        float normev = length(p_v);
+
+        float ph, th;
+        ph = asin(p_v.y / normev);
+		
+        th = atan2(p_v.x, p_v.z);
+        res.y = th;
+        res.z = ph;
+        res.x = normev;
+
+        return res;
+
+    }
+}
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{
+    float4 final_color;
+    float4 lit_color = 0.0;
+
+    float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord);
+
+    texel_pos = normalize(texel_pos);
+
+    float3 texel_pos2;
+    texel_pos2 = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
+
+    if (flags_lights.x > 0.0)
+    {
+        lit_color += ambient_color;
+    }
+
+    if (flags_lights.y > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2, light0_dir_local.xyz), 0.0, 1.0) * light0_color + 0.2;
+    }
+
+    if (flags_lights.z > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2, light1_dir_local.xyz), 0.0, 1.0) * light1_color;
+    }
+
+    if (flags_lights.w > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2, light2_dir_local.xyz), 0.0, 1.0) * light2_color;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////
+    	
+    float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
+
+
+    float4 c0_final, c1_final;
+    c0_final = c1_final = 0.0;
+
+    if (viewer_alt >= atmo_scattering_flag_5.x)
+    {
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += input.c1;
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += input.c1_1;
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += input.c1_2;
+        }
+    }
+    else
+    {
+
+        // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
+        // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
+
+        float factor_alt = 1.0 - clamp(viewer_alt / atmo_scattering_flag_5.x, 0.0, 1.0);
+
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += lerp(input.c1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += lerp(input.c1_1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += lerp(input.c1_2, 1.0, factor_alt);
+        }
+    }
+
+    final_color.xyz = c0_final + ( lit_color * c1_final );
+
+    //////////////////////////////////////////////////////////
+
+    float3 spherical = CtoS(input.TexCoord0.xyz);
+
+    float pi = 3.1415927;
+
+    float2 uv;
+    uv.x = (spherical.y + pi) / (2.0 * pi);
+    uv.y = 1.0 - ((spherical.z + (pi / 2.0)) / pi);
+
+    final_color.w = tex2D(Clouds_Texture, uv);
+
+    return final_color;
+}
