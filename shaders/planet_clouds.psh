@@ -82,6 +82,7 @@ struct PS_INTPUT
 };
 
 #include "spherelod_commons.hlsl"
+#include "landscapes.hlsl"
 
 
 float3 CtoS(float3 p_v)
@@ -126,8 +127,31 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float4 final_color;
     float4 lit_color = 0.0;
 
+
+    float3 spherical = CtoS(input.TexCoord0.xyz);
+
+    float pi = 3.1415927;
+
+    float2 uv;
+    uv.x = (spherical.y + pi) / (2.0 * pi);
+    uv.y = 1.0 - ((spherical.z + (pi / 2.0)) / pi);
+
+    final_color.w = tex2D(Clouds_Texture, uv);
+
+    ////////////////////////////////////////////////////////
+
+    float3 avg = 0.0;
+
+    avg = compute_clouds_bump_vector(8192, 4096, Clouds_Texture, uv, 0.333);
+
     float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord);
 
+    //texel_pos = normalize(texel_pos);
+
+    float k = 1.0;
+    texel_pos.x += k * avg.x;
+    texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+        
     texel_pos = normalize(texel_pos);
 
     float3 texel_pos2;
@@ -212,16 +236,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     final_color.xyz = c0_final + ( lit_color * c1_final );
 
     //////////////////////////////////////////////////////////
-
-    float3 spherical = CtoS(input.TexCoord0.xyz);
-
-    float pi = 3.1415927;
-
-    float2 uv;
-    uv.x = (spherical.y + pi) / (2.0 * pi);
-    uv.y = 1.0 - ((spherical.z + (pi / 2.0)) / pi);
-
-    final_color.w = tex2D(Clouds_Texture, uv);
 
     return final_color;
 }
