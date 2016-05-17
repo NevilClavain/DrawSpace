@@ -175,6 +175,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float3 texel_pos2;
     texel_pos2 = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
 
+    float lights_dot_offset = 0.1;
+
     if (flags_lights.x > 0.0)
     {
         lit_color += ambient_color;
@@ -182,17 +184,17 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     if (flags_lights.y > 0.0)
     {
-        lit_color += clamp(dot(texel_pos2, light0_dir_local.xyz), 0.0, 1.0) * light0_color + 0.2;
+        lit_color += clamp(dot(texel_pos2, light0_dir_local.xyz), 0.0, 1.0) * light0_color + lights_dot_offset;
     }
 
     if (flags_lights.z > 0.0)
     {
-        lit_color += clamp(dot(texel_pos2, light1_dir_local.xyz), 0.0, 1.0) * light1_color;
+        lit_color += clamp(dot(texel_pos2, light1_dir_local.xyz), 0.0, 1.0) * light1_color + lights_dot_offset;
     }
 
     if (flags_lights.w > 0.0)
     {
-        lit_color += clamp(dot(texel_pos2, light2_dir_local.xyz), 0.0, 1.0) * light2_color;
+        lit_color += clamp(dot(texel_pos2, light2_dir_local.xyz), 0.0, 1.0) * light2_color + lights_dot_offset;
     }
 
 
