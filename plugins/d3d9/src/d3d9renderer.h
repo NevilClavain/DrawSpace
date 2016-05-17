@@ -171,6 +171,9 @@ protected:
     int                                                         m_next_nbvertices;
     int                                                         m_next_nbtriangles;
 
+    std::vector<DeviceDescr>                                    m_devices_descrs;
+    int                                                         m_currentDevice;
+
     void set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
     void set_pixelshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
 
@@ -181,6 +184,7 @@ public:
     ~D3D9Renderer( void );
 
     virtual void GetDescr( dsstring& p_descr );
+    virtual void GetDeviceDescr( DeviceDescr& p_ddescr );
     virtual void DumpMemoryAllocs( void );
 
     virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf );

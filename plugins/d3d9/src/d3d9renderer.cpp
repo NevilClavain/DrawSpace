@@ -36,7 +36,8 @@ m_lpd3d( NULL ),
 m_lpd3ddevice( NULL ),
 m_vertexdeclaration( NULL ),
 m_next_nbvertices( 0 ),
-m_next_nbtriangles( 0 )
+m_next_nbtriangles( 0 ),
+m_currentDevice( -1 )
 {
 
 }
@@ -49,6 +50,14 @@ D3D9Renderer::~D3D9Renderer( void )
 void D3D9Renderer::GetDescr( dsstring& p_descr )
 {
     p_descr = "Direct3D9";
+}
+
+void D3D9Renderer::GetDeviceDescr( DeviceDescr& p_ddescr )
+{
+    if( m_currentDevice != -1 )
+    {
+        p_ddescr = m_devices_descrs[m_currentDevice];
+    }
 }
 
 void D3D9Renderer::DumpMemoryAllocs( void )
@@ -109,6 +118,8 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 
     long adapter = m_config.m_adapter_ordinal;
 
+    m_currentDevice = adapter;
+
     _DSDEBUG( logger, "begin" )
 
     m_hwnd = p_hwnd;
@@ -119,6 +130,26 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         _DSDEBUG( logger, "end : ko Direct3DCreate9 fail" )
         return false;
     }
+
+    // enum existing devices
+    UINT nb_adapters = m_lpd3d->GetAdapterCount();
+
+    m_devices_descrs.clear();
+
+	for( UINT i = 0; i < nb_adapters; i++ )
+	{
+		D3DADAPTER_IDENTIFIER9 currentDev;
+        m_lpd3d->GetAdapterIdentifier( i, 0, &currentDev );
+
+        DeviceDescr currentDescr;
+
+        currentDescr.description = currentDev.Description;
+        currentDescr.driver = currentDev.Driver;
+        currentDescr.deviceName = currentDev.DeviceName;
+
+        m_devices_descrs.push_back( currentDescr );
+    }
+
 
     // check for shaders model 3.0 support
 
