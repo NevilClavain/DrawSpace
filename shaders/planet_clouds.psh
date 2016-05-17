@@ -63,7 +63,7 @@ float4 atmo_scattering_flag_5 : register(c23);
 float4 atmo_scattering_flag_6 : register(c24);
 
 
-float4 clouds_texture_format : register(c29);
+float4 clouds_texture_infos : register(c29);
 
 
 sampler2D Clouds_Texture : register(s0);
@@ -129,14 +129,29 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
     float4 final_color;
     float4 lit_color = 0.0;
+    float pi = 3.1415927;
 
 
     float3 spherical = CtoS(input.TexCoord0.xyz);
 
-    float pi = 3.1415927;
+    // repasser theta du range [-pi, pi] a [0, 2pi];
+    spherical.y += pi;
+
+    //ajout offset theta;
+    spherical.y += (clouds_texture_infos.z / 180.0) * pi;
+
+    if (spherical.y >= 2 * pi)
+    {
+        spherical.y -= 2 * pi;
+    }
+    else if (spherical.y < 0.0)
+    {
+        spherical.y = ( 2 * pi ) + spherical.y;
+    }
 
     float2 uv;
-    uv.x = (spherical.y + pi) / (2.0 * pi);
+    uv.x = (spherical.y) / (2.0 * pi);
+
     uv.y = 1.0 - ((spherical.z + (pi / 2.0)) / pi);
 
     final_color.w = tex2D(Clouds_Texture, uv);
@@ -145,7 +160,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float3 avg = 0.0;
 
-    avg = compute_clouds_bump_vector(clouds_texture_format.x, clouds_texture_format.y, Clouds_Texture, uv, 0.333);
+    avg = compute_clouds_bump_vector(clouds_texture_infos.x, clouds_texture_infos.y, Clouds_Texture, uv, 0.333);
 
     float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord);
 
