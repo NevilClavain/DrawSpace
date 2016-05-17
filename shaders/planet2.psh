@@ -66,8 +66,6 @@ float4 atmo_scattering_flag_6 : register(c24);
 
 float4x4 matWorldRots : register(c25);
 
-//float4 water_anim : register(c29);
-
 
 
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes

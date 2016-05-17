@@ -63,6 +63,9 @@ float4 atmo_scattering_flag_5 : register(c23);
 float4 atmo_scattering_flag_6 : register(c24);
 
 
+float4 clouds_texture_format : register(c29);
+
+
 sampler2D Clouds_Texture : register(s0);
 
 struct PS_INTPUT
@@ -142,7 +145,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float3 avg = 0.0;
 
-    avg = compute_clouds_bump_vector(8192, 4096, Clouds_Texture, uv, 0.333);
+    avg = compute_clouds_bump_vector(clouds_texture_format.x, clouds_texture_format.y, Clouds_Texture, uv, 0.333);
 
     float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord);
 

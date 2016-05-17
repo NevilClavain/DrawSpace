@@ -106,41 +106,6 @@ struct VS_OUTPUT
 #include "spherelod_commons.hlsl"
 #include "atmospheric_scattering.hlsl"
 
-float3 CtoS(float3 p_v)
-{
-    float3 res;
-
-    if (p_v.y > 0.0 && p_v.x == 0.0 && p_v.z == 0.0)
-    {
-        res.x = p_v.y;
-        res.z = 3.1415927 / 2.0;
-        res.y = 0.0;
-        return res;
-    }
-    else if (p_v.y < 0.0 && p_v.x == 0.0 && p_v.z == 0.0)
-    {
-        res.x = -p_v.y;
-        res.z = -3.1415927 / 2.0;
-        res.y = 0.0;
-        return res;
-    }
-    else
-    {
-
-        float normev = length(p_v);
-
-        float ph, th;
-        ph = asin(p_v.y / normev);
-		
-        th = atan2(p_v.x, p_v.z);
-        res.y = th;
-        res.z = ph;
-        res.x = normev;
-
-        return res;
-
-    }
-}
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
@@ -172,7 +137,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
 
 
-///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
 
     float alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
