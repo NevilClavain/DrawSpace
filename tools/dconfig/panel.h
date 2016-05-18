@@ -39,12 +39,13 @@ class MainDialog : public wxDialog
 		wxButton* m_buttonSave;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void MainDialogOnClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void OnMainDialogClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void OnSaveButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		MainDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 442,471 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		MainDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 793,303 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~MainDialog();
 	
 };

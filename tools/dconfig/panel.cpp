@@ -29,12 +29,14 @@ MainDialog::MainDialog( wxWindow* parent, wxWindowID id, const wxString& title, 
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDialog::MainDialogOnClose ) );
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDialog::OnMainDialogClose ) );
+	m_buttonSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainDialog::OnSaveButtonClick ), NULL, this );
 }
 
 MainDialog::~MainDialog()
 {
 	// Disconnect Events
-	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDialog::MainDialogOnClose ) );
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDialog::OnMainDialogClose ) );
+	m_buttonSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainDialog::OnSaveButtonClick ), NULL, this );
 	
 }

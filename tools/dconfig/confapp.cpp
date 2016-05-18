@@ -43,7 +43,7 @@ bool ConfApp::OnInit( void )
 	frame->Show();
     */
 
-    DConfMainDialog* dialog = new DConfMainDialog( NULL, "DrawSpace Configuration" );
+    DConfMainDialog* dialog = new DConfMainDialog( NULL, "DrawSpace D3D9 Configuration" );
 
     dialog->Show();
     
