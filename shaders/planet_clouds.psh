@@ -175,7 +175,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float3 texel_pos2;
     texel_pos2 = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
 
-    float lights_dot_offset = 0.1;
+    float lights_dot_offset = 0.2;
 
     if (flags_lights.x > 0.0)
     {
