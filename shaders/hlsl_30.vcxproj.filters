@@ -98,10 +98,8 @@
     <FxCompile Include="planet_occlusion.psh">
       <Filter>Source Files\pixel\planet</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="planet_occlusion.vsh">
+    <FxCompile Include="planet_occlusion.vsh">
       <Filter>Source Files\vertex\planet</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>
