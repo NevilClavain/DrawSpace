@@ -19,8 +19,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	}
 	else
 	{
-		ret_color = tex2D( Texture0, input.TexCoord0 );
-	}
+        ret_color = color * tex2D(Texture0, input.TexCoord0);
+    }
 
 	return ret_color;
 }
