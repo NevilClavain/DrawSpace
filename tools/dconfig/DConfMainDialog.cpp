@@ -63,14 +63,14 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
     wxArrayString devices;
     for( size_t i = 0; i < m_adapters_infos.size(); i++ )
     {
-        devices.Add( m_adapters_infos[i].infos.Description );       
+        devices.Add( m_adapters_infos[i].infos.Description );
     }
 
     m_propertyGrid->Append( new wxEnumProperty( "Device", wxPG_LABEL, devices ) );
 
     for( size_t i = 0; i < m_adapters_infos.size(); i++ )
     {
-        wxPGProperty* devices_modes_root = m_propertyGrid->Append( new wxStringProperty( m_adapters_infos[i].infos.Description + wxString( " properties" ), wxPG_LABEL, "<composed>" ) );
+        wxPGProperty* devices_modes_root = m_propertyGrid->Append( new wxStringProperty( m_adapters_infos[i].infos.Description, wxPG_LABEL, "<composed>" ) );
 
         wxArrayString device_modes;
 
@@ -80,28 +80,7 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
         }
 
         m_propertyGrid->AppendIn( devices_modes_root, new wxEnumProperty( "Display mode", wxPG_LABEL, device_modes ) );
-    }   
-
-    
-
-    
-
-    /*
-    wxArrayString renderers;
-
-
-    renderers.Add( "Direct3D9" );
-    // :-P
-    //renderers.Add( "Direct3D11" );
-    //renderers.Add( "Direct3D12" );
-    //renderers.Add( "OpenGL4" );
-    //renderers.Add( "Vulkan" );
-
-    m_propertyGrid->Append( new wxEnumProperty( "Select renderer", wxPG_LABEL, renderers ) );
-    */
-
-
-
+    }
 }
 
 
@@ -114,7 +93,111 @@ void DConfMainDialog::OnMainDialogClose( wxCloseEvent& event )
     Destroy();
 }
 
+#define DIALOG_PROPERTIES_VARS \
+        wxStringProperty* string_prop; \
+        wxFileProperty* file_prop; \
+        wxFloatProperty* float_prop; \
+        wxIntProperty* int_prop; \
+        wxBoolProperty* bool_prop; \
+        wxEnumProperty* enum_prop; \
+        wxCharBuffer buffer; \
+        wxAny value; \
+
+#define DIALOG_GET_BOOL_PROPERTY( _name_, _var_name_ ) \
+        bool _var_name_; \
+        bool_prop = static_cast<wxBoolProperty*>( m_propertyGrid->GetProperty( _name_ ) ); \
+        value = bool_prop->GetValue(); \
+        value.GetAs<bool>( &_var_name_ );
+
+#define DIALOG_GET_ENUM_PROPERTY( _name_, _var_name_ ) \
+        wxString _var_name_; \
+        enum_prop = static_cast<wxEnumProperty*>( m_propertyGrid->GetProperty( _name_ ) ); \
+        _var_name_ = enum_prop->GetValueAsString();
+
+
+#define DIALOG_GET_STRING_PROPERTY( _name_, _var_name_ ) \
+        wxString _var_name_; \
+        string_prop = static_cast<wxStringProperty*>( m_propertyGrid->GetProperty( _name_ ) ); \
+        value = string_prop->GetValue(); \
+        value.GetAs<wxString>( &_var_name_ );
+
+#define DIALOG_WXSTRING_TO_DSSTRING( _src_var_name_, _dst_var_name_ ) \
+        std::string _dst_var_name_; \
+        buffer = _src_var_name_.ToAscii(); \
+        _dst_var_name_ = buffer.data();
+
+
+
 void DConfMainDialog::OnSaveButtonClick( wxCommandEvent& event )
 {
+    DIALOG_PROPERTIES_VARS
 
+    DIALOG_GET_BOOL_PROPERTY( "Fullscreen", fullscreen );
+
+    DIALOG_GET_ENUM_PROPERTY( "Window dims", wxsWindowsDims );
+    DIALOG_WXSTRING_TO_DSSTRING( wxsWindowsDims, windowsDims );
+
+    wxEnumProperty* dev_enum_prop = static_cast<wxEnumProperty*>( m_propertyGrid->GetProperty( "Device" ) );
+    int device_ordinal = dev_enum_prop->GetChoiceSelection();
+
+
+    DIALOG_GET_ENUM_PROPERTY( "Device", wxsDevice );
+    DIALOG_WXSTRING_TO_DSSTRING( wxsDevice, device );
+
+    FILE* fp = fopen( "appconfig.txt", "w" );
+
+    fprintf( fp, "renderplugin           drawspaced3d9\n" );
+    fprintf( fp, "dx9vertexproc          hardware\n" );
+    fprintf( fp, "dx9adapterordinal      %d\n", device_ordinal );
+    
+
+	if( fullscreen )
+	{
+        fprintf( fp, "fullscreen             true\n" );
+
+	}
+	else
+	{
+		fprintf( fp, "fullscreen             false\n" );
+	}
+
+    if( windowsDims == "800 x 600" )
+    {
+	    fprintf( fp, "width                  800\n" );
+	    fprintf( fp, "height                 600\n" );
+    }
+    else if( windowsDims == "1024 x 768" )
+    {
+	    fprintf( fp, "width                  1024\n" );
+	    fprintf( fp, "height                 768\n" );    
+    }
+    else if( windowsDims == "1280 x 960" )
+    {
+	    fprintf( fp, "width                  1280\n" );
+	    fprintf( fp, "height                 960\n" );
+    }
+    else if( windowsDims == "1440 x 900" )
+    {
+	    fprintf( fp, "width                  1440\n" );
+	    fprintf( fp, "height                 900\n" );    
+    }
+
+    /*
+    DIALOG_GET_ENUM_PROPERTY( device + std::string( ".Display mode" ) , wxsFsMode );
+    DIALOG_WXSTRING_TO_DSSTRING( wxsFsMode, fsMode );
+    */
+
+    wxEnumProperty* fsmode_enum_prop = static_cast<wxEnumProperty*>( m_propertyGrid->GetProperty( device + std::string( ".Display mode" ) ) );
+    int device_fsmode_ordinal = fsmode_enum_prop->GetChoiceSelection();
+
+
+	if( fullscreen )
+	{
+		adapter_infos ai = m_adapters_infos[device_ordinal];
+		adapter_mode am = ai.modes[device_fsmode_ordinal];
+
+		fprintf( fp, "dx9fullscreen          %d %d %d %d\n", am.width, am.height, am.refresh_rate, am.format );
+	}
+
+    fclose( fp );
 }

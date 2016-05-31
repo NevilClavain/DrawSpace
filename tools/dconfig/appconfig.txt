@@ -1,0 +1,7 @@
+renderplugin           drawspaced3d9
+dx9vertexproc          hardware
+dx9adapterordinal      0
+fullscreen     true
+width          512
+height         380
+dx9fullscreen          1280 1024 60 22
