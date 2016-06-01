@@ -70,7 +70,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	//return tex2D( Texture0, input.TexCoord0 );
 
     float3 np; //= { 0.0, 0.0, 1.0 };
-    np = compute_water_bump_vector(256, Texture0, input.TexCoord0.xy, 2.0);
+    np = compute_water_bump_vector(256, Texture0, input.TexCoord0.xy, 0.99);
 
     float4 np2;
 

@@ -22,7 +22,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         
         float2 mt = input.TexCoord0.xy + bump.xz;
 
-        scene_color = tex2D(Texture1, mt) * float4(0.65, 0.75, 0.99, 1.0);
+        scene_color = tex2D(Texture1, mt) * float4(0.95, 0.95, 0.99, 1.0);
     }
     return scene_color;
 }
