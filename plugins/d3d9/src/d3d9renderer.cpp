@@ -1716,6 +1716,7 @@ bool D3D9Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils
     result.Transpose();
 
     set_vertexshader_constants( 0, result.GetArray(), 4 );
+    set_pixelshader_constants( 100, result.GetArray(), 4 );
     
     //////////////////////////////////////////////////////////////////////
 
@@ -1727,6 +1728,7 @@ bool D3D9Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils
     worldview.Transpose();
     
     set_vertexshader_constants( 4, worldview.GetArray(), 4 );
+    set_pixelshader_constants( 104, worldview.GetArray(), 4 );
 
 	//////////////////////////////////////////////////////////////////////
     
@@ -1738,13 +1740,18 @@ bool D3D9Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils
     set_vertexshader_constants( 8, world.GetArray(), 4 );
     set_vertexshader_constants( 12, view.GetArray(), 4 );
 
+    set_pixelshader_constants( 108, world.GetArray(), 4 );
+    set_pixelshader_constants( 112, view.GetArray(), 4 );
+
 	//////////////////////////////////////////////////////////////////////
 
     set_vertexshader_constants( 16, cam.GetArray(), 4 );
+    set_pixelshader_constants( 116, cam.GetArray(), 4 );
 
 
     proj.Transpose();
     set_vertexshader_constants( 20, proj.GetArray(), 4 );
+    set_pixelshader_constants( 120, proj.GetArray(), 4 );
 
 
 	hRes = m_lpd3ddevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, m_next_nbvertices, 0, m_next_nbtriangles );
