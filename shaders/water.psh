@@ -3,6 +3,7 @@
 
 sampler2D Texture0 : register(s0);
 sampler2D Texture1 : register(s1);
+sampler2D Texture2 : register(s2);
 
 struct PS_INTPUT 
 {
@@ -14,12 +15,14 @@ struct PS_INTPUT
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {   
 	float4 scene_color = tex2D( Texture0, input.TexCoord0 );
-
     
     if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
     {
-        scene_color = tex2D(Texture1, input.TexCoord0);
-    }
+        float4 bump = normalize(2.0 * (tex2D(Texture2, input.TexCoord0) - 0.5));
+        
+        float2 mt = input.TexCoord0.xy + bump.xz;
 
+        scene_color = tex2D(Texture1, mt) * float4(0.65, 0.75, 0.99, 1.0);
+    }
     return scene_color;
 }
