@@ -21,9 +21,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         
         float4 bump_color = tex2D(Texture2, input.TexCoord0);
         
-
         float3 bump = bump_color.xyz;
-        float fresnel = bump_color.w;
+
 
         float2 mt = input.TexCoord0.xy + bump.xz;
 
@@ -32,7 +31,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
         float4 refrac_color = { 0.00, 0.18, 0.24, 1.0 };
         
-        scene_color = (fresnel * refrac_color) + ( (1.0 - fresnel) * 0.6 * tex2D(Texture1, mt) );        
+        scene_color = 0.6 * tex2D(Texture1, mt);        
         //scene_color.xyz = fresnel;
     }
     return scene_color;

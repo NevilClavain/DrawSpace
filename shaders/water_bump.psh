@@ -5,9 +5,7 @@ sampler2D Texture0 : register(s0);
 
 struct PS_INTPUT 
 {
-	//float4 Position : POSITION0;
 	float4 TexCoord0: TEXCOORD0;
-    float4 TexCoord1: TEXCOORD1;
 };
 
 
@@ -71,7 +69,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	//return tex2D( Texture0, input.TexCoord0 );
 
     float3 np;
-    np = compute_water_bump_vector(256, Texture0, input.TexCoord0.xy, 0.25);
+    np = compute_water_bump_vector(256, Texture0, input.TexCoord0.xy, 0.865);
 
     float4 np2;
 
@@ -82,35 +80,10 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     np2.w = 1.0;
     
 
-    float3 np_t; 
-    
-    np_t = mul(np2, transpose(matWorldView));
-
-    float3 nbase_t = mul(float4(0.0, 1.0, 0.0, 1.0), transpose(matWorldView));
-
-    
+    float3 np_t = mul(np2, transpose(matWorldView));
+    float3 nbase_t = mul(float4(0.0, 1.0, 0.0, 1.0), transpose(matWorldView));  
+      
     res_color.xyz = np_t - nbase_t;
-
-    // calcul du terme de fresnel approximé : V dot N bump
-    //float fresnel = saturate( dot(normalize(input.TexCoord1.xyz), np_t.xyz));
-
-    float fbias, fscale, fpow;
-
-    fbias = 0.0;
-    fscale = 0.1;
-    fpow = 8.0;
-
-    float3 vpos;
-
-    vpos.x = -input.TexCoord1.x;
-    vpos.y = -input.TexCoord1.y;
-    vpos.z = -input.TexCoord1.z;
-
-    //float fresnel = saturate(fbias + fscale * pow(1.0 + saturate(dot(normalize(-vpos), nbase_t.xyz)), fpow));
-    
-    float fresnel = saturate(dot(normalize(-vpos), nbase_t.xyz));
-
-    res_color.w = fresnel;
 
     return res_color;
 }
