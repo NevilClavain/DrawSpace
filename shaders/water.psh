@@ -27,12 +27,11 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         float2 mt = input.TexCoord0.xy + bump.xz;
 
         //float4 refrac_color = { 0.17, 0.36, 0.48, 1.0 };
-        //float4 refrac_color = { 0.97, 0.36, 0.48, 1.0 };
 
-        float4 refrac_color = { 0.00, 0.18, 0.24, 1.0 };
+        float4 refrac_color = { 0.55, 0.65, 0.78, 1.0 };
+
         
-        scene_color = 0.6 * tex2D(Texture1, mt);        
-        //scene_color.xyz = fresnel;
+        scene_color = refrac_color * tex2D(Texture1, mt);
     }
     return scene_color;
 }

@@ -1,0 +1,30 @@
+
+float4 wave : register(c0);
+
+sampler2D Texture0 : register(s0);
+sampler2D Texture1 : register(s1);
+sampler2D Texture2 : register(s2);
+
+#include "fbm.hlsl"
+
+struct PS_INTPUT 
+{
+	float4 Position : POSITION0;
+	float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{   
+    float4 color;
+    
+    float3 p;
+    p.x = lerp(0.0, 200.0, input.TexCoord0.x);
+    p.y = lerp(0.0, 200.0, input.TexCoord0.y);
+    p.z = wave.x;
+    //color = cnoise(p);
+
+    color = Perlin3D(p, 6799.9, 123.5);
+   
+    return color;
+}

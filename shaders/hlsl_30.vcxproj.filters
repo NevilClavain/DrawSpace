@@ -88,7 +88,6 @@
     <FxCompile Include="texture.psh">
       <Filter>Source Files\pixel</Filter>
     </FxCompile>
-    <FxCompile Include="texture.vsh" />
     <FxCompile Include="planet_clouds.psh">
       <Filter>Source Files\pixel\planet</Filter>
     </FxCompile>
@@ -100,6 +99,15 @@
     </FxCompile>
     <FxCompile Include="planet_occlusion.vsh">
       <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="water_waves.psh">
+      <Filter>Source Files\pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="texture.vsh">
+      <Filter>Source Files\vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="water_waves.vsh">
+      <Filter>Source Files\vertex</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
