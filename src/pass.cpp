@@ -166,11 +166,14 @@ void Pass::DumpProperties( dsstring& p_text )
             p_text += text_value;
             p_text += " ";
 
-            for( long i = 0; i < 4; i++ )
+            if( it->second.vector )
             {
-                RealToString( it->second.param_values[i], text_value );
-                p_text += text_value;
-                p_text += " ";                
+                for( long i = 0; i < 4; i++ )
+                {
+                    RealToString( it->second.param_values[i], text_value );
+                    p_text += text_value;
+                    p_text += " ";                
+                }
             }
 
             p_text += "\r\n";
@@ -279,7 +282,10 @@ void Pass::ApplyProperties( void )
         {
             GetViewportQuad()->AddShaderParameter( it->second.shader_index, it->first, it->second.param_register );
 
-            GetViewportQuad()->SetShaderRealVector( it->first, it->second.param_values );
+            if( it->second.vector )
+            {
+                GetViewportQuad()->SetShaderRealVector( it->first, it->second.param_values );
+            }
         }
     }
      
@@ -405,6 +411,8 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
         shader_params.param_values[1] = StringToReal( p_words[5] );
         shader_params.param_values[2] = StringToReal( p_words[6] );
         shader_params.param_values[3] = StringToReal( p_words[7] );
+
+        shader_params.vector = true;
 
         viewportquad_shaderparams[param_name] = shader_params;
 

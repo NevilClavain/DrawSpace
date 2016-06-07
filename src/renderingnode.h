@@ -45,7 +45,10 @@ public:
     {
         long            shader_index;
         long            param_register;
+
+        bool            vector; // si true, "param_values" est valide, sinon c'est "mat"
         Utils::Vector   param_values;
+        Utils::Matrix   mat;
 
     } ShadersParams;
 
@@ -104,6 +107,7 @@ public:
     virtual void AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register );
     virtual void SetShaderReal( const dsstring& p_id, dsreal p_value );
     virtual void SetShaderRealVector( const dsstring& p_id, const Utils::Vector& p_value );
+    virtual void SetShaderRealMatrix( const dsstring& p_id, const Utils::Matrix& p_value );
     virtual void SetShaderBool( const dsstring& p_id, bool p_value );
 
     virtual void GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist );

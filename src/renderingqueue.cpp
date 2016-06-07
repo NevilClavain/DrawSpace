@@ -163,8 +163,16 @@ void RenderingQueue::Draw( void )
                 break;
 
             case SET_SHADERS_PARAMS:
-               
-                renderer->SetFxShaderParams( curr_operation.shader_params->shader_index, curr_operation.shader_params->param_register, curr_operation.shader_params->param_values );
+                {
+                    if( curr_operation.shader_params->vector )
+                    {
+                        renderer->SetFxShaderParams( curr_operation.shader_params->shader_index, curr_operation.shader_params->param_register, curr_operation.shader_params->param_values );
+                    }
+                    else
+                    {
+                        renderer->SetFxShaderMatrix( curr_operation.shader_params->shader_index, curr_operation.shader_params->param_register, curr_operation.shader_params->mat );
+                    }
+                }
                 break;
 
             case DRAW_NODE:

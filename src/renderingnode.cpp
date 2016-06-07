@@ -116,6 +116,7 @@ void RenderingNode::SetShaderReal( const dsstring& p_id, dsreal p_value )
         vec[3] = 1.0;
         
         m_shader_params[p_id]->param_values = vec;
+        m_shader_params[p_id]->vector = true;
     }
 }
 
@@ -126,6 +127,16 @@ void RenderingNode::SetShaderRealVector( const dsstring& p_id, const Vector& p_v
         Vector vec = p_value;
 
         m_shader_params[p_id]->param_values = vec;
+        m_shader_params[p_id]->vector = true;
+    }
+}
+
+void RenderingNode::SetShaderRealMatrix( const dsstring& p_id, const Matrix& p_value )
+{
+    if( m_shader_params.count( p_id ) > 0 )
+    {
+        m_shader_params[p_id]->mat = p_value;
+        m_shader_params[p_id]->vector = false;
     }
 }
 
@@ -140,6 +151,7 @@ void RenderingNode::SetShaderBool( const dsstring& p_id, bool p_value )
         vec[3] = 1.0;
         
         m_shader_params[p_id]->param_values = vec;
+        m_shader_params[p_id]->vector = true;
     }
 }
 
