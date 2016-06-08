@@ -1,0 +1,28 @@
+
+
+
+sampler2D Texture0 : register(s0);
+sampler2D Texture1 : register(s1);
+sampler2D Texture2 : register(s2);
+
+struct PS_INTPUT 
+{
+	float4 Position : POSITION0;
+	float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{   
+	float4 scene_color = tex2D( Texture0, input.TexCoord0 );
+    
+    if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
+    {
+        
+        scene_color.x = 1.0;
+        scene_color.y = 0.0;
+        scene_color.z = 0.0;
+        scene_color.w = 1.0;
+    }
+    return scene_color;
+}
