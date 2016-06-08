@@ -48,6 +48,12 @@ float4   base_uv_global: register(c27);
 float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
 
+float4 mirror_flag : register(c51);
+    // .x -> mirror mode
+
+float4x4 reflectorMatWorld : register(c52);
+float4x4 reflectorInvMatWorld : register(c53);
+
 struct VS_INPUT 
 {
    float4 Position : POSITION0;
@@ -73,6 +79,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	VS_OUTPUT Output;
 
 	float4 v_position;
+
+    bool mirror_mode;
 
 	// sidelenght scaling
 
