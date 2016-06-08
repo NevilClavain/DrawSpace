@@ -106,6 +106,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 temp_humidity = tex2D( HT_Texture, input.LODGlobalPatch_TexCoord );
 
     float3 water_color = { 0.17, 0.36, 0.48 };
+    float3 water_mask_color = { 1.0, 0.0, 1.0 };
+
+    bool water_mask_mode = false;
 
 	float lim_sup = flags6.y;
 	float lim_inf = flags6.z;
@@ -114,10 +117,15 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float pixel_distance = input.LODGlobalPatch_TexCoord.w;
 
+    if (flags.x <= 1.0001)
+    {
+        water_mask_mode = true;
+    }
+
 	if( flags.x <= lim_inf )
 	{
 		// si altitude relative a un certain seuil
-
+        
 		// regarder l'altitude vertex interpole pour determiner si rendu mer
 		if( input.LODGlobalPatch_TexCoord.z <= 0.0 ) // altitude vertex (interpolee)
 		{
@@ -142,13 +150,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	{
 		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, HT_Texture, input.LODGlobalPatch_TexCoord, 100.0 );
 	}
-
-    /*
-    else
-    {        
-        avg = compute_water_bump_vector(256, Water_Bump_Texture, input.UnitPatch_TexCoord, 0.33);
-    }
-    */
 	
 	float3 texel_pos = compute_front_face_point_vector( input.GlobalPatch_TexCoord );
 
@@ -223,7 +224,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		if( sea ) 
 		{
             pixel_color.xyz = water_color;
-		}
+        }
 		else
 		{
 			pixel_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture );	
@@ -236,9 +237,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		float4 color_pixel = tex2D( Pixels_HTMap_Texture, temp_humidity );
 
 		if( sea )
-		{
+		{      
             pixel_color.xyz = water_color;
-		}
+        }
 		else
 		{
 			pixel_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
@@ -249,7 +250,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		if( sea )
 		{
             pixel_color.xyz = water_color;
-
         }
 		else
 		{
@@ -319,7 +319,21 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         }
     }
 
-    final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+    if(water_mask_mode)
+    {
+        if( sea )
+        {
+            final_color.xyz = water_mask_color;
+        }
+        else
+        {
+            final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+        }        
+    }
+    else
+    {
+        final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+    }
 
     if (flags_lights.y > 0.0)
     {
