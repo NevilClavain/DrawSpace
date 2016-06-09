@@ -368,3 +368,31 @@ float ocean_specular_from_space(float p_specular_val, float p_rel_alt, float3 p_
 
     return (p_specular_val * spec_attenuation * alt_spec_attenuation);
 }
+
+float4 reflected_vertex_pos(float4 p_vertex, float4 p_reflectorPos, float4 p_reflectorNormale, float4x4 p_matWorld, float4x4 p_matView, float4x4 p_matProj)
+{
+    float4 rvp;
+
+    float4x4 id = 0;
+    id[0][0] = 1.0;
+    id[1][1] = 1.0;
+    id[2][2] = -1.0;
+    id[3][3] = 1.0;
+    float4x4 matView2 = mul(p_matView, id);
+    
+    float4 worldPos = mul(p_vertex, p_matWorld);
+    float4 worldPos2 = worldPos - p_reflectorPos;
+    worldPos2.w = 1.0;
+    
+    float4 worldPosRefl;
+    worldPosRefl.xyz = reflect(worldPos2.xyz, normalize(p_reflectorNormale.xyz));
+    worldPosRefl.w = worldPos.w;
+
+    float4 worldPos3 = worldPosRefl + p_reflectorPos;
+    worldPos3.w = 1.0;
+
+    float4 viewPos = mul(worldPos3, matView2);
+
+    rvp = mul(viewPos, p_matProj);
+    return rvp;
+}

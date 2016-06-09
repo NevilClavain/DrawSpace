@@ -23,8 +23,8 @@
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
 float4x4 matWorld : register(c8);
-float4x4 matCam : register(c16);
-
+float4x4 matView : register(c12);
+float4x4 matProj : register(c20);
 
 float4   flag0:				register(c24);
 
@@ -50,9 +50,8 @@ float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
 float4 mirror_flag : register(c51);
     // .x -> mirror mode
-
-float4x4 reflectorMatWorld : register(c52);
-float4x4 reflectorInvMatWorld : register(c53);
+float4 reflectorPos : register(c52);
+float4 reflectorNormal : register(c53);
 
 struct VS_INPUT 
 {
@@ -72,15 +71,13 @@ struct VS_OUTPUT
 #include "fbm.hlsl"
 #include "multifbm_height.hlsl"
 #include "spherelod_commons.hlsl"
-
+#include "landscapes.hlsl"
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
 	VS_OUTPUT Output;
 
 	float4 v_position;
-
-    bool mirror_mode;
 
 	// sidelenght scaling
 
@@ -98,8 +95,14 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	v_position3 = v_position2 * flag0.z;	
 	v_position3.w = 1.0;
 
-
-	Output.Position = mul( v_position3, matWorldViewProjection );
+    if (mirror_flag.x > 0.0)
+    {
+        Output.Position = reflected_vertex_pos(v_position3, reflectorPos, reflectorNormal, matWorld, matView, matProj);
+    }
+    else
+    {
+        Output.Position = mul(v_position3, matWorldViewProjection);
+    }
 
 
     ////// atmo scattering : calcul vertex pos
