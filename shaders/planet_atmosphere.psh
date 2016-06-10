@@ -63,6 +63,11 @@ float4 atmo_scattering_flag_5 : register(c23);
 float4 atmo_scattering_flag_6 : register(c24);
 
 
+float4 mirror_flag : register(c29);
+    // .x -> mirror mode
+float4 reflectorPos : register(c30);
+float4 reflectorNormal : register(c31);
+
 struct PS_INTPUT
 {
     float4 t0 : TEXCOORD0;
@@ -125,39 +130,63 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float atmo_thickness = atmo_scattering_flag_0.x - atmo_scattering_flag_0.y;
 
     float4 color = 0.0;
+
+    float4 l0;
+    float4 l1;
+    float4 l2;
+
+    
+    if (mirror_flag.x > 0.0)
+    {
+        l0.xyz = reflect(light0_dir_global.xyz, normalize(reflectorNormal.xyz));
+        l0.w = light0_dir_global.w;
+        
+        l1.xyz = reflect(light1_dir_global.xyz, normalize(reflectorNormal.xyz));
+        l1.w = light1_dir_global.w;
+
+        l2.xyz = reflect(light2_dir_global.xyz, normalize(reflectorNormal.xyz));
+        l2.w = light2_dir_global.w;
+    }
+    else
+    {
+        l0 = light0_dir_global;
+        l1 = light1_dir_global;
+        l2 = light2_dir_global;
+    }
+
     
     if (viewer_alt >= atmo_scattering_flag_5.x)
     {        
         if (flags_light.y)
         {
-            color += compute_from_space(input.t0, input.t1, light0_dir_global);
+            color += compute_from_space(input.t0, input.t1, l0);
         }
         
         if (flags_light.z)
         {
-            color += compute_from_space(input.t0, input.t1, light1_dir_global);
+            color += compute_from_space(input.t0, input.t1, l1);
         }
 
         if (flags_light.w)
         {
-            color += compute_from_space(input.t0, input.t1, light2_dir_global);
+            color += compute_from_space(input.t0, input.t1, l2);
         }
     }
     else
     {
         if (flags_light.y)
         {
-            color += compute_from_surface(input.t0, input.t1, light0_dir_global);
+            color += compute_from_surface(input.t0, input.t1, l0);
         }
 
         if (flags_light.z)
         {
-            color += compute_from_surface(input.t0, input.t1, light1_dir_global);
+            color += compute_from_surface(input.t0, input.t1, l1);
         }
 
         if (flags_light.w)
         {
-            color += compute_from_surface(input.t0, input.t1, light2_dir_global);
+            color += compute_from_surface(input.t0, input.t1, l2);
         }
     }
 
