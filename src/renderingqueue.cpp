@@ -237,7 +237,7 @@ void RenderingQueue::UpdateOutputQueue( void )
     }
     
     build_output_list( m_nodes );
-    //cleanup_output_list();
+    cleanup_output_list();
 }
 
 void RenderingQueue::UpdateOutputQueueNoOpt( void )
