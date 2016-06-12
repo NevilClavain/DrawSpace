@@ -94,13 +94,14 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	float4 v_position3;	
 	v_position3 = v_position2 * flag0.z;	
 	v_position3.w = 1.0;
-
+    
     if (mirror_flag.x > 0.0)
     {
         Output.Position = reflected_vertex_pos(v_position3, reflectorPos, reflectorNormal, matWorld, matView, matProj);
     }
     else
     {
+
         Output.Position = mul(v_position3, matWorldViewProjection);
     }
 
@@ -114,29 +115,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     matWorldRot[3][1] = 0.0;
     matWorldRot[3][2] = 0.0;
 
-    //float4 vertex_pos = mul(v_position3, matWorldRot);
+    float4 vertex_pos = mul(v_position3, matWorldRot);
 
-
-    
-    float4 vertex_pos;
-    float4x4 id = 0;
-    id[0][0] = 1.0;
-    id[1][1] = 1.0;
-    id[2][2] = 1.0;
-    id[3][3] = 1.0;
-
-    if (mirror_flag.x > 0.0)
-    {
-        vertex_pos = reflected_vertex_pos(v_position3, reflectorPos, reflectorNormal, matWorldRot, id, id);
-
-        viewer_pos.y = -viewer_pos.y;
-
-    }
-    else
-    {
-        vertex_pos = mul(v_position3, matWorldRot);
-    }
-    
 
     Output.t0 = vertex_pos;
     Output.t1 = viewer_pos;
