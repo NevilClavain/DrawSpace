@@ -23,6 +23,8 @@
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
 float4x4 matWorld : register(c8);
+float4x4 matView : register(c12);
+float4x4 matProj : register(c20);
 float4x4 matCam : register(c16);
 
 
@@ -47,6 +49,10 @@ float4   base_uv_global: register(c27);
 
 float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
+
+float4 mirror_flag : register(c51);
+    // .x -> mirror mode
+    // .y -> planet ground ray
 
 float4 atmo_scattering_flag_0 : register(c32);
 float4 atmo_scattering_flag_1 : register(c33);
@@ -105,7 +111,7 @@ struct VS_OUTPUT
 #include "multifbm_height.hlsl"
 #include "spherelod_commons.hlsl"
 #include "atmospheric_scattering.hlsl"
-
+#include "landscapes.hlsl"
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
@@ -130,7 +136,20 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	v_position3.w = 1.0;
 
 
-	Output.Position = mul( v_position3, matWorldViewProjection );
+	//Output.Position = mul( v_position3, matWorldViewProjection );
+    
+    if (mirror_flag.x > 0.0)
+    {
+        float4 rn = normalize(viewer_pos);
+        float4 rp = rn * mirror_flag.y;
+
+        Output.Position = reflected_vertex_pos(v_position3, rp, rn, matWorld, matView, matProj);
+    }
+    else
+    {
+        Output.Position = mul(v_position3, matWorldViewProjection);
+    }
+
 
     Output.TexCoord0 = 0.0;
     Output.TexCoord0.xyz = v_position2.xyz;

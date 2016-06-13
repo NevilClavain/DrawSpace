@@ -50,8 +50,7 @@ float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
 float4 mirror_flag : register(c51);
     // .x -> mirror mode
-float4 reflectorPos : register(c52);
-float4 reflectorNormal : register(c53);
+    // .y -> planet ground ray
 
 struct VS_INPUT 
 {
@@ -97,11 +96,13 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     
     if (mirror_flag.x > 0.0)
     {
-        Output.Position = reflected_vertex_pos(v_position3, reflectorPos, reflectorNormal, matWorld, matView, matProj);
+        float4 rn = normalize(viewer_pos);
+        float4 rp = rn * mirror_flag.y;
+
+        Output.Position = reflected_vertex_pos(v_position3, rp, rn, matWorld, matView, matProj);
     }
     else
     {
-
         Output.Position = mul(v_position3, matWorldViewProjection);
     }
 

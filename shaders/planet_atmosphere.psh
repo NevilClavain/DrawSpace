@@ -62,12 +62,6 @@ float4 atmo_scattering_flag_4 : register(c22);
 float4 atmo_scattering_flag_5 : register(c23);
 float4 atmo_scattering_flag_6 : register(c24);
 
-
-float4 mirror_flag : register(c29);
-    // .x -> mirror mode
-float4 reflectorPos : register(c30);
-float4 reflectorNormal : register(c31);
-
 struct PS_INTPUT
 {
     float4 t0 : TEXCOORD0;
