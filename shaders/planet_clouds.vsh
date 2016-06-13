@@ -143,6 +143,9 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         float4 rn = normalize(viewer_pos);
         float4 rp = rn * mirror_flag.y;
 
+        float4 pos = matWorld[3];
+        rp += pos;
+
         Output.Position = reflected_vertex_pos(v_position3, rp, rn, matWorld, matView, matProj);
     }
     else
