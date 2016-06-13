@@ -19,10 +19,13 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
     {
         
-        scene_color.x = 1.0;
-        scene_color.y = 0.0;
-        scene_color.z = 0.0;
-        scene_color.w = 1.0;
+        float2 mt = input.TexCoord0.xy; //+bump.xz;
+
+        float4 refrac_color = { 0.8, 0.8, 0.8, 1.0};
+
+        
+        scene_color = refrac_color * tex2D(Texture1, mt);
+
     }
     return scene_color;
 }
