@@ -19,8 +19,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float4 color;
     
     float3 p;
-    p.x = lerp(0.0, 500.0, input.TexCoord0.x);
-    p.y = lerp(0.0, 500.0, input.TexCoord0.y);
+    p.x = lerp(0.0, 800.0, input.TexCoord0.x);
+    p.y = lerp(0.0, 800.0, input.TexCoord0.y);
     p.z = wave.x;
     //color = cnoise(p);
 

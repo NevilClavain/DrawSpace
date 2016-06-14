@@ -42,7 +42,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float4 res_color = 0;
 
     float3 np;
-    np = compute_water_bump_vector(256, Water_Bump_Texture, input.LODGlobalPatch_TexCoord.xy, 1.9);
+    np = compute_water_bump_vector(256, Water_Bump_Texture, input.LODGlobalPatch_TexCoord.xy, 1.5);
 
     float4 np2;
 
