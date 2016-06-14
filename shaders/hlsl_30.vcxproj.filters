@@ -100,13 +100,7 @@
     <FxCompile Include="planet_occlusion.vsh">
       <Filter>Source Files\vertex\planet</Filter>
     </FxCompile>
-    <FxCompile Include="water_waves.psh">
-      <Filter>Source Files\pixel</Filter>
-    </FxCompile>
     <FxCompile Include="texture.vsh">
-      <Filter>Source Files\vertex</Filter>
-    </FxCompile>
-    <FxCompile Include="water_waves.vsh">
       <Filter>Source Files\vertex</Filter>
     </FxCompile>
     <FxCompile Include="planet_water.psh">
@@ -114,6 +108,18 @@
     </FxCompile>
     <FxCompile Include="planet_water.vsh">
       <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_water_bump.psh">
+      <Filter>Source Files\pixel\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_water_bump.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_water_waves.vsh">
+      <Filter>Source Files\vertex\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_water_waves.psh">
+      <Filter>Source Files\pixel\planet</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

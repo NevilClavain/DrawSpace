@@ -72,8 +72,6 @@ sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altit
 sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
 sampler2D Splatting_HTMap_Texture	: register(s2);  // texture HT pour splatting
 
-sampler2D Water_Bump_Texture        : register(s3);
-
 struct PS_INTPUT
 {	
 	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
@@ -117,7 +115,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float pixel_distance = input.LODGlobalPatch_TexCoord.w;
 
-    if (flags.x <= 1.0001)
+    if (flags.x <= 1.0007)
     {
         water_mask_mode = true;
     }
