@@ -115,7 +115,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float pixel_distance = input.LODGlobalPatch_TexCoord.w;
 
-    if (flags.x <= 1.0015)
+    if (flags.x <= 1.0025)
     {
         water_mask_mode = true;
     }

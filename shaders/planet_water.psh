@@ -1,5 +1,5 @@
 
-
+float4 rel_alt : register(c0);
 
 sampler2D Texture0 : register(s0);
 sampler2D Texture1 : register(s1);
@@ -18,21 +18,20 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     
     //if (scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0)
 
-    if ( /*scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0*/scene_color.w == 0.0)
+    if( scene_color.w == 0.0)
     {
-
-
         float4 bump_color = tex2D(Texture2, input.TexCoord0);
         float4 sea_color = scene_color;
         sea_color.w = 1.0;
         
-        float3 bump = bump_color.xyz;
-        
-        float2 mt = input.TexCoord0.xy +bump.xz;
+        float3 bump = bump_color.xyz;        
+        float2 mt = input.TexCoord0.xy + bump.xz;
 
         float4 refrac_color = { 0.8, 0.8, 0.9, 1.0};
         
-        scene_color = refrac_color * tex2D(Texture1, mt);
+        float4 water_color = refrac_color * tex2D(Texture1, mt);
+
+        scene_color = lerp(water_color, sea_color, saturate((rel_alt.x - 1.0) / 0.0025));
 
     }
     return scene_color;
