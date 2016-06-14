@@ -316,7 +316,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
             c1_final += lerp(input.c1_2, 1.0, factor_alt);
         }
     }
-
+    
+    /*
     if(water_mask_mode)
     {
         if( sea )
@@ -332,6 +333,10 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     {
         final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
     }
+    */
+
+    final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+
 
     if (flags_lights.y > 0.0)
     {
@@ -357,7 +362,43 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         final_color.xyz = final_color.xyz / count_lights;
     }
 
-    final_color.w = 1.0;
+    //final_color.w = 1.0;
+    /*
+    if (water_mask_mode)
+    {
+        if (sea)
+        {
+            float4 real_color = c0_final + (lit_color * pixel_color * c1_final);
+            final_color.w = saturate( 2.0 * real_color.z );
+        }
+        else
+        {
+            final_color.w = 1.0;
+        }
+    }
+    else
+    {
+        final_color.w = 1.0;
+    }
+*/
+
+    if (water_mask_mode)
+    {
+        if (sea)
+        {
+            //float4 real_color = c0_final + (lit_color * pixel_color * c1_final);
+            final_color.w = 0.0;
+        }
+        else
+        {
+            final_color.w = 1.0;
+        }
+    }
+    else
+    {
+        final_color.w = 1.0;
+    }
+
 
 	return final_color;
 }

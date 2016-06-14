@@ -16,10 +16,15 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {   
 	float4 scene_color = tex2D( Texture0, input.TexCoord0 );
     
-    if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
+    //if (scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0)
+
+    if ( /*scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0*/scene_color.w == 0.0)
     {
 
+
         float4 bump_color = tex2D(Texture2, input.TexCoord0);
+        float4 sea_color = scene_color;
+        sea_color.w = 1.0;
         
         float3 bump = bump_color.xyz;
         
