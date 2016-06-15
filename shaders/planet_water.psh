@@ -1,5 +1,9 @@
 
-float4 rel_alt : register(c0);
+float4 flag0 : register(c0);
+  // .x -> altitude relative viewer
+  // .y -> altitude relative transition ocean global/ocean detaillé
+
+float4 color : register(c1);
 
 sampler2D Texture0 : register(s0);
 sampler2D Texture1 : register(s1);
@@ -26,12 +30,10 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         
         float3 bump = bump_color.xyz;        
         float2 mt = input.TexCoord0.xy + bump.xz;
-
-        float4 refrac_color = { 0.80, 0.82, 0.9, 1.0};
         
-        float4 water_color = refrac_color * tex2D(Texture1, mt);
+        float4 water_color = color * tex2D(Texture1, mt);
 
-        scene_color = lerp(water_color, sea_color, saturate((rel_alt.x - 1.0) / 0.0025));
+        scene_color = lerp(water_color, sea_color, saturate((flag0.x - 1.0) / (flag0.y - 1.0)));
 
     }
     return scene_color;

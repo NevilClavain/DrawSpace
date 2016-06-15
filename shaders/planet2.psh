@@ -35,6 +35,7 @@ float4 flags6 : register(c6);
 	// .x -> resol atlas textures splatting
 	// .y -> transition texture globale/texture splatting : borne sup
 	// .z -> transition texture globale/texture splatting : borne inf
+    // .w -> transition ocean global/ocean detaillé
 
 float4 flags_lights : register(c7);
 	// .x -> ambient light
@@ -115,7 +116,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float pixel_distance = input.LODGlobalPatch_TexCoord.w;
 
-    if (flags.x <= 1.0025)
+    if (flags.x <= flags6.w)
     {
         water_mask_mode = true;
     }
