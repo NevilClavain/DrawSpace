@@ -20,10 +20,13 @@
 *
 */
 
+float4 bump_flag : register(c30);
+// .x -> bump texture sampling resol
+// .y -> bump factor
 
 float4x4 matWorldView : register(c104);
 
-sampler2D Water_Bump_Texture : register(s3);
+sampler2D Water_Bump_Texture : register(s1);
 
 
 struct PS_INTPUT
@@ -42,7 +45,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float4 res_color = 0;
 
     float3 np;
-    np = compute_water_bump_vector(256, Water_Bump_Texture, input.LODGlobalPatch_TexCoord.xy, 1.8);
+    np = compute_water_bump_vector(bump_flag.x, Water_Bump_Texture, input.LODGlobalPatch_TexCoord.xy, bump_flag.y);
 
     float4 np2;
 

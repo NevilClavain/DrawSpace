@@ -140,9 +140,9 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     
     if (mirror_flag.x > 0.0)
     {
+        // calculer normale et position du plan de reflection
         float4 rn = normalize(viewer_pos);
         float4 rp = rn * mirror_flag.y;
-
         float4 pos = matWorld[3];
         rp += pos;
 
