@@ -24,7 +24,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     p.z = wave.x;
     //color = cnoise(p);
 
-    color = Perlin3D(p, 6799.9, 123.5);
+    color = Perlin3D(p, 679.9, 123.5);
    
     return color;
 }
