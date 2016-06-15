@@ -27,7 +27,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         float3 bump = bump_color.xyz;        
         float2 mt = input.TexCoord0.xy + bump.xz;
 
-        float4 refrac_color = { 0.8, 0.8, 0.9, 1.0};
+        float4 refrac_color = { 0.80, 0.82, 0.9, 1.0};
         
         float4 water_color = refrac_color * tex2D(Texture1, mt);
 
