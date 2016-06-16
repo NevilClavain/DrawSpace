@@ -121,5 +121,17 @@
     <FxCompile Include="planet_surface.vsh">
       <Filter>Source Files\vertex\planet</Filter>
     </FxCompile>
+    <FxCompile Include="screenimpostor.psh">
+      <Filter>Source Files\pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="spaceimpostor.psh">
+      <Filter>Source Files\pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="screenimpostor.vsh">
+      <Filter>Source Files\vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="spaceimpostor.vsh">
+      <Filter>Source Files\vertex</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
