@@ -122,4 +122,5 @@ void Runner::update_state( State p_state )
 void Runner::ResetState( void )
 {
     update_state( TASK_WAIT );
+    m_current_state_client_copy = TASK_WAIT;
 }
