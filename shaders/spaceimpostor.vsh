@@ -111,9 +111,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	
 	if( flags.x == 0.5 )
 	{	
-		cloud_color_top = lerp( cloud_dims.w, cloud_dims.z, ( Input.Pos.y + ( Input.Scale.y / 2.0 ) ) / ( cloud_dims.x - cloud_dims.y ) );
-		cloud_color_bottom = lerp( cloud_dims.w, cloud_dims.z, ( Input.Pos.y - ( Input.Scale.y / 2.0 ) ) / ( cloud_dims.x - cloud_dims.y ) );
-	}
+        cloud_color_top = lerp(cloud_dims.w, cloud_dims.z, (Input.Pos.y + (Input.Scale.y / 2.0) + abs(cloud_dims.y)) / (cloud_dims.x - cloud_dims.y));
+        cloud_color_bottom = lerp(cloud_dims.w, cloud_dims.z, (Input.Pos.y - (Input.Scale.y / 2.0) + abs(cloud_dims.y)) / (cloud_dims.x - cloud_dims.y));
+    }
 	else
 	{
 		cloud_color_top = cloud_color_bottom = 1.0;
