@@ -205,8 +205,12 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float4x4 roty = BuildRotationMatrix( yaxis, theta );
 	float4x4 rotx = BuildRotationMatrix( xaxis, -phi );
 
+    /*
 	float4 vertexpos2 = mul( vertexpos, mul( mul( rotx, roty ), world_view ) );
 	Output.Position = mul( vertexpos2, matProj );
+    */
+
+    Output.Position = mul( mul( mul( vertexpos, mul(rotx, roty)), local_trans), matWorldViewProjection);
 
 	Output.TexCoord0 = Input.TexCoord0;
 
