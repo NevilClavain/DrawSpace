@@ -13,7 +13,7 @@ float4 flags: register(c24);
 
 float4 cloud_dims: register(c25); // .x => cloud top; y => cloud bottom; z => cloud color top; w => cloud color bottom
 
-float4 view_pos : register(c26);
+float4 viewer_pos : register(c26);
 
 struct VS_INPUT 
 {
@@ -33,6 +33,8 @@ struct VS_OUTPUT
 
     float Fog:        FOG;
 };
+
+#include "landscapes.hlsl"
 
 float ComputeExp2Fog(float4 worldViewPos, float density)
 {
@@ -160,6 +162,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 		Output.Color = cloud_color_bottom;
 	}
 
+    /*
 	float4x4 inv = 0;
 
 	inv[0][0] = 1.0;
@@ -168,7 +171,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	inv[3][3] = 1.0;
 
 	float4x4 final_view = mul( matView, inv );
-
+*/
 
 	float4 xaxis;
 	xaxis.x = 1;
@@ -198,7 +201,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 
 		
-	float4x4 world_view = mul( mul( local_trans, matWorld ), final_view );
+	//float4x4 world_view = mul( mul( local_trans, matWorld ), final_view );
 
 
 	// passer le point ( 0, 0, 0 ) du repere cam vers le repere world	
@@ -209,12 +212,12 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	// il ne reste plus qu'à calculer theta et phi a partir du point obtenu (point 0 camera exprimé dans le repere local à l'impostor)
 
-	float theta = atan2( centerpos3[0], centerpos3[2] );
+    float theta = atan2(centerpos3[0], centerpos3[2]);
 
 	float4 theta_dir = centerpos3;
 	theta_dir.y = 0;
 
-	float phi = atan2( centerpos3[1], sqrt( theta_dir.x * theta_dir.x + theta_dir.y * theta_dir.y + theta_dir.z * theta_dir.z ) );
+    float phi = atan2( centerpos3[1], sqrt( theta_dir.x * theta_dir.x + theta_dir.y * theta_dir.y + theta_dir.z * theta_dir.z ) );
 
 	float4x4 roty = BuildRotationMatrix( yaxis, theta );
 	float4x4 rotx = BuildRotationMatrix( xaxis, -phi );
@@ -222,10 +225,24 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     float4 vpos = mul(mul(vertexpos, mul(rotx, roty)), local_trans);
 
+    
+    if (flags.x > 0.0)
+    {
+        // calculer normale et position du plan de reflection
+        float4 rn = normalize(viewer_pos);
+        float4 rp = rn * flags.y;
+        float4 pos = matWorld[3];
+        //rp += pos;
 
+        Output.Position = reflected_vertex_pos(vpos, rp, rn, matWorld, matView, matProj);
+    }
+    else
+    {
 
+        Output.Position = mul(vpos, matWorldViewProjection);
+    }
 
-    Output.Position = mul(vpos, matWorldViewProjection);
+    //Output.Position = mul(vpos, matWorldViewProjection);
 
 	Output.TexCoord0 = Input.TexCoord0;
 
