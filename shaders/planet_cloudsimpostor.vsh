@@ -15,6 +15,8 @@ float4 cloud_dims: register(c25); // .x => cloud top; y => cloud bottom; z => cl
 
 float4 viewer_pos : register(c26);
 
+float4 planetPos : register(c27);
+
 struct VS_INPUT 
 {
 	float4 Position : POSITION0;
@@ -162,17 +164,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 		Output.Color = cloud_color_bottom;
 	}
 
-    /*
-	float4x4 inv = 0;
-
-	inv[0][0] = 1.0;
-	inv[1][1] = 1.0;
-	inv[2][2] = -1.0;
-	inv[3][3] = 1.0;
-
-	float4x4 final_view = mul( matView, inv );
-*/
-
 	float4 xaxis;
 	xaxis.x = 1;
 	xaxis.y = 0;
@@ -197,11 +188,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	local_trans[3][0] = Input.Pos.x;
 	local_trans[3][1] = Input.Pos.y;
 	local_trans[3][2] = Input.Pos.z;
-
-
-
-		
-	//float4x4 world_view = mul( mul( local_trans, matWorld ), final_view );
 
 
 	// passer le point ( 0, 0, 0 ) du repere cam vers le repere world	
@@ -231,8 +217,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         // calculer normale et position du plan de reflection
         float4 rn = normalize(viewer_pos);
         float4 rp = rn * flags.y;
-        float4 pos = matWorld[3];
-        //rp += pos;
+        rp += planetPos;
 
         Output.Position = reflected_vertex_pos(vpos, rp, rn, matWorld, matView, matProj);
     }
