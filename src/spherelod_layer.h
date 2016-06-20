@@ -91,7 +91,7 @@ protected:
     // mis a jour quand on est relatif
     DrawSpace::Utils::Vector                                    m_relative_hotviewerpos;
 
-    Layer::SubPassCreationHandler*                             m_handler;
+    Layer::SubPassCreationHandler*                              m_handler;
 
     Dynamics::Orbiter*                                          m_owner;
 

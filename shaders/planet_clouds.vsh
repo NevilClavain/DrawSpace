@@ -134,9 +134,6 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	float4 v_position3;	
 	v_position3 = v_position2 * flag0.z;	
 	v_position3.w = 1.0;
-
-
-	//Output.Position = mul( v_position3, matWorldViewProjection );
     
     if (mirror_flag.x > 0.0)
     {

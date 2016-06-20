@@ -7,6 +7,10 @@ float4x4 matCam: register(c16);
 float4x4 matProj: register(c20);
 
 float4 flags: register(c24);
+    // .x -> mirror mode
+    // .y -> planet ground ray
+    // .z -> intensite fog
+
 float4 cloud_dims: register(c25); // .x => cloud top; y => cloud bottom; z => cloud color top; w => cloud color bottom
 
 
@@ -126,15 +130,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float cloud_color_top;
 	float cloud_color_bottom;
 	
-	if( flags.x == 0.5 )
-	{	
-        cloud_color_top = lerp(cloud_dims.w, cloud_dims.z, (Input.Pos.y + (Input.Scale.y / 2.0) + abs(cloud_dims.y)) / (cloud_dims.x - cloud_dims.y));
-        cloud_color_bottom = lerp(cloud_dims.w, cloud_dims.z, (Input.Pos.y - (Input.Scale.y / 2.0) + abs(cloud_dims.y)) / (cloud_dims.x - cloud_dims.y));
-    }
-	else
-	{
-		cloud_color_top = cloud_color_bottom = 1.0;
-	}
+    cloud_color_top = lerp(cloud_dims.w, cloud_dims.z, (Input.Pos.y + (Input.Scale.y / 2.0) + abs(cloud_dims.y)) / (cloud_dims.x - cloud_dims.y));
+    cloud_color_bottom = lerp(cloud_dims.w, cloud_dims.z, (Input.Pos.y - (Input.Scale.y / 2.0) + abs(cloud_dims.y)) / (cloud_dims.x - cloud_dims.y));
 		
 	//
 
@@ -224,6 +221,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 
     float4 vpos = mul(mul(vertexpos, mul(rotx, roty)), local_trans);
+
+
+
 
     Output.Position = mul(vpos, matWorldViewProjection);
 
