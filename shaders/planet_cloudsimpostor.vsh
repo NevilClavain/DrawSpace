@@ -13,7 +13,7 @@ float4 flags: register(c24);
 
 float4 cloud_dims: register(c25); // .x => cloud top; y => cloud bottom; z => cloud color top; w => cloud color bottom
 
-
+float4 view_pos : register(c26);
 
 struct VS_INPUT 
 {
@@ -233,7 +233,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 
     float4 PositionWV = mul(vpos, matWorldView);
-    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.0000015));
+    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, flags.z));
 
 	return( Output );   
 }

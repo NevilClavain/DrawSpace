@@ -1,4 +1,5 @@
 
+float4 fog_color : register(c0);
 
 
 sampler2D Texture0: register(s0);
@@ -19,7 +20,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		// mode specifique pour les nuages volumetriques
 	
 	//ret_color = input.Color;
-    float4 fog_color = { 0.45, 0.63, 0.78, 1.0 };
+    //float4 fog_color = { 0.45, 0.63, 0.78, 1.0 };
     ret_color = saturate(lerp(fog_color, input.Color, input.Fog));
 	ret_color.a = tex2D( Texture0, input.TexCoord0 ).r;	
 
