@@ -26,7 +26,24 @@ struct VS_OUTPUT
 	float4 Position : POSITION0;
 	float4 TexCoord0: TEXCOORD0;
 	float4 Color:	  TEXCOORD1;  //specifique aux nuages volumetriques
+
+    float Fog:        FOG;
 };
+
+float ComputeExp2Fog(float4 worldViewPos, float density)
+{
+    float4 org;
+   
+    org.x = 0.0;
+    org.y = 0.0;
+    org.z = 0.0;
+    org.w = 1.0;
+
+    float4 d = -worldViewPos[2];
+    return 1 / exp2(d * density);
+   
+   // retour a 0.0 -> brouillard au maximum
+}
 
 float4x4 InverseMatrix( float4x4 p_mat )
 {
@@ -205,14 +222,18 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float4x4 roty = BuildRotationMatrix( yaxis, theta );
 	float4x4 rotx = BuildRotationMatrix( xaxis, -phi );
 
-    /*
-	float4 vertexpos2 = mul( vertexpos, mul( mul( rotx, roty ), world_view ) );
-	Output.Position = mul( vertexpos2, matProj );
-    */
 
-    Output.Position = mul( mul( mul( vertexpos, mul(rotx, roty)), local_trans), matWorldViewProjection);
+    float4 vpos = mul(mul(vertexpos, mul(rotx, roty)), local_trans);
+
+    Output.Position = mul(vpos, matWorldViewProjection);
 
 	Output.TexCoord0 = Input.TexCoord0;
+
+    //////////////////////////////////////////
+
+
+    float4 PositionWV = mul(vpos, matWorldView);
+    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.0000015));
 
 	return( Output );   
 }
