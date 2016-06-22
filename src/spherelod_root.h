@@ -117,6 +117,8 @@ protected:
     SphericalLOD::SubPass::singleshot_subpasses                             m_singleshot_subpasses;
     SphericalLOD::SubPass::permanent_subpasses                              m_permanent_subpasses;
 
+    bool                                                                    m_enable_gravity;
+
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -171,6 +173,8 @@ public:
     void                                ResetRegisteredBodyLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index );
 
     int                                 GetSingleShotSubPassesStackSize();
+
+    void                                SetGravityState( bool p_state );
 };
 
 

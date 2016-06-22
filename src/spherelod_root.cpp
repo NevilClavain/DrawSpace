@@ -34,7 +34,8 @@ using namespace DrawSpace::SphericalLOD;
 Root::Root( const dsstring& p_scenename, dsreal p_ray, DrawSpace::Utils::TimeManager* p_time, const SphericalLOD::Config& p_config ) : Orbiter( &m_world ),
 m_scenename( p_scenename ),
 m_ray( p_ray * 1000.0 ),
-m_timemanager( p_time )
+m_timemanager( p_time ),
+m_enable_gravity( true )
 {
     m_world.Initialize();
 
@@ -314,7 +315,10 @@ void Root::on_scenegraph_event( SceneNodeGraph::ScenegraphEvent p_event, SceneNo
 {
     if( DrawSpace::Core::SceneNodeGraph::TRANSFORMATIONS_BEGIN == p_event )
     {
-        apply_gravity();
+        if( m_enable_gravity )
+        {
+            apply_gravity();
+        }
     }
     else if( DrawSpace::Core::SceneNodeGraph::TRANSFORMATIONS_DONE == p_event )
     {
@@ -719,4 +723,9 @@ DrawSpace::SphericalLOD::SubPass::EntryInfos Root::on_subpasscreation( DrawSpace
 int Root::GetSingleShotSubPassesStackSize()
 {
     return m_singleshot_subpasses_stack.size();
+}
+
+void Root::SetGravityState( bool p_state )
+{
+    m_enable_gravity = p_state;
 }
