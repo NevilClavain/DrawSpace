@@ -67,7 +67,7 @@ float4 atmo_scattering_flag_6 : register(c24);
 
 float4x4 matWorldRots : register(c25);
 
-
+float4 terrain_bump_flag : register(c31);
 
 sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
 sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
@@ -147,8 +147,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
 	if( !sea )
 	{
-		avg = compute_terrain_bump_vector( temp_humidity.w, flags2.x, HT_Texture, input.LODGlobalPatch_TexCoord, 100.0 );
-	}
+        avg = compute_terrain_bump_vector(temp_humidity.w, flags2.x, HT_Texture, input.LODGlobalPatch_TexCoord, terrain_bump_flag.x);
+    }
 	
 	float3 texel_pos = compute_front_face_point_vector( input.GlobalPatch_TexCoord );
 
