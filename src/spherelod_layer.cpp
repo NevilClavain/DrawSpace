@@ -165,6 +165,8 @@ void Layer::Compute( Root* p_owner )
             pos[3] = 1.0;
        
             m_planetbody->UpdateHotPoint( pos );
+
+            m_planetbody->Compute(); 
         }
 
         //////////////////////////////////////////////////////////////////
