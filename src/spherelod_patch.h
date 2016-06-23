@@ -31,7 +31,7 @@
 #include "spherelod_subpass.h"
 #include "pass.h"
 
-#define NB_LOD_RANGES           16
+#define NB_LOD_RANGES           10//16
 #define PATCH_RESOLUTION        15
 #define PATCH_HIGH_RESOLUTION   256
 #define PATCH_AVG_RESOLUTION    64
