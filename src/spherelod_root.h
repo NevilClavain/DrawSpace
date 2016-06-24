@@ -79,6 +79,9 @@ protected:
         DrawSpace::Dynamics::InertBody*     attached_body;
         DrawSpace::Dynamics::Collider*      attached_collider;
 
+        bool                                relative_alt_valid;
+        dsreal                              relative_alt;
+
         DrawSpace::Dynamics::CameraPoint*   camera;
 
         std::vector<SphericalLOD::Layer*>   layers;
@@ -101,7 +104,6 @@ protected:
       
     std::map<DrawSpace::Dynamics::InertBody*, RegisteredBody>               m_registered_bodies;
     std::map<dsstring, RegisteredCamera>                                    m_registered_camerapoints;
-    dsstring                                                                m_current_camerapoint;
 
     std::vector<SphericalLOD::Layer*>                                       m_layers_list;
 
@@ -156,7 +158,8 @@ public:
                                                                             DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
 
 
-    SphericalLOD::Layer*                GetLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index );
+    SphericalLOD::Layer*                GetLayerFromInertBody( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index );
+    SphericalLOD::Layer*                GetLayerFromCamera( const dsstring& p_cameraName, int p_layer_index );
     
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 
@@ -166,6 +169,7 @@ public:
     void                                Update2( DrawSpace::Utils::TimeManager& p_timemanager );
 
     bool                                GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude );
+    bool                                GetCameraRelativeAltitude( const dsstring& p_cameraName, dsreal& p_rel_altitude );
 
     void                                DrawSubPasses( void );
 

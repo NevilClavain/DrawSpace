@@ -104,22 +104,15 @@ void Root::on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event
 
         if( m_registered_camerapoints.count( current_camera_scenename ) > 0 )
         {
-            m_current_camerapoint = current_camera_scenename;
-
             std::vector<SphericalLOD::Body*> planet_bodies;
 
             for( size_t i = 0; i < m_registered_camerapoints[current_camera_scenename].layers.size(); i++ )
             {
                 SphericalLOD::Layer* layer = m_registered_camerapoints[current_camera_scenename].layers[i];
             
-                planet_bodies.push_back( layer->GetPlanetBody() );
+                planet_bodies.push_back( layer->GetBody() );
             }
             m_drawable->SetCurrentPlanetBodies( planet_bodies );
-        }
-        else
-        {
-            // camera non enregistree
-            m_current_camerapoint = "";
         }
     }
 }
@@ -223,6 +216,8 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
             dsstring camera_scenename;
 
             reg_camera.camera = camera_node->GetContent();
+
+            reg_camera.relative_alt_valid = false;
 
             p_node->GetSceneName( camera_scenename );
 
@@ -411,7 +406,7 @@ void Root::manage_bodies( void )
                         detach_body( it->second.body );                
                         layer->RemoveColliderFromWorld();
                         layer->SetHotState( false );
-                        layer->ResetPlanetBody();
+                        layer->ResetBody();
                     }
 
                     ///////////////////////////////////////////////////////////////////////
@@ -498,6 +493,9 @@ void Root::manage_camerapoints( void )
             camera_pos2[2] = camera_pos( 3, 2 );
 
             dsreal rel_alt = ( camera_pos2.Length() / m_ray );
+
+            m_registered_camerapoints[it->first].relative_alt = rel_alt;
+            m_registered_camerapoints[it->first].relative_alt_valid = true;
             
             for( size_t i = 0; i < it->second.layers.size(); i++ )
             {
@@ -536,7 +534,7 @@ void Root::update_cameras_alt( void )
 
             if( m_registered_bodies.count( inertbody ) )
             {                
-                it->second.camera->SetRelativeAltitude( m_registered_bodies[inertbody].layers[m_config->m_ground_layer]->GetPlanetBody()->GetHotPointAltitud() );
+                it->second.camera->SetRelativeAltitude( m_registered_bodies[inertbody].layers[m_config->m_ground_layer]->GetBody()->GetHotPointAltitud() );
             }
         }
     }
@@ -599,13 +597,20 @@ void Root::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scene
 }
 
 
-DrawSpace::SphericalLOD::Layer* Root::GetLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index )
+DrawSpace::SphericalLOD::Layer* Root::GetLayerFromInertBody( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index )
 {
     if( m_registered_bodies.count( p_body ) )
     {
-
         return m_registered_bodies[p_body].layers[p_layer_index];
+    }
+    return NULL;
+}
 
+DrawSpace::SphericalLOD::Layer* Root::GetLayerFromCamera( const dsstring& p_cameraName, int p_layer_index )
+{
+    if( m_registered_camerapoints.count( p_cameraName ) )
+    {    
+        return m_registered_camerapoints[p_cameraName].layers[p_layer_index];
     }
     return NULL;
 }
@@ -625,12 +630,27 @@ bool Root::GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body,
     return false;
 }
 
+bool Root::GetCameraRelativeAltitude( const dsstring& p_cameraName, dsreal& p_rel_altitude )
+{
+    if( m_registered_camerapoints.count( p_cameraName ) > 0 )
+    {
+        RegisteredCamera entry = m_registered_camerapoints[p_cameraName];
+        if( entry.relative_alt_valid )
+        {
+            p_rel_altitude = entry.relative_alt;
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
 void Root::ResetRegisteredBodyLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index )
 {
     if( m_registered_bodies.count( p_body ) > 0 )
     {
         RegisteredBody entry = m_registered_bodies[p_body];        
-        entry.layers[p_layer_index]->GetPlanetBody()->Reset();
+        entry.layers[p_layer_index]->ResetBody();
     }
 }
 

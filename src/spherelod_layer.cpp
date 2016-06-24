@@ -32,11 +32,11 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::SphericalLOD;
 
-Layer::Layer( Dynamics::Orbiter* p_owner, DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_planetbody, 
+Layer::Layer( Dynamics::Orbiter* p_owner, DrawSpace::SphericalLOD::Config* p_config, DrawSpace::Dynamics::World* p_world, DrawSpace::SphericalLOD::Body* p_body, 
                 Collider* p_collider, Layer::SubPassCreationHandler* p_handler, int p_index ) :
 m_world( p_world ),
 m_config( p_config ),
-m_planetbody( p_planetbody ), 
+m_body( p_body ), 
 m_collider( p_collider ),
 m_collision_state( false ),
 m_hot( false ),
@@ -55,7 +55,7 @@ m_owner( p_owner )
     if( m_collisions )
     {
         m_patch_update_cb = _DRAWSPACE_NEW_( PatchUpdateCb, PatchUpdateCb( this, &Layer::on_patchupdate ) );
-        m_planetbody->RegisterPatchUpdateHandler( m_patch_update_cb );
+        m_body->RegisterPatchUpdateHandler( m_patch_update_cb );
 
         for( int i = 0; i < 6; i++ )
         {
@@ -63,7 +63,7 @@ m_owner( p_owner )
             m_collisions_hms[i]->Disable();        
         }
     }
-    p_planetbody->Initialize();
+    p_body->Initialize();
 }
 
 Layer::~Layer( void )
@@ -86,7 +86,7 @@ void Layer::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch
         {
             display_list.push_back( m_current_patch );
 
-            if( p_patch->GetOrientation() == m_planetbody->GetCurrentFace() )
+            if( p_patch->GetOrientation() == m_body->GetCurrentFace() )
             {
                 // ce patch appartient bien a la face "courante"
 
@@ -164,9 +164,9 @@ void Layer::Compute( Root* p_owner )
             pos[2] = res( 3, 2 );
             pos[3] = 1.0;
        
-            m_planetbody->UpdateHotPoint( pos );
+            m_body->UpdateHotPoint( pos );
 
-            m_planetbody->Compute(); 
+            m_body->Compute(); 
         }
 
         //////////////////////////////////////////////////////////////////
@@ -188,16 +188,16 @@ void Layer::Compute( Root* p_owner )
         delta[2] = pos_cam( 3, 2 ) - pos_planet( 3, 2 );
         delta[3] = 1.0;
 
-        m_planetbody->UpdateInvariantViewerPos( delta );
+        m_body->UpdateInvariantViewerPos( delta );
 
     }
     else if( m_inertbody )
     {        
         if( m_hot )
         {
-            m_planetbody->UpdateHotPoint( m_relative_hotviewerpos ); // m_relative_hotviewerpos est mis à jour seulement 
+            m_body->UpdateHotPoint( m_relative_hotviewerpos ); // m_relative_hotviewerpos est mis à jour seulement 
                                                                   // quand on est relatif (hot)
-            m_planetbody->Compute();            
+            m_body->Compute();            
         }
 
         //////////////////////////////////////////////////////////////////
@@ -220,7 +220,7 @@ void Layer::Compute( Root* p_owner )
         delta[2] = pos_body( 3, 2 ) - pos_planet( 3, 2 );
         delta[3] = 1.0;
 
-        m_planetbody->UpdateInvariantViewerPos( delta );
+        m_body->UpdateInvariantViewerPos( delta );
     }
 
     /*
@@ -254,8 +254,8 @@ void Layer::Compute( Root* p_owner )
             hotpoint[1] = camera_pos( 3, 1 );
             hotpoint[2] = camera_pos( 3, 2 );
 
-            m_planetbody->UpdateHotPoint( hotpoint );
-            m_planetbody->Compute();
+            m_body->UpdateHotPoint( hotpoint );
+            m_body->Compute();
         }
     }
     */
@@ -264,7 +264,7 @@ void Layer::Compute( Root* p_owner )
 void Layer::SetHotState( bool p_hotstate )
 {
     m_hot = p_hotstate;
-    m_planetbody->SetHotState( m_hot );
+    m_body->SetHotState( m_hot );
     m_nb_collisionmeshebuild_done = 0;
 }
 
@@ -304,9 +304,9 @@ void Layer::RemoveColliderFromWorld( void )
     }
 }
 
-DrawSpace::SphericalLOD::Body* Layer::GetPlanetBody( void )
+DrawSpace::SphericalLOD::Body* Layer::GetBody( void )
 {
-    return m_planetbody;
+    return m_body;
 }
 
 void Layer::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done )
@@ -316,7 +316,7 @@ void Layer::GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done )
 
 void Layer::UpdateRelativeAlt( dsreal p_alt )
 {
-    m_planetbody->UpdateRelativeAlt( p_alt );
+    m_body->UpdateRelativeAlt( p_alt );
 }
 
 void Layer::SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider )
@@ -328,7 +328,7 @@ void Layer::SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider )
         float* heightmap = (float*)m_current_collisions_hm->GetHMTextureContent();
 
         Meshe final_meshe;
-        build_meshe( *( m_planetbody->GetPatcheMeshe() ), m_current_patch, final_meshe, heightmap );
+        build_meshe( *( m_body->GetPatcheMeshe() ), m_current_patch, final_meshe, heightmap );
 
         Dynamics::InertBody::Body::Parameters params;
 
@@ -355,9 +355,9 @@ void Layer::SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider )
     }
 }
 
-void Layer::ResetPlanetBody( void )
+void Layer::ResetBody( void )
 {
-    m_planetbody->Reset();
+    m_body->Reset();
 }
 
 void Layer::UpdateRelativeHotViewerPos( const Utils::Vector& p_pos )

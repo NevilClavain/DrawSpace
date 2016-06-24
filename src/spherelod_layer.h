@@ -58,7 +58,8 @@ protected:
 
     DrawSpace::SphericalLOD::Config*                            m_config;
 
-    DrawSpace::SphericalLOD::Body*                              m_planetbody;
+    //DrawSpace::SphericalLOD::Body*                              m_planetbody;
+    DrawSpace::SphericalLOD::Body*                              m_body;
 
     DrawSpace::Dynamics::Collider*                              m_collider;
     
@@ -116,13 +117,13 @@ public:
     DrawSpace::Dynamics::InertBody* GetInertBody( void );
 
     void RemoveColliderFromWorld( void );
-    DrawSpace::SphericalLOD::Body* GetPlanetBody( void );
+    DrawSpace::SphericalLOD::Body* GetBody( void );
 
     void UpdateRelativeAlt( dsreal p_alt );
 
     void GetCollisionMesheBuildStats( long& p_nb_collisionmeshebuild_done );
 
-    void ResetPlanetBody( void );
+    void ResetBody( void );
 
     void UpdateRelativeHotViewerPos( const Utils::Vector& p_pos );
 
