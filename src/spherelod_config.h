@@ -49,7 +49,8 @@ public:
 
 
     double                          m_lod0base;
-    int                             m_nbLODRanges;
+    int                             m_nbLODRanges_freeCameras;
+    int                             m_nbLODRanges_inertBodies;
 
 
     std::vector<LayerDescriptor>    m_layers_descr;

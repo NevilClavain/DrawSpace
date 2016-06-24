@@ -32,7 +32,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
 Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
-                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index ) : 
+                Patch::SubPassCreationHandler* p_handler, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, int p_nbLODRanges ) : 
 
 m_orientation( p_orientation ),
 m_ray( p_ray ),
@@ -42,7 +42,8 @@ m_config( p_config ),
 m_subpasscreation_handler( p_handler ),
 m_parent( p_parent ),
 m_nodeid( p_nodeid ),
-m_subpass_entry_infos_valid( false )
+m_subpass_entry_infos_valid( false ),
+m_nbLODRanges( p_nbLODRanges )
 {
     m_enable_datatexture = m_config->m_layers_descr[p_layer_index].enable_datatextures;
 
@@ -56,7 +57,7 @@ m_subpass_entry_infos_valid( false )
     if( NULL == p_parent )
     {
         //m_lod_level = NB_LOD_RANGES - 1;
-        m_lod_level = m_config->m_nbLODRanges - 1;
+        m_lod_level = m_nbLODRanges - 1;
         m_xpos = m_ypos = 0.0;
         m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
 
@@ -133,13 +134,13 @@ m_subpass_entry_infos_valid( false )
     if( m_enable_datatexture )
     {
         //if( m_lod_level == NB_LOD_RANGES - 1 )
-        if( m_lod_level == m_config->m_nbLODRanges - 1)
+        if( m_lod_level == m_nbLODRanges - 1)
         {
             prepare_data_texture( m_subpasscreation_handler, 1, p_layer_index );
         }
     
         //else if( m_lod_level >= NB_LOD_RANGES - 8 )
-        else if( m_lod_level >= m_config->m_nbLODRanges - 8 )
+        else if( m_lod_level >= m_nbLODRanges - 8 )
         {
             prepare_data_texture( m_subpasscreation_handler, 0, p_layer_index );
         }

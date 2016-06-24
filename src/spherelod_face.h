@@ -82,6 +82,8 @@ protected:
 
     int                                                         m_layer_index;
 
+    int                                                         m_nbLODRanges;
+
     void on_nodeinstanciation( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node );
     void on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node );
@@ -105,7 +107,7 @@ protected:
 
 public:
 
-    Face( DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler );
+    Face( DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges );
     virtual ~Face( void );
 
     bool Init( int p_orientation );

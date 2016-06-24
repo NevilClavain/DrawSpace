@@ -40,7 +40,7 @@ Meshe* Body::m_skirt_meshe = NULL;  //les jupes terrains
 
 
 Body::Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, 
-            Patch::SubPassCreationHandler* p_handler ) : 
+            Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges ) : 
 m_timemanager( p_time ),
 m_current_face( -1 ),
 m_current_patch( NULL ),
@@ -52,7 +52,7 @@ m_config( p_config )
 
     for( long i = 0; i < 6; i++ )
     {
-        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_config, p_layer_index, p_handler ) );
+        m_faces[i] = _DRAWSPACE_NEW_( Face, Face( m_config, p_layer_index, p_handler, p_nbLODRanges ) );
     }
 }
 

@@ -79,12 +79,12 @@ public:
 
     static DrawSpace::Core::Meshe*                                              m_patch_meshe; //patch terrains
     static DrawSpace::Core::Meshe*                                              m_patch2_meshe; // patch terrains haute resolution
-     static DrawSpace::Core::Meshe*                                             m_patch3_meshe; // patch terrains moyenne resolution
+    static DrawSpace::Core::Meshe*                                              m_patch3_meshe; // patch terrains moyenne resolution
     static DrawSpace::Core::Meshe*                                              m_skirt_meshe; //les jupes terrains
 
 
     Body( DrawSpace::Utils::TimeManager* p_time, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index,
-            Patch::SubPassCreationHandler* p_handler );
+            Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges );
 
     virtual ~Body( void );
 

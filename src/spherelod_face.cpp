@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::SphericalLOD;
 
-Face::Face( DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler ) : 
+Face::Face( DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges ) : 
 m_config( p_config ),
 m_rootpatch( NULL ), 
 m_currentleaf( NULL ),
@@ -44,13 +44,14 @@ m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
 m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
 */
 m_subpasscreation_handler( p_handler ),
-m_layer_index( p_layer_index )
+m_layer_index( p_layer_index ),
+m_nbLODRanges( p_nbLODRanges )
 {
     m_diameter = 1000.0 * m_config->m_layers_descr[p_layer_index].ray * 2.0;
     m_min_lodlevel = m_config->m_layers_descr[p_layer_index].min_lodlevel;
 
-    m_lod_slipping_sup = m_config->m_nbLODRanges - 1;
-    m_lod_slipping_inf = m_config->m_nbLODRanges - 4;
+    m_lod_slipping_sup = m_nbLODRanges - 1;
+    m_lod_slipping_inf = m_nbLODRanges - 4;
 }
 
 Face::~Face( void )
@@ -78,7 +79,7 @@ bool Face::Init( int p_orientation )
 void Face::init_lodranges( void )
 {
     dsreal k = 1.0;
-    for( int i = /*NB_LOD_RANGES*/ m_config->m_nbLODRanges - 1; i >= 0; i--)
+    for( int i = /*NB_LOD_RANGES*/ m_nbLODRanges - 1; i >= 0; i--)
     {
         m_lodranges[i] = k * m_diameter / 2.0;        
         k *= 0.5;
@@ -92,7 +93,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
 
         Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_diameter / 2.0, m_orientation, NULL, -1, 
-                                                        root, m_subpasscreation_handler, m_config, m_layer_index ) );
+                                                        root, m_subpasscreation_handler, m_config, m_layer_index, m_nbLODRanges ) );
         root->SetContent( patch );      
     }
     else
@@ -101,7 +102,7 @@ void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
         QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
 
         Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), 
-                                                        node, m_subpasscreation_handler, m_config, m_layer_index ) );
+                                                        node, m_subpasscreation_handler, m_config, m_layer_index, m_nbLODRanges ) );
         node->SetContent( patch );      
     }
 }
@@ -482,7 +483,7 @@ void Face::Compute( void )
         m_work_displaylist.clear();
         m_work_currentPatch = NULL;
 
-        recursive_build_displaylist( m_rootpatch, /*NB_LOD_RANGES - 1*/ m_config->m_nbLODRanges - 1 );
+        recursive_build_displaylist( m_rootpatch, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1 );
     }
 }
 
@@ -499,7 +500,7 @@ void Face::UpdateLODComputationResults( void )
             m_work_displaylist.push_back( m_rootpatch->GetContent() );
             m_displaylist = m_work_displaylist;
             m_currentPatch = m_rootpatch->GetContent();
-            m_currentPatchLOD = m_config->m_nbLODRanges - 1; //NB_LOD_RANGES - 1;
+            m_currentPatchLOD = m_nbLODRanges - 1; //NB_LOD_RANGES - 1;
         }
         else
         {
@@ -663,8 +664,8 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
         dsreal factor = Maths::Clamp( 0.0, 1.0, m_relative_alt - 1.0 );
         dsreal factor2 = atan( 18.0 * factor ) / 1.57;
 
-        m_lod_slipping_sup = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_config->m_nbLODRanges - 1, Maths::Lerp( 12, /*NB_LOD_RANGES - 1*/ m_config->m_nbLODRanges - 1, factor2 ) );
-        m_lod_slipping_inf = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_config->m_nbLODRanges - 1, Maths::Lerp( 0, /*NB_LOD_RANGES - 2*/ m_config->m_nbLODRanges - 2, factor2 ) );
+        m_lod_slipping_sup = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::Lerp( 12, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, factor2 ) );
+        m_lod_slipping_inf = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::Lerp( 0, /*NB_LOD_RANGES - 2*/ m_nbLODRanges - 2, factor2 ) );
     }
 }
 

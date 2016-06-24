@@ -26,7 +26,8 @@ using namespace DrawSpace::SphericalLOD;
 
 Config::Config( void ) :
 m_lod0base( 12000.0 ),
-m_nbLODRanges( 16 )
+m_nbLODRanges_freeCameras( 16 ),
+m_nbLODRanges_inertBodies( 16 )
 {
     /*
     for( int i = 0; i < 6; i++ )

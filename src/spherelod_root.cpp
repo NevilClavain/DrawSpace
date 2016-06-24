@@ -154,7 +154,7 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                             inertbody->IncludeTo( this );
 
                             DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                                DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb ) );
+                                DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb, m_config->m_nbLODRanges_inertBodies ) );
 
                             Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                         
@@ -180,7 +180,7 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                     for( size_t i = 0; i < m_config->m_layers_descr.size(); i++ )
                     {                                                                                                                
                         DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, 
-                            DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb ) );
+                            DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb, m_config->m_nbLODRanges_inertBodies ) );
 
                         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
                    
@@ -289,7 +289,7 @@ void Root::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* 
 {
     for( size_t i = 0; i < m_config->m_layers_descr.size(); i++ )
     {
-        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb ) );
+        DrawSpace::SphericalLOD::Body* slod_body = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Body, DrawSpace::SphericalLOD::Body( m_timemanager, m_config, i, m_subpass_creation_cb, m_config->m_nbLODRanges_freeCameras ) );
 
         Collider* collider = _DRAWSPACE_NEW_( Collider, Collider );
     
