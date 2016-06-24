@@ -270,7 +270,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Unbind();
 }
 
-void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+DrawSpace::Core::RenderingNode* Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                 DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
 {
 
@@ -341,6 +341,7 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
     node->SetBinder( p_binder );
     node->SetOrderNumber( p_rendering_order );
 
+    return node;
 }
 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void )
