@@ -55,7 +55,8 @@ m_subpass_entry_infos_valid( false )
 
     if( NULL == p_parent )
     {
-        m_lod_level = NB_LOD_RANGES - 1;
+        //m_lod_level = NB_LOD_RANGES - 1;
+        m_lod_level = m_config->m_nbLODRanges - 1;
         m_xpos = m_ypos = 0.0;
         m_sidelength = 2.0;    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
 
@@ -131,12 +132,14 @@ m_subpass_entry_infos_valid( false )
 
     if( m_enable_datatexture )
     {
-        if( m_lod_level == NB_LOD_RANGES - 1 )
+        //if( m_lod_level == NB_LOD_RANGES - 1 )
+        if( m_lod_level == m_config->m_nbLODRanges - 1)
         {
             prepare_data_texture( m_subpasscreation_handler, 1, p_layer_index );
         }
     
-        else if( m_lod_level >= NB_LOD_RANGES - 8 )
+        //else if( m_lod_level >= NB_LOD_RANGES - 8 )
+        else if( m_lod_level >= m_config->m_nbLODRanges - 8 )
         {
             prepare_data_texture( m_subpasscreation_handler, 0, p_layer_index );
         }

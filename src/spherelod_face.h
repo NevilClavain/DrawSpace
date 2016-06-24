@@ -74,7 +74,7 @@ protected:
     int                                                         m_work_lod_slipping_sup;
     int                                                         m_work_lod_slipping_inf;    
 
-    dsreal                                                      m_lodranges[NB_LOD_RANGES];
+    dsreal                                                      m_lodranges[NB_LOD_RANGES_MAX];
 
     Patch::SubPassCreationHandler*                              m_subpasscreation_handler;
 

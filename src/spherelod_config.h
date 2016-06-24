@@ -49,6 +49,7 @@ public:
 
 
     double                          m_lod0base;
+    int                             m_nbLODRanges;
 
 
     std::vector<LayerDescriptor>    m_layers_descr;
