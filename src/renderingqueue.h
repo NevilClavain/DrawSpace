@@ -57,7 +57,6 @@ protected:
     {
         SET_TEXTURE,
         SET_VERTEXTEXTURE,
-        //SET_FX,
         SET_SHADERS,
         SET_RENDERSTATES_IN,
         SET_RENDERSTATES_OUT,
@@ -96,6 +95,8 @@ protected:
         long                                            index;
 
     } erase_infos;
+
+    typedef std::vector<erase_infos>                   OperationsGroup;
  
     std::map<long, std::vector<RenderingNode*>>         m_renderingorder_nodes;
 
@@ -122,6 +123,20 @@ protected:
 
     long                                                m_switches_cost;
 
+
+    std::vector<OperationsGroup>                        m_setmeshe_groups;
+    std::vector<OperationsGroup>                        m_setshaders_groups;
+
+    std::vector<OperationsGroup>                        m_setrsin_groups;
+    std::vector<OperationsGroup>                        m_setrsout_groups;
+
+    std::vector<OperationsGroup>                        m_settexture_groups[RenderingNode::NbMaxTextures];
+    std::vector<OperationsGroup>                        m_unsettexture_groups[RenderingNode::NbMaxTextures];
+
+    std::vector<OperationsGroup>                        m_setvtexture_groups[RenderingNode::NbMaxTextures];
+    std::vector<OperationsGroup>                        m_unsetvtexture_groups[RenderingNode::NbMaxTextures];
+
+
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
 
     void sort_list( std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list );
@@ -130,7 +145,14 @@ protected:
     void sort_list_by( SortedListType p_type, long p_texturestage, std::vector<RenderingNode*>& p_in_list, std::map<dsstring, std::vector<RenderingNode*>>& p_out_lists );
 
     void build_output_list( std::vector<RenderingNode*>& p_input_list );
+
+
+    void search_op_groups( OperationType p_type, std::vector<OperationsGroup>& p_groups );
+    void search_op_textures_groups( OperationType p_type, int p_stage, std::vector<OperationsGroup>& p_groups );
+
     void cleanup_output_list( void );
+
+
 
     double lists_score( std::map<dsstring, std::vector<RenderingNode*>>& p_lists );
 

@@ -124,20 +124,6 @@ void RenderingQueue::Draw( void )
                 m_switches_cost++;
                 break;
 
-                /*
-            case SET_FX:
-
-                renderer->SetFx( curr_operation.data );
-                m_switches_cost++;
-                break;
-
-            case UNSET_FX:
-
-                renderer->UnsetFx( curr_operation.data );
-                m_switches_cost++;
-                break;
-                */
-
             case SET_SHADERS:
 
                 renderer->SetShaders( curr_operation.data );
@@ -237,6 +223,21 @@ void RenderingQueue::UpdateOutputQueue( void )
     }
     
     build_output_list( m_nodes );
+
+    m_setmeshe_groups.clear();
+    m_setshaders_groups.clear();
+    m_setrsin_groups.clear();
+    m_setrsout_groups.clear();
+
+    for( int i = 0; i < RenderingNode::NbMaxTextures; i++ )
+    {
+        m_settexture_groups[i].clear();
+        m_unsettexture_groups[i].clear();
+
+        m_setvtexture_groups[i].clear();
+        m_unsetvtexture_groups[i].clear();
+    }
+
     cleanup_output_list();
 }
 
@@ -255,6 +256,22 @@ void RenderingQueue::UpdateOutputQueueNoOpt( void )
         }
     }
     build_output_list( m_nodes );
+
+    m_setmeshe_groups.clear();
+    m_setshaders_groups.clear();
+    m_setrsin_groups.clear();
+    m_setrsout_groups.clear();
+
+    for( int i = 0; i < RenderingNode::NbMaxTextures; i++ )
+    {
+        m_settexture_groups[i].clear();
+        m_unsettexture_groups[i].clear();
+
+        m_setvtexture_groups[i].clear();
+        m_unsetvtexture_groups[i].clear();
+    }
+
+
     cleanup_output_list();
 }
 
@@ -868,16 +885,250 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
     }
 }
 
+void RenderingQueue::search_op_textures_groups( OperationType p_type, int p_stage, std::vector<OperationsGroup>& p_groups )
+{
+    void* curr_data = NULL;
 
+    OperationsGroup group;
+
+    long index = 0;
+    for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
+    {
+        Operation curr_operation = (*it);
+
+        if( p_type == curr_operation.type && p_stage == curr_operation.texture_stage )
+        {
+            if( NULL == curr_data )
+            {
+                curr_data = curr_operation.data;
+
+                erase_infos ei;
+                ei.pos = it;
+                ei.index = index;
+                group.push_back( ei ); 
+            }
+            else
+            {
+                if( curr_data == curr_operation.data )
+                {
+                    // add to currentgroup
+
+                    erase_infos ei;
+                    ei.pos = it;
+                    ei.index = index;
+                    group.push_back( ei );   
+                }
+                else
+                {
+
+                    p_groups.push_back( group );
+                    // start new group
+                    group.clear();
+
+                    erase_infos ei;
+                    ei.pos = it;
+                    ei.index = index;
+                    group.push_back( ei );
+
+                    curr_data = curr_operation.data;
+                }
+            }
+        }
+    }
+
+    if( group.size() > 0 )
+    {
+        p_groups.push_back( group );
+    }
+}
+
+
+void RenderingQueue::search_op_groups( OperationType p_type, std::vector<OperationsGroup>& p_groups )
+{
+    void* curr_data = NULL;
+
+    OperationsGroup group;
+
+    long index = 0;
+    for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
+    {
+        Operation curr_operation = (*it);
+
+        if( p_type == curr_operation.type )
+        {
+            if( NULL == curr_data )
+            {
+                curr_data = curr_operation.data;
+
+                erase_infos ei;
+                ei.pos = it;
+                ei.index = index;
+                group.push_back( ei ); 
+            }
+            else
+            {
+                if( curr_data == curr_operation.data )
+                {
+                    // add to currentgroup
+
+                    erase_infos ei;
+                    ei.pos = it;
+                    ei.index = index;
+                    group.push_back( ei );   
+                }
+                else
+                {
+
+                    p_groups.push_back( group );
+                    // start new group
+                    group.clear();
+
+                    erase_infos ei;
+                    ei.pos = it;
+                    ei.index = index;
+                    group.push_back( ei );
+
+                    curr_data = curr_operation.data;
+                }
+            }
+        }
+    }
+
+    if( group.size() > 0 )
+    {
+        p_groups.push_back( group );
+    }
+}
 
 
 void RenderingQueue::cleanup_output_list( void )
 {
-    /*
-    Operation                current_setfx_ope;
-    bool                     current_setfx_ope_set = false;
-    */
+    // etape de creation des groupes
+    
+    search_op_groups( SET_MESHE, m_setmeshe_groups );
+    search_op_groups( SET_SHADERS, m_setshaders_groups );
 
+    search_op_groups( SET_RENDERSTATES_IN, m_setrsin_groups );
+    search_op_groups( SET_RENDERSTATES_OUT, m_setrsout_groups );
+
+    for( int i = 0; i < RenderingNode::NbMaxTextures; i++ )
+    {
+        search_op_textures_groups( SET_TEXTURE, i, m_settexture_groups[i] );
+        search_op_textures_groups( UNSET_TEXTURE, i, m_unsettexture_groups[i] );
+
+        search_op_textures_groups( SET_VERTEXTEXTURE, i, m_setvtexture_groups[i] );
+        search_op_textures_groups( UNSET_VERTEXTEXTURE, i, m_unsetvtexture_groups[i] );
+    }
+
+
+    // etape de nettoyage
+
+    // SET_MESHE : pour chaque groupe effacer toutes les entrees sauf le 1er
+    for( size_t i = 0; i < m_setmeshe_groups.size(); i++ )
+    {
+        if( m_setmeshe_groups[i].size() > 1 )
+        {
+            for( size_t j = 1; j < m_setmeshe_groups[i].size(); j++ )
+            {
+                m_outputqueue.erase( m_setmeshe_groups[i][j].pos );
+            }
+        }
+    }
+
+    // SET_SHADERS : pour chaque groupe effacer toutes les entrees sauf le 1er
+    for( size_t i = 0; i < m_setshaders_groups.size(); i++ )
+    {
+        if( m_setshaders_groups[i].size() > 1 )
+        {
+            for( size_t j = 1; j < m_setshaders_groups[i].size(); j++ )
+            {
+                m_outputqueue.erase( m_setshaders_groups[i][j].pos );
+            }
+        }
+    }
+
+    // SET_RENDERSTATES_IN : pour chaque groupe effacer toutes les entrees sauf le 1er
+    for( size_t i = 0; i < m_setrsin_groups.size(); i++ )
+    {
+        if( m_setrsin_groups[i].size() > 1 )
+        {
+            for( size_t j = 1; j < m_setrsin_groups[i].size(); j++ )
+            {
+                m_outputqueue.erase( m_setrsin_groups[i][j].pos );
+            }
+        }
+    }
+
+    // SET_RENDERSTATES_OUT : pour chaque groupe effacer toutes les entrees sauf le dernier
+    for( size_t i = 0; i < m_setrsout_groups.size(); i++ )
+    {
+        if( m_setrsout_groups[i].size() > 1 )
+        {
+            for( size_t j = 0; j < m_setrsout_groups[i].size() - 1; j++ )
+            {
+                m_outputqueue.erase( m_setrsout_groups[i][j].pos );
+            }
+        }
+    }
+
+
+    for( int i0 = 0; i0 < RenderingNode::NbMaxTextures; i0++ )
+    {
+        // SET_TEXTURE : pour chaque groupe effacer toutes les entrees sauf le 1er
+        for( size_t i = 0; i < m_settexture_groups[i0].size(); i++ )
+        {
+            if( m_settexture_groups[i0][i].size() > 1 )
+            {
+                for( size_t j = 1; j < m_settexture_groups[i0][i].size(); j++ )
+                {
+                    m_outputqueue.erase( m_settexture_groups[i0][i][j].pos );
+                }
+            }
+        }  
+
+        // UNSET_TEXTURE : pour chaque groupe effacer toutes les entrees sauf le dernier
+        for( size_t i = 0; i < m_unsettexture_groups[i0].size(); i++ )
+        {
+            if( m_unsettexture_groups[i0][i].size() > 1 )
+            {
+                for( size_t j = 0; j < m_unsettexture_groups[i0][i].size() - 1; j++ )
+                {
+                    m_outputqueue.erase( m_unsettexture_groups[i0][i][j].pos );
+                }
+            }
+        }
+
+
+        // SET_VTEXTURE : pour chaque groupe effacer toutes les entrees sauf le 1er
+        for( size_t i = 0; i < m_setvtexture_groups[i0].size(); i++ )
+        {
+            if( m_setvtexture_groups[i0][i].size() > 1 )
+            {
+                for( size_t j = 1; j < m_setvtexture_groups[i0][i].size(); j++ )
+                {
+                    m_outputqueue.erase( m_setvtexture_groups[i0][i][j].pos );
+                }
+            }
+        }  
+
+        // UNSET_VTEXTURE : pour chaque groupe effacer toutes les entrees sauf le dernier
+        for( size_t i = 0; i < m_unsetvtexture_groups[i0].size(); i++ )
+        {
+            if( m_unsetvtexture_groups[i0][i].size() > 1 )
+            {
+                for( size_t j = 0; j < m_unsetvtexture_groups[i0][i].size() - 1; j++ )
+                {
+                    m_outputqueue.erase( m_unsetvtexture_groups[i0][i][j].pos );
+                }
+            }
+        }
+    }
+    
+
+
+
+
+    /*
     Operation                current_setsh_ope;
     bool                     current_setsh_ope_set = false;
 
@@ -1000,53 +1251,6 @@ void RenderingQueue::cleanup_output_list( void )
                     }
                 }
                 break;
-/*
-            case SET_FX:
-
-                if( !current_setfx_ope_set )
-                {
-                    current_setfx_ope = curr_operation;
-                    current_setfx_ope_set = true;                    
-                }
-                else
-                {
-                    if( current_setfx_ope.data == curr_operation.data )
-                    {
-                        erase_infos ei;
-                        ei.index = index;
-                        ei.pos = it;
-
-                        to_erase_list.push_back( ei );
-
-                        // remonter pour rechercher le unset_fx precedent
-                        
-                        std::list<Operation>::iterator it2 = it;
-                        long index2 = index;
-
-                        while( it2 != m_outputqueue.begin() )
-                        {
-                            Operation curr_operation_2 = (*it2);
-
-                            if( UNSET_FX == curr_operation_2.type && current_setfx_ope.data == curr_operation_2.data )
-                            {
-                                ei.index = index2;
-                                ei.pos = it2;
-                                to_erase_list.push_back( ei );  
-
-                                break;
-                            }
-                            it2--;
-                            index2--;
-                        }
-                    }
-                    else
-                    {
-                        current_setfx_ope = curr_operation;
-                    }
-                }
-                
-                break;
-*/
 
             case SET_MESHE:
 
@@ -1145,11 +1349,12 @@ void RenderingQueue::cleanup_output_list( void )
                 break;
         }
     }
-
+    
     for( size_t i = 0; i < to_erase_list.size(); i++ )
     {
         m_outputqueue.erase( to_erase_list[i].pos );
     }
+    */
 }
 
 long RenderingQueue::GetSwitchesCost( void )
