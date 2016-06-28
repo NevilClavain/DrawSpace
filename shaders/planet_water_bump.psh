@@ -26,7 +26,7 @@ float4 bump_flag : register(c30);
 
 float4x4 matWorldView : register(c104);
 
-sampler2D Water_Bump_Texture : register(s1);
+sampler2D Water_Bump_Texture : register(s0);
 
 
 struct PS_INTPUT

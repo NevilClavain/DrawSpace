@@ -65,9 +65,10 @@ float4 atmo_scattering_flag_4 : register(c22);
 float4 atmo_scattering_flag_5 : register(c23);
 float4 atmo_scattering_flag_6 : register(c24);
 
-sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
-sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
-sampler2D Splatting_HTMap_Texture	: register(s2);  // texture HT pour splatting
+sampler2D Pixels_HTMap_Texture : register(s0); // texture HT en pixels
+sampler2D Splatting_HTMap_Texture : register(s1); // texture HT pour splatting
+sampler2D HT_Texture : register(s7); // texture Humidite, Temperature, Altitudes
+
 
 struct PS_INTPUT
 {	

@@ -115,7 +115,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_a
 
         if( refpatchtexture != current_texture )
         {
-            m_renderer->SetTexture( refpatchtexture->GetRenderData(), 0 );
+            m_renderer->SetTexture( refpatchtexture->GetRenderData(), 7 );
             current_texture = refpatchtexture;
         }
         

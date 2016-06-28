@@ -66,7 +66,7 @@ float4 atmo_scattering_flag_6 : register(c24);
 float4 clouds_texture_infos : register(c29);
 
 
-sampler2D Clouds_Texture : register(s1);
+sampler2D Clouds_Texture : register(s0);
 
 struct PS_INTPUT
 {

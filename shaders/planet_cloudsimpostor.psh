@@ -3,7 +3,7 @@ float4 fog_color        : register(c0);
 float4 ambientlit_color : register(c1);
 
 
-sampler2D Texture0: register(s1);
+sampler2D Texture0: register(s0);
 
 struct PS_INTPUT 
 {

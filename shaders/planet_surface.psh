@@ -69,9 +69,11 @@ float4x4 matWorldRots : register(c25);
 
 float4 terrain_bump_flag : register(c31);
 
-sampler2D HT_Texture				: register(s0);  // texture Humidite, Temperature, Altitudes
-sampler2D Pixels_HTMap_Texture		: register(s1);  // texture HT en pixels
-sampler2D Splatting_HTMap_Texture	: register(s2);  // texture HT pour splatting
+
+sampler2D Pixels_HTMap_Texture : register(s0); // texture HT en pixels
+sampler2D Splatting_HTMap_Texture : register(s1); // texture HT pour splatting
+
+sampler2D HT_Texture				: register(s7);  // texture Humidite, Temperature, Altitudes
 
 struct PS_INTPUT
 {	
