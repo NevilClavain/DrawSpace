@@ -432,6 +432,7 @@ bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
     if( m_meshes_base.count( hash ) > 0 )
     {
         *p_data = (void *)m_meshes_base[hash];
+        p_meshe->SetRenderData( (void *)m_meshes_base[hash] );
         return true;
     }
 
@@ -794,10 +795,10 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         }
 
         // inutile, puisque cette texture est d�ja "pass�e" par ici...
-        /*
-        p_texture->SetFormat( width, height, bpp );
-        p_texture->SetRenderData( (void*)m_textures_base[path] );
-        */
+        
+        //p_texture->SetFormat( width, height, bpp );
+        //p_texture->SetRenderData( (void*)m_textures_base[path] );
+        
 
         return true;
     }
