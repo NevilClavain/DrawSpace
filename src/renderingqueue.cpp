@@ -739,7 +739,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             meshe_data = current_meshe->GetRenderData();
 
-            // optimisation pour les meshes : par recreer dans le renderer un meshe deja cree (evite la verif via md5 hash, couteuse
+            // optimisation pour les meshes : pas recreer dans le renderer un meshe deja cree (evite la verif via md5 hash, couteuse
             // pour les gros meshes)
 
             if( NULL == meshe_data )
