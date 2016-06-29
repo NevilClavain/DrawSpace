@@ -186,6 +186,7 @@ public:
 
     RootParser* GetRootParser( void );
     void InitializeSeedBase( unsigned int p_seed );
+    void InitializeSeedBaseFromCurrentTime( void );
 
 };
 

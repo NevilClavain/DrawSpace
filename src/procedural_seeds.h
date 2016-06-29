@@ -42,6 +42,7 @@ public:
     ~SeedsBase( void );
 
     void Initialize( unsigned int p_globalseed );
+    void InitializeFromCurrentTime( void );
     int GetSeed( unsigned int p_index );
 };
 

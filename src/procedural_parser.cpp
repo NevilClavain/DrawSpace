@@ -416,3 +416,8 @@ void RulesPackage::InitializeSeedBase( unsigned int p_seed )
 {
     m_seedsbase.Initialize( p_seed );
 }
+
+void RulesPackage::InitializeSeedBaseFromCurrentTime( void )
+{
+    m_seedsbase.InitializeFromCurrentTime();
+}

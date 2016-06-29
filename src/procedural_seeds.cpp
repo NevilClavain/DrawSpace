@@ -48,6 +48,19 @@ void SeedsBase::Initialize( unsigned int p_globalseed )
     }
 }
 
+void SeedsBase::InitializeFromCurrentTime( void )
+{
+    std::default_random_engine generator;
+    std::uniform_int_distribution<unsigned int> rand( 0, 1000000000 );
+
+    generator.seed( ::GetTickCount() );
+
+    for( int i = 0; i < BaseSize; i++ )
+    {
+        m_base[i] = rand( generator );
+    }
+}
+
 int SeedsBase::GetSeed( unsigned int p_index )
 {
     if( p_index < BaseSize )
