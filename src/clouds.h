@@ -108,6 +108,7 @@ public:
 
     void ImpostorsInit( void );
     void CloudsReset( void );
+    void CloudsUpdateRequest( void );
 };
 }
 

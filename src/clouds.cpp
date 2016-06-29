@@ -261,7 +261,7 @@ void Clouds::execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const Dr
 
         local_trans.Translation( m_clouds[i]->position );
 
-        Matrix final = local_trans * p_impostor_mat;
+        Matrix finalm = local_trans * p_impostor_mat;
 
         Matrix cam_mat = p_cam_mat;
 
@@ -270,7 +270,7 @@ void Clouds::execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const Dr
 
         Vector t_point_imp, t_point_cam;
 
-        final.Transform( &point_imp, &t_point_imp );        
+        finalm.Transform( &point_imp, &t_point_imp );        
         cam_mat.Transform( &point_cam, &t_point_cam );
 
         // la distance entre l'impostor et le point camera;
@@ -416,4 +416,20 @@ void Clouds::CloudsReset( void )
     }
 
     m_clouds.clear();
+}
+
+void Clouds::CloudsUpdateRequest( void )
+{
+    Matrix ImpostorMat;
+    m_owner->GetFinalTransform( ImpostorMat );
+
+    Matrix CamMat;
+    m_current_camera->GetFinalTransform( CamMat );
+
+    PropertyPool props;
+
+    props.AddPropValue<Matrix>( "ImpostorMat", ImpostorMat );
+    props.AddPropValue<Matrix>( "CamMat", CamMat );
+
+    m_runner->PushMessage( props );
 }
