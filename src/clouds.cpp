@@ -407,3 +407,13 @@ dsreal Clouds::GetSortingDistance( void )
 {
     return m_sorting_distance;
 }
+
+void Clouds::CloudsReset( void )
+{
+    for( size_t i = 0; i < m_clouds.size(); i++ )
+    {
+        delete m_clouds[i];
+    }
+
+    m_clouds.clear();
+}

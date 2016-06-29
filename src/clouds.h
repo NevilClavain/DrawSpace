@@ -107,6 +107,7 @@ public:
     void EnableDetails( bool p_details );
 
     void ImpostorsInit( void );
+    void CloudsReset( void );
 };
 }
 
