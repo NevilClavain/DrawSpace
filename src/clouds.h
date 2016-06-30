@@ -93,6 +93,8 @@ protected:
     
     bool                                                                m_running;
 
+    int                                                                 m_nbmax_clouds_impostors;
+
 public:
 
     Clouds( void );

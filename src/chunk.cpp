@@ -73,7 +73,7 @@ void Chunk::GetImpostorsDisplayList( DrawSpace::ImpostorsDisplayList& p_idl )
     p_idl = m_idl;
 }
 
-void Chunk::ImpostorsInit( /*const ImpostorsDisplayList& m_idl*/ void )
+void Chunk::ImpostorsInit( int p_nbmax_impostors )
 {
     m_meshe->ClearTriangles();
     m_meshe->ClearVertices();
@@ -147,7 +147,27 @@ void Chunk::ImpostorsInit( /*const ImpostorsDisplayList& m_idl*/ void )
 
         m_meshe->AddTriangle( Triangle( index_base, 3 + index_base, 1 + index_base ) );
         m_meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );
-        
+    }
+
+    if( p_nbmax_impostors > -1 )
+    {
+        // padding : on va a la fin allouer des buffers correspondant à la taille max d'impostors qu'on souhaite.
+        // Utile si mise a jour des impostors avec ImpostorsUpdate() (comme c'est le cas avec les clouds volumetrique par exemple)
+
+        for( size_t i = 0; i < p_nbmax_impostors - m_idl.size(); i++ )
+        {
+            Vertex v1, v2, v3, v4;
+             
+            m_meshe->AddVertex( v1 );
+            m_meshe->AddVertex( v2 );
+            m_meshe->AddVertex( v3 );
+            m_meshe->AddVertex( v4 );
+
+            size_t index_base = 4 * i;
+
+            m_meshe->AddTriangle( Triangle( index_base, 3 + index_base, 1 + index_base ) );
+            m_meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );                
+        }
     }
 }
 

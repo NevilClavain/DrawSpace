@@ -38,6 +38,7 @@ protected:
 
     DrawSpace::Interface::Renderer*                         m_renderer;
     DrawSpace::Core::Meshe*                                 m_meshe;
+
     DrawSpace::ImpostorsDisplayList                         m_idl;
 
     std::map<Pass*, DrawSpace::Core::RenderingNode*>        m_passesnodes;
@@ -57,7 +58,7 @@ public:
 
     void SetImpostorsDisplayList( const DrawSpace::ImpostorsDisplayList& p_idl );
     void GetImpostorsDisplayList( DrawSpace::ImpostorsDisplayList& p_idl );
-    void ImpostorsInit( void );
+    void ImpostorsInit( int p_nbmax_impostors = -1 );
     void ImpostorsUpdate( void );
 
     void Update( DrawSpace::Utils::TimeManager& p_timemanager ) {};

@@ -35,7 +35,8 @@ m_previous_camera_pos_avail( false ),
 m_owner( NULL ),
 m_sorting_distance( 1000.0 ),
 m_details( true ),
-m_running( false )
+m_running( false ),
+m_nbmax_clouds_impostors( -1 )
 {
     m_proceduralcb = _DRAWSPACE_NEW_( ProceduralCb, ProceduralCb( this, &Clouds::on_procedural ) );
     m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
@@ -310,7 +311,7 @@ void Clouds::ImpostorsInit( void )
 {
     m_clouds_sort_request = true;
     impostors_init();
-    Chunk::ImpostorsInit();
+    Chunk::ImpostorsInit( m_nbmax_clouds_impostors );
 }
 
 Clouds::ProceduralCb* Clouds::GetProceduralCallback( void )
