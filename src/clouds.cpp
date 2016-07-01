@@ -96,7 +96,13 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
     Procedural::Array* message = static_cast<Procedural::Array*>( p_atom );
     Procedural::String* opcode = static_cast<Procedural::String*>( message->GetValueAt( 0 ) );
 
-    if( "declare_cloud" == opcode->GetValue() )
+    if( "declare_nbmax_impostors" == opcode->GetValue() )
+    {
+        Procedural::Integer* nbmax_impostors = static_cast<Procedural::Integer*>( message->GetValueAt( 1 ) );
+
+        m_nbmax_clouds_impostors = nbmax_impostors->GetValue();
+    }
+    else if( "declare_cloud" == opcode->GetValue() )
     {
         Procedural::RandomDistribution<dsreal, std::uniform_real_distribution<dsreal>, Procedural::Real>* rand_cloudposx = 
             static_cast<Procedural::RandomDistribution<dsreal, std::uniform_real_distribution<dsreal>, Procedural::Real>*>( message->GetValueAt( 1 ) );
