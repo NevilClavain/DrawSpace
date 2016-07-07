@@ -1,6 +1,7 @@
 
 float4 fog_color        : register(c0);
 float4 ambientlit_color : register(c1);
+float4 alpha            : register(c2);
 
 
 sampler2D Texture0: register(s0);
@@ -19,7 +20,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	float4 ret_color;
 
     ret_color = ambientlit_color * saturate(lerp(fog_color, input.Color, input.Fog));
-	ret_color.a = tex2D( Texture0, input.TexCoord0 ).r;	
+	ret_color.a = tex2D( Texture0, input.TexCoord0 ).r * alpha.x;	
 
 	return ret_color;
 }
