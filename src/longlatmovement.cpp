@@ -150,3 +150,14 @@ void LongLatMovement::GetBaseTransform( Matrix& p_mat )
 }
 
 
+void LongLatMovement::GetXYZ( DrawSpace::Utils::Vector& p_out )
+{
+    Utils::Vector in;
+
+    in[0] = m_alt;
+    in[1] = m_longitud_theta;
+    in[2] = m_latitud_phi;
+
+    Utils::Maths::SphericaltoCartesian( in, p_out );
+}
+
