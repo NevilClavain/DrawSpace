@@ -35,46 +35,15 @@ m_previous_camera_pos_avail( false ),
 m_owner( NULL ),
 m_sorting_distance( 1000.0 ),
 m_details( true ),
-m_running( false ),
 m_nbmax_clouds_impostors( -1 )
 {
     m_proceduralcb = _DRAWSPACE_NEW_( ProceduralCb, ProceduralCb( this, &Clouds::on_procedural ) );
     m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
-    m_runnercb = _DRAWSPACE_NEW_( RunnerMsgCb, RunnerMsgCb( this, &Clouds::on_sort_request ) );
-    m_runnerevt = _DRAWSPACE_NEW_( RunnerEvtCb, RunnerEvtCb( this, &Clouds::on_sort_result ) );
-
-    m_runner = _DRAWSPACE_NEW_( Runner, Runner );
-
-    m_runner->RegisterTaskMsgHandler( m_runnercb );
-    m_runner->RegisterEventHandler( m_runnerevt );
-
-    m_runner->Startup();
 }
 
 Clouds::~Clouds( void )
 {
-    _DRAWSPACE_DELETE_( m_runner );
 }
-
-void Clouds::on_sort_request( PropertyPool* p_args )
-{
-    Matrix ImpostorMat, CamMat;
-    ImpostorMat = p_args->GetPropValue<Matrix>( "ImpostorMat" );
-    CamMat = p_args->GetPropValue<Matrix>( "CamMat" );
-
-    execsortz( ImpostorMat, CamMat );
-    impostors_init();
-}
-
-void Clouds::on_sort_result( DrawSpace::Core::Runner::State p_runnerstate )
-{
-    if( p_runnerstate == DrawSpace::Core::Runner::TASK_DONE )
-    {
-        ImpostorsUpdate();
-        m_runner->ResetState();
-    }
-}
-
 
 void Clouds::on_camera_event( SceneNodeGraph::CameraEvent p_event, BaseSceneNode* p_node )
 {
@@ -339,11 +308,7 @@ void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
         return;
     }
    
-    m_running = true;
-
     Chunk::Update2( p_timemanager );
-
-    m_runner->Check();
 
     if( m_current_camera )
     {
@@ -382,20 +347,18 @@ void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
 
     if( m_clouds_sort_request )
     {
+        
         // get clouds node global transform
         Matrix ImpostorMat;
         m_owner->GetFinalTransform( ImpostorMat );
 
         Matrix CamMat;
         m_current_camera->GetFinalTransform( CamMat );
-
-        PropertyPool props;
-
-        props.AddPropValue<Matrix>( "ImpostorMat", ImpostorMat );
-        props.AddPropValue<Matrix>( "CamMat", CamMat );
-
-        m_runner->PushMessage( props );
-
+        
+        execsortz( ImpostorMat, CamMat );
+        impostors_init();
+        ImpostorsUpdate();
+        
         m_clouds_sort_request = false;
     }    
 }
@@ -433,10 +396,7 @@ void Clouds::CloudsUpdateRequest( void )
     Matrix CamMat;
     m_current_camera->GetFinalTransform( CamMat );
 
-    PropertyPool props;
-
-    props.AddPropValue<Matrix>( "ImpostorMat", ImpostorMat );
-    props.AddPropValue<Matrix>( "CamMat", CamMat );
-
-    m_runner->PushMessage( props );
+    execsortz( ImpostorMat, CamMat );
+    impostors_init();
+    ImpostorsUpdate();
 }

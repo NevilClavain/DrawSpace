@@ -39,9 +39,6 @@ public:
 
 protected:
 
-    typedef Core::CallBack<Clouds, void, Core::PropertyPool*>                                        RunnerMsgCb;
-    typedef Core::CallBack<Clouds, void, Core::Runner::State>                                        RunnerEvtCb;
-
     typedef Core::CallBack2<Clouds, void, Core::SceneNodeGraph::CameraEvent, Core::BaseSceneNode*>   CameraEventCb;
 
 public:
@@ -59,8 +56,6 @@ public:
 
 protected:
 
-    void on_sort_request( Core::PropertyPool* p_args );
-    void on_sort_result( DrawSpace::Core::Runner::State p_runnerstate );
     void on_camera_event( Core::SceneNodeGraph::CameraEvent p_event, Core::BaseSceneNode* p_node );
     void on_procedural( Procedural::Atomic* p_atom );
 
@@ -69,12 +64,8 @@ protected:
     void impostors_init( void );
    
 
-    RunnerMsgCb*                                                        m_runnercb;
-    RunnerEvtCb*                                                        m_runnerevt;
     ProceduralCb*                                                       m_proceduralcb;
     CameraEventCb*                                                      m_cameracb;
-
-    DrawSpace::Core::Runner*                                            m_runner;
 
     bool                                                                m_clouds_sort_request;
 
