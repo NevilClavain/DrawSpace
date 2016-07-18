@@ -49,7 +49,9 @@ public:
     {
         DrawSpace::ImpostorsDisplayList         impostors;
 
-        DrawSpace::Utils::Vector                position;
+        bool                                    spherical;
+        DrawSpace::Utils::Vector                position;  // valide si spherical == false
+
         dsreal                                  distToView; // compute result for z qsort
         
     } CloudUnitDescriptor;

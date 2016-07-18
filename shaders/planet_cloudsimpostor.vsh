@@ -19,11 +19,12 @@ float4 planetPos : register(c27);
 
 struct VS_INPUT 
 {
-	float4 Position : POSITION0;
-	float4 Normales : NORMAL0;
-	float4 TexCoord0: TEXCOORD0;
-	float4 Pos:       TEXCOORD7;
-	float4 Scale:     TEXCOORD8;
+	float4 Position :  POSITION0;
+	float4 Normales :  NORMAL0;
+	float4 TexCoord0:  TEXCOORD0;
+	float4 Pos:        TEXCOORD7;
+	float4 Scale:      TEXCOORD8;
+    float4 Sphericals: TEXCOORD6;
 
 };
 
@@ -37,6 +38,7 @@ struct VS_OUTPUT
 };
 
 #include "landscapes.hlsl"
+
 
 float ComputeExp2Fog(float4 worldViewPos, float density)
 {
@@ -177,6 +179,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	yaxis.z = 0;
 	yaxis.w = 0;
 
+    /*
 	// local translation
 	float4x4 local_trans = 0;
 
@@ -205,12 +208,60 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     float phi = atan2( centerpos3[1], sqrt( theta_dir.x * theta_dir.x + theta_dir.y * theta_dir.y + theta_dir.z * theta_dir.z ) );
 
-	float4x4 roty = BuildRotationMatrix( yaxis, theta );
-	float4x4 rotx = BuildRotationMatrix( xaxis, -phi );
+    
+
+    float4x4 roty = BuildRotationMatrix(yaxis, theta);
+    float4x4 rotx = BuildRotationMatrix(xaxis, -phi);
 
 
     float4 vpos = mul(mul(vertexpos, mul(rotx, roty)), local_trans);
 
+    */
+
+    float theta_longitud = Input.Sphericals.y;
+    float phi_latitud = Input.Sphericals.z;
+    float ray_input = 501400.0;
+     //Input.Sphericals.x;
+
+    float4x4 translation = 0.0;
+
+    translation[0][0] = 1.0;
+    translation[1][1] = 1.0;
+    translation[2][2] = 1.0;
+    translation[3][3] = 1.0;
+    translation[3][0] = 0.0;
+    translation[3][1] = ray_input;
+    translation[3][2] = 0.0;
+
+
+
+    float4x4 spherical;
+
+    // todo completer avec les matrices rot de longitude et latitude
+    spherical = translation;
+
+
+
+    float4x4 local_trans = 0;
+
+    local_trans[0][0] = 1.0;
+    local_trans[1][1] = 1.0;
+    local_trans[2][2] = 1.0;
+    local_trans[3][3] = 1.0;
+
+    local_trans[3][0] = Input.Pos.x;
+    local_trans[3][1] = Input.Pos.y;
+    local_trans[3][2] = Input.Pos.z;
+    
+
+    // les matrices de rot pour faire face a la camera
+
+    float theta = 0.0;
+    float phi = 0.0;
+    float4x4 facecam_roty = BuildRotationMatrix(yaxis, theta);
+    float4x4 facecam_rotx = BuildRotationMatrix(xaxis, -phi);
+
+    float4 vpos = mul(mul(mul(vertexpos, mul(facecam_rotx, facecam_roty)), local_trans), spherical);
     
     if (flags.x > 0.0)
     {

@@ -688,6 +688,9 @@ bool D3D9Renderer::UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsD
         v->tu0 = p_list[i].u1;
         v->tv0 = p_list[i].v1;
         v->nx = 1.0;
+        v->tu6 = p_list[i].spherical_ray;
+        v->tv6 = p_list[i].spherical_longitud;
+        v->tw6 = p_list[i].spherical_latitud;
         v->tu7 = p_list[i].localpos[0];
         v->tv7 = p_list[i].localpos[1];
         v->tw7 = p_list[i].localpos[2];
@@ -704,6 +707,9 @@ bool D3D9Renderer::UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsD
         v->tu0 = p_list[i].u2;
         v->tv0 = p_list[i].v2;
         v->nx = 2.0;
+        v->tu6 = p_list[i].spherical_ray;
+        v->tv6 = p_list[i].spherical_longitud;
+        v->tw6 = p_list[i].spherical_latitud;
         v->tu7 = p_list[i].localpos[0];
         v->tv7 = p_list[i].localpos[1];
         v->tw7 = p_list[i].localpos[2];
@@ -720,6 +726,9 @@ bool D3D9Renderer::UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsD
         v->tu0 = p_list[i].u3;
         v->tv0 = p_list[i].v3;
         v->nx = 3.0;
+        v->tu6 = p_list[i].spherical_ray;
+        v->tv6 = p_list[i].spherical_longitud;
+        v->tw6 = p_list[i].spherical_latitud;
         v->tu7 = p_list[i].localpos[0];
         v->tv7 = p_list[i].localpos[1];
         v->tw7 = p_list[i].localpos[2];
@@ -736,6 +745,9 @@ bool D3D9Renderer::UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsD
         v->tu0 = p_list[i].u4;
         v->tv0 = p_list[i].v4;
         v->nx = 4.0;
+        v->tu6 = p_list[i].spherical_ray;
+        v->tv6 = p_list[i].spherical_longitud;
+        v->tw6 = p_list[i].spherical_latitud;
         v->tu7 = p_list[i].localpos[0];
         v->tv7 = p_list[i].localpos[1];
         v->tw7 = p_list[i].localpos[2];

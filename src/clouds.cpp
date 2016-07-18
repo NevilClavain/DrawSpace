@@ -85,11 +85,19 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
 
         m_new_cloud = new CloudUnitDescriptor;
 
+        m_new_cloud->spherical = false;
+
         m_new_cloud->position[0] = posx->GetValue();
         m_new_cloud->position[1] = 0.0;
         m_new_cloud->position[2] = posz->GetValue();
         m_new_cloud->position[3] = 1.0;
 
+    }
+    else if( "declare_cloud_spherical_pos" == opcode->GetValue() )
+    {
+        m_new_cloud = new CloudUnitDescriptor;
+
+        m_new_cloud->spherical = true;     
     }
     else if( "add_core_impostor" == opcode->GetValue() )
     {
@@ -165,9 +173,18 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
         idle.v4 = impostor_uv->GetValue()[3];
 
 
-        idle.localpos[0] = m_new_cloud->position[0] + posx->GetValue();
-        idle.localpos[1] = m_new_cloud->position[1] + posy->GetValue();
-        idle.localpos[2] = m_new_cloud->position[2] + posz->GetValue();
+        if( m_new_cloud->spherical )
+        {
+            idle.localpos[0] = m_new_cloud->position[0] + posx->GetValue();
+            idle.localpos[1] = m_new_cloud->position[1] + posy->GetValue();
+            idle.localpos[2] = m_new_cloud->position[2] + posz->GetValue();
+        }
+        else
+        {
+            idle.localpos[0] = posx->GetValue();
+            idle.localpos[1] = posy->GetValue();
+            idle.localpos[2] = posz->GetValue();        
+        }
     
         m_new_cloud->impostors.push_back( idle );
     

@@ -90,6 +90,11 @@ void Chunk::ImpostorsInit( int p_nbmax_impostors )
         v1.tu[0] = m_idl[i].u1;
         v1.tv[0] = m_idl[i].v1;
         v1.nx = 1.0;
+
+        v1.tu[6] = m_idl[i].spherical_ray;
+        v1.tv[6] = m_idl[i].spherical_longitud;
+        v1.tw[6] = m_idl[i].spherical_latitud;
+
         v1.tu[7] = m_idl[i].localpos[0];
         v1.tv[7] = m_idl[i].localpos[1];
         v1.tw[7] = m_idl[i].localpos[2];
@@ -104,6 +109,11 @@ void Chunk::ImpostorsInit( int p_nbmax_impostors )
         v2.tu[0] = m_idl[i].u2;
         v2.tv[0] = m_idl[i].v2;
         v2.nx = 2.0;
+
+        v2.tu[6] = m_idl[i].spherical_ray;
+        v2.tv[6] = m_idl[i].spherical_longitud;
+        v2.tw[6] = m_idl[i].spherical_latitud;
+
         v2.tu[7] = m_idl[i].localpos[0];
         v2.tv[7] = m_idl[i].localpos[1];
         v2.tw[7] = m_idl[i].localpos[2];
@@ -118,6 +128,11 @@ void Chunk::ImpostorsInit( int p_nbmax_impostors )
         v3.tu[0] = m_idl[i].u3;
         v3.tv[0] = m_idl[i].v3;
         v3.nx = 3.0;
+
+        v3.tu[6] = m_idl[i].spherical_ray;
+        v3.tv[6] = m_idl[i].spherical_longitud;
+        v3.tw[6] = m_idl[i].spherical_latitud;
+
         v3.tu[7] = m_idl[i].localpos[0];
         v3.tv[7] = m_idl[i].localpos[1];
         v3.tw[7] = m_idl[i].localpos[2];
@@ -132,6 +147,11 @@ void Chunk::ImpostorsInit( int p_nbmax_impostors )
         v4.tu[0] = m_idl[i].u4;
         v4.tv[0] = m_idl[i].v4;
         v4.nx = 4.0;
+
+        v4.tu[6] = m_idl[i].spherical_ray;
+        v4.tv[6] = m_idl[i].spherical_longitud;
+        v4.tw[6] = m_idl[i].spherical_latitud;
+
         v4.tu[7] = m_idl[i].localpos[0];
         v4.tv[7] = m_idl[i].localpos[1];
         v4.tw[7] = m_idl[i].localpos[2];

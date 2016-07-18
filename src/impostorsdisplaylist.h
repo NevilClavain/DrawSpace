@@ -32,6 +32,9 @@ typedef struct
     float                       width_scale;
     float                       height_scale;
     DrawSpace::Utils::Vector    localpos;
+    float                       spherical_ray;
+    float                       spherical_longitud;
+    float                       spherical_latitud;
 
     dsreal                      u1, v1;
     dsreal                      u2, v2;
