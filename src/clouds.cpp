@@ -35,7 +35,8 @@ m_previous_camera_pos_avail( false ),
 m_owner( NULL ),
 m_sorting_distance( 1000.0 ),
 m_details( true ),
-m_nbmax_clouds_impostors( -1 )
+m_nbmax_clouds_impostors( -1 ),
+m_spherical_pos_ray( 0.0 )
 {
     m_proceduralcb = _DRAWSPACE_NEW_( ProceduralCb, ProceduralCb( this, &Clouds::on_procedural ) );
     m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
@@ -95,9 +96,23 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
     }
     else if( "declare_cloud_spherical_pos" == opcode->GetValue() )
     {
+        Procedural::RandomDistribution<dsreal, std::uniform_real_distribution<dsreal>, Procedural::Real>* rand_cloudpostheta = 
+            static_cast<Procedural::RandomDistribution<dsreal, std::uniform_real_distribution<dsreal>, Procedural::Real>*>( message->GetValueAt( 1 ) );
+
+        Procedural::RandomDistribution<dsreal, std::uniform_real_distribution<dsreal>, Procedural::Real>* rand_cloudposphi = 
+            static_cast<Procedural::RandomDistribution<dsreal, std::uniform_real_distribution<dsreal>, Procedural::Real>*>( message->GetValueAt( 2 ) );
+
+        Procedural::Real* postheta = static_cast<Procedural::Real*>( rand_cloudpostheta->GetResultValue() );
+        Procedural::Real* posphi = static_cast<Procedural::Real*>( rand_cloudposphi->GetResultValue() );
+
         m_new_cloud = new CloudUnitDescriptor;
 
-        m_new_cloud->spherical = true;     
+        m_new_cloud->spherical = true; 
+
+        m_new_cloud->position_spherical[0] = m_spherical_pos_ray;
+        m_new_cloud->position_spherical[1] = postheta->GetValue();
+        m_new_cloud->position_spherical[2] = posphi->GetValue();
+        m_new_cloud->position_spherical[3] = 1.0;
     }
     else if( "add_core_impostor" == opcode->GetValue() )
     {
@@ -134,13 +149,24 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
         idle.v4 = impostor_uv->GetValue()[3];
 
 
-        idle.localpos[0] = m_new_cloud->position[0] + posx->GetValue();
-        idle.localpos[1] = m_new_cloud->position[1];
-        idle.localpos[2] = m_new_cloud->position[2] + posz->GetValue();
-    
+        if( !m_new_cloud->spherical )
+        {
+            idle.localpos[0] = m_new_cloud->position[0] + posx->GetValue();
+            idle.localpos[1] = m_new_cloud->position[1];
+            idle.localpos[2] = m_new_cloud->position[2] + posz->GetValue();
+        }
+        else
+        {
+            idle.localpos[0] = posx->GetValue();
+            idle.localpos[1] = 0.0;
+            idle.localpos[2] = posz->GetValue();
+
+            idle.spherical_longitud = m_new_cloud->position_spherical[1];
+            idle.spherical_latitud = m_new_cloud->position_spherical[2];
+            idle.spherical_ray = m_new_cloud->position_spherical[0];
+        }
+
         m_new_cloud->impostors.push_back( idle );
-
-
     }
     else if( "add_bottom_impostor" == opcode->GetValue() )
     {
@@ -173,7 +199,7 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
         idle.v4 = impostor_uv->GetValue()[3];
 
 
-        if( m_new_cloud->spherical )
+        if( !m_new_cloud->spherical )
         {
             idle.localpos[0] = m_new_cloud->position[0] + posx->GetValue();
             idle.localpos[1] = m_new_cloud->position[1] + posy->GetValue();
@@ -183,7 +209,11 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
         {
             idle.localpos[0] = posx->GetValue();
             idle.localpos[1] = posy->GetValue();
-            idle.localpos[2] = posz->GetValue();        
+            idle.localpos[2] = posz->GetValue();
+
+            idle.spherical_longitud = m_new_cloud->position_spherical[1];
+            idle.spherical_latitud = m_new_cloud->position_spherical[2];
+            idle.spherical_ray = m_new_cloud->position_spherical[0];
         }
     
         m_new_cloud->impostors.push_back( idle );
@@ -231,12 +261,24 @@ void Clouds::on_procedural( Procedural::Atomic* p_atom )
         idle.v4 = impostor_uv->GetValue()[3];
         
 
-        idle.localpos[0] = m_new_cloud->position[0] + posx->GetValue();
-        idle.localpos[1] = m_new_cloud->position[1] + posy->GetValue();
-        idle.localpos[2] = m_new_cloud->position[2] + posz->GetValue();
-    
-        m_new_cloud->impostors.push_back( idle );
-    
+        if( !m_new_cloud->spherical )
+        {
+            idle.localpos[0] = m_new_cloud->position[0] + posx->GetValue();
+            idle.localpos[1] = m_new_cloud->position[1] + posy->GetValue();
+            idle.localpos[2] = m_new_cloud->position[2] + posz->GetValue();
+        }
+        else
+        {
+            idle.localpos[0] = posx->GetValue();
+            idle.localpos[1] = posy->GetValue();
+            idle.localpos[2] = posz->GetValue();
+
+            idle.spherical_longitud = m_new_cloud->position_spherical[1];
+            idle.spherical_latitud = m_new_cloud->position_spherical[2];
+            idle.spherical_ray = m_new_cloud->position_spherical[0];
+        }
+
+        m_new_cloud->impostors.push_back( idle );    
     }
     else if( "push_cloud" == opcode->GetValue() )
     {
@@ -416,4 +458,9 @@ void Clouds::CloudsUpdateRequest( void )
     execsortz( ImpostorMat, CamMat );
     impostors_init();
     ImpostorsUpdate();
+}
+
+void Clouds::SetSphericalPosRay( dsreal p_ray )
+{
+    m_spherical_pos_ray = p_ray;
 }

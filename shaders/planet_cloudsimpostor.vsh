@@ -218,12 +218,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     */
 
-    float theta_longitud = 3.1415927 * (90.0 / 180.0);
-    //Input.Sphericals.y;
-    float phi_latitud = 3.1415927 * ( -30.0 / 180.0 );
-     //Input.Sphericals.z;
-    float ray_input = 501400.0;
-     //Input.Sphericals.x;
+    float theta_pos = 3.1415927 * (Input.Sphericals.y / 180.0);
+    float phi_pos = 3.1415927 * (Input.Sphericals.z / 180.0);
+    float ray_input = Input.Sphericals.x;
 
     float4x4 translation = 0.0;
 
@@ -236,37 +233,32 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     translation[3][2] = 0.0;
 
     float4x4 rotation_y = 0.0;
-    //BuildRotationMatrix(yaxis, theta_longitud);
-
-    rotation_y[0][0] = cos(theta_longitud);
+    
+    rotation_y[0][0] = cos(theta_pos);
     rotation_y[1][1] = 1.0;
-    rotation_y[2][2] = cos(theta_longitud);
+    rotation_y[2][2] = cos(theta_pos);
     rotation_y[3][3] = 1.0;
     rotation_y[3][0] = 0.0;
     rotation_y[3][1] = 0.0;
     rotation_y[3][2] = 0.0;
-    rotation_y[2][0] = -sin(theta_longitud);
-    rotation_y[0][2] = sin(theta_longitud);
+    rotation_y[2][0] = -sin(theta_pos);
+    rotation_y[0][2] = sin(theta_pos);
 
     float4x4 rotation_x = 0.0;
-    //BuildRotationMatrix(xaxis, phi_latitud);
+    
     rotation_x[0][0] = 1.0;
-    rotation_x[1][1] = cos(phi_latitud);
-    rotation_x[2][2] = cos(phi_latitud);
+    rotation_x[1][1] = cos(phi_pos);
+    rotation_x[2][2] = cos(phi_pos);
     rotation_x[3][3] = 1.0;
     rotation_x[3][0] = 0.0;
     rotation_x[3][1] = 0.0;
     rotation_x[3][2] = 0.0;
-    rotation_x[2][1] = sin(phi_latitud);
-    rotation_x[1][2] = -sin(phi_latitud);
+    rotation_x[2][1] = sin(phi_pos);
+    rotation_x[1][2] = -sin(phi_pos);
 
     float4x4 spherical;
     // todo completer avec les matrices rot de longitude et latitude
     spherical = mul(mul(translation, rotation_x), rotation_y);
-    //spherical = translation;
-
-
-
 
     float4x4 local_trans = 0;
 
@@ -319,12 +311,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         Output.Position = mul(vpos, matWorldViewProjection);
     }
 
-    //Output.Position = mul(vpos, matWorldViewProjection);
-
 	Output.TexCoord0 = Input.TexCoord0;
 
     //////////////////////////////////////////
-
 
     float4 PositionWV = mul(vpos, matWorldView);
     Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, flags.z));

@@ -51,6 +51,7 @@ public:
 
         bool                                    spherical;
         DrawSpace::Utils::Vector                position;  // valide si spherical == false
+        DrawSpace::Utils::Vector                position_spherical;  // valide si spherical == true
 
         dsreal                                  distToView; // compute result for z qsort
         
@@ -88,6 +89,8 @@ protected:
 
     int                                                                 m_nbmax_clouds_impostors;
 
+    dsreal                                                              m_spherical_pos_ray; //position hauteur nuage si on utilise le mode coords spheriques
+
 public:
 
     Clouds( void );
@@ -104,6 +107,8 @@ public:
     void ImpostorsInit( void );
     void CloudsReset( void );
     void CloudsUpdateRequest( void );
+
+    void SetSphericalPosRay( dsreal p_ray );
 };
 }
 
