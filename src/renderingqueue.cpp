@@ -892,7 +892,7 @@ void RenderingQueue::search_op_textures_groups( OperationType p_type, int p_stag
     OperationsGroup group;
 
     long index = 0;
-    for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
+    for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
     {
         Operation curr_operation = (*it);
 
@@ -950,7 +950,7 @@ void RenderingQueue::search_op_groups( OperationType p_type, std::vector<Operati
     OperationsGroup group;
 
     long index = 0;
-    for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
+    for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
     {
         Operation curr_operation = (*it);
 

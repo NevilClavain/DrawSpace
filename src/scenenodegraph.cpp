@@ -46,7 +46,7 @@ void SceneNodeGraph::ComputeTransformations( Utils::TimeManager& p_timemanager )
     {
         (* m_scenegraphevt_handlers[i] )( TRANSFORMATIONS_BEGIN, this );
     }
-    for( std::map<dsstring, BaseSceneNode*>::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
         it->second->ComputeTransformation( p_timemanager );
     }

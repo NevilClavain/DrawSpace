@@ -204,7 +204,7 @@ void Chunk::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace
         _DSEXCEPTION( "NULL meshe ; please allocate a meshe object for chunk prior to other operations" );
     }
 
-    for( std::map<Pass*, RenderingNode*>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
+    for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         Pass* current_pass = it->first;
 
