@@ -218,8 +218,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     */
 
-    float theta_longitud = Input.Sphericals.y;
-    float phi_latitud = Input.Sphericals.z;
+    float theta_longitud = 3.1415927 * (90.0 / 180.0);
+    //Input.Sphericals.y;
+    float phi_latitud = 3.1415927 * ( -30.0 / 180.0 );
+     //Input.Sphericals.z;
     float ray_input = 501400.0;
      //Input.Sphericals.x;
 
@@ -233,12 +235,36 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     translation[3][1] = ray_input;
     translation[3][2] = 0.0;
 
+    float4x4 rotation_y = 0.0;
+    //BuildRotationMatrix(yaxis, theta_longitud);
 
+    rotation_y[0][0] = cos(theta_longitud);
+    rotation_y[1][1] = 1.0;
+    rotation_y[2][2] = cos(theta_longitud);
+    rotation_y[3][3] = 1.0;
+    rotation_y[3][0] = 0.0;
+    rotation_y[3][1] = 0.0;
+    rotation_y[3][2] = 0.0;
+    rotation_y[2][0] = -sin(theta_longitud);
+    rotation_y[0][2] = sin(theta_longitud);
+
+    float4x4 rotation_x = 0.0;
+    //BuildRotationMatrix(xaxis, phi_latitud);
+    rotation_x[0][0] = 1.0;
+    rotation_x[1][1] = cos(phi_latitud);
+    rotation_x[2][2] = cos(phi_latitud);
+    rotation_x[3][3] = 1.0;
+    rotation_x[3][0] = 0.0;
+    rotation_x[3][1] = 0.0;
+    rotation_x[3][2] = 0.0;
+    rotation_x[2][1] = sin(phi_latitud);
+    rotation_x[1][2] = -sin(phi_latitud);
 
     float4x4 spherical;
-
     // todo completer avec les matrices rot de longitude et latitude
-    spherical = translation;
+    spherical = mul(mul(translation, rotation_x), rotation_y);
+    //spherical = translation;
+
 
 
 
@@ -256,10 +282,25 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     // les matrices de rot pour faire face a la camera
 
-    float theta = 0.0;
-    float phi = 0.0;
+	// passer le point ( 0, 0, 0 ) du repere cam vers le repere world	
+    float4 centerpos2 = mul(centerpos, matCam);
+
+	// passer le point obtenu du repere world vers le repere local a l'impostor
+    float4 centerpos3 = mul(centerpos2, InverseMatrix(mul(mul(local_trans, spherical), matWorld)));
+
+	// il ne reste plus qu'à calculer theta et phi a partir du point obtenu (point 0 camera exprimé dans le repere local à l'impostor)
+
+    float theta = atan2(centerpos3[0], centerpos3[2]);
+
+    float4 theta_dir = centerpos3;
+    theta_dir.y = 0;
+
+    float phi = atan2(centerpos3[1], sqrt(theta_dir.x * theta_dir.x + theta_dir.y * theta_dir.y + theta_dir.z * theta_dir.z));
+   
     float4x4 facecam_roty = BuildRotationMatrix(yaxis, theta);
     float4x4 facecam_rotx = BuildRotationMatrix(xaxis, -phi);
+
+
 
     float4 vpos = mul(mul(mul(vertexpos, mul(facecam_rotx, facecam_roty)), local_trans), spherical);
     
