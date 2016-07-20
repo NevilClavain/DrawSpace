@@ -23,6 +23,8 @@
 #include <algorithm>
 #include "clouds.h"
 #include "memalloc.h"
+#include "transformation.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -39,13 +41,14 @@ m_nbmax_clouds_impostors( -1 ),
 m_spherical_pos_ray( 0.0 )
 {
     m_proceduralcb = _DRAWSPACE_NEW_( ProceduralCb, ProceduralCb( this, &Clouds::on_procedural ) );
-    m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
+    //m_cameracb = _DRAWSPACE_NEW_( CameraEventCb, CameraEventCb( this, &Clouds::on_camera_event ) );
 }
 
 Clouds::~Clouds( void )
 {
 }
 
+/*
 void Clouds::on_camera_event( SceneNodeGraph::CameraEvent p_event, BaseSceneNode* p_node )
 {
     if( DrawSpace::Core::SceneNodeGraph::ACTIVE == p_event )
@@ -59,6 +62,7 @@ void Clouds::on_camera_event( SceneNodeGraph::CameraEvent p_event, BaseSceneNode
         }
     }
 }
+*/
 
 void Clouds::on_procedural( Procedural::Atomic* p_atom )
 {
@@ -291,21 +295,57 @@ void Clouds::execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const Dr
     // compute all camera-space z-depth
 
     for( size_t i = 0; i < m_clouds.size(); i++ )
-    {
-        Matrix local_trans;
+    {        
+        Matrix finalm;
 
-        local_trans.Translation( m_clouds[i]->position );
+        if( m_clouds[i]->spherical )
+        {
+            Matrix pos;
+            Matrix roty, rotx;
 
-        Matrix finalm = local_trans * p_impostor_mat;
+            dsreal ray = m_clouds[i]->position_spherical[0];
+            dsreal theta = m_clouds[i]->position_spherical[1];
+            dsreal phi = m_clouds[i]->position_spherical[2];
+
+            pos.Translation( 0.0, ray, 0.0 );
+
+            
+            //roty.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( theta ) );
+            //rotx.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), Maths::DegToRad( phi ) );
+            
+            
+            roty.Identity();
+            rotx.Identity();
+
+            roty(0, 0) = cos(Maths::DegToRad( theta ));
+            roty(2, 2) = cos(Maths::DegToRad( theta ));
+            roty(2, 0) = -sin(Maths::DegToRad( theta ));
+            roty(0, 2) = sin(Maths::DegToRad( theta ));
+
+            rotx(1, 1) = cos(Maths::DegToRad( phi ));
+            rotx(2, 2) = cos(Maths::DegToRad( phi ));
+            rotx(2, 1) = sin(Maths::DegToRad( phi ));
+            rotx(1, 2) = -sin(Maths::DegToRad( phi ));
+            
+            finalm = pos * rotx * roty * p_impostor_mat;
+        }
+        else
+        {
+            Matrix local_trans;
+            local_trans.Translation( m_clouds[i]->position );
+            finalm = local_trans * p_impostor_mat;
+        }
 
         Matrix cam_mat = p_cam_mat;
 
         Vector point_imp( 0.0, 0.0, 0.0, 1.0 );
+
+        
         Vector point_cam( 0.0, 0.0, 0.0, 1.0 );
 
         Vector t_point_imp, t_point_cam;
 
-        finalm.Transform( &point_imp, &t_point_imp );        
+        finalm.Transform( &point_imp, &t_point_imp );
         cam_mat.Transform( &point_cam, &t_point_cam );
 
         // la distance entre l'impostor et le point camera;
@@ -317,6 +357,7 @@ void Clouds::execsortz( const DrawSpace::Utils::Matrix& p_impostor_mat, const Dr
         dist_imp[3] = 1.0;
 
         m_clouds[i]->distToView = dist_imp.Length();
+        
     }
 
     std::sort( m_clouds.begin(), m_clouds.end(), Clouds::nodes_comp );
@@ -356,7 +397,7 @@ Clouds::ProceduralCb* Clouds::GetProceduralCallback( void )
 void Clouds::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
     Chunk::OnRegister( p_scenegraph, p_node );
-    m_scenenodegraph->RegisterCameraEvtHandler( m_cameracb );
+    //m_scenenodegraph->RegisterCameraEvtHandler( m_cameracb );
     m_owner = p_node;
 }
 
@@ -404,7 +445,7 @@ void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
         }
     }
 
-    if( m_clouds_sort_request )
+    if( m_clouds_sort_request && m_current_camera )
     {
         
         // get clouds node global transform
@@ -449,15 +490,18 @@ void Clouds::CloudsReset( void )
 
 void Clouds::CloudsUpdateRequest( void )
 {
-    Matrix ImpostorMat;
-    m_owner->GetFinalTransform( ImpostorMat );
+    if( m_current_camera )
+    {
+        Matrix ImpostorMat;
+        m_owner->GetFinalTransform( ImpostorMat );
 
-    Matrix CamMat;
-    m_current_camera->GetFinalTransform( CamMat );
+        Matrix CamMat;
+        m_current_camera->GetFinalTransform( CamMat );
 
-    execsortz( ImpostorMat, CamMat );
-    impostors_init();
-    ImpostorsUpdate();
+        execsortz( ImpostorMat, CamMat );
+        impostors_init();
+        ImpostorsUpdate();
+    }
 }
 
 void Clouds::SetSphericalPosRay( dsreal p_ray )

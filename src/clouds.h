@@ -39,7 +39,7 @@ public:
 
 protected:
 
-    typedef Core::CallBack2<Clouds, void, Core::SceneNodeGraph::CameraEvent, Core::BaseSceneNode*>   CameraEventCb;
+    //typedef Core::CallBack2<Clouds, void, Core::SceneNodeGraph::CameraEvent, Core::BaseSceneNode*>   CameraEventCb;
 
 public:
 
@@ -68,7 +68,7 @@ protected:
    
 
     ProceduralCb*                                                       m_proceduralcb;
-    CameraEventCb*                                                      m_cameracb;
+    //CameraEventCb*                                                      m_cameracb;
 
     bool                                                                m_clouds_sort_request;
 
@@ -109,6 +109,8 @@ public:
     void CloudsUpdateRequest( void );
 
     void SetSphericalPosRay( dsreal p_ray );
+
+    void SetCurrentCamera( DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>* p_cam ) { m_current_camera = p_cam; };
 };
 }
 
