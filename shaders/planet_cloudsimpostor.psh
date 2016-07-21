@@ -1,9 +1,10 @@
 
 float4 fog_color        : register(c0);
-//float4 ambientlit_color : register(c1);
 float4 ldir             : register(c1);
 float4 lcolor           : register(c2);
-float4 alpha            : register(c3);
+float4 flags            : register(c3);
+// .x -> alpha
+// .y -> clip distance
 
 
 sampler2D Texture0: register(s0);
@@ -22,14 +23,14 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 ret_color;
 
-    float clip_distance = 20000.0;
-
+    float clip_distance = flags.y;
     clip(input.PosCamSpace.z < -clip_distance ? -1 : 1);
 
     float ldot = saturate(dot(input.Posdir.xyz, ldir.xyz) + 0.35);
 
     ret_color = lcolor * ldot * saturate(lerp(fog_color, input.Color, input.Fog));
-	ret_color.a = tex2D( Texture0, input.TexCoord0 ).r * alpha.x;	
+    float alpha = flags.x;
+    ret_color.a = tex2D(Texture0, input.TexCoord0).r * alpha;
 
 	return ret_color;
 }
