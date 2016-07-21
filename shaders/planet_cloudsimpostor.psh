@@ -10,16 +10,21 @@ sampler2D Texture0: register(s0);
 
 struct PS_INTPUT 
 {
-	float4 TexCoord0: TEXCOORD0;
-	float4 Color:	  TEXCOORD1;
-    float4 Posdir:    TEXCOORD2;
-    float  Fog :      FOG;
+	float4 TexCoord0:    TEXCOORD0;
+	float4 Color:	     TEXCOORD1;
+    float4 Posdir:       TEXCOORD2;
+    float4 PosCamSpace : TEXCOORD3;
+    float  Fog :         FOG;
 };
 
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
 	float4 ret_color;
+
+    float clip_distance = 20000.0;
+
+    clip(input.PosCamSpace.z < -clip_distance ? -1 : 1);
 
     float ldot = saturate(dot(input.Posdir.xyz, ldir.xyz) + 0.35);
 

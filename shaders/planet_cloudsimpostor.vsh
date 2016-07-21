@@ -30,10 +30,11 @@ struct VS_INPUT
 
 struct VS_OUTPUT 
 {
-	float4 Position : POSITION0;
-	float4 TexCoord0: TEXCOORD0;
-	float4 Color:	  TEXCOORD1;
-    float4 Posdir:    TEXCOORD2;
+	float4 Position :   POSITION0;
+	float4 TexCoord0:   TEXCOORD0;
+	float4 Color:	    TEXCOORD1;
+    float4 Posdir:      TEXCOORD2;
+    float4 PosCamSpace: TEXCOORD3;
 
     float Fog:        FOG;
 };
@@ -292,6 +293,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     worldnott[3][2] = 0.0;
    
     Output.Posdir = mul(mul(mul(l_init, rotation_x), rotation_y), worldnott);
+
+    Output.PosCamSpace = PositionWV;
 
 	return( Output );   
 }
