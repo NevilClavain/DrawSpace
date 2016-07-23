@@ -434,3 +434,23 @@ void Calendar::RegisterWorld( DrawSpace::Dynamics::World* p_world )
 {
     m_worlds.push_back( p_world );
 }
+
+void Calendar::AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed )
+{
+    m_time_manager->AngleSpeedInc( p_angle, p_angleSpeed * m_time_factor );
+}
+
+void Calendar::AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
+{
+    m_time_manager->AngleSpeedDec( p_angle, p_angleSpeed * m_time_factor );
+}
+
+void Calendar::TranslationSpeedInc( dsreal *p_translation, dsreal p_speed )
+{
+    m_time_manager->TranslationSpeedInc( p_translation, p_speed * m_time_factor );
+}
+
+void Calendar::TranslationSpeedDec( dsreal *p_translation, dsreal p_speed )
+{
+    m_time_manager->TranslationSpeedDec( p_translation, p_speed * m_time_factor );
+}

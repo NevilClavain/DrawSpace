@@ -149,6 +149,11 @@ public:
     void        Suspend( bool p_suspend );
 
     void        RegisterWorld( DrawSpace::Dynamics::World* p_world );
+
+    void        AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed );
+    void        AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed );
+    void        TranslationSpeedInc( dsreal *p_translation, dsreal p_speed );
+    void        TranslationSpeedDec( dsreal *p_translation, dsreal p_speed );
         
 };
 }
