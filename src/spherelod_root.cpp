@@ -162,7 +162,7 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                                                                             collider, m_subpass_creation_cb, i ) );
                             layer->SetHotState( true );
 
-                            m_layers_list.push_back( layer );                     
+                            m_layers_list.push_back( layer );
                             reg_body.layers.push_back( layer );
                             layer->SetInertBody( inertbody );
                         }

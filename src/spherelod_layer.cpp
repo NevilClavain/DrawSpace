@@ -47,7 +47,8 @@ m_current_patch( NULL ),
 m_draw_collidinghm( false ),
 m_handler( p_handler ),
 m_current_collisions_hm( NULL ),
-m_owner( p_owner )
+m_owner( p_owner ),
+m_currentpatch_max_height( 0.0 )
 {
     m_collisions = m_config->m_layers_descr[p_index].enable_collisions;
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
@@ -104,6 +105,8 @@ void Layer::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch
 
 void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap )
 {
+    dsreal max_height = 0.0;
+
     for( int y = 0; y < PATCH_RESOLUTION; y++ )
     {
         for( int x = 0; x < PATCH_RESOLUTION; x++ )
@@ -116,6 +119,11 @@ void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Pat
             p_patchmeshe.GetVertex( index, v );
 
             double alt = *( p_heightmap + index_hm );
+
+            if( alt > max_height )
+            {
+                max_height = alt;
+            }
                   
             Vector v_out;
 
@@ -136,6 +144,8 @@ void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Pat
         p_patchmeshe.GetTriangles( i, t );
         p_outmeshe.AddTriangle( t );
     }
+
+    m_currentpatch_max_height = max_height;
 }
 
 void Layer::Compute( Root* p_owner )
@@ -365,3 +375,12 @@ void Layer::UpdateRelativeHotViewerPos( const Utils::Vector& p_pos )
     m_relative_hotviewerpos = p_pos;
 }
 
+bool Layer::HasCollisions( void )
+{
+    return m_collisions;
+}
+
+dsreal Layer::GetLastMaxHeight( void )
+{
+    return m_currentpatch_max_height;
+}

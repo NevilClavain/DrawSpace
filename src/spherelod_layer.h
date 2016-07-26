@@ -96,6 +96,8 @@ protected:
 
     Dynamics::Orbiter*                                          m_owner;
 
+    dsreal                                                      m_currentpatch_max_height;
+
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
     
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap );
@@ -130,6 +132,9 @@ public:
     Layer::SubPassCreationHandler* GetSubPassCreationHandler( void );
 
     virtual void SubPassDone( DrawSpace::SphericalLOD::Collisions* p_collider );
+
+    bool HasCollisions( void );
+    dsreal GetLastMaxHeight( void );
 };
 
 }
