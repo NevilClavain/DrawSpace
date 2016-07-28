@@ -97,10 +97,15 @@ protected:
     Dynamics::Orbiter*                                          m_owner;
 
     dsreal                                                      m_currentpatch_max_height;
+    dsreal                                                      m_currentpatch_current_height;
+
+    dsreal                                                      m_alt_grid[PATCH_RESOLUTION * PATCH_RESOLUTION];
 
     void on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch_lod );
     
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap );
+
+    float get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y );
 
 public:
 
@@ -135,6 +140,7 @@ public:
 
     bool HasCollisions( void );
     dsreal GetLastMaxHeight( void );
+    dsreal GetCurrentHeight( void );
 };
 
 }

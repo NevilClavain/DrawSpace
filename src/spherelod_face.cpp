@@ -426,11 +426,17 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node )
     if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
         ( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[1] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[1] )
     {
+        m_currentPatchViewCoords[0] = ( projected_viewer[0] - patch_xpos ) / patch_side_size;
+        m_currentPatchViewCoords[1] = ( projected_viewer[1] - patch_ypos ) / patch_side_size;
         return true;
     }
     return false;
 }
 
+void Face::GetCurrentPatchViewCoords( DrawSpace::Utils::Vector& p_outcoords )
+{
+    p_outcoords = m_currentPatchViewCoords;
+}
 
 QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current )
 {

@@ -50,6 +50,7 @@ protected:
     std::vector<Patch*>                                         m_work_displaylist;
 
     Patch*                                                      m_currentPatch;
+    DrawSpace::Utils::Vector                                    m_currentPatchViewCoords;
     int                                                         m_currentPatchLOD;
 
     Patch*                                                      m_work_currentPatch;
@@ -131,6 +132,7 @@ public:
     void UpdateRelativeAlt( dsreal p_alt );   
 
     Patch* GetCurrentPatch( void );
+    void GetCurrentPatchViewCoords( DrawSpace::Utils::Vector& p_outcoords );
     int GetCurrentPatchLOD( void );
 
     Patch* GetRootPatch( void );

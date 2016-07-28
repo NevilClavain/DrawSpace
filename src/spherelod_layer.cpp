@@ -25,6 +25,7 @@
 #include "spherelod_drawing.h"
 #include "renderer.h"
 #include "plugin.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -48,7 +49,8 @@ m_draw_collidinghm( false ),
 m_handler( p_handler ),
 m_current_collisions_hm( NULL ),
 m_owner( p_owner ),
-m_currentpatch_max_height( 0.0 )
+m_currentpatch_max_height( 0.0 ),
+m_currentpatch_current_height( -1000.0 )
 {
     m_collisions = m_config->m_layers_descr[p_index].enable_collisions;
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
@@ -65,6 +67,8 @@ m_currentpatch_max_height( 0.0 )
         }
     }
     p_body->Initialize();
+
+    memset( m_alt_grid, 0, sizeof( m_alt_grid ) );
 }
 
 Layer::~Layer( void )
@@ -103,6 +107,59 @@ void Layer::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch
     }
 }
 
+float Layer::get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y )
+{
+    int index_hm;
+
+    int x1, y1;
+    int x2, y2;
+
+    dsreal xcoord = p_coord_x;
+    dsreal ycoord = p_coord_y;
+
+    // trouver les 4 valeurs voisines;
+
+    // xcoord et ycoord sur le range [-0.5, 0.5]
+    // trouver les coords discretes de grille patch, c a d [0, PATCH_RESOLUTION - 1], encadrant le point coord fourni;
+
+    dsreal resol = PATCH_RESOLUTION - 1;
+
+    x1 = floor( ( ( xcoord + 0.5 ) ) * resol );
+    y1 = floor( ( ( ycoord + 0.5 ) ) * resol );
+
+    x2 = x1 + 1;
+    y2 = y1 + 1;
+
+    index_hm = ( PATCH_RESOLUTION * ( PATCH_RESOLUTION - 1 - y1 ) ) + x1;
+    dsreal h1 = m_alt_grid[index_hm];
+
+    index_hm = ( PATCH_RESOLUTION * ( PATCH_RESOLUTION - 1 - y1 ) ) + x2;
+    dsreal h2 = m_alt_grid[index_hm];
+
+    index_hm = ( PATCH_RESOLUTION * ( PATCH_RESOLUTION - 1 - y2 ) ) + x2;
+    dsreal h3 = m_alt_grid[index_hm];
+
+    index_hm = ( PATCH_RESOLUTION * ( PATCH_RESOLUTION - 1 - y2 ) ) + x1;
+    dsreal h4 = m_alt_grid[index_hm];
+
+    // calcul des distances du point central vers les 4 coints de bords
+
+    dsreal interv = 1.0 / ( PATCH_RESOLUTION - 1 );
+
+    // passer les coins en range [-0.5, 0.5]
+    dsreal xg1, yg1;
+    xg1 = ( x1 * interv ) - 0.5;
+    yg1 = ( y1 * interv ) - 0.5;
+
+    dsreal unit_x, unit_y;
+
+    unit_x = ( xcoord - xg1 ) / interv;
+    unit_y = ( ycoord - yg1 ) / interv;
+
+    dsreal a1 =  Maths::Lerp( Maths::Lerp( h1, h4, unit_y ), Maths::Lerp( h2, h3, unit_y ), unit_x );
+    return a1;
+}
+
 void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap )
 {
     dsreal max_height = 0.0;
@@ -119,6 +176,8 @@ void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Pat
             p_patchmeshe.GetVertex( index, v );
 
             double alt = *( p_heightmap + index_hm );
+
+            m_alt_grid[index_hm] = alt;
 
             if( alt > max_height )
             {
@@ -233,42 +292,22 @@ void Layer::Compute( Root* p_owner )
         m_body->UpdateInvariantViewerPos( delta );
     }
 
-    /*
-    if( m_hot )
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Vector view_patch_coords;
+    int curr_face = m_body->GetCurrentFace();
+
+    if( curr_face > -1 )
     {
-        Matrix camera_pos;
-        bool inject_hotpoint = false;
+        m_body->GetFace( m_body->GetCurrentFace() )->GetCurrentPatchViewCoords( view_patch_coords );
 
-        if( m_camera )
+        dsreal new_alt = get_interpolated_height( view_patch_coords[0], view_patch_coords[1] );
+
+        if( !isnan( new_alt ) )
         {
-            dsstring camera_scenename;
-            
-            DrawSpace::Core::SceneNode<CameraPoint>* camera_node = m_camera->GetOwner();
-            camera_node->GetSceneName( camera_scenename );
-
-            p_owner->GetCameraHotpoint( camera_scenename, camera_pos );
-            
-            inject_hotpoint = true;
-        }
-        else if( m_inertbody )
-        {
-            m_inertbody->GetLastLocalWorldTrans( camera_pos );
-            inject_hotpoint = true;
-        }
-
-        if( inject_hotpoint )
-        {
-            DrawSpace::Utils::Vector hotpoint;
-
-            hotpoint[0] = camera_pos( 3, 0 );
-            hotpoint[1] = camera_pos( 3, 1 );
-            hotpoint[2] = camera_pos( 3, 2 );
-
-            m_body->UpdateHotPoint( hotpoint );
-            m_body->Compute();
+            m_currentpatch_current_height = new_alt;
         }
     }
-    */
 }
 
 void Layer::SetHotState( bool p_hotstate )
@@ -383,4 +422,9 @@ bool Layer::HasCollisions( void )
 dsreal Layer::GetLastMaxHeight( void )
 {
     return m_currentpatch_max_height;
+}
+
+dsreal Layer::GetCurrentHeight( void )
+{
+    return m_currentpatch_current_height;
 }
