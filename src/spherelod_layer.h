@@ -97,6 +97,7 @@ protected:
     Dynamics::Orbiter*                                          m_owner;
 
     dsreal                                                      m_currentpatch_max_height;
+    dsreal                                                      m_currentpatch_min_height;
     dsreal                                                      m_currentpatch_current_height;
 
     dsreal                                                      m_alt_grid[PATCH_RESOLUTION * PATCH_RESOLUTION];

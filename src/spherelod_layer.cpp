@@ -50,6 +50,7 @@ m_handler( p_handler ),
 m_current_collisions_hm( NULL ),
 m_owner( p_owner ),
 m_currentpatch_max_height( 0.0 ),
+m_currentpatch_min_height( 0.0 ),
 m_currentpatch_current_height( -1000.0 )
 {
     m_collisions = m_config->m_layers_descr[p_index].enable_collisions;
@@ -124,8 +125,8 @@ float Layer::get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y )
 
     dsreal resol = PATCH_RESOLUTION - 1;
 
-    x1 = floor( ( ( xcoord + 0.5 ) ) * resol );
-    y1 = floor( ( ( ycoord + 0.5 ) ) * resol );
+    x1 = Maths::Floor( ( ( xcoord + 0.5 ) ) * resol );
+    y1 = Maths::Floor( ( ( ycoord + 0.5 ) ) * resol );
 
     x2 = x1 + 1;
     y2 = y1 + 1;
@@ -142,6 +143,7 @@ float Layer::get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y )
     index_hm = ( PATCH_RESOLUTION * ( PATCH_RESOLUTION - 1 - y2 ) ) + x1;
     dsreal h4 = m_alt_grid[index_hm];
 
+    
     // calcul des distances du point central vers les 4 coints de bords
 
     dsreal interv = 1.0 / ( PATCH_RESOLUTION - 1 );
@@ -157,12 +159,14 @@ float Layer::get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y )
     unit_y = ( ycoord - yg1 ) / interv;
 
     dsreal a1 =  Maths::Lerp( Maths::Lerp( h1, h4, unit_y ), Maths::Lerp( h2, h3, unit_y ), unit_x );
-    return a1;
+
+    return Maths::Clamp( m_currentpatch_min_height, m_currentpatch_max_height, a1 );
 }
 
 void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap )
 {
     dsreal max_height = 0.0;
+    dsreal min_height = 1000000000.0;
 
     for( int y = 0; y < PATCH_RESOLUTION; y++ )
     {
@@ -182,6 +186,11 @@ void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Pat
             if( alt > max_height )
             {
                 max_height = alt;
+            }
+
+            if( alt < min_height )
+            {
+                min_height = alt;
             }
                   
             Vector v_out;
@@ -205,6 +214,7 @@ void Layer::build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Pat
     }
 
     m_currentpatch_max_height = max_height;
+    m_currentpatch_min_height = min_height;
 }
 
 void Layer::Compute( Root* p_owner )
@@ -297,7 +307,7 @@ void Layer::Compute( Root* p_owner )
     Vector view_patch_coords;
     int curr_face = m_body->GetCurrentFace();
 
-    if( curr_face > -1 )
+    if( curr_face > -1 && !m_draw_collidinghm )
     {
         m_body->GetFace( m_body->GetCurrentFace() )->GetCurrentPatchViewCoords( view_patch_coords );
 
