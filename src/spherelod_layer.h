@@ -106,7 +106,7 @@ protected:
     
     void build_meshe( DrawSpace::Core::Meshe& p_patchmeshe, SphericalLOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap );
 
-    float get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y );
+    dsreal get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y );
 
 public:
 

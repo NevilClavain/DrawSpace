@@ -108,7 +108,7 @@ void Layer::on_patchupdate( DrawSpace::SphericalLOD::Patch* p_patch, int p_patch
     }
 }
 
-float Layer::get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y )
+dsreal Layer::get_interpolated_height( dsreal p_coord_x, dsreal p_coord_y )
 {
     int index_hm;
 
