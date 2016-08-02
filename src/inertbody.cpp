@@ -696,8 +696,8 @@ bool InertBody::HasLanded( void )
     btVector3 lv = m_rigidBody->getLinearVelocity();
     btVector3 av = m_rigidBody->getAngularVelocity();
 
-    bool status = GetContactState() && lv.length() < 0.001 && av.length() < 0.001;
-
+    bool status = GetContactState() && lv.length() < 0.2 && av.length() < 0.2;
+    /*
     // PROVISOIRE, pour tests
     if( status )
     {
@@ -707,6 +707,7 @@ bool InertBody::HasLanded( void )
     {
         m_rigidBody->activate( true );
     }
+    */
 
     return status;
 }
