@@ -139,5 +139,11 @@
     <FxCompile Include="planet_cloudsimpostor.vsh">
       <Filter>Source Files\vertex\planet</Filter>
     </FxCompile>
+    <FxCompile Include="ship.psh">
+      <Filter>Source Files\pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="ship.vsh">
+      <Filter>Source Files\vertex</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
