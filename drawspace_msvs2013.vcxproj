@@ -144,6 +144,8 @@
     <ClInclude Include="src\meshe.h" />
     <ClInclude Include="src\mesheimport.h" />
     <ClInclude Include="src\misc_utils.h" />
+    <ClInclude Include="src\module_service.h" />
+    <ClInclude Include="src\module_root.h" />
     <ClInclude Include="src\movement.h" />
     <ClInclude Include="src\mutex.h" />
     <ClInclude Include="src\noise.h" />

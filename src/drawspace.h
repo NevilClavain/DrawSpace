@@ -98,4 +98,5 @@
 #include "procedural_seeds.h"
 #include "impostorsdisplaylist.h"
 #include "clouds.h"
+#include "module_root.h"
 #endif

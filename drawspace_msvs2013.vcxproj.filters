@@ -28,6 +28,9 @@
     <Filter Include="procedural">
       <UniqueIdentifier>{56a6aed0-8cdc-4aaa-896a-041de23ca8b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interface\module">
+      <UniqueIdentifier>{ca2c3f9d-f98d-475d-a99b-e6b13ae60346}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\asset.cpp" />
@@ -527,6 +530,12 @@
     </ClInclude>
     <ClInclude Include="src\spherelod_root.h">
       <Filter>sphericalLOD</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module_root.h">
+      <Filter>interface\module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\module_service.h">
+      <Filter>interface\module</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
