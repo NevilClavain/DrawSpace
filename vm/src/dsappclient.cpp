@@ -28,7 +28,7 @@ using namespace DrawSpace::Interface::Module;
 
 
 dsAppClient::dsAppClient( void ) :
-m_bootservice( NULL )
+m_mainloopservice( NULL )
 {    
     _INIT_LOGGER( "app.conf" )
     m_w_title = "DrawSpace VM";
@@ -40,9 +40,9 @@ dsAppClient::~dsAppClient( void )
 
 void dsAppClient::OnRenderFrame( void )
 {
-    if( m_bootservice )
+    if( m_mainloopservice )
     {
-        m_bootservice->Run();
+        m_mainloopservice->Run();
     }
 }
 
@@ -50,11 +50,10 @@ bool dsAppClient::OnIdleAppInit( void )
 {
     Root* root = DrawSpace::Core::SingletonPlugin<Root>::GetInstance()->m_interface;
 
-    m_bootservice = root->InstanciateService( "bootstrap" );
-
-    if( m_bootservice )
+    m_mainloopservice = root->InstanciateService( "mainloop" );
+    if( m_mainloopservice )
     {
-        m_bootservice->Init();
+        m_mainloopservice->Init();
         return true;
     }
     else
@@ -70,53 +69,80 @@ void dsAppClient::OnAppInit( void )
 
 void dsAppClient::OnClose( void )
 {
-    if( m_bootservice )
+    if( m_mainloopservice )
     {
-        m_bootservice->Release();
+        m_mainloopservice->Release();
     }
 }
 
 void dsAppClient::OnKeyPress( long p_key ) 
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnKeyPress( p_key );
+    }
 }
 
 void dsAppClient::OnEndKeyPress( long p_key )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnEndKeyPress( p_key );
+    }
 }
 
 void dsAppClient::OnKeyPulse( long p_key )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnKeyPulse( p_key );
+    }
 }
 
 void dsAppClient::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnMouseMove( p_xm, p_ym, p_dx, p_dy );
+    }
 }
 
 void dsAppClient::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnMouseLeftButtonDown( p_xm, p_ym );
+    }
 }
 
 void dsAppClient::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnMouseLeftButtonUp( p_xm, p_ym );
+    }
 }
 
 void dsAppClient::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnMouseRightButtonDown( p_xm, p_ym );
+    }
 }
 
 void dsAppClient::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnMouseRightButtonUp( p_xm, p_ym );
+    }
 }
 
 void dsAppClient::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnAppEvent( p_wParam, p_lParam );
+    }
 }

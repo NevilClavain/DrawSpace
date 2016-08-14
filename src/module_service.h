@@ -40,6 +40,16 @@ public:
     virtual void                            Release( void ) = 0;
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void ) = 0;
 
+    virtual void                            OnKeyPress( long p_key ) = 0;
+    virtual void                            OnEndKeyPress( long p_key ) = 0;
+    virtual void                            OnKeyPulse( long p_key ) = 0;
+    virtual void                            OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy ) = 0;
+    virtual void                            OnMouseLeftButtonDown( long p_xm, long p_ym ) = 0;
+    virtual void                            OnMouseLeftButtonUp( long p_xm, long p_ym ) = 0;
+    virtual void                            OnMouseRightButtonDown( long p_xm, long p_ym ) = 0;
+    virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym ) = 0;
+    virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam ) = 0;
+
 };
 }
 }
