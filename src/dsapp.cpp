@@ -46,7 +46,8 @@ using namespace DrawSpace::Interface;
 
 App* App::m_base_instance = NULL;
 
-DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>* 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::m_instance = NULL;
+DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>* 	    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::m_instance        = NULL;
+DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>* 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::m_instance    = NULL;
 
 
 
