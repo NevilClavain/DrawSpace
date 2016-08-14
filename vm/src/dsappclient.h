@@ -31,6 +31,8 @@ protected:
 
     static dsAppClient* m_instance;
 
+    DrawSpace::Interface::Module::Service* m_bootservice;
+
     dsAppClient( void );
 
 public:

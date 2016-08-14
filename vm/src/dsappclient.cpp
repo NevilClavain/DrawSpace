@@ -24,8 +24,11 @@
 
 dsAppClient* dsAppClient::m_instance = NULL;
 
+using namespace DrawSpace::Interface::Module;
 
-dsAppClient::dsAppClient( void )
+
+dsAppClient::dsAppClient( void ) :
+m_bootservice( NULL )
 {    
     _INIT_LOGGER( "app.conf" )
     m_w_title = "DrawSpace VM";
@@ -33,16 +36,31 @@ dsAppClient::dsAppClient( void )
 
 dsAppClient::~dsAppClient( void )
 {
-
 }
 
 void dsAppClient::OnRenderFrame( void )
 {
+    if( m_bootservice )
+    {
+        m_bootservice->Run();
+    }
 }
 
 bool dsAppClient::OnIdleAppInit( void )
 {
-    return true;
+    Root* root = DrawSpace::Core::SingletonPlugin<Root>::GetInstance()->m_interface;
+
+    m_bootservice = root->InstanciateService( "bootstrap" );
+
+    if( m_bootservice )
+    {
+        m_bootservice->Init();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void dsAppClient::OnAppInit( void )
@@ -52,7 +70,10 @@ void dsAppClient::OnAppInit( void )
 
 void dsAppClient::OnClose( void )
 {
-
+    if( m_bootservice )
+    {
+        m_bootservice->Release();
+    }
 }
 
 void dsAppClient::OnKeyPress( long p_key ) 
