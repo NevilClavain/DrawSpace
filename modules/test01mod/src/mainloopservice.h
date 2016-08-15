@@ -31,6 +31,7 @@ protected:
 
     DrawSpace::Interface::Renderer*         m_renderer;
     DrawSpace::Utils::TimeManager           m_tm;
+    dsstring                                m_device;
 
 public:
     MainLoopService( void );

@@ -40,6 +40,11 @@ MainLoopService::~MainLoopService( void )
 void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer )
 {
     m_renderer = p_renderer;
+
+    DrawSpace::Interface::Renderer::DeviceDescr dd;
+    m_renderer->GetDeviceDescr( dd );
+
+    m_device = dd.description;
 }
 
 void MainLoopService::Run( void )
@@ -48,8 +53,7 @@ void MainLoopService::Run( void )
 
     m_renderer->ClearScreen( 0, 255, 0, 255 );
 
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_tm.GetFPS() );
-
+    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_device.c_str() );
 
     m_renderer->EndScreen();
 
