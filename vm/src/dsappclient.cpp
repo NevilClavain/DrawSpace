@@ -64,7 +64,6 @@ bool dsAppClient::OnIdleAppInit( void )
 
 void dsAppClient::OnAppInit( void )
 {
-
 }
 
 void dsAppClient::OnClose( void )
