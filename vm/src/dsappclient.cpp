@@ -53,7 +53,7 @@ bool dsAppClient::OnIdleAppInit( void )
     m_mainloopservice = root->InstanciateService( "mainloop" );
     if( m_mainloopservice )
     {
-        m_mainloopservice->Init();
+        m_mainloopservice->Init( DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
         return true;
     }
     else

@@ -27,12 +27,17 @@
 
 class MainLoopService : public DrawSpace::Interface::Module::Service
 {
+protected:
+
+    DrawSpace::Interface::Renderer*         m_renderer;
+    DrawSpace::Utils::TimeManager           m_tm;
+
 public:
     MainLoopService( void );
     ~MainLoopService( void );
 
 
-    virtual void                            Init( void );
+    virtual void                            Init( DrawSpace::Interface::Renderer* p_renderer );
     virtual void                            Run( void );
     virtual void                            Release( void );
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );

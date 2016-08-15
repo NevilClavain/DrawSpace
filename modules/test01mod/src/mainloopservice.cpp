@@ -21,6 +21,7 @@
 */
 
 #include "mainloopservice.h"
+#include "drawspace.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -36,13 +37,28 @@ MainLoopService::~MainLoopService( void )
 {
 }
 
-
-void MainLoopService::Init( void )
+void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer )
 {
+    m_renderer = p_renderer;
 }
 
 void MainLoopService::Run( void )
-{
+{   
+    m_renderer->BeginScreen();
+
+    m_renderer->ClearScreen( 0, 255, 0, 255 );
+
+    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_tm.GetFPS() );
+
+
+    m_renderer->EndScreen();
+
+    m_renderer->FlipScreen();
+    
+    m_tm.Update();
+    if( m_tm.IsReady() )
+    {
+    }
 }
 
 void MainLoopService::Release( void )
