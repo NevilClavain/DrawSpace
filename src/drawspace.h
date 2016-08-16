@@ -54,6 +54,7 @@
 #include "shader.h"
 #include "plugin.h"
 #include "pimanager.h"
+#include "piload.h"
 #include "renderstate.h"
 #include "renderer.h"
 #include "fx.h"

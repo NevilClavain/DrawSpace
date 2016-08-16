@@ -257,6 +257,9 @@
     <ClCompile Include="src\spherelod_root.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
+    <ClCompile Include="src\piload.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -536,6 +539,9 @@
     </ClInclude>
     <ClInclude Include="src\module_service.h">
       <Filter>interface\module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\piload.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

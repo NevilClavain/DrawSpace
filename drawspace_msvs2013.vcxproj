@@ -56,6 +56,7 @@
     <ClCompile Include="src\orbiter.cpp" />
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\pass.cpp" />
+    <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
     <ClCompile Include="src\procedural_blocs.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="src\orbiter.h" />
     <ClInclude Include="src\parser.h" />
     <ClInclude Include="src\pass.h" />
+    <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
     <ClInclude Include="src\spherelod_root.h" />
