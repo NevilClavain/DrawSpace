@@ -22,62 +22,6 @@
 
 #include "dsappclient.h"
 
-/*
-bool LoadRendererPlugin( const dsstring& p_file )
-{
-	dsstring complete_path = p_file;
-#ifdef _DEBUG
-	complete_path += ".dll";
-#else
-	complete_path += "_r.dll";
-#endif
-
-    DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Handle pihandle = NULL;
-    DrawSpace::Interface::Renderer* renderer = NULL;
-	PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK )
-    {
-        return false;
-    }
-
-    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Instanciate( pihandle, &renderer ) != PIM_OK )
-    {
-        return false;
-    }
-
-    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = renderer;
-    
-    return true;
-}
-
-bool LoadModule( const dsstring& p_file )
-{
-	dsstring complete_path = p_file;
-#ifdef _DEBUG
-	complete_path += ".dll";
-#else
-	complete_path += "_r.dll";
-#endif
-
-    DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Handle pihandle = NULL;
-
-    DrawSpace::Interface::Module::Root* module_root = NULL;
-    PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK )
-    {
-        return false;
-    }
-
-    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::Instanciate( pihandle, &module_root ) != PIM_OK )
-    {
-        return false;
-    }
-
-    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface = module_root;
-    return true;
-}
-*/
-
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
     try
