@@ -28,6 +28,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
 
+_DECLARE_DS_LOGGER( logger, "test01mainloopservice", NULL )
 
 MainLoopService::MainLoopService( void )
 {
@@ -37,14 +38,24 @@ MainLoopService::~MainLoopService( void )
 {
 }
 
-void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer )
+void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
 {
+    p_logconf->RegisterSink( &logger );
+    logger.SetConfiguration( p_logconf );
+
+    p_logconf->RegisterSink( MemAlloc::GetLogSink() );
+    MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
+
+    /////////////////////////////////////////////////////////////////////////////////
+
     m_renderer = p_renderer;
 
     DrawSpace::Interface::Renderer::DeviceDescr dd;
     m_renderer->GetDeviceDescr( dd );
 
     m_device = dd.description;
+
+    _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
 void MainLoopService::Run( void )
@@ -67,6 +78,7 @@ void MainLoopService::Run( void )
 
 void MainLoopService::Release( void )
 {
+    _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 }
 
 BaseSceneNode* MainLoopService::GetSceneNode( void )

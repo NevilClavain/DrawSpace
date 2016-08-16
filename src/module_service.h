@@ -36,7 +36,7 @@ class Service
 {
 public:
     
-    virtual void                            Init( DrawSpace::Interface::Renderer* p_renderer ) = 0;
+    virtual void                            Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf ) = 0;
     virtual void                            Run( void ) = 0;
     virtual void                            Release( void ) = 0;
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void ) = 0;

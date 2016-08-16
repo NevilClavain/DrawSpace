@@ -27,10 +27,13 @@ dsAppClient* dsAppClient::m_instance = NULL;
 using namespace DrawSpace::Interface::Module;
 
 
+_DECLARE_DS_LOGGER( logger, "vmapp", DrawSpace::Logger::Configuration::GetInstance() )
+
+
 dsAppClient::dsAppClient( void ) :
 m_mainloopservice( NULL )
 {    
-    _INIT_LOGGER( "app.conf" )
+    _INIT_LOGGER( "logvm.conf" )
     m_w_title = "DrawSpace VM";
 }
 
@@ -48,28 +51,34 @@ void dsAppClient::OnRenderFrame( void )
 
 bool dsAppClient::OnIdleAppInit( void )
 {
+    _DSDEBUG(logger, dsstring("VM startup..."))
+
     Root* root = DrawSpace::Core::SingletonPlugin<Root>::GetInstance()->m_interface;
 
     m_mainloopservice = root->InstanciateService( "mainloop" );
     if( m_mainloopservice )
     {
-        m_mainloopservice->Init( DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
+        _DSDEBUG(logger, dsstring("mainloop service initialisation"))
+        m_mainloopservice->Init( DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface, DrawSpace::Logger::Configuration::GetInstance() );
         return true;
     }
     else
     {
+        _DSWARN(logger, dsstring("no mainloop service found, leaving..."))
         return false;
     }
 }
 
 void dsAppClient::OnAppInit( void )
-{
+{    
 }
 
 void dsAppClient::OnClose( void )
 {
+    _DSDEBUG(logger, dsstring("VM shutdown..."))
     if( m_mainloopservice )
     {
+        _DSDEBUG(logger, dsstring("closing main loop service..."))
         m_mainloopservice->Release();
     }
 }

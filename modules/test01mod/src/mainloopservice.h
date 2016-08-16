@@ -38,7 +38,7 @@ public:
     ~MainLoopService( void );
 
 
-    virtual void                            Init( DrawSpace::Interface::Renderer* p_renderer );
+    virtual void                            Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf );
     virtual void                            Run( void );
     virtual void                            Release( void );
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );
