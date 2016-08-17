@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1478A8CD-E662-4506-BE6A-4BFF2521F18C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>drawspaceconf</RootNamespace>
+    <RootNamespace>d3d9conf</RootNamespace>
     <ProjectName>d3d9conf</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -53,14 +53,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WXMSW__;__WXDEBUG__;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/include;./../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/include/msvc;./../../../src;./../../../DrawSpace_thirdparts/dx9sdk/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/include;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/include/msvc;./../../../../src;./../../../../DrawSpace_thirdparts/dx9sdk/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>./../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/lib/vc_lib;./../../../DrawSpace_thirdparts/dx9sdk/Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/lib/vc_lib;./../../../../DrawSpace_thirdparts/dx9sdk/Lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;wxmsw30ud_core.lib;wxbase30ud.lib;comctl32.lib;rpcrt4.lib;winmm.lib;d3d9.lib;d3dx9.lib</AdditionalDependencies>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(SolutionDir)/../../bin/d3d9conf.exe</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -72,15 +72,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;__WXMSW__;__WXDEBUG__;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/include;./../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/include/msvc;./../../../src;./../../../DrawSpace_thirdparts/dx9sdk/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/include;./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/include/msvc;./../../../../src;./../../../../DrawSpace_thirdparts/dx9sdk/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>$(OutDir)$(TargetName)_r$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>./../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/lib/vc_lib;./../../../DrawSpace_thirdparts/dx9sdk/Lib</AdditionalLibraryDirectories>
+      <OutputFile>$(SolutionDir)/../../bin/d3d9conf_r.exe</OutputFile>
+      <AdditionalLibraryDirectories>./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/lib/vc_lib;./../../../../DrawSpace_thirdparts/dx9sdk/Lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>wxmsw30u_core.lib;wxbase30u.lib;comctl32.lib;rpcrt4.lib;winmm.lib;d3d9.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

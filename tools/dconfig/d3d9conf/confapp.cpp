@@ -23,6 +23,17 @@
 #include "confapp.h"
 #include "DConfMainDialog.h"
 
+// sur laptop, forcer l'utilisation du GPU haute performance, au lieu des chipset graphiques integrés
+extern "C" {
+	// This is the quickest and easiest way to enable using the nVidia GPU on a Windows laptop with a dedicated nVidia GPU and Optimus tech.
+	// enable optimus!
+    __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+
+	// AMD have one too!!!
+	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
+
+
 
 IMPLEMENT_APP( ConfApp )
 

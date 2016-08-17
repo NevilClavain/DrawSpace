@@ -543,5 +543,8 @@
     <ClInclude Include="src\piload.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\keys.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

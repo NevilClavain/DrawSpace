@@ -130,6 +130,7 @@
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\inertbody.h" />
     <ClInclude Include="src\inits.h" />
+    <ClInclude Include="src\keys.h" />
     <ClInclude Include="src\linearmovement.h" />
     <ClInclude Include="src\lod.h" />
     <ClInclude Include="src\logconf.h" />
