@@ -49,15 +49,9 @@ ConfApp::~ConfApp( void )
 
 bool ConfApp::OnInit( void )
 {
-    /*
-	ConfFrame* frame = new ConfFrame( _( "DrawSpace 3D Engine Config" ) );
-	frame->Show();
-    */
-
     DConfMainDialog* dialog = new DConfMainDialog( NULL, "DrawSpace D3D11 Configuration" );
 
-    dialog->Show();
-    
+    dialog->Show();   
 	return true;
 }
 

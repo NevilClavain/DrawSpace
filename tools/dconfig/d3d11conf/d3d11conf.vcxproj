@@ -58,10 +58,13 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/lib/vc_lib;./../../../../DrawSpace_thirdparts/dx11sdk/Lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;wxmsw30ud_core.lib;wxbase30ud.lib;comctl32.lib;rpcrt4.lib;winmm.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/lib/vc_lib;./../../../../DrawSpace_thirdparts/dx11sdk/Lib/x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;wxmsw30ud_core.lib;wxbase30ud.lib;comctl32.lib;rpcrt4.lib;winmm.lib;d3dx11.lib;dxgi.lib;</AdditionalDependencies>
       <OutputFile>$(SolutionDir)/../../bin/d3d11conf.exe</OutputFile>
     </Link>
+    <PostBuildEvent>
+      <Command>copy .\..\..\..\bin\d3d11conf.exe .\..\..\..\..\Drawspace_samples\bin</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -80,9 +83,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(SolutionDir)/../../bin/d3d11conf_r.exe</OutputFile>
-      <AdditionalLibraryDirectories>./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/lib/vc_lib;./../../../../DrawSpace_thirdparts/dx11sdk/Lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxmsw30u_core.lib;wxbase30u.lib;comctl32.lib;rpcrt4.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./../../../../DrawSpace_thirdparts/wxWidgets-3.0.2/vs2013/lib/vc_lib;./../../../../DrawSpace_thirdparts/dx11sdk/Lib/x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxmsw30u_core.lib;wxbase30u.lib;comctl32.lib;rpcrt4.lib;winmm.lib;d3dx11.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy .\..\..\..\bin\d3d11conf_r.exe .\..\..\..\..\Drawspace_samples\bin</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="confapp.cpp" />

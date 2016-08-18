@@ -4,6 +4,34 @@
 DConfMainDialog::DConfMainDialog( wxWindow* parent, const wxString& title ) :
 MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
 {
+    IDXGIAdapter * adapter; 
+    std::vector <IDXGIAdapter*> adapters; 
+    IDXGIFactory* factory = NULL; 
+    
+
+    // Create a DXGIFactory object.
+    CreateDXGIFactory(__uuidof(IDXGIFactory) ,(void**)&factory);
+
+
+    for( UINT i = 0; factory->EnumAdapters(i, &adapter) != DXGI_ERROR_NOT_FOUND; ++i )
+    {
+        adapters.push_back(adapter);
+    } 
+
+    UINT nb_adapters = adapters.size();
+
+    for( UINT i = 0; i < nb_adapters; i++ )
+	{
+		adapter_infos infos;
+
+		DXGI_ADAPTER_DESC current;
+		adapters[i]->GetDesc( &current );
+
+        infos.infos = current;
+
+        m_adapters_infos.push_back( infos );
+    }
+
 
     /*
 	m_lpd3d = Direct3DCreate9( D3D_SDK_VERSION );
@@ -48,7 +76,7 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
 
         m_adapters_infos.push_back( infos );
     }
-
+    */
     // remplissage formulaire à partir des données récoltées
 
     m_propertyGrid->Append( new wxBoolProperty( "Fullscreen", wxPG_LABEL, false ) );
@@ -68,20 +96,22 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
 
     m_propertyGrid->Append( new wxEnumProperty( "Device", wxPG_LABEL, devices ) );
 
+    
     for( size_t i = 0; i < m_adapters_infos.size(); i++ )
     {
         wxPGProperty* devices_modes_root = m_propertyGrid->Append( new wxStringProperty( m_adapters_infos[i].infos.Description, wxPG_LABEL, "<composed>" ) );
 
         wxArrayString device_modes;
-
+        /*
         for( size_t j = 0; j < m_adapters_infos[i].modes.size(); j++ )
         {
             device_modes.Add( m_adapters_infos[i].modes[j].comment );
         }
+        */
 
         m_propertyGrid->AppendIn( devices_modes_root, new wxEnumProperty( "Display mode", wxPG_LABEL, device_modes ) );
     }
-    */
+    
 }
 
 
