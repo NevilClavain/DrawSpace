@@ -23,60 +23,71 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
     for( UINT i = 0; i < nb_adapters; i++ )
 	{
 		adapter_infos infos;
+        adapter_mode  mode;
 
 		DXGI_ADAPTER_DESC current;
 		adapters[i]->GetDesc( &current );
 
         infos.infos = current;
 
+
+        
+        IDXGIOutput* output = NULL; 
+        HRESULT hr;
+
+        hr = adapters[i]->EnumOutputs( 0, &output );
+
+
+
+        if( S_OK == hr )
+        {
+
+            DXGI_OUTPUT_DESC dod;
+
+            output->GetDesc( &dod );
+
+
+            UINT nb_modes = 0;
+            DXGI_MODE_DESC* displayModes = NULL;
+            DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+            // Get the number of elements
+            hr = output->GetDisplayModeList( format, 0, &nb_modes, NULL );
+
+            displayModes = new DXGI_MODE_DESC[nb_modes];
+            hr = output->GetDisplayModeList( format, 0, &nb_modes, displayModes );
+
+		    if( nb_modes > 0 )
+		    {
+			    for( UINT j = 0; j < nb_modes; j++ )
+			    {
+
+				    mode.format = DXGI_FORMAT_R8G8B8A8_UINT;
+				    mode.width = displayModes[j].Width;
+				    mode.height = displayModes[j].Height;
+				    mode.refresh_rate = displayModes[j].RefreshRate.Numerator / displayModes[j].RefreshRate.Denominator;
+
+				    char comment[256];
+				    sprintf( comment, "DXGI_FORMAT_R8G8B8A8_UINT %d x %d, %d Hz", mode.width, mode.height, mode.refresh_rate );
+				    mode.comment = comment;
+
+				    infos.modes.push_back( mode );
+			    }
+		    }
+        }
+
+  
+
         m_adapters_infos.push_back( infos );
     }
 
-
-    /*
-	m_lpd3d = Direct3DCreate9( D3D_SDK_VERSION );
-
-	UINT nb_adapters = m_lpd3d->GetAdapterCount();
-
-	for( UINT i = 0; i < nb_adapters; i++ )
-	{
-		adapter_infos infos;
-		adapter_mode  mode;
-
-		D3DADAPTER_IDENTIFIER9 current;
-		m_lpd3d->GetAdapterIdentifier( i, 0, &current );
-
-        infos.infos = current;
-
-
-        D3DDISPLAYMODE current_dm;
-
-		UINT nb_modes;
-		
-		nb_modes = m_lpd3d->GetAdapterModeCount( i, D3DFMT_X8R8G8B8 );
-		if( nb_modes > 0 )
-		{
-			for( UINT j = 0; j < nb_modes; j++ )
-			{
-				HRESULT res = m_lpd3d->EnumAdapterModes( i, D3DFMT_X8R8G8B8, j, &current_dm );
-
-				mode.format = D3DFMT_X8R8G8B8;
-				mode.width = current_dm.Width;
-				mode.height = current_dm.Height;
-				mode.refresh_rate = current_dm.RefreshRate;
-
-				char comment[256];
-				sprintf( comment, "D3DFMT_X8R8G8B8 %d x %d, %d Hz", current_dm.Width, current_dm.Height, current_dm.RefreshRate );
-				mode.comment = comment;
-
-				infos.modes.push_back( mode );
-			}
-		}
-	
-
-        m_adapters_infos.push_back( infos );
+    if( factory )
+    {
+        factory->Release();
     }
-    */
+
+
+
     // remplissage formulaire à partir des données récoltées
 
     m_propertyGrid->Append( new wxBoolProperty( "Fullscreen", wxPG_LABEL, false ) );
@@ -102,13 +113,11 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
         wxPGProperty* devices_modes_root = m_propertyGrid->Append( new wxStringProperty( m_adapters_infos[i].infos.Description, wxPG_LABEL, "<composed>" ) );
 
         wxArrayString device_modes;
-        /*
+        
         for( size_t j = 0; j < m_adapters_infos[i].modes.size(); j++ )
         {
             device_modes.Add( m_adapters_infos[i].modes[j].comment );
-        }
-        */
-
+        }        
         m_propertyGrid->AppendIn( devices_modes_root, new wxEnumProperty( "Display mode", wxPG_LABEL, device_modes ) );
     }
     
@@ -161,7 +170,7 @@ void DConfMainDialog::OnMainDialogClose( wxCloseEvent& event )
 
 void DConfMainDialog::OnSaveButtonClick( wxCommandEvent& event )
 {
-    /*
+    
     DIALOG_PROPERTIES_VARS
 
     DIALOG_GET_BOOL_PROPERTY( "Fullscreen", fullscreen );
@@ -178,9 +187,9 @@ void DConfMainDialog::OnSaveButtonClick( wxCommandEvent& event )
 
     FILE* fp = fopen( "appconfig.txt", "w" );
 
-    fprintf( fp, "renderplugin           drawspaced3d9\n" );
-    fprintf( fp, "dx9vertexproc          hardware\n" );
-    fprintf( fp, "dx9adapterordinal      %d\n", device_ordinal );
+    fprintf( fp, "renderplugin           drawspaced3d11\n" );
+    fprintf( fp, "dx11vertexproc          hardware\n" );
+    fprintf( fp, "dx11adapterordinal      %d\n", device_ordinal );
     
 
 	if( fullscreen )
@@ -224,9 +233,9 @@ void DConfMainDialog::OnSaveButtonClick( wxCommandEvent& event )
 		adapter_infos ai = m_adapters_infos[device_ordinal];
 		adapter_mode am = ai.modes[device_fsmode_ordinal];
 
-		fprintf( fp, "dx9fullscreen          %d %d %d %d\n", am.width, am.height, am.refresh_rate, am.format );
+		fprintf( fp, "dx11fullscreen          %d %d %d %d\n", am.width, am.height, am.refresh_rate, am.format );
 	}
 
     fclose( fp );
-    */
+    
 }
