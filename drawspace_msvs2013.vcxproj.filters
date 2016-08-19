@@ -31,6 +31,9 @@
     <Filter Include="interface\module">
       <UniqueIdentifier>{ca2c3f9d-f98d-475d-a99b-e6b13ae60346}</UniqueIdentifier>
     </Filter>
+    <Filter Include="module">
+      <UniqueIdentifier>{39bf7d1b-7ace-4f96-ba23-0ed16d8a10c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\asset.cpp" />
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="src\piload.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\keys.cpp">
+      <Filter>module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,7 +550,7 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="src\keys.h">
-      <Filter>utils</Filter>
+      <Filter>module</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

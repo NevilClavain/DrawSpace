@@ -100,4 +100,5 @@
 #include "impostorsdisplaylist.h"
 #include "clouds.h"
 #include "module_root.h"
+#include "keys.h"
 #endif

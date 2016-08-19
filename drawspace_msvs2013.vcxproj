@@ -38,6 +38,7 @@
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\inertbody.cpp" />
     <ClCompile Include="src\inits.cpp" />
+    <ClCompile Include="src\keys.cpp" />
     <ClCompile Include="src\linearmovement.cpp" />
     <ClCompile Include="src\lod.cpp" />
     <ClCompile Include="src\logconf.cpp" />
