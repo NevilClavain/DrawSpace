@@ -34,7 +34,7 @@ ShipService::~ShipService( void )
 }
 
 
-void ShipService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
+void ShipService::Init( const dsstring& p_instanceId, DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
 {
 }
 
