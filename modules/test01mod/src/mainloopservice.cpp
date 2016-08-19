@@ -38,7 +38,17 @@ MainLoopService::~MainLoopService( void )
 {
 }
 
-void MainLoopService::Init( const dsstring& p_instanceId, DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
+void MainLoopService::GetLocalKeys( const dsstring p_instanceName, std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
+{
+
+}
+
+void MainLoopService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
+{
+
+}
+
+void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
 {
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
