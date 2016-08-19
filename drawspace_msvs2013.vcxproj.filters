@@ -263,7 +263,7 @@
     <ClCompile Include="src\piload.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\keys.cpp">
+    <ClCompile Include="src\module_keys.cpp">
       <Filter>module</Filter>
     </ClCompile>
   </ItemGroup>
@@ -549,7 +549,7 @@
     <ClInclude Include="src\piload.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\keys.h">
+    <ClInclude Include="src\module_keys.h">
       <Filter>module</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _KEYS_H_
-#define _KEYS_H_
+#ifndef _MODULE_KEYS_H_
+#define _MODULE_KEYS_H_
 
 #include "drawspace_commons.h"
 

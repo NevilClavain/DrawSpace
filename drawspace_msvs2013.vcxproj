@@ -38,7 +38,7 @@
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\inertbody.cpp" />
     <ClCompile Include="src\inits.cpp" />
-    <ClCompile Include="src\keys.cpp" />
+    <ClCompile Include="src\module_keys.cpp" />
     <ClCompile Include="src\linearmovement.cpp" />
     <ClCompile Include="src\lod.cpp" />
     <ClCompile Include="src\logconf.cpp" />
@@ -131,7 +131,7 @@
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\inertbody.h" />
     <ClInclude Include="src\inits.h" />
-    <ClInclude Include="src\keys.h" />
+    <ClInclude Include="src\module_keys.h" />
     <ClInclude Include="src\linearmovement.h" />
     <ClInclude Include="src\lod.h" />
     <ClInclude Include="src\logconf.h" />
