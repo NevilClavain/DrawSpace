@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shipmod", "modules\shipmod\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test01mod", "modules\test01mod\test01mod.vcxproj", "{1BAEE7A2-DD8F-45EA-A03F-6985A786A583}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "skyboxmod", "modules\skyboxmod\skyboxmod.vcxproj", "{CC3FD43C-EA27-40D1-9796-8A84483E4F58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -85,6 +87,14 @@ Global
 		{1BAEE7A2-DD8F-45EA-A03F-6985A786A583}.Release|Win32.ActiveCfg = Release|Win32
 		{1BAEE7A2-DD8F-45EA-A03F-6985A786A583}.Release|Win32.Build.0 = Release|Win32
 		{1BAEE7A2-DD8F-45EA-A03F-6985A786A583}.Release|x64.ActiveCfg = Release|Win32
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Debug|ARM.ActiveCfg = Debug|Win32
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Debug|Win32.Build.0 = Debug|Win32
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Debug|x64.ActiveCfg = Debug|Win32
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Release|ARM.ActiveCfg = Release|Win32
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Release|Win32.ActiveCfg = Release|Win32
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Release|Win32.Build.0 = Release|Win32
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,5 +102,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A7B60B84-EE35-4006-B26D-5D98A8897AF3} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{1BAEE7A2-DD8F-45EA-A03F-6985A786A583} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 	EndGlobalSection
 EndGlobal
