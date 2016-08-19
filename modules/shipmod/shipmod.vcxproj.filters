@@ -7,6 +7,9 @@
     <ClCompile Include="src\shiproot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\shipservice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -15,6 +18,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shiproot.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shipservice.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

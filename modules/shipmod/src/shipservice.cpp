@@ -20,29 +20,69 @@
 *
 */
 
-#ifndef _SHIPROOT_H_
-#define _SHIPROOT_H_
-
-#include "module_root.h"
 #include "shipservice.h"
 
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Interface::Module;
 
-class ShipRoot : public DrawSpace::Interface::Module::Root
+ShipService::ShipService( void )
 {
-protected:
+}
 
-    std::map<dsstring, DrawSpace::Interface::Module::Service*> m_services;
+ShipService::~ShipService( void )
+{
+}
 
 
-public:
-    ShipRoot( void );
-    virtual ~ShipRoot( void );
+void ShipService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
+{
+}
 
-    virtual dsstring GetModuleName( void );
-    virtual dsstring GetModuleDescr( void );
-    virtual std::vector<dsstring> GetServicesList( void );
-    virtual DrawSpace::Interface::Module::Service* InstanciateService( const dsstring& p_id );
+void ShipService::Run( void )
+{
+}
 
-};
+void ShipService::Release( void )
+{
+}
 
-#endif
+DrawSpace::Core::BaseSceneNode* ShipService::GetSceneNode( void )
+{
+    return NULL;
+}
+
+void ShipService::OnKeyPress( long p_key )
+{
+}
+
+void ShipService::OnEndKeyPress( long p_key )
+{
+}
+
+void ShipService::OnKeyPulse( long p_key )
+{
+}
+
+void ShipService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
+{
+}
+
+void ShipService::OnMouseLeftButtonDown( long p_xm, long p_ym )
+{
+}
+
+void ShipService::OnMouseLeftButtonUp( long p_xm, long p_ym )
+{
+}
+
+void ShipService::OnMouseRightButtonDown( long p_xm, long p_ym )
+{
+}
+
+void ShipService::OnMouseRightButtonUp( long p_xm, long p_ym )
+{
+}
+
+void ShipService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
+{
+}
