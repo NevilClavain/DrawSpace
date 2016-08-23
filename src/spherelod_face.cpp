@@ -733,3 +733,8 @@ void Face::recursive_merge( DrawSpace::Utils::BaseQuadtreeNode* p_currpatch )
         p_currpatch->Merge();
     }
 }
+
+void Face::GetCurrentCubeFaceHotPoint( DrawSpace::Utils::Vector& p_cubeface_hotpoint )
+{
+    p_cubeface_hotpoint = m_cubeface_hotpoint;
+}
