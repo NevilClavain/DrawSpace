@@ -37,6 +37,11 @@ protected:
 
     dsreal                      m_longitud_theta;
     dsreal                      m_latitud_phi;
+
+    dsreal                      m_longitud_theta_base;
+    dsreal                      m_latitud_phi_base;
+
+
     dsreal                      m_alt;
 
     // camera orientation control
@@ -59,6 +64,8 @@ public:
     void SetPhi( dsreal p_phi );
     void SetLatitud( dsreal p_latitud );
     void SetLongitud( dsreal p_longitud );
+    void SetLatitudBase( dsreal p_latitud );
+    void SetLongitudBase( dsreal p_longitud );
     void SetAlt( dsreal p_altitud );
 
 

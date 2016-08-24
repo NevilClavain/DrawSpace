@@ -42,6 +42,11 @@ void LongLatMovement::Init( dsreal p_init_longitud_theta, dsreal p_init_latitud_
 {
     m_longitud_theta = DrawSpace::Utils::Maths::DegToRad( p_init_longitud_theta );
     m_latitud_phi = DrawSpace::Utils::Maths::DegToRad( p_init_latitud_phi );
+
+    m_longitud_theta_base = 0.0;
+    m_latitud_phi_base = 0.0;
+
+
     m_alt = p_init_alt;
 
     SetTheta( p_init_theta );
@@ -79,7 +84,15 @@ void LongLatMovement::Compute( Utils::TimeManager& p_timemanager )
 
     Matrix latitud;
     latitud.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), m_latitud_phi );
-    
+
+    Matrix longitud_b;
+    longitud_b.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), m_longitud_theta_base );
+
+    Matrix latitud_b;
+    latitud_b.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), m_latitud_phi_base );
+
+    transformation.PushMatrix( longitud_b );
+    transformation.PushMatrix( latitud_b );
     transformation.PushMatrix( longitud );
     transformation.PushMatrix( latitud );
     transformation.PushMatrix( altitude );
@@ -108,6 +121,17 @@ void LongLatMovement::SetLongitud( dsreal p_longitud )
 {
     m_longitud_theta = DrawSpace::Utils::Maths::DegToRad( p_longitud );
 }
+
+void LongLatMovement::SetLatitudBase( dsreal p_latitud )
+{
+    m_latitud_phi_base = DrawSpace::Utils::Maths::DegToRad( p_latitud );
+}
+
+void LongLatMovement::SetLongitudBase( dsreal p_longitud )
+{
+    m_longitud_theta_base = DrawSpace::Utils::Maths::DegToRad( p_longitud );
+}
+
 
 void LongLatMovement::SetAlt( dsreal p_altitud )
 {
