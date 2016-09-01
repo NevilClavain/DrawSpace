@@ -128,7 +128,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 		// si altitude relative a un certain seuil
         
 		// regarder l'altitude vertex interpole pour determiner si rendu mer
-		if( input.LODGlobalPatch_TexCoord.z <= 0.0 ) // altitude vertex (interpolee)
+		if( input.LODGlobalPatch_TexCoord.z <= 0.1 ) // altitude vertex (interpolee)
 		{
 			sea = true;
 		}
@@ -320,23 +320,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         }
     }
     
-    /*
-    if(water_mask_mode)
-    {
-        if( sea )
-        {
-            final_color.xyz = water_mask_color;
-        }
-        else
-        {
-            final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
-        }        
-    }
-    else
-    {
-        final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
-    }
-    */
+
 
     final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
 
@@ -365,25 +349,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         final_color.xyz = final_color.xyz / count_lights;
     }
 
-    //final_color.w = 1.0;
-    /*
-    if (water_mask_mode)
-    {
-        if (sea)
-        {
-            float4 real_color = c0_final + (lit_color * pixel_color * c1_final);
-            final_color.w = saturate( 2.0 * real_color.z );
-        }
-        else
-        {
-            final_color.w = 1.0;
-        }
-    }
-    else
-    {
-        final_color.w = 1.0;
-    }
-*/
 
     if (water_mask_mode)
     {

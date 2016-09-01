@@ -90,4 +90,70 @@ float ComputeVertexHeight(float4 p_vpos, float p_plains_amplitude, float p_mount
     return res;
 }
 
+// retourne un facteur multiplicatif entre 0.0 et 1.0 et non une altitude en metres
+float ComputeRiversFromTexture(sampler2D p_mapSampler, float4 p_vpos, float4 p_uv, float p_uvnoise_seed1, float p_uvnoise_seed2)
+{
+    float fbm_uvnoise_hl = 0.8;
 
+    float res = 0.0;
+
+    float n_vpos_x = (p_vpos.x / 2.0) + 0.5;
+    float n_vpos_y = (p_vpos.y / 2.0) + 0.5;
+    float n_vpos_z = (p_vpos.z / 2.0) + 0.5;
+
+
+    float3 f3;
+    f3[0] = lerp(-fbm_uvnoise_hl, fbm_uvnoise_hl, n_vpos_x);
+    f3[1] = lerp(-fbm_uvnoise_hl, fbm_uvnoise_hl, n_vpos_y);
+    f3[2] = lerp(-fbm_uvnoise_hl, fbm_uvnoise_hl, n_vpos_z);
+
+    float fbm_uvnoise = Fractal_fBm_wombat_perlin(f3, 7, 2.6, 0.5, 1.0, p_uvnoise_seed1, p_uvnoise_seed2);
+
+    
+    /////////////////////////////////////////////////////////////////////////////// 
+    float4 uv_mod = 0.0;
+
+    uv_mod.x = p_uv.x + (fbm_uvnoise * 0.0025 );
+    uv_mod.y = p_uv.y + (-fbm_uvnoise * 0.0025 );
+    
+    float4 color = tex2Dlod(p_mapSampler, uv_mod);
+    ////////////////////////////////////////////////////////////////////////////////////////
+
+    res = color.x;
+
+    return res;
+}
+
+// renvoie une altitude comprise entre -0.0 et +700.0 
+float ComputeCanyonsFromTexture(sampler2D p_mapSampler, float4 p_vpos, float4 p_uv, float p_uvnoise_seed1, float p_uvnoise_seed2)
+{
+    float fbm_uvnoise_hl = 0.8;
+
+    float res = 0.0;
+
+    float n_vpos_x = (p_vpos.x / 2.0) + 0.5;
+    float n_vpos_y = (p_vpos.y / 2.0) + 0.5;
+    float n_vpos_z = (p_vpos.z / 2.0) + 0.5;
+
+
+    float3 f3;
+    f3[0] = lerp(-fbm_uvnoise_hl, fbm_uvnoise_hl, n_vpos_x);
+    f3[1] = lerp(-fbm_uvnoise_hl, fbm_uvnoise_hl, n_vpos_y);
+    f3[2] = lerp(-fbm_uvnoise_hl, fbm_uvnoise_hl, n_vpos_z);
+
+    float fbm_uvnoise = Fractal_fBm_wombat_perlin(f3, 7, 2.6, 0.5, 1.0, p_uvnoise_seed1, p_uvnoise_seed2);
+
+    
+    /////////////////////////////////////////////////////////////////////////////// 
+    float4 uv_mod = 0.0;
+
+    uv_mod.x = p_uv.x + (fbm_uvnoise * 0.0095);
+    uv_mod.y = p_uv.y + (-fbm_uvnoise * 0.0095);
+    
+    float4 color = tex2Dlod(p_mapSampler, uv_mod);
+    ////////////////////////////////////////////////////////////////////////////////////////
+
+    res = 700.0 * color.x;
+
+    return res;
+}

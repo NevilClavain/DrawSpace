@@ -91,6 +91,10 @@ float4 light2_dir             : register(c49);
 float4 light2_color           : register(c50);
 
 
+sampler2D TextureRivers : register(s0);
+sampler2D TextureCanyons : register(s1);
+
+
 struct VS_INPUT 
 {
    float4 Position : POSITION0;
@@ -151,19 +155,27 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	float v_alt = 0.0;
 
+    float4 global_uv = 0.0;
+    global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
+    global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
+    float v_factor = ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
+
 	if( vertex_distance < /*1.015*/ /*2.0*/ 1.05 * horizon_limit )
-	{		
+	{	
+        	
         v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
+        v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
 
 		if( v_alt >= 0.0 )
 		{
+          
 			// seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
 			// les vertex "skirt" ont toujours une altitude de zero
 
 			if( Input.TexCoord0.z == 0.0 )
 			{
-				v_position3 *= ( 1.0 + ( v_alt / flag0.z ) );
-			}
+                v_position3 *= (1.0 + (v_factor * (v_alt / flag0.z)));
+            }
             else
             {
                 v_position3 *= (1.0 + (-100.0 / flag0.z));
@@ -180,7 +192,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.LODGlobalPatch_TexCoord.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
 	Output.LODGlobalPatch_TexCoord.y = lerp( base_uv.y, base_uv.w, Input.TexCoord0.y );
 
-	Output.LODGlobalPatch_TexCoord.z = v_alt;
+    Output.LODGlobalPatch_TexCoord.z = v_alt * v_factor;
     Output.LODGlobalPatch_TexCoord.w = vertex_distance;
 
 	// conserver aussi les coords textures originales du patch

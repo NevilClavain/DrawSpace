@@ -37,6 +37,10 @@ float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
+float4 base_uv_global : register(c27);
+	// .x, .y -> u1, v1
+	// .z, .w -> u2, v2
+
 float4 landscape_control: register(c30);
 	// .x -> plains amplitude
 	// .y -> mountains amplitude
@@ -63,17 +67,19 @@ float4 thparams2: register(c33);
 	// .w -> k_tropical
 
 
-
+sampler2D TextureRivers : register(s0);
+sampler2D TextureCanyons : register(s1);
 
 struct VS_INPUT 
 {
-   float4 Position : POSITION0;      
+    float4 Position : POSITION0;
+    float4 TexCoord0 : TEXCOORD0;
 };
 
 struct VS_OUTPUT 
 {
-   float4 Position	: POSITION0;
-   float4 aht		: TEXCOORD0;  // aht : altitude temperature humidity
+    float4 Position	: POSITION0;
+    float4 aht		: TEXCOORD0;  // aht : altitude temperature humidity
 };
 
 #include "fbm.hlsl"
@@ -117,6 +123,15 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     float res = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
+
+    float4 global_uv = 0.0;
+    global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
+    global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
+
+    res += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
+
+
+    res *= ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
 
 	Output.aht = 0.0;
 	Output.aht.x = res;
