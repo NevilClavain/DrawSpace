@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test01mod", "modules\test01
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "skyboxmod", "modules\skyboxmod\skyboxmod.vcxproj", "{CC3FD43C-EA27-40D1-9796-8A84483E4F58}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d11", "plugins\d3d11\d3d11.vcxproj", "{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -95,6 +97,14 @@ Global
 		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Release|Win32.ActiveCfg = Release|Win32
 		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Release|Win32.Build.0 = Release|Win32
 		{CC3FD43C-EA27-40D1-9796-8A84483E4F58}.Release|x64.ActiveCfg = Release|Win32
+		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}.Debug|ARM.ActiveCfg = Debug|Win32
+		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}.Debug|Win32.Build.0 = Debug|Win32
+		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}.Debug|x64.ActiveCfg = Debug|Win32
+		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}.Release|ARM.ActiveCfg = Release|Win32
+		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}.Release|Win32.ActiveCfg = Release|Win32
+		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}.Release|Win32.Build.0 = Release|Win32
+		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
