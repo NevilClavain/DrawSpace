@@ -188,10 +188,8 @@ void DConfMainDialog::OnSaveButtonClick( wxCommandEvent& event )
     FILE* fp = fopen( "appconfig.txt", "w" );
 
     fprintf( fp, "renderplugin           drawspaced3d11\n" );
-    fprintf( fp, "dx11vertexproc          hardware\n" );
     fprintf( fp, "dx11adapterordinal      %d\n", device_ordinal );
     
-
 	if( fullscreen )
 	{
         fprintf( fp, "fullscreen             true\n" );
