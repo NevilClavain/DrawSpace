@@ -1,7 +1,10 @@
 DrawSpace
 =========
 
-My C/C++ graphic rendering engine.
+My C/C++ graphic rendering engine including features for 3D spaces simulation, especially Procedural planets generation & rendering,
+including accurate atmospheric effects, volumetrics clouds, water rendering, etc...
+
+![alt tag](https://3.bp.blogspot.com/-82kYw9Zkzpk/VzjFhWsdqKI/AAAAAAAAAvg/AH5CPYrEQGoTS-qJMEPsXcybr7YJxDPLQCLcB/s640/Image21.png)
 
 Full GPLv3 text is available in the ./licenses directory
 
