@@ -287,3 +287,23 @@ void DrawSpace::Utils::RealToString( dsreal p_value, dsstring& p_str )
     sprintf( str, "%f", p_value );
     p_str = dsstring( str );
 }
+
+dswstring DrawSpace::Utils::String2WString( const dsstring& p_s )
+{
+    int len;
+    int slength = (int)p_s.length() + 1;
+    len = MultiByteToWideChar( CP_ACP, 0, p_s.c_str(), slength, 0, 0 ); 
+    dswstring r( len, L'\0' );
+    MultiByteToWideChar( CP_ACP, 0, p_s.c_str(), slength, &r[0], len );
+    return r;
+}
+
+dsstring DrawSpace::Utils::WString2String( const dswstring& p_s )
+{
+    int len;
+    int slength = (int)p_s.length() + 1;
+    len = WideCharToMultiByte( CP_ACP, 0, p_s.c_str(), slength, 0, 0, 0, 0 ); 
+    dsstring r( len, '\0' );
+    WideCharToMultiByte( CP_ACP, 0, p_s.c_str(), slength, &r[0], len, 0, 0 ); 
+    return r;
+}

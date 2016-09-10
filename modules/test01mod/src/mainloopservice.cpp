@@ -65,6 +65,8 @@ void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpac
 
     m_device = dd.description;
 
+    m_renderer->GetDescr( m_pluginDescr );
+
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
@@ -74,7 +76,7 @@ void MainLoopService::Run( void )
 
     m_renderer->ClearScreen( 0, 255, 0, 255 );
 
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_device.c_str() );
+    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s - %s", m_tm.GetFPS(), m_device.c_str(), m_pluginDescr.c_str() );
 
     m_renderer->EndScreen();
 

@@ -33,6 +33,7 @@
 #include "flags.h"
 
 #define dsstring    std::string
+#define dswstring   std::wstring
 #define dsreal      double
 #define dslonglong  long long
 #define dstime      __time64_t

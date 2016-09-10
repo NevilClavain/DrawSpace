@@ -23,6 +23,10 @@
 #ifndef _D3D11RENDERER_H_
 #define _D3D11RENDERER_H_
 
+#pragma warning( disable : 4005 )
+
+#include <d3d11.h>
+
 #include <memalloc.h>
 #include <tracedefs.h>
 #include <renderer.h>
@@ -32,12 +36,59 @@
 #include <matrix.h>
 #include <transformation.h>
 
+#include <FW1FontWrapper.h>
 
+
+#define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
+                                 dsstring d3dErrStr;
+
+#define D3D11_CHECK( p_mName ) \
+    if( hRes != S_OK ) \
+    { \
+        TranslateD3DD11Error( hRes, d3dErrStr ); \
+        dsstring dstr = " "#p_mName" -> "; \
+        dstr += d3dErrStr; \
+        dstr += "\n"; \
+        _DSERROR( logger, dstr.c_str() ); \
+        return false; \
+    }
 
 class D3D11Renderer : public DrawSpace::Interface::Renderer
 {
 protected:
 
+    class Config : public DrawSpace::Utils::Parser
+    {
+    protected:
+        bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
+    public:
+        int             m_adapter_ordinal;
+        int             m_fullscreen_width;
+        int             m_fullscreen_height;
+        int             m_refreshrate;
+        DXGI_FORMAT     m_fullscreen_format;
+        DWORD           m_vertex_processing;
+    };
+
+
+    Config                              m_config;
+
+
+    HWND                                m_hwnd;
+
+    IDXGISwapChain*                     m_lpd3dswapchain;
+    ID3D11Device*                       m_lpd3ddevice;                     
+    ID3D11DeviceContext*                m_lpd3ddevcontext;   
+
+    ID3D11RenderTargetView*             m_screentarget;
+
+    D3D11_VIEWPORT                      m_viewport;
+
+    IFW1FontWrapper*                    m_fontWrapper;
+
+    std::vector<DeviceDescr>            m_devices_descrs;
+    int                                 m_currentDevice;
 
 
 public:

@@ -33,19 +33,21 @@ namespace DrawSpace
 namespace Utils
 {
 
-Gui::TextWidget* BuildText( DrawSpace::Core::Font* p_font, long p_width, long p_height, const Vector& p_color, const dsstring& p_name );
+    Gui::TextWidget* BuildText( DrawSpace::Core::Font* p_font, long p_width, long p_height, const Vector& p_color, const dsstring& p_name );
 
-bool LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias );
-Interface::FontImport* InstanciateFontImportFromPlugin( const dsstring& p_pluginalias );
+    bool LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias );
+    Interface::FontImport* InstanciateFontImportFromPlugin( const dsstring& p_pluginalias );
 
-void BuildSpaceboxFx( DrawSpace::Spacebox* p_spacebox, Pass* p_pass );
+    void BuildSpaceboxFx( DrawSpace::Spacebox* p_spacebox, Pass* p_pass );
 
-long StringToInt( const dsstring& p_value );
-dsreal StringToReal( const dsstring& p_value );
+    long StringToInt( const dsstring& p_value );
+    dsreal StringToReal( const dsstring& p_value );
 
-void IntToString( long p_value, dsstring& p_str );
-void RealToString( dsreal p_value, dsstring& p_str );
+    void IntToString( long p_value, dsstring& p_str );
+    void RealToString( dsreal p_value, dsstring& p_str );
 
+    dswstring   String2WString( const dsstring& p_s );
+    dsstring    WString2String( const dswstring& p_s );
 }
 }
 

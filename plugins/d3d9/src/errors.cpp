@@ -19,6 +19,7 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 *
 */
+#pragma warning( disable : 4005 )
 
 #include <drawspace_commons.h>
 #include <d3dx9.h>
