@@ -1,10 +1,8 @@
 DrawSpace
 =========
 
-My C/C++ graphic rendering engine including features for 3D spaces simulation, especially Procedural planets generation & rendering,
-including accurate atmospheric effects, volumetrics clouds, water rendering, etc...
-
-![alt tag](https://3.bp.blogspot.com/-82kYw9Zkzpk/VzjFhWsdqKI/AAAAAAAAAvg/AH5CPYrEQGoTS-qJMEPsXcybr7YJxDPLQCLcB/s640/Image21.png)
+My C/C++ graphic rendering engine including features for 3D spaces simulation, especially procedural planets generation & rendering,
+including accurate atmospheric effects, 3D clouds, water rendering, etc...
 
 Full GPLv3 text is available in the ./licenses directory
 
@@ -21,4 +19,31 @@ DrawSpace currently rely on some 3rd-parts libraries:
 
 	** RSA Data Security, Inc. MD5 Message-Digest Algorithm
 
-	** Perlin noise & fractals functions from The Universe Development Kit Copyright (C) 2000  Sean O'Neil
+	** Wombat efficient texture-free procedural noise library for shaders : https://github.com/BrianSharpe/Wombat
+
+![alt tag](https://1.bp.blogspot.com/-0dPNeTT4lYw/V7NZ6Uve5HI/AAAAAAAABuY/lr7re1lYz0MLvO8uhMdNMGfGetvLT3nCwCLcB/s1600/Image59.png)
+
+![alt tag](https://3.bp.blogspot.com/-82kYw9Zkzpk/VzjFhWsdqKI/AAAAAAAAAvg/AH5CPYrEQGoTS-qJMEPsXcybr7YJxDPLQCLcB/s640/Image21.png)
+
+![alt tag](https://1.bp.blogspot.com/-TXkQyEqbvQE/VzjFmt84yLI/AAAAAAAAAvs/tAJBUYeRUeQdi7zz491lY2OKjA36RL3XgCLcB/s640/Image29.png)
+
+![alt tag](https://1.bp.blogspot.com/-LqGrp_Crt-M/VzjFor4VDBI/AAAAAAAAAvw/PlyM94rhHhUR0_-Wb7kudygHVKAAh2KtACLcB/s640/Image31.png)
+
+![alt tag](https://4.bp.blogspot.com/-gM8yxsRBKVg/V2Bb-3Z5zEI/AAAAAAAAA64/fbSCURSPUQMlFaZEHQyR8m1kWAZ2ADy7QCLcB/s640/Image37.png)
+
+![alt tag](https://3.bp.blogspot.com/-sQ1XhPDZriE/V2Bb8qMjhUI/AAAAAAAAA6s/P1D7q5HWGxMOKgdCGMLFj10Ruo3xT4hQwCLcB/s640/Image36.png)
+
+![alt tag](https://2.bp.blogspot.com/-S5YXd68LlqI/V2BbyJ5BcII/AAAAAAAAA6Q/3V_Vao7oi3YgaJqKEKfL7iY-7dB0hyJogCLcB/s640/Image32.png)
+
+![alt tag](https://2.bp.blogspot.com/-Xh1Vt7hbmhA/V3VxLIU34YI/AAAAAAAABmI/QWrSGDx9Dn8oInZrodrLMbq3h0LxoQV7gCLcB/s640/Image47.png)
+
+![alt tag](https://4.bp.blogspot.com/-VYDFsAgslTQ/V3VxFVx5hRI/AAAAAAAABmA/q0jtao56mSYlN1SELWyqxEyI473sJagOwCLcB/s640/Image46.png)
+
+![alt tag](https://4.bp.blogspot.com/-DspdeXA2j7g/V7NaEj0xvmI/AAAAAAAABus/5AWpP1s1KVwSMnQKxSwiOXWNSomr584mgCLcB/s640/Image52.png)
+
+![alt tag](https://4.bp.blogspot.com/-K6Gc-rzOgxI/V7NZ627WmhI/AAAAAAAABuc/gVN6mMEssFAvVF6fwFVbsz2UPA5H0HmgACLcB/s640/Image58.png)
+
+![alt tag](https://1.bp.blogspot.com/-QXHmeGIIvHk/V7NZ_WXzcTI/AAAAAAAABuk/S1230_yZb_AXmwHUd1XwQLjCH22okb5cgCLcB/s640/Image55.png)
+
+![alt tag](https://4.bp.blogspot.com/-qOTcQPfD5Ac/V7NaImWq5VI/AAAAAAAABuw/UOhgv7-vIx4AzcdgkffWV5nJKyNan5Y6QCLcB/s640/Image50.png)
+
