@@ -23,8 +23,6 @@ DrawSpace currently rely on some 3rd-parts libraries:
 
 ![alt tag](https://1.bp.blogspot.com/-0dPNeTT4lYw/V7NZ6Uve5HI/AAAAAAAABuY/lr7re1lYz0MLvO8uhMdNMGfGetvLT3nCwCLcB/s1600/Image59.png)
 
-![alt tag](https://1.bp.blogspot.com/-0dPNeTT4lYw/V7NZ6Uve5HI/AAAAAAAABuY/lr7re1lYz0MLvO8uhMdNMGfGetvLT3nCwCLcB/s1600/Image59.png)
-
 ![alt tag](https://3.bp.blogspot.com/-82kYw9Zkzpk/VzjFhWsdqKI/AAAAAAAAAvg/AH5CPYrEQGoTS-qJMEPsXcybr7YJxDPLQCLcB/s640/Image21.png)
 
 ![alt tag](https://1.bp.blogspot.com/-TXkQyEqbvQE/VzjFmt84yLI/AAAAAAAAAvs/tAJBUYeRUeQdi7zz491lY2OKjA36RL3XgCLcB/s640/Image29.png)
