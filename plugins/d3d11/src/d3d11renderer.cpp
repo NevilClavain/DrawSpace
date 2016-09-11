@@ -77,8 +77,6 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     p_logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
 
-
-
     if( true == m_config.Run( "appconfig.txt", "    " ) )
     {
         _DSDEBUG( logger, "plugin configuration file -> OK" )
@@ -92,6 +90,8 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     long adapter = m_config.m_adapter_ordinal;
 
     m_currentDevice = adapter;
+
+    _DSDEBUG( logger, "D3D11 init begin" )
 
     IDXGIFactory* factory = NULL; 
     CreateDXGIFactory(__uuidof(IDXGIFactory) ,(void**)&factory);
@@ -175,7 +175,9 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
 void D3D11Renderer::Release( void )
 {
+    _DSDEBUG( logger, "begin" )
 
+    _DSDEBUG( logger, "end" )
 }
 
 void D3D11Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz )
