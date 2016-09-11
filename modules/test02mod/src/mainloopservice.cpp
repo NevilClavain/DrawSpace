@@ -48,7 +48,7 @@ void MainLoopService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*
 
 }
 
-void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
+void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf )
 {
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
@@ -58,12 +58,12 @@ void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpac
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_renderer = p_renderer;
+    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
 
-    DrawSpace::Interface::Renderer::DeviceDescr dd;
-    m_renderer->GetDeviceDescr( dd );
+    init_passes();
 
-    m_device = dd.description;
+
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
@@ -74,7 +74,7 @@ void MainLoopService::Run( void )
 
     m_renderer->ClearScreen( 255, 255, 0, 255 );
 
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "test2 -> %d fps - %s", m_tm.GetFPS(), m_device.c_str() );
+    m_renderer->DrawText( 255, 0, 0, 10, 20, "test2 -> %d fps", m_tm.GetFPS() );
 
     m_renderer->EndScreen();
 
@@ -132,4 +132,14 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
+void MainLoopService::init_passes( void )
+{
+    m_texturepass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "texture_pass" ) );
+
+    m_texturepass->Initialize();
+    
+    m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
+    m_texturepass->GetRenderingQueue()->EnableTargetClearing( true );
+    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 145, 230, 230, 255 );
+}
 

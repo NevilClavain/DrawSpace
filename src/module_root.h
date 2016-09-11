@@ -24,6 +24,7 @@
 #define _MODULE_ROOT_
 
 #include "module_service.h"
+#include "plugin.h"
 
 namespace DrawSpace
 {
@@ -34,7 +35,12 @@ namespace Module
 class Root
 {
 public:
-    
+
+    virtual void                    UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
+    {
+        DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+    }
+
     virtual dsstring                GetModuleName( void ) = 0;
     virtual dsstring                GetModuleDescr( void ) = 0;
     virtual std::vector<dsstring>   GetServicesList( void ) = 0;

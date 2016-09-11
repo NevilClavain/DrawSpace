@@ -24,6 +24,7 @@
 #define _MAINLOOPSERVICE_H_
 
 #include "module_service.h"
+#include "pass.h"
 
 class MainLoopService : public DrawSpace::Interface::Module::Service
 {
@@ -31,7 +32,11 @@ protected:
 
     DrawSpace::Interface::Renderer*         m_renderer;
     DrawSpace::Utils::TimeManager           m_tm;
-    dsstring                                m_device;
+
+    DrawSpace::FinalPass*                   m_finalpass;
+    DrawSpace::IntermediatePass*            m_texturepass;
+
+    void    init_passes( void );
 
 public:
     MainLoopService( void );
@@ -39,7 +44,7 @@ public:
 
     virtual void                            GetLocalKeys( const dsstring p_instanceName, std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
     virtual void                            GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
-    virtual void                            Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf );
+    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf );
     virtual void                            Run( void );
     virtual void                            Release( void );
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );

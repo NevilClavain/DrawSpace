@@ -80,5 +80,7 @@ bool PILoad::LoadModule( const dsstring& p_file )
     }
 
     DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface = module_root;
+
+    module_root->UpdateRenderer( DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
     return true;
 }

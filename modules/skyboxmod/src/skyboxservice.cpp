@@ -43,7 +43,7 @@ void SkyboxService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>&
 
 }
 
-void SkyboxService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
+void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf )
 {
 }
 

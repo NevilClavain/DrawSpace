@@ -48,7 +48,7 @@ void MainLoopService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*
 
 }
 
-void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf )
+void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf )
 {
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
@@ -58,7 +58,7 @@ void MainLoopService::Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpac
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_renderer = p_renderer;
+    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
     DrawSpace::Interface::Renderer::DeviceDescr dd;
     m_renderer->GetDeviceDescr( dd );

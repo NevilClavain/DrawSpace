@@ -39,7 +39,7 @@ public:
     
     virtual void                            GetLocalKeys( const dsstring p_instanceName, std::vector<DrawSpace::Module::KeySinkBase*>& p_keys ) = 0;
     virtual void                            GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys ) = 0;
-    virtual void                            Init( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::Logger::Configuration* p_logconf ) = 0;
+    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf ) = 0;
     virtual void                            Run( void ) = 0;
     virtual void                            Release( void ) = 0;
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void ) = 0;
