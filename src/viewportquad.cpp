@@ -28,30 +28,30 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface;
 
-ViewportQuad::ViewportQuad( dsreal p_width, dsreal p_height ) : m_width( p_width ), m_height( p_height )
+ViewportQuad::ViewportQuad( dsreal p_width, dsreal p_height, dsreal p_z_offset ) : m_width( p_width ), m_height( p_height ), m_z_offset( p_z_offset )
 {
     Vertex v1, v2, v3, v4;
     v1.x = - m_width / 2.0;
     v1.y = m_height / 2.0;
-    v1.z = -1.0;
+    v1.z = -1.0 + p_z_offset;
     v1.tu[0] = 0.0;
     v1.tv[0] = 0.0;
 
     v2.x = m_width / 2.0;
     v2.y = m_height / 2.0;
-    v2.z = -1.0;
+    v2.z = -1.0 + p_z_offset;
     v2.tu[0] = 1.0;
     v2.tv[0] = 0.0;
 
     v3.x = m_width / 2.0;
     v3.y = - m_height / 2.0;
-    v3.z = -1.0;
+    v3.z = -1.0 + p_z_offset;
     v3.tu[0] = 1.0;
     v3.tv[0] = 1.0;
 
     v4.x = - m_width / 2.0;
     v4.y = - m_height / 2.0;
-    v4.z = -1.0;
+    v4.z = -1.0 + p_z_offset;
     v4.tu[0] = 0.0;
     v4.tv[0] = 1.0;
 

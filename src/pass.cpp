@@ -449,7 +449,7 @@ RenderingQueue* Pass::GetRenderingQueue( void )
     return m_renderingqueue;
 }
 
-void Pass::CreateViewportQuad( void )
+void Pass::CreateViewportQuad( dsreal p_z_offset )
 {
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
@@ -459,19 +459,19 @@ void Pass::CreateViewportQuad( void )
     {
         _DSEXCEPTION( "pass name cannot be empty" );
     }
-    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport ) );
+    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, p_z_offset ) );
 
     m_renderingqueue->Add( m_viewportquad );
 }
 
-void Pass::CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height )
+void Pass::CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height, dsreal p_z_offset )
 {
     if( "" == m_name )
     {
         _DSEXCEPTION( "pass name cannot be empty" );
     }
 
-    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( p_viewport_width, p_viewport_height ) );
+    m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( p_viewport_width, p_viewport_height, p_z_offset ) );
     m_renderingqueue->Add( m_viewportquad );
 }
 

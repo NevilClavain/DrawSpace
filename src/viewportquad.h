@@ -39,8 +39,10 @@ protected:
 
     DrawSpace::Utils::Matrix                m_projection;
 
+    dsreal                                  m_z_offset;
+
 public:
-    ViewportQuad( dsreal p_width, dsreal p_height );
+    ViewportQuad( dsreal p_width, dsreal p_height, dsreal p_z_offset = 0.0 );
     virtual ~ViewportQuad( void );
     void OnDraw( void );
 };

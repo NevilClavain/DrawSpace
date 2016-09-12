@@ -73,8 +73,8 @@ public:
 
     virtual Core::RenderingQueue* GetRenderingQueue( void );
 
-    virtual void CreateViewportQuad( void );
-    virtual void CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height );
+    virtual void CreateViewportQuad( dsreal p_z_offset = 0.0 );
+    virtual void CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height, dsreal p_z_offset = 0.0 );
 
     virtual ViewportQuad* GetViewportQuad( void );
 
