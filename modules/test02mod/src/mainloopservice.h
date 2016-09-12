@@ -25,6 +25,7 @@
 
 #include "module_service.h"
 #include "pass.h"
+#include "scenenodegraph.h"
 
 class MainLoopService : public DrawSpace::Interface::Module::Service
 {
@@ -36,6 +37,9 @@ protected:
     DrawSpace::FinalPass*                   m_finalpass;
     DrawSpace::IntermediatePass*            m_texturepass;
 
+    DrawSpace::Core::SceneNodeGraph         m_scenenodegraph;
+
+    void    create_passes( void );
     void    init_passes( void );
 
 public:
