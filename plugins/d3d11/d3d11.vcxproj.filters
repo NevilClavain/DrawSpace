@@ -21,5 +21,11 @@
     <ClInclude Include="src\d3d11renderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\d3d11triangle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\d3d11vertex.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

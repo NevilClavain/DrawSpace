@@ -35,9 +35,10 @@
 #include <vector.h>
 #include <matrix.h>
 #include <transformation.h>
-
 #include <FW1FontWrapper.h>
 
+#include "d3d11vertex.h"
+#include "d3d11triangle.h"
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  dsstring d3dErrStr;
@@ -72,6 +73,15 @@ protected:
     };
 
 
+    typedef struct
+    {
+	    ID3D11Buffer*           vertex_buffer;
+	    ID3D11Buffer*           index_buffer;
+        int                     nb_vertices;
+        int                     nb_triangles;
+
+    } MesheData;
+
     Config                              m_config;
 
 
@@ -89,6 +99,9 @@ protected:
 
     std::vector<DeviceDescr>            m_devices_descrs;
     int                                 m_currentDevice;
+
+
+    std::map<dsstring, MesheData*>      m_meshes_base;
 
 
 public:

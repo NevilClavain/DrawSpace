@@ -162,13 +162,36 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     backBuffer->Release();
 
+    ////////////////////////////////////////////////////////////////////////
+
+    /* a faire pour chaque shader ?? */
+
+    /*
+	const D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{ "POSITION",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",      0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    1, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    2, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    3, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    4, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    5, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    6, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    7, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",    8, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+    hRes = m_lpd3ddevice->CreateInputLayout( layout, 11, NULL, 0, &m_inputLayout );
+    D3D11_CHECK( CreateInputLayout )
+    */
+
+    //////////////////////////////////////////////////////////////////////////
 
 	IFW1Factory* fW1Factory;
 	hRes = FW1CreateFactory( FW1_VERSION, &fW1Factory );
 	
 	hRes = fW1Factory->CreateFontWrapper( m_lpd3ddevice, L"System", &m_fontWrapper );
-
-
 
     return true;
 }
@@ -252,6 +275,138 @@ void D3D11Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
 
 bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
 {
+    DECLARE_D3D11ASSERT_VARS
+
+    D3D11_SUBRESOURCE_DATA id = {0};
+    D3D11_BUFFER_DESC vertexBufferDesc = {0};
+    D3D11_BUFFER_DESC indexBufferDesc = {0};
+    
+    Core::Meshe* meshe = p_meshe;
+
+    dsstring hash;
+    p_meshe->GetMD5( hash );
+
+    if( m_meshes_base.count( hash ) > 0 )
+    {
+        *p_data = (void *)m_meshes_base[hash];
+        p_meshe->SetRenderData( (void *)m_meshes_base[hash] );
+        return true;
+    }
+
+    long nb_vertices = meshe->GetVertexListSize();
+    long nb_triangles = meshe->GetTrianglesListSize();
+
+    MesheData* meshe_data = _DRAWSPACE_NEW_( MesheData, MesheData );
+
+    // vertex buffer creation
+    d3d11vertex* v = new d3d11vertex[nb_vertices];
+    for( long i = 0; i < nb_vertices; i++ )
+    {
+        Core::Vertex vertex;
+        meshe->GetVertex( i, vertex );
+
+        v[i].x = (float)vertex.x;
+        v[i].y = (float)vertex.y;
+        v[i].z = (float)vertex.z;
+
+        v[i].nx = (float)vertex.nx;
+        v[i].ny = (float)vertex.ny;
+        v[i].nz = (float)vertex.nz;
+
+        v[i].tu0 = vertex.tu[0];
+        v[i].tu1 = vertex.tu[1];
+        v[i].tu2 = vertex.tu[2];
+        v[i].tu3 = vertex.tu[3];
+        v[i].tu4 = vertex.tu[4];
+        v[i].tu5 = vertex.tu[5];
+        v[i].tu6 = vertex.tu[6];
+        v[i].tu7 = vertex.tu[7];
+        v[i].tu8 = vertex.tu[8];
+
+        v[i].tv0 = vertex.tv[0];
+        v[i].tv1 = vertex.tv[1];
+        v[i].tv2 = vertex.tv[2];
+        v[i].tv3 = vertex.tv[3];
+        v[i].tv4 = vertex.tv[4];
+        v[i].tv5 = vertex.tv[5];
+        v[i].tv6 = vertex.tv[6];
+        v[i].tv7 = vertex.tv[7];
+        v[i].tv8 = vertex.tv[8];
+        
+        v[i].tw0 = vertex.tw[0];
+        v[i].tw1 = vertex.tw[1];
+        v[i].tw2 = vertex.tw[2];
+        v[i].tw3 = vertex.tw[3];
+        v[i].tw4 = vertex.tw[4];
+        v[i].tw5 = vertex.tw[5];
+        v[i].tw6 = vertex.tw[6];
+        v[i].tw7 = vertex.tw[7];
+        v[i].tw8 = vertex.tw[8];
+        
+        v[i].ta0 = vertex.ta[0];
+        v[i].ta1 = vertex.ta[1];
+        v[i].ta2 = vertex.ta[2];
+        v[i].ta3 = vertex.ta[3];
+        v[i].ta4 = vertex.ta[4];
+        v[i].ta5 = vertex.ta[5];
+        v[i].ta6 = vertex.ta[6];
+        v[i].ta7 = vertex.ta[7];
+        v[i].ta8 = vertex.ta[8];
+    }
+
+	id.pSysMem = v;
+	id.SysMemPitch = sizeof( d3d11vertex );
+	id.SysMemSlicePitch = 0;
+
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = nb_vertices * sizeof( d3d11vertex );
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0; 
+
+    hRes = m_lpd3ddevice->CreateBuffer( &vertexBufferDesc, &id, &meshe_data->vertex_buffer );
+    D3D11_CHECK( CreateBuffer )
+
+    delete[] v;
+
+    // index buffer creation
+
+    d3d11triangle *t = new d3d11triangle[nb_triangles];
+
+    for( long i = 0; i < nb_triangles; i++ )
+    {
+        Core::Triangle triangle;
+        meshe->GetTriangles( i, triangle );
+
+        t[i].vertex1 = triangle.vertex1;
+        t[i].vertex2 = triangle.vertex2;
+        t[i].vertex3 = triangle.vertex3;
+    }
+
+	id.pSysMem = t;
+	id.SysMemPitch = sizeof( d3d11triangle );
+	id.SysMemSlicePitch = 0;
+
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = nb_triangles * sizeof( d3d11triangle );
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0; 
+
+    hRes = m_lpd3ddevice->CreateBuffer( &indexBufferDesc, &id, &meshe_data->index_buffer );
+    D3D11_CHECK( CreateBuffer )
+
+    delete[] t;
+
+    meshe_data->nb_vertices = nb_vertices;
+    meshe_data->nb_triangles = nb_triangles;
+
+    *p_data = (void *)meshe_data;
+
+    meshe->SetRenderData( (void *)meshe_data );
+
+    m_meshes_base[hash] = meshe_data;
+
     return true;
 }
 
