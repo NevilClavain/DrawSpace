@@ -1,4 +1,4 @@
-/*
+﻿/*
 *                                                                          
 * DrawSpace Rendering engine                                               
 * Emmanuel Chaumont Copyright (c) 2013-2016                              
@@ -151,6 +151,10 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     D3D11_CHECK( D3D11CreateDeviceAndSwapChain )
 
+    m_characteristics.fullscreen = false;
+    m_characteristics.width_resol = p_w_width;
+    m_characteristics.height_resol = p_w_height;
+
     ///////////////////////////////////////////////////////////////////////
 
     ID3D11Texture2D* backBuffer;
@@ -186,12 +190,33 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     D3D11_CHECK( CreateInputLayout )
     */
 
+    //projection set, to automatically fit with the screen resolution
+    float v_width, v_height;
+    if( p_fullscreen )
+    {
+        v_width = 1.0;
+        v_height = v_width * m_config.m_fullscreen_height / m_config.m_fullscreen_width;
+    }
+    else
+    {
+        v_width = 1.0;
+        v_height = v_width * p_w_height / p_w_width;
+    }
+
+	_DSDEBUG( logger, dsstring("projection : v_width = ") << v_width << dsstring( " v_height = " ) << v_height );
+
+    m_characteristics.width_viewport = v_width;
+    m_characteristics.height_viewport = v_height;
+
     //////////////////////////////////////////////////////////////////////////
 
 	IFW1Factory* fW1Factory;
 	hRes = FW1CreateFactory( FW1_VERSION, &fW1Factory );
 	
 	hRes = fW1Factory->CreateFontWrapper( m_lpd3ddevice, L"System", &m_fontWrapper );
+
+    //////////////////////////////////////////////////////////////////////////
+
 
     return true;
 }
@@ -437,6 +462,161 @@ bool D3D11Renderer::UpdateMesheVerticesFromImpostors( const DrawSpace::Impostors
 
 bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data )
 {
+    DECLARE_D3D11ASSERT_VARS
+    ID3D11Texture2D*	    d3dt11;
+    TextureInfos*           texture_infos;
+
+    dsstring path;
+    p_texture->GetPath( path );
+
+    if( m_textures_base.count( path ) > 0 )
+    {
+        *p_data = (void*)m_textures_base[path];
+        
+        long width = m_textures_base[path]->descr.Width;
+        long height = m_textures_base[path]->descr.Height;
+        long bpp;
+
+        switch( m_textures_base[path]->descr.Format )
+        {
+            case DXGI_FORMAT_R8G8B8A8_TYPELESS:
+            case DXGI_FORMAT_R8G8B8A8_UNORM:
+            case DXGI_FORMAT_R8G8B8A8_UINT:
+            case DXGI_FORMAT_R8G8B8A8_SNORM:
+            case DXGI_FORMAT_R8G8B8A8_SINT:
+                bpp = 4;
+                break;
+
+            case DXGI_FORMAT_R16_FLOAT:
+                bpp = 2;
+                break;
+
+            case DXGI_FORMAT_R32_FLOAT:
+                bpp = 4;
+                break;
+
+            case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                bpp = 16;
+                break;
+
+            default:
+                bpp = -1;
+                break;
+        }
+
+        // inutile, puisque cette texture est deja "passee" par ici...
+        
+        //p_texture->SetFormat( width, height, bpp );
+        //p_texture->SetRenderData( (void*)m_textures_base[path] );
+        
+        return true;
+    }
+
+    bool setformat_call = true; // si true, appel SetFormat() sur la texture
+
+    if( p_texture->IsRenderTarget() )
+    {
+        unsigned long rw, rh;
+        p_texture->GetRenderTargetDims( rw, rh );
+
+        DXGI_FORMAT format;
+
+        int bpp = 0;
+        switch( p_texture->GetRenderPurpose() )
+        {
+            case Texture::RENDERPURPOSE_COLOR:
+
+                //format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                format = DXGI_FORMAT_R8G8B8A8_UINT;
+                bpp = 4;
+                break;
+
+            case Texture::RENDERPURPOSE_FLOAT:
+
+                format = DXGI_FORMAT_R16_FLOAT;
+                bpp = 2;
+                break;
+
+            case Texture::RENDERPURPOSE_FLOAT32:
+
+                format = DXGI_FORMAT_R32_FLOAT;
+                bpp = 4;
+                break;
+
+            case Texture::RENDERPURPOSE_FLOATVECTOR:
+
+                format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+                bpp = 8;
+                break;
+        
+        }
+
+        D3D11_TEXTURE2D_DESC textureDesc;
+
+        // Initialize the render target texture description.
+        ZeroMemory( &textureDesc, sizeof( textureDesc ) );
+
+        // Setup the render target texture description.
+        textureDesc.Width = rw;
+        textureDesc.Height = rh;
+        textureDesc.MipLevels = 1;
+        textureDesc.ArraySize = 1;
+        textureDesc.Format = format;
+        textureDesc.SampleDesc.Count = 1;
+        textureDesc.Usage = D3D11_USAGE_DEFAULT;
+        textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+        textureDesc.CPUAccessFlags = 0;
+        textureDesc.MiscFlags = 0;
+
+        // Create the render target texture.
+        hRes = m_lpd3ddevice->CreateTexture2D( &textureDesc, NULL, &d3dt11 );
+        D3D11_CHECK( CreateTexture2D )
+
+        // creation du render target view
+        D3D11_RENDER_TARGET_VIEW_DESC       renderTargetViewDesc;
+        D3D11_SHADER_RESOURCE_VIEW_DESC     shaderResourceViewDesc;
+
+        ID3D11RenderTargetView*             rendertextureTargetView;
+        ID3D11ShaderResourceView*           rendertextureResourceView;
+
+
+        ZeroMemory( &renderTargetViewDesc, sizeof( renderTargetViewDesc ) );
+
+	    renderTargetViewDesc.Format = format;
+	    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	    renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	    hRes = m_lpd3ddevice->CreateRenderTargetView( d3dt11, &renderTargetViewDesc, &rendertextureTargetView );
+        D3D11_CHECK( CreateRenderTargetView )
+
+        // creation du shader resource view associé 
+	    shaderResourceViewDesc.Format = format;
+	    shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	    shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	    shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	    hRes = m_lpd3ddevice->CreateShaderResourceView( d3dt11, &shaderResourceViewDesc, &rendertextureResourceView );
+        D3D11_CHECK( CreateShaderResourceView )
+
+        D3D11_TEXTURE2D_DESC descr;
+        d3dt11->GetDesc( &descr );
+
+        texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+        texture_infos->path = path;
+        texture_infos->texture_instance = p_texture;
+        texture_infos->texture = d3dt11;
+        texture_infos->descr = descr;
+        texture_infos->rendertextureResourceView = rendertextureResourceView;
+        texture_infos->rendertextureTargetView = rendertextureTargetView;
+
+        m_textures_base[path] = texture_infos;
+
+        *p_data = (void*)texture_infos;
+    }
+    else
+    {
+    
+    }
     return true;
 }
 
@@ -537,7 +717,17 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
 void D3D11Renderer::GetRenderCharacteristics( Characteristics& p_characteristics )
 {
+    p_characteristics = m_characteristics;
+    if( !m_characteristics.fullscreen )
+    {
+        // prendre en compte les bords fenetre
 
+        RECT rect;
+        GetClientRect( m_hwnd, &rect );
+
+        p_characteristics.width_resol = rect.right;
+        p_characteristics.height_resol = rect.bottom;
+    }
 }
 
 void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... )
