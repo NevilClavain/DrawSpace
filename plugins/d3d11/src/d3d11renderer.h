@@ -127,6 +127,10 @@ protected:
 
     std::map<dsstring, TextureInfos*>   m_textures_base;
     std::map<dsstring, MesheData*>      m_meshes_base;
+    std::map<dsstring, ShadersData*>    m_shaders_bases;
+
+
+    HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut );
 
 
 public:
