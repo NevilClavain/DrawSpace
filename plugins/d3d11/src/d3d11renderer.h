@@ -96,6 +96,15 @@ protected:
 
     } MesheData;
 
+
+    typedef struct
+    {
+        ID3D11VertexShader*         vertex_shader;
+        ID3D11PixelShader*          pixel_shader;
+
+    } ShadersData;
+    
+
     Config                              m_config;
 
 
