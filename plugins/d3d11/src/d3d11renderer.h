@@ -83,7 +83,7 @@ protected:
         ID3D11Texture2D*            texture;
         
         ID3D11RenderTargetView*     rendertextureTargetView;
-        ID3D11ShaderResourceView*   rendertextureResourceView;
+        ID3D11ShaderResourceView*   textureShaderResourceView;
 
     } TextureInfos;
 

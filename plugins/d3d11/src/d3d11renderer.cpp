@@ -606,7 +606,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         texture_infos->texture_instance = p_texture;
         texture_infos->texture = d3dt11;
         texture_infos->descr = descr;
-        texture_infos->rendertextureResourceView = rendertextureResourceView;
+        texture_infos->textureShaderResourceView = rendertextureResourceView;
         texture_infos->rendertextureTargetView = rendertextureTargetView;
 
         m_textures_base[path] = texture_infos;
@@ -617,7 +617,26 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
     {
         if( p_texture->GetPurpose() == Texture::PURPOSE_COLORFROMFILE )
         {
+            ID3D11ShaderResourceView*           textureResourceView;
+
+            void* data = p_texture->GetData();
+            size_t data_size = p_texture->GetDataSize();
+
+            hRes = D3DX11CreateShaderResourceViewFromMemory( m_lpd3ddevice, data, data_size, NULL, NULL, &textureResourceView, NULL );
+            D3D11_CHECK( D3DX11CreateShaderResourceViewFromMemory )
+
+            texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+            texture_infos->path = path;
+            texture_infos->texture_instance = p_texture;
+            texture_infos->texture = NULL;
+            texture_infos->rendertextureTargetView = NULL;
+            texture_infos->textureShaderResourceView = textureResourceView;
+
+            m_textures_base[path] = texture_infos;
+
+            *p_data = (void*)texture_infos;
         
+            setformat_call = false; // ici on ne dispose pas des infos description texture
         }
         else
         {
@@ -687,193 +706,57 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 	        hRes = m_lpd3ddevice->CreateShaderResourceView( d3dt11, &shaderResourceViewDesc, &textureResourceView );
             D3D11_CHECK( CreateShaderResourceView )
 
+            texture_infos->textureShaderResourceView = textureResourceView;
+
             *p_data = (void*)texture_infos;
                    
             // inutile d'appeler SetFormat() sur la texture
             setformat_call = false;
-
-
         }
-
-        /*
-        switch( p_texture->GetPurpose() )
-        {
-            case Texture::PURPOSE_COLORFROMFILE:
-                {
-                    void* data = p_texture->GetData();
-                    size_t data_size = p_texture->GetDataSize();
-
-                }
-                break;
-
-            case Texture::PURPOSE_COLOR:
-                {
-
-                    long w, h, bpp;
-                    p_texture->GetFormat( w, h, bpp );
-
-                    D3D11_TEXTURE2D_DESC desc;
-                    desc.Width = w;
-                    desc.Height = h;
-                    desc.MipLevels = 1;
-                    desc.ArraySize = 1;
-                    desc.Format = DXGI_FORMAT_R8G8B8A8_UINT;
-                    desc.SampleDesc.Count = 1;
-                    desc.SampleDesc.Quality = 0;
-                    desc.Usage = D3D11_USAGE_DEFAULT;
-                    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-                    desc.CPUAccessFlags = 0;
-                    desc.MiscFlags = 0;
-
-                    hRes = m_lpd3ddevice->CreateTexture2D( &desc, NULL, &d3dt11 );
-
-                    D3D11_CHECK( CreateTexture2D )
-
-                    texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
-                    texture_infos->path = path;
-                    texture_infos->texture_instance = p_texture;
-                    texture_infos->texture = d3dt11;
-                    texture_infos->rendertextureTargetView = NULL;
-
-                    D3D11_TEXTURE2D_DESC descr;
-                    d3dt11->GetDesc( &descr );
-
-                    texture_infos->descr = descr;
-                    
-                    *p_data = (void*)texture_infos;
-                   
-                    // inutile d'appeler SetFormat() sur la texture
-                    setformat_call = false;
-
-                }
-                break;
-
-            case Texture::PURPOSE_FLOAT32:
-                {
-                    long w, h, bpp;
-                    p_texture->GetFormat( w, h, bpp );
-
-                    D3D11_TEXTURE2D_DESC desc;
-                    desc.Width = w;
-                    desc.Height = h;
-                    desc.MipLevels = 1;
-                    desc.ArraySize = 1;
-                    desc.Format = DXGI_FORMAT_R32_FLOAT;
-                    desc.SampleDesc.Count = 1;
-                    desc.SampleDesc.Quality = 0;
-                    desc.Usage = D3D11_USAGE_DEFAULT;
-                    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-                    desc.CPUAccessFlags = 0;
-                    desc.MiscFlags = 0;
-
-                    hRes = m_lpd3ddevice->CreateTexture2D( &desc, NULL, &d3dt11 );
-
-                    D3D11_CHECK( CreateTexture2D )
-
-                    texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
-                    texture_infos->path = path;
-                    texture_infos->texture_instance = p_texture;
-                    texture_infos->texture = d3dt11;
-                    texture_infos->rendertextureTargetView = NULL;
-
-
-                    D3D11_TEXTURE2D_DESC descr;
-                    d3dt11->GetDesc( &descr );
-
-                    texture_infos->descr = descr;
-                    
-                    *p_data = (void*)texture_infos;
-                   
-                    // inutile d'appeler SetFormat() sur la texture
-                    setformat_call = false;
-                }
-                break;
-
-            case Texture::PURPOSE_FLOAT32VECTOR:
-                {
-                    long w, h, bpp;
-                    p_texture->GetFormat( w, h, bpp );
-
-                    D3D11_TEXTURE2D_DESC desc;
-                    desc.Width = w;
-                    desc.Height = h;
-                    desc.MipLevels = 1;
-                    desc.ArraySize = 1;
-                    desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-                    desc.SampleDesc.Count = 1;
-                    desc.SampleDesc.Quality = 0;
-                    desc.Usage = D3D11_USAGE_DEFAULT;
-                    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-                    desc.CPUAccessFlags = 0;
-                    desc.MiscFlags = 0;
-
-                    hRes = m_lpd3ddevice->CreateTexture2D( &desc, NULL, &d3dt11 );
-
-                    D3D11_CHECK( CreateTexture2D )
-
-                    texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
-                    texture_infos->path = path;
-                    texture_infos->texture_instance = p_texture;
-                    texture_infos->texture = d3dt11;
-                    texture_infos->rendertextureTargetView = NULL;
-
-                    D3D11_TEXTURE2D_DESC descr;
-                    d3dt11->GetDesc( &descr );
-
-                    texture_infos->descr = descr;
-                    
-                    *p_data = (void*)texture_infos;
-                   
-                    // inutile d'appeler SetFormat() sur la texture
-                    setformat_call = false;            
-                }
-                break;
-        }
-        */
-
-
 
     }
 
-    long width = texture_infos->descr.Width;
-    long height = texture_infos->descr.Height;
-    long bpp;
-
-    switch( texture_infos->descr.Format )
-    {
-        case DXGI_FORMAT_R8G8B8A8_TYPELESS:
-        case DXGI_FORMAT_R8G8B8A8_UNORM:
-        case DXGI_FORMAT_R8G8B8A8_UINT:
-        case DXGI_FORMAT_R8G8B8A8_SNORM:
-        case DXGI_FORMAT_R8G8B8A8_SINT:
-            bpp = 4;
-            break;
-
-        case DXGI_FORMAT_R16_FLOAT:
-            bpp = 2;
-            break;
-
-        case DXGI_FORMAT_R32_FLOAT:
-            bpp = 4;
-            break;
-
-        case DXGI_FORMAT_R32G32B32A32_FLOAT:
-            bpp = 16;
-            break;
-
-        case DXGI_FORMAT_R16G16B16A16_FLOAT:
-            bpp = 8;
-            break;
-
-        default:
-            bpp = -1;
-            break;
-    }
 
     if( setformat_call )
     {
+        long width = texture_infos->descr.Width;
+        long height = texture_infos->descr.Height;
+        long bpp;
+
+        switch( texture_infos->descr.Format )
+        {
+            case DXGI_FORMAT_R8G8B8A8_TYPELESS:
+            case DXGI_FORMAT_R8G8B8A8_UNORM:
+            case DXGI_FORMAT_R8G8B8A8_UINT:
+            case DXGI_FORMAT_R8G8B8A8_SNORM:
+            case DXGI_FORMAT_R8G8B8A8_SINT:
+                bpp = 4;
+                break;
+
+            case DXGI_FORMAT_R16_FLOAT:
+                bpp = 2;
+                break;
+
+            case DXGI_FORMAT_R32_FLOAT:
+                bpp = 4;
+                break;
+
+            case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                bpp = 16;
+                break;
+
+            case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                bpp = 8;
+                break;
+
+            default:
+                bpp = -1;
+                break;
+        }
+
         p_texture->SetFormat( width, height, bpp );
     }
+
     p_texture->SetRenderData( (void*)texture_infos );
 
     return true;
