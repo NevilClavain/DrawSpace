@@ -38,6 +38,7 @@ m_lpd3dswapchain( NULL ),
 m_lpd3ddevice( NULL ),
 m_lpd3ddevcontext( NULL ),
 m_screentarget( NULL ),
+m_inputLayout( NULL ),
 m_currentDevice( -1 )
 {
 
@@ -175,28 +176,6 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     backBuffer->Release();
 
     ////////////////////////////////////////////////////////////////////////
-
-    /* a faire pour chaque shader ?? */
-
-    /*
-	const D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",      0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    1, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    2, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    3, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    4, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    5, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    6, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    7, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",    8, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-    hRes = m_lpd3ddevice->CreateInputLayout( layout, 11, NULL, 0, &m_inputLayout );
-    D3D11_CHECK( CreateInputLayout )
-    */
 
     //projection set, to automatically fit with the screen resolution
     float v_width, v_height;
@@ -876,6 +855,31 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
             hRes = m_lpd3ddevice->CreateVertexShader( pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &vs );
             D3D11_CHECK( CreateVertexShader );
+
+            if( NULL == m_inputLayout )
+            {
+                //////////////////////// au premier vshader créé, instancier et setter l'objet inputLayout
+
+	            const D3D11_INPUT_ELEMENT_DESC layout[] =
+	            {
+		            { "POSITION",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		            { "NORMAL",      0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    1, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    2, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    3, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    4, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    5, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    6, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    7, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "TEXCOORD",    8, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	            };
+
+                hRes = m_lpd3ddevice->CreateInputLayout( layout, 11, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_inputLayout );
+                D3D11_CHECK( CreateInputLayout )
+
+                m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );                
+            }
         }
         else
         {
