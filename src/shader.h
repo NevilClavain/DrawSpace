@@ -70,6 +70,8 @@ public:
 
     void    GetKeyword( dsstring& p_outkeyword );
 
+    void    GetPath( dsstring& p_path );
+
     static Asset* Instanciate( void );
 };
 }

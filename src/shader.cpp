@@ -229,3 +229,8 @@ void Shader::GetKeyword( dsstring& p_outkeyword )
 {
     p_outkeyword = SHADER_TEXT_KEYWORD;
 }
+
+void Shader::GetPath( dsstring& p_path )
+{
+    p_path = m_path;
+}

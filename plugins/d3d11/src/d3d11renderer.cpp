@@ -845,6 +845,11 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
         Core::Shader* vertex_shader = p_fx->GetShader( 0 );
         Core::Shader* pixel_shader = p_fx->GetShader( 1 );
 
+        dsstring vshader_path, pshader_path;
+
+        vertex_shader->GetPath( vshader_path );
+        pixel_shader->GetPath( pshader_path );
+
         if( !vertex_shader->IsCompiled() )
         {
             if( NULL == vertex_shader->GetData() )
@@ -854,25 +859,22 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
             }
 
             ID3DBlob* pVSBlob = NULL;
-            hRes = compile_shader_from_file( vertex_shader->GetData(), vertex_shader->GetDataSize(), "texture.vsh", "vs_main", "vs_3_0", &pVSBlob );
+            ID3DBlob* pVSErrBlob;
+            hRes = compile_shader_from_file( vertex_shader->GetData(), vertex_shader->GetDataSize(), vshader_path.c_str(), "vs_main", "vs_4_0", &pVSBlob, &pVSErrBlob );
 
             if( S_OK != hRes )
             {
-                /*
-                if( NULL != errors )
+                if( pVSErrBlob != NULL )
                 {
-					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)errors->GetBufferPointer() )
-                    _DSEXCEPTION( "D3DXCompileShader FAIL (vertex) : " << dsstring( (char *)errors->GetBufferPointer() ) )
+					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)pVSErrBlob->GetBufferPointer() )
+                    _DSEXCEPTION( "D3DXCompileShader FAIL (vertex) : " << dsstring( (char *)pVSErrBlob->GetBufferPointer() ) )
+
+                    pVSErrBlob->Release();
                 }
-                */
                 return false;
             }
 
-            void* bptr = pVSBlob->GetBufferPointer();
-            int p_size = pVSBlob->GetBufferSize();
-
-            hRes = m_lpd3ddevice->CreateVertexShader( bptr, p_size, NULL, &vs );
-
+            hRes = m_lpd3ddevice->CreateVertexShader( pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &vs );
             D3D11_CHECK( CreateVertexShader );
         }
         else
@@ -885,7 +887,31 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
         if( !pixel_shader->IsCompiled() )
         {
-            _DSEXCEPTION( "D3D11 plugin accept compiled shaders only !")
+            if( NULL == pixel_shader->GetData() )
+            {
+                _DSFATAL( logger, "no data in pixel shader !" )
+                return false;
+            }
+
+
+            ID3DBlob* pPSBlob = NULL;
+            ID3DBlob* pPSErrBlob;
+            hRes = compile_shader_from_file( pixel_shader->GetData(), pixel_shader->GetDataSize(), pshader_path.c_str(), "ps_main", "ps_4_0", &pPSBlob, &pPSErrBlob );
+
+            if( S_OK != hRes )
+            {
+                if( pPSErrBlob != NULL )
+                {
+					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)pPSErrBlob->GetBufferPointer() )
+                    _DSEXCEPTION( "D3DXCompileShader FAIL (vertex) : " << dsstring( (char *)pPSErrBlob->GetBufferPointer() ) )
+
+                    pPSErrBlob->Release();
+                }
+                return false;
+
+                hRes = m_lpd3ddevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &ps );
+                D3D11_CHECK( CreatePixelShader );   
+            }
         }
         else
         {
@@ -1006,7 +1032,7 @@ bool D3D11Renderer::Config::on_new_line( const dsstring& p_line, long p_line_num
     return true;
 }
 
-HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut )
+HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut )
 {
     HRESULT hr = S_OK;
 
@@ -1024,12 +1050,14 @@ HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTS
     hr = D3DX11CompileFromMemory( (LPCTSTR)p_data, p_size, szFileName, NULL, NULL, szEntryPoint, szShaderModel, dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
+
+
         if( pErrorBlob != NULL )
-            OutputDebugStringA( (char*)pErrorBlob->GetBufferPointer() );
-        if( pErrorBlob ) pErrorBlob->Release();
+        {
+            *ppBlobErrOut = pErrorBlob;
+        }
+
         return hr;
     }
-    if( pErrorBlob ) pErrorBlob->Release();
-
     return S_OK;
 }
