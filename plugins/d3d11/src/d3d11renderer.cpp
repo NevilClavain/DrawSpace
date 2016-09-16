@@ -204,6 +204,33 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     //////////////////////////////////////////////////////////////////////////
 
+    m_lpd3ddevcontext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+
+
+    D3D11_SAMPLER_DESC sampDesc;
+    ZeroMemory( &sampDesc, sizeof(sampDesc) );
+    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sampDesc.MinLOD = 0;
+    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_samplerState );
+    D3D11_CHECK( CreateSamplerState )
+
+
+    ID3D11SamplerState* ss_array[1] = { m_samplerState };
+
+    // a mettre en option dans l'interface renderer ?
+    for( long i = 0; i < 8; i++ )
+    {
+        m_lpd3ddevcontext->VSSetSamplers( i, 1, ss_array );
+        m_lpd3ddevcontext->PSSetSamplers( i, 1, ss_array );
+    }
+    
+
 
     return true;
 }

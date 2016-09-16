@@ -116,6 +116,8 @@ protected:
     ID3D11Device*                       m_lpd3ddevice;                     
     ID3D11DeviceContext*                m_lpd3ddevcontext;
 
+    ID3D11SamplerState*                 m_samplerState;
+
     ID3D11InputLayout*                  m_inputLayout;
 
     ID3D11RenderTargetView*             m_screentarget;
