@@ -456,6 +456,16 @@ void D3D11Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
 
 bool D3D11Renderer::SetMeshe( void* p_data )
 {
+    MesheData* meshe_data = (MesheData*)p_data;
+
+    UINT stride = sizeof( d3d11vertex );
+    UINT offset = 0;
+    m_lpd3ddevcontext->IASetVertexBuffers( 0, 1, &meshe_data->vertex_buffer, &stride, &offset ); 
+    m_lpd3ddevcontext->IASetIndexBuffer( meshe_data->index_buffer, DXGI_FORMAT_R32_UINT, 0 );
+
+    m_next_nbvertices = meshe_data->nb_vertices;
+    m_next_nbtriangles = meshe_data->nb_triangles;
+
     return true;
 }
 
@@ -783,11 +793,17 @@ void D3D11Renderer::DestroyTexture( void* p_data )
 
 bool D3D11Renderer::SetTexture( void* p_data, int p_stage )
 {
+    TextureInfos* ti = (TextureInfos*)p_data;
+    m_lpd3ddevcontext->PSSetShaderResources( p_stage, 1, &ti->textureShaderResourceView );
+
     return true;
 }
 
 bool D3D11Renderer::SetVertexTexture( void* p_data, int p_stage )
 {
+    TextureInfos* ti = (TextureInfos*)p_data;
+    m_lpd3ddevcontext->VSSetShaderResources( p_stage, 1, &ti->textureShaderResourceView );
+
     return true;
 }
 

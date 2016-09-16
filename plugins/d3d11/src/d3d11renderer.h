@@ -111,6 +111,8 @@ protected:
     HWND                                m_hwnd;
 
     Characteristics                     m_characteristics;
+    int                                 m_next_nbvertices;
+    int                                 m_next_nbtriangles;
 
     IDXGISwapChain*                     m_lpd3dswapchain;
     ID3D11Device*                       m_lpd3ddevice;                     
