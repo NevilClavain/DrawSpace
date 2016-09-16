@@ -979,6 +979,11 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
 bool D3D11Renderer::SetShaders( void* p_data )
 {
+	ShadersData* sdata = (ShadersData*)p_data;
+
+    m_lpd3ddevcontext->VSSetShader( sdata->vertex_shader, NULL, 0 );
+    m_lpd3ddevcontext->PSSetShader( sdata->pixel_shader, NULL, 0 );
+
     return true;
 }
 
