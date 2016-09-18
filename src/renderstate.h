@@ -36,8 +36,6 @@ public:
     typedef enum
     {
         NONE,
-        SETCLEARMASK,
-        SETCLEARCOLOR,
         SETCULLING,
         ENABLEZBUFFER,
         SETTEXTUREFILTERTYPE,

@@ -42,8 +42,6 @@ RenderState::~RenderState( void )
 void RenderState::InitStringMaps( void )
 {
     m_tostring[NONE] = "NONE";
-    m_tostring[SETCLEARMASK] = "SETCLEARMASK";
-    m_tostring[SETCLEARCOLOR] = "SETCLEARCOLOR";
     m_tostring[SETCULLING] = "SETCULLING";
     m_tostring[ENABLEZBUFFER] = "ENABLEZBUFFER";
     m_tostring[SETTEXTUREFILTERTYPE] = "SETTEXTUREFILTERTYPE";
@@ -56,8 +54,6 @@ void RenderState::InitStringMaps( void )
     m_tostring[ALPHABLENDSRC] = "ALPHABLENDSRC";
 
     m_fromstring["NONE"] = NONE;
-    m_fromstring["SETCLEARMASK"] = SETCLEARMASK;
-    m_fromstring["SETCLEARCOLOR"] = SETCLEARCOLOR;
     m_fromstring["SETCULLING"] = SETCULLING;
     m_fromstring["ENABLEZBUFFER"] = ENABLEZBUFFER;
     m_fromstring["SETTEXTUREFILTERTYPE"] = SETTEXTUREFILTERTYPE;
