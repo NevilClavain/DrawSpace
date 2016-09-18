@@ -65,75 +65,78 @@ protected:
         bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
     public:
-        int                         m_adapter_ordinal;
-        int                         m_fullscreen_width;
-        int                         m_fullscreen_height;
-        int                         m_refreshrate;
-        DXGI_FORMAT                 m_fullscreen_format;
-        DWORD                       m_vertex_processing;
+        int                                     m_adapter_ordinal;
+        int                                     m_fullscreen_width;
+        int                                     m_fullscreen_height;
+        int                                     m_refreshrate;
+        DXGI_FORMAT                             m_fullscreen_format;
+        DWORD                                   m_vertex_processing;
     };
 
     typedef struct
     {
-        dsstring                    path;
-        DrawSpace::Core::Texture*   texture_instance;
+        dsstring                                path;
+        DrawSpace::Core::Texture*               texture_instance;
 
-        D3D11_TEXTURE2D_DESC        descr;
+        D3D11_TEXTURE2D_DESC                    descr;
 
-        ID3D11Texture2D*            texture;
+        ID3D11Texture2D*                        texture;
         
-        ID3D11RenderTargetView*     rendertextureTargetView;
-        ID3D11ShaderResourceView*   textureShaderResourceView;
+        ID3D11RenderTargetView*                 rendertextureTargetView;
+        ID3D11ShaderResourceView*               textureShaderResourceView;
 
     } TextureInfos;
 
     typedef struct
     {
-	    ID3D11Buffer*               vertex_buffer;
-	    ID3D11Buffer*               index_buffer;
-        int                         nb_vertices;
-        int                         nb_triangles;
+	    ID3D11Buffer*                           vertex_buffer;
+	    ID3D11Buffer*                           index_buffer;
+        int                                     nb_vertices;
+        int                                     nb_triangles;
 
     } MesheData;
 
 
     typedef struct
     {
-        ID3D11VertexShader*         vertex_shader;
-        ID3D11PixelShader*          pixel_shader;
+        ID3D11VertexShader*                     vertex_shader;
+        ID3D11PixelShader*                      pixel_shader;
 
     } ShadersData;
     
 
-    Config                              m_config;
+    Config                                      m_config;
 
 
-    HWND                                m_hwnd;
+    HWND                                        m_hwnd;
 
-    Characteristics                     m_characteristics;
-    int                                 m_next_nbvertices;
-    int                                 m_next_nbtriangles;
+    Characteristics                             m_characteristics;
+    int                                         m_next_nbvertices;
+    int                                         m_next_nbtriangles;
 
-    IDXGISwapChain*                     m_lpd3dswapchain;
-    ID3D11Device*                       m_lpd3ddevice;                     
-    ID3D11DeviceContext*                m_lpd3ddevcontext;
+    IDXGISwapChain*                             m_lpd3dswapchain;
+    ID3D11Device*                               m_lpd3ddevice;                     
+    ID3D11DeviceContext*                        m_lpd3ddevcontext;
 
-    ID3D11SamplerState*                 m_samplerState;
+    ID3D11SamplerState*                         m_samplerState;
 
-    ID3D11InputLayout*                  m_inputLayout;
+    ID3D11InputLayout*                          m_inputLayout;
 
-    ID3D11RenderTargetView*             m_screentarget;
+    ID3D11RenderTargetView*                     m_screentarget;
 
-    D3D11_VIEWPORT                      m_viewport;
+    ID3D11RasterizerState*                      m_rsState;
 
-    IFW1FontWrapper*                    m_fontWrapper;
+    D3D11_VIEWPORT                              m_viewport;
 
-    std::vector<DeviceDescr>            m_devices_descrs;
-    int                                 m_currentDevice;
+    IFW1FontWrapper*                            m_fontWrapper;
 
-    std::map<dsstring, TextureInfos*>   m_textures_base;
-    std::map<dsstring, MesheData*>      m_meshes_base;
-    std::map<dsstring, ShadersData*>    m_shaders_bases;
+    std::vector<DeviceDescr>                    m_devices_descrs;
+    int                                         m_currentDevice;
+
+    std::map<dsstring, TextureInfos*>           m_textures_base;
+    std::map<dsstring, MesheData*>              m_meshes_base;
+    std::map<dsstring, ShadersData*>            m_shaders_bases;
+    std::map<dsstring, DrawSpace::Core::Fx*>    m_fx_bases;
 
 
     HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut );

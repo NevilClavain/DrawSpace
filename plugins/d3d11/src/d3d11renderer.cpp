@@ -229,7 +229,38 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
         m_lpd3ddevcontext->VSSetSamplers( i, 1, ss_array );
         m_lpd3ddevcontext->PSSetSamplers( i, 1, ss_array );
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    D3D11_RASTERIZER_DESC rsDesc;
+
+    rsDesc.FillMode = D3D11_FILL_SOLID;
+    rsDesc.CullMode = D3D11_CULL_BACK;
+    rsDesc.FrontCounterClockwise = FALSE;
+    rsDesc.DepthBias = 0;
+    rsDesc.SlopeScaledDepthBias = 0.0f;
+    rsDesc.DepthBiasClamp = 0.0f;
+    rsDesc.DepthClipEnable = TRUE;
+    rsDesc.ScissorEnable = FALSE;
+    rsDesc.MultisampleEnable = FALSE;
+    rsDesc.AntialiasedLineEnable = FALSE;
     
+    hRes = m_lpd3ddevice->CreateRasterizerState( &rsDesc, &m_rsState );
+    D3D11_CHECK( CreateRasterizerState )
+
+    m_lpd3ddevcontext->RSSetState( m_rsState );
+
+
+
+    ID3D11RasterizerState* curr_rs;
+    D3D11_RASTERIZER_DESC curr_rsDesc;
+
+    m_lpd3ddevcontext->RSGetState( &curr_rs );
+
+    curr_rs->GetDesc( &curr_rsDesc );
+
 
 
     return true;
@@ -954,11 +985,11 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
                     pPSErrBlob->Release();
                 }
-                return false;
-
-                hRes = m_lpd3ddevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &ps );
-                D3D11_CHECK( CreatePixelShader );   
+                return false;  
             }
+
+            hRes = m_lpd3ddevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &ps );
+            D3D11_CHECK( CreatePixelShader ); 
         }
         else
         {
@@ -989,6 +1020,18 @@ bool D3D11Renderer::SetShaders( void* p_data )
 
 bool D3D11Renderer::CreateRenderStatesSet( DrawSpace::Core::Fx* p_fx, void** p_data )
 {
+    dsstring hash;
+    p_fx->GetRenderStatesSetMD5( hash );
+
+    if( m_fx_bases.count( hash ) > 0 )
+    {
+        *p_data = (void *)m_fx_bases[hash];
+        return true;
+    }
+
+    *p_data = (void*)p_fx;
+    m_fx_bases[hash] = p_fx;
+
     return true;
 }
 
