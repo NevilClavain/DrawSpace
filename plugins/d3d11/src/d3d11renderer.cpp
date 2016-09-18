@@ -1037,11 +1037,27 @@ bool D3D11Renderer::CreateRenderStatesSet( DrawSpace::Core::Fx* p_fx, void** p_d
 
 bool D3D11Renderer::ApplyRenderStatesIn( void* p_data )
 {
+	DrawSpace::Core::Fx* fx = (DrawSpace::Core::Fx*)p_data;
+
+    long nb_rs_in = fx->GetRenderStatesInListSize();
+    for( long i = 0; i < nb_rs_in; i++ )
+    {
+        DrawSpace::Core::RenderState rs = fx->GetRenderStateIn( i );
+        SetRenderState( &rs );
+    }
     return true;
 }
 
 bool D3D11Renderer::ApplyRenderStatesOut( void* p_data )
 {
+	DrawSpace::Core::Fx* fx = (DrawSpace::Core::Fx*)p_data;
+
+    long nb_rs_out = fx->GetRenderStatesOutListSize();
+    for( long i = 0; i < nb_rs_out; i++ )
+    {
+        DrawSpace::Core::RenderState rs = fx->GetRenderStateOut( i );
+        SetRenderState( &rs );
+    }
     return true;
 }
 
@@ -1062,7 +1078,279 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
 
 void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
 {
+    dsstring arg;
+    p_renderstate->GetArg( arg );
 
+    switch( p_renderstate->GetOperation() )
+    {
+        case DrawSpace::Core::RenderState::SETCULLING:
+            
+            if( "none" == arg )
+            {
+
+            }
+            else if( "cw" == arg )
+            {
+
+            }
+            else
+            {
+
+            }
+            break;
+
+        case DrawSpace::Core::RenderState::ENABLEZBUFFER:
+            if( "true" == arg )
+            {
+
+            }
+            else
+            {
+
+            }
+            break;
+
+        case DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE:
+            {
+
+                if( "none" == arg )
+                {
+
+                }
+                else if( "point" == arg )
+                {
+
+                }
+                else if( "linear" == arg )
+                {
+
+                }
+                else if( "anisotropic" == arg )
+                {
+
+                }
+
+                for( long i = 0; i < 8; i++ )
+                {
+
+                }
+            }
+            break;
+
+
+        case DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE:
+            {
+
+
+                if( "none" == arg )
+                {
+
+                }
+                else if( "point" == arg )
+                {
+
+                }
+                else if( "linear" == arg )
+                {
+
+                }
+                else if( "anisotropic" == arg )
+                {
+
+                }
+
+                for( long i = 0; i < 8; i++ )
+                {
+
+                }
+            }
+            break;
+
+        case DrawSpace::Core::RenderState::SETFILLMODE:
+            {
+
+                if( "point" == arg )
+                {
+
+                }
+                else if( "line" == arg )
+                {
+  
+                }
+                else if( "solid" == arg )
+                {
+   
+                }
+   
+            }
+            break;
+
+        case DrawSpace::Core::RenderState::ALPHABLENDENABLE:
+            {
+                if( "true" == arg )
+                {
+
+                }
+                else if( "false" == arg )
+                {
+
+                }
+            }
+            break;
+
+        case DrawSpace::Core::RenderState::ALPHABLENDOP:
+            {
+                if( "add" == arg )
+                {
+
+                }
+                else if( "sub" == arg )
+                {
+ 
+                }
+                else if( "revsub" == arg )
+                {
+
+                }
+                else if( "min" == arg )
+                {
+
+                }
+                else if( "max" == arg )
+                {
+
+                }
+            }
+            break;
+
+        case DrawSpace::Core::RenderState::ALPHABLENDFUNC:
+            {
+                if( "never" == arg )
+                {
+
+                }
+                else if( "less" == arg )
+                {
+
+                }
+                else if( "equal" == arg )
+                {
+
+                }
+                else if( "lessequal" == arg )
+                {
+
+                }
+                else if( "greater" == arg )
+                {
+   
+                }
+                else if( "notequal" == arg )
+                {
+      
+                }
+                else if( "greaterequal" == arg )
+                {
+
+                }
+                else if( "always" == arg )
+                {
+
+                }
+            }
+            break;
+
+        case DrawSpace::Core::RenderState::ALPHABLENDDEST:
+            {
+                if( "zero" == arg )
+                {
+
+                }
+                else if( "one" == arg )
+                {
+
+                }
+                else if( "srccolor" == arg )
+                {
+ 
+                }
+                else if( "invsrccolor" == arg )
+                {
+
+                }
+                else if( "srcalpha" == arg )
+                {
+    
+                }
+                else if( "invsrcalpha" == arg )
+                {
+      
+                }
+                else if( "destalpha" == arg )
+                {
+   
+                }
+                else if( "invdestalpha" == arg )
+                {
+    
+                }
+                else if( "destcolor" == arg )
+                {
+ 
+                }
+                else if( "invdestcolor" == arg )
+                {
+
+                }
+            }
+            break;
+
+        case DrawSpace::Core::RenderState::ALPHABLENDSRC:
+
+                if( "zero" == arg )
+                {
+  
+                }
+                else if( "one" == arg )
+                {
+
+                }
+                else if( "srccolor" == arg )
+                {
+
+                }
+                else if( "invsrccolor" == arg )
+                {
+
+                }
+                else if( "srcalpha" == arg )
+                {
+       
+                }
+                else if( "invsrcalpha" == arg )
+                {
+    
+                }
+                else if( "destalpha" == arg )
+                {
+    
+                }
+                else if( "invdestalpha" == arg )
+                {
+   
+                }
+                else if( "destcolor" == arg )
+                {
+ 
+                }
+                else if( "invdestcolor" == arg )
+                {
+ 
+                }
+
+            break;
+
+    }
 }
 
 void D3D11Renderer::GetRenderCharacteristics( Characteristics& p_characteristics )
