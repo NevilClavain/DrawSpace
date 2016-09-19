@@ -210,7 +210,9 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory( &sampDesc, sizeof(sampDesc) );
-    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+
+
+    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
     sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -218,11 +220,33 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     sampDesc.MinLOD = 0;
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-    hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_samplerState );
+    hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_pointFilterSamplerState );
+    D3D11_CHECK( CreateSamplerState )
+
+    sampDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sampDesc.MinLOD = 0;
+    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_linearFilterSamplerState );
     D3D11_CHECK( CreateSamplerState )
 
 
-    ID3D11SamplerState* ss_array[1] = { m_samplerState };
+    sampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sampDesc.MinLOD = 0;
+    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_anisotropicFilterSamplerState );
+    D3D11_CHECK( CreateSamplerState )
+
+    ID3D11SamplerState* ss_array[1] = { m_linearFilterSamplerState };
 
     // a mettre en option dans l'interface renderer ?
     for( long i = 0; i < 8; i++ )
@@ -238,8 +262,12 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     D3D11_RASTERIZER_DESC rsDesc;
 
     rsDesc.FillMode = D3D11_FILL_SOLID;
-    rsDesc.CullMode = D3D11_CULL_BACK;
+
+    // cull cw
+    rsDesc.CullMode = D3D11_CULL_FRONT;   
     rsDesc.FrontCounterClockwise = FALSE;
+    // cull cw
+
     rsDesc.DepthBias = 0;
     rsDesc.SlopeScaledDepthBias = 0.0f;
     rsDesc.DepthBiasClamp = 0.0f;
@@ -1104,52 +1132,64 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
             
             if( "none" == arg )
             {
-
+                m_currentRSDesc.CullMode = D3D11_CULL_NONE;
+                m_currentRSDesc.FrontCounterClockwise = FALSE;
             }
             else if( "cw" == arg )
             {
-
+                // cull cw
+                m_currentRSDesc.CullMode = D3D11_CULL_FRONT;   
+                m_currentRSDesc.FrontCounterClockwise = FALSE;
+                // cull cw
             }
             else
             {
-
+                // cull ccw
+                m_currentRSDesc.CullMode = D3D11_CULL_BACK;   
+                m_currentRSDesc.FrontCounterClockwise = FALSE;
+                // cull ccw
             }
+
+            set_cache_rs();
             break;
 
         case DrawSpace::Core::RenderState::ENABLEZBUFFER:
             if( "true" == arg )
             {
-
+                m_currentRSDesc.DepthClipEnable = true;
             }
             else
             {
-
+                m_currentRSDesc.DepthClipEnable = false;
             }
+
+            set_cache_rs();
             break;
 
         case DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE:
             {
+                ID3D11SamplerState* ss_array[1];
 
                 if( "none" == arg )
                 {
-
+                    _DSEXCEPTION( "'none' texture filter type is unsupported for D3D11" )
                 }
                 else if( "point" == arg )
                 {
-
+                    ss_array[0] = m_pointFilterSamplerState;
                 }
                 else if( "linear" == arg )
                 {
-
+                    ss_array[0] = m_linearFilterSamplerState;
                 }
                 else if( "anisotropic" == arg )
                 {
-
+                    ss_array[0] = m_anisotropicFilterSamplerState;
                 }
 
                 for( long i = 0; i < 8; i++ )
                 {
-
+                    m_lpd3ddevcontext->PSSetSamplers( i, 1, ss_array );
                 }
             }
             break;
@@ -1157,48 +1197,44 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
         case DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE:
             {
-
+                ID3D11SamplerState* ss_array[1];
 
                 if( "none" == arg )
                 {
-
+                    _DSEXCEPTION( "'none' texture filter type is unsupported for D3D11" )
                 }
                 else if( "point" == arg )
                 {
-
+                    ss_array[0] = m_pointFilterSamplerState;
                 }
                 else if( "linear" == arg )
                 {
-
+                    ss_array[0] = m_linearFilterSamplerState;
                 }
                 else if( "anisotropic" == arg )
                 {
-
+                    ss_array[0] = m_anisotropicFilterSamplerState;
                 }
 
                 for( long i = 0; i < 8; i++ )
                 {
-
+                    m_lpd3ddevcontext->VSSetSamplers( i, 1, ss_array );
                 }
             }
             break;
 
         case DrawSpace::Core::RenderState::SETFILLMODE:
             {
-
-                if( "point" == arg )
+                if( "line" == arg )
                 {
-
-                }
-                else if( "line" == arg )
-                {
-  
+                    m_currentRSDesc.FillMode = D3D11_FILL_WIREFRAME;
                 }
                 else if( "solid" == arg )
                 {
-   
+                    m_currentRSDesc.FillMode = D3D11_FILL_SOLID;
                 }
    
+                set_cache_rs();
             }
             break;
 
