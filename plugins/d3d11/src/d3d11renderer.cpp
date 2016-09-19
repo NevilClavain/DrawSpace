@@ -139,14 +139,6 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     sd.SampleDesc.Quality = 0; // en low quality
     sd.Windowed = TRUE;
 
-    /*
-    D3D_FEATURE_LEVEL featureLevels[] =
-    {
-        D3D_FEATURE_LEVEL_9_1,
-    };
-    UINT numFeatureLevels = ARRAYSIZE( featureLevels );
-    */
-
     hRes = D3D11CreateDeviceAndSwapChain( NULL, D3D_DRIVER_TYPE_HARDWARE,
                                   NULL,
                                   NULL,
@@ -264,6 +256,29 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     // apply this default renderstate
     set_cache_rs();
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // default blend state description
+
+    D3D11_BLEND_DESC blDesc;
+    ZeroMemory( &blDesc, sizeof( blDesc ) );
+
+    blDesc.AlphaToCoverageEnable = false;
+    blDesc.IndependentBlendEnable = false;
+    blDesc.RenderTarget[0].BlendEnable = false;
+    blDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+    blDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
+    blDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    blDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    blDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+    m_currentBlendDesc = blDesc;
+
+    // apply this default blend state
+    set_cache_blendstate();
 
     return true;
 }
@@ -1100,6 +1115,35 @@ bool D3D11Renderer::set_cache_rs( void )
         m_lpd3ddevcontext->RSSetState( rs );
 
         m_rsCache[rsdesc_key] = rs; // store in cache
+    }
+
+    return status;
+}
+
+bool D3D11Renderer::set_cache_blendstate( void )
+{
+    bool status = true;
+    DECLARE_D3D11ASSERT_VARS
+
+    D3D11_BLEND_DESC currBlendDesc = m_currentBlendDesc;
+    MD5 md5;
+
+    FLOAT bvals[4] = { 0.0, 0.0, 0.0, 0.0 };
+
+    dsstring bsdesc_key = md5.digestMemory( (BYTE*)&currBlendDesc, sizeof( D3D11_BLEND_DESC ) );
+
+    if( m_bsCache.count( bsdesc_key ) > 0 )
+    {
+        m_lpd3ddevcontext->OMSetBlendState( m_bsCache[bsdesc_key], bvals, 0xffffffff );
+    }
+    else
+    {
+        ID3D11BlendState* bs;
+        hRes = m_lpd3ddevice->CreateBlendState( &currBlendDesc, &bs );
+        D3D11_CHECK( CreateBlendState )
+        m_lpd3ddevcontext->OMSetBlendState( bs, bvals, 0xffffffff );
+
+        m_bsCache[bsdesc_key] = bs; // store in cache
     }
 
     return status;

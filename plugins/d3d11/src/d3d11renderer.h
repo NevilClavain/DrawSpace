@@ -128,9 +128,10 @@ protected:
     ID3D11RenderTargetView*                                         m_screentarget;
 
     D3D11_RASTERIZER_DESC                                           m_currentRSDesc;
-    //ID3D11RasterizerState*                      m_rsState;
+    D3D11_BLEND_DESC                                                m_currentBlendDesc;
 
     std::map<dsstring, ID3D11RasterizerState*>                      m_rsCache;
+    std::map<dsstring, ID3D11BlendState*>                           m_bsCache;
 
     D3D11_VIEWPORT                                                  m_viewport;
 
@@ -148,6 +149,7 @@ protected:
     HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut );
 
     bool set_cache_rs( void );
+    bool set_cache_blendstate( void );
 
 public:
     D3D11Renderer( void );
