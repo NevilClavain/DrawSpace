@@ -23,6 +23,7 @@
 #include "d3d11renderer.h"
 #include "memalloc.h"
 #include "misc_utils.h"
+#include <md5.h>
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -233,7 +234,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     ////////////////////////////////////////////////////////////////////////////
 
-
+    // default renderstate description
     D3D11_RASTERIZER_DESC rsDesc;
 
     rsDesc.FillMode = D3D11_FILL_SOLID;
@@ -246,22 +247,11 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     rsDesc.ScissorEnable = FALSE;
     rsDesc.MultisampleEnable = FALSE;
     rsDesc.AntialiasedLineEnable = FALSE;
-    
-    hRes = m_lpd3ddevice->CreateRasterizerState( &rsDesc, &m_rsState );
-    D3D11_CHECK( CreateRasterizerState )
 
-    m_lpd3ddevcontext->RSSetState( m_rsState );
+    m_currentRSDesc = rsDesc;
 
-
-
-    ID3D11RasterizerState* curr_rs;
-    D3D11_RASTERIZER_DESC curr_rsDesc;
-
-    m_lpd3ddevcontext->RSGetState( &curr_rs );
-
-    curr_rs->GetDesc( &curr_rsDesc );
-
-
+    // apply this default renderstate
+    set_cache_rs();
 
     return true;
 }
@@ -1074,6 +1064,33 @@ bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, Draw
 bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
 {
     return true;
+}
+
+bool D3D11Renderer::set_cache_rs( void )
+{
+    bool status = true;
+    DECLARE_D3D11ASSERT_VARS
+
+    D3D11_RASTERIZER_DESC currRS = m_currentRSDesc;
+    MD5 md5;
+
+    dsstring rsdesc_key = md5.digestMemory( (BYTE*)&currRS, sizeof( D3D11_RASTERIZER_DESC ) );
+    
+    if( m_rsCache.count( rsdesc_key ) > 0 )
+    {
+        m_lpd3ddevcontext->RSSetState( m_rsCache[rsdesc_key] );
+    }
+    else
+    {
+        ID3D11RasterizerState* rs;
+        hRes = m_lpd3ddevice->CreateRasterizerState( &currRS, &rs );
+        D3D11_CHECK( CreateRasterizerState )
+        m_lpd3ddevcontext->RSSetState( rs );
+
+        m_rsCache[rsdesc_key] = rs; // store in cache
+    }
+
+    return status;
 }
 
 void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
