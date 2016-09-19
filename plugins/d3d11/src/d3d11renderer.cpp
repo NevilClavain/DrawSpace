@@ -1270,12 +1270,14 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
             {
                 if( "true" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].BlendEnable = TRUE;
                 }
                 else if( "false" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].BlendEnable = FALSE;
                 }
+
+                set_cache_blendstate();
             }
             break;
 
@@ -1283,60 +1285,37 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
             {
                 if( "add" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+                    m_currentBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
                 }
                 else if( "sub" == arg )
                 {
- 
+                    m_currentBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_SUBTRACT;
+                    m_currentBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_SUBTRACT;
                 }
                 else if( "revsub" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_REV_SUBTRACT;
+                    m_currentBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_REV_SUBTRACT;
                 }
                 else if( "min" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MIN;
+                    m_currentBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MIN;
                 }
                 else if( "max" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MAX;
+                    m_currentBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
                 }
             }
             break;
 
         case DrawSpace::Core::RenderState::ALPHABLENDFUNC:
             {
-                if( "never" == arg )
+                if( arg != "always" )
                 {
-
-                }
-                else if( "less" == arg )
-                {
-
-                }
-                else if( "equal" == arg )
-                {
-
-                }
-                else if( "lessequal" == arg )
-                {
-
-                }
-                else if( "greater" == arg )
-                {
-   
-                }
-                else if( "notequal" == arg )
-                {
-      
-                }
-                else if( "greaterequal" == arg )
-                {
-
-                }
-                else if( "always" == arg )
-                {
-
+                    _DSEXCEPTION( "unsupported alpha blending func for D3D11" )
                 }
             }
             break;
@@ -1345,43 +1324,53 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
             {
                 if( "zero" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
                 }
                 else if( "one" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
                 }
                 else if( "srccolor" == arg )
                 {
- 
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_SRC_COLOR;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_SRC_COLOR;
                 }
                 else if( "invsrccolor" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_COLOR;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_COLOR;
                 }
                 else if( "srcalpha" == arg )
                 {
-    
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_SRC_ALPHA;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_SRC_ALPHA;
                 }
                 else if( "invsrcalpha" == arg )
                 {
-      
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
                 }
                 else if( "destalpha" == arg )
                 {
-   
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_ALPHA;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;   
                 }
                 else if( "invdestalpha" == arg )
                 {
-    
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_DEST_ALPHA;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_DEST_ALPHA;    
                 }
                 else if( "destcolor" == arg )
                 {
- 
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_COLOR;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_COLOR; 
                 }
                 else if( "invdestcolor" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_DEST_COLOR;
+                    m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_DEST_COLOR;
                 }
             }
             break;
@@ -1390,47 +1379,56 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
                 if( "zero" == arg )
                 {
-  
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ZERO;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
                 }
                 else if( "one" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
                 }
                 else if( "srccolor" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_COLOR;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_COLOR;
                 }
                 else if( "invsrccolor" == arg )
                 {
-
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_INV_SRC_COLOR;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_INV_SRC_COLOR;
                 }
                 else if( "srcalpha" == arg )
                 {
-       
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
                 }
                 else if( "invsrcalpha" == arg )
                 {
-    
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_INV_SRC_ALPHA;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
                 }
                 else if( "destalpha" == arg )
                 {
-    
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_DEST_ALPHA;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_DEST_ALPHA;   
                 }
                 else if( "invdestalpha" == arg )
                 {
-   
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_INV_DEST_ALPHA;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_INV_DEST_ALPHA;    
                 }
                 else if( "destcolor" == arg )
                 {
- 
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_DEST_COLOR;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_DEST_COLOR; 
                 }
                 else if( "invdestcolor" == arg )
                 {
- 
+                    m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_INV_DEST_COLOR;
+                    m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_INV_DEST_COLOR;
                 }
 
             break;
-
     }
 }
 
