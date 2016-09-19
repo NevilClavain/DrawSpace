@@ -1730,11 +1730,7 @@ void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
         case DrawSpace::Core::RenderState::SETFILLMODE:
             {
                 D3DFILLMODE fm;
-                if( "point" == arg )
-                {
-                    fm = D3DFILL_POINT;
-                }
-                else if( "line" == arg )
+                if( "line" == arg )
                 {
                     fm = D3DFILL_WIREFRAME ;
                 }
