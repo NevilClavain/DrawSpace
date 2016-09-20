@@ -1,0 +1,18 @@
+
+
+
+struct PS_INTPUT 
+{
+   float4 Position : POSITION0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{   
+    float4 color;
+    color.x = 1.0;
+    color.y = 0.5;
+    color.z = 0.25;
+    color.w = 1.0;
+    return color;
+}

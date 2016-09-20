@@ -139,11 +139,19 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     sd.SampleDesc.Quality = 0; // en low quality
     sd.Windowed = TRUE;
 
+    D3D_FEATURE_LEVEL featureLevels[] =
+    {
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+    };
+    UINT numFeatureLevels = ARRAYSIZE( featureLevels );
+
     hRes = D3D11CreateDeviceAndSwapChain( NULL, D3D_DRIVER_TYPE_HARDWARE,
                                   NULL,
                                   NULL,
-                                  NULL,
-                                  NULL,
+                                  featureLevels,
+                                  numFeatureLevels,
                                   D3D11_SDK_VERSION,
                                   &sd,
                                   &m_lpd3dswapchain,
@@ -240,7 +248,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     rsDesc.FillMode = D3D11_FILL_SOLID;
 
     // cull cw
-    rsDesc.CullMode = D3D11_CULL_FRONT;   
+    rsDesc.CullMode = D3D11_CULL_NONE; //D3D11_CULL_FRONT;   
     rsDesc.FrontCounterClockwise = FALSE;
     // cull cw
 
@@ -1168,6 +1176,10 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
     m_lpd3ddevcontext->UpdateSubresource( m_pixelshader_legacyargs_buffer, 0, NULL, &m_pixelshader_legacyargs, 0, 0 );
 
     ///////////////
+
+    m_lpd3ddevcontext->VSSetConstantBuffers( 0, 1, &m_vertexshader_legacyargs_buffer );
+    m_lpd3ddevcontext->PSSetConstantBuffers( 0, 1, &m_pixelshader_legacyargs_buffer );
+    m_lpd3ddevcontext->DrawIndexed( m_next_nbtriangles * 3, 0, 0 );
 
     return true;
 }
