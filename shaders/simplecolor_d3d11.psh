@@ -9,12 +9,17 @@ SamplerState sam            : register(s0);
 
 struct PS_INTPUT 
 {
-	float4 Position : POSITION0;
+    float4 Position : SV_POSITION;
 	float4 TexCoord0: TEXCOORD0;
 };
 
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {   
-    return txDiffuse.Sample(sam, input.TexCoord0);
+    float4 color;
+    color.x = 1.0;
+    color.y = 0.5;
+    color.z = 0.0;
+    color.w = 1.0;
+    return color;
 }

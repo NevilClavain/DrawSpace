@@ -25,6 +25,10 @@
 
 typedef struct
 {
+    XMFLOAT3 pos;
+    XMFLOAT2 t0;
+
+    /*
     float   x;
     float   y;
     float   z;
@@ -77,6 +81,7 @@ typedef struct
     float   tv8;
     float   tw8;
     float   ta8;
+    */
 
 } d3d11vertex;
 
