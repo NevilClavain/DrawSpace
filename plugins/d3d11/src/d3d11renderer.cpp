@@ -280,6 +280,22 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     // apply this default blend state
     set_cache_blendstate();
 
+    /////////////////////////////////////////////////////////////////////////////
+
+    D3D11_BUFFER_DESC bd;
+    ZeroMemory( &bd, sizeof( bd ) );
+
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof( ShaderLegacyArg );
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bd.CPUAccessFlags = 0;
+
+    hRes = m_lpd3ddevice->CreateBuffer( &bd, NULL, &m_vertexshader_legacyargs_buffer );
+    D3D11_CHECK( CreateBuffer )
+    
+    hRes = m_lpd3ddevice->CreateBuffer( &bd, NULL, &m_pixelshader_legacyargs_buffer );
+    D3D11_CHECK( CreateBuffer )
+
     return true;
 }
 
@@ -1090,6 +1106,69 @@ bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, Draw
 
 bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
 {
+
+    // setting transformation
+    DrawSpace::Utils::Matrix final_view;
+    DrawSpace::Utils::Matrix inv;
+    DrawSpace::Utils::Matrix result;
+
+    inv.Identity();
+    inv( 2, 2 ) = -1.0;
+    final_view = p_view * inv;
+
+    Transformation chain;    
+    chain.PushMatrix( p_proj );
+    chain.PushMatrix( final_view );
+    chain.PushMatrix( p_world );
+    chain.BuildResult();
+    chain.GetResult( &result );
+    result.Transpose();
+
+    set_vertexshader_constants_mat( 0, result );
+    set_pixelshader_constants_mat( 100, result );
+    
+    //////////////////////////////////////////////////////////////////////
+
+    DrawSpace::Utils::Matrix proj = p_proj;
+    DrawSpace::Utils::Matrix world = p_world;
+    DrawSpace::Utils::Matrix view = p_view;
+    DrawSpace::Utils::Matrix cam = p_view;
+    DrawSpace::Utils::Matrix worldview = world * view;
+    worldview.Transpose();
+    
+    set_vertexshader_constants_mat( 4, worldview );
+    set_pixelshader_constants_mat( 104, worldview );
+
+	//////////////////////////////////////////////////////////////////////
+    
+    world.Transpose();
+    view.Transpose();
+    cam.Inverse();
+    cam.Transpose();
+
+    set_vertexshader_constants_mat( 8, world );
+    set_vertexshader_constants_mat( 12, view );
+
+    set_pixelshader_constants_mat( 108, world );
+    set_pixelshader_constants_mat( 112, view );
+
+	//////////////////////////////////////////////////////////////////////
+
+    set_vertexshader_constants_mat( 16, cam );
+    set_pixelshader_constants_mat( 116, cam );
+
+
+    proj.Transpose();
+    set_vertexshader_constants_mat( 20, proj );
+    set_pixelshader_constants_mat( 120, proj );
+
+    // update des shaders legacy constants buffers...
+
+    m_lpd3ddevcontext->UpdateSubresource( m_vertexshader_legacyargs_buffer, 0, NULL, &m_vertexshader_legacyargs, 0, 0 );
+    m_lpd3ddevcontext->UpdateSubresource( m_pixelshader_legacyargs_buffer, 0, NULL, &m_pixelshader_legacyargs, 0, 0 );
+
+    ///////////////
+
     return true;
 }
 
@@ -1429,6 +1508,44 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                 }
 
             break;
+    }
+}
+
+void D3D11Renderer::set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec )
+{
+    m_vertexshader_legacyargs.vector[p_startreg].x = p_vec[0];
+    m_vertexshader_legacyargs.vector[p_startreg].y = p_vec[1];
+    m_vertexshader_legacyargs.vector[p_startreg].z = p_vec[2];
+    m_vertexshader_legacyargs.vector[p_startreg].w = p_vec[3];
+}
+
+void D3D11Renderer::set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec )
+{
+    m_pixelshader_legacyargs.vector[p_startreg].x = p_vec[0];
+    m_pixelshader_legacyargs.vector[p_startreg].y = p_vec[1];
+    m_pixelshader_legacyargs.vector[p_startreg].z = p_vec[2];
+    m_pixelshader_legacyargs.vector[p_startreg].w = p_vec[3]; 
+}
+
+void D3D11Renderer::set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat )
+{
+    for( int i = 0; i < 4; i++ )
+    {
+        for( int j = 0; j < 4; j++ )
+        {
+            m_vertexshader_legacyargs.matrix[p_startreg]( i, j ) = p_mat( i, j );
+        }
+    }
+}
+
+void D3D11Renderer::set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat )
+{
+    for( int i = 0; i < 4; i++ )
+    {
+        for( int j = 0; j < 4; j++ )
+        {
+            m_pixelshader_legacyargs.matrix[p_startreg]( i, j ) = p_mat( i, j );
+        }
     }
 }
 

@@ -27,6 +27,7 @@
 
 #include <d3d11.h>
 #include <d3dx11.h>
+#include <xnamath.h>
 
 #include <memalloc.h>
 #include <tracedefs.h>
@@ -105,6 +106,13 @@ protected:
     } ShadersData;
     
 
+    typedef struct
+    {
+        XMFLOAT4                                                    vector[512];
+        XMMATRIX                                                    matrix[512];
+    
+    } ShaderLegacyArg;
+
     Config                                                          m_config;
 
 
@@ -144,6 +152,18 @@ protected:
     std::map<dsstring, MesheData*>                                  m_meshes_base;
     std::map<dsstring, ShadersData*>                                m_shaders_bases;
     std::map<dsstring, DrawSpace::Core::Fx*>                        m_fx_bases;
+
+    ID3D11Buffer*                                                   m_vertexshader_legacyargs_buffer;
+    ID3D11Buffer*                                                   m_pixelshader_legacyargs_buffer;
+
+    ShaderLegacyArg                                                 m_vertexshader_legacyargs;
+    ShaderLegacyArg                                                 m_pixelshader_legacyargs;
+
+    void set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
+    void set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
+
+    void set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat );
+    void set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat );
 
 
     HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut );
