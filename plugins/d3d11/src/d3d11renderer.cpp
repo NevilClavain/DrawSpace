@@ -467,7 +467,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 
         v[i].pos.x = (float)vertex.x;
         v[i].pos.y = (float)vertex.y;
-        v[i].pos.z = (float)vertex.y;
+        v[i].pos.z = (float)vertex.z;
 
         v[i].t0.x = vertex.tu[0];
         v[i].t0.y = vertex.tv[0];
@@ -986,7 +986,7 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
 	            const D3D11_INPUT_ELEMENT_DESC layout[] =
 	            {
-		            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
                     { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },/*,
 		            { "NORMAL",       0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
                     { "TEXCOORD0",    0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
