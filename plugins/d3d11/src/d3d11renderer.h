@@ -130,6 +130,11 @@ protected:
     ID3D11SamplerState*                                             m_pointFilterSamplerState;
     ID3D11SamplerState*                                             m_anisotropicFilterSamplerState;
 
+    ID3D11Texture2D*                                                m_pDepthStencil; 
+    ID3D11DepthStencilView*                                         m_pDepthStencilView;
+
+    ID3D11DepthStencilState*                                        m_DSState_DepthTestDisabled;
+    ID3D11DepthStencilState*                                        m_DSState_DepthTestEnabled;
 
     ID3D11InputLayout*                                              m_inputLayout;
 

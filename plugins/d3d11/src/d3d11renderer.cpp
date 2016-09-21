@@ -24,6 +24,7 @@
 #include "memalloc.h"
 #include "misc_utils.h"
 #include <md5.h>
+#include <d3dcompiler.h>
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -40,7 +41,9 @@ m_lpd3ddevice( NULL ),
 m_lpd3ddevcontext( NULL ),
 m_screentarget( NULL ),
 m_inputLayout( NULL ),
-m_currentDevice( -1 )
+m_currentDevice( -1 ),
+m_pDepthStencil( NULL ),
+m_pDepthStencilView( NULL )
 {
 
 }
@@ -126,10 +129,30 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     m_hwnd = p_hwnd;
 
+
+    m_characteristics.fullscreen = false;
+    /*
+    m_characteristics.width_resol = p_w_width;
+    m_characteristics.height_resol = p_w_height;
+    */
+
+    RECT rect;
+    GetClientRect( m_hwnd, &rect );
+    m_characteristics.width_resol = rect.right;
+    m_characteristics.height_resol = rect.bottom;
+
+
+    UINT createDeviceFlags = 0;
+#ifdef _DEBUG
+    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory( &sd, sizeof( sd ) );
     sd.BufferCount = 1;
-
+    sd.BufferDesc.Width = m_characteristics.width_resol;
+    sd.BufferDesc.Height = m_characteristics.height_resol;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
@@ -149,7 +172,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     hRes = D3D11CreateDeviceAndSwapChain( NULL, D3D_DRIVER_TYPE_HARDWARE,
                                   NULL,
-                                  NULL,
+                                  createDeviceFlags,
                                   featureLevels,
                                   numFeatureLevels,
                                   D3D11_SDK_VERSION,
@@ -161,9 +184,8 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     D3D11_CHECK( D3D11CreateDeviceAndSwapChain )
 
-    m_characteristics.fullscreen = false;
-    m_characteristics.width_resol = p_w_width;
-    m_characteristics.height_resol = p_w_height;
+
+
 
     ///////////////////////////////////////////////////////////////////////
 
@@ -175,6 +197,74 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     D3D11_CHECK( CreateRenderTargetView )
 
     backBuffer->Release();
+
+
+    ////////////////////////////////////////////////////////////////////////
+
+    D3D11_TEXTURE2D_DESC descDepth;
+    ZeroMemory( &descDepth, sizeof( descDepth ) );
+    descDepth.Width = m_characteristics.width_resol;
+    descDepth.Height = m_characteristics.height_resol;
+    descDepth.MipLevels = 1;
+    descDepth.ArraySize = 1;
+    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    descDepth.SampleDesc.Count = 1;
+    descDepth.SampleDesc.Quality = 0;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.CPUAccessFlags = 0;
+    descDepth.MiscFlags = 0;
+    hRes = m_lpd3ddevice->CreateTexture2D( &descDepth, NULL, &m_pDepthStencil );
+
+    D3D11_CHECK( CreateTexture2D )
+
+
+
+    D3D11_DEPTH_STENCIL_DESC dsDesc;
+    ZeroMemory( &dsDesc, sizeof( dsDesc ) );
+
+    // Depth test parameters
+    dsDesc.DepthEnable = FALSE;
+    dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+    // Stencil test parameters
+    dsDesc.StencilEnable = FALSE;
+    dsDesc.StencilReadMask = 0xFF;
+    dsDesc.StencilWriteMask = 0xFF;
+
+    // Stencil operations if pixel is front-facing
+    dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+    dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+    // Stencil operations if pixel is back-facing
+    dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+    dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+    hRes = m_lpd3ddevice->CreateDepthStencilState( &dsDesc, &m_DSState_DepthTestDisabled );
+    D3D11_CHECK( CreateDepthStencilState )
+
+    dsDesc.DepthEnable = TRUE;
+
+    hRes = m_lpd3ddevice->CreateDepthStencilState( &dsDesc, &m_DSState_DepthTestEnabled );
+    D3D11_CHECK( CreateDepthStencilState )
+
+    m_lpd3ddevcontext->OMSetDepthStencilState( m_DSState_DepthTestDisabled, 1 );
+
+
+    // Create the depth stencil view
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+    ZeroMemory( &descDSV, sizeof(descDSV) );
+    descDSV.Format = descDepth.Format;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0;
+    hRes = m_lpd3ddevice->CreateDepthStencilView( m_pDepthStencil, &descDSV, &m_pDepthStencilView );
+
+    D3D11_CHECK( CreateDepthStencilView )
 
     ////////////////////////////////////////////////////////////////////////
 
@@ -255,7 +345,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     rsDesc.DepthBias = 0;
     rsDesc.SlopeScaledDepthBias = 0.0f;
     rsDesc.DepthBiasClamp = 0.0f;
-    rsDesc.DepthClipEnable = TRUE;
+    rsDesc.DepthClipEnable = FALSE;
     rsDesc.ScissorEnable = FALSE;
     rsDesc.MultisampleEnable = FALSE;
     rsDesc.AntialiasedLineEnable = FALSE;
@@ -344,7 +434,7 @@ void D3D11Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long 
 
 void D3D11Renderer::BeginScreen( void )
 {
-    m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_screentarget, NULL );
+    m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_screentarget, m_pDepthStencilView );
 }
 
 void D3D11Renderer::EndScreen( void )
@@ -371,7 +461,7 @@ void D3D11Renderer::ClearScreen( unsigned char p_r, unsigned char p_g, unsigned 
 
 void D3D11Renderer::ClearDepth( dsreal p_value )
 {
-
+    m_lpd3ddevcontext->ClearDepthStencilView( m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 }
 
 void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
@@ -475,7 +565,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
     }
 
 	id.pSysMem = v;
-	id.SysMemPitch = sizeof( d3d11vertex );
+	id.SysMemPitch = 0;//sizeof( d3d11vertex );
 	id.SysMemSlicePitch = 0;
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -490,7 +580,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
     delete[] v;
 
     // index buffer creation
-
+    
     d3d11triangle *t = new d3d11triangle[nb_triangles];
 
     for( long i = 0; i < nb_triangles; i++ )
@@ -504,12 +594,13 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
     }
 
 	id.pSysMem = t;
-	id.SysMemPitch = sizeof( d3d11triangle );
+    
+	id.SysMemPitch = 0;//sizeof( d3d11triangle );
 	id.SysMemSlicePitch = 0;
 
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = nb_triangles * sizeof( d3d11triangle );
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0; 
 
@@ -541,6 +632,7 @@ bool D3D11Renderer::SetMeshe( void* p_data )
 
     UINT stride = sizeof( d3d11vertex );
     UINT offset = 0;
+
     m_lpd3ddevcontext->IASetVertexBuffers( 0, 1, &meshe_data->vertex_buffer, &stride, &offset ); 
     m_lpd3ddevcontext->IASetIndexBuffer( meshe_data->index_buffer, DXGI_FORMAT_R32_UINT, 0 );
 
@@ -1251,7 +1343,7 @@ bool D3D11Renderer::set_cache_blendstate( void )
 }
 
 void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
-{
+{    
     dsstring arg;
     p_renderstate->GetArg( arg );
 
@@ -1285,14 +1377,12 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
         case DrawSpace::Core::RenderState::ENABLEZBUFFER:
             if( "true" == arg )
             {
-                m_currentRSDesc.DepthClipEnable = true;
+                m_lpd3ddevcontext->OMSetDepthStencilState( m_DSState_DepthTestEnabled, 1 );
             }
             else
             {
-                m_currentRSDesc.DepthClipEnable = false;
+                m_lpd3ddevcontext->OMSetDepthStencilState( m_DSState_DepthTestDisabled, 1 );
             }
-
-            set_cache_rs();
             break;
 
         case DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE:
@@ -1574,6 +1664,8 @@ void D3D11Renderer::set_pixelshader_constants_mat( DWORD p_startreg, const DrawS
 void D3D11Renderer::GetRenderCharacteristics( Characteristics& p_characteristics )
 {
     p_characteristics = m_characteristics;
+
+    /*
     if( !m_characteristics.fullscreen )
     {
         // prendre en compte les bords fenetre
@@ -1584,6 +1676,7 @@ void D3D11Renderer::GetRenderCharacteristics( Characteristics& p_characteristics
         p_characteristics.width_resol = rect.right;
         p_characteristics.height_resol = rect.bottom;
     }
+    */
 }
 
 void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... )
@@ -1638,7 +1731,7 @@ HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTS
     HRESULT hr = S_OK;
 
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
-/*
+
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
     // Setting this flag improves the shader debugging experience, but still allows 
@@ -1646,7 +1739,7 @@ HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTS
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
-    */
+    
     ID3DBlob* pErrorBlob;
     hr = D3DX11CompileFromMemory( (LPCTSTR)p_data, p_size, szFileName, NULL, NULL, szEntryPoint, szShaderModel, dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
