@@ -138,8 +138,8 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     RECT rect;
     GetClientRect( m_hwnd, &rect );
-    m_characteristics.width_resol = rect.right;
-    m_characteristics.height_resol = rect.bottom;
+    m_characteristics.width_resol = rect.right - rect.left;
+    m_characteristics.height_resol = rect.bottom - rect.top;
 
 
     UINT createDeviceFlags = 0;
@@ -287,12 +287,12 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     m_characteristics.height_viewport = v_height;
 
     //////////////////////////////////////////////////////////////////////////
-
+    
 	IFW1Factory* fW1Factory;
 	hRes = FW1CreateFactory( FW1_VERSION, &fW1Factory );
 	
 	hRes = fW1Factory->CreateFontWrapper( m_lpd3ddevice, L"System", &m_fontWrapper );
-
+    
     //////////////////////////////////////////////////////////////////////////
 
     m_lpd3ddevcontext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
@@ -505,55 +505,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
     {
         Core::Vertex vertex;
         meshe->GetVertex( i, vertex );
-        /*
-        v[i].x = (float)vertex.x;
-        v[i].y = (float)vertex.y;
-        v[i].z = (float)vertex.z;
-
-        v[i].nx = (float)vertex.nx;
-        v[i].ny = (float)vertex.ny;
-        v[i].nz = (float)vertex.nz;
-
-        v[i].tu0 = vertex.tu[0];
-        v[i].tu1 = vertex.tu[1];
-        v[i].tu2 = vertex.tu[2];
-        v[i].tu3 = vertex.tu[3];
-        v[i].tu4 = vertex.tu[4];
-        v[i].tu5 = vertex.tu[5];
-        v[i].tu6 = vertex.tu[6];
-        v[i].tu7 = vertex.tu[7];
-        v[i].tu8 = vertex.tu[8];
-
-        v[i].tv0 = vertex.tv[0];
-        v[i].tv1 = vertex.tv[1];
-        v[i].tv2 = vertex.tv[2];
-        v[i].tv3 = vertex.tv[3];
-        v[i].tv4 = vertex.tv[4];
-        v[i].tv5 = vertex.tv[5];
-        v[i].tv6 = vertex.tv[6];
-        v[i].tv7 = vertex.tv[7];
-        v[i].tv8 = vertex.tv[8];
-        
-        v[i].tw0 = vertex.tw[0];
-        v[i].tw1 = vertex.tw[1];
-        v[i].tw2 = vertex.tw[2];
-        v[i].tw3 = vertex.tw[3];
-        v[i].tw4 = vertex.tw[4];
-        v[i].tw5 = vertex.tw[5];
-        v[i].tw6 = vertex.tw[6];
-        v[i].tw7 = vertex.tw[7];
-        v[i].tw8 = vertex.tw[8];
-        
-        v[i].ta0 = vertex.ta[0];
-        v[i].ta1 = vertex.ta[1];
-        v[i].ta2 = vertex.ta[2];
-        v[i].ta3 = vertex.ta[3];
-        v[i].ta4 = vertex.ta[4];
-        v[i].ta5 = vertex.ta[5];
-        v[i].ta6 = vertex.ta[6];
-        v[i].ta7 = vertex.ta[7];
-        v[i].ta8 = vertex.ta[8];
-        */
+     
 
         v[i].pos.x = (float)vertex.x;
         v[i].pos.y = (float)vertex.y;
@@ -608,6 +560,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
     D3D11_CHECK( CreateBuffer )
 
     delete[] t;
+
 
     meshe_data->nb_vertices = nb_vertices;
     meshe_data->nb_triangles = nb_triangles;
@@ -1079,7 +1032,8 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 	            const D3D11_INPUT_ELEMENT_DESC layout[] =
 	            {
 		            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-                    { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },/*,
+                    { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    /*,
 		            { "NORMAL",       0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
                     { "TEXCOORD0",    0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
                     { "TEXCOORD1",    1, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -1094,6 +1048,8 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
                 hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_inputLayout );
                 D3D11_CHECK( CreateInputLayout )
+
+                pVSBlob->Release();
 
                 m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );                
             }
@@ -1133,6 +1089,8 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
             hRes = m_lpd3ddevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &ps );
             D3D11_CHECK( CreatePixelShader ); 
+
+            pPSBlob->Release();
         }
         else
         {
@@ -1681,6 +1639,8 @@ void D3D11Renderer::GetRenderCharacteristics( Characteristics& p_characteristics
 
 void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... )
 {
+    
+
     char buffer[512];
     _vsnprintf( buffer, 512, p_format, (va_list)( &p_format + 1 ) );
 
