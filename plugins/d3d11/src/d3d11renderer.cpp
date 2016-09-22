@@ -1164,12 +1164,48 @@ bool D3D11Renderer::ApplyRenderStatesOut( void* p_data )
 
 bool D3D11Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector )
 {
-    return true;
+	switch( p_shader_index )
+	{
+		case 0:
+
+			// vertex shader params application		
+			set_vertexshader_constants_vec( p_register, p_vector );
+			break;
+
+		case 1:
+
+			// pixel shader params application
+			set_pixelshader_constants_vec( p_register, p_vector );
+			break;
+
+        default:
+            return false;
+	}
+
+	return false;
 }
 
 bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat )
 {
-    return true;
+	switch( p_shader_index )
+	{
+		case 0:
+
+			// vertex shader params application		
+			set_vertexshader_constants_mat( p_register, p_mat );
+			break;
+
+		case 1:
+
+			// pixel shader params application
+			set_pixelshader_constants_mat( p_register, p_mat );
+			break;
+
+        default:
+            return false;
+	}
+
+	return false;
 }
 
 bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
@@ -1256,7 +1292,7 @@ bool D3D11Renderer::set_cache_rs( void )
     
     if( m_rsCache.count( rsdesc_key ) > 0 )
     {
-        m_lpd3ddevcontext->RSSetState( m_rsCache[rsdesc_key] );
+        m_lpd3ddevcontext->RSSetState( m_rsCache[rsdesc_key].rs_state );
     }
     else
     {
@@ -1265,7 +1301,9 @@ bool D3D11Renderer::set_cache_rs( void )
         D3D11_CHECK( CreateRasterizerState )
         m_lpd3ddevcontext->RSSetState( rs );
 
-        m_rsCache[rsdesc_key] = rs; // store in cache
+        // create new entry in cache
+        RSCacheEntry cache_e = { currRS, rs };
+        m_rsCache[rsdesc_key] = cache_e; // store in cache
     }
 
     return status;
@@ -1285,7 +1323,7 @@ bool D3D11Renderer::set_cache_blendstate( void )
 
     if( m_bsCache.count( bsdesc_key ) > 0 )
     {
-        m_lpd3ddevcontext->OMSetBlendState( m_bsCache[bsdesc_key], bvals, 0xffffffff );
+        m_lpd3ddevcontext->OMSetBlendState( m_bsCache[bsdesc_key].bs_state, bvals, 0xffffffff );
     }
     else
     {
@@ -1294,7 +1332,9 @@ bool D3D11Renderer::set_cache_blendstate( void )
         D3D11_CHECK( CreateBlendState )
         m_lpd3ddevcontext->OMSetBlendState( bs, bvals, 0xffffffff );
 
-        m_bsCache[bsdesc_key] = bs; // store in cache
+        // create new entry in cache
+        BSCacheEntry cache_e = { currBlendDesc, bs };
+        m_bsCache[bsdesc_key] = cache_e; // store in cache
     }
 
     return status;

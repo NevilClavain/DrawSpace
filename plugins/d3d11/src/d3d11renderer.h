@@ -113,6 +113,25 @@ protected:
     
     } ShaderLegacyArg;
 
+    // render states
+    typedef struct
+    {
+        D3D11_RASTERIZER_DESC   rs_desc;
+        ID3D11RasterizerState*  rs_state;
+
+    } RSCacheEntry;
+
+    // blending states
+    typedef struct
+    {
+        D3D11_BLEND_DESC        bs_desc;
+        ID3D11BlendState*       bs_state;
+
+    } BSCacheEntry;
+
+    typedef std::map<dsstring, RSCacheEntry>                        RSCache;
+    typedef std::map<dsstring, BSCacheEntry>                        BSCache;
+
     Config                                                          m_config;
 
 
@@ -143,8 +162,8 @@ protected:
     D3D11_RASTERIZER_DESC                                           m_currentRSDesc;
     D3D11_BLEND_DESC                                                m_currentBlendDesc;
 
-    std::map<dsstring, ID3D11RasterizerState*>                      m_rsCache;
-    std::map<dsstring, ID3D11BlendState*>                           m_bsCache;
+    RSCache                                                         m_rsCache;
+    BSCache                                                         m_bsCache;
 
     D3D11_VIEWPORT                                                  m_viewport;
 
