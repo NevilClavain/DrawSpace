@@ -77,7 +77,7 @@ void MainLoopService::Run( void )
     //m_texturepass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
 
-    //m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_tm.GetFPS() );
+    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps", m_tm.GetFPS() );
 
     m_renderer->FlipScreen();
 
@@ -169,12 +169,11 @@ void MainLoopService::create_passes( void )
     m_finalpass->GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
     m_finalpass->GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
 
-    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    //m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
     m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
-    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+    
+    //m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
     m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
-    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
     
 
     //m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );

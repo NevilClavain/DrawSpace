@@ -338,14 +338,14 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     rsDesc.FillMode = D3D11_FILL_SOLID;
 
     // cull cw
-    rsDesc.CullMode = D3D11_CULL_NONE; //D3D11_CULL_FRONT;   
+    rsDesc.CullMode = D3D11_CULL_FRONT;   
     rsDesc.FrontCounterClockwise = FALSE;
     // cull cw
 
     rsDesc.DepthBias = 0;
     rsDesc.SlopeScaledDepthBias = 0.0f;
     rsDesc.DepthBiasClamp = 0.0f;
-    rsDesc.DepthClipEnable = FALSE;
+    rsDesc.DepthClipEnable = TRUE;
     rsDesc.ScissorEnable = FALSE;
     rsDesc.MultisampleEnable = FALSE;
     rsDesc.AntialiasedLineEnable = FALSE;
@@ -1639,8 +1639,6 @@ void D3D11Renderer::GetRenderCharacteristics( Characteristics& p_characteristics
 
 void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... )
 {
-    
-
     char buffer[512];
     _vsnprintf( buffer, 512, p_format, (va_list)( &p_format + 1 ) );
 
@@ -1653,7 +1651,8 @@ void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_po
 		p_posX,// X position
 		p_posY,// Y position
 		color32,// Text color, 0xAaBbGgRr
-		0// Flags
+		FW1_NOGEOMETRYSHADER | FW1_RESTORESTATE// Flags
+        
 	);
 }
 
