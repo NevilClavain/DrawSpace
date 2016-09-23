@@ -33,6 +33,8 @@ protected:
 
     DrawSpace::Interface::Renderer*         m_renderer;
     DrawSpace::Utils::TimeManager           m_tm;
+    dsstring                                m_device;
+    dsstring                                m_pluginDescr;
 
     DrawSpace::FinalPass*                   m_finalpass;
     DrawSpace::IntermediatePass*            m_texturepass;
