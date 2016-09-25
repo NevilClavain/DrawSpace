@@ -173,6 +173,7 @@ protected:
     int                                                             m_currentDevice;
 
     std::map<dsstring, TextureInfos*>                               m_textures_base;
+    std::map<DrawSpace::Core::Texture*, TextureInfos*>              m_targettextures_base;
     std::map<dsstring, MesheData*>                                  m_meshes_base;
     std::map<dsstring, ShadersData*>                                m_shaders_bases;
     std::map<dsstring, DrawSpace::Core::Fx*>                        m_fx_bases;

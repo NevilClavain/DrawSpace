@@ -82,10 +82,10 @@ void MainLoopService::Run( void )
 
     m_scenenodegraph.ComputeTransformations( m_tm );
 
-    //m_texturepass->GetRenderingQueue()->Draw();
+    m_texturepass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
 
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s - %s", m_tm.GetFPS(), m_device.c_str(), m_pluginDescr.c_str() );
+    //m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s - %s", m_tm.GetFPS(), m_device.c_str(), m_pluginDescr.c_str() );
 
     m_renderer->FlipScreen();
 
@@ -148,8 +148,8 @@ void MainLoopService::create_passes( void )
     m_texturepass->Initialize();
     
     //m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
-    //m_texturepass->GetRenderingQueue()->EnableTargetClearing( true );
-    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 145, 230, 230, 255 );
+    m_texturepass->GetRenderingQueue()->EnableTargetClearing( true );
+    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 255, 0, 0, 255 );
 
     
 
@@ -160,7 +160,7 @@ void MainLoopService::create_passes( void )
 
     m_finalpass->GetRenderingQueue()->SetTargetClearingColor( 255, 255, 255, 255 );
 
-    m_finalpass->CreateViewportQuad();
+    m_finalpass->CreateViewportQuad( -5.0 );
     //m_finalpass->GetRenderingQueue()->EnableTargetClearing( true );
     //m_finalpass->GetRenderingQueue()->EnableDepthClearing( true );
     m_finalpass->GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
@@ -189,10 +189,10 @@ void MainLoopService::create_passes( void )
     m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     
 
-    //m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
+    m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
 
-    m_finalpass->GetViewportQuad()->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "plasma2.jpg" ) ), 0 );
-    m_finalpass->GetViewportQuad()->GetTexture( 0 )->LoadFromFile();
+    //m_finalpass->GetViewportQuad()->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "plasma2.jpg" ) ), 0 );
+    //m_finalpass->GetViewportQuad()->GetTexture( 0 )->LoadFromFile();
 
 }
 

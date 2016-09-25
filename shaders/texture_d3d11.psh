@@ -11,7 +11,7 @@ SamplerState sam            : register(s0);
 
 struct PS_INTPUT 
 {
-	float4 Position : POSITION0;
+    float4 Position : SV_POSITION;
 	float2 TexCoord0: TEXCOORD0;
 };
 

@@ -466,12 +466,18 @@ void D3D11Renderer::ClearDepth( dsreal p_value )
 
 void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
 {
-
+    if( m_targettextures_base.count( p_texture ) > 0 )
+    {
+        m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_targettextures_base[p_texture]->rendertextureTargetView, m_pDepthStencilView );
+    }
+    else
+    {
+        _DSEXCEPTION( "D3D11 : unknown render target" )
+    }
 }
 
 void D3D11Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
 {
-
 }
 
 bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
@@ -680,8 +686,9 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         {
             case Texture::RENDERPURPOSE_COLOR:
 
-                //format = DXGI_FORMAT_R8G8B8A8_UNORM;
-                format = DXGI_FORMAT_R8G8B8A8_UINT;
+                //format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+                format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                //format = DXGI_FORMAT_R8G8B8A8_UINT;                
                 bpp = 4;
                 break;
 
@@ -743,7 +750,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 	    hRes = m_lpd3ddevice->CreateRenderTargetView( d3dt11, &renderTargetViewDesc, &rendertextureTargetView );
         D3D11_CHECK( CreateRenderTargetView )
 
-        // creation du shader resource view associé 
+        // creation du shader resource view associé
+        ZeroMemory( &shaderResourceViewDesc, sizeof( shaderResourceViewDesc ) );
 	    shaderResourceViewDesc.Format = format;
 	    shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	    shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
@@ -764,6 +772,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         texture_infos->rendertextureTargetView = rendertextureTargetView;
 
         m_textures_base[path] = texture_infos;
+
+        m_targettextures_base[p_texture] = texture_infos;
 
         *p_data = (void*)texture_infos;
     }
@@ -939,6 +949,8 @@ bool D3D11Renderer::SetVertexTexture( void* p_data, int p_stage )
 
 bool D3D11Renderer::UnsetTexture( int p_stage )
 {
+    ID3D11ShaderResourceView* nullSRV[1] = {nullptr};
+    m_lpd3ddevcontext->PSSetShaderResources( p_stage, 1, nullSRV );
     return true;
 }
 
