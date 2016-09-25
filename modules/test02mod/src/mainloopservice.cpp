@@ -85,7 +85,7 @@ void MainLoopService::Run( void )
     m_texturepass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
 
-    //m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s - %s", m_tm.GetFPS(), m_device.c_str(), m_pluginDescr.c_str() );
+    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s - %s", m_tm.GetFPS(), m_device.c_str(), m_pluginDescr.c_str() );
 
     m_renderer->FlipScreen();
 
@@ -161,7 +161,7 @@ void MainLoopService::create_passes( void )
     m_finalpass->GetRenderingQueue()->SetTargetClearingColor( 255, 255, 255, 255 );
 
     m_finalpass->CreateViewportQuad( -5.0 );
-    //m_finalpass->GetRenderingQueue()->EnableTargetClearing( true );
+    m_finalpass->GetRenderingQueue()->EnableTargetClearing( true );
     //m_finalpass->GetRenderingQueue()->EnableDepthClearing( true );
     m_finalpass->GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
     //m_finalpass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water.vsh", false ) ) );

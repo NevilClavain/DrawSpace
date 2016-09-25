@@ -145,6 +145,8 @@ protected:
     ID3D11Device*                                                   m_lpd3ddevice;                     
     ID3D11DeviceContext*                                            m_lpd3ddevcontext;
 
+    ID3D11RenderTargetView*                                         m_currentTarget;
+
     ID3D11SamplerState*                                             m_linearFilterSamplerState;
     ID3D11SamplerState*                                             m_pointFilterSamplerState;
     ID3D11SamplerState*                                             m_anisotropicFilterSamplerState;

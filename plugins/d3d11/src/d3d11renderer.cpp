@@ -43,7 +43,8 @@ m_screentarget( NULL ),
 m_inputLayout( NULL ),
 m_currentDevice( -1 ),
 m_pDepthStencil( NULL ),
-m_pDepthStencilView( NULL )
+m_pDepthStencilView( NULL ),
+m_currentTarget( NULL )
 {
 
 }
@@ -435,6 +436,8 @@ void D3D11Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long 
 void D3D11Renderer::BeginScreen( void )
 {
     m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_screentarget, m_pDepthStencilView );
+
+    m_currentTarget = m_screentarget;
 }
 
 void D3D11Renderer::EndScreen( void )
@@ -456,7 +459,7 @@ void D3D11Renderer::ClearScreen( unsigned char p_r, unsigned char p_g, unsigned 
     clearcolor[2] = p_b / 255.0;
     clearcolor[3] = p_a / 255.0;
 
-    m_lpd3ddevcontext->ClearRenderTargetView( m_screentarget, clearcolor );
+    m_lpd3ddevcontext->ClearRenderTargetView( m_currentTarget, clearcolor );
 }
 
 void D3D11Renderer::ClearDepth( dsreal p_value )
@@ -469,6 +472,8 @@ void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
     if( m_targettextures_base.count( p_texture ) > 0 )
     {
         m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_targettextures_base[p_texture]->rendertextureTargetView, m_pDepthStencilView );
+
+        m_currentTarget = m_targettextures_base[p_texture]->rendertextureTargetView;
     }
     else
     {
