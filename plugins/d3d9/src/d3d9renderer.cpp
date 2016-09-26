@@ -1673,7 +1673,8 @@ void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
 
                 if( "none" == arg )
                 {
-                    ftype = D3DTEXF_NONE;
+                    //ftype = D3DTEXF_NONE;
+                    ftype = D3DTEXF_POINT;
                 }
                 else if( "point" == arg )
                 {
@@ -1704,7 +1705,8 @@ void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
 
                 if( "none" == arg )
                 {
-                    ftype = D3DTEXF_NONE;
+                    //ftype = D3DTEXF_NONE;
+                    ftype = D3DTEXF_POINT;
                 }
                 else if( "point" == arg )
                 {
