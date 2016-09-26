@@ -24,25 +24,38 @@
 #define _MAINLOOPSERVICE_H_
 
 #include "module_service.h"
-#include "pass.h"
-#include "scenenodegraph.h"
+#include "drawspace.h"
 
 class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    DrawSpace::Interface::Renderer*         m_renderer;
-    DrawSpace::Utils::TimeManager           m_tm;
-    dsstring                                m_device;
-    dsstring                                m_pluginDescr;
+    DrawSpace::Interface::Renderer*                                     m_renderer;
+    DrawSpace::Utils::TimeManager                                       m_tm;
+    dsstring                                                            m_device;
+    dsstring                                                            m_pluginDescr;
 
-    DrawSpace::FinalPass*                   m_finalpass;
-    DrawSpace::IntermediatePass*            m_texturepass;
+    DrawSpace::FinalPass*                                               m_finalpass;
+    DrawSpace::IntermediatePass*                                        m_texturepass;
 
-    DrawSpace::Core::SceneNodeGraph         m_scenenodegraph;
+    DrawSpace::Spacebox*                                                m_spacebox;
+    DrawSpace::Core::SceneNode<DrawSpace::Spacebox>*                    m_spacebox_node;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_spacebox_transfo_node;
+
+
+    DrawSpace::Dynamics::CameraPoint*                                   m_camera;
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_camera_node;
+
+    DrawSpace::Core::FPSMovement                                        m_fpsmove;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::FPSMovement>*           m_fpsmove_node;
+
+    DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
     void    create_passes( void );
     void    init_passes( void );
+
+    void    create_spacebox( void );
+    void    create_camera( void );
 
 public:
     MainLoopService( void );

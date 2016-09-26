@@ -321,7 +321,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_anisotropicFilterSamplerState );
     D3D11_CHECK( CreateSamplerState )
 
-    ID3D11SamplerState* ss_array[1] = { m_linearFilterSamplerState };
+    ID3D11SamplerState* ss_array[1] = { m_pointFilterSamplerState };
 
     // a mettre en option dans l'interface renderer ?
     for( long i = 0; i < 8; i++ )
@@ -1408,7 +1408,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
                 if( "none" == arg )
                 {
-                    _DSEXCEPTION( "'none' texture filter type is unsupported for D3D11" )
+                    ss_array[0] = m_pointFilterSamplerState;
                 }
                 else if( "point" == arg )
                 {
@@ -1437,7 +1437,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
                 if( "none" == arg )
                 {
-                    _DSEXCEPTION( "'none' texture filter type is unsupported for D3D11" )
+                    ss_array[0] = m_pointFilterSamplerState;
                 }
                 else if( "point" == arg )
                 {
