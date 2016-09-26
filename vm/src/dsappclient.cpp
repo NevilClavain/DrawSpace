@@ -35,6 +35,8 @@ m_mainloopservice( NULL )
 {    
     _INIT_LOGGER( "logvm.conf" )
     m_w_title = "DrawSpace VM";
+
+    m_mouse_circularmode_update_cb = _DRAWSPACE_NEW_( MouseCircularModeupdateCallback, MouseCircularModeupdateCallback( this, &dsAppClient::on_mousecircularmode_update ) );
 }
 
 dsAppClient::~dsAppClient( void )
@@ -153,4 +155,9 @@ void dsAppClient::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
     {
         m_mainloopservice->OnAppEvent( p_wParam, p_lParam );
     }
+}
+
+void dsAppClient::on_mousecircularmode_update( bool p_state )
+{
+    m_mouse_circularmode = p_state;
 }
