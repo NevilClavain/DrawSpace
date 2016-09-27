@@ -43,7 +43,7 @@ void ShipService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p
 
 }
 
-void ShipService::Init( DrawSpace::Logger::Configuration* p_logconf )
+void ShipService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
 {
 }
 

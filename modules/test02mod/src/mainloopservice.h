@@ -51,11 +51,15 @@ protected:
 
     DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
+    DrawSpace::Core::BaseCallback<void, bool>*                          m_mousecircularmode_cb;
+
     void    create_passes( void );
     void    init_passes( void );
 
     void    create_spacebox( void );
     void    create_camera( void );
+
+    void    set_mouse_circular_mode( bool p_state );
 
 public:
     MainLoopService( void );
@@ -63,7 +67,7 @@ public:
 
     virtual void                            GetLocalKeys( const dsstring p_instanceName, std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
     virtual void                            GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
-    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf );
+    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb );
     virtual void                            Run( void );
     virtual void                            Release( void );
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );

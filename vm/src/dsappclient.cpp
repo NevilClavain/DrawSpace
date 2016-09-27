@@ -61,7 +61,7 @@ bool dsAppClient::OnIdleAppInit( void )
     if( m_mainloopservice )
     {
         _DSDEBUG(logger, dsstring("mainloop service initialisation"))
-        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance() );
+        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance(), m_mouse_circularmode_update_cb );
         return true;
     }
     else

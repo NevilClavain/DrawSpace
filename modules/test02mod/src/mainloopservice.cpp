@@ -48,8 +48,10 @@ void MainLoopService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*
 
 }
 
-void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf )
+void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
 {
+    m_mousecircularmode_cb = p_mousecircularmode_cb;
+
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 
@@ -77,6 +79,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf )
     m_renderer->GetDeviceDescr( dd );
 
     m_device = dd.description;
+
+    set_mouse_circular_mode( true );
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
@@ -107,6 +111,14 @@ void MainLoopService::Release( void )
 BaseSceneNode* MainLoopService::GetSceneNode( void )
 {
     return NULL;
+}
+
+void MainLoopService::set_mouse_circular_mode( bool p_state )
+{
+    if( m_mousecircularmode_cb )
+    {
+        (*m_mousecircularmode_cb)( p_state );
+    }
 }
 
 void MainLoopService::OnKeyPress( long p_key )

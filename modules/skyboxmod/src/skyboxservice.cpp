@@ -43,7 +43,7 @@ void SkyboxService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>&
 
 }
 
-void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf )
+void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
 {
 }
 

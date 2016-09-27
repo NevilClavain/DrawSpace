@@ -39,7 +39,7 @@ public:
 
     virtual void                            GetLocalKeys( const dsstring p_instanceName, std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
     virtual void                            GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
-    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf );
+    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb );
     virtual void                            Run( void );
     virtual void                            Release( void );
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );
