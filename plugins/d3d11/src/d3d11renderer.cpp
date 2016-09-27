@@ -176,8 +176,12 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     hRes = D3D11CreateDeviceAndSwapChain( NULL, D3D_DRIVER_TYPE_HARDWARE,
                                   NULL,
                                   createDeviceFlags,
+                                  /*
                                   featureLevels,
                                   numFeatureLevels,
+                                  */
+                                  NULL,
+                                  0,
                                   D3D11_SDK_VERSION,
                                   &sd,
                                   &m_lpd3dswapchain,
