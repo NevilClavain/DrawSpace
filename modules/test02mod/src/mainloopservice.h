@@ -35,12 +35,37 @@ protected:
     dsstring                                                            m_device;
     dsstring                                                            m_pluginDescr;
 
+    DrawSpace::Interface::MesheImport*                                  m_meshe_import;
+
+    DrawSpace::Dynamics::World                                          m_world;
+
     DrawSpace::FinalPass*                                               m_finalpass;
     DrawSpace::IntermediatePass*                                        m_texturepass;
 
     DrawSpace::Spacebox*                                                m_spacebox;
     DrawSpace::Core::SceneNode<DrawSpace::Spacebox>*                    m_spacebox_node;
     DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_spacebox_transfo_node;
+
+    DrawSpace::Chunk*                                                   m_chunk;
+    DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_chunk_node;
+    DrawSpace::Dynamics::InertBody*                                     m_cube_body;
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>*         m_cube_body_node;
+
+
+    DrawSpace::Chunk*                                                   m_cube2;
+    DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_cube2_node;
+    DrawSpace::Dynamics::Collider*                                      m_cube2_collider;
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::Collider>*          m_cube2_colider_node;
+    DrawSpace::Core::FreeMovement                                       m_freemove;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::FreeMovement>*          m_freemove_node;
+
+
+    DrawSpace::Dynamics::InertBody*                                     m_ground_body;
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>*         m_ground_body_node;
+
+    DrawSpace::Chunk*                                                   m_ground;
+    DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_ground_node;
+
 
 
     DrawSpace::Dynamics::CameraPoint*                                   m_camera;
@@ -58,6 +83,8 @@ protected:
 
     void    create_spacebox( void );
     void    create_camera( void );
+    void    create_cubes( void );
+    void    create_ground( void );
 
     void    set_mouse_circular_mode( bool p_state );
 
