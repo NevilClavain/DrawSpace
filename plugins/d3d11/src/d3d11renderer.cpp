@@ -260,7 +260,9 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     hRes = m_lpd3ddevice->CreateDepthStencilState( &dsDesc, &m_DSState_DepthTestEnabled );
     D3D11_CHECK( CreateDepthStencilState )
 
-    m_lpd3ddevcontext->OMSetDepthStencilState( m_DSState_DepthTestDisabled, 1 );
+    // dans D3D9 plugin, zbuffer est activé par défaut (cf doc)
+    // donc idem ici
+    m_lpd3ddevcontext->OMSetDepthStencilState( m_DSState_DepthTestEnabled, 1 );
 
 
     // Create the depth stencil view
@@ -319,7 +321,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_pointFilterSamplerState );
     D3D11_CHECK( CreateSamplerState )
 
-    sampDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_linearFilterSamplerState );
     D3D11_CHECK( CreateSamplerState )
 
@@ -344,10 +346,20 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     rsDesc.FillMode = D3D11_FILL_SOLID;
 
+    // dans d3d9, le cull mode par defaut est ccw (cf doc)
+    // donc idem ici
+
+    // cull ccw
+    rsDesc.CullMode = D3D11_CULL_BACK;   
+    rsDesc.FrontCounterClockwise = FALSE;
+    // cull ccw
+
+    /*
     // cull cw
     rsDesc.CullMode = D3D11_CULL_FRONT;   
     rsDesc.FrontCounterClockwise = FALSE;
     // cull cw
+    */
 
     rsDesc.DepthBias = 0;
     rsDesc.SlopeScaledDepthBias = 0.0f;
@@ -470,7 +482,7 @@ void D3D11Renderer::ClearScreen( unsigned char p_r, unsigned char p_g, unsigned 
 
 void D3D11Renderer::ClearDepth( dsreal p_value )
 {
-    m_lpd3ddevcontext->ClearDepthStencilView( m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+    m_lpd3ddevcontext->ClearDepthStencilView( m_pDepthStencilView, D3D11_CLEAR_DEPTH, p_value, 0 );
 }
 
 void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
