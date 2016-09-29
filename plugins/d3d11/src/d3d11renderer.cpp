@@ -530,7 +530,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 
     // vertex buffer creation
     d3d11vertex* v = new d3d11vertex[nb_vertices];
-    for( size_t i = 0; i < nb_vertices; i++ )
+    for( long i = 0; i < nb_vertices; i++ )
     {
         Core::Vertex vertex;
         meshe->GetVertex( i, vertex );
@@ -544,8 +544,8 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
         {
             v[i].t[j].x = vertex.tu[j];
             v[i].t[j].y = vertex.tv[j];
-            v[i].t[j].z = vertex.tv[j];
-            v[i].t[j].w = vertex.tw[j];
+            v[i].t[j].z = vertex.tw[j];
+            v[i].t[j].w = vertex.ta[j];
         }
     }
 
@@ -553,10 +553,10 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 	id.SysMemPitch = 0;//sizeof( d3d11vertex );
 	id.SysMemSlicePitch = 0;
 
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	vertexBufferDesc.ByteWidth = nb_vertices * sizeof( d3d11vertex );
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDesc.MiscFlags = 0; 
 
     hRes = m_lpd3ddevice->CreateBuffer( &vertexBufferDesc, &id, &meshe_data->vertex_buffer );
@@ -583,10 +583,10 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 	id.SysMemPitch = 0;//sizeof( d3d11triangle );
 	id.SysMemSlicePitch = 0;
 
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	indexBufferDesc.ByteWidth = nb_triangles * sizeof( d3d11triangle );
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	indexBufferDesc.MiscFlags = 0; 
 
     hRes = m_lpd3ddevice->CreateBuffer( &indexBufferDesc, &id, &meshe_data->index_buffer );
@@ -609,7 +609,20 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 
 void D3D11Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
 {
+    MesheData* meshe_data = (MesheData*)p_data;
+   
+    meshe_data->index_buffer->Release();
+    meshe_data->vertex_buffer->Release();
 
+    _DRAWSPACE_DELETE_( meshe_data );
+
+    dsstring hash;
+    p_meshe->GetMD5( hash );
+
+    if( m_meshes_base.count( hash ) > 0 )
+    {
+        m_meshes_base.erase( hash );
+    }
 }
 
 bool D3D11Renderer::SetMeshe( void* p_data )
@@ -630,16 +643,167 @@ bool D3D11Renderer::SetMeshe( void* p_data )
 
 bool D3D11Renderer::UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data )
 {
+    DECLARE_D3D11ASSERT_VARS
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+    MesheData* meshe_data = (MesheData*)p_data;
+
+    hRes = m_lpd3ddevcontext->Map( meshe_data->index_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    D3D11_CHECK( m_lpd3ddevcontext )
+
+    d3d11triangle* t = (d3d11triangle*)mappedResource.pData;
+
+    long nb_triangles = p_meshe->GetTrianglesListSize();
+
+    for( long i = 0; i < nb_triangles; i++ )
+    {
+        Core::Triangle triangle;
+        p_meshe->GetTriangles( i, triangle );
+
+        t[i].vertex1 = triangle.vertex1;
+        t[i].vertex2 = triangle.vertex2;
+        t[i].vertex3 = triangle.vertex3;
+    }
+
+    m_lpd3ddevcontext->Unmap( meshe_data->vertex_buffer, 0 );
     return true;
 }
 
 bool D3D11Renderer::UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data )
 {
+    DECLARE_D3D11ASSERT_VARS
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+    MesheData* meshe_data = (MesheData*)p_data;
+
+    hRes = m_lpd3ddevcontext->Map( meshe_data->vertex_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    D3D11_CHECK( m_lpd3ddevcontext )
+
+    d3d11vertex* v = (d3d11vertex*)mappedResource.pData;
+
+    long nb_vertices = p_meshe->GetVertexListSize();
+
+    for( long i = 0; i < nb_vertices; i++ )
+    {
+        Core::Vertex vertex;
+        p_meshe->GetVertex( i, vertex );
+
+        v[i].pos.x = (float)vertex.x;
+        v[i].pos.y = (float)vertex.y;
+        v[i].pos.z = (float)vertex.z;
+
+        for( size_t j = 0; j < 9; j++ )
+        {
+            v[i].t[j].x = vertex.tu[j];
+            v[i].t[j].y = vertex.tv[j];
+            v[i].t[j].z = vertex.tw[j];
+            v[i].t[j].w = vertex.ta[j];
+        }
+    }
+
+    m_lpd3ddevcontext->Unmap( meshe_data->vertex_buffer, 0 );
     return true;
 }
 
 bool D3D11Renderer::UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsDisplayList& p_list, void* p_data )
 {
+    DECLARE_D3D11ASSERT_VARS
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+    MesheData* meshe_data = (MesheData*)p_data;
+
+    hRes = m_lpd3ddevcontext->Map( meshe_data->vertex_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    D3D11_CHECK( m_lpd3ddevcontext )
+
+    d3d11vertex* v = (d3d11vertex*)mappedResource.pData;
+
+    for( size_t i = 0; i < p_list.size(); i++ )
+    {
+   
+        // vertex x,y,z set by impostors shaders
+
+        v->pos.x = 0.0;
+        v->pos.y = 0.0;
+        v->pos.z = 0.0;
+
+        v->t[0].x = p_list[i].u1;
+        v->t[0].y = p_list[i].v1;
+        v->normale.x = 1.0;
+        v->t[6].x = p_list[i].spherical_ray;
+        v->t[6].y = p_list[i].spherical_longitud;
+        v->t[6].z = p_list[i].spherical_latitud;
+        v->t[7].x = p_list[i].localpos[0];
+        v->t[7].y = p_list[i].localpos[1];
+        v->t[7].z = p_list[i].localpos[2];
+        v->t[8].x = p_list[i].width_scale;
+        v->t[8].y = p_list[i].height_scale;
+
+
+        v++;
+
+        // vertex x,y,z set by impostors shaders
+
+        v->pos.x = 0.0;
+        v->pos.y = 0.0;
+        v->pos.z = 0.0;
+
+        v->t[0].x = p_list[i].u2;
+        v->t[0].y = p_list[i].v2;
+        v->normale.x = 2.0;
+        v->t[6].x = p_list[i].spherical_ray;
+        v->t[6].y = p_list[i].spherical_longitud;
+        v->t[6].z = p_list[i].spherical_latitud;
+        v->t[7].x = p_list[i].localpos[0];
+        v->t[7].y = p_list[i].localpos[1];
+        v->t[7].z = p_list[i].localpos[2];
+        v->t[8].x = p_list[i].width_scale;
+        v->t[8].y = p_list[i].height_scale;
+
+        v++;
+
+        // vertex x,y,z set by impostors shaders
+
+
+        v->pos.x = 0.0;
+        v->pos.y = 0.0;
+        v->pos.z = 0.0;
+
+        v->t[0].x = p_list[i].u3;
+        v->t[0].y = p_list[i].v3;
+        v->normale.x = 3.0;
+        v->t[6].x = p_list[i].spherical_ray;
+        v->t[6].y = p_list[i].spherical_longitud;
+        v->t[6].z = p_list[i].spherical_latitud;
+        v->t[7].x = p_list[i].localpos[0];
+        v->t[7].y = p_list[i].localpos[1];
+        v->t[7].z = p_list[i].localpos[2];
+        v->t[8].x = p_list[i].width_scale;
+        v->t[8].y = p_list[i].height_scale;
+
+        v++;
+        
+        // vertex x,y,z set by impostors shaders
+
+        v->pos.x = 0.0;
+        v->pos.y = 0.0;
+        v->pos.z = 0.0;
+
+        v->t[0].x = p_list[i].u4;
+        v->t[0].y = p_list[i].v4;
+        v->normale.x = 4.0;
+        v->t[6].x = p_list[i].spherical_ray;
+        v->t[6].y = p_list[i].spherical_longitud;
+        v->t[6].z = p_list[i].spherical_latitud;
+        v->t[7].x = p_list[i].localpos[0];
+        v->t[7].y = p_list[i].localpos[1];
+        v->t[7].z = p_list[i].localpos[2];
+        v->t[8].x = p_list[i].width_scale;
+        v->t[8].y = p_list[i].height_scale;
+
+        v++;
+    }
+
+    m_lpd3ddevcontext->Unmap( meshe_data->vertex_buffer, 0 );
     return true;
 }
 
