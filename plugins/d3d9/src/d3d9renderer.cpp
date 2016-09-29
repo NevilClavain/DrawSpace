@@ -582,7 +582,7 @@ bool D3D9Renderer::UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_
 {
     MesheData* meshe_data = (MesheData*)p_data;
 
-    d3d9triangle *t;
+    d3d9triangle* t;
     meshe_data->index_buffer->Lock( 0, 0, (VOID **)&t, 0 );
 
     long nb_triangles = p_meshe->GetTrianglesListSize();
@@ -595,7 +595,7 @@ bool D3D9Renderer::UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_
         t->vertex1 = triangle.vertex1;
         t->vertex2 = triangle.vertex2;
         t->vertex3 = triangle.vertex3;
-    }   
+    }
     meshe_data->index_buffer->Unlock();
 
     return true;
