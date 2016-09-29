@@ -1115,7 +1115,34 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 
 void D3D11Renderer::DestroyTexture( void* p_data )
 {
+    TextureInfos* ti = (TextureInfos*)p_data;
 
+    if( ti->texture )
+    {
+        ti->texture->Release();
+    }
+    if( ti->rendertextureTargetView )
+    {
+        ti->rendertextureTargetView->Release();
+    }
+    if( ti->textureShaderResourceView )
+    {
+        ti->textureShaderResourceView->Release();
+    }
+
+    if( m_textures_base.count( ti->path ) > 0 )
+    {
+        m_textures_base.erase( ti->path );
+    }
+    ti->texture_instance->SetRenderData( NULL );
+
+
+     if( m_targettextures_base.count( ti->texture_instance ) > 0 )
+     {
+        m_targettextures_base.erase( ti->texture_instance );
+     }
+
+     _DRAWSPACE_DELETE_( ti );
 }
 
 bool D3D11Renderer::SetTexture( void* p_data, int p_stage )
