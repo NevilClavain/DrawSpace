@@ -914,6 +914,22 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         textureDesc.CPUAccessFlags = 0;
         textureDesc.MiscFlags = 0;
 
+        /*
+        pour une texture qui n'est pas destinée a un shader, mais à être lue par le CPU
+
+        textureDesc.Width = rw;
+        textureDesc.Height = rh;
+        textureDesc.MipLevels = 1;
+        textureDesc.ArraySize = 1;
+        textureDesc.Format = format;
+        textureDesc.SampleDesc.Count = 1;
+        textureDesc.Usage = D3D11_USAGE_STAGING;
+        textureDesc.BindFlags = 0;
+        textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        textureDesc.MiscFlags = 0;
+        
+        */
+
         // Create the render target texture.
         hRes = m_lpd3ddevice->CreateTexture2D( &textureDesc, NULL, &d3dt11 );
         D3D11_CHECK( CreateTexture2D )
