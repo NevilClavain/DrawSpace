@@ -949,6 +949,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         d3dt11->GetDesc( &descr );
 
         texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+        texture_infos->content_access = true;
         texture_infos->bits = NULL;
         texture_infos->path = path;
         texture_infos->texture_instance = p_texture;
@@ -976,6 +977,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             D3D11_CHECK( D3DX11CreateShaderResourceViewFromMemory )
 
             texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+            texture_infos->content_access = false;
             texture_infos->bits = NULL;
             texture_infos->path = path;
             texture_infos->texture_instance = p_texture;
@@ -1025,9 +1027,9 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             desc.Format = format;
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
-            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.Usage = D3D11_USAGE_DYNAMIC;
             desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-            desc.CPUAccessFlags = 0;
+            desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
             desc.MiscFlags = 0;
 
             hRes = m_lpd3ddevice->CreateTexture2D( &desc, NULL, &d3dt11 );
@@ -1035,6 +1037,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             D3D11_CHECK( CreateTexture2D )
 
             texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+            texture_infos->content_access = true;
             texture_infos->bits = NULL;
             texture_infos->path = path;
             texture_infos->texture_instance = p_texture;
@@ -1184,6 +1187,11 @@ bool D3D11Renderer::AllocTextureContent( void* p_texturedata )
 {
     TextureInfos* ti = (TextureInfos*)p_texturedata;
 
+    if( !ti->content_access )
+    {
+        _DSEXCEPTION( "trying to alloc content for a non accessible texture content" )
+    }
+
     // si pas deja alloue
     if( NULL == ti->bits )
     {
@@ -1231,7 +1239,7 @@ void D3D11Renderer::ReleaseTextureContent( void* p_texturedata )
 {
     TextureInfos* ti = (TextureInfos*)p_texturedata;
 
-    if( ti->bits )
+    if( ti->content_access && ti->bits )
     {
         _DRAWSPACE_DELETE_N_( ti->bits );
         ti->bits = NULL;
@@ -1241,16 +1249,33 @@ void D3D11Renderer::ReleaseTextureContent( void* p_texturedata )
 void* D3D11Renderer::GetTextureContentPtr( void* p_texturedata )
 {
     TextureInfos* ti = (TextureInfos*)p_texturedata;
+    if( !ti->content_access )
+    {
+        _DSEXCEPTION( "trying to access content for a non accessible texture content" )
+    }
+
     return ti->bits;
 }
 
 bool D3D11Renderer::CopyTextureContent( void* p_texturedata )
 {
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
+    if( !ti->content_access )
+    {
+        _DSEXCEPTION( "trying to access content for a non accessible texture content" )
+    }
+    
     return true;
 }
 
 bool D3D11Renderer::UpdateTextureContent( void* p_texturedata )
 {
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
+    if( !ti->content_access )
+    {
+        _DSEXCEPTION( "trying to access content for a non accessible texture content" )
+    }
+
     return true;
 }
 

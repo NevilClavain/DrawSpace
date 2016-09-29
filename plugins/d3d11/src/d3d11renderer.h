@@ -85,6 +85,7 @@ protected:
         ID3D11RenderTargetView*                                     rendertextureTargetView;
         ID3D11ShaderResourceView*                                   textureShaderResourceView;
         void*                                                       bits;
+        bool                                                        content_access; // si false, on ne peut acceder au contenu de cette texture
 
     } TextureInfos;
 
