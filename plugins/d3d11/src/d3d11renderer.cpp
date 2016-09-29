@@ -1899,7 +1899,32 @@ void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_po
 
 void D3D11Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
 {
+    DrawSpace::Utils::Matrix final_view;
+    DrawSpace::Utils::Matrix inv;
+    DrawSpace::Utils::Matrix proj;
 
+    DrawSpace::Utils::Vector res;
+    DrawSpace::Utils::Vector point = p_point;
+
+    inv.Identity();
+    inv( 2, 2 ) = -1.0;
+
+    final_view = p_view * inv;
+
+    DrawSpace::Utils::Vector point2;
+    final_view.Transform( &point, &point2 );
+
+    p_outz = point2[2];
+
+    if( point2[2] < 1.0 )
+    {
+        point2[2] = 1.0;
+    }
+
+    p_proj.Transform( &point2, &res );
+
+    p_outx = 0.5 * m_characteristics.width_viewport * ( res[0] / ( res[2] + 1.0 ) );
+    p_outy = 0.5 * m_characteristics.height_viewport * ( res[1] / ( res[2] + 1.0 ) );
 }
 
 
