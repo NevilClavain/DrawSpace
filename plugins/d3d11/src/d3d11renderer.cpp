@@ -873,9 +873,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         {
             case Texture::RENDERPURPOSE_COLOR:
 
-                //format = DXGI_FORMAT_R32G32B32A32_FLOAT;
                 format = DXGI_FORMAT_R8G8B8A8_UNORM;
-                //format = DXGI_FORMAT_R8G8B8A8_UINT;                
                 bpp = 4;
                 break;
 
@@ -951,6 +949,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         d3dt11->GetDesc( &descr );
 
         texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+        texture_infos->bits = NULL;
         texture_infos->path = path;
         texture_infos->texture_instance = p_texture;
         texture_infos->texture = d3dt11;
@@ -977,6 +976,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             D3D11_CHECK( D3DX11CreateShaderResourceViewFromMemory )
 
             texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+            texture_infos->bits = NULL;
             texture_infos->path = path;
             texture_infos->texture_instance = p_texture;
             texture_infos->texture = NULL;
@@ -1035,6 +1035,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             D3D11_CHECK( CreateTexture2D )
 
             texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+            texture_infos->bits = NULL;
             texture_infos->path = path;
             texture_infos->texture_instance = p_texture;
             texture_infos->texture = d3dt11;
@@ -1130,6 +1131,12 @@ void D3D11Renderer::DestroyTexture( void* p_data )
         ti->textureShaderResourceView->Release();
     }
 
+    if( ti->bits )
+    {
+        _DRAWSPACE_DELETE_N_( ti->bits );
+        ti->bits = NULL;
+    }
+
     if( m_textures_base.count( ti->path ) > 0 )
     {
         m_textures_base.erase( ti->path );
@@ -1175,17 +1182,66 @@ bool D3D11Renderer::UnsetVertexTexture( int p_stage )
 
 bool D3D11Renderer::AllocTextureContent( void* p_texturedata )
 {
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
+
+    // si pas deja alloue
+    if( NULL == ti->bits )
+    {
+        int bpp;
+        switch( ti->descr.Format )
+        {
+            case DXGI_FORMAT_R8G8B8A8_TYPELESS:
+            case DXGI_FORMAT_R8G8B8A8_UNORM:
+            case DXGI_FORMAT_R8G8B8A8_UINT:
+            case DXGI_FORMAT_R8G8B8A8_SNORM:
+            case DXGI_FORMAT_R8G8B8A8_SINT:
+                bpp = 4;
+                break;
+
+            case DXGI_FORMAT_R16_FLOAT:
+                bpp = 2;
+                break;
+
+            case DXGI_FORMAT_R32_FLOAT:
+                bpp = 4;
+                break;
+
+            case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                bpp = 16;
+                break;
+
+            case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                bpp = 8;
+                break;
+
+            default:
+                bpp = -1;
+                break;        }
+
+        if( bpp != -1 )
+        {
+            long blocsize = bpp * ti->descr.Width * ti->descr.Height;
+            ti->bits = _DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char[blocsize], blocsize );
+        }
+    }
     return true;
 }
 
 void D3D11Renderer::ReleaseTextureContent( void* p_texturedata )
 {
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
 
+    if( ti->bits )
+    {
+        _DRAWSPACE_DELETE_N_( ti->bits );
+        ti->bits = NULL;
+    }
 }
 
 void* D3D11Renderer::GetTextureContentPtr( void* p_texturedata )
 {
-    return NULL;
+    TextureInfos* ti = (TextureInfos*)p_texturedata;
+    return ti->bits;
 }
 
 bool D3D11Renderer::CopyTextureContent( void* p_texturedata )

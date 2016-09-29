@@ -82,9 +82,9 @@ protected:
         D3D11_TEXTURE2D_DESC                                        descr;
 
         ID3D11Texture2D*                                            texture;
-        
         ID3D11RenderTargetView*                                     rendertextureTargetView;
         ID3D11ShaderResourceView*                                   textureShaderResourceView;
+        void*                                                       bits;
 
     } TextureInfos;
 
