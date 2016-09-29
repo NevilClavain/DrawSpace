@@ -49,6 +49,14 @@ public:
 
     typedef enum
     {
+        RENDERTARGET_GPU,
+        RENDERTARGET_CPU,
+
+    } RenderTarget;
+
+
+    typedef enum
+    {
         PURPOSE_COLORFROMFILE,
         PURPOSE_COLOR,
         PURPOSE_FLOAT32,
@@ -71,6 +79,7 @@ protected:
     unsigned long   m_render_target_height;
 
     RenderPurpose   m_renderpurpose;
+    RenderTarget    m_rendertarget;
     Purpose         m_purpose;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
@@ -104,6 +113,8 @@ public:
     void GetFormat( long& p_width, long& p_height, long& p_bpp );
 
     RenderPurpose GetRenderPurpose( void );
+    RenderTarget GetRenderTarget( void );
+    void SetRenderTarget( RenderTarget p_rendertarget );
     Purpose GetPurpose( void );
     void SetPurpose( Purpose p_purpose );
 

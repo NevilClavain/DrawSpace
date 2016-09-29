@@ -42,6 +42,7 @@ m_render_target( false ),
 m_render_target_width( 256 ),
 m_render_target_height( 256 ),
 m_renderpurpose( RENDERPURPOSE_COLOR ),
+m_rendertarget( RENDERTARGET_GPU ),
 m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL )
 {
@@ -329,6 +330,16 @@ void Texture::GetKeyword( dsstring& p_outkeyword )
 Texture::RenderPurpose Texture::GetRenderPurpose( void )
 {
     return m_renderpurpose;
+}
+
+Texture::RenderTarget Texture::GetRenderTarget( void )
+{
+    return m_rendertarget;
+}
+
+void Texture::SetRenderTarget( Texture::RenderTarget p_rendertarget )
+{
+    m_rendertarget = p_rendertarget;
 }
 
 Texture::Purpose Texture::GetPurpose( void )
