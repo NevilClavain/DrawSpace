@@ -49,8 +49,8 @@ public:
 
     typedef enum
     {
-        RENDERTARGET_GPU,
-        RENDERTARGET_CPU,
+        RENDERTARGET_GPU,  // cas ou la texture resultante va être bindee a un shader (GPU) (défaut)
+        RENDERTARGET_CPU,  // cas ou le contenu de la texture resultante doit être lue par le CPU
 
     } RenderTarget;
 
@@ -86,7 +86,8 @@ protected:
     
 public:
     Texture( void );
-    Texture( const dsstring& p_path, bool p_render_target = false, unsigned long p_render_target_width = 256, unsigned long p_render_target_height = 256, RenderPurpose p_rp = RENDERPURPOSE_COLOR );
+    Texture( const dsstring& p_path, bool p_render_target = false, unsigned long p_render_target_width = 256, unsigned long p_render_target_height = 256, 
+                RenderPurpose p_rp = RENDERPURPOSE_COLOR, RenderTarget p_rt = RENDERTARGET_GPU );
     ~Texture( void );
 
     bool LoadFromFile( void );
@@ -114,7 +115,6 @@ public:
 
     RenderPurpose GetRenderPurpose( void );
     RenderTarget GetRenderTarget( void );
-    void SetRenderTarget( RenderTarget p_rendertarget );
     Purpose GetPurpose( void );
     void SetPurpose( Purpose p_purpose );
 

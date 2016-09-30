@@ -53,9 +53,11 @@ m_render_data( NULL )
     m_properties["rendertarget_size"].AddPropValue<unsigned long>( "width", m_render_target_width );
     m_properties["rendertarget_size"].AddPropValue<unsigned long>( "height", m_render_target_height );
     m_properties["renderpurpose"].AddPropValue<RenderPurpose>( m_renderpurpose );
+    m_properties["rendertarget"].AddPropValue<RenderTarget>( m_rendertarget );
 }
 
-Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_target_width, unsigned long p_render_target_height, RenderPurpose p_rp ) : 
+Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_target_width, unsigned long p_render_target_height, 
+            RenderPurpose p_rp, RenderTarget p_rt ) : 
 m_path( p_path ), 
 m_filedata( NULL ), 
 m_filedatasize( -1 ), 
@@ -63,6 +65,7 @@ m_render_target( p_render_target ),
 m_render_target_width( p_render_target_width ),
 m_render_target_height( p_render_target_height ),
 m_renderpurpose( p_rp ),
+m_rendertarget( p_rt ),
 m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL )
 {
@@ -73,6 +76,7 @@ m_render_data( NULL )
     m_properties["rendertarget_size"].AddPropValue<unsigned long>( "width", m_render_target_width );
     m_properties["rendertarget_size"].AddPropValue<unsigned long>( "height", m_render_target_height );
     m_properties["renderpurpose"].AddPropValue<RenderPurpose>( m_renderpurpose );
+    m_properties["rendertarget"].AddPropValue<RenderTarget>( m_rendertarget );
 }
 
 Texture::~Texture( void )
@@ -140,6 +144,7 @@ bool Texture::ApplyProperties( void )
     m_render_target_width = m_properties["rendertarget_size"].GetPropValue<unsigned long>( "width" );
     m_render_target_height = m_properties["rendertarget_size"].GetPropValue<unsigned long>( "height" );
     m_renderpurpose = m_properties["renderpurpose"].GetPropValue<RenderPurpose>();
+    m_rendertarget = m_properties["rendertarget"].GetPropValue<RenderTarget>();
 
     return true;
 }
@@ -335,11 +340,6 @@ Texture::RenderPurpose Texture::GetRenderPurpose( void )
 Texture::RenderTarget Texture::GetRenderTarget( void )
 {
     return m_rendertarget;
-}
-
-void Texture::SetRenderTarget( Texture::RenderTarget p_rendertarget )
-{
-    m_rendertarget = p_rendertarget;
 }
 
 Texture::Purpose Texture::GetPurpose( void )

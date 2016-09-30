@@ -128,6 +128,7 @@ protected:
     long                            m_targetdims_height;
 
     Core::Texture::RenderPurpose    m_renderpurpose;
+    Core::Texture::RenderTarget     m_rendertarget;
 
     void init_properties( void );
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
@@ -140,6 +141,7 @@ public:
     void SetTargetDimsFromRenderer( bool p_state );
     void SetTargetDims( long p_width, long p_height );
     void SetRenderPurpose( Core::Texture::RenderPurpose p_renderpurpose );
+    void SetRenderTarget( Core::Texture::RenderTarget p_rendertarget );
 
     bool Initialize( void );
     

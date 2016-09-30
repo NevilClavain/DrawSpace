@@ -427,19 +427,6 @@ bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dss
     return true;
 }
 
-/*
-void Pass::SetName( const dsstring& p_name )
-{
-    m_name = p_name;
-}
-
-void Pass::GetName( dsstring& p_name )
-{
-    p_name = m_name;
-}
-*/
-
-
 RenderingQueue* Pass::GetRenderingQueue( void )
 {
     if( !m_initialized )
@@ -550,7 +537,8 @@ IntermediatePass::IntermediatePass( void ) :
 m_targetdims_fromrenderer( true ),
 m_targetdims_width( 256 ),
 m_targetdims_height( 256 ),
-m_renderpurpose( Texture::RENDERPURPOSE_COLOR )
+m_renderpurpose( Texture::RENDERPURPOSE_COLOR ),
+m_rendertarget( Texture::RENDERTARGET_GPU )
 {
     init_properties();
 }
@@ -561,7 +549,8 @@ IntermediatePass::IntermediatePass( const dsstring& p_name ) :
 m_targetdims_fromrenderer( true ),
 m_targetdims_width( 256 ),
 m_targetdims_height( 256 ),
-m_renderpurpose( Texture::RENDERPURPOSE_COLOR )
+m_renderpurpose( Texture::RENDERPURPOSE_COLOR ),
+m_rendertarget( Texture::RENDERTARGET_GPU )
 {
     init_properties();
     m_name = p_name;
@@ -579,6 +568,7 @@ void IntermediatePass::init_properties( void )
     m_properties["targetdims"].AddPropValue<long>( "width", 256 );
     m_properties["targetdims"].AddPropValue<long>( "height", 256 );
     m_properties["renderpurpose"].AddPropValue<Texture::RenderPurpose>( Texture::RENDERPURPOSE_COLOR );
+    m_properties["rendertarget"].AddPropValue<Texture::RenderTarget>( Texture::RENDERTARGET_GPU );
 }
 
 
@@ -608,6 +598,13 @@ void IntermediatePass::SetRenderPurpose( Core::Texture::RenderPurpose p_renderpu
     m_properties["renderpurpose"].SetPropValue<Texture::RenderPurpose>( m_renderpurpose );
 }
 
+void IntermediatePass::SetRenderTarget( Core::Texture::RenderTarget p_rendertarget )
+{
+    m_rendertarget = p_rendertarget;
+
+    // update property
+    m_properties["rendertarget"].SetPropValue<Texture::RenderTarget>( m_rendertarget );
+}
 
 bool IntermediatePass::Initialize( void )
 {
@@ -635,7 +632,7 @@ bool IntermediatePass::Initialize( void )
         w_resol = m_targetdims_width;
     }
 
-    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, w_resol, h_resol, m_renderpurpose ) );
+    m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, w_resol, h_resol, m_renderpurpose, m_rendertarget ) );
     m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
 
     m_initialized = true;
@@ -733,6 +730,7 @@ void IntermediatePass::ApplyProperties( void )
     SetTargetDims( m_properties["targetdims"].GetPropValue<long>( "width" ), m_properties["targetdims"].GetPropValue<long>( "height" ) );
 
     m_renderpurpose = m_properties["renderpurpose"].GetPropValue<Texture::RenderPurpose>();
+    m_rendertarget = m_properties["rendertarget"].GetPropValue<Texture::RenderTarget>();
 
     m_name = m_properties["passname"].GetPropValue<dsstring>();
     Initialize();
