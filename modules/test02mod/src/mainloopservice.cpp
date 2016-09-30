@@ -95,7 +95,28 @@ void MainLoopService::Run( void )
 
     m_scenenodegraph.ComputeTransformations( m_tm );
 
+    Matrix water_plane_mat;
+    m_ground_body_node->GetFinalTransform( water_plane_mat );
+
+
+    Vector reflectorPos( water_plane_mat( 3, 0 ), water_plane_mat( 3, 1 ), water_plane_mat( 3, 2 ), 1.0 );
+    Vector reflectorNormale( 0.0, 1.0, 0.0, 1.0 );
+
+    for( int i = 0; i < 6; i++ )
+    {
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->SetShaderRealVector( "reflector_normale", reflectorNormale );
+    }
+
+    
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_pos", reflectorPos );
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_normale", reflectorNormale );
+
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_pos", reflectorPos );
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_normale", reflectorNormale );
+    
+
     m_texturepass->GetRenderingQueue()->Draw();
+    m_texturemirrorpass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
 
     m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s - %s", m_tm.GetFPS(), m_device.c_str(), m_pluginDescr.c_str() );
@@ -196,8 +217,13 @@ void MainLoopService::create_passes( void )
     m_texturepass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "texture_pass" ) );
 
     m_texturepass->Initialize();
-    
     m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
+
+
+    m_texturemirrorpass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "texturemirror_pass" ) );
+
+    m_texturemirrorpass->Initialize();
+    m_texturemirrorpass->GetRenderingQueue()->EnableDepthClearing( true );
 
 
 
@@ -227,20 +253,18 @@ void MainLoopService::create_passes( void )
     m_finalpass->GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
     m_finalpass->GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
 
-    //m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "point" ) );
-    //m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     
 
-    m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
+    //m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
+    m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 0 );
 
-    //m_finalpass->GetViewportQuad()->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "plasma2.jpg" ) ), 0 );
-    //m_finalpass->GetViewportQuad()->GetTexture( 0 )->LoadFromFile();
 
 }
 
 void MainLoopService::init_passes( void )
 {
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
+    m_texturemirrorpass->GetRenderingQueue()->UpdateOutputQueue();
     m_finalpass->GetRenderingQueue()->UpdateOutputQueue();
 }
 
@@ -249,6 +273,7 @@ void MainLoopService::create_spacebox( void )
 {
     m_spacebox = _DRAWSPACE_NEW_( DrawSpace::Spacebox, DrawSpace::Spacebox );
     m_spacebox->RegisterPassSlot( m_texturepass );
+    m_spacebox->RegisterPassSlot( m_texturemirrorpass );
 
     for( long i = 0; i < 6; i++ )
     {
@@ -301,6 +326,66 @@ void MainLoopService::create_spacebox( void )
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->SetOrderNumber( 200 );
 
 
+
+    for( long i = 0; i < 6; i++ )
+    {
+
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+        if( m_pluginDescr == "Direct3D11")
+        {
+            m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_d3d11.vsh", false ) ) );
+            m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_d3d11.psh", false ) ) );      
+        }
+        else
+        { 
+            m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vsh", false ) ) );
+            m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.psh", false ) ) );      
+        }
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->GetShader( 0 )->LoadFromFile();
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->GetShader( 1 )->LoadFromFile();
+
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    }   
+
+
+    
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
+
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->GetTexture( 0 )->LoadFromFile();
+
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->GetTexture( 0 )->LoadFromFile();
+
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->GetTexture( 0 )->LoadFromFile();
+
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->GetTexture( 0 )->LoadFromFile();
+
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->GetTexture( 0 )->LoadFromFile();
+
+
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetOrderNumber( 200 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->SetOrderNumber( 200 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->SetOrderNumber( 200 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->SetOrderNumber( 200 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->SetOrderNumber( 200 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->SetOrderNumber( 200 );
+
+    for( int i = 0; i < 6; i++ )
+    {
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->AddShaderParameter( 0, "reflector_pos", 24 );
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->AddShaderParameter( 0, "reflector_normale", 25 );
+    }
+
+
     
     m_spacebox_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Spacebox>, SceneNode<DrawSpace::Spacebox>( "spacebox" ) );
     m_spacebox_node->SetContent( m_spacebox );
@@ -351,6 +436,7 @@ void MainLoopService::create_cubes( void )
     m_chunk->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
 
     m_chunk->RegisterPassSlot( m_texturepass );
+    m_chunk->RegisterPassSlot( m_texturemirrorpass );
 
 
     m_meshe_import = new DrawSpace::Utils::AC3DMesheImport();
@@ -379,6 +465,35 @@ void MainLoopService::create_cubes( void )
     m_chunk->GetNodeFromPass( m_texturepass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
     m_chunk->GetNodeFromPass( m_texturepass )->GetTexture( 0 )->LoadFromFile();
 
+
+
+    
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+
+    if( m_pluginDescr == "Direct3D11")
+    {
+        m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_d3d11.vsh", false ) ) );
+        m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_d3d11.psh", false ) ) );
+    }
+    else
+    { 
+        m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vsh", false ) ) );
+        m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.psh", false ) ) );
+    }
+
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->GetTexture( 0 )->LoadFromFile();
+
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->AddShaderParameter( 0, "reflector_pos", 24 );
+    m_chunk->GetNodeFromPass( m_texturemirrorpass )->AddShaderParameter( 0, "reflector_normale", 25 );
+    
 
     
     m_chunk_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Chunk>, SceneNode<DrawSpace::Chunk>( "chunk" ) );
@@ -413,6 +528,7 @@ void MainLoopService::create_cubes( void )
     m_cube2->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
 
     m_cube2->RegisterPassSlot( m_texturepass );
+    m_cube2->RegisterPassSlot( m_texturemirrorpass );
 
         
     m_cube2->GetMeshe()->SetImporter( m_meshe_import );
@@ -436,22 +552,43 @@ void MainLoopService::create_cubes( void )
     m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->GetShader( 0 )->LoadFromFile();
     m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->GetShader( 1 )->LoadFromFile();
 
-    /*
-    m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
-    m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
-    */
-    
-    m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
-
-
-    m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
-
-    
+   
 
     m_cube2->GetNodeFromPass( m_texturepass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "saturnmap.jpg" ) ), 0 );
     m_cube2->GetNodeFromPass( m_texturepass )->GetTexture( 0 )->LoadFromFile();
+
+
+    
+
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+
+    if( m_pluginDescr == "Direct3D11")
+    {
+        m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_d3d11.vsh", false ) ) );
+        m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_d3d11.psh", false ) ) );
+    }
+    else
+    { 
+        m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vsh", false ) ) );
+        m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.psh", false ) ) );
+    }
+
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "saturnmap.jpg" ) ), 0 );
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetTexture( 0 )->LoadFromFile();
+
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->AddShaderParameter( 0, "reflector_pos", 24 );
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->AddShaderParameter( 0, "reflector_normale", 25 );
+
+    
+
+
 
     m_cube2_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Chunk>, SceneNode<DrawSpace::Chunk>( "cube2" ) );
     m_cube2_node->SetContent( m_cube2 );

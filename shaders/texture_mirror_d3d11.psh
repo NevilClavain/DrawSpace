@@ -1,0 +1,22 @@
+
+cbuffer legacyargs : register(b0)
+{
+    float4 vec[512];
+    Matrix mat[512];
+};
+
+
+Texture2D txDiffuse         : register(t0);
+SamplerState sam            : register(s0);
+
+struct PS_INTPUT 
+{
+    float4 Position : SV_POSITION;
+	float2 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main(PS_INTPUT input) : SV_Target
+{   
+    return txDiffuse.Sample(sam, input.TexCoord0);
+}

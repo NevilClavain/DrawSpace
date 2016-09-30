@@ -493,10 +493,6 @@ void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
 
         m_currentTarget = m_targettextures_base[p_texture]->rendertextureTargetView;
     }
-    else
-    {
-        _DSEXCEPTION( "D3D11 : unknown render target" )
-    }
 }
 
 void D3D11Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )

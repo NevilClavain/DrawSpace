@@ -41,6 +41,7 @@ protected:
 
     DrawSpace::FinalPass*                                               m_finalpass;
     DrawSpace::IntermediatePass*                                        m_texturepass;
+    DrawSpace::IntermediatePass*                                        m_texturemirrorpass;
 
     DrawSpace::Spacebox*                                                m_spacebox;
     DrawSpace::Core::SceneNode<DrawSpace::Spacebox>*                    m_spacebox_node;
