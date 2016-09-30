@@ -903,19 +903,6 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         ZeroMemory( &textureDesc, sizeof( textureDesc ) );
 
         // Setup the render target texture description.
-        textureDesc.Width = rw;
-        textureDesc.Height = rh;
-        textureDesc.MipLevels = 1;
-        textureDesc.ArraySize = 1;
-        textureDesc.Format = format;
-        textureDesc.SampleDesc.Count = 1;
-        textureDesc.Usage = D3D11_USAGE_DEFAULT;
-        textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-        textureDesc.CPUAccessFlags = 0;
-        textureDesc.MiscFlags = 0;
-
-        /*
-        pour une texture qui n'est pas destinée a un shader, mais à être lue par le CPU
 
         textureDesc.Width = rw;
         textureDesc.Height = rh;
@@ -923,12 +910,24 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         textureDesc.ArraySize = 1;
         textureDesc.Format = format;
         textureDesc.SampleDesc.Count = 1;
-        textureDesc.Usage = D3D11_USAGE_STAGING;
-        textureDesc.BindFlags = 0;
-        textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+
+
+        if( Texture::RENDERTARGET_GPU == p_texture->GetRenderTarget() )
+        {
+            textureDesc.Usage = D3D11_USAGE_DEFAULT;
+            textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+            textureDesc.CPUAccessFlags = 0;
+
+        }
+        else // Texture::RENDERTARGET_CPU case
+        {
+            textureDesc.Usage = D3D11_USAGE_STAGING;
+            textureDesc.BindFlags = 0;
+            textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        }
+
         textureDesc.MiscFlags = 0;
-        
-        */
+
 
         // Create the render target texture.
         hRes = m_lpd3ddevice->CreateTexture2D( &textureDesc, NULL, &d3dt11 );
