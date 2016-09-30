@@ -1,0 +1,27 @@
+
+
+
+sampler2D TextureDiffuse        : register(s0);
+sampler2D TextureDiffuseMirror  : register(s1);
+sampler2D TextureBump           : register(s2);
+
+struct PS_INTPUT 
+{
+	float4 Position : POSITION0;
+	float4 TexCoord0: TEXCOORD0;
+};
+
+
+float4 ps_main( PS_INTPUT input ) : COLOR0
+{   
+    float4 scene_color = tex2D(TextureDiffuse, input.TexCoord0);
+    
+    if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
+    {        
+        float2 mt = input.TexCoord0.xy;
+        float4 refrac_color = { 0.55, 0.65, 0.78, 1.0 };
+                
+        scene_color = refrac_color * tex2D(TextureDiffuseMirror, mt);
+    }
+    return scene_color;
+}
