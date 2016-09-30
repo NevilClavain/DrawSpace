@@ -123,6 +123,9 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     _DSDEBUG( logger, "begin" )
 
     m_hwnd = p_hwnd;
+
+    RECT rect;
+    GetClientRect( m_hwnd, &rect );
     
     m_lpd3d = Direct3DCreate9( D3D_SDK_VERSION );
     if( NULL == m_lpd3d )
@@ -224,8 +227,8 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         d3dpp.FullScreen_RefreshRateInHz = m_config.m_refreshrate;
 
         m_characteristics.fullscreen = true;
-        m_characteristics.width_resol = d3dpp.BackBufferWidth;
-        m_characteristics.height_resol = d3dpp.BackBufferHeight;
+        m_characteristics.width_resol = m_config.m_fullscreen_width;
+        m_characteristics.height_resol = m_config.m_fullscreen_height;
 
 		_DSDEBUG( logger, dsstring( " -> FULLSCREEN " ) << d3dpp.BackBufferWidth << dsstring( " x " ) << d3dpp.BackBufferHeight << dsstring( " format " ) << d3dpp.BackBufferFormat )
     }
@@ -249,8 +252,15 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
         m_characteristics.fullscreen = false;
+
+        /*
         m_characteristics.width_resol = p_w_width;
         m_characteristics.height_resol = p_w_height;
+        */
+
+        m_characteristics.width_resol = rect.right - rect.left;
+        m_characteristics.height_resol = rect.bottom - rect.top;
+
 
 		_DSDEBUG( logger, dsstring(" -> WINDOWED ") << p_w_width << dsstring( " x " ) << p_w_height )
     }
@@ -1915,6 +1925,8 @@ void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
 void D3D9Renderer::GetRenderCharacteristics( Characteristics& p_characteristics )
 {
     p_characteristics = m_characteristics;
+
+    /*
     if( !m_characteristics.fullscreen )
     {
         // prendre en compte les bords fenetre
@@ -1925,6 +1937,7 @@ void D3D9Renderer::GetRenderCharacteristics( Characteristics& p_characteristics 
         p_characteristics.width_resol = rect.right;
         p_characteristics.height_resol = rect.bottom;
     }
+    */
 }
 
 void D3D9Renderer::set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount )
