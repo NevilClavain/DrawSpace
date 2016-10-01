@@ -1,0 +1,17 @@
+
+cbuffer legacyargs : register(b0)
+{
+    float4 vec[512];
+    Matrix mat[512];
+};
+
+
+struct PS_INTPUT 
+{
+    float4 Position : SV_POSITION;
+};
+
+float4 ps_main(PS_INTPUT input) : SV_Target
+{   
+    return vec[0];
+}
