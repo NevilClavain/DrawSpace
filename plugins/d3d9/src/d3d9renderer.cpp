@@ -60,6 +60,11 @@ void D3D9Renderer::GetDeviceDescr( DeviceDescr& p_ddescr )
     }
 }
 
+void D3D9Renderer::GetShadersDescr( dsstring& p_descr )
+{
+    p_descr = "hlsl_3_0";
+}
+
 void D3D9Renderer::DumpMemoryAllocs( void )
 {
     DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();

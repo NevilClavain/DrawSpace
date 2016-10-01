@@ -185,6 +185,8 @@ public:
 
     virtual void GetDescr( dsstring& p_descr );
     virtual void GetDeviceDescr( DeviceDescr& p_ddescr );
+    virtual void GetShadersDescr( dsstring& p_descr );
+
     virtual void DumpMemoryAllocs( void );
 
     virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf );

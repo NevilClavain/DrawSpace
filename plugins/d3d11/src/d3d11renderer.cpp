@@ -68,6 +68,11 @@ void D3D11Renderer::GetDeviceDescr( DeviceDescr& p_ddescr )
     }
 }
 
+void D3D11Renderer::GetShadersDescr( dsstring& p_descr )
+{
+    p_descr = "hlsl_4_0";
+}
+
 void D3D11Renderer::DumpMemoryAllocs( void )
 {
 
