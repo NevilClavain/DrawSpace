@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test02mod", "modules\test02
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPU_hlsl_src_4_0", "shaders\hlsl_4_0\hlsl_src_40.vcxproj", "{29D2641C-CEF2-4CC2-A3A2-247A61C1D744}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPU_hlsl_src_3_0", "shaders\hlsl_3_0\hlsl_src_30.vcxproj", "{E2580B46-7227-4D64-B781-B22F2BDB891B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -129,6 +131,14 @@ Global
 		{29D2641C-CEF2-4CC2-A3A2-247A61C1D744}.Release|Win32.ActiveCfg = Release|Win32
 		{29D2641C-CEF2-4CC2-A3A2-247A61C1D744}.Release|Win32.Build.0 = Release|Win32
 		{29D2641C-CEF2-4CC2-A3A2-247A61C1D744}.Release|x64.ActiveCfg = Release|Win32
+		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Debug|ARM.ActiveCfg = Debug|Win32
+		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Debug|Win32.Build.0 = Debug|Win32
+		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Debug|x64.ActiveCfg = Debug|Win32
+		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Release|ARM.ActiveCfg = Release|Win32
+		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Release|Win32.ActiveCfg = Release|Win32
+		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Release|Win32.Build.0 = Release|Win32
+		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
