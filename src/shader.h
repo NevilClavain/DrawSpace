@@ -38,18 +38,25 @@ namespace Core
 class Shader : public Asset
 {
 protected:
-    dsstring                        m_path;
+    static dsstring                 m_rootpath;
+    static bool                     m_addshaderspath;
+    dsstring                        m_filepath;
     void*                           m_data;
     size_t                          m_datasize;
     bool                            m_compiled;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
+    dsstring compute_final_path( void );
+
 public:
     Shader( void );
-    Shader( const dsstring& p_path, bool p_compiled );
+    Shader( const dsstring& p_filepath, bool p_compiled );
     Shader( bool p_compiled );
     ~Shader( void );
+
+    static void EnableShadersDescrInFinalPath( bool p_state );
+    static void SetRootPath( const dsstring& p_path );
 
     bool	IsCompiled( void );
     void*	GetData( void );

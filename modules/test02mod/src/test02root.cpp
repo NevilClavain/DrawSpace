@@ -30,6 +30,9 @@ using namespace DrawSpace::Interface::Module;
 Test02Root::Test02Root( void )
 {
     m_services["mainloop"] = new MainLoopService();
+
+    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
+    DrawSpace::Core::Shader::SetRootPath( ".\\..\\..\\DrawSpace\\shaders_bank" );
 }
 
 Test02Root::~Test02Root( void )

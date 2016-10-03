@@ -25,12 +25,17 @@
 #include "memalloc.h"
 #include "exceptions.h"
 #include "misc_utils.h"
+#include "renderer.h"
+#include "plugin.h"
 
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface;
 
+dsstring Shader::m_rootpath = ".";
+bool Shader::m_addshaderspath = false;
 
 Shader::Shader( void ) :
 m_data( NULL ), 
@@ -38,19 +43,19 @@ m_compiled( false ),
 m_datasize( -1 )
 {
     // properties array creation
-    m_properties["filepath"].AddPropValue<dsstring>( m_path );
+    m_properties["filepath"].AddPropValue<dsstring>( m_filepath );
     m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
     m_properties["compiled"].AddPropValue<bool>( m_compiled );
 }
 
-Shader::Shader( const dsstring& p_path, bool p_compiled ) : 
-m_path( p_path ), 
+Shader::Shader( const dsstring& p_filepath, bool p_compiled ) : 
+m_filepath( p_filepath ), 
 m_data( NULL ), 
 m_compiled( p_compiled ), 
 m_datasize( -1 )
 {
     // properties array creation
-    m_properties["filepath"].AddPropValue<dsstring>( m_path );
+    m_properties["filepath"].AddPropValue<dsstring>( m_filepath );
     m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
     m_properties["compiled"].AddPropValue<bool>( m_compiled );
 }
@@ -61,13 +66,23 @@ m_compiled( p_compiled ),
 m_datasize( -1 )
 {
     // properties array creation
-    m_properties["filepath"].AddPropValue<dsstring>( m_path );
+    m_properties["filepath"].AddPropValue<dsstring>( m_filepath );
     m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
     m_properties["compiled"].AddPropValue<bool>( m_compiled );
 }
 
 Shader::~Shader( void )
 {
+}
+
+void Shader::EnableShadersDescrInFinalPath( bool p_state )
+{
+    m_addshaderspath = p_state;
+}
+
+void Shader::SetRootPath( const dsstring& p_path )
+{
+    m_rootpath = p_path;
 }
 
 bool Shader::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
@@ -129,11 +144,12 @@ size_t Shader::GetDataSize( void )
 bool Shader::LoadFromFile( void )
 {
     long size;
-    void* data = Utils::File::LoadAndAllocBinaryFile( m_path, &size );
+    //void* data = Utils::File::LoadAndAllocBinaryFile( m_filepath, &size );
+    void* data = Utils::File::LoadAndAllocBinaryFile( compute_final_path(), &size );
     if( !data )
     {
         //return false;
-        _DSEXCEPTION( "Unable to load shader " << m_path );
+        _DSEXCEPTION( "Unable to load shader " << m_filepath );
     }
     m_data = data;
     m_datasize = size;
@@ -151,7 +167,7 @@ void Shader::ReleaseData( void )
 
 bool Shader::ApplyProperties( void )
 {
-    m_path = m_properties["filepath"].GetPropValue<dsstring>();
+    m_filepath = m_properties["filepath"].GetPropValue<dsstring>();
     if( false == LoadFromFile() )
     {
         return false;
@@ -232,5 +248,21 @@ void Shader::GetKeyword( dsstring& p_outkeyword )
 
 void Shader::GetPath( dsstring& p_path )
 {
-    p_path = m_path;
+    //p_path = m_filepath;
+    p_path = compute_final_path();
+}
+
+dsstring Shader::compute_final_path( void )
+{
+    dsstring final_path = m_rootpath + "\\";
+    if( m_addshaderspath )    
+    {
+        Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+        dsstring m_shader_descr;
+        renderer->GetShadersDescr( m_shader_descr );
+        final_path += m_shader_descr + "\\";
+    }
+    final_path += m_filepath;
+
+    return final_path;
 }
