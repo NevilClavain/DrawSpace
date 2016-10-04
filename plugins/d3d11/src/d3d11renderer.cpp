@@ -495,8 +495,18 @@ void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
     if( m_targettextures_base.count( p_texture ) > 0 )
     {
         m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_targettextures_base[p_texture]->rendertextureTargetView, m_pDepthStencilView );
-
         m_currentTarget = m_targettextures_base[p_texture]->rendertextureTargetView;
+    }
+    else
+    {
+        // pas trouvé de texture cible à setter 
+
+        // quick'n dirty pour eviter que ce rendu ne vienne écraser le résultat de la rendertarget actuelle (positionnée par le dernier 
+        // appel à OMSetRenderTargets() )
+
+        // a noter que ce pb n'existait pas en D3D9 (API structurée différement)
+
+        BeginScreen();
     }
 }
 
