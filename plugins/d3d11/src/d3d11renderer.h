@@ -199,6 +199,8 @@ protected:
     bool set_cache_rs( void );
     bool set_cache_blendstate( void );
 
+    bool create_depth_stencil_buffer( int p_width, int p_height, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view );
+
 public:
     D3D11Renderer( void );
     ~D3D11Renderer( void );

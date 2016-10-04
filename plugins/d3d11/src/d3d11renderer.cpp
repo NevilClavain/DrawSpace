@@ -213,25 +213,6 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     ////////////////////////////////////////////////////////////////////////
 
-    D3D11_TEXTURE2D_DESC descDepth;
-    ZeroMemory( &descDepth, sizeof( descDepth ) );
-    descDepth.Width = m_characteristics.width_resol;
-    descDepth.Height = m_characteristics.height_resol;
-    descDepth.MipLevels = 1;
-    descDepth.ArraySize = 1;
-    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    descDepth.SampleDesc.Count = 1;
-    descDepth.SampleDesc.Quality = 0;
-    descDepth.Usage = D3D11_USAGE_DEFAULT;
-    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    descDepth.CPUAccessFlags = 0;
-    descDepth.MiscFlags = 0;
-    hRes = m_lpd3ddevice->CreateTexture2D( &descDepth, NULL, &m_pDepthStencil );
-
-    D3D11_CHECK( CreateTexture2D )
-
-
-
     D3D11_DEPTH_STENCIL_DESC dsDesc;
     ZeroMemory( &dsDesc, sizeof( dsDesc ) );
 
@@ -270,6 +251,24 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     m_lpd3ddevcontext->OMSetDepthStencilState( m_DSState_DepthTestEnabled, 1 );
 
 
+    /*
+    D3D11_TEXTURE2D_DESC descDepth;
+    ZeroMemory( &descDepth, sizeof( descDepth ) );
+    descDepth.Width = m_characteristics.width_resol;
+    descDepth.Height = m_characteristics.height_resol;
+    descDepth.MipLevels = 1;
+    descDepth.ArraySize = 1;
+    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    descDepth.SampleDesc.Count = 1;
+    descDepth.SampleDesc.Quality = 0;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.CPUAccessFlags = 0;
+    descDepth.MiscFlags = 0;
+    hRes = m_lpd3ddevice->CreateTexture2D( &descDepth, NULL, &m_pDepthStencil );
+
+    D3D11_CHECK( CreateTexture2D )
+
     // Create the depth stencil view
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
     ZeroMemory( &descDSV, sizeof(descDSV) );
@@ -279,6 +278,13 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     hRes = m_lpd3ddevice->CreateDepthStencilView( m_pDepthStencil, &descDSV, &m_pDepthStencilView );
 
     D3D11_CHECK( CreateDepthStencilView )
+
+    */
+
+    if( !create_depth_stencil_buffer( m_characteristics.width_resol, m_characteristics.height_resol, &m_pDepthStencil, &m_pDepthStencilView ) )
+    {
+        return false;
+    }
 
     ////////////////////////////////////////////////////////////////////////
 
@@ -419,6 +425,38 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     D3D11_CHECK( CreateBuffer )
 
     return true;
+}
+
+bool D3D11Renderer::create_depth_stencil_buffer( int p_width, int p_height, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view )
+{
+    DECLARE_D3D11ASSERT_VARS
+
+    D3D11_TEXTURE2D_DESC descDepth;
+    ZeroMemory( &descDepth, sizeof( descDepth ) );
+    descDepth.Width = p_width;
+    descDepth.Height = p_height;
+    descDepth.MipLevels = 1;
+    descDepth.ArraySize = 1;
+    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    descDepth.SampleDesc.Count = 1;
+    descDepth.SampleDesc.Quality = 0;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.CPUAccessFlags = 0;
+    descDepth.MiscFlags = 0;
+    hRes = m_lpd3ddevice->CreateTexture2D( &descDepth, NULL, p_texture2D );
+
+    D3D11_CHECK( CreateTexture2D )
+
+    // Create the depth stencil view
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+    ZeroMemory( &descDSV, sizeof(descDSV) );
+    descDSV.Format = descDepth.Format;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0;
+    hRes = m_lpd3ddevice->CreateDepthStencilView( m_pDepthStencil, &descDSV, p_view );
+
+    D3D11_CHECK( CreateDepthStencilView )
 }
 
 void D3D11Renderer::Release( void )
