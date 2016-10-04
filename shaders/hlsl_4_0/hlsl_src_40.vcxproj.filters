@@ -36,5 +36,11 @@
     <FxCompile Include="water_mask.vsh">
       <Filter>vertex_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="water_waves.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="water_waves.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
