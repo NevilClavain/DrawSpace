@@ -42,6 +42,8 @@ protected:
     DrawSpace::FinalPass*                                               m_finalpass;
     DrawSpace::IntermediatePass*                                        m_texturepass;
     DrawSpace::IntermediatePass*                                        m_texturemirrorpass;
+    DrawSpace::IntermediatePass*                                        m_wavespass;
+
 
     DrawSpace::Spacebox*                                                m_spacebox;
     DrawSpace::Core::SceneNode<DrawSpace::Spacebox>*                    m_spacebox_node;
@@ -66,6 +68,9 @@ protected:
 
     DrawSpace::Chunk*                                                   m_ground;
     DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_ground_node;
+
+    dsreal                                                              m_waves;
+    bool                                                                m_waves_inc;
 
 
 

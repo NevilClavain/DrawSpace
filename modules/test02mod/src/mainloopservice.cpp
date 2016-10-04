@@ -30,7 +30,10 @@ using namespace DrawSpace::Interface::Module;
 
 _DECLARE_DS_LOGGER( logger, "test02mainloopservice", NULL )
 
-MainLoopService::MainLoopService( void ): m_fpsmove( true )
+MainLoopService::MainLoopService( void ) : 
+m_fpsmove( true ),
+m_waves( 0.0 ),
+m_waves_inc( true )
 {
 }
 
@@ -115,6 +118,7 @@ void MainLoopService::Run( void )
     m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_normale", reflectorNormale );
     
 
+    m_wavespass->GetRenderingQueue()->Draw();
     m_texturepass->GetRenderingQueue()->Draw();
     m_texturemirrorpass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
@@ -127,7 +131,32 @@ void MainLoopService::Run( void )
     if( m_tm.IsReady() )
     {
         m_world.StepSimulation( m_tm.GetFPS(), 15 );
+
+        if( m_waves_inc )
+        {
+            if( m_waves < 200.0 )
+            {
+                m_tm.TranslationSpeedInc( &m_waves, 1.0 );
+            }
+            else
+            {
+                m_waves_inc = false;
+            }
+        }
+        else
+        {
+            if( m_waves > 0.0 )
+            {
+                m_tm.TranslationSpeedDec( &m_waves, 1.0 );
+            }
+            else
+            {
+                m_waves_inc = true;
+            }        
+        }
     }
+
+    m_wavespass->GetViewportQuad()->SetShaderRealVector( "waves", DrawSpace::Utils::Vector( m_waves, 0.0, 0.0, 0.0 ) );
 }
 
 void MainLoopService::Release( void )
@@ -226,6 +255,23 @@ void MainLoopService::create_passes( void )
     m_texturemirrorpass->GetRenderingQueue()->EnableDepthClearing( true );
 
 
+    m_wavespass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "waves_pass" ) );
+
+    m_wavespass->SetTargetDimsFromRenderer( false );
+    m_wavespass->SetTargetDims( 512, 512 );
+
+    m_wavespass->Initialize();
+    m_wavespass->CreateViewportQuad();
+    
+    m_wavespass->GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+    m_wavespass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.vso", true ) ) );
+    m_wavespass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.pso", true ) ) );
+    m_wavespass->GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_wavespass->GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    m_wavespass->GetViewportQuad()->AddShaderParameter( 1, "waves", 0 );
+
+
 
 
     m_finalpass = _DRAWSPACE_NEW_( FinalPass, FinalPass( "final_pass" ) );
@@ -248,14 +294,19 @@ void MainLoopService::create_passes( void )
 
     
 
-    m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
-    m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 1 );
+    //m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
+    //m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 1 );
+
+    m_finalpass->GetViewportQuad()->SetTexture( m_wavespass->GetTargetTexture(), 0 );
+    //m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 1 );
+
 }
 
 void MainLoopService::init_passes( void )
 {
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
     m_texturemirrorpass->GetRenderingQueue()->UpdateOutputQueue();
+    m_wavespass->GetRenderingQueue()->UpdateOutputQueue();
     m_finalpass->GetRenderingQueue()->UpdateOutputQueue();
 }
 
