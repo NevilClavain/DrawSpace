@@ -122,6 +122,7 @@ void MainLoopService::Run( void )
     m_wavespass->GetRenderingQueue()->Draw();
     m_texturepass->GetRenderingQueue()->Draw();
     m_texturemirrorpass->GetRenderingQueue()->Draw();
+    m_bumppass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
 
     m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s - %s", m_tm.GetFPS(), m_device.c_str(), m_pluginDescr.c_str() );
@@ -256,6 +257,20 @@ void MainLoopService::create_passes( void )
     m_texturemirrorpass->GetRenderingQueue()->EnableDepthClearing( true );
 
 
+
+    m_bumppass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "bump_pass" ) );
+
+    m_bumppass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOATVECTOR );
+
+    m_bumppass->Initialize();
+    
+    m_bumppass->GetRenderingQueue()->EnableDepthClearing( true );
+    m_bumppass->GetRenderingQueue()->EnableTargetClearing( true );
+    m_bumppass->GetRenderingQueue()->SetTargetClearingColor( 255, 255, 255, 255 );
+
+
+
+
     m_wavespass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "waves_pass" ) );
 
     m_wavespass->SetTargetDimsFromRenderer( false );
@@ -295,10 +310,11 @@ void MainLoopService::create_passes( void )
 
     
 
-    //m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
-    //m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 1 );
+    m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
+    m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 1 );
+    m_finalpass->GetViewportQuad()->SetTexture( m_bumppass->GetTargetTexture(), 2 );
 
-    m_finalpass->GetViewportQuad()->SetTexture( m_wavespass->GetTargetTexture(), 0 );
+    //m_finalpass->GetViewportQuad()->SetTexture( m_wavespass->GetTargetTexture(), 0 );
     
 }
 
@@ -306,6 +322,7 @@ void MainLoopService::init_passes( void )
 {
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
     m_texturemirrorpass->GetRenderingQueue()->UpdateOutputQueue();
+    m_bumppass->GetRenderingQueue()->UpdateOutputQueue();
     m_wavespass->GetRenderingQueue()->UpdateOutputQueue();
     m_finalpass->GetRenderingQueue()->UpdateOutputQueue();
 }
@@ -645,6 +662,7 @@ void MainLoopService::create_ground( void )
     m_ground->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
 
     m_ground->RegisterPassSlot( m_texturepass );
+    m_ground->RegisterPassSlot( m_bumppass );
     
     m_ground->GetMeshe()->SetImporter( m_meshe_import );
 
@@ -675,6 +693,21 @@ void MainLoopService::create_ground( void )
     m_ground->GetNodeFromPass( m_texturepass )->AddShaderParameter( 1, "color", 0 );
     m_ground->GetNodeFromPass( m_texturepass )->SetShaderRealVector( "color", Vector( 1.0, 0.0, 1.0, 1.0 ) );
 
+
+    m_ground->GetNodeFromPass( m_bumppass )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+    m_ground->GetNodeFromPass( m_bumppass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump.vso", true ) ) );
+    m_ground->GetNodeFromPass( m_bumppass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump.pso", true ) ) );
+    m_ground->GetNodeFromPass( m_bumppass )->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_ground->GetNodeFromPass( m_bumppass )->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    
+    m_ground->GetNodeFromPass( m_bumppass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    m_ground->GetNodeFromPass( m_bumppass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+
+    m_ground->GetNodeFromPass( m_bumppass )->AddShaderParameter( 1, "worldview", 0 );
+
+    m_ground->GetNodeFromPass( m_bumppass )->SetTexture( m_wavespass->GetTargetTexture(), 0 );
 
 
 

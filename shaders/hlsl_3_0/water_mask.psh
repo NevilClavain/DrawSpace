@@ -18,7 +18,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     
     if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
     {        
-        float2 mt = input.TexCoord0.xy;
+        float2 mt = input.TexCoord0.xy + tex2D(TextureBump, input.TexCoord0).xz;
         float4 refrac_color = { 0.55, 0.65, 0.78, 1.0 };
                 
         scene_color = refrac_color * tex2D(TextureDiffuseMirror, mt);

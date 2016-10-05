@@ -43,6 +43,7 @@ protected:
     DrawSpace::IntermediatePass*                                        m_texturepass;
     DrawSpace::IntermediatePass*                                        m_texturemirrorpass;
     DrawSpace::IntermediatePass*                                        m_wavespass;
+    DrawSpace::IntermediatePass*                                        m_bumppass;
 
 
     DrawSpace::Spacebox*                                                m_spacebox;
