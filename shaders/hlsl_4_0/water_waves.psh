@@ -7,7 +7,7 @@ cbuffer legacyargs : register(b0)
 
 
 
-//#include "fbm.hlsl"
+#include "fbm.hlsl"
 
 struct PS_INTPUT 
 {
@@ -17,7 +17,15 @@ struct PS_INTPUT
 
 
 float4 ps_main(PS_INTPUT input) : SV_Target
-{   
-    float4 green = { 0.0, 1.0, 0.0, 1.0 };
-    return green;
+{
+    float4 color;
+
+    float3 p;
+    p.x = lerp(0.0, 1200.0, input.TexCoord0.x);
+    p.y = lerp(0.0, 1200.0, input.TexCoord0.y);
+    p.z = vec[0].x;
+
+    color = Perlin3D(p, 679.9, 123.5);
+
+    return color;
 }
