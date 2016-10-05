@@ -42,5 +42,11 @@
     <FxCompile Include="water_waves.psh">
       <Filter>pixel_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="water_bump.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="water_bump.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
