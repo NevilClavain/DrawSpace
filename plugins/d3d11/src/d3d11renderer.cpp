@@ -44,7 +44,8 @@ m_inputLayout( NULL ),
 m_currentDevice( -1 ),
 m_pDepthStencil( NULL ),
 m_pDepthStencilView( NULL ),
-m_currentTarget( NULL )
+m_currentTarget( NULL ),
+m_currentView( NULL )
 {
 
 }
@@ -250,41 +251,13 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     // donc idem ici
     m_lpd3ddevcontext->OMSetDepthStencilState( m_DSState_DepthTestEnabled, 1 );
 
-
-    /*
-    D3D11_TEXTURE2D_DESC descDepth;
-    ZeroMemory( &descDepth, sizeof( descDepth ) );
-    descDepth.Width = m_characteristics.width_resol;
-    descDepth.Height = m_characteristics.height_resol;
-    descDepth.MipLevels = 1;
-    descDepth.ArraySize = 1;
-    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    descDepth.SampleDesc.Count = 1;
-    descDepth.SampleDesc.Quality = 0;
-    descDepth.Usage = D3D11_USAGE_DEFAULT;
-    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    descDepth.CPUAccessFlags = 0;
-    descDepth.MiscFlags = 0;
-    hRes = m_lpd3ddevice->CreateTexture2D( &descDepth, NULL, &m_pDepthStencil );
-
-    D3D11_CHECK( CreateTexture2D )
-
-    // Create the depth stencil view
-    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-    ZeroMemory( &descDSV, sizeof(descDSV) );
-    descDSV.Format = descDepth.Format;
-    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    descDSV.Texture2D.MipSlice = 0;
-    hRes = m_lpd3ddevice->CreateDepthStencilView( m_pDepthStencil, &descDSV, &m_pDepthStencilView );
-
-    D3D11_CHECK( CreateDepthStencilView )
-
-    */
-
-    if( !create_depth_stencil_buffer( m_characteristics.width_resol, m_characteristics.height_resol, &m_pDepthStencil, &m_pDepthStencilView ) )
+    
+    if( !create_depth_stencil_buffer( m_characteristics.width_resol, m_characteristics.height_resol, DXGI_FORMAT_D24_UNORM_S8_UINT, 
+                                        &m_pDepthStencil, &m_pDepthStencilView ) )
     {
         return false;
     }
+    
 
     ////////////////////////////////////////////////////////////////////////
 
@@ -427,7 +400,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     return true;
 }
 
-bool D3D11Renderer::create_depth_stencil_buffer( int p_width, int p_height, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view )
+bool D3D11Renderer::create_depth_stencil_buffer( int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view )
 {
     DECLARE_D3D11ASSERT_VARS
 
@@ -454,9 +427,11 @@ bool D3D11Renderer::create_depth_stencil_buffer( int p_width, int p_height, ID3D
     descDSV.Format = descDepth.Format;
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     descDSV.Texture2D.MipSlice = 0;
-    hRes = m_lpd3ddevice->CreateDepthStencilView( m_pDepthStencil, &descDSV, p_view );
+    hRes = m_lpd3ddevice->CreateDepthStencilView( *p_texture2D, &descDSV, p_view );
 
     D3D11_CHECK( CreateDepthStencilView )
+
+    return true;
 }
 
 void D3D11Renderer::Release( void )
@@ -496,9 +471,9 @@ void D3D11Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long 
 
 void D3D11Renderer::BeginScreen( void )
 {
-    m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_screentarget, m_pDepthStencilView );
-
     m_currentTarget = m_screentarget;
+    m_currentView = m_pDepthStencilView;
+    m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
 }
 
 void D3D11Renderer::EndScreen( void )
@@ -525,15 +500,17 @@ void D3D11Renderer::ClearScreen( unsigned char p_r, unsigned char p_g, unsigned 
 
 void D3D11Renderer::ClearDepth( dsreal p_value )
 {
-    m_lpd3ddevcontext->ClearDepthStencilView( m_pDepthStencilView, D3D11_CLEAR_DEPTH, p_value, 0 );
+    m_lpd3ddevcontext->ClearDepthStencilView( m_currentView, D3D11_CLEAR_DEPTH, p_value, 0 );
 }
 
 void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
 {
     if( m_targettextures_base.count( p_texture ) > 0 )
     {
-        m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_targettextures_base[p_texture]->rendertextureTargetView, m_pDepthStencilView );
         m_currentTarget = m_targettextures_base[p_texture]->rendertextureTargetView;
+        m_currentView = m_targettextures_base[p_texture]->stencilDepthView;
+
+        m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
     }
     else
     {
@@ -959,6 +936,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         textureDesc.ArraySize = 1;
         textureDesc.Format = format;
         textureDesc.SampleDesc.Count = 1;
+        textureDesc.SampleDesc.Quality = 0;
 
 
         if( Texture::RENDERTARGET_GPU == p_texture->GetRenderTarget() )
@@ -1022,8 +1000,10 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         texture_infos->textureShaderResourceView = rendertextureResourceView;
         texture_infos->rendertextureTargetView = rendertextureTargetView;
 
-        m_textures_base[path] = texture_infos;
+        // creation d'un stencil-depth buffer associe
+        create_depth_stencil_buffer( rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &texture_infos->stencilDepthBuffer, &texture_infos->stencilDepthView );
 
+        m_textures_base[path] = texture_infos;
         m_targettextures_base[p_texture] = texture_infos;
 
         *p_data = (void*)texture_infos;
@@ -1048,6 +1028,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             texture_infos->texture = NULL;
             texture_infos->rendertextureTargetView = NULL;
             texture_infos->textureShaderResourceView = textureResourceView;
+            texture_infos->stencilDepthBuffer = NULL;
+            texture_infos->stencilDepthView = NULL;
 
             m_textures_base[path] = texture_infos;
 
@@ -1107,6 +1089,9 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             texture_infos->texture_instance = p_texture;
             texture_infos->texture = d3dt11;
             texture_infos->rendertextureTargetView = NULL;
+            texture_infos->stencilDepthBuffer = NULL;
+            texture_infos->stencilDepthView = NULL;
+
 
             D3D11_TEXTURE2D_DESC descr;
             d3dt11->GetDesc( &descr );
@@ -1193,10 +1178,19 @@ void D3D11Renderer::DestroyTexture( void* p_data )
     {
         ti->rendertextureTargetView->Release();
     }
+    if( ti->stencilDepthBuffer )
+    {
+        ti->stencilDepthBuffer->Release();
+    }
+    if( ti->stencilDepthView )
+    {
+        ti->stencilDepthView->Release();
+    }
     if( ti->textureShaderResourceView )
     {
         ti->textureShaderResourceView->Release();
     }
+
 
     if( ti->bits )
     {

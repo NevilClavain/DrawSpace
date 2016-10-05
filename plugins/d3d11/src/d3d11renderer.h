@@ -84,6 +84,11 @@ protected:
         ID3D11Texture2D*                                            texture;
         ID3D11RenderTargetView*                                     rendertextureTargetView;
         ID3D11ShaderResourceView*                                   textureShaderResourceView;
+
+        // reserve au textures render target
+        ID3D11Texture2D*                                            stencilDepthBuffer;
+        ID3D11DepthStencilView*                                     stencilDepthView;
+
         void*                                                       bits;
         bool                                                        content_access; // si false, on ne peut acceder au contenu de cette texture
 
@@ -146,6 +151,7 @@ protected:
     ID3D11Device*                                                   m_lpd3ddevice;                     
     ID3D11DeviceContext*                                            m_lpd3ddevcontext;
 
+    ID3D11DepthStencilView*                                         m_currentView;
     ID3D11RenderTargetView*                                         m_currentTarget;
 
     ID3D11SamplerState*                                             m_linearFilterSamplerState;
@@ -199,7 +205,7 @@ protected:
     bool set_cache_rs( void );
     bool set_cache_blendstate( void );
 
-    bool create_depth_stencil_buffer( int p_width, int p_height, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view );
+    bool create_depth_stencil_buffer( int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view );
 
 public:
     D3D11Renderer( void );
