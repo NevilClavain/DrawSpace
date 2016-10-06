@@ -51,5 +51,8 @@
     <FxCompile Include="mat_input_constants.hlsl">
       <Filter>commons</Filter>
     </FxCompile>
+    <FxCompile Include="fbm.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

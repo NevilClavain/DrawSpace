@@ -48,5 +48,8 @@
     <FxCompile Include="water_bump.vsh">
       <Filter>vertex_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="fbm.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

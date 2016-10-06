@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="fbm.hlsl" />
     <FxCompile Include="mat_input_constants.hlsl" />
     <FxCompile Include="texture.psh">
       <FileType>Document</FileType>
