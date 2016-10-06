@@ -5,6 +5,7 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
+#include "mat_input_constants.hlsl"
 
 struct VS_INPUT 
 {
@@ -24,7 +25,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     pos.xyz = Input.Position;    
     pos.w = 1.0;
 
-    Output.Position = mul(pos, mat[0]);
+    Output.Position = mul(pos, mat[matWorldViewProjection]);
       
     return( Output );   
 }

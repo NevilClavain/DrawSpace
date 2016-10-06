@@ -5,6 +5,7 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
+#include "mat_input_constants.hlsl"
 
 struct VS_INPUT
 {
@@ -52,7 +53,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4 pos;
     pos.xyz = Input.Position;
     pos.w = 1.0;
-    Output.Position = reflectedVertexPos(pos, vec[24], vec[25], mat[8], mat[12], mat[20]);
+    Output.Position = reflectedVertexPos(pos, vec[24], vec[25], mat[matWorld], mat[matView], mat[matProj]);
     Output.TexCoord0 = Input.TexCoord0.xy;
       
     return (Output);
