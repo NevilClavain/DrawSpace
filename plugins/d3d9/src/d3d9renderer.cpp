@@ -221,10 +221,11 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         d3dpp.Flags = 0;		
         d3dpp.BackBufferCount = 0; // ca veut dire 1 !!!!
 
+        
         d3dpp.BackBufferWidth = m_config.m_fullscreen_width;
         d3dpp.BackBufferHeight = m_config.m_fullscreen_height;
         d3dpp.BackBufferFormat = m_config.m_fullscreen_format;
-
+        
 
 
         d3dpp.Flags = D3DPRESENTFLAG_DISCARD_DEPTHSTENCIL;
@@ -232,8 +233,11 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         d3dpp.FullScreen_RefreshRateInHz = m_config.m_refreshrate;
 
         m_characteristics.fullscreen = true;
+
         m_characteristics.width_resol = m_config.m_fullscreen_width;
         m_characteristics.height_resol = m_config.m_fullscreen_height;
+        
+        ///// ??????????????
 
 		_DSDEBUG( logger, dsstring( " -> FULLSCREEN " ) << d3dpp.BackBufferWidth << dsstring( " x " ) << d3dpp.BackBufferHeight << dsstring( " format " ) << d3dpp.BackBufferFormat )
     }
@@ -257,11 +261,6 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
         m_characteristics.fullscreen = false;
-
-        /*
-        m_characteristics.width_resol = p_w_width;
-        m_characteristics.height_resol = p_w_height;
-        */
 
         m_characteristics.width_resol = rect.right - rect.left;
         m_characteristics.height_resol = rect.bottom - rect.top;
@@ -327,6 +326,8 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     {
         v_width = 1.0;
         v_height = v_width * m_config.m_fullscreen_height / m_config.m_fullscreen_width;
+
+        _DSDEBUG( logger, " fullscreen for perpective : v_width = " << v_width << " v_height " << v_height )
     }
     else
     {
@@ -343,6 +344,17 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 
 
     hRes = D3DXCreateFontA( m_lpd3ddevice, 15, 10, 0, 0, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "System", &m_font );
+
+
+    // set viewport....
+
+    m_viewport.X = rect.left;
+    m_viewport.Y = rect.top;
+    m_viewport.Width = rect.right - rect.left;
+    m_viewport.Height = rect.bottom - rect.top;
+    m_viewport.MinZ = 0.0;
+    m_viewport.MaxZ = 1.0;
+
 
     _DSDEBUG( logger, "end : ok" )
     return true;
@@ -362,6 +374,9 @@ void D3D9Renderer::Release( void )
 
 void D3D9Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz )
 {
+    /*
+    _DSDEBUG( logger, " auto " << p_automatic << " vpx " << p_vpx << " vpy " << p_vpy << " vpw " << p_vpwidth << " vph " << p_vpheight << " vpminz " << p_vpminz << " vpmaxz " << p_vpmaxz )
+
     if( p_automatic )
     {
         RECT wndrect;
@@ -377,21 +392,14 @@ void D3D9Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p
     {
         m_viewport.X = p_vpx;
         m_viewport.Y = p_vpy;
-        m_viewport.Width = p_vpwidth;
-        m_viewport.Height = p_vpheight;
+        m_viewport.Width = 1024; //p_vpwidth;
+        m_viewport.Height = 768;//p_vpheight;
         m_viewport.MinZ = p_vpminz;
         m_viewport.MaxZ = p_vpmaxz;
     }
     m_lpd3ddevice->SetViewport( &m_viewport );
+    */
 }
-
-/*
-void D3D9Renderer::SetProjection( float p_vw, float p_vh, float p_zn, float p_zf )
-{
-    m_projection.Perspective( p_vw, p_vh, p_zn, p_zf );
-}
-*/
-
 
 void D3D9Renderer::BeginScreen( void )
 {
@@ -1930,19 +1938,6 @@ void D3D9Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
 void D3D9Renderer::GetRenderCharacteristics( Characteristics& p_characteristics )
 {
     p_characteristics = m_characteristics;
-
-    /*
-    if( !m_characteristics.fullscreen )
-    {
-        // prendre en compte les bords fenetre
-
-        RECT rect;
-        GetClientRect( m_hwnd, &rect );
-
-        p_characteristics.width_resol = rect.right;
-        p_characteristics.height_resol = rect.bottom;
-    }
-    */
 }
 
 void D3D9Renderer::set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount )
