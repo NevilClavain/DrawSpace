@@ -157,35 +157,41 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory( &sd, sizeof( sd ) );
-    sd.BufferCount = 1;
-    sd.BufferDesc.Width = m_characteristics.width_resol;
-    sd.BufferDesc.Height = m_characteristics.height_resol;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = p_hwnd;
-    sd.SampleDesc.Count = 1; // de 1 a 4 en D3D11
-    sd.SampleDesc.Quality = 0; // en low quality
-    sd.Windowed = TRUE;
 
-    D3D_FEATURE_LEVEL featureLevels[] =
+    if( p_fullscreen )
     {
-        D3D_FEATURE_LEVEL_11_0,
-        /*
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-        */
-    };
-    UINT numFeatureLevels = ARRAYSIZE( featureLevels );
+        sd.BufferCount = 1;
+        sd.BufferDesc.Width = m_config.m_fullscreen_width;
+        sd.BufferDesc.Height = m_config.m_fullscreen_height;
+        sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        sd.BufferDesc.RefreshRate.Numerator = 60;
+        sd.BufferDesc.RefreshRate.Denominator = 1;
+        sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        sd.OutputWindow = p_hwnd;
+        sd.SampleDesc.Count = 1; // de 1 a 4 en D3D11
+        sd.SampleDesc.Quality = 0; // en low quality        
+        sd.Windowed = FALSE;    
+    }
+    else
+    {
+        sd.BufferCount = 1;
+        sd.BufferDesc.Width = m_characteristics.width_resol;
+        sd.BufferDesc.Height = m_characteristics.height_resol;
+        sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        sd.BufferDesc.RefreshRate.Numerator = 60;
+        sd.BufferDesc.RefreshRate.Denominator = 1;
+        sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        sd.OutputWindow = p_hwnd;
+        sd.SampleDesc.Count = 1; // de 1 a 4 en D3D11
+        sd.SampleDesc.Quality = 0; // en low quality
+        sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+        sd.Windowed = TRUE;
+    }
+
 
     hRes = D3D11CreateDeviceAndSwapChain( NULL, D3D_DRIVER_TYPE_HARDWARE,
                                   NULL,
                                   createDeviceFlags,
-                                  /*
-                                  featureLevels,
-                                  numFeatureLevels,
-                                  */
                                   NULL,
                                   0,
                                   D3D11_SDK_VERSION,
@@ -197,7 +203,10 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     D3D11_CHECK( D3D11CreateDeviceAndSwapChain )
 
-
+    if( p_fullscreen )
+    {
+        m_lpd3dswapchain->SetFullscreenState( TRUE, NULL );
+    }
 
 
     ///////////////////////////////////////////////////////////////////////
@@ -2116,7 +2125,7 @@ bool D3D11Renderer::Config::on_new_line( const dsstring& p_line, long p_line_num
     }
     if( 5 == p_words.size() )
     {
-        if( "dx9fullscreen" == p_words[0] )
+        if( "dx11fullscreen" == p_words[0] )
         {
             m_fullscreen_width = atoi( p_words[1].c_str() );
             m_fullscreen_height = atoi( p_words[2].c_str() );
