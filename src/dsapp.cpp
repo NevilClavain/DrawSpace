@@ -185,9 +185,9 @@ void App::process_input_events( void )
 
             if( m_mouse_circularmode )
             {
-                if( x_m < m_w_width / 4 )
+                if( x_m < m_renderer_characteristics.width_resol / 4 )
                 {
-                    x_m = 3 * m_w_width / 4;
+                    x_m = 3 * m_renderer_characteristics.width_resol / 4;
 
                     OnMouseMove( x_m, y_m, 0, m_mousemoving_curr_y - m_mousemoving_last_y );
 
@@ -207,9 +207,9 @@ void App::process_input_events( void )
 
                     SetCursorPos( point.x, point.y );
                 }
-                else if( x_m > 3 * m_w_width / 4 )
+                else if( x_m > 3 * m_renderer_characteristics.width_resol / 4 )
                 {
-                    x_m = m_w_width / 4;
+                    x_m = m_renderer_characteristics.width_resol / 4;
 
                     OnMouseMove( x_m, y_m, 0, m_mousemoving_curr_y - m_mousemoving_last_y );
 
@@ -229,9 +229,9 @@ void App::process_input_events( void )
 
                     SetCursorPos( point.x, point.y );
                 }
-                else if( y_m < m_w_height / 4 )
+                else if( y_m < m_renderer_characteristics.height_resol / 4 )
                 {
-                    y_m = 3 * m_w_height / 4;
+                    y_m = 3 * m_renderer_characteristics.height_resol / 4;
 
                     OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, 0 );
 
@@ -251,9 +251,9 @@ void App::process_input_events( void )
 
                     SetCursorPos( point.x, point.y );
                 }
-                else if( y_m > 3 * m_w_height / 4 )
+                else if( y_m > 3 * m_renderer_characteristics.height_resol / 4 )
                 {
-                    y_m = m_w_height / 4;
+                    y_m = m_renderer_characteristics.height_resol / 4;
 
                     OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, 0 );
 
@@ -438,6 +438,9 @@ bool App::InitRenderer( void )
     }
 
     m_gl_ready = true;
+
+    // get renderer characteristics
+    renderer->GetRenderCharacteristics( m_renderer_characteristics );
 
     _DSDEBUG( logger, "end OK" )
     return true;

@@ -160,4 +160,5 @@ void dsAppClient::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 void dsAppClient::on_mousecircularmode_update( bool p_state )
 {
     m_mouse_circularmode = p_state;
+    ::ShowCursor( !p_state );
 }
