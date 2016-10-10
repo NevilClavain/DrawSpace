@@ -159,6 +159,10 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     }
 
 
+    RECT desktop_rect;
+    GetWindowRect( GetDesktopWindow(), &desktop_rect );
+
+
     // check for shaders model 3.0 support
 
     D3DCAPS9 caps;
