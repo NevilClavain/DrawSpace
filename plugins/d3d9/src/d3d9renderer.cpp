@@ -348,12 +348,28 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 
     // set viewport....
 
-    m_viewport.X = rect.left;
-    m_viewport.Y = rect.top;
-    m_viewport.Width = rect.right - rect.left;
-    m_viewport.Height = rect.bottom - rect.top;
-    m_viewport.MinZ = 0.0;
-    m_viewport.MaxZ = 1.0;
+    // set viewport....
+    if( p_fullscreen )
+    {
+        m_viewport.X = 0.0;
+        m_viewport.Y = 0.0;
+        m_viewport.Width = m_config.m_fullscreen_width;
+        m_viewport.Height = m_config.m_fullscreen_height;
+        m_viewport.MinZ = 0.0;
+        m_viewport.MaxZ = 1.0;
+    }
+    else
+    {
+        m_viewport.X = rect.left;
+        m_viewport.Y = rect.top;
+        m_viewport.Width = rect.right - rect.left;
+        m_viewport.Height = rect.bottom - rect.top;
+        m_viewport.MinZ = 0.0;
+        m_viewport.MaxZ = 1.0;
+    }
+
+
+    m_lpd3ddevice->SetViewport( &m_viewport );
 
     // renderer characteristics dump
     _DSDEBUG( logger, dsstring( "characteristics.width_resol = " ) << (int)m_characteristics.width_resol );
@@ -376,35 +392,6 @@ void D3D9Renderer::Release( void )
     D3D9_RELEASE( m_lpd3ddevice );
 
     _DSDEBUG( logger, "end" )
-}
-
-void D3D9Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz )
-{
-    /*
-    _DSDEBUG( logger, " auto " << p_automatic << " vpx " << p_vpx << " vpy " << p_vpy << " vpw " << p_vpwidth << " vph " << p_vpheight << " vpminz " << p_vpminz << " vpmaxz " << p_vpmaxz )
-
-    if( p_automatic )
-    {
-        RECT wndrect;
-        ::GetClientRect( m_hwnd, &wndrect );
-        m_viewport.X = wndrect.left;
-        m_viewport.Y = wndrect.top;
-        m_viewport.Width = wndrect.right - wndrect.left;
-        m_viewport.Height = wndrect.bottom - wndrect.top;
-        m_viewport.MinZ = p_vpminz;
-        m_viewport.MaxZ = p_vpmaxz;
-    }
-    else
-    {
-        m_viewport.X = p_vpx;
-        m_viewport.Y = p_vpy;
-        m_viewport.Width = 1024; //p_vpwidth;
-        m_viewport.Height = 768;//p_vpheight;
-        m_viewport.MinZ = p_vpminz;
-        m_viewport.MaxZ = p_vpmaxz;
-    }
-    m_lpd3ddevice->SetViewport( &m_viewport );
-    */
 }
 
 void D3D9Renderer::BeginScreen( void )

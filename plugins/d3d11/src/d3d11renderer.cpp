@@ -436,6 +436,8 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
         m_viewport.TopLeftY = rect.top;        
     }
 
+    m_lpd3ddevcontext->RSSetViewports( 1, &m_viewport );
+
     // renderer characteristics dump
     _DSDEBUG( logger, dsstring( "characteristics.width_resol = " ) << (int)m_characteristics.width_resol );
     _DSDEBUG( logger, dsstring( "characteristics.height_resol = " ) << (int)m_characteristics.height_resol );
@@ -487,36 +489,6 @@ void D3D11Renderer::Release( void )
     _DSDEBUG( logger, "begin" )
 
     _DSDEBUG( logger, "end" )
-}
-
-void D3D11Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz )
-{
-    /*
-    if( p_automatic )
-    {
-        RECT wndrect;
-        ::GetClientRect( m_hwnd, &wndrect );
-
-        m_viewport.Width = wndrect.right - wndrect.left;
-        m_viewport.Height = wndrect.bottom - wndrect.top;
-        m_viewport.MinDepth = p_vpminz;
-        m_viewport.MaxDepth = p_vpmaxz;
-        m_viewport.TopLeftX = wndrect.left;
-        m_viewport.TopLeftY = wndrect.top;
-
-    }
-    else
-    {
-        m_viewport.Width = p_vpwidth;
-        m_viewport.Height = p_vpheight;
-        m_viewport.MinDepth = p_vpminz;
-        m_viewport.MaxDepth = p_vpmaxz;
-        m_viewport.TopLeftX = p_vpx;
-        m_viewport.TopLeftY = p_vpy; 
-    }
-    */
-
-    m_lpd3ddevcontext->RSSetViewports( 1, &m_viewport );
 }
 
 void D3D11Renderer::BeginScreen( void )

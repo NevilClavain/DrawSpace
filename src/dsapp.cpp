@@ -436,14 +436,6 @@ bool App::InitRenderer( void )
         _DSDEBUG( logger, "end FAIL" )
         return false;
     }
-    if( !m_w_fullscreen )
-    {
-        renderer->SetViewport( true, 0, 0, 0, 0, 0.0f, 1.0f );
-    }
-    else
-    {
-        renderer->SetViewport( false, 0, 0, m_w_width, m_w_height, 0.0f, 1.0f );
-    }
 
     m_gl_ready = true;
 

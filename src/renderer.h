@@ -64,8 +64,6 @@ public:
 
     virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, Logger::Configuration* p_logcong ) = 0;
     virtual void Release( void ) = 0;
-
-    virtual void SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz ) = 0;
     
     virtual void BeginScreen( void ) = 0;
     virtual void EndScreen( void ) = 0;
@@ -96,12 +94,6 @@ public:
     virtual void* GetTextureContentPtr( void* p_texturedata ) = 0;
     virtual bool CopyTextureContent( void* p_texturedata ) = 0;
     virtual bool UpdateTextureContent( void* p_texturedata ) = 0;
-
-    /*
-    virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
-    virtual bool SetFx( void* p_data ) = 0;
-	virtual bool UnsetFx( void* p_data ) = 0;
-    */
 
     virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool SetShaders( void* p_data ) = 0;
