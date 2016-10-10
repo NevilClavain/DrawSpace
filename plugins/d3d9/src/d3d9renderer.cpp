@@ -355,6 +355,12 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     m_viewport.MinZ = 0.0;
     m_viewport.MaxZ = 1.0;
 
+    // renderer characteristics dump
+    _DSDEBUG( logger, dsstring( "characteristics.width_resol = " ) << (int)m_characteristics.width_resol );
+    _DSDEBUG( logger, dsstring( "characteristics.height_resol = " ) << (int)m_characteristics.height_resol );
+    _DSDEBUG( logger, dsstring( "characteristics.width_viewport = " ) << (float)m_characteristics.width_viewport );
+    _DSDEBUG( logger, dsstring( "characteristics.height_viewport = " ) << (float)m_characteristics.height_viewport );
+    _DSDEBUG( logger, dsstring( "characteristics.fullscreen = " ) << m_characteristics.fullscreen );
 
     _DSDEBUG( logger, "end : ok" )
     return true;

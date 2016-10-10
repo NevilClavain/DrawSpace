@@ -83,6 +83,8 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 {
     DECLARE_D3D11ASSERT_VARS
 
+    _DSDEBUG( logger, "begin" )
+
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 
@@ -137,16 +139,11 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     m_hwnd = p_hwnd;
 
 
-    m_characteristics.fullscreen = false;
-    /*
-    m_characteristics.width_resol = p_w_width;
-    m_characteristics.height_resol = p_w_height;
-    */
+
 
     RECT rect;
     GetClientRect( m_hwnd, &rect );
-    m_characteristics.width_resol = rect.right - rect.left;
-    m_characteristics.height_resol = rect.bottom - rect.top;
+
 
 
     UINT createDeviceFlags = 0;
@@ -160,6 +157,11 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     if( p_fullscreen )
     {
+        m_characteristics.fullscreen = true;
+
+        m_characteristics.width_resol = m_config.m_fullscreen_width;
+        m_characteristics.height_resol = m_config.m_fullscreen_height;
+
         sd.BufferCount = 1;
         sd.BufferDesc.Width = m_config.m_fullscreen_width;
         sd.BufferDesc.Height = m_config.m_fullscreen_height;
@@ -174,6 +176,12 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     }
     else
     {
+        
+        m_characteristics.fullscreen = false;
+
+        m_characteristics.width_resol = rect.right - rect.left;
+        m_characteristics.height_resol = rect.bottom - rect.top;
+
         sd.BufferCount = 1;
         sd.BufferDesc.Width = m_characteristics.width_resol;
         sd.BufferDesc.Height = m_characteristics.height_resol;
@@ -186,6 +194,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
         sd.SampleDesc.Quality = 0; // en low quality
         sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
         sd.Windowed = TRUE;
+
     }
 
 
@@ -406,6 +415,36 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     hRes = m_lpd3ddevice->CreateBuffer( &bd, NULL, &m_pixelshader_legacyargs_buffer );
     D3D11_CHECK( CreateBuffer )
 
+
+    // set viewport....
+    if( p_fullscreen )
+    {
+        m_viewport.Width = m_config.m_fullscreen_width;
+        m_viewport.Height = m_config.m_fullscreen_height;
+        m_viewport.MinDepth = 0.0;
+        m_viewport.MaxDepth = 1.0;
+        m_viewport.TopLeftX = 0.0;
+        m_viewport.TopLeftY = 0.0;
+    }
+    else
+    {
+        m_viewport.Width = rect.right - rect.left;
+        m_viewport.Height = rect.bottom - rect.top;
+        m_viewport.MinDepth = 0.0;
+        m_viewport.MaxDepth = 1.0;
+        m_viewport.TopLeftX = rect.left;
+        m_viewport.TopLeftY = rect.top;        
+    }
+
+    // renderer characteristics dump
+    _DSDEBUG( logger, dsstring( "characteristics.width_resol = " ) << (int)m_characteristics.width_resol );
+    _DSDEBUG( logger, dsstring( "characteristics.height_resol = " ) << (int)m_characteristics.height_resol );
+    _DSDEBUG( logger, dsstring( "characteristics.width_viewport = " ) << (float)m_characteristics.width_viewport );
+    _DSDEBUG( logger, dsstring( "characteristics.height_viewport = " ) << (float)m_characteristics.height_viewport );
+    _DSDEBUG( logger, dsstring( "characteristics.fullscreen = " ) << m_characteristics.fullscreen );
+
+    _DSDEBUG( logger, "end : ok" )
+
     return true;
 }
 
@@ -452,6 +491,7 @@ void D3D11Renderer::Release( void )
 
 void D3D11Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long p_vpwidth, long p_vpheight, float p_vpminz, float p_vpmaxz )
 {
+    /*
     if( p_automatic )
     {
         RECT wndrect;
@@ -474,6 +514,7 @@ void D3D11Renderer::SetViewport( bool p_automatic, long p_vpx, long p_vpy, long 
         m_viewport.TopLeftX = p_vpx;
         m_viewport.TopLeftY = p_vpy; 
     }
+    */
 
     m_lpd3ddevcontext->RSSetViewports( 1, &m_viewport );
 }
@@ -2049,19 +2090,6 @@ void D3D11Renderer::set_pixelshader_constants_mat( DWORD p_startreg, const DrawS
 void D3D11Renderer::GetRenderCharacteristics( Characteristics& p_characteristics )
 {
     p_characteristics = m_characteristics;
-
-    /*
-    if( !m_characteristics.fullscreen )
-    {
-        // prendre en compte les bords fenetre
-
-        RECT rect;
-        GetClientRect( m_hwnd, &rect );
-
-        p_characteristics.width_resol = rect.right;
-        p_characteristics.height_resol = rect.bottom;
-    }
-    */
 }
 
 void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... )
