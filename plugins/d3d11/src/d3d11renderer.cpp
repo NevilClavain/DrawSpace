@@ -36,6 +36,7 @@ extern void TranslateD3DD11Error( HRESULT p_hRes, dsstring &p_str );
 _DECLARE_DS_LOGGER( logger, "d3d11", NULL )
 
 D3D11Renderer::D3D11Renderer( void ) :
+m_curr_adapter( NULL ),
 m_lpd3dswapchain( NULL ),
 m_lpd3ddevice( NULL ),
 m_lpd3ddevcontext( NULL ),
@@ -79,6 +80,60 @@ void D3D11Renderer::DumpMemoryAllocs( void )
 
 }
 
+void D3D11Renderer::fullscreen_autoset_desktop_resolution( int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den )
+{
+    bool found = false;
+    // get user windows desktop resolution
+    RECT desktop_rect;
+    GetWindowRect( GetDesktopWindow(), &desktop_rect );
+
+    //check if device has display format corresponding to desktop resolution
+
+    IDXGIOutput* output = NULL;
+
+    m_curr_adapter->EnumOutputs( 0, &output );
+
+    UINT nb_modes = 0;
+    DXGI_MODE_DESC* displayModes = NULL;
+    DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+    output->GetDisplayModeList( format, 0, &nb_modes, NULL );
+
+    if( 0 == nb_modes )
+    {
+        _DSEXCEPTION( "no d3d adapter mode found!!!!" );
+    }
+
+    displayModes = new DXGI_MODE_DESC[nb_modes];
+    output->GetDisplayModeList( format, 0, &nb_modes, displayModes );
+    UINT j;
+	for( j = 0; j < nb_modes; j++ )
+	{
+        if( displayModes[j].Width == desktop_rect.right - desktop_rect.left && displayModes[j].Height == desktop_rect.bottom - desktop_rect.top )
+        {            
+            p_fullscreen_width = displayModes[j].Width;
+            p_fullscreen_height = displayModes[j].Height;
+            p_fullscreen_format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            p_fullscreen_refreshRate_num = displayModes[j].RefreshRate.Numerator;
+            p_fullscreen_refreshRate_den = displayModes[j].RefreshRate.Denominator;
+            found = true;
+            break;
+        }
+	}
+
+    if( !found )
+    {
+        //pas trouvé, alors prendre l'entrée de la dernière iteration :(
+
+        p_fullscreen_width = displayModes[j].Width;
+        p_fullscreen_height = displayModes[j].Height;
+        p_fullscreen_format = DXGI_FORMAT_R8G8B8A8_UINT;
+        p_fullscreen_refreshRate_num = displayModes[j].RefreshRate.Numerator;
+        p_fullscreen_refreshRate_den = displayModes[j].RefreshRate.Denominator;
+    }
+}
+
+
 bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf )
 {
     DECLARE_D3D11ASSERT_VARS
@@ -116,8 +171,6 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     for( UINT i = 0; factory->EnumAdapters(i, &curr_adapter) != DXGI_ERROR_NOT_FOUND; ++i )
     {
-        //adapters.push_back(adapter);
-
         DXGI_ADAPTER_DESC   descr;
         curr_adapter->GetDesc( &descr );
 
@@ -131,7 +184,24 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
         currentDescr.deviceName = "N/A";
 
         m_devices_descrs.push_back( currentDescr );
-    } 
+
+        if( i == adapter )
+        {
+            m_curr_adapter = curr_adapter;
+        }
+    }
+
+    int         fullscreen_width;
+    int         fullscreen_height;
+    DXGI_FORMAT fullscreen_format;
+    int         fullscreen_refresh_rate_num;
+    int         fullscreen_refresh_rate_den;
+
+    if( p_fullscreen )
+    {
+        // basculer automatiquement sur un mode correspondant a la resol actuelle du bureau windows
+        fullscreen_autoset_desktop_resolution( fullscreen_width, fullscreen_height, fullscreen_format, fullscreen_refresh_rate_num, fullscreen_refresh_rate_den );
+    }
 
 
     //////////////////////////////
@@ -159,15 +229,15 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     {
         m_characteristics.fullscreen = true;
 
-        m_characteristics.width_resol = m_config.m_fullscreen_width;
-        m_characteristics.height_resol = m_config.m_fullscreen_height;
+        m_characteristics.width_resol = fullscreen_width;
+        m_characteristics.height_resol = fullscreen_height;
 
         sd.BufferCount = 1;
-        sd.BufferDesc.Width = m_config.m_fullscreen_width;
-        sd.BufferDesc.Height = m_config.m_fullscreen_height;
-        sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        sd.BufferDesc.RefreshRate.Numerator = 60;
-        sd.BufferDesc.RefreshRate.Denominator = 1;
+        sd.BufferDesc.Width = fullscreen_width;
+        sd.BufferDesc.Height = fullscreen_height;
+        sd.BufferDesc.Format = fullscreen_format;
+        sd.BufferDesc.RefreshRate.Numerator = fullscreen_refresh_rate_num;
+        sd.BufferDesc.RefreshRate.Denominator = fullscreen_refresh_rate_den;
         sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         sd.OutputWindow = p_hwnd;
         sd.SampleDesc.Count = 1; // de 1 a 4 en D3D11
@@ -284,7 +354,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     if( p_fullscreen )
     {
         v_width = 1.0;
-        v_height = v_width * m_config.m_fullscreen_height / m_config.m_fullscreen_width;
+        v_height = v_width * fullscreen_height / fullscreen_width;
     }
     else
     {
@@ -419,8 +489,8 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     // set viewport....
     if( p_fullscreen )
     {
-        m_viewport.Width = m_config.m_fullscreen_width;
-        m_viewport.Height = m_config.m_fullscreen_height;
+        m_viewport.Width = fullscreen_width;
+        m_viewport.Height = fullscreen_height;
         m_viewport.MinDepth = 0.0;
         m_viewport.MaxDepth = 1.0;
         m_viewport.TopLeftX = 0.0;

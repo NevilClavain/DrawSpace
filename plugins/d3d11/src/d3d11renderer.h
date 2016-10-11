@@ -151,6 +151,8 @@ protected:
     ID3D11Device*                                                   m_lpd3ddevice;                     
     ID3D11DeviceContext*                                            m_lpd3ddevcontext;
 
+    IDXGIAdapter*                                                   m_curr_adapter;
+
     ID3D11DepthStencilView*                                         m_currentView;
     ID3D11RenderTargetView*                                         m_currentTarget;
 
@@ -206,6 +208,8 @@ protected:
     bool set_cache_blendstate( void );
 
     bool create_depth_stencil_buffer( int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view );
+
+    void fullscreen_autoset_desktop_resolution( int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den );
 
 public:
     D3D11Renderer( void );
