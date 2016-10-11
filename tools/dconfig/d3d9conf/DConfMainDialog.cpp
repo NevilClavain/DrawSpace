@@ -4,8 +4,6 @@
 DConfMainDialog::DConfMainDialog( wxWindow* parent, const wxString& title ) :
 MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
 {
-
-
 	m_lpd3d = Direct3DCreate9( D3D_SDK_VERSION );
 
 	UINT nb_adapters = m_lpd3d->GetAdapterCount();
@@ -68,19 +66,6 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
 
     m_propertyGrid->Append( new wxEnumProperty( "Device", wxPG_LABEL, devices ) );
 
-    for( size_t i = 0; i < m_adapters_infos.size(); i++ )
-    {
-        wxPGProperty* devices_modes_root = m_propertyGrid->Append( new wxStringProperty( m_adapters_infos[i].infos.Description, wxPG_LABEL, "<composed>" ) );
-
-        wxArrayString device_modes;
-
-        for( size_t j = 0; j < m_adapters_infos[i].modes.size(); j++ )
-        {
-            device_modes.Add( m_adapters_infos[i].modes[j].comment );
-        }
-
-        m_propertyGrid->AppendIn( devices_modes_root, new wxEnumProperty( "Display mode", wxPG_LABEL, device_modes ) );
-    }
 }
 
 
@@ -144,7 +129,7 @@ void DConfMainDialog::OnSaveButtonClick( wxCommandEvent& event )
     DIALOG_GET_ENUM_PROPERTY( "Device", wxsDevice );
     DIALOG_WXSTRING_TO_DSSTRING( wxsDevice, device );
 
-    FILE* fp = fopen( "appconfig.txt", "w" );
+    FILE* fp = fopen( "appconfig.txt", "wt" );
 
     fprintf( fp, "renderplugin           drawspaced3d9\n" );
     fprintf( fp, "dx9vertexproc          hardware\n" );
@@ -182,22 +167,10 @@ void DConfMainDialog::OnSaveButtonClick( wxCommandEvent& event )
 	    fprintf( fp, "height                 900\n" );    
     }
 
-    /*
-    DIALOG_GET_ENUM_PROPERTY( device + std::string( ".Display mode" ) , wxsFsMode );
-    DIALOG_WXSTRING_TO_DSSTRING( wxsFsMode, fsMode );
-    */
-
     wxEnumProperty* fsmode_enum_prop = static_cast<wxEnumProperty*>( m_propertyGrid->GetProperty( device + std::string( ".Display mode" ) ) );
     int device_fsmode_ordinal = fsmode_enum_prop->GetChoiceSelection();
 
-
-	if( fullscreen )
-	{
-		adapter_infos ai = m_adapters_infos[device_ordinal];
-		adapter_mode am = ai.modes[device_fsmode_ordinal];
-
-		fprintf( fp, "dx9fullscreen          %d %d %d %d\n", am.width, am.height, am.refresh_rate, am.format );
-	}
+    fflush( fp );
 
     fclose( fp );
 }
