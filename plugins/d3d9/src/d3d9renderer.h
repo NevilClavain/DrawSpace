@@ -67,10 +67,6 @@ protected:
 
     public:
         int         m_adapter_ordinal;
-        int         m_fullscreen_width;
-        int         m_fullscreen_height;
-        int         m_refreshrate;
-        D3DFORMAT   m_fullscreen_format;
         DWORD       m_vertex_processing;
     };
 
@@ -178,6 +174,8 @@ protected:
     void set_pixelshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
 
     D3DFORMAT find_depthbuffer_format( int p_adapterordinal, D3DFORMAT p_displayformat );
+
+    void fullscreen_autoset_desktop_resolution( int& p_fullscreen_width, int& p_fullscreen_height, D3DFORMAT& p_fullscreen_format, UINT& p_fullscreen_refreshRate );
 
 public:
     D3D9Renderer( void );

@@ -99,6 +99,48 @@ D3DFORMAT D3D9Renderer::find_depthbuffer_format( int p_adapterordinal, D3DFORMAT
     }
 }
 
+void D3D9Renderer::fullscreen_autoset_desktop_resolution( int& p_fullscreen_width, int& p_fullscreen_height, D3DFORMAT& p_fullscreen_format, UINT& p_fullscreen_refreshRate )
+{
+    bool found = false;
+    // get user windows desktop resolution
+    RECT desktop_rect;
+    GetWindowRect( GetDesktopWindow(), &desktop_rect );
+
+    //check if device has display format corresponding to desktop resolution
+    D3DDISPLAYMODE current_dm;
+    UINT nb_modes = m_lpd3d->GetAdapterModeCount( m_currentDevice, D3DFMT_X8R8G8B8 );
+
+    if( 0 == nb_modes )
+    {
+        _DSEXCEPTION( "no d3d adapter mode found!!!!" );
+    }
+
+	for( UINT j = 0; j < nb_modes; j++ )
+	{
+		HRESULT res = m_lpd3d->EnumAdapterModes( m_currentDevice, D3DFMT_X8R8G8B8, j, &current_dm );
+
+        if( current_dm.Width == desktop_rect.right - desktop_rect.left && current_dm.Height == desktop_rect.bottom - desktop_rect.top )
+        {            
+            p_fullscreen_width = current_dm.Width;
+            p_fullscreen_height = current_dm.Height;
+            p_fullscreen_format = D3DFMT_X8R8G8B8;
+            p_fullscreen_refreshRate = current_dm.RefreshRate;
+            found = true;
+            break;
+        }
+	}
+
+    if( !found )
+    {
+        //pas trouvé, alors prendre l'entrée de la dernière iteration :(
+
+        p_fullscreen_width = current_dm.Width;
+        p_fullscreen_height = current_dm.Height;
+        p_fullscreen_format = D3DFMT_X8R8G8B8;
+        p_fullscreen_refreshRate = current_dm.RefreshRate;
+    }
+}
+
 bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf )
 {
     D3DPRESENT_PARAMETERS d3dpp;
@@ -159,8 +201,16 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     }
 
 
-    RECT desktop_rect;
-    GetWindowRect( GetDesktopWindow(), &desktop_rect );
+    int fullscreen_width;
+    int fullscreen_height;
+    D3DFORMAT fullscreen_format;
+    UINT fullscreen_refresh_rate;
+
+    if( p_fullscreen )
+    {
+        // basculer automatiquement sur un mode correspondant a la resol actuelle du bureau windows
+        fullscreen_autoset_desktop_resolution( fullscreen_width, fullscreen_height, fullscreen_format, fullscreen_refresh_rate );
+    }
 
 
     // check for shaders model 3.0 support
@@ -192,7 +242,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     D3DFORMAT depth_format;
     if( p_fullscreen )
     {
-        depth_format = find_depthbuffer_format( adapter, m_config.m_fullscreen_format );
+        depth_format = find_depthbuffer_format( adapter, fullscreen_format );
     }
     else
     {
@@ -226,20 +276,20 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         d3dpp.BackBufferCount = 0; // ca veut dire 1 !!!!
 
         
-        d3dpp.BackBufferWidth = m_config.m_fullscreen_width;
-        d3dpp.BackBufferHeight = m_config.m_fullscreen_height;
-        d3dpp.BackBufferFormat = m_config.m_fullscreen_format;
+        d3dpp.BackBufferWidth = fullscreen_width;
+        d3dpp.BackBufferHeight = fullscreen_height;
+        d3dpp.BackBufferFormat = fullscreen_format;
         
 
 
         d3dpp.Flags = D3DPRESENTFLAG_DISCARD_DEPTHSTENCIL;
         d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-        d3dpp.FullScreen_RefreshRateInHz = m_config.m_refreshrate;
+        d3dpp.FullScreen_RefreshRateInHz = fullscreen_refresh_rate;
 
         m_characteristics.fullscreen = true;
 
-        m_characteristics.width_resol = m_config.m_fullscreen_width;
-        m_characteristics.height_resol = m_config.m_fullscreen_height;
+        m_characteristics.width_resol = fullscreen_width;
+        m_characteristics.height_resol = fullscreen_height;
         
         ///// ??????????????
 
@@ -329,7 +379,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     if( p_fullscreen )
     {
         v_width = 1.0;
-        v_height = v_width * m_config.m_fullscreen_height / m_config.m_fullscreen_width;
+        v_height = v_width * (float)fullscreen_height / (float)fullscreen_width;
 
         _DSDEBUG( logger, " fullscreen for perpective : v_width = " << v_width << " v_height " << v_height )
     }
@@ -357,8 +407,8 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     {
         m_viewport.X = 0.0;
         m_viewport.Y = 0.0;
-        m_viewport.Width = m_config.m_fullscreen_width;
-        m_viewport.Height = m_config.m_fullscreen_height;
+        m_viewport.Width = fullscreen_width;
+        m_viewport.Height = fullscreen_height;
         m_viewport.MinZ = 0.0;
         m_viewport.MaxZ = 1.0;
     }
@@ -1984,16 +2034,7 @@ bool D3D9Renderer::Config::on_new_line( const dsstring& p_line, long p_line_num,
         }
 
     }
-    if( 5 == p_words.size() )
-    {
-        if( "dx9fullscreen" == p_words[0] )
-        {
-            m_fullscreen_width = atoi( p_words[1].c_str() );
-            m_fullscreen_height = atoi( p_words[2].c_str() );
-            m_refreshrate = atoi( p_words[3].c_str() );
-            m_fullscreen_format = (D3DFORMAT)atoi( p_words[4].c_str() );
-        }
-    }
+
 
     return true;
 }
