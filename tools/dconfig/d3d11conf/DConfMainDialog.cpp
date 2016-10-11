@@ -76,8 +76,6 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
 		    }
         }
 
-  
-
         m_adapters_infos.push_back( infos );
     }
 
@@ -85,8 +83,6 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
     {
         factory->Release();
     }
-
-
 
     // remplissage formulaire à partir des données récoltées
 
@@ -97,6 +93,7 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
     window_dims.Add( "1024 x 768" );
     window_dims.Add( "1280 x 960" );
     window_dims.Add( "1440 x 900" );
+    window_dims.Add( "1920 x 1080" );
     m_propertyGrid->Append( new wxEnumProperty( "Window dims", wxPG_LABEL, window_dims ) );
 
     wxArrayString devices;
@@ -106,20 +103,6 @@ MainDialog( parent, wxID_ANY, title, wxDefaultPosition )
     }
 
     m_propertyGrid->Append( new wxEnumProperty( "Device", wxPG_LABEL, devices ) );
-
-    
-    for( size_t i = 0; i < m_adapters_infos.size(); i++ )
-    {
-        wxPGProperty* devices_modes_root = m_propertyGrid->Append( new wxStringProperty( m_adapters_infos[i].infos.Description, wxPG_LABEL, "<composed>" ) );
-
-        wxArrayString device_modes;
-        
-        for( size_t j = 0; j < m_adapters_infos[i].modes.size(); j++ )
-        {
-            device_modes.Add( m_adapters_infos[i].modes[j].comment );
-        }        
-        m_propertyGrid->AppendIn( devices_modes_root, new wxEnumProperty( "Display mode", wxPG_LABEL, device_modes ) );
-    }
     
 }
 
@@ -220,20 +203,16 @@ void DConfMainDialog::OnSaveButtonClick( wxCommandEvent& event )
 	    fprintf( fp, "width                  1440\n" );
 	    fprintf( fp, "height                 900\n" );    
     }
-
+    else if( windowsDims == "1920 x 1080" )
+    {
+	    fprintf( fp, "width                  1920\n" );
+	    fprintf( fp, "height                 1080\n" );    
+    }
 
     wxEnumProperty* fsmode_enum_prop = static_cast<wxEnumProperty*>( m_propertyGrid->GetProperty( device + std::string( ".Display mode" ) ) );
     int device_fsmode_ordinal = fsmode_enum_prop->GetChoiceSelection();
 
-
-	if( fullscreen )
-	{
-		adapter_infos ai = m_adapters_infos[device_ordinal];
-		adapter_mode am = ai.modes[device_fsmode_ordinal];
-
-		fprintf( fp, "dx11fullscreen          %d %d %d %d\n", am.width, am.height, am.refresh_rate, am.format );
-	}
-
+    fflush( fp );
     fclose( fp );
     
 }
