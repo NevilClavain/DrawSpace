@@ -84,11 +84,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 
     m_scenenodegraph.SetCurrentCamera( "camera" );
 
-    DrawSpace::Interface::Renderer::DeviceDescr dd;
-    m_renderer->GetDeviceDescr( dd );
-
-    m_device = dd.description;
-
     set_mouse_circular_mode( true );
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
@@ -125,7 +120,7 @@ void MainLoopService::Run( void )
     m_bumppass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
 
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s - %s", m_tm.GetFPS(), m_device.c_str(), m_pluginDescr.c_str() );
+    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 
     m_renderer->FlipScreen();
 

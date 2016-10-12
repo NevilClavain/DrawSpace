@@ -31,7 +31,6 @@ protected:
 
     DrawSpace::Interface::Renderer*         m_renderer;
     DrawSpace::Utils::TimeManager           m_tm;
-    dsstring                                m_device;
     dsstring                                m_pluginDescr;
 
 public:

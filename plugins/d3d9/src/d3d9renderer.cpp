@@ -36,8 +36,7 @@ m_lpd3d( NULL ),
 m_lpd3ddevice( NULL ),
 m_vertexdeclaration( NULL ),
 m_next_nbvertices( 0 ),
-m_next_nbtriangles( 0 ),
-m_currentDevice( -1 )
+m_next_nbtriangles( 0 )
 {
 
 }
@@ -50,14 +49,6 @@ D3D9Renderer::~D3D9Renderer( void )
 void D3D9Renderer::GetDescr( dsstring& p_descr )
 {
     p_descr = "Direct3D9";
-}
-
-void D3D9Renderer::GetDeviceDescr( DeviceDescr& p_ddescr )
-{
-    if( m_currentDevice != -1 )
-    {
-        p_ddescr = m_devices_descrs[m_currentDevice];
-    }
 }
 
 void D3D9Renderer::GetShadersDescr( dsstring& p_descr )
@@ -106,39 +97,10 @@ void D3D9Renderer::fullscreen_autoset_desktop_resolution( int& p_fullscreen_widt
     RECT desktop_rect;
     GetWindowRect( GetDesktopWindow(), &desktop_rect );
 
-    //check if device has display format corresponding to desktop resolution
-    D3DDISPLAYMODE current_dm;
-    UINT nb_modes = m_lpd3d->GetAdapterModeCount( m_currentDevice, D3DFMT_X8R8G8B8 );
-
-    if( 0 == nb_modes )
-    {
-        _DSEXCEPTION( "no d3d adapter mode found!!!!" );
-    }
-
-	for( UINT j = 0; j < nb_modes; j++ )
-	{
-		HRESULT res = m_lpd3d->EnumAdapterModes( m_currentDevice, D3DFMT_X8R8G8B8, j, &current_dm );
-
-        if( current_dm.Width == desktop_rect.right - desktop_rect.left && current_dm.Height == desktop_rect.bottom - desktop_rect.top )
-        {            
-            p_fullscreen_width = current_dm.Width;
-            p_fullscreen_height = current_dm.Height;
-            p_fullscreen_format = D3DFMT_X8R8G8B8;
-            p_fullscreen_refreshRate = current_dm.RefreshRate;
-            found = true;
-            break;
-        }
-	}
-
-    if( !found )
-    {
-        //pas trouvé, alors prendre l'entrée de la dernière iteration :(
-
-        p_fullscreen_width = current_dm.Width;
-        p_fullscreen_height = current_dm.Height;
-        p_fullscreen_format = D3DFMT_X8R8G8B8;
-        p_fullscreen_refreshRate = current_dm.RefreshRate;
-    }
+    p_fullscreen_width = desktop_rect.right - desktop_rect.left;
+    p_fullscreen_height = desktop_rect.bottom - desktop_rect.top;
+    p_fullscreen_format = D3DFMT_X8R8G8B8;
+    p_fullscreen_refreshRate = 20;
 }
 
 bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf )
@@ -153,19 +115,8 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     p_logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
 
-    if( true == m_config.Run( "appconfig.txt", "    " ) )
-    {
-        _DSDEBUG( logger, "plugin configuration file -> OK" )
-    }
-    else
-    {
-        _DSWARN( logger, "Failed to parse plugin configuration file !! -> switching to default settings" )
-        return false;
-    }
-
-    long adapter = m_config.m_adapter_ordinal;
-
-    m_currentDevice = adapter;
+    
+    long adapter = 0;
 
     _DSDEBUG( logger, "begin" )
 
@@ -179,25 +130,6 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
     {	
         _DSDEBUG( logger, "end : ko Direct3DCreate9 fail" )
         return false;
-    }
-
-    // enum existing devices
-    UINT nb_adapters = m_lpd3d->GetAdapterCount();
-
-    m_devices_descrs.clear();
-
-	for( UINT i = 0; i < nb_adapters; i++ )
-	{
-		D3DADAPTER_IDENTIFIER9 currentDev;
-        m_lpd3d->GetAdapterIdentifier( i, 0, &currentDev );
-
-        DeviceDescr currentDescr;
-
-        currentDescr.description = currentDev.Description;
-        currentDescr.driver = currentDev.Driver;
-        currentDescr.deviceName = currentDev.DeviceName;
-
-        m_devices_descrs.push_back( currentDescr );
     }
 
 
@@ -323,9 +255,7 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 		_DSDEBUG( logger, dsstring(" -> WINDOWED ") << p_w_width << dsstring( " x " ) << p_w_height )
     }
 
-    DWORD behavior = m_config.m_vertex_processing;
-
-    hRes = m_lpd3d->CreateDevice( adapter, D3DDEVTYPE_HAL, m_hwnd, behavior | D3DCREATE_FPU_PRESERVE, &d3dpp, &m_lpd3ddevice );
+    hRes = m_lpd3d->CreateDevice( adapter, D3DDEVTYPE_HAL, m_hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_FPU_PRESERVE, &d3dpp, &m_lpd3ddevice );
     D3D9_CHECK( CreateDevice )
 
     D3DVERTEXELEMENT9 vdecl[] = 
@@ -2011,32 +1941,6 @@ void D3D9Renderer::set_pixelshader_constants( DWORD p_startreg, dsreal *p_ftab, 
         }
     }	
     m_lpd3ddevice->SetPixelShaderConstantF( p_startreg, ftab, p_v4fCount );
-}
-
-bool D3D9Renderer::Config::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    if( 2 == p_words.size() )
-    {
-        if( "dx9adapterordinal" == p_words[0] )
-        {
-            m_adapter_ordinal = atoi( p_words[1].c_str() );
-        }
-        if( "dx9vertexproc" == p_words[0] )
-        {
-            if( "hardware" == p_words[1] )
-            {
-                m_vertex_processing = D3DCREATE_HARDWARE_VERTEXPROCESSING;
-            }
-            else
-            {
-                m_vertex_processing = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
-            }
-        }
-
-    }
-
-
-    return true;
 }
 
 void D3D9Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... )

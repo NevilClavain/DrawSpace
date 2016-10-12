@@ -60,19 +60,6 @@ class D3D11Renderer : public DrawSpace::Interface::Renderer
 {
 protected:
 
-    class Config : public DrawSpace::Utils::Parser
-    {
-    protected:
-        bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
-    public:
-        int                                                         m_adapter_ordinal;
-        int                                                         m_fullscreen_width;
-        int                                                         m_fullscreen_height;
-        int                                                         m_refreshrate;
-        DXGI_FORMAT                                                 m_fullscreen_format;
-        DWORD                                                       m_vertex_processing;
-    };
 
     typedef struct
     {
@@ -138,9 +125,6 @@ protected:
     typedef std::map<dsstring, RSCacheEntry>                        RSCache;
     typedef std::map<dsstring, BSCacheEntry>                        BSCache;
 
-    Config                                                          m_config;
-
-
     HWND                                                            m_hwnd;
 
     Characteristics                                                 m_characteristics;
@@ -150,8 +134,6 @@ protected:
     IDXGISwapChain*                                                 m_lpd3dswapchain;
     ID3D11Device*                                                   m_lpd3ddevice;                     
     ID3D11DeviceContext*                                            m_lpd3ddevcontext;
-
-    IDXGIAdapter*                                                   m_curr_adapter;
 
     ID3D11DepthStencilView*                                         m_currentView;
     ID3D11RenderTargetView*                                         m_currentTarget;
@@ -179,9 +161,6 @@ protected:
     D3D11_VIEWPORT                                                  m_viewport;
 
     IFW1FontWrapper*                                                m_fontWrapper;
-
-    std::vector<DeviceDescr>                                        m_devices_descrs;
-    int                                                             m_currentDevice;
 
     std::map<dsstring, TextureInfos*>                               m_textures_base;
     std::map<DrawSpace::Core::Texture*, TextureInfos*>              m_targettextures_base;
@@ -216,7 +195,6 @@ public:
     ~D3D11Renderer( void );
 
     virtual void GetDescr( dsstring& p_descr );
-    virtual void GetDeviceDescr( DeviceDescr& p_ddescr );
     virtual void GetShadersDescr( dsstring& p_descr );
 
     virtual void DumpMemoryAllocs( void );

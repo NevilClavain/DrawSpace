@@ -36,13 +36,11 @@ extern void TranslateD3DD11Error( HRESULT p_hRes, dsstring &p_str );
 _DECLARE_DS_LOGGER( logger, "d3d11", NULL )
 
 D3D11Renderer::D3D11Renderer( void ) :
-m_curr_adapter( NULL ),
 m_lpd3dswapchain( NULL ),
 m_lpd3ddevice( NULL ),
 m_lpd3ddevcontext( NULL ),
 m_screentarget( NULL ),
 m_inputLayout( NULL ),
-m_currentDevice( -1 ),
 m_pDepthStencil( NULL ),
 m_pDepthStencilView( NULL ),
 m_currentTarget( NULL ),
@@ -62,14 +60,6 @@ void D3D11Renderer::GetDescr( dsstring& p_descr )
     p_descr = "Direct3D11";
 }
 
-void D3D11Renderer::GetDeviceDescr( DeviceDescr& p_ddescr )
-{
-    if( m_currentDevice != -1 )
-    {
-        p_ddescr = m_devices_descrs[m_currentDevice];
-    }
-}
-
 void D3D11Renderer::GetShadersDescr( dsstring& p_descr )
 {
     p_descr = "hlsl_4_0";
@@ -87,50 +77,12 @@ void D3D11Renderer::fullscreen_autoset_desktop_resolution( int& p_fullscreen_wid
     RECT desktop_rect;
     GetWindowRect( GetDesktopWindow(), &desktop_rect );
 
-    //check if device has display format corresponding to desktop resolution
+    p_fullscreen_width = desktop_rect.right - desktop_rect.left;
+    p_fullscreen_height = desktop_rect.bottom - desktop_rect.top;
+    p_fullscreen_format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    p_fullscreen_refreshRate_num = 60;
+    p_fullscreen_refreshRate_den = 1;
 
-    IDXGIOutput* output = NULL;
-
-    m_curr_adapter->EnumOutputs( 0, &output );
-
-    UINT nb_modes = 0;
-    DXGI_MODE_DESC* displayModes = NULL;
-    DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-    output->GetDisplayModeList( format, 0, &nb_modes, NULL );
-
-    if( 0 == nb_modes )
-    {
-        _DSEXCEPTION( "no d3d adapter mode found!!!!" );
-    }
-
-    displayModes = new DXGI_MODE_DESC[nb_modes];
-    output->GetDisplayModeList( format, 0, &nb_modes, displayModes );
-    UINT j;
-	for( j = 0; j < nb_modes; j++ )
-	{
-        if( displayModes[j].Width == desktop_rect.right - desktop_rect.left && displayModes[j].Height == desktop_rect.bottom - desktop_rect.top )
-        {            
-            p_fullscreen_width = displayModes[j].Width;
-            p_fullscreen_height = displayModes[j].Height;
-            p_fullscreen_format = DXGI_FORMAT_R8G8B8A8_UNORM;
-            p_fullscreen_refreshRate_num = displayModes[j].RefreshRate.Numerator;
-            p_fullscreen_refreshRate_den = displayModes[j].RefreshRate.Denominator;
-            found = true;
-            break;
-        }
-	}
-
-    if( !found )
-    {
-        //pas trouvé, alors prendre l'entrée de la dernière iteration :(
-
-        p_fullscreen_width = displayModes[j].Width;
-        p_fullscreen_height = displayModes[j].Height;
-        p_fullscreen_format = DXGI_FORMAT_R8G8B8A8_UINT;
-        p_fullscreen_refreshRate_num = displayModes[j].RefreshRate.Numerator;
-        p_fullscreen_refreshRate_den = displayModes[j].RefreshRate.Denominator;
-    }
 }
 
 
@@ -146,50 +98,12 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     p_logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
 
-    if( true == m_config.Run( "appconfig.txt", "    " ) )
-    {
-        _DSDEBUG( logger, "plugin configuration file -> OK" )
-    }
-    else
-    {
-        _DSWARN( logger, "Failed to parse plugin configuration file !! -> switching to default settings" )
-        return false;
-    }
-
-    long adapter = m_config.m_adapter_ordinal;
-
-    m_currentDevice = adapter;
 
     _DSDEBUG( logger, "D3D11 init begin" )
 
     IDXGIFactory* factory = NULL; 
     CreateDXGIFactory(__uuidof(IDXGIFactory) ,(void**)&factory);
 
-    // enum existing devices
-
-    IDXGIAdapter* curr_adapter;
-
-    for( UINT i = 0; factory->EnumAdapters(i, &curr_adapter) != DXGI_ERROR_NOT_FOUND; ++i )
-    {
-        DXGI_ADAPTER_DESC   descr;
-        curr_adapter->GetDesc( &descr );
-
-        DeviceDescr currentDescr;
-
-        std::wstring wdescr( descr.Description );
-
-
-        currentDescr.description = DrawSpace::Utils::WString2String( descr.Description ); //"N/A"; //wcharToDsString( descr.Description );
-        currentDescr.driver = "N/A";
-        currentDescr.deviceName = "N/A";
-
-        m_devices_descrs.push_back( currentDescr );
-
-        if( i == adapter )
-        {
-            m_curr_adapter = curr_adapter;
-        }
-    }
 
     int         fullscreen_width;
     int         fullscreen_height;
@@ -2184,28 +2098,7 @@ void D3D11Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace:
 }
 
 
-bool D3D11Renderer::Config::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    if( 2 == p_words.size() )
-    {
-        if( "dx11adapterordinal" == p_words[0] )
-        {
-            m_adapter_ordinal = atoi( p_words[1].c_str() );
-        }
-    }
-    if( 5 == p_words.size() )
-    {
-        if( "dx11fullscreen" == p_words[0] )
-        {
-            m_fullscreen_width = atoi( p_words[1].c_str() );
-            m_fullscreen_height = atoi( p_words[2].c_str() );
-            m_refreshrate = atoi( p_words[3].c_str() );
-            m_fullscreen_format = (DXGI_FORMAT)atoi( p_words[4].c_str() );
-        }
-    }
 
-    return true;
-}
 
 HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut )
 {

@@ -60,17 +60,6 @@ class D3D9Renderer : public DrawSpace::Interface::Renderer
 {
 protected:
 
-    class Config : public DrawSpace::Utils::Parser
-    {
-    protected:
-        bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
-    public:
-        int         m_adapter_ordinal;
-        DWORD       m_vertex_processing;
-    };
-
-
     typedef struct
     {
         LPDIRECT3DTEXTURE9          texture;
@@ -132,9 +121,6 @@ protected:
     } NodeInfos;
 
 
-
-    Config                                                      m_config;
-
     HWND                                                        m_hwnd;
 
     dsstring                                                    m_lasterror;
@@ -167,8 +153,6 @@ protected:
     int                                                         m_next_nbvertices;
     int                                                         m_next_nbtriangles;
 
-    std::vector<DeviceDescr>                                    m_devices_descrs;
-    int                                                         m_currentDevice;
 
     void set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
     void set_pixelshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
@@ -181,8 +165,7 @@ public:
     D3D9Renderer( void );
     ~D3D9Renderer( void );
 
-    virtual void GetDescr( dsstring& p_descr );
-    virtual void GetDeviceDescr( DeviceDescr& p_ddescr );
+    virtual void GetDescr( dsstring& p_descr );    
     virtual void GetShadersDescr( dsstring& p_descr );
 
     virtual void DumpMemoryAllocs( void );

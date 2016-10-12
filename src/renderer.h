@@ -56,8 +56,6 @@ public:
     } DeviceDescr;
 
     virtual void GetDescr( dsstring& p_descr ) = 0;
-    virtual void GetDeviceDescr( DeviceDescr& p_ddescr ) = 0;
-
     virtual void GetShadersDescr( dsstring& p_descr ) = 0;
 
     virtual void DumpMemoryAllocs( void ) = 0;
