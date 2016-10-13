@@ -472,12 +472,65 @@ void D3D11Renderer::Release( void )
 {
     _DSDEBUG( logger, "begin" )
 
-
     // nettoyer toutes les resources textures...
 
+    for( auto it = m_textures_base.begin(); it != m_textures_base.end(); ++it )
+    {
+        if( it->second->texture )
+        {
+            it->second->texture->Release();
+        }
+
+        if( it->second->rendertextureTargetView )
+        {
+            it->second->rendertextureTargetView->Release();
+        }
+
+        if( it->second->stencilDepthBuffer )
+        {
+            it->second->stencilDepthBuffer->Release();
+        }
+
+        if( it->second->stencilDepthView )
+        {
+            it->second->stencilDepthView->Release();
+        }
+
+        if( it->second->textureShaderResourceView )
+        {
+            it->second->textureShaderResourceView->Release();
+        }
+
+        if( it->second->bits )
+        {
+            _DRAWSPACE_DELETE_N_( it->second->bits );
+            it->second->bits = NULL;
+        }
+
+        _DRAWSPACE_DELETE_( it->second );
+    }
+
     // nettoyer toutes les resources shaders...
+    for( auto it = m_shaders_bases.begin(); it != m_shaders_bases.end(); ++it )
+    {
+        it->second->vertex_shader->Release();
+        it->second->pixel_shader->Release();
+
+        _DRAWSPACE_DELETE_( it->second );
+    }
+    m_shaders_bases.clear();
 
     // nettoyer toutes les resources meshes...
+    for( auto it = m_meshes_base.begin(); it != m_meshes_base.end(); ++it )
+    {
+        it->second->index_buffer->Release();
+        it->second->vertex_buffer->Release();
+
+        _DRAWSPACE_DELETE_( it->second );
+    }
+    m_meshes_base.clear();
+
+
 
     D3D11_RELEASE( m_pixelshader_legacyargs_buffer );
     D3D11_RELEASE( m_vertexshader_legacyargs_buffer );
@@ -1247,12 +1300,12 @@ void D3D11Renderer::DestroyTexture( void* p_data )
     ti->texture_instance->SetRenderData( NULL );
 
 
-     if( m_targettextures_base.count( ti->texture_instance ) > 0 )
-     {
+    if( m_targettextures_base.count( ti->texture_instance ) > 0 )
+    {
         m_targettextures_base.erase( ti->texture_instance );
-     }
+    }
 
-     _DRAWSPACE_DELETE_( ti );
+    _DRAWSPACE_DELETE_( ti );
 }
 
 bool D3D11Renderer::SetTexture( void* p_data, int p_stage )
