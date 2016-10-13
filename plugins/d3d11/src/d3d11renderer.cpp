@@ -472,6 +472,42 @@ void D3D11Renderer::Release( void )
 {
     _DSDEBUG( logger, "begin" )
 
+
+    // nettoyer toutes les resources textures...
+
+    // nettoyer toutes les resources shaders...
+
+    // nettoyer toutes les resources meshes...
+
+    D3D11_RELEASE( m_pixelshader_legacyargs_buffer );
+    D3D11_RELEASE( m_vertexshader_legacyargs_buffer );
+
+    for( auto it = m_bsCache.begin(); it != m_bsCache.end(); ++it )
+    {
+        it->second.bs_state->Release();
+    }
+    m_bsCache.clear();
+
+    for( auto it = m_rsCache.begin(); it != m_rsCache.end(); ++it )
+    {
+        it->second.rs_state->Release();
+    }
+    m_rsCache.clear();
+    
+    D3D11_RELEASE( m_anisotropicFilterSamplerState );
+    D3D11_RELEASE( m_linearFilterSamplerState );
+    D3D11_RELEASE( m_pointFilterSamplerState );
+    m_fontWrapper->Release();
+    D3D11_RELEASE( m_pDepthStencilView );
+    D3D11_RELEASE( m_pDepthStencil );
+    D3D11_RELEASE( m_pDepthStencil );
+    D3D11_RELEASE( m_DSState_DepthTestEnabled );
+    D3D11_RELEASE( m_DSState_DepthTestDisabled );
+    D3D11_RELEASE( m_screentarget );
+    D3D11_RELEASE( m_lpd3dswapchain );
+    D3D11_RELEASE( m_lpd3ddevcontext );
+    D3D11_RELEASE( m_lpd3ddevice );
+
     _DSDEBUG( logger, "end" )
 }
 

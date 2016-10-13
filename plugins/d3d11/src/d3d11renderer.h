@@ -56,6 +56,8 @@
         return false; \
     }
 
+#define D3D11_RELEASE( p_Obj ) { if( p_Obj ) { p_Obj->Release(); p_Obj = NULL; } }
+
 class D3D11Renderer : public DrawSpace::Interface::Renderer
 {
 protected:
