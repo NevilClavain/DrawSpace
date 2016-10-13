@@ -509,6 +509,7 @@ void D3D11Renderer::Release( void )
 
         _DRAWSPACE_DELETE_( it->second );
     }
+    m_textures_base.clear();
 
     // nettoyer toutes les resources shaders...
     for( auto it = m_shaders_bases.begin(); it != m_shaders_bases.end(); ++it )
