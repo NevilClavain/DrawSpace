@@ -56,7 +56,7 @@ bool PILoad::LoadRendererPlugin( const dsstring& p_file )
     return true;
 }
 
-bool PILoad::LoadModule( const dsstring& p_file )
+bool PILoad::LoadModule( const dsstring& p_file, DrawSpace::Interface::Module::Root** p_module_root )
 {
 	dsstring complete_path = p_file;
 #ifdef _DEBUG
@@ -79,7 +79,9 @@ bool PILoad::LoadModule( const dsstring& p_file )
         return false;
     }
 
-    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface = module_root;
+    //DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface = module_root;
+
+    *p_module_root = module_root;
 
     module_root->UpdateRenderer( DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
     return true;

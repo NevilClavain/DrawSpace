@@ -24,6 +24,7 @@
 #define _PILOAD_H_
 
 #include "drawspace_commons.h"
+#include "module_root.h"
 
 namespace DrawSpace
 {
@@ -34,7 +35,7 @@ class PILoad
 public:
 
     static bool LoadRendererPlugin( const dsstring& p_file );
-    static bool LoadModule( const dsstring& p_file );
+    static bool LoadModule( const dsstring& p_file, DrawSpace::Interface::Module::Root** p_module_root );
 };
 }
 }

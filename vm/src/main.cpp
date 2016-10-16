@@ -61,10 +61,9 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 
         if( lpCmdLine != "" )
         {
-            if( !DrawSpace::Utils::PILoad::LoadModule( lpCmdLine ) )
+            if( !DrawSpace::Utils::PILoad::LoadModule( lpCmdLine, &DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface ) )
             {
-                MessageBoxA( NULL, "Cannot load specified module" , "DrawSpace", MB_OK | MB_ICONSTOP );
-                return 0;
+                _DSEXCEPTION( "cannot load skybox module" );
             }
         }
 
