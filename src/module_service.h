@@ -37,8 +37,7 @@ class Service
 {
 public:
     
-    virtual void                            GetLocalKeys( const dsstring p_instanceName, std::vector<DrawSpace::Module::KeySinkBase*>& p_keys ) = 0;
-    virtual void                            GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys ) = 0;
+    virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys ) = 0;
     virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb ) = 0;
     virtual void                            Run( void ) = 0;
     virtual void                            Release( void ) = 0;

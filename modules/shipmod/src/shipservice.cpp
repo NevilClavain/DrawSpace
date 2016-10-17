@@ -33,12 +33,8 @@ ShipService::~ShipService( void )
 {
 }
 
-void ShipService::GetLocalKeys( const dsstring p_instanceName, std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
-{
 
-}
-
-void ShipService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
+void ShipService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
 
 }

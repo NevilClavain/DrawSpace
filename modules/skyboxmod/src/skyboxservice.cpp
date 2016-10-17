@@ -33,12 +33,7 @@ SkyboxService::~SkyboxService( void )
 {
 }
 
-void SkyboxService::GetLocalKeys( const dsstring p_instanceName, std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
-{
-
-}
-
-void SkyboxService::GetGlobalKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
+void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
 
 }
