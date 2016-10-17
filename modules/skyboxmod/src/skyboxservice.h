@@ -25,6 +25,19 @@
 
 #include "module_service.h"
 
+class FooParam : public DrawSpace::Module::KeySink<int>
+{
+public:
+    FooParam( const dsstring& p_id ) : KeySink( p_id )
+    {
+    }
+
+    virtual void OnUpdated( int p_val )
+    {
+        _asm nop
+    }
+};
+
 class SkyboxService : public DrawSpace::Interface::Module::Service
 {
 protected:
@@ -32,6 +45,8 @@ protected:
     DrawSpace::Interface::Renderer*         m_renderer;
     DrawSpace::Utils::TimeManager           m_tm;
     dsstring                                m_device;
+
+    FooParam                                m_foo;
 
 public:
     SkyboxService( void );

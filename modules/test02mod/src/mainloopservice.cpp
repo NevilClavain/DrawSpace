@@ -33,7 +33,8 @@ _DECLARE_DS_LOGGER( logger, "test02mainloopservice", NULL )
 MainLoopService::MainLoopService( void ) : 
 m_fpsmove( true ),
 m_waves( 0.0 ),
-m_waves_inc( true )
+m_waves_inc( true ),
+m_foo( "foo" )
 {
 }
 
@@ -48,6 +49,11 @@ void MainLoopService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_k
 
 void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
 {
+    m_keysLinkTable.RegisterClientKey( &m_foo );
+
+
+    //////////////////////////////////////////////////////////////////////////////
+
     m_mousecircularmode_cb = p_mousecircularmode_cb;
 
     p_logconf->RegisterSink( &logger );
@@ -83,6 +89,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
         _DSEXCEPTION( "fail to load skybox module service" )
     }
     connect_keys( sb_service );
+
+    m_foo = 666;
 
     create_camera();
     create_cubes();

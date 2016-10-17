@@ -25,7 +25,8 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface::Module;
 
-SkyboxService::SkyboxService( void )
+SkyboxService::SkyboxService( void ) :
+m_foo( "foo" )
 {
 }
 
@@ -35,7 +36,7 @@ SkyboxService::~SkyboxService( void )
 
 void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
-
+    p_keys.push_back( &m_foo );
 }
 
 void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )

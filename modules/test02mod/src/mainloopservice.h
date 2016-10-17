@@ -84,6 +84,8 @@ protected:
 
     DrawSpace::Core::BaseCallback<void, bool>*                          m_mousecircularmode_cb;
 
+    DrawSpace::Module::KeySource<int>                                   m_foo;
+
     void    create_passes( void );
     void    init_passes( void );
 
