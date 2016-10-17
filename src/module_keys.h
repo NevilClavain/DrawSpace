@@ -145,6 +145,7 @@ public:
 
     void RegisterClientKey( KeySourceBase* p_key );
     void RegisterModuleKey( KeySinkBase* p_key );
+    void RegisterModuleKeysVector( const std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
 };
 
 }

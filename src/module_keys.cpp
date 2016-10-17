@@ -45,6 +45,15 @@ void KeysLinkTable::RegisterModuleKey( KeySinkBase* p_key )
     updateLinks();
 }
 
+void KeysLinkTable::RegisterModuleKeysVector( const std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
+{
+    for( size_t i = 0; i < p_keys.size(); i++ )
+    {
+        m_moduleKeys.push_back( p_keys[i] );
+    }
+    updateLinks();
+}
+
 void KeysLinkTable::updateLinks( void )
 {
     for( size_t i = 0; i < m_clientsKeys.size(); i++ )
@@ -53,7 +62,7 @@ void KeysLinkTable::updateLinks( void )
         {
             if( m_clientsKeys[i]->GetId() == m_moduleKeys[j]->GetId() )
             {
-                m_clientsKeys[i]->AddSink(  m_moduleKeys[j] );
+                m_clientsKeys[i]->AddSink( m_moduleKeys[j] );
             }
         }
     }

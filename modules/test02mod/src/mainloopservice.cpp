@@ -73,14 +73,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     create_spacebox();
 
     DrawSpace::Interface::Module::Root* sbmod_root;
-
     if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", &sbmod_root ) )
     {
-        MessageBoxA( NULL, "Cannot load specified module" , "DrawSpace", MB_OK | MB_ICONSTOP );
-        return;
+        _DSEXCEPTION( "fail to load skyboxmod module root" )
     }
-
     DrawSpace::Interface::Module::Service* sb_service = sbmod_root->InstanciateService( "skybox" );
+    if( NULL == sb_service )
+    {
+        _DSEXCEPTION( "fail to load skybox module service" )
+    }
+    connect_keys( sb_service );
 
     create_camera();
     create_cubes();

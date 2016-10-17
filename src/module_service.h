@@ -35,8 +35,17 @@ namespace Module
 {
 class Service
 {
+protected:
+    DrawSpace::Module::KeysLinkTable        m_keysLinkTable;
+
+    void                                    connect_keys( Service* p_subservice )
+    {
+        std::vector<DrawSpace::Module::KeySinkBase*> keys;
+        p_subservice->GetKeys( keys );
+        m_keysLinkTable.RegisterModuleKeysVector( keys );
+    }
+
 public:
-    
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys ) = 0;
     virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb ) = 0;
     virtual void                            Run( void ) = 0;
