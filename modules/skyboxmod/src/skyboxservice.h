@@ -25,17 +25,17 @@
 
 #include "module_service.h"
 
+class SkyboxService;
+
 class FooParam : public DrawSpace::Module::KeySink<int>
 {
-public:
-    FooParam( const dsstring& p_id ) : KeySink( p_id )
-    {
-    }
+protected:
 
-    virtual void OnUpdated( int p_val )
-    {
-        _asm nop
-    }
+    SkyboxService* m_owner;
+
+public:
+    FooParam( const dsstring& p_id, SkyboxService* p_owner );
+    virtual void OnUpdated( int p_val );
 };
 
 class SkyboxService : public DrawSpace::Interface::Module::Service
@@ -57,6 +57,8 @@ public:
     virtual void                            Run( void );
     virtual void                            Release( void );
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );
+
+    virtual void                            OnFooUpdated( int p_value );
 
     virtual void                            OnKeyPress( long p_key );
     virtual void                            OnEndKeyPress( long p_key );

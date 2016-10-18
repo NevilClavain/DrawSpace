@@ -25,8 +25,19 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface::Module;
 
+
+FooParam::FooParam( const dsstring& p_id, SkyboxService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
+{
+}
+
+void FooParam::OnUpdated( int p_val )
+{
+    m_owner->OnFooUpdated( p_val );
+}
+
+
 SkyboxService::SkyboxService( void ) :
-m_foo( "foo" )
+m_foo( "foo", this )
 {
 }
 
@@ -55,6 +66,12 @@ DrawSpace::Core::BaseSceneNode* SkyboxService::GetSceneNode( void )
 {
     return NULL;
 }
+
+void SkyboxService::OnFooUpdated( int p_value )
+{
+    _asm nop
+}
+
 
 void SkyboxService::OnKeyPress( long p_key )
 {

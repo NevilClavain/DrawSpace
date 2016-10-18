@@ -28,6 +28,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d11", "plugins\d3d11\d3d11.vcxproj", "{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test02mod", "modules\test02mod\test02mod.vcxproj", "{5902623F-B55C-43F5-A619-A45A6AF26623}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CC3FD43C-EA27-40D1-9796-8A84483E4F58} = {CC3FD43C-EA27-40D1-9796-8A84483E4F58}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPU_hlsl_src_4_0", "shaders\hlsl_4_0\hlsl_src_40.vcxproj", "{29D2641C-CEF2-4CC2-A3A2-247A61C1D744}"
 EndProject
