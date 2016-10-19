@@ -35,7 +35,7 @@ class PILoad
 public:
 
     static bool LoadRendererPlugin( const dsstring& p_file );
-    static bool LoadModule( const dsstring& p_file, DrawSpace::Interface::Module::Root** p_module_root );
+    static bool LoadModule( const dsstring& p_file,  const dsstring& p_module_instance_id, DrawSpace::Interface::Module::Root** p_module_root );
 };
 }
 }

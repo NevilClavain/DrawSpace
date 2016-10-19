@@ -34,7 +34,7 @@ MainLoopService::MainLoopService( void ) :
 m_fpsmove( true ),
 m_waves( 0.0 ),
 m_waves_inc( true ),
-m_foo( "foo" )
+m_foo( "skybox.foo" )
 {
 }
 
@@ -79,10 +79,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     create_spacebox();
 
     DrawSpace::Interface::Module::Root* sbmod_root;
-    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", &sbmod_root ) )
+    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", &sbmod_root ) )
     {
         _DSEXCEPTION( "fail to load skyboxmod module root" )
     }
+
     DrawSpace::Interface::Module::Service* sb_service = sbmod_root->InstanciateService( "skybox" );
     if( NULL == sb_service )
     {

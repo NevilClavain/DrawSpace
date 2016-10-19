@@ -45,23 +45,3 @@ dsstring ShipRoot::GetModuleDescr( void )
 {
     return "SpaceShip module";
 }
-
-std::vector<dsstring> ShipRoot::GetServicesList( void )
-{
-    std::vector<dsstring> list;
-
-    for( auto it = m_services.begin(); it != m_services.end(); ++it )
-    {
-        list.push_back( it->first );
-    }
-    return list;
-}
-
-Service* ShipRoot::InstanciateService( const dsstring& p_id )
-{
-    if( m_services.count( p_id ) > 0 )
-    {
-        return m_services[p_id];
-    }
-    return NULL;
-}

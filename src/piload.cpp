@@ -56,7 +56,7 @@ bool PILoad::LoadRendererPlugin( const dsstring& p_file )
     return true;
 }
 
-bool PILoad::LoadModule( const dsstring& p_file, DrawSpace::Interface::Module::Root** p_module_root )
+bool PILoad::LoadModule( const dsstring& p_file, const dsstring& p_module_instance_id, DrawSpace::Interface::Module::Root** p_module_root )
 {
 	dsstring complete_path = p_file;
 #ifdef _DEBUG
@@ -69,7 +69,7 @@ bool PILoad::LoadModule( const dsstring& p_file, DrawSpace::Interface::Module::R
 
     DrawSpace::Interface::Module::Root* module_root = NULL;
     PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK )
+    if( pistatus != PIM_OK && pistatus != PIM_OK_PIALREADYLOADED )
     {
         return false;
     }
@@ -79,10 +79,11 @@ bool PILoad::LoadModule( const dsstring& p_file, DrawSpace::Interface::Module::R
         return false;
     }
 
-    //DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface = module_root;
-
     *p_module_root = module_root;
 
     module_root->UpdateRenderer( DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
+    module_root->SetInstanceId( p_module_instance_id );
+    module_root->ServicesInit();
+
     return true;
 }

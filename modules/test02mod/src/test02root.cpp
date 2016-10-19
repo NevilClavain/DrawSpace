@@ -29,14 +29,18 @@ using namespace DrawSpace::Interface::Module;
 
 Test02Root::Test02Root( void )
 {
-    m_services["mainloop"] = new MainLoopService();
-
-    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
-    DrawSpace::Core::Shader::SetRootPath( ".\\..\\..\\DrawSpace\\shaders_bank" );
 }
 
 Test02Root::~Test02Root( void )
 {
+}
+
+void Test02Root::ServicesInit( void )
+{
+    m_services["mainloop"] = new MainLoopService();
+
+    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
+    DrawSpace::Core::Shader::SetRootPath( ".\\..\\..\\DrawSpace\\shaders_bank" );
 }
 
 dsstring Test02Root::GetModuleName( void )
@@ -47,24 +51,4 @@ dsstring Test02Root::GetModuleName( void )
 dsstring Test02Root::GetModuleDescr( void )
 {
     return "test02 module";
-}
-
-std::vector<dsstring> Test02Root::GetServicesList( void )
-{
-    std::vector<dsstring> list;
-
-    for( auto it = m_services.begin(); it != m_services.end(); ++it )
-    {
-        list.push_back( it->first );
-    }
-    return list;
-}
-
-Service* Test02Root::InstanciateService( const dsstring& p_id )
-{
-    if( m_services.count( p_id ) > 0 )
-    {
-        return m_services[p_id];
-    }
-    return NULL;
 }

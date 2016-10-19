@@ -29,7 +29,6 @@ using namespace DrawSpace::Interface::Module;
 
 SkyboxRoot::SkyboxRoot( void )
 {
-    m_services["skybox"] = new SkyboxService();
 }
 
 SkyboxRoot::~SkyboxRoot( void )
@@ -46,22 +45,7 @@ dsstring SkyboxRoot::GetModuleDescr( void )
     return "Skybox module";
 }
 
-std::vector<dsstring> SkyboxRoot::GetServicesList( void )
+void SkyboxRoot::ServicesInit( void )
 {
-    std::vector<dsstring> list;
-
-    for( auto it = m_services.begin(); it != m_services.end(); ++it )
-    {
-        list.push_back( it->first );
-    }
-    return list;
-}
-
-Service* SkyboxRoot::InstanciateService( const dsstring& p_id )
-{
-    if( m_services.count( p_id ) > 0 )
-    {
-        return m_services[p_id];
-    }
-    return NULL;
+    m_services["skybox"] = new SkyboxService( m_id );
 }

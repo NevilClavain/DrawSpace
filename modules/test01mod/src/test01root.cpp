@@ -29,11 +29,15 @@ using namespace DrawSpace::Interface::Module;
 
 Test01Root::Test01Root( void )
 {
-    m_services["mainloop"] = new MainLoopService();
 }
 
 Test01Root::~Test01Root( void )
 {
+}
+
+void Test01Root::ServicesInit( void )
+{
+    m_services["mainloop"] = new MainLoopService();
 }
 
 dsstring Test01Root::GetModuleName( void )
@@ -44,24 +48,4 @@ dsstring Test01Root::GetModuleName( void )
 dsstring Test01Root::GetModuleDescr( void )
 {
     return "test01 module";
-}
-
-std::vector<dsstring> Test01Root::GetServicesList( void )
-{
-    std::vector<dsstring> list;
-
-    for( auto it = m_services.begin(); it != m_services.end(); ++it )
-    {
-        list.push_back( it->first );
-    }
-    return list;
-}
-
-Service* Test01Root::InstanciateService( const dsstring& p_id )
-{
-    if( m_services.count( p_id ) > 0 )
-    {
-        return m_services[p_id];
-    }
-    return NULL;
 }

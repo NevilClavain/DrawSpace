@@ -36,9 +36,9 @@ void FooParam::OnUpdated( int p_val )
 }
 
 
-SkyboxService::SkyboxService( void ) :
-m_foo( "foo", this )
+SkyboxService::SkyboxService( const dsstring& p_id )
 {
+    m_foo = _DRAWSPACE_NEW_( FooParam, FooParam( p_id + dsstring( ".foo" ), this ) );
 }
 
 SkyboxService::~SkyboxService( void )
@@ -47,7 +47,7 @@ SkyboxService::~SkyboxService( void )
 
 void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
-    p_keys.push_back( &m_foo );
+    p_keys.push_back( m_foo );
 }
 
 void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )

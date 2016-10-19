@@ -29,18 +29,13 @@
 
 class Test01Root : public DrawSpace::Interface::Module::Root
 {
-protected:
-
-    std::map<dsstring, DrawSpace::Interface::Module::Service*> m_services;
-
 public:
     Test01Root( void );
     virtual ~Test01Root( void );
 
     virtual dsstring GetModuleName( void );
     virtual dsstring GetModuleDescr( void );
-    virtual std::vector<dsstring> GetServicesList( void );
-    virtual DrawSpace::Interface::Module::Service* InstanciateService( const dsstring& p_id );
+    virtual void ServicesInit( void );
 
 };
 

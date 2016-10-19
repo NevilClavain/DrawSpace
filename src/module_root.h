@@ -34,6 +34,12 @@ namespace Module
 {
 class Root
 {
+protected:
+
+    // table des differents services
+    std::map<dsstring, DrawSpace::Interface::Module::Service*>  m_services;
+    dsstring                                                    m_id;           //identifiant instance de module
+
 public:
 
     virtual void                    UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
@@ -41,10 +47,31 @@ public:
         DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
     }
 
+    virtual void                    SetInstanceId( const dsstring& p_id ) { m_id = p_id; };
+
     virtual dsstring                GetModuleName( void ) = 0;
     virtual dsstring                GetModuleDescr( void ) = 0;
-    virtual std::vector<dsstring>   GetServicesList( void ) = 0;
-    virtual Service*                InstanciateService( const dsstring& p_id ) = 0;
+    virtual void                    ServicesInit( void ) = 0;
+
+
+    virtual std::vector<dsstring>   GetServicesList( void )
+    {
+        std::vector<dsstring> list;
+        for( auto it = m_services.begin(); it != m_services.end(); ++it )
+        {
+            list.push_back( it->first );
+        }
+        return list;
+    }
+
+    virtual Service*                InstanciateService( const dsstring& p_id )
+    {
+        if( m_services.count( p_id ) > 0 )
+        {
+            return m_services[p_id];
+        }
+        return NULL;
+    }
 
 
 };

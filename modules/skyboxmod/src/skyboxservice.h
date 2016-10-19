@@ -46,10 +46,10 @@ protected:
     DrawSpace::Utils::TimeManager           m_tm;
     dsstring                                m_device;
 
-    FooParam                                m_foo;
+    FooParam*                               m_foo;
 
 public:
-    SkyboxService( void );
+    SkyboxService( const dsstring& p_id );
     ~SkyboxService( void );
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );

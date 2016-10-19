@@ -29,19 +29,12 @@
 
 class ShipRoot : public DrawSpace::Interface::Module::Root
 {
-protected:
-
-    std::map<dsstring, DrawSpace::Interface::Module::Service*> m_services;
-
-
 public:
     ShipRoot( void );
     virtual ~ShipRoot( void );
 
     virtual dsstring GetModuleName( void );
     virtual dsstring GetModuleDescr( void );
-    virtual std::vector<dsstring> GetServicesList( void );
-    virtual DrawSpace::Interface::Module::Service* InstanciateService( const dsstring& p_id );
 
 };
 
