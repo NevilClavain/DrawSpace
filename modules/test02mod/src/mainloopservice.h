@@ -85,6 +85,7 @@ protected:
     DrawSpace::Core::BaseCallback<void, bool>*                          m_mousecircularmode_cb;
 
     DrawSpace::Module::KeySource<int>                                   m_foo;
+    DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_skybox_scenenodegraph;
 
     void    create_passes( void );
     void    init_passes( void );
