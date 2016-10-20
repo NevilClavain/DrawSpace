@@ -62,6 +62,8 @@ protected:
 
     DrawSpace::Core::SceneNodeGraph*        m_scenenodegraph;
 
+    DrawSpace::IntermediatePass*            m_texturepass;
+
     DrawSpace::Spacebox*                    m_spacebox;
 
 public:
