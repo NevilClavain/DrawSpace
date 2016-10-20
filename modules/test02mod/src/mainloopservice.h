@@ -87,6 +87,7 @@ protected:
     /////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_skybox_scenenodegraph;
+    DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_skybox_texturepass;
 
     /////////////////////////////////////////////////////////////////////////////////
 

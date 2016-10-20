@@ -24,6 +24,7 @@
 #define _SKYBOXSERVICE_H_
 
 #include "module_service.h"
+#include "spacebox.h"
 
 class SkyboxService;
 
@@ -38,6 +39,16 @@ public:
     virtual void OnUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
 };
 
+class TexturePassParam : public DrawSpace::Module::KeySink<DrawSpace::IntermediatePass*>
+{
+protected:
+    SkyboxService* m_owner;
+
+public:
+    TexturePassParam( const dsstring& p_id, SkyboxService* p_owner );
+    virtual void OnUpdated( DrawSpace::IntermediatePass* p_val );
+};
+
 class SkyboxService : public DrawSpace::Interface::Module::Service
 {
 protected:
@@ -47,8 +58,11 @@ protected:
     dsstring                                m_device;
 
     SceneNodeGraphParam*                    m_scparam;
+    TexturePassParam*                       m_texturepassparam;
 
     DrawSpace::Core::SceneNodeGraph*        m_scenenodegraph;
+
+    DrawSpace::Spacebox*                    m_spacebox;
 
 public:
     SkyboxService( const dsstring& p_id );
@@ -61,6 +75,7 @@ public:
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );
 
     virtual void                            OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
+    virtual void                            OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );
 
 
     virtual void                            OnKeyPress( long p_key );

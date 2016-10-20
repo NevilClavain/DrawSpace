@@ -34,7 +34,8 @@ MainLoopService::MainLoopService( void ) :
 m_fpsmove( true ),
 m_waves( 0.0 ),
 m_waves_inc( true ),
-m_skybox_scenenodegraph( "skybox.SceneNodeGraph" )
+m_skybox_scenenodegraph( "skybox.SceneNodeGraph" ),
+m_skybox_texturepass( "skybox.TexturePass" )
 {
 }
 
@@ -50,6 +51,7 @@ void MainLoopService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_k
 void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
 {
     m_keysLinkTable.RegisterClientKey( &m_skybox_scenenodegraph );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturepass );
 
 
     //////////////////////////////////////////////////////////////////////////////
@@ -92,6 +94,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     connect_keys( sb_service );
 
     m_skybox_scenenodegraph = &m_scenenodegraph;
+    m_skybox_texturepass = m_texturepass;
 
     create_camera();
     create_cubes();
