@@ -49,6 +49,16 @@ public:
     virtual void OnUpdated( DrawSpace::IntermediatePass* p_val );
 };
 
+class TextureMirrorPassParam : public DrawSpace::Module::KeySink<DrawSpace::IntermediatePass*>
+{
+protected:
+    SkyboxService* m_owner;
+
+public:
+    TextureMirrorPassParam( const dsstring& p_id, SkyboxService* p_owner );
+    virtual void OnUpdated( DrawSpace::IntermediatePass* p_val );
+};
+
 class SkyboxService : public DrawSpace::Interface::Module::Service
 {
 protected:
@@ -59,10 +69,12 @@ protected:
 
     SceneNodeGraphParam*                    m_scparam;
     TexturePassParam*                       m_texturepassparam;
+    TextureMirrorPassParam*                 m_texturemirrorpassparam;
 
     DrawSpace::Core::SceneNodeGraph*        m_scenenodegraph;
 
     DrawSpace::IntermediatePass*            m_texturepass;
+    DrawSpace::IntermediatePass*            m_texturemirrorpass;
 
     DrawSpace::Spacebox*                    m_spacebox;
 
@@ -78,6 +90,7 @@ public:
 
     virtual void                            OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
     virtual void                            OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );
+    virtual void                            OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_val );
 
 
     virtual void                            OnKeyPress( long p_key );

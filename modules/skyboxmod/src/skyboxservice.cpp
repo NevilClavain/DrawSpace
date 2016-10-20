@@ -50,11 +50,25 @@ void TexturePassParam::OnUpdated( DrawSpace::IntermediatePass* p_val )
 
 /////////////////////////////
 
+TextureMirrorPassParam::TextureMirrorPassParam( const dsstring& p_id, SkyboxService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
+{
+}
+
+void TextureMirrorPassParam::OnUpdated( DrawSpace::IntermediatePass* p_val )
+{
+    m_owner->OnTextureMirrorPassUpdate( p_val );
+}
+
+/////////////////////////////
+
 SkyboxService::SkyboxService( const dsstring& p_id ) :
-m_scenenodegraph( NULL )
+m_scenenodegraph( NULL ),
+m_texturepass( NULL ),
+m_texturemirrorpass( NULL )
 {
     m_scparam = _DRAWSPACE_NEW_( SceneNodeGraphParam, SceneNodeGraphParam( p_id + dsstring( ".SceneNodeGraph" ), this ) );
     m_texturepassparam = _DRAWSPACE_NEW_( TexturePassParam, TexturePassParam( p_id + dsstring( ".TexturePass" ), this ) );
+    m_texturemirrorpassparam = _DRAWSPACE_NEW_( TextureMirrorPassParam, TextureMirrorPassParam( p_id + dsstring( ".TextureMirrorPass" ), this ) );
 
     m_spacebox = _DRAWSPACE_NEW_( DrawSpace::Spacebox, DrawSpace::Spacebox );
 }
@@ -67,6 +81,7 @@ void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_key
 {
     p_keys.push_back( m_scparam );
     p_keys.push_back( m_texturepassparam );
+    p_keys.push_back( m_texturemirrorpassparam );
 }
 
 void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
@@ -132,7 +147,12 @@ void SkyboxService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val )
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::BottomQuad )->SetOrderNumber( 200 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::LeftQuad )->SetOrderNumber( 200 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->SetOrderNumber( 200 );
+}
 
+void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_val )
+{
+    m_spacebox->RegisterPassSlot( p_val );
+    m_texturemirrorpass = p_val;
 }
 
 void SkyboxService::OnKeyPress( long p_key )

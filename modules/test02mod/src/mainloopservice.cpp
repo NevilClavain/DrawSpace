@@ -36,7 +36,8 @@ m_fpsmove( true ),
 m_waves( 0.0 ),
 m_waves_inc( true ),
 m_skybox_scenenodegraph( "skybox.SceneNodeGraph" ),
-m_skybox_texturepass( "skybox.TexturePass" )
+m_skybox_texturepass( "skybox.TexturePass" ),
+m_skybox_texturemirrorpass( "skybox.TextureMirrorPass" )
 {
 }
 
@@ -53,6 +54,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 {
     m_keysLinkTable.RegisterClientKey( &m_skybox_scenenodegraph );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturepass );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturemirrorpass );
 
 
     //////////////////////////////////////////////////////////////////////////////
@@ -97,6 +99,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 
     m_skybox_scenenodegraph = &m_scenenodegraph;
     m_skybox_texturepass = m_texturepass;
+    m_skybox_texturemirrorpass = m_texturemirrorpass;
 
     create_camera();
     create_cubes();
