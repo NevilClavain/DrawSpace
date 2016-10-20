@@ -46,10 +46,7 @@ protected:
 
 public:
 
-    virtual void                    UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
-    {
-        DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-    }
+    virtual void                    UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer );
 
     virtual void                    SetInstanceId( const dsstring& p_id ) { m_id = p_id; };
 
@@ -57,34 +54,12 @@ public:
     virtual dsstring                GetModuleDescr( void ) = 0;
     virtual void                    ServicesInit( void ) = 0;
 
-    virtual void                    ConfigureShadersResources( const dsstring& p_shadersresources_rootpath, bool p_shadersdescr_infinalpath )
-    {
-        m_shadersresources_rootpath = p_shadersresources_rootpath;
-        m_shadersdescr_infinalpath = p_shadersdescr_infinalpath;
+    virtual void                    ConfigureShadersResources( const dsstring& p_shadersresources_rootpath, bool p_shadersdescr_infinalpath );
 
-        // also update current DLL's global variables
-        DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
-        DrawSpace::Core::Shader::SetRootPath( ".\\..\\..\\DrawSpace\\shaders_bank" );
-    }
+    virtual std::vector<dsstring>   GetServicesList( void );
 
-    virtual std::vector<dsstring>   GetServicesList( void )
-    {
-        std::vector<dsstring> list;
-        for( auto it = m_services.begin(); it != m_services.end(); ++it )
-        {
-            list.push_back( it->first );
-        }
-        return list;
-    }
+    virtual Service*                InstanciateService( const dsstring& p_id );
 
-    virtual Service*                InstanciateService( const dsstring& p_id )
-    {
-        if( m_services.count( p_id ) > 0 )
-        {
-            return m_services[p_id];
-        }
-        return NULL;
-    }
 };
 }
 }

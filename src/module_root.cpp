@@ -22,5 +22,43 @@
 
 #include "module_root.h"
 
-dsstring DrawSpace::Interface::Module::Root::m_shadersresources_rootpath;
-bool DrawSpace::Interface::Module::Root::m_shadersdescr_infinalpath = false;
+using namespace DrawSpace;
+using namespace DrawSpace::Interface::Module;
+
+dsstring Root::m_shadersresources_rootpath;
+bool Root::m_shadersdescr_infinalpath = false;
+
+void Root::UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
+{
+    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+}
+
+void Root::ConfigureShadersResources( const dsstring& p_shadersresources_rootpath, bool p_shadersdescr_infinalpath )
+{
+    m_shadersresources_rootpath = p_shadersresources_rootpath;
+    m_shadersdescr_infinalpath = p_shadersdescr_infinalpath;
+
+    // also update current DLL's global variables
+    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
+    DrawSpace::Core::Shader::SetRootPath( ".\\..\\..\\DrawSpace\\shaders_bank" );
+}
+
+std::vector<dsstring> Root::GetServicesList( void )
+{
+    std::vector<dsstring> list;
+    for( auto it = m_services.begin(); it != m_services.end(); ++it )
+    {
+        list.push_back( it->first );
+    }
+    return list;
+}
+
+Service* Root::InstanciateService( const dsstring& p_id )
+{
+    if( m_services.count( p_id ) > 0 )
+    {
+        return m_services[p_id];
+    }
+    return NULL;
+}
+
