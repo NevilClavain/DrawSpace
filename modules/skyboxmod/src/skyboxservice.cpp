@@ -25,16 +25,6 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface::Module;
 
-
-FooParam::FooParam( const dsstring& p_id, SkyboxService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
-{
-}
-
-void FooParam::OnUpdated( int p_val )
-{
-    m_owner->OnFooUpdated( p_val );
-}
-
 SceneNodeGraphParam::SceneNodeGraphParam( const dsstring& p_id, SkyboxService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
 {
 }
@@ -48,7 +38,6 @@ void SceneNodeGraphParam::OnUpdated( DrawSpace::Core::SceneNodeGraph* p_val )
 SkyboxService::SkyboxService( const dsstring& p_id ) :
 m_scenenodegraph( NULL )
 {
-    m_foo = _DRAWSPACE_NEW_( FooParam, FooParam( p_id + dsstring( ".foo" ), this ) );
     m_scparam = _DRAWSPACE_NEW_( SceneNodeGraphParam, SceneNodeGraphParam( p_id + dsstring( ".SceneNodeGraph" ), this ) );
 }
 
@@ -58,7 +47,6 @@ SkyboxService::~SkyboxService( void )
 
 void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
-    p_keys.push_back( m_foo );
     p_keys.push_back( m_scparam );
 }
 
@@ -77,11 +65,6 @@ void SkyboxService::Release( void )
 DrawSpace::Core::BaseSceneNode* SkyboxService::GetSceneNode( void )
 {
     return NULL;
-}
-
-void SkyboxService::OnFooUpdated( int p_value )
-{
-    _asm nop
 }
 
 void SkyboxService::OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val )

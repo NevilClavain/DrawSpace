@@ -27,15 +27,6 @@
 
 class SkyboxService;
 
-class FooParam : public DrawSpace::Module::KeySink<int>
-{
-protected:
-    SkyboxService* m_owner;
-
-public:
-    FooParam( const dsstring& p_id, SkyboxService* p_owner );
-    virtual void OnUpdated( int p_val );
-};
 
 class SceneNodeGraphParam : public DrawSpace::Module::KeySink<DrawSpace::Core::SceneNodeGraph*>
 {
@@ -55,7 +46,6 @@ protected:
     DrawSpace::Utils::TimeManager           m_tm;
     dsstring                                m_device;
 
-    FooParam*                               m_foo;
     SceneNodeGraphParam*                    m_scparam;
 
     DrawSpace::Core::SceneNodeGraph*        m_scenenodegraph;
@@ -70,7 +60,6 @@ public:
     virtual void                            Release( void );
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );
 
-    virtual void                            OnFooUpdated( int p_value );
     virtual void                            OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
 
 

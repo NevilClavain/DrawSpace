@@ -34,7 +34,6 @@ MainLoopService::MainLoopService( void ) :
 m_fpsmove( true ),
 m_waves( 0.0 ),
 m_waves_inc( true ),
-m_foo( "skybox.foo" ),
 m_skybox_scenenodegraph( "skybox.SceneNodeGraph" )
 {
 }
@@ -50,7 +49,6 @@ void MainLoopService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_k
 
 void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
 {
-    m_keysLinkTable.RegisterClientKey( &m_foo );
     m_keysLinkTable.RegisterClientKey( &m_skybox_scenenodegraph );
 
 
@@ -92,9 +90,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
         _DSEXCEPTION( "fail to load skybox module service" )
     }
     connect_keys( sb_service );
-
-    m_foo = 666;
-
 
     m_skybox_scenenodegraph = &m_scenenodegraph;
 
