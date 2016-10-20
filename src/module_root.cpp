@@ -39,8 +39,8 @@ void Root::ConfigureShadersResources( const dsstring& p_shadersresources_rootpat
     m_shadersdescr_infinalpath = p_shadersdescr_infinalpath;
 
     // also update current DLL's global variables
-    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
-    DrawSpace::Core::Shader::SetRootPath( ".\\..\\..\\DrawSpace\\shaders_bank" );
+    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( m_shadersdescr_infinalpath );
+    DrawSpace::Core::Shader::SetRootPath( m_shadersresources_rootpath );
 }
 
 std::vector<dsstring> Root::GetServicesList( void )
