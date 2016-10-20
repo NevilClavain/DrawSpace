@@ -51,6 +51,7 @@
     <ClCompile Include="src\memalloc.cpp" />
     <ClCompile Include="src\meshe.cpp" />
     <ClCompile Include="src\misc_utils.cpp" />
+    <ClCompile Include="src\module_root.cpp" />
     <ClCompile Include="src\movement.cpp" />
     <ClCompile Include="src\mutex.cpp" />
     <ClCompile Include="src\noise.cpp" />

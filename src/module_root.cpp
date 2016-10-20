@@ -20,26 +20,7 @@
 *
 */
 
-#ifndef _PILOAD_H_
-#define _PILOAD_H_
-
-#include "drawspace_commons.h"
 #include "module_root.h"
 
-namespace DrawSpace
-{
-namespace Utils
-{
-class PILoad
-{
-public:
-
-    static bool LoadRendererPlugin( const dsstring& p_file );
-    static bool LoadModule( const dsstring& p_file,  const dsstring& p_module_instance_id, 
-                            const dsstring& p_shaders_res_root, bool p_enable_shadersdescr_infinalpath, 
-                            DrawSpace::Interface::Module::Root** p_module_root );
-};
-}
-}
-
-#endif
+dsstring DrawSpace::Interface::Module::Root::m_shadersresources_rootpath;
+bool DrawSpace::Interface::Module::Root::m_shadersdescr_infinalpath = false;

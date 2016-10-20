@@ -34,6 +34,10 @@ namespace Module
 {
 class Root
 {
+public:
+    static dsstring                                             m_shadersresources_rootpath;
+    static bool                                                 m_shadersdescr_infinalpath;
+
 protected:
 
     // table des differents services
@@ -53,6 +57,15 @@ public:
     virtual dsstring                GetModuleDescr( void ) = 0;
     virtual void                    ServicesInit( void ) = 0;
 
+    virtual void                    ConfigureShadersResources( const dsstring& p_shadersresources_rootpath, bool p_shadersdescr_infinalpath )
+    {
+        m_shadersresources_rootpath = p_shadersresources_rootpath;
+        m_shadersdescr_infinalpath = p_shadersdescr_infinalpath;
+
+        // also update current DLL's global variables
+        DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
+        DrawSpace::Core::Shader::SetRootPath( ".\\..\\..\\DrawSpace\\shaders_bank" );
+    }
 
     virtual std::vector<dsstring>   GetServicesList( void )
     {
@@ -72,8 +85,6 @@ public:
         }
         return NULL;
     }
-
-
 };
 }
 }

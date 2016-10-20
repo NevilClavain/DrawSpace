@@ -21,6 +21,7 @@
 */
 
 #include "mainloopservice.h"
+#include "test02root.h"
 #include "drawspace.h"
 
 using namespace DrawSpace;
@@ -81,7 +82,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     create_spacebox();
 
     DrawSpace::Interface::Module::Root* sbmod_root;
-    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", &sbmod_root ) )
+    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", DrawSpace::Interface::Module::Root::m_shadersresources_rootpath
+                                                , DrawSpace::Interface::Module::Root::m_shadersdescr_infinalpath, &sbmod_root ) )
     {
         _DSEXCEPTION( "fail to load skyboxmod module root" )
     }

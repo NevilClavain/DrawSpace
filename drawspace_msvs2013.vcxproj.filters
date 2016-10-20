@@ -266,6 +266,9 @@
     <ClCompile Include="src\module_keys.cpp">
       <Filter>module</Filter>
     </ClCompile>
+    <ClCompile Include="src\module_root.cpp">
+      <Filter>interface\module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
