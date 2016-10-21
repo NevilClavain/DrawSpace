@@ -84,30 +84,13 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 
     create_passes();
     create_spacebox();
-
-    DrawSpace::Interface::Module::Root* sbmod_root;
-    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", DrawSpace::Interface::Module::Root::m_shadersresources_rootpath
-                                                , DrawSpace::Interface::Module::Root::m_shadersdescr_infinalpath, &sbmod_root ) )
-    {
-        _DSEXCEPTION( "fail to load skyboxmod module root" )
-    }
-
-    DrawSpace::Interface::Module::Service* sb_service = sbmod_root->InstanciateService( "skybox" );
-    if( NULL == sb_service )
-    {
-        _DSEXCEPTION( "fail to load skybox module service" )
-    }
-    connect_keys( sb_service );
-
-    m_skybox_scenenodegraph = &m_scenenodegraph;
-    m_skybox_texturepass = m_texturepass;
-    m_skybox_texturemirrorpass = m_texturemirrorpass;
-
     create_camera();
     create_cubes();
     create_ground();
 
     init_passes();
+
+    
 
     m_scenenodegraph.SetCurrentCamera( "camera" );
 
@@ -121,6 +104,7 @@ void MainLoopService::Run( void )
 
     m_scenenodegraph.ComputeTransformations( m_tm );
 
+
     Matrix water_plane_mat;
     m_ground_body_node->GetFinalTransform( water_plane_mat );
 
@@ -128,10 +112,6 @@ void MainLoopService::Run( void )
     Vector reflectorPos( water_plane_mat( 3, 0 ), water_plane_mat( 3, 1 ), water_plane_mat( 3, 2 ), 1.0 );
     Vector reflectorNormale( 0.0, 1.0, 0.0, 1.0 );
 
-    for( int i = 0; i < 6; i++ )
-    {
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->SetShaderRealVector( "reflector_normale", reflectorNormale );
-    }
 
     
     m_chunk->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_pos", reflectorPos );
@@ -141,7 +121,9 @@ void MainLoopService::Run( void )
     m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_normale", reflectorNormale );
 
     m_skybox_reflectornormale = reflectorNormale;
+
     
+    m_sb_service->Run();
 
     m_wavespass->GetRenderingQueue()->Draw();
     m_texturepass->GetRenderingQueue()->Draw();
@@ -356,123 +338,26 @@ void MainLoopService::init_passes( void )
 
 void MainLoopService::create_spacebox( void )
 {
-    m_spacebox = _DRAWSPACE_NEW_( DrawSpace::Spacebox, DrawSpace::Spacebox );
-    m_spacebox->RegisterPassSlot( m_texturepass );
-    m_spacebox->RegisterPassSlot( m_texturemirrorpass );
-
-    for( long i = 0; i < 6; i++ )
+    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", DrawSpace::Interface::Module::Root::m_shadersresources_rootpath,
+                                                DrawSpace::Interface::Module::Root::m_shadersdescr_infinalpath, &m_sbmod_root ) )
     {
-
-        m_spacebox->GetNodeFromPass( m_texturepass, i )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-
-        m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-        m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-        m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->GetShader( 0 )->LoadFromFile();
-        m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->GetShader( 1 )->LoadFromFile();
-
-        //m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-        //m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
-    }  
-    
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RearQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::TopQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::BottomQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::LeftQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->GetTexture( 0 )->LoadFromFile();
-
-
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RearQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::TopQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::BottomQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::LeftQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->SetOrderNumber( 200 );
-
-
-
-    for( long i = 0; i < 6; i++ )
-    {
-
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );      
-
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->GetShader( 0 )->LoadFromFile();
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->GetShader( 1 )->LoadFromFile();
-
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
-        //m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
-        //m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
-    }   
-
-
-    
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->GetTexture( 0 )->LoadFromFile();
-
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ), 0 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->GetTexture( 0 )->LoadFromFile();
-
-
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->SetOrderNumber( 200 );
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->SetOrderNumber( 200 );
-
-    for( int i = 0; i < 6; i++ )
-    {
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->AddShaderParameter( 0, "reflector_pos", 24 );
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->AddShaderParameter( 0, "reflector_normale", 25 );
+        _DSEXCEPTION( "fail to load skyboxmod module root" )
     }
 
+    m_sb_service = m_sbmod_root->InstanciateService( "skybox" );
+    if( NULL == m_sb_service )
+    {
+        _DSEXCEPTION( "fail to load skybox module service" )
+    }
+    connect_keys( m_sb_service );
 
-    
-    m_spacebox_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Spacebox>, SceneNode<DrawSpace::Spacebox>( "spacebox" ) );
-    m_spacebox_node->SetContent( m_spacebox );
+    m_skybox_scenenodegraph = &m_scenenodegraph;
+    m_skybox_texturepass = m_texturepass;
+    m_skybox_texturemirrorpass = m_texturemirrorpass;
 
-    
-    m_scenenodegraph.RegisterNode( m_spacebox_node );
-
-
-    m_spacebox_transfo_node = _DRAWSPACE_NEW_( DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>, DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>( "spacebox_transfo" ) );
-    m_spacebox_transfo_node->SetContent( _DRAWSPACE_NEW_( Transformation, Transformation ) );
-    Matrix spacebox_scale;
-    spacebox_scale.Scale( 20.0, 20.0, 20.0 );
-    m_spacebox_transfo_node->GetContent()->PushMatrix( spacebox_scale );
-
-    m_scenenodegraph.AddNode( m_spacebox_transfo_node );
-    m_scenenodegraph.RegisterNode( m_spacebox_transfo_node );
-    m_spacebox_node->LinkTo( m_spacebox_transfo_node );
+    m_sb_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL );
 }
+
 
 void MainLoopService::create_camera( void )
 {

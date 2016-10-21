@@ -24,6 +24,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
 
 /////////////////////////////
@@ -99,10 +100,28 @@ void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_key
 
 void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
 {
+    m_spacebox_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Spacebox>, SceneNode<DrawSpace::Spacebox>( "spacebox" ) );
+    m_spacebox_node->SetContent( m_spacebox );
+
+    m_scenenodegraph->RegisterNode( m_spacebox_node );
+
+    m_spacebox_transfo_node = _DRAWSPACE_NEW_( DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>, DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>( "spacebox_transfo" ) );
+    m_spacebox_transfo_node->SetContent( _DRAWSPACE_NEW_( Transformation, Transformation ) );
+    Matrix spacebox_scale;
+    spacebox_scale.Scale( 20.0, 20.0, 20.0 );
+    m_spacebox_transfo_node->GetContent()->PushMatrix( spacebox_scale );
+
+    m_scenenodegraph->AddNode( m_spacebox_transfo_node );
+    m_scenenodegraph->RegisterNode( m_spacebox_transfo_node );
+    m_spacebox_node->LinkTo( m_spacebox_transfo_node );
 }
 
 void SkyboxService::Run( void )
 {
+    for( int i = 0; i < 6; i++ )
+    {
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->SetShaderRealVector( "reflector_normale", m_reflector_normale );
+    }
 }
 
 void SkyboxService::Release( void )
@@ -222,10 +241,7 @@ void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_va
 
 void SkyboxService::OnReflectorNormaleUpdate( const DrawSpace::Utils::Vector& p_normale )
 {
-    for( int i = 0; i < 6; i++ )
-    {
-        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->SetShaderRealVector( "reflector_normale", p_normale );
-    }
+    m_reflector_normale = p_normale;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

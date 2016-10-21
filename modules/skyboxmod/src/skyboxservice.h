@@ -25,6 +25,7 @@
 
 #include "module_service.h"
 #include "spacebox.h"
+#include "transformation.h"
 
 class SkyboxService;
 
@@ -73,21 +74,26 @@ class SkyboxService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    DrawSpace::Interface::Renderer*         m_renderer;
-    DrawSpace::Utils::TimeManager           m_tm;
-    dsstring                                m_device;
+    DrawSpace::Interface::Renderer*                                     m_renderer;
+    DrawSpace::Utils::TimeManager                                       m_tm;
+    dsstring                                                            m_device;
 
-    SceneNodeGraphParam*                    m_scparam;
-    TexturePassParam*                       m_texturepassparam;
-    TextureMirrorPassParam*                 m_texturemirrorpassparam;
-    ReflectorNormaleParam*                  m_reflectornormaleparam;
+    SceneNodeGraphParam*                                                m_scparam;
+    TexturePassParam*                                                   m_texturepassparam;
+    TextureMirrorPassParam*                                             m_texturemirrorpassparam;
+    ReflectorNormaleParam*                                              m_reflectornormaleparam;
 
-    DrawSpace::Core::SceneNodeGraph*        m_scenenodegraph;
+    DrawSpace::Core::SceneNodeGraph*                                    m_scenenodegraph;
 
-    DrawSpace::IntermediatePass*            m_texturepass;
-    DrawSpace::IntermediatePass*            m_texturemirrorpass;
 
-    DrawSpace::Spacebox*                    m_spacebox;
+    DrawSpace::IntermediatePass*                                        m_texturepass;
+    DrawSpace::IntermediatePass*                                        m_texturemirrorpass;
+
+    DrawSpace::Spacebox*                                                m_spacebox;
+    DrawSpace::Core::SceneNode<DrawSpace::Spacebox>*                    m_spacebox_node;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_spacebox_transfo_node;
+
+    DrawSpace::Utils::Vector                                            m_reflector_normale;
 
 public:
     SkyboxService( const dsstring& p_id );

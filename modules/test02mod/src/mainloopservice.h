@@ -44,10 +44,10 @@ protected:
     DrawSpace::IntermediatePass*                                        m_wavespass;
     DrawSpace::IntermediatePass*                                        m_bumppass;
 
+    DrawSpace::Interface::Module::Root*                                 m_sbmod_root;
+    DrawSpace::Interface::Module::Service*                              m_sb_service;
 
-    DrawSpace::Spacebox*                                                m_spacebox;
-    DrawSpace::Core::SceneNode<DrawSpace::Spacebox>*                    m_spacebox_node;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_spacebox_transfo_node;
+
 
     DrawSpace::Chunk*                                                   m_chunk;
     DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_chunk_node;
