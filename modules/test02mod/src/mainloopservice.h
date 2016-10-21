@@ -89,6 +89,7 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_skybox_scenenodegraph;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_skybox_texturepass;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_skybox_texturemirrorpass;
+    DrawSpace::Module::KeySource<DrawSpace::Utils::Vector>              m_skybox_reflectornormale;
 
     /////////////////////////////////////////////////////////////////////////////////
 

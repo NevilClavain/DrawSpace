@@ -61,6 +61,17 @@ void TextureMirrorPassParam::OnUpdated( DrawSpace::IntermediatePass* p_val )
 
 /////////////////////////////
 
+ReflectorNormaleParam::ReflectorNormaleParam( const dsstring& p_id, SkyboxService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
+{
+}
+
+void ReflectorNormaleParam::OnUpdated( DrawSpace::Utils::Vector p_val )
+{
+    m_owner->OnReflectorNormaleUpdate( p_val );
+}
+
+/////////////////////////////
+
 SkyboxService::SkyboxService( const dsstring& p_id ) :
 m_scenenodegraph( NULL ),
 m_texturepass( NULL ),
@@ -69,6 +80,7 @@ m_texturemirrorpass( NULL )
     m_scparam = _DRAWSPACE_NEW_( SceneNodeGraphParam, SceneNodeGraphParam( p_id + dsstring( ".SceneNodeGraph" ), this ) );
     m_texturepassparam = _DRAWSPACE_NEW_( TexturePassParam, TexturePassParam( p_id + dsstring( ".TexturePass" ), this ) );
     m_texturemirrorpassparam = _DRAWSPACE_NEW_( TextureMirrorPassParam, TextureMirrorPassParam( p_id + dsstring( ".TextureMirrorPass" ), this ) );
+    m_reflectornormaleparam = _DRAWSPACE_NEW_( ReflectorNormaleParam, ReflectorNormaleParam( p_id + dsstring( ".ReflectorNormale" ), this ) );
 
     m_spacebox = _DRAWSPACE_NEW_( DrawSpace::Spacebox, DrawSpace::Spacebox );
 }
@@ -82,6 +94,7 @@ void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_key
     p_keys.push_back( m_scparam );
     p_keys.push_back( m_texturepassparam );
     p_keys.push_back( m_texturemirrorpassparam );
+    p_keys.push_back( m_reflectornormaleparam );
 }
 
 void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
@@ -206,6 +219,16 @@ void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_va
     }
 
 }
+
+void SkyboxService::OnReflectorNormaleUpdate( const DrawSpace::Utils::Vector& p_normale )
+{
+    for( int i = 0; i < 6; i++ )
+    {
+        m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->SetShaderRealVector( "reflector_normale", p_normale );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void SkyboxService::OnKeyPress( long p_key )
 {

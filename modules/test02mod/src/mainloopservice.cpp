@@ -37,7 +37,8 @@ m_waves( 0.0 ),
 m_waves_inc( true ),
 m_skybox_scenenodegraph( "skybox.SceneNodeGraph" ),
 m_skybox_texturepass( "skybox.TexturePass" ),
-m_skybox_texturemirrorpass( "skybox.TextureMirrorPass" )
+m_skybox_texturemirrorpass( "skybox.TextureMirrorPass" ),
+m_skybox_reflectornormale( "skybox.ReflectorNormale" )
 {
 }
 
@@ -55,6 +56,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_keysLinkTable.RegisterClientKey( &m_skybox_scenenodegraph );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturepass );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturemirrorpass );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_reflectornormale );
 
 
     //////////////////////////////////////////////////////////////////////////////
@@ -137,6 +139,8 @@ void MainLoopService::Run( void )
 
     m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_pos", reflectorPos );
     m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_normale", reflectorNormale );
+
+    m_skybox_reflectornormale = reflectorNormale;
     
 
     m_wavespass->GetRenderingQueue()->Draw();
