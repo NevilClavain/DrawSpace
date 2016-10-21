@@ -73,10 +73,23 @@ void ReflectorNormaleParam::OnUpdated( DrawSpace::Utils::Vector p_val )
 
 /////////////////////////////
 
+ScalingParam::ScalingParam( const dsstring& p_id, SkyboxService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
+{
+
+}
+
+void ScalingParam::OnUpdated( dsreal p_val )
+{
+
+}
+
+/////////////////////////////
+
 SkyboxService::SkyboxService( const dsstring& p_id ) :
 m_scenenodegraph( NULL ),
 m_texturepass( NULL ),
-m_texturemirrorpass( NULL )
+m_texturemirrorpass( NULL ),
+m_scaling( 20.0 )
 {
     m_scparam = _DRAWSPACE_NEW_( SceneNodeGraphParam, SceneNodeGraphParam( p_id + dsstring( ".SceneNodeGraph" ), this ) );
     m_texturepassparam = _DRAWSPACE_NEW_( TexturePassParam, TexturePassParam( p_id + dsstring( ".TexturePass" ), this ) );
@@ -108,7 +121,7 @@ void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace
     m_spacebox_transfo_node = _DRAWSPACE_NEW_( DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>, DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>( "spacebox_transfo" ) );
     m_spacebox_transfo_node->SetContent( _DRAWSPACE_NEW_( Transformation, Transformation ) );
     Matrix spacebox_scale;
-    spacebox_scale.Scale( 20.0, 20.0, 20.0 );
+    spacebox_scale.Scale( m_scaling, m_scaling, m_scaling );
     m_spacebox_transfo_node->GetContent()->PushMatrix( spacebox_scale );
 
     m_scenenodegraph->AddNode( m_spacebox_transfo_node );
@@ -242,6 +255,11 @@ void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_va
 void SkyboxService::OnReflectorNormaleUpdate( const DrawSpace::Utils::Vector& p_normale )
 {
     m_reflector_normale = p_normale;
+}
+
+void SkyboxService::OnScalingUpdate( dsreal p_scale )
+{
+    m_scaling = p_scale;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

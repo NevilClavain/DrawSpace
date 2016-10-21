@@ -70,6 +70,19 @@ public:
     virtual void OnUpdated( DrawSpace::Utils::Vector p_val );
 };
 
+class ScalingParam : public DrawSpace::Module::KeySink<dsreal>
+{
+protected:
+    SkyboxService* m_owner;
+
+public:
+    ScalingParam( const dsstring& p_id, SkyboxService* p_owner );
+    virtual void OnUpdated( dsreal p_val );
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 class SkyboxService : public DrawSpace::Interface::Module::Service
 {
 protected:
@@ -95,6 +108,8 @@ protected:
 
     DrawSpace::Utils::Vector                                            m_reflector_normale;
 
+    dsreal                                                              m_scaling;
+
 public:
     SkyboxService( const dsstring& p_id );
     ~SkyboxService( void );
@@ -109,7 +124,7 @@ public:
     virtual void                            OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );
     virtual void                            OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_val );
     virtual void                            OnReflectorNormaleUpdate( const DrawSpace::Utils::Vector& p_normale );
-
+    virtual void                            OnScalingUpdate( dsreal p_scale );
 
     virtual void                            OnKeyPress( long p_key );
     virtual void                            OnEndKeyPress( long p_key );
