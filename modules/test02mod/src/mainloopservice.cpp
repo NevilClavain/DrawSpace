@@ -125,12 +125,14 @@ void MainLoopService::Run( void )
     
     m_sb_service->Run();
 
+    m_coloredpass->GetRenderingQueue()->Draw();
+
     m_wavespass->GetRenderingQueue()->Draw();
     m_texturepass->GetRenderingQueue()->Draw();
     m_texturemirrorpass->GetRenderingQueue()->Draw();
     m_bumppass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
-
+    
     m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 
     m_renderer->FlipScreen();
@@ -221,6 +223,23 @@ void MainLoopService::OnEndKeyPress( long p_key )
 
 void MainLoopService::OnKeyPulse( long p_key )
 {
+    switch( p_key )
+    {
+        case VK_SPACE:
+            {
+                // read render texture content test...
+                m_coloredpass->GetTargetTexture()->CopyTextureContent();
+
+                unsigned char* pix = (unsigned char*)m_texturecontent;
+                unsigned char b = pix[0];
+                unsigned char g = pix[1];
+                unsigned char r = pix[2];
+                unsigned char a = pix[3];
+
+                _asm nop;
+            }
+            break;
+    }
 }
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
@@ -251,8 +270,20 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 
 void MainLoopService::create_passes( void )
 {
-    m_texturepass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "texture_pass" ) );
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    m_coloredpass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "colored_pass" ) );
+    m_coloredpass->SetRenderTarget( Texture::RENDERTARGET_CPU );
+    m_coloredpass->Initialize();
+    m_coloredpass->GetRenderingQueue()->EnableDepthClearing( true );
+    m_coloredpass->GetRenderingQueue()->EnableTargetClearing( true );
+    m_coloredpass->GetRenderingQueue()->SetTargetClearingColor( 12, 66, 155, 255 );
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    m_texturepass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "texture_pass" ) );
     m_texturepass->Initialize();
     m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
 
@@ -322,17 +353,26 @@ void MainLoopService::create_passes( void )
     m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 1 );
     m_finalpass->GetViewportQuad()->SetTexture( m_bumppass->GetTargetTexture(), 2 );
 
-    //m_finalpass->GetViewportQuad()->SetTexture( m_wavespass->GetTargetTexture(), 0 );
+    // puisque m_coloredpass n'est connectée a aucune passe
+    void* data;
+    m_renderer->CreateTexture( m_coloredpass->GetTargetTexture(), &data );
     
 }
 
 void MainLoopService::init_passes( void )
 {
+    m_coloredpass->GetRenderingQueue()->UpdateOutputQueue();
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
     m_texturemirrorpass->GetRenderingQueue()->UpdateOutputQueue();
     m_bumppass->GetRenderingQueue()->UpdateOutputQueue();
     m_wavespass->GetRenderingQueue()->UpdateOutputQueue();
     m_finalpass->GetRenderingQueue()->UpdateOutputQueue();
+
+    m_coloredpass->GetTargetTexture()->AllocTextureContent();
+
+    m_texturecontent = m_coloredpass->GetTargetTexture()->GetTextureContentPtr();
+
+    _asm nop
 }
 
 

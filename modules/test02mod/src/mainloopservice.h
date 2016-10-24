@@ -44,6 +44,8 @@ protected:
     DrawSpace::IntermediatePass*                                        m_wavespass;
     DrawSpace::IntermediatePass*                                        m_bumppass;
 
+    DrawSpace::IntermediatePass*                                        m_coloredpass;
+
     DrawSpace::Interface::Module::Root*                                 m_sbmod_root;
     DrawSpace::Interface::Module::Service*                              m_sb_service;
 
@@ -83,6 +85,8 @@ protected:
     DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
     DrawSpace::Core::BaseCallback<void, bool>*                          m_mousecircularmode_cb;
+
+    void*                                                               m_texturecontent;
 
     /////////////////////////////////////////////////////////////////////////////////
 
