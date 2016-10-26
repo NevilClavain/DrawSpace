@@ -951,6 +951,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         {
             case DXGI_FORMAT_R8G8B8A8_TYPELESS:
             case DXGI_FORMAT_R8G8B8A8_UNORM:
+            case DXGI_FORMAT_B8G8R8A8_UNORM:
             case DXGI_FORMAT_R8G8B8A8_UINT:
             case DXGI_FORMAT_R8G8B8A8_SNORM:
             case DXGI_FORMAT_R8G8B8A8_SINT:
@@ -996,7 +997,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         {
             case Texture::RENDERPURPOSE_COLOR:
 
-                format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                //format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                format = DXGI_FORMAT_B8G8R8A8_UNORM;
                 bpp = 4;
                 break;
 
@@ -1160,7 +1162,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             {
                 case Texture::PURPOSE_COLOR:
                     {
-                        format = DXGI_FORMAT_R8G8B8A8_UINT;
+                        //format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                        format = DXGI_FORMAT_B8G8R8A8_UNORM;
                     }
                     break;
 
@@ -1228,6 +1231,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 
             texture_infos->textureShaderResourceView = textureResourceView;
 
+            m_textures_base[path] = texture_infos;
+
             *p_data = (void*)texture_infos;
                    
             // inutile d'appeler SetFormat() sur la texture
@@ -1247,6 +1252,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         {
             case DXGI_FORMAT_R8G8B8A8_TYPELESS:
             case DXGI_FORMAT_R8G8B8A8_UNORM:
+            case DXGI_FORMAT_B8G8R8A8_UNORM:
             case DXGI_FORMAT_R8G8B8A8_UINT:
             case DXGI_FORMAT_R8G8B8A8_SNORM:
             case DXGI_FORMAT_R8G8B8A8_SINT:
@@ -1380,6 +1386,7 @@ bool D3D11Renderer::AllocTextureContent( void* p_texturedata )
         {
             case DXGI_FORMAT_R8G8B8A8_TYPELESS:
             case DXGI_FORMAT_R8G8B8A8_UNORM:
+            case DXGI_FORMAT_B8G8R8A8_UNORM:
             case DXGI_FORMAT_R8G8B8A8_UINT:
             case DXGI_FORMAT_R8G8B8A8_SNORM:
             case DXGI_FORMAT_R8G8B8A8_SINT:
@@ -1461,6 +1468,7 @@ bool D3D11Renderer::CopyTextureContent( void* p_texturedata )
     {
             case DXGI_FORMAT_R8G8B8A8_TYPELESS:
             case DXGI_FORMAT_R8G8B8A8_UNORM:
+            case DXGI_FORMAT_B8G8R8A8_UNORM:
             case DXGI_FORMAT_R8G8B8A8_UINT:
             case DXGI_FORMAT_R8G8B8A8_SNORM:
             case DXGI_FORMAT_R8G8B8A8_SINT:
@@ -1507,10 +1515,72 @@ bool D3D11Renderer::CopyTextureContent( void* p_texturedata )
 
 bool D3D11Renderer::UpdateTextureContent( void* p_texturedata )
 {
+    DECLARE_D3D11ASSERT_VARS
+
     TextureInfos* ti = (TextureInfos*)p_texturedata;
     if( !ti->content_access )
     {
         _DSEXCEPTION( "trying to access content for a non accessible texture content" )
+    }
+
+    if( NULL == ti->bits )
+    {
+        return false;
+    }
+
+    long blocsize;
+    int bpp;
+    switch( ti->descr.Format )
+    {
+            case DXGI_FORMAT_R8G8B8A8_TYPELESS:
+            case DXGI_FORMAT_R8G8B8A8_UNORM:
+            case DXGI_FORMAT_B8G8R8A8_UNORM:
+            case DXGI_FORMAT_R8G8B8A8_UINT:
+            case DXGI_FORMAT_R8G8B8A8_SNORM:
+            case DXGI_FORMAT_R8G8B8A8_SINT:
+                bpp = 4;
+                break;
+
+            case DXGI_FORMAT_R16_FLOAT:
+                bpp = 2;
+                break;
+
+            case DXGI_FORMAT_R32_FLOAT:
+                bpp = 4;
+                break;
+
+            case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                bpp = 16;
+                break;
+
+            default:
+                bpp = -1;
+                break;
+    }
+
+    if( bpp != -1 )
+    {
+        blocsize = bpp * ti->descr.Width * ti->descr.Height;            
+    }
+    else
+    {
+        return false;
+    }
+
+    if( ti->rendertextureTargetView )
+    {
+        // vouloir updater une render texture = non sens
+        return false;
+    }
+    else
+    { 
+        D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+        hRes = m_lpd3ddevcontext->Map( ti->texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource );
+        D3D11_CHECK( Map )
+
+        memcpy( mappedResource.pData, ti->bits, blocsize );
+        m_lpd3ddevcontext->Unmap( ti->texture, 0 );
     }
 
     return true;

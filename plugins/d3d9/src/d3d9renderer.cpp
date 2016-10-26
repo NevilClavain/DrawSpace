@@ -941,6 +941,8 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                     texture_infos->render_texture = false;
                     texture_infos->bits = NULL;
                     d3dt9->GetLevelDesc( 0, &texture_infos->descr );
+                    m_textures_base[path] = texture_infos;
+
                     
                     *p_data = (void*)texture_infos;
                    
@@ -965,6 +967,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                     texture_infos->render_texture = false;
                     texture_infos->bits = NULL;
                     d3dt9->GetLevelDesc( 0, &texture_infos->descr );
+                    m_textures_base[path] = texture_infos;
                     
                     *p_data = (void*)texture_infos;
 
@@ -989,6 +992,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 texture_infos->render_texture = false;
                 texture_infos->bits = NULL;
                 d3dt9->GetLevelDesc( 0, &texture_infos->descr );
+                m_textures_base[path] = texture_infos;
                     
                 *p_data = (void*)texture_infos;
 
