@@ -231,6 +231,8 @@ void MainLoopService::OnKeyPulse( long p_key )
                 m_coloredpass->GetTargetTexture()->CopyTextureContent();
 
                 unsigned char* pix = (unsigned char*)m_texturecontent;
+
+
                 unsigned char b = pix[0];
                 unsigned char g = pix[1];
                 unsigned char r = pix[2];
@@ -369,10 +371,28 @@ void MainLoopService::init_passes( void )
     m_finalpass->GetRenderingQueue()->UpdateOutputQueue();
 
     m_coloredpass->GetTargetTexture()->AllocTextureContent();
-
     m_texturecontent = m_coloredpass->GetTargetTexture()->GetTextureContentPtr();
 
-    _asm nop
+    m_texcube2->AllocTextureContent();
+    m_tc2content = m_texcube2->GetTextureContentPtr();
+
+    unsigned char* tptr = (unsigned char*)m_tc2content;
+
+    for( int y = 0; y < 256; y++ )
+    {
+        for( int x = 0; x < 256; x++ )
+        {
+            int index = 4 * ( ( 256 * y ) + x );
+
+            tptr[index] = 0;
+            tptr[index + 1] = 0;
+            tptr[index + 2] = 255;
+            tptr[index + 3] = 255;
+        }
+    }
+
+    m_texcube2->UpdateTextureContent();
+
 }
 
 
@@ -508,6 +528,11 @@ void MainLoopService::create_cubes( void )
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    m_texcube2 = _DRAWSPACE_NEW_( Texture, Texture( "tc2" ));
+    m_texcube2->SetPurpose( Texture::PURPOSE_COLOR );
+    m_texcube2->SetFormat( 256, 256, 4 );
+
+
     m_cube2 = _DRAWSPACE_NEW_( DrawSpace::Chunk, DrawSpace::Chunk );
 
     m_cube2->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
@@ -532,8 +557,10 @@ void MainLoopService::create_cubes( void )
     m_cube2->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
    
 
-    m_cube2->GetNodeFromPass( m_texturepass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "saturnmap.jpg" ) ), 0 );
-    m_cube2->GetNodeFromPass( m_texturepass )->GetTexture( 0 )->LoadFromFile();
+    //m_cube2->GetNodeFromPass( m_texturepass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "saturnmap.jpg" ) ), 0 );
+    //m_cube2->GetNodeFromPass( m_texturepass )->GetTexture( 0 )->LoadFromFile();
+
+    m_cube2->GetNodeFromPass( m_texturepass )->SetTexture( m_texcube2, 0 );
 
 
     
@@ -553,8 +580,10 @@ void MainLoopService::create_cubes( void )
 
 
 
-    m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "saturnmap.jpg" ) ), 0 );
-    m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetTexture( 0 )->LoadFromFile();
+    //m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "saturnmap.jpg" ) ), 0 );
+    //m_cube2->GetNodeFromPass( m_texturemirrorpass )->GetTexture( 0 )->LoadFromFile();
+
+    m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetTexture( m_texcube2, 0 );
 
     m_cube2->GetNodeFromPass( m_texturemirrorpass )->AddShaderParameter( 0, "reflector_pos", 24 );
     m_cube2->GetNodeFromPass( m_texturemirrorpass )->AddShaderParameter( 0, "reflector_normale", 25 );
