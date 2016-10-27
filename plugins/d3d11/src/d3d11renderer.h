@@ -38,6 +38,8 @@
 #include <matrix.h>
 #include <transformation.h>
 #include <FW1FontWrapper.h>
+#include <CEGUI\CEGUI.h>
+#include <CEGUI\RendererModules\Direct3D11\Renderer.h>
 
 #include "d3d11vertex.h"
 #include "d3d11triangle.h"
@@ -177,6 +179,8 @@ protected:
     ShaderLegacyArg                                                 m_vertexshader_legacyargs;
     ShaderLegacyArg                                                 m_pixelshader_legacyargs;
 
+    bool                                                            m_guisubsystem_ready;
+
     void set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
     void set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
 
@@ -255,6 +259,10 @@ public:
     virtual void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... );
 
     virtual void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
+
+    virtual bool InitGUISubSystem( void );
+    virtual void RenderGUI( void );
+
 };
 
 #endif

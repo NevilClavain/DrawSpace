@@ -53,15 +53,15 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;D3D9_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx9sdk/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx9sdk/include;./../../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib</AdditionalLibraryDirectories>
       <OutputFile>$(SolutionDir)\libs\drawspaced3d9.dll</OutputFile>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d9.lib;d3dx9.lib;drawspace.lib;BulletDynamics_vs2013_debug.lib;BulletCollision_vs2013_debug.lib;LinearMath_vs2013_debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d9.lib;d3dx9.lib;drawspace.lib;BulletDynamics_vs2013_debug.lib;BulletCollision_vs2013_debug.lib;LinearMath_vs2013_debug.lib;CEGUIBase-0_d.lib;CEGUIDirect3D9Renderer-0_d.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy .\..\..\libs\drawspaced3d9.dll .\..\..\..\Drawspace_samples\bin</Command>

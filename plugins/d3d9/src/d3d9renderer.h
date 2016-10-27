@@ -31,7 +31,8 @@
 #include <vector.h>
 #include <matrix.h>
 #include <transformation.h>
-
+#include <CEGUI\CEGUI.h>
+#include <CEGUI\RendererModules\Direct3D9\Renderer.h>
 
 #include <d3dx9.h>
 #include "d3d9vertex.h"
@@ -153,6 +154,8 @@ protected:
     int                                                         m_next_nbvertices;
     int                                                         m_next_nbtriangles;
 
+    bool                                                        m_guisubsystem_ready;
+
 
     void set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
     void set_pixelshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
@@ -202,12 +205,6 @@ public:
     virtual bool CopyTextureContent( void* p_texturedata );
     virtual bool UpdateTextureContent( void* p_texturedata );
 
-    /*
-    virtual bool CreateFx( DrawSpace::Core::Fx* p_fx, void** p_data );
-    virtual bool SetFx( void* p_data );
-	virtual bool UnsetFx( void* p_data );
-    */
-
     virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data );
     virtual bool SetShaders( void* p_data );
 
@@ -228,6 +225,10 @@ public:
     virtual void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... );
 
     virtual void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
+
+    virtual bool InitGUISubSystem( void );
+    virtual void RenderGUI( void );
+
 };
 
 #endif

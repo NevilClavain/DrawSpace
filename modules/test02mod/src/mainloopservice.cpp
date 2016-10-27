@@ -96,6 +96,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 
     set_mouse_circular_mode( true );
 
+    m_renderer->InitGUISubSystem();
+
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
@@ -134,6 +136,8 @@ void MainLoopService::Run( void )
     m_finalpass->GetRenderingQueue()->Draw();
     
     m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
+
+    //m_renderer->RenderGUI();
 
     m_renderer->FlipScreen();
 

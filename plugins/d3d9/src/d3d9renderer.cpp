@@ -2002,3 +2002,25 @@ void D3D9Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::
 
     //p_outz = res[2];
 }
+
+bool D3D9Renderer::InitGUISubSystem( void )
+{
+    if( !m_lpd3ddevice )
+    {
+        _DSEXCEPTION( "Cannot initialize GUI sub system cause D3D9 is currently not initialized" )
+    }
+
+    CEGUI::Direct3D9Renderer::bootstrapSystem( m_lpd3ddevice );
+
+    m_guisubsystem_ready = true;
+    return true;
+}
+
+void D3D9Renderer::RenderGUI( void )
+{
+    if( !m_guisubsystem_ready )
+    {
+        _DSEXCEPTION( "GUI sub system is currently not initialized, cannot render" )
+    }
+    CEGUI::System::getSingleton().renderAllGUIContexts();
+}

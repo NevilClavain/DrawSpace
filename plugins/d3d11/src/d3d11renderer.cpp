@@ -44,7 +44,8 @@ m_inputLayout( NULL ),
 m_pDepthStencil( NULL ),
 m_pDepthStencilView( NULL ),
 m_currentTarget( NULL ),
-m_currentView( NULL )
+m_currentView( NULL ),
+m_guisubsystem_ready( false )
 {
 
 }
@@ -2361,8 +2362,6 @@ HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTS
     hr = D3DX11CompileFromMemory( (LPCTSTR)p_data, p_size, szFileName, NULL, NULL, szEntryPoint, szShaderModel, dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
-
-
         if( pErrorBlob != NULL )
         {
             *ppBlobErrOut = pErrorBlob;
@@ -2371,4 +2370,26 @@ HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTS
         return hr;
     }
     return S_OK;
+}
+
+bool D3D11Renderer::InitGUISubSystem( void )
+{
+    if( !m_lpd3ddevice || !m_lpd3ddevcontext )
+    {
+        _DSEXCEPTION( "Cannot initialize GUI sub system cause D3D11 is currently not initialized" )
+    }
+
+    CEGUI::Direct3D11Renderer::bootstrapSystem( m_lpd3ddevice, m_lpd3ddevcontext );
+
+    m_guisubsystem_ready = true;
+    return true;
+}
+
+void D3D11Renderer::RenderGUI( void )
+{
+    if( !m_guisubsystem_ready )
+    {
+        _DSEXCEPTION( "GUI sub system is currently not initialized, cannot render" )
+    }
+    CEGUI::System::getSingleton().renderAllGUIContexts();
 }
