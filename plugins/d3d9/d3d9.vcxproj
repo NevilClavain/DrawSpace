@@ -76,7 +76,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;D3D9_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx9sdk/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx9sdk/include;./../../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -85,8 +85,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(SolutionDir)\libs\drawspaced3d9_r.dll</OutputFile>
-      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdi32.lib;user32.lib;d3d9.lib;d3dx9.lib;drawspace_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdi32.lib;user32.lib;d3d9.lib;d3dx9.lib;drawspace_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib;CEGUIBase-0.lib;CEGUIDirect3D9Renderer-0.lib</AdditionalDependencies>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
