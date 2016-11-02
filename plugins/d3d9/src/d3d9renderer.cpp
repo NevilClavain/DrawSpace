@@ -2022,8 +2022,27 @@ void D3D9Renderer::RenderGUI( void )
     {
         _DSEXCEPTION( "GUI sub system is currently not initialized, cannot render" )
     }
+
+    DWORD alphablendenable_state;
+    m_lpd3ddevice->GetRenderState( D3DRS_ALPHABLENDENABLE, &alphablendenable_state );
+
+    DWORD cull_state;
+    m_lpd3ddevice->GetRenderState( D3DRS_CULLMODE, &cull_state );
+
+    DWORD fill_state;
+    m_lpd3ddevice->GetRenderState( D3DRS_FILLMODE, &fill_state );
+
+    // save render states
     CEGUI::System::getSingleton().renderAllGUIContexts();
 
+    // restore Render states...
     m_lpd3ddevice->SetVertexDeclaration( m_vertexdeclaration );
-    m_lpd3ddevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
+    m_lpd3ddevice->SetRenderState( D3DRS_SCISSORTESTENABLE, FALSE );
+    m_lpd3ddevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE );
+    
+    m_lpd3ddevice->SetRenderState( D3DRS_ALPHABLENDENABLE, alphablendenable_state );
+    m_lpd3ddevice->SetRenderState( D3DRS_CULLMODE, cull_state );
+    m_lpd3ddevice->SetRenderState( D3DRS_FILLMODE, fill_state );
+
+    
 }
