@@ -137,7 +137,7 @@ void MainLoopService::Run( void )
     
     m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 
-    //m_renderer->RenderGUI();
+    m_renderer->RenderGUI();
 
     m_renderer->FlipScreen();
 

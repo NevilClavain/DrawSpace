@@ -2023,4 +2023,7 @@ void D3D9Renderer::RenderGUI( void )
         _DSEXCEPTION( "GUI sub system is currently not initialized, cannot render" )
     }
     CEGUI::System::getSingleton().renderAllGUIContexts();
+
+    m_lpd3ddevice->SetVertexDeclaration( m_vertexdeclaration );
+    m_lpd3ddevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
 }

@@ -2392,4 +2392,7 @@ void D3D11Renderer::RenderGUI( void )
         _DSEXCEPTION( "GUI sub system is currently not initialized, cannot render" )
     }
     CEGUI::System::getSingleton().renderAllGUIContexts();
+
+    // restore my input layout, 'cause CEGUI puts its own...
+    m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );
 }
