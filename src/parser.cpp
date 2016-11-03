@@ -22,6 +22,7 @@
 
 #include "parser.h"
 #include "misc_utils.h"
+#include "file.h"
 
 using namespace DrawSpace::Utils;
 
@@ -87,40 +88,31 @@ bool Parser::Run( const dsstring& p_filepath, const dsstring& p_separators )
     bool status = true;
     long line_count = 0;
 
-    FILE* fp = fopen( p_filepath.c_str(), "r" );
-    if( fp )
+    File file( p_filepath, File::OPENEXISTINGTEXT );
+    char line[256];
+
+    while( file.Gets( line, 256 ) )
     {
-        char line[256];
-
-        while( fgets( line, 256, fp ) )
+        line_count++;
+        // supprimer le retour chariot en fin de ligne
+        if( 0x0a != line[0] )
         {
-            line_count++;
-            // supprimer le retour chariot en fin de ligne
-            if( 0x0a != line[0] )
+            size_t len = strlen( line );
+            if( 0x0a == line[len - 1 ] )
             {
-                size_t len = strlen( line );
-                if( 0x0a == line[len - 1 ] )
-                {
-                    line[len - 1] = 0x00;
-                }
+                line[len - 1] = 0x00;
+            }
 
-                std::vector<dsstring> words;
-                split_line( line, p_separators, words );
+            std::vector<dsstring> words;
+            split_line( line, p_separators, words );
 
-                if( !on_new_line( line, line_count, words ) )
-                {
-                    status = false;
-                    break;
-                }
+            if( !on_new_line( line, line_count, words ) )
+            {
+                status = false;
+                break;
             }
         }
-        fclose( fp );
     }
-    else
-    {
-        status = false;
-    }
-
     return status;
 }
 

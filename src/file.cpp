@@ -22,6 +22,7 @@
 
 #include "file.h"
 #include "memalloc.h"
+#include "exceptions.h"
 
 using namespace DrawSpace::Utils;
 
@@ -31,7 +32,7 @@ File::File( const dsstring& p_filename, Mode p_mode ) : m_fp( NULL )
     {
         m_fp = fopen( p_filename.c_str(), "wb" );
     }
-    else if( OPEN_EXISTING == p_mode )
+    else if( OPENEXISTINGB == p_mode )
     {
         m_fp = fopen( p_filename.c_str(), "rb" );
     }	
@@ -41,9 +42,13 @@ File::File( const dsstring& p_filename, Mode p_mode ) : m_fp( NULL )
     }
     else if( OPENEXISTINGTEXT == p_mode )
     {
-        m_fp = fopen( p_filename.c_str(), "rt" );
-    }	
+        m_fp = fopen( p_filename.c_str(), "r" );
+    }
 
+    if( !m_fp )
+    {
+        _DSEXCEPTION( dsstring( "Failed to open file " ) + p_filename );
+    }
 }
 
 File::~File( void )
@@ -84,6 +89,19 @@ void File::Puts( const dsstring& p_string )
     {
         fputs( p_string.c_str(), m_fp );
     }
+}
+
+bool File::Gets( char* p_buff, int p_nbToRead )
+{
+    if( m_fp )
+    {
+        char* s = fgets( p_buff, p_nbToRead, m_fp );
+        if( s )
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 void File::Flush( void )

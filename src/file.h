@@ -41,7 +41,7 @@ public:
     typedef enum
     {
         CREATENEW,
-        OPENEXISTING,
+        OPENEXISTINGB,
         CREATENEWTEXT,
         OPENEXISTINGTEXT,
 
@@ -55,6 +55,7 @@ public:
     long FileSize( void );
 
     void Puts( const dsstring& p_string );
+    bool Gets( char* p_buff, int p_nbToRead );
     void Flush( void );
 
     static long	FileSize( FILE *p_fp );
