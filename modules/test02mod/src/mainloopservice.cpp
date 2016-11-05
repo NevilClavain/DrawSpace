@@ -402,8 +402,8 @@ void MainLoopService::init_passes( void )
 
 void MainLoopService::create_spacebox( void )
 {
-    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", DrawSpace::Interface::Module::Root::m_shadersresources_rootpath,
-                                                DrawSpace::Interface::Module::Root::m_shadersdescr_infinalpath, &m_sbmod_root ) )
+    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", "",
+                                                false, &m_sbmod_root ) )
     {
         _DSEXCEPTION( "fail to load skyboxmod module root" )
     }

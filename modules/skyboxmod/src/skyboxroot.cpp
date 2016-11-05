@@ -29,6 +29,8 @@ using namespace DrawSpace::Interface::Module;
 
 SkyboxRoot::SkyboxRoot( void )
 {
+    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
+    DrawSpace::Core::Shader::SetRootPath( "shaders_bank" );    
 }
 
 SkyboxRoot::~SkyboxRoot( void )

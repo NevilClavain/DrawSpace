@@ -25,22 +25,10 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Interface::Module;
 
-dsstring Root::m_shadersresources_rootpath;
-bool Root::m_shadersdescr_infinalpath = false;
 
 void Root::UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
 {
     DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-}
-
-void Root::ConfigureShadersResources( const dsstring& p_shadersresources_rootpath, bool p_shadersdescr_infinalpath )
-{
-    m_shadersresources_rootpath = p_shadersresources_rootpath;
-    m_shadersdescr_infinalpath = p_shadersdescr_infinalpath;
-
-    // also update current DLL's global variables
-    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( m_shadersdescr_infinalpath );
-    DrawSpace::Core::Shader::SetRootPath( m_shadersresources_rootpath );
 }
 
 std::vector<dsstring> Root::GetServicesList( void )

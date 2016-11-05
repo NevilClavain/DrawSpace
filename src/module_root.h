@@ -34,10 +34,6 @@ namespace Module
 {
 class Root
 {
-public:
-    static dsstring                                             m_shadersresources_rootpath;
-    static bool                                                 m_shadersdescr_infinalpath;
-
 protected:
 
     // table des differents services
@@ -53,9 +49,7 @@ public:
     virtual dsstring                GetModuleName( void ) = 0;
     virtual dsstring                GetModuleDescr( void ) = 0;
     virtual void                    ServicesInit( void ) = 0;
-
-    virtual void                    ConfigureShadersResources( const dsstring& p_shadersresources_rootpath, bool p_shadersdescr_infinalpath );
-
+   
     virtual std::vector<dsstring>   GetServicesList( void );
 
     virtual Service*                InstanciateService( const dsstring& p_id );
