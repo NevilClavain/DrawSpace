@@ -62,7 +62,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
         if( lpCmdLine != "" )
         {
             if( !DrawSpace::Utils::PILoad::LoadModule( lpCmdLine, "main_appmodule", 
-                                                        ".\\..\\..\\DrawSpace\\shaders_bank", true,
+                                                        "shaders_bank", true,
                                                         &DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface ) )
             {
                 _DSEXCEPTION( "cannot load skybox module" );
