@@ -65,24 +65,29 @@ public:
     } Purpose;
 
 protected:
-    dsstring        m_path;
-    long            m_width;
-    long            m_height;
-    long            m_bpp;
-    void*           m_render_data;
 
-    void*           m_filedata;
-    long            m_filedatasize;
+    static dsstring                 m_rootpath;
 
-    bool            m_render_target;
-    unsigned long   m_render_target_width;
-    unsigned long   m_render_target_height;
+    dsstring                        m_path;
+    long                            m_width;
+    long                            m_height;
+    long                            m_bpp;
+    void*                           m_render_data;
 
-    RenderPurpose   m_renderpurpose;
-    RenderTarget    m_rendertarget;
-    Purpose         m_purpose;
+    void*                           m_filedata;
+    long                            m_filedatasize;
+
+    bool                            m_render_target;
+    unsigned long                   m_render_target_width;
+    unsigned long                   m_render_target_height;
+
+    RenderPurpose                   m_renderpurpose;
+    RenderTarget                    m_rendertarget;
+    Purpose                         m_purpose;
 
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
+    dsstring compute_final_path( void );
     
 public:
     Texture( void );

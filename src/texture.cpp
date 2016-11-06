@@ -34,6 +34,8 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
+dsstring Texture::m_rootpath = ".";
+
 
 Texture::Texture( void ) :
 m_filedata( NULL ), 
@@ -86,7 +88,7 @@ Texture::~Texture( void )
 bool Texture::LoadFromFile( void )
 {
     long size;
-    void* data = Utils::File::LoadAndAllocBinaryFile( m_path, &size );
+    void* data = Utils::File::LoadAndAllocBinaryFile( compute_final_path(), &size );
     if( !data )
     {
         return false;
@@ -117,7 +119,7 @@ long Texture::GetDataSize( void )
 
 void Texture::GetPath( dsstring& p_path )
 {
-    p_path = m_path;
+    p_path = compute_final_path();
 }
 
 bool Texture::IsRenderTarget( void )
@@ -410,4 +412,12 @@ bool Texture::UpdateTextureContent( void )
 void* Texture::GetRenderData( void )
 {
     return m_render_data;
+}
+
+dsstring Texture::compute_final_path( void )
+{
+    dsstring final_path = m_rootpath + "\\";
+    
+    final_path += m_path;
+    return final_path;
 }

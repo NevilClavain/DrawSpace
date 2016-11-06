@@ -144,7 +144,6 @@ size_t Shader::GetDataSize( void )
 bool Shader::LoadFromFile( void )
 {
     long size;
-    //void* data = Utils::File::LoadAndAllocBinaryFile( m_filepath, &size );
     void* data = Utils::File::LoadAndAllocBinaryFile( compute_final_path(), &size );
     if( !data )
     {
@@ -248,7 +247,6 @@ void Shader::GetKeyword( dsstring& p_outkeyword )
 
 void Shader::GetPath( dsstring& p_path )
 {
-    //p_path = m_filepath;
     p_path = compute_final_path();
 }
 
