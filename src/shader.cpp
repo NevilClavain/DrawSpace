@@ -252,13 +252,13 @@ void Shader::GetPath( dsstring& p_path )
 
 dsstring Shader::compute_final_path( void )
 {
-    dsstring final_path = m_rootpath + "\\";
+    dsstring final_path = m_rootpath + "/";
     if( m_addshaderspath )    
     {
         Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
         dsstring m_shader_descr;
         renderer->GetShadersDescr( m_shader_descr );
-        final_path += m_shader_descr + "\\";
+        final_path += m_shader_descr + "/";
     }
     final_path += m_filepath;
 

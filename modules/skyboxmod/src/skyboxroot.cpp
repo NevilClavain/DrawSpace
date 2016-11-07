@@ -30,9 +30,9 @@ using namespace DrawSpace::Interface::Module;
 SkyboxRoot::SkyboxRoot( void )
 {
     DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
-    DrawSpace::Core::Shader::SetRootPath( "test_data\\shaders_bank" );
+    DrawSpace::Core::Shader::SetRootPath( "test_data/shaders_bank" );
 
-    DrawSpace::Core::Texture::SetRootPath( "test_data\\textures_bank" );
+    DrawSpace::Core::Texture::SetRootPath( "test_data/textures_bank" );
 }
 
 SkyboxRoot::~SkyboxRoot( void )

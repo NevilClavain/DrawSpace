@@ -416,7 +416,7 @@ void* Texture::GetRenderData( void )
 
 dsstring Texture::compute_final_path( void )
 {
-    dsstring final_path = m_rootpath + "\\";
+    dsstring final_path = m_rootpath + "/";
     
     final_path += m_path;
     return final_path;
