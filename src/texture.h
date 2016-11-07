@@ -95,6 +95,8 @@ public:
                 RenderPurpose p_rp = RENDERPURPOSE_COLOR, RenderTarget p_rt = RENDERTARGET_GPU );
     ~Texture( void );
 
+    static void SetRootPath( const dsstring& p_path );
+
     bool LoadFromFile( void );
     void ReleaseData( void );
 

@@ -421,3 +421,8 @@ dsstring Texture::compute_final_path( void )
     final_path += m_path;
     return final_path;
 }
+
+void Texture::SetRootPath( const dsstring& p_path )
+{
+    m_rootpath = p_path;
+}

@@ -30,7 +30,9 @@ using namespace DrawSpace::Interface::Module;
 Test02Root::Test02Root( void )
 {
     DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
-    DrawSpace::Core::Shader::SetRootPath( "test_data\\shaders_bank" );  
+    DrawSpace::Core::Shader::SetRootPath( "test_data\\shaders_bank" );
+
+    DrawSpace::Core::Texture::SetRootPath( "test_data\\textures_bank" );
 }
 
 Test02Root::~Test02Root( void )
