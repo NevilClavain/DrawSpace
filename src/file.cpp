@@ -26,6 +26,9 @@
 
 using namespace DrawSpace::Utils;
 
+File::FSMode File::m_fsMode = File::LOCALFILESYSTEM;
+dsstring File::m_virtualFsArchiveName;
+
 File::File( const dsstring& p_filename, Mode p_mode ) : m_fp( NULL )
 {
     if( CREATENEW == p_mode )

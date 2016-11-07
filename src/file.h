@@ -33,7 +33,21 @@ namespace Utils
 
 class File
 {
+
+public:
+    typedef enum
+    {
+        LOCALFILESYSTEM,
+        VIRTUALFILESYSTEM,
+
+    } FSMode;
+
 protected:
+
+    static FSMode       m_fsMode;
+    static dsstring     m_virtualFsArchiveName;
+
+
     FILE* m_fp;
 
 public:
