@@ -64,6 +64,9 @@ public:
     File( const dsstring& p_filename, Mode p_mode );
     ~File( void );
 
+    static void MountVirtualFS( const dsstring& p_virtualFsArchiveName );
+    static void UnmountVirtualFS( void );
+
     void SaveArchive( Archive& p_arc );
     bool LoadArchive( Archive& p_arc );
     long FileSize( void );

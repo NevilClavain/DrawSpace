@@ -20,9 +20,12 @@
 *
 */
 
+#include <Physfs.h>
+
 #include "file.h"
 #include "memalloc.h"
 #include "exceptions.h"
+
 
 using namespace DrawSpace::Utils;
 
@@ -136,22 +139,57 @@ long File::FileSize( FILE *p_fp )
 
 void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
 {
-    void* ptr = NULL;
-    FILE* fp;
-    fp = fopen( p_file.c_str(), "rb" );
-    if( fp )
+
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        unsigned long fs = FileSize( fp );
-        ptr = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char[fs], fs );
-        if( ptr )
+        void* ptr = NULL;
+        FILE* fp;
+        fp = fopen( p_file.c_str(), "rb" );
+        if( fp )
         {
-            fread( (void *)ptr, fs, 1, fp );	
-            if( p_size )
+            unsigned long fs = FileSize( fp );
+            ptr = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char[fs], fs );
+            if( ptr )
             {
-                *p_size = fs;
+                fread( (void *)ptr, fs, 1, fp );	
+                if( p_size )
+                {
+                    *p_size = fs;
+                }
             }
+            fclose( fp );
         }
-        fclose( fp );
+        return ptr;
     }
-    return ptr;
+    else // VIRTUALFILESYSTEM
+    {
+
+   
+
+    }
+}
+
+void File::MountVirtualFS( const dsstring& p_virtualFsArchiveName )
+{
+    if( m_fsMode != VIRTUALFILESYSTEM )
+    {
+        PHYSFS_init( NULL );
+
+        int status = PHYSFS_mount( p_virtualFsArchiveName.c_str(), NULL, 1 );
+        if( !status )
+        {
+            _DSEXCEPTION( dsstring( "Cannot mount virtual filesystem archive : " ) + p_virtualFsArchiveName );
+        }
+
+        m_fsMode = VIRTUALFILESYSTEM;
+    }
+}
+
+void File::UnmountVirtualFS( void )
+{
+    if( VIRTUALFILESYSTEM == m_fsMode )
+    {
+        PHYSFS_deinit();
+        m_fsMode = LOCALFILESYSTEM;
+    }
 }
