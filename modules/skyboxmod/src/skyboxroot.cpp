@@ -21,6 +21,7 @@
 */
 
 #include "skyboxroot.h"
+#include "file.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -29,10 +30,12 @@ using namespace DrawSpace::Interface::Module;
 
 SkyboxRoot::SkyboxRoot( void )
 {
-    DrawSpace::Core::Shader::EnableShadersDescrInFinalPath( true );
-    DrawSpace::Core::Shader::SetRootPath( "test_data/shaders_bank" );
+    Shader::EnableShadersDescrInFinalPath( true );
+    Shader::SetRootPath( "test_data/shaders_bank" );
 
-    DrawSpace::Core::Texture::SetRootPath( "test_data/textures_bank" );
+    Texture::SetRootPath( "test_data/textures_bank" );
+
+    File::MountVirtualFS( "test_data.bank" );
 }
 
 SkyboxRoot::~SkyboxRoot( void )

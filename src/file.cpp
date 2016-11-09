@@ -139,7 +139,6 @@ long File::FileSize( FILE *p_fp )
 
 void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
 {
-
     if( LOCALFILESYSTEM == m_fsMode )
     {
         void* ptr = NULL;
@@ -163,9 +162,30 @@ void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
     }
     else // VIRTUALFILESYSTEM
     {
+        void* ptr = NULL;
 
-   
+        PHYSFS_file* vfile = PHYSFS_openRead( p_file.c_str() );
+        if( NULL == vfile )
+        {
+            _DSEXCEPTION( dsstring( "cannot open file from virtual filesystem : " ) + p_file );
+        }
+        PHYSFS_sint64 file_size = PHYSFS_fileLength( vfile );
 
+        unsigned char *vFileBuf;
+        vFileBuf = _DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char[file_size], file_size );
+        int length_read = PHYSFS_read( vfile, vFileBuf, 1, file_size );
+
+        if( length_read != file_size )
+        {
+            _DSEXCEPTION( dsstring( "unexpected error while reading file from virtual filesystem : " ) + p_file );
+        }
+
+        ptr = vFileBuf;
+        PHYSFS_close( vfile );
+
+        *p_size = length_read;
+
+        return ptr;
     }
 }
 
