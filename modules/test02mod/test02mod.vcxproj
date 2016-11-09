@@ -63,7 +63,8 @@
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;drawspace.lib;BulletDynamics_vs2013_debug.lib;BulletCollision_vs2013_debug.lib;LinearMath_vs2013_debug.lib;physfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy .\..\..\libs\test02mod.dll .\..\..\..\Drawspace_samples\bin</Command>
+      <Command>copy .\..\..\libs\test02mod.dll .\..\..\..\Drawspace_samples\bin
+copy .\..\..\shaders_bank\hlsl_3_0\texture.pso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_3_0\texture.pso</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
