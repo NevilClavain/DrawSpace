@@ -97,6 +97,7 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_skybox_texturepass;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_skybox_texturemirrorpass;
     DrawSpace::Module::KeySource<DrawSpace::Utils::Vector>              m_skybox_reflectornormale;
+    DrawSpace::Module::KeySource<dsstring>                              m_skybox_texturesbankpath;
 
     /////////////////////////////////////////////////////////////////////////////////
 

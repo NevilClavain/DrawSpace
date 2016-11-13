@@ -80,6 +80,16 @@ public:
     virtual void OnUpdated( dsreal p_val );
 };
 
+class TexturesBankPathParam : public DrawSpace::Module::KeySink<dsstring>
+{
+protected:
+    SkyboxService* m_owner;
+
+public:
+    TexturesBankPathParam( const dsstring& p_id, SkyboxService* p_owner );
+    virtual void OnUpdated( dsstring p_val );
+};
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,6 +105,7 @@ protected:
     TexturePassParam*                                                   m_texturepassparam;
     TextureMirrorPassParam*                                             m_texturemirrorpassparam;
     ReflectorNormaleParam*                                              m_reflectornormaleparam;
+    TexturesBankPathParam*                                              m_texturebankpathparam;
 
     DrawSpace::Core::SceneNodeGraph*                                    m_scenenodegraph;
 
@@ -109,6 +120,7 @@ protected:
     DrawSpace::Utils::Vector                                            m_reflector_normale;
 
     dsreal                                                              m_scaling;
+
 
 public:
     SkyboxService( const dsstring& p_id );

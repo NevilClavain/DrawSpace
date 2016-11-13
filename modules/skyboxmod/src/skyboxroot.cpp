@@ -31,11 +31,12 @@ using namespace DrawSpace::Interface::Module;
 SkyboxRoot::SkyboxRoot( void )
 {
     Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "test_data/shaders_bank" );
+    Shader::SetRootPath( "skybox_data/shaders_bank" );
 
-    Texture::SetRootPath( "test_data/textures_bank" );
+    //Texture::SetRootPath( "test_data/textures_bank" );
+    
 
-    File::MountVirtualFS( "test_data.bank" );
+    //File::MountVirtualFS( "test_data.bank" );
 }
 
 SkyboxRoot::~SkyboxRoot( void )

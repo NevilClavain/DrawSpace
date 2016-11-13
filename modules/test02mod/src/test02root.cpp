@@ -31,10 +31,9 @@ Test02Root::Test02Root( void )
 {
     Shader::EnableShadersDescrInFinalPath( true );
     Shader::SetRootPath( "test_data/shaders_bank" );
-
     Texture::SetRootPath( "test_data/textures_bank" );
 
-    File::MountVirtualFS( "test_data.bank" );
+    //File::MountVirtualFS( "test_data.bank" );
 }
 
 Test02Root::~Test02Root( void )
