@@ -32,11 +32,6 @@ SkyboxRoot::SkyboxRoot( void )
 {
     Shader::EnableShadersDescrInFinalPath( true );
     Shader::SetRootPath( "skybox_data/shaders_bank" );
-
-    //Texture::SetRootPath( "test_data/textures_bank" );
-    
-
-    //File::MountVirtualFS( "test_data.bank" );
 }
 
 SkyboxRoot::~SkyboxRoot( void )

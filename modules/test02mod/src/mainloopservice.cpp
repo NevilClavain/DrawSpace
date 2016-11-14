@@ -39,7 +39,8 @@ m_skybox_scenenodegraph( "skybox.SceneNodeGraph" ),
 m_skybox_texturepass( "skybox.TexturePass" ),
 m_skybox_texturemirrorpass( "skybox.TextureMirrorPass" ),
 m_skybox_reflectornormale( "skybox.ReflectorNormale" ),
-m_skybox_texturesbankpath( "skybox.TexturesBankPath" )
+m_skybox_texturesbankpath( "skybox.TexturesBankPath" ),
+m_skybox_texturesbankvirtualfspath( "skybox.TexturesBankVirtualFSPath" )
 {
 }
 
@@ -59,6 +60,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturemirrorpass );
     m_keysLinkTable.RegisterClientKey( &m_skybox_reflectornormale );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturesbankpath );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturesbankvirtualfspath );
 
 
     //////////////////////////////////////////////////////////////////////////////
@@ -419,6 +421,7 @@ void MainLoopService::create_spacebox( void )
 
     m_skybox_scenenodegraph = &m_scenenodegraph;
     m_skybox_texturesbankpath = "test_data/textures_bank";
+    m_skybox_texturesbankvirtualfspath = "test_data.bank";
 
     m_skybox_texturepass = m_texturepass;
     m_skybox_texturemirrorpass = m_texturemirrorpass;

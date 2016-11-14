@@ -21,6 +21,7 @@
 */
 
 #include "skyboxservice.h"
+#include "file.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -95,6 +96,17 @@ void TexturesBankPathParam::OnUpdated( dsstring p_val )
 
 /////////////////////////////
 
+TexturesBankVirtualFSPathParam::TexturesBankVirtualFSPathParam( const dsstring& p_id, SkyboxService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
+{
+}
+
+void TexturesBankVirtualFSPathParam::OnUpdated( dsstring p_val )
+{
+    m_owner->OnTextureVirtualFSPathUpdate( p_val );
+}
+
+/////////////////////////////
+
 SkyboxService::SkyboxService( const dsstring& p_id ) :
 m_scenenodegraph( NULL ),
 m_texturepass( NULL ),
@@ -106,6 +118,7 @@ m_scaling( 20.0 )
     m_texturemirrorpassparam = _DRAWSPACE_NEW_( TextureMirrorPassParam, TextureMirrorPassParam( p_id + dsstring( ".TextureMirrorPass" ), this ) );
     m_reflectornormaleparam = _DRAWSPACE_NEW_( ReflectorNormaleParam, ReflectorNormaleParam( p_id + dsstring( ".ReflectorNormale" ), this ) );
     m_texturebankpathparam = _DRAWSPACE_NEW_( TexturesBankPathParam, TexturesBankPathParam( p_id + dsstring( ".TexturesBankPath" ), this ) );
+    m_texturebankvirtualfspathparam = _DRAWSPACE_NEW_( TexturesBankVirtualFSPathParam, TexturesBankVirtualFSPathParam( p_id + dsstring( ".TexturesBankVirtualFSPath" ), this ) );
 
 
     m_spacebox = _DRAWSPACE_NEW_( DrawSpace::Spacebox, DrawSpace::Spacebox );
@@ -122,6 +135,7 @@ void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_key
     p_keys.push_back( m_texturemirrorpassparam );
     p_keys.push_back( m_reflectornormaleparam );
     p_keys.push_back( m_texturebankpathparam );
+    p_keys.push_back( m_texturebankvirtualfspathparam );
 }
 
 void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
@@ -169,6 +183,8 @@ void SkyboxService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val )
     m_spacebox->RegisterPassSlot( p_val );
     m_texturepass = p_val;
 
+    File::MountVirtualFS( "skybox_data.bank" );
+
     for( long i = 0; i < 6; i++ )
     {
         m_spacebox->GetNodeFromPass( m_texturepass, i )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
@@ -178,7 +194,10 @@ void SkyboxService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val )
 
         m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->GetShader( 0 )->LoadFromFile();
         m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->GetShader( 1 )->LoadFromFile();
-    }  
+    }
+
+    File::UnmountVirtualFS();
+    File::MountVirtualFS( m_texturevirtualfspath );
     
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
@@ -205,12 +224,16 @@ void SkyboxService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val )
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::BottomQuad )->SetOrderNumber( 200 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::LeftQuad )->SetOrderNumber( 200 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->SetOrderNumber( 200 );
+
 }
 
 void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_val )
 {
     m_spacebox->RegisterPassSlot( p_val );
     m_texturemirrorpass = p_val;
+
+    File::UnmountVirtualFS();
+    File::MountVirtualFS( "skybox_data.bank" );
 
     for( long i = 0; i < 6; i++ )
     {
@@ -229,7 +252,8 @@ void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_va
         //m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     }   
 
-
+    File::UnmountVirtualFS();
+    File::MountVirtualFS( m_texturevirtualfspath );
     
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
@@ -273,6 +297,11 @@ void SkyboxService::OnReflectorNormaleUpdate( const DrawSpace::Utils::Vector& p_
 void SkyboxService::OnScalingUpdate( dsreal p_scale )
 {
     m_scaling = p_scale;
+}
+
+void SkyboxService::OnTextureVirtualFSPathUpdate( const dsstring& p_path )
+{
+    m_texturevirtualfspath = p_path;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
