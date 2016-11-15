@@ -26,6 +26,8 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
+dsstring AC3DMesheImport::m_rootpath = ".";
+
 AC3DMesheImport::AC3DMesheImport( void )
 {
 }
@@ -180,6 +182,10 @@ bool AC3DMesheImport::on_new_line( const dsstring& p_line, long p_line_num, std:
 
 bool AC3DMesheImport::LoadFromFile( const dsstring& p_filepath, long p_index, Meshe* p_meshe )
 {
+    dsstring final_path = m_rootpath + "/";
+    
+    final_path += p_filepath;
+
     m_meshe = p_meshe;
     m_object_index = p_index;
     m_state = SEARCH_OBJECT_BEGIN;
@@ -188,5 +194,10 @@ bool AC3DMesheImport::LoadFromFile( const dsstring& p_filepath, long p_index, Me
     m_tricount = 0;
     m_vertices_uv_mem.clear();
     m_object_loc[0] = m_object_loc[1] = m_object_loc[2] = m_object_loc[3] = 0.0;
-    return Parser::Run( p_filepath, " " );
+    return Parser::Run( final_path, " " );
+}
+
+void AC3DMesheImport::SetRootPath( const dsstring& p_path )
+{
+    m_rootpath = p_path;
 }

@@ -45,6 +45,8 @@ protected:
         DONE
     } State;
 
+    static dsstring                             m_rootpath;
+
     DrawSpace::Core::Meshe*                     m_meshe;
     State                                       m_state;
     long                                        m_object_index;
@@ -65,6 +67,8 @@ protected:
 public:
     AC3DMesheImport( void );
     virtual ~AC3DMesheImport( void );
+
+    static void SetRootPath( const dsstring& p_path );
 
     virtual bool LoadFromFile( const dsstring& p_filepath, long p_index, DrawSpace::Core::Meshe* p_meshe );
 

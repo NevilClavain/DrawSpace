@@ -183,7 +183,7 @@ void SkyboxService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val )
     m_spacebox->RegisterPassSlot( p_val );
     m_texturepass = p_val;
 
-    File::MountVirtualFS( "skybox_data.bank" );
+    //File::MountVirtualFS( "skybox_data.bank" );
 
     for( long i = 0; i < 6; i++ )
     {
@@ -196,8 +196,8 @@ void SkyboxService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val )
         m_spacebox->GetNodeFromPass( m_texturepass, i )->GetFx()->GetShader( 1 )->LoadFromFile();
     }
 
-    File::UnmountVirtualFS();
-    File::MountVirtualFS( m_texturevirtualfspath );
+    //File::UnmountVirtualFS();
+    //File::MountVirtualFS( m_texturevirtualfspath );
     
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
@@ -232,8 +232,8 @@ void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_va
     m_spacebox->RegisterPassSlot( p_val );
     m_texturemirrorpass = p_val;
 
-    File::UnmountVirtualFS();
-    File::MountVirtualFS( "skybox_data.bank" );
+    //File::UnmountVirtualFS();
+    //File::MountVirtualFS( "skybox_data.bank" );
 
     for( long i = 0; i < 6; i++ )
     {
@@ -252,8 +252,8 @@ void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_va
         //m_spacebox->GetNodeFromPass( m_texturemirrorpass, i )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     }   
 
-    File::UnmountVirtualFS();
-    File::MountVirtualFS( m_texturevirtualfspath );
+    //File::UnmountVirtualFS();
+    //File::MountVirtualFS( m_texturevirtualfspath );
     
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
