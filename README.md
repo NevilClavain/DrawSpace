@@ -16,6 +16,7 @@ DrawSpace currently rely on some 3rd-parts libraries:
         
 	** Bullet physics 2.82 :      http://bulletphysics.org/wordpress/
 	** Lua 1.5 :                  http://www.lua.org/
+	** PhysicsFS 2.0.3 :          https://icculus.org/physfs/
 
 	** RSA Data Security, Inc. MD5 Message-Digest Algorithm
 
