@@ -20,8 +20,6 @@
 *
 */
 
-#include <Physfs.h>
-
 #include "file.h"
 #include "memalloc.h"
 #include "exceptions.h"
@@ -32,102 +30,161 @@ using namespace DrawSpace::Utils;
 File::FSMode File::m_fsMode = File::LOCALFILESYSTEM;
 dsstring File::m_virtualFsArchiveName;
 
-File::File( const dsstring& p_filename, Mode p_mode ) : m_fp( NULL )
+File::File( const dsstring& p_filename, Mode p_mode ) : 
+m_fp( NULL ),
+m_vfp( NULL )
 {
-    if( CREATENEW == p_mode )
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        m_fp = fopen( p_filename.c_str(), "wb" );
-    }
-    else if( OPENEXISTINGB == p_mode )
-    {
-        m_fp = fopen( p_filename.c_str(), "rb" );
-    }	
-    else if( CREATENEWTEXT == p_mode )
-    {
-        m_fp = fopen( p_filename.c_str(), "wt" );
-    }
-    else if( OPENEXISTINGTEXT == p_mode )
-    {
-        m_fp = fopen( p_filename.c_str(), "r" );
-    }
+        if( CREATENEW == p_mode )
+        {
+            m_fp = fopen( p_filename.c_str(), "wb" );
+        }
+        else if( OPENEXISTINGB == p_mode )
+        {
+            m_fp = fopen( p_filename.c_str(), "rb" );
+        }	
+        else if( CREATENEWTEXT == p_mode )
+        {
+            m_fp = fopen( p_filename.c_str(), "wt" );
+        }
+        else if( OPENEXISTINGTEXT == p_mode )
+        {
+            m_fp = fopen( p_filename.c_str(), "r" );
+        }
 
-    if( !m_fp )
+        if( !m_fp )
+        {
+            _DSEXCEPTION( dsstring( "Failed to open file " ) + p_filename );
+        }
+    }
+    else // VIRTUALFILESYSTEM
     {
-        _DSEXCEPTION( dsstring( "Failed to open file " ) + p_filename );
+
     }
 }
 
 File::~File( void )
 {
-    if( m_fp )
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        fclose( m_fp );
+        if( m_fp )
+        {
+            fclose( m_fp );
+            m_fp = NULL;
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+    
     }
 }
 
 void File::SaveArchive( Archive& p_arc )
 {
-    if( m_fp )
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        fwrite( p_arc.m_data, p_arc.m_total_length, 1, m_fp );	
+        if( m_fp )
+        {
+            fwrite( p_arc.m_data, p_arc.m_total_length, 1, m_fp );	
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+        _DSEXCEPTION( "unsupported method on VIRTUALFILESYSTEM mode" );
     }
 }
 
 bool File::LoadArchive( Archive& p_arc )
 {
-    if( m_fp )
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        unsigned long fsize = FileSize( m_fp ); //obtenir taille du fichier
+        if( m_fp )
+        {
+            unsigned long fsize = fileSize( m_fp ); //obtenir taille du fichier
 
-        p_arc.SetArchiveTotalLength( fsize );
-        fread( p_arc.GetCurrentPtr(), fsize, 1, m_fp );
-        return true;
+            p_arc.SetArchiveTotalLength( fsize );
+            fread( p_arc.GetCurrentPtr(), fsize, 1, m_fp );
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
-    else
+    else // VIRTUALFILESYSTEM
     {
-        return false;
+        _DSEXCEPTION( "unsupported method on VIRTUALFILESYSTEM mode" );
     }
 }
 
 void File::Puts( const dsstring& p_string )
 {
-    if( m_fp )
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        fputs( p_string.c_str(), m_fp );
+        if( m_fp )
+        {
+            fputs( p_string.c_str(), m_fp );
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+        _DSEXCEPTION( "unsupported method on VIRTUALFILESYSTEM mode" );
     }
 }
 
 bool File::Gets( char* p_buff, int p_nbToRead )
 {
-    if( m_fp )
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        char* s = fgets( p_buff, p_nbToRead, m_fp );
-        if( s )
+        if( m_fp )
         {
-            return true;
+            char* s = fgets( p_buff, p_nbToRead, m_fp );
+            if( s )
+            {
+                return true;
+            }
         }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+    
     }
     return false;
 }
 
 void File::Flush( void )
 {
-    if( m_fp )
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        fflush( m_fp );
+        if( m_fp )
+        {
+            fflush( m_fp );
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+        _DSEXCEPTION( "unsupported method on VIRTUALFILESYSTEM mode" );
     }
 }
 
 long File::FileSize( void )
 {
-    if( m_fp )
+    if( LOCALFILESYSTEM == m_fsMode )
     {
-        return FileSize( m_fp );
+        if( m_fp )
+        {
+            return fileSize( m_fp );
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+
     }
     return 0;
 }
 
-long File::FileSize( FILE *p_fp )
+long File::fileSize( FILE *p_fp )
 {
     long current_pos;
     current_pos = ftell( p_fp );
@@ -146,7 +203,7 @@ void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
         fp = fopen( p_file.c_str(), "rb" );
         if( fp )
         {
-            unsigned long fs = FileSize( fp );
+            unsigned long fs = fileSize( fp );
             ptr = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char[fs], fs );
             if( ptr )
             {

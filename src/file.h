@@ -25,6 +25,7 @@
 
 #include "drawspace_commons.h"
 #include "archive.h"
+#include <Physfs.h>
 
 namespace DrawSpace
 {
@@ -46,9 +47,10 @@ protected:
 
     static FSMode       m_fsMode;
     static dsstring     m_virtualFsArchiveName;
+    FILE*               m_fp;
+    PHYSFS_file*        m_vfp;
 
-
-    FILE* m_fp;
+    static long	        fileSize( FILE *p_fp );
 
 public:
 
@@ -75,7 +77,6 @@ public:
     bool Gets( char* p_buff, int p_nbToRead );
     void Flush( void );
 
-    static long	FileSize( FILE *p_fp );
     static void* LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size );
 };
 }
