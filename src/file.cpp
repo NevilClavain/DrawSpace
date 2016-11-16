@@ -60,7 +60,19 @@ m_vfp( NULL )
     }
     else // VIRTUALFILESYSTEM
     {
+        if( OPENEXISTINGB == p_mode || OPENEXISTINGTEXT == p_mode )
+        {
+            m_vfp = PHYSFS_openRead( p_filename.c_str() );
 
+            if( !m_vfp )
+            {
+                _DSEXCEPTION( dsstring( "Failed to open virtual file " ) + p_filename );
+            }
+        }
+        else
+        {
+            _DSEXCEPTION( "unsupported file access on VIRTUALFILESYSTEM mode" );
+        }
     }
 }
 
@@ -76,7 +88,11 @@ File::~File( void )
     }
     else // VIRTUALFILESYSTEM
     {
-    
+        if( m_vfp )
+        {
+            PHYSFS_close( m_vfp );
+            m_vfp = NULL;
+        }    
     }
 }
 
@@ -145,10 +161,69 @@ bool File::Gets( char* p_buff, int p_nbToRead )
                 return true;
             }
         }
+        else
+        {
+            _DSEXCEPTION( "File not open !" );
+        }
     }
     else // VIRTUALFILESYSTEM
     {
-    
+        if( m_vfp )
+        {
+            char c;
+            char* buff = p_buff;
+            int real_size;
+            bool cont = true;
+            int cc = 0;
+
+            while( cont && cc < p_nbToRead )
+            {
+                real_size = PHYSFS_read( m_vfp, &c, 1, 1 );
+                if( real_size > 0 && c != '\n' && c!= '\r' )
+                {
+                    *buff = c;
+                    buff++;
+                    cc++;                    
+                }
+                else
+                {
+                    cont = false;
+                }
+            }
+
+            *buff = 0;
+
+            if( 0 == real_size )
+            {
+                return false;
+            }
+            
+
+            /*
+            char* buff = p_buff;
+            int real_size = PHYSFS_read( m_vfp, buff, 1, p_nbToRead );
+
+            if( 0 == real_size )
+            {
+                return false;
+            }
+
+            // emuler le comportement du fgets : il faut donc tronquer quand une fin de ligne est rencontree
+            for( int i = 0; i < real_size; i++ )
+            {
+                if( '\n' == buff[i] || '\r' == buff[i] )
+                {
+                    buff[i] = 0x00;
+                    return true;
+                }
+            }
+            */
+            return true;
+        }
+        else
+        {
+            _DSEXCEPTION( "Virtual file not open !" );
+        }
     }
     return false;
 }
@@ -176,10 +251,21 @@ long File::FileSize( void )
         {
             return fileSize( m_fp );
         }
+        else
+        {
+            _DSEXCEPTION( "File not open !" );
+        }
     }
     else // VIRTUALFILESYSTEM
     {
-
+        if( m_vfp )
+        {
+            return PHYSFS_fileLength( m_vfp );
+        }
+        else
+        {
+            _DSEXCEPTION( "Virtual file not open !" );
+        }
     }
     return 0;
 }

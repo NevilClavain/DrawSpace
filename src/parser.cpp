@@ -103,13 +103,16 @@ bool Parser::Run( const dsstring& p_filepath, const dsstring& p_separators )
                 line[len - 1] = 0x00;
             }
 
-            std::vector<dsstring> words;
-            split_line( line, p_separators, words );
-
-            if( !on_new_line( line, line_count, words ) )
+            if( strcmp( line, "" ) )
             {
-                status = false;
-                break;
+                std::vector<dsstring> words;
+                split_line( line, p_separators, words );
+
+                if( !on_new_line( line, line_count, words ) )
+                {
+                    status = false;
+                    break;
+                }
             }
         }
     }
