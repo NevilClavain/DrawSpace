@@ -99,6 +99,7 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::Utils::Vector>              m_skybox_reflectornormale;
     DrawSpace::Module::KeySource<dsstring>                              m_skybox_texturesbankpath;
     DrawSpace::Module::KeySource<dsstring>                              m_skybox_texturesbankvirtualfspath;
+    DrawSpace::Module::KeySource<std::vector<dsstring>>                 m_skybox_texturesnames;
 
     /////////////////////////////////////////////////////////////////////////////////
 

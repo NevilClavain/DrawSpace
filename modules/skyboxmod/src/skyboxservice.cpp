@@ -107,6 +107,17 @@ void TexturesBankVirtualFSPathParam::OnUpdated( dsstring p_val )
 
 /////////////////////////////
 
+TexturesNamesParam::TexturesNamesParam( const dsstring& p_id, SkyboxService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
+{
+}
+
+void TexturesNamesParam::OnUpdated( std::vector<dsstring> p_val )
+{
+    m_owner->OnTexturesNamesUpdate( p_val );
+}
+
+/////////////////////////////
+
 SkyboxService::SkyboxService( const dsstring& p_id ) :
 m_scenenodegraph( NULL ),
 m_texturepass( NULL ),
@@ -119,7 +130,7 @@ m_scaling( 20.0 )
     m_reflectornormaleparam = _DRAWSPACE_NEW_( ReflectorNormaleParam, ReflectorNormaleParam( p_id + dsstring( ".ReflectorNormale" ), this ) );
     m_texturebankpathparam = _DRAWSPACE_NEW_( TexturesBankPathParam, TexturesBankPathParam( p_id + dsstring( ".TexturesBankPath" ), this ) );
     m_texturebankvirtualfspathparam = _DRAWSPACE_NEW_( TexturesBankVirtualFSPathParam, TexturesBankVirtualFSPathParam( p_id + dsstring( ".TexturesBankVirtualFSPath" ), this ) );
-
+    m_texturesnamesparam = _DRAWSPACE_NEW_( TexturesNamesParam, TexturesNamesParam( p_id + dsstring( ".TexturesNames" ), this ) );
 
     m_spacebox = _DRAWSPACE_NEW_( DrawSpace::Spacebox, DrawSpace::Spacebox );
 }
@@ -136,6 +147,7 @@ void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_key
     p_keys.push_back( m_reflectornormaleparam );
     p_keys.push_back( m_texturebankpathparam );
     p_keys.push_back( m_texturebankvirtualfspathparam );
+    p_keys.push_back( m_texturesnamesparam );
 }
 
 void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
@@ -199,22 +211,22 @@ void SkyboxService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val )
     File::UnmountVirtualFS();
     File::MountVirtualFS( m_texturevirtualfspath );
     
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::FrontQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::RearQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RearQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::TopQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::TopQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::BottomQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::BottomQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::LeftQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::LeftQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::RightQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturepass, Spacebox::RightQuad )->GetTexture( 0 )->LoadFromFile();
 
 
@@ -255,24 +267,23 @@ void SkyboxService::OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_va
     File::UnmountVirtualFS();
     File::MountVirtualFS( m_texturevirtualfspath );
     
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::FrontQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::RearQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::TopQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::TopQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::BottomQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::BottomQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::LeftQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::LeftQuad )->GetTexture( 0 )->LoadFromFile();
 
-    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ), 0 );
+    m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( m_textures_names[Spacebox::RightQuad] ) ), 0 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RightQuad )->GetTexture( 0 )->LoadFromFile();
-
 
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::FrontQuad )->SetOrderNumber( 200 );
     m_spacebox->GetNodeFromPass( m_texturemirrorpass, Spacebox::RearQuad )->SetOrderNumber( 200 );
@@ -302,6 +313,11 @@ void SkyboxService::OnScalingUpdate( dsreal p_scale )
 void SkyboxService::OnTextureVirtualFSPathUpdate( const dsstring& p_path )
 {
     m_texturevirtualfspath = p_path;
+}
+
+void SkyboxService::OnTexturesNamesUpdate( const std::vector<dsstring> p_textures )
+{
+    m_textures_names = p_textures;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

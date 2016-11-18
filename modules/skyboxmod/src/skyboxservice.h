@@ -98,7 +98,16 @@ protected:
 public:
     TexturesBankVirtualFSPathParam( const dsstring& p_id, SkyboxService* p_owner );
     virtual void OnUpdated( dsstring p_val );
+};
 
+class TexturesNamesParam : public DrawSpace::Module::KeySink<std::vector<dsstring>>
+{
+protected:
+    SkyboxService* m_owner;
+
+public:
+    TexturesNamesParam( const dsstring& p_id, SkyboxService* p_owner );
+    virtual void OnUpdated( std::vector<dsstring> p_val );
 };
 
 
@@ -118,6 +127,7 @@ protected:
     ReflectorNormaleParam*                                              m_reflectornormaleparam;
     TexturesBankPathParam*                                              m_texturebankpathparam;
     TexturesBankVirtualFSPathParam*                                     m_texturebankvirtualfspathparam;
+    TexturesNamesParam*                                                 m_texturesnamesparam;
 
     DrawSpace::Core::SceneNodeGraph*                                    m_scenenodegraph;
 
@@ -134,6 +144,8 @@ protected:
     dsreal                                                              m_scaling;
 
     dsstring                                                            m_texturevirtualfspath;
+
+    std::vector<dsstring>                                               m_textures_names;
 
 
 public:
@@ -152,6 +164,7 @@ public:
     virtual void                            OnReflectorNormaleUpdate( const DrawSpace::Utils::Vector& p_normale );
     virtual void                            OnScalingUpdate( dsreal p_scale );
     virtual void                            OnTextureVirtualFSPathUpdate( const dsstring& p_path );
+    virtual void                            OnTexturesNamesUpdate( const std::vector<dsstring> p_textures );
 
     virtual void                            OnKeyPress( long p_key );
     virtual void                            OnEndKeyPress( long p_key );

@@ -40,7 +40,8 @@ m_skybox_texturepass( "skybox.TexturePass" ),
 m_skybox_texturemirrorpass( "skybox.TextureMirrorPass" ),
 m_skybox_reflectornormale( "skybox.ReflectorNormale" ),
 m_skybox_texturesbankpath( "skybox.TexturesBankPath" ),
-m_skybox_texturesbankvirtualfspath( "skybox.TexturesBankVirtualFSPath" )
+m_skybox_texturesbankvirtualfspath( "skybox.TexturesBankVirtualFSPath" ),
+m_skybox_texturesnames( "skybox.TexturesNames" )
 {
 }
 
@@ -61,6 +62,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_keysLinkTable.RegisterClientKey( &m_skybox_reflectornormale );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturesbankpath );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturesbankvirtualfspath );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturesnames );
 
 
     //////////////////////////////////////////////////////////////////////////////
@@ -423,8 +425,21 @@ void MainLoopService::create_spacebox( void )
     m_skybox_texturesbankpath = "test_data/textures_bank";
     m_skybox_texturesbankvirtualfspath = "test_data.bank";
 
+    std::vector<dsstring> textures_names;
+    textures_names.assign( 6, "" );
+    textures_names[0] = "sb0.bmp";
+    textures_names[1] = "sb2.bmp";
+    textures_names[2] = "sb3.bmp";
+    textures_names[3] = "sb1.bmp";
+    textures_names[4] = "sb4.bmp";
+    textures_names[5] = "sb4.bmp";
+    m_skybox_texturesnames = textures_names;
+
+
     m_skybox_texturepass = m_texturepass;
     m_skybox_texturemirrorpass = m_texturemirrorpass;
+
+
     
     m_sb_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL );
 }
