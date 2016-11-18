@@ -103,9 +103,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     set_mouse_circular_mode( true );
 
     m_renderer->GUI_InitSubSystem();
-    m_renderer->GUI_SetResourcesRootDirectory( "./datafiles" );
+    m_renderer->GUI_SetResourcesRootDirectory( "./gui_datafiles" );
 
-    _DSDEBUG( logger, dsstring("main loop service : startup...") );
+    m_renderer->GUI_InitTest();
+
+    _DSDEBUG( logger, dsstring( "main loop service : startup..." ) );
 }
 
 void MainLoopService::Run( void )

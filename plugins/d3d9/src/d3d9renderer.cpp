@@ -2044,3 +2044,8 @@ void D3D9Renderer::GUI_SetResourcesRootDirectory( const dsstring& p_path )
 {
     m_guisubsystem.SetResourcesRootDirectory( p_path );
 }
+
+void D3D9Renderer::GUI_InitTest( void )
+{
+    m_guisubsystem.InitTest();
+}

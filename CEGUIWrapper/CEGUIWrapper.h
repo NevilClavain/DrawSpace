@@ -39,6 +39,9 @@ public:
     void RenderGUI( void );
 
     void SetResourcesRootDirectory( const dsstring& p_path );
+
+    // temporaire, pour tests divers :-D
+    void InitTest( void );
 };
 
 #endif

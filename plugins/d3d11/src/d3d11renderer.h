@@ -265,6 +265,7 @@ public:
     virtual bool GUI_InitSubSystem( void );
     virtual void GUI_Render( void );
     virtual void GUI_SetResourcesRootDirectory( const dsstring& p_path );
+    virtual void GUI_InitTest( void ); // temporaire
 
 };
 

@@ -23,6 +23,8 @@
 #include "CEGUIWrapper.h"
 #include "exceptions.h"
 
+using namespace CEGUI;
+
 CEGUIWrapper::CEGUIWrapper( void ) :
 m_ready( false )
 {
@@ -45,30 +47,57 @@ void CEGUIWrapper::RenderGUI( void )
         _DSEXCEPTION( "GUI sub system is currently not initialized, cannot render" )
     }
 
-    CEGUI::System::getSingleton().renderAllGUIContexts();
+    System::getSingleton().renderAllGUIContexts();
 }
 
 void CEGUIWrapper::SetResourcesRootDirectory( const dsstring& p_path )
 {
     dsstring droot = p_path;
 
-    CEGUI::DefaultResourceProvider* rp = static_cast<CEGUI::DefaultResourceProvider*>( CEGUI::System::getSingleton().getResourceProvider() );
+    DefaultResourceProvider* rp = static_cast<CEGUI::DefaultResourceProvider*>( CEGUI::System::getSingleton().getResourceProvider() );
 
     rp->setResourceGroupDirectory( "schemes", CEGUI::String( droot.c_str() ) + CEGUI::String( "/schemes/" ) );
-    CEGUI::Scheme::setDefaultResourceGroup( "schemes" );  
+    Scheme::setDefaultResourceGroup( "schemes" );  
 
     rp->setResourceGroupDirectory( "imagesets", CEGUI::String( droot.c_str() ) + CEGUI::String( "/imagesets/" ) );
-    CEGUI::ImageManager::setImagesetDefaultResourceGroup( "imagesets" );
+    ImageManager::setImagesetDefaultResourceGroup( "imagesets" );
 
     rp->setResourceGroupDirectory( "fonts", CEGUI::String( droot.c_str() ) + CEGUI::String( "/fonts/" ) );
-    CEGUI::Font::setDefaultResourceGroup( "fonts" );
+    Font::setDefaultResourceGroup( "fonts" );
 
     rp->setResourceGroupDirectory( "layouts", CEGUI::String( droot.c_str() ) + CEGUI::String( "/layouts/" ) );
-    CEGUI::WindowManager::setDefaultResourceGroup( "layouts" );
+    WindowManager::setDefaultResourceGroup( "layouts" );
 
-    CEGUI::XMLParser* parser = CEGUI::System::getSingleton().getXMLParser();
+    rp->setResourceGroupDirectory( "looknfeels", CEGUI::String( droot.c_str() ) + CEGUI::String( "/looknfeel/" ) );
+    WidgetLookManager::setDefaultResourceGroup( "looknfeels" );
+
+    rp->setResourceGroupDirectory("schemas", CEGUI::String( droot.c_str() ) + "/xml_schemas/");
+    XMLParser* parser = CEGUI::System::getSingleton().getXMLParser();
     if( parser->isPropertyPresent( "SchemaDefaultResourceGroup" ) )
     {
         parser->setProperty( "SchemaDefaultResourceGroup", "schemas" );
     }    
+}
+
+void CEGUIWrapper::InitTest( void )
+{
+    WindowManager& wmgr = WindowManager::getSingleton();
+
+    Window* myRoot = wmgr.createWindow( "DefaultWindow", "root" );
+    System::getSingleton().getDefaultGUIContext().setRootWindow( myRoot );
+
+    /*
+    SchemeManager::getSingleton().createFromFile( "TaharezLook.scheme" );
+    FrameWindow* fWnd = static_cast<FrameWindow*>( wmgr.createWindow( "TaharezLook/FrameWindow", "testWindow" ) );
+    */
+
+    SchemeManager::getSingleton().createFromFile( "AlfiskoSkin.scheme" );
+    FrameWindow* fWnd = static_cast<FrameWindow*>( wmgr.createWindow( "AlfiskoSkin/FrameWindow", "testWindow" ) );
+
+
+    myRoot->addChild( fWnd );
+
+    fWnd->setPosition( UVector2( UDim( 0.01f, 0.0f ), UDim( 0.07f, 0.00f ) ) );
+
+    fWnd->setText( "Hello World!" );
 }

@@ -2386,13 +2386,35 @@ bool D3D11Renderer::GUI_InitSubSystem( void )
 
 void D3D11Renderer::GUI_Render( void )
 {
+    // save current RS state
+    ID3D11RasterizerState* curr_rs;
+    m_lpd3ddevcontext->RSGetState( &curr_rs );
+
+    // save current blend state
+    ID3D11BlendState* curr_bs;
+    FLOAT bvals[4];
+    UINT mask;
+    m_lpd3ddevcontext->OMGetBlendState( &curr_bs, bvals, &mask );
+
+
     m_guisubsystem.RenderGUI();
 
     // restore my input layout, 'cause CEGUI puts its own...
     m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );
+
+    // then restore current RS state
+    m_lpd3ddevcontext->RSSetState( curr_rs );
+    
+    // and restore current blend state
+    m_lpd3ddevcontext->OMSetBlendState( curr_bs, bvals, mask );
 }
 
 void D3D11Renderer::GUI_SetResourcesRootDirectory( const dsstring& p_path )
 {
     m_guisubsystem.SetResourcesRootDirectory( p_path );
+}
+
+void D3D11Renderer::GUI_InitTest( void )
+{
+    m_guisubsystem.InitTest();
 }
