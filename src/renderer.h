@@ -115,8 +115,8 @@ public:
 
     virtual void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz ) = 0;
 
-    virtual bool InitGUISubSystem( void ) = 0;
-    virtual void RenderGUI( void ) = 0;
+    virtual bool GUI_InitSubSystem( void ) = 0;
+    virtual void GUI_Render( void ) = 0;
 };
 }
 }

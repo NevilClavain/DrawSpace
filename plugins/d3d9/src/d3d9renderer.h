@@ -226,8 +226,8 @@ public:
 
     virtual void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
-    virtual bool InitGUISubSystem( void );
-    virtual void RenderGUI( void );
+    virtual bool GUI_InitSubSystem( void );
+    virtual void GUI_Render( void );
 
 };
 

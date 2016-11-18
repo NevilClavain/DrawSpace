@@ -2003,7 +2003,7 @@ void D3D9Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::
     //p_outz = res[2];
 }
 
-bool D3D9Renderer::InitGUISubSystem( void )
+bool D3D9Renderer::GUI_InitSubSystem( void )
 {
     if( !m_lpd3ddevice )
     {
@@ -2016,7 +2016,7 @@ bool D3D9Renderer::InitGUISubSystem( void )
     return true;
 }
 
-void D3D9Renderer::RenderGUI( void )
+void D3D9Renderer::GUI_Render( void )
 {
     if( !m_guisubsystem_ready )
     {
