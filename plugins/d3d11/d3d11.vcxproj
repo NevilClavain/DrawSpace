@@ -52,12 +52,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;D3D11_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx11sdk/include;./../../../DrawSpace_thirdparts/fw1FontWrapper/include;./../../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx11sdk/include;./../../../DrawSpace_thirdparts/fw1FontWrapper/include;./../../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0;./../../CEGUIWrapper</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;dxgi.lib;drawspace.lib;BulletDynamics_vs2013_debug.lib;BulletCollision_vs2013_debug.lib;LinearMath_vs2013_debug.lib;fw1fontwrapper.lib;CEGUIBase-0_d.lib;CEGUIDirect3D11Renderer-0_d.lib;physfs.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;dxgi.lib;drawspace.lib;CEGUIWrapper.lib;BulletDynamics_vs2013_debug.lib;BulletCollision_vs2013_debug.lib;LinearMath_vs2013_debug.lib;fw1fontwrapper.lib;CEGUIBase-0_d.lib;CEGUIDirect3D11Renderer-0_d.lib;physfs.lib</AdditionalDependencies>
       <OutputFile>$(SolutionDir)\libs\drawspaced3d11.dll</OutputFile>
       <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx11sdk\Lib\x86;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\fw1fontwrapper\Lib\x86;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\PhysicsFS_VS2013SDK\lib</AdditionalLibraryDirectories>
     </Link>
@@ -74,14 +74,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;D3D11_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx11sdk/include;./../../../DrawSpace_thirdparts/fw1FontWrapper/include;./../../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx11sdk/include;./../../../DrawSpace_thirdparts/fw1FontWrapper/include;./../../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0;./../../CEGUIWrapper</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;dxgi.lib;drawspace_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib;fw1fontwrapper.lib;CEGUIBase-0.lib;CEGUIDirect3D11Renderer-0.lib;physfs.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;dxgi.lib;drawspace_r.lib;CEGUIWrapper_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib;fw1fontwrapper.lib;CEGUIBase-0.lib;CEGUIDirect3D11Renderer-0.lib;physfs.lib</AdditionalDependencies>
       <OutputFile>$(SolutionDir)\libs\drawspaced3d11_r.dll</OutputFile>
       <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx11sdk\Lib\x86;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\fw1fontwrapper\Lib\x86;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\PhysicsFS_VS2013SDK\lib</AdditionalLibraryDirectories>
     </Link>

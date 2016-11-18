@@ -38,7 +38,8 @@
 #include <matrix.h>
 #include <transformation.h>
 #include <FW1FontWrapper.h>
-#include <CEGUI\CEGUI.h>
+
+#include "CEGUIWrapper.h"
 #include <CEGUI\RendererModules\Direct3D11\Renderer.h>
 
 #include "d3d11vertex.h"
@@ -179,7 +180,8 @@ protected:
     ShaderLegacyArg                                                 m_vertexshader_legacyargs;
     ShaderLegacyArg                                                 m_pixelshader_legacyargs;
 
-    bool                                                            m_guisubsystem_ready;
+    CEGUIWrapper                                                    m_guisubsystem;
+
 
     void set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
     void set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );

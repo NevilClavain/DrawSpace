@@ -31,7 +31,8 @@
 #include <vector.h>
 #include <matrix.h>
 #include <transformation.h>
-#include <CEGUI\CEGUI.h>
+
+#include "CEGUIWrapper.h"
 #include <CEGUI\RendererModules\Direct3D9\Renderer.h>
 
 #include <d3dx9.h>
@@ -154,7 +155,7 @@ protected:
     int                                                         m_next_nbvertices;
     int                                                         m_next_nbtriangles;
 
-    bool                                                        m_guisubsystem_ready;
+    CEGUIWrapper                                                m_guisubsystem;
 
 
     void set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );

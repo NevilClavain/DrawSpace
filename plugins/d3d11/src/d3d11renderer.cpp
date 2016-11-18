@@ -44,8 +44,7 @@ m_inputLayout( NULL ),
 m_pDepthStencil( NULL ),
 m_pDepthStencilView( NULL ),
 m_currentTarget( NULL ),
-m_currentView( NULL ),
-m_guisubsystem_ready( false )
+m_currentView( NULL )
 {
 
 }
@@ -2372,7 +2371,7 @@ HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTS
     return S_OK;
 }
 
-bool D3D11Renderer::InitGUISubSystem( void )
+bool D3D11Renderer::GUI_InitSubSystem( void )
 {
     if( !m_lpd3ddevice || !m_lpd3ddevcontext )
     {
@@ -2381,17 +2380,13 @@ bool D3D11Renderer::InitGUISubSystem( void )
 
     CEGUI::Direct3D11Renderer::bootstrapSystem( m_lpd3ddevice, m_lpd3ddevcontext );
 
-    m_guisubsystem_ready = true;
+    m_guisubsystem.SetReady();
     return true;
 }
 
-void D3D11Renderer::RenderGUI( void )
+void D3D11Renderer::GUI_Render( void )
 {
-    if( !m_guisubsystem_ready )
-    {
-        _DSEXCEPTION( "GUI sub system is currently not initialized, cannot render" )
-    }
-    CEGUI::System::getSingleton().renderAllGUIContexts();
+    m_guisubsystem.RenderGUI();
 
     // restore my input layout, 'cause CEGUI puts its own...
     m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );

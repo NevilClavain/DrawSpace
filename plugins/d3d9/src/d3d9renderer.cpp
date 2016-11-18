@@ -2012,17 +2012,13 @@ bool D3D9Renderer::GUI_InitSubSystem( void )
 
     CEGUI::Direct3D9Renderer::bootstrapSystem( m_lpd3ddevice );
 
-    m_guisubsystem_ready = true;
+    m_guisubsystem.SetReady();
     return true;
 }
 
 void D3D9Renderer::GUI_Render( void )
 {
-    if( !m_guisubsystem_ready )
-    {
-        _DSEXCEPTION( "GUI sub system is currently not initialized, cannot render" )
-    }
-
+    // save some render states
     DWORD alphablendenable_state;
     m_lpd3ddevice->GetRenderState( D3DRS_ALPHABLENDENABLE, &alphablendenable_state );
 
@@ -2031,18 +2027,15 @@ void D3D9Renderer::GUI_Render( void )
 
     DWORD fill_state;
     m_lpd3ddevice->GetRenderState( D3DRS_FILLMODE, &fill_state );
+    
+    m_guisubsystem.RenderGUI();
 
-    // save render states
-    CEGUI::System::getSingleton().renderAllGUIContexts();
-
-    // restore Render states...
+    // restore previous render states...
     m_lpd3ddevice->SetVertexDeclaration( m_vertexdeclaration );
     m_lpd3ddevice->SetRenderState( D3DRS_SCISSORTESTENABLE, FALSE );
     m_lpd3ddevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE );
     
     m_lpd3ddevice->SetRenderState( D3DRS_ALPHABLENDENABLE, alphablendenable_state );
     m_lpd3ddevice->SetRenderState( D3DRS_CULLMODE, cull_state );
-    m_lpd3ddevice->SetRenderState( D3DRS_FILLMODE, fill_state );
-
-    
+    m_lpd3ddevice->SetRenderState( D3DRS_FILLMODE, fill_state );    
 }

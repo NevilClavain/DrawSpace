@@ -7,6 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspace", "drawspace_msvs
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "plugins\d3d9\d3d9.vcxproj", "{47F2BC30-BEB7-4968-9ED9-30129A5916BB}"
 	ProjectSection(ProjectDependencies) = postProject
+		{91726352-407B-4A12-AF4B-BF343122BDA5} = {91726352-407B-4A12-AF4B-BF343122BDA5}
 		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4} = {B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}
 	EndProjectSection
 EndProject
@@ -30,6 +31,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "skyboxmod", "modules\skybox
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d11", "plugins\d3d11\d3d11.vcxproj", "{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}"
 	ProjectSection(ProjectDependencies) = postProject
+		{91726352-407B-4A12-AF4B-BF343122BDA5} = {91726352-407B-4A12-AF4B-BF343122BDA5}
 		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4} = {B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}
 	EndProjectSection
 EndProject
@@ -44,6 +46,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPU_hlsl_src_4_0", "shaders\hlsl_4_0\hlsl_src_40.vcxproj", "{29D2641C-CEF2-4CC2-A3A2-247A61C1D744}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPU_hlsl_src_3_0", "shaders\hlsl_3_0\hlsl_src_30.vcxproj", "{E2580B46-7227-4D64-B781-B22F2BDB891B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CEGUIWrapper", "CEGUIWrapper\CEGUIWrapper.vcxproj", "{91726352-407B-4A12-AF4B-BF343122BDA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4} = {B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +150,14 @@ Global
 		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Release|Win32.ActiveCfg = Release|Win32
 		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Release|Win32.Build.0 = Release|Win32
 		{E2580B46-7227-4D64-B781-B22F2BDB891B}.Release|x64.ActiveCfg = Release|Win32
+		{91726352-407B-4A12-AF4B-BF343122BDA5}.Debug|ARM.ActiveCfg = Debug|Win32
+		{91726352-407B-4A12-AF4B-BF343122BDA5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{91726352-407B-4A12-AF4B-BF343122BDA5}.Debug|Win32.Build.0 = Debug|Win32
+		{91726352-407B-4A12-AF4B-BF343122BDA5}.Debug|x64.ActiveCfg = Debug|Win32
+		{91726352-407B-4A12-AF4B-BF343122BDA5}.Release|ARM.ActiveCfg = Release|Win32
+		{91726352-407B-4A12-AF4B-BF343122BDA5}.Release|Win32.ActiveCfg = Release|Win32
+		{91726352-407B-4A12-AF4B-BF343122BDA5}.Release|Win32.Build.0 = Release|Win32
+		{91726352-407B-4A12-AF4B-BF343122BDA5}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
