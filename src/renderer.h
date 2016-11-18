@@ -117,6 +117,7 @@ public:
 
     virtual bool GUI_InitSubSystem( void ) = 0;
     virtual void GUI_Render( void ) = 0;
+    virtual void GUI_SetResourcesRootDirectory( const dsstring& p_path ) = 0;
 };
 }
 }

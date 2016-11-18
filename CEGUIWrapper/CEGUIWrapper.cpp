@@ -47,3 +47,28 @@ void CEGUIWrapper::RenderGUI( void )
 
     CEGUI::System::getSingleton().renderAllGUIContexts();
 }
+
+void CEGUIWrapper::SetResourcesRootDirectory( const dsstring& p_path )
+{
+    dsstring droot = p_path;
+
+    CEGUI::DefaultResourceProvider* rp = static_cast<CEGUI::DefaultResourceProvider*>( CEGUI::System::getSingleton().getResourceProvider() );
+
+    rp->setResourceGroupDirectory( "schemes", CEGUI::String( droot.c_str() ) + CEGUI::String( "/schemes/" ) );
+    CEGUI::Scheme::setDefaultResourceGroup( "schemes" );  
+
+    rp->setResourceGroupDirectory( "imagesets", CEGUI::String( droot.c_str() ) + CEGUI::String( "/imagesets/" ) );
+    CEGUI::ImageManager::setImagesetDefaultResourceGroup( "imagesets" );
+
+    rp->setResourceGroupDirectory( "fonts", CEGUI::String( droot.c_str() ) + CEGUI::String( "/fonts/" ) );
+    CEGUI::Font::setDefaultResourceGroup( "fonts" );
+
+    rp->setResourceGroupDirectory( "layouts", CEGUI::String( droot.c_str() ) + CEGUI::String( "/layouts/" ) );
+    CEGUI::WindowManager::setDefaultResourceGroup( "layouts" );
+
+    CEGUI::XMLParser* parser = CEGUI::System::getSingleton().getXMLParser();
+    if( parser->isPropertyPresent( "SchemaDefaultResourceGroup" ) )
+    {
+        parser->setProperty( "SchemaDefaultResourceGroup", "schemas" );
+    }    
+}

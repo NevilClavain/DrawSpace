@@ -2039,3 +2039,8 @@ void D3D9Renderer::GUI_Render( void )
     m_lpd3ddevice->SetRenderState( D3DRS_CULLMODE, cull_state );
     m_lpd3ddevice->SetRenderState( D3DRS_FILLMODE, fill_state );    
 }
+
+void D3D9Renderer::GUI_SetResourcesRootDirectory( const dsstring& p_path )
+{
+    m_guisubsystem.SetResourcesRootDirectory( p_path );
+}

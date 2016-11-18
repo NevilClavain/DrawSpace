@@ -2391,3 +2391,8 @@ void D3D11Renderer::GUI_Render( void )
     // restore my input layout, 'cause CEGUI puts its own...
     m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );
 }
+
+void D3D11Renderer::GUI_SetResourcesRootDirectory( const dsstring& p_path )
+{
+    m_guisubsystem.SetResourcesRootDirectory( p_path );
+}

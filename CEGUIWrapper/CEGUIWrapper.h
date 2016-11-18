@@ -37,6 +37,8 @@ public:
 
     void SetReady( void );
     void RenderGUI( void );
+
+    void SetResourcesRootDirectory( const dsstring& p_path );
 };
 
 #endif
