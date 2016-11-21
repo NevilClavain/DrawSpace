@@ -91,6 +91,8 @@ protected:
     DrawSpace::Core::Texture*                                           m_texcube2;
     void*                                                               m_tc2content;
 
+    bool                                                                m_hmi_mode;
+
     /////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_skybox_scenenodegraph;

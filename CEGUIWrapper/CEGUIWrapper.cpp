@@ -94,10 +94,14 @@ void CEGUIWrapper::InitTest( void )
     SchemeManager::getSingleton().createFromFile( "AlfiskoSkin.scheme" );
     FrameWindow* fWnd = static_cast<FrameWindow*>( wmgr.createWindow( "AlfiskoSkin/FrameWindow", "testWindow" ) );
 
-
     myRoot->addChild( fWnd );
-
     fWnd->setPosition( UVector2( UDim( 0.01f, 0.0f ), UDim( 0.07f, 0.00f ) ) );
-
     fWnd->setText( "Hello World!" );
+
+    CEGUI::Window* button0 = static_cast<FrameWindow*>( wmgr.createWindow( "AlfiskoSkin/Button", "testButton0" ) );
+
+    fWnd->addChild( button0 );
+    button0->setPosition( UVector2( UDim( 0.25f, 0.0f ), UDim( 0.75f, 0.0f ) ) );
+    button0->setText( "Click me !" );
+    
 }

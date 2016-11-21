@@ -41,7 +41,8 @@ m_skybox_texturemirrorpass( "skybox.TextureMirrorPass" ),
 m_skybox_reflectornormale( "skybox.ReflectorNormale" ),
 m_skybox_texturesbankpath( "skybox.TexturesBankPath" ),
 m_skybox_texturesbankvirtualfspath( "skybox.TexturesBankVirtualFSPath" ),
-m_skybox_texturesnames( "skybox.TexturesNames" )
+m_skybox_texturesnames( "skybox.TexturesNames" ),
+m_hmi_mode( false )
 {
 }
 
@@ -101,6 +102,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_scenenodegraph.SetCurrentCamera( "camera" );
 
     set_mouse_circular_mode( true );
+    //set_mouse_circular_mode( false );
 
     m_renderer->GUI_InitSubSystem();
     m_renderer->GUI_SetResourcesRootDirectory( "./gui_datafiles" );
@@ -245,7 +247,6 @@ void MainLoopService::OnKeyPulse( long p_key )
 
                 unsigned char* pix = (unsigned char*)m_texturecontent;
 
-
                 unsigned char b = pix[0];
                 unsigned char g = pix[1];
                 unsigned char r = pix[2];
@@ -254,13 +255,23 @@ void MainLoopService::OnKeyPulse( long p_key )
                 _asm nop;
             }
             break;
+
+        case VK_F1:
+
+            m_hmi_mode = !m_hmi_mode;
+            set_mouse_circular_mode( !m_hmi_mode );
+            
+            break;
     }
 }
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-	m_fpsmove.RotateYaw( - p_dx / 4.0, m_tm );
-	m_fpsmove.RotatePitch( - p_dy / 4.0, m_tm );
+    if( !m_hmi_mode )
+    {
+        m_fpsmove.RotateYaw( - p_dx / 4.0, m_tm );
+	    m_fpsmove.RotatePitch( - p_dy / 4.0, m_tm );
+    }
 }
 
 void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
