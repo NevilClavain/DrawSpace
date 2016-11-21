@@ -31,6 +31,9 @@ class CEGUIWrapper
 protected:
 
     bool            m_ready;
+
+    bool            on_button_click(const CEGUI::EventArgs& p_evt );
+
 public:
     CEGUIWrapper( void );
     ~CEGUIWrapper( void );

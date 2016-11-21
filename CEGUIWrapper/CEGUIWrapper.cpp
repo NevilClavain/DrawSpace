@@ -91,18 +91,25 @@ void CEGUIWrapper::OnMouseMove( float p_xm, float p_ym, float p_dx, float p_dy )
 void CEGUIWrapper::OnMouseLeftButtonDown( void )
 {
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    context.injectMouseButtonDown( CEGUI::LeftButton );
 }
 
 void CEGUIWrapper::OnMouseLeftButtonUp( void )
 {
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    context.injectMouseButtonUp( CEGUI::LeftButton );
 }
 
 void CEGUIWrapper::OnMouseRightButtonDown( void )
 {
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    context.injectMouseButtonDown( CEGUI::RightButton );
 }
 
 void CEGUIWrapper::OnMouseRightButtonUp( void )
 {
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    context.injectMouseButtonUp( CEGUI::RightButton );
 }
 
 void CEGUIWrapper::InitTest( void )
@@ -129,5 +136,12 @@ void CEGUIWrapper::InitTest( void )
     fWnd->addChild( button0 );
     button0->setPosition( UVector2( UDim( 0.25f, 0.0f ), UDim( 0.75f, 0.0f ) ) );
     button0->setText( "Click me !" );
+
+    button0->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_button_click, this ) );
     
+}
+
+bool CEGUIWrapper::on_button_click(const CEGUI::EventArgs& p_evt )
+{
+    return true;
 }
