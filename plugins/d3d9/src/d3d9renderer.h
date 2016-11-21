@@ -230,6 +230,13 @@ public:
     virtual bool GUI_InitSubSystem( void );
     virtual void GUI_Render( void );
     virtual void GUI_SetResourcesRootDirectory( const dsstring& p_path );
+
+    virtual void GUI_OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
+    virtual void GUI_OnMouseLeftButtonDown( long p_xm, long p_ym );
+    virtual void GUI_OnMouseLeftButtonUp( long p_xm, long p_ym );
+    virtual void GUI_OnMouseRightButtonDown( long p_xm, long p_ym );
+    virtual void GUI_OnMouseRightButtonUp( long p_xm, long p_ym );
+
     virtual void GUI_InitTest( void ); // temporaire
 
 };

@@ -2045,6 +2045,26 @@ void D3D9Renderer::GUI_SetResourcesRootDirectory( const dsstring& p_path )
     m_guisubsystem.SetResourcesRootDirectory( p_path );
 }
 
+void D3D9Renderer::GUI_OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
+{
+}
+
+void D3D9Renderer::GUI_OnMouseLeftButtonDown( long p_xm, long p_ym )
+{
+}
+
+void D3D9Renderer::GUI_OnMouseLeftButtonUp( long p_xm, long p_ym )
+{
+}
+
+void D3D9Renderer::GUI_OnMouseRightButtonDown( long p_xm, long p_ym )
+{
+}
+
+void D3D9Renderer::GUI_OnMouseRightButtonUp( long p_xm, long p_ym )
+{
+}
+
 void D3D9Renderer::GUI_InitTest( void )
 {
     m_guisubsystem.InitTest();

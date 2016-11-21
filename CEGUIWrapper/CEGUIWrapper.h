@@ -40,6 +40,13 @@ public:
 
     void SetResourcesRootDirectory( const dsstring& p_path );
 
+    void OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
+    void OnMouseLeftButtonDown( long p_xm, long p_ym );
+    void OnMouseLeftButtonUp( long p_xm, long p_ym );
+    void OnMouseRightButtonDown( long p_xm, long p_ym );
+    void OnMouseRightButtonUp( long p_xm, long p_ym );
+
+
     // temporaire, pour tests divers :-D
     void InitTest( void );
 };

@@ -2414,6 +2414,31 @@ void D3D11Renderer::GUI_SetResourcesRootDirectory( const dsstring& p_path )
     m_guisubsystem.SetResourcesRootDirectory( p_path );
 }
 
+void D3D11Renderer::GUI_OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
+{
+    m_guisubsystem.OnMouseMove( p_xm, p_ym, p_dx, p_dy );
+}
+
+void D3D11Renderer::GUI_OnMouseLeftButtonDown( long p_xm, long p_ym )
+{
+    m_guisubsystem.OnMouseLeftButtonDown( p_xm, p_ym );
+}
+
+void D3D11Renderer::GUI_OnMouseLeftButtonUp( long p_xm, long p_ym )
+{
+    m_guisubsystem.OnMouseLeftButtonUp( p_xm, p_ym );
+}
+
+void D3D11Renderer::GUI_OnMouseRightButtonDown( long p_xm, long p_ym )
+{
+    m_guisubsystem.OnMouseRightButtonDown( p_xm, p_ym );
+}
+
+void D3D11Renderer::GUI_OnMouseRightButtonUp( long p_xm, long p_ym )
+{
+    m_guisubsystem.OnMouseRightButtonUp( p_xm, p_ym );
+}
+
 void D3D11Renderer::GUI_InitTest( void )
 {
     m_guisubsystem.InitTest();

@@ -272,22 +272,42 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
         m_fpsmove.RotateYaw( - p_dx / 4.0, m_tm );
 	    m_fpsmove.RotatePitch( - p_dy / 4.0, m_tm );
     }
+    else
+    {
+        m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
+    }
 }
 
 void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnMouseLeftButtonDown( p_xm, p_ym );
+    }
 }
 
 void MainLoopService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnMouseLeftButtonUp( p_xm, p_ym );
+    }
 }
 
 void MainLoopService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnMouseRightButtonDown( p_xm, p_ym );
+    }
 }
 
 void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnMouseRightButtonUp( p_xm, p_ym );
+    }
 }
 
 void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
