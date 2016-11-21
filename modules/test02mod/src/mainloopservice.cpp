@@ -274,7 +274,7 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
     }
     else
     {
-        //m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
+        m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
     }
 }
 

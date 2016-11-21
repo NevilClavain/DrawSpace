@@ -81,14 +81,16 @@ void CEGUIWrapper::SetResourcesRootDirectory( const dsstring& p_path )
 
 void CEGUIWrapper::OnMouseMove( float p_xm, float p_ym, float p_dx, float p_dy )
 {  
+    bool status;
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
 
-    context.injectMouseMove( p_dx, p_dy );
-    context.injectMousePosition( p_xm, p_ym );
+    status = context.injectMouseMove( p_dx, p_dy );
+    status = context.injectMousePosition( p_xm, p_ym );
 }
 
 void CEGUIWrapper::OnMouseLeftButtonDown( void )
 {
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
 }
 
 void CEGUIWrapper::OnMouseLeftButtonUp( void )
