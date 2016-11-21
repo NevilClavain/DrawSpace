@@ -119,11 +119,11 @@ public:
     virtual void GUI_Render( void ) = 0;
     virtual void GUI_SetResourcesRootDirectory( const dsstring& p_path ) = 0;
 
-    virtual void GUI_OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy ) = 0;
-    virtual void GUI_OnMouseLeftButtonDown( long p_xm, long p_ym ) = 0;
-    virtual void GUI_OnMouseLeftButtonUp( long p_xm, long p_ym ) = 0;
-    virtual void GUI_OnMouseRightButtonDown( long p_xm, long p_ym ) = 0;
-    virtual void GUI_OnMouseRightButtonUp( long p_xm, long p_ym ) = 0;
+    virtual void GUI_OnMouseMove( float p_xm, float p_ym, float p_dx, float p_dy ) = 0;
+    virtual void GUI_OnMouseLeftButtonDown( void ) = 0;
+    virtual void GUI_OnMouseLeftButtonUp( void ) = 0;
+    virtual void GUI_OnMouseRightButtonDown( void ) = 0;
+    virtual void GUI_OnMouseRightButtonUp( void ) = 0;
 
     virtual void GUI_InitTest( void ) = 0; // temporaire
 

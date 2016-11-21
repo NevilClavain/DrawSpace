@@ -274,7 +274,7 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
     }
     else
     {
-        m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
+        //m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
     }
 }
 
@@ -282,7 +282,7 @@ void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
     if( m_hmi_mode )
     {
-        m_renderer->GUI_OnMouseLeftButtonDown( p_xm, p_ym );
+        m_renderer->GUI_OnMouseLeftButtonDown();
     }
 }
 
@@ -290,7 +290,7 @@ void MainLoopService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
     if( m_hmi_mode )
     {
-        m_renderer->GUI_OnMouseLeftButtonUp( p_xm, p_ym );
+        m_renderer->GUI_OnMouseLeftButtonUp();
     }
 }
 
@@ -298,7 +298,7 @@ void MainLoopService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
     if( m_hmi_mode )
     {
-        m_renderer->GUI_OnMouseRightButtonDown( p_xm, p_ym );
+        m_renderer->GUI_OnMouseRightButtonDown();
     }
 }
 
@@ -306,7 +306,7 @@ void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
     if( m_hmi_mode )
     {
-        m_renderer->GUI_OnMouseRightButtonUp( p_xm, p_ym );
+        m_renderer->GUI_OnMouseRightButtonUp();
     }
 }
 

@@ -79,29 +79,27 @@ void CEGUIWrapper::SetResourcesRootDirectory( const dsstring& p_path )
     }    
 }
 
-void CEGUIWrapper::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
-{
-    /*
+void CEGUIWrapper::OnMouseMove( float p_xm, float p_ym, float p_dx, float p_dy )
+{  
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
 
     context.injectMouseMove( p_dx, p_dy );
     context.injectMousePosition( p_xm, p_ym );
-    */
 }
 
-void CEGUIWrapper::OnMouseLeftButtonDown( long p_xm, long p_ym )
+void CEGUIWrapper::OnMouseLeftButtonDown( void )
 {
 }
 
-void CEGUIWrapper::OnMouseLeftButtonUp( long p_xm, long p_ym )
+void CEGUIWrapper::OnMouseLeftButtonUp( void )
 {
 }
 
-void CEGUIWrapper::OnMouseRightButtonDown( long p_xm, long p_ym )
+void CEGUIWrapper::OnMouseRightButtonDown( void )
 {
 }
 
-void CEGUIWrapper::OnMouseRightButtonUp( long p_xm, long p_ym )
+void CEGUIWrapper::OnMouseRightButtonUp( void )
 {
 }
 
