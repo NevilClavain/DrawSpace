@@ -204,6 +204,12 @@ void MainLoopService::set_mouse_circular_mode( bool p_state )
 
 void MainLoopService::OnKeyPress( long p_key )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnKeyDown( p_key );
+        return;
+    }
+
     switch( p_key )
     {
         case 'Q':
@@ -226,6 +232,12 @@ void MainLoopService::OnKeyPress( long p_key )
 
 void MainLoopService::OnEndKeyPress( long p_key )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnKeyUp( p_key );
+        return;
+    }
+
     switch( p_key )
     {
         case 'Q':
@@ -238,6 +250,12 @@ void MainLoopService::OnEndKeyPress( long p_key )
 
 void MainLoopService::OnKeyPulse( long p_key )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnChar( p_key );
+        return;
+    }
+
     switch( p_key )
     {
         case VK_SPACE:

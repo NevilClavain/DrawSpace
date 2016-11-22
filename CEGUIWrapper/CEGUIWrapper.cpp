@@ -112,6 +112,26 @@ void CEGUIWrapper::OnMouseRightButtonUp( void )
     context.injectMouseButtonUp( CEGUI::RightButton );
 }
 
+void CEGUIWrapper::OnKeyDown( long p_key )
+{
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();    
+
+    context.injectKeyDown( CEGUI::Key::Scan::A );
+}
+
+void CEGUIWrapper::OnKeyUp( long p_key )
+{
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+
+    context.injectKeyDown( CEGUI::Key::Scan::A );
+}
+
+void CEGUIWrapper::OnChar( long p_key )
+{
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    context.injectChar( p_key );
+}
+
 void CEGUIWrapper::InitTest( void )
 {
     WindowManager& wmgr = WindowManager::getSingleton();
@@ -124,14 +144,18 @@ void CEGUIWrapper::InitTest( void )
     FrameWindow* fWnd = static_cast<FrameWindow*>( wmgr.createWindow( "TaharezLook/FrameWindow", "testWindow" ) );
     */
 
-    SchemeManager::getSingleton().createFromFile( "AlfiskoSkin.scheme" );
-    FrameWindow* fWnd = static_cast<FrameWindow*>( wmgr.createWindow( "AlfiskoSkin/FrameWindow", "testWindow" ) );
+    SchemeManager::getSingleton().createFromFile( "TaharezLook.scheme" );
+    FrameWindow* fWnd = static_cast<FrameWindow*>( wmgr.createWindow( "TaharezLook/FrameWindow", "testWindow" ) );
+
+    //////////////////////////////////////////
 
     myRoot->addChild( fWnd );
     fWnd->setPosition( UVector2( UDim( 0.01f, 0.0f ), UDim( 0.07f, 0.00f ) ) );
     fWnd->setText( "Hello World!" );
 
-    CEGUI::Window* button0 = static_cast<FrameWindow*>( wmgr.createWindow( "AlfiskoSkin/Button", "testButton0" ) );
+    //////////////////////////////////////////
+
+    CEGUI::PushButton* button0 = static_cast<CEGUI::PushButton*>( wmgr.createWindow( "TaharezLook/Button", "testButton0" ) );
 
     fWnd->addChild( button0 );
     button0->setPosition( UVector2( UDim( 0.25f, 0.0f ), UDim( 0.75f, 0.0f ) ) );
@@ -139,6 +163,13 @@ void CEGUIWrapper::InitTest( void )
 
     button0->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_button_click, this ) );
     
+    //////////////////////////////////////////
+
+    CEGUI::Editbox* ebx = static_cast<CEGUI::Editbox*>( wmgr.createWindow( "TaharezLook/Editbox", "testEbx0" ) );
+
+    fWnd->addChild( ebx );
+
+    ebx->setText( "" );
 }
 
 bool CEGUIWrapper::on_button_click(const CEGUI::EventArgs& p_evt )

@@ -2074,3 +2074,18 @@ void D3D9Renderer::GUI_InitTest( void )
 {
     m_guisubsystem.InitTest();
 }
+
+void D3D9Renderer::GUI_OnKeyDown( long p_key )
+{
+    m_guisubsystem.OnKeyDown( p_key );
+}
+
+void D3D9Renderer::GUI_OnKeyUp( long p_key )
+{
+    m_guisubsystem.OnKeyUp( p_key );
+}
+
+void D3D9Renderer::GUI_OnChar( long p_key )
+{
+    m_guisubsystem.OnChar( p_key );
+}

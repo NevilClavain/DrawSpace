@@ -271,6 +271,10 @@ public:
     virtual void GUI_OnMouseLeftButtonUp( void );
     virtual void GUI_OnMouseRightButtonDown( void );
     virtual void GUI_OnMouseRightButtonUp( void );
+    virtual void GUI_OnKeyDown( long p_key );
+    virtual void GUI_OnKeyUp( long p_key );
+    virtual void GUI_OnChar( long p_key );
+
 
     virtual void GUI_InitTest( void ); // temporaire
 

@@ -48,6 +48,10 @@ public:
     void OnMouseLeftButtonUp( void );
     void OnMouseRightButtonDown( void );
     void OnMouseRightButtonUp( void );
+    void OnKeyDown( long p_key );
+    void OnKeyUp( long p_key );
+    void OnChar( long p_key );
+
 
 
     // temporaire, pour tests divers :-D
