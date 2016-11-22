@@ -158,7 +158,7 @@ void CEGUIWrapper::InitTest( void )
     CEGUI::PushButton* button0 = static_cast<CEGUI::PushButton*>( wmgr.createWindow( "TaharezLook/Button", "testButton0" ) );
 
     fWnd->addChild( button0 );
-    button0->setPosition( UVector2( UDim( 0.25f, 0.0f ), UDim( 0.75f, 0.0f ) ) );
+    button0->setPosition( UVector2( UDim( 0.25f, 0.0f ), UDim( 0.5f, 0.0f ) ) );
     button0->setText( "Click me !" );
 
     button0->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_button_click, this ) );
