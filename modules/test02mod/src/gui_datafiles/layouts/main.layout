@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="root">
+    <Window type="AlfiskoSkin/FrameWindow" name="testWindow">
+      <Property name="Position" value="{ {0.02, 0}, {0.07, 0} }" />
+      <Property name="Size" value="{ {0.35, 0}, {0.35, 0} }" />
+      <Property name="Text" value="Hello World! (xml)" />
+    </Window>
+  </Window>
+</GUILayout>

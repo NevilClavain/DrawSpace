@@ -136,13 +136,14 @@ void CEGUIWrapper::InitTest( void )
 {
     WindowManager& wmgr = WindowManager::getSingleton();
 
-    Window* myRoot = wmgr.createWindow( "DefaultWindow", "root" );
+    SchemeManager::getSingleton().createFromFile( "AlfiskoSkin.scheme" );
+
+    Window* myRoot = wmgr.loadLayoutFromFile( "main.layout" );
     System::getSingleton().getDefaultGUIContext().setRootWindow( myRoot );
 
     /*
-    SchemeManager::getSingleton().createFromFile( "TaharezLook.scheme" );
-    FrameWindow* fWnd = static_cast<FrameWindow*>( wmgr.createWindow( "TaharezLook/FrameWindow", "testWindow" ) );
-    */
+    Window* myRoot = wmgr.createWindow( "DefaultWindow", "root" );
+    System::getSingleton().getDefaultGUIContext().setRootWindow( myRoot );
 
     SchemeManager::getSingleton().createFromFile( "TaharezLook.scheme" );
     FrameWindow* fWnd = static_cast<FrameWindow*>( wmgr.createWindow( "TaharezLook/FrameWindow", "testWindow" ) );
@@ -170,6 +171,7 @@ void CEGUIWrapper::InitTest( void )
     fWnd->addChild( ebx );
 
     ebx->setText( "" );
+    */
 }
 
 bool CEGUIWrapper::on_button_click(const CEGUI::EventArgs& p_evt )
