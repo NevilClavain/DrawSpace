@@ -105,7 +105,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     //set_mouse_circular_mode( false );
 
     m_renderer->GUI_InitSubSystem();
-    m_renderer->GUI_SetResourcesRootDirectory( "./gui_datafiles" );
+    m_renderer->GUI_SetResourcesRootDirectory( "./test02modgui_datafiles" );
 
     //m_renderer->GUI_InitTest();
 

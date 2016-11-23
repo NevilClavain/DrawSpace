@@ -42,9 +42,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -88,7 +90,7 @@ copy .\..\..\shaders_bank\hlsl_4_0\water_mask.pso .\..\..\..\Drawspace_samples\b
 copy .\..\..\shaders_bank\hlsl_4_0\water_mask.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_mask.vso
 copy .\..\..\shaders_bank\hlsl_4_0\water_waves.pso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.pso
 copy .\..\..\shaders_bank\hlsl_4_0\water_waves.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.vso
-      </Command>
+copy .\src\gui_datafiles\layouts\main.layout .\..\..\..\Drawspace_samples\bin\test02modgui_datafiles\layouts\main.layout</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,7 +139,7 @@ copy .\..\..\shaders_bank\hlsl_4_0\water_mask.pso .\..\..\..\Drawspace_samples\b
 copy .\..\..\shaders_bank\hlsl_4_0\water_mask.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_mask.vso
 copy .\..\..\shaders_bank\hlsl_4_0\water_waves.pso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.pso
 copy .\..\..\shaders_bank\hlsl_4_0\water_waves.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.vso
-      </Command>
+copy .\src\gui_datafiles\layouts\main.layout .\..\..\..\Drawspace_samples\bin\test02modgui_datafiles\layouts\main.layout</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -148,6 +150,9 @@ copy .\..\..\shaders_bank\hlsl_4_0\water_waves.vso .\..\..\..\Drawspace_samples\
   <ItemGroup>
     <ClInclude Include="src\mainloopservice.h" />
     <ClInclude Include="src\test02root.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\gui_datafiles\layouts\main.layout" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
