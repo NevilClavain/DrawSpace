@@ -52,7 +52,7 @@ public:
     void OnKeyUp( long p_key );
     void OnChar( long p_key );
 
-
+    void LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path );
 
     // temporaire, pour tests divers :-D
     void InitTest( void );

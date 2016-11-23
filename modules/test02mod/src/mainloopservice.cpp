@@ -107,7 +107,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_renderer->GUI_InitSubSystem();
     m_renderer->GUI_SetResourcesRootDirectory( "./gui_datafiles" );
 
-    m_renderer->GUI_InitTest();
+    //m_renderer->GUI_InitTest();
+
+    m_renderer->GUI_LoadLayoutFromFile( "main.layout", "AlfiskoSkin.scheme" );
 
     _DSDEBUG( logger, dsstring( "main loop service : startup..." ) );
 }

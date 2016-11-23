@@ -132,6 +132,16 @@ void CEGUIWrapper::OnChar( long p_key )
     context.injectChar( p_key );
 }
 
+void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path )
+{
+    WindowManager& wmgr = WindowManager::getSingleton();
+
+    SchemeManager::getSingleton().createFromFile( p_scheme_path );
+
+    Window* wRoot = wmgr.loadLayoutFromFile( p_layout_path );
+    System::getSingleton().getDefaultGUIContext().setRootWindow( wRoot );
+}
+
 void CEGUIWrapper::InitTest( void )
 {
     WindowManager& wmgr = WindowManager::getSingleton();

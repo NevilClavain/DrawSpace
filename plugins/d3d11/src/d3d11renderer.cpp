@@ -2458,3 +2458,8 @@ void D3D11Renderer::GUI_OnChar( long p_key )
 {
     m_guisubsystem.OnChar( p_key );
 }
+
+void D3D11Renderer::GUI_LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path )
+{
+    m_guisubsystem.LoadLayoutFromFile( p_layout_path, p_scheme_path );
+}

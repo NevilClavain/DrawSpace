@@ -127,6 +127,7 @@ public:
     virtual void GUI_OnKeyDown( long p_key ) = 0;
     virtual void GUI_OnKeyUp( long p_key ) = 0;
     virtual void GUI_OnChar( long p_key ) = 0;
+    virtual void GUI_LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path ) = 0;
 
     virtual void GUI_InitTest( void ) = 0; // temporaire
 
