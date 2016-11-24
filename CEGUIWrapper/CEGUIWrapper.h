@@ -30,7 +30,10 @@ class CEGUIWrapper
 {
 protected:
 
-    bool            m_ready;
+    bool                                m_ready;
+
+    std::map<int, CEGUI::Window*>       m_ceguiWindowTable;
+
 
     bool            on_button_click(const CEGUI::EventArgs& p_evt );
 
@@ -53,6 +56,8 @@ public:
     void OnChar( long p_key );
 
     void LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path );
+
+    //void GetGUIWindows( )
 
     // temporaire, pour tests divers :-D
     void InitTest( void );
