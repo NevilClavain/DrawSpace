@@ -115,15 +115,13 @@ void CEGUIWrapper::OnMouseRightButtonUp( void )
 void CEGUIWrapper::OnKeyDown( long p_key )
 {
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();    
-
-    context.injectKeyDown( CEGUI::Key::Scan::A );
+    //context.injectKeyDown( CEGUI::Key::Scan::A );
 }
 
 void CEGUIWrapper::OnKeyUp( long p_key )
 {
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
-
-    context.injectKeyDown( CEGUI::Key::Scan::A );
+    //context.injectKeyUp( CEGUI::Key::Scan::A );
 }
 
 void CEGUIWrapper::OnChar( long p_key )
@@ -140,6 +138,14 @@ void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsst
 
     Window* wRoot = wmgr.loadLayoutFromFile( p_layout_path );
     System::getSingleton().getDefaultGUIContext().setRootWindow( wRoot );
+
+    /*
+    Window* myRoot = System::getSingleton().getDefaultGUIContext().getRootWindow();
+
+    CEGUI::DefaultWindow* main_win = static_cast<CEGUI::DefaultWindow*>( myRoot->getChild( 1 ) );
+    CEGUI::DefaultWindow* static_text = static_cast<CEGUI::DefaultWindow*>( main_win->getChild( 2 ) );
+    static_text->setText( "prout !" );
+    */
 }
 
 void CEGUIWrapper::InitTest( void )

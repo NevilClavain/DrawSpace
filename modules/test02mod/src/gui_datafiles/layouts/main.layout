@@ -2,9 +2,18 @@
 <GUILayout version="4">
   <Window type="DefaultWindow" name="root">
     <Window type="AlfiskoSkin/FrameWindow" name="testWindow">
+      <Property name="ID" value="1" />
       <Property name="Position" value="{ {0.02, 0}, {0.07, 0} }" />
       <Property name="Size" value="{ {0.2, 0}, {0.85, 0} }" />
       <Property name="Text" value="Main control" />
+
+      <Window type="AlfiskoSkin/Label" name="FPSInfoLabel" >
+        <Property name="ID" value="2" />
+        <Property name="Area" value="{ {0.0, 0}, {0.0, 0} }" />
+        <Property name="Size" value="{ {1.0, 0}, {0.1, 0} }" />
+        <Property name="Text" value="... fps" />
+      </Window>      
+
     </Window>
   </Window>
 </GUILayout>

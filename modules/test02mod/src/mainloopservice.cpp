@@ -252,6 +252,40 @@ void MainLoopService::OnEndKeyPress( long p_key )
 
 void MainLoopService::OnKeyPulse( long p_key )
 {
+    switch( p_key )
+    {
+        case VK_SPACE:
+            {
+                // read render texture content test...
+                m_coloredpass->GetTargetTexture()->CopyTextureContent();
+
+                unsigned char* pix = (unsigned char*)m_texturecontent;
+
+                unsigned char b = pix[0];
+                unsigned char g = pix[1];
+                unsigned char r = pix[2];
+                unsigned char a = pix[3];
+
+                _asm nop;
+            }
+            break;
+
+        case VK_F1:
+
+            m_hmi_mode = !m_hmi_mode;
+            set_mouse_circular_mode( !m_hmi_mode );
+            
+            break;
+    }
+
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnChar( p_key );
+        return;
+    }
+
+
+    /*
     if( m_hmi_mode )
     {
         m_renderer->GUI_OnChar( p_key );
@@ -283,6 +317,7 @@ void MainLoopService::OnKeyPulse( long p_key )
             
             break;
     }
+    */
 }
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )

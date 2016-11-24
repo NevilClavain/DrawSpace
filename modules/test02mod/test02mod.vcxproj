@@ -152,7 +152,9 @@ copy .\src\gui_datafiles\layouts\main.layout .\..\..\..\Drawspace_samples\bin\te
     <ClInclude Include="src\test02root.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\gui_datafiles\layouts\main.layout" />
+    <None Include="src\gui_datafiles\layouts\main.layout">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
