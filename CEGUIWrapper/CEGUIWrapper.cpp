@@ -139,6 +139,9 @@ void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsst
     Window* wRoot = wmgr.loadLayoutFromFile( p_layout_path );
     System::getSingleton().getDefaultGUIContext().setRootWindow( wRoot );
 
+    // id 0 reservé à la fenetre root
+    m_ceguiWindowTable[0] = wRoot;
+
     /*
     Window* myRoot = System::getSingleton().getDefaultGUIContext().getRootWindow();
 
@@ -146,6 +149,32 @@ void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsst
     CEGUI::DefaultWindow* static_text = static_cast<CEGUI::DefaultWindow*>( main_win->getChild( 2 ) );
     static_text->setText( "prout !" );
     */
+}
+
+void CEGUIWrapper::StoreGUIWindows( int p_parent_id, int p_id )
+{
+    if( m_ceguiWindowTable.count( p_parent_id ) > 0 )
+    {
+        Window* parent = m_ceguiWindowTable[p_parent_id];
+        Window* child = parent->getChild( p_id );
+        m_ceguiWindowTable[p_id] = child;
+    }
+    else
+    {
+        _DSEXCEPTION( "unregistered CEGUI window ID" );
+    }
+}
+
+void CEGUIWrapper::SetGUIWindowsText( int p_id, const dsstring& p_text )
+{
+    if( m_ceguiWindowTable.count( p_id ) > 0 )
+    {
+        m_ceguiWindowTable[p_id]->setText( p_text );
+    }
+    else
+    {
+        _DSEXCEPTION( "unregistered CEGUI window ID" );
+    }
 }
 
 void CEGUIWrapper::InitTest( void )

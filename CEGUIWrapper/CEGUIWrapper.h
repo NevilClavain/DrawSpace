@@ -57,7 +57,8 @@ public:
 
     void LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path );
 
-    //void GetGUIWindows( )
+    void StoreGUIWindows( int p_parent_id, int p_id );
+    void SetGUIWindowsText( int p_id, const dsstring& p_text );
 
     // temporaire, pour tests divers :-D
     void InitTest( void );
