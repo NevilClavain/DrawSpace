@@ -110,6 +110,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     //m_renderer->GUI_InitTest();
 
     m_renderer->GUI_LoadLayoutFromFile( "main.layout", "AlfiskoSkin.scheme" );
+    m_renderer->GUI_StoreWidget( 0, 1 );
+    m_renderer->GUI_StoreWidget( 1, 2 );
+    
+    
 
     _DSDEBUG( logger, dsstring( "main loop service : startup..." ) );
 }
@@ -147,8 +151,14 @@ void MainLoopService::Run( void )
     m_texturemirrorpass->GetRenderingQueue()->Draw();
     m_bumppass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
-    
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
+
+    char comment[256];
+    sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
+    dsstring fps_text = comment;
+
+    //m_renderer->DrawText( 255, 0, 0, 10, 20, "%s", fps_text.c_str() );   
+    m_renderer->GUI_SetWidgetText( 2, fps_text );
+
 
     m_renderer->GUI_Render();
 

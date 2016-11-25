@@ -2463,3 +2463,13 @@ void D3D11Renderer::GUI_LoadLayoutFromFile( const dsstring& p_layout_path, const
 {
     m_guisubsystem.LoadLayoutFromFile( p_layout_path, p_scheme_path );
 }
+
+void D3D11Renderer::GUI_StoreWidget( int p_parent_id, int p_id )
+{
+    m_guisubsystem.StoreGUIWindows( p_parent_id, p_id );
+}
+
+void D3D11Renderer::GUI_SetWidgetText( int p_id, const dsstring& p_text )
+{
+    m_guisubsystem.SetGUIWindowsText( p_id, p_text );
+}
