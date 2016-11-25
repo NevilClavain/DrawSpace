@@ -44,7 +44,9 @@ m_skybox_texturesbankvirtualfspath( "skybox.TexturesBankVirtualFSPath" ),
 m_skybox_texturesnames( "skybox.TexturesNames" ),
 m_hmi_mode( false )
 {
+    m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPUshButtonClickedCallback, GUIWidgetPUshButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
 }
+
 
 MainLoopService::~MainLoopService( void )
 {
@@ -115,11 +117,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_renderer->GUI_StoreWidget( 1, 3 );
     m_renderer->GUI_StoreWidget( 1, 4 );
 
+
+    m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 3 );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );
     
     
-
     _DSDEBUG( logger, dsstring( "main loop service : startup..." ) );
 }
 
@@ -847,4 +850,16 @@ void MainLoopService::create_ground( void )
 
 
 
+}
+
+void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
+{
+    if( "Trigger" == p_widget_id )
+    {
+        m_cube_body->Enable( true );
+    }
+    else if( "Quit" == p_widget_id )
+    {
+    
+    }
 }

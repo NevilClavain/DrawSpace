@@ -30,6 +30,8 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
+    typedef DrawSpace::Core::CallBack<MainLoopService, void, dsstring>  GUIWidgetPUshButtonClickedCallback;
+
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
@@ -93,6 +95,8 @@ protected:
 
     bool                                                                m_hmi_mode;
 
+    GUIWidgetPUshButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
+
     /////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_skybox_scenenodegraph;
@@ -105,6 +109,7 @@ protected:
 
     /////////////////////////////////////////////////////////////////////////////////
 
+
     void    create_passes( void );
     void    init_passes( void );
 
@@ -114,6 +119,8 @@ protected:
     void    create_ground( void );
 
     void    set_mouse_circular_mode( bool p_state );
+
+    void    on_guipushbutton_clicked( dsstring p_widget_id );
 
 public:
     MainLoopService( void );

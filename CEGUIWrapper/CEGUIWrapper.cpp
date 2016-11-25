@@ -26,7 +26,8 @@
 using namespace CEGUI;
 
 CEGUIWrapper::CEGUIWrapper( void ) :
-m_ready( false )
+m_ready( false ),
+m_pushbuttoneventclicked_handler( NULL )
 {
 }
 
@@ -141,14 +142,6 @@ void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsst
 
     // id 0 reservé à la fenetre root
     m_ceguiWindowTable[0] = wRoot;
-
-    /*
-    Window* myRoot = System::getSingleton().getDefaultGUIContext().getRootWindow();
-
-    CEGUI::DefaultWindow* main_win = static_cast<CEGUI::DefaultWindow*>( myRoot->getChild( 1 ) );
-    CEGUI::DefaultWindow* static_text = static_cast<CEGUI::DefaultWindow*>( main_win->getChild( 2 ) );
-    static_text->setText( "prout !" );
-    */
 }
 
 void CEGUIWrapper::Store( int p_parent_id, int p_id )
@@ -187,6 +180,11 @@ void CEGUIWrapper::SubscribePushButtonEventClicked( int p_id )
     {
         _DSEXCEPTION( "unregistered CEGUI window ID" );
     }
+}
+
+void CEGUIWrapper::RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler )
+{
+    m_pushbuttoneventclicked_handler = p_handler;
 }
 
 void CEGUIWrapper::InitTest( void )
@@ -241,6 +239,13 @@ bool CEGUIWrapper::on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt )
     const CEGUI::MouseEventArgs& we = static_cast<const CEGUI::MouseEventArgs&>( p_evt ); 
     CEGUI::String senderID = we.window->getName();
 
+    if( m_pushbuttoneventclicked_handler )
+    {
+        dsstring widgetId( senderID.c_str() );
+        (*m_pushbuttoneventclicked_handler)( widgetId );
+    }
+
+    /*
     if( senderID == "Trigger" )
     {
         _asm nop;
@@ -250,7 +255,7 @@ bool CEGUIWrapper::on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt )
     {
         _asm nop;
     }
-
+    */
 
     return true;
 }

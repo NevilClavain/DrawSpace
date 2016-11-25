@@ -22,6 +22,7 @@
 
 #include <CEGUI\CEGUI.h>
 #include "drawspace_commons.h"
+#include "callback.h"
 
 #ifndef _CEGUIWRAPPER_H_
 #define _CEGUIWRAPPER_H_
@@ -30,10 +31,9 @@ class CEGUIWrapper
 {
 protected:
 
-    bool                                m_ready;
-
-    std::map<int, CEGUI::Window*>       m_ceguiWindowTable;
-
+    bool                                                m_ready;
+    std::map<int, CEGUI::Window*>                       m_ceguiWindowTable;
+    DrawSpace::Core::BaseCallback<void, dsstring>*      m_pushbuttoneventclicked_handler;
 
     bool            on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt );
 
@@ -41,6 +41,7 @@ public:
     CEGUIWrapper( void );
     ~CEGUIWrapper( void );
 
+    
     void SetReady( void );
     void RenderGUI( void );
 
@@ -59,7 +60,9 @@ public:
 
     void Store( int p_parent_id, int p_id );
     void SetText( int p_id, const dsstring& p_text );
+    
     void SubscribePushButtonEventClicked( int p_id );
+    void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler );
 
     // temporaire, pour tests divers :-D
     void InitTest( void );

@@ -2109,3 +2109,8 @@ void D3D9Renderer::GUI_SubscribeWidgetPushButtonEventClicked( int p_id )
 {
     m_guisubsystem.SubscribePushButtonEventClicked( p_id );
 }
+
+void D3D9Renderer::GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler )
+{
+    m_guisubsystem.RegisterPushButtonEventClickedHandler( p_handler );
+}
