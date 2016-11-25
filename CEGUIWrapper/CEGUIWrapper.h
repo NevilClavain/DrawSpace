@@ -35,7 +35,7 @@ protected:
     std::map<int, CEGUI::Window*>       m_ceguiWindowTable;
 
 
-    bool            on_button_click(const CEGUI::EventArgs& p_evt );
+    bool            on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt );
 
 public:
     CEGUIWrapper( void );
@@ -57,8 +57,9 @@ public:
 
     void LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path );
 
-    void StoreGUIWindows( int p_parent_id, int p_id );
-    void SetGUIWindowsText( int p_id, const dsstring& p_text );
+    void Store( int p_parent_id, int p_id );
+    void SetText( int p_id, const dsstring& p_text );
+    void SubscribePushButtonEventClicked( int p_id );
 
     // temporaire, pour tests divers :-D
     void InitTest( void );

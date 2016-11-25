@@ -2097,10 +2097,15 @@ void D3D9Renderer::GUI_LoadLayoutFromFile( const dsstring& p_layout_path, const 
 
 void D3D9Renderer::GUI_StoreWidget( int p_parent_id, int p_id )
 {
-    m_guisubsystem.StoreGUIWindows( p_parent_id, p_id );
+    m_guisubsystem.Store( p_parent_id, p_id );
 }
 
 void D3D9Renderer::GUI_SetWidgetText( int p_id, const dsstring& p_text )
 {
-    m_guisubsystem.SetGUIWindowsText( p_id, p_text );
+    m_guisubsystem.SetText( p_id, p_text );
+}
+
+void D3D9Renderer::GUI_SubscribeWidgetPushButtonEventClicked( int p_id )
+{
+    m_guisubsystem.SubscribePushButtonEventClicked( p_id );
 }

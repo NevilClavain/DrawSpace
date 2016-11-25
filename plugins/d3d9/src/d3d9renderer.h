@@ -243,6 +243,7 @@ public:
 
     virtual void GUI_StoreWidget( int p_parent_id, int p_id );
     virtual void GUI_SetWidgetText( int p_id, const dsstring& p_text );
+    virtual void GUI_SubscribeWidgetPushButtonEventClicked( int p_id );
 
 
     virtual void GUI_InitTest( void ); // temporaire

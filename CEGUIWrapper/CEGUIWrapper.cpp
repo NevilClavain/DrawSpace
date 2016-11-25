@@ -151,7 +151,7 @@ void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsst
     */
 }
 
-void CEGUIWrapper::StoreGUIWindows( int p_parent_id, int p_id )
+void CEGUIWrapper::Store( int p_parent_id, int p_id )
 {
     if( m_ceguiWindowTable.count( p_parent_id ) > 0 )
     {
@@ -165,11 +165,23 @@ void CEGUIWrapper::StoreGUIWindows( int p_parent_id, int p_id )
     }
 }
 
-void CEGUIWrapper::SetGUIWindowsText( int p_id, const dsstring& p_text )
+void CEGUIWrapper::SetText( int p_id, const dsstring& p_text )
 {
     if( m_ceguiWindowTable.count( p_id ) > 0 )
     {
         m_ceguiWindowTable[p_id]->setText( p_text );
+    }
+    else
+    {
+        _DSEXCEPTION( "unregistered CEGUI window ID" );
+    }
+}
+
+void CEGUIWrapper::SubscribePushButtonEventClicked( int p_id )
+{
+    if( m_ceguiWindowTable.count( p_id ) > 0 )
+    {
+        m_ceguiWindowTable[p_id]->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_PushButton_EventClicked, this ) );
     }
     else
     {
@@ -185,6 +197,11 @@ void CEGUIWrapper::InitTest( void )
 
     Window* myRoot = wmgr.loadLayoutFromFile( "main.layout" );
     System::getSingleton().getDefaultGUIContext().setRootWindow( myRoot );
+
+
+    CEGUI::Window* button0 = static_cast<CEGUI::Window*>( wmgr.createWindow( "TaharezLook/Button", "testButton0" ) );
+    button0->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_PushButton_EventClicked, this ) );
+
 
     /*
     Window* myRoot = wmgr.createWindow( "DefaultWindow", "root" );
@@ -219,7 +236,21 @@ void CEGUIWrapper::InitTest( void )
     */
 }
 
-bool CEGUIWrapper::on_button_click(const CEGUI::EventArgs& p_evt )
+bool CEGUIWrapper::on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt )
 {
+    const CEGUI::MouseEventArgs& we = static_cast<const CEGUI::MouseEventArgs&>( p_evt ); 
+    CEGUI::String senderID = we.window->getName();
+
+    if( senderID == "Trigger" )
+    {
+        _asm nop;
+    }
+
+    if( senderID == "Quit" )
+    {
+        _asm nop;
+    }
+
+
     return true;
 }

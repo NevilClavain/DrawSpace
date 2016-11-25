@@ -112,6 +112,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_renderer->GUI_LoadLayoutFromFile( "main.layout", "AlfiskoSkin.scheme" );
     m_renderer->GUI_StoreWidget( 0, 1 );
     m_renderer->GUI_StoreWidget( 1, 2 );
+    m_renderer->GUI_StoreWidget( 1, 3 );
+    m_renderer->GUI_StoreWidget( 1, 4 );
+
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 3 );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );
     
     
 

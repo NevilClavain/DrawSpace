@@ -130,6 +130,7 @@ public:
     virtual void GUI_LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path ) = 0;
     virtual void GUI_StoreWidget( int p_parent_id, int p_id ) = 0;
     virtual void GUI_SetWidgetText( int p_id, const dsstring& p_text ) = 0;
+    virtual void GUI_SubscribeWidgetPushButtonEventClicked( int p_id ) = 0;
 
 
 
