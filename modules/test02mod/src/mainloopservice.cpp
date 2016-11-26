@@ -294,6 +294,11 @@ void MainLoopService::OnKeyPulse( long p_key )
             set_mouse_circular_mode( !m_hmi_mode );
             
             break;
+
+        case VK_ESCAPE:
+
+            PostQuitMessage( 0 );
+            break;
     }
 
     if( m_hmi_mode )
@@ -860,6 +865,6 @@ void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
     }
     else if( "Quit" == p_widget_id )
     {
-    
+        PostQuitMessage( 0 );
     }
 }
