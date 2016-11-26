@@ -87,6 +87,8 @@ protected:
     DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
     DrawSpace::Core::BaseCallback<void, bool>*                          m_mousecircularmode_cb;
+    DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
+
 
     void*                                                               m_texturecontent;
 
@@ -127,7 +129,7 @@ public:
     ~MainLoopService( void );
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
-    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb );
+    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb );
     virtual void                            Run( void );
     virtual void                            Release( void );
     virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void );

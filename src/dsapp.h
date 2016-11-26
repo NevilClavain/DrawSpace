@@ -141,6 +141,8 @@ public:
 
     virtual void GetRenderPluginName( dsstring& p_plugin );
 
+    virtual void Quit( int p_code );
+
 
     //////INPUT : WINDOWS EVENT//////////////////////////////////////////////////////
 

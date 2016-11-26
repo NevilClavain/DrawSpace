@@ -57,7 +57,7 @@ void MainLoopService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_k
 
 }
 
-void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
+void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
     m_keysLinkTable.RegisterClientKey( &m_skybox_scenenodegraph );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturepass );
@@ -71,6 +71,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     //////////////////////////////////////////////////////////////////////////////
 
     m_mousecircularmode_cb = p_mousecircularmode_cb;
+    m_closeapp_cb = p_closeapp_cb;
 
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
@@ -293,11 +294,6 @@ void MainLoopService::OnKeyPulse( long p_key )
             m_hmi_mode = !m_hmi_mode;
             set_mouse_circular_mode( !m_hmi_mode );
             
-            break;
-
-        case VK_ESCAPE:
-
-            PostQuitMessage( 0 );
             break;
     }
 
@@ -553,7 +549,7 @@ void MainLoopService::create_spacebox( void )
 
 
     
-    m_sb_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL );
+    m_sb_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL );
 }
 
 
@@ -865,6 +861,6 @@ void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
     }
     else if( "Quit" == p_widget_id )
     {
-        PostQuitMessage( 0 );
+        (*m_closeapp_cb)( 0 );
     }
 }

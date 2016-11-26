@@ -37,6 +37,7 @@ m_mainloopservice( NULL )
     m_w_title = "DrawSpace VM";
 
     m_mouse_circularmode_update_cb = _DRAWSPACE_NEW_( MouseCircularModeupdateCallback, MouseCircularModeupdateCallback( this, &dsAppClient::on_mousecircularmode_update ) );
+    m_close_app_cb = _DRAWSPACE_NEW_( CloseAppCallback, CloseAppCallback( this, &dsAppClient::on_closeapp ) );
 }
 
 dsAppClient::~dsAppClient( void )
@@ -61,7 +62,7 @@ bool dsAppClient::OnIdleAppInit( void )
     if( m_mainloopservice )
     {
         _DSDEBUG(logger, dsstring("mainloop service initialisation"))
-        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance(), m_mouse_circularmode_update_cb );
+        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance(), m_mouse_circularmode_update_cb, m_close_app_cb );
         return true;
     }
     else
@@ -161,4 +162,9 @@ void dsAppClient::on_mousecircularmode_update( bool p_state )
 {
     m_mouse_circularmode = p_state;
     ::ShowCursor( !p_state );
+}
+
+void dsAppClient::on_closeapp( int p_code )
+{
+    Quit( p_code );
 }

@@ -150,7 +150,7 @@ void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_key
     p_keys.push_back( m_texturesnamesparam );
 }
 
-void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb )
+void SkyboxService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
     m_spacebox_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Spacebox>, SceneNode<DrawSpace::Spacebox>( "spacebox" ) );
     m_spacebox_node->SetContent( m_spacebox );

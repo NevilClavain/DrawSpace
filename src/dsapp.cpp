@@ -582,4 +582,7 @@ bool App::Config::on_new_line( const dsstring& p_line, long p_line_num, std::vec
     return true;
 }
 
-
+void App::Quit( int p_code )
+{
+    PostQuitMessage( p_code );
+}

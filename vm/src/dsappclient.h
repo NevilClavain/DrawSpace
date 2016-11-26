@@ -30,10 +30,14 @@ class dsAppClient : public DrawSpace::App
 protected:
     typedef DrawSpace::Core::CallBack<dsAppClient, void, bool>                                 MouseCircularModeupdateCallback;
 
+    typedef DrawSpace::Core::CallBack<dsAppClient, void, int>                                  CloseAppCallback;
+
     MouseCircularModeupdateCallback*            m_mouse_circularmode_update_cb;
+    CloseAppCallback*                           m_close_app_cb;
     static dsAppClient*                         m_instance;
 
     void on_mousecircularmode_update( bool p_state );
+    void on_closeapp( int p_code );
 
     DrawSpace::Interface::Module::Service* m_mainloopservice;
 
