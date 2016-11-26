@@ -1,34 +1,31 @@
-<?xml version="1.0" ?>
-<GUILayout version="4">
-  <Window type="DefaultWindow" name="root">
-    <Window type="AlfiskoSkin/FrameWindow" name="testWindow">
-      <Property name="ID" value="1" />
-      <Property name="Position" value="{ {0.02, 0}, {0.07, 0} }" />
-      <Property name="Size" value="{ {0.2, 0}, {0.25, 0} }" />
-      <Property name="Text" value="Main control" />
-      
-      <Window type="AlfiskoSkin/Label" name="FPSInfoLabel" >
-        <Property name="ID" value="2" />
-        <Property name="Position" value="{ {0.0, 0}, {0.0, 0} }" />
-        <Property name="Size" value="{ {1.0, 0}, {0.1, 0} }" />
-        <Property name="Text" value="" />
-      </Window>
+<?xml version="1.0" encoding="UTF-8"?>
 
-      <Window type="AlfiskoSkin/Button" name="Trigger" >
-        <Property name="ID" value="3" />
-        <Property name="Position" value="{ {0.0, 0}, {0.2, 0} }" />
-        <Property name="Size" value="{ {1.0, 0}, {0.4, 0} }" />
-        <Property name="Text" value="Action" />
-      </Window>
-      
-      <Window type="AlfiskoSkin/Button" name="Quit" >
-        <Property name="ID" value="4" />
-        <Property name="Position" value="{ {0.0, 0}, {0.6, 0} }" />
-        <Property name="Size" value="{ {1.0, 0}, {0.4, 0} }" />
-        <Property name="Text" value="Leave" />
-      </Window>
-      
-      
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="AlfiskoSkin/FrameWindow" name="testWindow" >
+            <Property name="ID" value="1" />
+            <Property name="Area" value="{{0,0},{0,0},{0.25,77},{0.25,26}}" />
+            <Property name="Text" value="Main control" />
+            <AutoWindow namePath="__auto_titlebar__" >
+                <Property name="AlwaysOnTop" value="false" />
+            </AutoWindow>
+            <Window type="AlfiskoSkin/Label" name="FPSInfoLabel" >
+                <Property name="ID" value="2" />
+                <Property name="Area" value="{{0,0},{0,0},{1,0},{0.1,0}}" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            </Window>
+            <Window type="AlfiskoSkin/Button" name="Trigger" >
+                <Property name="ID" value="3" />
+                <Property name="Area" value="{{0,-2},{0.2,-6},{1,-2},{0.6,-16}}" />
+                <Property name="Text" value="Action" />
+            </Window>
+            <Window type="AlfiskoSkin/Button" name="Quit" >
+                <Property name="ID" value="4" />
+                <Property name="Area" value="{{0,0},{0.6,0},{1,0},{1,1}}" />
+                <Property name="Text" value="Leave !" />
+            </Window>
+        </Window>
     </Window>
-  </Window>
 </GUILayout>
