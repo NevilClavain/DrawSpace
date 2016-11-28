@@ -33,6 +33,8 @@ protected:
 
     bool                                                m_ready;
     std::map<int, CEGUI::Window*>                       m_ceguiWindowTable;
+    std::map<dsstring, CEGUI::Window*>                  m_ceguiLayoutTable;
+
     DrawSpace::Core::BaseCallback<void, dsstring>*      m_pushbuttoneventclicked_handler;
 
     bool            on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt );
@@ -58,6 +60,7 @@ public:
 
     void LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path );
 
+    void SetLayout( const dsstring& p_layoutpath );
     void Store( int p_parent_id, int p_id );
     void SetText( int p_id, const dsstring& p_text );
     

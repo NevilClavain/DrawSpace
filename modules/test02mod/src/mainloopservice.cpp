@@ -109,10 +109,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 
     m_renderer->GUI_InitSubSystem();
     m_renderer->GUI_SetResourcesRootDirectory( "./test02modgui_datafiles" );
+    
 
     //m_renderer->GUI_InitTest();
 
     m_renderer->GUI_LoadLayoutFromFile( "main.layout", "AlfiskoSkin.scheme" );
+    m_renderer->GUI_SetLayout( "main.layout" );
     m_renderer->GUI_StoreWidget( 0, 1 );
     m_renderer->GUI_StoreWidget( 1, 2 );
     m_renderer->GUI_StoreWidget( 1, 3 );

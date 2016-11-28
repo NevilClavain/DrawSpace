@@ -2114,3 +2114,8 @@ void D3D9Renderer::GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::B
 {
     m_guisubsystem.RegisterPushButtonEventClickedHandler( p_handler );
 }
+
+void D3D9Renderer::GUI_SetLayout( const dsstring& p_layoutpath )
+{
+    m_guisubsystem.SetLayout( p_layoutpath );
+}

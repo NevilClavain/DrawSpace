@@ -138,10 +138,25 @@ void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsst
     SchemeManager::getSingleton().createFromFile( p_scheme_path );
 
     Window* wRoot = wmgr.loadLayoutFromFile( p_layout_path );
-    System::getSingleton().getDefaultGUIContext().setRootWindow( wRoot );
 
-    // id 0 reservé à la fenetre root
-    m_ceguiWindowTable[0] = wRoot;
+    m_ceguiLayoutTable[p_layout_path] = wRoot;
+
+    //System::getSingleton().getDefaultGUIContext().setRootWindow( wRoot );
+
+    int root_id = wRoot->getID();
+    m_ceguiWindowTable[root_id] = wRoot;
+}
+
+void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
+{
+    if( m_ceguiLayoutTable.count( p_layoutpath ) )
+    {
+        System::getSingleton().getDefaultGUIContext().setRootWindow( m_ceguiLayoutTable[p_layoutpath] );
+    }
+    else
+    {
+        _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
 }
 
 void CEGUIWrapper::Store( int p_parent_id, int p_id )
