@@ -24,8 +24,21 @@
             <Window type="AlfiskoSkin/Button" name="Quit" >
                 <Property name="ID" value="4" />
                 <Property name="Area" value="{{0,0},{0.6,0},{1,0},{1,1}}" />
-                <Property name="Text" value="Leave !" />
+                <Property name="Text" value="Leave !!" />
             </Window>
         </Window>
-    </Window>
+
+      <Window type="AlfiskoSkin/StaticImage" name="InsideImage4" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{0.495,0}}" />
+        <Property name="Image" value="AlfiskoSkin/TitlebarActiveL" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Property name="AspectMode" value="Expand" />
+        <Property name="PixelAligned" value="False" />
+        <Property name="VerticalAlignment" value="Centre" />
+        <Property name="HorizontalAlignment" value="Centre" />
+        <Property name="AutoRenderingSurface" value="True" />
+        <Property name="MousePassThroughEnabled" value="True" />
+      </Window>
+      
+    </Window>  
 </GUILayout>

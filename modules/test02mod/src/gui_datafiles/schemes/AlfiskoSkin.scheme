@@ -25,6 +25,9 @@
 	<FalagardMapping windowType="AlfiskoSkin/VerticalSlider" targetType="CEGUI/Slider" renderer="Core/Slider" lookNFeel="AlfiskoSkin/VerticalSlider" />
 
 	<FalagardMapping windowType="AlfiskoSkin/MenuItem" targetType="CEGUI/MenuItem" renderer="Core/MenuItem" lookNFeel="AlfiskoSkin/MenuItem" />
+
+  <FalagardMapping windowType="AlfiskoSkin/StaticImage" targetType="DefaultWindow" renderer="Core/Default" lookNFeel="AlfiskoSkin/StaticImage" />
+  
 <!--
 	<FalagardMapping windowType="AlfiskoSkin/Menubar" targetType="CEGUI/Menubar" renderer="Core/Menubar" lookNFeel="AlfiskoSkin/Menubar" />
 	<FalagardMapping windowType="AlfiskoSkin/PopupMenu" targetType="CEGUI/PopupMenu" renderer="Core/PopupMenu" lookNFeel="AlfiskoSkin/PopupMenu" />
