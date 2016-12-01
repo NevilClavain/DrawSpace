@@ -121,6 +121,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_renderer->GUI_StoreWidget( 1, 4 );
 
 
+    m_renderer->GUI_LoadScheme( "xfskin.scheme" );
+
+
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 3 );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );

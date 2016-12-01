@@ -2095,6 +2095,11 @@ void D3D9Renderer::GUI_LoadLayoutFromFile( const dsstring& p_layout_path, const 
     m_guisubsystem.LoadLayoutFromFile( p_layout_path, p_scheme_path );
 }
 
+void D3D9Renderer::GUI_LoadScheme( const dsstring& p_scheme_path )
+{
+    m_guisubsystem.LoadScheme( p_scheme_path );
+}
+
 void D3D9Renderer::GUI_StoreWidget( int p_parent_id, int p_id )
 {
     m_guisubsystem.Store( p_parent_id, p_id );

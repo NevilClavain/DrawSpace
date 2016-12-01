@@ -128,6 +128,7 @@ public:
     virtual void GUI_OnKeyUp( long p_key ) = 0;
     virtual void GUI_OnChar( long p_key ) = 0;
     virtual void GUI_LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path ) = 0;
+    virtual void GUI_LoadScheme( const dsstring& p_scheme_path ) = 0;
     virtual void GUI_SetLayout( const dsstring& p_layoutpath ) = 0;
     virtual void GUI_StoreWidget( int p_parent_id, int p_id ) = 0;
     virtual void GUI_SetWidgetText( int p_id, const dsstring& p_text ) = 0;

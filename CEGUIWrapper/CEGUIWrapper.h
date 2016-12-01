@@ -62,6 +62,8 @@ public:
 
     void LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path );
 
+    void LoadScheme( const dsstring& p_scheme_path );
+
     void SetLayout( const dsstring& p_layoutpath );
     void Store( int p_parent_id, int p_id );
     void SetText( int p_id, const dsstring& p_text );

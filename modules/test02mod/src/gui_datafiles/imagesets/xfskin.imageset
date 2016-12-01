@@ -1,0 +1,3 @@
+<Imageset autoScaled="false" imagefile="xfskin.png" name="xfskin" nativeHorzRes="2048" nativeVertRes="2048" version="2">
+    <Image height="52" name="MouseCursor" width="45" xPos="161" yPos="127" />
+</Imageset>
