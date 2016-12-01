@@ -4,13 +4,41 @@
     <Window type="DefaultWindow" name="root" >
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
+      
+        
+      <Window type="AlfiskoSkin/StaticImage" name="InsideImage4" >
+        <Property name="Area" value="{{0,0},{0,0},{1.0,0},{1.0,0}}" />
+        <Property name="Image" value="AlfiskoSkin/TitlebarActiveL" />
+        
+        <!--
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Property name="AspectMode" value="Expand" />
+        <Property name="PixelAligned" value="False" />
+        <Property name="VerticalAlignment" value="Centre" />
+        <Property name="HorizontalAlignment" value="Centre" />
+        <Property name="AutoRenderingSurface" value="True" />
+        <Property name="MousePassThroughEnabled" value="True" />
+        -->
+        
+        <Window type="AlfiskoSkin/Button" name="Test" >
+            <Property name="ID" value="5" />
+            <Property name="Area" value="{{0.8,0},{0.0,0},{1.0,0},{0.1,0}}" />
+            <Property name="Text" value="Test" />
+        </Window>            
+      </Window>        
+        
+        
         <Window type="AlfiskoSkin/FrameWindow" name="testWindow" >
             <Property name="ID" value="1" />
             <Property name="Area" value="{{0,0},{0,0},{0.25,77},{0.25,26}}" />
             <Property name="Text" value="Main control" />
+          
+            <!--
             <AutoWindow namePath="__auto_titlebar__" >
-                <Property name="AlwaysOnTop" value="false" />
+                <Property name="AlwaysOnTop" value="true" />
             </AutoWindow>
+            -->
+            
             <Window type="AlfiskoSkin/Label" name="FPSInfoLabel" >
                 <Property name="ID" value="2" />
                 <Property name="Area" value="{{0,0},{0,0},{1,0},{0.1,0}}" />
@@ -27,18 +55,6 @@
                 <Property name="Text" value="Leave !!" />
             </Window>
         </Window>
-
-      <Window type="AlfiskoSkin/StaticImage" name="InsideImage4" >
-        <Property name="Area" value="{{0,0},{0,0},{1,0},{0.495,0}}" />
-        <Property name="Image" value="AlfiskoSkin/TitlebarActiveL" />
-        <Property name="MaxSize" value="{{1,0},{1,0}}" />
-        <Property name="AspectMode" value="Expand" />
-        <Property name="PixelAligned" value="False" />
-        <Property name="VerticalAlignment" value="Centre" />
-        <Property name="HorizontalAlignment" value="Centre" />
-        <Property name="AutoRenderingSurface" value="True" />
-        <Property name="MousePassThroughEnabled" value="True" />
-      </Window>
       
     </Window>  
 </GUILayout>

@@ -77,7 +77,8 @@ void CEGUIWrapper::SetResourcesRootDirectory( const dsstring& p_path )
     if( parser->isPropertyPresent( "SchemaDefaultResourceGroup" ) )
     {
         parser->setProperty( "SchemaDefaultResourceGroup", "schemas" );
-    }    
+    }
+    
 }
 
 void CEGUIWrapper::OnMouseMove( float p_xm, float p_ym, float p_dx, float p_dy )
@@ -141,10 +142,18 @@ void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsst
 
     m_ceguiLayoutTable[p_layout_path] = wRoot;
 
-    //System::getSingleton().getDefaultGUIContext().setRootWindow( wRoot );
-
     int root_id = wRoot->getID();
     m_ceguiWindowTable[root_id] = wRoot;
+/*    
+    m_mouse_cursor = new CEGUI::MouseCursor();
+
+    m_mouse_cursor->setImage( "AlfiskoSkin/TitlebarActiveL" );
+    m_mouse_cursor->setVisible( true );
+
+    m_mouse_cursor->show();
+  */  
+    
+
 }
 
 void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
@@ -259,18 +268,6 @@ bool CEGUIWrapper::on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt )
         dsstring widgetId( senderID.c_str() );
         (*m_pushbuttoneventclicked_handler)( widgetId );
     }
-
-    /*
-    if( senderID == "Trigger" )
-    {
-        _asm nop;
-    }
-
-    if( senderID == "Quit" )
-    {
-        _asm nop;
-    }
-    */
 
     return true;
 }

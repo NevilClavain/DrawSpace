@@ -42,7 +42,7 @@ m_skybox_reflectornormale( "skybox.ReflectorNormale" ),
 m_skybox_texturesbankpath( "skybox.TexturesBankPath" ),
 m_skybox_texturesbankvirtualfspath( "skybox.TexturesBankVirtualFSPath" ),
 m_skybox_texturesnames( "skybox.TexturesNames" ),
-m_hmi_mode( false )
+m_hmi_mode( true )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPUshButtonClickedCallback, GUIWidgetPUshButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
 }
@@ -104,8 +104,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 
     m_scenenodegraph.SetCurrentCamera( "camera" );
 
-    set_mouse_circular_mode( true );
-    //set_mouse_circular_mode( false );
+    //set_mouse_circular_mode( true );
+    set_mouse_circular_mode( false );
 
     m_renderer->GUI_InitSubSystem();
     m_renderer->GUI_SetResourcesRootDirectory( "./test02modgui_datafiles" );
@@ -305,40 +305,6 @@ void MainLoopService::OnKeyPulse( long p_key )
         return;
     }
 
-
-    /*
-    if( m_hmi_mode )
-    {
-        m_renderer->GUI_OnChar( p_key );
-        return;
-    }
-
-    switch( p_key )
-    {
-        case VK_SPACE:
-            {
-                // read render texture content test...
-                m_coloredpass->GetTargetTexture()->CopyTextureContent();
-
-                unsigned char* pix = (unsigned char*)m_texturecontent;
-
-                unsigned char b = pix[0];
-                unsigned char g = pix[1];
-                unsigned char r = pix[2];
-                unsigned char a = pix[3];
-
-                _asm nop;
-            }
-            break;
-
-        case VK_F1:
-
-            m_hmi_mode = !m_hmi_mode;
-            set_mouse_circular_mode( !m_hmi_mode );
-            
-            break;
-    }
-    */
 }
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )

@@ -36,10 +36,12 @@ protected:
     CloseAppCallback*                           m_close_app_cb;
     static dsAppClient*                         m_instance;
 
+    DrawSpace::Interface::Module::Service*      m_mainloopservice;
+    bool                                        m_mousecursor_visible;
+
+
     void on_mousecircularmode_update( bool p_state );
     void on_closeapp( int p_code );
-
-    DrawSpace::Interface::Module::Service* m_mainloopservice;
 
     dsAppClient( void );
 

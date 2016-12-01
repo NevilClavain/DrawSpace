@@ -31,7 +31,8 @@ _DECLARE_DS_LOGGER( logger, "vmapp", DrawSpace::Logger::Configuration::GetInstan
 
 
 dsAppClient::dsAppClient( void ) :
-m_mainloopservice( NULL )
+m_mainloopservice( NULL ),
+m_mousecursor_visible( true )
 {    
     _INIT_LOGGER( "logvm.conf" )
     m_w_title = "DrawSpace VM";
@@ -161,7 +162,26 @@ void dsAppClient::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 void dsAppClient::on_mousecircularmode_update( bool p_state )
 {
     m_mouse_circularmode = p_state;
-    ::ShowCursor( !p_state );
+
+    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est déja visible), car sinon
+    // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
+
+    if( p_state )
+    {
+        if( m_mousecursor_visible )
+        {
+            ::ShowCursor( false );
+            m_mousecursor_visible = false;
+        }
+    }
+    else
+    {
+        if( !m_mousecursor_visible )
+        {
+            ::ShowCursor( true );
+            m_mousecursor_visible = true;
+        }
+    }
 }
 
 void dsAppClient::on_closeapp( int p_code )

@@ -37,6 +37,8 @@ protected:
 
     DrawSpace::Core::BaseCallback<void, dsstring>*      m_pushbuttoneventclicked_handler;
 
+    CEGUI::MouseCursor*                                 m_mouse_cursor;
+
     bool            on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt );
 
 public:
