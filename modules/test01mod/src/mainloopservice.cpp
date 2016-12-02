@@ -43,7 +43,10 @@ void MainLoopService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_k
 
 }
 
-void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
+void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, 
+                            DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, 
+                            DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
+                            DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );

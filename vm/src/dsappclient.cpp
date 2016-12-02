@@ -37,6 +37,7 @@ m_mousecursor_visible( true )
     _INIT_LOGGER( "logvm.conf" )
     m_w_title = "DrawSpace VM";
 
+    m_mouse_visible_cb = _DRAWSPACE_NEW_( MouseVisibleCallback, MouseVisibleCallback( this, &dsAppClient::on_mouse_visible ) );
     m_mouse_circularmode_update_cb = _DRAWSPACE_NEW_( MouseCircularModeupdateCallback, MouseCircularModeupdateCallback( this, &dsAppClient::on_mousecircularmode_update ) );
     m_close_app_cb = _DRAWSPACE_NEW_( CloseAppCallback, CloseAppCallback( this, &dsAppClient::on_closeapp ) );
 }
@@ -63,7 +64,9 @@ bool dsAppClient::OnIdleAppInit( void )
     if( m_mainloopservice )
     {
         _DSDEBUG(logger, dsstring("mainloop service initialisation"))
-        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance(), m_mouse_circularmode_update_cb, m_close_app_cb );
+        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance(), 
+                                    m_mouse_circularmode_update_cb, m_mouse_visible_cb, m_close_app_cb );
+
         return true;
     }
     else
@@ -159,10 +162,34 @@ void dsAppClient::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
     }
 }
 
+void dsAppClient::on_mouse_visible( bool p_state )
+{
+    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est déja visible), car sinon
+    // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
+
+    if( !p_state )
+    {
+        if( m_mousecursor_visible )
+        {
+            ::ShowCursor( false );
+            m_mousecursor_visible = false;
+        }
+    }
+    else
+    {
+        if( !m_mousecursor_visible )
+        {
+            ::ShowCursor( true );
+            m_mousecursor_visible = true;
+        }
+    }
+}
+
 void dsAppClient::on_mousecircularmode_update( bool p_state )
 {
     m_mouse_circularmode = p_state;
 
+    /*
     // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est déja visible), car sinon
     // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
 
@@ -182,6 +209,7 @@ void dsAppClient::on_mousecircularmode_update( bool p_state )
             m_mousecursor_visible = true;
         }
     }
+    */
 }
 
 void dsAppClient::on_closeapp( int p_code )

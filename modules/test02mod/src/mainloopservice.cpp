@@ -57,7 +57,10 @@ void MainLoopService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_k
 
 }
 
-void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
+void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, 
+                            DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, 
+                            DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
+                            DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
     m_keysLinkTable.RegisterClientKey( &m_skybox_scenenodegraph );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturepass );
@@ -72,6 +75,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 
     m_mousecircularmode_cb = p_mousecircularmode_cb;
     m_closeapp_cb = p_closeapp_cb;
+
+    // hide OS mouse cursor (we use CEGUI mouse cursor instead)
+    (*p_mousevisible_cb)( false );
 
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
@@ -104,8 +110,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
 
     m_scenenodegraph.SetCurrentCamera( "camera" );
 
-    //set_mouse_circular_mode( true );
-    set_mouse_circular_mode( false );
 
     m_renderer->GUI_InitSubSystem();
     m_renderer->GUI_SetResourcesRootDirectory( "./test02modgui_datafiles" );
@@ -135,6 +139,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 3 );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );
 
+    set_mouse_circular_mode( false );
 
     
     
@@ -234,6 +239,8 @@ void MainLoopService::set_mouse_circular_mode( bool p_state )
     if( m_mousecircularmode_cb )
     {
         (*m_mousecircularmode_cb)( p_state );
+
+        m_renderer->GUI_ShowMouseCursor( !p_state );
     }
 }
 
@@ -529,7 +536,7 @@ void MainLoopService::create_spacebox( void )
 
 
     
-    m_sb_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL );
+    m_sb_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL, NULL );
 }
 
 
