@@ -111,9 +111,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_renderer->GUI_SetResourcesRootDirectory( "./test02modgui_datafiles" );
     
 
-    //m_renderer->GUI_InitTest();
+    m_renderer->GUI_LoadScheme( "xfskin.scheme" );
+    m_renderer->GUI_LoadScheme( "AlfiskoSkin.scheme" );
 
-    m_renderer->GUI_LoadLayoutFromFile( "main.layout", "AlfiskoSkin.scheme" );
+
+    m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
+    m_renderer->GUI_ShowMouseCursor( true );
+
+
+    m_renderer->GUI_LoadLayout( "main.layout" );
+
     m_renderer->GUI_SetLayout( "main.layout" );
     m_renderer->GUI_StoreWidget( 0, 1 );
     m_renderer->GUI_StoreWidget( 1, 2 );
@@ -121,12 +128,14 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf, DrawSpa
     m_renderer->GUI_StoreWidget( 1, 4 );
 
 
-    m_renderer->GUI_LoadScheme( "xfskin.scheme" );
+    
 
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 3 );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );
+
+
     
     
     _DSDEBUG( logger, dsstring( "main loop service : startup..." ) );

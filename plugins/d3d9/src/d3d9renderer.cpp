@@ -2090,9 +2090,9 @@ void D3D9Renderer::GUI_OnChar( long p_key )
     m_guisubsystem.OnChar( p_key );
 }
 
-void D3D9Renderer::GUI_LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path )
+void D3D9Renderer::GUI_LoadLayout( const dsstring& p_layout_path )
 {
-    m_guisubsystem.LoadLayoutFromFile( p_layout_path, p_scheme_path );
+    m_guisubsystem.LoadLayout( p_layout_path );
 }
 
 void D3D9Renderer::GUI_LoadScheme( const dsstring& p_scheme_path )
@@ -2123,4 +2123,14 @@ void D3D9Renderer::GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::B
 void D3D9Renderer::GUI_SetLayout( const dsstring& p_layoutpath )
 {
     m_guisubsystem.SetLayout( p_layoutpath );
+}
+
+void D3D9Renderer::GUI_SetMouseCursorImage( const dsstring& p_image )
+{
+    m_guisubsystem.SetMouseCursorImage( p_image );
+}
+
+void D3D9Renderer::GUI_ShowMouseCursor( bool p_show )
+{
+    m_guisubsystem.ShowMouseCursor( p_show );
 }

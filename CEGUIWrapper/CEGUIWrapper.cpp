@@ -135,16 +135,13 @@ void CEGUIWrapper::OnChar( long p_key )
 void CEGUIWrapper::LoadScheme( const dsstring& p_scheme_path )
 {
     SchemeManager::getSingleton().createFromFile( p_scheme_path );
-
-    System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage( "xfskin/MouseCursor" );
-    System::getSingleton().getDefaultGUIContext().getMouseCursor().setVisible( true );
 }
 
-void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path )
+void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path )
 {
     WindowManager& wmgr = WindowManager::getSingleton();
 
-    SchemeManager::getSingleton().createFromFile( p_scheme_path );
+    //SchemeManager::getSingleton().createFromFile( p_scheme_path );
 
     Window* wRoot = wmgr.loadLayoutFromFile( p_layout_path );
 
@@ -152,14 +149,6 @@ void CEGUIWrapper::LoadLayoutFromFile( const dsstring& p_layout_path, const dsst
 
     int root_id = wRoot->getID();
     m_ceguiWindowTable[root_id] = wRoot;
-
-
-/*    
-    System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage( "AlfiskoSkin/TitlebarActiveL" );
-    System::getSingleton().getDefaultGUIContext().getMouseCursor().setVisible( true );
-  */  
-    
-
 }
 
 void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
@@ -276,4 +265,14 @@ bool CEGUIWrapper::on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt )
     }
 
     return true;
+}
+
+void CEGUIWrapper::SetMouseCursorImage( const dsstring& p_image )
+{
+    System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage( p_image );
+}
+
+void CEGUIWrapper::ShowMouseCursor( bool p_show )
+{
+    System::getSingleton().getDefaultGUIContext().getMouseCursor().setVisible( p_show );
 }

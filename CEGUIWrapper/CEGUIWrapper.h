@@ -60,7 +60,7 @@ public:
     void OnKeyUp( long p_key );
     void OnChar( long p_key );
 
-    void LoadLayoutFromFile( const dsstring& p_layout_path, const dsstring& p_scheme_path );
+    void LoadLayout( const dsstring& p_layout_path );
 
     void LoadScheme( const dsstring& p_scheme_path );
 
@@ -70,6 +70,10 @@ public:
     
     void SubscribePushButtonEventClicked( int p_id );
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler );
+
+    void SetMouseCursorImage( const dsstring& p_image );
+    void ShowMouseCursor( bool p_show );
+
 
     // temporaire, pour tests divers :-D
     void InitTest( void );
