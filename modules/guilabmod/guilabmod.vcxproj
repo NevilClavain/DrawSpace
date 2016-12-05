@@ -99,11 +99,6 @@
     <ClInclude Include="src\mainloopservice.h" />
     <ClInclude Include="src\guilabroot.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\gui_datafiles\layouts\main.layout">
-      <FileType>Document</FileType>
-    </Text>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

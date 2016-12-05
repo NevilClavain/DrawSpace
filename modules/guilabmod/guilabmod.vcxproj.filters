@@ -24,7 +24,4 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\gui_datafiles\layouts\main.layout" />
-  </ItemGroup>
 </Project>

@@ -149,12 +149,6 @@ copy .\..\..\shaders_bank\hlsl_4_0\water_waves.vso .\..\..\..\Drawspace_samples\
     <ClInclude Include="src\mainloopservice.h" />
     <ClInclude Include="src\test02root.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\gui_datafiles\layouts\main.layout">
-      <SubType>Designer</SubType>
-      <FileType>Document</FileType>
-    </Text>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
