@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+      <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+      <Property name="MaxSize" value="{{1,0},{1,0}}" />
+      
+      <Window type="AlfiskoSkin/FrameWindow" name="testWindow" >
+            <Property name="ID" value="1" />
+            <Property name="Area" value="{{0,0},{0,0},{0.25,77},{0.25,26}}" />
+            <Property name="Text" value="Main control" />
+          
+            <!--
+            <AutoWindow namePath="__auto_titlebar__" >
+                <Property name="AlwaysOnTop" value="true" />
+            </AutoWindow>
+            -->
+            
+            <Window type="AlfiskoSkin/Label" name="FPSInfoLabel" >
+                <Property name="ID" value="2" />
+                <Property name="Area" value="{{0,0},{0,0},{1,0},{0.1,0}}" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            </Window>
+            <Window type="AlfiskoSkin/Button" name="Trigger" >
+                <Property name="ID" value="3" />
+                <Property name="Area" value="{{0,-2},{0.2,-6},{1,-2},{0.6,-16}}" />
+                <Property name="Text" value="Action" />
+            </Window>
+            <Window type="AlfiskoSkin/Button" name="Quit" >
+                <Property name="ID" value="4" />
+                <Property name="Area" value="{{0,0},{0.6,0},{1,0},{1,1}}" />
+                <Property name="Text" value="Leave !!" />
+            </Window>
+        </Window>
+      
+    </Window>  
+</GUILayout>

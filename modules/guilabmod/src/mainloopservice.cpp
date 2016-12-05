@@ -66,10 +66,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GetDescr( m_pluginDescr );
 
     m_renderer->GUI_InitSubSystem();
-    //m_renderer->GUI_SetResourcesRootDirectory( "./test02modgui_datafiles" );
-    m_renderer->GUI_SetResourcesRootDirectory( "./guilabmodgui_datafiles" );
+
+    m_renderer->GUI_SetResourcesRootDirectory( "./xfskin" );
     m_renderer->GUI_LoadScheme( "xfskin.scheme" );
-    //m_renderer->GUI_LoadScheme( "AlfiskoSkin.scheme" );
 
     m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
     m_renderer->GUI_ShowMouseCursor( true );

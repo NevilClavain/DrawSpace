@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project CEGUIDefaultResolution="1280x720" CEGUIVersion="0.8" baseDirectory="." fontsPath="fonts" imagesetsPath="imagesets" layoutsPath="layouts" looknfeelsPath="looknfeel" schemesPath="schemes" version="CEED Project 1" xmlSchemasPath="xml_schemas">
+    <Items>
+        <Item path="fonts/ArkitechBold-12.font" type="file" />
+        <Item path="imagesets/xfskin.imageset" type="file" />
+        <Item path="looknfeel/xfskin.looknfeel" type="file" />
+        <Item path="schemes/xfskin.scheme" type="file" />
+        <Item path="layouts/main.layout" type="file" />
+    </Items>
+</Project>

@@ -25,8 +25,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\gui_datafiles\layouts\main.layout">
-      <Filter>Source Files</Filter>
-    </None>
+    <Text Include="src\gui_datafiles\layouts\main.layout" />
   </ItemGroup>
 </Project>

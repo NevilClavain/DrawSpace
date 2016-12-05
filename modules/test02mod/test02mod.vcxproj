@@ -89,8 +89,7 @@ copy .\..\..\shaders_bank\hlsl_4_0\water_bump.vso .\..\..\..\Drawspace_samples\b
 copy .\..\..\shaders_bank\hlsl_4_0\water_mask.pso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_mask.pso
 copy .\..\..\shaders_bank\hlsl_4_0\water_mask.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_mask.vso
 copy .\..\..\shaders_bank\hlsl_4_0\water_waves.pso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.pso
-copy .\..\..\shaders_bank\hlsl_4_0\water_waves.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.vso
-copy .\src\gui_datafiles\layouts\main.layout .\..\..\..\Drawspace_samples\bin\test02modgui_datafiles\layouts\main.layout</Command>
+copy .\..\..\shaders_bank\hlsl_4_0\water_waves.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.vso</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -138,8 +137,7 @@ copy .\..\..\shaders_bank\hlsl_4_0\water_bump.vso .\..\..\..\Drawspace_samples\b
 copy .\..\..\shaders_bank\hlsl_4_0\water_mask.pso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_mask.pso
 copy .\..\..\shaders_bank\hlsl_4_0\water_mask.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_mask.vso
 copy .\..\..\shaders_bank\hlsl_4_0\water_waves.pso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.pso
-copy .\..\..\shaders_bank\hlsl_4_0\water_waves.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.vso
-copy .\src\gui_datafiles\layouts\main.layout .\..\..\..\Drawspace_samples\bin\test02modgui_datafiles\layouts\main.layout</Command>
+copy .\..\..\shaders_bank\hlsl_4_0\water_waves.vso .\..\..\..\Drawspace_samples\bin\test_data\shaders_bank\hlsl_4_0\water_waves.vso</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
