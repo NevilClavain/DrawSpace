@@ -30,7 +30,7 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack<MainLoopService, void, dsstring>  GUIWidgetPUshButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack<MainLoopService, void, dsstring>  GUIWidgetPushButtonClickedCallback;
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
@@ -97,7 +97,7 @@ protected:
 
     bool                                                                m_hmi_mode;
 
-    GUIWidgetPUshButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
+    GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
 
     /////////////////////////////////////////////////////////////////////////////////
 

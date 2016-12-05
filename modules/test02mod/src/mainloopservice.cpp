@@ -44,7 +44,7 @@ m_skybox_texturesbankvirtualfspath( "skybox.TexturesBankVirtualFSPath" ),
 m_skybox_texturesnames( "skybox.TexturesNames" ),
 m_hmi_mode( true )
 {
-    m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPUshButtonClickedCallback, GUIWidgetPUshButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
+    m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
 }
 
 
