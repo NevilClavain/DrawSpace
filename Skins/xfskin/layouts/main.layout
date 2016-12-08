@@ -10,5 +10,8 @@
             <Property name="Text" value="test" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
+        <Window type="xfskin/Button" name="Button" >
+            <Property name="Area" value="{{0,444},{0,436},{0,700},{0,545}}" />
+        </Window>
     </Window>
 </GUILayout>

@@ -88,22 +88,162 @@
   <WidgetLook name="xfskin/Button">
 
     <ImagerySection name="normal">
+
+      <FrameComponent>
+        <Image component="TopLeftCorner" name="xfskin/ButtonNormalTL"/>
+        <Image component="TopRightCorner" name="xfskin/ButtonNormalTR"/>
+        <Image component="BottomLeftCorner" name="xfskin/ButtonNormalBL"/>
+        <Image component="BottomRightCorner" name="xfskin/ButtonNormalBR"/>
+        <Image component="LeftEdge" name="xfskin/ButtonNormalL"/>
+        <Image component="RightEdge" name="xfskin/ButtonNormalR"/>
+        <Image component="TopEdge" name="xfskin/ButtonNormalT"/>
+        <Image component="BottomEdge" name="xfskin/ButtonNormalB"/>
+      </FrameComponent>      
+
+      <ImageryComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <ImageDim name="xfskin/ButtonNormalL" dimension="Width"/>
+          </Dim>
+          <Dim type="TopEdge">
+            <ImageDim name="xfskin/ButtonNormalT" dimension="Height"/>
+          </Dim>
+          <Dim type="RightEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Width"/>
+              <ImageDim name="xfskin/ButtonNormalR" dimension="Width"/>
+            </OperatorDim>
+          </Dim>
+          <Dim type="BottomEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Height"/>
+              <ImageDim name="xfskin/ButtonNormalB" dimension="Height"/>
+            </OperatorDim>
+          </Dim>
+        </Area>
+        <Image name="xfskin/ButtonNormalFill"/>
+        <VertFormat type="Stretched"/>
+        <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+   
     </ImagerySection>
+    
+          
     <ImagerySection name="hover">
+      
+      <FrameComponent>
+        <Image component="TopLeftCorner" name="xfskin/ButtonHoverTL"/>
+        <Image component="TopRightCorner" name="xfskin/ButtonHoverTR"/>
+        <Image component="BottomLeftCorner" name="xfskin/ButtonHoverBL"/>
+        <Image component="BottomRightCorner" name="xfskin/ButtonHoverBR"/>
+        <Image component="LeftEdge" name="xfskin/ButtonHoverL"/>
+        <Image component="RightEdge" name="xfskin/ButtonHoverR"/>
+        <Image component="TopEdge" name="xfskin/ButtonHoverT"/>
+        <Image component="BottomEdge" name="xfskin/ButtonHoverB"/>
+      </FrameComponent>      
+
+      <ImageryComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <ImageDim name="xfskin/ButtonHoverL" dimension="Width"/>
+          </Dim>
+          <Dim type="TopEdge">
+            <ImageDim name="xfskin/ButtonHoverT" dimension="Height"/>
+          </Dim>
+          <Dim type="RightEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Width"/>
+              <ImageDim name="xfskin/ButtonHoverR" dimension="Width"/>
+            </OperatorDim>
+          </Dim>
+          <Dim type="BottomEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Height"/>
+              <ImageDim name="xfskin/ButtonHoverB" dimension="Height"/>
+            </OperatorDim>
+          </Dim>
+        </Area>
+        <Image name="xfskin/ButtonHoverFill"/>
+        <VertFormat type="Stretched"/>
+        <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+    
+    
     </ImagerySection>
+    
+      
+    
     <ImagerySection name="pushed">
+          
+      <FrameComponent>
+        <Image component="TopLeftCorner" name="xfskin/ButtonPushedTL"/>
+        <Image component="TopRightCorner" name="xfskin/ButtonPushedTR"/>
+        <Image component="BottomLeftCorner" name="xfskin/ButtonPushedBL"/>
+        <Image component="BottomRightCorner" name="xfskin/ButtonPushedBR"/>
+        <Image component="LeftEdge" name="xfskin/ButtonPushedL"/>
+        <Image component="RightEdge" name="xfskin/ButtonPushedR"/>
+        <Image component="TopEdge" name="xfskin/ButtonPushedT"/>
+        <Image component="BottomEdge" name="xfskin/ButtonPushedB"/>
+      </FrameComponent>      
+
+      <ImageryComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <ImageDim name="xfskin/ButtonPushedL" dimension="Width"/>
+          </Dim>
+          <Dim type="TopEdge">
+            <ImageDim name="xfskin/ButtonPushedT" dimension="Height"/>
+          </Dim>
+          <Dim type="RightEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Width"/>
+              <ImageDim name="xfskin/ButtonPushedR" dimension="Width"/>
+            </OperatorDim>
+          </Dim>
+          <Dim type="BottomEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Height"/>
+              <ImageDim name="xfskin/ButtonPushedB" dimension="Height"/>
+            </OperatorDim>
+          </Dim>
+        </Area>
+        <Image name="xfskin/ButtonPushedFill"/>
+        <VertFormat type="Stretched"/>
+        <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+      
     </ImagerySection>    
     
     <StateImagery name="Normal">
+      <Layer>
+        <Section section="normal"/>
+      </Layer>      
     </StateImagery>
+    
     <StateImagery name="Hover">
+      <Layer>
+        <Section section="hover"/>
+      </Layer>            
     </StateImagery>
+    
     <StateImagery name="Pushed">
+      <Layer>
+        <Section section="pushed"/>
+      </Layer>            
     </StateImagery>
+    
     <StateImagery name="PushedOff">
+      <Layer>
+        <Section section="normal"/>
+      </Layer>            
     </StateImagery>
+    
     <StateImagery name="Disabled">
+      <Layer>
+        <Section section="normal"/>
+      </Layer>
     </StateImagery>
+  
   </WidgetLook>
   
 </Falagard>

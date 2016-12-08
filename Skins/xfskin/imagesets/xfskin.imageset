@@ -6,22 +6,25 @@
     <Image height="30" name="ButtonNormalBL" width="30" xPos="135" yPos="219" />
     <Image height="30" name="ButtonNormalTR" width="30" xPos="383" yPos="160" />
     <Image height="30" name="ButtonNormalBR" width="30" xPos="383" yPos="219" />
-    <Image height="29" name="ButonNormalL" width="30" xPos="135" yPos="190" />
-    <Image height="29" name="ButonNormalR" width="30" xPos="383" yPos="190" />
-    <Image height="29" name="ButonHoverL" width="30" xPos="135" yPos="293" />
+    <Image height="29" name="ButtonNormalL" width="30" xPos="135" yPos="190" />
+    <Image height="29" name="ButtonNormalR" width="30" xPos="383" yPos="190" />
+    <Image height="29" name="ButtonHoverL" width="30" xPos="135" yPos="293" />
     <Image height="30" name="ButtonHoverTL" width="30" xPos="135" yPos="263" />
     <Image height="30" name="ButtonHoverTR" width="30" xPos="383" yPos="263" />
     <Image height="19" name="ButtonHoverB" width="218" xPos="165" yPos="333" />
     <Image height="19" name="ButtonHoverT" width="218" xPos="165" yPos="263" />
     <Image height="30" name="ButtonHoverBL" width="30" xPos="135" yPos="322" />
-    <Image height="29" name="ButonHoverR" width="30" xPos="383" yPos="293" />
+    <Image height="29" name="ButtonHoverR" width="30" xPos="383" yPos="293" />
     <Image height="30" name="ButtonHoverBR" width="30" xPos="383" yPos="322" />
     <Image height="30" name="ButtonPushedTR" width="30" xPos="383" yPos="370" />
     <Image height="30" name="ButtonPushedBL" width="30" xPos="135" yPos="429" />
     <Image height="30" name="ButtonPushedBR" width="30" xPos="383" yPos="429" />
-    <Image height="29" name="ButonPushedL" width="30" xPos="135" yPos="400" />
+    <Image height="29" name="ButtonPushedL" width="30" xPos="135" yPos="400" />
     <Image height="19" name="ButtonPushedB" width="218" xPos="165" yPos="440" />
     <Image height="30" name="ButtonPushedTL" width="30" xPos="135" yPos="370" />
     <Image height="19" name="ButtonPushedT" width="218" xPos="165" yPos="370" />
-    <Image height="29" name="ButonPushedR" width="30" xPos="383" yPos="400" />
+    <Image height="29" name="ButtonPushedR" width="30" xPos="383" yPos="400" />
+    <Image height="51" name="ButtonNormalFill" width="218" xPos="165" yPos="179" />
+    <Image height="51" name="ButtonHoverFill" width="218" xPos="165" yPos="282" />
+    <Image height="51" name="ButtonPushedFill" width="218" xPos="165" yPos="389" />
 </Imageset>
