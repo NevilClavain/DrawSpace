@@ -83,6 +83,27 @@
         <Section section="imageSection"/>
       </Layer>
     </StateImagery>
-  </WidgetLook>  
+  </WidgetLook>
+
+  <WidgetLook name="xfskin/Button">
+
+    <ImagerySection name="normal">
+    </ImagerySection>
+    <ImagerySection name="hover">
+    </ImagerySection>
+    <ImagerySection name="pushed">
+    </ImagerySection>    
+    
+    <StateImagery name="Normal">
+    </StateImagery>
+    <StateImagery name="Hover">
+    </StateImagery>
+    <StateImagery name="Pushed">
+    </StateImagery>
+    <StateImagery name="PushedOff">
+    </StateImagery>
+    <StateImagery name="Disabled">
+    </StateImagery>
+  </WidgetLook>
   
 </Falagard>
