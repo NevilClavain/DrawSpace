@@ -224,10 +224,6 @@ void MainLoopService::Release( void )
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 }
 
-BaseSceneNode* MainLoopService::GetSceneNode( void )
-{
-    return NULL;
-}
 
 void MainLoopService::set_mouse_circular_mode( bool p_state )
 {

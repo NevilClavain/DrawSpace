@@ -126,11 +126,6 @@ void MainLoopService::Release( void )
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 }
 
-BaseSceneNode* MainLoopService::GetSceneNode( void )
-{
-    return NULL;
-}
-
 void MainLoopService::OnKeyPress( long p_key )
 {
     m_renderer->GUI_OnKeyDown( p_key );

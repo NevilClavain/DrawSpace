@@ -183,11 +183,6 @@ void SkyboxService::Release( void )
 {
 }
 
-DrawSpace::Core::BaseSceneNode* SkyboxService::GetSceneNode( void )
-{
-    return NULL;
-}
-
 void SkyboxService::OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val )
 {
     m_scenenodegraph = p_val;

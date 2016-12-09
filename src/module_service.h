@@ -54,7 +54,6 @@ public:
 
     virtual void                            Run( void ) = 0;
     virtual void                            Release( void ) = 0;
-    virtual DrawSpace::Core::BaseSceneNode* GetSceneNode( void ) = 0;
 
     virtual void                            OnKeyPress( long p_key ) = 0;
     virtual void                            OnEndKeyPress( long p_key ) = 0;
