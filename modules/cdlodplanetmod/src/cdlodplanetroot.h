@@ -20,18 +20,18 @@
 *
 */
 
-#ifndef _SKYBOXROOT_H_
-#define _SKYBOXROOT_H_
+#ifndef _CDLODPLANETROOT_H_
+#define _CDLODPLANETROOT_H_
 
 #include "module_root.h"
-#include "skyboxservice.h"
+#include "cdlodplanetservice.h"
 
 
-class SkyboxRoot : public DrawSpace::Interface::Module::Root
+class CDLODPlanetRoot : public DrawSpace::Interface::Module::Root
 {
 public:
-    SkyboxRoot( void );
-    virtual ~SkyboxRoot( void );
+    CDLODPlanetRoot( void );
+    virtual ~CDLODPlanetRoot( void );
 
     virtual dsstring GetModuleName( void );
     virtual dsstring GetModuleDescr( void );

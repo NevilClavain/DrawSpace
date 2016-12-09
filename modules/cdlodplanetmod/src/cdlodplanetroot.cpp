@@ -20,22 +20,35 @@
 *
 */
 
-#ifndef _SKYBOXROOT_H_
-#define _SKYBOXROOT_H_
+#include "cdlodplanetroot.h"
+#include "file.h"
 
-#include "module_root.h"
-#include "skyboxservice.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface::Module;
 
-
-class SkyboxRoot : public DrawSpace::Interface::Module::Root
+CDLODPlanetRoot::CDLODPlanetRoot( void )
 {
-public:
-    SkyboxRoot( void );
-    virtual ~SkyboxRoot( void );
+    Shader::EnableShadersDescrInFinalPath( true );
+    Shader::SetRootPath( "cdlodplanet_data/shaders_bank" );
+}
 
-    virtual dsstring GetModuleName( void );
-    virtual dsstring GetModuleDescr( void );
-    virtual void ServicesInit( void );
-};
+CDLODPlanetRoot::~CDLODPlanetRoot( void )
+{
+}
 
-#endif
+dsstring CDLODPlanetRoot::GetModuleName( void )
+{
+    return "CDLODPlanetMod";
+}
+
+dsstring CDLODPlanetRoot::GetModuleDescr( void )
+{
+    return "CDLOD/Procedural planet module";
+}
+
+void CDLODPlanetRoot::ServicesInit( void )
+{
+    m_services["cdlodplanet"] = new CDLODPlanetService( m_id );
+}
