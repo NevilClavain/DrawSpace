@@ -47,5 +47,5 @@ dsstring GUILabRoot::GetModuleName( void )
 
 dsstring GUILabRoot::GetModuleDescr( void )
 {
-    return "CEGUI test module";
+    return "CEGUI lab test module";
 }
