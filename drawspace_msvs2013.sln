@@ -64,6 +64,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cdlodplanetmod", "modules\c
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "worldinspectormod", "modules\worldinspectormod\worldinspectormod.vcxproj", "{765F5A95-12B4-4141-8EDA-4126A896C8DA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "solarsystemdemomod", "modules\solarsystemdemomod\solarsystemdemomod.vcxproj", "{9FD65150-ED90-4ACC-A46B-BE8C26249B70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -194,6 +196,14 @@ Global
 		{765F5A95-12B4-4141-8EDA-4126A896C8DA}.Release|Win32.ActiveCfg = Release|Win32
 		{765F5A95-12B4-4141-8EDA-4126A896C8DA}.Release|Win32.Build.0 = Release|Win32
 		{765F5A95-12B4-4141-8EDA-4126A896C8DA}.Release|x64.ActiveCfg = Release|Win32
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70}.Debug|ARM.ActiveCfg = Debug|Win32
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70}.Debug|Win32.Build.0 = Debug|Win32
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70}.Debug|x64.ActiveCfg = Debug|Win32
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70}.Release|ARM.ActiveCfg = Release|Win32
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70}.Release|Win32.ActiveCfg = Release|Win32
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70}.Release|Win32.Build.0 = Release|Win32
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -205,5 +215,6 @@ Global
 		{0F6EC2E2-ED8A-481F-905E-72DD1E5E5F97} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{B09637F4-8086-4754-A85F-058EA996B787} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{765F5A95-12B4-4141-8EDA-4126A896C8DA} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
+		{9FD65150-ED90-4ACC-A46B-BE8C26249B70} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 	EndGlobalSection
 EndGlobal
