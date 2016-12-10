@@ -63,9 +63,13 @@ bool dsAppClient::OnIdleAppInit( void )
     m_mainloopservice = root->InstanciateService( "mainloop" );
     if( m_mainloopservice )
     {
+        dsstring win_title = "DrawSpace VM - ";
+        
+        win_title += root->GetModuleDescr();
+        ::SetWindowText( m_hwnd, win_title.c_str() );
+
         _DSDEBUG(logger, dsstring("mainloop service initialisation"))
-        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance(), 
-                                    m_mouse_circularmode_update_cb, m_mouse_visible_cb, m_close_app_cb );
+        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance(), m_mouse_circularmode_update_cb, m_mouse_visible_cb, m_close_app_cb );
 
         return true;
     }
