@@ -57,14 +57,19 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     /////////////////////////////////////////////////////////////////////////////////
 
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-
     m_renderer->GetDescr( m_pluginDescr );
+
+    create_passes();
+    init_passes();
+
+    //m_renderer->GUI_InitSubSystem();
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
 void MainLoopService::Run( void )
 {   
+    /*
     m_renderer->BeginScreen();
 
     m_renderer->ClearScreen( 0, 255, 0, 255 );
@@ -72,6 +77,17 @@ void MainLoopService::Run( void )
     m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 
     m_renderer->EndScreen();
+
+    m_renderer->FlipScreen();
+    */
+
+    m_texturepass->GetRenderingQueue()->Draw();
+    m_finalpass->GetRenderingQueue()->Draw();
+
+    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps -- %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
+
+    //m_renderer->GUI_Render();
+
 
     m_renderer->FlipScreen();
     
@@ -122,4 +138,48 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
+void MainLoopService::init_passes( void )
+{
+    m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
+    m_finalpass->GetRenderingQueue()->UpdateOutputQueue();
+}
 
+void MainLoopService::create_passes( void )
+{
+    m_texturepass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( "texture_pass" ) );
+
+    m_texturepass->Initialize();
+    m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
+    m_texturepass->GetRenderingQueue()->EnableTargetClearing( true );
+    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 128, 0, 128, 0 );
+
+
+    m_finalpass = _DRAWSPACE_NEW_( FinalPass, FinalPass( "final_pass" ) );
+    m_finalpass->Initialize();
+
+    m_finalpass->GetRenderingQueue()->EnableTargetClearing( true );
+    m_finalpass->GetRenderingQueue()->SetTargetClearingColor( 255, 255, 255, 255 );
+
+    m_finalpass->CreateViewportQuad();
+    m_finalpass->GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+    
+
+    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "point" ) );
+    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+
+
+    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
+    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
+
+
+    m_finalpass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vsh", false ) ) );
+    m_finalpass->GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.psh", false ) ) );
+
+    m_finalpass->GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_finalpass->GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    
+
+    m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
+
+}

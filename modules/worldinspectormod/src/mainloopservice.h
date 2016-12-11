@@ -24,14 +24,22 @@
 #define _MAINLOOPSERVICE_H_
 
 #include "module_service.h"
+#include "drawspace.h"
 
 class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    DrawSpace::Interface::Renderer*         m_renderer;
-    DrawSpace::Utils::TimeManager           m_tm;
-    dsstring                                m_pluginDescr;
+    DrawSpace::Interface::Renderer*                                     m_renderer;
+    DrawSpace::Utils::TimeManager                                       m_tm;
+    dsstring                                                            m_pluginDescr;
+
+
+    DrawSpace::FinalPass*                                               m_finalpass;
+    DrawSpace::IntermediatePass*                                        m_texturepass;
+
+    void init_passes( void );
+    void create_passes( void );
 
 public:
     MainLoopService( void );
