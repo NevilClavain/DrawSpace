@@ -50,6 +50,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
+
+    // hide OS mouse cursor (we use CEGUI mouse cursor instead)
+    (*p_mousevisible_cb)( false );
+
+
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 
@@ -67,7 +72,18 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     init_passes();
 
-    //m_renderer->GUI_InitSubSystem();
+    m_renderer->GUI_InitSubSystem();
+
+    m_renderer->GUI_SetResourcesRootDirectory( "./xfskin" );
+    m_renderer->GUI_LoadScheme( "xfskin.scheme" );
+
+    m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
+    m_renderer->GUI_ShowMouseCursor( true );
+
+    m_renderer->GUI_LoadLayout( "worldinspector.layout" );
+    m_renderer->GUI_SetLayout( "worldinspector.layout" );
+
+    m_renderer->GUI_StoreWidget( 0, 1 );
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
@@ -79,10 +95,14 @@ void MainLoopService::Run( void )
     m_texturepass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
 
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps -- %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
+    //m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps -- %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 
-    //m_renderer->GUI_Render();
+    char comment[256];
+    sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
+    dsstring fps_text = comment;
+    m_renderer->GUI_SetWidgetText( 1, fps_text );
 
+    m_renderer->GUI_Render();
 
     m_renderer->FlipScreen();
     
@@ -99,47 +119,60 @@ void MainLoopService::Release( void )
 
 void MainLoopService::OnKeyPress( long p_key )
 {
+    m_renderer->GUI_OnKeyDown( p_key );
 }
 
 void MainLoopService::OnEndKeyPress( long p_key )
 {
+    m_renderer->GUI_OnKeyUp( p_key );
 }
 
 void MainLoopService::OnKeyPulse( long p_key )
 {
+    m_renderer->GUI_OnChar( p_key );
 }
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
     if( m_mouse_left )
     {
-        m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 1.5, m_tm );
-        m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 1.5, m_tm );
+        m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 8.0, m_tm );
+        m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 8.0, m_tm );
     }
     else if( m_mouse_right )
     {
-        m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), p_dx * 1.5, m_tm );
+        m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 8.0, m_tm );
     }
+
+    m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
 }
 
 void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
     m_mouse_left = true;
+
+    m_renderer->GUI_OnMouseLeftButtonDown();
 }
 
 void MainLoopService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
     m_mouse_left = false;
+
+    m_renderer->GUI_OnMouseLeftButtonUp();
 }
 
 void MainLoopService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
     m_mouse_right = true;
+
+    m_renderer->GUI_OnMouseRightButtonDown();
 }
 
 void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
     m_mouse_right = false;
+
+    m_renderer->GUI_OnMouseRightButtonUp();
 }
 
 void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )

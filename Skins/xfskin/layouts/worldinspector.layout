@@ -4,14 +4,11 @@
     <Window type="DefaultWindow" name="root" >
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
-        <Window type="xfskin/Label" name="FPSInfoLabel" >
+        <Window type="xfskin/Label" name="Label" >
             <Property name="ID" value="1" />
-            <Property name="Area" value="{{0,1},{0,278},{1,1},{0.1,278}}" />
-            <Property name="Text" value="test" />
+            <Property name="Area" value="{{0,0},{0,-1},{0,1429},{0,31}}" />
+            <Property name="Text" value="Test !" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
-        </Window>
-        <Window type="xfskin/Button" name="Button" >
-            <Property name="Area" value="{{0,444},{0,436},{0,700},{0,545}}" />
         </Window>
     </Window>
 </GUILayout>
