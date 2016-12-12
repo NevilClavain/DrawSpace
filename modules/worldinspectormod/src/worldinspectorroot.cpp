@@ -29,6 +29,10 @@ using namespace DrawSpace::Interface::Module;
 
 WorldInspectorRoot::WorldInspectorRoot( void )
 {
+    Shader::EnableShadersDescrInFinalPath( true );
+    Shader::SetRootPath( "worldinspector_data/shaders_bank" );
+    Texture::SetRootPath( "worldinspector_data/textures_bank" );
+    AC3DMesheImport::SetRootPath( "worldinspector_data/meshes_bank" );
 }
 
 WorldInspectorRoot::~WorldInspectorRoot( void )
