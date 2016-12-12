@@ -30,7 +30,9 @@ using namespace DrawSpace::Interface::Module;
 
 _DECLARE_DS_LOGGER( logger, "worldinspectormainloopservice", NULL )
 
-MainLoopService::MainLoopService( void )
+MainLoopService::MainLoopService( void ) :
+m_mouse_left( false ),
+m_mouse_right( false )
 {
 }
 
@@ -60,6 +62,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GetDescr( m_pluginDescr );
 
     create_passes();
+    create_camera();
+    create_cubes();
+
     init_passes();
 
     //m_renderer->GUI_InitSubSystem();
@@ -69,17 +74,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {   
-    /*
-    m_renderer->BeginScreen();
-
-    m_renderer->ClearScreen( 0, 255, 0, 255 );
-
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
-
-    m_renderer->EndScreen();
-
-    m_renderer->FlipScreen();
-    */
+    m_scenenodegraph.ComputeTransformations( m_tm );
 
     m_texturepass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
@@ -116,22 +111,35 @@ void MainLoopService::OnKeyPulse( long p_key )
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
+    if( m_mouse_left )
+    {
+        m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 1.5, m_tm );
+        m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 1.5, m_tm );
+    }
+    else if( m_mouse_right )
+    {
+        m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), p_dx * 1.5, m_tm );
+    }
 }
 
 void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
+    m_mouse_left = true;
 }
 
 void MainLoopService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
+    m_mouse_left = false;
 }
 
 void MainLoopService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
+    m_mouse_right = true;
 }
 
 void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
+    m_mouse_right = false;
 }
 
 void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
@@ -184,4 +192,85 @@ void MainLoopService::create_passes( void )
 
     m_finalpass->GetViewportQuad()->SetTexture( m_texturepass->GetTargetTexture(), 0 );
 
+}
+
+void MainLoopService::create_cubes( void )
+{
+    m_chunk = _DRAWSPACE_NEW_( DrawSpace::Chunk, DrawSpace::Chunk );
+
+    m_chunk->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+
+    m_chunk->RegisterPassSlot( m_texturepass );
+
+
+    m_meshe_import = new DrawSpace::Utils::AC3DMesheImport();
+    
+    m_chunk->GetMeshe()->SetImporter( m_meshe_import );
+    m_chunk->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
+    m_chunk->GetNodeFromPass( m_texturepass )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+  
+    m_chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    m_chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    m_chunk->GetNodeFromPass( m_texturepass )->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_chunk->GetNodeFromPass( m_texturepass )->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    m_chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    m_chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    m_chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+    m_chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
+
+    
+
+    m_chunk->GetNodeFromPass( m_texturepass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
+    m_chunk->GetNodeFromPass( m_texturepass )->GetTexture( 0 )->LoadFromFile();
+
+
+    m_chunk_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Chunk>, SceneNode<DrawSpace::Chunk>( "chunk" ) );
+    m_chunk_node->SetContent( m_chunk );
+
+    
+    m_scenenodegraph.RegisterNode( m_chunk_node );
+
+
+    m_objectRot = _DRAWSPACE_NEW_( DrawSpace::Core::FreeMovement, DrawSpace::Core::FreeMovement );
+    m_objectRot_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Core::FreeMovement>, SceneNode<DrawSpace::Core::FreeMovement>( "objectRot" ) );
+
+    m_objectRot->Init( Vector( 0.0, 0.0, 0.0, 1.0 ) );
+    m_objectRot->SetSpeed( 0.0 );
+
+    m_objectRot_node->SetContent( m_objectRot );
+
+    m_scenenodegraph.AddNode( m_objectRot_node );
+    m_scenenodegraph.RegisterNode( m_objectRot_node );
+
+    m_chunk_node->LinkTo( m_objectRot_node );
+}
+
+void MainLoopService::create_camera( void )
+{
+    m_camera = _DRAWSPACE_NEW_( DrawSpace::Dynamics::CameraPoint, DrawSpace::Dynamics::CameraPoint );
+    m_camera_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::CameraPoint>, SceneNode<DrawSpace::Dynamics::CameraPoint>( "camera" ) );
+    m_camera_node->SetContent( m_camera );
+
+    m_scenenodegraph.RegisterNode( m_camera_node );
+
+    m_scenenodegraph.SetCurrentCamera( "camera" );
+
+    m_camerapos = _DRAWSPACE_NEW_( DrawSpace::Core::Transformation, DrawSpace::Core::Transformation );
+    m_camerapos_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Core::Transformation>, SceneNode<DrawSpace::Core::Transformation>( "camera_pos" ) );
+
+    m_camerapos_node->SetContent( m_camerapos );
+
+    DrawSpace::Utils::Matrix camera_pos;
+    camera_pos.Translation( 0.0, 0.0, 5.0 );
+
+    m_camerapos->PushMatrix( camera_pos );
+
+    m_scenenodegraph.AddNode( m_camerapos_node );
+    m_scenenodegraph.RegisterNode( m_camerapos_node );
+
+    m_camera_node->LinkTo( m_camerapos_node );    
 }

@@ -34,12 +34,34 @@ protected:
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
 
+    DrawSpace::Interface::MesheImport*                                  m_meshe_import;
+
+    DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
     DrawSpace::FinalPass*                                               m_finalpass;
     DrawSpace::IntermediatePass*                                        m_texturepass;
 
+    DrawSpace::Core::FreeMovement*                                      m_objectRot;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::FreeMovement>*          m_objectRot_node;
+
+    DrawSpace::Chunk*                                                   m_chunk;
+    DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_chunk_node;
+
+    DrawSpace::Dynamics::CameraPoint*                                   m_camera;
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_camera_node;
+
+    DrawSpace::Core::Transformation*                                    m_camerapos;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_camerapos_node;
+
+    bool                                                                m_mouse_left;
+    bool                                                                m_mouse_right;
+
+
     void init_passes( void );
     void create_passes( void );
+
+    void create_cubes( void );
+    void create_camera( void );
 
 public:
     MainLoopService( void );
