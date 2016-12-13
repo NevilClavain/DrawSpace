@@ -24,4 +24,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\hlsl_3_0\planet_surface_flat.psh">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\shaders\hlsl_3_0\planet_surface_flat.vsh">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
