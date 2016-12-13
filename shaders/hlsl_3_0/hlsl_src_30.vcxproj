@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="fbm.hlsl" />
+    <FxCompile Include="spherelod_commons.hlsl" />
     <FxCompile Include="texture.psh">
       <FileType>Document</FileType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ps_main</EntryPointName>
@@ -122,6 +123,26 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="water_bump.vsh">
+      <FileType>Document</FileType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\shaders_bank\hlsl_3_0\%(Filename).vso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">vs_main</EntryPointName>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</EnableDebuggingInformation>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">3.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="planet_surface_flat.psh">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ps_main</EntryPointName>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</EnableDebuggingInformation>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">3.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\shaders_bank\hlsl_3_0\%(Filename).pso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="planet_surface_flat.vsh">
       <FileType>Document</FileType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\shaders_bank\hlsl_3_0\%(Filename).vso</ObjectFileOutput>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">vs_main</EntryPointName>

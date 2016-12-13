@@ -66,6 +66,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cdlodplanetmod", "modules\cdlodplanetmod\cdlodplanetmod.vcxproj", "{B09637F4-8086-4754-A85F-058EA996B787}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "worldinspectormod", "modules\worldinspectormod\worldinspectormod.vcxproj", "{765F5A95-12B4-4141-8EDA-4126A896C8DA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B09637F4-8086-4754-A85F-058EA996B787} = {B09637F4-8086-4754-A85F-058EA996B787}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "solarsystemdemomod", "modules\solarsystemdemomod\solarsystemdemomod.vcxproj", "{9FD65150-ED90-4ACC-A46B-BE8C26249B70}"
 EndProject

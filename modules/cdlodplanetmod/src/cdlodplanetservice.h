@@ -24,8 +24,18 @@
 #define _CDLODPLANETSERVICE_H_
 
 #include "module_service.h"
+#include "drawspace.h"
 
+class SimpleColorBinder : public DrawSpace::SphericalLOD::Binder
+{
+protected:
+public:
 
+    SimpleColorBinder( void );
+
+    virtual void Bind( void );
+    virtual void Unbind( void );
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -36,6 +46,13 @@ protected:
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_device;
+
+
+    SimpleColorBinder*                                                  m_simplebinder[6];
+    DrawSpace::Core::Fx*                                                m_details_fx;
+
+
+    void create_planet( void );
 
 public:
     CDLODPlanetService( const dsstring& p_id );
