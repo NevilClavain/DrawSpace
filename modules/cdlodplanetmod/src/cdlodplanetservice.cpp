@@ -84,56 +84,6 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
-    create_planet();
-}
-
-void CDLODPlanetService::Run( void )
-{
-}
-
-void CDLODPlanetService::Release( void )
-{
-}
-
-
-void CDLODPlanetService::OnKeyPress( long p_key )
-{
-}
-
-void CDLODPlanetService::OnEndKeyPress( long p_key )
-{
-}
-
-void CDLODPlanetService::OnKeyPulse( long p_key )
-{
-}
-
-void CDLODPlanetService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
-{
-}
-
-void CDLODPlanetService::OnMouseLeftButtonDown( long p_xm, long p_ym )
-{
-}
-
-void CDLODPlanetService::OnMouseLeftButtonUp( long p_xm, long p_ym )
-{
-}
-
-void CDLODPlanetService::OnMouseRightButtonDown( long p_xm, long p_ym )
-{
-}
-
-void CDLODPlanetService::OnMouseRightButtonUp( long p_xm, long p_ym )
-{
-}
-
-void CDLODPlanetService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
-{
-}
-
-void CDLODPlanetService::create_planet( void )
-{
     for( int i = 0; i < 6; i++ )
     {
         m_simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
@@ -198,4 +148,49 @@ void CDLODPlanetService::create_planet( void )
     }
 
     config.m_layers_descr.push_back( planet_surface );
+}
+
+void CDLODPlanetService::Run( void )
+{
+}
+
+void CDLODPlanetService::Release( void )
+{
+}
+
+
+void CDLODPlanetService::OnKeyPress( long p_key )
+{
+}
+
+void CDLODPlanetService::OnEndKeyPress( long p_key )
+{
+}
+
+void CDLODPlanetService::OnKeyPulse( long p_key )
+{
+}
+
+void CDLODPlanetService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
+{
+}
+
+void CDLODPlanetService::OnMouseLeftButtonDown( long p_xm, long p_ym )
+{
+}
+
+void CDLODPlanetService::OnMouseLeftButtonUp( long p_xm, long p_ym )
+{
+}
+
+void CDLODPlanetService::OnMouseRightButtonDown( long p_xm, long p_ym )
+{
+}
+
+void CDLODPlanetService::OnMouseRightButtonUp( long p_xm, long p_ym )
+{
+}
+
+void CDLODPlanetService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
+{
 }

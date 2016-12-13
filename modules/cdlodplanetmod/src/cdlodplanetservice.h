@@ -52,8 +52,6 @@ protected:
     DrawSpace::Core::Fx*                                                m_details_fx;
 
 
-    void create_planet( void );
-
 public:
     CDLODPlanetService( const dsstring& p_id );
     ~CDLODPlanetService( void );

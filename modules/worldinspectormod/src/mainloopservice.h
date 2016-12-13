@@ -61,6 +61,7 @@ protected:
     void create_passes( void );
 
     void create_cubes( void );
+    void create_planet( void );
     void create_camera( void );
 
 public:

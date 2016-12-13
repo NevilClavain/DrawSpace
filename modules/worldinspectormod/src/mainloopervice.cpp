@@ -69,6 +69,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     create_passes();
     create_camera();
     create_cubes();
+    create_planet();
 
     init_passes();
 
@@ -306,4 +307,9 @@ void MainLoopService::create_camera( void )
     m_scenenodegraph.RegisterNode( m_camerapos_node );
 
     m_camera_node->LinkTo( m_camerapos_node );    
+}
+
+void MainLoopService::create_planet( void )
+{
+
 }
