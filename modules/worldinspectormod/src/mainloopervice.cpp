@@ -311,5 +311,16 @@ void MainLoopService::create_camera( void )
 
 void MainLoopService::create_planet( void )
 {
-
+    /*
+    if( !DrawSpace::Utils::PILoad::LoadModule( "cdlodplanetmod", "cdlodplanet", &m_sbmod_root ) )
+    {
+        _DSEXCEPTION( "fail to load cdlodplanet module root" )
+    }
+    
+    m_sb_service = m_sbmod_root->InstanciateService( "skybox" );
+    if( NULL == m_sb_service )
+    {
+        _DSEXCEPTION( "fail to load skybox module service" )
+    }
+    */
 }
