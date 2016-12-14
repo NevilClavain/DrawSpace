@@ -54,9 +54,10 @@ public:
                                                     DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb ) = 0;
 
     virtual void                            Run( void ) = 0;
-    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( void ) = 0;
-
     virtual void                            Release( void ) = 0;
+
+    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName ) = 0;
+    virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName ) = 0;
 
 
     virtual void                            OnKeyPress( long p_key ) = 0;

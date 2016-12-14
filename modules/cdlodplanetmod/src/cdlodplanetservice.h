@@ -98,7 +98,8 @@ public:
     virtual void                            Run( void );
     virtual void                            Release( void );
 
-    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( void );
+    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName );
+    virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName );
 
     virtual void                            OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
     virtual void                            OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );

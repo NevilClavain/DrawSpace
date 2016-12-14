@@ -207,7 +207,11 @@ void CDLODPlanetService::Release( void )
 {
 }
 
-DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( void )
+DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
 {
     return NULL;
+}
+
+void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
+{
 }

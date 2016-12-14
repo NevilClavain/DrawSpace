@@ -183,9 +183,13 @@ void SkyboxService::Release( void )
 {
 }
 
-DrawSpace::Core::BaseSceneNode* SkyboxService::InstanciateSceneNode( void )
+DrawSpace::Core::BaseSceneNode* SkyboxService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
 {
     return NULL;
+}
+
+void SkyboxService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
+{
 }
 
 void SkyboxService::OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val )
