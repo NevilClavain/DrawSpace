@@ -55,6 +55,32 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
 
 
+
+/////////////////////////////
+
+SceneNodeGraphParam::SceneNodeGraphParam( const dsstring& p_id, CDLODPlanetService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
+{
+}
+
+void SceneNodeGraphParam::OnUpdated( DrawSpace::Core::SceneNodeGraph* p_val )
+{
+    m_owner->OnSceneNodeGraphUpdated( p_val );
+}
+
+/////////////////////////////
+
+TexturePassParam::TexturePassParam( const dsstring& p_id, CDLODPlanetService* p_owner ) : KeySink( p_id ), m_owner( p_owner )
+{
+}
+
+void TexturePassParam::OnUpdated( DrawSpace::IntermediatePass* p_val )
+{
+    m_owner->OnTexturePassUpdate( p_val );
+}
+
+/////////////////////////////
+
+
 SimpleColorBinder::SimpleColorBinder( void )
 {
 }
@@ -67,8 +93,12 @@ void SimpleColorBinder::Unbind( void )
 {
 }
 
+////////////////////////////////////////////
+
 CDLODPlanetService::CDLODPlanetService( const dsstring& p_id )
 {
+    m_scparam = _DRAWSPACE_NEW_( SceneNodeGraphParam, SceneNodeGraphParam( p_id + dsstring( ".SceneNodeGraph" ), this ) );
+    m_texturepassparam = _DRAWSPACE_NEW_( TexturePassParam, TexturePassParam( p_id + dsstring( ".TexturePass" ), this ) );
 }
 
 CDLODPlanetService::~CDLODPlanetService( void )
@@ -77,6 +107,8 @@ CDLODPlanetService::~CDLODPlanetService( void )
 
 void CDLODPlanetService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
+    p_keys.push_back( m_scparam );
+    p_keys.push_back( m_texturepassparam );
 }
 
 void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf, 
@@ -148,49 +180,29 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
     }
 
     config.m_layers_descr.push_back( planet_surface );
+
+    m_planet = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( "planet01", PLANET_RAY, &m_tm, config ) );
+
+
 }
+
+void CDLODPlanetService::OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val )
+{
+    m_scenenodegraph = p_val;
+}
+
+void CDLODPlanetService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val )
+{
+    m_texturepass = p_val;
+}
+
+
+
 
 void CDLODPlanetService::Run( void )
 {
 }
 
 void CDLODPlanetService::Release( void )
-{
-}
-
-
-void CDLODPlanetService::OnKeyPress( long p_key )
-{
-}
-
-void CDLODPlanetService::OnEndKeyPress( long p_key )
-{
-}
-
-void CDLODPlanetService::OnKeyPulse( long p_key )
-{
-}
-
-void CDLODPlanetService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
-{
-}
-
-void CDLODPlanetService::OnMouseLeftButtonDown( long p_xm, long p_ym )
-{
-}
-
-void CDLODPlanetService::OnMouseLeftButtonUp( long p_xm, long p_ym )
-{
-}
-
-void CDLODPlanetService::OnMouseRightButtonDown( long p_xm, long p_ym )
-{
-}
-
-void CDLODPlanetService::OnMouseRightButtonUp( long p_xm, long p_ym )
-{
-}
-
-void CDLODPlanetService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }

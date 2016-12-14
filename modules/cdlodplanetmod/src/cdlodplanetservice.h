@@ -26,6 +26,30 @@
 #include "module_service.h"
 #include "drawspace.h"
 
+
+class CDLODPlanetService;
+
+class SceneNodeGraphParam : public DrawSpace::Module::KeySink<DrawSpace::Core::SceneNodeGraph*>
+{
+protected:
+    CDLODPlanetService* m_owner;
+
+public:
+    SceneNodeGraphParam( const dsstring& p_id, CDLODPlanetService* p_owner );
+    virtual void OnUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
+};
+
+class TexturePassParam : public DrawSpace::Module::KeySink<DrawSpace::IntermediatePass*>
+{
+protected:
+    CDLODPlanetService* m_owner;
+
+public:
+    TexturePassParam( const dsstring& p_id, CDLODPlanetService* p_owner );
+    virtual void OnUpdated( DrawSpace::IntermediatePass* p_val );
+};
+
+
 class SimpleColorBinder : public DrawSpace::SphericalLOD::Binder
 {
 protected:
@@ -47,10 +71,19 @@ protected:
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_device;
 
+    SceneNodeGraphParam*                                                m_scparam;
+    TexturePassParam*                                                   m_texturepassparam;
+
+
+    DrawSpace::Core::SceneNodeGraph*                                    m_scenenodegraph;
+    DrawSpace::IntermediatePass*                                        m_texturepass;
+
 
     SimpleColorBinder*                                                  m_simplebinder[6];
     DrawSpace::Core::Fx*                                                m_details_fx;
 
+    DrawSpace::SphericalLOD::Root*                                      m_planet;
+    DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*          m_planet_node;
 
 public:
     CDLODPlanetService( const dsstring& p_id );
@@ -65,15 +98,18 @@ public:
     virtual void                            Run( void );
     virtual void                            Release( void );
 
-    virtual void                            OnKeyPress( long p_key );
-    virtual void                            OnEndKeyPress( long p_key );
-    virtual void                            OnKeyPulse( long p_key );
-    virtual void                            OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
-    virtual void                            OnMouseLeftButtonDown( long p_xm, long p_ym );
-    virtual void                            OnMouseLeftButtonUp( long p_xm, long p_ym );
-    virtual void                            OnMouseRightButtonDown( long p_xm, long p_ym );
-    virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
-    virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
+    virtual void                            OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
+    virtual void                            OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );
+
+    virtual void                            OnKeyPress( long p_key ) {};
+    virtual void                            OnEndKeyPress( long p_key ) {};
+    virtual void                            OnKeyPulse( long p_key ) {};
+    virtual void                            OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy ) {};
+    virtual void                            OnMouseLeftButtonDown( long p_xm, long p_ym ) {};
+    virtual void                            OnMouseLeftButtonUp( long p_xm, long p_ym ) {};
+    virtual void                            OnMouseRightButtonDown( long p_xm, long p_ym ) {};
+    virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym ) {};
+    virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam ) {};
 };
 
 #endif

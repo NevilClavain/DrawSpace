@@ -57,6 +57,13 @@ protected:
     bool                                                                m_mouse_right;
 
 
+    DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
+    DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
+
+
+    DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
+    DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
+
     void init_passes( void );
     void create_passes( void );
 

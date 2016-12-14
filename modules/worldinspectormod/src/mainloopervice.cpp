@@ -32,7 +32,9 @@ _DECLARE_DS_LOGGER( logger, "worldinspectormainloopservice", NULL )
 
 MainLoopService::MainLoopService( void ) :
 m_mouse_left( false ),
-m_mouse_right( false )
+m_mouse_right( false ),
+m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
+m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" )
 {
 }
 
@@ -53,6 +55,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     // hide OS mouse cursor (we use CEGUI mouse cursor instead)
     (*p_mousevisible_cb)( false );
+
+
+    m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_scenenodegraph );
+    m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_texturepass );
 
 
     p_logconf->RegisterSink( &logger );
@@ -310,17 +316,16 @@ void MainLoopService::create_camera( void )
 }
 
 void MainLoopService::create_planet( void )
-{
-    /*
-    if( !DrawSpace::Utils::PILoad::LoadModule( "cdlodplanetmod", "cdlodplanet", &m_sbmod_root ) )
+{   
+    if( !DrawSpace::Utils::PILoad::LoadModule( "cdlodplanetmod", "cdlodplanet", &m_cdlodp_root ) )
     {
         _DSEXCEPTION( "fail to load cdlodplanet module root" )
-    }
-    
-    m_sb_service = m_sbmod_root->InstanciateService( "skybox" );
-    if( NULL == m_sb_service )
-    {
-        _DSEXCEPTION( "fail to load skybox module service" )
-    }
-    */
+    }    
+    m_cdlodp_service = m_cdlodp_root->InstanciateService( "cdlodplanet" );
+    connect_keys( m_cdlodp_service );
+
+    m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
+    m_cdlodplanet_texturepass = m_texturepass;
+
+    m_cdlodp_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL, NULL );
 }
