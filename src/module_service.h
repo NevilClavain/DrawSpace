@@ -47,6 +47,7 @@ protected:
 
 public:
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys ) = 0;
+
     virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, 
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, 
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
@@ -54,6 +55,10 @@ public:
 
     virtual void                            Run( void ) = 0;
     virtual void                            Release( void ) = 0;
+
+    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( void ) = 0;
+
+
 
     virtual void                            OnKeyPress( long p_key ) = 0;
     virtual void                            OnEndKeyPress( long p_key ) = 0;

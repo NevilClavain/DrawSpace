@@ -86,6 +86,12 @@ void MainLoopService::Release( void )
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 }
 
+DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( void )
+{
+    return NULL;
+}
+
+
 void MainLoopService::OnKeyPress( long p_key )
 {
 }

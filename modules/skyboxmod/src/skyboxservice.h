@@ -160,6 +160,7 @@ public:
 
     virtual void                            Run( void );
     virtual void                            Release( void );
+    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( void );
 
     virtual void                            OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
     virtual void                            OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );

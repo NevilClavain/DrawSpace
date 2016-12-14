@@ -206,3 +206,8 @@ void CDLODPlanetService::Run( void )
 void CDLODPlanetService::Release( void )
 {
 }
+
+DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( void )
+{
+    return NULL;
+}
