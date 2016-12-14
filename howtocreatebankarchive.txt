@@ -1,0 +1,3 @@
+-ouvrir une console DOS
+-taper "7z a <monarchive.zip> <./monrepertoireaarchiver>"
+-taper "rename <monarchive.zip> <monarchive.bank>"
