@@ -79,6 +79,8 @@ protected:
     DrawSpace::IntermediatePass*                                        m_texturepass;
 
 
+    DrawSpace::SphericalLOD::Config                                     m_config;
+
     SimpleColorBinder*                                                  m_simplebinder[6];
     DrawSpace::Core::Fx*                                                m_details_fx;
 

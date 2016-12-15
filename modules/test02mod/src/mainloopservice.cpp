@@ -35,7 +35,6 @@ MainLoopService::MainLoopService( void ) :
 m_fpsmove( true ),
 m_waves( 0.0 ),
 m_waves_inc( true ),
-m_skybox_scenenodegraph( "skybox.SceneNodeGraph" ),
 m_skybox_texturepass( "skybox.TexturePass" ),
 m_skybox_texturemirrorpass( "skybox.TextureMirrorPass" ),
 m_skybox_reflectornormale( "skybox.ReflectorNormale" ),
@@ -61,8 +60,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, 
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
-{
-    m_keysLinkTable.RegisterClientKey( &m_skybox_scenenodegraph );
+{    
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturepass );
     m_keysLinkTable.RegisterClientKey( &m_skybox_texturemirrorpass );
     m_keysLinkTable.RegisterClientKey( &m_skybox_reflectornormale );

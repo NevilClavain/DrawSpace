@@ -116,6 +116,7 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
+ /*
     for( int i = 0; i < 6; i++ )
     {
         m_simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
@@ -128,12 +129,10 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
     planet_pshader->LoadFromFile();
 
 
-    SphericalLOD::Config config;
-
-    config.m_lod0base = 19000.0;
-    config.m_ground_layer = 0;
-    config.m_nbLODRanges_inertBodies = NB_LOD_INERTBODIES;
-    config.m_nbLODRanges_freeCameras = NB_LOD_FREECAMERAS;
+    m_config.m_lod0base = 19000.0;
+    m_config.m_ground_layer = 0;
+    m_config.m_nbLODRanges_inertBodies = NB_LOD_INERTBODIES;
+    m_config.m_nbLODRanges_freeCameras = NB_LOD_FREECAMERAS;
 
 
     m_details_fx = new Fx;
@@ -179,9 +178,13 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
         planet_surface.patchTexturesBinder[i] = NULL;
     }
 
-    config.m_layers_descr.push_back( planet_surface );
+    m_config.m_layers_descr.push_back( planet_surface );
 
-    m_planet = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( "planet01", PLANET_RAY, &m_tm, config ) );
+
+    m_planet = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( p_sceneNodeName, PLANET_RAY, &m_tm, m_config ) );
+
+
+    */
 
 
 }
@@ -209,6 +212,13 @@ void CDLODPlanetService::Release( void )
 
 DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
 {
+
+
+
+
+
+
+
     return NULL;
 }
 

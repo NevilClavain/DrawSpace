@@ -30,16 +30,6 @@
 class SkyboxService;
 
 
-class SceneNodeGraphParam : public DrawSpace::Module::KeySink<DrawSpace::Core::SceneNodeGraph*>
-{
-protected:
-    SkyboxService* m_owner;
-
-public:
-    SceneNodeGraphParam( const dsstring& p_id, SkyboxService* p_owner );
-    virtual void OnUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
-};
-
 class TexturePassParam : public DrawSpace::Module::KeySink<DrawSpace::IntermediatePass*>
 {
 protected:
@@ -68,16 +58,6 @@ protected:
 public:
     ReflectorNormaleParam( const dsstring& p_id, SkyboxService* p_owner );
     virtual void OnUpdated( DrawSpace::Utils::Vector p_val );
-};
-
-class ScalingParam : public DrawSpace::Module::KeySink<dsreal>
-{
-protected:
-    SkyboxService* m_owner;
-
-public:
-    ScalingParam( const dsstring& p_id, SkyboxService* p_owner );
-    virtual void OnUpdated( dsreal p_val );
 };
 
 class TexturesBankPathParam : public DrawSpace::Module::KeySink<dsstring>
@@ -128,7 +108,6 @@ protected:
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_device;
 
-    SceneNodeGraphParam*                                                m_scparam;
     TexturePassParam*                                                   m_texturepassparam;
     TextureMirrorPassParam*                                             m_texturemirrorpassparam;
     ReflectorNormaleParam*                                              m_reflectornormaleparam;
@@ -152,7 +131,6 @@ protected:
 
     DrawSpace::Utils::Vector                                            m_reflector_normale;
 
-    dsreal                                                              m_scaling;
 
     dsstring                                                            m_texturevirtualfspath;
 
@@ -179,7 +157,6 @@ public:
     virtual void                            OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );
     virtual void                            OnTextureMirrorPassUpdate( DrawSpace::IntermediatePass* p_val );
     virtual void                            OnReflectorNormaleUpdate( const DrawSpace::Utils::Vector& p_normale );
-    virtual void                            OnScalingUpdate( dsreal p_scale );
     virtual void                            OnTextureVirtualFSPathUpdate( const dsstring& p_path );
     virtual void                            OnTexturesNamesUpdate( const std::vector<dsstring> p_textures );
 
