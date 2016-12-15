@@ -42,6 +42,7 @@ class BaseSceneNode
 protected:
     
     dsstring                    m_scenename;
+    BaseSceneNode*              m_parent; 
     std::vector<BaseSceneNode*> m_children;
     DrawSpace::Utils::Matrix    m_finaltransform;
     SceneNodeGraph*             m_scenenodegraph;
@@ -50,10 +51,21 @@ public:
 
     BaseSceneNode( const dsstring& p_scenename ) :
     m_scenename( p_scenename ),
+    m_parent( NULL ),
     m_scenenodegraph( NULL )
     {
 
 
+    }
+
+    virtual void LinkTo( BaseSceneNode* p_node )
+    {
+        if( p_node == this )
+        {
+            _DSEXCEPTION( "Trying to link scenegraph node " + m_scenename + " to itself !!" );
+        }
+        p_node->AddChild( this );
+        m_parent = p_node;
     }
 
     virtual void GetSceneName( dsstring& p_scenename )
@@ -98,7 +110,7 @@ protected:
 
     typedef DrawSpace::Core::BaseCallback<void, BaseSceneNode*>    UpdateBeginHandler;
 
-    BaseSceneNode*                      m_parent;    
+    //BaseSceneNode*                      m_parent;    
     DrawSpace::Utils::Matrix            m_globaltransform;
     Base*                               m_content;
     bool                                m_enable;
@@ -110,7 +122,7 @@ public:
     SceneNode( const dsstring& p_scenename ) :
     BaseSceneNode( p_scenename ),
     m_content( NULL ),
-    m_parent( NULL ),
+    //m_parent( NULL ),
     m_enable( true )
     {
     }
@@ -124,6 +136,7 @@ public:
 		m_content = p_content;
 	}
 
+    /*
     virtual void LinkTo( BaseSceneNode* p_node )
     {
         if( p_node == this )
@@ -133,6 +146,7 @@ public:
         p_node->AddChild( this );
         m_parent = p_node;
     }
+    */
 
     virtual Base* GetContent( void )
     {

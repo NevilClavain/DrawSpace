@@ -98,6 +98,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_world.Initialize();
     m_world.SetGravity( DrawSpace::Utils::Vector( 0.0, -9.81, 0.0, 0.0 ) );
 
+    load_skybox_module();
+
     create_passes();
     create_spacebox();
     create_camera();
@@ -105,18 +107,13 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     create_ground();
 
     init_passes();
-
     
-
     m_scenenodegraph.SetCurrentCamera( "camera" );
-
 
     m_renderer->GUI_InitSubSystem();
     m_renderer->GUI_SetResourcesRootDirectory( "./testskin" );
     
     m_renderer->GUI_LoadScheme( "AlfiskoSkin.scheme" );
-
-
 
     m_renderer->GUI_LoadLayout( "main.layout" );
 
@@ -462,7 +459,10 @@ void MainLoopService::create_passes( void )
     // puisque m_coloredpass n'est connectée a aucune passe
     void* data;
     m_renderer->CreateTexture( m_coloredpass->GetTargetTexture(), &data );
-    
+  
+
+    m_skybox_texturepass = m_texturepass;
+    m_skybox_texturemirrorpass = m_texturemirrorpass;
 }
 
 void MainLoopService::init_passes( void )
@@ -499,8 +499,7 @@ void MainLoopService::init_passes( void )
 
 }
 
-
-void MainLoopService::create_spacebox( void )
+void MainLoopService::load_skybox_module( void )
 {
     if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", &m_sbmod_root ) )
     {
@@ -514,7 +513,7 @@ void MainLoopService::create_spacebox( void )
     }
     connect_keys( m_sb_service );
 
-    m_skybox_scenenodegraph = &m_scenenodegraph;
+    //m_skybox_scenenodegraph = &m_scenenodegraph;
     m_skybox_texturesbankpath = "test_data/textures_bank";
     m_skybox_texturesbankvirtualfspath = "test_data.bank";
 
@@ -527,14 +526,27 @@ void MainLoopService::create_spacebox( void )
     textures_names[4] = "sb4.bmp";
     textures_names[5] = "sb4.bmp";
     m_skybox_texturesnames = textures_names;
-
-
-    m_skybox_texturepass = m_texturepass;
-    m_skybox_texturemirrorpass = m_texturemirrorpass;
-
-
     
     m_sb_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL, NULL );
+}
+
+
+void MainLoopService::create_spacebox( void )
+{ 
+    DrawSpace::Core::BaseSceneNode* spacebox_node = m_sb_service->InstanciateSceneNode( "spacebox" );
+
+    m_scenenodegraph.RegisterNode( spacebox_node );
+
+    m_spacebox_transfo_node = _DRAWSPACE_NEW_( DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>, DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>( "spacebox_transfo" ) );
+    m_spacebox_transfo_node->SetContent( _DRAWSPACE_NEW_( Transformation, Transformation ) );
+    Matrix spacebox_scale;
+    spacebox_scale.Scale( 20.0, 20.0, 20.0 );
+    m_spacebox_transfo_node->GetContent()->PushMatrix( spacebox_scale );
+    
+    m_scenenodegraph.AddNode( m_spacebox_transfo_node );
+    m_scenenodegraph.RegisterNode( m_spacebox_transfo_node );
+
+    spacebox_node->LinkTo( m_spacebox_transfo_node );
 }
 
 

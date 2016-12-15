@@ -99,6 +99,9 @@ protected:
 
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
 
+
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_spacebox_transfo_node;
+
     /////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_skybox_scenenodegraph;
@@ -114,6 +117,8 @@ protected:
 
     void    create_passes( void );
     void    init_passes( void );
+
+    void    load_skybox_module( void );
 
     void    create_spacebox( void );
     void    create_camera( void );

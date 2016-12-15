@@ -117,6 +117,13 @@ class SkyboxService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
+    typedef struct
+    {
+        DrawSpace::Spacebox*                                            skybox;
+        DrawSpace::Core::SceneNode<DrawSpace::Spacebox>*                skybox_node;
+    
+    } SkyboxNodeEntry;
+
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_device;
@@ -135,9 +142,13 @@ protected:
     DrawSpace::IntermediatePass*                                        m_texturepass;
     DrawSpace::IntermediatePass*                                        m_texturemirrorpass;
 
+    /*
     DrawSpace::Spacebox*                                                m_spacebox;
     DrawSpace::Core::SceneNode<DrawSpace::Spacebox>*                    m_spacebox_node;
     DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_spacebox_transfo_node;
+    */
+
+    std::map<dsstring, SkyboxNodeEntry>                                 m_nodes;
 
     DrawSpace::Utils::Vector                                            m_reflector_normale;
 
