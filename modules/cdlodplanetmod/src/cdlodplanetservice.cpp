@@ -116,76 +116,6 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
- /*
-    for( int i = 0; i < 6; i++ )
-    {
-        m_simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
-    }
-
-    Shader* planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface_flat.vso", true ) );
-    Shader* planet_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface_flat.pso", true ) );
-
-    planet_vshader->LoadFromFile();
-    planet_pshader->LoadFromFile();
-
-
-    m_config.m_lod0base = 19000.0;
-    m_config.m_ground_layer = 0;
-    m_config.m_nbLODRanges_inertBodies = NB_LOD_INERTBODIES;
-    m_config.m_nbLODRanges_freeCameras = NB_LOD_FREECAMERAS;
-
-
-    m_details_fx = new Fx;
-
-    m_details_fx->AddShader( planet_vshader );
-    m_details_fx->AddShader( planet_pshader );
-
-
-    m_details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    m_details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    m_details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
-    m_details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
-
-    m_details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    m_details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
-    m_details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
-    m_details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
-
-
-    m_details_fx->SetRenderStateUniqueQueueID( "planet01" ); // parce qu'on va updater le renderstate ENABLEZBUFFER pendant le rendu
-
-    for( int i = 0; i < 6; i++ )
-    {
-        m_simplebinder[i]->SetFx( m_details_fx );
-    }
-
-
-    for( int i = 0; i < 6; i++ )
-    {
-        m_simplebinder[i]->SetRenderer( m_renderer );
-    }
-
-
-    SphericalLOD::Config::LayerDescriptor planet_surface;
-    planet_surface.enable_collisions = true;
-    planet_surface.enable_datatextures = true;
-    planet_surface.enable_lod = true;
-    planet_surface.min_lodlevel = 0;
-    planet_surface.ray = PLANET_RAY;
-    for( int i = 0; i < 6; i++ )
-    {
-        planet_surface.groundCollisionsBinder[i] = NULL;
-        planet_surface.patchTexturesBinder[i] = NULL;
-    }
-
-    m_config.m_layers_descr.push_back( planet_surface );
-
-
-    m_planet = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( p_sceneNodeName, PLANET_RAY, &m_tm, m_config ) );
-
-
-    */
-
 
 }
 
@@ -212,12 +142,81 @@ void CDLODPlanetService::Release( void )
 
 DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
 {
+    PlanetEntry pe;
+
+    for( int i = 0; i < 6; i++ )
+    {
+        pe.simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
+    }
+
+    pe.planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface_flat.vso", true ) );
+    pe.planet_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface_flat.pso", true ) );
+
+    pe.planet_vshader->LoadFromFile();
+    pe.planet_pshader->LoadFromFile();
+
+
+    pe.details_fx = new Fx;
+
+    pe.details_fx->AddShader( pe.planet_vshader );
+    pe.details_fx->AddShader( pe.planet_pshader );
+
+
+    pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
+    pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+
+    pe.details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    pe.details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+    pe.details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
+    pe.details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+
+
+    pe.details_fx->SetRenderStateUniqueQueueID( p_sceneNodeName ); // parce qu'on va updater le renderstate ENABLEZBUFFER pendant le rendu
+
+    for( int i = 0; i < 6; i++ )
+    {
+        pe.simplebinder[i]->SetFx( pe.details_fx );
+    }
+
+
+    for( int i = 0; i < 6; i++ )
+    {
+        pe.simplebinder[i]->SetRenderer( m_renderer );
+    }
+
+
+    pe.config.m_lod0base = 19000.0;
+    pe.config.m_ground_layer = 0;
+    pe.config.m_nbLODRanges_inertBodies = NB_LOD_INERTBODIES;
+    pe.config.m_nbLODRanges_freeCameras = NB_LOD_FREECAMERAS;
 
 
 
+    SphericalLOD::Config::LayerDescriptor planet_surface;
+    planet_surface.enable_collisions = true;
+    planet_surface.enable_datatextures = true;
+    planet_surface.enable_lod = true;
+    planet_surface.min_lodlevel = 0;
+    planet_surface.ray = PLANET_RAY;
+    for( int i = 0; i < 6; i++ )
+    {
+        planet_surface.groundCollisionsBinder[i] = NULL;
+        planet_surface.patchTexturesBinder[i] = NULL;
+    }
+
+    pe.config.m_layers_descr.push_back( planet_surface );
 
 
+    pe.planet = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( p_sceneNodeName, PLANET_RAY, &m_tm, pe.config ) );
 
+    for( int i = 0; i < 6; i++ )
+    {
+        pe.planet->RegisterSinglePassSlot( m_texturepass, pe.simplebinder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_SKIRT_MESHE, 0, 2000 );
+    }
+
+    pe.planet->RegisterScenegraphCallbacks( *m_scenenodegraph );
 
     return NULL;
 }

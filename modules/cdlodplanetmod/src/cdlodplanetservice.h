@@ -67,9 +67,24 @@ class CDLODPlanetService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
+    typedef struct
+    {
+        DrawSpace::SphericalLOD::Config                                 config;
+
+        SimpleColorBinder*                                              simplebinder[6];
+        DrawSpace::Core::Fx*                                            details_fx;
+
+        DrawSpace::Core::Shader*                                        planet_vshader;
+        DrawSpace::Core::Shader*                                        planet_pshader;
+
+        DrawSpace::SphericalLOD::Root*                                  planet;
+        DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*      planet_node;    
+    } PlanetEntry;
+
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_device;
+
 
     SceneNodeGraphParam*                                                m_scparam;
     TexturePassParam*                                                   m_texturepassparam;
@@ -78,14 +93,6 @@ protected:
     DrawSpace::Core::SceneNodeGraph*                                    m_scenenodegraph;
     DrawSpace::IntermediatePass*                                        m_texturepass;
 
-
-    DrawSpace::SphericalLOD::Config                                     m_config;
-
-    SimpleColorBinder*                                                  m_simplebinder[6];
-    DrawSpace::Core::Fx*                                                m_details_fx;
-
-    DrawSpace::SphericalLOD::Root*                                      m_planet;
-    DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*          m_planet_node;
 
 public:
     CDLODPlanetService( const dsstring& p_id );

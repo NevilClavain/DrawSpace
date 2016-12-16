@@ -67,6 +67,8 @@ protected:
     void init_passes( void );
     void create_passes( void );
 
+    void load_cdlodplanet_module( void );
+
     void create_cubes( void );
     void create_planet( void );
     void create_camera( void );

@@ -75,6 +75,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     create_passes();
     create_camera();
     create_cubes();
+
+    load_cdlodplanet_module();
+
     create_planet();
 
     init_passes();
@@ -326,6 +329,11 @@ void MainLoopService::create_camera( void )
 
 void MainLoopService::create_planet( void )
 {   
+    m_cdlodp_service->InstanciateSceneNode( "planet0" );
+}
+
+void MainLoopService::load_cdlodplanet_module( void )
+{
     if( !DrawSpace::Utils::PILoad::LoadModule( "cdlodplanetmod", "cdlodplanet", &m_cdlodp_root ) )
     {
         _DSEXCEPTION( "fail to load cdlodplanet module root" )
