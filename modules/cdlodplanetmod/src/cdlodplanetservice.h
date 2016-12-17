@@ -78,7 +78,8 @@ protected:
         DrawSpace::Core::Shader*                                        planet_pshader;
 
         DrawSpace::SphericalLOD::Root*                                  planet;
-        DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*      planet_node;    
+        DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*      planet_node;
+
     } PlanetEntry;
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
@@ -92,6 +93,8 @@ protected:
 
     DrawSpace::Core::SceneNodeGraph*                                    m_scenenodegraph;
     DrawSpace::IntermediatePass*                                        m_texturepass;
+
+    std::map<dsstring, PlanetEntry>                                     m_nodes;
 
 
 public:
@@ -108,6 +111,7 @@ public:
     virtual void                            Release( void );
 
     virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName );
+    virtual void                            RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
     virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName );
 
     virtual void                            OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );

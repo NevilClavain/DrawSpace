@@ -269,6 +269,11 @@ DrawSpace::Core::BaseSceneNode* SkyboxService::InstanciateSceneNode( const dsstr
     return entry.skybox_node;
 }
 
+void SkyboxService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+}
+
+
 void SkyboxService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {
     //TODO

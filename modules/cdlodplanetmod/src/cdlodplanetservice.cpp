@@ -116,7 +116,7 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
-
+    DrawSpace::SphericalLOD::Body::BuildMeshes();
 }
 
 void CDLODPlanetService::OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val )
@@ -195,8 +195,8 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 
 
     SphericalLOD::Config::LayerDescriptor planet_surface;
-    planet_surface.enable_collisions = true;
-    planet_surface.enable_datatextures = true;
+    planet_surface.enable_collisions = false;
+    planet_surface.enable_datatextures = false;
     planet_surface.enable_lod = true;
     planet_surface.min_lodlevel = 0;
     planet_surface.ray = PLANET_RAY;
@@ -216,9 +216,29 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
         pe.planet->RegisterSinglePassSlot( m_texturepass, pe.simplebinder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_SKIRT_MESHE, 0, 2000 );
     }
 
-    pe.planet->RegisterScenegraphCallbacks( *m_scenenodegraph );
+    // temp
+    pe.planet->SetOrbitDuration( 0.333 );
+    pe.planet->SetRevolutionTiltAngle( 8.0 );    
+    pe.planet->SetRevolutionDuration( 1.0 );
+    
 
-    return NULL;
+    pe.planet_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::SphericalLOD::Root>, SceneNode<DrawSpace::SphericalLOD::Root>( p_sceneNodeName ) );
+    pe.planet_node->SetContent( pe.planet );
+
+
+    //m_scenenodegraph->RegisterNode( pe.planet_node );
+
+    m_nodes[p_sceneNodeName] = pe;
+
+    return pe.planet_node;
+}
+
+void CDLODPlanetService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+    for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    {
+        it->second.planet->RegisterScenegraphCallbacks( *m_scenenodegraph );
+    }
 }
 
 void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName )

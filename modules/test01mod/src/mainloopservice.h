@@ -44,7 +44,9 @@ public:
                                                     DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb );
     virtual void                            Run( void );
     virtual void                            Release( void );
+
     virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName );
+    virtual void                            RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
     virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName );
 
 

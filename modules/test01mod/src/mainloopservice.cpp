@@ -91,6 +91,11 @@ DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dss
     return NULL;
 }
 
+void MainLoopService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+}
+
+
 void MainLoopService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {
 }

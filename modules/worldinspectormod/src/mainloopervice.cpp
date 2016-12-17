@@ -95,6 +95,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GUI_StoreWidget( 0, 1 );
 
+
+    m_scenenodegraph.SetCurrentCamera( "camera" );
+
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
@@ -130,6 +133,10 @@ void MainLoopService::Release( void )
 DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
 {
     return NULL;
+}
+
+void MainLoopService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
 }
 
 void MainLoopService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
@@ -309,7 +316,7 @@ void MainLoopService::create_camera( void )
 
     m_scenenodegraph.RegisterNode( m_camera_node );
 
-    m_scenenodegraph.SetCurrentCamera( "camera" );
+    
 
     m_camerapos = _DRAWSPACE_NEW_( DrawSpace::Core::Transformation, DrawSpace::Core::Transformation );
     m_camerapos_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Core::Transformation>, SceneNode<DrawSpace::Core::Transformation>( "camera_pos" ) );
@@ -317,7 +324,7 @@ void MainLoopService::create_camera( void )
     m_camerapos_node->SetContent( m_camerapos );
 
     DrawSpace::Utils::Matrix camera_pos;
-    camera_pos.Translation( 0.0, 0.0, 5.0 );
+    camera_pos.Translation( 0.0, 0.0, /*5.0*/ 2000.0 * 1000.0 );
 
     m_camerapos->PushMatrix( camera_pos );
 
@@ -329,7 +336,12 @@ void MainLoopService::create_camera( void )
 
 void MainLoopService::create_planet( void )
 {   
-    m_cdlodp_service->InstanciateSceneNode( "planet0" );
+    DrawSpace::Core::BaseSceneNode* spacebox_node = m_cdlodp_service->InstanciateSceneNode( "planet0" );
+
+    m_scenenodegraph.RegisterNode( spacebox_node );
+
+    spacebox_node->LinkTo( m_objectRot_node );
+    m_cdlodp_service->RegisterScenegraphCallbacks( m_scenenodegraph );
 }
 
 void MainLoopService::load_cdlodplanet_module( void )

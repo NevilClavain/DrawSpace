@@ -57,6 +57,7 @@ public:
     virtual void                            Release( void ) = 0;
 
     virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName ) = 0;
+    virtual void                            RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph ) = 0;
     virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName ) = 0;
 
 
