@@ -218,7 +218,7 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 
     // temp
     pe.planet->SetOrbitDuration( 0.333 );
-    pe.planet->SetRevolutionTiltAngle( 8.0 );    
+    pe.planet->SetRevolutionTiltAngle( 0.0 );    
     pe.planet->SetRevolutionDuration( 1.0 );
     
 
