@@ -92,6 +92,11 @@ LRESULT CALLBACK DrawSpaceAppWinProc( HWND pHwnd, UINT pMsg, WPARAM pWParam, LPA
             App::OSInputEvtKeyUp( (long)pWParam );
             break;
 
+        case WM_MOUSEWHEEL:
+
+            App::OSInputEvtMouseWheel( (long)pWParam );
+            break;
+
         case WM_QUIT:
         case WM_DESTROY:
 
@@ -124,6 +129,8 @@ m_app_ready( false ),
 m_keypress( false ),
 m_keypulse( false ),
 m_mousemoving( true ),
+m_mousewheel( false ),
+m_mousewheel_delta( 0 ),
 m_mousemovingstart( true ),
 m_mousemoving_curr_x( 0 ),
 m_mousemoving_curr_y( 0 ),
@@ -301,6 +308,12 @@ void App::process_input_events( void )
         }
 
         m_mousemoving = false;
+    }
+
+    if( m_mousewheel )
+    {
+        OnMouseWheel( m_mousewheel_delta );
+        m_mousewheel = false;
     }
 }
 
@@ -538,6 +551,12 @@ void App::OSInputEvtMouseMove( long p_pos, long p_button )
     m_base_instance->m_mousemoving_pos = p_pos;
 }
 
+
+void App::OSInputEvtMouseWheel( long p_distance )
+{
+    m_base_instance->m_mousewheel = true;
+    m_base_instance->m_mousewheel_delta = p_distance;
+}
 
 void App::OSInputEvtApp( WPARAM p_wParam, LPARAM p_lParam )
 {

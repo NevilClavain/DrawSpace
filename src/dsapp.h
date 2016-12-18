@@ -78,6 +78,7 @@ protected:
 
     bool                                    m_mousemoving;
     bool                                    m_mousemovingstart;
+    bool                                    m_mousewheel;
     long                                    m_mousemoving_pos;
     long                                    m_mousemoving_curr_x;
     long                                    m_mousemoving_curr_y;
@@ -86,6 +87,7 @@ protected:
     long                                    m_mouselclick_pos;
     long                                    m_mouserclick_pos;
     long                                    m_mouse_circularmode;
+    long                                    m_mousewheel_delta;
 
     App( void );
 
@@ -112,6 +114,7 @@ protected:
     virtual void OnKeyPulse( long p_key ) { };
 
     virtual void OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy ) { };
+    virtual void OnMouseWheel( long p_distance ) { };
 
     virtual void OnMouseLeftButtonDown( long p_xm, long p_ym ) { };
     virtual void OnMouseLeftButtonUp( long p_xm, long p_ym ) { };
@@ -153,6 +156,7 @@ public:
     static void	OSInputEvtKeyDown( long p_key );
     static void	OSInputEvtKeyUp( long p_key );
     static void	OSInputEvtMouseMove( long p_pos, long p_button );
+    static void OSInputEvtMouseWheel( long p_distance );
     static void	OSInputEvtApp( WPARAM p_wParam, LPARAM p_lParam );
 
 };

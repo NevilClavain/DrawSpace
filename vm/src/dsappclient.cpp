@@ -126,6 +126,11 @@ void dsAppClient::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
     }
 }
 
+void dsAppClient::OnMouseWheel( long p_delta )
+{
+
+}
+
 void dsAppClient::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
     if( m_mainloopservice )
