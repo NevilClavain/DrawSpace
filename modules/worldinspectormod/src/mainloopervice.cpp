@@ -76,6 +76,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     create_camera();
     create_cubes();
 
+    m_scenenodegraph.SetCurrentCamera( "camera" );
+
     load_cdlodplanet_module();
 
     create_planet();
@@ -96,7 +98,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( 0, 1 );
 
 
-    m_scenenodegraph.SetCurrentCamera( "camera" );
+    //m_scenenodegraph.SetCurrentCamera( "camera" );
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
