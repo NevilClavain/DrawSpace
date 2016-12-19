@@ -1,0 +1,45 @@
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2016                              
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+
+struct PS_INTPUT
+{
+    float4 LODGlobalPatch_TexCoord : TEXCOORD0;
+    float4 UnitPatch_TexCoord : TEXCOORD1;
+    float4 GlobalPatch_TexCoord : TEXCOORD2;
+
+    float4 c0 : COLOR0;
+    float4 c1 : COLOR1;
+
+    float4 c0_1 : COLOR2;
+    float4 c1_1 : COLOR3;
+
+    float4 c0_2 : COLOR4;
+    float4 c1_2 : COLOR5;
+
+    float Fog : FOG;
+};
+
+float4 ps_main(PS_INTPUT input) : SV_Target
+{
+    float4 final_color = { 0.0, 1.0, 1.0, 1.0 };
+    return final_color;
+}

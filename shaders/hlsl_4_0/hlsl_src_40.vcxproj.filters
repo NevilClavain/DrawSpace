@@ -10,6 +10,12 @@
     <Filter Include="pixel_shaders">
       <UniqueIdentifier>{d5eb96f1-9215-4b4c-bfae-a3828ce2133d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="pixel_shaders\planet">
+      <UniqueIdentifier>{db192676-3adc-4c47-8b6d-9f544a510e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vertex_shaders\planet">
+      <UniqueIdentifier>{ee64fab3-3230-4f4f-90fa-71ec5912dac1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="texture.psh">
@@ -52,6 +58,15 @@
       <Filter>commons</Filter>
     </FxCompile>
     <FxCompile Include="fbm.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_surface_flat.psh">
+      <Filter>pixel_shaders\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_surface_flat.vsh">
+      <Filter>vertex_shaders\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="spherelod_commons.hlsl">
       <Filter>commons</Filter>
     </FxCompile>
   </ItemGroup>

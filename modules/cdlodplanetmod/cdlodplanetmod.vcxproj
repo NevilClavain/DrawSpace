@@ -111,6 +111,14 @@ copy .\..\..\shaders_bank\hlsl_3_0\planet_surface_flat.vso .\..\..\..\Drawspace_
       <FileType>Document</FileType>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\shaders\hlsl_4_0\planet_surface_flat.psh">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="..\..\shaders\hlsl_4_0\planet_surface_flat.vsh">
+      <FileType>Document</FileType>
+    </Text>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
