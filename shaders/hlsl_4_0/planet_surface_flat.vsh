@@ -28,6 +28,13 @@ cbuffer legacyargs : register(b0)
 
 #include "mat_input_constants.hlsl"
 
+#define flag0                   24
+#define patch_translation       25
+#define base_uv                 26
+#define base_uv_global          27
+#define viewer_pos              28
+
+
 struct VS_INPUT
 {
     float3 Position : POSITION;
