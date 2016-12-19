@@ -44,6 +44,6 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-    float4 final_color = { 0.0, 1.0, 0.0, 1.0 };
+    float4 final_color = { 0.0, 1.0, 1.0, 1.0 };
 	return final_color;
 }
