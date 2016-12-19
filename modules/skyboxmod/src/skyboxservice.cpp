@@ -327,6 +327,11 @@ void SkyboxService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
 }
 
+void SkyboxService::OnMouseWheel( long p_delta )
+{
+}
+
+
 void SkyboxService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
 }

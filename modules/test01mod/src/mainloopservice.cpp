@@ -116,6 +116,11 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
 }
 
+void MainLoopService::OnMouseWheel( long p_delta )
+{
+}
+
+
 void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
 }

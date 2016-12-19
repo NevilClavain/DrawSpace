@@ -159,6 +159,10 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
     m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
 }
 
+void MainLoopService::OnMouseWheel( long p_delta )
+{
+}
+
 void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
     m_renderer->GUI_OnMouseLeftButtonDown();

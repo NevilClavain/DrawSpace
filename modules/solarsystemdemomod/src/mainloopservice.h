@@ -54,6 +54,7 @@ public:
     virtual void                            OnEndKeyPress( long p_key );
     virtual void                            OnKeyPulse( long p_key );
     virtual void                            OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
+    virtual void                            OnMouseWheel( long p_delta );
     virtual void                            OnMouseLeftButtonDown( long p_xm, long p_ym );
     virtual void                            OnMouseLeftButtonUp( long p_xm, long p_ym );
     virtual void                            OnMouseRightButtonDown( long p_xm, long p_ym );
