@@ -26,7 +26,7 @@ struct PS_INTPUT
 	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
 	float4 UnitPatch_TexCoord		: TEXCOORD1;
 	float4 GlobalPatch_TexCoord		: TEXCOORD2;
-
+    /*
     float4 c0 : COLOR0;
     float4 c1 : COLOR1;
 
@@ -37,6 +37,7 @@ struct PS_INTPUT
     float4 c1_2 : COLOR5;
 
     float Fog : FOG;
+    */
 };
 
 #include "spherelod_commons.hlsl"

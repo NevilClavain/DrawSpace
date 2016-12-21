@@ -161,7 +161,7 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     pe.details_fx->AddShader( pe.planet_vshader );
     pe.details_fx->AddShader( pe.planet_pshader );
 
-
+    pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
     pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );

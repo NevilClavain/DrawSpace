@@ -43,12 +43,11 @@ struct VS_INPUT
 
 struct VS_OUTPUT
 {
-    float4 Position : POSITION0;
+    float4 Position                 : SV_POSITION;
     
-    float4 LODGlobalPatch_TexCoord : TEXCOORD0;
-    float4 UnitPatch_TexCoord : TEXCOORD1;
-    float4 GlobalPatch_TexCoord : TEXCOORD2;
-
+    float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
+    float4 UnitPatch_TexCoord       : TEXCOORD1;
+    float4 GlobalPatch_TexCoord     : TEXCOORD2;
 };
 
 #include "mat_input_constants.hlsl"
@@ -68,7 +67,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	// sidelenght scaling
 
     v_position.xyz = Input.Position * flag0.y / 2.0;
-    v_position.xyz = v_position.xyz + patch_translation.xyz;
+    v_position.xy = v_position.xy + patch_translation.xy;
     v_position.z = 1.0;
     v_position.w = 1.0;
 	
@@ -81,7 +80,6 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     v_position3 = v_position2 * flag0.z;
     v_position3.w = 1.0;
     
-    v_position3.w = 1.0;
 
     Output.Position = mul(v_position3, mat[matWorldViewProjection]);
 	
