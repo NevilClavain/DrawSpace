@@ -65,7 +65,9 @@
     <PostBuildEvent>
       <Command>copy .\..\..\libs\cdlodplanetmod.dll .\..\..\..\Drawspace_samples\bin
 copy .\..\..\shaders_bank\hlsl_3_0\planet_surface_flat.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface_flat.pso
-copy .\..\..\shaders_bank\hlsl_3_0\planet_surface_flat.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface_flat.vso</Command>
+copy .\..\..\shaders_bank\hlsl_3_0\planet_surface_flat.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface_flat.vso
+copy .\..\..\shaders_bank\hlsl_4_0\planet_surface_flat.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_4_0\planet_surface_flat.pso
+copy .\..\..\shaders_bank\hlsl_4_0\planet_surface_flat.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_4_0\planet_surface_flat.vso</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -91,7 +93,9 @@ copy .\..\..\shaders_bank\hlsl_3_0\planet_surface_flat.vso .\..\..\..\Drawspace_
     <PostBuildEvent>
       <Command>copy .\..\..\libs\cdlodplanetmod_r.dll .\..\..\..\Drawspace_samples\bin
 copy .\..\..\shaders_bank\hlsl_3_0\planet_surface_flat.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface_flat.pso
-copy .\..\..\shaders_bank\hlsl_3_0\planet_surface_flat.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface_flat.vso</Command>
+copy .\..\..\shaders_bank\hlsl_3_0\planet_surface_flat.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface_flat.vso
+copy .\..\..\shaders_bank\hlsl_4_0\planet_surface_flat.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_4_0\planet_surface_flat.pso
+copy .\..\..\shaders_bank\hlsl_4_0\planet_surface_flat.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_4_0\planet_surface_flat.vso</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
