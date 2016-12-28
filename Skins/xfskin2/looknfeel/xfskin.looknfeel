@@ -133,6 +133,9 @@
     <PropertyDefinition initialValue="CentreAligned" type="VerticalTextFormatting" name="VertLabelFormatting"/>
     <PropertyDefinition initialValue="CentreAligned" type="HorizontalTextFormatting" name="HorzLabelFormatting"/>
 
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="Colour" name="NormalTextColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FFDDDDDD" type="Colour" name="DisabledTextColour"/>    
+
     <ImagerySection name="label">
       <TextComponent>
         <Area>
@@ -286,7 +289,9 @@
         <Section section="normal">
         </Section>
         <Section section="label">
-          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
+
+          <ColourProperty name="NormalTextColour"/>
         </Section>
       </Layer>
     </StateImagery>
@@ -295,7 +300,8 @@
       <Layer>
         <Section section="hover"/>
         <Section section="label">
-          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
+          <ColourProperty name="NormalTextColour"/>
         </Section>        
       </Layer>
     </StateImagery>
@@ -304,7 +310,8 @@
       <Layer>
         <Section section="pushed"/>
         <Section section="label">
-          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
+          <ColourProperty name="NormalTextColour"/>
         </Section>
       </Layer>
     </StateImagery>
@@ -313,7 +320,8 @@
       <Layer>
         <Section section="normal"/>
         <Section section="label">
-          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
+          <ColourProperty name="NormalTextColour"/>
         </Section>
       </Layer>
     </StateImagery>
@@ -322,7 +330,9 @@
       <Layer>
         <Section section="normal"/>
         <Section section="label">
-          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
+
+          <ColourProperty name="DisabledTextColour"/>
         </Section>
       </Layer>
     </StateImagery>
