@@ -2,28 +2,28 @@
 
 <GUILayout version="4" >
     <Window type="DefaultWindow" name="root" >
-        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="Area" value="{{0,-2},{0,-2},{1,-2},{1,-2}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="xfskin/Label" name="Label" >
             <Property name="ID" value="1" />
-            <Property name="Area" value="{{0,0},{0,0},{0,696},{0,32}}" />
+            <Property name="Area" value="{{0,344},{0,25},{0,598},{0,97}}" />
             <Property name="Font" value="Audiowide-Regular-12" />
             <Property name="Text" value="1224 Test !!" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/Button" name="Button" >
             <Property name="ID" value="2" />
-            <Property name="Area" value="{{0,115},{0,105},{0,355},{0,189}}" />
+            <Property name="Area" value="{{0,275},{0,276},{0,515},{0,360}}" />
             <Property name="Font" value="Audiowide-Regular-12" />
             <Property name="Text" value="Button 0" />
         </Window>
         <Window type="xfskin/StaticImage" name="StaticImage" >
-            <Property name="Area" value="{{0,355},{0,145},{0,557},{0,148}}" />
+            <Property name="Area" value="{{0,515},{0,316},{0,717},{0,319}}" />
             <Property name="Image" value="xfskin/line_h_long" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/StaticImage" name="StaticImage2" >
-            <Property name="Area" value="{{0,555},{0,125},{0,585},{0,165}}" />
+            <Property name="Area" value="{{0,715},{0,296},{0,745},{0,336}}" />
             <Property name="Image" value="xfskin/bloc_1" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>

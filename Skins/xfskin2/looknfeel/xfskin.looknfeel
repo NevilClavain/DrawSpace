@@ -2,8 +2,7 @@
 <Falagard version="7">
 
   <WidgetLook name="xfskin/Label">
-    <!--<PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="Colour" name="NormalTextColour"/>-->
-    <PropertyDefinition redrawOnWrite="true" initialValue="FFFFFFFF" type="Colour" name="NormalTextColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="Colour" name="NormalTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="FFDDDDDD" type="Colour" name="DisabledTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="CentreAligned" type="VerticalTextFormatting" name="VertFormatting"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="CentreAligned" type="HorizontalTextFormatting" name="HorzFormatting"/>
@@ -28,8 +27,51 @@
         <HorzFormatProperty name="HorzFormatting"/>
       </TextComponent>
     </ImagerySection>
+
+    <ImagerySection name="normal">
+
+      <FrameComponent>
+        <Image component="TopLeftCorner" name="xfskin/LabelTL"/>
+        <Image component="TopRightCorner" name="xfskin/LabelTR"/>
+        <Image component="BottomLeftCorner" name="xfskin/LabelBL"/>
+        <Image component="BottomRightCorner" name="xfskin/LabelBR"/>
+        <Image component="LeftEdge" name="xfskin/LabelL"/>
+        <Image component="RightEdge" name="xfskin/LabelR"/>
+        <Image component="TopEdge" name="xfskin/LabelT"/>
+        <Image component="BottomEdge" name="xfskin/LabelB"/>
+      </FrameComponent>
+
+      <ImageryComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <ImageDim name="xfskin/LabelL" dimension="Width"/>
+          </Dim>
+          <Dim type="TopEdge">
+            <ImageDim name="xfskin/LabelT" dimension="Height"/>
+          </Dim>
+          <Dim type="RightEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Width"/>
+              <ImageDim name="xfskin/LabelR" dimension="Width"/>
+            </OperatorDim>
+          </Dim>
+          <Dim type="BottomEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Height"/>
+              <ImageDim name="xfskin/LabelB" dimension="Height"/>
+            </OperatorDim>
+          </Dim>
+        </Area>
+        <Image name="xfskin/LabelFill"/>
+        <VertFormat type="Stretched"/>
+        <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+
+    </ImagerySection>    
+    
     <StateImagery name="Enabled">
       <Layer>
+        <Section section="normal"/>
         <Section section="Label">
           <ColourProperty name="NormalTextColour"/>
         </Section>
@@ -37,6 +79,7 @@
     </StateImagery>
     <StateImagery name="Disabled">
       <Layer>
+        <Section section="normal"/>
         <Section section="Label">
           <ColourProperty name="DisabledTextColour"/>
         </Section>
