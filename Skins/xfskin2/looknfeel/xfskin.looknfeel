@@ -2,7 +2,8 @@
 <Falagard version="7">
 
   <WidgetLook name="xfskin/Label">
-    <PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="Colour" name="NormalTextColour"/>
+    <!--<PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="Colour" name="NormalTextColour"/>-->
+    <PropertyDefinition redrawOnWrite="true" initialValue="FFFFFFFF" type="Colour" name="NormalTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="FFDDDDDD" type="Colour" name="DisabledTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="CentreAligned" type="VerticalTextFormatting" name="VertFormatting"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="CentreAligned" type="HorizontalTextFormatting" name="HorzFormatting"/>

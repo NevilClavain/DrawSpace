@@ -40,4 +40,13 @@
     <Image height="3" name="line_h_long" width="180" xPos="57" yPos="275" />
     <Image height="44" name="line_45_1" width="45" xPos="126" yPos="302" />
     <Image height="44" name="line_45_2" width="45" xPos="179" yPos="302" />
+    <Image height="30" name="LabelTL" width="56" xPos="699" yPos="27" />
+    <Image height="30" name="LabelTR" width="56" xPos="851" yPos="27" />
+    <Image height="30" name="LabelT" width="96" xPos="755" yPos="27" />
+    <Image height="18" name="LabelBL" width="56" xPos="699" yPos="78" />
+    <Image height="18" name="LabelBR" width="56" xPos="851" yPos="78" />
+    <Image height="18" name="LabelB" width="96" xPos="755" yPos="78" />
+    <Image height="21" name="LabelL" width="56" xPos="699" yPos="57" />
+    <Image height="21" name="LabelR" width="56" xPos="851" yPos="57" />
+    <Image height="21" name="LabelFill" width="96" xPos="755" yPos="57" />
 </Imageset>
