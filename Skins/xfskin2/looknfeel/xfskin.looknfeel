@@ -2,7 +2,7 @@
 <Falagard version="7">
 
   <WidgetLook name="xfskin/Label">
-    <PropertyDefinition redrawOnWrite="true" initialValue="FFFFFFFF" type="Colour" name="NormalTextColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="Colour" name="NormalTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="FFDDDDDD" type="Colour" name="DisabledTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="CentreAligned" type="VerticalTextFormatting" name="VertFormatting"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="CentreAligned" type="HorizontalTextFormatting" name="HorzFormatting"/>
@@ -250,28 +250,36 @@
     <StateImagery name="Hover">
       <Layer>
         <Section section="hover"/>
-        <Section section="label"/>
+        <Section section="label">
+          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+        </Section>        
       </Layer>
     </StateImagery>
 
     <StateImagery name="Pushed">
       <Layer>
         <Section section="pushed"/>
-        <Section section="label"/>
+        <Section section="label">
+          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+        </Section>
       </Layer>
     </StateImagery>
 
     <StateImagery name="PushedOff">
       <Layer>
         <Section section="normal"/>
-        <Section section="label"/>
+        <Section section="label">
+          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+        </Section>
       </Layer>
     </StateImagery>
 
     <StateImagery name="Disabled">
       <Layer>
         <Section section="normal"/>
-        <Section section="label"/>
+        <Section section="label">
+          <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+        </Section>
       </Layer>
     </StateImagery>
 

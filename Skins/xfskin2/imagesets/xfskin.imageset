@@ -27,4 +27,17 @@
     <Image height="35" name="ButtonPushedL" width="27" xPos="324" yPos="265" />
     <Image height="25" name="ButtonPushedTR" width="27" xPos="585" yPos="240" />
     <Image height="25" name="ButtonPushedTL" width="27" xPos="324" yPos="240" />
+    <Image height="40" name="bloc_0" width="52" xPos="488" yPos="379" />
+    <Image height="52" name="bloc_1" width="40" xPos="554" yPos="367" />
+    <Image height="87" name="bloc_2" width="82" xPos="335" yPos="355" />
+    <Image height="60" name="line_v_0" width="3" xPos="179" yPos="129" />
+    <Image height="60" name="line_v_1" width="7" xPos="196" yPos="129" />
+    <Image height="60" name="line_v_2" width="7" xPos="221" yPos="129" />
+    <Image height="180" name="line_v_long" width="3" xPos="267" yPos="129" />
+    <Image height="3" name="line_h_0" width="60" xPos="177" yPos="217" />
+    <Image height="9" name="line_h_1" width="60" xPos="177" yPos="231" />
+    <Image height="7" name="line_h_2" width="60" xPos="177" yPos="253" />
+    <Image height="3" name="line_h_long" width="180" xPos="57" yPos="275" />
+    <Image height="44" name="line_45_1" width="45" xPos="126" yPos="302" />
+    <Image height="44" name="line_45_2" width="45" xPos="179" yPos="302" />
 </Imageset>

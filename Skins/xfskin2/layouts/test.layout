@@ -13,9 +13,19 @@
         </Window>
         <Window type="xfskin/Button" name="Button" >
             <Property name="ID" value="2" />
-            <Property name="Area" value="{{0,111},{0,105},{0,351},{0,189}}" />
+            <Property name="Area" value="{{0,115},{0,105},{0,355},{0,189}}" />
             <Property name="Font" value="Audiowide-Regular-12" />
-            <Property name="Text" value="T0" />
+            <Property name="Text" value="Button 0" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage" >
+            <Property name="Area" value="{{0,355},{0,145},{0,557},{0,148}}" />
+            <Property name="Image" value="xfskin/line_h_long" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage2" >
+            <Property name="Area" value="{{0,555},{0,125},{0,585},{0,165}}" />
+            <Property name="Image" value="xfskin/bloc_1" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
     </Window>
 </GUILayout>
