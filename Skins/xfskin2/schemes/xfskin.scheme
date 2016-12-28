@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<GUIScheme version="5" name="xfskin">
+
+  <Font filename="Audiowide-Regular-12.font" />
+  
+  
+  <Imageset filename="xfskin.imageset" />
+
+  
+  <LookNFeel filename="xfskin.looknfeel" />
+  
+  <WindowRendererSet filename="CEGUICoreWindowRendererSet" />
+
+  <FalagardMapping windowType="xfskin/Label" targetType="DefaultWindow" renderer="Core/Default" lookNFeel="xfskin/Label" />
+  <FalagardMapping windowType="xfskin/Button" targetType="CEGUI/PushButton" renderer="Core/Button" lookNFeel="xfskin/Button" />
+
+</GUIScheme>

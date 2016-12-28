@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="xfskin/Label" name="Label" >
+            <Property name="ID" value="1" />
+            <Property name="Area" value="{{0,0},{0,0},{0,696},{0,32}}" />
+            <Property name="Font" value="Audiowide-Regular-12" />
+            <Property name="Text" value="1224 Test !!" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="Button" >
+            <Property name="ID" value="2" />
+            <Property name="Area" value="{{0,111},{0,105},{0,351},{0,189}}" />
+            <Property name="Font" value="Audiowide-Regular-12" />
+            <Property name="Text" value="T0" />
+        </Window>
+    </Window>
+</GUILayout>

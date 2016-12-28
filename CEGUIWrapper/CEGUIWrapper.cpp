@@ -86,7 +86,7 @@ void CEGUIWrapper::OnMouseMove( float p_xm, float p_ym, float p_dx, float p_dy )
     bool status;
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
 
-    status = context.injectMouseMove( p_dx, p_dy );
+    //status = context.injectMouseMove( p_dx, p_dy );
     status = context.injectMousePosition( p_xm, p_ym );
 }
 

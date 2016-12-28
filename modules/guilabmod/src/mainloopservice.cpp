@@ -67,14 +67,21 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GUI_InitSubSystem();
 
-    m_renderer->GUI_SetResourcesRootDirectory( "./xfskin" );
+    m_renderer->GUI_SetResourcesRootDirectory( "./xfskin2" );
+    //m_renderer->GUI_SetResourcesRootDirectory( "./xfskin" );
     m_renderer->GUI_LoadScheme( "xfskin.scheme" );
 
     m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
-    m_renderer->GUI_ShowMouseCursor( true );
+    //m_renderer->GUI_ShowMouseCursor( true );
 
+    
+    m_renderer->GUI_LoadLayout( "test.layout" );
+    m_renderer->GUI_SetLayout( "test.layout" );
+   
+    /*
     m_renderer->GUI_LoadLayout( "main.layout" );
     m_renderer->GUI_SetLayout( "main.layout" );
+    */
 
     m_renderer->GUI_StoreWidget( 0, 1 );
 
@@ -99,7 +106,7 @@ void MainLoopService::Run( void )
 {   
     m_renderer->BeginScreen();
 
-    m_renderer->ClearScreen( 0, 128, 0, 255 );
+    m_renderer->ClearScreen( 0, 0, 0, 255 );
 
     m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 

@@ -1,0 +1,14 @@
+neogrey creative font end user license agreement
+
+By downloading and/or installing this typeface you agree to this license.
+
+1.This typeface is free for personal projects. For commercial purposes, please write to ivan@neogrey.com
+2. The typeface may not be modified without permission from Ivan Philipov.
+3. This typeface may not be sold.
+4. This typeface can be redistributed freely, as long as you include this license agreement.
+5. Embedding this typeface in a PDF document is allowed.
+6. Embedding this typeface in a web page with a @font-face declaration is allowed.
+7. Except for your right granted in this document, all other rights are owned and retained by Ivan Philipov/ neogrey creative.
+8. Ivan Philipov/ neogrey creative will not be liable for any damage resulting from the use of this typeface.
+
+
