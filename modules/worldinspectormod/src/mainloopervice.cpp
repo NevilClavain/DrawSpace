@@ -86,7 +86,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GUI_InitSubSystem();
 
-    m_renderer->GUI_SetResourcesRootDirectory( "./xfskin" );
+    m_renderer->GUI_SetResourcesRootDirectory( "./xfskin2" );
     m_renderer->GUI_LoadScheme( "xfskin.scheme" );
 
     m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
@@ -330,7 +330,7 @@ void MainLoopService::create_camera( void )
     m_camerapos_node->SetContent( m_camerapos );
 
     DrawSpace::Utils::Matrix camera_pos;
-    camera_pos.Translation( 0.0, 0.0, /*5.0*/ 2000.0 * 1000.0 );
+    camera_pos.Translation( 0.0, 0.0, 3000.0 * 1000.0 );
 
     m_camerapos->PushMatrix( camera_pos );
 

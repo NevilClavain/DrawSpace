@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="xfskin/Label" name="FPS_Label" >
+            <Property name="ID" value="1" />
+            <Property name="Area" value="{{0,0},{0,0},{0.25,0},{0.08,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="Close_Button" >
+            <Property name="ID" value="2" />
+            <Property name="Area" value="{{0,0},{0,0},{0,259},{0,73}}" />
+            <Property name="Text" value="Close" />
+            <Property name="VerticalAlignment" value="Bottom" />
+            <Property name="HorizontalAlignment" value="Centre" />
+        </Window>
+    </Window>
+</GUILayout>
