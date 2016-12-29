@@ -36,10 +36,12 @@ m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" )
 {
+    m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
 }
 
 MainLoopService::~MainLoopService( void )
 {
+    _DRAWSPACE_DELETE_( m_guiwidgetpushbuttonclicked_cb );
 }
 
 void MainLoopService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
@@ -55,6 +57,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     // hide OS mouse cursor (we use CEGUI mouse cursor instead)
     (*p_mousevisible_cb)( false );
+
+    m_closeapp_cb = p_closeapp_cb;
 
 
     m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_scenenodegraph );
@@ -96,6 +100,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_SetLayout( "worldinspector.layout" );
 
     m_renderer->GUI_StoreWidget( 0, 1 );
+    m_renderer->GUI_StoreWidget( 0, 2 );
+
+    m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 2 );
+
 
 
     //m_scenenodegraph.SetCurrentCamera( "camera" );
@@ -363,4 +372,12 @@ void MainLoopService::load_cdlodplanet_module( void )
     m_cdlodplanet_texturepass = m_texturepass;
 
     m_cdlodp_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL, NULL );
+}
+
+void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
+{
+    if( "Close_Button" == p_widget_id )
+    {
+        (*m_closeapp_cb)( 0 );
+    }
 }

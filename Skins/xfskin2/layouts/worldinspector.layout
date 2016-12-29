@@ -2,7 +2,7 @@
 
 <GUILayout version="4" >
     <Window type="DefaultWindow" name="root" >
-        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="Area" value="{{0,-2},{0,0},{1,-1},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="xfskin/Label" name="FPS_Label" >
             <Property name="ID" value="1" />
@@ -11,10 +11,20 @@
         </Window>
         <Window type="xfskin/Button" name="Close_Button" >
             <Property name="ID" value="2" />
-            <Property name="Area" value="{{0,0},{0,0},{0,259},{0,73}}" />
+            <Property name="Area" value="{{0,0},{0,0},{0.179861,0},{0.0901235,0}}" />
             <Property name="Text" value="Close" />
             <Property name="VerticalAlignment" value="Bottom" />
             <Property name="HorizontalAlignment" value="Centre" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage" >
+            <Property name="Area" value="{{0.0208333,0},{0.0802469,0},{0.0229167,0},{0.407407,0}}" />
+            <Property name="Image" value="xfskin/line_v_long" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage2" >
+            <Property name="Area" value="{{0.00555556,0},{0.406173,0},{0.03125,0},{0.444444,0}}" />
+            <Property name="Image" value="xfskin/bloc_0" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
     </Window>
 </GUILayout>

@@ -30,6 +30,8 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
+    typedef DrawSpace::Core::CallBack<MainLoopService, void, dsstring>  GUIWidgetPushButtonClickedCallback;
+
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
@@ -64,6 +66,9 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
 
+    GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
+    DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
+
     void init_passes( void );
     void create_passes( void );
 
@@ -72,6 +77,8 @@ protected:
     void create_cubes( void );
     void create_planet( void );
     void create_camera( void );
+
+    void on_guipushbutton_clicked( dsstring p_widget_id );
 
 public:
     MainLoopService( void );
