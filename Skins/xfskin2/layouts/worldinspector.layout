@@ -2,11 +2,11 @@
 
 <GUILayout version="4" >
     <Window type="DefaultWindow" name="root" >
-        <Property name="Area" value="{{0,-2},{0,0},{1,-1},{1,0}}" />
+        <Property name="Area" value="{{0.0102431,-15},{-0.00246914,2},{1.01024,-14},{0.997531,2}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="xfskin/Label" name="FPS_Label" >
             <Property name="ID" value="1" />
-            <Property name="Area" value="{{0,0},{0,0},{0.25,0},{0.08,0}}" />
+            <Property name="Area" value="{{0,0},{0,0},{0.244271,0},{0.08,0}}" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/Button" name="Close_Button" >
@@ -25,6 +25,37 @@
             <Property name="Area" value="{{0.00555556,0},{0.406173,0},{0.03125,0},{0.444444,0}}" />
             <Property name="Image" value="xfskin/bloc_0" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="FPS_Label2" >
+            <Property name="ID" value="3" />
+            <Property name="Area" value="{{-0.000217453,0},{7.72383e-005,0},{-0.0102869,360},{7.72383e-005,65}}" />
+            <Property name="Text" value="Planet view" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorizontalAlignment" value="Right" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage3" >
+            <Property name="Area" value="{{0.24375,0},{0.0314815,0},{0.402778,0},{0.114198,0}}" />
+            <Property name="Image" value="xfskin/line_h_long" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="VertFormatting" value="TopAligned" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage4" >
+            <Property name="Area" value="{{0.401736,0},{0.0317901,0},{0.429514,0},{0.0777778,0}}" />
+            <Property name="Image" value="xfskin/line_45_2" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="VertFormatting" value="TopAligned" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage5" >
+            <Property name="Area" value="{{0.423611,0},{0.0685185,0},{0.470833,0},{0.135185,0}}" />
+            <Property name="Image" value="xfskin/line_h_2" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="VertFormatting" value="TopAligned" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage6" >
+            <Property name="Area" value="{{0.469792,0},{0.0737654,0},{0.759201,0},{0.140741,0}}" />
+            <Property name="Image" value="xfskin/line_h_long" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="VertFormatting" value="TopAligned" />
         </Window>
     </Window>
 </GUILayout>
