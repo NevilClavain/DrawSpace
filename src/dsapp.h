@@ -113,6 +113,8 @@ protected:
 
     virtual void OnKeyPulse( long p_key ) { };
 
+    virtual void OnChar( long p_char, long p_scan ) { };
+
     virtual void OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy ) { };
     virtual void OnMouseWheel( long p_distance ) { };
 
@@ -155,6 +157,7 @@ public:
     static void	OSInputEvtRButtonDown( long p_pos );
     static void	OSInputEvtKeyDown( long p_key );
     static void	OSInputEvtKeyUp( long p_key );
+    static void OSInputEvtChar( long p_char, long p_scan );
     static void	OSInputEvtMouseMove( long p_pos, long p_button );
     static void OSInputEvtMouseWheel( long p_distance );
     static void	OSInputEvtApp( WPARAM p_wParam, LPARAM p_lParam );

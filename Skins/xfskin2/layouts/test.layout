@@ -27,5 +27,25 @@
             <Property name="Image" value="xfskin/bloc_1" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
+        <Window type="xfskin/Editbox" name="Editbox" >
+            <Property name="ID" value="3" />
+            <Property name="Area" value="{{0,242},{0,501},{0,563},{0,582}}" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_ClearText" >
+            <Property name="ID" value="4" />
+            <Property name="Area" value="{{0,66},{0,521},{0,231},{0,571}}" />
+            <Property name="Text" value="Clear text" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_CopyInput" >
+            <Property name="ID" value="5" />
+            <Property name="Area" value="{{0,583},{0,520},{0,783},{0,570}}" />
+            <Property name="Text" value="Copy input" />
+        </Window>
+        <Window type="xfskin/Label" name="Label2" >
+            <Property name="ID" value="6" />
+            <Property name="Area" value="{{0,798},{0,505},{0,1076},{0,582}}" />
+            <Property name="Text" value="?" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
     </Window>
 </GUILayout>

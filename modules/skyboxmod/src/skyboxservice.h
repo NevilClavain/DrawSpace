@@ -157,16 +157,6 @@ public:
     virtual void                            OnTextureVirtualFSPathUpdate( const dsstring& p_path );
     virtual void                            OnTexturesNamesUpdate( const std::vector<dsstring> p_textures );
 
-    virtual void                            OnKeyPress( long p_key );
-    virtual void                            OnEndKeyPress( long p_key );
-    virtual void                            OnKeyPulse( long p_key );
-    virtual void                            OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
-    virtual void                            OnMouseWheel( long p_delta );
-    virtual void                            OnMouseLeftButtonDown( long p_xm, long p_ym );
-    virtual void                            OnMouseLeftButtonUp( long p_xm, long p_ym );
-    virtual void                            OnMouseRightButtonDown( long p_xm, long p_ym );
-    virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
-    virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 };
 
 #endif

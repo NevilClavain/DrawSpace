@@ -32,6 +32,7 @@ _DECLARE_DS_LOGGER( logger, "guilabmainloopservice", NULL )
 
 MainLoopService::MainLoopService( void )
 {
+    m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
 }
 
 MainLoopService::~MainLoopService( void )
@@ -84,6 +85,15 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     */
 
     m_renderer->GUI_StoreWidget( 0, 1 );
+    m_renderer->GUI_StoreWidget( 0, 2 );
+    m_renderer->GUI_StoreWidget( 0, 3 );
+    m_renderer->GUI_StoreWidget( 0, 4 );
+    m_renderer->GUI_StoreWidget( 0, 5 );
+    m_renderer->GUI_StoreWidget( 0, 6 );
+
+    m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 5 );
 
 
     //set_mouse_circular_mode( false );
@@ -158,7 +168,12 @@ void MainLoopService::OnEndKeyPress( long p_key )
 
 void MainLoopService::OnKeyPulse( long p_key )
 {
-    m_renderer->GUI_OnChar( p_key );
+    //m_renderer->GUI_OnChar( p_key );
+}
+
+void MainLoopService::OnChar( long p_char, long p_scan )
+{
+    m_renderer->GUI_OnChar( p_char );
 }
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
@@ -194,4 +209,15 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
+void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
+{
+    if( "Button_ClearText" == p_widget_id )
+    {
+        _asm nop;
+    }
+    else if( "Button_CopyInput" == p_widget_id )
+    {
+        _asm nop;
+    }
+}
 

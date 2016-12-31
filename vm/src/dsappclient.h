@@ -70,6 +70,7 @@ public:
     virtual void        OnKeyPress( long p_key ) ;
     virtual void        OnEndKeyPress( long p_key );
     virtual void        OnKeyPulse( long p_key );
+    virtual void        OnChar( long p_char, long p_scan );
     virtual void        OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
     virtual void        OnMouseWheel( long p_delta );
     virtual void        OnMouseLeftButtonDown( long p_xm, long p_ym );

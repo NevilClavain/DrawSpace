@@ -112,6 +112,11 @@ void MainLoopService::OnKeyPulse( long p_key )
 {
 }
 
+void MainLoopService::OnChar( long p_char, long p_scan )
+{
+
+}
+
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
 }

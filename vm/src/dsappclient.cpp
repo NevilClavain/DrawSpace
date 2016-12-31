@@ -131,6 +131,14 @@ void dsAppClient::OnMouseWheel( long p_delta )
 
 }
 
+void dsAppClient::OnChar( long p_char, long p_scan )
+{
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnChar( p_char, p_scan );
+    }
+}
+
 void dsAppClient::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
     if( m_mainloopservice )

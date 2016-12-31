@@ -289,8 +289,6 @@
         <Section section="normal">
         </Section>
         <Section section="label">
-          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
-
           <ColourProperty name="NormalTextColour"/>
         </Section>
       </Layer>
@@ -300,7 +298,6 @@
       <Layer>
         <Section section="hover"/>
         <Section section="label">
-          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
           <ColourProperty name="NormalTextColour"/>
         </Section>        
       </Layer>
@@ -310,7 +307,6 @@
       <Layer>
         <Section section="pushed"/>
         <Section section="label">
-          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
           <ColourProperty name="NormalTextColour"/>
         </Section>
       </Layer>
@@ -320,7 +316,6 @@
       <Layer>
         <Section section="normal"/>
         <Section section="label">
-          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
           <ColourProperty name="NormalTextColour"/>
         </Section>
       </Layer>
@@ -330,13 +325,107 @@
       <Layer>
         <Section section="normal"/>
         <Section section="label">
-          <!-- <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/> -->
-
           <ColourProperty name="DisabledTextColour"/>
         </Section>
       </Layer>
     </StateImagery>
 
   </WidgetLook>
+
+
+
+  <WidgetLook name="xfskin/Editbox">
+    <PropertyDefinition redrawOnWrite="true" initialValue="FFFFFFFF" type="ColourRect" name="NormalTextColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="SelectedTextColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FFB6D142" type="ColourRect" name="ActiveSelectionColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF808080" type="ColourRect" name="InactiveSelectionColour"/>
+    <Property name="MouseCursorImage" value="xfskin/MouseTextBar"/>
+    <Property name="Size" value="{{0, 256}, {0, 32}}" />
+    <NamedArea name="TextArea">
+      <Area>
+        <Dim type="LeftEdge">
+          <ImageDim name="xfskin/EditboxL" dimension="Width"/>
+        </Dim>
+        <Dim type="TopEdge">
+          <ImageDim name="xfskin/EditboxT" dimension="Height"/>
+        </Dim>
+        <Dim type="RightEdge">
+          <OperatorDim op="Subtract">
+            <UnifiedDim scale="1" type="RightEdge"/>
+            <ImageDim name="xfskin/EditboxR" dimension="Width"/>
+          </OperatorDim>
+        </Dim>
+        <Dim type="BottomEdge">
+          <OperatorDim op="Subtract">
+            <UnifiedDim scale="1" type="BottomEdge"/>
+            <ImageDim name="xfskin/EditboxB" dimension="Height"/>
+          </OperatorDim>
+        </Dim>
+      </Area>
+    </NamedArea>
+    <ImagerySection name="container_normal">
+      <FrameComponent>
+        <Image component="TopLeftCorner" name="xfskin/EditboxTL"/>
+        <Image component="TopRightCorner" name="xfskin/EditboxTR"/>
+        <Image component="BottomLeftCorner" name="xfskin/EditboxBL"/>
+        <Image component="BottomRightCorner" name="xfskin/EditboxBR"/>
+        <Image component="LeftEdge" name="xfskin/EditboxL"/>
+        <Image component="RightEdge" name="xfskin/EditboxR"/>
+        <Image component="TopEdge" name="xfskin/EditboxT"/>
+        <Image component="BottomEdge" name="xfskin/EditboxB"/>
+        <Image component="Background" name="xfskin/EditboxFill"/>
+      </FrameComponent>
+    </ImagerySection>
+    <ImagerySection name="selection">
+      <ImageryComponent>
+        <Image name="xfskin/GenericBrush"/>
+        <VertFormat type="Stretched"/>
+        <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+    </ImagerySection>
+    <ImagerySection name="Caret">
+      <ImageryComponent>
+        <Area>
+          <Dim type="Width">
+            <AbsoluteDim value="3"/>
+          </Dim>
+        </Area>
+        <Image name="xfskin/GenericBrush"/>
+        <VertFormat type="Stretched"/>
+        <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+    </ImagerySection>
+    <StateImagery name="Enabled">
+      <Layer>
+        <Section section="container_normal"/>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="ReadOnly">
+      <Layer>
+        <Section section="container_normal"/>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="Disabled">
+      <Layer>
+        <Section section="container_normal">
+          <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+        </Section>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="ActiveSelection">
+      <Layer>
+        <Section section="selection">
+          <ColourProperty name="ActiveSelectionColour"/>
+        </Section>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="InactiveSelection">
+      <Layer>
+        <Section section="selection">
+          <ColourProperty name="InactiveSelectionColour"/>
+        </Section>
+      </Layer>
+    </StateImagery>
+  </WidgetLook>  
 
 </Falagard>

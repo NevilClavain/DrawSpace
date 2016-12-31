@@ -49,4 +49,15 @@
     <Image height="21" name="LabelL" width="56" xPos="699" yPos="57" />
     <Image height="21" name="LabelR" width="56" xPos="851" yPos="57" />
     <Image height="21" name="LabelFill" width="96" xPos="755" yPos="57" />
+    <Image height="30" name="EditboxTL" width="68" xPos="632" yPos="135" />
+    <Image height="30" name="EditboxBL" width="68" xPos="632" yPos="189" />
+    <Image height="24" name="EditboxL" width="68" xPos="632" yPos="165" />
+    <Image height="30" name="EditboxTR" width="68" xPos="916" yPos="135" />
+    <Image height="30" name="EditboxBR" width="68" xPos="916" yPos="189" />
+    <Image height="24" name="EditboxR" width="68" xPos="916" yPos="165" />
+    <Image height="30" name="EditboxT" width="216" xPos="700" yPos="135" />
+    <Image height="30" name="EditboxB" width="216" xPos="700" yPos="189" />
+    <Image height="24" name="EditboxFill" width="216" xPos="700" yPos="165" />
+    <Image height="33" name="MouseTextBar" width="2" xPos="109" yPos="38" />
+    <Image height="25" name="GenericBrush" width="25" xPos="70" yPos="44" />
 </Imageset>

@@ -315,13 +315,15 @@ void MainLoopService::OnKeyPulse( long p_key )
             
             break;
     }
+}
 
+void MainLoopService::OnChar( long p_char, long p_scan )
+{
     if( m_hmi_mode )
     {
-        m_renderer->GUI_OnChar( p_key );
+        m_renderer->GUI_OnChar( p_char );
         return;
     }
-
 }
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )

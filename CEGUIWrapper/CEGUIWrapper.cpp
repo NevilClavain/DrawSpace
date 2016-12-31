@@ -116,20 +116,23 @@ void CEGUIWrapper::OnMouseRightButtonUp( void )
 
 void CEGUIWrapper::OnKeyDown( long p_key )
 {
-    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();    
-    //context.injectKeyDown( CEGUI::Key::Scan::A );
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+
+    Key::Scan s = (Key::Scan)p_key;
+    //context.injectKeyDown( s );
 }
 
 void CEGUIWrapper::OnKeyUp( long p_key )
 {
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
-    //context.injectKeyUp( CEGUI::Key::Scan::A );
+    Key::Scan s = (Key::Scan)p_key;
+    //context.injectKeyUp( s );
 }
 
 void CEGUIWrapper::OnChar( long p_key )
 {
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
-    context.injectChar( p_key );
+    context.injectChar( p_key  );
 }
 
 void CEGUIWrapper::LoadScheme( const dsstring& p_scheme_path )

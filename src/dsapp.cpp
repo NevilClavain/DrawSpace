@@ -92,6 +92,11 @@ LRESULT CALLBACK DrawSpaceAppWinProc( HWND pHwnd, UINT pMsg, WPARAM pWParam, LPA
             App::OSInputEvtKeyUp( (long)pWParam );
             break;
 
+        case WM_CHAR:
+
+            App::OSInputEvtChar( (long)pWParam, (long)pLParam);
+            break;
+
         case WM_MOUSEWHEEL:
 
             App::OSInputEvtMouseWheel( (long)pWParam );
@@ -544,6 +549,12 @@ void App::OSInputEvtKeyUp( long p_key )
     m_base_instance->m_keypress = false;
     m_base_instance->OnEndKeyPress( p_key );
 }
+
+void App::OSInputEvtChar( long p_char, long p_scan )
+{
+    m_base_instance->OnChar( p_char, p_scan );
+}
+
 
 void App::OSInputEvtMouseMove( long p_pos, long p_button )
 {
