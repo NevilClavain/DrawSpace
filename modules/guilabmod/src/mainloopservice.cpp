@@ -213,11 +213,13 @@ void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
 {
     if( "Button_ClearText" == p_widget_id )
     {
-        _asm nop;
+        m_renderer->GUI_SetWidgetText( 3, "" );
     }
     else if( "Button_CopyInput" == p_widget_id )
     {
-        _asm nop;
+        dsstring widget_text;
+        m_renderer->GUI_GetWidgetText( 3, widget_text );
+        m_renderer->GUI_SetWidgetText( 6, widget_text );
     }
 }
 

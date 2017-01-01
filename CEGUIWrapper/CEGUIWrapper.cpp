@@ -119,14 +119,14 @@ void CEGUIWrapper::OnKeyDown( long p_key )
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
 
     Key::Scan s = (Key::Scan)p_key;
-    //context.injectKeyDown( s );
+    context.injectKeyDown( s );
 }
 
 void CEGUIWrapper::OnKeyUp( long p_key )
 {
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
     Key::Scan s = (Key::Scan)p_key;
-    //context.injectKeyUp( s );
+    context.injectKeyUp( s );
 }
 
 void CEGUIWrapper::OnChar( long p_key )
@@ -185,6 +185,19 @@ void CEGUIWrapper::SetText( int p_id, const dsstring& p_text )
     if( m_ceguiWindowTable.count( p_id ) > 0 )
     {
         m_ceguiWindowTable[p_id]->setText( p_text );
+    }
+    else
+    {
+        _DSEXCEPTION( "unregistered CEGUI window ID" );
+    }
+}
+
+void CEGUIWrapper::GetText( int p_id, dsstring& p_outtext )
+{
+    if( m_ceguiWindowTable.count( p_id ) > 0 )
+    {
+        CEGUI::String text = m_ceguiWindowTable[p_id]->getText();
+        p_outtext = text.c_str();
     }
     else
     {

@@ -67,6 +67,7 @@ public:
     void SetLayout( const dsstring& p_layoutpath );
     void Store( int p_parent_id, int p_id );
     void SetText( int p_id, const dsstring& p_text );
+    void GetText( int p_id, dsstring& p_outtext );
     
     void SubscribePushButtonEventClicked( int p_id );
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler );

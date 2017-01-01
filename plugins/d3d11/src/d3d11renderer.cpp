@@ -2479,6 +2479,11 @@ void D3D11Renderer::GUI_SetWidgetText( int p_id, const dsstring& p_text )
     m_guisubsystem.SetText( p_id, p_text );
 }
 
+void D3D11Renderer::GUI_GetWidgetText( int p_id, dsstring& p_outtext )
+{
+    m_guisubsystem.GetText( p_id, p_outtext );
+}
+
 void D3D11Renderer::GUI_SubscribeWidgetPushButtonEventClicked( int p_id )
 {
     m_guisubsystem.SubscribePushButtonEventClicked( p_id );

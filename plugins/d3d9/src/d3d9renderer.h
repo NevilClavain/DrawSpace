@@ -244,6 +244,7 @@ public:
     virtual void GUI_SetLayout( const dsstring& p_layoutpath );
     virtual void GUI_StoreWidget( int p_parent_id, int p_id );
     virtual void GUI_SetWidgetText( int p_id, const dsstring& p_text );
+    virtual void GUI_GetWidgetText( int p_id, dsstring& p_outtext );
     virtual void GUI_SubscribeWidgetPushButtonEventClicked( int p_id );
     virtual void GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler );
     virtual void GUI_SetMouseCursorImage( const dsstring& p_image );
