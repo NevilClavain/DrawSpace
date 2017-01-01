@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -19,6 +19,7 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 *
 */
+
 #pragma warning( disable : 4005 )
 
 #include <drawspace_commons.h>

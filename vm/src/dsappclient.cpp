@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -181,7 +181,7 @@ void dsAppClient::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 
 void dsAppClient::on_mouse_visible( bool p_state )
 {
-    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est déja visible), car sinon
+    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est dï¿½ja visible), car sinon
     // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
 
     if( !p_state )
@@ -207,7 +207,7 @@ void dsAppClient::on_mousecircularmode_update( bool p_state )
     m_mouse_circularmode = p_state;
 
     /*
-    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est déja visible), car sinon
+    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est dï¿½ja visible), car sinon
     // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
 
     if( p_state )

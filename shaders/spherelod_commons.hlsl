@@ -20,7 +20,6 @@
 *
 */
 
-
 float3 ProjectVectorToCube( int p_orientation, float3 p_vector )
 {
     float3 res;
@@ -84,10 +83,10 @@ float3 compute_front_face_point_vector( float2 p_tex_coords )
 {
 	float3 texel_pos = 0.0;
 
-	// x - u -> passage de [0, 1] à [-1, 1]
+	// x - u -> passage de [0, 1] ï¿½ [-1, 1]
 	texel_pos.x = ( 2.0 * p_tex_coords.x ) - 1.0;
 
-	// y - v -> passage de [0, 1] à [+1,-1]
+	// y - v -> passage de [0, 1] ï¿½ [+1,-1]
 	texel_pos.y = -( ( 2.0 * p_tex_coords.y ) - 1.0 );
 
 	texel_pos.z = 1.0;

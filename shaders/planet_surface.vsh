@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -304,7 +304,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     
     ////////////////////////////
 
-    // fog modulé en fct de l'altitude
+    // fog modulï¿½ en fct de l'altitude
 
     float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
 

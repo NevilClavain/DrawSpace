@@ -1,3 +1,25 @@
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+
 
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
@@ -243,7 +265,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	// passer le point obtenu du repere world vers le repere local a l'impostor
     float4 centerpos3 = mul(centerpos2, InverseMatrix(mul(mul(local_trans, spherical), matWorld)));
 
-	// il ne reste plus qu'à calculer theta et phi a partir du point obtenu (point 0 camera exprimé dans le repere local à l'impostor)
+	// il ne reste plus qu'ï¿½ calculer theta et phi a partir du point obtenu (point 0 camera exprimï¿½ dans le repere local ï¿½ l'impostor)
 
     float theta = atan2(centerpos3[0], centerpos3[2]);
 

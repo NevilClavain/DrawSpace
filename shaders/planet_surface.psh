@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -35,7 +35,7 @@ float4 flags6 : register(c6);
 	// .x -> resol atlas textures splatting
 	// .y -> transition texture globale/texture splatting : borne sup
 	// .z -> transition texture globale/texture splatting : borne inf
-    // .w -> transition ocean global/ocean detaillé
+    // .w -> transition ocean global/ocean detaillï¿½
 
 float4 flags_lights : register(c7);
 	// .x -> ambient light
@@ -345,7 +345,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     if (count_lights > 0)
     {
-        // pour eviter la saturation des couleurs dues à l'additivité 
+        // pour eviter la saturation des couleurs dues ï¿½ l'additivitï¿½ 
         final_color.xyz = final_color.xyz / count_lights;
     }
 

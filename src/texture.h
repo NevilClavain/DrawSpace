@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -49,8 +49,8 @@ public:
 
     typedef enum
     {
-        RENDERTARGET_GPU,  // cas ou la texture resultante va être bindee a un shader (GPU) (défaut)
-        RENDERTARGET_CPU,  // cas ou le contenu de la texture resultante doit être lue par le CPU
+        RENDERTARGET_GPU,  // cas ou la texture resultante va ï¿½tre bindee a un shader (GPU) (dï¿½faut)
+        RENDERTARGET_CPU,  // cas ou le contenu de la texture resultante doit ï¿½tre lue par le CPU
 
     } RenderTarget;
 

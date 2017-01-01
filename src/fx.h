@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -43,8 +43,8 @@ protected:
     std::vector<RenderState>                    m_renderstates_in;
     std::vector<RenderState>                    m_renderstates_out;
 
-    dsstring                                    m_renderstate_unique_queue_id; //si non vide, permet de forcer la rendering queue à garder
-                                                                                // une entree setrenderstates spécialement dédiée au node associée
+    dsstring                                    m_renderstate_unique_queue_id; //si non vide, permet de forcer la rendering queue ï¿½ garder
+                                                                                // une entree setrenderstates spï¿½cialement dï¿½diï¿½e au node associï¿½e
                                                                                 // au lieu d'utiliser celle issue du regroupement
                                                                                 // Utile pour le cas ou on doit updater un ou plusieurs renderstate
                                                                                 // pour ce node pendant le rendu

@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -23,7 +23,7 @@
 #include "dsapp.h"
 #include "tracedefs.h"
 
-// sur laptop, forcer l'utilisation du GPU haute performance, au lieu des chipset graphiques integrés
+// sur laptop, forcer l'utilisation du GPU haute performance, au lieu des chipset graphiques integrï¿½s
 extern "C" {
 	// This is the quickest and easiest way to enable using the nVidia GPU on a Windows laptop with a dedicated nVidia GPU and Optimus tech.
 	// enable optimus!

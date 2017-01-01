@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -98,7 +98,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	//float temperature_alt_dec = 0.0064;  // INPUT 
 	float temperature_alt_dec = thparams.z / 1000.0;
-	//pente temperature fct de l'altitude : x ° perdus tout les 1000 metres 
+	//pente temperature fct de l'altitude : x ï¿½ perdus tout les 1000 metres 
 
 	float temperature_lat;
 	float temperature_alt;

@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -274,7 +274,7 @@ void Layer::Compute( Root* p_owner )
     {        
         if( m_hot )
         {
-            m_body->UpdateHotPoint( m_relative_hotviewerpos ); // m_relative_hotviewerpos est mis à jour seulement 
+            m_body->UpdateHotPoint( m_relative_hotviewerpos ); // m_relative_hotviewerpos est mis ï¿½ jour seulement 
                                                                   // quand on est relatif (hot)
             m_body->Compute();            
         }

@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -464,7 +464,7 @@ void MainLoopService::create_passes( void )
     m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 1 );
     m_finalpass->GetViewportQuad()->SetTexture( m_bumppass->GetTargetTexture(), 2 );
 
-    // puisque m_coloredpass n'est connectée a aucune passe
+    // puisque m_coloredpass n'est connectï¿½e a aucune passe
     void* data;
     m_renderer->CreateTexture( m_coloredpass->GetTargetTexture(), &data );
   

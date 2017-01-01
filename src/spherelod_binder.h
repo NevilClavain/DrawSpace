@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -35,7 +35,7 @@ namespace DrawSpace
 namespace SphericalLOD
 {
 
-// cette classe peut être vue comme un "descripteur" de renderingNode de planete (SphericalLOD::FaceDrawingNode)
+// cette classe peut ï¿½tre vue comme un "descripteur" de renderingNode de planete (SphericalLOD::FaceDrawingNode)
 class Binder
 {
 protected:

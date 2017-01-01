@@ -20,7 +20,6 @@
 *
 */
 
-
 float ComputeVertexHeight(sampler2D p_mapSampler, float4 p_vpos, float4 p_uv, float p_plains_amplitude, float p_mountains_amplitude,
                             float p_offset, float p_uvnoise_seed1, float p_uvnoise_seed2, float p_uvnoise_weight )
 {

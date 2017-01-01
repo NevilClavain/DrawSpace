@@ -1,7 +1,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -171,7 +171,7 @@ void Chunk::ImpostorsInit( int p_nbmax_impostors )
 
     if( p_nbmax_impostors > -1 )
     {
-        // padding : on va a la fin allouer des buffers correspondant à la taille max d'impostors qu'on souhaite.
+        // padding : on va a la fin allouer des buffers correspondant ï¿½ la taille max d'impostors qu'on souhaite.
         // Utile si mise a jour des impostors avec ImpostorsUpdate() (comme c'est le cas avec les clouds volumetrique par exemple)
 
         for( size_t i = 0; i < p_nbmax_impostors - m_idl.size(); i++ )
