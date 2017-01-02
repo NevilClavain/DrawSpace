@@ -32,10 +32,7 @@ class CEGUIWrapper
 protected:
 
     bool                                                m_ready;
-    /*
-    std::map<int, CEGUI::Window*>                       m_ceguiWindowTable;
-    std::map<dsstring, CEGUI::Window*>                  m_ceguiLayoutTable;
-    */
+
     /////////////////////////////////////////////////////////////////////////////////
 
     typedef std::map<dsstring, CEGUI::Window*>          WidgetsTable;
@@ -45,6 +42,8 @@ protected:
 
     CEGUI::Window*                                      m_currentLayout;
 
+    std::vector<CEGUI::Editbox*>                        m_editBoxes;
+
     /////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::Core::BaseCallback<void, dsstring>*      m_pushbuttoneventclicked_handler;
@@ -52,6 +51,8 @@ protected:
     CEGUI::MouseCursor*                                 m_mouse_cursor;
 
     bool            on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt );
+
+    CEGUI::Editbox* find_focused_editbox( void );
 
 public:
     CEGUIWrapper( void );
@@ -82,13 +83,6 @@ public:
     void SubscribePushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName );
     void SetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
     void GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext );  
-    
-    /*
-    void Store( int p_parent_id, int p_id );
-    void SetText( int p_id, const dsstring& p_text );
-    void GetText( int p_id, dsstring& p_outtext );    
-    void SubscribePushButtonEventClicked( int p_id );
-    */
     
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler );
 

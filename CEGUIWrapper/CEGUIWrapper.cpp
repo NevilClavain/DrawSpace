@@ -132,6 +132,23 @@ void CEGUIWrapper::OnKeyUp( long p_key )
 
 void CEGUIWrapper::OnChar( long p_key )
 {
+    if( p_key == 0x08 ) // backspace
+    {
+        CEGUI::Editbox* edbx = find_focused_editbox();
+        if( edbx )
+        {
+            CEGUI::String content = edbx->getText();
+            if( content.size() > 0 )
+            {                
+                dsstring content2 = content.c_str();
+
+                content2.erase( content.size() - 1 );
+
+                edbx->setText( content2.c_str() );
+            }
+        }
+    }
+
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
     context.injectChar( p_key  );
 }
@@ -147,14 +164,6 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path )
 
     Window* wRoot = wmgr.loadLayoutFromFile( p_layout_path );
 
-    /*
-    m_ceguiLayoutTable[p_layout_path] = wRoot;
-
-    int root_id = wRoot->getID();
-    m_ceguiWindowTable[root_id] = wRoot;
-
-    */
-
     m_layoutNamesTable[p_layout_path] = wRoot;
     
     dsstring rootName = wRoot->getName().c_str();
@@ -163,17 +172,6 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path )
 
 void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
 {
-    /*
-    if( m_ceguiLayoutTable.count( p_layoutpath ) )
-    {
-        System::getSingleton().getDefaultGUIContext().setRootWindow( m_ceguiLayoutTable[p_layoutpath] );
-    }
-    else
-    {
-        _DSEXCEPTION( "unregistered CEGUI layout" );
-    }
-    */
-
     if( m_layoutNamesTable.count( p_layoutpath ) )
     {
         m_currentLayout = m_layoutNamesTable[p_layoutpath];
@@ -199,6 +197,12 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
             Window* child = parent->getChild( p_id );
             dsstring childName = child->getName().c_str();
             wt[childName] = child;
+
+            CEGUI::Editbox* edbx = dynamic_cast<CEGUI::Editbox*>( child );            
+            if( edbx )
+            {
+                m_editBoxes.push_back( edbx );
+            }
         }
         else
         {
@@ -277,60 +281,6 @@ void CEGUIWrapper::GetText( const dsstring& p_layoutName, const dsstring& p_widg
     }
 }
 
-
-/*
-void CEGUIWrapper::Store( int p_parent_id, int p_id )
-{
-    if( m_ceguiWindowTable.count( p_parent_id ) > 0 )
-    {
-        Window* parent = m_ceguiWindowTable[p_parent_id];
-        Window* child = parent->getChild( p_id );
-        m_ceguiWindowTable[p_id] = child;
-    }
-    else
-    {
-        _DSEXCEPTION( "unregistered CEGUI window ID" );
-    }
-}
-
-void CEGUIWrapper::SetText( int p_id, const dsstring& p_text )
-{
-    if( m_ceguiWindowTable.count( p_id ) > 0 )
-    {
-        m_ceguiWindowTable[p_id]->setText( p_text );
-    }
-    else
-    {
-        _DSEXCEPTION( "unregistered CEGUI window ID" );
-    }
-}
-
-void CEGUIWrapper::GetText( int p_id, dsstring& p_outtext )
-{
-    if( m_ceguiWindowTable.count( p_id ) > 0 )
-    {
-        CEGUI::String text = m_ceguiWindowTable[p_id]->getText();
-        p_outtext = text.c_str();
-    }
-    else
-    {
-        _DSEXCEPTION( "unregistered CEGUI window ID" );
-    }
-}
-
-void CEGUIWrapper::SubscribePushButtonEventClicked( int p_id )
-{
-    if( m_ceguiWindowTable.count( p_id ) > 0 )
-    {
-        m_ceguiWindowTable[p_id]->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_PushButton_EventClicked, this ) );
-    }
-    else
-    {
-        _DSEXCEPTION( "unregistered CEGUI window ID" );
-    }
-}
-*/
-
 void CEGUIWrapper::RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler )
 {
     m_pushbuttoneventclicked_handler = p_handler;
@@ -405,4 +355,17 @@ void CEGUIWrapper::SetMouseCursorImage( const dsstring& p_image )
 void CEGUIWrapper::ShowMouseCursor( bool p_show )
 {
     System::getSingleton().getDefaultGUIContext().getMouseCursor().setVisible( p_show );
+}
+
+CEGUI::Editbox* CEGUIWrapper::find_focused_editbox( void )
+{
+    for( size_t i = 0; i < m_editBoxes.size(); i++ )
+    {
+        if( m_editBoxes[i]->hasInputFocus() )
+        {
+            return m_editBoxes[i];
+        }
+    }
+
+    return NULL;
 }
