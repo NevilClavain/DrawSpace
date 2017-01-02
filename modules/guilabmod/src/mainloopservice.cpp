@@ -79,22 +79,31 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_LoadLayout( "test.layout" );
     m_renderer->GUI_SetLayout( "test.layout" );
    
-    /*
-    m_renderer->GUI_LoadLayout( "main.layout" );
-    m_renderer->GUI_SetLayout( "main.layout" );
-    */
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 1 );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 2 );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 3 );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 4 );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 5 );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 6 );
 
+    /*
     m_renderer->GUI_StoreWidget( 0, 1 );
     m_renderer->GUI_StoreWidget( 0, 2 );
     m_renderer->GUI_StoreWidget( 0, 3 );
     m_renderer->GUI_StoreWidget( 0, 4 );
     m_renderer->GUI_StoreWidget( 0, 5 );
     m_renderer->GUI_StoreWidget( 0, 6 );
+    */
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
+
+    /*
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 5 );
+    */
 
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "test.layout", "Button_ClearText" );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "test.layout", "Button_CopyInput" );
 
     //set_mouse_circular_mode( false );
 
@@ -126,7 +135,9 @@ void MainLoopService::Run( void )
     char comment[256];
     sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
     dsstring fps_text = comment;
-    m_renderer->GUI_SetWidgetText( 1, fps_text );
+    //m_renderer->GUI_SetWidgetText( 1, fps_text );
+
+    m_renderer->GUI_SetWidgetText( "test.layout", "Label", fps_text );
 
     m_renderer->GUI_Render();
 
@@ -213,13 +224,15 @@ void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
 {
     if( "Button_ClearText" == p_widget_id )
     {
-        m_renderer->GUI_SetWidgetText( 3, "" );
+        //m_renderer->GUI_SetWidgetText( 3, "" );
+
+        m_renderer->GUI_SetWidgetText( "test.layout", "Editbox", "" );
     }
     else if( "Button_CopyInput" == p_widget_id )
     {
         dsstring widget_text;
-        m_renderer->GUI_GetWidgetText( 3, widget_text );
-        m_renderer->GUI_SetWidgetText( 6, widget_text );
+        m_renderer->GUI_GetWidgetText( "test.layout", "Editbox", widget_text );
+        m_renderer->GUI_SetWidgetText( "test.layout", "Label2", widget_text );
     }
 }
 

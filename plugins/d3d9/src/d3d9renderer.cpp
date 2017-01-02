@@ -2100,24 +2100,24 @@ void D3D9Renderer::GUI_LoadScheme( const dsstring& p_scheme_path )
     m_guisubsystem.LoadScheme( p_scheme_path );
 }
 
-void D3D9Renderer::GUI_StoreWidget( int p_parent_id, int p_id )
+void D3D9Renderer::GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id )
 {
-    m_guisubsystem.Store( p_parent_id, p_id );
+    m_guisubsystem.Store( p_layoutName, p_parentName, p_id );
 }
 
-void D3D9Renderer::GUI_SetWidgetText( int p_id, const dsstring& p_text )
+void D3D9Renderer::GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text )
 {
-    m_guisubsystem.SetText( p_id, p_text );
+    m_guisubsystem.SetText( p_layoutName, p_widgetName, p_text );
 }
 
-void D3D9Renderer::GUI_GetWidgetText( int p_id, dsstring& p_outtext )
+void D3D9Renderer::GUI_GetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext )
 {
-    m_guisubsystem.GetText( p_id, p_outtext );
+    m_guisubsystem.GetText( p_layoutName, p_widgetName, p_outtext );
 }
 
-void D3D9Renderer::GUI_SubscribeWidgetPushButtonEventClicked( int p_id )
+void D3D9Renderer::GUI_SubscribeWidgetPushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName )
 {
-    m_guisubsystem.SubscribePushButtonEventClicked( p_id );
+    m_guisubsystem.SubscribePushButtonEventClicked( p_layoutName, p_widgetName );
 }
 
 void D3D9Renderer::GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler )

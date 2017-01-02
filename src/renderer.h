@@ -130,10 +130,10 @@ public:
     virtual void GUI_LoadLayout( const dsstring& p_layout_path ) = 0;
     virtual void GUI_LoadScheme( const dsstring& p_scheme_path ) = 0;
     virtual void GUI_SetLayout( const dsstring& p_layoutpath ) = 0;
-    virtual void GUI_StoreWidget( int p_parent_id, int p_id ) = 0;
-    virtual void GUI_SetWidgetText( int p_id, const dsstring& p_text ) = 0;
-    virtual void GUI_GetWidgetText( int p_id, dsstring& p_outtext ) = 0;
-    virtual void GUI_SubscribeWidgetPushButtonEventClicked( int p_id ) = 0;
+    virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id ) = 0;
+    virtual void GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text ) = 0;
+    virtual void GUI_GetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext ) = 0;
+    virtual void GUI_SubscribeWidgetPushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
     virtual void GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler ) = 0;
     virtual void GUI_SetMouseCursorImage( const dsstring& p_image ) = 0;
     virtual void GUI_ShowMouseCursor( bool p_show ) = 0;

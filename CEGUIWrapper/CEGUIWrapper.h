@@ -32,8 +32,20 @@ class CEGUIWrapper
 protected:
 
     bool                                                m_ready;
+    /*
     std::map<int, CEGUI::Window*>                       m_ceguiWindowTable;
     std::map<dsstring, CEGUI::Window*>                  m_ceguiLayoutTable;
+    */
+    /////////////////////////////////////////////////////////////////////////////////
+
+    typedef std::map<dsstring, CEGUI::Window*>          WidgetsTable;
+
+    std::map<CEGUI::Window*, WidgetsTable>              m_layoutsTable;
+    std::map<dsstring, CEGUI::Window*>                  m_layoutNamesTable;
+
+    CEGUI::Window*                                      m_currentLayout;
+
+    /////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::Core::BaseCallback<void, dsstring>*      m_pushbuttoneventclicked_handler;
 
@@ -65,11 +77,19 @@ public:
     void LoadScheme( const dsstring& p_scheme_path );
 
     void SetLayout( const dsstring& p_layoutpath );
+
+    void Store( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id );
+    void SubscribePushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName );
+    void SetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
+    void GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext );  
+    
+    /*
     void Store( int p_parent_id, int p_id );
     void SetText( int p_id, const dsstring& p_text );
-    void GetText( int p_id, dsstring& p_outtext );
-    
+    void GetText( int p_id, dsstring& p_outtext );    
     void SubscribePushButtonEventClicked( int p_id );
+    */
+    
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler );
 
     void SetMouseCursorImage( const dsstring& p_image );

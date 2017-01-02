@@ -27,7 +27,8 @@ using namespace CEGUI;
 
 CEGUIWrapper::CEGUIWrapper( void ) :
 m_ready( false ),
-m_pushbuttoneventclicked_handler( NULL )
+m_pushbuttoneventclicked_handler( NULL ),
+m_currentLayout( NULL )
 {
 }
 
@@ -144,18 +145,25 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path )
 {
     WindowManager& wmgr = WindowManager::getSingleton();
 
-    //SchemeManager::getSingleton().createFromFile( p_scheme_path );
-
     Window* wRoot = wmgr.loadLayoutFromFile( p_layout_path );
 
+    /*
     m_ceguiLayoutTable[p_layout_path] = wRoot;
 
     int root_id = wRoot->getID();
     m_ceguiWindowTable[root_id] = wRoot;
+
+    */
+
+    m_layoutNamesTable[p_layout_path] = wRoot;
+    
+    dsstring rootName = wRoot->getName().c_str();
+    m_layoutsTable[wRoot][rootName] = wRoot;
 }
 
 void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
 {
+    /*
     if( m_ceguiLayoutTable.count( p_layoutpath ) )
     {
         System::getSingleton().getDefaultGUIContext().setRootWindow( m_ceguiLayoutTable[p_layoutpath] );
@@ -164,8 +172,113 @@ void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
     {
         _DSEXCEPTION( "unregistered CEGUI layout" );
     }
+    */
+
+    if( m_layoutNamesTable.count( p_layoutpath ) )
+    {
+        m_currentLayout = m_layoutNamesTable[p_layoutpath];
+        System::getSingleton().getDefaultGUIContext().setRootWindow( m_currentLayout );        
+    }
+    else
+    {
+        _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
 }
 
+void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        CEGUI::Window* wRoot = m_layoutNamesTable[p_layoutName];
+
+        WidgetsTable& wt = m_layoutsTable[wRoot];
+
+        if( wt.count( p_parentName ) > 0 )
+        {
+            Window* parent = wt[p_parentName];
+            Window* child = parent->getChild( p_id );
+            dsstring childName = child->getName().c_str();
+            wt[childName] = child;
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+void CEGUIWrapper::SubscribePushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            widget->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_PushButton_EventClicked, this ) );
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+void CEGUIWrapper::SetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            widget->setText( p_text );
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+void CEGUIWrapper::GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            p_outtext = widget->getText().c_str();
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+
+/*
 void CEGUIWrapper::Store( int p_parent_id, int p_id )
 {
     if( m_ceguiWindowTable.count( p_parent_id ) > 0 )
@@ -216,6 +329,7 @@ void CEGUIWrapper::SubscribePushButtonEventClicked( int p_id )
         _DSEXCEPTION( "unregistered CEGUI window ID" );
     }
 }
+*/
 
 void CEGUIWrapper::RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler )
 {

@@ -116,18 +116,25 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_LoadLayout( "main.layout" );
 
     m_renderer->GUI_SetLayout( "main.layout" );
+
+    /*
     m_renderer->GUI_StoreWidget( 0, 1 );
     m_renderer->GUI_StoreWidget( 1, 2 );
     m_renderer->GUI_StoreWidget( 1, 3 );
     m_renderer->GUI_StoreWidget( 1, 4 );
+    */
 
+    m_renderer->GUI_StoreWidget( "main.layout", "root", 1 );
+    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 2 );
+    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 3 );
+    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 4 );
 
     
 
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 3 );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Trigger" );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Quit" );
 
     set_mouse_circular_mode( false );
 
@@ -175,7 +182,7 @@ void MainLoopService::Run( void )
     dsstring fps_text = comment;
 
     //m_renderer->DrawText( 255, 0, 0, 10, 20, "%s", fps_text.c_str() );   
-    m_renderer->GUI_SetWidgetText( 2, fps_text );
+    m_renderer->GUI_SetWidgetText( "main.layout", "FPSInfoLabel", fps_text );
 
 
     m_renderer->GUI_Render();

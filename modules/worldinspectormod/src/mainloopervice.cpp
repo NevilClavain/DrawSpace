@@ -99,11 +99,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_LoadLayout( "worldinspector.layout" );
     m_renderer->GUI_SetLayout( "worldinspector.layout" );
 
-    m_renderer->GUI_StoreWidget( 0, 1 );
-    m_renderer->GUI_StoreWidget( 0, 2 );
+    m_renderer->GUI_StoreWidget( "worldinspector.layout", "root", 1 );
+    m_renderer->GUI_StoreWidget( "worldinspector.layout", "root", 2 );
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 2 );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "worldinspector.layout", "Close_Button" );
 
 
 
@@ -124,7 +124,7 @@ void MainLoopService::Run( void )
     char comment[256];
     sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
     dsstring fps_text = comment;
-    m_renderer->GUI_SetWidgetText( 1, fps_text );
+    m_renderer->GUI_SetWidgetText( "worldinspector.layout", "FPS_Label", fps_text );
 
     m_renderer->GUI_Render();
 
