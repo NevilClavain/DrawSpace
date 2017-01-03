@@ -47,5 +47,9 @@
             <Property name="Text" value="?" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
+        <Window type="xfskin/Editbox" name="Editbox2" >
+            <Property name="ID" value="7" />
+            <Property name="Area" value="{{0,241},{0,600},{0,562},{0,681}}" />
+        </Window>
     </Window>
 </GUILayout>

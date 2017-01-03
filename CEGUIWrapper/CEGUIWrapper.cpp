@@ -125,6 +125,39 @@ void CEGUIWrapper::OnKeyDown( long p_key )
 
 void CEGUIWrapper::OnKeyUp( long p_key )
 {
+    int delta = 0;
+    if( VK_LEFT == p_key )
+    {
+        delta = -1;
+    }
+    else if( VK_RIGHT == p_key )
+    {
+        delta = 1;
+    }
+
+
+    if( delta )
+    {
+        CEGUI::Editbox* edbx = find_focused_editbox();
+        if( edbx )
+        {
+            size_t idx = edbx->getCaretIndex();
+
+            idx += delta;
+
+            if( idx < 1 )
+            {
+                idx = 1;
+            }
+            else if( idx > edbx->getText().size() )
+            {
+                idx = edbx->getText().size();
+            }
+
+            edbx->setCaretIndex( idx );
+        }
+    }
+
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
     Key::Scan s = (Key::Scan)p_key;
     context.injectKeyUp( s );
@@ -132,7 +165,7 @@ void CEGUIWrapper::OnKeyUp( long p_key )
 
 void CEGUIWrapper::OnChar( long p_key )
 {
-    if( p_key == 0x08 ) // backspace
+    if( 0x08 == p_key ) // backspace
     {
         CEGUI::Editbox* edbx = find_focused_editbox();
         if( edbx )
@@ -142,7 +175,8 @@ void CEGUIWrapper::OnChar( long p_key )
             {                
                 dsstring content2 = content.c_str();
 
-                content2.erase( content.size() - 1 );
+                size_t idx = edbx->getCaretIndex();
+                content2.erase( idx - 1 );
 
                 edbx->setText( content2.c_str() );
             }
