@@ -176,9 +176,15 @@ void CEGUIWrapper::OnChar( long p_key )
                 dsstring content2 = content.c_str();
 
                 size_t idx = edbx->getCaretIndex();
-                content2.erase( idx - 1 );
+                content2.erase( idx - 1, 1 );
+                idx--;
+                if( idx < 1 )
+                {
+                    idx= 1;
+                }
 
                 edbx->setText( content2.c_str() );
+                edbx->setCaretIndex( idx );
             }
         }
     }
