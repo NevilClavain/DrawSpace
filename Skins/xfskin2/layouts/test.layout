@@ -51,10 +51,23 @@
             <Property name="ID" value="7" />
             <Property name="Area" value="{{0,241},{0,600},{0,562},{0,681}}" />
         </Window>
-        <Window type="xfskin/Titlebar" name="Titlebar" >
-            <Property name="Area" value="{{0,729},{0,175},{0,1110},{0,225}}" />
-            <Property name="Text" value="Title bar" />
-            <Property name="AlwaysOnTop" value="true" />
+        <Window type="xfskin/FrameWindow" name="FrameWindow" >
+            <Property name="Area" value="{{0,780},{0,152},{0.3,920},{0.3,252}}" />
+            <Property name="Text" value="Frame Window caption" />
+            <AutoWindow namePath="__auto_titlebar__" >
+                <Property name="AlwaysOnTop" value="false" />
+            </AutoWindow>
+            <Window type="xfskin/Button" name="Button" >
+                <Property name="Area" value="{{0,24},{0,204},{0,204},{0,254}}" />
+                <Property name="Text" value="Apply" />
+            </Window>
+            <Window type="xfskin/Button" name="Button2" >
+                <Property name="Area" value="{{0,349},{0,205},{0,523},{0,255}}" />
+                <Property name="Text" value="Cancel" />
+            </Window>
+            <Window type="xfskin/Editbox" name="Editbox" >
+                <Property name="Area" value="{{0,124},{0,77},{0,417},{0,164}}" />
+            </Window>
         </Window>
     </Window>
 </GUILayout>

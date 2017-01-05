@@ -79,4 +79,6 @@
     <Image height="19" name="WindowB" width="418" xPos="644" yPos="517" />
     <Image height="210" name="WindowFill" width="432" xPos="637" yPos="307" />
     <Image height="9" name="TitlebarDummy1" width="50" xPos="623" yPos="260" />
+    <Image height="27" name="CloseButtonNormal" width="27" xPos="1002" yPos="198" />
+    <Image height="27" name="CloseButtonPushed" width="27" xPos="1046" yPos="198" />
 </Imageset>

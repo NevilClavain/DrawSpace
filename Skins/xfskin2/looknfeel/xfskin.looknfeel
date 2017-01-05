@@ -335,7 +335,7 @@
 
 
   <WidgetLook name="xfskin/Editbox">
-    <PropertyDefinition redrawOnWrite="true" initialValue="FFFFFFFF" type="ColourRect" name="NormalTextColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="ColourRect" name="NormalTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="SelectedTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="FFB6D142" type="ColourRect" name="ActiveSelectionColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="FF808080" type="ColourRect" name="InactiveSelectionColour"/>
@@ -550,5 +550,285 @@
     </StateImagery>  
   </WidgetLook>  
   
+
+  
+  <WidgetLook name="xfskin/ImageButton">
+    <PropertyDefinition redrawOnWrite="true" initialValue="" type="Image" name="NormalImage"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="" type="Image" name="HoverImage"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="" type="Image" name="PushedImage"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="" type="Image" name="DisabledImage"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="Stretched" type="VerticalFormatting" name="VertImageFormatting"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="Stretched" type="HorizontalFormatting" name="HorzImageFormatting"/>
+    <Property name="Size" value="{{0, 96}, {0, 32}}" />
+    <ImagerySection name="normal">
+        <ImageryComponent>
+            <ImageProperty name="NormalImage"/>
+            <VertFormatProperty name="VertImageFormatting"/>
+            <HorzFormatProperty name="HorzImageFormatting"/>
+        </ImageryComponent>
+    </ImagerySection>
+    <ImagerySection name="hover">
+        <ImageryComponent>
+            <ImageProperty name="HoverImage"/>
+            <VertFormatProperty name="VertImageFormatting"/>
+            <HorzFormatProperty name="HorzImageFormatting"/>
+        </ImageryComponent>
+    </ImagerySection>
+    <ImagerySection name="pushed">
+        <ImageryComponent>
+            <ImageProperty name="PushedImage"/>
+            <VertFormatProperty name="VertImageFormatting"/>
+            <HorzFormatProperty name="HorzImageFormatting"/>
+        </ImageryComponent>
+    </ImagerySection>
+    <ImagerySection name="disabled">
+        <ImageryComponent>
+            <ImageProperty name="DisabledImage"/>
+            <VertFormatProperty name="VertImageFormatting"/>
+            <HorzFormatProperty name="HorzImageFormatting"/>
+        </ImageryComponent>
+    </ImagerySection>
+    <StateImagery name="Normal">
+        <Layer>
+            <Section section="normal"/>
+        </Layer>
+    </StateImagery>
+    <StateImagery name="Hover">
+        <Layer>
+            <Section section="hover"/>
+        </Layer>
+    </StateImagery>
+    <StateImagery name="Pushed">
+        <Layer>
+            <Section section="pushed"/>
+        </Layer>
+    </StateImagery>
+    <StateImagery name="PushedOff">
+        <Layer>
+            <Section section="hover"/>
+        </Layer>
+    </StateImagery>
+    <StateImagery name="Disabled">
+        <Layer>
+            <Section section="disabled"/>
+        </Layer>
+    </StateImagery>
+</WidgetLook>
+
+<WidgetLook name="xfskin/FrameWindow">
+  <PropertyLinkDefinition targetProperty="CaptionColour" widget="__auto_titlebar__" initialValue="FF000000" type="ColourRect" name="CaptionColour"/>
+  <PropertyLinkDefinition targetProperty="Font" widget="__auto_titlebar__" type="Font" name="TitlebarFont"/>
+  <Property name="AutoRenderingSurface" value="true"/>
+  <Property name="Size" value="{{0.3, 0}, {0.3, 0}}" />
+  <NamedArea name="ClientWithTitleWithFrame">
+      <Area>
+          <Dim type="LeftEdge">
+              <ImageDim name="xfskin/WindowL" dimension="Width"/>
+          </Dim>
+          <Dim type="TopEdge">
+              <WidgetDim widget="__auto_titlebar__" dimension="BottomEdge"/>
+          </Dim>
+          <Dim type="RightEdge">
+              <OperatorDim op="Subtract">
+                  <UnifiedDim scale="1" type="RightEdge"/>
+                  <ImageDim name="xfskin/WindowR" dimension="Width"/>
+              </OperatorDim>
+          </Dim>
+          <Dim type="BottomEdge">
+              <OperatorDim op="Subtract">
+                  <UnifiedDim scale="1" type="BottomEdge"/>
+                  <ImageDim name="xfskin/WindowB" dimension="Height"/>
+              </OperatorDim>
+          </Dim>
+      </Area>
+  </NamedArea>
+  <NamedArea name="ClientWithTitleNoFrame">
+      <Area>
+          <Dim type="TopEdge">
+              <WidgetDim widget="__auto_titlebar__" dimension="BottomEdge"/>
+          </Dim>
+      </Area>
+  </NamedArea>
+  <NamedArea name="ClientNoTitleWithFrame">
+      <Area>
+          <Dim type="LeftEdge">
+              <ImageDim name="xfskin/WindowL" dimension="Width"/>
+          </Dim>
+          <Dim type="TopEdge">
+              <ImageDim name="xfskin/WindowT" dimension="Height"/>
+          </Dim>
+          <Dim type="RightEdge">
+              <OperatorDim op="Subtract">
+                  <UnifiedDim scale="1" type="RightEdge"/>
+                  <ImageDim name="xfskin/WindowR" dimension="Width"/>
+              </OperatorDim>
+          </Dim>
+          <Dim type="BottomEdge">
+              <OperatorDim op="Subtract">
+                  <UnifiedDim scale="1" type="BottomEdge"/>
+                  <ImageDim name="xfskin/WindowB" dimension="Height"/>
+              </OperatorDim>
+          </Dim>
+      </Area>
+  </NamedArea>
+  <NamedArea name="ClientNoTitleNoFrame"/>
+  <Child nameSuffix="__auto_titlebar__" type="xfskin/Titlebar">
+      <Area>
+          <Dim type="Height">
+              <FontDim padding="16" type="LineSpacing"/>
+          </Dim>
+      </Area>
+      <Property name="AlwaysOnTop" value="False"/>
+      <Property name="NonClient" value="true"/>
+  </Child>
+      
+  <Child nameSuffix="__auto_closebutton__" type="xfskin/ImageButton">
+      <Area>
+          <Dim type="LeftEdge">
+              <OperatorDim op="Subtract">
+                  <AbsoluteDim value="0"/>
+                  <ImageDim name="xfskin/TitlebarActiveTR" dimension="Width"/>
+              </OperatorDim>
+          </Dim>
+          <Dim type="TopEdge">
+              <OperatorDim op="Multiply">
+                  <AbsoluteDim value="0.5"/>
+                  <OperatorDim op="Subtract">
+                      <WidgetDim widget="__auto_titlebar__" dimension="Height"/>
+                      <ImageDim name="xfskin/CloseButtonNormal" dimension="Height"/>
+                  </OperatorDim>
+              </OperatorDim>
+          </Dim>
+          <Dim type="Width">
+              <ImageDim name="xfskin/CloseButtonNormal" dimension="Width"/>
+          </Dim>
+          <Dim type="Height">
+              <ImageDim name="xfskin/CloseButtonNormal" dimension="Height"/>
+          </Dim>
+      </Area>
+      <HorzAlignment type="RightAligned"/>
+      <Property name="AlwaysOnTop" value="true"/>
+      <Property name="NonClient" value="true"/>
+      <Property name="NormalImage" value="xfskin/CloseButtonNormal"/>
+      <Property name="HoverImage" value="xfskin/CloseButtonNormal"/>
+      <Property name="PushedImage" value="xfskin/CloseButtonPushed"/>
+  </Child>        
+  <ImagerySection name="withtitle_frame">
+      <FrameComponent>
+          <Area>
+              <Dim type="TopEdge">
+                  <WidgetDim widget="__auto_titlebar__" dimension="BottomEdge"/>
+              </Dim>
+          </Area>
+          <Image component="BottomLeftCorner" name="xfskin/WindowBL"/>
+          <Image component="BottomRightCorner" name="xfskin/WindowBR"/>
+          <Image component="LeftEdge" name="xfskin/WindowL"/>
+          <Image component="RightEdge" name="xfskin/WindowR"/>
+          <Image component="BottomEdge" name="xfskin/WindowB"/>
+          <Image component="Background" name="xfskin/WindowFill"/>
+      </FrameComponent>
+  </ImagerySection>
+  <ImagerySection name="notitle_frame">
+      <FrameComponent>
+          <Image component="TopLeftCorner" name="xfskin/WindowTL"/>
+          <Image component="TopRightCorner" name="xfskin/WindowTR"/>
+          <Image component="BottomLeftCorner" name="xfskin/WindowBL"/>
+          <Image component="BottomRightCorner" name="xfskin/WindowBR"/>
+          <Image component="LeftEdge" name="xfskin/WindowL"/>
+          <Image component="RightEdge" name="xfskin/WindowR"/>
+          <Image component="TopEdge" name="xfskin/WindowT"/>
+          <Image component="BottomEdge" name="xfskin/WindowB"/>
+          <Image component="Background" name="xfskin/WindowFill"/>
+      </FrameComponent>
+  </ImagerySection>
+  <ImagerySection name="withtitle_noframe_client_area">
+      <ImageryComponent>
+          <Area>
+              <Dim type="TopEdge">
+                  <WidgetDim widget="__auto_titlebar__" dimension="Height"/>
+              </Dim>
+          </Area>
+          <Image name="xfskin/WindowFill"/>
+          <VertFormat type="Stretched"/>
+          <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+  </ImagerySection>
+  <ImagerySection name="notitle_noframe_client_area">
+      <ImageryComponent>
+          <Image name="xfskin/WindowFill"/>
+          <VertFormat type="Stretched"/>
+          <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+  </ImagerySection>
+  <StateImagery name="ActiveWithTitleWithFrame">
+      <Layer>
+          <Section section="withtitle_frame"/>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="InactiveWithTitleWithFrame">
+      <Layer>
+          <Section section="withtitle_frame"/>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="DisabledWithTitleWithFrame">
+      <Layer>
+          <Section section="withtitle_frame">
+              <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+          </Section>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="ActiveWithTitleNoFrame">
+      <Layer>
+          <Section section="withtitle_noframe_client_area"/>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="InactiveWithTitleNoFrame">
+      <Layer>
+          <Section section="withtitle_noframe_client_area"/>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="DisabledWithTitleNoFrame">
+      <Layer>
+          <Section section="withtitle_noframe_client_area">
+              <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+          </Section>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="ActiveNoTitleWithFrame">
+      <Layer>
+          <Section section="notitle_frame"/>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="InactiveNoTitleWithFrame">
+      <Layer>
+          <Section section="notitle_frame"/>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="DisabledNoTitleWithFrame">
+      <Layer>
+          <Section section="notitle_frame">
+              <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+          </Section>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="ActiveNoTitleNoFrame">
+      <Layer>
+          <Section section="notitle_noframe_client_area"/>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="InactiveNoTitleNoFrame">
+      <Layer>
+          <Section section="notitle_noframe_client_area"/>
+      </Layer>
+  </StateImagery>
+  <StateImagery name="DisabledNoTitleNoFrame">
+      <Layer>
+          <Section section="notitle_noframe_client_area">
+              <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+          </Section>
+      </Layer>
+  </StateImagery>
+</WidgetLook>
+
 
 </Falagard>
