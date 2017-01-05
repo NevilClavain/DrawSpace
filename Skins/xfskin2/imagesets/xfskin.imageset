@@ -60,4 +60,23 @@
     <Image height="24" name="EditboxFill" width="216" xPos="700" yPos="165" />
     <Image height="33" name="MouseTextBar" width="2" xPos="109" yPos="38" />
     <Image height="25" name="GenericBrush" width="25" xPos="70" yPos="44" />
+    <Image height="16" name="TitlebarActiveTL" width="27" xPos="623" yPos="241" />
+    <Image height="16" name="TitlebarActiveBL" width="27" xPos="623" yPos="272" />
+    <Image height="15" name="TitlebarActiveL" width="12" xPos="623" yPos="257" />
+    <Image height="16" name="TitlebarActiveTR" width="27" xPos="1056" yPos="241" />
+    <Image height="16" name="TitlebarActiveBR" width="27" xPos="1056" yPos="272" />
+    <Image height="15" name="TitlebarActiveR" width="12" xPos="1071" yPos="257" />
+    <Image height="16" name="TitlebarActiveT" width="406" xPos="650" yPos="241" />
+    <Image height="16" name="TitlebarActiveB" width="406" xPos="650" yPos="272" />
+    <Image height="15" name="TitlebarActiveFill" width="436" xPos="635" yPos="257" />
+    <Image height="19" name="WindowTL" width="21" xPos="623" yPos="288" />
+    <Image height="19" name="WindowBL" width="21" xPos="623" yPos="517" />
+    <Image height="210" name="WindowL" width="14" xPos="623" yPos="307" />
+    <Image height="19" name="WindowTR" width="21" xPos="1062" yPos="288" />
+    <Image height="19" name="WindowBR" width="21" xPos="1062" yPos="517" />
+    <Image height="210" name="WindowR" width="14" xPos="1069" yPos="307" />
+    <Image height="19" name="WindowT" width="418" xPos="644" yPos="288" />
+    <Image height="19" name="WindowB" width="418" xPos="644" yPos="517" />
+    <Image height="210" name="WindowFill" width="432" xPos="637" yPos="307" />
+    <Image height="9" name="TitlebarDummy1" width="50" xPos="623" yPos="260" />
 </Imageset>

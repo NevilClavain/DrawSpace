@@ -51,5 +51,10 @@
             <Property name="ID" value="7" />
             <Property name="Area" value="{{0,241},{0,600},{0,562},{0,681}}" />
         </Window>
+        <Window type="xfskin/Titlebar" name="Titlebar" >
+            <Property name="Area" value="{{0,729},{0,175},{0,1110},{0,225}}" />
+            <Property name="Text" value="Title bar" />
+            <Property name="AlwaysOnTop" value="true" />
+        </Window>
     </Window>
 </GUILayout>

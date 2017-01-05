@@ -2,20 +2,15 @@
 
 <GUILayout version="4" >
     <Window type="DefaultWindow" name="root" >
-      <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
-      <Property name="MaxSize" value="{{1,0},{1,0}}" />
-      
-      <Window type="AlfiskoSkin/FrameWindow" name="testWindow" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="AlfiskoSkin/FrameWindow" name="testWindow" >
             <Property name="ID" value="1" />
             <Property name="Area" value="{{0,0},{0,0},{0.25,77},{0.25,26}}" />
             <Property name="Text" value="Main control" />
-          
-            <!--
             <AutoWindow namePath="__auto_titlebar__" >
-                <Property name="AlwaysOnTop" value="true" />
+                <Property name="AlwaysOnTop" value="false" />
             </AutoWindow>
-            -->
-            
             <Window type="AlfiskoSkin/Label" name="FPSInfoLabel" >
                 <Property name="ID" value="2" />
                 <Property name="Area" value="{{0,0},{0,0},{1,0},{0.1,0}}" />
@@ -32,6 +27,9 @@
                 <Property name="Text" value="Leave !!" />
             </Window>
         </Window>
-      
-    </Window>  
+        <Window type="AlfiskoSkin/Titlebar" name="Titlebar" >
+            <Property name="Area" value="{{0,589},{0,380},{0,1022},{0,446}}" />
+            <Property name="AlwaysOnTop" value="true" />
+        </Window>
+    </Window>
 </GUILayout>

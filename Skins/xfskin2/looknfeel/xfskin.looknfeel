@@ -426,6 +426,129 @@
         </Section>
       </Layer>
     </StateImagery>
+  </WidgetLook>
+
+
+
+  <WidgetLook name="xfskin/Titlebar">
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="CaptionColour"/>
+
+    <ImagerySection name="active">
+      <FrameComponent>
+        <Image component="TopLeftCorner" name="xfskin/TitlebarActiveTL"/>
+        <Image component="TopRightCorner" name="xfskin/TitlebarActiveTR"/>
+        <Image component="BottomLeftCorner" name="xfskin/TitlebarActiveBL"/>
+        <Image component="BottomRightCorner" name="xfskin/TitlebarActiveBR"/>
+        <Image component="LeftEdge" name="xfskin/TitlebarActiveL"/>
+        <Image component="RightEdge" name="xfskin/TitlebarActiveR"/>
+        <Image component="TopEdge" name="xfskin/TitlebarActiveT"/>
+        <Image component="BottomEdge" name="xfskin/TitlebarActiveB"/>
+      </FrameComponent>
+      <ImageryComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <ImageDim name="xfskin/TitlebarActiveL" dimension="Width"/>
+          </Dim>
+          <Dim type="TopEdge">
+            <ImageDim name="xfskin/TitlebarActiveT" dimension="Height"/>
+          </Dim>
+          <Dim type="RightEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Width"/>
+              <ImageDim name="xfskin/TitlebarActiveR" dimension="Width"/>
+            </OperatorDim>
+          </Dim>
+          <Dim type="BottomEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Height"/>
+              <ImageDim name="xfskin/TitlebarActiveB" dimension="Height"/>
+            </OperatorDim>
+          </Dim>
+        </Area>
+        <Image name="xfskin/TitlebarActiveFill"/>
+        <VertFormat type="Stretched"/>
+        <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+    </ImagerySection>
+    
+    <ImagerySection name="inactive">
+      <FrameComponent>
+        <Image component="TopLeftCorner" name="xfskin/TitlebarActiveTL"/>
+        <Image component="TopRightCorner" name="xfskin/TitlebarActiveTR"/>
+        <Image component="BottomLeftCorner" name="xfskin/TitlebarActiveBL"/>
+        <Image component="BottomRightCorner" name="xfskin/TitlebarActiveBR"/>
+        <Image component="LeftEdge" name="xfskin/TitlebarActiveL"/>
+        <Image component="RightEdge" name="xfskin/TitlebarActiveR"/>
+        <Image component="TopEdge" name="xfskin/TitlebarActiveT"/>
+        <Image component="BottomEdge" name="xfskin/TitlebarActiveB"/>
+      </FrameComponent>
+      <ImageryComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <ImageDim name="xfskin/TitlebarActiveL" dimension="Width"/>
+          </Dim>
+          <Dim type="TopEdge">
+            <ImageDim name="xfskin/TitlebarActiveT" dimension="Height"/>
+          </Dim>
+          <Dim type="RightEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Width"/>
+              <ImageDim name="xfskin/TitlebarActiveR" dimension="Width"/>
+            </OperatorDim>
+          </Dim>
+          <Dim type="BottomEdge">
+            <OperatorDim op="Subtract">
+              <UnifiedDim scale="1" type="Height"/>
+              <ImageDim name="xfskin/TitlebarActiveB" dimension="Height"/>
+            </OperatorDim>
+          </Dim>
+        </Area>
+        <Image name="xfskin/TitlebarActiveFill"/>
+        <VertFormat type="Stretched"/>
+        <HorzFormat type="Stretched"/>
+      </ImageryComponent>
+    </ImagerySection>      
+        
+    <ImagerySection name="caption">
+      <TextComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <OperatorDim op="Add">
+              <ImageDim name="xfskin/TitlebarDummy1" dimension="Width"/>
+              <AbsoluteDim value="1"/>
+            </OperatorDim>
+          </Dim>
+          <Dim type="TopEdge">
+            <AbsoluteDim value="2"/>
+          </Dim>
+        </Area>
+        <Colours topLeft="FF000000" bottomLeft="FF000000" topRight="FF000000" bottomRight="FF000000"/>
+        <VertFormat type="CentreAligned"/>
+      </TextComponent>
+      <TextComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <ImageDim name="xfskin/TitlebarDummy1" dimension="Width"/>
+          </Dim>
+        </Area>
+        <ColourProperty name="CaptionColour"/>
+        <VertFormat type="CentreAligned"/>
+      </TextComponent>
+    </ImagerySection>
+    <StateImagery name="Active">
+      <Layer>
+        <Section section="active"/>
+        <Section section="caption"/>
+      </Layer>
+    </StateImagery>
+  
+    <StateImagery name="Inactive">
+        <Layer>
+            <Section section="inactive"/>
+            <Section section="caption"/>
+        </Layer>
+    </StateImagery>  
   </WidgetLook>  
+  
 
 </Falagard>
