@@ -54,20 +54,37 @@
         <Window type="xfskin/FrameWindow" name="FrameWindow" >
             <Property name="Area" value="{{0,780},{0,152},{0.3,920},{0.3,252}}" />
             <Property name="Text" value="Frame Window caption" />
+            <Property name="SizingEnabled" value="false" />
+            <Property name="EWSizingCursorImage" value="xfskin/MouseCursor" />
+            <Property name="NSSizingCursorImage" value="xfskin/MouseCursor" />
             <AutoWindow namePath="__auto_titlebar__" >
                 <Property name="AlwaysOnTop" value="false" />
             </AutoWindow>
             <Window type="xfskin/Button" name="Button" >
                 <Property name="Area" value="{{0,24},{0,204},{0,204},{0,254}}" />
                 <Property name="Text" value="Apply" />
+                <Window type="xfskin/SimpleLabel" name="SimpleLabel" >
+                    <Property name="Area" value="{{0,0},{0,0},{0,12},{0,32}}" />
+                    <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                </Window>
             </Window>
             <Window type="xfskin/Button" name="Button2" >
                 <Property name="Area" value="{{0,349},{0,205},{0,523},{0,255}}" />
                 <Property name="Text" value="Cancel" />
             </Window>
             <Window type="xfskin/Editbox" name="Editbox" >
-                <Property name="Area" value="{{0,124},{0,77},{0,417},{0,164}}" />
+                <Property name="Area" value="{{0,145},{0,76},{0,438},{0,152}}" />
             </Window>
+            <Window type="xfskin/SimpleLabel" name="SimpleLabel" >
+                <Property name="Area" value="{{0,221},{0,46},{0,345},{0,78}}" />
+                <Property name="Text" value="x value" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            </Window>
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel" >
+            <Property name="Area" value="{{0,288},{0,441},{0,511},{0,473}}" />
+            <Property name="Text" value="Simple Label text !!!" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
     </Window>
 </GUILayout>

@@ -12,6 +12,7 @@
   <WindowRendererSet filename="CEGUICoreWindowRendererSet" />
 
   <FalagardMapping windowType="xfskin/Label" targetType="DefaultWindow" renderer="Core/Default" lookNFeel="xfskin/Label" />
+  <FalagardMapping windowType="xfskin/SimpleLabel" targetType="DefaultWindow" renderer="Core/Default" lookNFeel="xfskin/SimpleLabel" />
   <FalagardMapping windowType="xfskin/Button" targetType="CEGUI/PushButton" renderer="Core/Button" lookNFeel="xfskin/Button" />
   <FalagardMapping windowType="xfskin/ImageButton" targetType="CEGUI/PushButton" renderer="Core/Button" lookNFeel="xfskin/ImageButton" />
   <FalagardMapping windowType="xfskin/StaticImage" targetType="DefaultWindow" renderer="Core/Default" lookNFeel="xfskin/StaticImage" />

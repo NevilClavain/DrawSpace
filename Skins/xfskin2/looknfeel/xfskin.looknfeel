@@ -86,6 +86,49 @@
       </Layer>
     </StateImagery>
   </WidgetLook>
+  
+  
+  <WidgetLook name="xfskin/SimpleLabel">
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="Colour" name="NormalTextColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FFDDDDDD" type="Colour" name="DisabledTextColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="CentreAligned" type="VerticalTextFormatting" name="VertFormatting"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="CentreAligned" type="HorizontalTextFormatting" name="HorzFormatting"/>
+    <Property name="Size" value="{{0, 12}, {0, 32}}" />
+    <ImagerySection name="Label">
+      <TextComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <AbsoluteDim value="0"/>
+          </Dim>
+          <Dim type="TopEdge">
+            <AbsoluteDim value="0"/>
+          </Dim>
+          <Dim type="Width">
+            <UnifiedDim scale="1" type="Width"/>
+          </Dim>
+          <Dim type="Height">
+            <UnifiedDim scale="1" type="Height"/>
+          </Dim>
+        </Area>
+        <VertFormatProperty name="VertFormatting"/>
+        <HorzFormatProperty name="HorzFormatting"/>
+      </TextComponent>
+    </ImagerySection>       
+    <StateImagery name="Enabled">
+      <Layer>
+        <Section section="Label">
+          <ColourProperty name="NormalTextColour"/>
+        </Section>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="Disabled">
+      <Layer>
+        <Section section="Label">
+          <ColourProperty name="DisabledTextColour"/>
+        </Section>
+      </Layer>
+    </StateImagery>
+  </WidgetLook>    
 
   <WidgetLook name="xfskin/StaticImage">
 
