@@ -10,6 +10,9 @@
     <ClCompile Include="src\mainloopervice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\planetsetupsubservice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -21,6 +24,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\mainloopservice.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\planetsetupsubservice.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

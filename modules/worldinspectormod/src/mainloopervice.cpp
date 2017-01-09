@@ -21,7 +21,7 @@
 */
 
 #include "mainloopservice.h"
-#include "drawspace.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -37,6 +37,7 @@ m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
+    
 }
 
 MainLoopService::~MainLoopService( void )
@@ -55,39 +56,44 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
 
-    // hide OS mouse cursor (we use CEGUI mouse cursor instead)
-    (*p_mousevisible_cb)( false );
-
-    m_closeapp_cb = p_closeapp_cb;
-
-
-    m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_scenenodegraph );
-    m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_texturepass );
-
-
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 
     p_logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
 
+    _DSDEBUG( logger, dsstring("main loop service : startup...") );
+
+   
+    // hide OS mouse cursor (we use CEGUI mouse cursor instead)
+    (*p_mousevisible_cb)( false );
+
+    m_closeapp_cb = p_closeapp_cb;
+
+    
+    m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_scenenodegraph );
+    m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_texturepass );
+    
+
+
     /////////////////////////////////////////////////////////////////////////////////
 
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_renderer->GetDescr( m_pluginDescr );
+    
+    //create_passes();
+    
+    //create_camera();
+    //create_cubes();
 
-    create_passes();
-    create_camera();
-    create_cubes();
+    //m_scenenodegraph.SetCurrentCamera( "camera" );
 
-    m_scenenodegraph.SetCurrentCamera( "camera" );
+    //load_cdlodplanet_module();
 
-    load_cdlodplanet_module();
-
-    create_planet();
-
-    init_passes();
-
+    //create_planet();
+    
+    //init_passes();
+    
     m_renderer->GUI_InitSubSystem();
 
     m_renderer->GUI_SetResourcesRootDirectory( "./xfskin2" );
@@ -96,37 +102,55 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
     m_renderer->GUI_ShowMouseCursor( true );
 
+    
     m_renderer->GUI_LoadLayout( "worldinspector.layout" );
     m_renderer->GUI_SetLayout( "worldinspector.layout" );
 
+    /*
     m_renderer->GUI_StoreWidget( "worldinspector.layout", "root", 1 );
     m_renderer->GUI_StoreWidget( "worldinspector.layout", "root", 2 );
-
+    
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "worldinspector.layout", "Close_Button" );
+    */
 
 
+    m_planetsetupsubservice.Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
 
-    //m_scenenodegraph.SetCurrentCamera( "camera" );
-
-    _DSDEBUG( logger, dsstring("main loop service : startup...") );
+    m_current_subservice = &m_planetsetupsubservice;
 }
 
 void MainLoopService::Run( void )
 {   
-    m_scenenodegraph.ComputeTransformations( m_tm );
+    //m_scenenodegraph.ComputeTransformations( m_tm );
 
-    m_texturepass->GetRenderingQueue()->Draw();
-    m_finalpass->GetRenderingQueue()->Draw();
+    //m_texturepass->GetRenderingQueue()->Draw();
+    //m_finalpass->GetRenderingQueue()->Draw();
 
     //m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps -- %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 
+    /*
     char comment[256];
     sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
     dsstring fps_text = comment;
     m_renderer->GUI_SetWidgetText( "worldinspector.layout", "FPS_Label", fps_text );
+    
 
     m_renderer->GUI_Render();
+    
+
+    m_renderer->FlipScreen();
+
+    */
+
+    /*
+    m_renderer->BeginScreen();
+
+    m_renderer->ClearScreen( 0, 0, 0, 0 );
+
+    m_renderer->GUI_Render();
+
+    m_renderer->EndScreen();
 
     m_renderer->FlipScreen();
     
@@ -134,6 +158,9 @@ void MainLoopService::Run( void )
     if( m_tm.IsReady() )
     {
     }
+    */
+
+    m_current_subservice->Run();
 }
 
 void MainLoopService::Release( void )
@@ -156,27 +183,32 @@ void MainLoopService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 
 void MainLoopService::OnKeyPress( long p_key )
 {
-    m_renderer->GUI_OnKeyDown( p_key );
+    //m_renderer->GUI_OnKeyDown( p_key );
+
+    m_current_subservice->OnKeyPress( p_key );
 }
 
 void MainLoopService::OnEndKeyPress( long p_key )
 {
-    m_renderer->GUI_OnKeyUp( p_key );
+    //m_renderer->GUI_OnKeyUp( p_key );
+
+    m_current_subservice->OnEndKeyPress( p_key );
 }
 
 void MainLoopService::OnKeyPulse( long p_key )
 {
-    //m_renderer->GUI_OnChar( p_key );
 }
 
 void MainLoopService::OnChar( long p_char, long p_scan )
 {
-    m_renderer->GUI_OnChar( p_char );
-}
+    //m_renderer->GUI_OnChar( p_char );
 
+    m_current_subservice->OnChar( p_char, p_scan );
+}
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
+    /*
     if( m_mouse_left )
     {
         m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 8.0, m_tm );
@@ -186,8 +218,11 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
     {
         m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 8.0, m_tm );
     }
+    */
 
-    m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
+    //m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
+
+    m_current_subservice->OnMouseMove( p_xm, p_ym, p_dx, p_dy );
 }
 
 void MainLoopService::OnMouseWheel( long p_delta )
@@ -198,28 +233,36 @@ void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
     m_mouse_left = true;
 
-    m_renderer->GUI_OnMouseLeftButtonDown();
+    //m_renderer->GUI_OnMouseLeftButtonDown();
+
+    m_current_subservice->OnMouseLeftButtonDown( p_xm, p_ym );
 }
 
 void MainLoopService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
     m_mouse_left = false;
 
-    m_renderer->GUI_OnMouseLeftButtonUp();
+    //m_renderer->GUI_OnMouseLeftButtonUp();
+
+    m_current_subservice->OnMouseLeftButtonUp( p_xm, p_ym );
 }
 
 void MainLoopService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
     m_mouse_right = true;
 
-    m_renderer->GUI_OnMouseRightButtonDown();
+    //m_renderer->GUI_OnMouseRightButtonDown();
+
+    m_current_subservice->OnMouseRightButtonDown( p_xm, p_ym );
 }
 
 void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
     m_mouse_right = false;
 
-    m_renderer->GUI_OnMouseRightButtonUp();
+    //m_renderer->GUI_OnMouseRightButtonUp();
+
+    m_current_subservice->OnMouseRightButtonUp( p_xm, p_ym );
 }
 
 void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )

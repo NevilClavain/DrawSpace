@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="xfskin/Label" name="Label" >
+            <Property name="ID" value="1" />
+            <Property name="Area" value="{{-0.000217453,0},{7.72383e-005,0},{0.240061,0},{0.0803241,0}}" />
+            <Property name="Text" value="Planet Setup" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorizontalAlignment" value="Right" />
+        </Window>
+        <Window type="xfskin/Button" name="Quit_Button" >
+            <Property name="ID" value="2" />
+            <Property name="Area" value="{{0,2},{0,0},{0.166667,2},{0.0802469,0}}" />
+            <Property name="Text" value="Quit" />
+            <Property name="VerticalAlignment" value="Bottom" />
+        </Window>
+        <Window type="xfskin/Button" name="PlanetView_Button" >
+            <Property name="ID" value="3" />
+            <Property name="Area" value="{{0,1},{0,0},{0.166667,1},{0.0802469,0}}" />
+            <Property name="Text" value="Planet View" />
+            <Property name="VerticalAlignment" value="Centre" />
+        </Window>
+    </Window>
+</GUILayout>

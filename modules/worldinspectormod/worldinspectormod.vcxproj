@@ -93,10 +93,12 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mainloopervice.cpp" />
+    <ClCompile Include="src\planetsetupsubservice.cpp" />
     <ClCompile Include="src\worldinspectorroot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\mainloopservice.h" />
+    <ClInclude Include="src\planetsetupsubservice.h" />
     <ClInclude Include="src\worldinspectorroot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -28,7 +28,7 @@
         </Window>
         <Window type="xfskin/Label" name="FPS_Label2" >
             <Property name="ID" value="3" />
-            <Property name="Area" value="{{-0.000217453,0},{7.72383e-005,0},{-0.0102869,360},{7.72383e-005,65}}" />
+            <Property name="Area" value="{{-0.000217453,0},{7.72383e-005,0},{0.24006,0},{0.0803242,0}}" />
             <Property name="Text" value="Planet view" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="HorizontalAlignment" value="Right" />

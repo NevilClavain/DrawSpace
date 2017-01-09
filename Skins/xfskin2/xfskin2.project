@@ -7,5 +7,6 @@
         <Item path="imagesets/xfskin.imageset" type="file" />
         <Item path="looknfeel/xfskin.looknfeel" type="file" />
         <Item path="schemes/xfskin.scheme" type="file" />
+        <Item path="layouts/planetsetup.layout" type="file" />
     </Items>
 </Project>

@@ -20,72 +20,32 @@
 *
 */
 
-#ifndef _MAINLOOPSERVICE_H_
-#define _MAINLOOPSERVICE_H_
+#ifndef _PLANETSETUPSUBSERVICE_H_
+#define _PLANETSETUPSUBSERVICE_H_
 
 #include "module_service.h"
-#include "planetsetupsubservice.h"
+#include "drawspace.h"
 
-class MainLoopService : public DrawSpace::Interface::Module::Service
+class MainLoopService;
+
+class PlanetSetupSubService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack<MainLoopService, void, dsstring>  GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack<PlanetSetupSubService, void, dsstring>  GUIWidgetPushButtonClickedCallback;
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
 
-    DrawSpace::Interface::MesheImport*                                  m_meshe_import;
-
-    DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
-
-    DrawSpace::FinalPass*                                               m_finalpass;
-    DrawSpace::IntermediatePass*                                        m_texturepass;
-
-    DrawSpace::Core::FreeMovement*                                      m_objectRot;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::FreeMovement>*          m_objectRot_node;
-
-    DrawSpace::Chunk*                                                   m_chunk;
-    DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_chunk_node;
-
-    DrawSpace::Dynamics::CameraPoint*                                   m_camera;
-    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_camera_node;
-
-    DrawSpace::Core::Transformation*                                    m_camerapos;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_camerapos_node;
-
-    bool                                                                m_mouse_left;
-    bool                                                                m_mouse_right;
-
-
-    DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
-    DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
-
-
-    DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
-    DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
-
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
     DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
-
-    PlanetSetupSubService                                               m_planetsetupsubservice;
-    DrawSpace::Interface::Module::Service*                              m_current_subservice;
-
-    void init_passes( void );
-    void create_passes( void );
-
-    void load_cdlodplanet_module( void );
-
-    void create_cubes( void );
-    void create_planet( void );
-    void create_camera( void );
 
     void on_guipushbutton_clicked( dsstring p_widget_id );
 
 public:
-    MainLoopService( void );
-    ~MainLoopService( void );
+    PlanetSetupSubService( void );
+    ~PlanetSetupSubService( void );
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
     virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, 
@@ -112,8 +72,8 @@ public:
     virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
-    void                                    SetPlanetViewLayout( void );
-    void                                    SetPlanetSetupLayout( void );
+
+
 };
 
 #endif
