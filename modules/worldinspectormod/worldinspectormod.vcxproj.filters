@@ -29,5 +29,8 @@
     <ClInclude Include="src\planetsetupsubservice.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\crtp_singleton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

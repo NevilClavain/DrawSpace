@@ -115,9 +115,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     */
 
 
-    m_planetsetupsubservice.Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
+    PlanetSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
 
-    m_current_subservice = &m_planetsetupsubservice;
+    m_current_subservice = PlanetSetupSubService::GetInstance();
 }
 
 void MainLoopService::Run( void )
@@ -429,4 +429,14 @@ void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
     {
         (*m_closeapp_cb)( 0 );
     }
+}
+
+void MainLoopService::SetPlanetViewLayout( void )
+{
+
+}
+
+void MainLoopService::SetPlanetSetupLayout( void )
+{
+
 }

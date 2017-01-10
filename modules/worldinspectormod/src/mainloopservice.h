@@ -24,9 +24,10 @@
 #define _MAINLOOPSERVICE_H_
 
 #include "module_service.h"
+#include "crtp_singleton.h"
 #include "planetsetupsubservice.h"
 
-class MainLoopService : public DrawSpace::Interface::Module::Service
+class MainLoopService : public DrawSpace::Interface::Module::Service, public BaseSingleton<MainLoopService>
 {
 protected:
 
@@ -69,7 +70,6 @@ protected:
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
     DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
 
-    PlanetSetupSubService                                               m_planetsetupsubservice;
     DrawSpace::Interface::Module::Service*                              m_current_subservice;
 
     void init_passes( void );
@@ -83,8 +83,10 @@ protected:
 
     void on_guipushbutton_clicked( dsstring p_widget_id );
 
-public:
+
     MainLoopService( void );
+public:
+
     ~MainLoopService( void );
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
@@ -114,6 +116,8 @@ public:
 
     void                                    SetPlanetViewLayout( void );
     void                                    SetPlanetSetupLayout( void );
+
+    friend class BaseSingleton<MainLoopService>;
 };
 
 #endif

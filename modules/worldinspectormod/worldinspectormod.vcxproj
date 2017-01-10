@@ -97,6 +97,7 @@
     <ClCompile Include="src\worldinspectorroot.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\crtp_singleton.h" />
     <ClInclude Include="src\mainloopservice.h" />
     <ClInclude Include="src\planetsetupsubservice.h" />
     <ClInclude Include="src\worldinspectorroot.h" />

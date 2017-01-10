@@ -42,6 +42,7 @@ PlanetSetupSubService::~PlanetSetupSubService( void )
     _DRAWSPACE_DELETE_( m_guiwidgetpushbuttonclicked_cb );
 }
 
+
 void PlanetSetupSubService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
 }
@@ -174,7 +175,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( dsstring p_widget_id )
     }
     else if( "PlanetView_Button" == p_widget_id )
     {
-    
+        MainLoopService::GetInstance()->SetPlanetViewLayout();
     }
 }
 

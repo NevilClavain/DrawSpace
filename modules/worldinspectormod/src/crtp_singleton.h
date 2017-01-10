@@ -20,36 +20,31 @@
 *
 */
 
-#include "worldinspectorroot.h"
+// Curiously recurring template pattern for singleton :-D
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Utils;
-using namespace DrawSpace::Interface::Module;
+#ifndef _CRTP_H_
+#define _CRTP_H_
 
-WorldInspectorRoot::WorldInspectorRoot( void )
+template<class T>
+class BaseSingleton
 {
-    Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "worldinspector_data/shaders_bank" );
-    Texture::SetRootPath( "worldinspector_data/textures_bank" );
-    AC3DMesheImport::SetRootPath( "worldinspector_data/meshes_bank" );
-}
+protected:
 
-WorldInspectorRoot::~WorldInspectorRoot( void )
-{
-}
+    static T* m_instance;
 
-void WorldInspectorRoot::ServicesInit( void )
-{
-    m_services["mainloop"] = MainLoopService::GetInstance();
-}
+public:
 
-dsstring WorldInspectorRoot::GetModuleName( void )
-{
-    return "WordInspectorMod";
-}
+    static T* GetInstance( void )
+    {
+        if( !m_instance )
+        {
+            m_instance = new T;
+        }
+        return m_instance;
+    };
+};
 
-dsstring WorldInspectorRoot::GetModuleDescr( void )
-{
-    return "World Inspector module";
-}
+template <class T>
+T* BaseSingleton<T>::m_instance = NULL;
+
+#endif

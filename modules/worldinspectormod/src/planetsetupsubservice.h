@@ -25,10 +25,11 @@
 
 #include "module_service.h"
 #include "drawspace.h"
+#include "crtp_singleton.h"
 
 class MainLoopService;
 
-class PlanetSetupSubService : public DrawSpace::Interface::Module::Service
+class PlanetSetupSubService : public DrawSpace::Interface::Module::Service, public BaseSingleton<PlanetSetupSubService>
 {
 protected:
 
@@ -43,9 +44,10 @@ protected:
 
     void on_guipushbutton_clicked( dsstring p_widget_id );
 
-public:
     PlanetSetupSubService( void );
+public:
     ~PlanetSetupSubService( void );
+
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
     virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, 
@@ -72,7 +74,7 @@ public:
     virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
-
+    friend class BaseSingleton<PlanetSetupSubService>;
 
 };
 
