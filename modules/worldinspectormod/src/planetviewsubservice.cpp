@@ -20,7 +20,7 @@
 *
 */
 
-#include "planetsetupsubservice.h"
+#include "planetviewsubservice.h"
 #include "mainloopservice.h"
 
 using namespace DrawSpace;
@@ -28,26 +28,26 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
 
-_DECLARE_DS_LOGGER( logger, "planetsetupsubservice", NULL )
+_DECLARE_DS_LOGGER( logger, "planetviewsubservice", NULL )
 
-#define LAYOUT_FILE "planetsetup.layout"
+#define LAYOUT_FILE "planetview.layout"
 
-PlanetSetupSubService::PlanetSetupSubService( void )
+PlanetViewSubService::PlanetViewSubService( void )
 {
-    m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetSetupSubService::on_guipushbutton_clicked ) );
+    m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
 }
     
-PlanetSetupSubService::~PlanetSetupSubService( void )
+PlanetViewSubService::~PlanetViewSubService( void )
 {
     _DRAWSPACE_DELETE_( m_guiwidgetpushbuttonclicked_cb );
 }
 
 
-void PlanetSetupSubService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
+void PlanetViewSubService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
 }
 
-void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf, 
+void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf, 
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, 
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                                                     DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
@@ -58,7 +58,7 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     p_logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
 
-    _DSDEBUG( logger, dsstring("PlanetSetup sub service : startup...") );
+    _DSDEBUG( logger, dsstring("PlanetView sub service : startup...") );
 
     m_closeapp_cb = p_closeapp_cb;
 
@@ -68,15 +68,13 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
 
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 2 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 3 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Quit_Button" );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "PlanetView_Button" );   
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Close_Button" );
 }
 
 
-void PlanetSetupSubService::Run( void )
+void PlanetViewSubService::Run( void )
 {
     m_renderer->BeginScreen();
 
@@ -94,94 +92,90 @@ void PlanetSetupSubService::Run( void )
     }
 }
 
-void PlanetSetupSubService::Release( void )
+void PlanetViewSubService::Release( void )
 {
-    _DSDEBUG( logger, dsstring("PlanetSetup sub service : shutdown...") );
+    _DSDEBUG( logger, dsstring("PlanetView sub service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* PlanetSetupSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
+DrawSpace::Core::BaseSceneNode* PlanetViewSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
 {
     return NULL;
 }
 
-void PlanetSetupSubService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+void PlanetViewSubService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
 {
 }
 
-void PlanetSetupSubService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
+void PlanetViewSubService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {
 }
 
-void PlanetSetupSubService::OnKeyPress( long p_key )
+void PlanetViewSubService::OnKeyPress( long p_key )
 {
     m_renderer->GUI_OnKeyDown( p_key );
 }
 
-void PlanetSetupSubService::OnEndKeyPress( long p_key )
+void PlanetViewSubService::OnEndKeyPress( long p_key )
 {
     m_renderer->GUI_OnKeyUp( p_key );
 }
 
-void PlanetSetupSubService::OnKeyPulse( long p_key )
+void PlanetViewSubService::OnKeyPulse( long p_key )
 {
 }
 
-void PlanetSetupSubService::OnChar( long p_char, long p_scan )
+void PlanetViewSubService::OnChar( long p_char, long p_scan )
 {
     m_renderer->GUI_OnChar( p_char );
 }
 
-void PlanetSetupSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
+void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
     m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
 }
 
-void PlanetSetupSubService::OnMouseWheel( long p_delta )
+void PlanetViewSubService::OnMouseWheel( long p_delta )
 {
 }
 
-void PlanetSetupSubService::OnMouseLeftButtonDown( long p_xm, long p_ym )
+void PlanetViewSubService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
     m_renderer->GUI_OnMouseLeftButtonDown();
 }
 
-void PlanetSetupSubService::OnMouseLeftButtonUp( long p_xm, long p_ym )
+void PlanetViewSubService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
     m_renderer->GUI_OnMouseLeftButtonUp();
 }
 
-void PlanetSetupSubService::OnMouseRightButtonDown( long p_xm, long p_ym )
+void PlanetViewSubService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
     m_renderer->GUI_OnMouseRightButtonDown();
 }
 
-void PlanetSetupSubService::OnMouseRightButtonUp( long p_xm, long p_ym )
+void PlanetViewSubService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
     m_renderer->GUI_OnMouseRightButtonUp();
 }
 
-void PlanetSetupSubService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
+void PlanetViewSubService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
-void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id )
+void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id )
 {
     if( p_layout != LAYOUT_FILE )
     {
         return;
     }
 
-    if( "Quit_Button" == p_widget_id )
+    if( "Close_Button" == p_widget_id )
     {
-        (*m_closeapp_cb)( 0 );
-    }
-    else if( "PlanetView_Button" == p_widget_id )
-    {
-        MainLoopService::GetInstance()->SetPlanetViewLayout();
+        MainLoopService::GetInstance()->SetPlanetSetupLayout();
     }
 }
 
-void PlanetSetupSubService::ApplyLayout( void )
+void PlanetViewSubService::ApplyLayout( void )
 {
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
 }

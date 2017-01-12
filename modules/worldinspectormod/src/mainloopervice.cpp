@@ -21,7 +21,8 @@
 */
 
 #include "mainloopservice.h"
-
+#include "planetsetupsubservice.h"
+#include "planetviewsubservice.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -36,13 +37,12 @@ m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" )
 {
-    m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
-    
+
 }
 
 MainLoopService::~MainLoopService( void )
 {
-    _DRAWSPACE_DELETE_( m_guiwidgetpushbuttonclicked_cb );
+
 }
 
 void MainLoopService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
@@ -102,22 +102,13 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
     m_renderer->GUI_ShowMouseCursor( true );
 
-    
-    m_renderer->GUI_LoadLayout( "worldinspector.layout" );
-    m_renderer->GUI_SetLayout( "worldinspector.layout" );
-
-    /*
-    m_renderer->GUI_StoreWidget( "worldinspector.layout", "root", 1 );
-    m_renderer->GUI_StoreWidget( "worldinspector.layout", "root", 2 );
-    
-    m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "worldinspector.layout", "Close_Button" );
-    */
-
-
     PlanetSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
+    PlanetViewSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
+
+    PlanetSetupSubService::GetInstance()->ApplyLayout();
 
     m_current_subservice = PlanetSetupSubService::GetInstance();
+
 }
 
 void MainLoopService::Run( void )
@@ -423,20 +414,12 @@ void MainLoopService::load_cdlodplanet_module( void )
     m_cdlodp_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL, NULL );
 }
 
-void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
-{
-    if( "Close_Button" == p_widget_id )
-    {
-        (*m_closeapp_cb)( 0 );
-    }
-}
-
 void MainLoopService::SetPlanetViewLayout( void )
 {
-
+    PlanetViewSubService::GetInstance()->ApplyLayout();
 }
 
 void MainLoopService::SetPlanetSetupLayout( void )
 {
-
+    PlanetSetupSubService::GetInstance()->ApplyLayout();
 }

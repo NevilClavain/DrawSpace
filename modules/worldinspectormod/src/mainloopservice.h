@@ -23,15 +23,12 @@
 #ifndef _MAINLOOPSERVICE_H_
 #define _MAINLOOPSERVICE_H_
 
-#include "module_service.h"
 #include "crtp_singleton.h"
-#include "planetsetupsubservice.h"
+#include "drawspace.h"
 
 class MainLoopService : public DrawSpace::Interface::Module::Service, public BaseSingleton<MainLoopService>
 {
 protected:
-
-    typedef DrawSpace::Core::CallBack<MainLoopService, void, dsstring>  GUIWidgetPushButtonClickedCallback;
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
@@ -67,7 +64,6 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
 
-    GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
     DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
 
     DrawSpace::Interface::Module::Service*                              m_current_subservice;
@@ -80,8 +76,6 @@ protected:
     void create_cubes( void );
     void create_planet( void );
     void create_camera( void );
-
-    void on_guipushbutton_clicked( dsstring p_widget_id );
 
 
     MainLoopService( void );

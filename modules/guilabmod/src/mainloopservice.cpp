@@ -221,7 +221,7 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
-void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
+void MainLoopService::on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id )
 {
     if( "Button_ClearText" == p_widget_id )
     {

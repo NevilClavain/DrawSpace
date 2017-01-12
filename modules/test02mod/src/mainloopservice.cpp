@@ -865,7 +865,7 @@ void MainLoopService::create_ground( void )
 
 }
 
-void MainLoopService::on_guipushbutton_clicked( dsstring p_widget_id )
+void MainLoopService::on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id )
 {
     if( "Trigger" == p_widget_id )
     {

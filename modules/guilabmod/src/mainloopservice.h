@@ -29,7 +29,7 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack<MainLoopService, void, dsstring>  GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack2<MainLoopService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
 
     DrawSpace::Interface::Renderer*                 m_renderer;
     DrawSpace::Utils::TimeManager                   m_tm;
@@ -41,7 +41,7 @@ protected:
 
     void set_mouse_circular_mode( bool p_state );
 
-    void on_guipushbutton_clicked( dsstring p_widget_id );
+    void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
 public:
     MainLoopService( void );

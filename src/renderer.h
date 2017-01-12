@@ -134,7 +134,7 @@ public:
     virtual void GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text ) = 0;
     virtual void GUI_GetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext ) = 0;
     virtual void GUI_SubscribeWidgetPushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
-    virtual void GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler ) = 0;
+    virtual void GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler ) = 0;
     virtual void GUI_SetMouseCursorImage( const dsstring& p_image ) = 0;
     virtual void GUI_ShowMouseCursor( bool p_show ) = 0;
 

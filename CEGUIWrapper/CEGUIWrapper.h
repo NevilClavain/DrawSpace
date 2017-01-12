@@ -31,22 +31,27 @@ class CEGUIWrapper
 {
 protected:
 
-    bool                                                m_ready;
+    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedHandler;
+
+    bool                                                                        m_ready;
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    typedef std::map<dsstring, CEGUI::Window*>          WidgetsTable;
+    typedef std::map<dsstring, CEGUI::Window*>                                  WidgetsTable;
 
-    std::map<CEGUI::Window*, WidgetsTable>              m_layoutsTable;
-    std::map<dsstring, CEGUI::Window*>                  m_layoutNamesTable;
+    std::map<CEGUI::Window*, WidgetsTable>                                      m_layoutsTable;
+    std::map<dsstring, CEGUI::Window*>                                          m_layoutNamesTable;
 
-    CEGUI::Window*                                      m_currentLayout;
+    dsstring                                                                    m_currentLayoutName;
+    CEGUI::Window*                                                              m_currentLayout;
 
-    std::vector<CEGUI::Editbox*>                        m_editBoxes;
+    std::vector<CEGUI::Editbox*>                                                m_editBoxes;
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    DrawSpace::Core::BaseCallback<void, dsstring>*      m_pushbuttoneventclicked_handler;
+    //DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring &>*    m_pushbuttoneventclicked_handler;
+    std::vector<GUIWidgetPushButtonClickedHandler*>                             m_pushbuttoneventclicked_handlers_list;
+
 
     CEGUI::MouseCursor*                                 m_mouse_cursor;
 
@@ -84,7 +89,7 @@ public:
     void SetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
     void GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext );  
     
-    void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler );
+    void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler );
 
     void SetMouseCursorImage( const dsstring& p_image );
     void ShowMouseCursor( bool p_show );

@@ -11,5 +11,11 @@
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="HorizontalAlignment" value="Right" />
         </Window>
+        <Window type="xfskin/Button" name="Close_Button" >
+            <Property name="ID" value="2" />
+            <Property name="Area" value="{{0,2},{0,0},{0.166667,2},{0.0802469,0}}" />
+            <Property name="Text" value="Close" />
+            <Property name="VerticalAlignment" value="Bottom" />
+        </Window>
     </Window>
 </GUILayout>

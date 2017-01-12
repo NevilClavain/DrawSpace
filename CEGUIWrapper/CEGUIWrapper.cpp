@@ -27,7 +27,6 @@ using namespace CEGUI;
 
 CEGUIWrapper::CEGUIWrapper( void ) :
 m_ready( false ),
-m_pushbuttoneventclicked_handler( NULL ),
 m_currentLayout( NULL )
 {
 }
@@ -214,6 +213,7 @@ void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
 {
     if( m_layoutNamesTable.count( p_layoutpath ) )
     {
+        m_currentLayoutName = p_layoutpath;
         m_currentLayout = m_layoutNamesTable[p_layoutpath];
         System::getSingleton().getDefaultGUIContext().setRootWindow( m_currentLayout );        
     }
@@ -321,9 +321,10 @@ void CEGUIWrapper::GetText( const dsstring& p_layoutName, const dsstring& p_widg
     }
 }
 
-void CEGUIWrapper::RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback<void, dsstring>* p_handler )
+void CEGUIWrapper::RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler )
 {
-    m_pushbuttoneventclicked_handler = p_handler;
+    //m_pushbuttoneventclicked_handler = p_handler;
+    m_pushbuttoneventclicked_handlers_list.push_back( p_handler );
 }
 
 void CEGUIWrapper::InitTest( void )
@@ -378,12 +379,20 @@ bool CEGUIWrapper::on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt )
     const CEGUI::MouseEventArgs& we = static_cast<const CEGUI::MouseEventArgs&>( p_evt ); 
     CEGUI::String senderID = we.window->getName();
 
+    /*
     if( m_pushbuttoneventclicked_handler )
     {
         dsstring widgetId( senderID.c_str() );
-        (*m_pushbuttoneventclicked_handler)( widgetId );
-    }
 
+        (*m_pushbuttoneventclicked_handler)( m_currentLayoutName, widgetId );
+    }
+    */
+
+    for( size_t i = 0; i < m_pushbuttoneventclicked_handlers_list.size(); i++ )
+    {
+        dsstring widgetId( senderID.c_str() );
+        (*m_pushbuttoneventclicked_handlers_list[i])( m_currentLayoutName, widgetId );
+    }
     return true;
 }
 

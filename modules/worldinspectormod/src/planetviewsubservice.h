@@ -20,19 +20,19 @@
 *
 */
 
-#ifndef _PLANETSETUPSUBSERVICE_H_
-#define _PLANETSETUPSUBSERVICE_H_
+#ifndef _PLANETVIEWSUBSERVICE_H_
+#define _PLANETVIEWSUBSERVICE_H_
 
 #include "drawspace.h"
 #include "crtp_singleton.h"
 
 class MainLoopService;
 
-class PlanetSetupSubService : public DrawSpace::Interface::Module::Service, public BaseSingleton<PlanetSetupSubService>
+class PlanetViewSubService : public DrawSpace::Interface::Module::Service, public BaseSingleton<PlanetViewSubService>
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack2<PlanetSetupSubService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack2<PlanetViewSubService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
@@ -43,9 +43,9 @@ protected:
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
-    PlanetSetupSubService( void );
+    PlanetViewSubService( void );
 public:
-    ~PlanetSetupSubService( void );
+    ~PlanetViewSubService( void );
 
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
@@ -73,10 +73,10 @@ public:
     virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
+
     virtual void                            ApplyLayout( void );
 
-    friend class BaseSingleton<PlanetSetupSubService>;
-
+    friend class BaseSingleton<PlanetViewSubService>;
 };
 
 #endif

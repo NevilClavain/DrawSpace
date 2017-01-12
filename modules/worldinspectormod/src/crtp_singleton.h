@@ -22,8 +22,8 @@
 
 // Curiously recurring template pattern for singleton :-D
 
-#ifndef _CRTP_H_
-#define _CRTP_H_
+#ifndef _CRTP_SINGLETON_H_
+#define _CRTP_SINGLETON_H_
 
 template<class T>
 class BaseSingleton
@@ -45,6 +45,6 @@ public:
 };
 
 template <class T>
-T* BaseSingleton<T>::m_instance = NULL;
+T* BaseSingleton<T>::m_instance;
 
 #endif
