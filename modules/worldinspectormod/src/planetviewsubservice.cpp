@@ -20,6 +20,8 @@
 *
 */
 
+#include <Windows.h>
+#include "Psapi.h"
 #include "planetviewsubservice.h"
 #include "mainloopservice.h"
 
@@ -68,6 +70,9 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
 
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 2 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 4 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 5 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 6 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Close_Button" );
@@ -77,8 +82,25 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 void PlanetViewSubService::Run( void )
 {
     m_renderer->BeginScreen();
-
     m_renderer->ClearScreen( 0, 0, 0, 0 );
+
+    char renderer_name[64];
+    char fps[64];
+
+
+    sprintf( fps, "%d fps", m_tm.GetFPS() );
+    sprintf( renderer_name, "%s", m_pluginDescr.c_str() );
+
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_FPS", fps );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Renderer", renderer_name );
+
+    char working_set[64];
+
+    PROCESS_MEMORY_COUNTERS pmc;
+    GetProcessMemoryInfo( GetCurrentProcess(), &pmc, sizeof( PROCESS_MEMORY_COUNTERS ) );
+
+    sprintf( working_set, "%d bytes", pmc.WorkingSetSize );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Mem", working_set );
 
     m_renderer->GUI_Render();
 

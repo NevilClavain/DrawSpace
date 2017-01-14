@@ -49,9 +49,9 @@ public:
     virtual dsstring                GetModuleName( void ) = 0;
     virtual dsstring                GetModuleDescr( void ) = 0;
     virtual void                    ServicesInit( void ) = 0;
-   
-    virtual std::vector<dsstring>   GetServicesList( void );
 
+    virtual void                    DumpMemoryAllocs( void ); 
+    virtual std::vector<dsstring>   GetServicesList( void );
     virtual Service*                InstanciateService( const dsstring& p_id );
 
 };

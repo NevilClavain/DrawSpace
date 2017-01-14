@@ -50,3 +50,7 @@ Service* Root::InstanciateService( const dsstring& p_id )
     return NULL;
 }
 
+void Root::DumpMemoryAllocs( void )
+{
+    DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
+}

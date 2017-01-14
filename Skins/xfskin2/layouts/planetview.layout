@@ -17,5 +17,29 @@
             <Property name="Text" value="Close" />
             <Property name="VerticalAlignment" value="Bottom" />
         </Window>
+        <Window type="xfskin/Label" name="Label_Renderer" >
+            <Property name="ID" value="4" />
+            <Property name="Area" value="{{-0.000217453,0},{7.72383e-005,0},{0.180338,0},{0.0803242,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Mem" >
+            <Property name="ID" value="6" />
+            <Property name="Area" value="{{0.388671,0},{7.72382e-005,0},{0.569227,0},{0.0803242,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_FPS" >
+            <Property name="ID" value="5" />
+            <Property name="Area" value="{{0.194227,0},{7.72383e-005,0},{0.374783,0},{0.0803242,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage" >
+            <Property name="Area" value="{{0.56875,0},{0.0246914,0},{0.759722,0},{0.135802,0}}" />
+            <Property name="Image" value="xfskin/line_h_long" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="VertFormatting" value="TopAligned" />
+        </Window>
     </Window>
 </GUILayout>

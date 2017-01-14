@@ -417,9 +417,11 @@ void MainLoopService::load_cdlodplanet_module( void )
 void MainLoopService::SetPlanetViewLayout( void )
 {
     PlanetViewSubService::GetInstance()->ApplyLayout();
+    m_current_subservice = PlanetViewSubService::GetInstance();
 }
 
 void MainLoopService::SetPlanetSetupLayout( void )
 {
     PlanetSetupSubService::GetInstance()->ApplyLayout();
+    m_current_subservice = PlanetSetupSubService::GetInstance();
 }
