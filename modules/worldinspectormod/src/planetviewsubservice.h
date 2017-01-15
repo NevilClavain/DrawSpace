@@ -55,11 +55,16 @@ protected:
     DrawSpace::Core::Transformation*                                    m_camerapos;
     DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_camerapos_node;
 
+
+
     DrawSpace::Core::FreeMovement*                                      m_objectRot;
     DrawSpace::Core::SceneNode<DrawSpace::Core::FreeMovement>*          m_objectRot_node;
 
     DrawSpace::Chunk*                                                   m_chunk;
     DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_chunk_node;
+
+    DrawSpace::Core::Transformation*                                    m_cubescaling;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_cubescaling_node;
 
     bool                                                                m_mouse_left;
     bool                                                                m_mouse_right;

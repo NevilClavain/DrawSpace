@@ -82,6 +82,8 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     load_cdlodplanet_module();
 
+    create_planet();
+
     init_passes();
 
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
@@ -296,9 +298,9 @@ void PlanetViewSubService::create_camera( void )
     m_camerapos_node->SetContent( m_camerapos );
 
     DrawSpace::Utils::Matrix camera_pos;
-    //camera_pos.Translation( 0.0, 0.0, 3000.0 * 1000.0 );
+    camera_pos.Translation( 0.0, 0.0, 3000.0 * 1000.0 );
 
-    camera_pos.Translation( 0.0, 0.0, 5.0 );
+    //camera_pos.Translation( 0.0, 0.0, 5.0 );
 
     m_camerapos->PushMatrix( camera_pos );
 
@@ -335,6 +337,20 @@ void PlanetViewSubService::create_planet( void )
 
 void PlanetViewSubService::create_cubes( void )
 {
+    m_cubescaling = _DRAWSPACE_NEW_( DrawSpace::Core::Transformation, DrawSpace::Core::Transformation );
+    m_cubescaling_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Core::Transformation>, SceneNode<DrawSpace::Core::Transformation>( "cube_scaling" ) );
+
+    m_cubescaling_node->SetContent( m_cubescaling );
+
+    DrawSpace::Utils::Matrix cube_scale;
+    cube_scale.Scale( Vector( 500000.0, 500000.0, 500000.0, 1.0 ) );
+
+    m_cubescaling->PushMatrix( cube_scale );
+
+    m_scenenodegraph.AddNode( m_cubescaling_node );
+    m_scenenodegraph.RegisterNode( m_cubescaling_node );
+
+
     m_chunk = _DRAWSPACE_NEW_( DrawSpace::Chunk, DrawSpace::Chunk );
 
     m_chunk->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
@@ -385,5 +401,6 @@ void PlanetViewSubService::create_cubes( void )
     m_scenenodegraph.AddNode( m_objectRot_node );
     m_scenenodegraph.RegisterNode( m_objectRot_node );
 
+    //m_objectRot_node->LinkTo( m_cubescaling_node );
     m_chunk_node->LinkTo( m_objectRot_node );
 }
