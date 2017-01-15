@@ -31,11 +31,11 @@ using namespace DrawSpace::Interface::Module;
 
 _DECLARE_DS_LOGGER( logger, "worldinspectormainloopservice", NULL )
 
-MainLoopService::MainLoopService( void ) :
+MainLoopService::MainLoopService( void )/* :
 m_mouse_left( false ),
 m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
-m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" )
+m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" )*/
 {
 
 }
@@ -70,10 +70,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_closeapp_cb = p_closeapp_cb;
 
-    
+    /*
     m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_scenenodegraph );
     m_keysLinkTable.RegisterClientKey( &m_cdlodplanet_texturepass );
-    
+    */
 
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -222,7 +222,7 @@ void MainLoopService::OnMouseWheel( long p_delta )
 
 void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
-    m_mouse_left = true;
+    //m_mouse_left = true;
 
     //m_renderer->GUI_OnMouseLeftButtonDown();
 
@@ -231,7 +231,7 @@ void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 
 void MainLoopService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
-    m_mouse_left = false;
+    //m_mouse_left = false;
 
     //m_renderer->GUI_OnMouseLeftButtonUp();
 
@@ -240,7 +240,7 @@ void MainLoopService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 
 void MainLoopService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
-    m_mouse_right = true;
+    //m_mouse_right = true;
 
     //m_renderer->GUI_OnMouseRightButtonDown();
 
@@ -249,7 +249,7 @@ void MainLoopService::OnMouseRightButtonDown( long p_xm, long p_ym )
 
 void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
-    m_mouse_right = false;
+    //m_mouse_right = false;
 
     //m_renderer->GUI_OnMouseRightButtonUp();
 
@@ -259,7 +259,7 @@ void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
-
+/*
 void MainLoopService::init_passes( void )
 {
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
@@ -413,6 +413,7 @@ void MainLoopService::load_cdlodplanet_module( void )
 
     m_cdlodp_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL, NULL );
 }
+*/
 
 void MainLoopService::SetPlanetViewLayout( void )
 {

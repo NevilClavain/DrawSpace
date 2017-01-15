@@ -38,8 +38,48 @@ protected:
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
 
+    DrawSpace::Interface::MesheImport*                                  m_meshe_import;
+
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
     DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
+
+    DrawSpace::FinalPass*                                               m_finalpass;
+    DrawSpace::IntermediatePass*                                        m_texturepass;
+
+
+    DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
+
+    DrawSpace::Dynamics::CameraPoint*                                   m_camera;
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_camera_node;
+
+    DrawSpace::Core::Transformation*                                    m_camerapos;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_camerapos_node;
+
+    DrawSpace::Core::FreeMovement*                                      m_objectRot;
+    DrawSpace::Core::SceneNode<DrawSpace::Core::FreeMovement>*          m_objectRot_node;
+
+    DrawSpace::Chunk*                                                   m_chunk;
+    DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_chunk_node;
+
+    bool                                                                m_mouse_left;
+    bool                                                                m_mouse_right;
+
+
+
+    DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
+    DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
+
+    DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
+    DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
+
+    void load_cdlodplanet_module( void );
+
+    void init_passes( void );
+    void create_passes( void );
+
+    void create_cubes( void );
+    void create_camera( void );
+    void create_planet( void );
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 

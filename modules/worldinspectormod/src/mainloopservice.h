@@ -36,46 +36,56 @@ protected:
 
     DrawSpace::Interface::MesheImport*                                  m_meshe_import;
 
-    DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
+    //DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
-    DrawSpace::FinalPass*                                               m_finalpass;
-    DrawSpace::IntermediatePass*                                        m_texturepass;
+    //DrawSpace::FinalPass*                                               m_finalpass;
+    //DrawSpace::IntermediatePass*                                        m_texturepass;
 
+    /*
     DrawSpace::Core::FreeMovement*                                      m_objectRot;
     DrawSpace::Core::SceneNode<DrawSpace::Core::FreeMovement>*          m_objectRot_node;
+    */
 
+
+    /*
     DrawSpace::Chunk*                                                   m_chunk;
     DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_chunk_node;
+    */
 
+    /*
     DrawSpace::Dynamics::CameraPoint*                                   m_camera;
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_camera_node;
 
     DrawSpace::Core::Transformation*                                    m_camerapos;
     DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_camerapos_node;
+    */
 
+    /*
     bool                                                                m_mouse_left;
     bool                                                                m_mouse_right;
+    */
 
-
+    /*
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
     DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
-
-
+    */
+    /*
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
+    */
 
     DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
 
     DrawSpace::Interface::Module::Service*                              m_current_subservice;
 
-    void init_passes( void );
-    void create_passes( void );
+    //void init_passes( void );
+    //void create_passes( void );
 
-    void load_cdlodplanet_module( void );
+    //void load_cdlodplanet_module( void );
 
-    void create_cubes( void );
-    void create_planet( void );
-    void create_camera( void );
+    //void create_cubes( void );
+    //void create_planet( void );
+    //void create_camera( void );
 
 
     MainLoopService( void );
