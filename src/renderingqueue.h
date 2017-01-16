@@ -96,7 +96,7 @@ protected:
 
     } erase_infos;
 
-    typedef std::vector<erase_infos>                   OperationsGroup;
+    typedef std::vector<erase_infos>                    OperationsGroup;
  
     std::map<long, std::vector<RenderingNode*>>         m_renderingorder_nodes;
 
