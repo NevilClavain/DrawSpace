@@ -6,7 +6,7 @@
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="AlfiskoSkin/FrameWindow" name="testWindow" >
             <Property name="ID" value="1" />
-            <Property name="Area" value="{{0,0},{0,0},{0.25,77},{0.25,26}}" />
+            <Property name="Area" value="{{0,0},{0,0},{0.25,77},{0.25,-5}}" />
             <Property name="Text" value="Main control" />
             <AutoWindow namePath="__auto_titlebar__" >
                 <Property name="AlwaysOnTop" value="false" />
@@ -27,9 +27,15 @@
                 <Property name="Text" value="Leave !!" />
             </Window>
         </Window>
-        <Window type="AlfiskoSkin/Titlebar" name="Titlebar" >
-            <Property name="Area" value="{{0,589},{0,380},{0,1022},{0,446}}" />
-            <Property name="AlwaysOnTop" value="true" />
+        <Window type="AlfiskoSkin/Button" name="Button_Create" >
+            <Property name="ID" value="5" />
+            <Property name="Area" value="{{0,22},{0,343},{0,258},{0,416}}" />
+            <Property name="Text" value="Create" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_Destroy" >
+            <Property name="ID" value="6" />
+            <Property name="Area" value="{{0,20},{0,455},{0,256},{0,528}}" />
+            <Property name="Text" value="Destroy" />
         </Window>
     </Window>
 </GUILayout>

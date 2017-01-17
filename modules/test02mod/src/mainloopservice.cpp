@@ -98,10 +98,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     load_skybox_module();
 
+    m_meshe_import = new DrawSpace::Utils::AC3DMesheImport();
+    
     create_passes();
     create_spacebox();
     create_camera();
-    create_cubes();
+    create_static_cube();
     create_ground();
 
     init_passes();
@@ -128,13 +130,17 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 2 );
     m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 3 );
     m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 4 );
-
+    m_renderer->GUI_StoreWidget( "main.layout", "root", 5 );
+    m_renderer->GUI_StoreWidget( "main.layout", "root", 6 );
     
 
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Trigger" );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Quit" );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Button_Create" );
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Button_Destroy" );
+
 
     set_mouse_circular_mode( false );
 
@@ -157,9 +163,16 @@ void MainLoopService::Run( void )
     Vector reflectorNormale( 0.0, 1.0, 0.0, 1.0 );
 
 
-    
+    /*
     m_chunk->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_pos", reflectorPos );
     m_chunk->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_normale", reflectorNormale );
+    */
+
+    for( size_t i = 0; i < m_cubes.size(); i++ )
+    {
+        m_cubes[i].chunk->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_pos", reflectorPos );
+        m_cubes[i].chunk->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_normale", reflectorNormale );
+    }
 
     m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_pos", reflectorPos );
     m_cube2->GetNodeFromPass( m_texturemirrorpass )->SetShaderRealVector( "reflector_normale", reflectorNormale );
@@ -271,7 +284,7 @@ void MainLoopService::OnKeyPress( long p_key )
 
         case VK_F3:
 
-            m_cube_body->Enable( true );
+            //m_cube_body->Enable( true );
             break;
 
     }
@@ -310,8 +323,6 @@ void MainLoopService::OnKeyPulse( long p_key )
                 unsigned char g = pix[1];
                 unsigned char r = pix[2];
                 unsigned char a = pix[3];
-
-                _asm nop;
             }
             break;
 
@@ -385,6 +396,8 @@ void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
+
+
 
 void MainLoopService::create_passes( void )
 {
@@ -587,19 +600,106 @@ void MainLoopService::create_camera( void )
     m_camera_node->LinkTo( m_fpsmove_node );
 }
 
-void MainLoopService::create_cubes( void )
+void MainLoopService::create_dynamic_cube( void )
+{
+    CUBE_ENTRY ce;
+
+    ce.chunk = _DRAWSPACE_NEW_( DrawSpace::Chunk, DrawSpace::Chunk );
+
+    ce.chunk->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+
+    ce.chunk->RegisterPassSlot( m_texturepass );
+    ce.chunk->RegisterPassSlot( m_texturemirrorpass );
+    
+    ce.chunk->GetMeshe()->SetImporter( m_meshe_import );
+    ce.chunk->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
+    ce.chunk->GetNodeFromPass( m_texturepass )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+  
+    ce.chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    ce.chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    ce.chunk->GetNodeFromPass( m_texturepass )->GetFx()->GetShader( 0 )->LoadFromFile();
+    ce.chunk->GetNodeFromPass( m_texturepass )->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    ce.chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    ce.chunk->GetNodeFromPass( m_texturepass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    ce.chunk->GetNodeFromPass( m_texturepass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
+    ce.chunk->GetNodeFromPass( m_texturepass )->GetTexture( 0 )->LoadFromFile();
+
+
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );
+
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->GetShader( 0 )->LoadFromFile();
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->GetTexture( 0 )->LoadFromFile();
+
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->AddShaderParameter( 0, "reflector_pos", 24 );
+    ce.chunk->GetNodeFromPass( m_texturemirrorpass )->AddShaderParameter( 0, "reflector_normale", 25 );
+    
+    char num[24];
+    sprintf( num, "chunk_cube_%d", m_cubes.size() );
+    dsstring chunk_id = num;
+    
+    ce.chunk_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Chunk>, SceneNode<DrawSpace::Chunk>( chunk_id ) );
+    ce.chunk_node->SetContent( ce.chunk );
+
+    m_scenenodegraph.RegisterNode( ce.chunk_node );
+
+    DrawSpace::Dynamics::Body::Parameters cube_params;
+    cube_params.shape_descr.box_dims = DrawSpace::Utils::Vector( 0.5, 0.5, 0.5, 1.0 );
+    cube_params.mass = 50.0;
+    cube_params.shape_descr.shape = DrawSpace::Dynamics::Body::BOX_SHAPE;
+
+    cube_params.initial_attitude.Translation( 0.0, 3.5, 0.0 );
+
+
+    ce.cube_body = _DRAWSPACE_NEW_( DrawSpace::Dynamics::InertBody, DrawSpace::Dynamics::InertBody( &m_world, cube_params ) );
+
+    ce.cube_body->Enable( true );
+
+
+    sprintf( num, "dynamic_cube_%d", m_cubes.size() );
+    dsstring cube_id = num;
+
+    ce.cube_body_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::InertBody>, SceneNode<DrawSpace::Dynamics::InertBody>( cube_id ) );
+    ce.cube_body_node->SetContent( ce.cube_body );
+
+    m_scenenodegraph.AddNode( ce.cube_body_node );
+    m_scenenodegraph.RegisterNode( ce.cube_body_node );
+
+    ce.chunk_node->LinkTo( ce.cube_body_node );
+
+    m_cubes.push_back( ce );
+
+    m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
+    m_texturemirrorpass->GetRenderingQueue()->UpdateOutputQueue();
+}
+
+void MainLoopService::create_static_cube( void )
 {
 
 
+    /*
     m_chunk = _DRAWSPACE_NEW_( DrawSpace::Chunk, DrawSpace::Chunk );
 
     m_chunk->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
 
     m_chunk->RegisterPassSlot( m_texturepass );
     m_chunk->RegisterPassSlot( m_texturemirrorpass );
-
-
-    m_meshe_import = new DrawSpace::Utils::AC3DMesheImport();
     
     m_chunk->GetMeshe()->SetImporter( m_meshe_import );
     m_chunk->GetMeshe()->LoadFromFile( "object.ac", 0 );
@@ -671,7 +771,7 @@ void MainLoopService::create_cubes( void )
     m_scenenodegraph.RegisterNode( m_cube_body_node );
 
     m_chunk_node->LinkTo( m_cube_body_node );
-
+    */
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     m_texcube2 = _DRAWSPACE_NEW_( Texture, Texture( "tc2" ));
@@ -869,10 +969,14 @@ void MainLoopService::on_guipushbutton_clicked( const dsstring& p_layout, const 
 {
     if( "Trigger" == p_widget_id )
     {
-        m_cube_body->Enable( true );
+        //m_cube_body->Enable( true );
     }
     else if( "Quit" == p_widget_id )
     {
         (*m_closeapp_cb)( 0 );
+    }
+    else if( "Button_Create" )
+    {
+        create_dynamic_cube();
     }
 }

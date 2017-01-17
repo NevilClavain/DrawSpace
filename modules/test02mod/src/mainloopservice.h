@@ -30,6 +30,15 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
+    typedef struct
+    {
+        DrawSpace::Chunk*                                                   chunk;
+        DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       chunk_node;
+        DrawSpace::Dynamics::InertBody*                                     cube_body;
+        DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>*         cube_body_node;
+        
+    } CUBE_ENTRY;
+
     typedef DrawSpace::Core::CallBack2<MainLoopService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
@@ -52,11 +61,16 @@ protected:
     DrawSpace::Interface::Module::Service*                              m_sb_service;
 
 
-
+    
+    /*
     DrawSpace::Chunk*                                                   m_chunk;
     DrawSpace::Core::SceneNode<DrawSpace::Chunk>*                       m_chunk_node;
     DrawSpace::Dynamics::InertBody*                                     m_cube_body;
     DrawSpace::Core::SceneNode<DrawSpace::Dynamics::InertBody>*         m_cube_body_node;
+    */
+
+    std::vector<CUBE_ENTRY>                                             m_cubes;
+
 
 
     DrawSpace::Chunk*                                                   m_cube2;
@@ -121,7 +135,10 @@ protected:
 
     void    create_spacebox( void );
     void    create_camera( void );
-    void    create_cubes( void );
+    void    create_static_cube( void );
+
+    void    create_dynamic_cube( void );
+
     void    create_ground( void );
 
     void    set_mouse_circular_mode( bool p_state );
