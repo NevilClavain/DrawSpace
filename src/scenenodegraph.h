@@ -98,7 +98,9 @@ public:
     // tout les nodes
     std::vector<BaseSceneNode*>& GetAllNodesList( void );
 
-    void RegisterNode( BaseSceneNode* p_node );	
+    void RegisterNode( BaseSceneNode* p_node );
+    void UnregisterNode( BaseSceneNode* p_node );
+
     bool AddNode( BaseSceneNode* p_node );
 
 

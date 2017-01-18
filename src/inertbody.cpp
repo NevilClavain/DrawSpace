@@ -738,6 +738,10 @@ void InertBody::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawS
     m_owner = static_cast<SceneNode<InertBody>*>( p_node );
 }
 
+void InertBody::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+}
+
 //BaseSceneNode* InertBody::GetOwner( void )
 SceneNode<InertBody>* InertBody::GetOwner( void )
 {

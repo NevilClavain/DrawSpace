@@ -76,6 +76,7 @@ public:
     void SetQuadDrawingState( Pass* p_pass, int p_quad, bool p_drawing );
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+    void OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
     DrawSpace::Core::Meshe* GetMeshe( int p_mesheid );
 

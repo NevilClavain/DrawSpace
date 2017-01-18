@@ -160,6 +160,8 @@ public:
 
     void                                SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
     void                                OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+    void                                OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
     void                                Update( DrawSpace::Utils::TimeManager& p_timemanager );
     void                                Update2( DrawSpace::Utils::TimeManager& p_timemanager );
 

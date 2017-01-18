@@ -323,6 +323,10 @@ void Orbiter::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpa
     m_owner = static_cast<SceneNode<Orbiter>*>( p_node );
 }
 
+void Orbiter::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+}
+
 //BaseSceneNode* Orbiter::GetOwner( void )
 DrawSpace::Core::SceneNode<Orbiter>* Orbiter::GetOwner( void )
 {

@@ -78,6 +78,12 @@ void CameraPoint::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_nod
 }
 
 
+void CameraPoint::OnUnregister( SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    //COMPLETER
+    // supprimer de la listes cameras scenegraph
+}
+
 void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )
 {
     p_infos.locked_on_node = ( m_locked_node != NULL ? true : false );

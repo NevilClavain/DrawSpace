@@ -213,6 +213,11 @@ void Chunk::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace
     m_scenenodegraph = p_scenegraph;
 }
 
+void Chunk::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    //COMPLETER
+}
+
 Core::Meshe* Chunk::GetMeshe( void )
 {
     return m_meshe;

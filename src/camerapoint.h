@@ -84,6 +84,7 @@ public:
 
     
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+    virtual void OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
     virtual void Update( DrawSpace::Utils::TimeManager& p_timemanager );
     virtual void Update2( DrawSpace::Utils::TimeManager& p_timemanager );

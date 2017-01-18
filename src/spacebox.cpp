@@ -272,6 +272,11 @@ void Spacebox::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSp
     m_scenenodegraph = p_scenegraph;
 }
 
+void Spacebox::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    //COMPLETER
+}
+
 Core::Meshe* Spacebox::GetMeshe( int p_mesheid )
 {
     return m_meshes[p_mesheid];

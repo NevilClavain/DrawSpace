@@ -578,6 +578,11 @@ void Root::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace:
     m_drawable->OnRegister( p_scenegraph, p_node );
 }
 
+void Root::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    //COMPLETER
+}
+
 void Root::Update( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     Orbiter::Update( p_timemanager );

@@ -97,6 +97,8 @@ public:
     virtual ~Clouds( void );
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+    void OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
     ProceduralCb* GetProceduralCallback( void );
     void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
 

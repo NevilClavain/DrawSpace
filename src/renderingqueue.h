@@ -164,6 +164,7 @@ public:
     ~RenderingQueue( void );
 
     void Add( RenderingNode* p_node );
+    void Remove( RenderingNode* p_node );
     void Draw( void );
     
     void EnableDepthClearing( bool p_enable );

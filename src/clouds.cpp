@@ -401,6 +401,11 @@ void Clouds::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpac
     m_owner = p_node;
 }
 
+void Clouds::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+    Chunk::OnUnregister( p_scenegraph, p_node );
+}
+
 void Clouds::Update2( DrawSpace::Utils::TimeManager& p_timemanager )
 {
     if( !m_owner )

@@ -123,18 +123,14 @@ public:
     Drawing( SphericalLOD::Config* p_config );
     virtual ~Drawing( void );
 
-    //virtual void SetCurrentPlanetBody( Body* p_planetbody );
-
     virtual void SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies );
 
     virtual void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
 
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+    virtual void OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    virtual /*FaceDrawingNode*  */ DrawSpace::Core::RenderingNode* RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
-
-
-    //DrawSpace::Core::RenderingNode* GetPlanetBodyNodeFromPass( Pass* p_pass, int p_faceid );
+    virtual DrawSpace::Core::RenderingNode* RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
    
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 

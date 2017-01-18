@@ -269,6 +269,10 @@ void Collider::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_node )
     m_owner = p_node;
 }
 
+void Collider::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
+{
+}
+
 bool Collider::GetParameters( Parameters& p_parameters )
 {
     if( m_parameters_set )

@@ -186,6 +186,21 @@ void RenderingQueue::Add( RenderingNode* p_node )
     m_renderingorder_nodes[p_node->GetOrderNumber()].push_back( p_node );
 }
 
+void RenderingQueue::Remove( RenderingNode* p_node )
+{
+    long order_num = p_node->GetOrderNumber();
+    std::vector<RenderingNode*>& list = m_renderingorder_nodes[order_num];
+
+    for( auto it = list.begin(); it != list.end(); ++it )
+    {
+        if( *it == p_node )
+        {
+            list.erase( it );
+            break;
+        }
+    }
+}
+
 void RenderingQueue::EnableDepthClearing( bool p_enable )
 {
     m_clear_depth = p_enable;

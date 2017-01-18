@@ -105,6 +105,12 @@ void SceneNodeGraph::RegisterNode( BaseSceneNode* p_node )
     }
 }
 
+void SceneNodeGraph::UnregisterNode( BaseSceneNode* p_node )
+{
+    p_node->OnUnregister( this );
+
+    //COMPLETER
+}
 
 Core::BaseSceneNode* SceneNodeGraph::GetCurrentCamera( void )
 {    

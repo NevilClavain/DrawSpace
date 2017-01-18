@@ -86,6 +86,7 @@ public:
     virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager ) = 0;
     virtual void ForceComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager ) = 0;
     virtual void OnRegister( SceneNodeGraph* p_scenegraph ) = 0;
+    virtual void OnUnregister( SceneNodeGraph* p_scenegraph ) = 0;
     virtual void GetTransformationRelativeTo( BaseSceneNode* p_node, DrawSpace::Utils::Matrix& p_mat ) = 0;
     virtual void Enable( bool p_state ) = 0;
 
@@ -214,6 +215,14 @@ public:
         {
             m_content->OnRegister( p_scenegraph, this );
         }
+    }
+
+    void OnUnregister( SceneNodeGraph* p_scenegraph )
+    {
+        if( m_content )
+        {
+            m_content->OnUnregister( p_scenegraph, this );
+        }        
     }
 
     BaseSceneNode* GetParentNode( void )
