@@ -45,7 +45,8 @@ public:
 
     typedef enum
     {
-        NODE_ADDED,
+        NODE_REGISTERED,
+		NODE_UNREGISTERED,
         NODE_APP_READY,  // app client custom event
 
     } NodesEvent;
@@ -102,6 +103,7 @@ public:
     void UnregisterNode( BaseSceneNode* p_node );
 
     bool AddNode( BaseSceneNode* p_node );
+	void RemoveNode(BaseSceneNode* p_node);
 
 
     Core::BaseSceneNode* GetCurrentCamera( void );

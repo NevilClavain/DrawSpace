@@ -975,8 +975,24 @@ void MainLoopService::on_guipushbutton_clicked( const dsstring& p_layout, const 
     {
         (*m_closeapp_cb)( 0 );
     }
-    else if( "Button_Create" )
+    else if( "Button_Create" == p_widget_id )
     {
         create_dynamic_cube();
+    }
+    else if( "Button_Destroy" == p_widget_id )
+    {
+        for( size_t i = 0; i < m_cubes.size(); i++ )
+        {
+            m_scenenodegraph.UnregisterNode( m_cubes[i].chunk_node );
+            m_scenenodegraph.UnregisterNode( m_cubes[i].cube_body_node );
+
+            m_scenenodegraph.RemoveNode( m_cubes[i].cube_body_node );
+            m_cubes[i].chunk_node->Unlink();
+
+            m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
+            m_texturemirrorpass->GetRenderingQueue()->UpdateOutputQueue();
+        }
+
+        m_cubes.clear();
     }
 }

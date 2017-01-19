@@ -215,7 +215,13 @@ void Chunk::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace
 
 void Chunk::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    //COMPLETER
+	for (auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it)
+	{
+		Pass* current_pass = it->first;
+
+		current_pass->GetRenderingQueue()->Remove( (*it).second );
+	}
+	m_scenenodegraph = NULL;
 }
 
 Core::Meshe* Chunk::GetMeshe( void )

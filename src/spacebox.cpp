@@ -274,7 +274,16 @@ void Spacebox::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSp
 
 void Spacebox::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    //COMPLETER
+	for (std::map<Pass*, NodesSet>::iterator it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it)
+	{
+		Pass* current_pass = it->first;
+
+		for (long i = 0; i < 6; i++)
+		{
+			current_pass->GetRenderingQueue()->Remove( (*it).second.nodes[i] );
+		}
+	}
+	m_scenenodegraph = NULL;
 }
 
 Core::Meshe* Spacebox::GetMeshe( int p_mesheid )

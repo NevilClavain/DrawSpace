@@ -80,8 +80,15 @@ void CameraPoint::OnRegister( SceneNodeGraph* p_scenegraph, BaseSceneNode* p_nod
 
 void CameraPoint::OnUnregister( SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    //COMPLETER
     // supprimer de la listes cameras scenegraph
+	std::map<dsstring, Core::BaseSceneNode*>& camera_list = p_scenegraph->GetCamerasList();
+
+	dsstring scenename;
+	p_node->GetSceneName( scenename );
+	if( camera_list.count( scenename ) )
+	{
+		camera_list.erase(scenename);
+	}
 }
 
 void CameraPoint::GetInfos( CameraPoint::Infos& p_infos )

@@ -194,7 +194,6 @@ void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpa
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
     {
         std::pair<Pass*, FaceDrawingNode*> curr_pair = *it;
-
         curr_pair.first->GetRenderingQueue()->Add( curr_pair.second );
     }
 
@@ -203,7 +202,13 @@ void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpa
 
 void Drawing::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    //COMPLETER
+	for (auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it)
+	{
+		std::pair<Pass*, FaceDrawingNode*> curr_pair = *it;
+		curr_pair.first->GetRenderingQueue()->Remove( curr_pair.second );
+	}
+
+	m_scenenodegraph = NULL;
 }
 
 void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )

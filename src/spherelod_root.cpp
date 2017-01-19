@@ -119,7 +119,7 @@ void Root::on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event
 
 void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    if( SceneNodeGraph::NODE_ADDED == p_event )
+    if( SceneNodeGraph::NODE_REGISTERED == p_event )
     {
         SceneNode<InertBody>* inertbody_node = dynamic_cast<SceneNode<InertBody>*>( p_node );
         SceneNode<Rocket>* rocket_node = dynamic_cast<SceneNode<Rocket>*>( p_node );
@@ -580,7 +580,8 @@ void Root::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace:
 
 void Root::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {
-    //COMPLETER
+	Orbiter::OnUnregister( p_scenegraph, p_node );
+	m_drawable->OnUnregister( p_scenegraph, p_node );
 }
 
 void Root::Update( DrawSpace::Utils::TimeManager& p_timemanager )

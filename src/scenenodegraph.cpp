@@ -84,6 +84,17 @@ bool SceneNodeGraph::AddNode( BaseSceneNode* p_node )
     return true;
 }
 
+void SceneNodeGraph::RemoveNode(BaseSceneNode* p_node)
+{
+	dsstring name;
+	p_node->GetSceneName( name );
+
+	if( m_nodes.count( name ) > 0 )
+	{
+		m_nodes.erase( name );
+	}
+}
+
 std::map<dsstring, BaseSceneNode*>& SceneNodeGraph::GetNodesList( void )
 {
     return m_nodes;
@@ -101,7 +112,7 @@ void SceneNodeGraph::RegisterNode( BaseSceneNode* p_node )
 
     for( size_t i = 0; i < m_nodesevt_handlers.size(); i++ )
     {
-        ( *m_nodesevt_handlers[i] )( NODE_ADDED, p_node );
+        ( *m_nodesevt_handlers[i] )( NODE_REGISTERED, p_node );
     }
 }
 
@@ -109,7 +120,19 @@ void SceneNodeGraph::UnregisterNode( BaseSceneNode* p_node )
 {
     p_node->OnUnregister( this );
 
-    //COMPLETER
+	for( auto it = m_all_nodes.begin(); it != m_all_nodes.end(); ++it )
+	{
+		if (*it == p_node)
+		{
+			m_all_nodes.erase(it);
+			break;
+		}
+	}
+
+	for (size_t i = 0; i < m_nodesevt_handlers.size(); i++)
+	{
+		(*m_nodesevt_handlers[i])( NODE_UNREGISTERED, p_node );
+	}
 }
 
 Core::BaseSceneNode* SceneNodeGraph::GetCurrentCamera( void )
@@ -222,7 +245,7 @@ void SceneNodeGraph::RegisterNodesEvtHandler( NodesEventHandler* p_handler )
     
     for( size_t i = 0; i < m_all_nodes.size(); i++ )
     {
-        (*p_handler)( NODE_ADDED, m_all_nodes[i] );
+        (*p_handler)( NODE_REGISTERED, m_all_nodes[i] );
     }
 }
 

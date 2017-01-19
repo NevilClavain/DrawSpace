@@ -54,8 +54,6 @@ public:
     m_parent( NULL ),
     m_scenenodegraph( NULL )
     {
-
-
     }
 
     virtual void LinkTo( BaseSceneNode* p_node )
@@ -64,9 +62,28 @@ public:
         {
             _DSEXCEPTION( "Trying to link scenegraph node " + m_scenename + " to itself !!" );
         }
-        p_node->AddChild( this );
+
+		p_node->m_children.push_back( this );
         m_parent = p_node;
     }
+
+	virtual void Unlink(void)
+	{
+		// detach from parent node
+		if( m_parent )
+		{
+			for( auto it = m_parent->m_children.begin(); it != m_parent->m_children.end(); ++it )
+			{
+				if (*it == this)
+				{
+					m_parent->m_children.erase( it );
+					break;
+				}
+			}
+
+			m_parent = NULL;
+		}
+	}
 
     virtual void GetSceneName( dsstring& p_scenename )
     {
@@ -83,25 +100,19 @@ public:
         p_mat = m_finaltransform;
     }
 
+	virtual SceneNodeGraph* GetSceneNodeGraph(void)
+	{
+		return m_scenenodegraph;
+	}
+
     virtual void ComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager ) = 0;
     virtual void ForceComputeTransformation( DrawSpace::Utils::TimeManager& p_timemanager ) = 0;
     virtual void OnRegister( SceneNodeGraph* p_scenegraph ) = 0;
     virtual void OnUnregister( SceneNodeGraph* p_scenegraph ) = 0;
     virtual void GetTransformationRelativeTo( BaseSceneNode* p_node, DrawSpace::Utils::Matrix& p_mat ) = 0;
     virtual void Enable( bool p_state ) = 0;
-
-    virtual void AddChild( BaseSceneNode* p_node )
-    {
-        m_children.push_back( p_node );
-    }
-
-    virtual SceneNodeGraph* GetSceneNodeGraph( void )
-    {
-        return m_scenenodegraph;
-    }
     
-    friend class SceneNodeGraph;
-    
+    friend class SceneNodeGraph;    
 };
 
 template <typename Base>
@@ -110,8 +121,7 @@ class SceneNode : public BaseSceneNode
 protected:
 
     typedef DrawSpace::Core::BaseCallback<void, BaseSceneNode*>    UpdateBeginHandler;
-
-    //BaseSceneNode*                      m_parent;    
+  
     DrawSpace::Utils::Matrix            m_globaltransform;
     Base*                               m_content;
     bool                                m_enable;
@@ -123,7 +133,6 @@ public:
     SceneNode( const dsstring& p_scenename ) :
     BaseSceneNode( p_scenename ),
     m_content( NULL ),
-    //m_parent( NULL ),
     m_enable( true )
     {
     }
@@ -136,18 +145,6 @@ public:
 	{
 		m_content = p_content;
 	}
-
-    /*
-    virtual void LinkTo( BaseSceneNode* p_node )
-    {
-        if( p_node == this )
-        {
-            _DSEXCEPTION( "Trying to link scenegraph node " + m_scenename + " to itself !!" );
-        }
-        p_node->AddChild( this );
-        m_parent = p_node;
-    }
-    */
 
     virtual Base* GetContent( void )
     {
