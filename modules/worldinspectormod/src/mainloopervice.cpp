@@ -123,6 +123,7 @@ void MainLoopService::OnEndKeyPress( long p_key )
 
 void MainLoopService::OnKeyPulse( long p_key )
 {
+    m_current_subservice->OnKeyPulse( p_key );
 }
 
 void MainLoopService::OnChar( long p_char, long p_scan )
@@ -167,6 +168,13 @@ void MainLoopService::SetPlanetViewLayout( void )
 {
     PlanetViewSubService::GetInstance()->ApplyLayout();
     m_current_subservice = PlanetViewSubService::GetInstance();
+
+    // ICI
+
+    PlanetViewSubService::GetInstance()->AddPlanet();
+
+
+
 }
 
 void MainLoopService::SetPlanetSetupLayout( void )

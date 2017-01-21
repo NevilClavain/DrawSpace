@@ -35,6 +35,7 @@ _DECLARE_DS_LOGGER( logger, "planetviewsubservice", NULL )
 #define LAYOUT_FILE "planetview.layout"
 
 PlanetViewSubService::PlanetViewSubService( void ) :
+m_planet_node( NULL ),
 m_mouse_left( false ),
 m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
@@ -80,9 +81,9 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_scenenodegraph.SetCurrentCamera( "camera" );
 
-    load_cdlodplanet_module();
+    load_cdlodplanet_module( p_logconf );
 
-    create_planet();
+    //create_planet();
 
     init_passes();
 
@@ -162,6 +163,13 @@ void PlanetViewSubService::OnEndKeyPress( long p_key )
 
 void PlanetViewSubService::OnKeyPulse( long p_key )
 {
+    switch( p_key )
+    {
+        case VK_F1:
+
+            m_cdlodp_root->DumpMemoryAllocs();
+            break;    
+    }
 }
 
 void PlanetViewSubService::OnChar( long p_char, long p_scan )
@@ -225,6 +233,7 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
 
     if( "Close_Button" == p_widget_id )
     {
+        RemovePlanet();
         MainLoopService::GetInstance()->SetPlanetSetupLayout();
     }
 }
@@ -310,7 +319,7 @@ void PlanetViewSubService::create_camera( void )
     m_camera_node->LinkTo( m_camerapos_node );    
 }
 
-void PlanetViewSubService::load_cdlodplanet_module( void )
+void PlanetViewSubService::load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf )
 {
     if( !DrawSpace::Utils::PILoad::LoadModule( "cdlodplanetmod", "cdlodplanet", &m_cdlodp_root ) )
     {
@@ -322,17 +331,27 @@ void PlanetViewSubService::load_cdlodplanet_module( void )
     m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
     m_cdlodplanet_texturepass = m_texturepass;
 
-    m_cdlodp_service->Init( DrawSpace::Logger::Configuration::GetInstance(), NULL, NULL, NULL );
+    m_cdlodp_service->Init( p_logconf, NULL, NULL, NULL );
 }
 
 void PlanetViewSubService::create_planet( void )
 {   
-    DrawSpace::Core::BaseSceneNode* spacebox_node = m_cdlodp_service->InstanciateSceneNode( "planet0" );
+    m_planet_node = m_cdlodp_service->InstanciateSceneNode( "planet0" );
 
-    m_scenenodegraph.RegisterNode( spacebox_node );
+    m_scenenodegraph.RegisterNode( m_planet_node );
 
-    spacebox_node->LinkTo( m_objectRot_node );
+    m_planet_node->LinkTo( m_objectRot_node );
     m_cdlodp_service->RegisterScenegraphCallbacks( m_scenenodegraph );
+}
+
+void PlanetViewSubService::destroy_planet( void )
+{
+    m_cdlodp_service->ReleaseSceneNode( "planet0" );
+
+    m_scenenodegraph.UnregisterNode( m_planet_node );   
+    m_planet_node->Unlink();
+
+    m_planet_node = NULL;
 }
 
 void PlanetViewSubService::create_cubes( void )
@@ -403,4 +422,16 @@ void PlanetViewSubService::create_cubes( void )
 
     //m_objectRot_node->LinkTo( m_cubescaling_node );
     m_chunk_node->LinkTo( m_objectRot_node );
+}
+
+void PlanetViewSubService::AddPlanet( void )
+{
+    create_planet();
+    m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
+}
+
+void PlanetViewSubService::RemovePlanet( void )
+{
+    destroy_planet();
+    m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
 }

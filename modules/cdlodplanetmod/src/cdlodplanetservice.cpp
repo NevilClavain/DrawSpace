@@ -54,7 +54,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
 
-
+_DECLARE_DS_LOGGER( logger, "cdlodplanetservice", NULL )
 
 /////////////////////////////
 
@@ -116,6 +116,14 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
+    p_logconf->RegisterSink( &logger );
+    logger.SetConfiguration( p_logconf );
+
+    p_logconf->RegisterSink( MemAlloc::GetLogSink() );
+    MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
+
+    _DSDEBUG( logger, dsstring("CDLODPlanet service : startup...") );
+
     DrawSpace::SphericalLOD::Body::BuildMeshes();
 }
 
@@ -138,6 +146,7 @@ void CDLODPlanetService::Run( void )
 
 void CDLODPlanetService::Release( void )
 {
+    _DSDEBUG( logger, dsstring("CDLODPlanet service : shutdown...") );
 }
 
 DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
@@ -225,9 +234,6 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     pe.planet_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::SphericalLOD::Root>, SceneNode<DrawSpace::SphericalLOD::Root>( p_sceneNodeName ) );
     pe.planet_node->SetContent( pe.planet );
 
-
-    //m_scenenodegraph->RegisterNode( pe.planet_node );
-
     m_nodes[p_sceneNodeName] = pe;
 
     return pe.planet_node;
@@ -243,4 +249,8 @@ void CDLODPlanetService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNode
 
 void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {
+    if( m_nodes.count( p_sceneNodeName ) )
+    {
+        m_nodes.erase( p_sceneNodeName );
+    }
 }

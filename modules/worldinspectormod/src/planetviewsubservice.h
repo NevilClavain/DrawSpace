@@ -66,6 +66,9 @@ protected:
     DrawSpace::Core::Transformation*                                    m_cubescaling;
     DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_cubescaling_node;
 
+
+    DrawSpace::Core::BaseSceneNode*                                     m_planet_node;
+
     bool                                                                m_mouse_left;
     bool                                                                m_mouse_right;
 
@@ -77,14 +80,16 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
 
-    void load_cdlodplanet_module( void );
+    void load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf );
 
     void init_passes( void );
     void create_passes( void );
 
     void create_cubes( void );
     void create_camera( void );
+
     void create_planet( void );
+    void destroy_planet( void );
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
@@ -120,6 +125,8 @@ public:
 
 
     virtual void                            ApplyLayout( void );
+    virtual void                            AddPlanet( void );
+    virtual void                            RemovePlanet( void );
 
     friend class BaseSingleton<PlanetViewSubService>;
 };
