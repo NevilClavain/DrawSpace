@@ -168,13 +168,6 @@ void MainLoopService::SetPlanetViewLayout( void )
 {
     PlanetViewSubService::GetInstance()->ApplyLayout();
     m_current_subservice = PlanetViewSubService::GetInstance();
-
-    // ICI
-
-    PlanetViewSubService::GetInstance()->AddPlanet();
-
-
-
 }
 
 void MainLoopService::SetPlanetSetupLayout( void )

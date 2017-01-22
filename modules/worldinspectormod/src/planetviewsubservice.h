@@ -125,8 +125,6 @@ public:
 
 
     virtual void                            ApplyLayout( void );
-    virtual void                            AddPlanet( void );
-    virtual void                            RemovePlanet( void );
 
     friend class BaseSingleton<PlanetViewSubService>;
 };

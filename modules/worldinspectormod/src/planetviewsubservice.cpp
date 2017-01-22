@@ -233,7 +233,10 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
 
     if( "Close_Button" == p_widget_id )
     {
-        RemovePlanet();
+        destroy_planet();
+        m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
+
+
         MainLoopService::GetInstance()->SetPlanetSetupLayout();
     }
 }
@@ -241,6 +244,9 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
 void PlanetViewSubService::ApplyLayout( void )
 {
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
+
+    create_planet();
+    m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
 }
 
 void PlanetViewSubService::create_passes( void )
@@ -424,14 +430,3 @@ void PlanetViewSubService::create_cubes( void )
     m_chunk_node->LinkTo( m_objectRot_node );
 }
 
-void PlanetViewSubService::AddPlanet( void )
-{
-    create_planet();
-    m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
-}
-
-void PlanetViewSubService::RemovePlanet( void )
-{
-    destroy_planet();
-    m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
-}
