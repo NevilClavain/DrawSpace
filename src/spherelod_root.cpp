@@ -283,6 +283,10 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
             }
         }
     }
+    else if( SceneNodeGraph::NODE_UNREGISTERED == p_event )
+    {
+        _asm nop
+    }
 }
 
 void Root::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, Root::RegisteredCamera& p_cameradescr, bool p_hotstate )
