@@ -233,19 +233,21 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
 
     if( "Close_Button" == p_widget_id )
     {
-        destroy_planet();
-        m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
-
-
-        MainLoopService::GetInstance()->SetPlanetSetupLayout();
+        MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETVIEW_CLOSEBUTTON_CLIC );
     }
 }
 
-void PlanetViewSubService::ApplyLayout( void )
+void PlanetViewSubService::Activate( void )
 {
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
 
     create_planet();
+    m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
+}
+
+void PlanetViewSubService::Unactivate( void )
+{
+    destroy_planet();
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
 }
 

@@ -28,6 +28,16 @@
 
 class MainLoopService : public DrawSpace::Interface::Module::Service, public BaseSingleton<MainLoopService>
 {
+public:
+
+    typedef enum
+    {
+        GUIEVT_PLANETSETUP_QUITBUTTON_CLIC,
+        GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC,
+        GUIEVT_PLANETVIEW_CLOSEBUTTON_CLIC,
+    
+    } APP_GUI_EVENT;
+
 protected:
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
@@ -70,8 +80,7 @@ public:
     virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
-    void                                    SetPlanetViewLayout( void );
-    void                                    SetPlanetSetupLayout( void );
+    void                                    OnGUIEvent( APP_GUI_EVENT p_evt );
 
     friend class BaseSingleton<MainLoopService>;
 };

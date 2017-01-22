@@ -82,7 +82,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     PlanetSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
     PlanetViewSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
 
-    PlanetSetupSubService::GetInstance()->ApplyLayout();
+    PlanetSetupSubService::GetInstance()->Activate();
 
     m_current_subservice = PlanetSetupSubService::GetInstance();
 
@@ -164,14 +164,31 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
-void MainLoopService::SetPlanetViewLayout( void )
+void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
 {
-    PlanetViewSubService::GetInstance()->ApplyLayout();
-    m_current_subservice = PlanetViewSubService::GetInstance();
-}
+    switch( p_evt )
+    {
+        case GUIEVT_PLANETSETUP_QUITBUTTON_CLIC:
 
-void MainLoopService::SetPlanetSetupLayout( void )
-{
-    PlanetSetupSubService::GetInstance()->ApplyLayout();
-    m_current_subservice = PlanetSetupSubService::GetInstance();
+            // close whole app
+            (*m_closeapp_cb)( 0 );
+            break;
+
+        case GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC:
+
+            PlanetSetupSubService::GetInstance()->Unactivate();
+            PlanetViewSubService::GetInstance()->Activate();
+
+            m_current_subservice = PlanetViewSubService::GetInstance();
+            break;
+
+        case GUIEVT_PLANETVIEW_CLOSEBUTTON_CLIC:
+
+            PlanetViewSubService::GetInstance()->Unactivate();
+            PlanetSetupSubService::GetInstance()->Activate();
+
+            m_current_subservice = PlanetSetupSubService::GetInstance();
+
+            break;
+    }
 }

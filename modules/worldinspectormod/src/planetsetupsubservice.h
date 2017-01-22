@@ -73,7 +73,8 @@ public:
     virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
-    virtual void                            ApplyLayout( void );
+    virtual void                            Activate( void );
+    virtual void                            Unactivate( void );
 
     friend class BaseSingleton<PlanetSetupSubService>;
 

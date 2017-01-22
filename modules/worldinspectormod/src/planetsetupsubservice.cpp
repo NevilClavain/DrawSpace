@@ -197,15 +197,19 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 
     if( "Quit_Button" == p_widget_id )
     {
-        (*m_closeapp_cb)( 0 );
+        MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_QUITBUTTON_CLIC );
     }
     else if( "PlanetView_Button" == p_widget_id )
     {
-        MainLoopService::GetInstance()->SetPlanetViewLayout();
+        MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC );
     }
 }
 
-void PlanetSetupSubService::ApplyLayout( void )
+void PlanetSetupSubService::Activate( void )
 {
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
+}
+
+void PlanetSetupSubService::Unactivate( void )
+{
 }
