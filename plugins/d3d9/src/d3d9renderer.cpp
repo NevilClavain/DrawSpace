@@ -1483,22 +1483,6 @@ bool D3D9Renderer::SetShaders( void* p_data )
     return true;
 }
 
-
-bool D3D9Renderer::CreateRenderStatesSet( DrawSpace::Core::Fx* p_fx, void** p_data )
-{
-    dsstring hash;
-    p_fx->GetRenderStatesSetMD5( hash );
-
-    if( m_fx_bases.count( hash ) > 0 )
-    {
-        *p_data = (void *)m_fx_bases[hash];
-        return true;
-    }
-
-    *p_data = (void*)p_fx;
-    m_fx_bases[hash] = p_fx;
-    return true;
-}
 bool D3D9Renderer::ApplyRenderStatesIn( void* p_data )
 {	
 	DrawSpace::Core::Fx* fx = (DrawSpace::Core::Fx*)p_data;

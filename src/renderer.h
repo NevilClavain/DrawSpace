@@ -96,7 +96,6 @@ public:
     virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool SetShaders( void* p_data ) = 0;
 
-    virtual bool CreateRenderStatesSet( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool ApplyRenderStatesIn( void* p_data ) = 0;
     virtual bool ApplyRenderStatesOut( void* p_data ) = 0;
 

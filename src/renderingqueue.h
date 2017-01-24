@@ -137,6 +137,9 @@ protected:
     std::vector<OperationsGroup>                        m_unsetvtexture_groups[RenderingNode::NbMaxTextures];
 
 
+    std::map<dsstring, DrawSpace::Core::Fx*>            m_fx_bases;
+
+
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
 
     void sort_list( std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list );

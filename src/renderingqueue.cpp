@@ -222,6 +222,7 @@ void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_
 void RenderingQueue::UpdateOutputQueue( void )
 {     
     m_nodes.clear();
+    m_fx_bases.clear();
 
     for( std::map<long, std::vector<RenderingNode*>>::iterator it = m_renderingorder_nodes.begin(); it != m_renderingorder_nodes.end(); ++it )
     {
@@ -259,6 +260,7 @@ void RenderingQueue::UpdateOutputQueue( void )
 void RenderingQueue::UpdateOutputQueueNoOpt( void )
 {
     m_nodes.clear();
+    m_fx_bases.clear();
 
     for( std::map<long, std::vector<RenderingNode*>>::iterator it = m_renderingorder_nodes.begin(); it != m_renderingorder_nodes.end(); ++it )
     {
@@ -685,22 +687,36 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
         Fx* current_fx = node->GetFx();
 
-        /*
-        if( false == renderer->CreateFx( current_fx, &fx_data ) )
-        {
-            _DSEXCEPTION( "Cannot create FX" )
-        }
-        m_fx_datas[node] = fx_data;
-        */
-
         if( false == renderer->CreateShaders( current_fx, &sh_data ) )
         {
             _DSEXCEPTION( "Cannot create Shaders" )
         }
         m_sh_datas[node] = sh_data;
 
+        /*
         renderer->CreateRenderStatesSet( current_fx, &rs_data );
         m_rs_datas[node] = rs_data;
+        */
+        
+        //m_rs_datas[node] = current_fx;
+
+        /////////////////////////////////////////////
+        dsstring hash;
+        current_fx->GetRenderStatesSetMD5( hash );
+
+        if( m_fx_bases.count( hash ) > 0 )
+        {
+            rs_data = (void *)m_fx_bases[hash];
+        }
+        else
+        {
+            rs_data = (void*)current_fx;
+            m_fx_bases[hash] = current_fx;
+        }
+
+        m_rs_datas[node] = rs_data;
+        /////////////////////////////////////////////
+
 
         for( long j = 0; j < node->GetTextureListSize(); j++ )
         {

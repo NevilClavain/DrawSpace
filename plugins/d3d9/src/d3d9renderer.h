@@ -92,17 +92,6 @@ protected:
 
     } MesheData;
 
-    /*
-    typedef struct
-    {
-        LPDIRECT3DVERTEXSHADER9         vertex_shader;
-        LPDIRECT3DPIXELSHADER9          pixel_shader;
-
-        DrawSpace::Core::Fx*            fx;
-
-    } FxData;
-    */
-
     typedef struct
     {
         LPDIRECT3DVERTEXSHADER9         vertex_shader;
@@ -145,7 +134,6 @@ protected:
     
     std::map<dsstring, MesheData*>                              m_meshes_base;
     
-    //std::map<dsstring, FxData*>                                 m_fx_bases;
     std::map<dsstring, ShadersData*>                            m_shaders_bases;
     std::map<dsstring, DrawSpace::Core::Fx*>                    m_fx_bases;
 
@@ -209,7 +197,6 @@ public:
     virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data );
     virtual bool SetShaders( void* p_data );
 
-    virtual bool CreateRenderStatesSet( DrawSpace::Core::Fx* p_fx, void** p_data );
     virtual bool ApplyRenderStatesIn( void* p_data );
     virtual bool ApplyRenderStatesOut( void* p_data );
 
