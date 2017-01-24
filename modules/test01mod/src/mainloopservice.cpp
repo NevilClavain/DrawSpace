@@ -95,6 +95,9 @@ void MainLoopService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGra
 {
 }
 
+void MainLoopService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+}
 
 void MainLoopService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {

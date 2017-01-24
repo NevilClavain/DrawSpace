@@ -119,6 +119,11 @@ public:
     void RegisterNodesEvtHandler( NodesEventHandler* p_handler );
     void RegisterScenegraphEvtHandler( ScenegraphEventHandler* p_handler );
 
+    void UnregisterCameraEvtHandler( CameraEventHandler* p_handler );
+    void UnregisterNodesEvtHandler( NodesEventHandler* p_handler );
+    void UnregisterScenegraphEvtHandler( ScenegraphEventHandler* p_handler );
+
+
     void PointProjection( const DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
     void GetCurrentCameraName( dsstring& p_outname );

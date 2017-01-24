@@ -237,6 +237,19 @@ void SceneNodeGraph::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
     }
 }
 
+void SceneNodeGraph::UnregisterCameraEvtHandler( CameraEventHandler* p_handler )
+{
+    for( auto it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
+    {
+        if( (*it) == p_handler )
+        {
+            m_cameraevt_handlers.erase( it );
+            break;
+        }
+    }
+}
+
+
 void SceneNodeGraph::RegisterNodesEvtHandler( NodesEventHandler* p_handler )
 {
     m_nodesevt_handlers.push_back( p_handler );
@@ -249,10 +262,36 @@ void SceneNodeGraph::RegisterNodesEvtHandler( NodesEventHandler* p_handler )
     }
 }
 
+void SceneNodeGraph::UnregisterNodesEvtHandler( NodesEventHandler* p_handler )
+{
+    for( auto it = m_nodesevt_handlers.begin(); it != m_nodesevt_handlers.end(); ++it )
+    {
+        if( (*it) == p_handler )
+        {
+            m_nodesevt_handlers.erase( it );
+            break;
+        }
+    }
+}
+
 void SceneNodeGraph::RegisterScenegraphEvtHandler( ScenegraphEventHandler* p_handler )
 {
     m_scenegraphevt_handlers.push_back( p_handler );
 }
+
+
+void SceneNodeGraph::UnregisterScenegraphEvtHandler( ScenegraphEventHandler* p_handler )
+{
+    for( auto it = m_scenegraphevt_handlers.begin(); it != m_scenegraphevt_handlers.end(); ++it )
+    {
+        if( (*it) == p_handler )
+        {
+            m_scenegraphevt_handlers.erase( it );
+            break;
+        }
+    }
+}
+
 
 void SceneNodeGraph::PointProjection( const Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
 {

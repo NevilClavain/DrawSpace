@@ -58,6 +58,7 @@ public:
 
     virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName ) = 0;
     virtual void                            RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph ) = 0;
+    virtual void                            UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph ) = 0;
     virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName ) = 0;
 
 

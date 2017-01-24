@@ -157,6 +157,7 @@ public:
     SphericalLOD::Layer*                GetLayerFromCamera( const dsstring& p_cameraName, int p_layer_index );
     
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
+    void                                UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 
     void                                SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
     void                                OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );

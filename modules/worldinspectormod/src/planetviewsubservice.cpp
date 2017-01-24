@@ -147,6 +147,10 @@ void PlanetViewSubService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNo
 {
 }
 
+void PlanetViewSubService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+}
+
 void PlanetViewSubService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {
 }
@@ -354,12 +358,14 @@ void PlanetViewSubService::create_planet( void )
 
 void PlanetViewSubService::destroy_planet( void )
 {
-    m_cdlodp_service->ReleaseSceneNode( "planet0" );
+    m_cdlodp_service->UnregisterScenegraphCallbacks( m_scenenodegraph );
 
     m_scenenodegraph.UnregisterNode( m_planet_node );   
     m_planet_node->Unlink();
 
     m_planet_node = NULL;
+
+    m_cdlodp_service->ReleaseSceneNode( "planet0" );
 }
 
 void PlanetViewSubService::create_cubes( void )

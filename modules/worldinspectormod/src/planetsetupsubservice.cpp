@@ -132,6 +132,10 @@ void PlanetSetupSubService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneN
 {
 }
 
+void PlanetSetupSubService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+}
+
 void PlanetSetupSubService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {
 }

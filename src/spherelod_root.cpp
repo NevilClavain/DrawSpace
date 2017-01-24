@@ -606,6 +606,12 @@ void Root::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scene
     p_scenegraph.RegisterScenegraphEvtHandler( m_scenegraph_evt_cb );
 }
 
+void Root::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+    p_scenegraph.UnregisterNodesEvtHandler( m_nodes_evt_cb );
+    p_scenegraph.UnregisterCameraEvtHandler( m_camera_evt_cb );
+    p_scenegraph.UnregisterScenegraphEvtHandler( m_scenegraph_evt_cb );
+}
 
 DrawSpace::SphericalLOD::Layer* Root::GetLayerFromInertBody( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index )
 {

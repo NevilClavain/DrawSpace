@@ -273,6 +273,9 @@ void SkyboxService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph
 {
 }
 
+void SkyboxService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+}
 
 void SkyboxService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {

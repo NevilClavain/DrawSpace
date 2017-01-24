@@ -165,7 +165,7 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     pe.planet_pshader->LoadFromFile();
 
 
-    pe.details_fx = new Fx;
+	pe.details_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
     pe.details_fx->AddShader( pe.planet_vshader );
     pe.details_fx->AddShader( pe.planet_pshader );
@@ -247,10 +247,32 @@ void CDLODPlanetService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNode
     }
 }
 
+void CDLODPlanetService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+    for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    {
+        it->second.planet->UnregisterScenegraphCallbacks( *m_scenenodegraph );
+    }
+}
+
 void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 {
     if( m_nodes.count( p_sceneNodeName ) )
     {
+		PlanetEntry pe = m_nodes[p_sceneNodeName];
+
+		_DRAWSPACE_DELETE_( pe.planet_vshader );
+		_DRAWSPACE_DELETE_( pe.planet_pshader );
+
+		_DRAWSPACE_DELETE_( pe.details_fx );
+		_DRAWSPACE_DELETE_( pe.planet );
+		_DRAWSPACE_DELETE_( pe.planet_node );
+
+		for (int i = 0; i < 6; i++)
+		{
+			_DRAWSPACE_DELETE_( pe.simplebinder[i] );
+		}
+
         m_nodes.erase( p_sceneNodeName );
     }
 }
