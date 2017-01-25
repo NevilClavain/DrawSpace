@@ -438,3 +438,13 @@ dsreal Layer::GetCurrentHeight( void )
 {
     return m_currentpatch_current_height;
 }
+
+DrawSpace::SphericalLOD::Body* Layer::GetSlodBody( void )
+{
+    return m_body;
+}
+
+DrawSpace::Dynamics::Collider* Layer::GetCollider( void )
+{
+    return m_collider;
+}

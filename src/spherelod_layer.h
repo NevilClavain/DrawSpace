@@ -58,9 +58,7 @@ protected:
 
     DrawSpace::SphericalLOD::Config*                            m_config;
 
-    //DrawSpace::SphericalLOD::Body*                              m_planetbody;
     DrawSpace::SphericalLOD::Body*                              m_body;
-
     DrawSpace::Dynamics::Collider*                              m_collider;
     
     long                                                        m_nb_collisionmeshebuild_done;
@@ -142,6 +140,10 @@ public:
     bool HasCollisions( void );
     dsreal GetLastMaxHeight( void );
     dsreal GetCurrentHeight( void );
+
+    DrawSpace::SphericalLOD::Body*  GetSlodBody( void );
+    DrawSpace::Dynamics::Collider*  GetCollider( void );
+
 };
 
 }

@@ -57,8 +57,6 @@ protected:
 
         std::vector<SphericalLOD::Layer*>           layers;
 
-        DrawSpace::IntermediatePass*                collidingheightmap_pass;
-        DrawSpace::SphericalLOD::FaceDrawingNode*   collidingheightmap_node;
         
     } RegisteredBody;
 

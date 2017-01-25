@@ -55,7 +55,7 @@ m_enable_gravity( true )
     m_timer = _DRAWSPACE_NEW_( DrawSpace::Utils::Timer, DrawSpace::Utils::Timer );
 
     m_timer->SetHandler( m_timer_cb );
-    m_timer->SetPeriod( /*100*/ /*60*/ 20 );
+    m_timer->SetPeriod( 20 );
     m_timemanager->RegisterTimer( m_timer );
 
     m_timer->SetState( true );
@@ -63,6 +63,31 @@ m_enable_gravity( true )
 
 Root::~Root( void )
 {
+
+    for( size_t i = 0; i < m_layers_list.size(); i++ )
+    {
+        DrawSpace::Dynamics::Collider* collider = m_layers_list[i]->GetCollider();
+        _DRAWSPACE_DELETE_( collider );
+
+        DrawSpace::SphericalLOD::Body* slod_body = m_layers_list[i]->GetSlodBody();
+        _DRAWSPACE_DELETE_( slod_body );
+
+        _DRAWSPACE_DELETE_( m_layers_list[i] );    
+    }
+
+    m_timemanager->UnregisterTimer( m_timer );
+
+    _DRAWSPACE_DELETE_( m_timer );
+    _DRAWSPACE_DELETE_( m_timer_cb );
+
+    _DRAWSPACE_DELETE_( m_subpass_creation_cb );
+
+    _DRAWSPACE_DELETE_( m_scenegraph_evt_cb );
+    _DRAWSPACE_DELETE_( m_nodes_evt_cb );
+    _DRAWSPACE_DELETE_( m_camera_evt_cb );
+
+    _DRAWSPACE_DELETE_( m_drawable );
+    _DRAWSPACE_DELETE_( m_config );
 }
 
 void Root::attach_body( InertBody* p_body )
