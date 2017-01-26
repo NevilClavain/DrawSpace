@@ -128,6 +128,8 @@ public:
     virtual void                            Activate( void );
     virtual void                            Unactivate( void );
 
+    virtual void                            DumpMemoryAllocs( void );
+
     friend class BaseSingleton<PlanetViewSubService>;
 };
 

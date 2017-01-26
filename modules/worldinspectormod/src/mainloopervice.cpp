@@ -186,6 +186,11 @@ void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
             m_current_subservice = PlanetViewSubService::GetInstance();
             break;
 
+        case GUIEVT_PLANETSETUP_F1_KEY:
+
+            PlanetViewSubService::GetInstance()->DumpMemoryAllocs();
+            break;
+
         case GUIEVT_PLANETVIEW_CLOSEBUTTON_CLIC:
 
             PlanetViewSubService::GetInstance()->Unactivate();

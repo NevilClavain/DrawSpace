@@ -438,3 +438,7 @@ void PlanetViewSubService::create_cubes( void )
     m_chunk_node->LinkTo( m_objectRot_node );
 }
 
+void PlanetViewSubService::DumpMemoryAllocs( void )
+{
+    m_cdlodp_root->DumpMemoryAllocs();
+}

@@ -152,6 +152,13 @@ void PlanetSetupSubService::OnEndKeyPress( long p_key )
 
 void PlanetSetupSubService::OnKeyPulse( long p_key )
 {
+    switch( p_key )
+    {
+        case VK_F1:
+
+            MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_F1_KEY );
+            break;    
+    }
 }
 
 void PlanetSetupSubService::OnChar( long p_char, long p_scan )

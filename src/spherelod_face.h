@@ -41,6 +41,11 @@ protected:
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   SplitCallback;
     typedef DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>   MergeCallback;
 
+    InstanciationCallback*                                      m_cb_inst;
+    DeletionCallback*                                           m_cb_del;
+    InstanciationCallback*                                      m_cb_merge;
+    DeletionCallback*                                           m_cb_split;
+
     DrawSpace::Utils::QuadtreeNode<Patch>*                      m_rootpatch; 
 
     DrawSpace::SphericalLOD::Config*                            m_config;
@@ -55,9 +60,6 @@ protected:
 
     Patch*                                                      m_work_currentPatch;
     int                                                         m_work_currentPatchLOD;
-
-    DrawSpace::Core::Texture*                                   m_perlinnoise_texture;
-
 
     int                                                         m_orientation;
     dsreal                                                      m_diameter;

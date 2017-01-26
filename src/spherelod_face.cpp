@@ -32,6 +32,10 @@ using namespace DrawSpace::SphericalLOD;
 
 Face::Face( DrawSpace::SphericalLOD::Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges ) : 
 m_config( p_config ),
+m_cb_inst( NULL ),
+m_cb_del( NULL ),
+m_cb_merge( NULL ),
+m_cb_split( NULL ),
 m_rootpatch( NULL ), 
 m_currentleaf( NULL ),
 m_currentPatch( NULL ),
@@ -39,10 +43,6 @@ m_currentPatchLOD( -1 ),
 m_hot( false ),
 m_relative_alt( 0.0 ),
 m_relative_alt_sphere( 0.0 ),
-/*
-m_lod_slipping_sup( NB_LOD_RANGES - 1 ),
-m_lod_slipping_inf( NB_LOD_RANGES - 4 ),
-*/
 m_subpasscreation_handler( p_handler ),
 m_layer_index( p_layer_index ),
 m_nbLODRanges( p_nbLODRanges )
@@ -56,7 +56,30 @@ m_nbLODRanges( p_nbLODRanges )
 
 Face::~Face( void )
 {
-    _DRAWSPACE_DELETE_( m_rootpatch );
+    if( m_rootpatch )
+    {
+        _DRAWSPACE_DELETE_( m_rootpatch );
+    }
+
+    if( m_cb_inst )
+    {
+         _DRAWSPACE_DELETE_( m_cb_inst );
+    }
+
+    if( m_cb_del )
+    {
+         _DRAWSPACE_DELETE_( m_cb_del );
+    }
+
+    if( m_cb_merge )
+    {
+         _DRAWSPACE_DELETE_( m_cb_merge );
+    }
+
+    if( m_cb_split )
+    {
+         _DRAWSPACE_DELETE_( m_cb_split );
+    }
 }
 
 // create face's root patch
@@ -71,6 +94,11 @@ bool Face::Init( int p_orientation )
 
     m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );
     
+    m_cb_inst = cb_inst;
+    m_cb_del = cb_del;
+    m_cb_merge = cb_merge;
+    m_cb_split = cb_split;
+
     init_lodranges();
 
     return true;
