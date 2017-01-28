@@ -76,6 +76,8 @@ m_enable( true )
 
 Collisions::~Collisions( void )
 {
+    _DRAWSPACE_DELETE_( m_subpass );
+    _DRAWSPACE_DELETE_( m_subpass_node );
 }
 
 DrawSpace::IntermediatePass* Collisions::create_colliding_heightmap_pass( void )
