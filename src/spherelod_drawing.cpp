@@ -176,6 +176,16 @@ m_config( p_config )
 Drawing::~Drawing( void )
 {
     _DRAWSPACE_DELETE_( m_singlenode_draw_handler );
+
+    for( size_t i = 0; i < m_drawing_handlers.size(); i++ )
+    {
+        _DRAWSPACE_DELETE_( m_drawing_handlers[i] );
+    }
+
+    for( size_t i = 0; i < m_facedrawingnodes.size(); i++ )
+    {
+        _DRAWSPACE_DELETE_( m_facedrawingnodes[i] );
+    }
 }
 
 void Drawing::SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies )
@@ -279,11 +289,12 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Unbind();
 }
 
-DrawSpace::Core::RenderingNode* Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                 DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
 {
 
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+    m_facedrawingnodes.push_back( node );
 
     FaceDrawingNode* node_skirts = NULL;
 
@@ -304,6 +315,7 @@ DrawSpace::Core::RenderingNode* Drawing::RegisterSinglePassSlot( Pass* p_pass, S
         case SphericalLOD::Body::LOWRES_SKIRT_MESHE:
 
             node_skirts = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+            m_facedrawingnodes.push_back( node_skirts );
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe ); 
@@ -322,6 +334,7 @@ DrawSpace::Core::RenderingNode* Drawing::RegisterSinglePassSlot( Pass* p_pass, S
         
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
 
+    m_drawing_handlers.push_back( cb );
 
     if( node_skirts )
     {
@@ -349,8 +362,6 @@ DrawSpace::Core::RenderingNode* Drawing::RegisterSinglePassSlot( Pass* p_pass, S
 
     node->SetBinder( p_binder );
     node->SetOrderNumber( p_rendering_order );
-
-    return node;
 }
 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void )

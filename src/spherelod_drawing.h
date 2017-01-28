@@ -93,19 +93,18 @@ protected:
     typedef std::map<FaceDrawingNode*, int>                                             NodesSet;
     typedef DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*>   RenderingNodeDrawCallback;
 
-    //Body*                                                                       m_planetbody;
     std::vector<Body*>                                                          m_planetbodies;
-
-    //std::map<Pass*, NodesSet>                                                   m_passesnodes;
-
-    //std::map<Pass*, std::vector<FaceDrawingNode*> >                             m_passesnodes;
 
     std::vector<std::pair<Pass*, FaceDrawingNode*> >                            m_passesnodes;
 
+    std::vector<FaceDrawingNode*>                                               m_facedrawingnodes;
 
     NodesSet                                                                    m_nodes;
 
     RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler;
+    
+    std::vector<RenderingNodeDrawCallback*>                                     m_drawing_handlers; 
+
     
     DrawSpace::Interface::Renderer*                                             m_renderer;
     DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
@@ -130,7 +129,7 @@ public:
     virtual void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
     virtual void OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
 
-    virtual DrawSpace::Core::RenderingNode* RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
+    virtual void RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
    
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 

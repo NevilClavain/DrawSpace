@@ -147,7 +147,7 @@ public:
     void                                GetSceneName( dsstring& p_name );    
 
 
-    DrawSpace::Core::RenderingNode*     RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
+    void                                RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                                                             DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
 
 

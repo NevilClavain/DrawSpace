@@ -73,6 +73,10 @@ m_datasize( -1 )
 
 Shader::~Shader( void )
 {
+    if( m_data )
+    {
+        _DRAWSPACE_DELETE_N_( m_data );
+    }
 }
 
 void Shader::EnableShadersDescrInFinalPath( bool p_state )

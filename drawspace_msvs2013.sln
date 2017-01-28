@@ -64,6 +64,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "guilabmod", "modules\guilab
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cdlodplanetmod", "modules\cdlodplanetmod\cdlodplanetmod.vcxproj", "{B09637F4-8086-4754-A85F-058EA996B787}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4} = {B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "worldinspectormod", "modules\worldinspectormod\worldinspectormod.vcxproj", "{765F5A95-12B4-4141-8EDA-4126A896C8DA}"
 	ProjectSection(ProjectDependencies) = postProject
