@@ -355,14 +355,6 @@ void Root::on_scenegraph_event( SceneNodeGraph::ScenegraphEvent p_event, SceneNo
 
 void Root::on_timer( DrawSpace::Utils::Timer* p_timer )
 {
-    /*
-    DrawSpace::SphericalLOD::SubPass* sp = pop_next_subpass();
-    if( sp )
-    {
-        m_singleshot_subpasses.push_back( sp );
-    }
-    */
-
     if( m_singleshot_subpasses_stack.size() > 0 )
     {
         DrawSpace::SphericalLOD::SubPass* pass = m_singleshot_subpasses_stack.back();
