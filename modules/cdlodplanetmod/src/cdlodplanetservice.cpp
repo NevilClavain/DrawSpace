@@ -158,8 +158,8 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
         pe.simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
     }
 
-    pe.planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface_flat.vso", true ) );
-    pe.planet_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface_flat.pso", true ) );
+    pe.planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface.vso", true ) );
+    pe.planet_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface.pso", true ) );
 
     pe.planet_vshader->LoadFromFile();
     pe.planet_pshader->LoadFromFile();
