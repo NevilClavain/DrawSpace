@@ -72,7 +72,7 @@ protected:
     bool                                                                m_mouse_left;
     bool                                                                m_mouse_right;
 
-
+    double                                                              m_camera_distance;
 
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
     DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
@@ -92,6 +92,8 @@ protected:
     void destroy_planet( void );
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
+
+    void update_cameranodedistance( void );
 
     PlanetViewSubService( void );
 public:

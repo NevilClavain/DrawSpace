@@ -36,10 +36,20 @@
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/StaticImage" name="StaticImage" >
-            <Property name="Area" value="{{0.56875,0},{0.0246914,0},{0.759722,0},{0.135802,0}}" />
+            <Property name="Area" value="{{0,819},{0,20},{0,1094},{0,110}}" />
             <Property name="Image" value="xfskin/line_h_long" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="VertFormatting" value="TopAligned" />
+            <Property name="VerticalAlignment" value="Bottom" />
+            <Property name="HorizontalAlignment" value="Right" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_CameraDistance" >
+            <Property name="ID" value="7" />
+            <Property name="Area" value="{{0,0},{0,0},{0.304167,0},{0.0802469,0}}" />
+            <Property name="Text" value="Camera distance : XXXXX.XX km" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="VerticalAlignment" value="Bottom" />
+            <Property name="HorizontalAlignment" value="Right" />
         </Window>
     </Window>
 </GUILayout>

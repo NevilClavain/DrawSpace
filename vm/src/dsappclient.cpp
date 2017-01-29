@@ -128,7 +128,10 @@ void dsAppClient::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 
 void dsAppClient::OnMouseWheel( long p_delta )
 {
-
+    if( m_mainloopservice )
+    {
+        m_mainloopservice->OnMouseWheel( p_delta );
+    }
 }
 
 void dsAppClient::OnChar( long p_char, long p_scan )

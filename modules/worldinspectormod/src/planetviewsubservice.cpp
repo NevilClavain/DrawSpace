@@ -39,7 +39,8 @@ m_planet_node( NULL ),
 m_mouse_left( false ),
 m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
-m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" )
+m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" ),
+m_camera_distance( 3000000.0 )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
 }
@@ -93,6 +94,7 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 4 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 5 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 6 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 7 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Close_Button" );
@@ -114,6 +116,11 @@ void PlanetViewSubService::Run( void )
 
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_FPS", fps );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Renderer", renderer_name );
+
+
+    char camera_distance_text[256];
+    sprintf( camera_distance_text, "Camera distance : %.2f km", m_camera_distance / 1000.0 );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_CameraDistance", camera_distance_text );
 
     char working_set[64];
 
@@ -198,6 +205,25 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
 
 void PlanetViewSubService::OnMouseWheel( long p_delta )
 {
+    if( p_delta > 0 )
+    {
+        m_camera_distance -= 100000.0;
+    }
+    else
+    {
+        m_camera_distance += 100000.0;
+    }
+
+    update_cameranodedistance();
+}
+
+void PlanetViewSubService::update_cameranodedistance( void )
+{
+    DrawSpace::Utils::Matrix camera_pos;
+    camera_pos.Translation( 0.0, 0.0, m_camera_distance );
+
+    m_camerapos->ClearAll();
+    m_camerapos->PushMatrix( camera_pos );
 }
 
 void PlanetViewSubService::OnMouseLeftButtonDown( long p_xm, long p_ym )
@@ -243,6 +269,16 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
 
 void PlanetViewSubService::Activate( void )
 {
+    /// reset transformation
+
+    m_camera_distance = 3000.0 * 1000.0;
+    update_cameranodedistance();
+
+    m_objectRot->Init( Vector( 0.0, 0.0, 0.0, 1.0 ) );
+
+    ////
+
+
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
 
     create_planet();
@@ -310,20 +346,13 @@ void PlanetViewSubService::create_camera( void )
     m_camera_node->SetContent( m_camera );
 
     m_scenenodegraph.RegisterNode( m_camera_node );
-
-    
-
+   
     m_camerapos = _DRAWSPACE_NEW_( DrawSpace::Core::Transformation, DrawSpace::Core::Transformation );
     m_camerapos_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Core::Transformation>, SceneNode<DrawSpace::Core::Transformation>( "camera_pos" ) );
 
     m_camerapos_node->SetContent( m_camerapos );
 
-    DrawSpace::Utils::Matrix camera_pos;
-    camera_pos.Translation( 0.0, 0.0, 3000.0 * 1000.0 );
-
-    //camera_pos.Translation( 0.0, 0.0, 5.0 );
-
-    m_camerapos->PushMatrix( camera_pos );
+    update_cameranodedistance();
 
     m_scenenodegraph.AddNode( m_camerapos_node );
     m_scenenodegraph.RegisterNode( m_camerapos_node );
