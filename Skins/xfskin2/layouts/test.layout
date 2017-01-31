@@ -61,7 +61,7 @@
                 <Property name="AlwaysOnTop" value="false" />
             </AutoWindow>
             <Window type="xfskin/Button" name="Button" >
-                <Property name="Area" value="{{0,24},{0,204},{0,204},{0,254}}" />
+                <Property name="Area" value="{{0,24},{0,204},{0,220},{0,254}}" />
                 <Property name="Text" value="Apply" />
                 <Window type="xfskin/SimpleLabel" name="SimpleLabel" >
                     <Property name="Area" value="{{0,0},{0,0},{0,12},{0,32}}" />
@@ -69,22 +69,28 @@
                 </Window>
             </Window>
             <Window type="xfskin/Button" name="Button2" >
-                <Property name="Area" value="{{0,349},{0,205},{0,523},{0,255}}" />
+                <Property name="Area" value="{{0,299},{0,204},{0,480},{0,254}}" />
                 <Property name="Text" value="Cancel" />
             </Window>
             <Window type="xfskin/Editbox" name="Editbox" >
-                <Property name="Area" value="{{0,145},{0,76},{0,438},{0,152}}" />
+                <Property name="Area" value="{{0,98},{0,77},{0,405},{0,153}}" />
             </Window>
             <Window type="xfskin/SimpleLabel" name="SimpleLabel" >
-                <Property name="Area" value="{{0,221},{0,46},{0,345},{0,78}}" />
+                <Property name="Area" value="{{0,187},{0,46},{0,311},{0,78}}" />
                 <Property name="Text" value="x value" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            </Window>
+            <Window type="xfskin/VerticalScrollbar" name="VerticalScrollbar" >
+                <Property name="Area" value="{{0,505},{0,32},{0,542},{1,-14}}" />
             </Window>
         </Window>
         <Window type="xfskin/SimpleLabel" name="SimpleLabel" >
             <Property name="Area" value="{{0,288},{0,441},{0,511},{0,473}}" />
             <Property name="Text" value="Simple Label text !!!" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/VerticalScrollbar" name="VerticalScrollbar" >
+            <Property name="Area" value="{{0,106},{0,107},{0,151},{1,-417}}" />
         </Window>
     </Window>
 </GUILayout>

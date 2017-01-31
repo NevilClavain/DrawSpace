@@ -874,4 +874,170 @@
 </WidgetLook>
 
 
+
+<WidgetLook name="xfskin/VerticalScrollbarThumb">
+  <Property name="VertFree" value="true" />
+  <Property name="MouseInputPropagationEnabled" value="true" />
+  <Property name="Size" value="{{0, 16}, {0, 48}}" />
+  <ImagerySection name="normal">
+    <FrameComponent>
+      <Image component="TopEdge" name="xfskin/MiniVertScrollThumbTopNormal" />
+      <Image component="BottomEdge" name="xfskin/MiniVertScrollThumbBottomNormal" />
+      <Image component="Background" name="xfskin/MiniVertScrollThumbMiddleNormal" />
+    </FrameComponent>
+  </ImagerySection>
+  <ImagerySection name="hover">
+    <FrameComponent>
+      <Image component="TopEdge" name="xfskin/MiniVertScrollThumbTopHover" />
+      <Image component="BottomEdge" name="xfskin/MiniVertScrollThumbBottomHover" />
+      <Image component="Background" name="xfskin/MiniVertScrollThumbMiddleHover" />
+    </FrameComponent>
+  </ImagerySection>
+  <StateImagery name="Normal">
+    <Layer>
+      <Section section="normal" />
+    </Layer>
+  </StateImagery>
+  <StateImagery name="Hover">
+    <Layer>
+      <Section section="hover" />
+    </Layer>
+  </StateImagery>
+  <StateImagery name="Pushed">
+    <Layer>
+      <Section section="normal" />
+    </Layer>
+  </StateImagery>
+  <StateImagery name="Disabled">
+    <Layer>
+      <Section section="normal">
+        <Colours topLeft="FF7F7F7F" topRight="FF7F7F7F" bottomLeft="FF7F7F7F" bottomRight="FF7F7F7F" />
+      </Section>
+    </Layer>
+  </StateImagery>
+</WidgetLook>
+
+
+<WidgetLook name="xfskin/VerticalScrollbar">
+  <Property name="VerticalScrollbar" value="true" />
+  <Property name="Size" value="{{0, 16}, {1, 0}}" />
+  <NamedArea name="ThumbTrackArea">
+    <Area>
+      <Dim type="TopEdge" >
+        <ImageDim name="xfskin/MiniVertScrollUpNormal" dimension="Height" />
+      </Dim>
+      <Dim type="BottomEdge" >
+        <OperatorDim op="Subtract">
+          <UnifiedDim scale="1.0" type="BottomEdge" />
+          <ImageDim name="xfskin/MiniVertScrollDownNormal" dimension="Height" />
+        </OperatorDim>
+      </Dim>
+    </Area>
+  </NamedArea>
+  <Child  type="xfskin/ImageButton" nameSuffix="__auto_incbtn__">
+    <Area>
+      <Dim type="Height" >
+        <ImageDim name="xfskin/MiniVertScrollDownNormal" dimension="Height" />
+      </Dim>
+    </Area>
+    <VertAlignment type="BottomAligned" />
+    <Property name="NormalImage" value="xfskin/MiniVertScrollDownNormal" />
+    <Property name="HoverImage" value="xfskin/MiniVertScrollDownHover" />
+    <Property name="PushedImage" value="xfskin/MiniVertScrollDownNormal" />
+  </Child>
+  <Child  type="xfskin/ImageButton" nameSuffix="__auto_decbtn__">
+    <Area>
+      <Dim type="Height" >
+        <ImageDim name="xfskin/MiniVertScrollUpNormal" dimension="Height" />
+      </Dim>
+    </Area>
+    <Property name="NormalImage" value="xfskin/MiniVertScrollUpNormal" />
+    <Property name="HoverImage" value="xfskin/MiniVertScrollUpHover" />
+    <Property name="PushedImage" value="xfskin/MiniVertScrollUpNormal" />
+  </Child>
+  <Child  type="xfskin/VerticalScrollbarThumb" nameSuffix="__auto_thumb__">
+    <Area>
+      <Dim type="Height" >
+        <UnifiedDim scale="0.1" type="Height" />
+      </Dim>
+    </Area>
+    <Property name="MinSize" value="{{0,0},{0,25}}" />
+  </Child>
+  <ImagerySection name="main">
+    <ImageryComponent>
+      <Area>
+        <Dim type="TopEdge" >
+          <ImageDim name="xfskin/MiniVertScrollUpNormal" dimension="Height" />
+        </Dim>
+        <Dim type="BottomEdge" >
+          <OperatorDim op="Subtract">
+            <UnifiedDim scale="1.0" type="BottomEdge" />
+            <ImageDim name="xfskin/MiniVertScrollDownNormal" dimension="Height" />
+          </OperatorDim>
+        </Dim>
+      </Area>
+      <Image name="xfskin/MiniVertScrollBarSegment" />
+      <VertFormat type="Stretched" />
+      <HorzFormat type="CentreAligned" />
+    </ImageryComponent>
+  </ImagerySection>
+  <StateImagery name="Enabled">
+    <Layer>
+      <Section section="main" />
+    </Layer>
+  </StateImagery>
+  <StateImagery name="Disabled">
+    <Layer>
+      <Section section="main">
+        <Colours topLeft="FF7F7F7F" topRight="FF7F7F7F" bottomLeft="FF7F7F7F" bottomRight="FF7F7F7F" />
+      </Section>
+    </Layer>
+  </StateImagery>
+</WidgetLook>  
+  
+  
+
+<WidgetLook name="xfskin/HorizontalScrollbarThumb">
+  <Property name="HorzFree" value="true" />
+  <Property name="MouseInputPropagationEnabled" value="true" />
+  <Property name="Size" value="{{0, 48}, {0, 16}}" />
+  <ImagerySection name="normal">
+    <FrameComponent>
+      <Image component="LeftEdge" name="xfskin/MiniHorzScrollThumbLeftNormal" />
+      <Image component="RightEdge" name="xfskin/MiniHorzScrollThumbRightNormal" />
+      <Image component="Background" name="xfskin/MiniHorzScrollThumbMiddleNormal" />
+    </FrameComponent>
+  </ImagerySection>
+  <ImagerySection name="hover">
+    <FrameComponent>
+      <Image component="LeftEdge" name="xfskin/MiniHorzScrollThumbLeftHover" />
+      <Image component="RightEdge" name="xfskin/MiniHorzScrollThumbRightHover" />
+      <Image component="Background" name="xfskin/MiniHorzScrollThumbMiddleHover" />
+    </FrameComponent>
+  </ImagerySection>
+  <StateImagery name="Normal">
+    <Layer>
+      <Section section="normal" />
+    </Layer>
+  </StateImagery>
+  <StateImagery name="Hover">
+    <Layer>
+      <Section section="hover" />
+    </Layer>
+  </StateImagery>
+  <StateImagery name="Pushed">
+    <Layer>
+      <Section section="normal" />
+    </Layer>
+  </StateImagery>
+  <StateImagery name="Disabled">
+    <Layer>
+      <Section section="normal">
+        <Colours topLeft="FF7F7F7F" topRight="FF7F7F7F" bottomLeft="FF7F7F7F" bottomRight="FF7F7F7F" />
+      </Section>
+    </Layer>
+  </StateImagery>
+</WidgetLook>
+
+
 </Falagard>

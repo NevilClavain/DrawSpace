@@ -81,4 +81,26 @@
     <Image height="9" name="TitlebarDummy1" width="50" xPos="623" yPos="260" />
     <Image height="27" name="CloseButtonNormal" width="27" xPos="1002" yPos="198" />
     <Image height="27" name="CloseButtonPushed" width="27" xPos="1046" yPos="198" />
+    <Image height="13" name="MiniVertScrollThumbTopNormal" width="26" xPos="1315" yPos="15" />
+    <Image height="28" name="MiniVertScrollThumbMiddleNormal" width="26" xPos="1315" yPos="55" />
+    <Image height="13" name="MiniVertScrollThumbBottomNormal" width="26" xPos="1315" yPos="126" />
+    <Image height="13" name="MiniVertScrollThumbTopHover" width="26" xPos="1373" yPos="14" />
+    <Image height="28" name="MiniVertScrollThumbMiddleHover" width="26" xPos="1373" yPos="56" />
+    <Image height="13" name="MiniVertScrollThumbBottomHover" width="26" xPos="1373" yPos="125" />
+    <Image height="26" name="MiniHorzScrollThumbLeftNormal" width="17" xPos="1141" yPos="28" />
+    <Image height="26" name="MiniHorzScrollThumbRightNormal" width="17" xPos="1248" yPos="28" />
+    <Image height="26" name="MiniHorzScrollThumbMiddleNormal" width="50" xPos="1175" yPos="28" />
+    <Image height="26" name="MiniHorzScrollThumbLeftHover" width="17" xPos="1142" yPos="86" />
+    <Image height="26" name="MiniHorzScrollThumbRightHover" width="17" xPos="1249" yPos="86" />
+    <Image height="26" name="MiniHorzScrollThumbMiddleHover" width="50" xPos="1175" yPos="86" />
+    <Image height="40" name="MiniHorzScrollLeftNormal" width="54" xPos="1157" yPos="203" />
+    <Image height="40" name="MiniHorzScrollRightNormal" width="54" xPos="1232" yPos="203" />
+    <Image height="40" name="MiniHorzScrollLeftHover" width="54" xPos="1157" yPos="261" />
+    <Image height="40" name="MiniHorzScrollRightHover" width="54" xPos="1233" yPos="261" />
+    <Image height="54" name="MiniVertScrollUpNormal" width="40" xPos="1166" yPos="327" />
+    <Image height="54" name="MiniVertScrollUpHover" width="40" xPos="1224" yPos="327" />
+    <Image height="54" name="MiniVertScrollDownNormal" width="40" xPos="1165" yPos="392" />
+    <Image height="54" name="MiniVertScrollDownHover" width="40" xPos="1223" yPos="392" />
+    <Image height="57" name="MiniVertScrollBarSegment" width="3" xPos="1325" yPos="166" />
+    <Image height="3" name="MiniHorzScrollBarSegment" width="57" xPos="1359" yPos="195" />
 </Imageset>

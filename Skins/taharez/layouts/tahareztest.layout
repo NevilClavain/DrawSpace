@@ -103,5 +103,11 @@
                 </AutoWindow>
             </AutoWindow>
         </Window>
+        <Window type="TaharezLook/VerticalScrollbar" name="VerticalScrollbar" >
+            <Property name="Area" value="{{0,152},{0,179},{0,174},{1,-43}}" />
+        </Window>
+        <Window type="TaharezLook/VerticalScrollbarThumb" name="VerticalScrollbarThumb" >
+            <Property name="Area" value="{{0,104},{0,402},{0,120},{0,450}}" />
+        </Window>
     </Window>
 </GUILayout>

@@ -19,5 +19,8 @@
   <FalagardMapping windowType="xfskin/Editbox" targetType="CEGUI/Editbox" renderer="Core/Editbox" lookNFeel="xfskin/Editbox" />
   <FalagardMapping windowType="xfskin/Titlebar" targetType="CEGUI/Titlebar" renderer="Core/Titlebar" lookNFeel="xfskin/Titlebar" />
   <FalagardMapping windowType="xfskin/FrameWindow" targetType="CEGUI/FrameWindow" renderer="Core/FrameWindow" lookNFeel="xfskin/FrameWindow" />
-
+  <FalagardMapping windowType="xfskin/VerticalScrollbarThumb" targetType="CEGUI/Thumb" renderer="Core/Button" lookNFeel="xfskin/VerticalScrollbarThumb" />
+  <FalagardMapping windowType="xfskin/HorizontalScrollbarThumb" targetType="CEGUI/Thumb" renderer="Core/Button" lookNFeel="xfskin/HorizontalScrollbarThumb" />
+  <FalagardMapping windowType="xfskin/VerticalScrollbar"   targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="xfskin/VerticalScrollbar" />
+  
 </GUIScheme>
