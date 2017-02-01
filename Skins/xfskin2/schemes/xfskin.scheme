@@ -22,5 +22,7 @@
   <FalagardMapping windowType="xfskin/VerticalScrollbarThumb" targetType="CEGUI/Thumb" renderer="Core/Button" lookNFeel="xfskin/VerticalScrollbarThumb" />
   <FalagardMapping windowType="xfskin/HorizontalScrollbarThumb" targetType="CEGUI/Thumb" renderer="Core/Button" lookNFeel="xfskin/HorizontalScrollbarThumb" />
   <FalagardMapping windowType="xfskin/VerticalScrollbar"   targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="xfskin/VerticalScrollbar" />
+  <FalagardMapping windowType="xfskin/HorizontalScrollbar" targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="xfskin/HorizontalScrollbar" />
+  <FalagardMapping windowType="xfskin/Listbox" targetType="CEGUI/Listbox" renderer="Core/Listbox" lookNFeel="xfskin/Listbox" />
   
 </GUIScheme>

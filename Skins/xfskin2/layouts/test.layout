@@ -92,5 +92,9 @@
         <Window type="xfskin/VerticalScrollbar" name="VerticalScrollbar" >
             <Property name="Area" value="{{0,106},{0,107},{0,151},{1,-417}}" />
         </Window>
+        <Window type="xfskin/Listbox" name="Listbox" >
+            <Property name="ID" value="8" />
+            <Property name="Area" value="{{0,1101},{0,516},{0,1357},{0,772}}" />
+        </Window>
     </Window>
 </GUILayout>

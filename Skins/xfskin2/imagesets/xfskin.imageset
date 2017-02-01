@@ -103,4 +103,13 @@
     <Image height="54" name="MiniVertScrollDownHover" width="40" xPos="1223" yPos="392" />
     <Image height="57" name="MiniVertScrollBarSegment" width="3" xPos="1325" yPos="166" />
     <Image height="3" name="MiniHorzScrollBarSegment" width="57" xPos="1359" yPos="195" />
+    <Image height="16" name="ListboxBottomLeft" width="16" xPos="1331" yPos="304" />
+    <Image height="16" name="ListboxBottomRight" width="16" xPos="1383" yPos="304" />
+    <Image height="16" name="ListboxTopRight" width="16" xPos="1383" yPos="252" />
+    <Image height="16" name="ListboxTopLeft" width="16" xPos="1331" yPos="252" />
+    <Image height="36" name="ListboxLeft" width="16" xPos="1331" yPos="268" />
+    <Image height="36" name="ListboxRight" width="16" xPos="1383" yPos="268" />
+    <Image height="16" name="ListboxTop" width="36" xPos="1347" yPos="252" />
+    <Image height="16" name="ListboxBottom" width="36" xPos="1347" yPos="304" />
+    <Image height="36" name="ListboxBackdrop" width="36" xPos="1347" yPos="268" />
 </Imageset>

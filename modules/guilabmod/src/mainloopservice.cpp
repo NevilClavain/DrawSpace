@@ -69,11 +69,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_InitSubSystem();
 
     m_renderer->GUI_SetResourcesRootDirectory( "./xfskin2" );
-    //m_renderer->GUI_SetResourcesRootDirectory( "./xfskin" );
+
     m_renderer->GUI_LoadScheme( "xfskin.scheme" );
 
     m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
-    //m_renderer->GUI_ShowMouseCursor( true );
 
     
     m_renderer->GUI_LoadLayout( "test.layout" );
@@ -86,27 +85,13 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( "test.layout", "root", 5 );
     m_renderer->GUI_StoreWidget( "test.layout", "root", 6 );
     m_renderer->GUI_StoreWidget( "test.layout", "root", 7 );
-
-    /*
-    m_renderer->GUI_StoreWidget( 0, 1 );
-    m_renderer->GUI_StoreWidget( 0, 2 );
-    m_renderer->GUI_StoreWidget( 0, 3 );
-    m_renderer->GUI_StoreWidget( 0, 4 );
-    m_renderer->GUI_StoreWidget( 0, 5 );
-    m_renderer->GUI_StoreWidget( 0, 6 );
-    */
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 8 );
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
-    /*
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 4 );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( 5 );
-    */
 
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "test.layout", "Button_ClearText" );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "test.layout", "Button_CopyInput" );
-
-    //set_mouse_circular_mode( false );
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }

@@ -238,10 +238,23 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
             dsstring childName = child->getName().c_str();
             wt[childName] = child;
 
-            CEGUI::Editbox* edbx = dynamic_cast<CEGUI::Editbox*>( child );            
+            CEGUI::Editbox* edbx = dynamic_cast<CEGUI::Editbox*>( child );     
             if( edbx )
             {
                 m_editBoxes.push_back( edbx );
+                return;
+            }
+
+            CEGUI::Listbox* lsbx = dynamic_cast<CEGUI::Listbox*>( child );
+            if( lsbx )
+            {
+                m_listBoxes[childName] = lsbx;
+
+                for( int i = 0; i < 20; i++ )
+                {
+                    lsbx->addItem( new CEGUI::ListboxTextItem( "paf rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" ) );
+                }
+                return;
             }
         }
         else

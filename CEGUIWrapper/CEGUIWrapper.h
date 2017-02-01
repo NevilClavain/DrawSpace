@@ -46,6 +46,8 @@ protected:
     CEGUI::Window*                                                              m_currentLayout;
 
     std::vector<CEGUI::Editbox*>                                                m_editBoxes;
+    std::map<dsstring, CEGUI::Listbox*>                                         m_listBoxes;
+
 
     /////////////////////////////////////////////////////////////////////////////////
 
