@@ -1119,6 +1119,7 @@
 
 
  <WidgetLook name="xfskin/Listbox">
+  <PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="ColourRect" name="NormalTextColour"/>
   <Property name="Size" value="{{0, 256}, {0, 256}}" />
   <NamedArea name="ItemRenderingArea">
     <Area>
@@ -1211,10 +1212,10 @@
   <Child  type="xfskin/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
     <Area>
       <Dim type="Width" >
-        <UnifiedDim scale="1" offset="-12" type="Width" />
+        <UnifiedDim scale="1" offset="-32" type="Width" />
       </Dim>
       <Dim type="Height" >
-        <AbsoluteDim value="12" />
+        <AbsoluteDim value="32" />
       </Dim>
     </Area>
     <VertAlignment type="BottomAligned" />
@@ -1222,10 +1223,10 @@
   <Child  type="xfskin/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
     <Area>
       <Dim type="Width" >
-        <AbsoluteDim value="12" />
+        <AbsoluteDim value="32" />
       </Dim>
       <Dim type="Height" >
-        <UnifiedDim scale="1" offset="-12" type="Height" />
+        <UnifiedDim scale="1" offset="-32" type="Height" />
       </Dim>
     </Area>
     <HorzAlignment type="RightAligned" />

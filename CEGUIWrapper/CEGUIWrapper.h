@@ -33,6 +33,8 @@ protected:
 
     typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedHandler;
 
+
+
     bool                                                                        m_ready;
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +48,6 @@ protected:
     CEGUI::Window*                                                              m_currentLayout;
 
     std::vector<CEGUI::Editbox*>                                                m_editBoxes;
-    std::map<dsstring, CEGUI::Listbox*>                                         m_listBoxes;
 
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +90,10 @@ public:
     void Store( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id );
     void SubscribePushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName );
     void SetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
-    void GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext );  
+    void GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext ); 
+
+    void AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
+    void ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName );
     
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler );
 

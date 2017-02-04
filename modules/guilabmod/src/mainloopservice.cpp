@@ -214,15 +214,17 @@ void MainLoopService::on_guipushbutton_clicked( const dsstring& p_layout, const 
 {
     if( "Button_ClearText" == p_widget_id )
     {
-        //m_renderer->GUI_SetWidgetText( 3, "" );
+         m_renderer->GUI_SetWidgetText( "test.layout", "Editbox", "" );
 
-        m_renderer->GUI_SetWidgetText( "test.layout", "Editbox", "" );
+         m_renderer->GUI_ClearListbox( "test.layout", "Listbox" );
     }
     else if( "Button_CopyInput" == p_widget_id )
     {
         dsstring widget_text;
         m_renderer->GUI_GetWidgetText( "test.layout", "Editbox", widget_text );
         m_renderer->GUI_SetWidgetText( "test.layout", "Label2", widget_text );
+
+        m_renderer->GUI_AddListboxTextItem( "test.layout", "Listbox", widget_text, 0xFF037574, "xfskin/GenericBrush" );
     }
 }
 

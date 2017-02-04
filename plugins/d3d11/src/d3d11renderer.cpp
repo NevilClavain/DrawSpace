@@ -2467,6 +2467,16 @@ void D3D11Renderer::GUI_GetWidgetText( const dsstring& p_layoutName, const dsstr
     m_guisubsystem.GetText( p_layoutName, p_widgetName, p_outtext );
 }
 
+void D3D11Renderer::GUI_AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage )
+{
+    m_guisubsystem.AddListboxTextItem( p_layoutName, p_widgetName, p_text, p_colors, p_brushImage );
+}
+
+void D3D11Renderer::GUI_ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    m_guisubsystem.ClearListbox( p_layoutName, p_widgetName );
+}
+
 void D3D11Renderer::GUI_SubscribeWidgetPushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName )
 {
     m_guisubsystem.SubscribePushButtonEventClicked( p_layoutName, p_widgetName );

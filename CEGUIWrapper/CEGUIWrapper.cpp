@@ -243,19 +243,74 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
             {
                 m_editBoxes.push_back( edbx );
                 return;
-            }
+            }   
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
 
-            CEGUI::Listbox* lsbx = dynamic_cast<CEGUI::Listbox*>( child );
-            if( lsbx )
+void CEGUIWrapper::AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage  )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            
+            CEGUI::Listbox* lsbx = dynamic_cast<CEGUI::Listbox*>( widget );
+            if( !lsbx )
             {
-                m_listBoxes[childName] = lsbx;
-
-                for( int i = 0; i < 20; i++ )
-                {
-                    lsbx->addItem( new CEGUI::ListboxTextItem( "paf rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" ) );
-                }
-                return;
+                 _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::Listbox" );
             }
+
+            CEGUI::ListboxTextItem* lbtext = new CEGUI::ListboxTextItem( p_text.c_str() );
+
+            CEGUI::Colour tc;
+            tc.setARGB( p_colors );
+
+            lbtext->setSelectionBrushImage( p_brushImage );
+            lbtext->setSelectionColours( tc );
+            lbtext->setTextColours( tc );
+
+            lsbx->addItem( lbtext );
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+void CEGUIWrapper::ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            
+            CEGUI::Listbox* lsbx = dynamic_cast<CEGUI::Listbox*>( widget );
+            if( !lsbx )
+            {
+                 _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::Listbox" );
+            }
+
+            lsbx->resetList();
         }
         else
         {
