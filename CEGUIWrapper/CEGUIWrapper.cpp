@@ -22,6 +22,7 @@
 
 #include "CEGUIWrapper.h"
 #include "exceptions.h"
+#include "memalloc.h"
 
 using namespace CEGUI;
 
@@ -280,6 +281,7 @@ void CEGUIWrapper::AddListboxTextItem( const dsstring& p_layoutName, const dsstr
             lbtext->setSelectionBrushImage( p_brushImage );
             lbtext->setSelectionColours( tc );
             lbtext->setTextColours( tc );
+            lbtext->setAutoDeleted( true ); //pas besoin de desallouer sur clear list ou suppression item :)
 
             lsbx->addItem( lbtext );
         }
@@ -311,6 +313,130 @@ void CEGUIWrapper::ClearListbox( const dsstring& p_layoutName, const dsstring& p
             }
 
             lsbx->resetList();
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+void CEGUIWrapper::AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            
+            CEGUI::Combobox* cbbx = dynamic_cast<CEGUI::Combobox*>( widget );
+            if( !cbbx )
+            {
+                 _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::Combobox" );
+            }
+
+            CEGUI::ListboxTextItem* lbtext = new CEGUI::ListboxTextItem( p_text.c_str() );
+
+            CEGUI::Colour tc;
+            tc.setARGB( p_colors );
+
+            lbtext->setSelectionBrushImage( p_brushImage );
+            lbtext->setSelectionColours( tc );
+            lbtext->setTextColours( tc );
+            lbtext->setAutoDeleted( true ); //pas besoin de desallouer sur clear list ou suppression item :)
+
+            cbbx->addItem( lbtext );
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+void CEGUIWrapper::ClearCombobox( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            
+            CEGUI::Combobox* cbbx = dynamic_cast<CEGUI::Combobox*>( widget );
+            if( !cbbx )
+            {
+                 _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::Combobox" );
+            }
+
+            cbbx->resetList();
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+void CEGUIWrapper::SetComboBoxItemSelectionState( const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index, bool p_state )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            
+            CEGUI::Combobox* cbbx = dynamic_cast<CEGUI::Combobox*>( widget );
+            if( !cbbx )
+            {
+                 _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::Combobox" );
+            }
+            cbbx->setItemSelectState( (size_t)p_index, p_state );
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+int CEGUIWrapper::GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            
+            CEGUI::Combobox* cbbx = dynamic_cast<CEGUI::Combobox*>( widget );
+            if( !cbbx )
+            {
+                 _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::Combobox" );
+            }
+            return cbbx->getItemIndex( cbbx->getSelectedItem() );
         }
         else
         {

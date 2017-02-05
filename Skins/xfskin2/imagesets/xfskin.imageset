@@ -112,4 +112,17 @@
     <Image height="16" name="ListboxTop" width="36" xPos="1347" yPos="252" />
     <Image height="16" name="ListboxBottom" width="36" xPos="1347" yPos="304" />
     <Image height="36" name="ListboxBackdrop" width="36" xPos="1347" yPos="268" />
+    <Image height="84" name="ComboboxEditLeft" width="58" xPos="18" yPos="403" />
+    <Image height="84" name="ComboboxEditMiddle" width="69" xPos="76" yPos="403" />
+    <Image height="84" name="ComboboxListButtonNormal" width="78" xPos="145" yPos="403" />
+    <Image height="84" name="ComboboxListButtonHover" width="78" xPos="147" yPos="514" />
+    <Image height="13" name="ComboboxListBottomLeft" width="13" xPos="251" yPos="477" />
+    <Image height="13" name="ComboboxListBottom" width="42" xPos="264" yPos="477" />
+    <Image height="13" name="ComboboxListBottomRight" width="13" xPos="306" yPos="477" />
+    <Image height="12" name="ComboboxListLeft" width="13" xPos="251" yPos="465" />
+    <Image height="12" name="ComboboxListRight" width="13" xPos="306" yPos="465" />
+    <Image height="12" name="ComboboxListTop" width="42" xPos="264" yPos="465" />
+    <Image height="10" name="ComboboxListTopLeft" width="13" xPos="251" yPos="455" />
+    <Image height="10" name="ComboboxListTopRight" width="13" xPos="306" yPos="455" />
+    <Image height="12" name="ComboboxListBackdrop" width="42" xPos="264" yPos="465" />
 </Imageset>

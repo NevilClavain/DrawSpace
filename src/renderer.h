@@ -134,6 +134,10 @@ public:
     virtual void GUI_GetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext ) = 0;
     virtual void GUI_AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage ) = 0;
     virtual void GUI_ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
+    virtual void GUI_AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage ) = 0;
+    virtual void GUI_ClearCombobox( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
+    virtual void GUI_SetComboBoxItemSelectionState( const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index, bool p_state ) = 0;
+    virtual int  GUI_GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
 
     virtual void GUI_SubscribeWidgetPushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
     virtual void GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler ) = 0;

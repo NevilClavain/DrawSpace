@@ -94,6 +94,12 @@ public:
 
     void AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
     void ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName );
+
+    void AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
+    void ClearCombobox( const dsstring& p_layoutName, const dsstring& p_widgetName );
+
+    void SetComboBoxItemSelectionState( const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index, bool p_state );
+    int GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName );
     
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler );
 

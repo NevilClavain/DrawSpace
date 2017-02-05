@@ -86,6 +86,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( "test.layout", "root", 6 );
     m_renderer->GUI_StoreWidget( "test.layout", "root", 7 );
     m_renderer->GUI_StoreWidget( "test.layout", "root", 8 );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 9 );
+
+    m_renderer->GUI_AddComboboxTextItem( "test.layout", "Combobox", "true", 0xFF037574, "xfskin/GenericBrush" );
+    m_renderer->GUI_AddComboboxTextItem( "test.layout", "Combobox", "false", 0xFF037574, "xfskin/GenericBrush" );
+    m_renderer->GUI_AddComboboxTextItem( "test.layout", "Combobox", "aaaa", 0xFF037574, "xfskin/GenericBrush" );
+    m_renderer->GUI_AddComboboxTextItem( "test.layout", "Combobox", "bbbb", 0xFF037574, "xfskin/GenericBrush" );
+
+    m_renderer->GUI_SetComboBoxItemSelectionState( "test.layout", "Combobox", 2, true );
+
+    int cbidx = m_renderer->GUI_GetComboBoxSelectionIndex( "test.layout", "Combobox" );
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 

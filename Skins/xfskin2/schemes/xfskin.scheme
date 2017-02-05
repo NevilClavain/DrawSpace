@@ -24,5 +24,8 @@
   <FalagardMapping windowType="xfskin/VerticalScrollbar"   targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="xfskin/VerticalScrollbar" />
   <FalagardMapping windowType="xfskin/HorizontalScrollbar" targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="xfskin/HorizontalScrollbar" />
   <FalagardMapping windowType="xfskin/Listbox" targetType="CEGUI/Listbox" renderer="Core/Listbox" lookNFeel="xfskin/Listbox" />
+  <FalagardMapping windowType="xfskin/ComboEditbox"  targetType="CEGUI/Editbox"	 renderer="Core/Editbox" lookNFeel="xfskin/ComboEditbox" />
+  <FalagardMapping windowType="xfskin/ComboDropList" targetType="CEGUI/ComboDropList" renderer="Core/Listbox" lookNFeel="xfskin/ComboDropList" />
+  <FalagardMapping windowType="xfskin/Combobox" targetType="CEGUI/Combobox"	 renderer="Core/Default" lookNFeel="xfskin/Combobox" />
   
 </GUIScheme>

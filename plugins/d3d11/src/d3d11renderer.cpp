@@ -2477,6 +2477,26 @@ void D3D11Renderer::GUI_ClearListbox( const dsstring& p_layoutName, const dsstri
     m_guisubsystem.ClearListbox( p_layoutName, p_widgetName );
 }
 
+void D3D11Renderer::GUI_AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage )
+{
+    m_guisubsystem.AddComboboxTextItem( p_layoutName, p_widgetName, p_text, p_colors, p_brushImage );
+}
+
+void D3D11Renderer::GUI_ClearCombobox( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    m_guisubsystem.ClearCombobox( p_layoutName, p_widgetName );
+}
+
+void D3D11Renderer::GUI_SetComboBoxItemSelectionState( const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index, bool p_state )
+{
+    m_guisubsystem.SetComboBoxItemSelectionState( p_layoutName, p_widgetName, p_index, p_state );
+}
+
+int D3D11Renderer::GUI_GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    return m_guisubsystem.GetComboBoxSelectionIndex( p_layoutName, p_widgetName );
+}
+
 void D3D11Renderer::GUI_SubscribeWidgetPushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName )
 {
     m_guisubsystem.SubscribePushButtonEventClicked( p_layoutName, p_widgetName );

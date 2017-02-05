@@ -4,110 +4,37 @@
     <Window type="DefaultWindow" name="DefaultWindow" >
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
-        <Window type="TaharezLook/Combobox" name="Combobox" >
-            <Property name="Area" value="{{0,338},{0,163},{0,594},{0,419}}" />
-            <AutoWindow namePath="__auto_editbox__" >
-                <Property name="ActiveSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
-            </AutoWindow>
-            <AutoWindow namePath="__auto_droplist__" >
-                <AutoWindow namePath="__auto_hscrollbar__" >
-                    <AutoWindow namePath="__auto_incbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_decbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_thumb__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                </AutoWindow>
-                <AutoWindow namePath="__auto_vscrollbar__" >
-                    <AutoWindow namePath="__auto_incbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_decbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_thumb__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                </AutoWindow>
-            </AutoWindow>
-        </Window>
-        <Window type="TaharezLook/Editbox" name="Editbox" >
-            <Property name="Area" value="{{0,470},{0,24},{0,598},{0,56}}" />
-        </Window>
         <Window type="TaharezLook/Button" name="Button" >
             <Property name="Area" value="{{0,220},{0,53},{0,316},{0,85}}" />
         </Window>
-        <Window type="TaharezLook/Listbox" name="Listbox" >
-            <Property name="Area" value="{{0,652},{0,273},{0,908},{0,529}}" />
+        <Window type="TaharezLook/ComboEditbox" name="ComboEditbox" >
+            <Property name="Area" value="{{0,0},{0,0},{0,256},{0,32}}" />
         </Window>
-        <Window type="TaharezLook/Combobox" name="Combobox2" >
-            <Property name="Area" value="{{0,686},{0,119},{0,942},{0,375}}" />
-            <AutoWindow namePath="__auto_editbox__" >
-                <Property name="ActiveSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
-            </AutoWindow>
-            <AutoWindow namePath="__auto_droplist__" >
-                <AutoWindow namePath="__auto_hscrollbar__" >
-                    <AutoWindow namePath="__auto_incbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_decbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_thumb__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
+        <Window type="TaharezLook/ComboDropList" name="ComboDropList" >
+            <Property name="Area" value="{{0,424},{0,261},{0,680},{0,517}}" />
+            <Property name="Visible" value="false" />
+            <AutoWindow namePath="__auto_hscrollbar__" >
+                <AutoWindow namePath="__auto_incbtn__" >
+                    <Property name="RestoreOldCapture" value="true" />
                 </AutoWindow>
-                <AutoWindow namePath="__auto_vscrollbar__" >
-                    <AutoWindow namePath="__auto_incbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_decbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_thumb__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
+                <AutoWindow namePath="__auto_decbtn__" >
+                    <Property name="RestoreOldCapture" value="true" />
+                </AutoWindow>
+                <AutoWindow namePath="__auto_thumb__" >
+                    <Property name="RestoreOldCapture" value="true" />
                 </AutoWindow>
             </AutoWindow>
-        </Window>
-        <Window type="TaharezLook/Combobox" name="Combobox3" >
-            <Property name="Area" value="{{0,0},{0,0},{0,256},{0,256}}" />
-            <AutoWindow namePath="__auto_editbox__" >
-                <Property name="ActiveSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
-            </AutoWindow>
-            <AutoWindow namePath="__auto_droplist__" >
-                <AutoWindow namePath="__auto_hscrollbar__" >
-                    <AutoWindow namePath="__auto_incbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_decbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_thumb__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
+            <AutoWindow namePath="__auto_vscrollbar__" >
+                <AutoWindow namePath="__auto_incbtn__" >
+                    <Property name="RestoreOldCapture" value="true" />
                 </AutoWindow>
-                <AutoWindow namePath="__auto_vscrollbar__" >
-                    <AutoWindow namePath="__auto_incbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_decbtn__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
-                    <AutoWindow namePath="__auto_thumb__" >
-                        <Property name="RestoreOldCapture" value="true" />
-                    </AutoWindow>
+                <AutoWindow namePath="__auto_decbtn__" >
+                    <Property name="RestoreOldCapture" value="true" />
+                </AutoWindow>
+                <AutoWindow namePath="__auto_thumb__" >
+                    <Property name="RestoreOldCapture" value="true" />
                 </AutoWindow>
             </AutoWindow>
-        </Window>
-        <Window type="TaharezLook/VerticalScrollbar" name="VerticalScrollbar" >
-            <Property name="Area" value="{{0,152},{0,179},{0,174},{1,-43}}" />
-        </Window>
-        <Window type="TaharezLook/VerticalScrollbarThumb" name="VerticalScrollbarThumb" >
-            <Property name="Area" value="{{0,104},{0,402},{0,120},{0,450}}" />
         </Window>
     </Window>
 </GUILayout>

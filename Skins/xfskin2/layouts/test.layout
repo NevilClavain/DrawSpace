@@ -2,7 +2,7 @@
 
 <GUILayout version="4" >
     <Window type="DefaultWindow" name="root" >
-        <Property name="Area" value="{{0,-2},{0,-2},{1,-2},{1,-2}}" />
+        <Property name="Area" value="{{0,-1},{0,-2},{1,-1},{1,-2}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="xfskin/Label" name="Label" >
             <Property name="ID" value="1" />
@@ -29,7 +29,7 @@
         </Window>
         <Window type="xfskin/Editbox" name="Editbox" >
             <Property name="ID" value="3" />
-            <Property name="Area" value="{{0,242},{0,501},{0,563},{0,582}}" />
+            <Property name="Area" value="{{0,242},{0,501},{0,563},{0,587}}" />
         </Window>
         <Window type="xfskin/Button" name="Button_ClearText" >
             <Property name="ID" value="4" />
@@ -49,7 +49,7 @@
         </Window>
         <Window type="xfskin/Editbox" name="Editbox2" >
             <Property name="ID" value="7" />
-            <Property name="Area" value="{{0,241},{0,600},{0,562},{0,681}}" />
+            <Property name="Area" value="{{0,241},{0,599},{0,562},{0,680}}" />
         </Window>
         <Window type="xfskin/FrameWindow" name="FrameWindow" >
             <Property name="Area" value="{{0,780},{0,152},{0.3,920},{0.3,252}}" />
@@ -95,6 +95,40 @@
         <Window type="xfskin/Listbox" name="Listbox" >
             <Property name="ID" value="8" />
             <Property name="Area" value="{{0,1101},{0,516},{0,1357},{0,772}}" />
+        </Window>
+        <Window type="xfskin/Combobox" name="Combobox" >
+            <Property name="ID" value="9" />
+            <Property name="Area" value="{{0,783},{0,26},{0,1039},{0,226}}" />
+            <Property name="ReadOnly" value="true" />
+            <Property name="ActiveEditSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
+            <AutoWindow namePath="__auto_editbox__" >
+                <Property name="ReadOnly" value="true" />
+                <Property name="ActiveSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
+            </AutoWindow>
+            <AutoWindow namePath="__auto_droplist__" >
+                <AutoWindow namePath="__auto_hscrollbar__" >
+                    <AutoWindow namePath="__auto_incbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_decbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_thumb__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                </AutoWindow>
+                <AutoWindow namePath="__auto_vscrollbar__" >
+                    <AutoWindow namePath="__auto_incbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_decbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_thumb__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                </AutoWindow>
+            </AutoWindow>
         </Window>
     </Window>
 </GUILayout>
