@@ -7,32 +7,33 @@
         <Window type="TaharezLook/Button" name="Button" >
             <Property name="Area" value="{{0,220},{0,53},{0,316},{0,85}}" />
         </Window>
-        <Window type="TaharezLook/ComboEditbox" name="ComboEditbox" >
-            <Property name="Area" value="{{0,0},{0,0},{0,256},{0,32}}" />
-        </Window>
-        <Window type="TaharezLook/ComboDropList" name="ComboDropList" >
-            <Property name="Area" value="{{0,424},{0,261},{0,680},{0,517}}" />
-            <Property name="Visible" value="false" />
-            <AutoWindow namePath="__auto_hscrollbar__" >
-                <AutoWindow namePath="__auto_incbtn__" >
-                    <Property name="RestoreOldCapture" value="true" />
-                </AutoWindow>
-                <AutoWindow namePath="__auto_decbtn__" >
-                    <Property name="RestoreOldCapture" value="true" />
-                </AutoWindow>
-                <AutoWindow namePath="__auto_thumb__" >
-                    <Property name="RestoreOldCapture" value="true" />
-                </AutoWindow>
+        <Window type="TaharezLook/Combobox" name="Combobox" >
+            <Property name="Area" value="{{0,0},{0,0},{0,256},{0,256}}" />
+            <AutoWindow namePath="__auto_editbox__" >
+                <Property name="ActiveSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
             </AutoWindow>
-            <AutoWindow namePath="__auto_vscrollbar__" >
-                <AutoWindow namePath="__auto_incbtn__" >
-                    <Property name="RestoreOldCapture" value="true" />
+            <AutoWindow namePath="__auto_droplist__" >
+                <AutoWindow namePath="__auto_hscrollbar__" >
+                    <AutoWindow namePath="__auto_incbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_decbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_thumb__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
                 </AutoWindow>
-                <AutoWindow namePath="__auto_decbtn__" >
-                    <Property name="RestoreOldCapture" value="true" />
-                </AutoWindow>
-                <AutoWindow namePath="__auto_thumb__" >
-                    <Property name="RestoreOldCapture" value="true" />
+                <AutoWindow namePath="__auto_vscrollbar__" >
+                    <AutoWindow namePath="__auto_incbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_decbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_thumb__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
                 </AutoWindow>
             </AutoWindow>
         </Window>

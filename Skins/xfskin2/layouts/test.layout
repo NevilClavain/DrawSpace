@@ -98,13 +98,7 @@
         </Window>
         <Window type="xfskin/Combobox" name="Combobox" >
             <Property name="ID" value="9" />
-            <Property name="Area" value="{{0,783},{0,26},{0,1039},{0,226}}" />
-            <Property name="ReadOnly" value="true" />
-            <Property name="ActiveEditSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
-            <AutoWindow namePath="__auto_editbox__" >
-                <Property name="ReadOnly" value="true" />
-                <Property name="ActiveSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
-            </AutoWindow>
+            <Property name="Area" value="{{0,345},{0,147},{0,601},{0,403}}" />
             <AutoWindow namePath="__auto_droplist__" >
                 <AutoWindow namePath="__auto_hscrollbar__" >
                     <AutoWindow namePath="__auto_incbtn__" >

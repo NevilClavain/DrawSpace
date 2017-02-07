@@ -380,7 +380,7 @@
   <WidgetLook name="xfskin/Editbox">
     <PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="ColourRect" name="NormalTextColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="SelectedTextColour"/>
-    <PropertyDefinition redrawOnWrite="true" initialValue="FFB6D142" type="ColourRect" name="ActiveSelectionColour"/>
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="ColourRect" name="ActiveSelectionColour"/>
     <PropertyDefinition redrawOnWrite="true" initialValue="FF808080" type="ColourRect" name="InactiveSelectionColour"/>
     <Property name="MouseCursorImage" value="xfskin/MouseCursor"/>
     <Property name="Size" value="{{0, 256}, {0, 32}}" />
@@ -1260,88 +1260,6 @@
 
 
 
-  <WidgetLook name="xfskin/ComboEditbox">
-    <PropertyDefinition name="NormalTextColour" initialValue="FF037574" redrawOnWrite="true" type="ColourRect"/>
-    <PropertyDefinition name="SelectedTextColour" initialValue="FF000000" redrawOnWrite="true" type="ColourRect"/>
-    <PropertyDefinition name="ActiveSelectionColour" initialValue="FFB6D142" redrawOnWrite="true" type="ColourRect"/>
-    <PropertyDefinition name="InactiveSelectionColour" initialValue="FF808080" redrawOnWrite="true" type="ColourRect"/>
-    <Property name="MouseCursorImage" value="xfskin/MouseCursor" />
-    <Property name="Size" value="{{0, 256}, {0, 32}}" />
-    <NamedArea name="TextArea">
-      <Area>
-        <Dim type="LeftEdge" >
-          <AbsoluteDim value="50" />
-        </Dim>
-        <Dim type="TopEdge" >
-          <AbsoluteDim value="5" />
-        </Dim>
-        <Dim type="RightEdge" >
-          <UnifiedDim scale="1.0" offset="-5" type="RightEdge" />
-        </Dim>
-        <Dim type="BottomEdge" >
-          <UnifiedDim scale="1.0" offset="-5" type="BottomEdge" />
-        </Dim>
-      </Area>
-    </NamedArea>
-    <ImagerySection name="container_normal">
-      <FrameComponent>
-        <Image component="LeftEdge" name="xfskin/ComboboxEditLeft" />
-        <Image component="Background" name="xfskin/ComboboxEditMiddle" />
-      </FrameComponent>
-    </ImagerySection>
-    <ImagerySection name="selection">
-      <ImageryComponent>
-        <Image name="xfskin/GenericBrush" />
-        <VertFormat type="Stretched" />
-        <HorzFormat type="Stretched" />
-      </ImageryComponent>
-    </ImagerySection>
-    <ImagerySection name="Caret">
-      <ImageryComponent>
-        <Area>
-          <Dim type="Width" >
-            <ImageDim name="xfskin/MouseTextBar" dimension="Width" />
-          </Dim>
-        </Area>
-        <Image name="xfskin/MouseTextBar" />
-        <VertFormat type="Stretched" />
-        <HorzFormat type="Stretched" />
-      </ImageryComponent>
-    </ImagerySection>
-    <StateImagery name="Enabled">
-      <Layer>
-        <Section section="container_normal">
-          <ColourProperty name="NormalTextColour"/>
-        </Section>
-      </Layer>
-    </StateImagery>
-    <StateImagery name="ReadOnly">
-      <Layer>
-        <Section section="container_normal" />
-      </Layer>
-    </StateImagery>
-    <StateImagery name="Disabled">
-      <Layer>
-        <Section section="container_normal">
-          <Colours topLeft="FF7F7F7F" topRight="FF7F7F7F" bottomLeft="FF7F7F7F" bottomRight="FF7F7F7F" />
-        </Section>
-      </Layer>
-    </StateImagery>
-    <StateImagery name="ActiveSelection">
-      <Layer>
-        <Section section="selection">
-          <ColourProperty name="ActiveSelectionColour" />
-        </Section>
-      </Layer>
-    </StateImagery>
-    <StateImagery name="InactiveSelection">
-      <Layer>
-        <Section section="selection">
-          <ColourProperty name="InactiveSelectionColour" />
-        </Section>
-      </Layer>
-    </StateImagery>
-  </WidgetLook>
 
 
   <WidgetLook name="xfskin/ComboDropList">
@@ -1484,11 +1402,97 @@
   </WidgetLook>
 
 
+  <WidgetLook name="xfskin/ComboEditbox">
+    <PropertyDefinition name="NormalTextColour" initialValue="FF037574" redrawOnWrite="true" type="ColourRect"/>
+    <PropertyDefinition name="SelectedTextColour" initialValue="FF000000" redrawOnWrite="true" type="ColourRect"/>
+    <PropertyDefinition name="ActiveSelectionColour" initialValue="FFB6D142" redrawOnWrite="true" type="ColourRect"/>
+    <PropertyDefinition name="InactiveSelectionColour" initialValue="FF808080" redrawOnWrite="true" type="ColourRect"/>
+    <Property name="MouseCursorImage" value="xfskin/MouseCursor" />
+    <Property name="Size" value="{{0, 256}, {0, 32}}" />
+    <NamedArea name="TextArea">
+      <Area>
+        <Dim type="LeftEdge" >
+          <AbsoluteDim value="50" />
+        </Dim>
+        <Dim type="TopEdge" >
+          <AbsoluteDim value="5" />
+        </Dim>
+        <Dim type="RightEdge" >
+          <UnifiedDim scale="1.0" offset="-5" type="RightEdge" />
+        </Dim>
+        <Dim type="BottomEdge" >
+          <UnifiedDim scale="1.0" offset="-5" type="BottomEdge" />
+        </Dim>
+      </Area>
+    </NamedArea>
+    <ImagerySection name="container_normal">
+      <FrameComponent>
+        <Image component="LeftEdge" name="xfskin/ComboboxEditLeft" />
+        <Image component="Background" name="xfskin/ComboboxEditMiddle" />
+      </FrameComponent>
+    </ImagerySection>
+    <ImagerySection name="selection">
+      <ImageryComponent>
+        <Image name="xfskin/GenericBrush" />
+        <VertFormat type="Stretched" />
+        <HorzFormat type="Stretched" />
+      </ImageryComponent>
+    </ImagerySection>
+    <ImagerySection name="Caret">
+      <ImageryComponent>
+        <Area>
+          <Dim type="Width" >
+            <ImageDim name="xfskin/MouseTextBar" dimension="Width" />
+          </Dim>
+        </Area>
+        <Image name="xfskin/MouseTextBar" />
+        <VertFormat type="Stretched" />
+        <HorzFormat type="Stretched" />
+      </ImageryComponent>
+    </ImagerySection>
+    <StateImagery name="Enabled">
+      <Layer>
+        <Section section="container_normal">
+          <ColourProperty name="NormalTextColour"/>
+        </Section>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="ReadOnly">
+      <Layer>
+        <Section section="container_normal" />
+      </Layer>
+    </StateImagery>
+    <StateImagery name="Disabled">
+      <Layer>
+        <Section section="container_normal">
+          <Colours topLeft="FF7F7F7F" topRight="FF7F7F7F" bottomLeft="FF7F7F7F" bottomRight="FF7F7F7F" />
+        </Section>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="ActiveSelection">
+      <Layer>
+        <Section section="selection">
+          <ColourProperty name="ActiveSelectionColour" />
+        </Section>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="InactiveSelection">
+      <Layer>
+        <Section section="selection">
+          <ColourProperty name="InactiveSelectionColour" />
+        </Section>
+      </Layer>
+    </StateImagery>
+  </WidgetLook>
+
+    
   <WidgetLook name="xfskin/Combobox">
-    <PropertyLinkDefinition name="NormalEditTextColour" widget="__auto_editbox__" targetProperty="NormalTextColour" initialValue="FF037574" type="ColourRect"/>
-    <PropertyLinkDefinition name="SelectedEditTextColour" widget="__auto_editbox__" targetProperty="SelectedTextColour" initialValue="FF000000" type="ColourRect"/>
-    <PropertyLinkDefinition name="ActiveEditSelectionColour" widget="__auto_editbox__" targetProperty="ActiveSelectionColour" initialValue="FFB6D142" type="ColourRect"/>
-    <PropertyLinkDefinition name="InactiveEditSelectionColour" widget="__auto_editbox__" targetProperty="InactiveSelectionColour" initialValue="FF808080" type="ColourRect"/>
+    
+        <PropertyLinkDefinition name="NormalEditTextColour" widget="__auto_editbox__" targetProperty="NormalTextColour" initialValue="FF037574" type="ColourRect"/>
+        <PropertyLinkDefinition name="SelectedEditTextColour" widget="__auto_editbox__" targetProperty="SelectedTextColour" initialValue="FF000000" type="ColourRect"/>
+        <PropertyLinkDefinition name="ActiveEditSelectionColour" widget="__auto_editbox__" targetProperty="ActiveSelectionColour" initialValue="FF037574" type="ColourRect"/>
+        <PropertyLinkDefinition name="InactiveEditSelectionColour" widget="__auto_editbox__" targetProperty="InactiveSelectionColour" initialValue="FF808080" type="ColourRect"/>
+    
     <Property name="Size" value="{{0, 256}, {0, 256}}" />
     <Child  type="xfskin/ComboEditbox" nameSuffix="__auto_editbox__">
       <Area>
@@ -1526,7 +1530,8 @@
       <Property name="PushedImage" value="xfskin/ComboboxListButtonHover" />
       <Property name="DisabledImage" value="xfskin/ComboboxListButtonNormal" />
     </Child>
-    <StateImagery name="Enabled" />
+    <StateImagery name="Enabled">     
+    </StateImagery>
     <StateImagery name="Disabled" />
   </WidgetLook>
   
