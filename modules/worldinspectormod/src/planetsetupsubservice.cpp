@@ -75,10 +75,15 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 4 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 5 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 6 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 7 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 8 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 9 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Quit_Button" );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "PlanetView_Button" );   
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "PlanetView_Button" ); 
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "AddPlanet_Button" ); 
+
 }
 
 
@@ -213,6 +218,10 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
     else if( "PlanetView_Button" == p_widget_id )
     {
         MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC );
+    }
+    else if( "AddPlanet_Button" == p_widget_id )
+    {
+        _asm nop
     }
 }
 

@@ -13,13 +13,13 @@
         </Window>
         <Window type="xfskin/Button" name="Quit_Button" >
             <Property name="ID" value="2" />
-            <Property name="Area" value="{{0,2},{0,0},{0.166667,2},{0.0802469,0}}" />
+            <Property name="Area" value="{{0.00972222,0},{-0.017284,0},{0.00972222,240},{-0.017284,65}}" />
             <Property name="Text" value="Quit" />
             <Property name="VerticalAlignment" value="Bottom" />
         </Window>
         <Window type="xfskin/Button" name="PlanetView_Button" >
             <Property name="ID" value="3" />
-            <Property name="Area" value="{{0,1},{0,0},{0.166667,1},{0.0802469,0}}" />
+            <Property name="Area" value="{{0.807639,0},{0.0148148,0},{0.974306,0},{0.0950617,0}}" />
             <Property name="Text" value="Planet View" />
             <Property name="VerticalAlignment" value="Centre" />
         </Window>
@@ -46,6 +46,19 @@
             <Property name="Image" value="xfskin/line_h_long" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="VertFormatting" value="TopAligned" />
+        </Window>
+        <Window type="xfskin/Listbox" name="PlanetSlots_Listbox" >
+            <Property name="ID" value="8" />
+            <Property name="Area" value="{{0.591667,0},{0.335802,0},{0.769444,0},{0.716049,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="AddPlanet_Button" >
+            <Property name="ID" value="7" />
+            <Property name="Area" value="{{0.591667,1},{0.207407,0},{0.769444,1},{0.287654,0}}" />
+            <Property name="Text" value="Add planet" />
+        </Window>
+        <Window type="xfskin/Editbox" name="PlanetName_Editbox" >
+            <Property name="ID" value="9" />
+            <Property name="Area" value="{{0.807639,0},{0.207407,0},{0.985417,0},{0.314814,0}}" />
         </Window>
     </Window>
 </GUILayout>
