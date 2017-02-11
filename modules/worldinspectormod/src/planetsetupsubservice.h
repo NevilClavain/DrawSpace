@@ -32,7 +32,33 @@ class PlanetSetupSubService : public DrawSpace::Interface::Module::Service, publ
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack2<PlanetSetupSubService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack2<PlanetSetupSubService, void, const dsstring&, const dsstring&>   GUIWidgetPushButtonClickedCallback;
+
+    typedef DrawSpace::Core::CallBack<PlanetSetupSubService, void, DrawSpace::Utils::Timer*>            TimerCb;
+
+
+	class PlanetSceneNodeConfig
+	{
+	public:
+
+        //////////////////////////////////////////////////////////////////
+
+        DrawSpace::Module::KeySource<dsreal>            m_planetRay;
+
+        //////////////////////////////////////////////////////////////////
+
+		DrawSpace::Module::KeysLinkTable*               m_keylinksTable;
+
+	public:
+
+		PlanetSceneNodeConfig( void ) :
+		m_planetRay("planetRay ")
+		{
+		}
+	};
+
+
+
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
@@ -41,7 +67,18 @@ protected:
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
     DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
 
+    std::map<dsstring, PlanetSceneNodeConfig>							m_nodes_config;
+
+    TimerCb*                                                            m_statusbar_timer_cb;
+    DrawSpace::Utils::Timer*                                            m_statusbar_timer;
+
+
+
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
+
+    void on_statusbar_timer( DrawSpace::Utils::Timer* p_timer );
+
+    void statusbar_msg( const dsstring& p_msg );
 
     PlanetSetupSubService( void );
 public:

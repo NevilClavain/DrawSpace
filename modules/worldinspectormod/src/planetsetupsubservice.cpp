@@ -38,6 +38,9 @@ _DECLARE_DS_LOGGER( logger, "planetsetupsubservice", NULL )
 PlanetSetupSubService::PlanetSetupSubService( void )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetSetupSubService::on_guipushbutton_clicked ) );
+
+    m_statusbar_timer_cb = _DRAWSPACE_NEW_( TimerCb, TimerCb( this, &PlanetSetupSubService::on_statusbar_timer ) );
+    m_statusbar_timer = _DRAWSPACE_NEW_( DrawSpace::Utils::Timer, DrawSpace::Utils::Timer );
 }
     
 PlanetSetupSubService::~PlanetSetupSubService( void )
@@ -78,12 +81,21 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 7 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 8 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 9 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 10 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Quit_Button" );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "PlanetView_Button" ); 
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "AddPlanet_Button" ); 
 
+
+    ///////// timer messages status bar
+
+    m_statusbar_timer->SetHandler( m_statusbar_timer_cb );
+    m_statusbar_timer->SetPeriod( 3000 );
+    m_tm.RegisterTimer( m_statusbar_timer );
+
+    m_statusbar_timer->SetState( false );
 }
 
 
@@ -221,7 +233,20 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
     }
     else if( "AddPlanet_Button" == p_widget_id )
     {
-        _asm nop
+        //PlanetSceneNodeConfig planet_config;
+
+        dsstring node_name;
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "PlanetName_Editbox", node_name );
+        
+        if( node_name != "" )
+        {
+            _asm nop
+
+        }
+        else
+        {
+            statusbar_msg( "Planet slot must have a name !" );
+        }
     }
 }
 
@@ -232,4 +257,16 @@ void PlanetSetupSubService::Activate( void )
 
 void PlanetSetupSubService::Unactivate( void )
 {
+}
+
+void PlanetSetupSubService::on_statusbar_timer( DrawSpace::Utils::Timer* p_timer )
+{
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Status", "" );
+    m_statusbar_timer->SetState( false );
+}
+
+void PlanetSetupSubService::statusbar_msg( const dsstring& p_msg )
+{
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Status", p_msg );
+    m_statusbar_timer->SetState( true );
 }

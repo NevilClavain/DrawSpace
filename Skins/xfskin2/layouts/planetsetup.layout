@@ -60,5 +60,10 @@
             <Property name="ID" value="9" />
             <Property name="Area" value="{{0.807639,0},{0.207407,0},{0.985417,0},{0.314814,0}}" />
         </Window>
+        <Window type="xfskin/Label" name="Label_Status" >
+            <Property name="ID" value="10" />
+            <Property name="Area" value="{{0.196528,0},{0.901235,0},{0.920833,0},{0.981481,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
     </Window>
 </GUILayout>

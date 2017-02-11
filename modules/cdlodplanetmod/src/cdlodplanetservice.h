@@ -49,6 +49,24 @@ public:
     virtual void OnUpdated( DrawSpace::IntermediatePass* p_val );
 };
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+class PlanetRayParam : public DrawSpace::Module::KeySink < DrawSpace::IntermediatePass* >
+{
+public:
+	dsreal	m_ray = 500000.0; // thks C++ 11 :)
+
+	PlanetRayParam( const dsstring& p_id ) : KeySink( p_id )
+	{
+	}
+
+	virtual void OnUpdated( dsreal p_val )
+	{
+		m_ray = p_val;
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 class SimpleColorBinder : public DrawSpace::SphericalLOD::Binder
 {
@@ -66,6 +84,26 @@ public:
 class CDLODPlanetService : public DrawSpace::Interface::Module::Service
 {
 protected:
+
+	class PlanetSceneNodeConfig
+	{
+	public:
+		/////////////////--*- ENSEMBLE DES PARAMETRES PLANETE -*-- ////////////////////
+
+		PlanetRayParam	m_planetRay;
+
+		////////////////////////////////////////////////////////////////////////////////
+
+		DrawSpace::Module::KeysLinkTable m_keylinksTable;
+
+	public:
+
+		PlanetSceneNodeConfig( void ) :
+		m_planetRay("planetRay ")
+		{
+			m_keylinksTable.RegisterModuleKey( &m_planetRay );
+		}
+	};
 
     typedef struct
     {
@@ -94,6 +132,12 @@ protected:
     DrawSpace::Core::SceneNodeGraph*                                    m_scenenodegraph;
     DrawSpace::IntermediatePass*                                        m_texturepass;
 
+
+
+	// liste des config possibles pour instancier des scenenodes planetes
+	std::map<dsstring, PlanetSceneNodeConfig>							m_nodes_config;
+
+	// liste des instances scenenodes planetes
     std::map<dsstring, PlanetEntry>                                     m_nodes;
 
 
@@ -101,22 +145,24 @@ public:
     CDLODPlanetService( const dsstring& p_id );
     ~CDLODPlanetService( void );
 
-    virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
-    virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, 
+    virtual void								GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
+    virtual void								Init( DrawSpace::Logger::Configuration* p_logconf, 
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, 
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                                                     DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb );
 
-    virtual void                            Run( void );
-    virtual void                            Release( void );
+    virtual void								Run( void );
+    virtual void								Release( void );
 
-    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName );
-    virtual void                            RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
-    virtual void                            UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
-    virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName );
+    virtual DrawSpace::Core::BaseSceneNode*		InstanciateSceneNode( const dsstring& p_sceneNodeName );
+    virtual void								RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
+    virtual void								UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
+    virtual void								ReleaseSceneNode( const dsstring& p_sceneNodeName );
 
-    virtual void                            OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
-    virtual void                            OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );
+	virtual DrawSpace::Module::KeysLinkTable*	AddSceneNodeConfig( const dsstring& p_sceneNodeName );
+
+    virtual void								OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
+    virtual void								OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );
 };
 
 #endif
