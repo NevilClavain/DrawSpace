@@ -232,15 +232,14 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC );
     }
     else if( "AddPlanet_Button" == p_widget_id )
-    {
-        //PlanetSceneNodeConfig planet_config;
-
+    {       
         dsstring node_name;
         m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "PlanetName_Editbox", node_name );
         
         if( node_name != "" )
         {
-            _asm nop
+            m_nodes_config[node_name] = PlanetSceneNodeConfig();
+
 
         }
         else

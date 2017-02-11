@@ -84,8 +84,6 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     load_cdlodplanet_module( p_logconf );
 
-    //create_planet();
-
     init_passes();
 
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
@@ -463,7 +461,6 @@ void PlanetViewSubService::create_cubes( void )
     m_scenenodegraph.AddNode( m_objectRot_node );
     m_scenenodegraph.RegisterNode( m_objectRot_node );
 
-    //m_objectRot_node->LinkTo( m_cubescaling_node );
     m_chunk_node->LinkTo( m_objectRot_node );
 }
 

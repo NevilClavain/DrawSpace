@@ -54,7 +54,7 @@ public:
 class PlanetRayParam : public DrawSpace::Module::KeySink < DrawSpace::IntermediatePass* >
 {
 public:
-	dsreal	m_ray = 500000.0; // thks C++ 11 :)
+	dsreal m_ray;
 
 	PlanetRayParam( const dsstring& p_id ) : KeySink( p_id )
 	{

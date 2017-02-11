@@ -54,7 +54,7 @@
         <Window type="xfskin/Button" name="AddPlanet_Button" >
             <Property name="ID" value="7" />
             <Property name="Area" value="{{0.591667,1},{0.207407,0},{0.769444,1},{0.287654,0}}" />
-            <Property name="Text" value="Add planet" />
+            <Property name="Text" value="Add planet slot" />
         </Window>
         <Window type="xfskin/Editbox" name="PlanetName_Editbox" >
             <Property name="ID" value="9" />
