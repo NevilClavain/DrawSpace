@@ -51,19 +51,19 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-class PlanetRayParam : public DrawSpace::Module::KeySink < DrawSpace::IntermediatePass* >
+class PlanetRayParam : public DrawSpace::Module::KeySink <dsreal>
 {
 public:
 	dsreal m_ray;
 
 	PlanetRayParam( const dsstring& p_id ) : KeySink( p_id )
-	{
-	}
+    {
+    }
 
 	virtual void OnUpdated( dsreal p_val )
-	{
-		m_ray = p_val;
-	}
+    {
+        m_ray = p_val;
+    }
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ protected:
 	public:
 
 		PlanetSceneNodeConfig( void ) :
-		m_planetRay("planetRay ")
+		m_planetRay("planetRay")
 		{
 			m_keylinksTable.RegisterModuleKey( &m_planetRay );
 		}

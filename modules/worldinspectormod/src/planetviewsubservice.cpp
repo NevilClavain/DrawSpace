@@ -82,7 +82,8 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_scenenodegraph.SetCurrentCamera( "camera" );
 
-    load_cdlodplanet_module( p_logconf );
+    m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
+    m_cdlodplanet_texturepass = m_texturepass;
 
     init_passes();
 
@@ -358,21 +359,6 @@ void PlanetViewSubService::create_camera( void )
     m_camera_node->LinkTo( m_camerapos_node );    
 }
 
-void PlanetViewSubService::load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf )
-{
-    if( !DrawSpace::Utils::PILoad::LoadModule( "cdlodplanetmod", "cdlodplanet", &m_cdlodp_root ) )
-    {
-        _DSEXCEPTION( "fail to load cdlodplanet module root" )
-    }    
-    m_cdlodp_service = m_cdlodp_root->InstanciateService( "cdlodplanet" );
-    connect_keys( m_cdlodp_service );
-
-    m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
-    m_cdlodplanet_texturepass = m_texturepass;
-
-    m_cdlodp_service->Init( p_logconf, NULL, NULL, NULL );
-}
-
 void PlanetViewSubService::create_planet( void )
 {   
     m_planet_node = m_cdlodp_service->InstanciateSceneNode( "planet0" );
@@ -467,4 +453,12 @@ void PlanetViewSubService::create_cubes( void )
 void PlanetViewSubService::DumpMemoryAllocs( void )
 {
     m_cdlodp_root->DumpMemoryAllocs();
+}
+
+void PlanetViewSubService::SetCDLODInfos( DrawSpace::Interface::Module::Root* p_cdlodp_root, DrawSpace::Interface::Module::Service* p_cdlodp_service )
+{
+    m_cdlodp_root = p_cdlodp_root;
+    m_cdlodp_service = p_cdlodp_service;
+
+    connect_keys( m_cdlodp_service );
 }

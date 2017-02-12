@@ -52,7 +52,7 @@ protected:
 	public:
 
 		PlanetSceneNodeConfig( void ) :
-		m_planetRay("planetRay ")
+		m_planetRay("planetRay")
 		{
 		}
 	};
@@ -71,6 +71,10 @@ protected:
 
     TimerCb*                                                            m_statusbar_timer_cb;
     DrawSpace::Utils::Timer*                                            m_statusbar_timer;
+
+
+    DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
+    DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
 
 
 
@@ -113,6 +117,8 @@ public:
 
     virtual void                            Activate( void );
     virtual void                            Unactivate( void );
+
+    virtual void                            SetCDLODInfos( DrawSpace::Interface::Module::Root* p_cdlodp_root, DrawSpace::Interface::Module::Service* p_cdlodp_service );
 
     friend class BaseSingleton<PlanetSetupSubService>;
 

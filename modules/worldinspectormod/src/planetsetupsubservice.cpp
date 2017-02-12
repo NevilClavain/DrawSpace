@@ -238,9 +238,12 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         
         if( node_name != "" )
         {
-            m_nodes_config[node_name] = PlanetSceneNodeConfig();
+            //m_nodes_config[node_name] = PlanetSceneNodeConfig();
+            m_nodes_config[node_name].m_keylinksTable = m_cdlodp_service->AddSceneNodeConfig( node_name );
 
+            m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetRay );
 
+            m_nodes_config[node_name].m_planetRay = 550000.0;
         }
         else
         {
@@ -268,4 +271,12 @@ void PlanetSetupSubService::statusbar_msg( const dsstring& p_msg )
 {
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Status", p_msg );
     m_statusbar_timer->SetState( true );
+}
+
+void PlanetSetupSubService::SetCDLODInfos( DrawSpace::Interface::Module::Root* p_cdlodp_root, DrawSpace::Interface::Module::Service* p_cdlodp_service )
+{
+    m_cdlodp_root = p_cdlodp_root;
+    m_cdlodp_service = p_cdlodp_service;
+
+    connect_keys( m_cdlodp_service );
 }

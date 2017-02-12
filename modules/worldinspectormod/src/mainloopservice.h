@@ -52,6 +52,13 @@ protected:
 
     DrawSpace::Interface::Module::Service*                              m_current_subservice;
 
+    DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
+    DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
+
+
+    void load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf );
+
+
     MainLoopService( void );
 public:
 

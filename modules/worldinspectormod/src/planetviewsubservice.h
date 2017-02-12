@@ -80,8 +80,6 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
 
-    void load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf );
-
     void init_passes( void );
     void create_passes( void );
 
@@ -131,6 +129,8 @@ public:
     virtual void                            Unactivate( void );
 
     virtual void                            DumpMemoryAllocs( void );
+
+    virtual void                            SetCDLODInfos( DrawSpace::Interface::Module::Root* p_cdlodp_root, DrawSpace::Interface::Module::Service* p_cdlodp_service );
 
     friend class BaseSingleton<PlanetViewSubService>;
 };

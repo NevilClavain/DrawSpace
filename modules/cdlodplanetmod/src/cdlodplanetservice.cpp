@@ -279,6 +279,5 @@ void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 
 DrawSpace::Module::KeysLinkTable* CDLODPlanetService::AddSceneNodeConfig( const dsstring& p_sceneNodeName )
 {
-	m_nodes_config[p_sceneNodeName] = PlanetSceneNodeConfig();
 	return &m_nodes_config[p_sceneNodeName].m_keylinksTable;
 }

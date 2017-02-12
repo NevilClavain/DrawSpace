@@ -79,8 +79,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_SetMouseCursorImage( "xfskin/MouseCursor" );
     m_renderer->GUI_ShowMouseCursor( true );
 
+
+    load_cdlodplanet_module( p_logconf );
+    PlanetSetupSubService::GetInstance()->SetCDLODInfos( m_cdlodp_root, m_cdlodp_service );
+    PlanetViewSubService::GetInstance()->SetCDLODInfos( m_cdlodp_root, m_cdlodp_service );
+
     PlanetSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
     PlanetViewSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
+
+
+
 
     PlanetSetupSubService::GetInstance()->Activate();
 
@@ -201,4 +209,16 @@ void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
 
             break;
     }
+}
+
+void MainLoopService::load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf )
+{
+    if( !DrawSpace::Utils::PILoad::LoadModule( "cdlodplanetmod", "cdlodplanet", &m_cdlodp_root ) )
+    {
+        _DSEXCEPTION( "fail to load cdlodplanet module root" )
+    }    
+    m_cdlodp_service = m_cdlodp_root->InstanciateService( "cdlodplanet" );
+    connect_keys( m_cdlodp_service );
+
+    m_cdlodp_service->Init( p_logconf, NULL, NULL, NULL );
 }
