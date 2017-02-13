@@ -51,20 +51,21 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-class PlanetRayParam : public DrawSpace::Module::KeySink <dsreal>
+class RealParam : public DrawSpace::Module::KeySink <dsreal>
 {
 public:
-	dsreal m_ray;
+	dsreal m_value;
 
-	PlanetRayParam( const dsstring& p_id ) : KeySink( p_id )
+	RealParam( const dsstring& p_id ) : KeySink( p_id )
     {
     }
 
 	virtual void OnUpdated( dsreal p_val )
     {
-        m_ray = p_val;
+        m_value = p_val;
     }
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -90,11 +91,11 @@ protected:
 	public:
 		/////////////////--*- ENSEMBLE DES PARAMETRES PLANETE -*-- ////////////////////
 
-		PlanetRayParam	m_planetRay;
+		RealParam                           m_planetRay;
 
 		////////////////////////////////////////////////////////////////////////////////
 
-		DrawSpace::Module::KeysLinkTable m_keylinksTable;
+		DrawSpace::Module::KeysLinkTable    m_keylinksTable;
 
 	public:
 

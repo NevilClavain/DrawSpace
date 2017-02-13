@@ -65,5 +65,12 @@
             <Property name="Area" value="{{0.196528,0},{0.901235,0},{0.920833,0},{0.981481,0}}" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
+        <Window type="xfskin/Listbox" name="Listbox" >
+            <Property name="Area" value="{{0.224306,0},{0.335802,0},{0.520833,0},{0.716049,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="Button" >
+            <Property name="Area" value="{{0.246528,0},{0.392593,0},{0.383333,0},{0.476543,0}}" />
+            <Property name="Text" value="Ground" />
+        </Window>
     </Window>
 </GUILayout>
