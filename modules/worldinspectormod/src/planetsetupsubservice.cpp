@@ -240,10 +240,10 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         {
             //m_nodes_config[node_name] = PlanetSceneNodeConfig();
             m_nodes_config[node_name].m_keylinksTable = m_cdlodp_service->AddSceneNodeConfig( node_name );
-
             m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetRay );
-
             m_nodes_config[node_name].m_planetRay = 550000.0;
+
+            update_listbox();
         }
         else
         {
@@ -279,4 +279,16 @@ void PlanetSetupSubService::SetCDLODInfos( DrawSpace::Interface::Module::Root* p
     m_cdlodp_service = p_cdlodp_service;
 
     connect_keys( m_cdlodp_service );
+}
+
+void PlanetSetupSubService::update_listbox( void )
+{
+    m_renderer->GUI_ClearListbox( LAYOUT_FILE, "PlanetSlots_Listbox" );
+
+    for( auto it  = m_nodes_config.begin(); it != m_nodes_config.end(); ++it )
+    {
+        dsstring planetNodeName = it->first;
+
+        m_renderer->GUI_AddListboxTextItem( LAYOUT_FILE, "PlanetSlots_Listbox", planetNodeName, 0xFF037574, "xfskin/GenericBrush" );
+    }
 }

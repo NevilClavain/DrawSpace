@@ -84,6 +84,8 @@ protected:
 
     void statusbar_msg( const dsstring& p_msg );
 
+    void update_listbox( void );
+
     PlanetSetupSubService( void );
 public:
     ~PlanetSetupSubService( void );
