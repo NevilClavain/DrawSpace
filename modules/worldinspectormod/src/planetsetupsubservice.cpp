@@ -240,8 +240,16 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         {
             //m_nodes_config[node_name] = PlanetSceneNodeConfig();
             m_nodes_config[node_name].m_keylinksTable = m_cdlodp_service->AddSceneNodeConfig( node_name );
+
+			// connect keys here
             m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetRay );
-            m_nodes_config[node_name].m_planetRay = 550000.0;
+			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsVertexShader );
+			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsPixelShader );
+
+			// setup default values here
+            m_nodes_config[node_name].m_planetRay = 550.0;
+			m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
+			m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
 
             update_listbox();
         }

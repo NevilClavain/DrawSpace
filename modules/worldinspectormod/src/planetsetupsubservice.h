@@ -44,6 +44,8 @@ protected:
         //////////////////////////////////////////////////////////////////
 
         DrawSpace::Module::KeySource<dsreal>            m_planetRay;
+		DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
+		DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
 
         //////////////////////////////////////////////////////////////////
 
@@ -52,7 +54,9 @@ protected:
 	public:
 
 		PlanetSceneNodeConfig( void ) :
-		m_planetRay("planetRay")
+		m_planetRay( "planetRay" ), 
+		m_detailsVertexShader( "detailsVertexShader" ),
+		m_detailsPixelShader( "detailsPixelShader" )
 		{
 		}
 	};

@@ -22,9 +22,10 @@
 
 #include "cdlodplanetservice.h"
 #include "file.h"
+#include "exceptions.h"
 
 
-#define PLANET_RAY                          500.0
+//#define PLANET_RAY                          500.0
 #define PLANET_ATMO_THICKNESS               12000.0
 #define ATMO_SCATTERING_SPACE_GROUND_LIMIT  70000.0
 #define FOG_ALT_LIMIT                       10000.0
@@ -153,13 +154,23 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 {
     PlanetEntry pe;
 
+	if( m_nodes_config.count( p_sceneNodeName ) )
+	{
+		// une config de node est associée
+		pe.node_config = &m_nodes_config[p_sceneNodeName];
+	}
+	else
+	{
+		_DSEXCEPTION( dsstring( "Node configuration is mandatory for CDLODPlanet node creation" ) );
+	}
+
     for( int i = 0; i < 6; i++ )
     {
         pe.simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
     }
 
-    pe.planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface.vso", true ) );
-    pe.planet_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_surface.pso", true ) );
+	pe.planet_vshader = _DRAWSPACE_NEW_(Shader, Shader( pe.node_config->m_detailsVertexShader.m_value, true));
+	pe.planet_pshader = _DRAWSPACE_NEW_(Shader, Shader(pe.node_config->m_detailsPixelShader.m_value, true));
 
     pe.planet_vshader->LoadFromFile();
     pe.planet_pshader->LoadFromFile();
@@ -208,7 +219,7 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     planet_surface.enable_datatextures = false;
     planet_surface.enable_lod = true;
     planet_surface.min_lodlevel = 0;
-    planet_surface.ray = PLANET_RAY;
+	planet_surface.ray = pe.node_config->m_planetRay.m_value; //PLANET_RAY;
     for( int i = 0; i < 6; i++ )
     {
         planet_surface.groundCollisionsBinder[i] = NULL;
@@ -218,7 +229,7 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     pe.config.m_layers_descr.push_back( planet_surface );
 
 
-    pe.planet = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( p_sceneNodeName, PLANET_RAY, &m_tm, pe.config ) );
+	pe.planet = _DRAWSPACE_NEW_(DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root(p_sceneNodeName, /*PLANET_RAY*/pe.node_config->m_planetRay.m_value, &m_tm, pe.config));
 
     for( int i = 0; i < 6; i++ )
     {

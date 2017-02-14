@@ -54,7 +54,7 @@ public:
 class RealParam : public DrawSpace::Module::KeySink <dsreal>
 {
 public:
-	dsreal m_value;
+	dsreal			m_value;
 
 	RealParam( const dsstring& p_id ) : KeySink( p_id )
     {
@@ -64,6 +64,21 @@ public:
     {
         m_value = p_val;
     }
+};
+
+class StringParam : public DrawSpace::Module::KeySink <dsstring>
+{
+public:
+	dsstring		m_value;
+
+	StringParam( const dsstring& p_id ) : KeySink( p_id )
+	{
+	}
+
+	virtual void OnUpdated( dsstring p_val )
+	{
+		m_value = p_val;
+	}
 };
 
 
@@ -93,6 +108,9 @@ protected:
 
 		RealParam                           m_planetRay;
 
+		StringParam							m_detailsVertexShader;
+		StringParam							m_detailsPixelShader;
+
 		////////////////////////////////////////////////////////////////////////////////
 
 		DrawSpace::Module::KeysLinkTable    m_keylinksTable;
@@ -100,9 +118,13 @@ protected:
 	public:
 
 		PlanetSceneNodeConfig( void ) :
-		m_planetRay("planetRay")
+		m_planetRay("planetRay"),
+		m_detailsVertexShader( "detailsVertexShader" ),
+		m_detailsPixelShader( "detailsPixelShader" )
 		{
 			m_keylinksTable.RegisterModuleKey( &m_planetRay );
+			m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
+			m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );
 		}
 	};
 
@@ -118,6 +140,8 @@ protected:
 
         DrawSpace::SphericalLOD::Root*                                  planet;
         DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*      planet_node;
+
+		PlanetSceneNodeConfig*											node_config;
 
     } PlanetEntry;
 
