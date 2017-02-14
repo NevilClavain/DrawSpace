@@ -20,12 +20,36 @@
 *
 */
 
-#include "worldinspectorroot.h"
+#include "astrolabroot.h"
 
-extern "C"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface::Module;
+
+AstrolabRoot::AstrolabRoot( void )
 {
-__declspec(dllexport) DrawSpace::Interface::Module::Root* PIFactory( void )
-{
-    return new WorldInspectorRoot;
+    Shader::EnableShadersDescrInFinalPath( true );
+    Shader::SetRootPath( "astrolab_data/shaders_bank" );
+    Texture::SetRootPath( "astrolab_data/textures_bank" );
+    AC3DMesheImport::SetRootPath( "astrolab_data/meshes_bank" );
 }
+
+AstrolabRoot::~AstrolabRoot( void )
+{
+}
+
+void AstrolabRoot::ServicesInit( void )
+{
+    m_services["mainloop"] = MainLoopService::GetInstance();
+}
+
+dsstring AstrolabRoot::GetModuleName( void )
+{
+    return "AstrolabMod";
+}
+
+dsstring AstrolabRoot::GetModuleDescr( void )
+{
+    return "Astrolab module";
 }

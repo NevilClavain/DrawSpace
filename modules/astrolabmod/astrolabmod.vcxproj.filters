@@ -4,9 +4,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\worldinspectorroot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\mainloopervice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -16,6 +13,9 @@
     <ClCompile Include="src\planetviewsubservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\astrolabroot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -23,9 +23,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\worldinspectorroot.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\mainloopservice.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -36,6 +33,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\planetviewsubservice.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\astrolabroot.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

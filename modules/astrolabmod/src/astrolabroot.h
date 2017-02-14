@@ -20,18 +20,18 @@
 *
 */
 
-#ifndef _WORLDINSPECTORROOT_H_
-#define _WORLDINSPECTORROOT_H_
+#ifndef _ASTROLABROOT_H_
+#define _ASTROLABROOT_H_
 
 #include "module_root.h"
 #include "mainloopservice.h"
 
 
-class WorldInspectorRoot : public DrawSpace::Interface::Module::Root
+class AstrolabRoot : public DrawSpace::Interface::Module::Root
 {
 public:
-    WorldInspectorRoot( void );
-    virtual ~WorldInspectorRoot( void );
+    AstrolabRoot( void );
+    virtual ~AstrolabRoot( void );
 
     virtual dsstring GetModuleName( void );
     virtual dsstring GetModuleDescr( void );
