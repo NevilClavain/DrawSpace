@@ -94,6 +94,8 @@ public:
 
     void AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
     void ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName );
+    bool GetListboxFirstSelectedItemIndex( const dsstring& p_layoutName, const dsstring& p_widgetName, int& p_index, dsstring& p_text );
+
 
     void AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
     void ClearCombobox( const dsstring& p_layoutName, const dsstring& p_widgetName );

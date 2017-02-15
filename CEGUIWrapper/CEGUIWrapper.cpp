@@ -325,6 +325,49 @@ void CEGUIWrapper::ClearListbox( const dsstring& p_layoutName, const dsstring& p
     }
 }
 
+bool CEGUIWrapper::GetListboxFirstSelectedItemIndex(  const dsstring& p_layoutName, const dsstring& p_widgetName, int& p_index, dsstring& p_text )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            
+            CEGUI::Listbox* lsbx = dynamic_cast<CEGUI::Listbox*>( widget );
+            if( !lsbx )
+            {
+                 _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::Listbox" );
+            }
+
+            ListboxItem* lb_item = lsbx->getFirstSelectedItem();
+
+            if( !lb_item )
+            {
+                return false;
+            }
+
+            ListboxTextItem* text = static_cast<ListboxTextItem*>( lb_item );
+
+            p_text = text->getText().c_str();
+
+            p_index = lsbx->getItemIndex( lb_item );
+
+            return true;
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+
 void CEGUIWrapper::AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage )
 {
     if( m_layoutNamesTable.count( p_layoutName ) > 0 )

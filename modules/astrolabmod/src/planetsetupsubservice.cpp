@@ -229,7 +229,21 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
     }
     else if( "PlanetView_Button" == p_widget_id )
     {
-        MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC );
+
+        int lb_index;
+        dsstring lb_text;
+
+        bool select = m_renderer->GUI_GetListboxFirstSelectedItemIndex( LAYOUT_FILE, "PlanetSlots_Listbox", lb_index, lb_text );
+
+        if( select )
+        {
+
+            MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC );
+        }
+        else
+        {
+            statusbar_msg( "you must select a planet entry !" );
+        }
     }
     else if( "AddPlanet_Button" == p_widget_id )
     {       

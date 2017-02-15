@@ -2477,6 +2477,12 @@ void D3D11Renderer::GUI_ClearListbox( const dsstring& p_layoutName, const dsstri
     m_guisubsystem.ClearListbox( p_layoutName, p_widgetName );
 }
 
+bool D3D11Renderer::GUI_GetListboxFirstSelectedItemIndex( const dsstring& p_layoutName, const dsstring& p_widgetName, int& p_index, dsstring& p_text )
+{
+    return m_guisubsystem.GetListboxFirstSelectedItemIndex( p_layoutName, p_widgetName, p_index, p_text );
+}
+
+
 void D3D11Renderer::GUI_AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage )
 {
     m_guisubsystem.AddComboboxTextItem( p_layoutName, p_widgetName, p_text, p_colors, p_brushImage );
