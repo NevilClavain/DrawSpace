@@ -94,6 +94,8 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 5 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 6 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 7 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 8 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 9 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Close_Button" );
@@ -115,6 +117,9 @@ void PlanetViewSubService::Run( void )
 
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_FPS", fps );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Renderer", renderer_name );
+
+
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_PlanetName", "Planet X" );
 
 
     char camera_distance_text[256];
