@@ -237,7 +237,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 
         if( select )
         {
-
+			m_selected_planet_id = lb_text;
             MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC );
         }
         else
@@ -252,14 +252,16 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         
         if( node_name != "" )
         {
-            //m_nodes_config[node_name] = PlanetSceneNodeConfig();
             m_nodes_config[node_name].m_keylinksTable = m_cdlodp_service->AddSceneNodeConfig( node_name );
 
 			// connect keys here
+			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetName );
             m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetRay );
 			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsVertexShader );
 			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsPixelShader );
 
+			// store planet unique name (also used as scenegraph node id)
+			m_nodes_config[node_name].m_planetName = node_name;
 			// setup default values here
             m_nodes_config[node_name].m_planetRay = 550.0;
 			m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
@@ -313,4 +315,9 @@ void PlanetSetupSubService::update_listbox( void )
 
         m_renderer->GUI_AddListboxTextItem( LAYOUT_FILE, "PlanetSlots_Listbox", planetNodeName, 0xFF037574, "xfskin/GenericBrush" );
     }
+}
+
+dsstring PlanetSetupSubService::GetSelectedPlanetId( void )
+{
+	return m_selected_planet_id;
 }

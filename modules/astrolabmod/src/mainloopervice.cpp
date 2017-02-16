@@ -190,7 +190,7 @@ void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
         case GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC:
 
             PlanetSetupSubService::GetInstance()->Unactivate();
-            PlanetViewSubService::GetInstance()->Activate();
+			PlanetViewSubService::GetInstance()->Activate( PlanetSetupSubService::GetInstance()->GetSelectedPlanetId() );
 
             m_current_subservice = PlanetViewSubService::GetInstance();
             break;

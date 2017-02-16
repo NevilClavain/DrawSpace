@@ -43,6 +43,7 @@ protected:
 
         //////////////////////////////////////////////////////////////////
 
+		DrawSpace::Module::KeySource<dsstring>          m_planetName;
         DrawSpace::Module::KeySource<dsreal>            m_planetRay;
 		DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
 		DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
@@ -54,6 +55,7 @@ protected:
 	public:
 
 		PlanetSceneNodeConfig( void ) :
+		m_planetName( "planetName" ),
 		m_planetRay( "planetRay" ), 
 		m_detailsVertexShader( "detailsVertexShader" ),
 		m_detailsPixelShader( "detailsPixelShader" )
@@ -80,7 +82,7 @@ protected:
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
     DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
 
-
+	dsstring															m_selected_planet_id;
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
@@ -125,6 +127,8 @@ public:
     virtual void                            Unactivate( void );
 
     virtual void                            SetCDLODInfos( DrawSpace::Interface::Module::Root* p_cdlodp_root, DrawSpace::Interface::Module::Service* p_cdlodp_service );
+
+	virtual dsstring						GetSelectedPlanetId(void);
 
     friend class BaseSingleton<PlanetSetupSubService>;
 

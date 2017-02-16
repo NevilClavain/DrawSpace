@@ -86,7 +86,7 @@ protected:
     void create_cubes( void );
     void create_camera( void );
 
-    void create_planet( void );
+    void create_planet( const dsstring& p_planetId );
     void destroy_planet( void );
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
@@ -125,7 +125,7 @@ public:
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
 
-    virtual void                            Activate( void );
+	virtual void                            Activate( const dsstring& p_planetId );
     virtual void                            Unactivate( void );
 
     virtual void                            DumpMemoryAllocs( void );

@@ -106,6 +106,8 @@ protected:
 	public:
 		/////////////////--*- ENSEMBLE DES PARAMETRES PLANETE -*-- ////////////////////
 
+		StringParam							m_planetName;
+
 		RealParam                           m_planetRay;
 
 		StringParam							m_detailsVertexShader;
@@ -118,10 +120,12 @@ protected:
 	public:
 
 		PlanetSceneNodeConfig( void ) :
+		m_planetName( "planetName" ),
 		m_planetRay("planetRay"),
 		m_detailsVertexShader( "detailsVertexShader" ),
 		m_detailsPixelShader( "detailsPixelShader" )
 		{
+			m_keylinksTable.RegisterModuleKey( &m_planetName );
 			m_keylinksTable.RegisterModuleKey( &m_planetRay );
 			m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
 			m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );

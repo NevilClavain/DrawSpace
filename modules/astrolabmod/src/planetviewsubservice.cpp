@@ -266,7 +266,7 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
     }
 }
 
-void PlanetViewSubService::Activate( void )
+void PlanetViewSubService::Activate( const dsstring& p_planetId )
 {
     /// reset transformation
 
@@ -280,7 +280,7 @@ void PlanetViewSubService::Activate( void )
 
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
 
-    create_planet();
+    create_planet( p_planetId );
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
 }
 
@@ -359,9 +359,9 @@ void PlanetViewSubService::create_camera( void )
     m_camera_node->LinkTo( m_camerapos_node );    
 }
 
-void PlanetViewSubService::create_planet( void )
+void PlanetViewSubService::create_planet( const dsstring& p_planetId )
 {   
-    m_planet_node = m_cdlodp_service->InstanciateSceneNode( "planet0" );
+    m_planet_node = m_cdlodp_service->InstanciateSceneNode( p_planetId );
 
     m_scenenodegraph.RegisterNode( m_planet_node );
 
