@@ -25,6 +25,7 @@
 
 #include "drawspace.h"
 #include "crtp_singleton.h"
+#include "planetscenenodeconfig.h"
 
 class MainLoopService;
 
@@ -80,6 +81,8 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
 
+	PlanetSceneNodeConfig*												m_planet_conf;
+
     void init_passes( void );
     void create_passes( void );
 
@@ -87,7 +90,7 @@ protected:
     void create_camera( void );
 
     void create_planet( const dsstring& p_planetId );
-    void destroy_planet( void );
+	void destroy_planet(const dsstring& p_planetId);
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
@@ -125,7 +128,7 @@ public:
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
 
-	virtual void                            Activate( const dsstring& p_planetId );
+	virtual void                            Activate( PlanetSceneNodeConfig* p_planetConfig );
     virtual void                            Unactivate( void );
 
     virtual void                            DumpMemoryAllocs( void );

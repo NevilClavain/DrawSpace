@@ -4,9 +4,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\mainloopervice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\planetsetupsubservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -14,6 +11,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\astrolabroot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mainloopservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\astrolabroot.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\planetscenenodeconfig.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -25,6 +25,7 @@
 
 #include "drawspace.h"
 #include "crtp_singleton.h"
+#include "planetscenenodeconfig.h"
 
 class MainLoopService;
 
@@ -35,35 +36,6 @@ protected:
     typedef DrawSpace::Core::CallBack2<PlanetSetupSubService, void, const dsstring&, const dsstring&>   GUIWidgetPushButtonClickedCallback;
 
     typedef DrawSpace::Core::CallBack<PlanetSetupSubService, void, DrawSpace::Utils::Timer*>            TimerCb;
-
-
-	class PlanetSceneNodeConfig
-	{
-	public:
-
-        //////////////////////////////////////////////////////////////////
-
-		DrawSpace::Module::KeySource<dsstring>          m_planetName;
-        DrawSpace::Module::KeySource<dsreal>            m_planetRay;
-		DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
-		DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
-
-        //////////////////////////////////////////////////////////////////
-
-		DrawSpace::Module::KeysLinkTable*               m_keylinksTable;
-
-	public:
-
-		PlanetSceneNodeConfig( void ) :
-		m_planetName( "planetName" ),
-		m_planetRay( "planetRay" ), 
-		m_detailsVertexShader( "detailsVertexShader" ),
-		m_detailsPixelShader( "detailsPixelShader" )
-		{
-		}
-	};
-
-
 
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
@@ -82,7 +54,7 @@ protected:
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
     DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
 
-	dsstring															m_selected_planet_id;
+	PlanetSceneNodeConfig*												m_selected_planet_conf;
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
@@ -128,7 +100,8 @@ public:
 
     virtual void                            SetCDLODInfos( DrawSpace::Interface::Module::Root* p_cdlodp_root, DrawSpace::Interface::Module::Service* p_cdlodp_service );
 
-	virtual dsstring						GetSelectedPlanetId(void);
+	//virtual dsstring						GetSelectedPlanetId(void);
+	virtual PlanetSceneNodeConfig*			GetSelectedPlanetConfig( void );
 
     friend class BaseSingleton<PlanetSetupSubService>;
 

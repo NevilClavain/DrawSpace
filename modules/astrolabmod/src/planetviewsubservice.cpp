@@ -40,7 +40,8 @@ m_mouse_left( false ),
 m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" ),
-m_camera_distance( 3000000.0 )
+m_camera_distance( 3000000.0 ),
+m_planet_conf(NULL)
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
 }
@@ -118,8 +119,12 @@ void PlanetViewSubService::Run( void )
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_FPS", fps );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Renderer", renderer_name );
 
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_PlanetName", m_planet_conf->m_planetName.m_value );
 
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_PlanetName", "Planet X" );
+	char planet_ray[64];
+	sprintf( planet_ray, "Ray : %.1f km", m_planet_conf->m_planetRay.m_value );
+	m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_PlanetRay", planet_ray );
+
 
 
     char camera_distance_text[256];
@@ -271,8 +276,10 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
     }
 }
 
-void PlanetViewSubService::Activate( const dsstring& p_planetId )
+void PlanetViewSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
 {
+	m_planet_conf = p_planetConfig;
+
     /// reset transformation
 
     m_camera_distance = 3000.0 * 1000.0;
@@ -282,16 +289,15 @@ void PlanetViewSubService::Activate( const dsstring& p_planetId )
 
     ////
 
-
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
 
-    create_planet( p_planetId );
+	create_planet( m_planet_conf->m_planetName.m_value );
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
 }
 
 void PlanetViewSubService::Unactivate( void )
 {
-    destroy_planet();
+	destroy_planet( m_planet_conf->m_planetName.m_value );
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
 }
 
@@ -374,7 +380,7 @@ void PlanetViewSubService::create_planet( const dsstring& p_planetId )
     m_cdlodp_service->RegisterScenegraphCallbacks( m_scenenodegraph );
 }
 
-void PlanetViewSubService::destroy_planet( void )
+void PlanetViewSubService::destroy_planet( const dsstring& p_planetId )
 {
     m_cdlodp_service->UnregisterScenegraphCallbacks( m_scenenodegraph );
 
@@ -383,7 +389,7 @@ void PlanetViewSubService::destroy_planet( void )
 
     m_planet_node = NULL;
 
-    m_cdlodp_service->ReleaseSceneNode( "planet0" );
+	m_cdlodp_service->ReleaseSceneNode( p_planetId );
 }
 
 void PlanetViewSubService::create_cubes( void )

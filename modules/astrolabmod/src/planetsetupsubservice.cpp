@@ -31,11 +31,12 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
 
-_DECLARE_DS_LOGGER( logger, "planetsetupsubservice", NULL )
+_DECLARE_DS_LOGGER(logger, "planetsetupsubservice", NULL)
 
 #define LAYOUT_FILE "planetsetup.layout"
 
-PlanetSetupSubService::PlanetSetupSubService( void )
+PlanetSetupSubService::PlanetSetupSubService(void) :
+m_selected_planet_conf( NULL )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetSetupSubService::on_guipushbutton_clicked ) );
 
@@ -229,7 +230,6 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
     }
     else if( "PlanetView_Button" == p_widget_id )
     {
-
         int lb_index;
         dsstring lb_text;
 
@@ -237,7 +237,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 
         if( select )
         {
-			m_selected_planet_id = lb_text;
+			m_selected_planet_conf = &m_nodes_config[lb_text];
             MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC );
         }
         else
@@ -317,7 +317,7 @@ void PlanetSetupSubService::update_listbox( void )
     }
 }
 
-dsstring PlanetSetupSubService::GetSelectedPlanetId( void )
+PlanetSceneNodeConfig* PlanetSetupSubService::GetSelectedPlanetConfig(void)
 {
-	return m_selected_planet_id;
+	return m_selected_planet_conf;
 }

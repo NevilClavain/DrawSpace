@@ -71,12 +71,10 @@ public:
 
 class KeySourceBase
 {
-protected:
-
-        dsstring     m_id;
+protected:	
+	dsstring     m_id;
 
 public:
-
     KeySourceBase( const dsstring& p_id ) : m_id( p_id )
     {
     }
@@ -86,9 +84,7 @@ public:
         return m_id;
     }
 
-
     virtual void AddSink( KeySinkBase* p_sink ) = 0;
-
 };
 
 
@@ -102,6 +98,10 @@ protected:
     std::set<KeySinkBase*>          m_sinkskey;
 
 public:
+
+	base							m_value;  // juste pour memoriser la valeur
+												// et pouvoir la consulter sans avoir
+												// a acceder au keysink derrière
 
     KeySource( const dsstring& p_id )  : KeySourceBase( p_id )
     {
@@ -120,6 +120,8 @@ public:
 
     void operator= ( base p_val )
     {
+		m_value = p_val; // memoriser localement la valeur
+
         for( size_t i = 0; i < m_sinks.size(); i++ )
         {
             m_sinks[i]->OnUpdated( p_val );
