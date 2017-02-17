@@ -44,4 +44,12 @@
       <Filter>Source Files\hlsl_40</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\hlsl_3_0\planet_ht.psh">
+      <Filter>Source Files\hlsl_30</Filter>
+    </None>
+    <None Include="..\..\shaders\hlsl_3_0\planet_ht.vsh">
+      <Filter>Source Files\hlsl_30</Filter>
+    </None>
+  </ItemGroup>
 </Project>

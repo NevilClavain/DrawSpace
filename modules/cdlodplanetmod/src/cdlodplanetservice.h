@@ -95,6 +95,40 @@ public:
     virtual void Unbind( void );
 };
 
+class MultiFractalBinder : public DrawSpace::SphericalLOD::Binder
+{
+public:
+
+	dsreal                                  m_plains_amplitude;
+	dsreal                                  m_mountains_amplitude;
+	dsreal                                  m_vertical_offset;
+	dsreal                                  m_mountains_offset;
+
+	dsreal                                  m_plains_seed1;
+	dsreal                                  m_plains_seed2;
+	dsreal                                  m_mix_seed1;
+	dsreal                                  m_mix_seed2;
+
+public:
+
+	MultiFractalBinder(void);
+
+	virtual void Bind(void);
+	virtual void Unbind(void);
+};
+
+class PlanetClimateBinder : public MultiFractalBinder
+{
+protected:
+
+public:
+
+	PlanetClimateBinder( void );
+
+	virtual void Bind( void );
+	virtual void Unbind( void );
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 class CDLODPlanetService : public DrawSpace::Interface::Module::Service
@@ -137,7 +171,13 @@ protected:
         DrawSpace::SphericalLOD::Config                                 config;
 
         SimpleColorBinder*                                              simplebinder[6];
+		PlanetClimateBinder*											planet_climate_binder[6];
+
         DrawSpace::Core::Fx*                                            details_fx;
+		DrawSpace::Core::Fx*                                            climate_fx;
+
+		DrawSpace::Core::Shader*                                        climate_vshader;
+		DrawSpace::Core::Shader*                                        climate_pshader;
 
         DrawSpace::Core::Shader*                                        planet_vshader;
         DrawSpace::Core::Shader*                                        planet_pshader;

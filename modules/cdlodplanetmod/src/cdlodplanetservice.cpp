@@ -94,6 +94,87 @@ void SimpleColorBinder::Unbind( void )
 {
 }
 
+MultiFractalBinder::MultiFractalBinder(void) :
+m_plains_amplitude(PLAINS_AMPLITUDE),
+m_mountains_amplitude(MOUNTAINS_AMPLITUDE),
+m_vertical_offset(VERTICAL_OFFSET),
+m_mountains_offset(MOUNTAINS_OFFSET),
+m_plains_seed1(234.4),
+m_plains_seed2(9334.1),
+m_mix_seed1(823.4),
+m_mix_seed2(509.0)
+{
+	m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+}
+
+void MultiFractalBinder::Bind(void)
+{
+	Vector landscape_control;
+	Vector seeds;
+
+	landscape_control[0] = m_plains_amplitude;
+	landscape_control[1] = m_mountains_amplitude;
+	landscape_control[2] = m_vertical_offset;
+	landscape_control[3] = m_mountains_offset;
+
+	seeds[0] = m_plains_seed1;
+	seeds[1] = m_plains_seed2;
+	seeds[2] = m_mix_seed1;
+	seeds[3] = m_mix_seed2;
+
+	m_renderer->SetFxShaderParams(0, 30, landscape_control);
+	m_renderer->SetFxShaderParams(0, 31, seeds);
+}
+
+void MultiFractalBinder::Unbind(void)
+{
+}
+
+
+
+PlanetClimateBinder::PlanetClimateBinder(void) : MultiFractalBinder()
+{
+}
+
+void PlanetClimateBinder::Bind(void)
+{
+	// planete temperee
+
+
+	Vector thparams(40.0, 20.0, TEMP_DEC_PER_KM, BEACH_LIMIT);
+	Vector thparams2(0.48, 0.87, 0.45, 0.75);
+
+
+
+	// planete chaude et peu humide (aride) : desertique
+	//Vector thparams( 0.0, 10.0, TEMP_DEC_PER_KM, BEACH_LIMIT );
+	//Vector thparams2( 0.0, 0.0, 0.78, 0.78 );
+
+	// planete chaude et tres humide : monde tropical
+	//Vector thparams( 2500.0, 1800.0, TEMP_DEC_PER_KM, BEACH_LIMIT );
+	//Vector thparams2( 0.05, 0.1, 0.45, 0.48 );
+
+
+	// monde glacé et plutot sec
+	//Vector thparams( 50.0, 80.0, TEMP_DEC_PER_KM, BEACH_LIMIT );
+	//Vector thparams2( 1.4, 1.5, 0.28, 0.99 );
+
+	// monde froid et plutot humide
+	//Vector thparams( 1400.0, 1900.0, TEMP_DEC_PER_KM, BEACH_LIMIT );
+	//Vector thparams2( 0.92, 1.5, 0.37, 0.99 );
+
+
+	m_renderer->SetFxShaderParams(0, 32, thparams);
+	m_renderer->SetFxShaderParams(0, 33, thparams2);
+
+	MultiFractalBinder::Bind();
+}
+
+void PlanetClimateBinder::Unbind(void)
+{
+	MultiFractalBinder::Unbind();
+}
+
 ////////////////////////////////////////////
 
 CDLODPlanetService::CDLODPlanetService( const dsstring& p_id )
@@ -164,13 +245,14 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 		_DSEXCEPTION( dsstring( "Node configuration is mandatory for CDLODPlanet node creation" ) );
 	}
 
-    for( int i = 0; i < 6; i++ )
-    {
-        pe.simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
+	for (int i = 0; i < 6; i++)
+	{
+		pe.simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
+		pe.planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder );
     }
 
-	pe.planet_vshader = _DRAWSPACE_NEW_(Shader, Shader( pe.node_config->m_detailsVertexShader.m_value, true));
-	pe.planet_pshader = _DRAWSPACE_NEW_(Shader, Shader(pe.node_config->m_detailsPixelShader.m_value, true));
+	pe.planet_vshader = _DRAWSPACE_NEW_(Shader, Shader( pe.node_config->m_detailsVertexShader.m_value, true ) );
+	pe.planet_pshader = _DRAWSPACE_NEW_(Shader, Shader( pe.node_config->m_detailsPixelShader.m_value, true ) );
 
     pe.planet_vshader->LoadFromFile();
     pe.planet_pshader->LoadFromFile();
@@ -181,7 +263,6 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     pe.details_fx->AddShader( pe.planet_vshader );
     pe.details_fx->AddShader( pe.planet_pshader );
 
-    //pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
     pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
@@ -201,9 +282,27 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     }
 
 
+	pe.climate_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.vso", true ) );
+	pe.climate_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.pso", true ) );
+
+	pe.climate_vshader->LoadFromFile();
+	pe.climate_pshader->LoadFromFile();
+
+	pe.climate_fx = new Fx;
+	pe.climate_fx->AddShader( pe.climate_vshader );
+	pe.climate_fx->AddShader( pe.climate_pshader );
+	pe.climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
+	pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
+
+	for (int i = 0; i < 6; i++)
+	{
+		pe.planet_climate_binder[i]->SetFx( pe.climate_fx );
+	}
+
     for( int i = 0; i < 6; i++ )
     {
         pe.simplebinder[i]->SetRenderer( m_renderer );
+		pe.planet_climate_binder[i]->SetRenderer( m_renderer );
     }
 
 
@@ -216,14 +315,14 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 
     SphericalLOD::Config::LayerDescriptor planet_surface;
     planet_surface.enable_collisions = false;
-    planet_surface.enable_datatextures = false;
+    planet_surface.enable_datatextures = true;
     planet_surface.enable_lod = true;
     planet_surface.min_lodlevel = 0;
 	planet_surface.ray = pe.node_config->m_planetRay.m_value; //PLANET_RAY;
     for( int i = 0; i < 6; i++ )
     {
         planet_surface.groundCollisionsBinder[i] = NULL;
-        planet_surface.patchTexturesBinder[i] = NULL;
+		planet_surface.patchTexturesBinder[i] = pe.planet_climate_binder[i];
     }
 
     pe.config.m_layers_descr.push_back( planet_surface );
@@ -275,13 +374,21 @@ void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
 		_DRAWSPACE_DELETE_( pe.planet_vshader );
 		_DRAWSPACE_DELETE_( pe.planet_pshader );
 
+		_DRAWSPACE_DELETE_( pe.climate_vshader );
+		_DRAWSPACE_DELETE_( pe.climate_pshader );
+
+
 		_DRAWSPACE_DELETE_( pe.details_fx );
+
+		_DRAWSPACE_DELETE_( pe.climate_fx );
+
 		_DRAWSPACE_DELETE_( pe.planet );
 		_DRAWSPACE_DELETE_( pe.planet_node );
 
 		for (int i = 0; i < 6; i++)
 		{
 			_DRAWSPACE_DELETE_( pe.simplebinder[i] );
+			_DRAWSPACE_DELETE_( pe.planet_climate_binder[i] );
 		}
 
         m_nodes.erase( p_sceneNodeName );

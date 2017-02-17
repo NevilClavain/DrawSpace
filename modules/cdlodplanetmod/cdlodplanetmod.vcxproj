@@ -66,6 +66,8 @@
       <Command>copy .\..\..\libs\cdlodplanetmod.dll .\..\..\..\Drawspace_samples\bin
 copy .\..\..\shaders_bank\hlsl_3_0\planet_surface.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface.pso
 copy .\..\..\shaders_bank\hlsl_3_0\planet_surface.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface.vso
+copy .\..\..\shaders_bank\hlsl_3_0\planet_ht.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_ht.pso
+copy .\..\..\shaders_bank\hlsl_3_0\planet_ht.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_ht.vso
 copy .\..\..\shaders_bank\hlsl_4_0\planet_surface.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_4_0\planet_surface.pso
 copy .\..\..\shaders_bank\hlsl_4_0\planet_surface.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_4_0\planet_surface.vso</Command>
     </PostBuildEvent>
@@ -94,6 +96,8 @@ copy .\..\..\shaders_bank\hlsl_4_0\planet_surface.vso .\..\..\..\Drawspace_sampl
       <Command>copy .\..\..\libs\cdlodplanetmod_r.dll .\..\..\..\Drawspace_samples\bin
 copy .\..\..\shaders_bank\hlsl_3_0\planet_surface.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface.pso
 copy .\..\..\shaders_bank\hlsl_3_0\planet_surface.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_surface.vso
+copy .\..\..\shaders_bank\hlsl_3_0\planet_ht.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_ht.pso
+copy .\..\..\shaders_bank\hlsl_3_0\planet_ht.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_3_0\planet_ht.vso
 copy .\..\..\shaders_bank\hlsl_4_0\planet_surface.pso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_4_0\planet_surface.pso
 copy .\..\..\shaders_bank\hlsl_4_0\planet_surface.vso .\..\..\..\Drawspace_samples\bin\cdlodplanet_data\shaders_bank\hlsl_4_0\planet_surface.vso</Command>
     </PostBuildEvent>
@@ -122,6 +126,10 @@ copy .\..\..\shaders_bank\hlsl_4_0\planet_surface.vso .\..\..\..\Drawspace_sampl
     <Text Include="..\..\shaders\hlsl_4_0\planet_surface_flat.vsh">
       <FileType>Document</FileType>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\hlsl_3_0\planet_ht.psh" />
+    <None Include="..\..\shaders\hlsl_3_0\planet_ht.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
