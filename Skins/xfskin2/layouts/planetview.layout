@@ -13,9 +13,8 @@
         </Window>
         <Window type="xfskin/Button" name="Close_Button" >
             <Property name="ID" value="2" />
-            <Property name="Area" value="{{0.0104167,0},{-0.0185185,0},{0.177083,0},{0.0617284,0}}" />
+            <Property name="Area" value="{{0.0104167,0},{0.900077,0},{0.177083,0},{0.980324,0}}" />
             <Property name="Text" value="Close" />
-            <Property name="VerticalAlignment" value="Bottom" />
         </Window>
         <Window type="xfskin/Label" name="Label_Renderer" >
             <Property name="ID" value="4" />
@@ -45,21 +44,20 @@
         </Window>
         <Window type="xfskin/Label" name="Label_CameraDistance" >
             <Property name="ID" value="7" />
-            <Property name="Area" value="{{-0.00833333,0},{-0.0185185,0},{0.295833,0},{0.0617284,0}}" />
+            <Property name="Area" value="{{-0.00833333,0},{0.900077,0},{0.295833,0},{0.980324,0}}" />
             <Property name="Text" value="Camera distance : XXXXX.XX km" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
-            <Property name="VerticalAlignment" value="Bottom" />
             <Property name="HorizontalAlignment" value="Right" />
         </Window>
         <Window type="xfskin/Label" name="Label_PlanetName" >
             <Property name="ID" value="8" />
-            <Property name="Area" value="{{0.201171,0},{0.900077,-1},{0.444227,0},{0.980324,-1}}" />
+            <Property name="Area" value="{{0.201171,-25},{0.900077,0},{0.444227,-25},{0.980324,0}}" />
             <Property name="Text" value="..." />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/Label" name="Label_PlanetRay" >
             <Property name="ID" value="9" />
-            <Property name="Area" value="{{0.451171,0},{0.900077,1},{0.681727,0},{0.980324,1}}" />
+            <Property name="Area" value="{{0.451171,0},{0.900077,0},{0.681727,0},{0.980324,0}}" />
             <Property name="Text" value="..." />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
