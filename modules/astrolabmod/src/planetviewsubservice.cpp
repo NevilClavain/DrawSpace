@@ -107,6 +107,8 @@ void PlanetViewSubService::Run( void )
 {
     m_scenenodegraph.ComputeTransformations( m_tm );
 
+    m_cdlodp_service->Run();
+
     m_texturepass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
 

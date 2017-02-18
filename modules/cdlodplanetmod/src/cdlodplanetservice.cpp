@@ -104,7 +104,6 @@ m_plains_seed2(9334.1),
 m_mix_seed1(823.4),
 m_mix_seed2(509.0)
 {
-	m_renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
 void MultiFractalBinder::Bind(void)
@@ -206,6 +205,8 @@ void CDLODPlanetService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     _DSDEBUG( logger, dsstring("CDLODPlanet service : startup...") );
 
+    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
     DrawSpace::SphericalLOD::Body::BuildMeshes();
 }
 
@@ -224,6 +225,10 @@ void CDLODPlanetService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val
 
 void CDLODPlanetService::Run( void )
 {
+    for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    {
+        it->second.planet->DrawSubPasses();
+    }
 }
 
 void CDLODPlanetService::Release( void )
