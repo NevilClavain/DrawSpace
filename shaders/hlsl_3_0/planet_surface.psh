@@ -20,6 +20,8 @@
 *
 */
 
+sampler2D HT_Texture : register(s7); // texture Humidite, Temperature, Altitudes
+
 struct PS_INTPUT
 {	
 	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
@@ -44,6 +46,34 @@ struct PS_INTPUT
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
-    float4 final_color = { 0.0, 1.0, 1.0, 1.0 };
+
+    float4 temp_humidity = tex2D(HT_Texture, input.LODGlobalPatch_TexCoord);
+
+    float4 final_color = 0;
+
+    /*
+    final_color.x = 0.0;
+    final_color.y = 0.0;
+
+    final_color.z = temp_humidity.z;
+    */
+
+    if( temp_humidity.z > 0.0 )
+    {
+        final_color.x = 0.0;
+        final_color.y = 0.0;
+
+        final_color.z = 1.0;
+    }
+    else
+    {
+        final_color.x = 0.0;
+        final_color.y = 1.0;
+
+        final_color.z = 0.0;        
+    }
+    final_color.w = 1.0;
+
+
 	return final_color;
 }

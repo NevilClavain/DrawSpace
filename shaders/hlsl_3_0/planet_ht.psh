@@ -47,5 +47,12 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	}
 
 	color.w = point_alt;
+
+    /// temporaire
+    //color.x = 1.0;
+    //color.y = 0.0;
+    //color.z = 1.0;
+    //color.w = 1.0;
+
 	return color;	
 }

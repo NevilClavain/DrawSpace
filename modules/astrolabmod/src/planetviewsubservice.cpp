@@ -310,14 +310,13 @@ void PlanetViewSubService::create_passes( void )
     m_texturepass->Initialize();
     m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
     m_texturepass->GetRenderingQueue()->EnableTargetClearing( true );
-    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 0 );
 
 
     m_finalpass = _DRAWSPACE_NEW_( FinalPass, FinalPass( "final_pass" ) );
     m_finalpass->Initialize();
 
-    m_finalpass->GetRenderingQueue()->EnableTargetClearing( true );
-    m_finalpass->GetRenderingQueue()->SetTargetClearingColor( 255, 255, 255, 255 );
+    //m_finalpass->GetRenderingQueue()->EnableTargetClearing( true );
+    //m_finalpass->GetRenderingQueue()->SetTargetClearingColor( 255, 255, 255, 255 );
 
     m_finalpass->CreateViewportQuad();
     m_finalpass->GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );

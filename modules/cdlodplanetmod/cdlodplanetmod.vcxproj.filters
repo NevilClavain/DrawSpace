@@ -31,24 +31,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\shaders\hlsl_3_0\planet_surface_flat.psh">
-      <Filter>Source Files\hlsl_30</Filter>
-    </Text>
-    <Text Include="..\..\shaders\hlsl_3_0\planet_surface_flat.vsh">
-      <Filter>Source Files\hlsl_30</Filter>
-    </Text>
-    <Text Include="..\..\shaders\hlsl_4_0\planet_surface_flat.psh">
-      <Filter>Source Files\hlsl_40</Filter>
-    </Text>
-    <Text Include="..\..\shaders\hlsl_4_0\planet_surface_flat.vsh">
-      <Filter>Source Files\hlsl_40</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\shaders\hlsl_3_0\planet_ht.psh">
       <Filter>Source Files\hlsl_30</Filter>
     </None>
     <None Include="..\..\shaders\hlsl_3_0\planet_ht.vsh">
+      <Filter>Source Files\hlsl_30</Filter>
+    </None>
+    <None Include="..\..\shaders\hlsl_3_0\planet_surface.psh">
+      <Filter>Source Files\hlsl_30</Filter>
+    </None>
+    <None Include="..\..\shaders\hlsl_3_0\planet_surface.vsh">
       <Filter>Source Files\hlsl_30</Filter>
     </None>
   </ItemGroup>

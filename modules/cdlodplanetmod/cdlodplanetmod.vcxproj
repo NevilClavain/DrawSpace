@@ -112,24 +112,10 @@ copy .\..\..\shaders_bank\hlsl_4_0\planet_surface.vso .\..\..\..\Drawspace_sampl
     <ClInclude Include="src\cdlodplanetservice.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\shaders\hlsl_3_0\planet_surface_flat.psh">
-      <FileType>Document</FileType>
-    </Text>
-    <Text Include="..\..\shaders\hlsl_3_0\planet_surface_flat.vsh">
-      <FileType>Document</FileType>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\shaders\hlsl_4_0\planet_surface_flat.psh">
-      <FileType>Document</FileType>
-    </Text>
-    <Text Include="..\..\shaders\hlsl_4_0\planet_surface_flat.vsh">
-      <FileType>Document</FileType>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\shaders\hlsl_3_0\planet_ht.psh" />
     <None Include="..\..\shaders\hlsl_3_0\planet_ht.vsh" />
+    <None Include="..\..\shaders\hlsl_3_0\planet_surface.psh" />
+    <None Include="..\..\shaders\hlsl_3_0\planet_surface.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
