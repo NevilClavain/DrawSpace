@@ -279,9 +279,22 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
             statusbar_msg( "Planet slot must have a name !" );
         }
     }
-	else if ("GroundSetup_Button" == p_widget_id)
+	else if( "GroundSetup_Button" == p_widget_id )
 	{
-		MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETGROUNDSETUPBUTTON_CLIC );
+		int lb_index;
+		dsstring lb_text;
+
+		bool select = m_renderer->GUI_GetListboxFirstSelectedItemIndex( LAYOUT_FILE, "PlanetSlots_Listbox", lb_index, lb_text );
+
+		if (select)
+		{
+			m_selected_planet_conf = &m_nodes_config[lb_text];
+			MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETGROUNDSETUPBUTTON_CLIC );
+		}
+		else
+		{
+			statusbar_msg( "you must select a planet entry !" );
+		}
 	}
 }
 

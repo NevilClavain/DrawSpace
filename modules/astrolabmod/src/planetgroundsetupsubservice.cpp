@@ -35,7 +35,8 @@ _DECLARE_DS_LOGGER(logger, "planetgroundsetupsubservice", NULL)
 
 #define LAYOUT_FILE "planetgroundsetup.layout"
 
-PlanetGroundSetupSubService::PlanetGroundSetupSubService( void )
+PlanetGroundSetupSubService::PlanetGroundSetupSubService( void ) :
+m_planetconfig( NULL )
 {
 	m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_(GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback(this, &PlanetGroundSetupSubService::on_guipushbutton_clicked));
 }
@@ -185,11 +186,16 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
     }
 }
 
-void PlanetGroundSetupSubService::Activate(void)
+void PlanetGroundSetupSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
 {
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
+
+	m_planetconfig = p_planetConfig;
+
+	// update local copy of config
+	m_planetRay = m_planetconfig->m_planetRay.m_value;
 }
 
-void PlanetGroundSetupSubService::Unactivate(void)
+void PlanetGroundSetupSubService::Unactivate( void )
 {
 }

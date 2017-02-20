@@ -40,6 +40,11 @@ protected:
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
 
+	PlanetSceneNodeConfig*												m_planetconfig;
+
+	// local copy of planet params
+	dsreal																m_planetRay;
+
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
 
 
@@ -77,7 +82,7 @@ public:
     virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
-    virtual void                            Activate( void );
+	virtual void                            Activate( PlanetSceneNodeConfig* p_planetConfig );
     virtual void                            Unactivate( void );
 
 	friend class BaseSingleton<PlanetGroundSetupSubService>;

@@ -200,7 +200,7 @@ void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
 		case GUIEVT_PLANETSETUP_PLANETGROUNDSETUPBUTTON_CLIC:
 
 			PlanetSetupSubService::GetInstance()->Unactivate();
-			PlanetGroundSetupSubService::GetInstance()->Activate();
+			PlanetGroundSetupSubService::GetInstance()->Activate( PlanetSetupSubService::GetInstance()->GetSelectedPlanetConfig() );
 
 			m_current_subservice = PlanetGroundSetupSubService::GetInstance();
 			break;
