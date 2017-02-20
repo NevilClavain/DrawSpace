@@ -83,11 +83,16 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 8 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 9 );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 10 );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 11 );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 12 );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 13 );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 14 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Quit_Button" );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "PlanetView_Button" ); 
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "AddPlanet_Button" ); 
+    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "AddPlanet_Button" );
+	m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "GroundSetup_Button" );
 
 
     ///////// timer messages status bar
@@ -274,6 +279,10 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
             statusbar_msg( "Planet slot must have a name !" );
         }
     }
+	else if ("GroundSetup_Button" == p_widget_id)
+	{
+		MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETGROUNDSETUPBUTTON_CLIC );
+	}
 }
 
 void PlanetSetupSubService::Activate( void )

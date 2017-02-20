@@ -20,51 +20,36 @@
 *
 */
 
-#ifndef _MAINLOOPSERVICE_H_
-#define _MAINLOOPSERVICE_H_
+#ifndef _PLANETGROUNDSETUPSUBSERVICE_H_
+#define _PLANETGROUNDSETUPSUBSERVICE_H_
 
-#include "crtp_singleton.h"
 #include "drawspace.h"
+#include "crtp_singleton.h"
+#include "planetscenenodeconfig.h"
 
-class MainLoopService : public DrawSpace::Interface::Module::Service, public BaseSingleton<MainLoopService>
+class MainLoopService;
+
+class PlanetGroundSetupSubService : public DrawSpace::Interface::Module::Service, public BaseSingleton<PlanetGroundSetupSubService>
 {
-public:
-
-    typedef enum
-    {
-        GUIEVT_PLANETSETUP_QUITBUTTON_CLIC,
-        GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC,
-		GUIEVT_PLANETSETUP_PLANETGROUNDSETUPBUTTON_CLIC,
-        GUIEVT_PLANETSETUP_F1_KEY,
-
-        GUIEVT_PLANETVIEW_CLOSEBUTTON_CLIC,
-		GUIEVT_PLANETGROUNDSETUP_CLOSEBUTTON_CLIC,
-    
-    } APP_GUI_EVENT;
-
 protected:
+
+	typedef DrawSpace::Core::CallBack2<PlanetGroundSetupSubService, void, const dsstring&, const dsstring&>   GUIWidgetPushButtonClickedCallback;
+
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
 
-    DrawSpace::Interface::MesheImport*                                  m_meshe_import;
-
-    DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
-
-    DrawSpace::Interface::Module::Service*                              m_current_subservice;
-
-    DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
-    DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
+    GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
 
 
-    void load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf );
+    void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
 
-    MainLoopService( void );
+	PlanetGroundSetupSubService(void);
 public:
+	~PlanetGroundSetupSubService(void);
 
-    ~MainLoopService( void );
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
     virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, 
@@ -92,9 +77,10 @@ public:
     virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
-    void                                    OnGUIEvent( APP_GUI_EVENT p_evt );
+    virtual void                            Activate( void );
+    virtual void                            Unactivate( void );
 
-    friend class BaseSingleton<MainLoopService>;
+	friend class BaseSingleton<PlanetGroundSetupSubService>;
 };
 
 #endif

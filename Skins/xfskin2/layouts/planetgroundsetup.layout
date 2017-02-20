@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="xfskin/Label" name="Label" >
+            <Property name="ID" value="1" />
+            <Property name="Area" value="{{-0.00646745,0},{0.00501551,0},{0.23381,0},{0.0852624,0}}" />
+            <Property name="Text" value="Planet ground setup" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorizontalAlignment" value="Right" />
+        </Window>
+        <Window type="xfskin/Button" name="Close_Button" >
+            <Property name="ID" value="2" />
+            <Property name="Area" value="{{0.0104167,0},{0.900077,0},{0.177083,0},{0.980324,0}}" />
+            <Property name="Text" value="Close" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Renderer" >
+            <Property name="ID" value="3" />
+            <Property name="Area" value="{{0.00325477,0},{0.00501551,0},{0.18381,0},{0.0852624,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+    </Window>
+</GUILayout>

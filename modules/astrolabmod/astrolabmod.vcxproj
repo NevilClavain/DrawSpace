@@ -93,6 +93,7 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mainloopservice.cpp" />
+    <ClCompile Include="src\planetgroundsetupsubservice.cpp" />
     <ClCompile Include="src\planetsetupsubservice.cpp" />
     <ClCompile Include="src\planetviewsubservice.cpp" />
     <ClCompile Include="src\astrolabroot.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="src\mainloopservice.h" />
     <ClInclude Include="src\planetscenenodeconfig.h" />
     <ClInclude Include="src\planetsetupsubservice.h" />
+    <ClInclude Include="src\planetgroundsetupsubservice.h" />
     <ClInclude Include="src\planetviewsubservice.h" />
     <ClInclude Include="src\astrolabroot.h" />
   </ItemGroup>

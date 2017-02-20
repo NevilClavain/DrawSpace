@@ -16,6 +16,9 @@
     <ClCompile Include="src\mainloopservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\planetgroundsetupsubservice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -39,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\planetscenenodeconfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\planetgroundsetupsubservice.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
