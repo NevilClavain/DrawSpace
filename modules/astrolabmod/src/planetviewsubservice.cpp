@@ -203,12 +203,12 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
 {
     if( m_mouse_left )
     {
-        m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 8.0, m_tm );
-        m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 8.0, m_tm );
+        m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 0.5, m_tm );
+        m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 0.5, m_tm );
     }
     else if( m_mouse_right )
     {
-        m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 8.0, m_tm );
+        m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 0.5, m_tm );
     }
 
     m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
@@ -310,7 +310,7 @@ void PlanetViewSubService::create_passes( void )
     m_texturepass->Initialize();
     m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
     m_texturepass->GetRenderingQueue()->EnableTargetClearing( true );
-    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
+    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 1, 1, 1, 255 );
 
 
     m_finalpass = _DRAWSPACE_NEW_( FinalPass, FinalPass( "final_pass" ) );
@@ -323,8 +323,8 @@ void PlanetViewSubService::create_passes( void )
     m_finalpass->GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
     
 
-    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "point" ) );
-    m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    //m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    //m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
 
 
     m_finalpass->GetViewportQuad()->GetFx()->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );

@@ -83,6 +83,10 @@ m_render_data( NULL )
 
 Texture::~Texture( void )
 {
+    if( m_filedata )
+    {
+        _DRAWSPACE_DELETE_N_( m_filedata );
+    }
 }
 
 bool Texture::LoadFromFile( void )

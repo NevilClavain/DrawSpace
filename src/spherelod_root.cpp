@@ -305,13 +305,20 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                 create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera, false );
 
                 m_registered_camerapoints[camera_scenename] = reg_camera;
+
+				// ECH AJOUT 21/02/2017 : même pour les camera FREE, attribuer le referent body, afin
+				// que le calcul de la relative altitude soit effectue dans Root::manage_camerapoints()
+				// (relative_alt est nécessaire dans les differents shaders !!!)
+				camera_node->GetContent()->SetReferentBody( this );
             }
         }
     }
+	/*
     else if( SceneNodeGraph::NODE_UNREGISTERED == p_event )
     {
         _asm nop
     }
+	*/
 }
 
 void Root::create_camera_collisions( const dsstring& p_cameraname, CameraPoint* p_camera, Root::RegisteredCamera& p_cameradescr, bool p_hotstate )
@@ -493,35 +500,30 @@ void Root::manage_camerapoints( void )
 {
     for( auto it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
     {
-        if( it->second.type == FREE_ON_PLANET )
+        if( it->second.type == FREE_ON_PLANET || it->second.type == FREE )
         {
             Matrix camera_pos;
 
-            /*
-            GetCameraHotpoint( it->first, camera_pos );
-            */
-
             SceneNode<CameraPoint>* camera_node = m_registered_camerapoints[it->first].camera->GetOwner();
 
-            Orbiter* orbiter = static_cast<Orbiter*>( m_registered_camerapoints[it->first].camera->GetReferentBody() );
-            camera_pos.Identity();
-            camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), camera_pos );
+			Orbiter* orbiter = static_cast<Orbiter*>( m_registered_camerapoints[it->first].camera->GetReferentBody() );
+			camera_pos.Identity();
+			camera_node->GetTransformationRelativeTo( orbiter->GetOwner(), camera_pos );
 
+			DrawSpace::Utils::Vector camera_pos2;
+			camera_pos2[0] = camera_pos( 3, 0 );
+			camera_pos2[1] = camera_pos( 3, 1 );
+			camera_pos2[2] = camera_pos( 3, 2 );
 
-            DrawSpace::Utils::Vector camera_pos2;
-            camera_pos2[0] = camera_pos( 3, 0 );
-            camera_pos2[1] = camera_pos( 3, 1 );
-            camera_pos2[2] = camera_pos( 3, 2 );
+			dsreal rel_alt = ( camera_pos2.Length() / m_ray );
 
-            dsreal rel_alt = ( camera_pos2.Length() / m_ray );
+			m_registered_camerapoints[it->first].relative_alt = rel_alt;
+			m_registered_camerapoints[it->first].relative_alt_valid = true;
 
-            m_registered_camerapoints[it->first].relative_alt = rel_alt;
-            m_registered_camerapoints[it->first].relative_alt_valid = true;
-            
-            for( size_t i = 0; i < it->second.layers.size(); i++ )
-            {
-                it->second.layers[i]->UpdateRelativeAlt( rel_alt );
-            }
+			for( size_t i = 0; i < it->second.layers.size(); i++ )
+			{
+				it->second.layers[i]->UpdateRelativeAlt( rel_alt );
+			}
         }
         // les camera de type FREE ne sont jamais "hot", donc inutile de leur fournir l'altitude relative
         // les cameras de type INERTBODY_LINKED : l'altitude relative est deja fournie au layer via l'inertbody associe, dans manage_bodies()
@@ -603,6 +605,16 @@ void Root::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpac
 {
 	Orbiter::OnUnregister( p_scenegraph, p_node );
 	m_drawable->OnUnregister( p_scenegraph, p_node );
+
+    for( auto it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
+    {
+        if( it->second.type == FREE )
+        {
+			// reinit du referentbody, qui a ete positionne lors de l'enregistrement 
+			// de cette camera FREE, dans Root::on_nodes_event()
+			it->second.camera->SetReferentBody( NULL );
+		}
+	}
 }
 
 void Root::Update( DrawSpace::Utils::TimeManager& p_timemanager )

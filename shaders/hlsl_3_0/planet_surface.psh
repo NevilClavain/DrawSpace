@@ -20,14 +20,67 @@
 *
 */
 
-sampler2D HT_Texture : register(s7); // texture Humidite, Temperature, Altitudes
+float4 flags : register(c0);
+	// .x -> fragment/layout relative altitude
+	// .y -> patch sidelenght
+	// .z -> fragment/layout ray
+	// .w -> patch orientation enum integer
+
+float4 flags2 : register(c1);
+	// .x -> ht textures resol
+
+float4 viewer_pos : register(c2); // pos camera par rapport au centre sphere
+
+float4 flags6 : register(c6);
+	// .x -> resol atlas textures splatting
+	// .y -> transition texture globale/texture splatting : borne sup
+	// .z -> transition texture globale/texture splatting : borne inf
+    // .w -> transition ocean global/ocean detaille
+
+float4 flags_lights : register(c7);
+	// .x -> ambient light
+	// .y -> color0 light
+	// .z -> color1 light
+	// .w -> color2 light
+
+float4 ambient_color    : register(c8);
+
+float4 light0_dir_local : register(c9);
+float4 light0_dir       : register(c10);
+float4 light0_color     : register(c11);
+
+float4 light1_dir_local : register(c12);
+float4 light1_dir       : register(c13);
+float4 light1_color     : register(c14);
+
+float4 light2_dir_local : register(c15);
+float4 light2_dir       : register(c16);
+float4 light2_color     : register(c17);
+
+float4 atmo_scattering_flag_0 : register(c18);
+float4 atmo_scattering_flag_1 : register(c19);
+float4 atmo_scattering_flag_2 : register(c20);
+float4 atmo_scattering_flag_3 : register(c21);
+float4 atmo_scattering_flag_4 : register(c22);
+float4 atmo_scattering_flag_5 : register(c23);
+float4 atmo_scattering_flag_6 : register(c24);
+
+float4x4 matWorldRots : register(c25);
+
+float4 terrain_bump_flag : register(c31);
+
+
+sampler2D Pixels_HTMap_Texture : register(s0); // texture HT en pixels
+sampler2D Splatting_HTMap_Texture : register(s1); // texture HT pour splatting
+
+sampler2D HT_Texture				: register(s7);  // texture Humidite, Temperature, Altitudes
 
 struct PS_INTPUT
 {	
 	float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
 	float4 UnitPatch_TexCoord		: TEXCOORD1;
 	float4 GlobalPatch_TexCoord		: TEXCOORD2;
-    /*
+
     float4 c0 : COLOR0;
     float4 c1 : COLOR1;
 
@@ -38,42 +91,289 @@ struct PS_INTPUT
     float4 c1_2 : COLOR5;
 
     float Fog : FOG;
-    */
 };
 
 #include "spherelod_commons.hlsl"
+#include "landscapes.hlsl"
+
 
 
 float4 ps_main( PS_INTPUT input ) : COLOR0
 {
+	float4 final_color = 0.0;
+    float4 lit_color = 0.0;
+	float4 pixel_color = 0.0;
 
-    float4 temp_humidity = tex2D(HT_Texture, input.LODGlobalPatch_TexCoord);
+	float4 temp_humidity = tex2D( HT_Texture, input.LODGlobalPatch_TexCoord );
 
-    float4 final_color = 0;
+    float3 water_color = { 0.17, 0.36, 0.48 };
+    float3 water_mask_color = { 1.0, 0.0, 1.0 };
 
-    /*
-    final_color.x = 0.0;
-    final_color.y = 0.0;
+    bool water_mask_mode = false;
 
-    final_color.z = temp_humidity.z;
-    */
+	float lim_sup = flags6.y;
+	float lim_inf = flags6.z;
 
-    if( temp_humidity.z > 0.0 )
+	bool sea = false;
+
+    float pixel_distance = input.LODGlobalPatch_TexCoord.w;
+
+    if (flags.x <= flags6.w)
     {
-        final_color.x = 0.0;
-        final_color.y = 0.0;
+        water_mask_mode = true;
+    }
 
-        final_color.z = 1.0;
+	if( flags.x <= lim_inf )
+	{
+		// si altitude relative a un certain seuil
+        
+		// regarder l'altitude vertex interpole pour determiner si rendu mer
+		if( input.LODGlobalPatch_TexCoord.z <= 0.1 ) // altitude vertex (interpolee)
+		{
+			sea = true;
+		}
+	}
+	else
+	{
+	
+		// si altitude relative > 1.5
+
+		// regarder texture donnees temperature/humidite pour determiner si rendu mer
+		if( temp_humidity.z > 0.0 )
+		{
+			sea = true;
+		}
+	}
+
+	float3 avg = 0.0;
+
+	if( !sea )
+	{
+        avg = compute_terrain_bump_vector(temp_humidity.w, flags2.x, HT_Texture, input.LODGlobalPatch_TexCoord, terrain_bump_flag.x);
+    }
+	
+	float3 texel_pos = compute_front_face_point_vector( input.GlobalPatch_TexCoord );
+
+	if( !sea )
+	{
+        float k = clamp((1.5708 - atan(30.0 * (flags.x - 1.0))), 0.01, 0.35);
+        
+		texel_pos.x += k * avg.x;
+		texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+        
+		texel_pos = normalize( texel_pos );
+
+    }
+
+    int count_lights = 0;
+    float4 spec0 = 0;
+    float4 spec1 = 0;
+    float4 spec2 = 0;
+
+    float3 nviewerpos = normalize(viewer_pos.xyz);
+    
+	float3 texel_pos2;
+	texel_pos2 = CubeToSphere( ProjectVectorToCube( flags.w, texel_pos ) );
+
+    float3 normale_world = mul(matWorldRots, texel_pos2);
+
+    float ocean_spec_power = 120.0;
+
+    if (flags_lights.x > 0.0)
+    {
+        lit_color += ambient_color;
+    }
+
+    if (flags_lights.y > 0.0)
+	{
+        lit_color += clamp(dot(texel_pos2, light0_dir_local.xyz), 0.0, 1.0) * light0_color;
+        if( sea )
+        {
+            float3 hv = normalize(light0_dir.xyz + nviewerpos);
+            spec0 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light0_dir.xyz, hv);
+        }
+        count_lights++;
+    }
+
+    if (flags_lights.z > 0.0)
+	{		
+        lit_color += clamp(dot(texel_pos2, light1_dir_local.xyz), 0.0, 1.0) * light1_color;
+        if (sea)
+        {
+            float3 hv = normalize(light1_dir.xyz + nviewerpos);
+            spec1 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light1_dir.xyz, hv);
+        }
+        count_lights++;
+    }
+
+    if (flags_lights.w > 0.0)
+	{
+        lit_color += clamp(dot(texel_pos2, light2_dir_local.xyz), 0.0, 1.0) * light2_color;
+        if (sea)
+        {
+            float3 hv = normalize(light2_dir.xyz + nviewerpos);
+            spec2 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light2_dir.xyz, hv);
+        }
+        count_lights++;
+    }
+
+
+	////////////////////////////////////////////////////////////////////////////////////
+	
+	if( flags.x > 0.0 && flags.x <= lim_inf )
+	{			
+		if( sea ) 
+		{
+            pixel_color.xyz = water_color;
+        }
+		else
+		{
+			pixel_color = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture );	
+		}
+
+	}
+	else if( flags.x > lim_inf && flags.x <= lim_sup )
+	{
+		float4 color_splat = splatting_color( input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture );
+		float4 color_pixel = tex2D( Pixels_HTMap_Texture, temp_humidity );
+
+		if( sea )
+		{      
+            pixel_color.xyz = water_color;
+        }
+		else
+		{
+			pixel_color = lerp( color_splat, color_pixel, ( flags.x - lim_inf ) / ( lim_sup - lim_inf ) );
+		}
+	}
+	else
+	{		
+		if( sea )
+		{
+            pixel_color.xyz = water_color;
+        }
+		else
+		{
+			pixel_color = tex2D( Pixels_HTMap_Texture, temp_humidity );
+		}
+	}
+
+
+
+    ///////////////////// inclure le "fog de surface" dans la couleur pixel
+
+    pixel_color = saturate(lerp(atmo_scattering_flag_6, pixel_color, input.Fog));
+
+    /////////////////////
+
+
+	// ECH temporaire
+	//final_color.xyz = pixel_color.xyz;
+	final_color.w = 1.0;
+	// ECH temporaire
+    
+	
+	
+    float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
+
+
+    float4 c0_final, c1_final;
+    c0_final = c1_final = 0.0;
+
+    if (viewer_alt >= atmo_scattering_flag_5.x)
+    {
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += input.c1;
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += input.c1_1;
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += input.c1_2;
+        }        
     }
     else
     {
-        final_color.x = 0.0;
-        final_color.y = 1.0;
 
-        final_color.z = 0.0;        
+        // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
+        // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
+
+        float factor_alt = 1.0 - clamp(viewer_alt / atmo_scattering_flag_5.x, 0.0, 1.0);
+
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += lerp(input.c1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += lerp(input.c1_1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += lerp(input.c1_2, 1.0, factor_alt);
+        }
     }
-    final_color.w = 1.0;
+    
 
+    final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
+
+
+    if (flags_lights.y > 0.0)
+    {
+        final_color.xyz += spec0;
+    }
+
+    if (flags_lights.z > 0.0)
+    {
+        final_color.xyz += spec1;
+    }
+
+    if (flags_lights.w > 0.0)
+    {
+        final_color.xyz += spec2;
+    }
+
+    final_color.xyz = saturate(final_color.xyz);
+
+
+    if (count_lights > 0)
+    {
+        // pour eviter la saturation des couleurs dues � l'additivit� 
+        final_color.xyz = final_color.xyz / count_lights;
+    }
+		
+
+	/* ECH desactivation temporaire
+    if (water_mask_mode)
+    {
+        if (sea)
+        {
+            //float4 real_color = c0_final + (lit_color * pixel_color * c1_final);
+            final_color.w = 0.0;
+        }
+        else
+        {
+            final_color.w = 1.0;
+        }
+    }
+    else
+    {
+        final_color.w = 1.0;
+    }
+	*/
 
 	return final_color;
 }
