@@ -43,7 +43,9 @@ m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" ),
 m_camera_distance( 3000000.0 ),
 m_planet_conf(NULL),
-m_mousewheel_delta( 0 )
+m_mousewheel_delta( 0 ),
+m_leftdrag_x_delta( 0 ),
+m_leftdrag_y_delta( 0 )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
 }
@@ -126,16 +128,42 @@ void PlanetViewSubService::Run( void )
 {
 	if( m_mousewheel_delta > 0 )
 	{
-		m_arrow->ApplyFwdForce( 100000000.0 );
+		m_arrow->ApplyFwdForce( 200000000.0 );
 	}
 	else if( m_mousewheel_delta < 0 )
 	{
-		m_arrow->ApplyRevForce( 100000000.0 );
+		m_arrow->ApplyRevForce( 200000000.0 );
 	}
 	else
 	{
 		m_arrow->ZeroLSpeed();
 	}
+
+    if( m_leftdrag_y_delta > 0 )
+    {
+        m_arrow->ApplyDownPitch( 0.9 * abs( m_leftdrag_y_delta ) );
+    }
+    else if( m_leftdrag_y_delta < 0 )
+    {
+        m_arrow->ApplyUpPitch( 0.9 * abs( m_leftdrag_y_delta ) );
+    }
+    else
+    {
+        m_arrow->ZeroASpeed();
+    }
+
+    if( m_leftdrag_x_delta > 0 )
+    {
+        m_arrow->ApplyLeftYaw( 0.9 * abs( m_leftdrag_x_delta ) );
+    }
+    else if( m_leftdrag_x_delta < 0 )
+    {
+        m_arrow->ApplyRightYaw( 0.9 * abs( m_leftdrag_x_delta ) );
+    }
+    else
+    {
+        m_arrow->ZeroASpeed();
+    }
 
     m_scenenodegraph.ComputeTransformations( m_tm );
 
@@ -183,6 +211,8 @@ void PlanetViewSubService::Run( void )
     }
 
 	m_mousewheel_delta = 0;
+    m_leftdrag_y_delta = 0;
+    m_leftdrag_x_delta = 0;
 }
 
 void PlanetViewSubService::Release( void )
@@ -247,6 +277,14 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
 			m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 0.5, m_tm );
 		}
 	}
+	else if( m_current_camera == m_camera2 )
+	{
+		if( m_mouse_left )
+		{
+            m_leftdrag_x_delta = p_dx;
+            m_leftdrag_y_delta = p_dy;
+		}
+	}
 
     m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
 }
@@ -268,8 +306,6 @@ void PlanetViewSubService::OnMouseWheel( long p_delta )
 	}
 	else if( m_current_camera == m_camera2 )
 	{
-		//m_arrow->ApplyFwdForce( 10000000.0 );
-
 		if( p_delta > 0 )
 		{
 			m_mousewheel_delta = 1;

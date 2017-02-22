@@ -51,6 +51,8 @@ protected:
     DrawSpace::IntermediatePass*                                        m_texturepass;
 
 	int																	m_mousewheel_delta;
+    int                                                                 m_leftdrag_x_delta;
+    int                                                                 m_leftdrag_y_delta;
 
     DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
