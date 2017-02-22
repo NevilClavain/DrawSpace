@@ -169,7 +169,7 @@ void PlanetClimateBinder::Bind(void)
 	MultiFractalBinder::Bind();
 }
 
-void PlanetClimateBinder::Unbind(void)
+void PlanetClimateBinder::Unbind( void )
 {
 	MultiFractalBinder::Unbind();
 }
@@ -277,7 +277,7 @@ m_terrain_bump_factor( TERRAIN_BUMP_FACTOR )
 
 }
 
-void PlanetDetailsBinder::Bind(void)
+void PlanetDetailsBinder::Bind( void )
 {
 
 	Vector flags6(16.0, 1.095, 1.0040, m_ocean_details_alt);
@@ -354,17 +354,17 @@ void PlanetDetailsBinder::Bind(void)
 	MultiFractalBinder::Bind();
 }
 
-void PlanetDetailsBinder::Unbind(void)
+void PlanetDetailsBinder::Unbind( void )
 {
 	MultiFractalBinder::Unbind();
 }
 
-void PlanetDetailsBinder::SetPlanetNode(DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>* p_planet_node)
+void PlanetDetailsBinder::SetPlanetNode( DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>* p_planet_node )
 {
 	m_planet_node = p_planet_node;
 }
 
-void PlanetDetailsBinder::Update(void)
+void PlanetDetailsBinder::Update( void )
 {
 	Matrix planet_final_transform;
 
@@ -459,6 +459,8 @@ void CDLODPlanetService::Run( void )
 			it->second.planet_details_binder[i]->Update();
 		}
     }
+
+	m_tm.Update();
 }
 
 void CDLODPlanetService::Release( void )
@@ -466,7 +468,7 @@ void CDLODPlanetService::Release( void )
     _DSDEBUG( logger, dsstring("CDLODPlanet service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
+DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
     PlanetEntry pe;
 
@@ -538,12 +540,12 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 	pe.climate_fx->AddShader( pe.climate_pshader );
     
 	pe.climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
-    pe.climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    //pe.climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     pe.climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
 
 	pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
-    pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
+    //pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
     
 
 	for (int i = 0; i < 6; i++)
@@ -602,9 +604,9 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 		pe.planet_details_binder[i]->SetPlanetNode( pe.planet_node );
 	}
 
+	p_calendar->RegisterWorld( pe.planet->GetWorld() );
 
     m_nodes[p_sceneNodeName] = pe;
-
     return pe.planet_node;
 }
 
@@ -624,11 +626,13 @@ void CDLODPlanetService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNo
     }
 }
 
-void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
+void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
     if( m_nodes.count( p_sceneNodeName ) )
-    {
+    {	
 		PlanetEntry pe = m_nodes[p_sceneNodeName];
+
+		p_calendar->UnregisterWorld( pe.planet->GetWorld() );
 
 		_DRAWSPACE_DELETE_( pe.planet_vshader );
 		_DRAWSPACE_DELETE_( pe.planet_pshader );

@@ -435,6 +435,18 @@ void Calendar::RegisterWorld( DrawSpace::Dynamics::World* p_world )
     m_worlds.push_back( p_world );
 }
 
+void Calendar::UnregisterWorld( DrawSpace::Dynamics::World* p_world )
+{
+	for( auto it = m_worlds.begin(); it!= m_worlds.end(); ++it )
+	{
+		if( (*it) == p_world )
+		{
+			m_worlds.erase( it );
+			return;
+		}
+	}
+}
+
 void Calendar::AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed )
 {
     m_time_manager->AngleSpeedInc( p_angle, p_angleSpeed * m_time_factor );

@@ -165,6 +165,7 @@ bool SceneNodeGraph::SetCurrentCamera( const dsstring& p_nodename )
         }
         return true;
     }
+	_DSEXCEPTION( "Unknown camera '" + p_nodename + "'" );
     return false;
 }
 

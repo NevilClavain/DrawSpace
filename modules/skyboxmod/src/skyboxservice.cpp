@@ -145,7 +145,7 @@ void SkyboxService::Release( void )
 {
 }
 
-DrawSpace::Core::BaseSceneNode* SkyboxService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
+DrawSpace::Core::BaseSceneNode* SkyboxService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
     SkyboxNodeEntry entry;
 
@@ -277,7 +277,7 @@ void SkyboxService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGra
 {
 }
 
-void SkyboxService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
+void SkyboxService::ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
     //TODO
 }

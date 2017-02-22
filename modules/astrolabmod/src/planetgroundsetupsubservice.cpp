@@ -41,17 +41,17 @@ m_planetconfig( NULL )
 	m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_(GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback(this, &PlanetGroundSetupSubService::on_guipushbutton_clicked));
 }
     
-PlanetGroundSetupSubService::~PlanetGroundSetupSubService(void)
+PlanetGroundSetupSubService::~PlanetGroundSetupSubService( void )
 {
     _DRAWSPACE_DELETE_( m_guiwidgetpushbuttonclicked_cb );
 }
 
 
-void PlanetGroundSetupSubService::GetKeys(std::vector<DrawSpace::Module::KeySinkBase*>& p_keys)
+void PlanetGroundSetupSubService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )
 {
 }
 
-void PlanetGroundSetupSubService::Init(DrawSpace::Logger::Configuration* p_logconf,
+void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousecircularmode_cb, 
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                                                     DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
@@ -99,25 +99,25 @@ void PlanetGroundSetupSubService::Run(void)
     }
 }
 
-void PlanetGroundSetupSubService::Release(void)
+void PlanetGroundSetupSubService::Release( void )
 {
     _DSDEBUG( logger, dsstring("PlanetGroundSetup sub service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* PlanetGroundSetupSubService::InstanciateSceneNode(const dsstring& p_sceneNodeName)
+DrawSpace::Core::BaseSceneNode* PlanetGroundSetupSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
     return NULL;
 }
 
-void PlanetGroundSetupSubService::RegisterScenegraphCallbacks(DrawSpace::Core::SceneNodeGraph& p_scenegraph)
+void PlanetGroundSetupSubService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
 {
 }
 
-void PlanetGroundSetupSubService::UnregisterScenegraphCallbacks(DrawSpace::Core::SceneNodeGraph& p_scenegraph)
+void PlanetGroundSetupSubService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
 {
 }
 
-void PlanetGroundSetupSubService::ReleaseSceneNode(const dsstring& p_sceneNodeName)
+void PlanetGroundSetupSubService::ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
 }
 

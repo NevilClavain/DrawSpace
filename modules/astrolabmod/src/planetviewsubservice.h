@@ -40,6 +40,7 @@ protected:
     dsstring                                                            m_pluginDescr;
 
 	DrawSpace::Dynamics::World											m_world;
+	DrawSpace::Dynamics::Calendar*										m_calendar;
 
     DrawSpace::Interface::MesheImport*                                  m_meshe_import;
 
@@ -49,6 +50,7 @@ protected:
     DrawSpace::FinalPass*                                               m_finalpass;
     DrawSpace::IntermediatePass*                                        m_texturepass;
 
+	int																	m_mousewheel_delta;
 
     DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
@@ -120,10 +122,10 @@ public:
     virtual void                            Run( void );
     virtual void                            Release( void );
 
-    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName );
+    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar );
     virtual void                            RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
     virtual void                            UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
-    virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName );
+    virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar );
 
 
     virtual void                            OnKeyPress( long p_key );

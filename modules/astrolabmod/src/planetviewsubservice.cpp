@@ -42,7 +42,8 @@ m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" ),
 m_camera_distance( 3000000.0 ),
-m_planet_conf(NULL)
+m_planet_conf(NULL),
+m_mousewheel_delta( 0 )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
 }
@@ -81,12 +82,19 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 	World::m_scale = 1.0;
     m_world.Initialize();
 
+    m_calendar = _DRAWSPACE_NEW_( Calendar, Calendar( 0, &m_tm ) );
+    m_calendar->RegisterWorld( &m_world );
+
     create_passes();
     create_camera();
     create_cubes();
 
-    m_scenenodegraph.SetCurrentCamera( "camera" );
-	m_current_camera = m_camera;
+    //m_scenenodegraph.SetCurrentCamera( "camera" );
+	//m_current_camera = m_camera;
+
+    m_scenenodegraph.SetCurrentCamera( "camera2" );
+	m_current_camera = m_camera2;
+
 
     m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
     m_cdlodplanet_texturepass = m_texturepass;
@@ -110,11 +118,25 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Close_Button" );
 
 
+	m_calendar->Startup( 0 );
 }
 
 
 void PlanetViewSubService::Run( void )
 {
+	if( m_mousewheel_delta > 0 )
+	{
+		m_arrow->ApplyFwdForce( 100000000.0 );
+	}
+	else if( m_mousewheel_delta < 0 )
+	{
+		m_arrow->ApplyRevForce( 100000000.0 );
+	}
+	else
+	{
+		m_arrow->ZeroLSpeed();
+	}
+
     m_scenenodegraph.ComputeTransformations( m_tm );
 
     m_cdlodp_service->Run();
@@ -154,11 +176,13 @@ void PlanetViewSubService::Run( void )
     m_renderer->GUI_Render();
 
     m_renderer->FlipScreen();
+	m_calendar->Run();
     
-    m_tm.Update();
     if( m_tm.IsReady() )
     {
     }
+
+	m_mousewheel_delta = 0;
 }
 
 void PlanetViewSubService::Release( void )
@@ -166,7 +190,7 @@ void PlanetViewSubService::Release( void )
     _DSDEBUG( logger, dsstring("PlanetView sub service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* PlanetViewSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName )
+DrawSpace::Core::BaseSceneNode* PlanetViewSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
     return NULL;
 }
@@ -179,7 +203,7 @@ void PlanetViewSubService::UnregisterScenegraphCallbacks( DrawSpace::Core::Scene
 {
 }
 
-void PlanetViewSubService::ReleaseSceneNode( const dsstring& p_sceneNodeName )
+void PlanetViewSubService::ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
 }
 
@@ -241,6 +265,19 @@ void PlanetViewSubService::OnMouseWheel( long p_delta )
 		}
 
 		update_cameranodedistance();
+	}
+	else if( m_current_camera == m_camera2 )
+	{
+		//m_arrow->ApplyFwdForce( 10000000.0 );
+
+		if( p_delta > 0 )
+		{
+			m_mousewheel_delta = 1;
+		}
+		else
+		{
+			m_mousewheel_delta = -1;
+		}
 	}
 }
 
@@ -392,7 +429,7 @@ void PlanetViewSubService::create_camera( void )
     m_arrow_params.mass = 0.5;
     m_arrow_params.shape_descr.shape = DrawSpace::Dynamics::Body::BOX_SHAPE;
     m_arrow_params.shape_descr.box_dims = DrawSpace::Utils::Vector( 2.0, 2.0, 2.0, 1.0 );
-    m_arrow_params.initial_attitude.Translation( 0.0, 0.0, 3000000.0 );
+    m_arrow_params.initial_attitude.Translation( 0.0, 0.0, 5000000.0 );
 
     m_arrow = _DRAWSPACE_NEW_( DrawSpace::Dynamics::Rocket, DrawSpace::Dynamics::Rocket( &m_world, m_arrow_params ) );
    
@@ -417,7 +454,7 @@ void PlanetViewSubService::create_camera( void )
 
 void PlanetViewSubService::create_planet( const dsstring& p_planetId )
 {   
-    m_planet_node = m_cdlodp_service->InstanciateSceneNode( p_planetId );
+    m_planet_node = m_cdlodp_service->InstanciateSceneNode( p_planetId, m_calendar );
 
     m_scenenodegraph.RegisterNode( m_planet_node );
 
@@ -434,7 +471,7 @@ void PlanetViewSubService::destroy_planet( const dsstring& p_planetId )
 
     m_planet_node = NULL;
 
-	m_cdlodp_service->ReleaseSceneNode( p_planetId );
+	m_cdlodp_service->ReleaseSceneNode( p_planetId, m_calendar );
 }
 
 void PlanetViewSubService::create_cubes( void )

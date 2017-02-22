@@ -26,6 +26,7 @@
 #include "scenenode.h"
 #include "renderer.h"
 #include "module_keys.h"
+#include "calendar.h"
 
 namespace DrawSpace
 {
@@ -56,10 +57,10 @@ public:
     virtual void								Run( void ) = 0;
     virtual void								Release( void ) = 0;
 
-    virtual DrawSpace::Core::BaseSceneNode*		InstanciateSceneNode( const dsstring& p_sceneNodeName ) = 0;
+    virtual DrawSpace::Core::BaseSceneNode*		InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar ) = 0;
     virtual void								RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph ) = 0;
     virtual void								UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph ) = 0;
-    virtual void								ReleaseSceneNode( const dsstring& p_sceneNodeName ) = 0;
+    virtual void								ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar ) = 0;
 
 	virtual DrawSpace::Module::KeysLinkTable*	AddSceneNodeConfig( const dsstring& p_sceneNodeName ) { return NULL; };
 
