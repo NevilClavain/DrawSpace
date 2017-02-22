@@ -27,6 +27,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Dynamics;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
 
@@ -77,16 +78,23 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_renderer->GetDescr( m_pluginDescr );
 
+	World::m_scale = 1.0;
+    m_world.Initialize();
+
     create_passes();
     create_camera();
     create_cubes();
 
     m_scenenodegraph.SetCurrentCamera( "camera" );
+	m_current_camera = m_camera;
 
     m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
     m_cdlodplanet_texturepass = m_texturepass;
 
     init_passes();
+
+
+
 
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
 
@@ -100,6 +108,8 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Close_Button" );
+
+
 }
 
 
@@ -201,31 +211,37 @@ void PlanetViewSubService::OnChar( long p_char, long p_scan )
 
 void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-    if( m_mouse_left )
-    {
-        m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 0.5, m_tm );
-        m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 0.5, m_tm );
-    }
-    else if( m_mouse_right )
-    {
-        m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 0.5, m_tm );
-    }
+	if( m_current_camera == m_camera )
+	{
+		if( m_mouse_left )
+		{
+			m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 0.5, m_tm );
+			m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 0.5, m_tm );
+		}
+		else if( m_mouse_right )
+		{
+			m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 0.5, m_tm );
+		}
+	}
 
     m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
 }
 
 void PlanetViewSubService::OnMouseWheel( long p_delta )
 {
-    if( p_delta > 0 )
-    {
-        m_camera_distance -= 100000.0;
-    }
-    else
-    {
-        m_camera_distance += 100000.0;
-    }
+	if( m_current_camera == m_camera )
+	{	
+		if( p_delta > 0 )
+		{
+			m_camera_distance -= 100000.0;
+		}
+		else
+		{
+			m_camera_distance += 100000.0;
+		}
 
-    update_cameranodedistance();
+		update_cameranodedistance();
+	}
 }
 
 void PlanetViewSubService::update_cameranodedistance( void )
@@ -369,7 +385,34 @@ void PlanetViewSubService::create_camera( void )
     m_scenenodegraph.AddNode( m_camerapos_node );
     m_scenenodegraph.RegisterNode( m_camerapos_node );
 
-    m_camera_node->LinkTo( m_camerapos_node );    
+    m_camera_node->LinkTo( m_camerapos_node );
+
+	//////////////////////////////////////////////////////////////////////
+
+    m_arrow_params.mass = 0.5;
+    m_arrow_params.shape_descr.shape = DrawSpace::Dynamics::Body::BOX_SHAPE;
+    m_arrow_params.shape_descr.box_dims = DrawSpace::Utils::Vector( 2.0, 2.0, 2.0, 1.0 );
+    m_arrow_params.initial_attitude.Translation( 0.0, 0.0, 3000000.0 );
+
+    m_arrow = _DRAWSPACE_NEW_( DrawSpace::Dynamics::Rocket, DrawSpace::Dynamics::Rocket( &m_world, m_arrow_params ) );
+   
+    m_arrow_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::Rocket>, SceneNode<DrawSpace::Dynamics::Rocket>( "arrow_body" ) );
+    m_arrow_node->SetContent( m_arrow );
+
+    m_scenenodegraph.AddNode( m_arrow_node );
+    m_scenenodegraph.RegisterNode( m_arrow_node );
+
+
+    m_camera2 = _DRAWSPACE_NEW_( DrawSpace::Dynamics::CameraPoint, DrawSpace::Dynamics::CameraPoint );
+    m_camera2_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::CameraPoint>, SceneNode<DrawSpace::Dynamics::CameraPoint>( "camera2" ) );
+    m_camera2_node->SetContent( m_camera2 );
+
+	m_camera2->SetReferentBody( m_arrow );
+
+    m_scenenodegraph.RegisterNode( m_camera2_node );
+
+    m_camera2_node->LinkTo( m_arrow_node );
+
 }
 
 void PlanetViewSubService::create_planet( const dsstring& p_planetId )

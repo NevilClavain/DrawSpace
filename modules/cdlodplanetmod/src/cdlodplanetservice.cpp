@@ -240,7 +240,7 @@ m_terrain_bump_factor( TERRAIN_BUMP_FACTOR )
 	m_lights[0].m_color[3] = 1.0;
 	m_lights[0].m_dir[0] = -0.6;
 	m_lights[0].m_dir[1] = 0.0;
-	m_lights[0].m_dir[2] = 1.0;
+	m_lights[0].m_dir[2] = 0.6; // 1.0
 	m_lights[0].m_dir[3] = 1.0;
 
 	m_lights[0].m_dir.Normalize();

@@ -39,6 +39,8 @@ protected:
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
 
+	DrawSpace::Dynamics::World											m_world;
+
     DrawSpace::Interface::MesheImport*                                  m_meshe_import;
 
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
@@ -55,6 +57,13 @@ protected:
 
     DrawSpace::Core::Transformation*                                    m_camerapos;
     DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_camerapos_node;
+
+
+    DrawSpace::Dynamics::CameraPoint*                                   m_camera2;
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_camera2_node;
+    DrawSpace::Dynamics::Rocket*										m_arrow;
+    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::Rocket>*			m_arrow_node;
+	DrawSpace::Dynamics::Body::Parameters								m_arrow_params;
 
 
 
@@ -82,6 +91,8 @@ protected:
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
 
 	PlanetSceneNodeConfig*												m_planet_conf;
+
+	DrawSpace::Dynamics::CameraPoint*									m_current_camera;
 
     void init_passes( void );
     void create_passes( void );
