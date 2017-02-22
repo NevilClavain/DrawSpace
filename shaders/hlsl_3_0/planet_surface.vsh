@@ -164,7 +164,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	{	
         	
         v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
-        v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
+        //v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
 
 		if( v_alt >= 0.0 )
 		{
@@ -174,7 +174,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 			if( Input.TexCoord0.z == 0.0 )
 			{
-                v_position3 *= (1.0 + (v_factor * (v_alt / flag0.z)));
+                v_position3 *= (1.0 + (/*v_factor * */ (v_alt / flag0.z)));
             }
             else
             {

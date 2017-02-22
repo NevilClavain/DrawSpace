@@ -265,14 +265,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     pixel_color = saturate(lerp(atmo_scattering_flag_6, pixel_color, input.Fog));
 
     /////////////////////
-
-
-	// ECH temporaire
-	//final_color.xyz = pixel_color.xyz;
-	final_color.w = 1.0;
-	// ECH temporaire
-    
-	
 	
     float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
@@ -327,7 +319,6 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         }
     }
     
-
     final_color.xyz = c0_final + (lit_color * pixel_color * c1_final);
 
 

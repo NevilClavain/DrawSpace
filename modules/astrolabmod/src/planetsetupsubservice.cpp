@@ -268,7 +268,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 			// store planet unique name (also used as scenegraph node id)
 			m_nodes_config[node_name].m_planetName = node_name;
 			// setup default values here
-            m_nodes_config[node_name].m_planetRay = 550.0;
+            m_nodes_config[node_name].m_planetRay = 500.0;
 			m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
 			m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
 

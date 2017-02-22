@@ -484,12 +484,12 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 	{
 		//pe.simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
 
-		pe.planet_details_binder[i] = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder( pe.node_config->m_planetRay.m_value, PLANET_ATMO_THICKNESS ) );
+		pe.planet_details_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( pe.node_config->m_planetRay.m_value * 1000.0, PLANET_ATMO_THICKNESS ) );
 		pe.planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder );
     }
 
-	pe.planet_vshader = _DRAWSPACE_NEW_(Shader, Shader( pe.node_config->m_detailsVertexShader.m_value, true ) );
-	pe.planet_pshader = _DRAWSPACE_NEW_(Shader, Shader( pe.node_config->m_detailsPixelShader.m_value, true ) );
+	pe.planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( pe.node_config->m_detailsVertexShader.m_value, true ) );
+	pe.planet_pshader = _DRAWSPACE_NEW_( Shader, Shader( pe.node_config->m_detailsPixelShader.m_value, true ) );
 
 	pe.texture_th_pixels = _DRAWSPACE_NEW_( Texture, Texture( "earth_th_pixels_16.jpg" ) );
 	pe.texture_th_splatting = _DRAWSPACE_NEW_( Texture, Texture( "earth_th_splatting_16.jpg" ) );
