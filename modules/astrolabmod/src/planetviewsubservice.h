@@ -118,6 +118,7 @@ protected:
     void update_cameranodedistance( void );
 
 	dsreal compute_arrow_force( void );
+	dsreal compute_arrow_torque( dsreal p_delta );
 
 	void set_arrow_initial_attitude( void );
 

@@ -130,11 +130,17 @@ dsreal PlanetViewSubService::compute_arrow_force( void )
 	return ( 5 * std::pow( m_rel_altitude, 1.2 ) );
 }
 
+dsreal PlanetViewSubService::compute_arrow_torque( dsreal p_delta )
+{
+	return 40.0 * abs( p_delta ) * std::pow( m_rel_altitude, 0.28 );
+}
+
+
 void PlanetViewSubService::Run( void )
 {
 	if( m_mousewheel_delta > 0 )
 	{
-		dsreal force = DrawSpace::Utils::Maths::Clamp( 20000.0, 100000000000.0, 1000000000.0 * compute_arrow_force() );
+		dsreal force = DrawSpace::Utils::Maths::Clamp( 20000.0, 5000000000.0, 1000000000.0 * compute_arrow_force() );
 		m_arrow->ApplyFwdForce( force );
 	}
 	else if( m_mousewheel_delta < 0 )
@@ -149,31 +155,31 @@ void PlanetViewSubService::Run( void )
 
     if( m_leftdrag_y_delta > 0 )
     {
-        m_arrow->ApplyDownPitch( 20.0 * abs( m_leftdrag_y_delta ) );
+        m_arrow->ApplyDownPitch( compute_arrow_torque( m_leftdrag_y_delta ) );
     }
     else if( m_leftdrag_y_delta < 0 )
     {
-        m_arrow->ApplyUpPitch( 20.0 * abs( m_leftdrag_y_delta ) );
+        m_arrow->ApplyUpPitch( compute_arrow_torque( m_leftdrag_y_delta ) );
     }
 
 
     if( m_leftdrag_x_delta > 0 )
     {
-        m_arrow->ApplyLeftYaw( 20.0 * abs( m_leftdrag_x_delta ) );
+        m_arrow->ApplyLeftYaw( compute_arrow_torque( m_leftdrag_x_delta ) );
     }
     else if( m_leftdrag_x_delta < 0 )
     {
-        m_arrow->ApplyRightYaw( 20.0 * abs( m_leftdrag_x_delta ) );
+        m_arrow->ApplyRightYaw( compute_arrow_torque( m_leftdrag_x_delta ) );
     }
 
 
 	if( m_rightdrag_x_delta < 0 )
 	{
-		m_arrow->ApplyLeftRoll( 100.0 * abs( m_rightdrag_x_delta ) );
+		m_arrow->ApplyLeftRoll( 8.0 * compute_arrow_torque( m_rightdrag_x_delta ) );
 	}
 	else if( m_rightdrag_x_delta > 0 )
 	{
-		m_arrow->ApplyRightRoll( 100.0 * abs( m_rightdrag_x_delta ) );
+		m_arrow->ApplyRightRoll( 8.0 * compute_arrow_torque( m_rightdrag_x_delta ) );
 	}
 
 
