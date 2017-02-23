@@ -132,12 +132,22 @@ dsreal PlanetViewSubService::compute_arrow_force( void )
 
 dsreal PlanetViewSubService::compute_arrow_torque( dsreal p_delta )
 {
-	return 40.0 * abs( p_delta ) * std::pow( m_rel_altitude, 0.28 );
+	return 55.0 * abs( p_delta ) * std::pow( m_rel_altitude, 0.28 );
 }
 
 
 void PlanetViewSubService::Run( void )
 {
+    static dsreal prev_rel_altitude;
+    static Matrix prev_arrow_transf;
+
+    if( m_rel_altitude >= 0.0 )
+    {
+        prev_rel_altitude = m_rel_altitude;
+        m_arrow_node->GetFinalTransform( prev_arrow_transf );
+    }
+
+
 	if( m_mousewheel_delta > 0 )
 	{
 		dsreal force = DrawSpace::Utils::Maths::Clamp( 20000.0, 5000000000.0, 1000000000.0 * compute_arrow_force() );
@@ -191,6 +201,14 @@ void PlanetViewSubService::Run( void )
     m_scenenodegraph.ComputeTransformations( m_tm );
 
     m_cdlodp_service->Run();
+
+    if( m_rel_altitude < 0.0 )
+    {
+        m_arrow->ZeroLSpeed();
+        m_arrow->ZeroASpeed();
+
+        m_arrow->ForceInitialAttitude( prev_arrow_transf );
+    }
 
     m_texturepass->GetRenderingQueue()->Draw();
     m_finalpass->GetRenderingQueue()->Draw();
@@ -267,6 +285,9 @@ void PlanetViewSubService::Run( void )
     m_leftdrag_y_delta = 0;
     m_leftdrag_x_delta = 0;
 	m_rightdrag_x_delta = 0;
+
+
+
 }
 
 void PlanetViewSubService::Release( void )
@@ -582,6 +603,8 @@ void PlanetViewSubService::create_planet( const dsstring& p_planetId )
 
     m_planet_node->LinkTo( m_objectRot_node );
     m_cdlodp_service->RegisterScenegraphCallbacks( m_scenenodegraph );
+
+    m_rel_altitude = 0.0;
 }
 
 void PlanetViewSubService::destroy_planet( const dsstring& p_planetId )
