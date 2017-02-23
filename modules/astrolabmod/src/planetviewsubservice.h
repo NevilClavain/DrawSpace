@@ -53,6 +53,7 @@ protected:
 	int																	m_mousewheel_delta;
     int                                                                 m_leftdrag_x_delta;
     int                                                                 m_leftdrag_y_delta;
+	int                                                                 m_rightdrag_x_delta;
 
     DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
@@ -88,6 +89,8 @@ protected:
 
     double                                                              m_camera_distance;
 
+	double																m_rel_altitude;
+
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
     DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
 
@@ -104,12 +107,19 @@ protected:
     void create_cubes( void );
     void create_camera( void );
 
+	void create_arrow_camera( void );
+	void destroy_arrow_camera( void );
+
     void create_planet( const dsstring& p_planetId );
 	void destroy_planet(const dsstring& p_planetId);
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
     void update_cameranodedistance( void );
+
+	dsreal compute_arrow_force( void );
+
+	void set_arrow_initial_attitude( void );
 
     PlanetViewSubService( void );
 public:

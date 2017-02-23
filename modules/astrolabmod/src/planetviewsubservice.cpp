@@ -42,10 +42,12 @@ m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" ),
 m_camera_distance( 3000000.0 ),
-m_planet_conf(NULL),
+m_rel_altitude( 0.0 ),
+m_planet_conf( NULL ),
 m_mousewheel_delta( 0 ),
 m_leftdrag_x_delta( 0 ),
-m_leftdrag_y_delta( 0 )
+m_leftdrag_y_delta( 0 ),
+m_rightdrag_x_delta( 0 )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
 }
@@ -94,8 +96,8 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     //m_scenenodegraph.SetCurrentCamera( "camera" );
 	//m_current_camera = m_camera;
 
-    m_scenenodegraph.SetCurrentCamera( "camera2" );
-	m_current_camera = m_camera2;
+    //m_scenenodegraph.SetCurrentCamera( "camera2" );
+	//m_current_camera = m_camera2;
 
 
     m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
@@ -123,16 +125,22 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 	m_calendar->Startup( 0 );
 }
 
+dsreal PlanetViewSubService::compute_arrow_force( void )
+{
+	return ( 5 * std::pow( m_rel_altitude, 1.2 ) );
+}
 
 void PlanetViewSubService::Run( void )
 {
 	if( m_mousewheel_delta > 0 )
 	{
-		m_arrow->ApplyFwdForce( 200000000.0 );
+		dsreal force = DrawSpace::Utils::Maths::Clamp( 20000.0, 100000000000.0, 1000000000.0 * compute_arrow_force() );
+		m_arrow->ApplyFwdForce( force );
 	}
 	else if( m_mousewheel_delta < 0 )
 	{
-		m_arrow->ApplyRevForce( 200000000.0 );
+		dsreal force = DrawSpace::Utils::Maths::Clamp( 0.0, 20000000000.0, 1000000000.0 * compute_arrow_force() );
+		m_arrow->ApplyRevForce( force );
 	}
 	else
 	{
@@ -141,29 +149,38 @@ void PlanetViewSubService::Run( void )
 
     if( m_leftdrag_y_delta > 0 )
     {
-        m_arrow->ApplyDownPitch( 0.9 * abs( m_leftdrag_y_delta ) );
+        m_arrow->ApplyDownPitch( 20.0 * abs( m_leftdrag_y_delta ) );
     }
     else if( m_leftdrag_y_delta < 0 )
     {
-        m_arrow->ApplyUpPitch( 0.9 * abs( m_leftdrag_y_delta ) );
+        m_arrow->ApplyUpPitch( 20.0 * abs( m_leftdrag_y_delta ) );
     }
-    else
-    {
-        m_arrow->ZeroASpeed();
-    }
+
 
     if( m_leftdrag_x_delta > 0 )
     {
-        m_arrow->ApplyLeftYaw( 0.9 * abs( m_leftdrag_x_delta ) );
+        m_arrow->ApplyLeftYaw( 20.0 * abs( m_leftdrag_x_delta ) );
     }
     else if( m_leftdrag_x_delta < 0 )
     {
-        m_arrow->ApplyRightYaw( 0.9 * abs( m_leftdrag_x_delta ) );
+        m_arrow->ApplyRightYaw( 20.0 * abs( m_leftdrag_x_delta ) );
     }
-    else
-    {
-        m_arrow->ZeroASpeed();
-    }
+
+
+	if( m_rightdrag_x_delta < 0 )
+	{
+		m_arrow->ApplyLeftRoll( 100.0 * abs( m_rightdrag_x_delta ) );
+	}
+	else if( m_rightdrag_x_delta > 0 )
+	{
+		m_arrow->ApplyRightRoll( 100.0 * abs( m_rightdrag_x_delta ) );
+	}
+
+
+	if( m_leftdrag_x_delta == 0 && m_leftdrag_y_delta == 0 && m_rightdrag_x_delta == 0 )
+	{
+		m_arrow->ZeroASpeed();
+	}
 
     m_scenenodegraph.ComputeTransformations( m_tm );
 
@@ -190,7 +207,37 @@ void PlanetViewSubService::Run( void )
 
 
     char camera_distance_text[256];
-    sprintf( camera_distance_text, "Camera distance : %.2f km", m_camera_distance / 1000.0 );
+
+	if( m_current_camera == m_camera )
+	{
+		sprintf( camera_distance_text, "Camera distance : %.2f km", m_camera_distance / 1000.0 );
+	}
+	else if( m_current_camera == m_camera2 )
+	{
+		Matrix arrow_trans;
+		m_arrow_node->GetFinalTransform( arrow_trans );
+
+		Vector arrow_pos( arrow_trans( 3, 0 ), arrow_trans( 3, 1 ), arrow_trans( 3, 2 ), 1.0 );
+
+		dsreal distance = arrow_pos.Length();
+		dsreal altitude = ( distance / 1000.0 ) - m_planet_conf->m_planetRay.m_value;
+
+		dsreal relative_alt = ( distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) ) - 1.0;
+
+		if( altitude > 10.0 )
+		{
+			sprintf( camera_distance_text, "Altitude : %.3f km", altitude );
+		}
+		else
+		{
+			sprintf( camera_distance_text, "Altitude : %d m", (int)( altitude * 1000.0 ) );
+		}
+
+		//sprintf( camera_distance_text, "rel alt : %f", distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) );
+
+		m_rel_altitude = relative_alt;
+	}
+
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_CameraDistance", camera_distance_text );
 
     char working_set[64];
@@ -213,6 +260,7 @@ void PlanetViewSubService::Run( void )
 	m_mousewheel_delta = 0;
     m_leftdrag_y_delta = 0;
     m_leftdrag_x_delta = 0;
+	m_rightdrag_x_delta = 0;
 }
 
 void PlanetViewSubService::Release( void )
@@ -283,6 +331,10 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
 		{
             m_leftdrag_x_delta = p_dx;
             m_leftdrag_y_delta = p_dy;
+		}
+		else if( m_mouse_right )
+		{
+			m_rightdrag_x_delta = p_dx;
 		}
 	}
 
@@ -382,12 +434,14 @@ void PlanetViewSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
 
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
 
+	create_arrow_camera();
 	create_planet( m_planet_conf->m_planetName.m_value );
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
 }
 
 void PlanetViewSubService::Unactivate( void )
 {
+	destroy_arrow_camera();
 	destroy_planet( m_planet_conf->m_planetName.m_value );
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
 }
@@ -440,6 +494,56 @@ void PlanetViewSubService::init_passes( void )
     m_finalpass->GetRenderingQueue()->UpdateOutputQueue();
 }
 
+void PlanetViewSubService::create_arrow_camera( void )
+{
+	m_arrow_params.mass = 10.0;
+    m_arrow_params.shape_descr.shape = DrawSpace::Dynamics::Body::BOX_SHAPE;
+    m_arrow_params.shape_descr.box_dims = DrawSpace::Utils::Vector( 2.0, 2.0, 2.0, 1.0 );
+    m_arrow_params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
+
+    m_arrow = _DRAWSPACE_NEW_( DrawSpace::Dynamics::Rocket, DrawSpace::Dynamics::Rocket( &m_world, m_arrow_params ) );
+   
+    m_arrow_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::Rocket>, SceneNode<DrawSpace::Dynamics::Rocket>( "arrow_body" ) );
+    m_arrow_node->SetContent( m_arrow );
+
+    m_scenenodegraph.AddNode( m_arrow_node );
+    m_scenenodegraph.RegisterNode( m_arrow_node );
+
+
+    m_camera2 = _DRAWSPACE_NEW_( DrawSpace::Dynamics::CameraPoint, DrawSpace::Dynamics::CameraPoint );
+    m_camera2_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::CameraPoint>, SceneNode<DrawSpace::Dynamics::CameraPoint>( "camera2" ) );
+    m_camera2_node->SetContent( m_camera2 );
+
+	m_camera2->SetReferentBody( m_arrow );
+
+    m_scenenodegraph.RegisterNode( m_camera2_node );
+
+    m_camera2_node->LinkTo( m_arrow_node );
+
+	set_arrow_initial_attitude();
+
+	m_scenenodegraph.SetCurrentCamera( "camera2" );
+	m_current_camera = m_camera2;
+}
+
+void PlanetViewSubService::destroy_arrow_camera( void )
+{
+	m_scenenodegraph.SetCurrentCamera( "" );
+	m_current_camera = NULL;
+
+	m_scenenodegraph.UnregisterNode( m_camera2_node );
+	m_camera2_node->Unlink();
+
+	m_scenenodegraph.UnregisterNode( m_arrow_node );
+	m_scenenodegraph.RemoveNode( m_arrow_node );
+
+	_DRAWSPACE_DELETE_( m_camera2_node );
+	_DRAWSPACE_DELETE_( m_camera2 );
+	_DRAWSPACE_DELETE_( m_arrow_node );
+	_DRAWSPACE_DELETE_( m_arrow );
+}
+
+
 void PlanetViewSubService::create_camera( void )
 {
     m_camera = _DRAWSPACE_NEW_( DrawSpace::Dynamics::CameraPoint, DrawSpace::Dynamics::CameraPoint );
@@ -461,30 +565,6 @@ void PlanetViewSubService::create_camera( void )
     m_camera_node->LinkTo( m_camerapos_node );
 
 	//////////////////////////////////////////////////////////////////////
-
-    m_arrow_params.mass = 0.5;
-    m_arrow_params.shape_descr.shape = DrawSpace::Dynamics::Body::BOX_SHAPE;
-    m_arrow_params.shape_descr.box_dims = DrawSpace::Utils::Vector( 2.0, 2.0, 2.0, 1.0 );
-    m_arrow_params.initial_attitude.Translation( 0.0, 0.0, 5000000.0 );
-
-    m_arrow = _DRAWSPACE_NEW_( DrawSpace::Dynamics::Rocket, DrawSpace::Dynamics::Rocket( &m_world, m_arrow_params ) );
-   
-    m_arrow_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::Rocket>, SceneNode<DrawSpace::Dynamics::Rocket>( "arrow_body" ) );
-    m_arrow_node->SetContent( m_arrow );
-
-    m_scenenodegraph.AddNode( m_arrow_node );
-    m_scenenodegraph.RegisterNode( m_arrow_node );
-
-
-    m_camera2 = _DRAWSPACE_NEW_( DrawSpace::Dynamics::CameraPoint, DrawSpace::Dynamics::CameraPoint );
-    m_camera2_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::CameraPoint>, SceneNode<DrawSpace::Dynamics::CameraPoint>( "camera2" ) );
-    m_camera2_node->SetContent( m_camera2 );
-
-	m_camera2->SetReferentBody( m_arrow );
-
-    m_scenenodegraph.RegisterNode( m_camera2_node );
-
-    m_camera2_node->LinkTo( m_arrow_node );
 
 }
 
@@ -590,4 +670,12 @@ void PlanetViewSubService::SetCDLODInfos( DrawSpace::Interface::Module::Root* p_
     m_cdlodp_service = p_cdlodp_service;
 
     connect_keys( m_cdlodp_service );
+}
+
+void PlanetViewSubService::set_arrow_initial_attitude( void )
+{
+	Matrix mat;   
+    mat.Translation( 0.0, 0.0, 4000000.0 );
+
+	m_arrow->ForceInitialAttitude( mat );
 }
