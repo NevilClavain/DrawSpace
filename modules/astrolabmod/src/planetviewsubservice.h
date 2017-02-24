@@ -94,6 +94,8 @@ protected:
 
 	DrawSpace::Dynamics::CameraPoint*									m_current_camera;
 
+	bool																m_shift;
+
     void init_passes( void );
     void create_passes( void );
 

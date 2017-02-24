@@ -46,7 +46,8 @@ m_planet_conf( NULL ),
 m_mousewheel_delta( 0 ),
 m_leftdrag_x_delta( 0 ),
 m_leftdrag_y_delta( 0 ),
-m_rightdrag_x_delta( 0 )
+m_rightdrag_x_delta( 0 ),
+m_shift( false )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
 }
@@ -337,11 +338,27 @@ void PlanetViewSubService::ReleaseSceneNode( const dsstring& p_sceneNodeName, Dr
 
 void PlanetViewSubService::OnKeyPress( long p_key )
 {
+	switch( p_key )
+	{
+		case VK_SHIFT:
+
+			m_shift = true;
+			break;
+	}
+
     m_renderer->GUI_OnKeyDown( p_key );
 }
 
 void PlanetViewSubService::OnEndKeyPress( long p_key )
 {
+	switch( p_key )
+	{
+		case VK_SHIFT:
+
+			m_shift = false;
+			break;
+	}
+
     m_renderer->GUI_OnKeyUp( p_key );
 }
 
@@ -380,14 +397,29 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
 
 	if( m_current_camera == m_camera2 )
 	{
-		if( m_mouse_left )
+		if( m_shift )
 		{
-            m_leftdrag_x_delta = p_dx;
-            m_leftdrag_y_delta = p_dy;
+			if( m_mouse_left )
+			{
+				m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 0.5, m_tm );
+				m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 0.5, m_tm );
+			}
+			else if( m_mouse_right )
+			{
+				m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 0.5, m_tm );
+			}
 		}
-		else if( m_mouse_right )
+		else
 		{
-			m_rightdrag_x_delta = p_dx;
+			if( m_mouse_left )
+			{
+				m_leftdrag_x_delta = p_dx;
+				m_leftdrag_y_delta = p_dy;
+			}
+			else if( m_mouse_right )
+			{
+				m_rightdrag_x_delta = p_dx;
+			}		
 		}
 	}
 
