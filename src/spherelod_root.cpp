@@ -525,7 +525,6 @@ void Root::manage_camerapoints( void )
 				it->second.layers[i]->UpdateRelativeAlt( rel_alt );
 			}
         }
-        // les camera de type FREE ne sont jamais "hot", donc inutile de leur fournir l'altitude relative
         // les cameras de type INERTBODY_LINKED : l'altitude relative est deja fournie au layer via l'inertbody associe, dans manage_bodies()
     }
 }

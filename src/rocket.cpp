@@ -173,6 +173,10 @@ void Rocket::ZeroASpeed( void )
     m_rigidBody->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
 }
 
+void Rocket::ClearForces( void )
+{
+	m_rigidBody->clearForces();
+}
 
 void Rocket::ForceLinearSpeed( const DrawSpace::Utils::Vector& p_speed )
 {

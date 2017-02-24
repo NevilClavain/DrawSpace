@@ -132,7 +132,29 @@ dsreal PlanetViewSubService::compute_arrow_force( void )
 
 dsreal PlanetViewSubService::compute_arrow_torque( dsreal p_delta )
 {
-	return 55.0 * abs( p_delta ) * std::pow( m_rel_altitude, 0.28 );
+	dsreal torque;
+
+	if( m_rel_altitude < 0.10 )
+	{
+		torque = 2.0 * abs( p_delta );
+	}
+	else if( m_rel_altitude < 2.30 )
+	{
+		torque = 5.0 * abs( p_delta );
+	}
+	else if( m_rel_altitude < 3.20 )
+	{
+		torque = 7.0 * abs( p_delta );
+	}
+	else if( m_rel_altitude < 4.20 )
+	{
+		torque = 170.0 * abs( p_delta );
+	}
+	else
+	{
+		torque = 200.0 * abs( p_delta );
+	}
+	return torque;
 }
 
 
@@ -257,7 +279,7 @@ void PlanetViewSubService::Run( void )
 			sprintf( camera_distance_text, "Altitude : %d m", (int)( altitude * 1000.0 ) );
 		}
 
-		//sprintf( camera_distance_text, "rel alt : %f", distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) );
+		sprintf( camera_distance_text, "rel alt : %f", ( distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) ) - 1.0 );
 
 		m_rel_altitude = relative_alt;
 	}
