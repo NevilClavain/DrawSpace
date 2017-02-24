@@ -57,11 +57,6 @@ protected:
 
     DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
-    DrawSpace::Dynamics::CameraPoint*                                   m_camera;
-    DrawSpace::Core::SceneNode<DrawSpace::Dynamics::CameraPoint>*       m_camera_node;
-
-    DrawSpace::Core::Transformation*                                    m_camerapos;
-    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_camerapos_node;
 
 
     DrawSpace::Dynamics::CameraPoint*                                   m_camera2;
@@ -87,8 +82,6 @@ protected:
     bool                                                                m_mouse_left;
     bool                                                                m_mouse_right;
 
-    double                                                              m_camera_distance;
-
 	double																m_rel_altitude;
 
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
@@ -105,7 +98,6 @@ protected:
     void create_passes( void );
 
     void create_cubes( void );
-    void create_camera( void );
 
 	void create_arrow_camera( void );
 	void destroy_arrow_camera( void );
@@ -114,8 +106,6 @@ protected:
 	void destroy_planet(const dsstring& p_planetId);
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
-
-    void update_cameranodedistance( void );
 
 	dsreal compute_arrow_force( void );
 	dsreal compute_arrow_torque( dsreal p_delta );

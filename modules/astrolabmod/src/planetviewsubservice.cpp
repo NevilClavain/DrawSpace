@@ -41,7 +41,6 @@ m_mouse_left( false ),
 m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" ),
-m_camera_distance( 3000000.0 ),
 m_rel_altitude( 0.0 ),
 m_planet_conf( NULL ),
 m_mousewheel_delta( 0 ),
@@ -90,23 +89,12 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_calendar->RegisterWorld( &m_world );
 
     create_passes();
-    create_camera();
     create_cubes();
-
-    //m_scenenodegraph.SetCurrentCamera( "camera" );
-	//m_current_camera = m_camera;
-
-    //m_scenenodegraph.SetCurrentCamera( "camera2" );
-	//m_current_camera = m_camera2;
-
 
     m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
     m_cdlodplanet_texturepass = m_texturepass;
 
     init_passes();
-
-
-
 
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
 
@@ -271,12 +259,7 @@ void PlanetViewSubService::Run( void )
 
 
     char camera_distance_text[256];
-
-	if( m_current_camera == m_camera )
-	{
-		sprintf( camera_distance_text, "Camera distance : %.2f km", m_camera_distance / 1000.0 );
-	}
-	else if( m_current_camera == m_camera2 )
+	if( m_current_camera == m_camera2 )
 	{
 		Matrix arrow_trans;
 		m_arrow_node->GetFinalTransform( arrow_trans );
@@ -380,6 +363,7 @@ void PlanetViewSubService::OnChar( long p_char, long p_scan )
 
 void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
+	/*
 	if( m_current_camera == m_camera )
 	{
 		if( m_mouse_left )
@@ -392,7 +376,9 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
 			m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 0.5, m_tm );
 		}
 	}
-	else if( m_current_camera == m_camera2 )
+	else */
+
+	if( m_current_camera == m_camera2 )
 	{
 		if( m_mouse_left )
 		{
@@ -410,20 +396,7 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
 
 void PlanetViewSubService::OnMouseWheel( long p_delta )
 {
-	if( m_current_camera == m_camera )
-	{	
-		if( p_delta > 0 )
-		{
-			m_camera_distance -= 100000.0;
-		}
-		else
-		{
-			m_camera_distance += 100000.0;
-		}
-
-		update_cameranodedistance();
-	}
-	else if( m_current_camera == m_camera2 )
+	if( m_current_camera == m_camera2 )
 	{
 		if( p_delta > 0 )
 		{
@@ -434,15 +407,6 @@ void PlanetViewSubService::OnMouseWheel( long p_delta )
 			m_mousewheel_delta = -1;
 		}
 	}
-}
-
-void PlanetViewSubService::update_cameranodedistance( void )
-{
-    DrawSpace::Utils::Matrix camera_pos;
-    camera_pos.Translation( 0.0, 0.0, m_camera_distance );
-
-    m_camerapos->ClearAll();
-    m_camerapos->PushMatrix( camera_pos );
 }
 
 void PlanetViewSubService::OnMouseLeftButtonDown( long p_xm, long p_ym )
@@ -489,11 +453,6 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
 void PlanetViewSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
 {
 	m_planet_conf = p_planetConfig;
-
-    /// reset transformation
-
-    m_camera_distance = 3000.0 * 1000.0;
-    update_cameranodedistance();
 
     m_objectRot->Init( Vector( 0.0, 0.0, 0.0, 1.0 ) );
 
@@ -610,30 +569,6 @@ void PlanetViewSubService::destroy_arrow_camera( void )
 	_DRAWSPACE_DELETE_( m_arrow );
 }
 
-
-void PlanetViewSubService::create_camera( void )
-{
-    m_camera = _DRAWSPACE_NEW_( DrawSpace::Dynamics::CameraPoint, DrawSpace::Dynamics::CameraPoint );
-    m_camera_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::CameraPoint>, SceneNode<DrawSpace::Dynamics::CameraPoint>( "camera" ) );
-    m_camera_node->SetContent( m_camera );
-
-    m_scenenodegraph.RegisterNode( m_camera_node );
-   
-    m_camerapos = _DRAWSPACE_NEW_( DrawSpace::Core::Transformation, DrawSpace::Core::Transformation );
-    m_camerapos_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Core::Transformation>, SceneNode<DrawSpace::Core::Transformation>( "camera_pos" ) );
-
-    m_camerapos_node->SetContent( m_camerapos );
-
-    update_cameranodedistance();
-
-    m_scenenodegraph.AddNode( m_camerapos_node );
-    m_scenenodegraph.RegisterNode( m_camerapos_node );
-
-    m_camera_node->LinkTo( m_camerapos_node );
-
-	//////////////////////////////////////////////////////////////////////
-
-}
 
 void PlanetViewSubService::create_planet( const dsstring& p_planetId )
 {   
