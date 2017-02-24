@@ -134,21 +134,33 @@ dsreal PlanetViewSubService::compute_arrow_torque( dsreal p_delta )
 {
 	dsreal torque;
 
-	if( m_rel_altitude < 0.10 )
+	if( m_rel_altitude < 0.05 )
 	{
-		torque = 2.0 * abs( p_delta );
+		torque = 30.0 * abs( p_delta );
 	}
-	else if( m_rel_altitude < 2.30 )
+	else if( m_rel_altitude < 0.10 )
 	{
-		torque = 5.0 * abs( p_delta );
+		torque = 50.0 * abs( p_delta );
 	}
-	else if( m_rel_altitude < 3.20 )
+	else if( m_rel_altitude < 0.16 )
 	{
-		torque = 7.0 * abs( p_delta );
+		torque = 85.0 * abs( p_delta );
+	}
+	else if( m_rel_altitude < 0.28 )
+	{
+		torque = 110.0 * abs( p_delta );
+	}
+	else if( m_rel_altitude < 0.45 )
+	{
+		torque = 130.0 * abs( p_delta );
+	}	
+	else if( m_rel_altitude < 3.0 )
+	{
+		torque = 144.0 * abs( p_delta );
 	}
 	else if( m_rel_altitude < 4.20 )
 	{
-		torque = 170.0 * abs( p_delta );
+		torque = 160.0 * abs( p_delta );
 	}
 	else
 	{
@@ -187,30 +199,36 @@ void PlanetViewSubService::Run( void )
 
     if( m_leftdrag_y_delta > 0 )
     {
+		m_arrow->ZeroASpeed();
         m_arrow->ApplyDownPitch( compute_arrow_torque( m_leftdrag_y_delta ) );
     }
     else if( m_leftdrag_y_delta < 0 )
     {
+		m_arrow->ZeroASpeed();
         m_arrow->ApplyUpPitch( compute_arrow_torque( m_leftdrag_y_delta ) );
     }
 
 
     if( m_leftdrag_x_delta > 0 )
     {
+		m_arrow->ZeroASpeed();
         m_arrow->ApplyLeftYaw( compute_arrow_torque( m_leftdrag_x_delta ) );
     }
     else if( m_leftdrag_x_delta < 0 )
     {
+		m_arrow->ZeroASpeed();
         m_arrow->ApplyRightYaw( compute_arrow_torque( m_leftdrag_x_delta ) );
     }
 
 
 	if( m_rightdrag_x_delta < 0 )
 	{
+		m_arrow->ZeroASpeed();
 		m_arrow->ApplyLeftRoll( 8.0 * compute_arrow_torque( m_rightdrag_x_delta ) );
 	}
 	else if( m_rightdrag_x_delta > 0 )
 	{
+		m_arrow->ZeroASpeed();
 		m_arrow->ApplyRightRoll( 8.0 * compute_arrow_torque( m_rightdrag_x_delta ) );
 	}
 
@@ -279,7 +297,7 @@ void PlanetViewSubService::Run( void )
 			sprintf( camera_distance_text, "Altitude : %d m", (int)( altitude * 1000.0 ) );
 		}
 
-		sprintf( camera_distance_text, "rel alt : %f", ( distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) ) - 1.0 );
+		//sprintf( camera_distance_text, "rel alt : %f", ( distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) ) - 1.0 );
 
 		m_rel_altitude = relative_alt;
 	}
