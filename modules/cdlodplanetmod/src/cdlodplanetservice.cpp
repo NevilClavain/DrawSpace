@@ -470,12 +470,15 @@ void CDLODPlanetService::Release( void )
 
 DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
-    PlanetEntry pe;
+    PlanetInstance pe;
 
 	if( m_nodes_config.count( p_sceneNodeName ) )
 	{
 		// une config de node est associée
 		pe.node_config = &m_nodes_config[p_sceneNodeName];
+
+		// pour permettre la mise à jour de parametres "hot"
+		m_nodes_config[p_sceneNodeName].SetOwner( &pe );
 	}
 	else
 	{
@@ -606,6 +609,8 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 
 	p_calendar->RegisterWorld( pe.planet->GetWorld() );
 
+	pe.planet->SetGravityState( pe.node_config->m_gravityEnabled.m_value );
+
     m_nodes[p_sceneNodeName] = pe;
     return pe.planet_node;
 }
@@ -630,7 +635,7 @@ void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName, Draw
 {
     if( m_nodes.count( p_sceneNodeName ) )
     {	
-		PlanetEntry pe = m_nodes[p_sceneNodeName];
+		PlanetInstance pe = m_nodes[p_sceneNodeName];
 
 		p_calendar->UnregisterWorld( pe.planet->GetWorld() );
 
@@ -664,3 +669,18 @@ DrawSpace::Module::KeysLinkTable* CDLODPlanetService::AddSceneNodeConfig( const 
 	return &m_nodes_config[p_sceneNodeName].m_keylinksTable;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void PlanetInstance::OnGravityEnabledUpdate( bool p_value )
+{
+	planet->SetGravityState( p_value );
+}
+
+void GravityEnabledParam::OnUpdated( bool p_val )
+{
+	m_value = p_val;
+	if( m_owner )
+	{
+		m_owner->OnGravityEnabledUpdate( m_value );
+	}
+}

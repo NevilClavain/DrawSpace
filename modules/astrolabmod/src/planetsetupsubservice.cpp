@@ -264,6 +264,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
             m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetRay );
 			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsVertexShader );
 			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsPixelShader );
+			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_gravityEnabled );
 
 			// store planet unique name (also used as scenegraph node id)
 			m_nodes_config[node_name].m_planetName = node_name;
@@ -271,6 +272,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
             m_nodes_config[node_name].m_planetRay = 500.0;
 			m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
 			m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
+			m_nodes_config[node_name].m_gravityEnabled = false;
 
             update_listbox();
         }

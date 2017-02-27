@@ -51,7 +51,9 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-class RealParam : public DrawSpace::Module::KeySink <dsreal>
+class PlanetInstance;
+
+class RealParam : public DrawSpace::Module::KeySink<dsreal>
 {
 public:
 	dsreal			m_value;
@@ -66,7 +68,7 @@ public:
     }
 };
 
-class StringParam : public DrawSpace::Module::KeySink <dsstring>
+class StringParam : public DrawSpace::Module::KeySink<dsstring>
 {
 public:
 	dsstring		m_value;
@@ -78,6 +80,27 @@ public:
 	virtual void OnUpdated( dsstring p_val )
 	{
 		m_value = p_val;
+	}
+};
+
+class GravityEnabledParam : public DrawSpace::Module::KeySink<bool>
+{
+protected:
+
+	PlanetInstance*	m_owner;
+
+public:
+	bool			m_value;
+
+	GravityEnabledParam( const dsstring& p_id ) : KeySink( p_id ),
+	m_owner( NULL )
+	{
+	}
+
+	virtual void OnUpdated( bool p_val );
+	virtual void SetOwner( PlanetInstance* p_owner )
+	{
+		m_owner = p_owner;
 	}
 };
 
@@ -209,68 +232,83 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+class PlanetSceneNodeConfig
+{
+public:
+	/////////////////--*- ENSEMBLE DES PARAMETRES PLANETE -*-- ////////////////////
+
+	StringParam							m_planetName;
+
+	RealParam                           m_planetRay;
+
+	StringParam							m_detailsVertexShader;
+	StringParam							m_detailsPixelShader;
+
+	GravityEnabledParam					m_gravityEnabled;
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	DrawSpace::Module::KeysLinkTable    m_keylinksTable;
+
+public:
+
+	PlanetSceneNodeConfig( void ) :
+	m_planetName( "planetName" ),
+	m_planetRay("planetRay"),
+	m_detailsVertexShader( "detailsVertexShader" ),
+	m_detailsPixelShader( "detailsPixelShader" ),
+	m_gravityEnabled( "gravityEnabled" )
+	{
+		m_keylinksTable.RegisterModuleKey( &m_planetName );
+		m_keylinksTable.RegisterModuleKey( &m_planetRay );
+		m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
+		m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );
+		m_keylinksTable.RegisterModuleKey( &m_gravityEnabled );
+	}
+
+	virtual void SetOwner( PlanetInstance* p_owner )
+	{
+		m_gravityEnabled.SetOwner( p_owner );
+	}
+};
+
+class PlanetInstance
+{
+
+public:
+    DrawSpace::SphericalLOD::Config                                 config;
+
+	PlanetDetailsBinder*                                            planet_details_binder[6];
+	PlanetClimateBinder*											planet_climate_binder[6];
+
+    DrawSpace::Core::Fx*                                            details_fx;
+	DrawSpace::Core::Fx*                                            climate_fx;
+
+	DrawSpace::Core::Shader*                                        climate_vshader;
+	DrawSpace::Core::Shader*                                        climate_pshader;
+
+    DrawSpace::Core::Shader*                                        planet_vshader;
+    DrawSpace::Core::Shader*                                        planet_pshader;
+
+	DrawSpace::Core::Texture*										texture_th_pixels;
+	DrawSpace::Core::Texture*										texture_th_splatting;
+
+    DrawSpace::SphericalLOD::Root*                                  planet;
+    DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*      planet_node;
+
+	PlanetSceneNodeConfig*											node_config;
+
+public:
+	void OnGravityEnabledUpdate( bool p_value );
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDLODPlanetService : public DrawSpace::Interface::Module::Service
 {
 protected:
-
-	class PlanetSceneNodeConfig
-	{
-	public:
-		/////////////////--*- ENSEMBLE DES PARAMETRES PLANETE -*-- ////////////////////
-
-		StringParam							m_planetName;
-
-		RealParam                           m_planetRay;
-
-		StringParam							m_detailsVertexShader;
-		StringParam							m_detailsPixelShader;
-
-		////////////////////////////////////////////////////////////////////////////////
-
-		DrawSpace::Module::KeysLinkTable    m_keylinksTable;
-
-	public:
-
-		PlanetSceneNodeConfig( void ) :
-		m_planetName( "planetName" ),
-		m_planetRay("planetRay"),
-		m_detailsVertexShader( "detailsVertexShader" ),
-		m_detailsPixelShader( "detailsPixelShader" )
-		{
-			m_keylinksTable.RegisterModuleKey( &m_planetName );
-			m_keylinksTable.RegisterModuleKey( &m_planetRay );
-			m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
-			m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );
-		}
-	};
-
-    typedef struct
-    {
-        DrawSpace::SphericalLOD::Config                                 config;
-
-        //SimpleColorBinder*                                              simplebinder[6];
-
-		PlanetDetailsBinder*                                            planet_details_binder[6];
-		PlanetClimateBinder*											planet_climate_binder[6];
-
-        DrawSpace::Core::Fx*                                            details_fx;
-		DrawSpace::Core::Fx*                                            climate_fx;
-
-		DrawSpace::Core::Shader*                                        climate_vshader;
-		DrawSpace::Core::Shader*                                        climate_pshader;
-
-        DrawSpace::Core::Shader*                                        planet_vshader;
-        DrawSpace::Core::Shader*                                        planet_pshader;
-
-		DrawSpace::Core::Texture*										texture_th_pixels;
-		DrawSpace::Core::Texture*										texture_th_splatting;
-
-        DrawSpace::SphericalLOD::Root*                                  planet;
-        DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*      planet_node;
-
-		PlanetSceneNodeConfig*											node_config;
-
-    } PlanetEntry;
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
@@ -290,7 +328,7 @@ protected:
 	std::map<dsstring, PlanetSceneNodeConfig>							m_nodes_config;
 
 	// liste des instances scenenodes planetes
-    std::map<dsstring, PlanetEntry>                                     m_nodes;
+    std::map<dsstring, PlanetInstance>									m_nodes;
 
 
 public:

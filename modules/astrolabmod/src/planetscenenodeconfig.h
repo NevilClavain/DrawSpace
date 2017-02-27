@@ -35,6 +35,7 @@ public:
 	DrawSpace::Module::KeySource<dsreal>            m_planetRay;
 	DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
 	DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
+	DrawSpace::Module::KeySource<bool>				m_gravityEnabled;
 
 	//////////////////////////////////////////////////////////////////
 
@@ -42,11 +43,12 @@ public:
 
 public:
 
-	PlanetSceneNodeConfig(void) :
-		m_planetName("planetName"),
-		m_planetRay("planetRay"),
-		m_detailsVertexShader("detailsVertexShader"),
-		m_detailsPixelShader("detailsPixelShader")
+	PlanetSceneNodeConfig( void ) :
+		m_planetName( "planetName" ),
+		m_planetRay( "planetRay" ),
+		m_detailsVertexShader( "detailsVertexShader" ),
+		m_detailsPixelShader( "detailsPixelShader" ),
+		m_gravityEnabled( "gravityEnabled" )
 	{
 	}
 };
