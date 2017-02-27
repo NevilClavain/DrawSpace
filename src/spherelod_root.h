@@ -166,7 +166,7 @@ public:
 
     bool                                GetInertBodyRelativeAltitude( DrawSpace::Dynamics::InertBody* p_body, dsreal& p_rel_altitude );
     bool                                GetCameraRelativeAltitude( const dsstring& p_cameraName, dsreal& p_rel_altitude );
-
+    dsreal                              GetAnyCameraRelativeAltitude( const dsstring& p_cameraName );
     void                                DrawSubPasses( void );
 
 

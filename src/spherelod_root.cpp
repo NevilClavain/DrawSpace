@@ -689,6 +689,48 @@ bool Root::GetCameraRelativeAltitude( const dsstring& p_cameraName, dsreal& p_re
     return false;
 }
 
+dsreal Root::GetAnyCameraRelativeAltitude( const dsstring& p_cameraName )
+{
+    if( m_registered_camerapoints.count( p_cameraName ) > 0 )
+    {
+        RegisteredCamera entry = m_registered_camerapoints[p_cameraName];
+        dsreal rel_alt;
+
+        if( entry.type == FREE || entry.type == FREE_ON_PLANET )
+        {            
+            if( GetCameraRelativeAltitude( p_cameraName, rel_alt ) )
+            {
+                return rel_alt;
+            }
+            else
+            {
+                 _DSEXCEPTION( "Cannot retrieve relative alt for camera : " + p_cameraName );
+            }
+        }
+        else if( entry.type == INERTBODY_LINKED )
+        {
+            InertBody* inert_body = entry.attached_body;
+
+            if( GetInertBodyRelativeAltitude( inert_body, rel_alt ) )
+            {
+                return rel_alt;
+            }
+            else
+            {
+                _DSEXCEPTION( "Cannot retrieve relative alt for camera : " + p_cameraName );
+            }
+        }
+        else
+        {
+            _DSEXCEPTION( "Unknown camera type : " + p_cameraName );
+        }
+    }
+    else
+    {
+        _DSEXCEPTION( "Unknown camera : " + p_cameraName );
+    }
+}
+
 void Root::ResetRegisteredBodyLayer( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index )
 {
     if( m_registered_bodies.count( p_body ) > 0 )

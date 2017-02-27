@@ -450,14 +450,37 @@ void CDLODPlanetService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val
 
 void CDLODPlanetService::Run( void )
 {
+
+    dsstring camera_name;
+    m_scenenodegraph->GetCurrentCameraName( camera_name );
+
     for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        dsreal view_rel_alt = it->second.planet->GetAnyCameraRelativeAltitude( camera_name );
+        if( view_rel_alt < ZBUFFER_ACTIVATION_REL_ALT )
+        {
+            it->second.details_fx->UpdateRenderStateIn( 0, DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+        }
+        else
+        {
+            it->second.details_fx->UpdateRenderStateIn( 0, DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         it->second.planet->DrawSubPasses();
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		for (int i = 0; i < 6; i++)
 		{
 			it->second.planet_details_binder[i]->Update();
 		}
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     }
 
 	m_tm.Update();
