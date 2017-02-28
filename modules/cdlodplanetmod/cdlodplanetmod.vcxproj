@@ -106,10 +106,16 @@ copy .\..\..\shaders_bank\hlsl_4_0\planet_surface.vso .\..\..\..\Drawspace_sampl
     <ClCompile Include="src\cdlodplanetroot.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\cdlodplanetservice.cpp" />
+    <ClCompile Include="src\multifractalbinder.cpp" />
+    <ClCompile Include="src\planetdetailsbinder.cpp" />
+    <ClCompile Include="src\planetclimatebinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\cdlodplanetroot.h" />
     <ClInclude Include="src\cdlodplanetservice.h" />
+    <ClInclude Include="src\multifractalbinder.h" />
+    <ClInclude Include="src\planetclimatebinder.h" />
+    <ClInclude Include="src\planetdetailsbinder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\shaders\hlsl_3_0\planet_ht.psh" />

@@ -10,6 +10,15 @@
     <ClCompile Include="src\cdlodplanetroot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\multifractalbinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\planetdetailsbinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\planetclimatebinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -27,6 +36,15 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\cdlodplanetroot.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\multifractalbinder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\planetclimatebinder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\planetdetailsbinder.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,0 +1,74 @@
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+
+#ifndef _MULTIFRACTALBINDER_H_
+#define _MULTIFRACTALBINDER_H_
+
+#include "drawspace.h"
+
+#define PLANET_ATMO_THICKNESS               12000.0
+#define ATMO_SCATTERING_SPACE_GROUND_LIMIT  70000.0
+#define FOG_ALT_LIMIT                       10000.0
+#define ATMO_SCATTERING_ALPHA_ALT_VIEWER    75000.0
+#define FLAT_CLOUDS_ALT                     3300.0
+#define VOLUMETRIC_CLOUDS_DISTANCE_CLIP     60000.0
+#define VOLUMETRIC_CLOUDS_ALT               2400.0
+#define VOLUMETRIC_CLOUDS_MIN_SPEED_DEG_S   0.003
+#define VOLUMETRIC_CLOUDS_MAX_SPEED_DEG_S   0.004
+#define PLAINS_AMPLITUDE                    50.0
+#define MOUNTAINS_AMPLITUDE                 800.0
+#define MOUNTAINS_OFFSET                    -120.0
+#define VERTICAL_OFFSET                     0.0
+#define TEMP_DEC_PER_KM                     66.0
+#define BEACH_LIMIT                         25.0
+#define CLOUDS_PROCEDURALRULES_FILE         "planet_clouds_small_small.rules"
+#define CLOUDS_HEIGHT                       750.0
+#define CLOUDS_FOG_DENSITY                  0.000045
+#define FOG_DENSITY                         0.00050
+#define ZBUFFER_ACTIVATION_REL_ALT          1.0099
+#define TERRAIN_BUMP_FACTOR                 10.0
+#define NB_LOD_FREECAMERAS                  14
+#define NB_LOD_INERTBODIES                  15
+
+class MultiFractalBinder : public DrawSpace::SphericalLOD::Binder
+{
+public:
+
+	dsreal                                  m_plains_amplitude;
+	dsreal                                  m_mountains_amplitude;
+	dsreal                                  m_vertical_offset;
+	dsreal                                  m_mountains_offset;
+
+	dsreal                                  m_plains_seed1;
+	dsreal                                  m_plains_seed2;
+	dsreal                                  m_mix_seed1;
+	dsreal                                  m_mix_seed2;
+
+public:
+
+	MultiFractalBinder(void);
+
+	virtual void Bind(void);
+	virtual void Unbind(void);
+};
+
+#endif

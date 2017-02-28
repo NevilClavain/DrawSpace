@@ -24,8 +24,9 @@
 #define _CDLODPLANETSERVICE_H_
 
 #include "module_service.h"
-#include "drawspace.h"
-
+#include "multifractalbinder.h"
+#include "planetclimatebinder.h"
+#include "planetdetailsbinder.h"
 
 class CDLODPlanetService;
 
@@ -107,127 +108,8 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-class SimpleColorBinder : public DrawSpace::SphericalLOD::Binder
-{
-protected:
-public:
-
-    SimpleColorBinder( void );
-
-    virtual void Bind( void );
-    virtual void Unbind( void );
-};
-
-class MultiFractalBinder : public DrawSpace::SphericalLOD::Binder
-{
-public:
-
-	dsreal                                  m_plains_amplitude;
-	dsreal                                  m_mountains_amplitude;
-	dsreal                                  m_vertical_offset;
-	dsreal                                  m_mountains_offset;
-
-	dsreal                                  m_plains_seed1;
-	dsreal                                  m_plains_seed2;
-	dsreal                                  m_mix_seed1;
-	dsreal                                  m_mix_seed2;
-
-public:
-
-	MultiFractalBinder(void);
-
-	virtual void Bind(void);
-	virtual void Unbind(void);
-};
-
-class PlanetClimateBinder : public MultiFractalBinder
-{
-protected:
-
-public:
-
-	PlanetClimateBinder( void );
-
-	virtual void Bind( void );
-	virtual void Unbind( void );
-};
-
-class PlanetLight
-{
-public:
-
-	PlanetLight(void) :
-		m_enable(false)
-	{
-	};
 
 
-	bool														m_enable;
-	DrawSpace::Utils::Vector									m_color;
-	DrawSpace::Utils::Vector									m_dir;
-	DrawSpace::Utils::Vector									m_local_dir;
-
-};
-
-class PlanetDetailsBinder : public MultiFractalBinder
-{
-protected:
-
-	dsreal														m_innerRadius;
-	dsreal														m_outerRadius;
-	DrawSpace::Utils::Vector									m_waveLength;
-	dsreal														m_kr;
-	dsreal														m_km;
-	dsreal														m_scaleDepth;
-
-	dsreal														m_skyfromspace_ESun;
-	dsreal														m_skyfromatmo_ESun;
-	dsreal														m_groundfromspace_ESun;
-	dsreal														m_groundfromatmo_ESun;
-
-	DrawSpace::Utils::Vector									m_atmo_scattering_flags0;
-	DrawSpace::Utils::Vector									m_atmo_scattering_flags1;
-	DrawSpace::Utils::Vector									m_atmo_scattering_flags2;
-	DrawSpace::Utils::Vector									m_atmo_scattering_flags3;
-	DrawSpace::Utils::Vector									m_atmo_scattering_flags4;
-	DrawSpace::Utils::Vector									m_atmo_scattering_flags5;
-	DrawSpace::Utils::Vector									m_atmo_scattering_flags6;
-
-
-	DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>* m_planet_node;
-
-	bool														m_ambient;
-	DrawSpace::Utils::Vector									m_ambient_color;
-
-	PlanetLight													m_lights[3];
-
-	DrawSpace::Utils::Matrix									m_planet_final_transform_rots;
-
-	bool														m_mirror_mode;
-
-	dsreal														m_ocean_details_alt;
-	dsreal														m_terrain_bump_factor;
-
-public:
-
-	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness );
-
-	virtual void Bind( void );
-	virtual void Unbind( void );
-
-	void SetPlanetNode( DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>* p_planet_node );
-
-	void Update( void );
-
-	void SetMirrorMode( bool p_state )
-	{
-		m_mirror_mode = p_state;
-	}
-
-	dsreal GetOceansDetailsAlt( void) { return m_ocean_details_alt; };
-
-	PlanetLight GetLight( int p_index ) { return m_lights[p_index]; };
-};
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
