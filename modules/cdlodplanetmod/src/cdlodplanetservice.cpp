@@ -100,9 +100,6 @@ void CDLODPlanetService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val
     m_texturepass = p_val;
 }
 
-
-
-
 void CDLODPlanetService::Run( void )
 {
 
@@ -165,8 +162,6 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 
 	for (int i = 0; i < 6; i++)
 	{
-		//pe.simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
-
 		pe.m_planet_details_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( pe.m_node_config->m_planetRay.m_value * 1000.0, PLANET_ATMO_THICKNESS ) );
 		pe.m_planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder );
     }
@@ -347,18 +342,4 @@ DrawSpace::Module::KeysLinkTable* CDLODPlanetService::AddSceneNodeConfig( const 
 	return &m_nodes_config[p_sceneNodeName].m_keylinksTable;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void PlanetInstance::OnGravityEnabledUpdate( bool p_value )
-{
-	m_planet_root->SetGravityState( p_value );
-}
-
-void GravityEnabledParam::OnUpdated( bool p_val )
-{
-	m_value = p_val;
-	if( m_owner )
-	{
-		m_owner->OnGravityEnabledUpdate( m_value );
-	}
-}
