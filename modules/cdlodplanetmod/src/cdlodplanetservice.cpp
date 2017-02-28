@@ -458,25 +458,25 @@ void CDLODPlanetService::Run( void )
     {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        dsreal view_rel_alt = it->second.planet->GetAnyCameraRelativeAltitude( camera_name );
+        dsreal view_rel_alt = it->second.m_planet_root->GetAnyCameraRelativeAltitude( camera_name );
         if( view_rel_alt < ZBUFFER_ACTIVATION_REL_ALT )
         {
-            it->second.details_fx->UpdateRenderStateIn( 0, DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+            it->second.m_details_fx->UpdateRenderStateIn( 0, DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
         }
         else
         {
-            it->second.details_fx->UpdateRenderStateIn( 0, DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+            it->second.m_details_fx->UpdateRenderStateIn( 0, DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        it->second.planet->DrawSubPasses();
+        it->second.m_planet_root->DrawSubPasses();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		for (int i = 0; i < 6; i++)
 		{
-			it->second.planet_details_binder[i]->Update();
+			it->second.m_planet_details_binder[i]->Update();
 		}
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -498,7 +498,7 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 	if( m_nodes_config.count( p_sceneNodeName ) )
 	{
 		// une config de node est associée
-		pe.node_config = &m_nodes_config[p_sceneNodeName];
+		pe.m_node_config = &m_nodes_config[p_sceneNodeName];
 
 		// pour permettre la mise à jour de parametres "hot"
 		m_nodes_config[p_sceneNodeName].SetOwner( &pe );
@@ -512,84 +512,84 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 	{
 		//pe.simplebinder[i] = _DRAWSPACE_NEW_( SimpleColorBinder, SimpleColorBinder );
 
-		pe.planet_details_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( pe.node_config->m_planetRay.m_value * 1000.0, PLANET_ATMO_THICKNESS ) );
-		pe.planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder );
+		pe.m_planet_details_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( pe.m_node_config->m_planetRay.m_value * 1000.0, PLANET_ATMO_THICKNESS ) );
+		pe.m_planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder );
     }
 
-	pe.planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( pe.node_config->m_detailsVertexShader.m_value, true ) );
-	pe.planet_pshader = _DRAWSPACE_NEW_( Shader, Shader( pe.node_config->m_detailsPixelShader.m_value, true ) );
+	pe.m_planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( pe.m_node_config->m_detailsVertexShader.m_value, true ) );
+	pe.m_planet_pshader = _DRAWSPACE_NEW_( Shader, Shader( pe.m_node_config->m_detailsPixelShader.m_value, true ) );
 
-	pe.texture_th_pixels = _DRAWSPACE_NEW_( Texture, Texture( "earth_th_pixels_16.jpg" ) );
-	pe.texture_th_splatting = _DRAWSPACE_NEW_( Texture, Texture( "earth_th_splatting_16.jpg" ) );
+	pe.m_texture_th_pixels = _DRAWSPACE_NEW_( Texture, Texture( "earth_th_pixels_16.jpg" ) );
+	pe.m_texture_th_splatting = _DRAWSPACE_NEW_( Texture, Texture( "earth_th_splatting_16.jpg" ) );
 
 	// chargement des medias; TODO : verifier le status retour de chaque LoadFromFile();
-	pe.texture_th_pixels->LoadFromFile();
-	pe.texture_th_splatting->LoadFromFile();
-	pe.planet_vshader->LoadFromFile();
-	pe.planet_pshader->LoadFromFile();
+	pe.m_texture_th_pixels->LoadFromFile();
+	pe.m_texture_th_splatting->LoadFromFile();
+	pe.m_planet_vshader->LoadFromFile();
+	pe.m_planet_pshader->LoadFromFile();
 
 
-	pe.details_fx = _DRAWSPACE_NEW_( Fx, Fx );
+	pe.m_details_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
-    pe.details_fx->AddShader( pe.planet_vshader );
-    pe.details_fx->AddShader( pe.planet_pshader );
+    pe.m_details_fx->AddShader( pe.m_planet_vshader );
+    pe.m_details_fx->AddShader( pe.m_planet_pshader );
 
-    pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
-    //pe.details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    pe.m_details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    pe.m_details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    pe.m_details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
+    //pe.m_details_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
 
-    pe.details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    pe.details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
-    pe.details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
-    //pe.details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+    pe.m_details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    pe.m_details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+    pe.m_details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
+    //pe.m_details_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
 
 
-    pe.details_fx->SetRenderStateUniqueQueueID( p_sceneNodeName ); // parce qu'on va updater le renderstate ENABLEZBUFFER pendant le rendu
+    pe.m_details_fx->SetRenderStateUniqueQueueID( p_sceneNodeName ); // parce qu'on va updater le renderstate ENABLEZBUFFER pendant le rendu
 
     for( int i = 0; i < 6; i++ )
     {
-		pe.planet_details_binder[i]->SetFx( pe.details_fx );
+		pe.m_planet_details_binder[i]->SetFx( pe.m_details_fx );
 
-		pe.planet_details_binder[i]->SetTexture( pe.texture_th_pixels, 0 );
-		pe.planet_details_binder[i]->SetTexture( pe.texture_th_splatting, 1 );
+		pe.m_planet_details_binder[i]->SetTexture( pe.m_texture_th_pixels, 0 );
+		pe.m_planet_details_binder[i]->SetTexture( pe.m_texture_th_splatting, 1 );
     }
 
-	pe.climate_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.vso", true ) );
-	pe.climate_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.pso", true ) );
+	pe.m_climate_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.vso", true ) );
+	pe.m_climate_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.pso", true ) );
 
-	pe.climate_vshader->LoadFromFile();
-	pe.climate_pshader->LoadFromFile();
+	pe.m_climate_vshader->LoadFromFile();
+	pe.m_climate_pshader->LoadFromFile();
 
-	pe.climate_fx = _DRAWSPACE_NEW_( Fx, Fx );
-	pe.climate_fx->AddShader( pe.climate_vshader );
-	pe.climate_fx->AddShader( pe.climate_pshader );
+	pe.m_climate_fx = _DRAWSPACE_NEW_( Fx, Fx );
+	pe.m_climate_fx->AddShader( pe.m_climate_vshader );
+	pe.m_climate_fx->AddShader( pe.m_climate_pshader );
     
-	pe.climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
-    //pe.climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    pe.climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+	pe.m_climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
+    //pe.m_climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    pe.m_climate_fx->AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
 
-	pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
-    //pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    pe.climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+	pe.m_climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
+    //pe.m_climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    pe.m_climate_fx->AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
     
 
 	for (int i = 0; i < 6; i++)
 	{
-		pe.planet_climate_binder[i]->SetFx( pe.climate_fx );
+		pe.m_planet_climate_binder[i]->SetFx( pe.m_climate_fx );
 	}
 
     for( int i = 0; i < 6; i++ )
     {
-		pe.planet_details_binder[i]->SetRenderer( m_renderer );
-		pe.planet_climate_binder[i]->SetRenderer( m_renderer );
+		pe.m_planet_details_binder[i]->SetRenderer( m_renderer );
+		pe.m_planet_climate_binder[i]->SetRenderer( m_renderer );
     }
 
 
-    pe.config.m_lod0base = 19000.0;
-    pe.config.m_ground_layer = 0;
-    pe.config.m_nbLODRanges_inertBodies = NB_LOD_INERTBODIES;
-    pe.config.m_nbLODRanges_freeCameras = NB_LOD_FREECAMERAS;
+    pe.m_config.m_lod0base = 19000.0;
+    pe.m_config.m_ground_layer = 0;
+    pe.m_config.m_nbLODRanges_inertBodies = NB_LOD_INERTBODIES;
+    pe.m_config.m_nbLODRanges_freeCameras = NB_LOD_FREECAMERAS;
 
 
 
@@ -598,51 +598,51 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     planet_surface.enable_datatextures = true;
     planet_surface.enable_lod = true;
     planet_surface.min_lodlevel = 0;
-	planet_surface.ray = pe.node_config->m_planetRay.m_value; //PLANET_RAY;
+	planet_surface.ray = pe.m_node_config->m_planetRay.m_value; //PLANET_RAY;
     for( int i = 0; i < 6; i++ )
     {
         planet_surface.groundCollisionsBinder[i] = NULL;
-		planet_surface.patchTexturesBinder[i] = pe.planet_climate_binder[i];
+		planet_surface.patchTexturesBinder[i] = pe.m_planet_climate_binder[i];
     }
 
-    pe.config.m_layers_descr.push_back( planet_surface );
+    pe.m_config.m_layers_descr.push_back( planet_surface );
 
 
-	pe.planet = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( p_sceneNodeName, /*PLANET_RAY*/pe.node_config->m_planetRay.m_value, &m_tm, pe.config ) );
+	pe.m_planet_root = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( p_sceneNodeName, /*PLANET_RAY*/pe.m_node_config->m_planetRay.m_value, &m_tm, pe.m_config ) );
 
     for( int i = 0; i < 6; i++ )
     {
-		pe.planet->RegisterSinglePassSlot( m_texturepass, pe.planet_details_binder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_SKIRT_MESHE, 0, 2000 );
+		pe.m_planet_root->RegisterSinglePassSlot( m_texturepass, pe.m_planet_details_binder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_SKIRT_MESHE, 0, 2000 );
     }
 
 
     // temp
-    pe.planet->SetOrbitDuration( 0.333 );
-    pe.planet->SetRevolutionTiltAngle( 0.0 );    
-    pe.planet->SetRevolutionDuration( 1.0 );
+    pe.m_planet_root->SetOrbitDuration( 0.333 );
+    pe.m_planet_root->SetRevolutionTiltAngle( 0.0 );    
+    pe.m_planet_root->SetRevolutionDuration( 1.0 );
     
 
-    pe.planet_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::SphericalLOD::Root>, SceneNode<DrawSpace::SphericalLOD::Root>( p_sceneNodeName ) );
-    pe.planet_node->SetContent( pe.planet );
+    pe.m_planet_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::SphericalLOD::Root>, SceneNode<DrawSpace::SphericalLOD::Root>( p_sceneNodeName ) );
+    pe.m_planet_node->SetContent( pe.m_planet_root );
 
 	for (int i = 0; i < 6; i++)
 	{
-		pe.planet_details_binder[i]->SetPlanetNode( pe.planet_node );
+		pe.m_planet_details_binder[i]->SetPlanetNode( pe.m_planet_node );
 	}
 
-	p_calendar->RegisterWorld( pe.planet->GetWorld() );
+	p_calendar->RegisterWorld( pe.m_planet_root->GetWorld() );
 
-	pe.planet->SetGravityState( pe.node_config->m_gravityEnabled.m_value );
+	pe.m_planet_root->SetGravityState( pe.m_node_config->m_gravityEnabled.m_value );
 
     m_nodes[p_sceneNodeName] = pe;
-    return pe.planet_node;
+    return pe.m_planet_node;
 }
 
 void CDLODPlanetService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
 {
     for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        it->second.planet->RegisterScenegraphCallbacks( *m_scenenodegraph );
+        it->second.m_planet_root->RegisterScenegraphCallbacks( *m_scenenodegraph );
     }
 }
 
@@ -650,7 +650,7 @@ void CDLODPlanetService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNo
 {
     for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        it->second.planet->UnregisterScenegraphCallbacks( *m_scenenodegraph );
+        it->second.m_planet_root->UnregisterScenegraphCallbacks( *m_scenenodegraph );
     }
 }
 
@@ -660,27 +660,27 @@ void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName, Draw
     {	
 		PlanetInstance pe = m_nodes[p_sceneNodeName];
 
-		p_calendar->UnregisterWorld( pe.planet->GetWorld() );
+		p_calendar->UnregisterWorld( pe.m_planet_root->GetWorld() );
 
-		_DRAWSPACE_DELETE_( pe.planet_vshader );
-		_DRAWSPACE_DELETE_( pe.planet_pshader );
+		_DRAWSPACE_DELETE_( pe.m_planet_vshader );
+		_DRAWSPACE_DELETE_( pe.m_planet_pshader );
 
-		_DRAWSPACE_DELETE_( pe.climate_vshader );
-		_DRAWSPACE_DELETE_( pe.climate_pshader );
+		_DRAWSPACE_DELETE_( pe.m_climate_vshader );
+		_DRAWSPACE_DELETE_( pe.m_climate_pshader );
 
-		_DRAWSPACE_DELETE_( pe.texture_th_pixels );
-		_DRAWSPACE_DELETE_( pe.texture_th_splatting );
+		_DRAWSPACE_DELETE_( pe.m_texture_th_pixels );
+		_DRAWSPACE_DELETE_( pe.m_texture_th_splatting );
 
-		_DRAWSPACE_DELETE_( pe.details_fx );
-		_DRAWSPACE_DELETE_( pe.climate_fx );
+		_DRAWSPACE_DELETE_( pe.m_details_fx );
+		_DRAWSPACE_DELETE_( pe.m_climate_fx );
 
-		_DRAWSPACE_DELETE_( pe.planet );
-		_DRAWSPACE_DELETE_( pe.planet_node );
+		_DRAWSPACE_DELETE_( pe.m_planet_root );
+		_DRAWSPACE_DELETE_( pe.m_planet_node );
 
 		for (int i = 0; i < 6; i++)
 		{
-			_DRAWSPACE_DELETE_( pe.planet_details_binder[i] );
-			_DRAWSPACE_DELETE_( pe.planet_climate_binder[i] );
+			_DRAWSPACE_DELETE_( pe.m_planet_details_binder[i] );
+			_DRAWSPACE_DELETE_( pe.m_planet_climate_binder[i] );
 		}
 
         m_nodes.erase( p_sceneNodeName );
@@ -696,7 +696,7 @@ DrawSpace::Module::KeysLinkTable* CDLODPlanetService::AddSceneNodeConfig( const 
 
 void PlanetInstance::OnGravityEnabledUpdate( bool p_value )
 {
-	planet->SetGravityState( p_value );
+	m_planet_root->SetGravityState( p_value );
 }
 
 void GravityEnabledParam::OnUpdated( bool p_val )

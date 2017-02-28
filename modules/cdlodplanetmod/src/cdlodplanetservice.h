@@ -276,27 +276,27 @@ class PlanetInstance
 {
 
 public:
-    DrawSpace::SphericalLOD::Config                                 config;
+    DrawSpace::SphericalLOD::Config                                 m_config;
 
-	PlanetDetailsBinder*                                            planet_details_binder[6];
-	PlanetClimateBinder*											planet_climate_binder[6];
+	PlanetDetailsBinder*                                            m_planet_details_binder[6];
+	PlanetClimateBinder*											m_planet_climate_binder[6];
 
-    DrawSpace::Core::Fx*                                            details_fx;
-	DrawSpace::Core::Fx*                                            climate_fx;
+    DrawSpace::Core::Fx*                                            m_details_fx;
+	DrawSpace::Core::Fx*                                            m_climate_fx;
 
-	DrawSpace::Core::Shader*                                        climate_vshader;
-	DrawSpace::Core::Shader*                                        climate_pshader;
+	DrawSpace::Core::Shader*                                        m_climate_vshader;
+	DrawSpace::Core::Shader*                                        m_climate_pshader;
 
-    DrawSpace::Core::Shader*                                        planet_vshader;
-    DrawSpace::Core::Shader*                                        planet_pshader;
+    DrawSpace::Core::Shader*                                        m_planet_vshader;
+    DrawSpace::Core::Shader*                                        m_planet_pshader;
 
-	DrawSpace::Core::Texture*										texture_th_pixels;
-	DrawSpace::Core::Texture*										texture_th_splatting;
+	DrawSpace::Core::Texture*										m_texture_th_pixels;
+	DrawSpace::Core::Texture*										m_texture_th_splatting;
 
-    DrawSpace::SphericalLOD::Root*                                  planet;
-    DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*      planet_node;
+    DrawSpace::SphericalLOD::Root*                                  m_planet_root;
+    DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>*      m_planet_node;
 
-	PlanetSceneNodeConfig*											node_config;
+	PlanetSceneNodeConfig*											m_node_config;
 
 public:
 	void OnGravityEnabledUpdate( bool p_value );
