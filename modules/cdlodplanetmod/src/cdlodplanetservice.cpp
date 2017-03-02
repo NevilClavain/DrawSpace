@@ -103,6 +103,7 @@ void CDLODPlanetService::OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val
 void CDLODPlanetService::Run( void )
 {
 
+    /**
     dsstring camera_name;
     m_scenenodegraph->GetCurrentCameraName( camera_name );
 
@@ -134,6 +135,12 @@ void CDLODPlanetService::Run( void )
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     }
+    */
+
+    for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
+    {
+        it->second->Run();
+    }
 
 	m_tm.Update();
 }
@@ -145,6 +152,32 @@ void CDLODPlanetService::Release( void )
 
 DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
+    PlanetSceneNodeConfig* pconfig;
+
+	if( m_nodes_config.count( p_sceneNodeName ) )
+	{
+		// une config de node est associée
+		pconfig = &m_nodes_config[p_sceneNodeName];
+	}
+	else
+	{
+		_DSEXCEPTION( dsstring( "Node configuration is mandatory for CDLODPlanet node creation" ) );
+	}
+
+    PlanetInstance* pe = _DRAWSPACE_NEW_( PlanetInstance, PlanetInstance );
+
+	// pour permettre la mise à jour de parametres "hot"
+	m_nodes_config[p_sceneNodeName].SetOwner( pe );
+
+
+    pe->Init( pconfig, m_renderer, &m_tm, m_texturepass, p_calendar, m_scenenodegraph );
+
+    m_nodes[p_sceneNodeName] = pe;
+    return pe->GetSceneNode();
+
+
+
+    /*
     PlanetInstance pe;
 
 	if( m_nodes_config.count( p_sceneNodeName ) )
@@ -258,7 +291,7 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
     pe.m_config.m_layers_descr.push_back( planet_surface );
 
 
-	pe.m_planet_root = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( p_sceneNodeName, /*PLANET_RAY*/pe.m_node_config->m_planetRay.m_value, &m_tm, pe.m_config ) );
+	pe.m_planet_root = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( p_sceneNodeName, pe.m_node_config->m_planetRay.m_value, &m_tm, pe.m_config ) );
 
     for( int i = 0; i < 6; i++ )
     {
@@ -286,30 +319,44 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 
     m_nodes[p_sceneNodeName] = pe;
     return pe.m_planet_node;
+    */
 }
 
 void CDLODPlanetService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
 {
+    
     for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        it->second.m_planet_root->RegisterScenegraphCallbacks( *m_scenenodegraph );
+        //it->second.m_planet_root->RegisterScenegraphCallbacks( *m_scenenodegraph );
+
+        it->second->RegisterScenegraphCallbacks( *m_scenenodegraph );
     }
+    
 }
 
 void CDLODPlanetService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
 {
+    
     for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        it->second.m_planet_root->UnregisterScenegraphCallbacks( *m_scenenodegraph );
-    }
+        //it->second.m_planet_root->UnregisterScenegraphCallbacks( *m_scenenodegraph );
+
+        it->second->UnregisterScenegraphCallbacks( *m_scenenodegraph );
+    }    
 }
 
 void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
 {
     if( m_nodes.count( p_sceneNodeName ) )
-    {	
-		PlanetInstance pe = m_nodes[p_sceneNodeName];
+    {
+        PlanetInstance* pe = m_nodes[p_sceneNodeName];
 
+        pe->Release();
+        _DRAWSPACE_DELETE_( pe );
+
+		//PlanetInstance pe = m_nodes[p_sceneNodeName];
+
+        /*
 		p_calendar->UnregisterWorld( pe.m_planet_root->GetWorld() );
 
 		_DRAWSPACE_DELETE_( pe.m_planet_vshader );
@@ -332,6 +379,7 @@ void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName, Draw
 			_DRAWSPACE_DELETE_( pe.m_planet_details_binder[i] );
 			_DRAWSPACE_DELETE_( pe.m_planet_climate_binder[i] );
 		}
+        */
 
         m_nodes.erase( p_sceneNodeName );
     }

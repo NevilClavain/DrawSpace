@@ -29,8 +29,8 @@
 
 class PlanetInstance
 {
+protected:
 
-public:
     DrawSpace::SphericalLOD::Config                                 m_config;
 
 	PlanetDetailsBinder*                                            m_planet_details_binder[6];
@@ -53,7 +53,28 @@ public:
 
 	PlanetSceneNodeConfig*											m_node_config;
 
+    DrawSpace::Dynamics::Calendar*                                  m_calendar;
+    DrawSpace::Core::SceneNodeGraph*                                m_scenenodegraph;
+
+
 public:
+
+    PlanetInstance( void );
+    ~PlanetInstance( void );
+
+    void Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::Interface::Renderer* p_renderer,
+                    DrawSpace::Utils::TimeManager* p_tm, DrawSpace::IntermediatePass* p_ipass,
+                    DrawSpace::Dynamics::Calendar* p_calendar,     DrawSpace::Core::SceneNodeGraph* p_scenenodegraph );
+
+    void Run( void );
+
+    void Release( void );
+
+    DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>* GetSceneNode( void );
+
+    void RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
+    void UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
+
 	void OnGravityEnabledUpdate( bool p_value );
 };
 

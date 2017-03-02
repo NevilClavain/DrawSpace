@@ -71,7 +71,7 @@ protected:
 	std::map<dsstring, PlanetSceneNodeConfig>							m_nodes_config;
 
 	// liste des instances scenenodes planetes
-    std::map<dsstring, PlanetInstance>									m_nodes;
+    std::map<dsstring, PlanetInstance*>									m_nodes;
 
 
 public:
