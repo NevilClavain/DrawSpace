@@ -144,23 +144,16 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 
 void CDLODPlanetService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
 {
-    
     for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        //it->second.m_planet_root->RegisterScenegraphCallbacks( *m_scenenodegraph );
-
         it->second->RegisterScenegraphCallbacks( *m_scenenodegraph );
-    }
-    
+    }   
 }
 
 void CDLODPlanetService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
 {
-    
     for( auto it = m_nodes.begin(); it != m_nodes.end(); ++it )
     {
-        //it->second.m_planet_root->UnregisterScenegraphCallbacks( *m_scenenodegraph );
-
         it->second->UnregisterScenegraphCallbacks( *m_scenenodegraph );
     }    
 }
