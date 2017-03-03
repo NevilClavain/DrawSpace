@@ -51,9 +51,6 @@ protected:
     DrawSpace::IntermediatePass*                                        m_texturepass;
 
 	int																	m_mousewheel_delta;
-    int                                                                 m_leftdrag_x_delta;
-    int                                                                 m_leftdrag_y_delta;
-	int                                                                 m_rightdrag_x_delta;
 
     DrawSpace::Core::SceneNodeGraph                                     m_scenenodegraph;
 
@@ -95,6 +92,8 @@ protected:
 	DrawSpace::Dynamics::CameraPoint*									m_current_camera;
 
 	bool																m_shift;
+    bool                                                                m_ctrl;
+
 
     void init_passes( void );
     void create_passes( void );

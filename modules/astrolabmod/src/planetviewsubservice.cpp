@@ -44,10 +44,8 @@ m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" ),
 m_rel_altitude( 0.0 ),
 m_planet_conf( NULL ),
 m_mousewheel_delta( 0 ),
-m_leftdrag_x_delta( 0 ),
-m_leftdrag_y_delta( 0 ),
-m_rightdrag_x_delta( 0 ),
-m_shift( false )
+m_shift( false ),
+m_ctrl( false )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
 }
@@ -170,63 +168,6 @@ void PlanetViewSubService::Run( void )
         m_arrow_node->GetFinalTransform( prev_arrow_transf );
     }
 
-
-	if( m_mousewheel_delta > 0 )
-	{
-		dsreal force = DrawSpace::Utils::Maths::Clamp( 20000.0, 5000000000.0, 1000000000.0 * compute_arrow_force() );
-		m_arrow->ApplyFwdForce( force );
-	}
-	else if( m_mousewheel_delta < 0 )
-	{
-		dsreal force = DrawSpace::Utils::Maths::Clamp( 0.0, 20000000000.0, 1000000000.0 * compute_arrow_force() );
-		m_arrow->ApplyRevForce( force );
-	}
-	else
-	{
-		m_arrow->ZeroLSpeed();
-	}
-
-    if( m_leftdrag_y_delta > 0 )
-    {
-		m_arrow->ZeroASpeed();
-        m_arrow->ApplyDownPitch( compute_arrow_torque( m_leftdrag_y_delta ) );
-    }
-    else if( m_leftdrag_y_delta < 0 )
-    {
-		m_arrow->ZeroASpeed();
-        m_arrow->ApplyUpPitch( compute_arrow_torque( m_leftdrag_y_delta ) );
-    }
-
-
-    if( m_leftdrag_x_delta > 0 )
-    {
-		m_arrow->ZeroASpeed();
-        m_arrow->ApplyLeftYaw( compute_arrow_torque( m_leftdrag_x_delta ) );
-    }
-    else if( m_leftdrag_x_delta < 0 )
-    {
-		m_arrow->ZeroASpeed();
-        m_arrow->ApplyRightYaw( compute_arrow_torque( m_leftdrag_x_delta ) );
-    }
-
-
-	if( m_rightdrag_x_delta < 0 )
-	{
-		m_arrow->ZeroASpeed();
-		m_arrow->ApplyLeftRoll( 8.0 * compute_arrow_torque( m_rightdrag_x_delta ) );
-	}
-	else if( m_rightdrag_x_delta > 0 )
-	{
-		m_arrow->ZeroASpeed();
-		m_arrow->ApplyRightRoll( 8.0 * compute_arrow_torque( m_rightdrag_x_delta ) );
-	}
-
-
-	if( m_leftdrag_x_delta == 0 && m_leftdrag_y_delta == 0 && m_rightdrag_x_delta == 0 )
-	{
-		m_arrow->ZeroASpeed();
-	}
-
     m_scenenodegraph.ComputeTransformations( m_tm );
 
     m_cdlodp_service->Run();
@@ -304,14 +245,6 @@ void PlanetViewSubService::Run( void )
     if( m_tm.IsReady() )
     {
     }
-
-	m_mousewheel_delta = 0;
-    m_leftdrag_y_delta = 0;
-    m_leftdrag_x_delta = 0;
-	m_rightdrag_x_delta = 0;
-
-
-
 }
 
 void PlanetViewSubService::Release( void )
@@ -344,6 +277,11 @@ void PlanetViewSubService::OnKeyPress( long p_key )
 
 			m_shift = true;
 			break;
+
+        case VK_CONTROL:
+
+            m_ctrl = true;
+            break;
 	}
 
     m_renderer->GUI_OnKeyDown( p_key );
@@ -357,6 +295,11 @@ void PlanetViewSubService::OnEndKeyPress( long p_key )
 
 			m_shift = false;
 			break;
+
+        case VK_CONTROL:
+
+            m_ctrl = false;
+            break;
 	}
 
     m_renderer->GUI_OnKeyUp( p_key );
@@ -380,21 +323,6 @@ void PlanetViewSubService::OnChar( long p_char, long p_scan )
 
 void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-	/*
-	if( m_current_camera == m_camera )
-	{
-		if( m_mouse_left )
-		{
-			m_objectRot->RotateAxis( Vector( 0.0, 1.0, 0.0, 1.0), p_dx * 0.5, m_tm );
-			m_objectRot->RotateAxis( Vector( 1.0, 0.0, 0.0, 1.0), p_dy * 0.5, m_tm );
-		}
-		else if( m_mouse_right )
-		{
-			m_objectRot->RotateAxis( Vector( 0.0, 0.0, 1.0, 1.0), -p_dx * 0.5, m_tm );
-		}
-	}
-	else */
-
 	if( m_current_camera == m_camera2 )
 	{
 		if( m_shift )
@@ -413,12 +341,35 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
 		{
 			if( m_mouse_left )
 			{
-				m_leftdrag_x_delta = p_dx;
-				m_leftdrag_y_delta = p_dy;
+                if( p_dx > 0 )
+                {
+                    m_arrow->ApplyLeftYaw( 0.3 * compute_arrow_torque( p_dx ) );
+                }
+                else if( p_dx < 0 )
+                {
+                    m_arrow->ApplyRightYaw( 0.3 * compute_arrow_torque( p_dx ) );
+                }
+
+                if( p_dy > 0 )
+                {
+                    m_arrow->ApplyDownPitch( 0.3 * compute_arrow_torque( p_dy ) );
+                }
+                else if( p_dy < 0 )
+                {
+                    m_arrow->ApplyUpPitch( 0.3 * compute_arrow_torque( p_dy ) );
+                }
+
 			}
 			else if( m_mouse_right )
 			{
-				m_rightdrag_x_delta = p_dx;
+	            if( p_dx < 0 )
+	            {
+		            m_arrow->ApplyLeftRoll( 1.5 * compute_arrow_torque( p_dx ) );
+	            }
+	            else if( p_dx > 0 )
+	            {
+		            m_arrow->ApplyRightRoll( 1.5 * compute_arrow_torque( p_dx ) );
+	            }
 			}		
 		}
 	}
@@ -426,18 +377,41 @@ void PlanetViewSubService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_
     m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
 }
 
+
 void PlanetViewSubService::OnMouseWheel( long p_delta )
 {
 	if( m_current_camera == m_camera2 )
 	{
-		if( p_delta > 0 )
-		{
-			m_mousewheel_delta = 1;
-		}
-		else
-		{
-			m_mousewheel_delta = -1;
-		}
+        dsreal force = DrawSpace::Utils::Maths::Clamp( 20000.0, 5000000.0, 15000000.0 * compute_arrow_force() );
+
+        if( m_ctrl )
+        {
+		    if( p_delta < 0 )
+		    {
+			    m_mousewheel_delta++;
+		   
+		        m_arrow->ApplyRevForce( m_mousewheel_delta * force );
+		    }
+		    else
+		    {
+			    m_mousewheel_delta = 0;
+                m_arrow->ZeroLSpeed();
+		    }         
+        }
+        else
+        {
+		    if( p_delta > 0 )
+		    {
+			    m_mousewheel_delta++;
+		   
+		        m_arrow->ApplyFwdForce( m_mousewheel_delta * force );
+		    }
+		    else
+		    {
+			    m_mousewheel_delta = 0;
+                m_arrow->ZeroLSpeed();
+		    }        
+        }
 	}
 }
 
@@ -450,6 +424,7 @@ void PlanetViewSubService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 void PlanetViewSubService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
     m_mouse_left = false;
+    m_arrow->ZeroASpeed();
     m_renderer->GUI_OnMouseLeftButtonUp();
 }
 
@@ -462,6 +437,7 @@ void PlanetViewSubService::OnMouseRightButtonDown( long p_xm, long p_ym )
 void PlanetViewSubService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
     m_mouse_right = false;
+    m_arrow->ZeroASpeed();
     m_renderer->GUI_OnMouseRightButtonUp();
 }
 
