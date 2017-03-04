@@ -31,7 +31,8 @@ using namespace DrawSpace::Dynamics;
 
 Body::Body( void ) :
 m_world( NULL ),
-m_contact_state( false )
+m_contact_state( false ),
+m_memmgr_source( MEMMANAGER_SINGLETON )
 {
     m_lastworldtrans.Identity();
 }
@@ -39,13 +40,20 @@ m_contact_state( false )
 
 Body::Body( World* p_world ) :
 m_world( p_world ),
-m_contact_state( false )
+m_contact_state( false ),
+m_memmgr_source( MEMMANAGER_SINGLETON )
 {
     m_lastworldtrans.Identity();
 }
 
 Body::~Body( void )
 {
+}
+
+void Body::SetExternalMemManagerSource( DrawSpace::Utils::MemAlloc* p_memmgr )
+{
+    m_memmgr_source = MEMMANAGER_EXTERNAL;
+    m_memmgr = p_memmgr;
 }
 
 btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe )
@@ -55,15 +63,42 @@ btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapede
     switch( p_shapedescr.shape )
     {
         case Body::BOX_SHAPE:
-            return _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( p_shapedescr.box_dims[0] * world_scale, p_shapedescr.box_dims[1] * world_scale, p_shapedescr.box_dims[2] * world_scale ) ) );
+            {
+                if( MEMMANAGER_SINGLETON == m_memmgr_source )
+                {
+                    return _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( p_shapedescr.box_dims[0] * world_scale, p_shapedescr.box_dims[1] * world_scale, p_shapedescr.box_dims[2] * world_scale ) ) );
+                }
+                else
+                {
+                    return _DRAWSPACE_NEW_FROM_MEMMGR_( m_memmgr, btBoxShape, btBoxShape( btVector3( p_shapedescr.box_dims[0] * world_scale, p_shapedescr.box_dims[1] * world_scale, p_shapedescr.box_dims[2] * world_scale ) ) );
+                }
+            }
             
         case Body::SPHERE_SHAPE:
-            return _DRAWSPACE_NEW_( btSphereShape, btSphereShape( p_shapedescr.sphere_radius * world_scale ) );
-
+            {
+                if( MEMMANAGER_SINGLETON == m_memmgr_source )
+                {
+                    return _DRAWSPACE_NEW_( btSphereShape, btSphereShape( p_shapedescr.sphere_radius * world_scale ) );
+                }
+                else
+                {
+                    return _DRAWSPACE_NEW_FROM_MEMMGR_( m_memmgr, btSphereShape, btSphereShape( p_shapedescr.sphere_radius * world_scale ) );
+                }
+            }
             
         case Body::MESHE_SHAPE:
             {
-                btTriangleMesh* data = _DRAWSPACE_NEW_( btTriangleMesh, btTriangleMesh );
+                btTriangleMesh* data;
+                
+                if( MEMMANAGER_SINGLETON == m_memmgr_source )
+                {
+                    data = _DRAWSPACE_NEW_( btTriangleMesh, btTriangleMesh );
+                }
+                else
+                {
+                    data = _DRAWSPACE_NEW_FROM_MEMMGR_( m_memmgr, btTriangleMesh, btTriangleMesh );
+                }
+
                 Meshe meshe = p_shapedescr.meshe;
 
                 for( long i = 0; i < meshe.GetTrianglesListSize(); i++ )
@@ -89,7 +124,14 @@ btCollisionShape* Body::instanciate_collision_shape( const ShapeDescr& p_shapede
                     *p_btmeshe = data;
                 }
 
-                return _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( data, true, true ) );
+                if( MEMMANAGER_SINGLETON == m_memmgr_source )
+                {
+                    return _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( data, true, true ) );
+                }
+                else
+                {
+                    return _DRAWSPACE_NEW_FROM_MEMMGR_( m_memmgr, btBvhTriangleMeshShape, btBvhTriangleMeshShape( data, true, true ) );
+                }
             } 
 
         default:

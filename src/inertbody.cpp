@@ -115,7 +115,15 @@ void InertBody::create_body( const btTransform& p_transform )
 
     m_collisionShape = instanciate_collision_shape( m_parameters.shape_descr, &m_meshe_data );
 
-    m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( p_transform ) );
+    if( MEMMANAGER_SINGLETON == m_memmgr_source )
+    {
+        m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( p_transform ) );
+    }
+    else
+    {
+        m_motionState = _DRAWSPACE_NEW_FROM_MEMMGR_( m_memmgr, btDefaultMotionState, btDefaultMotionState( p_transform ) );
+    }
+
 
     btVector3 localInertia( 0, 0, 0 );
     if( m_parameters.mass > 0.0 )
@@ -124,9 +132,16 @@ void InertBody::create_body( const btTransform& p_transform )
     }
 
     btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( m_parameters.mass * world_scale, m_motionState, m_collisionShape, localInertia );
-    m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 
-    //m_world->getBulletWorld()->addRigidBody( m_rigidBody );
+    if( MEMMANAGER_SINGLETON == m_memmgr_source )
+    {
+        m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
+    }
+    else
+    {
+        m_rigidBody = _DRAWSPACE_NEW_FROM_MEMMGR_( m_memmgr, btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
+    }
+
     m_world->AddBody( this );
 
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
@@ -134,11 +149,20 @@ void InertBody::create_body( const btTransform& p_transform )
 
 void InertBody::destroy_body( void )
 {
-    //m_world->getBulletWorld()->removeRigidBody( m_rigidBody );
     m_world->RemoveBody( this );
-    _DRAWSPACE_DELETE_( m_motionState );
-    _DRAWSPACE_DELETE_( m_collisionShape );
-    _DRAWSPACE_DELETE_( m_rigidBody );
+
+    if( MEMMANAGER_SINGLETON == m_memmgr_source )
+    {
+        _DRAWSPACE_DELETE_( m_motionState );
+        _DRAWSPACE_DELETE_( m_collisionShape );
+        _DRAWSPACE_DELETE_( m_rigidBody );
+    }
+    else
+    {
+        _DRAWSPACE_DELETE_FROM_MEMMGR_( m_memmgr, m_motionState );
+        _DRAWSPACE_DELETE_FROM_MEMMGR_( m_memmgr, m_collisionShape );
+        _DRAWSPACE_DELETE_FROM_MEMMGR_( m_memmgr, m_rigidBody );    
+    }
 }
 
 void InertBody::SetWorld( World* p_world )

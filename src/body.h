@@ -75,21 +75,26 @@ public:
 
     } Parameters;
 
-
 protected:
     
+    typedef enum
+    {
+        MEMMANAGER_SINGLETON,
+        MEMMANAGER_EXTERNAL,
+
+    } MemManagerSource;
+
+
     World*                              m_world;
     bool                                m_contact_state;
-
     DrawSpace::Utils::Matrix            m_lastworldtrans;
-
     std::vector<EventHandler*>          m_evt_handlers;
-
     std::map<Body*, Body*>              m_attached_inertbodies;
 
+    MemManagerSource                    m_memmgr_source;
+    DrawSpace::Utils::MemAlloc*         m_memmgr;           // si m_memmgr_source == MEMMANAGER_EXTERNAL
+
     btCollisionShape*                   instanciate_collision_shape( const ShapeDescr& p_shapedescr, btTriangleMesh** p_btmeshe = NULL );
-
-
 
 public:
 
@@ -109,6 +114,8 @@ public:
     virtual void UnregisterAttachedInertBody( Body* p_body );
 
     virtual void Update2( DrawSpace::Utils::TimeManager& p_timemanager );
+
+    virtual void SetExternalMemManagerSource( DrawSpace::Utils::MemAlloc* p_memmgr );
 };
 }
 }

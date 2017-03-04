@@ -536,6 +536,8 @@ void PlanetViewSubService::create_arrow_camera( void )
     m_arrow_params.initial_attitude.Translation( 0.0, 0.0, 0.0 );
 
     m_arrow = _DRAWSPACE_NEW_( DrawSpace::Dynamics::Rocket, DrawSpace::Dynamics::Rocket( &m_world, m_arrow_params ) );
+
+    m_arrow->SetExternalMemManagerSource( DrawSpace::Utils::MemAlloc::GetInstance() );
    
     m_arrow_node = _DRAWSPACE_NEW_( SceneNode<DrawSpace::Dynamics::Rocket>, SceneNode<DrawSpace::Dynamics::Rocket>( "arrow_body" ) );
     m_arrow_node->SetContent( m_arrow );
