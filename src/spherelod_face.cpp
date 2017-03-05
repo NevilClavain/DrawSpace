@@ -58,6 +58,7 @@ Face::~Face( void )
 {
     if( m_rootpatch )
     {
+        m_rootpatch->RecursiveMerge();
         _DRAWSPACE_DELETE_( m_rootpatch );
     }
 

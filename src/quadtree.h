@@ -61,6 +61,7 @@ public:
 
 	virtual void Split( void ) = 0;
 	virtual void Merge( void ) = 0;
+    virtual void RecursiveMerge( void ) = 0;
 };
 
 template <typename Base>
@@ -167,6 +168,29 @@ public:
     virtual long GetDepthLevel( void )
     {
         return m_depth_level;
+    }
+
+    virtual void RecursiveMerge( void )
+    {
+        if( !m_splitted )
+        {
+            // leaf reached
+            return;
+        }
+
+        for( int i = 0; i < 4; i++ )
+        {
+            m_children[i]->RecursiveMerge();
+        }
+
+        (*m_mergehandler)( this );
+
+        for( int i = 0; i < 4; i++ )
+        {
+            _DRAWSPACE_DELETE_( m_children[i] );
+        }
+
+        m_splitted = false; 
     }
 };
 }
