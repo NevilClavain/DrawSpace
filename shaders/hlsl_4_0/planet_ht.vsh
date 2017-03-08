@@ -60,7 +60,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 {
     
     VS_OUTPUT Output;
-    /*
+
+    
     float4 flag0 = vec[v_flag0];
     float4 patch_translation = vec[v_patch_translation];
     float4 base_uv = vec[v_base_uv];
@@ -107,12 +108,12 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4 global_uv = 0.0;
     global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
     global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
-    */
+    
     /*
     res += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
     res *= ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
     */
-    /*
+    
     Output.aht = 0.0;
     Output.aht.x = res;
 
@@ -238,15 +239,12 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.aht.y = color_temp;
     Output.aht.z = color_humidity_final;
 
-    */
+    
 
     float4 pos;
     pos.xyz = Input.Position;
     pos.w = 1.0;
     Output.Position = mul(pos, mat[matWorldViewProjection]);
-
-    Output.aht = 0;
-    Output.aht.x = Input.TexCoord0.x;
-				  
+    				  
     return (Output);
 }

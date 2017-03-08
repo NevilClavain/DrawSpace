@@ -61,7 +61,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     
     float4 color = 0.0;
 
-    /*
     float point_alt = input.aht.x;
 
     float color_temp = input.aht.y;
@@ -76,13 +75,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
 
     color.w = point_alt;
-*/
-
-    /// temporaire
-    color.x = input.aht.x;
-    color.y = 0.0;
-    color.z = 0.0;
-    color.w = 1.0;
 
     return color;
 }

@@ -44,7 +44,6 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 Position                 : SV_POSITION;
-    
     float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
     float4 UnitPatch_TexCoord       : TEXCOORD1;
     float4 GlobalPatch_TexCoord     : TEXCOORD2;
@@ -56,6 +55,7 @@ struct VS_OUTPUT
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
     VS_OUTPUT Output;
+
 
     float4 flag0 = vec[v_flag0];
     float4 patch_translation = vec[v_patch_translation];    
