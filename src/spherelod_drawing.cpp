@@ -102,7 +102,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 
 
 void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
-                            const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj )
+                            const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
 {
     //ZeroMemory( &m_stats, sizeof( Stats ) );
 
@@ -113,7 +113,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_a
         Patch* ref_patch = m_display_list[i]->GetTextureReferent();
         Texture* refpatchtexture = ref_patch->GetDataTexture();
 
-        if( refpatchtexture != current_texture )
+        if( p_bind_ht_texture && ( refpatchtexture != current_texture ) )
         {
             m_renderer->SetTexture( refpatchtexture->GetRenderData(), 7 );
             current_texture = refpatchtexture;
@@ -259,7 +259,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
 
-    face_node->Draw( Body::m_patch_meshe->GetVertexListSize(), Body::m_patch_meshe->GetTrianglesListSize(), planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj );
+    face_node->Draw( Body::m_patch_meshe->GetVertexListSize(), Body::m_patch_meshe->GetTrianglesListSize(), planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj, true );
     node_binder->Unbind();
 }
 
@@ -285,7 +285,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
 
-    face_node->Draw( Body::m_patch_meshe->GetVertexListSize(), Body::m_patch_meshe->GetTrianglesListSize(), 1.0, rel_alt, view_pos, world, view, proj );   
+    face_node->Draw( Body::m_patch_meshe->GetVertexListSize(), Body::m_patch_meshe->GetTrianglesListSize(), 1.0, rel_alt, view_pos, world, view, proj, false );   
     node_binder->Unbind();
 }
 

@@ -487,7 +487,7 @@ void PlanetViewSubService::create_passes( void )
     m_texturepass->Initialize();
     m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
     m_texturepass->GetRenderingQueue()->EnableTargetClearing( true );
-    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 1, 1, 1, 255 );
+    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 100, 100, 150, 255 );
 
 
     m_finalpass = _DRAWSPACE_NEW_( FinalPass, FinalPass( "final_pass" ) );

@@ -20,6 +20,9 @@
 *
 */
 
+Texture2D HT_Texture                : register(t7);
+SamplerState HT_Texture_sampler     : register(s7);
+
 struct PS_INTPUT
 {
     float4 Position                 : SV_POSITION;
@@ -42,6 +45,32 @@ struct PS_INTPUT
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
-    float4 final_color = { 0.0, 1.0, 1.0, 1.0 };
+    float4 final_color = { 0.0, 0.0, 0.0, 1.0 };
+
+    float4 temp_humidity = HT_Texture.Sample(HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy);
+
+    /*
+    if( temp_humidity.z == 1.0 )
+    {
+        final_color.x = 0.0;
+        final_color.y = 0.0;
+        final_color.z = 1.0;
+        final_color.w = 1.0;
+    }
+    else
+    {
+        final_color.x = 0.0;
+        final_color.y = 1.0;
+        final_color.z = 0.0;
+        final_color.w = 1.0;        
+    }
+    */
+        
+    final_color.x = temp_humidity.x;
+    final_color.y = temp_humidity.y;
+    final_color.z = temp_humidity.z;
+    final_color.w = 1.0;
+
+
     return final_color;
 }

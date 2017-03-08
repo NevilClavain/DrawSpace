@@ -69,11 +69,14 @@
     <FxCompile Include="planet_surface.vsh">
       <Filter>vertex_shaders\planet</Filter>
     </FxCompile>
-    <FxCompile Include="planet_ht.vsh">
-      <Filter>vertex_shaders\planet</Filter>
-    </FxCompile>
     <FxCompile Include="planet_ht.psh">
       <Filter>pixel_shaders\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="multifbm_height.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_ht.vsh">
+      <Filter>vertex_shaders\planet</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
