@@ -81,6 +81,7 @@ protected:
         // reserve au textures render target
         ID3D11Texture2D*                                            stencilDepthBuffer;
         ID3D11DepthStencilView*                                     stencilDepthView;
+        D3D11_VIEWPORT                                              viewport; // viewport adapte au rendu dans cette texture
 
         void*                                                       bits;
         bool                                                        content_access; // si false, on ne peut acceder au contenu de cette texture
@@ -164,7 +165,7 @@ protected:
     RSCache                                                         m_rsCache;
     BSCache                                                         m_bsCache;
 
-    D3D11_VIEWPORT                                                  m_viewport;
+    D3D11_VIEWPORT                                                  m_mainScreenViewport;
 
     IFW1FontWrapper*                                                m_fontWrapper;
 

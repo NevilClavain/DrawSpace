@@ -403,24 +403,24 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     // set viewport....
     if( p_fullscreen )
     {
-        m_viewport.Width = fullscreen_width;
-        m_viewport.Height = fullscreen_height;
-        m_viewport.MinDepth = 0.0;
-        m_viewport.MaxDepth = 1.0;
-        m_viewport.TopLeftX = 0.0;
-        m_viewport.TopLeftY = 0.0;
+        m_mainScreenViewport.Width = fullscreen_width;
+        m_mainScreenViewport.Height = fullscreen_height;
+        m_mainScreenViewport.MinDepth = 0.0;
+        m_mainScreenViewport.MaxDepth = 1.0;
+        m_mainScreenViewport.TopLeftX = 0.0;
+        m_mainScreenViewport.TopLeftY = 0.0;
     }
     else
     {
-        m_viewport.Width = rect.right - rect.left;
-        m_viewport.Height = rect.bottom - rect.top;
-        m_viewport.MinDepth = 0.0;
-        m_viewport.MaxDepth = 1.0;
-        m_viewport.TopLeftX = rect.left;
-        m_viewport.TopLeftY = rect.top;        
+        m_mainScreenViewport.Width = rect.right - rect.left;
+        m_mainScreenViewport.Height = rect.bottom - rect.top;
+        m_mainScreenViewport.MinDepth = 0.0;
+        m_mainScreenViewport.MaxDepth = 1.0;
+        m_mainScreenViewport.TopLeftX = rect.left;
+        m_mainScreenViewport.TopLeftY = rect.top;        
     }
 
-    m_lpd3ddevcontext->RSSetViewports( 1, &m_viewport );
+    m_lpd3ddevcontext->RSSetViewports( 1, &m_mainScreenViewport );
 
     // renderer characteristics dump
     _DSDEBUG( logger, dsstring( "characteristics.width_resol = " ) << (int)m_characteristics.width_resol );
@@ -570,6 +570,8 @@ void D3D11Renderer::BeginScreen( void )
     m_currentTarget = m_screentarget;
     m_currentView = m_pDepthStencilView;
     m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
+
+    m_lpd3ddevcontext->RSSetViewports( 1, &m_mainScreenViewport );
 }
 
 void D3D11Renderer::EndScreen( void )
@@ -607,6 +609,8 @@ void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
         m_currentView = m_targettextures_base[p_texture]->stencilDepthView;
 
         m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
+
+        m_lpd3ddevcontext->RSSetViewports( 1, &m_targettextures_base[p_texture]->viewport );
     }
     else
     {
@@ -1120,6 +1124,15 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         create_depth_stencil_buffer( rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &texture_infos->stencilDepthBuffer, &texture_infos->stencilDepthView );
 
         m_textures_base[path] = texture_infos;
+
+        texture_infos->viewport.Width = descr.Width;
+        texture_infos->viewport.Height = descr.Height;
+
+        texture_infos->viewport.MinDepth = 0.0;
+        texture_infos->viewport.MaxDepth = 1.0;
+        texture_infos->viewport.TopLeftX = 0.0;
+        texture_infos->viewport.TopLeftY = 0.0;  
+
         m_targettextures_base[p_texture] = texture_infos;
 
         *p_data = (void*)texture_infos;
