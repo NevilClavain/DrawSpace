@@ -100,7 +100,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float h = sqrt((v_position2.x * v_position2.x) + (v_position2.z * v_position2.z)); // h compris entre 0.0 et 1.0
 
 
-    float vertex_latitude = acos(h);
+    float vertex_latitude = acos(clamp( h, 0.0, 1.0 ));
 
     float res = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
@@ -147,7 +147,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	// calcul temperature en fct de la lattitude du vertex
 
 
-    float norm_latitude = 1.0 - (2.0 * vertex_latitude / 3.1415927);
+    float norm_latitude = clamp( 1.0 - (2.0 * vertex_latitude / 3.1415927), 0.0, 1.0 );
 
 
     float temp_x;
