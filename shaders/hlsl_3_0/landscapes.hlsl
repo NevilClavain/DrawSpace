@@ -1,30 +1,9 @@
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
+* Emmanuel Chaumont Copyright (c) 2013-2017                             
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -302,7 +281,7 @@ float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidit
 
 		// calcul des poids splatting : calcul d'un "vecteur des distances"
 
-        float4 distances;
+        //float4 distances;
 
         float2 center_point;
         center_point.x = temperature_sampling.x;
@@ -325,6 +304,7 @@ float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidit
         point_4.x = 0.0;
         point_4.y = 1.0;
 
+        /*
         distances.x = 1.0 - clamp(sqrt((point_1.x - center_point.x) * (point_1.x - center_point.x) + (point_1.y - center_point.y) * (point_1.y - center_point.y)), 0.0, 1.0);
         distances.y = 1.0 - clamp(sqrt((point_2.x - center_point.x) * (point_2.x - center_point.x) + (point_2.y - center_point.y) * (point_2.y - center_point.y)), 0.0, 1.0);
         distances.z = 1.0 - clamp(sqrt((point_3.x - center_point.x) * (point_3.x - center_point.x) + (point_3.y - center_point.y) * (point_3.y - center_point.y)), 0.0, 1.0);
@@ -332,6 +312,10 @@ float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidit
 		
         res_color = distances.x * color_1 + distances.y * color_2
 					+ distances.z * color_3 + distances.w * color_4;
+
+        */
+
+        res_color = lerp(lerp(color_1, color_4, center_point.y), lerp(color_2, color_3, center_point.y), center_point.x);
     }
     else if (delta_u && !delta_v)
     {
