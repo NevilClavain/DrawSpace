@@ -201,7 +201,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     texel_pos2.xyz = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
     texel_pos2.w = 1.0;
 
-    float3 normale_world = mul(matWorldRots, texel_pos2);
+    float4 normale_world = mul(matWorldRots, texel_pos2);
 
     float ocean_spec_power = 120.0;
 
@@ -216,7 +216,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light0_dir.xyz + nviewerpos);
-            spec0 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light0_dir.xyz, hv);
+            spec0 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light0_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -227,7 +227,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light1_dir.xyz + nviewerpos);
-            spec1 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light1_dir.xyz, hv);
+            spec1 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light1_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -238,13 +238,16 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light2_dir.xyz + nviewerpos);
-            spec2 = ocean_specular_from_space(specular_light(hv, normale_world, ocean_spec_power), flags.x, light2_dir.xyz, hv);
+            spec2 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light2_dir.xyz, hv);
         }
         count_lights++;
     }
 
 
 	////////////////////////////////////////////////////////////////////////////////////
+
+    float2 ddx = { 0.0, 0.0 };
+    float2 ddy = { 0.0, 0.0 };
 	
     if (flags.x > 0.0 && flags.x <= lim_inf)
     {
@@ -261,7 +264,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     else if (flags.x > lim_inf && flags.x <= lim_sup)
     {
         float4 color_splat = splatting_color(input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture, Splatting_HTMap_Texture_Sampler);
-        float4 color_pixel = Pixels_HTMap_Texture.Sample(Pixels_HTMap_Texture_Sampler, temp_humidity.xy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+        float4 color_pixel = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
 
         if (sea)
         {
@@ -280,7 +283,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
         else
         {
-            pixel_color = Pixels_HTMap_Texture.Sample(Pixels_HTMap_Texture_Sampler, temp_humidity.xy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+            pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
         }
     }
 
@@ -346,7 +349,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     final_color = c0_final + (lit_color * pixel_color * c1_final);
 
 
-
     if (flags_lights.y > 0.0)
     {
         final_color += spec0;
@@ -370,7 +372,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         // pour eviter la saturation des couleurs dues a l'additivite
         final_color.xyz = final_color.xyz / count_lights;
     }
-		
 
 	/* ECH desactivation temporaire
     if (water_mask_mode)
@@ -391,7 +392,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
 	*/
 
-    final_color.w = 0.0;
+    final_color.w = 1.0;
     return final_color;
 
     /*
@@ -415,5 +416,5 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
     */
     
-    return final_color;
+    //return final_color;
 }

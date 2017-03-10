@@ -214,6 +214,8 @@ float2 compute_sampling_params(float p_param, float p_interval)
 
 float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidity, float p_splatting_atlas_resol, Texture2D p_Splatting_HTMap_Texture, SamplerState p_Splatting_HTMap_Texture_Sampler )
 {
+    float2 ddx = { 0.0, 0.0 };
+    float2 ddy = { 0.0, 0.0 };
 
 	// contracter legerement les coords patch pour eviter les effets de bords de couleurs
     float4 patch_coords = (0.98 * (p_textcoords - 0.5)) + 0.5;
@@ -274,10 +276,13 @@ float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidit
         coords_4.x += temperature_sampling.y;
         coords_4.y += humidity_sampling.y + interval;
 
-        float4 color_1 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_1.xy); //tex2D(p_Splatting_HTMap_Texture, coords_1);
-        float4 color_2 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_2.xy); //tex2D(p_Splatting_HTMap_Texture, coords_2);
-        float4 color_3 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_3.xy); //tex2D(p_Splatting_HTMap_Texture, coords_3);
-        float4 color_4 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_4.xy); //tex2D(p_Splatting_HTMap_Texture, coords_4);
+
+
+        // NB: use SampleGrad() rather then Sample() avoid strange artifacts on textures splatting limits in HLSL 4.0
+        float4 color_1 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_1.xy, ddx, ddy);
+        float4 color_2 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_2.xy, ddx, ddy);
+        float4 color_3 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_3.xy, ddx, ddy);
+        float4 color_4 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_4.xy, ddx, ddy);
 
 		// calcul des poids splatting : calcul d'un "vecteur des distances"
 
@@ -316,8 +321,8 @@ float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidit
         coords_2.x += temperature_sampling.y + interval;
         coords_2.y += humidity_sampling.y;
 
-        float4 color_1 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_1.xy); //tex2D(p_Splatting_HTMap_Texture, coords_1);
-        float4 color_2 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_2.xy); //tex2D(p_Splatting_HTMap_Texture, coords_2);
+        float4 color_1 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_1.xy, ddx, ddy);
+        float4 color_2 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_2.xy, ddx, ddy);
 		
         res_color = ((1.0 - temperature_sampling.x) * color_1) + (temperature_sampling.x * color_2);
     }
@@ -331,9 +336,8 @@ float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidit
         coords_4.x += temperature_sampling.y;
         coords_4.y += humidity_sampling.y + interval;
 
-        float4 color_1 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_1.xy); //tex2D(p_Splatting_HTMap_Texture, coords_1);
-        float4 color_4 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_4.xy); //tex2D(p_Splatting_HTMap_Texture, coords_4);
-
+        float4 color_1 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_1.xy, ddx, ddy);
+        float4 color_4 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_4.xy, ddx, ddy);
         res_color = ((1.0 - humidity_sampling.x) * color_1) + (humidity_sampling.x * color_4);
     }
     else
@@ -342,7 +346,7 @@ float4 splatting_color(float4 p_textcoords, float p_temperature, float p_humidit
         coords_1.x += temperature_sampling.y;
         coords_1.y += humidity_sampling.y;
 
-        float4 color_1 = p_Splatting_HTMap_Texture.Sample(p_Splatting_HTMap_Texture_Sampler, coords_1.xy); //tex2D(p_Splatting_HTMap_Texture, coords_1);
+        float4 color_1 = p_Splatting_HTMap_Texture.SampleGrad(p_Splatting_HTMap_Texture_Sampler, coords_1.xy, ddx, ddy);
 		
         res_color = color_1;
     }
