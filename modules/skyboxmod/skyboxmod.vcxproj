@@ -64,15 +64,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy .\..\..\libs\skyboxmod.dll .\..\..\..\Drawspace_samples\bin
-copy .\..\..\shaders_bank\hlsl_3_0\texture.pso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_3_0\texture.pso
-copy .\..\..\shaders_bank\hlsl_3_0\texture.vso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_3_0\texture.vso
-copy .\..\..\shaders_bank\hlsl_3_0\texture_mirror.pso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_3_0\texture_mirror.pso
-copy .\..\..\shaders_bank\hlsl_3_0\texture_mirror.vso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_3_0\texture_mirror.vso
-copy .\..\..\shaders_bank\hlsl_4_0\texture.pso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_4_0\texture.pso
-copy .\..\..\shaders_bank\hlsl_4_0\texture.vso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_4_0\texture.vso
-copy .\..\..\shaders_bank\hlsl_4_0\texture_mirror.pso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_4_0\texture_mirror.pso
-copy .\..\..\shaders_bank\hlsl_4_0\texture_mirror.vso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_4_0\texture_mirror.vso
-      </Command>
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,16 +88,7 @@ copy .\..\..\shaders_bank\hlsl_4_0\texture_mirror.vso .\..\..\..\Drawspace_sampl
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;drawspace_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib;physfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy .\..\..\libs\skyboxmod_r.dll .\..\..\..\Drawspace_samples\bin
-copy .\..\..\shaders_bank\hlsl_3_0\texture.pso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_3_0\texture.pso
-copy .\..\..\shaders_bank\hlsl_3_0\texture.vso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_3_0\texture.vso
-copy .\..\..\shaders_bank\hlsl_3_0\texture_mirror.pso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_3_0\texture_mirror.pso
-copy .\..\..\shaders_bank\hlsl_3_0\texture_mirror.vso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_3_0\texture_mirror.vso
-copy .\..\..\shaders_bank\hlsl_4_0\texture.pso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_4_0\texture.pso
-copy .\..\..\shaders_bank\hlsl_4_0\texture.vso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_4_0\texture.vso
-copy .\..\..\shaders_bank\hlsl_4_0\texture_mirror.pso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_4_0\texture_mirror.pso
-copy .\..\..\shaders_bank\hlsl_4_0\texture_mirror.vso .\..\..\..\Drawspace_samples\bin\skybox_data\shaders_bank\hlsl_4_0\texture_mirror.vso
-      </Command>
+      <Command>copy .\..\..\libs\skyboxmod_r.dll .\..\..\..\Drawspace_samples\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
