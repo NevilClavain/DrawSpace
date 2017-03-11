@@ -1534,5 +1534,102 @@
     </StateImagery>
     <StateImagery name="Disabled" />
   </WidgetLook>
+
+  <WidgetLook name="xfskin/Checkbox">
+    <PropertyDefinition redrawOnWrite="true" initialValue="FF037574" type="ColourRect" name="LabelColour"/>
+    <Property name="Size" value="{{0, 128}, {0, 32}}" />
+    <ImagerySection name="label">
+      <TextComponent>
+        <Area>
+          <Dim type="LeftEdge">
+            <OperatorDim op="Add">
+              <ImageDim name="xfskin/CheckboxNormal" dimension="Width"/>
+              <AbsoluteDim value="3"/>
+            </OperatorDim>
+          </Dim>
+        </Area>
+        <ColourProperty name="LabelColour"/>
+        <VertFormat type="CentreAligned"/>
+        <HorzFormat type="LeftAligned"/>
+      </TextComponent>
+    </ImagerySection>
+    <ImagerySection name="normal">
+      <ImageryComponent>
+        <Image name="xfskin/CheckboxNormal"/>
+        <VertFormat type="CentreAligned"/>
+        <HorzFormat type="LeftAligned"/>
+      </ImageryComponent>
+    </ImagerySection>
+    <ImagerySection name="hover">
+      <ImageryComponent>
+        <Image name="xfskin/CheckboxHover"/>
+        <VertFormat type="CentreAligned"/>
+        <HorzFormat type="LeftAligned"/>
+      </ImageryComponent>
+    </ImagerySection>
+    <ImagerySection name="selected">
+      <ImageryComponent>
+        <Image name="xfskin/CheckboxChecked"/>
+        <VertFormat type="CentreAligned"/>
+        <HorzFormat type="LeftAligned"/>
+      </ImageryComponent>
+    </ImagerySection>
+    <StateImagery name="Normal">
+      <Layer>
+        <Section section="normal"/>
+        <Section section="label"/>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="Hover">
+      <Layer>
+        <Section section="hover"/>
+        <Section section="label"/>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="Pushed">
+      <Layer>
+        <Section section="selected"/>
+        <Section section="label"/>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="Disabled">
+      <Layer>
+        <Section section="normal">
+          <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+        </Section>
+        <Section section="label">
+          <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+        </Section>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="SelectedNormal">
+      <Layer>
+        <Section section="selected"/>
+        <Section section="label"/>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="SelectedHover">
+      <Layer>
+        <Section section="hover"/>
+        <Section section="label"/>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="SelectedPushed">
+      <Layer>
+        <Section section="normal"/>
+        <Section section="label"/>
+      </Layer>
+    </StateImagery>
+    <StateImagery name="SelectedDisabled">
+      <Layer>
+        <Section section="selected">
+          <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+        </Section>
+        <Section section="label">
+          <Colours topLeft="FF7F7F7F" bottomLeft="FF7F7F7F" topRight="FF7F7F7F" bottomRight="FF7F7F7F"/>
+        </Section>
+      </Layer>
+    </StateImagery>
+  </WidgetLook>  
   
 </Falagard>

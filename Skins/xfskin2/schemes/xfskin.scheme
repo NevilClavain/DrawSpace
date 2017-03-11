@@ -27,5 +27,6 @@
   <FalagardMapping windowType="xfskin/ComboEditbox"  targetType="CEGUI/Editbox"	 renderer="Core/Editbox" lookNFeel="xfskin/ComboEditbox" />
   <FalagardMapping windowType="xfskin/ComboDropList" targetType="CEGUI/ComboDropList" renderer="Core/Listbox" lookNFeel="xfskin/ComboDropList" />
   <FalagardMapping windowType="xfskin/Combobox" targetType="CEGUI/Combobox"	 renderer="Core/Default" lookNFeel="xfskin/Combobox" />
+  <FalagardMapping windowType="xfskin/Checkbox" targetType="CEGUI/ToggleButton" renderer="Core/ToggleButton" lookNFeel="xfskin/Checkbox" />
   
 </GUIScheme>

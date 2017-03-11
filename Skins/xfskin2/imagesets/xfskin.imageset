@@ -125,4 +125,7 @@
     <Image height="10" name="ComboboxListTopLeft" width="13" xPos="251" yPos="455" />
     <Image height="10" name="ComboboxListTopRight" width="13" xPos="306" yPos="455" />
     <Image height="12" name="ComboboxListBackdrop" width="42" xPos="264" yPos="465" />
+    <Image height="34" name="CheckboxNormal" width="30" xPos="338" yPos="512" />
+    <Image height="34" name="CheckboxHover" width="30" xPos="396" yPos="512" />
+    <Image height="34" name="CheckboxChecked" width="30" xPos="444" yPos="512" />
 </Imageset>

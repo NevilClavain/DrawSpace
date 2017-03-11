@@ -99,6 +99,9 @@
         <Window type="xfskin/Combobox" name="Combobox" >
             <Property name="ID" value="9" />
             <Property name="Area" value="{{0,345},{0,147},{0,601},{0,403}}" />
+            <AutoWindow namePath="__auto_editbox__" >
+                <Property name="ActiveSelectionColour" value="tl:FF037574 tr:FF037574 bl:FF037574 br:FF037574" />
+            </AutoWindow>
             <AutoWindow namePath="__auto_droplist__" >
                 <AutoWindow namePath="__auto_hscrollbar__" >
                     <AutoWindow namePath="__auto_incbtn__" >
@@ -123,6 +126,10 @@
                     </AutoWindow>
                 </AutoWindow>
             </AutoWindow>
+        </Window>
+        <Window type="xfskin/Checkbox" name="Checkbox" >
+            <Property name="Area" value="{{0,803},{0,46},{0,931},{0,78}}" />
+            <Property name="Text" value="azerty" />
         </Window>
     </Window>
 </GUILayout>
