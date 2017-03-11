@@ -78,5 +78,8 @@
     <FxCompile Include="planet_ht.vsh">
       <Filter>vertex_shaders\planet</Filter>
     </FxCompile>
+    <FxCompile Include="landscapes.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

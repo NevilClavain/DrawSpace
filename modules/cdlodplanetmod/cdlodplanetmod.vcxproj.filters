@@ -30,12 +30,6 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{444bd206-24c1-4527-aed4-f9e37328b5e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\hlsl_30">
-      <UniqueIdentifier>{737e7e9e-a97a-435e-947e-21e35f27c9dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\hlsl_40">
-      <UniqueIdentifier>{8f6a2161-d71c-4eb3-b924-4a3e38801364}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\cdlodplanetservice.h">
@@ -59,19 +53,5 @@
     <ClInclude Include="src\planetconfig.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\shaders\hlsl_3_0\planet_ht.psh">
-      <Filter>Source Files\hlsl_30</Filter>
-    </None>
-    <None Include="..\..\shaders\hlsl_3_0\planet_ht.vsh">
-      <Filter>Source Files\hlsl_30</Filter>
-    </None>
-    <None Include="..\..\shaders\hlsl_3_0\planet_surface.psh">
-      <Filter>Source Files\hlsl_30</Filter>
-    </None>
-    <None Include="..\..\shaders\hlsl_3_0\planet_surface.vsh">
-      <Filter>Source Files\hlsl_30</Filter>
-    </None>
   </ItemGroup>
 </Project>
