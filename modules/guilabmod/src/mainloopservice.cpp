@@ -87,6 +87,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( "test.layout", "root", 7 );
     m_renderer->GUI_StoreWidget( "test.layout", "root", 8 );
     m_renderer->GUI_StoreWidget( "test.layout", "root", 9 );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", 10 );
 
     m_renderer->GUI_AddComboboxTextItem( "test.layout", "Combobox", "true", 0xFF037574, "xfskin/GenericBrush" );
     m_renderer->GUI_AddComboboxTextItem( "test.layout", "Combobox", "false", 0xFF037574, "xfskin/GenericBrush" );
@@ -235,6 +236,9 @@ void MainLoopService::on_guipushbutton_clicked( const dsstring& p_layout, const 
         m_renderer->GUI_SetWidgetText( "test.layout", "Label2", widget_text );
 
         m_renderer->GUI_AddListboxTextItem( "test.layout", "Listbox", widget_text, 0xFF037574, "xfskin/GenericBrush" );
+
+        bool istb = m_renderer->GUI_IsCheckBoxChecked( "test.layout", "Checkbox" );
+        _asm nop
     }
 }
 

@@ -101,7 +101,9 @@ public:
     void ClearCombobox( const dsstring& p_layoutName, const dsstring& p_widgetName );
 
     void SetComboBoxItemSelectionState( const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index, bool p_state );
-    int GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName );
+    int  GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName );
+
+    bool IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName );
     
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler );
 

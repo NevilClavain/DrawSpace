@@ -128,6 +128,7 @@
             </AutoWindow>
         </Window>
         <Window type="xfskin/Checkbox" name="Checkbox" >
+            <Property name="ID" value="10" />
             <Property name="Area" value="{{0,803},{0,46},{0,931},{0,78}}" />
             <Property name="Text" value="azerty" />
         </Window>

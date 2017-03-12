@@ -564,6 +564,35 @@ void CEGUIWrapper::RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseC
     m_pushbuttoneventclicked_handlers_list.push_back( p_handler );
 }
 
+bool CEGUIWrapper::IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+
+            CEGUI::ToggleButton* tb = dynamic_cast<CEGUI::ToggleButton*>( widget );
+            if( !tb )
+            {
+                 _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::ToggleButton" );
+            }
+
+            return tb->isSelected();
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
 void CEGUIWrapper::InitTest( void )
 {
     WindowManager& wmgr = WindowManager::getSingleton();

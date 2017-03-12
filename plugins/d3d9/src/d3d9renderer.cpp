@@ -2134,6 +2134,11 @@ int D3D9Renderer::GUI_GetComboBoxSelectionIndex( const dsstring& p_layoutName, c
     return m_guisubsystem.GetComboBoxSelectionIndex( p_layoutName, p_widgetName );
 }
 
+bool D3D9Renderer::GUI_IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    return m_guisubsystem.IsCheckBoxChecked( p_layoutName, p_widgetName );
+}
+
 void D3D9Renderer::GUI_SubscribeWidgetPushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName )
 {
     m_guisubsystem.SubscribePushButtonEventClicked( p_layoutName, p_widgetName );
