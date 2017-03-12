@@ -2531,6 +2531,11 @@ void D3D11Renderer::GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::
     m_guisubsystem.RegisterPushButtonEventClickedHandler( p_handler );
 }
 
+void D3D11Renderer::GUI_RegisterCheckboxEventStateChangedHandler( DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, bool>* p_handler )
+{
+    m_guisubsystem.RegisterCheckboxEventStateChangedHandler( p_handler );
+}
+
 void D3D11Renderer::GUI_SetLayout( const dsstring& p_layoutpath )
 {
     m_guisubsystem.SetLayout( p_layoutpath );

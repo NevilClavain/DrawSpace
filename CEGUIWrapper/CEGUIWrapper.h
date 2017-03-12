@@ -31,7 +31,8 @@ class CEGUIWrapper
 {
 protected:
 
-    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>          GUIWidgetPushButtonClickedHandler;
+    typedef DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, bool>    GUIWidgetCheckboxStateChangedHandler;
 
 
 
@@ -52,13 +53,14 @@ protected:
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    //DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring &>*    m_pushbuttoneventclicked_handler;
     std::vector<GUIWidgetPushButtonClickedHandler*>                             m_pushbuttoneventclicked_handlers_list;
+    std::vector<GUIWidgetCheckboxStateChangedHandler*>                          m_checkboxeventstatechanged_handlers_list;
 
-
-    CEGUI::MouseCursor*                                 m_mouse_cursor;
+    CEGUI::MouseCursor*                                                         m_mouse_cursor;
 
     bool            on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt );
+
+    bool            on_ToggleButton_EventSelectStateChanged(const CEGUI::EventArgs& p_evt );
 
     CEGUI::Editbox* find_focused_editbox( void );
 
@@ -106,6 +108,7 @@ public:
     bool IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName );
     
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler );
+    void RegisterCheckboxEventStateChangedHandler( DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, bool>* p_handler );
 
     void SetMouseCursorImage( const dsstring& p_image );
     void ShowMouseCursor( bool p_show );

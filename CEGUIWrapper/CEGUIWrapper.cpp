@@ -239,12 +239,19 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
             dsstring childName = child->getName().c_str();
             wt[childName] = child;
 
-            CEGUI::Editbox* edbx = dynamic_cast<CEGUI::Editbox*>( child );     
+            CEGUI::Editbox* edbx = dynamic_cast<CEGUI::Editbox*>( child );
             if( edbx )
             {
                 m_editBoxes.push_back( edbx );
                 return;
-            }   
+            }
+
+            CEGUI::ToggleButton* tbn = dynamic_cast<CEGUI::ToggleButton*>( child );
+            if( tbn )
+            {
+                tbn->subscribeEvent( CEGUI::ToggleButton::EventSelectStateChanged, CEGUI::Event::Subscriber( &CEGUIWrapper::on_ToggleButton_EventSelectStateChanged, this ) );
+                return;
+            }
         }
         else
         {
@@ -560,9 +567,14 @@ void CEGUIWrapper::GetText( const dsstring& p_layoutName, const dsstring& p_widg
 
 void CEGUIWrapper::RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler )
 {
-    //m_pushbuttoneventclicked_handler = p_handler;
     m_pushbuttoneventclicked_handlers_list.push_back( p_handler );
 }
+
+void CEGUIWrapper::RegisterCheckboxEventStateChangedHandler( DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, bool>* p_handler )
+{
+    m_checkboxeventstatechanged_handlers_list.push_back( p_handler );
+}
+
 
 bool CEGUIWrapper::IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName )
 {
@@ -642,22 +654,28 @@ void CEGUIWrapper::InitTest( void )
 
 bool CEGUIWrapper::on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt )
 {
-    const CEGUI::MouseEventArgs& we = static_cast<const CEGUI::MouseEventArgs&>( p_evt ); 
+    const CEGUI::WindowEventArgs& we = static_cast<const CEGUI::MouseEventArgs&>( p_evt ); 
     CEGUI::String senderID = we.window->getName();
-
-    /*
-    if( m_pushbuttoneventclicked_handler )
-    {
-        dsstring widgetId( senderID.c_str() );
-
-        (*m_pushbuttoneventclicked_handler)( m_currentLayoutName, widgetId );
-    }
-    */
 
     for( size_t i = 0; i < m_pushbuttoneventclicked_handlers_list.size(); i++ )
     {
         dsstring widgetId( senderID.c_str() );
         (*m_pushbuttoneventclicked_handlers_list[i])( m_currentLayoutName, widgetId );
+    }
+    return true;
+}
+
+bool CEGUIWrapper::on_ToggleButton_EventSelectStateChanged(const CEGUI::EventArgs& p_evt )
+{
+    const CEGUI::WindowEventArgs& we = static_cast<const CEGUI::MouseEventArgs&>( p_evt ); 
+    CEGUI::String senderID = we.window->getName();
+
+    CEGUI::ToggleButton* tbn = static_cast<CEGUI::ToggleButton*>( we.window );
+
+    for( size_t i = 0; i < m_checkboxeventstatechanged_handlers_list.size(); i++ )
+    {
+        dsstring widgetId( senderID.c_str() );
+        (*m_checkboxeventstatechanged_handlers_list[i])( m_currentLayoutName, widgetId, tbn->isSelected() );
     }
     return true;
 }

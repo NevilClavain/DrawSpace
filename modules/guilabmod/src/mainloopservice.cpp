@@ -33,6 +33,7 @@ _DECLARE_DS_LOGGER( logger, "guilabmainloopservice", NULL )
 MainLoopService::MainLoopService( void )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &MainLoopService::on_guipushbutton_clicked ) );
+    m_guiwidgetcheckboxstatechanged_cb = _DRAWSPACE_NEW_( GUIWidgetCheckboxStateChangedCallback, GUIWidgetCheckboxStateChangedCallback( this, &MainLoopService::on_guicheckboxstatechanged_clicked ) );
 }
 
 MainLoopService::~MainLoopService( void )
@@ -99,6 +100,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     int cbidx = m_renderer->GUI_GetComboBoxSelectionIndex( "test.layout", "Combobox" );
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
+    m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
 
 
     m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "test.layout", "Button_ClearText" );
@@ -242,3 +244,6 @@ void MainLoopService::on_guipushbutton_clicked( const dsstring& p_layout, const 
     }
 }
 
+void MainLoopService::on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state )
+{
+}
