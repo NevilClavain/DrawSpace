@@ -57,6 +57,7 @@ protected:
 
         std::vector<SphericalLOD::Layer*>           layers;
 
+        dsstring                                    scenename;
         
     } RegisteredBody;
 
@@ -83,6 +84,8 @@ protected:
         DrawSpace::Dynamics::CameraPoint*   camera;
 
         std::vector<SphericalLOD::Layer*>   layers;
+
+        dsstring                            scenename;
 
     } RegisteredCamera;
 

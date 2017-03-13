@@ -162,9 +162,15 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
 
         if( inertbody )
         {
+            dsstring scenename;
+
+            p_node->GetSceneName( scenename );
+
             if( inertbody->IsDynamicLinkEnabled() )
             {
                 RegisteredBody reg_body;
+
+                reg_body.scenename = scenename;
 
                 if( inertbody->IsDynamicLinkInitState() )
                 {
@@ -245,6 +251,8 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
             reg_camera.relative_alt_valid = false;
 
             p_node->GetSceneName( camera_scenename );
+
+            reg_camera.scenename = camera_scenename;
 
             DrawSpace::Dynamics::Body* camrefbody = camera_node->GetContent()->GetReferentBody();
             if( camrefbody )
