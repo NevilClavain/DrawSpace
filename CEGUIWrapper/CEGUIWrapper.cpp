@@ -252,6 +252,12 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
                 tbn->subscribeEvent( CEGUI::ToggleButton::EventSelectStateChanged, CEGUI::Event::Subscriber( &CEGUIWrapper::on_ToggleButton_EventSelectStateChanged, this ) );
                 return;
             }
+
+            CEGUI::PushButton* btn = dynamic_cast<CEGUI::PushButton*>( child );            
+            if( btn )
+            {
+                btn->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_PushButton_EventClicked, this ) );
+            }
         }
         else
         {
@@ -487,28 +493,6 @@ int CEGUIWrapper::GetComboBoxSelectionIndex( const dsstring& p_layoutName, const
                  _DSEXCEPTION( "Widget with corresponding ID is not a CEGUI::Combobox" );
             }
             return cbbx->getItemIndex( cbbx->getSelectedItem() );
-        }
-        else
-        {
-            _DSEXCEPTION( "unregistered CEGUI window ID" );
-        }
-    }
-    else
-    {
-         _DSEXCEPTION( "unregistered CEGUI layout" );
-    }
-}
-
-void CEGUIWrapper::SubscribePushButtonEventClicked( const dsstring& p_layoutName, const dsstring& p_widgetName )
-{
-    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
-    {
-        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
-
-        if( wt.count( p_widgetName ) > 0 )
-        {
-            Window* widget = wt[p_widgetName];
-            widget->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_PushButton_EventClicked, this ) );
         }
         else
         {

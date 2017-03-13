@@ -89,10 +89,6 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 14 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Quit_Button" );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "PlanetView_Button" ); 
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "AddPlanet_Button" );
-	m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "GroundSetup_Button" );
 
 
     ///////// timer messages status bar

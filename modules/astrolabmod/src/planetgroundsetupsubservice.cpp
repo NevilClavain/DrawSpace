@@ -73,7 +73,6 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 3 );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( LAYOUT_FILE, "Close_Button" );
 }
 
 

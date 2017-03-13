@@ -103,9 +103,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
 
 
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "test.layout", "Button_ClearText" );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "test.layout", "Button_CopyInput" );
-
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 

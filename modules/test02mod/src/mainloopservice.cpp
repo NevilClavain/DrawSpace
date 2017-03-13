@@ -136,11 +136,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Trigger" );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Quit" );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Button_Create" );
-    m_renderer->GUI_SubscribeWidgetPushButtonEventClicked( "main.layout", "Button_Destroy" );
-
 
     set_mouse_circular_mode( false );
 
