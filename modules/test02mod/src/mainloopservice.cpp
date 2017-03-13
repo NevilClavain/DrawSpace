@@ -119,12 +119,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GUI_SetLayout( "main.layout" );
 
-    /*
-    m_renderer->GUI_StoreWidget( 0, 1 );
-    m_renderer->GUI_StoreWidget( 1, 2 );
-    m_renderer->GUI_StoreWidget( 1, 3 );
-    m_renderer->GUI_StoreWidget( 1, 4 );
-    */
 
     m_renderer->GUI_StoreWidget( "main.layout", "root", 1 );
     m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 2 );
