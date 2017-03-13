@@ -97,13 +97,13 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
 
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 2 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 4 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 5 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 6 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 7 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 8 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 9 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_FPS" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Mem" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_CameraDistance" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetRay" );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 

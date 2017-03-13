@@ -74,19 +74,19 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
 
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 2 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 3 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 4 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 5 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 6 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 7 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 8 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 9 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 10 );
-	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 11 );
-	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 12 );
-	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 13 );
-	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 14 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Quit_Button" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "PlanetView_Button" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_FPS" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Mem" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "AddPlanet_Button" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "PlanetSlots_Listbox" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "PlanetName_Editbox" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Status" );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "GroundSetup_Button" );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button2" );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button22" );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button222" );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
