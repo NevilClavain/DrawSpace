@@ -277,7 +277,7 @@ public:
     virtual void GUI_LoadLayout( const dsstring& p_layout_path );
     virtual void GUI_LoadScheme( const dsstring& p_scheme_path );
     virtual void GUI_SetLayout( const dsstring& p_layoutpath );
-    virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id );
+    virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName );
     virtual void GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
     virtual void GUI_GetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext );
     virtual void GUI_AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );

@@ -120,12 +120,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_SetLayout( "main.layout" );
 
 
-    m_renderer->GUI_StoreWidget( "main.layout", "root", 1 );
-    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 2 );
-    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 3 );
-    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", 4 );
-    m_renderer->GUI_StoreWidget( "main.layout", "root", 5 );
-    m_renderer->GUI_StoreWidget( "main.layout", "root", 6 );
+    m_renderer->GUI_StoreWidget( "main.layout", "root", "testWindow" );
+    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", "FPSInfoLabel" );
+    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", "Trigger" );
+    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", "Quit" );
+    m_renderer->GUI_StoreWidget( "main.layout", "root", "Button_Create" );
+    m_renderer->GUI_StoreWidget( "main.layout", "root", "Button_Destroy" );
     
 
 

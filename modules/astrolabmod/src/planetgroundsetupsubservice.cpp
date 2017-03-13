@@ -69,8 +69,8 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
 
     m_renderer->GUI_LoadLayout( LAYOUT_FILE );
 
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 2 );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", 3 );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 }

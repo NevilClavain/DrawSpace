@@ -89,7 +89,7 @@ public:
 
     void SetLayout( const dsstring& p_layoutpath );
 
-    void Store( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id );
+    void Store( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName );
 
     void SetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
     void GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext ); 

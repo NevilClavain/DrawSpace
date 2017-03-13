@@ -224,7 +224,7 @@ void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
     }
 }
 
-void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id )
+void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName )
 {
     if( m_layoutNamesTable.count( p_layoutName ) > 0 )
     {
@@ -235,7 +235,8 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
         if( wt.count( p_parentName ) > 0 )
         {
             Window* parent = wt[p_parentName];
-            Window* child = parent->getChild( p_id );
+            //Window* child = parent->getChild( p_id );
+            Window* child = parent->getChildRecursive( p_childName );
             dsstring childName = child->getName().c_str();
             wt[childName] = child;
 

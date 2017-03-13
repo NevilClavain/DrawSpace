@@ -4,15 +4,13 @@
     <Window type="DefaultWindow" name="root" >
         <Property name="Area" value="{{0,-1},{0,-2},{1,-1},{1,-2}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
-        <Window type="xfskin/Label" name="Label" >
-            <Property name="ID" value="1" />
+        <Window type="xfskin/Label" name="Label" >            
             <Property name="Area" value="{{0,344},{0,25},{0,598},{0,97}}" />
             <Property name="Font" value="Audiowide-Regular-12" />
             <Property name="Text" value="1224 Test !!" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/Button" name="Button" >
-            <Property name="ID" value="2" />
             <Property name="Area" value="{{0,275},{0,276},{0,515},{0,360}}" />
             <Property name="Font" value="Audiowide-Regular-12" />
             <Property name="Text" value="Button 0" />
@@ -28,27 +26,22 @@
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/Editbox" name="Editbox" >
-            <Property name="ID" value="3" />
             <Property name="Area" value="{{0,242},{0,501},{0,563},{0,587}}" />
         </Window>
         <Window type="xfskin/Button" name="Button_ClearText" >
-            <Property name="ID" value="4" />
             <Property name="Area" value="{{0,66},{0,521},{0,231},{0,571}}" />
             <Property name="Text" value="Clear text" />
         </Window>
         <Window type="xfskin/Button" name="Button_CopyInput" >
-            <Property name="ID" value="5" />
             <Property name="Area" value="{{0,583},{0,520},{0,783},{0,570}}" />
             <Property name="Text" value="Copy input" />
         </Window>
         <Window type="xfskin/Label" name="Label2" >
-            <Property name="ID" value="6" />
             <Property name="Area" value="{{0,798},{0,505},{0,1076},{0,582}}" />
             <Property name="Text" value="?" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/Editbox" name="Editbox2" >
-            <Property name="ID" value="7" />
             <Property name="Area" value="{{0,241},{0,599},{0,562},{0,680}}" />
         </Window>
         <Window type="xfskin/FrameWindow" name="FrameWindow" >
@@ -93,11 +86,9 @@
             <Property name="Area" value="{{0,106},{0,107},{0,151},{1,-417}}" />
         </Window>
         <Window type="xfskin/Listbox" name="Listbox" >
-            <Property name="ID" value="8" />
             <Property name="Area" value="{{0,1101},{0,516},{0,1357},{0,772}}" />
         </Window>
         <Window type="xfskin/Combobox" name="Combobox" >
-            <Property name="ID" value="9" />
             <Property name="Area" value="{{0,345},{0,147},{0,601},{0,403}}" />
             <AutoWindow namePath="__auto_editbox__" >
                 <Property name="ActiveSelectionColour" value="tl:FF037574 tr:FF037574 bl:FF037574 br:FF037574" />
@@ -128,7 +119,6 @@
             </AutoWindow>
         </Window>
         <Window type="xfskin/Checkbox" name="Checkbox" >
-            <Property name="ID" value="10" />
             <Property name="Area" value="{{0,803},{0,46},{0,931},{0,78}}" />
             <Property name="Text" value="azerty" />
         </Window>

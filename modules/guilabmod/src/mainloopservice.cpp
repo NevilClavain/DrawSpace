@@ -79,16 +79,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_LoadLayout( "test.layout" );
     m_renderer->GUI_SetLayout( "test.layout" );
    
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 1 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 2 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 3 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 4 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 5 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 6 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 7 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 8 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 9 );
-    m_renderer->GUI_StoreWidget( "test.layout", "root", 10 );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Label" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Button" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Editbox" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Button_ClearText" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Button_CopyInput" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Label2" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Editbox2" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Listbox" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Combobox" );
+    m_renderer->GUI_StoreWidget( "test.layout", "root", "Checkbox" );
 
     m_renderer->GUI_AddComboboxTextItem( "test.layout", "Combobox", "true", 0xFF037574, "xfskin/GenericBrush" );
     m_renderer->GUI_AddComboboxTextItem( "test.layout", "Combobox", "false", 0xFF037574, "xfskin/GenericBrush" );

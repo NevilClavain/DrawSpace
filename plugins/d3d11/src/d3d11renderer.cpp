@@ -2465,9 +2465,9 @@ void D3D11Renderer::GUI_LoadScheme( const dsstring& p_scheme_path )
     m_guisubsystem.LoadScheme( p_scheme_path );
 }
 
-void D3D11Renderer::GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, int p_id )
+void D3D11Renderer::GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName )
 {
-    m_guisubsystem.Store( p_layoutName, p_parentName, p_id );
+    m_guisubsystem.Store( p_layoutName, p_parentName, p_childName );
 }
 
 void D3D11Renderer::GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text )
