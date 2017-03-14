@@ -64,7 +64,8 @@ public:
 
     void Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::Interface::Renderer* p_renderer,
                     DrawSpace::Utils::TimeManager* p_tm, DrawSpace::IntermediatePass* p_ipass,
-                    DrawSpace::Dynamics::Calendar* p_calendar,     DrawSpace::Core::SceneNodeGraph* p_scenenodegraph );
+                    DrawSpace::Dynamics::Calendar* p_calendar, DrawSpace::Core::SceneNodeGraph* p_scenenodegraph,
+                    DrawSpace::SphericalLOD::Root::LODDependantNodeInfoStateHandler* p_LODDepNodeInfoStateHandler );
 
     void Run( void );
 

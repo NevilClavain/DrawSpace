@@ -36,7 +36,8 @@ PlanetInstance::~PlanetInstance( void )
 
 void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::Interface::Renderer* p_renderer,
                 DrawSpace::Utils::TimeManager* p_tm, DrawSpace::IntermediatePass* p_ipass,
-                DrawSpace::Dynamics::Calendar* p_calendar,  DrawSpace::Core::SceneNodeGraph* p_scenenodegraph )
+                DrawSpace::Dynamics::Calendar* p_calendar,  DrawSpace::Core::SceneNodeGraph* p_scenenodegraph,
+                DrawSpace::SphericalLOD::Root::LODDependantNodeInfoStateHandler* p_LODDepNodeInfoStateHandler )
 {
     m_node_config = p_planet_config;
     m_scenenodegraph = p_scenenodegraph;
@@ -139,6 +140,8 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
     {
 		m_planet_root->RegisterSinglePassSlot( p_ipass, m_planet_details_binder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_SKIRT_MESHE, 0, 2000 );
     }
+
+    m_planet_root->RegisterLODDependantNodeInfosHandler( p_LODDepNodeInfoStateHandler );
 
     // temp
     m_planet_root->SetOrbitDuration( 0.333 );

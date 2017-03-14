@@ -103,7 +103,7 @@ void PlanetGroundSetupSubService::Release( void )
     _DSDEBUG( logger, dsstring("PlanetGroundSetup sub service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* PlanetGroundSetupSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
+DrawSpace::Core::BaseSceneNode* PlanetGroundSetupSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
 {
     return NULL;
 }

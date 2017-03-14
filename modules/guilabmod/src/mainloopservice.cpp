@@ -150,7 +150,7 @@ void MainLoopService::Release( void )
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
+DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
 {
     return NULL;
 }

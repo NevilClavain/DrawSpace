@@ -36,6 +36,10 @@ namespace Module
 {
 class Service
 {
+public:
+
+    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, bool >       LODDependantNodeInfoStateHandler;
+
 protected:
     DrawSpace::Module::KeysLinkTable        m_keysLinkTable;
 
@@ -57,7 +61,7 @@ public:
     virtual void								Run( void ) = 0;
     virtual void								Release( void ) = 0;
 
-    virtual DrawSpace::Core::BaseSceneNode*		InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar ) = 0;
+    virtual DrawSpace::Core::BaseSceneNode*		InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler ) = 0;
     virtual void								RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph ) = 0;
     virtual void								UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph ) = 0;
     virtual void								ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar ) = 0;

@@ -48,6 +48,7 @@ m_shift( false ),
 m_ctrl( false )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
+    m_loddepnodeinfosstate_cb = _DRAWSPACE_NEW_( LODDependantNodeInfoStateCallback, LODDependantNodeInfoStateCallback( this, &PlanetViewSubService::on_LODdepnodeinfosstate_update ) );
 }
     
 PlanetViewSubService::~PlanetViewSubService( void )
@@ -250,7 +251,7 @@ void PlanetViewSubService::Release( void )
     _DSDEBUG( logger, dsstring("PlanetView sub service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* PlanetViewSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
+DrawSpace::Core::BaseSceneNode* PlanetViewSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
 {
     return NULL;
 }
@@ -580,7 +581,7 @@ void PlanetViewSubService::destroy_arrow_camera( void )
 
 void PlanetViewSubService::create_planet( const dsstring& p_planetId )
 {   
-    m_planet_node = m_cdlodp_service->InstanciateSceneNode( p_planetId, m_calendar );
+    m_planet_node = m_cdlodp_service->InstanciateSceneNode( p_planetId, m_calendar, m_loddepnodeinfosstate_cb );
 
     m_scenenodegraph.RegisterNode( m_planet_node );
 
@@ -690,4 +691,9 @@ void PlanetViewSubService::set_arrow_initial_attitude( void )
     mat.Translation( 0.0, 0.0, 4000000.0 );
 
 	m_arrow->ForceInitialAttitude( mat );
+}
+
+void PlanetViewSubService::on_LODdepnodeinfosstate_update( const dsstring& p_nodeid, bool p_state )
+{
+
 }

@@ -228,7 +228,7 @@ void MainLoopService::Release( void )
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
+DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
 {
     return NULL;
 }
@@ -554,7 +554,7 @@ void MainLoopService::load_skybox_module( void )
 
 void MainLoopService::create_spacebox( void )
 { 
-    DrawSpace::Core::BaseSceneNode* spacebox_node = m_sb_service->InstanciateSceneNode( "spacebox", NULL );
+    DrawSpace::Core::BaseSceneNode* spacebox_node = m_sb_service->InstanciateSceneNode( "spacebox", NULL, NULL );
 
     m_scenenodegraph.RegisterNode( spacebox_node );
 

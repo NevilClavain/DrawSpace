@@ -115,7 +115,7 @@ void CDLODPlanetService::Release( void )
     _DSDEBUG( logger, dsstring("CDLODPlanet service : shutdown...") );
 }
 
-DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
+DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
 {
     PlanetSceneNodeConfig* pconfig;
 
@@ -135,7 +135,7 @@ DrawSpace::Core::BaseSceneNode* CDLODPlanetService::InstanciateSceneNode( const 
 	m_nodes_config[p_sceneNodeName].SetOwner( pe );
 
 
-    pe->Init( pconfig, m_renderer, &m_tm, m_texturepass, p_calendar, m_scenenodegraph );
+    pe->Init( pconfig, m_renderer, &m_tm, m_texturepass, p_calendar, m_scenenodegraph, p_handler );
 
     m_nodes[p_sceneNodeName] = pe;
     return pe->GetSceneNode();

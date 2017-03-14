@@ -145,7 +145,7 @@ void SkyboxService::Release( void )
 {
 }
 
-DrawSpace::Core::BaseSceneNode* SkyboxService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )
+DrawSpace::Core::BaseSceneNode* SkyboxService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
 {
     SkyboxNodeEntry entry;
 

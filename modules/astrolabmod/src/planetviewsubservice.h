@@ -35,6 +35,8 @@ protected:
 
     typedef DrawSpace::Core::CallBack2<PlanetViewSubService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
 
+    typedef DrawSpace::Core::CallBack2<PlanetViewSubService, void, const dsstring&, bool>             LODDependantNodeInfoStateCallback;
+
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
@@ -94,6 +96,8 @@ protected:
 	bool																m_shift;
     bool                                                                m_ctrl;
 
+    LODDependantNodeInfoStateCallback*                                  m_loddepnodeinfosstate_cb;
+
 
     void init_passes( void );
     void create_passes( void );
@@ -107,6 +111,8 @@ protected:
 	void destroy_planet(const dsstring& p_planetId);
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
+
+    void on_LODdepnodeinfosstate_update( const dsstring& p_nodeid, bool p_state );
 
 	dsreal compute_arrow_force( void );
 	dsreal compute_arrow_torque( dsreal p_delta );
@@ -126,7 +132,7 @@ public:
     virtual void                            Run( void );
     virtual void                            Release( void );
 
-    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar );
+    virtual DrawSpace::Core::BaseSceneNode* InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler );
     virtual void                            RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
     virtual void                            UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
     virtual void                            ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar );

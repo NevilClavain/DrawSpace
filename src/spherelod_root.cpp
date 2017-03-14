@@ -199,6 +199,11 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                         }
                                               
                         m_registered_bodies[inertbody] = reg_body;
+
+                        for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
+                        {
+                            (* m_LODDependantNodeInfosHandlers[i] )( scenename, true );
+                        }
                     }
                 }
                 else
@@ -224,6 +229,12 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                     }
 
                     m_registered_bodies[inertbody] = reg_body;
+
+                    for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
+                    {
+                        (* m_LODDependantNodeInfosHandlers[i] )( scenename, true );
+                    }
+
                 }
             }
             return;
@@ -269,6 +280,10 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                         reg_camera.layers = m_registered_bodies[inert_body].layers;
 
                         m_registered_camerapoints[camera_scenename] = reg_camera;
+                        for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
+                        {
+                            (* m_LODDependantNodeInfosHandlers[i] )( camera_scenename, true );
+                        }
                     }
                     else
                     {
@@ -292,7 +307,10 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                             create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera, true );
 
                             m_registered_camerapoints[camera_scenename] = reg_camera;
-
+                            for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
+                            {
+                                (* m_LODDependantNodeInfosHandlers[i] )( camera_scenename, true );
+                            }
                         }
                         else
                         {
@@ -313,6 +331,10 @@ void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, 
                 create_camera_collisions( camera_scenename, camera_node->GetContent(), reg_camera, false );
 
                 m_registered_camerapoints[camera_scenename] = reg_camera;
+                for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
+                {
+                    (* m_LODDependantNodeInfosHandlers[i] )( camera_scenename, true );
+                }
 
 				// ECH AJOUT 21/02/2017 : même pour les camera FREE, attribuer le referent body, afin
 				// que le calcul de la relative altitude soit effectue dans Root::manage_camerapoints()
@@ -842,4 +864,9 @@ int Root::GetSingleShotSubPassesStackSize()
 void Root::SetGravityState( bool p_state )
 {
     m_enable_gravity = p_state;
+}
+
+void Root::RegisterLODDependantNodeInfosHandler( LODDependantNodeInfoStateHandler* p_handler )
+{
+    m_LODDependantNodeInfosHandlers.push_back( p_handler );
 }
