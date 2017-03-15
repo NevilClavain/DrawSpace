@@ -110,6 +110,7 @@
     <ClInclude Include="src\planetconfig.h" />
     <ClInclude Include="src\planetdetailsbinder.h" />
     <ClInclude Include="src\planetinstance.h" />
+    <ClInclude Include="src\planetloddependantnodeinfos.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

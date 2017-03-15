@@ -850,9 +850,7 @@ DrawSpace::SphericalLOD::SubPass::EntryInfos Root::on_subpasscreation( DrawSpace
             break;
     }
 
-    ei.queue_id = p_dest;
-    
-
+    ei.queue_id = p_dest;    
     return ei;    
 }
 
@@ -869,4 +867,20 @@ void Root::SetGravityState( bool p_state )
 void Root::RegisterLODDependantNodeInfosHandler( LODDependantNodeInfoStateHandler* p_handler )
 {
     m_LODDependantNodeInfosHandlers.push_back( p_handler );
+}
+
+void Root::GetRegisteredBodyInfosList( std::vector<RegisteredBody>& p_list )
+{
+    for( auto it = m_registered_bodies.begin(); it != m_registered_bodies.end(); ++it )
+    {
+        p_list.push_back( it->second );
+    }
+}
+
+void Root::GetRegisteredCameraInfosList( std::vector<RegisteredCamera>& p_list )
+{
+    for( auto it = m_registered_camerapoints.begin(); it != m_registered_camerapoints.end(); ++it )
+    {
+        p_list.push_back( it->second );
+    }
 }

@@ -68,6 +68,8 @@ public:
 
 	virtual DrawSpace::Module::KeysLinkTable*	AddSceneNodeConfig( const dsstring& p_sceneNodeName ) { return NULL; };
 
+    virtual void                                AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_nodeId, DrawSpace::Module::KeysLinkTable* p_keytable ) {};
+
     virtual void								OnKeyPress( long p_key ) {};
     virtual void								OnEndKeyPress( long p_key ) {};
     virtual void								OnKeyPulse( long p_key ) {};

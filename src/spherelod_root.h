@@ -46,7 +46,14 @@ public:
 
     typedef DrawSpace::Core::CallBack<DrawSpace::SphericalLOD::Root, void, DrawSpace::Utils::Timer*>                                                                    TimerCb;
 
-protected:
+
+    typedef enum
+    {
+        FREE,
+        FREE_ON_PLANET,
+        INERTBODY_LINKED,
+
+    } CameraType;
 
     typedef struct
     {
@@ -62,15 +69,6 @@ protected:
         dsstring                                    scenename;
         
     } RegisteredBody;
-
-
-    typedef enum
-    {
-        FREE,
-        FREE_ON_PLANET,
-        INERTBODY_LINKED,
-
-    } CameraType;
 
     typedef struct
     {
@@ -91,6 +89,7 @@ protected:
 
     } RegisteredCamera;
 
+protected:
 
     dsreal                                                                  m_ray;
 
@@ -160,6 +159,9 @@ public:
 
     SphericalLOD::Layer*                GetLayerFromInertBody( DrawSpace::Dynamics::InertBody* p_body, int p_layer_index );
     SphericalLOD::Layer*                GetLayerFromCamera( const dsstring& p_cameraName, int p_layer_index );
+
+    void                                GetRegisteredBodyInfosList( std::vector<RegisteredBody>& p_list );
+    void                                GetRegisteredCameraInfosList( std::vector<RegisteredCamera>& p_list );
     
     void                                RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
     void                                UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );

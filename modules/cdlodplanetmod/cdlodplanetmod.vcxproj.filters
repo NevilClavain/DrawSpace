@@ -53,5 +53,8 @@
     <ClInclude Include="src\planetconfig.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\planetloddependantnodeinfos.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -94,6 +94,8 @@ public:
 
 	virtual DrawSpace::Module::KeysLinkTable*	AddSceneNodeConfig( const dsstring& p_sceneNodeName );
 
+    virtual void                                AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_nodeId, DrawSpace::Module::KeysLinkTable* p_keytable );
+
     virtual void								OnSceneNodeGraphUpdated( DrawSpace::Core::SceneNodeGraph* p_val );
     virtual void								OnTexturePassUpdate( DrawSpace::IntermediatePass* p_val );
 };

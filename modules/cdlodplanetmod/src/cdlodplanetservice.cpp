@@ -176,4 +176,7 @@ DrawSpace::Module::KeysLinkTable* CDLODPlanetService::AddSceneNodeConfig( const 
 	return &m_nodes_config[p_sceneNodeName].m_keylinksTable;
 }
 
+void CDLODPlanetService::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_nodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
+{
 
+}
