@@ -524,8 +524,8 @@ void Root::manage_camerapoints( void )
 
 			dsreal rel_alt = ( camera_pos2.Length() / m_ray );
 
-			m_registered_camerapoints[it->first].relative_alt = rel_alt;
-			m_registered_camerapoints[it->first].relative_alt_valid = true;
+            it->second.relative_alt = rel_alt;
+            it->second.relative_alt_valid = true;
 
 			for( size_t i = 0; i < it->second.layers.size(); i++ )
 			{
@@ -533,6 +533,13 @@ void Root::manage_camerapoints( void )
 			}
         }
         // les cameras de type INERTBODY_LINKED : l'altitude relative est deja fournie au layer via l'inertbody associe, dans manage_bodies()
+        else
+        {
+            // INERTBODY_LINKED
+
+            it->second.relative_alt = m_registered_bodies[it->second.attached_body].relative_alt;
+            it->second.relative_alt_valid = m_registered_bodies[it->second.attached_body].relative_alt_valid;
+        }
     }
 }
 
