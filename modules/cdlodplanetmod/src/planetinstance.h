@@ -31,6 +31,11 @@
 
 class PlanetInstance
 {
+public:
+
+    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, bool >  LODDependantNodeInfoStateHandler;
+
+
 protected:
 
     DrawSpace::SphericalLOD::Config                                 m_config;
@@ -58,6 +63,8 @@ protected:
     DrawSpace::Dynamics::Calendar*                                  m_calendar;
     DrawSpace::Core::SceneNodeGraph*                                m_scenenodegraph;
 
+    std::vector<LODDependantNodeInfoStateHandler*>                  m_LODDependantNodeInfosHandlers;
+
     std::map<dsstring, PlanetLODDependantNodeInfos>                 m_LODdependant_nodeinfos;
 
 public:
@@ -68,7 +75,7 @@ public:
     void Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::Interface::Renderer* p_renderer,
                     DrawSpace::Utils::TimeManager* p_tm, DrawSpace::IntermediatePass* p_ipass,
                     DrawSpace::Dynamics::Calendar* p_calendar, DrawSpace::Core::SceneNodeGraph* p_scenenodegraph,
-                    DrawSpace::SphericalLOD::Root::LODDependantNodeInfoStateHandler* p_LODDepNodeInfoStateHandler );
+                    LODDependantNodeInfoStateHandler* p_LODDepNodeInfoStateHandler );
 
     void Run( void );
 
@@ -80,6 +87,8 @@ public:
     void UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 
 	void OnGravityEnabledUpdate( bool p_value );
+
+    void RegisterLODDependantNodeInfosHandler( LODDependantNodeInfoStateHandler* p_handler );
 };
 
 #endif

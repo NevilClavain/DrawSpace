@@ -37,8 +37,6 @@ class Root : public Dynamics::Orbiter
 {
 public:
 
-    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, bool >                                                                                                LODDependantNodeInfoStateHandler;
-
     typedef DrawSpace::Core::CallBack2<DrawSpace::SphericalLOD::Root, void, DrawSpace::Core::SceneNodeGraph::CameraEvent, DrawSpace::Core::BaseSceneNode*>              CameraEvtCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::SphericalLOD::Root, void, DrawSpace::Core::SceneNodeGraph::NodesEvent, DrawSpace::Core::BaseSceneNode*>               NodesEventCb;
     typedef DrawSpace::Core::CallBack2<DrawSpace::SphericalLOD::Root, void, DrawSpace::Core::SceneNodeGraph::ScenegraphEvent, DrawSpace::Core::SceneNodeGraph*>         ScenegraphEventCb;
@@ -123,8 +121,6 @@ protected:
 
     bool                                                                    m_enable_gravity;
 
-    std::vector<LODDependantNodeInfoStateHandler*>                          m_LODDependantNodeInfosHandlers;
-
 
     void attach_body( DrawSpace::Dynamics::InertBody* p_body );
     void detach_body( DrawSpace::Dynamics::InertBody* p_body );
@@ -184,8 +180,6 @@ public:
     int                                 GetSingleShotSubPassesStackSize();
 
     void                                SetGravityState( bool p_state );
-
-    void                                RegisterLODDependantNodeInfosHandler( LODDependantNodeInfoStateHandler* p_handler );
 };
 
 

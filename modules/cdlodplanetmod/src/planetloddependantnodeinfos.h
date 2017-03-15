@@ -30,11 +30,17 @@ class PlanetLODDependantNodeInfos
 {
 public:
 
+    DrawSpace::Module::KeySource<bool>              m_isCamera;
+
+    DrawSpace::Module::KeySource<int>               m_cameraType;
+
     DrawSpace::Module::KeySource<bool>              m_isNodeHot;
-    DrawSpace::Module::KeySource<bool>              m_nodeRelativeAltitudeValid;
 
     DrawSpace::Module::KeySource<dsreal>            m_nodeAltitude;
+
+    DrawSpace::Module::KeySource<bool>              m_nodeRelativeAltitudeValid;
     DrawSpace::Module::KeySource<dsreal>            m_nodeRelativeAltitude;
+
     DrawSpace::Module::KeySource<dsreal>            m_groundAlt;
 
     PlanetLODDependantNodeInfos( void ) :
@@ -42,7 +48,9 @@ public:
         m_nodeRelativeAltitude( "nodeRelativeAltitude" ),
         m_isNodeHot( "isNodeHot" ),
         m_nodeRelativeAltitudeValid( "nodeRelativeAltitudeValid" ),
-        m_groundAlt( "groundAlt" )
+        m_groundAlt( "groundAlt" ),
+        m_isCamera( "isCamera" ),
+        m_cameraType( "cameraType" )
     {
     }
 };

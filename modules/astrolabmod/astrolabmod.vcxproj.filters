@@ -47,5 +47,8 @@
     <ClInclude Include="src\planetgroundsetupsubservice.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\nodeplanetinfos.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
