@@ -41,6 +41,7 @@ public:
     DrawSpace::Module::KeySource<bool>              m_nodeRelativeAltitudeValid;
     DrawSpace::Module::KeySource<dsreal>            m_nodeRelativeAltitude;
 
+    DrawSpace::Module::KeySource<bool>              m_groundAltValid;
     DrawSpace::Module::KeySource<dsreal>            m_groundAlt;
 
     PlanetLODDependantNodeInfos( void ) :
@@ -50,7 +51,8 @@ public:
         m_nodeRelativeAltitudeValid( "nodeRelativeAltitudeValid" ),
         m_groundAlt( "groundAlt" ),
         m_isCamera( "isCamera" ),
-        m_cameraType( "cameraType" )
+        m_cameraType( "cameraType" ),
+        m_groundAltValid( "groundAltValid" )
     {
     }
 
@@ -63,6 +65,7 @@ public:
         p_keytable->RegisterClientKey( &m_nodeRelativeAltitudeValid );
         p_keytable->RegisterClientKey( &m_nodeRelativeAltitude );
         p_keytable->RegisterClientKey( &m_groundAlt );
+        p_keytable->RegisterClientKey( &m_groundAltValid );
     }
 };
 

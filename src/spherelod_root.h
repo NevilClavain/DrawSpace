@@ -70,20 +70,20 @@ public:
 
     typedef struct
     {
-        bool                                update_meshe;
+        bool                                        update_meshe;
 
-        CameraType                          type;
-        DrawSpace::Dynamics::InertBody*     attached_body;
-        DrawSpace::Dynamics::Collider*      attached_collider;
+        CameraType                                  type;
+        DrawSpace::Dynamics::InertBody*             attached_body;
+        DrawSpace::Dynamics::Collider*              attached_collider;
 
-        bool                                relative_alt_valid;
-        dsreal                              relative_alt;
+        bool                                        relative_alt_valid;
+        dsreal                                      relative_alt;
 
-        DrawSpace::Dynamics::CameraPoint*   camera;
+        DrawSpace::Dynamics::CameraPoint*           camera;
 
-        std::vector<SphericalLOD::Layer*>   layers;
+        std::vector<SphericalLOD::Layer*>           layers;
 
-        dsstring                            scenename;
+        dsstring                                    scenename;
 
     } RegisteredCamera;
 

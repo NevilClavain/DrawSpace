@@ -92,6 +92,7 @@ public:
     BoolInfo                            m_nodeRelativeAltitudeValid;
     RealInfo                            m_nodeRelativeAltitude;
 
+    BoolInfo                            m_groundAltValid;
     RealInfo                            m_groundAlt;
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +108,8 @@ public:
     m_nodeAltitude( "nodeAltitude" ),
     m_nodeRelativeAltitudeValid( "nodeRelativeAltitudeValid" ),
     m_nodeRelativeAltitude( "nodeRelativeAltitude" ),
-    m_groundAlt( "groundAlt" )
+    m_groundAlt( "groundAlt" ),
+    m_groundAltValid( "groundAltValid" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_isCamera );
         m_keylinksTable.RegisterModuleKey( &m_cameraType );
@@ -116,6 +118,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_nodeRelativeAltitudeValid );
         m_keylinksTable.RegisterModuleKey( &m_nodeRelativeAltitude );
         m_keylinksTable.RegisterModuleKey( &m_groundAlt );
+        m_keylinksTable.RegisterModuleKey( &m_groundAltValid );
 	}
 };
 

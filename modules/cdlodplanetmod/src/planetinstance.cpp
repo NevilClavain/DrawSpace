@@ -214,6 +214,7 @@ void PlanetInstance::Run( void )
         m_LODdependant_nodeinfos[node_sceneid].m_nodeRelativeAltitude = bodies_infos[i].relative_alt;
         m_LODdependant_nodeinfos[node_sceneid].m_nodeAltitude = bodies_infos[i].layers[0]->GetBody()->GetHotPointAltitud();
         m_LODdependant_nodeinfos[node_sceneid].m_groundAlt = bodies_infos[i].layers[0]->GetCurrentHeight();
+        m_LODdependant_nodeinfos[node_sceneid].m_groundAltValid = bodies_infos[i].layers[0]->HasCollisions();
 
         if( notify_new_entry )
         {
@@ -273,6 +274,7 @@ void PlanetInstance::Run( void )
         m_LODdependant_nodeinfos[node_sceneid].m_nodeRelativeAltitude = cameras_infos[i].relative_alt;
         m_LODdependant_nodeinfos[node_sceneid].m_nodeAltitude = cameras_infos[i].layers[0]->GetBody()->GetHotPointAltitud();
         m_LODdependant_nodeinfos[node_sceneid].m_groundAlt = cameras_infos[i].layers[0]->GetCurrentHeight();
+        m_LODdependant_nodeinfos[node_sceneid].m_groundAltValid = cameras_infos[i].layers[0]->HasCollisions();
 
         if( notify_new_entry )
         {
