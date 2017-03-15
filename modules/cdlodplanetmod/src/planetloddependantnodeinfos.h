@@ -30,14 +30,19 @@ class PlanetLODDependantNodeInfos
 {
 public:
 
+    DrawSpace::Module::KeySource<bool>              m_isNodeHot;
+    DrawSpace::Module::KeySource<bool>              m_nodeRelativeAltitudeValid;
+
     DrawSpace::Module::KeySource<dsreal>            m_nodeAltitude;
     DrawSpace::Module::KeySource<dsreal>            m_nodeRelativeAltitude;
-    DrawSpace::Module::KeySource<bool>              m_isNodeHot;
+    DrawSpace::Module::KeySource<dsreal>            m_groundAlt;
 
     PlanetLODDependantNodeInfos( void ) :
         m_nodeAltitude( "nodeAltitude" ),
         m_nodeRelativeAltitude( "nodeRelativeAltitude" ),
-        m_isNodeHot( "isNodeHot" )
+        m_isNodeHot( "isNodeHot" ),
+        m_nodeRelativeAltitudeValid( "nodeRelativeAltitudeValid" ),
+        m_groundAlt( "groundAlt" )
     {
     }
 };

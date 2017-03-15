@@ -27,6 +27,8 @@
 #include "planetdetailsbinder.h"
 #include "planetclimatebinder.h"
 
+#include "planetloddependantnodeinfos.h"
+
 class PlanetInstance
 {
 protected:
@@ -56,6 +58,7 @@ protected:
     DrawSpace::Dynamics::Calendar*                                  m_calendar;
     DrawSpace::Core::SceneNodeGraph*                                m_scenenodegraph;
 
+    std::map<dsstring, PlanetLODDependantNodeInfos>                 m_LODdependant_nodeinfos;
 
 public:
 

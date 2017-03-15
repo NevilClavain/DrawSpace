@@ -165,6 +165,8 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
 void PlanetInstance::Run( void )
 {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     dsstring camera_name;
     m_scenenodegraph->GetCurrentCameraName( camera_name );
 
@@ -184,10 +186,44 @@ void PlanetInstance::Run( void )
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	for (int i = 0; i < 6; i++)
+	for( int i = 0; i < 6; i++ )
 	{
 		m_planet_details_binder[i]->Update();
 	}
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    std::vector<DrawSpace::SphericalLOD::Root::RegisteredBody> bodies_infos;
+    m_planet_root->GetRegisteredBodyInfosList( bodies_infos );
+
+    for( size_t i = 0; i < bodies_infos.size(); i++ )
+    {
+        dsstring node_sceneid = bodies_infos[i].scenename;
+
+        if( !m_LODdependant_nodeinfos.count( node_sceneid ) )
+        {
+        }
+
+        m_LODdependant_nodeinfos[node_sceneid].m_isNodeHot = bodies_infos[i].attached;
+        m_LODdependant_nodeinfos[node_sceneid].m_nodeRelativeAltitudeValid = bodies_infos[i].relative_alt_valid;
+        m_LODdependant_nodeinfos[node_sceneid].m_nodeRelativeAltitude = bodies_infos[i].relative_alt;
+        m_LODdependant_nodeinfos[node_sceneid].m_nodeAltitude = bodies_infos[i].layers[0]->GetBody()->GetHotPointAltitud();
+        m_LODdependant_nodeinfos[node_sceneid].m_groundAlt = bodies_infos[i].layers[0]->GetCurrentHeight();
+    }
+
+    std::vector<DrawSpace::SphericalLOD::Root::RegisteredCamera> cameras_infos;
+    m_planet_root->GetRegisteredCameraInfosList( cameras_infos );
+
+    /*
+    for( size_t i = 0; i < cameras_infos.size(); i++ )
+    {
+        dsstring node_sceneid = cameras_infos[i].scenename;
+
+        if( !m_LODdependant_nodeinfos.count( node_sceneid ) )
+        {
+        }
+    }
+    */
 }
 
 void PlanetInstance::Release( void )
