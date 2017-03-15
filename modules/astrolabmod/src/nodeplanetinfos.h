@@ -26,7 +26,6 @@
 #include "drawspace.h"
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 // infos de "nature planetaire" relative a un node scenegraph : altitude, altitude relative, hot ou non, etc...
@@ -59,7 +58,7 @@ public:
         {
         }
 
-	    virtual void OnUpdated( dsreal p_val )
+	    virtual void OnUpdated( int p_val )
         {
             m_value = p_val;
         }
@@ -74,11 +73,13 @@ public:
         {
         }
 
-	    virtual void OnUpdated( dsreal p_val )
+	    virtual void OnUpdated( bool p_val )
         {
             m_value = p_val;
         }
     };
+
+    ///////////////////////////////////////////////////////////////////////////////
 
     BoolInfo                            m_isCamera;
 
@@ -105,7 +106,8 @@ public:
     m_isNodeHot( "isNodeHot" ),
     m_nodeAltitude( "nodeAltitude" ),
     m_nodeRelativeAltitudeValid( "nodeRelativeAltitudeValid" ),
-    m_nodeRelativeAltitude( "nodeRelativeAltitude" )
+    m_nodeRelativeAltitude( "nodeRelativeAltitude" ),
+    m_groundAlt( "groundAlt" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_isCamera );
         m_keylinksTable.RegisterModuleKey( &m_cameraType );
@@ -115,12 +117,6 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_nodeRelativeAltitude );
         m_keylinksTable.RegisterModuleKey( &m_groundAlt );
 	}
-    /*
-	virtual void SetOwner( PlanetInstance* p_owner )
-	{
-		m_gravityEnabled.SetOwner( p_owner );
-	}
-    */
 };
 
 

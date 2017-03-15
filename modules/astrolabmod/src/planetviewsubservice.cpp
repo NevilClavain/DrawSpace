@@ -601,6 +601,11 @@ void PlanetViewSubService::destroy_planet( const dsstring& p_planetId )
     m_planet_node = NULL;
 
 	m_cdlodp_service->ReleaseSceneNode( p_planetId, m_calendar );
+
+    for( auto it = m_nodes_planetinfos.begin(); it != m_nodes_planetinfos.end(); ++it )
+    {
+        _DRAWSPACE_DELETE_( it->second );
+    }
 }
 
 void PlanetViewSubService::create_cubes( void )
@@ -695,5 +700,11 @@ void PlanetViewSubService::set_arrow_initial_attitude( void )
 
 void PlanetViewSubService::on_LODdepnodeinfosstate_update( const dsstring& p_nodeid, bool p_state )
 {
+    if( p_state )
+    {
+        NodePlanetInfos* pi = _DRAWSPACE_NEW_( NodePlanetInfos, NodePlanetInfos );
+        m_cdlodp_service->AddLODDependantNodeInfosKeyLinkTable( m_planet_conf->m_planetName.m_value, p_nodeid, &pi->m_keylinksTable );
 
+        m_nodes_planetinfos[p_nodeid] = pi;
+    }
 }

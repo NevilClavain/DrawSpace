@@ -200,12 +200,10 @@ void PlanetInstance::Run( void )
     {
         dsstring node_sceneid = bodies_infos[i].scenename;
 
+        bool notify_new_entry = false;
         if( !m_LODdependant_nodeinfos.count( node_sceneid ) )
         {
-            for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
-            {
-                (* m_LODDependantNodeInfosHandlers[i] )( node_sceneid, true );
-            }
+            notify_new_entry = true;
         }
 
         m_LODdependant_nodeinfos[node_sceneid].m_isNodeHot = bodies_infos[i].attached;
@@ -216,6 +214,14 @@ void PlanetInstance::Run( void )
         m_LODdependant_nodeinfos[node_sceneid].m_nodeRelativeAltitude = bodies_infos[i].relative_alt;
         m_LODdependant_nodeinfos[node_sceneid].m_nodeAltitude = bodies_infos[i].layers[0]->GetBody()->GetHotPointAltitud();
         m_LODdependant_nodeinfos[node_sceneid].m_groundAlt = bodies_infos[i].layers[0]->GetCurrentHeight();
+
+        if( notify_new_entry )
+        {
+            for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
+            {
+                (* m_LODDependantNodeInfosHandlers[i] )( node_sceneid, true );
+            }        
+        }
     }
 
     std::vector<DrawSpace::SphericalLOD::Root::RegisteredCamera> cameras_infos;
@@ -225,15 +231,12 @@ void PlanetInstance::Run( void )
     {
         dsstring node_sceneid = cameras_infos[i].scenename;
 
+        bool notify_new_entry = false;
+
         if( !m_LODdependant_nodeinfos.count( node_sceneid ) )
         {
-            for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
-            {
-                (* m_LODDependantNodeInfosHandlers[i] )( node_sceneid, true );
-            }
+            notify_new_entry = true;
         }
-
-        // continuer ici...
 
         m_LODdependant_nodeinfos[node_sceneid].m_isCamera = true;
         m_LODdependant_nodeinfos[node_sceneid].m_cameraType = (int)cameras_infos[i].type;
@@ -270,6 +273,14 @@ void PlanetInstance::Run( void )
         m_LODdependant_nodeinfos[node_sceneid].m_nodeRelativeAltitude = cameras_infos[i].relative_alt;
         m_LODdependant_nodeinfos[node_sceneid].m_nodeAltitude = cameras_infos[i].layers[0]->GetBody()->GetHotPointAltitud();
         m_LODdependant_nodeinfos[node_sceneid].m_groundAlt = cameras_infos[i].layers[0]->GetCurrentHeight();
+
+        if( notify_new_entry )
+        {
+            for( size_t i = 0; i < m_LODDependantNodeInfosHandlers.size(); i++ )
+            {
+                (* m_LODDependantNodeInfosHandlers[i] )( node_sceneid, true );
+            }
+        }
     }   
 }
 
@@ -320,7 +331,14 @@ void PlanetInstance::OnGravityEnabledUpdate( bool p_value )
 	m_planet_root->SetGravityState( p_value );
 }
 
-void PlanetInstance::RegisterLODDependantNodeInfosHandler( LODDependantNodeInfoStateHandler* p_handler )
+void PlanetInstance::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
 {
-    m_LODDependantNodeInfosHandlers.push_back( p_handler );
+    if( m_LODdependant_nodeinfos.count( p_dependantNodeId ) )
+    {
+        m_LODdependant_nodeinfos[p_dependantNodeId].RegisterKeysLinkTable( p_keytable );
+    }
+    else
+    {
+        _DSEXCEPTION( "Unknown LODdependant node : " + p_dependantNodeId );
+    }
 }

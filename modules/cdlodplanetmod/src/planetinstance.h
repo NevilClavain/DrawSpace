@@ -88,7 +88,7 @@ public:
 
 	void OnGravityEnabledUpdate( bool p_value );
 
-    void RegisterLODDependantNodeInfosHandler( LODDependantNodeInfoStateHandler* p_handler );
+    void AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable );
 };
 
 #endif

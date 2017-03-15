@@ -176,7 +176,14 @@ DrawSpace::Module::KeysLinkTable* CDLODPlanetService::AddSceneNodeConfig( const 
 	return &m_nodes_config[p_sceneNodeName].m_keylinksTable;
 }
 
-void CDLODPlanetService::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_nodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
+void CDLODPlanetService::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_nodeId, const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
 {
-
+    if( m_nodes.count( p_nodeId ) )
+    {
+        m_nodes[p_nodeId]->AddLODDependantNodeInfosKeyLinkTable( p_dependantNodeId, p_keytable );
+    }
+    else
+    {
+        _DSEXCEPTION( "Unknown node id for planet : " + p_nodeId );
+    }
 }

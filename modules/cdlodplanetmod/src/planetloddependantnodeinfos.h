@@ -53,6 +53,17 @@ public:
         m_cameraType( "cameraType" )
     {
     }
+
+    void RegisterKeysLinkTable( DrawSpace::Module::KeysLinkTable* p_keytable )
+    {
+        p_keytable->RegisterClientKey( &m_isCamera );
+        p_keytable->RegisterClientKey( &m_cameraType );
+        p_keytable->RegisterClientKey( &m_isNodeHot );
+        p_keytable->RegisterClientKey( &m_nodeAltitude );
+        p_keytable->RegisterClientKey( &m_nodeRelativeAltitudeValid );
+        p_keytable->RegisterClientKey( &m_nodeRelativeAltitude );
+        p_keytable->RegisterClientKey( &m_groundAlt );
+    }
 };
 
 #endif

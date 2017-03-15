@@ -26,6 +26,7 @@
 #include "drawspace.h"
 #include "crtp_singleton.h"
 #include "planetscenenodeconfig.h"
+#include "nodeplanetinfos.h"
 
 class MainLoopService;
 
@@ -97,6 +98,9 @@ protected:
     bool                                                                m_ctrl;
 
     LODDependantNodeInfoStateCallback*                                  m_loddepnodeinfosstate_cb;
+
+                                                                        // feedbacks&infos pour chaque node scenegraph qui est LOD-dependant de la planete visualisée
+    std::map<dsstring, NodePlanetInfos*>                                m_nodes_planetinfos;
 
 
     void init_passes( void );
