@@ -27,63 +27,65 @@
 
 class PlanetInstance; // fwd declaration
 
-class RealParam : public DrawSpace::Module::KeySink<dsreal>
-{
-public:
-	dsreal			m_value;
-
-	RealParam( const dsstring& p_id ) : KeySink( p_id )
-    {
-    }
-
-	virtual void OnUpdated( dsreal p_val )
-    {
-        m_value = p_val;
-    }
-};
-
-class StringParam : public DrawSpace::Module::KeySink<dsstring>
-{
-public:
-	dsstring		m_value;
-
-	StringParam( const dsstring& p_id ) : KeySink( p_id )
-	{
-	}
-
-	virtual void OnUpdated( dsstring p_val )
-	{
-		m_value = p_val;
-	}
-};
-
-class GravityEnabledParam : public DrawSpace::Module::KeySink<bool>
-{
-protected:
-
-	PlanetInstance*	m_owner;
-
-public:
-	bool			m_value;
-
-	GravityEnabledParam( const dsstring& p_id ) : KeySink( p_id ),
-	m_owner( NULL )
-	{
-	}
-
-	virtual void OnUpdated( bool p_val );
-	virtual void SetOwner( PlanetInstance* p_owner )
-	{
-		m_owner = p_owner;
-	}
-};
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 class PlanetSceneNodeConfig
 {
 public:
+
+    class RealParam : public DrawSpace::Module::KeySink<dsreal>
+    {
+    public:
+	    dsreal			m_value;
+
+	    RealParam( const dsstring& p_id ) : KeySink( p_id )
+        {
+        }
+
+	    virtual void OnUpdated( dsreal p_val )
+        {
+            m_value = p_val;
+        }
+    };
+
+    class StringParam : public DrawSpace::Module::KeySink<dsstring>
+    {
+    public:
+	    dsstring		m_value;
+
+	    StringParam( const dsstring& p_id ) : KeySink( p_id )
+	    {
+	    }
+
+	    virtual void OnUpdated( dsstring p_val )
+	    {
+		    m_value = p_val;
+	    }
+    };
+
+    class GravityEnabledParam : public DrawSpace::Module::KeySink<bool>
+    {
+    protected:
+
+	    PlanetInstance*	m_owner;
+
+    public:
+	    bool			m_value;
+
+	    GravityEnabledParam( const dsstring& p_id ) : KeySink( p_id ),
+	    m_owner( NULL )
+	    {
+	    }
+
+	    virtual void OnUpdated( bool p_val );
+	    virtual void SetOwner( PlanetInstance* p_owner )
+	    {
+		    m_owner = p_owner;
+	    }
+    };
+
+
 	/////////////////--*- ENSEMBLE DES PARAMETRES PLANETE -*-- ////////////////////
 
 	StringParam							m_planetName;

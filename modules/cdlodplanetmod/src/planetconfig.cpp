@@ -23,7 +23,7 @@
 #include "planetconfig.h"
 #include "planetinstance.h"
 
-void GravityEnabledParam::OnUpdated( bool p_val )
+void PlanetSceneNodeConfig::GravityEnabledParam::OnUpdated( bool p_val )
 {
 	m_value = p_val;
 	if( m_owner )
