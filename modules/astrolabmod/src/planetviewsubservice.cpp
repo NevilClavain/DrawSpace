@@ -109,6 +109,7 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_SubPasses", false );
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Altitude", false );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
@@ -264,7 +265,7 @@ void PlanetViewSubService::Run( void )
     PROCESS_MEMORY_COUNTERS pmc;
     GetProcessMemoryInfo( GetCurrentProcess(), &pmc, sizeof( PROCESS_MEMORY_COUNTERS ) );
 
-    sprintf( working_set, "%d bytes", pmc.WorkingSetSize );
+    sprintf( working_set, "%.1f Mb", pmc.WorkingSetSize / 1000000.0 );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Mem", working_set );
 
     m_renderer->GUI_Render();
@@ -637,6 +638,8 @@ void PlanetViewSubService::destroy_planet( const dsstring& p_planetId )
     {
         _DRAWSPACE_DELETE_( it->second );
     }
+
+    m_nodes_planetinfos.clear();
 }
 
 void PlanetViewSubService::create_cubes( void )

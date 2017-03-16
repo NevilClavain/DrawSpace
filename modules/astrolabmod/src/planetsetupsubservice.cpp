@@ -121,7 +121,7 @@ void PlanetSetupSubService::Run( void )
     PROCESS_MEMORY_COUNTERS pmc;
     GetProcessMemoryInfo( GetCurrentProcess(), &pmc, sizeof( PROCESS_MEMORY_COUNTERS ) );
 
-    sprintf( working_set, "%d bytes", pmc.WorkingSetSize );
+    sprintf( working_set, "%.1f Mb", pmc.WorkingSetSize / 1000000.0 );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Mem", working_set );
 
 
