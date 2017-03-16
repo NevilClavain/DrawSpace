@@ -130,6 +130,8 @@ public:
     virtual void GUI_LoadScheme( const dsstring& p_scheme_path ) = 0;
     virtual void GUI_SetLayout( const dsstring& p_layoutpath ) = 0;
     virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName ) = 0;
+    virtual void GUI_SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state ) = 0;
+    virtual bool GUI_IsVisible( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
     virtual void GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text ) = 0;
     virtual void GUI_GetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext ) = 0;
     virtual void GUI_AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage ) = 0;

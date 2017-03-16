@@ -53,5 +53,10 @@
             <Property name="Text" value="..." />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_Relative" >
+            <Property name="Area" value="{{0.802083,0},{0.148148,0},{0.989583,0},{0.187654,0}}" />
+            <Property name="Text" value="Relative" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
     </Window>
 </GUILayout>

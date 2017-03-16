@@ -237,6 +237,12 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
             Window* parent = wt[p_parentName];
             //Window* child = parent->getChild( p_id );
             Window* child = parent->getChildRecursive( p_childName );
+
+            if( !child )
+            {
+                _DSEXCEPTION( "Cannot locate windows : " + p_childName );
+            }
+
             dsstring childName = child->getName().c_str();
             wt[childName] = child;
 
@@ -269,6 +275,35 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
     {
          _DSEXCEPTION( "unregistered CEGUI layout" );
     }
+}
+
+void CEGUIWrapper::SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            widget->setVisible( p_state );
+        }
+    }
+}
+
+bool CEGUIWrapper::IsVisible( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            return widget->isVisible();
+        }
+    }
+    return false;
 }
 
 void CEGUIWrapper::AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage  )

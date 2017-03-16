@@ -105,6 +105,9 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_CameraDistance" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetRay" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Relative" );
+
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
@@ -158,6 +161,31 @@ dsreal PlanetViewSubService::compute_arrow_torque( dsreal p_delta )
 
 void PlanetViewSubService::Run( void )
 {
+
+    /////////////////////////////////////////////////
+    if( m_nodes_planetinfos.count( "arrow_body" ) )
+    {
+        if( m_nodes_planetinfos["arrow_body"]->m_isNodeHot.m_value )
+        {
+            // set hotstate label visible
+
+            if( !m_renderer->GUI_IsVisible( LAYOUT_FILE, "SimpleLabel_Relative") )
+            {
+                m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", true );
+            }
+        }
+        else
+        {
+            // set hotstate label invisible
+            if( m_renderer->GUI_IsVisible( LAYOUT_FILE, "SimpleLabel_Relative") )
+            {
+                m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////
+
     static dsreal prev_rel_altitude;
     static Matrix prev_arrow_transf;
 
@@ -486,7 +514,7 @@ void PlanetViewSubService::create_passes( void )
     m_texturepass->Initialize();
     m_texturepass->GetRenderingQueue()->EnableDepthClearing( true );
     m_texturepass->GetRenderingQueue()->EnableTargetClearing( true );
-    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 100, 100, 150, 255 );
+    m_texturepass->GetRenderingQueue()->SetTargetClearingColor( 1, 1, 1, 255 );
 
 
     m_finalpass = _DRAWSPACE_NEW_( FinalPass, FinalPass( "final_pass" ) );

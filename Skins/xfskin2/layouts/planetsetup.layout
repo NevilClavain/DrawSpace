@@ -30,12 +30,6 @@
             <Property name="Text" value="..." />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
-        <Window type="xfskin/StaticImage" name="StaticImage" >
-            <Property name="Area" value="{{0.56875,0},{0.0246914,0},{0.759722,0},{0.135803,0}}" />
-            <Property name="Image" value="xfskin/line_h_long" />
-            <Property name="MaxSize" value="{{1,0},{1,0}}" />
-            <Property name="VertFormatting" value="TopAligned" />
-        </Window>
         <Window type="xfskin/Listbox" name="PlanetSlots_Listbox" >
             <Property name="Area" value="{{0.593056,0},{0.333333,0},{0.770834,0},{0.711111,0}}" />
         </Window>
@@ -43,7 +37,7 @@
             <Property name="Area" value="{{0.590278,0},{0.203703,0},{0.770833,0},{0.28395,0}}" />
             <Property name="Text" value="Add planet slot" />
         </Window>
-        <Window type="xfskin/Editbox" name="PlanetName_Editbox" >        
+        <Window type="xfskin/Editbox" name="PlanetName_Editbox" >
             <Property name="Area" value="{{0.808333,0},{0.203703,0},{0.986111,0},{0.311111,0}}" />
         </Window>
         <Window type="xfskin/Label" name="Label_Status" >

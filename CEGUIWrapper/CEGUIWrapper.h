@@ -92,7 +92,10 @@ public:
     void Store( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName );
 
     void SetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
-    void GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext ); 
+    void GetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext );
+
+    void SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state );
+    bool IsVisible( const dsstring& p_layoutName, const dsstring& p_widgetName );
 
     void AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
     void ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName );

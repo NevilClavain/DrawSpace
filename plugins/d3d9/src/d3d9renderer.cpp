@@ -2089,6 +2089,16 @@ void D3D9Renderer::GUI_StoreWidget( const dsstring& p_layoutName, const dsstring
     m_guisubsystem.Store( p_layoutName, p_parentName, p_childName );
 }
 
+void D3D9Renderer::GUI_SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state )
+{
+    m_guisubsystem.SetVisibleState( p_layoutName, p_widgetName, p_state );
+}
+
+bool D3D9Renderer::GUI_IsVisible( const dsstring& p_layoutName, const dsstring& p_widgetName )
+{
+    return m_guisubsystem.IsVisible( p_layoutName, p_widgetName );
+}
+
 void D3D9Renderer::GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text )
 {
     m_guisubsystem.SetText( p_layoutName, p_widgetName, p_text );
