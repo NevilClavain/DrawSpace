@@ -37,19 +37,8 @@
             <Property name="VerticalAlignment" value="Bottom" />
             <Property name="HorizontalAlignment" value="Right" />
         </Window>
-        <Window type="xfskin/Label" name="Label_CameraDistance" >
-            <Property name="Area" value="{{-0.00833333,0},{0.900077,0},{0.295833,0},{0.980324,0}}" />
-            <Property name="Text" value="Camera distance : XXXXX.XX km" />
-            <Property name="MaxSize" value="{{1,0},{1,0}}" />
-            <Property name="HorizontalAlignment" value="Right" />
-        </Window>
         <Window type="xfskin/Label" name="Label_PlanetName" >
             <Property name="Area" value="{{0.201171,-25},{0.900077,0},{0.444227,-25},{0.980324,0}}" />
-            <Property name="Text" value="..." />
-            <Property name="MaxSize" value="{{1,0},{1,0}}" />
-        </Window>
-        <Window type="xfskin/Label" name="Label_PlanetRay" >
-            <Property name="Area" value="{{0.451171,0},{0.900077,0},{0.681727,0},{0.980324,0}}" />
             <Property name="Text" value="..." />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>

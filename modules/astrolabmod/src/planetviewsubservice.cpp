@@ -102,9 +102,7 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_FPS" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Mem" );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_CameraDistance" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetRay" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Relative" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Altitude" );
 
@@ -237,15 +235,9 @@ void PlanetViewSubService::Run( void )
 
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_PlanetName", m_planet_conf->m_planetName.m_value );
 
-	char planet_ray[64];
-	sprintf( planet_ray, "Ray : %.1f km", m_planet_conf->m_planetRay.m_value );
-	m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_PlanetRay", planet_ray );
-
-
-
-    char camera_distance_text[256];
 	if( m_current_camera == m_camera2 )
 	{
+        /*
 		Matrix arrow_trans;
 		m_arrow_node->GetFinalTransform( arrow_trans );
 
@@ -255,22 +247,14 @@ void PlanetViewSubService::Run( void )
 		dsreal altitude = ( distance / 1000.0 ) - m_planet_conf->m_planetRay.m_value;
 
 		dsreal relative_alt = ( distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) ) - 1.0;
+        */
+		//m_rel_altitude = relative_alt;
 
-		if( altitude > 10.0 )
-		{
-			sprintf( camera_distance_text, "Altitude : %.3f km", altitude );
-		}
-		else
-		{
-			sprintf( camera_distance_text, "Altitude : %d m", (int)( altitude * 1000.0 ) );
-		}
-
-		//sprintf( camera_distance_text, "rel alt : %f", ( distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) ) - 1.0 );
-
-		m_rel_altitude = relative_alt;
+        if( m_nodes_planetinfos.count( "arrow_body" ) && m_nodes_planetinfos["arrow_body"]->m_nodeRelativeAltitudeValid.m_value )
+        {
+            m_rel_altitude = m_nodes_planetinfos["arrow_body"]->m_nodeRelativeAltitude.m_value - 1.0;
+        }
 	}
-
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_CameraDistance", camera_distance_text );
 
     char working_set[64];
 
