@@ -106,6 +106,7 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetRay" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Relative" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Altitude" );
 
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
     
@@ -172,7 +173,21 @@ void PlanetViewSubService::Run( void )
             if( !m_renderer->GUI_IsVisible( LAYOUT_FILE, "SimpleLabel_Relative") )
             {
                 m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", true );
+                m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Altitude", true );
             }
+
+            char altitude_text[256];
+
+		    if( m_nodes_planetinfos["arrow_body"]->m_nodeAltitude.m_value > 10000.0 )
+		    {
+			    sprintf( altitude_text, "Altitude : %.3f km", m_nodes_planetinfos["arrow_body"]->m_nodeAltitude.m_value / 1000.0 );
+		    }
+		    else
+		    {
+			    sprintf( altitude_text, "Altitude : %d m", (int)( m_nodes_planetinfos["arrow_body"]->m_nodeAltitude.m_value ) );
+		    }
+
+            m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_Altitude", altitude_text );
         }
         else
         {
@@ -180,6 +195,7 @@ void PlanetViewSubService::Run( void )
             if( m_renderer->GUI_IsVisible( LAYOUT_FILE, "SimpleLabel_Relative") )
             {
                 m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
+                m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Altitude", false );
             }
         }
     }

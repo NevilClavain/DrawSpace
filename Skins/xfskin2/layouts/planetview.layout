@@ -2,7 +2,7 @@
 
 <GUILayout version="4" >
     <Window type="DefaultWindow" name="root" >
-        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="Area" value="{{0,1},{0,0},{1,1},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="xfskin/Label" name="Label" >
             <Property name="Area" value="{{-0.00646745,0},{0.00501551,0},{0.23381,0},{0.0852624,0}}" />
@@ -57,6 +57,13 @@
             <Property name="Area" value="{{0.802083,0},{0.148148,0},{0.989583,0},{0.187654,0}}" />
             <Property name="Text" value="Relative" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="NormalTextColour" value="FFFFFFFF" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_Altitude" >
+            <Property name="Area" value="{{0.802083,0},{0.21,0},{0.989583,0},{0.249506,0}}" />
+            <Property name="Text" value="Altitude : XXXX" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="NormalTextColour" value="FFFFFFFF" />
         </Window>
     </Window>
 </GUILayout>
