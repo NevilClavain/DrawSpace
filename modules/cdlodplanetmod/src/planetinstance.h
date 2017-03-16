@@ -67,6 +67,10 @@ protected:
 
     std::map<dsstring, PlanetLODDependantNodeInfos>                 m_LODdependant_nodeinfos;
 
+    void zbuffer_control_from_viewer_alt( void );
+    void update_details_binders( void );
+    void update_lod_dep_nodes_infos( void );
+
 public:
 
     PlanetInstance( void );

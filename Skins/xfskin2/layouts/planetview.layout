@@ -54,5 +54,11 @@
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="NormalTextColour" value="FFFFFFFF" />
         </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_SubPasses" >
+            <Property name="Area" value="{{0.740278,0},{0.935803,0},{0.986111,0},{0.975309,0}}" />
+            <Property name="Text" value="Computing more details..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="NormalTextColour" value="FFFFFFFF" />
+        </Window>
     </Window>
 </GUILayout>

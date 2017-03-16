@@ -165,8 +165,73 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
 void PlanetInstance::Run( void )
 {
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    zbuffer_control_from_viewer_alt();
+    m_planet_root->DrawSubPasses();
+    update_details_binders();
+    update_lod_dep_nodes_infos();
+}
 
+void PlanetInstance::Release( void )
+{
+    m_calendar->UnregisterWorld( m_planet_root->GetWorld() );
+
+	_DRAWSPACE_DELETE_( m_planet_node );
+	_DRAWSPACE_DELETE_( m_planet_root );
+
+	_DRAWSPACE_DELETE_( m_climate_fx );
+
+	_DRAWSPACE_DELETE_( m_climate_vshader );
+	_DRAWSPACE_DELETE_( m_climate_pshader );
+    
+	_DRAWSPACE_DELETE_( m_details_fx );
+
+    _DRAWSPACE_DELETE_( m_texture_th_pixels );
+	_DRAWSPACE_DELETE_( m_texture_th_splatting );
+
+	_DRAWSPACE_DELETE_( m_planet_vshader );
+	_DRAWSPACE_DELETE_( m_planet_pshader );
+
+	for (int i = 0; i < 6; i++)
+	{
+		_DRAWSPACE_DELETE_( m_planet_details_binder[i] );
+		_DRAWSPACE_DELETE_( m_planet_climate_binder[i] );
+	}
+}
+
+DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>* PlanetInstance::GetSceneNode( void )
+{
+    return m_planet_node;
+}
+
+void PlanetInstance::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+    m_planet_root->RegisterScenegraphCallbacks( p_scenegraph );
+}
+
+void PlanetInstance::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
+{
+    m_planet_root->UnregisterScenegraphCallbacks( p_scenegraph );
+}
+
+void PlanetInstance::OnGravityEnabledUpdate( bool p_value )
+{
+	m_planet_root->SetGravityState( p_value );
+}
+
+void PlanetInstance::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
+{
+    if( m_LODdependant_nodeinfos.count( p_dependantNodeId ) )
+    {
+        m_LODdependant_nodeinfos[p_dependantNodeId].RegisterKeysLinkTable( p_keytable );
+    }
+    else
+    {
+        _DSEXCEPTION( "Unknown LODdependant node : " + p_dependantNodeId );
+    }
+}
+
+void PlanetInstance::zbuffer_control_from_viewer_alt( void )
+{
     dsstring camera_name;
     m_scenenodegraph->GetCurrentCameraName( camera_name );
 
@@ -179,22 +244,23 @@ void PlanetInstance::Run( void )
     {
         m_details_fx->UpdateRenderStateIn( 0, DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     }
+}
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    m_planet_root->DrawSubPasses();
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+void PlanetInstance::update_details_binders( void )
+{
 	for( int i = 0; i < 6; i++ )
 	{
 		m_planet_details_binder[i]->Update();
 	}
+}
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+void PlanetInstance::update_lod_dep_nodes_infos( void )
+{
     std::vector<DrawSpace::SphericalLOD::Root::RegisteredBody> bodies_infos;
     m_planet_root->GetRegisteredBodyInfosList( bodies_infos );
+
+    int nbsubpasses = m_planet_root->GetNbSingleShotSubpasses();
+    nbsubpasses += m_planet_root->GetSingleShotSubPassesStackSize();
 
     for( size_t i = 0; i < bodies_infos.size(); i++ )
     {
@@ -215,6 +281,8 @@ void PlanetInstance::Run( void )
         m_LODdependant_nodeinfos[node_sceneid].m_nodeAltitude = bodies_infos[i].layers[0]->GetBody()->GetHotPointAltitud();
         m_LODdependant_nodeinfos[node_sceneid].m_groundAlt = bodies_infos[i].layers[0]->GetCurrentHeight();
         m_LODdependant_nodeinfos[node_sceneid].m_groundAltValid = bodies_infos[i].layers[0]->HasCollisions();
+
+        m_LODdependant_nodeinfos[node_sceneid].m_nbSubPasses = nbsubpasses;
 
         if( notify_new_entry )
         {
@@ -283,64 +351,5 @@ void PlanetInstance::Run( void )
                 (* m_LODDependantNodeInfosHandlers[i] )( node_sceneid, true );
             }
         }
-    }   
-}
-
-void PlanetInstance::Release( void )
-{
-    m_calendar->UnregisterWorld( m_planet_root->GetWorld() );
-
-	_DRAWSPACE_DELETE_( m_planet_node );
-	_DRAWSPACE_DELETE_( m_planet_root );
-
-	_DRAWSPACE_DELETE_( m_climate_fx );
-
-	_DRAWSPACE_DELETE_( m_climate_vshader );
-	_DRAWSPACE_DELETE_( m_climate_pshader );
-    
-	_DRAWSPACE_DELETE_( m_details_fx );
-
-    _DRAWSPACE_DELETE_( m_texture_th_pixels );
-	_DRAWSPACE_DELETE_( m_texture_th_splatting );
-
-	_DRAWSPACE_DELETE_( m_planet_vshader );
-	_DRAWSPACE_DELETE_( m_planet_pshader );
-
-	for (int i = 0; i < 6; i++)
-	{
-		_DRAWSPACE_DELETE_( m_planet_details_binder[i] );
-		_DRAWSPACE_DELETE_( m_planet_climate_binder[i] );
-	}
-}
-
-DrawSpace::Core::SceneNode<DrawSpace::SphericalLOD::Root>* PlanetInstance::GetSceneNode( void )
-{
-    return m_planet_node;
-}
-
-void PlanetInstance::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
-{
-    m_planet_root->RegisterScenegraphCallbacks( p_scenegraph );
-}
-
-void PlanetInstance::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
-{
-    m_planet_root->UnregisterScenegraphCallbacks( p_scenegraph );
-}
-
-void PlanetInstance::OnGravityEnabledUpdate( bool p_value )
-{
-	m_planet_root->SetGravityState( p_value );
-}
-
-void PlanetInstance::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
-{
-    if( m_LODdependant_nodeinfos.count( p_dependantNodeId ) )
-    {
-        m_LODdependant_nodeinfos[p_dependantNodeId].RegisterKeysLinkTable( p_keytable );
-    }
-    else
-    {
-        _DSEXCEPTION( "Unknown LODdependant node : " + p_dependantNodeId );
     }
 }

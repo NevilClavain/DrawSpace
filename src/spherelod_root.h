@@ -180,6 +180,10 @@ public:
     int                                 GetSingleShotSubPassesStackSize();
 
     void                                SetGravityState( bool p_state );
+
+    int                                 GetSingleShotSubpassesStackSize( void );
+    int                                 GetNbSingleShotSubpasses( void );
+
 };
 
 

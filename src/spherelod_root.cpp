@@ -863,3 +863,13 @@ void Root::GetRegisteredCameraInfosList( std::vector<RegisteredCamera>& p_list )
         p_list.push_back( it->second );
     }
 }
+
+int Root::GetSingleShotSubpassesStackSize( void )
+{
+    return m_singleshot_subpasses_stack.size();
+}
+
+int Root::GetNbSingleShotSubpasses( void )
+{
+    return m_singleshot_subpasses.size();
+}

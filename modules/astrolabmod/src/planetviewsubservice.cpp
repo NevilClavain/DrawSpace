@@ -105,8 +105,10 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Relative" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Altitude" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_SubPasses" );
 
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_SubPasses", false );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
@@ -160,7 +162,6 @@ dsreal PlanetViewSubService::compute_arrow_torque( dsreal p_delta )
 
 void PlanetViewSubService::Run( void )
 {
-
     /////////////////////////////////////////////////
     if( m_nodes_planetinfos.count( "arrow_body" ) )
     {
@@ -195,6 +196,21 @@ void PlanetViewSubService::Run( void )
                 m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
                 m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Altitude", false );
             }
+        }
+
+        if( m_nodes_planetinfos["arrow_body"]->m_nbSubPasses.m_value > 0 )
+        {
+            if( !m_renderer->GUI_IsVisible( LAYOUT_FILE, "SimpleLabel_SubPasses" ) )
+            {
+                m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_SubPasses", true );                
+            }
+        }
+        else
+        {
+            if( m_renderer->GUI_IsVisible( LAYOUT_FILE, "SimpleLabel_SubPasses" ) )
+            {
+                m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_SubPasses", false );
+            }        
         }
     }
 
@@ -237,19 +253,6 @@ void PlanetViewSubService::Run( void )
 
 	if( m_current_camera == m_camera2 )
 	{
-        /*
-		Matrix arrow_trans;
-		m_arrow_node->GetFinalTransform( arrow_trans );
-
-		Vector arrow_pos( arrow_trans( 3, 0 ), arrow_trans( 3, 1 ), arrow_trans( 3, 2 ), 1.0 );
-
-		dsreal distance = arrow_pos.Length();
-		dsreal altitude = ( distance / 1000.0 ) - m_planet_conf->m_planetRay.m_value;
-
-		dsreal relative_alt = ( distance / ( m_planet_conf->m_planetRay.m_value * 1000.0 ) ) - 1.0;
-        */
-		//m_rel_altitude = relative_alt;
-
         if( m_nodes_planetinfos.count( "arrow_body" ) && m_nodes_planetinfos["arrow_body"]->m_nodeRelativeAltitudeValid.m_value )
         {
             m_rel_altitude = m_nodes_planetinfos["arrow_body"]->m_nodeRelativeAltitude.m_value - 1.0;

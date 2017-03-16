@@ -95,6 +95,8 @@ public:
     BoolInfo                            m_groundAltValid;
     RealInfo                            m_groundAlt;
 
+    IntInfo                             m_nbSubPasses;
+
 	////////////////////////////////////////////////////////////////////////////////
 
 	DrawSpace::Module::KeysLinkTable    m_keylinksTable;
@@ -109,7 +111,8 @@ public:
     m_nodeRelativeAltitudeValid( "nodeRelativeAltitudeValid" ),
     m_nodeRelativeAltitude( "nodeRelativeAltitude" ),
     m_groundAlt( "groundAlt" ),
-    m_groundAltValid( "groundAltValid" )
+    m_groundAltValid( "groundAltValid" ),
+    m_nbSubPasses( "nbSubPasses" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_isCamera );
         m_keylinksTable.RegisterModuleKey( &m_cameraType );
@@ -119,6 +122,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_nodeRelativeAltitude );
         m_keylinksTable.RegisterModuleKey( &m_groundAlt );
         m_keylinksTable.RegisterModuleKey( &m_groundAltValid );
+        m_keylinksTable.RegisterModuleKey( &m_nbSubPasses );
 	}
 };
 
