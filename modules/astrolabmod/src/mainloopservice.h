@@ -57,6 +57,9 @@ protected:
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
     DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
 
+    DrawSpace::Interface::Module::Root*                                 m_sbmod_root;
+    DrawSpace::Interface::Module::Service*                              m_sb_service;
+
 
     void load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf );
 

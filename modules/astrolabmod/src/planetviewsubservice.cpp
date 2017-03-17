@@ -107,10 +107,25 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Altitude" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_SubPasses" );
 
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_HotParamName" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_HotParam" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_HotParamUpdate" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Checkbox_HotParam" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_HotParamNext" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_HotParamPrev" );
+
+
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_SubPasses", false );
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Altitude", false );
-    
+
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Checkbox_HotParam", false );
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Editbox_HotParam", false );
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Button_HotParamUpdate", false );
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_HotParamName", false );
+
+
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
 	m_calendar->Startup( 0 );
