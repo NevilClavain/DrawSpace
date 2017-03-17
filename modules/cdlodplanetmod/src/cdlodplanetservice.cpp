@@ -162,6 +162,8 @@ void CDLODPlanetService::ReleaseSceneNode( const dsstring& p_sceneNodeName, Draw
 {
     if( m_nodes.count( p_sceneNodeName ) )
     {
+        m_nodes_config[p_sceneNodeName].SetOwner( NULL );
+
         PlanetInstance* pe = m_nodes[p_sceneNodeName];
 
         pe->Release();
