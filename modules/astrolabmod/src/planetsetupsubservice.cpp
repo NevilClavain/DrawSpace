@@ -253,24 +253,31 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         
         if( node_name != "" )
         {
-            m_nodes_config[node_name].m_keylinksTable = m_cdlodp_service->AddSceneNodeConfig( node_name );
+            if( m_nodes_config.count( node_name ) )
+            {
+                statusbar_msg( "planet entry with same name exists !" );
+            }
+            else
+            {
+                m_nodes_config[node_name].m_keylinksTable = m_cdlodp_service->AddSceneNodeConfig( node_name );
 
-			// connect keys here
-			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetName );
-            m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetRay );
-			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsVertexShader );
-			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsPixelShader );
-			m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_gravityEnabled );
+			    // connect keys here
+			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetName );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetRay );
+			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsVertexShader );
+			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsPixelShader );
+			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_gravityEnabled );
 
-			// store planet unique name (also used as scenegraph node id)
-			m_nodes_config[node_name].m_planetName = node_name;
-			// setup default values here
-            m_nodes_config[node_name].m_planetRay = 500.0;
-			m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
-			m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
-			m_nodes_config[node_name].m_gravityEnabled = false;
+			    // store planet unique name (also used as scenegraph node id)
+			    m_nodes_config[node_name].m_planetName = node_name;
+			    // setup default values here
+                m_nodes_config[node_name].m_planetRay = 500.0;
+			    m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
+			    m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
+			    m_nodes_config[node_name].m_gravityEnabled = false;
 
-            update_listbox();
+                update_listbox();
+            }
         }
         else
         {
