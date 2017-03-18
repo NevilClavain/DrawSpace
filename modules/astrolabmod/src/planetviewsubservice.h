@@ -87,6 +87,14 @@ protected:
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
     DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
 
+    DrawSpace::Interface::Module::Root*                                 m_sbmod_root;
+    DrawSpace::Interface::Module::Service*                              m_sb_service;
+
+
+    DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_skybox_texturepass;
+    DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_skybox_texturemirrorpass;
+    DrawSpace::Module::KeySource<DrawSpace::Utils::Vector>              m_skybox_reflectornormale;
+
     DrawSpace::Module::KeySource<DrawSpace::Core::SceneNodeGraph*>      m_cdlodplanet_scenenodegraph;
     DrawSpace::Module::KeySource<DrawSpace::IntermediatePass*>          m_cdlodplanet_texturepass;
 
@@ -102,9 +110,13 @@ protected:
                                                                         // feedbacks&infos pour chaque node scenegraph qui est LOD-dependant de la planete visualisée
     std::map<dsstring, NodePlanetInfos*>                                m_nodes_planetinfos;
 
+    DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_spacebox_transfo_node;
+
 
     void init_passes( void );
     void create_passes( void );
+
+    //void create_spacebox( void );
 
     void create_cubes( void );
 
@@ -122,6 +134,8 @@ protected:
 	dsreal compute_arrow_torque( dsreal p_delta );
 
 	void set_arrow_initial_attitude( void );
+
+    void create_spacebox( void );
 
     PlanetViewSubService( void );
 public:
@@ -161,6 +175,7 @@ public:
     virtual void                            DumpMemoryAllocs( void );
 
     virtual void                            SetCDLODInfos( DrawSpace::Interface::Module::Root* p_cdlodp_root, DrawSpace::Interface::Module::Service* p_cdlodp_service );
+    virtual void                            SetSkyboxInfos( DrawSpace::Interface::Module::Root* p_skyboxp_root, DrawSpace::Interface::Module::Service* p_skyboxp_service );
 
     friend class BaseSingleton<PlanetViewSubService>;
 };

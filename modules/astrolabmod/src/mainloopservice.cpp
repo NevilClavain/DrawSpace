@@ -32,7 +32,10 @@ using namespace DrawSpace::Interface::Module;
 
 _DECLARE_DS_LOGGER( logger, "worldinspectormainloopservice", NULL )
 
-MainLoopService::MainLoopService( void )
+MainLoopService::MainLoopService( void ) :
+m_skybox_texturesbankpath( "skybox.TexturesBankPath" ),
+m_skybox_texturesbankvirtualfspath( "skybox.TexturesBankVirtualFSPath" ),
+m_skybox_texturesnames( "skybox.TexturesNames" )
 {
 
 }
@@ -52,6 +55,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
+
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturesbankpath );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturesbankvirtualfspath );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturesnames );
 
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
@@ -84,6 +91,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     load_cdlodplanet_module( p_logconf );
     PlanetSetupSubService::GetInstance()->SetCDLODInfos( m_cdlodp_root, m_cdlodp_service );
     PlanetViewSubService::GetInstance()->SetCDLODInfos( m_cdlodp_root, m_cdlodp_service );
+
+   
+    load_skybox_module( p_logconf );
+    PlanetViewSubService::GetInstance()->SetSkyboxInfos( m_sbmod_root, m_sb_service );
 
     PlanetSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
     PlanetViewSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
@@ -238,4 +249,37 @@ void MainLoopService::load_cdlodplanet_module( DrawSpace::Logger::Configuration*
     connect_keys( m_cdlodp_service );
 
     m_cdlodp_service->Init( p_logconf, NULL, NULL, NULL );
+}
+
+void MainLoopService::load_skybox_module( DrawSpace::Logger::Configuration* p_logconf )
+{
+    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", &m_sbmod_root ) )
+    {
+        _DSEXCEPTION( "fail to load skyboxmod module root" )
+    }
+
+    m_sb_service = m_sbmod_root->InstanciateService( "skybox" );
+    if( NULL == m_sb_service )
+    {
+        _DSEXCEPTION( "fail to load skybox module service" )
+    }
+    connect_keys( m_sb_service );
+
+    //m_skybox_scenenodegraph = &m_scenenodegraph;
+    m_skybox_texturesbankpath = "astrolab_data/textures_bank";
+    m_skybox_texturesbankvirtualfspath = "test_data.bank";
+
+    std::vector<dsstring> textures_names;
+    textures_names.assign( 6, "" );
+
+    textures_names[0] = "spacebox_front5.png";
+    textures_names[1] = "spacebox_back6.png";
+    textures_names[2] = "spacebox_left2.png";
+    textures_names[3] = "spacebox_right1.png";
+    textures_names[4] = "spacebox_top3.png";
+    textures_names[5] = "spacebox_bottom4.png";
+
+    m_skybox_texturesnames = textures_names;
+    
+    m_sb_service->Init( p_logconf, NULL, NULL, NULL );
 }

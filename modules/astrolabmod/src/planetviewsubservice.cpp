@@ -41,6 +41,9 @@ m_mouse_left( false ),
 m_mouse_right( false ),
 m_cdlodplanet_scenenodegraph( "cdlodplanet.SceneNodeGraph" ),
 m_cdlodplanet_texturepass( "cdlodplanet.TexturePass" ),
+m_skybox_texturepass( "skybox.TexturePass" ),
+m_skybox_texturemirrorpass( "skybox.TextureMirrorPass" ),
+m_skybox_reflectornormale( "skybox.ReflectorNormale" ),
 m_rel_altitude( 0.0 ),
 m_planet_conf( NULL ),
 m_mousewheel_delta( 0 ),
@@ -66,6 +69,10 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
                                                     DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                                                     DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturepass );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_texturemirrorpass );
+    m_keysLinkTable.RegisterClientKey( &m_skybox_reflectornormale );
+
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 
@@ -93,6 +100,10 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_cdlodplanet_scenenodegraph = &m_scenenodegraph;
     m_cdlodplanet_texturepass = m_texturepass;
+
+    m_skybox_texturepass = m_texturepass;
+
+    create_spacebox();
 
     init_passes();
 
@@ -739,6 +750,14 @@ void PlanetViewSubService::SetCDLODInfos( DrawSpace::Interface::Module::Root* p_
     connect_keys( m_cdlodp_service );
 }
 
+void PlanetViewSubService::SetSkyboxInfos( DrawSpace::Interface::Module::Root* p_skyboxp_root, DrawSpace::Interface::Module::Service* p_skyboxp_service )
+{
+    m_sbmod_root = p_skyboxp_root;
+    m_sb_service = p_skyboxp_service;
+
+    connect_keys( m_sb_service );
+}
+
 void PlanetViewSubService::set_arrow_initial_attitude( void )
 {
 	Matrix mat;   
@@ -756,4 +775,23 @@ void PlanetViewSubService::on_LODdepnodeinfosstate_update( const dsstring& p_nod
 
         m_nodes_planetinfos[p_nodeid] = pi;
     }
+}
+
+
+void PlanetViewSubService::create_spacebox( void )
+{ 
+    DrawSpace::Core::BaseSceneNode* spacebox_node = m_sb_service->InstanciateSceneNode( "spacebox", NULL, NULL );
+
+    m_scenenodegraph.RegisterNode( spacebox_node );
+
+    m_spacebox_transfo_node = _DRAWSPACE_NEW_( DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>, DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>( "spacebox_transfo" ) );
+    m_spacebox_transfo_node->SetContent( _DRAWSPACE_NEW_( Transformation, Transformation ) );
+    Matrix spacebox_scale;
+    spacebox_scale.Scale( 20.0, 20.0, 20.0 );
+    m_spacebox_transfo_node->GetContent()->PushMatrix( spacebox_scale );
+    
+    m_scenenodegraph.AddNode( m_spacebox_transfo_node );
+    m_scenenodegraph.RegisterNode( m_spacebox_transfo_node );
+
+    spacebox_node->LinkTo( m_spacebox_transfo_node );
 }

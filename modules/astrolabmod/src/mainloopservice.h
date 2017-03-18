@@ -60,8 +60,13 @@ protected:
     DrawSpace::Interface::Module::Root*                                 m_sbmod_root;
     DrawSpace::Interface::Module::Service*                              m_sb_service;
 
+    DrawSpace::Module::KeySource<dsstring>                              m_skybox_texturesbankpath;
+    DrawSpace::Module::KeySource<dsstring>                              m_skybox_texturesbankvirtualfspath;
+    DrawSpace::Module::KeySource<std::vector<dsstring>>                 m_skybox_texturesnames;
 
     void load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf );
+    
+    void load_skybox_module( DrawSpace::Logger::Configuration* p_logconf );
 
 
     MainLoopService( void );
