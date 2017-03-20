@@ -88,6 +88,10 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_MountainsOffset" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_MountainsOffset" );
 
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_VerticalOffset" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_VerticalOffset" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_VerticalOffset" );
+
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_BeachLimit" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_BeachLimit" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_BeachLimit" );
@@ -234,6 +238,72 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
     {
 		MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETGROUNDSETUP_CLOSEBUTTON_CLIC );
     }
+
+    if( "Button_PlanetRay" == p_widget_id )
+    {
+    
+    }
+
+    if( "Button_PlainsAmplitude" == p_widget_id )
+    {
+    
+    }
+
+    if( "Button_MountainsAmplitude" == p_widget_id )
+    {
+    
+    }
+
+    if( "Button_MountainsOffset" == p_widget_id )
+    {
+    
+    }
+
+    if( "Button_VerticalOffset" == P_tmpdir )
+    {
+    
+    }
+
+    if( "Button_BeachLimit" == p_widget_id )
+    {
+    
+    }
+
+    if( "Button_LandscapeBumpFactor" == p_widget_id )
+    {
+    
+    }
+
+    if( "Button_ZBufferActivationRelativeAlt" == p_widget_id )
+    {
+    
+    }
+
+    if( "Button_SplatTransitionUpRelativeAlt" == p_widget_id )
+    {
+    
+    }
+
+    if( "Button_SplatTransitionDownRelativeAlt" == p_widget_id )
+    {
+    
+    }
+
+    if( "SimpleLabel_SplatTextureResol" == p_widget_id )
+    {
+    
+    }
+
+    if( "SimpleLabel_NbLODFreeCameras" == p_widget_id )
+    {
+    
+    }
+
+    if( "SimpleLabel_NbLODInertBodies" == p_widget_id )
+    {
+    
+    }
+
 }
 
 void PlanetGroundSetupSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
