@@ -71,7 +71,58 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
 
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_PlanetRay" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_PlanetRay" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_PlanetRay" );
     
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_PlainsAmplitude" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_PlainsAmplitude" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_PlainsAmplitude" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_MountainsAmplitude" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_MountainsAmplitude" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_MountainsAmplitude" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_MountainsOffset" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_MountainsOffset" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_MountainsOffset" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_BeachLimit" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_BeachLimit" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_BeachLimit" );
+   
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_LandscapeBumpFactor" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_LandscapeBumpFactor" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_LandscapeBumpFactor" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_ZBufferActivationRelativeAlt" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_ZBufferActivationRelativeAlt" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_ZBufferActivationRelativeAlt" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_SplatTransitionUpRelativeAlt" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_SplatTransitionUpRelativeAlt" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_SplatTransitionUpRelativeAlt" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_SplatTransitionDownRelativeAlt" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_SplatTransitionDownRelativeAlt" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_SplatTransitionDownRelativeAlt" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_SplatTextureResol" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_SplatTextureResol" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_SplatTextureResol" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_GravityEnabled" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Checkbox_GravityEnabled" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_NbLODFreeCameras" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_NbLODFreeCameras" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_NbLODFreeCameras" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_NbLODInertBodies" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_NbLODInertBodies" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_NbLODInertBodies" );
+
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 }
 
