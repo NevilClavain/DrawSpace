@@ -282,10 +282,9 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_moutainsOffset = -120.0;
                 m_nodes_config[node_name].m_verticalOffset = 0.0;
 
-
 			    m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
 			    m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
-			    m_nodes_config[node_name].m_gravityEnabled = true;
+			    m_nodes_config[node_name].m_gravityEnabled = false;
 
                 update_listbox();
             }

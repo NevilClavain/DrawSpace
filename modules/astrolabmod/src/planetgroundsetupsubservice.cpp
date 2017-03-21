@@ -327,6 +327,23 @@ void PlanetGroundSetupSubService::update_screen( void )
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlanetRay", comment );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlanetRay", comment );
 
+
+    sprintf( comment, "%.2f", m_planetconfig->m_plainsAmplitude.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlainsAmplitude", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlainsAmplitude", comment );
+
+    sprintf( comment, "%.2f", m_planetconfig->m_moutainsAmplitude.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_MountainsAmplitude", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_MountainsAmplitude", comment );
+
+    sprintf( comment, "%.2f", m_planetconfig->m_moutainsOffset.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_MountainsOffset", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_MountainsOffset", comment );
+
+    sprintf( comment, "%.2f", m_planetconfig->m_verticalOffset.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_VerticalOffset", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_VerticalOffset", comment );
+
     m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_GravityEnabled", m_planetconfig->m_gravityEnabled.m_value );
     sprintf( comment, "%s", m_planetconfig->m_gravityEnabled.m_value ? "true" : "false" );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_GravityEnabled", comment );

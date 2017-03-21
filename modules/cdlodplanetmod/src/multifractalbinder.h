@@ -34,10 +34,6 @@
 #define VOLUMETRIC_CLOUDS_ALT               2400.0
 #define VOLUMETRIC_CLOUDS_MIN_SPEED_DEG_S   0.003
 #define VOLUMETRIC_CLOUDS_MAX_SPEED_DEG_S   0.004
-#define PLAINS_AMPLITUDE                    50.0
-#define MOUNTAINS_AMPLITUDE                 800.0
-#define MOUNTAINS_OFFSET                    -120.0
-#define VERTICAL_OFFSET                     0.0
 #define TEMP_DEC_PER_KM                     66.0
 #define BEACH_LIMIT                         25.0
 #define CLOUDS_PROCEDURALRULES_FILE         "planet_clouds_small_small.rules"
