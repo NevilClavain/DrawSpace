@@ -625,6 +625,30 @@ bool CEGUIWrapper::IsCheckBoxChecked( const dsstring& p_layoutName, const dsstri
     }
 }
 
+void CEGUIWrapper::SetCheckboxState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state )
+{
+    if( m_layoutNamesTable.count( p_layoutName ) > 0 )
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if( wt.count( p_widgetName ) > 0 )
+        {
+            Window* widget = wt[p_widgetName];
+            CEGUI::ToggleButton* tb = dynamic_cast<CEGUI::ToggleButton*>( widget );
+
+            tb->setSelected( p_state );
+        }
+        else
+        {
+            _DSEXCEPTION( "unregistered CEGUI window ID" );
+        }
+    }
+    else
+    {
+         _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
 void CEGUIWrapper::InitTest( void )
 {
     WindowManager& wmgr = WindowManager::getSingleton();

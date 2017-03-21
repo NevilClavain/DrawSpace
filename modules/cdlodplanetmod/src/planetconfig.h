@@ -91,6 +91,10 @@ public:
 	StringParam							m_planetName;
 
 	RealParam                           m_planetRay;
+    RealParam                           m_plainsAmplitude;
+    RealParam                           m_moutainsAmplitude;
+    RealParam                           m_moutainsOffset;
+    RealParam                           m_verticalOffset;
 
 	StringParam							m_detailsVertexShader;
 	StringParam							m_detailsPixelShader;
@@ -106,12 +110,20 @@ public:
 	PlanetSceneNodeConfig( void ) :
 	m_planetName( "planetName" ),
 	m_planetRay("planetRay"),
+    m_plainsAmplitude( "plainsAmplitude" ),
+    m_moutainsAmplitude( "moutainsAmplitude" ),
+    m_moutainsOffset( "moutainsOffset" ),
+    m_verticalOffset( "verticalOffset" ),
 	m_detailsVertexShader( "detailsVertexShader" ),
 	m_detailsPixelShader( "detailsPixelShader" ),
 	m_gravityEnabled( "gravityEnabled" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
+        m_keylinksTable.RegisterModuleKey( &m_plainsAmplitude );
+        m_keylinksTable.RegisterModuleKey( &m_moutainsAmplitude );
+        m_keylinksTable.RegisterModuleKey( &m_moutainsOffset );
+        m_keylinksTable.RegisterModuleKey( &m_verticalOffset );
 		m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
 		m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );
 		m_keylinksTable.RegisterModuleKey( &m_gravityEnabled );

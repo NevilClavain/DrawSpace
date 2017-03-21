@@ -27,11 +27,12 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-PlanetClimateBinder::PlanetClimateBinder(void) : MultiFractalBinder()
+PlanetClimateBinder::PlanetClimateBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset ) : 
+MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset )
 {
 }
 
-void PlanetClimateBinder::Bind(void)
+void PlanetClimateBinder::Bind( void )
 {
 	// planete temperee
 

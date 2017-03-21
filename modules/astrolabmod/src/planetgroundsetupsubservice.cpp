@@ -311,11 +311,23 @@ void PlanetGroundSetupSubService::Activate( PlanetSceneNodeConfig* p_planetConfi
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
 
 	m_planetconfig = p_planetConfig;
-
-	// update local copy of config
-	m_planetRay = m_planetconfig->m_planetRay.m_value;
+    
+    update_screen();
 }
 
 void PlanetGroundSetupSubService::Unactivate( void )
 {
+}
+
+void PlanetGroundSetupSubService::update_screen( void )
+{
+    char comment[64];
+
+    sprintf( comment, "%.2f", m_planetconfig->m_planetRay.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlanetRay", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlanetRay", comment );
+
+    m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_GravityEnabled", m_planetconfig->m_gravityEnabled.m_value );
+    sprintf( comment, "%s", m_planetconfig->m_gravityEnabled.m_value ? "true" : "false" );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_GravityEnabled", comment );
 }

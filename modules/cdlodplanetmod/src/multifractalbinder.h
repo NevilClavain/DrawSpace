@@ -65,10 +65,10 @@ public:
 
 public:
 
-	MultiFractalBinder(void);
+	MultiFractalBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset );
 
-	virtual void Bind(void);
-	virtual void Unbind(void);
+	virtual void Bind( void );
+	virtual void Unbind( void );
 };
 
 #endif

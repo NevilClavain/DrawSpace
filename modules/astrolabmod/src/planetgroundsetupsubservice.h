@@ -42,13 +42,13 @@ protected:
 
 	PlanetSceneNodeConfig*												m_planetconfig;
 
-	// local copy of planet params
-	dsreal																m_planetRay;
 
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
 
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
+
+    void update_screen( void );
 
 
 	PlanetGroundSetupSubService(void);

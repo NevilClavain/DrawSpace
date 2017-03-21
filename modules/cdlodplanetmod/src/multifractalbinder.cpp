@@ -26,11 +26,11 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-MultiFractalBinder::MultiFractalBinder( void ) :
-m_plains_amplitude( PLAINS_AMPLITUDE ),
-m_mountains_amplitude( MOUNTAINS_AMPLITUDE ),
-m_vertical_offset( VERTICAL_OFFSET ),
-m_mountains_offset( MOUNTAINS_OFFSET ),
+MultiFractalBinder::MultiFractalBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset ) :
+m_plains_amplitude( p_plains_amplitude ),
+m_mountains_amplitude( p_mountains_amplitude ),
+m_vertical_offset( p_vertical_offset ),
+m_mountains_offset( p_mountains_offset ),
 m_plains_seed1(234.4),
 m_plains_seed2(9334.1),
 m_mix_seed1(823.4),

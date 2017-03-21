@@ -2149,6 +2149,11 @@ bool D3D9Renderer::GUI_IsCheckBoxChecked( const dsstring& p_layoutName, const ds
     return m_guisubsystem.IsCheckBoxChecked( p_layoutName, p_widgetName );
 }
 
+void D3D9Renderer::GUI_SetCheckboxState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state )
+{
+    m_guisubsystem.SetCheckboxState( p_layoutName, p_widgetName, p_state );
+}
+
 void D3D9Renderer::GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler )
 {
     m_guisubsystem.RegisterPushButtonEventClickedHandler( p_handler );

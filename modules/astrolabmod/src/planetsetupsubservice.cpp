@@ -264,6 +264,10 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 			    // connect keys here
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetName );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_planetRay );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_plainsAmplitude );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_moutainsAmplitude );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_moutainsOffset );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_verticalOffset );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsVertexShader );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsPixelShader );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_gravityEnabled );
@@ -272,9 +276,16 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 			    m_nodes_config[node_name].m_planetName = node_name;
 			    // setup default values here
                 m_nodes_config[node_name].m_planetRay = 500.0;
+
+                m_nodes_config[node_name].m_plainsAmplitude = 50.0;
+                m_nodes_config[node_name].m_moutainsAmplitude = 800.0;
+                m_nodes_config[node_name].m_moutainsOffset = -120.0;
+                m_nodes_config[node_name].m_verticalOffset = 0.0;
+
+
 			    m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
 			    m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
-			    m_nodes_config[node_name].m_gravityEnabled = false;
+			    m_nodes_config[node_name].m_gravityEnabled = true;
 
                 update_listbox();
             }

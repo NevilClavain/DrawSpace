@@ -33,6 +33,12 @@ public:
 
 	DrawSpace::Module::KeySource<dsstring>          m_planetName;
 	DrawSpace::Module::KeySource<dsreal>            m_planetRay;
+
+    DrawSpace::Module::KeySource<dsreal>            m_plainsAmplitude;
+    DrawSpace::Module::KeySource<dsreal>            m_moutainsAmplitude;
+    DrawSpace::Module::KeySource<dsreal>            m_moutainsOffset;
+    DrawSpace::Module::KeySource<dsreal>            m_verticalOffset;
+
 	DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
 	DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
 	DrawSpace::Module::KeySource<bool>				m_gravityEnabled;
@@ -46,6 +52,10 @@ public:
 	PlanetSceneNodeConfig( void ) :
 		m_planetName( "planetName" ),
 		m_planetRay( "planetRay" ),
+        m_plainsAmplitude( "plainsAmplitude" ),
+        m_moutainsAmplitude( "moutainsAmplitude" ),
+        m_moutainsOffset( "moutainsOffset" ),
+        m_verticalOffset( "verticalOffset" ),
 		m_detailsVertexShader( "detailsVertexShader" ),
 		m_detailsPixelShader( "detailsPixelShader" ),
 		m_gravityEnabled( "gravityEnabled" )

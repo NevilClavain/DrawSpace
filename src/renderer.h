@@ -142,6 +142,8 @@ public:
     virtual void GUI_SetComboBoxItemSelectionState( const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index, bool p_state ) = 0;
     virtual int  GUI_GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
     virtual bool GUI_IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName ) = 0;
+    virtual void GUI_SetCheckboxState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state ) = 0;
+
 
     virtual void GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler ) = 0;
     virtual void GUI_RegisterCheckboxEventStateChangedHandler( DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, bool>* p_handler ) = 0;

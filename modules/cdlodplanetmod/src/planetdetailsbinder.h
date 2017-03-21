@@ -83,7 +83,7 @@ protected:
 
 public:
 
-	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness );
+	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset );
 
 	virtual void Bind( void );
 	virtual void Unbind( void );
