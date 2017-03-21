@@ -144,7 +144,7 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 dsreal PlanetViewSubService::compute_arrow_force( void )
 {
-	return ( 60.0 * std::pow( m_rel_altitude, 1.2 ) );
+	return ( 5.0 * std::pow( m_rel_altitude, 1.2 ) );
 }
 
 dsreal PlanetViewSubService::compute_arrow_torque( dsreal p_delta )
@@ -447,7 +447,7 @@ void PlanetViewSubService::OnMouseWheel( long p_delta )
 		    {
 			    m_mousewheel_delta++;
 		   
-		        m_arrow->ApplyRevForce( 2 * m_mousewheel_delta * force );
+		        m_arrow->ApplyRevForce( m_mousewheel_delta * force );
 		    }
 		    else
 		    {
@@ -461,7 +461,7 @@ void PlanetViewSubService::OnMouseWheel( long p_delta )
 		    {
 			    m_mousewheel_delta++;
 		   
-		        m_arrow->ApplyFwdForce( 2 * m_mousewheel_delta * force );
+		        m_arrow->ApplyFwdForce( m_mousewheel_delta * force );
 		    }
 		    else
 		    {

@@ -33,7 +33,8 @@ class PlanetGroundSetupSubService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-	typedef DrawSpace::Core::CallBack2<PlanetGroundSetupSubService, void, const dsstring&, const dsstring&>   GUIWidgetPushButtonClickedCallback;
+	typedef DrawSpace::Core::CallBack2<PlanetGroundSetupSubService, void, const dsstring&, const dsstring&>         GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack3<PlanetGroundSetupSubService, void, const dsstring&, const dsstring&, bool>   GUIWidgetCheckboxStateChangedCallback;
 
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
@@ -44,9 +45,11 @@ protected:
 
 
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
+    GUIWidgetCheckboxStateChangedCallback*                              m_guiwidgetcheckboxstatechanged_cb;
 
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
+    void on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state );
 
     void update_screen( void );
 

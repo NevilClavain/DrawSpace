@@ -38,7 +38,8 @@ _DECLARE_DS_LOGGER(logger, "planetgroundsetupsubservice", NULL)
 PlanetGroundSetupSubService::PlanetGroundSetupSubService( void ) :
 m_planetconfig( NULL )
 {
-	m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_(GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback(this, &PlanetGroundSetupSubService::on_guipushbutton_clicked));
+	m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetGroundSetupSubService::on_guipushbutton_clicked ) );
+    m_guiwidgetcheckboxstatechanged_cb = _DRAWSPACE_NEW_( GUIWidgetCheckboxStateChangedCallback, GUIWidgetCheckboxStateChangedCallback( this, &PlanetGroundSetupSubService::on_guicheckboxstatechanged_clicked ) );
 }
     
 PlanetGroundSetupSubService::~PlanetGroundSetupSubService( void )
@@ -128,6 +129,7 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_NbLODInertBodies" );
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
+    m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
 }
 
 
@@ -229,6 +231,8 @@ void PlanetGroundSetupSubService::OnAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 
 void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_layout, const dsstring& p_widget_id)
 {
+    dsstring text;
+
     if( p_layout != LAYOUT_FILE )
     {
         return;
@@ -241,27 +245,76 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
 
     if( "Button_PlanetRay" == p_widget_id )
     {
-    
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_PlanetRay", text );
+
+        try
+        {
+            m_planetconfig->m_planetRay = (dsreal)std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            update_screen();
+        }
     }
 
     if( "Button_PlainsAmplitude" == p_widget_id )
     {
-    
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_PlainsAmplitude", text );
+
+        try
+        {
+            m_planetconfig->m_plainsAmplitude = (dsreal)std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            update_screen();
+        }    
     }
 
     if( "Button_MountainsAmplitude" == p_widget_id )
     {
-    
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_MountainsAmplitude", text );
+
+        try
+        {
+            m_planetconfig->m_moutainsAmplitude = (dsreal)std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            update_screen();
+        }     
     }
 
     if( "Button_MountainsOffset" == p_widget_id )
     {
-    
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_MountainsOffset", text );
+
+        try
+        {
+            m_planetconfig->m_moutainsOffset = (dsreal)std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            update_screen();
+        }     
     }
 
-    if( "Button_VerticalOffset" == P_tmpdir )
+    if( "Button_VerticalOffset" == p_widget_id )
     {
-    
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_VerticalOffset", text );
+        try
+        {
+            m_planetconfig->m_verticalOffset = (dsreal)std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            update_screen();
+        }     
     }
 
     if( "Button_BeachLimit" == p_widget_id )
@@ -289,21 +342,34 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
     
     }
 
-    if( "SimpleLabel_SplatTextureResol" == p_widget_id )
+    if( "Button_SplatTextureResol" == p_widget_id )
     {
     
     }
 
-    if( "SimpleLabel_NbLODFreeCameras" == p_widget_id )
+    if( "Button_NbLODFreeCameras" == p_widget_id )
     {
     
     }
 
-    if( "SimpleLabel_NbLODInertBodies" == p_widget_id )
+    if( "Button_NbLODInertBodies" == p_widget_id )
     {
     
     }
+}
 
+void PlanetGroundSetupSubService::on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state )
+{
+    if( p_layout != LAYOUT_FILE )
+    {
+        return;
+    }
+
+    if( "Checkbox_GravityEnabled" == p_widget_id )
+    {
+        m_planetconfig->m_gravityEnabled = p_state;
+        update_screen();
+    }
 }
 
 void PlanetGroundSetupSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
@@ -322,27 +388,33 @@ void PlanetGroundSetupSubService::Unactivate( void )
 void PlanetGroundSetupSubService::update_screen( void )
 {
     char comment[64];
+    char comment2[64];
 
-    sprintf( comment, "%.2f", m_planetconfig->m_planetRay.m_value );
+    sprintf( comment, "%d km", (int)m_planetconfig->m_planetRay.m_value );
+    sprintf( comment2, "%d", (int)m_planetconfig->m_planetRay.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlanetRay", comment );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlanetRay", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlanetRay", comment2 );
 
 
-    sprintf( comment, "%.2f", m_planetconfig->m_plainsAmplitude.m_value );
+    sprintf( comment, "%d m", (int)m_planetconfig->m_plainsAmplitude.m_value );
+    sprintf( comment2, "%d", (int)m_planetconfig->m_plainsAmplitude.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlainsAmplitude", comment );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlainsAmplitude", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlainsAmplitude", comment2 );
 
-    sprintf( comment, "%.2f", m_planetconfig->m_moutainsAmplitude.m_value );
+    sprintf( comment, "%d m", (int)m_planetconfig->m_moutainsAmplitude.m_value );
+    sprintf( comment2, "%d", (int)m_planetconfig->m_moutainsAmplitude.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_MountainsAmplitude", comment );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_MountainsAmplitude", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_MountainsAmplitude", comment2 );
 
-    sprintf( comment, "%.2f", m_planetconfig->m_moutainsOffset.m_value );
+    sprintf( comment, "%d m", (int)m_planetconfig->m_moutainsOffset.m_value );
+    sprintf( comment2, "%d", (int)m_planetconfig->m_moutainsOffset.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_MountainsOffset", comment );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_MountainsOffset", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_MountainsOffset", comment2 );
 
-    sprintf( comment, "%.2f", m_planetconfig->m_verticalOffset.m_value );
+    sprintf( comment, "%d m", (int)m_planetconfig->m_verticalOffset.m_value );
+    sprintf( comment2, "%d", (int)m_planetconfig->m_verticalOffset.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_VerticalOffset", comment );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_VerticalOffset", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_VerticalOffset", comment2 );
 
     m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_GravityEnabled", m_planetconfig->m_gravityEnabled.m_value );
     sprintf( comment, "%s", m_planetconfig->m_gravityEnabled.m_value ? "true" : "false" );
