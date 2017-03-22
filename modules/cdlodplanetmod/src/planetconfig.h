@@ -95,6 +95,7 @@ public:
     RealParam                           m_moutainsAmplitude;
     RealParam                           m_moutainsOffset;
     RealParam                           m_verticalOffset;
+    RealParam                           m_beachLimit;
 
 	StringParam							m_detailsVertexShader;
 	StringParam							m_detailsPixelShader;
@@ -114,6 +115,7 @@ public:
     m_moutainsAmplitude( "moutainsAmplitude" ),
     m_moutainsOffset( "moutainsOffset" ),
     m_verticalOffset( "verticalOffset" ),
+    m_beachLimit( "beachLimit" ),
 	m_detailsVertexShader( "detailsVertexShader" ),
 	m_detailsPixelShader( "detailsPixelShader" ),
 	m_gravityEnabled( "gravityEnabled" )
@@ -124,6 +126,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_moutainsAmplitude );
         m_keylinksTable.RegisterModuleKey( &m_moutainsOffset );
         m_keylinksTable.RegisterModuleKey( &m_verticalOffset );
+        m_keylinksTable.RegisterModuleKey( &m_beachLimit );
 		m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
 		m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );
 		m_keylinksTable.RegisterModuleKey( &m_gravityEnabled );

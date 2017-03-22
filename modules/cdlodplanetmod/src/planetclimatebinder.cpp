@@ -27,8 +27,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-PlanetClimateBinder::PlanetClimateBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset ) : 
-MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset )
+PlanetClimateBinder::PlanetClimateBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset, dsreal p_beach_limit ) : 
+MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset ),
+m_beachlimit( p_beach_limit )
 {
 }
 
@@ -36,8 +37,8 @@ void PlanetClimateBinder::Bind( void )
 {
 	// planete temperee
 
-	Vector thparams(40.0, 20.0, TEMP_DEC_PER_KM, BEACH_LIMIT);
-	Vector thparams2(0.48, 0.87, 0.45, 0.75);
+	Vector thparams( 40.0, 20.0, TEMP_DEC_PER_KM, m_beachlimit );
+	Vector thparams2( 0.48, 0.87, 0.45, 0.75 );
 
 	// planete chaude et peu humide (aride) : desertique
 	//Vector thparams( 0.0, 10.0, TEMP_DEC_PER_KM, BEACH_LIMIT );

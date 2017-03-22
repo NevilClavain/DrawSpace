@@ -49,7 +49,8 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
                                                                                                 m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value ) );
 
 		m_planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder( m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
-                                                                                                m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value ) );
+                                                                                                m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
+                                                                                                m_node_config->m_beachLimit.m_value ) );
     }
 
 	m_planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( m_node_config->m_detailsVertexShader.m_value, true ) );
