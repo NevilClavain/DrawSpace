@@ -59,7 +59,6 @@ protected:
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
     void on_statusbar_timer( DrawSpace::Utils::Timer* p_timer );
-
     void statusbar_msg( const dsstring& p_msg );
 
     void update_listbox( void );

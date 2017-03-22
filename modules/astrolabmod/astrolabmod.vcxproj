@@ -97,6 +97,7 @@
     <ClCompile Include="src\planetsetupsubservice.cpp" />
     <ClCompile Include="src\planetviewsubservice.cpp" />
     <ClCompile Include="src\astrolabroot.cpp" />
+    <ClCompile Include="src\statusbartimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\crtp_singleton.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="src\planetgroundsetupsubservice.h" />
     <ClInclude Include="src\planetviewsubservice.h" />
     <ClInclude Include="src\astrolabroot.h" />
+    <ClInclude Include="src\statusbartimer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -19,6 +19,9 @@
     <ClCompile Include="src\planetgroundsetupsubservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\statusbartimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\nodeplanetinfos.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\statusbartimer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
