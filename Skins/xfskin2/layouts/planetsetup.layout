@@ -83,27 +83,39 @@
             <Property name="Area" value="{{0.280556,0},{0.239507,0},{0.481945,0},{0.323458,0}}" />
             <Property name="Text" value="Ground" />
         </Window>
-        <Window type="xfskin/Button" name="Button2" >
-            <Property name="Area" value="{{0.280556,0},{0.356791,0},{0.481945,0},{0.440742,0}}" />
+        <Window type="xfskin/Button" name="AtmoSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.554322,0},{0.481945,0},{0.638272,0}}" />
             <Property name="Text" value="Fog &amp; Atmosphere" />
         </Window>
-        <Window type="xfskin/Button" name="Button22" >
-            <Property name="Area" value="{{0.280556,0},{0.474074,0},{0.481945,0},{0.558025,0}}" />
+        <Window type="xfskin/Button" name="CloudsSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.660494,0},{0.481945,0},{0.744444,0}}" />
             <Property name="Text" value="Clouds" />
         </Window>
-        <Window type="xfskin/Button" name="Button222" >
-            <Property name="Area" value="{{0.280556,0},{0.591358,0},{0.481945,0},{0.675309,0}}" />
-            <Property name="Text" value="Medias" />
+        <Window type="xfskin/Button" name="ResourcesSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.765432,0},{0.481945,0},{0.849383,0}}" />
+            <Property name="Text" value="Resources" />
         </Window>
         <Window type="xfskin/StaticImage" name="StaticImage22322" >
-            <Property name="Area" value="{{0.5,0},{0.234568,0},{0.503472,0},{0.679012,0}}" />
+            <Property name="Area" value="{{0.5,0},{0.134568,0},{0.503472,0},{0.850617,0}}" />
             <Property name="Image" value="xfskin/line_v_long" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="xfskin/StaticImage" name="StaticImage223222" >
-            <Property name="Area" value="{{0.256944,0},{0.234568,0},{0.260416,0},{0.679012,0}}" />
+            <Property name="Area" value="{{0.256944,0},{0.134568,0},{0.260416,0},{0.850617,0}}" />
             <Property name="Image" value="xfskin/line_v_long" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="SeedsSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.134569,0},{0.481945,0},{0.218519,0}}" />
+            <Property name="Text" value="Seeds" />
+        </Window>
+        <Window type="xfskin/Button" name="ClimateSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.344445,0},{0.481945,0},{0.428396,0}}" />
+            <Property name="Text" value="Climate parameters" />
+        </Window>
+        <Window type="xfskin/Button" name="WaterSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.449384,0},{0.481945,0},{0.533334,0}}" />
+            <Property name="Text" value="Water details" />
         </Window>
     </Window>
 </GUILayout>

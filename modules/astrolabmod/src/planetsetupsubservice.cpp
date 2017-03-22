@@ -82,10 +82,14 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "PlanetSlots_Listbox" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "PlanetName_Editbox" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Status" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SeedsSetup_Button" );
 	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "GroundSetup_Button" );
-	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button2" );
-	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button22" );
-	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button222" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "ClimateSetup_Button" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "WaterSetup_Button" );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "AtmoSetup_Button" );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "CloudsSetup_Button" );
+	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "ResourcesSetup_Button" );
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
