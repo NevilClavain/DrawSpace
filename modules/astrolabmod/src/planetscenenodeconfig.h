@@ -39,6 +39,7 @@ public:
     DrawSpace::Module::KeySource<dsreal>            m_moutainsOffset;
     DrawSpace::Module::KeySource<dsreal>            m_verticalOffset;
     DrawSpace::Module::KeySource<dsreal>            m_beachLimit;
+    DrawSpace::Module::KeySource<dsreal>            m_landscapeBumpFactor;
 
 	DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
 	DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
@@ -58,6 +59,7 @@ public:
         m_moutainsOffset( "moutainsOffset" ),
         m_verticalOffset( "verticalOffset" ),
         m_beachLimit( "beachLimit" ),
+        m_landscapeBumpFactor( "landscapeBumpFactor" ),
 		m_detailsVertexShader( "detailsVertexShader" ),
 		m_detailsPixelShader( "detailsPixelShader" ),
 		m_gravityEnabled( "gravityEnabled" )

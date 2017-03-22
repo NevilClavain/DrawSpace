@@ -344,7 +344,17 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
 
     if( "Button_LandscapeBumpFactor" == p_widget_id )
     {
-    
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_LandscapeBumpFactor", text );
+        try
+        {
+            m_planetconfig->m_landscapeBumpFactor = (dsreal)std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }     
     }
 
     if( "Button_ZBufferActivationRelativeAlt" == p_widget_id )
@@ -440,6 +450,11 @@ void PlanetGroundSetupSubService::update_screen( void )
     sprintf( comment2, "%d", (int)m_planetconfig->m_beachLimit.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_BeachLimit", comment );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_BeachLimit", comment2 );
+
+    sprintf( comment, "%d", (int)m_planetconfig->m_landscapeBumpFactor.m_value );
+    sprintf( comment2, "%d", (int)m_planetconfig->m_landscapeBumpFactor.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_LandscapeBumpFactor", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_LandscapeBumpFactor", comment2 );
 
     m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_GravityEnabled", m_planetconfig->m_gravityEnabled.m_value );
     sprintf( comment, "%s", m_planetconfig->m_gravityEnabled.m_value ? "true" : "false" );
