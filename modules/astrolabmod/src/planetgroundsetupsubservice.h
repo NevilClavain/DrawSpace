@@ -26,6 +26,7 @@
 #include "drawspace.h"
 #include "crtp_singleton.h"
 #include "planetscenenodeconfig.h"
+#include "statusbartimer.h"
 
 class MainLoopService;
 
@@ -42,6 +43,8 @@ protected:
     dsstring                                                            m_pluginDescr;
 
 	PlanetSceneNodeConfig*												m_planetconfig;
+
+    StatusBarTimer                                                      m_statusbar_timer;
 
 
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;

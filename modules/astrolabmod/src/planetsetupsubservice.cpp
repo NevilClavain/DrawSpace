@@ -36,12 +36,11 @@ _DECLARE_DS_LOGGER(logger, "planetsetupsubservice", NULL)
 #define LAYOUT_FILE "planetsetup.layout"
 
 PlanetSetupSubService::PlanetSetupSubService(void) :
-m_selected_planet_conf( NULL )
+m_selected_planet_conf( NULL ),
+m_statusbar_timer( LAYOUT_FILE, "Label_Status" )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetSetupSubService::on_guipushbutton_clicked ) );
 
-    m_statusbar_timer_cb = _DRAWSPACE_NEW_( TimerCb, TimerCb( this, &PlanetSetupSubService::on_statusbar_timer ) );
-    m_statusbar_timer = _DRAWSPACE_NEW_( DrawSpace::Utils::Timer, DrawSpace::Utils::Timer );
 }
     
 PlanetSetupSubService::~PlanetSetupSubService( void )
@@ -90,14 +89,7 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
-
-    ///////// timer messages status bar
-
-    m_statusbar_timer->SetHandler( m_statusbar_timer_cb );
-    m_statusbar_timer->SetPeriod( 3000 );
-    m_tm.RegisterTimer( m_statusbar_timer );
-
-    m_statusbar_timer->SetState( false );
+    m_statusbar_timer.Init( m_tm );
 }
 
 
@@ -243,7 +235,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         }
         else
         {
-            statusbar_msg( "you must select a planet entry !" );
+            m_statusbar_timer.Print( "you must select a planet entry !" );
         }
     }
     else if( "AddPlanet_Button" == p_widget_id )
@@ -255,7 +247,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         {
             if( m_nodes_config.count( node_name ) )
             {
-                statusbar_msg( "planet entry with same name exists !" );
+                m_statusbar_timer.Print( "planet entry with same name exists !" );
             }
             else
             {
@@ -291,7 +283,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
         }
         else
         {
-            statusbar_msg( "Planet slot must have a name !" );
+            m_statusbar_timer.Print( "planet slot must have a name !" );
         }
     }
 	else if( "GroundSetup_Button" == p_widget_id )
@@ -308,7 +300,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 		}
 		else
 		{
-			statusbar_msg( "you must select a planet entry !" );
+            m_statusbar_timer.Print( "you must select a planet entry !" );
 		}
 	}
 }
@@ -320,18 +312,6 @@ void PlanetSetupSubService::Activate( void )
 
 void PlanetSetupSubService::Unactivate( void )
 {
-}
-
-void PlanetSetupSubService::on_statusbar_timer( DrawSpace::Utils::Timer* p_timer )
-{
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Status", "" );
-    m_statusbar_timer->SetState( false );
-}
-
-void PlanetSetupSubService::statusbar_msg( const dsstring& p_msg )
-{
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_Status", p_msg );
-    m_statusbar_timer->SetState( true );
 }
 
 void PlanetSetupSubService::SetCDLODInfos( DrawSpace::Interface::Module::Root* p_cdlodp_root, DrawSpace::Interface::Module::Service* p_cdlodp_service )

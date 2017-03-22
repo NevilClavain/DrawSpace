@@ -36,7 +36,8 @@ _DECLARE_DS_LOGGER(logger, "planetgroundsetupsubservice", NULL)
 #define LAYOUT_FILE "planetgroundsetup.layout"
 
 PlanetGroundSetupSubService::PlanetGroundSetupSubService( void ) :
-m_planetconfig( NULL )
+m_planetconfig( NULL ),
+m_statusbar_timer( LAYOUT_FILE, "Label_Status" )
 {
 	m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetGroundSetupSubService::on_guipushbutton_clicked ) );
     m_guiwidgetcheckboxstatechanged_cb = _DRAWSPACE_NEW_( GUIWidgetCheckboxStateChangedCallback, GUIWidgetCheckboxStateChangedCallback( this, &PlanetGroundSetupSubService::on_guicheckboxstatechanged_clicked ) );
@@ -132,6 +133,8 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
+
+    m_statusbar_timer.Init( m_tm );
 }
 
 
@@ -256,6 +259,7 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
         }
         catch( std::invalid_argument )
         {
+            m_statusbar_timer.Print( "bad value input!" );
             update_screen();
         }
     }
@@ -271,6 +275,7 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
         }
         catch( std::invalid_argument )
         {
+            m_statusbar_timer.Print( "bad value input!" );
             update_screen();
         }    
     }
@@ -286,6 +291,7 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
         }
         catch( std::invalid_argument )
         {
+            m_statusbar_timer.Print( "bad value input!" );
             update_screen();
         }     
     }
@@ -301,6 +307,7 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
         }
         catch( std::invalid_argument )
         {
+            m_statusbar_timer.Print( "bad value input!" );
             update_screen();
         }     
     }
@@ -315,6 +322,7 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
         }
         catch( std::invalid_argument )
         {
+            m_statusbar_timer.Print( "bad value input!" );
             update_screen();
         }     
     }

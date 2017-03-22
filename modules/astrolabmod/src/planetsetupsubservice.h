@@ -27,6 +27,8 @@
 #include "crtp_singleton.h"
 #include "planetscenenodeconfig.h"
 
+#include "statusbartimer.h"
+
 class MainLoopService;
 
 class PlanetSetupSubService : public DrawSpace::Interface::Module::Service, public BaseSingleton<PlanetSetupSubService>
@@ -34,8 +36,6 @@ class PlanetSetupSubService : public DrawSpace::Interface::Module::Service, publ
 protected:
 
     typedef DrawSpace::Core::CallBack2<PlanetSetupSubService, void, const dsstring&, const dsstring&>   GUIWidgetPushButtonClickedCallback;
-
-    typedef DrawSpace::Core::CallBack<PlanetSetupSubService, void, DrawSpace::Utils::Timer*>            TimerCb;
 
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
@@ -47,19 +47,16 @@ protected:
 
     std::map<dsstring, PlanetSceneNodeConfig>							m_nodes_config;
 
-    TimerCb*                                                            m_statusbar_timer_cb;
-    DrawSpace::Utils::Timer*                                            m_statusbar_timer;
-
-
     DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
     DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
 
 	PlanetSceneNodeConfig*												m_selected_planet_conf;
 
+    StatusBarTimer                                                      m_statusbar_timer;
+
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
-    void on_statusbar_timer( DrawSpace::Utils::Timer* p_timer );
-    void statusbar_msg( const dsstring& p_msg );
+
 
     void update_listbox( void );
 
