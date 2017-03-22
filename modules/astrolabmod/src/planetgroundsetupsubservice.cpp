@@ -73,6 +73,8 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
 
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Status" );
+
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_PlanetRay" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_PlanetRay" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_PlanetRay" );
