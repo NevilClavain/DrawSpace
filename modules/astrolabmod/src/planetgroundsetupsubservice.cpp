@@ -73,7 +73,7 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
 
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
-
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Status" );
 
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_PlanetRay" );
@@ -385,10 +385,10 @@ void PlanetGroundSetupSubService::on_guicheckboxstatechanged_clicked( const dsst
 void PlanetGroundSetupSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
 {
     m_renderer->GUI_SetLayout( LAYOUT_FILE );
-
 	m_planetconfig = p_planetConfig;
-    
+
     update_screen();
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Label_PlanetName", m_planetconfig->m_planetName.m_value );
 }
 
 void PlanetGroundSetupSubService::Unactivate( void )
