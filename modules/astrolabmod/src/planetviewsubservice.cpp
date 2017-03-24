@@ -526,6 +526,8 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
 
     if( "Button_ResetAll" == p_widget_id )
     {
+        m_objectRot->Init( Vector( 0.0, 0.0, 0.0, 1.0 ) );
+        set_arrow_initial_attitude();
     }
 
 }
