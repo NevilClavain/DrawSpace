@@ -84,5 +84,13 @@
             <Property name="Area" value="{{0.786111,0},{0.896296,0},{0.888889,0},{0.98642,0}}" />
             <Property name="Text" value="Prev" />
         </Window>
+        <Window type="xfskin/Button" name="Button_ResetPlanetTransform" >
+            <Property name="Area" value="{{0.481944,541},{0.896296,-116},{0.61875,541},{0.98642,-116}}" />
+            <Property name="Text" value="Reset planet matrix" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_ResetAll" >
+            <Property name="Area" value="{{0.481944,541},{0.896296,-201},{0.61875,541},{0.98642,-201}}" />
+            <Property name="Text" value="Reset all" />
+        </Window>
     </Window>
 </GUILayout>

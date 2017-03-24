@@ -126,6 +126,9 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_HotParamNext" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_HotParamPrev" );
 
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_ResetPlanetTransform" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_ResetAll" );
+
 
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_Relative", false );
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_SubPasses", false );
@@ -135,6 +138,8 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Editbox_HotParam", false );
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Button_HotParamUpdate", false );
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_HotParamName", false );
+
+    
 
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
@@ -513,6 +518,16 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
     {
         MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETVIEW_CLOSEBUTTON_CLIC );
     }
+
+    if( "Button_ResetPlanetTransform" == p_widget_id )
+    {
+        m_objectRot->Init( Vector( 0.0, 0.0, 0.0, 1.0 ) );
+    }
+
+    if( "Button_ResetAll" == p_widget_id )
+    {
+    }
+
 }
 
 void PlanetViewSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
