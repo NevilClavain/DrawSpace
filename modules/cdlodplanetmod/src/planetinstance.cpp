@@ -125,8 +125,8 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
     m_config.m_lod0base = 19000.0;
     m_config.m_ground_layer = 0;
-    m_config.m_nbLODRanges_inertBodies = NB_LOD_INERTBODIES;
-    m_config.m_nbLODRanges_freeCameras = NB_LOD_FREECAMERAS;
+    m_config.m_nbLODRanges_inertBodies = m_node_config->m_nbLODInertBodies.m_value;
+    m_config.m_nbLODRanges_freeCameras = m_node_config->m_nbLODFreeCameras.m_value;
 
     SphericalLOD::Config::LayerDescriptor planet_surface;
     planet_surface.enable_collisions = false;

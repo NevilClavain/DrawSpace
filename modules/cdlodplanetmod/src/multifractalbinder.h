@@ -39,8 +39,6 @@
 #define CLOUDS_HEIGHT                       750.0
 #define CLOUDS_FOG_DENSITY                  0.000045
 #define FOG_DENSITY                         0.00050
-#define NB_LOD_FREECAMERAS                  14
-#define NB_LOD_INERTBODIES                  15
 
 class MultiFractalBinder : public DrawSpace::SphericalLOD::Binder
 {

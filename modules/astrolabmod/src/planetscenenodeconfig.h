@@ -43,6 +43,9 @@ public:
     DrawSpace::Module::KeySource<dsreal>            m_zbufferActivationRelAlt;
     DrawSpace::Module::KeySource<dsreal>            m_splatTransitionUpRelativeAlt;
     DrawSpace::Module::KeySource<dsreal>            m_splatTransitionDownRelativeAlt;
+    DrawSpace::Module::KeySource<int>               m_nbLODFreeCameras;
+    DrawSpace::Module::KeySource<int>               m_nbLODInertBodies;
+
 
 	DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
 	DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
@@ -66,6 +69,8 @@ public:
         m_zbufferActivationRelAlt( "zbufferActivationRelAlt" ),
         m_splatTransitionUpRelativeAlt( "splatTransitionUpRelativeAlt" ),
         m_splatTransitionDownRelativeAlt( "splatTransitionDownRelativeAlt" ),
+        m_nbLODFreeCameras( "nbLODFreeCameras" ),
+        m_nbLODInertBodies( "nbLODInertBodies" ),
 		m_detailsVertexShader( "detailsVertexShader" ),
 		m_detailsPixelShader( "detailsPixelShader" ),
 		m_gravityEnabled( "gravityEnabled" )

@@ -49,6 +49,21 @@ public:
         }
     };
 
+    class IntParam : public DrawSpace::Module::KeySink<int>
+    {
+    public:
+	    int			    m_value;
+
+	    IntParam( const dsstring& p_id ) : KeySink( p_id )
+        {
+        }
+
+	    virtual void OnUpdated( int p_val )
+        {
+            m_value = p_val;
+        }
+    };
+
     class StringParam : public DrawSpace::Module::KeySink<dsstring>
     {
     public:
@@ -101,6 +116,9 @@ public:
     RealParam                           m_splatTransitionUpRelativeAlt;
     RealParam                           m_splatTransitionDownRelativeAlt;
 
+    IntParam                            m_nbLODFreeCameras;
+    IntParam                            m_nbLODInertBodies;
+
 	StringParam							m_detailsVertexShader;
 	StringParam							m_detailsPixelShader;
 
@@ -126,7 +144,9 @@ public:
     m_splatTransitionDownRelativeAlt( "splatTransitionDownRelativeAlt" ),
 	m_detailsVertexShader( "detailsVertexShader" ),
 	m_detailsPixelShader( "detailsPixelShader" ),
-	m_gravityEnabled( "gravityEnabled" )
+	m_gravityEnabled( "gravityEnabled" ),
+    m_nbLODFreeCameras( "nbLODFreeCameras" ),
+    m_nbLODInertBodies( "nbLODInertBodies" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
@@ -139,6 +159,8 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_zbufferActivationRelAlt );
         m_keylinksTable.RegisterModuleKey( &m_splatTransitionUpRelativeAlt );
         m_keylinksTable.RegisterModuleKey( &m_splatTransitionDownRelativeAlt );
+        m_keylinksTable.RegisterModuleKey( &m_nbLODFreeCameras );
+        m_keylinksTable.RegisterModuleKey( &m_nbLODInertBodies );
 		m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
 		m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );
 		m_keylinksTable.RegisterModuleKey( &m_gravityEnabled );

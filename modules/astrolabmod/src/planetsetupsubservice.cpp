@@ -269,6 +269,8 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_zbufferActivationRelAlt );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_splatTransitionUpRelativeAlt );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_splatTransitionDownRelativeAlt );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_nbLODFreeCameras );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_nbLODInertBodies );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsVertexShader );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsPixelShader );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_gravityEnabled );
@@ -287,6 +289,8 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_zbufferActivationRelAlt = 1.0098;
                 m_nodes_config[node_name].m_splatTransitionUpRelativeAlt = 1.095;
                 m_nodes_config[node_name].m_splatTransitionDownRelativeAlt = 1.0040;
+                m_nodes_config[node_name].m_nbLODFreeCameras = 14;
+                m_nodes_config[node_name].m_nbLODInertBodies = 15;
 
 			    m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
 			    m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";

@@ -389,7 +389,7 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
 
     if( "Button_SplatTransitionDownRelativeAlt" == p_widget_id )
     {
-         m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_SplatTransitionDownRelativeAlt", text );
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_SplatTransitionDownRelativeAlt", text );
         try
         {
             m_planetconfig->m_splatTransitionDownRelativeAlt = (dsreal)std::stof( text );
@@ -409,12 +409,32 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
 
     if( "Button_NbLODFreeCameras" == p_widget_id )
     {
-    
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_NbLODFreeCameras", text );
+        try
+        {
+            m_planetconfig->m_nbLODFreeCameras = std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }     
     }
 
     if( "Button_NbLODInertBodies" == p_widget_id )
     {
-    
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_NbLODInertBodies", text );
+        try
+        {
+            m_planetconfig->m_nbLODInertBodies = std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }    
     }
 }
 
@@ -500,6 +520,16 @@ void PlanetGroundSetupSubService::update_screen( void )
     sprintf( comment2, "%.4f", m_planetconfig->m_splatTransitionDownRelativeAlt.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_SplatTransitionDownRelativeAlt", comment );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_SplatTransitionDownRelativeAlt", comment2 );
+
+    sprintf( comment, "%d", m_planetconfig->m_nbLODFreeCameras.m_value );
+    sprintf( comment2, "%d", m_planetconfig->m_nbLODFreeCameras.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_NbLODFreeCameras", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_NbLODFreeCameras", comment2 );
+
+    sprintf( comment, "%d", m_planetconfig->m_nbLODInertBodies.m_value );
+    sprintf( comment2, "%d", m_planetconfig->m_nbLODInertBodies.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_NbLODInertBodies", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_NbLODInertBodies", comment2 );
 
     m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_GravityEnabled", m_planetconfig->m_gravityEnabled.m_value );
     sprintf( comment, "%s", m_planetconfig->m_gravityEnabled.m_value ? "true" : "false" );
