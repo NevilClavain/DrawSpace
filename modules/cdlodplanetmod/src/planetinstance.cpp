@@ -242,7 +242,7 @@ void PlanetInstance::zbuffer_control_from_viewer_alt( void )
     m_scenenodegraph->GetCurrentCameraName( camera_name );
 
     dsreal view_rel_alt = m_planet_root->GetAnyCameraRelativeAltitude( camera_name );
-    if( view_rel_alt < ZBUFFER_ACTIVATION_REL_ALT )
+    if( view_rel_alt < m_node_config->m_zbufferActivationRelAlt.m_value )
     {
         m_details_fx->UpdateRenderStateIn( 0, DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     }
