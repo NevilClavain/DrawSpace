@@ -97,8 +97,9 @@ public:
     RealParam                           m_verticalOffset;
     RealParam                           m_beachLimit;
     RealParam                           m_landscapeBumpFactor;
-
     RealParam                           m_zbufferActivationRelAlt;
+    RealParam                           m_splatTransitionUpRelativeAlt;
+    RealParam                           m_splatTransitionDownRelativeAlt;
 
 	StringParam							m_detailsVertexShader;
 	StringParam							m_detailsPixelShader;
@@ -121,6 +122,8 @@ public:
     m_beachLimit( "beachLimit" ),
     m_landscapeBumpFactor( "landscapeBumpFactor" ),
     m_zbufferActivationRelAlt( "zbufferActivationRelAlt" ),
+    m_splatTransitionUpRelativeAlt( "splatTransitionUpRelativeAlt" ),
+    m_splatTransitionDownRelativeAlt( "splatTransitionDownRelativeAlt" ),
 	m_detailsVertexShader( "detailsVertexShader" ),
 	m_detailsPixelShader( "detailsPixelShader" ),
 	m_gravityEnabled( "gravityEnabled" )
@@ -134,6 +137,8 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_beachLimit );
         m_keylinksTable.RegisterModuleKey( &m_landscapeBumpFactor );
         m_keylinksTable.RegisterModuleKey( &m_zbufferActivationRelAlt );
+        m_keylinksTable.RegisterModuleKey( &m_splatTransitionUpRelativeAlt );
+        m_keylinksTable.RegisterModuleKey( &m_splatTransitionDownRelativeAlt );
 		m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
 		m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );
 		m_keylinksTable.RegisterModuleKey( &m_gravityEnabled );

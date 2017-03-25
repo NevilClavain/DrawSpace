@@ -41,6 +41,8 @@ public:
     DrawSpace::Module::KeySource<dsreal>            m_beachLimit;
     DrawSpace::Module::KeySource<dsreal>            m_landscapeBumpFactor;
     DrawSpace::Module::KeySource<dsreal>            m_zbufferActivationRelAlt;
+    DrawSpace::Module::KeySource<dsreal>            m_splatTransitionUpRelativeAlt;
+    DrawSpace::Module::KeySource<dsreal>            m_splatTransitionDownRelativeAlt;
 
 	DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
 	DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
@@ -62,6 +64,8 @@ public:
         m_beachLimit( "beachLimit" ),
         m_landscapeBumpFactor( "landscapeBumpFactor" ),
         m_zbufferActivationRelAlt( "zbufferActivationRelAlt" ),
+        m_splatTransitionUpRelativeAlt( "splatTransitionUpRelativeAlt" ),
+        m_splatTransitionDownRelativeAlt( "splatTransitionDownRelativeAlt" ),
 		m_detailsVertexShader( "detailsVertexShader" ),
 		m_detailsPixelShader( "detailsPixelShader" ),
 		m_gravityEnabled( "gravityEnabled" )

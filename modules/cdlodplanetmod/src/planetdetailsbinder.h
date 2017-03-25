@@ -81,10 +81,13 @@ protected:
 	dsreal														m_ocean_details_alt;
 	dsreal														m_terrain_bump_factor;
 
+    dsreal                                                      m_splatTransitionUpRelativeAlt;
+    dsreal                                                      m_splatTransitionDownRelativeAlt;
+
 public:
 
 	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset,
-                            dsreal p_terrainbump_factor );
+                            dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt );
 
 	virtual void Bind( void );
 	virtual void Unbind( void );
