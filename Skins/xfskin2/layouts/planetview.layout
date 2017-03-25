@@ -55,7 +55,7 @@
             <Property name="NormalTextColour" value="FFFFFFFF" />
         </Window>
         <Window type="xfskin/SimpleLabel" name="SimpleLabel_SubPasses" >
-            <Property name="Area" value="{{0.776389,0},{0.697532,0},{1.02222,0},{0.737038,0}}" />
+            <Property name="Area" value="{{0.764583,0},{0.282717,0},{1.01042,0},{0.322223,0}}" />
             <Property name="Text" value="Computing more details..." />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="NormalTextColour" value="FFFFFFFF" />
@@ -85,11 +85,11 @@
             <Property name="Text" value="Prev" />
         </Window>
         <Window type="xfskin/Button" name="Button_ResetPlanetTransform" >
-            <Property name="Area" value="{{0.481944,541},{0.896296,-116},{0.61875,541},{0.98642,-116}}" />
+            <Property name="Area" value="{{0.857638,0},{0.753086,0},{0.994444,0},{0.84321,0}}" />
             <Property name="Text" value="Reset planet matrix" />
         </Window>
         <Window type="xfskin/Button" name="Button_ResetAll" >
-            <Property name="Area" value="{{0.481944,541},{0.896296,-201},{0.61875,541},{0.98642,-201}}" />
+            <Property name="Area" value="{{0.857638,0},{0.648148,0},{0.994444,0},{0.738271,0}}" />
             <Property name="Text" value="Reset all" />
         </Window>
     </Window>
