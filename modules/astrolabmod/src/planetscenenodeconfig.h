@@ -45,6 +45,7 @@ public:
     DrawSpace::Module::KeySource<dsreal>            m_splatTransitionDownRelativeAlt;
     DrawSpace::Module::KeySource<int>               m_nbLODFreeCameras;
     DrawSpace::Module::KeySource<int>               m_nbLODInertBodies;
+    DrawSpace::Module::KeySource<int>               m_splatTextureResol;
 
 
 	DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
@@ -73,7 +74,8 @@ public:
         m_nbLODInertBodies( "nbLODInertBodies" ),
 		m_detailsVertexShader( "detailsVertexShader" ),
 		m_detailsPixelShader( "detailsPixelShader" ),
-		m_gravityEnabled( "gravityEnabled" )
+		m_gravityEnabled( "gravityEnabled" ),
+        m_splatTextureResol( "splatTextureResol" )
 	{
 	}
 };

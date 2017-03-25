@@ -27,13 +27,15 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 PlanetDetailsBinder::PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset,
-                                            dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt ) :
+                                            dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
+                                            int p_splatTextureResol ) :
 MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset ),
 m_planet_node( NULL),
 m_ocean_details_alt( 1.0010 ),
 m_terrain_bump_factor( p_terrainbump_factor ),
 m_splatTransitionUpRelativeAlt( p_splatTransitionUpRelativeAlt ),
-m_splatTransitionDownRelativeAlt( p_splatTransitionDownRelativeAlt )
+m_splatTransitionDownRelativeAlt( p_splatTransitionDownRelativeAlt ),
+m_splatTextureResol( p_splatTextureResol )
 {
 
 	m_mirror_mode = false;
@@ -136,7 +138,7 @@ m_splatTransitionDownRelativeAlt( p_splatTransitionDownRelativeAlt )
 void PlanetDetailsBinder::Bind( void )
 {
 
-	Vector flags6(16.0, m_splatTransitionUpRelativeAlt, m_splatTransitionDownRelativeAlt, m_ocean_details_alt);
+	Vector flags6( m_splatTextureResol, m_splatTransitionUpRelativeAlt, m_splatTransitionDownRelativeAlt, m_ocean_details_alt );
 
 	Vector flags_lights;
 	flags_lights[0] = (m_ambient ? 1.0 : 0.0);

@@ -115,6 +115,7 @@ public:
     RealParam                           m_zbufferActivationRelAlt;
     RealParam                           m_splatTransitionUpRelativeAlt;
     RealParam                           m_splatTransitionDownRelativeAlt;
+    IntParam                            m_splatTextureResol;
 
     IntParam                            m_nbLODFreeCameras;
     IntParam                            m_nbLODInertBodies;
@@ -146,7 +147,8 @@ public:
 	m_detailsPixelShader( "detailsPixelShader" ),
 	m_gravityEnabled( "gravityEnabled" ),
     m_nbLODFreeCameras( "nbLODFreeCameras" ),
-    m_nbLODInertBodies( "nbLODInertBodies" )
+    m_nbLODInertBodies( "nbLODInertBodies" ),
+    m_splatTextureResol( "splatTextureResol" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
@@ -159,6 +161,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_zbufferActivationRelAlt );
         m_keylinksTable.RegisterModuleKey( &m_splatTransitionUpRelativeAlt );
         m_keylinksTable.RegisterModuleKey( &m_splatTransitionDownRelativeAlt );
+        m_keylinksTable.RegisterModuleKey( &m_splatTextureResol );
         m_keylinksTable.RegisterModuleKey( &m_nbLODFreeCameras );
         m_keylinksTable.RegisterModuleKey( &m_nbLODInertBodies );
 		m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );

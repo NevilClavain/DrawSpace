@@ -404,7 +404,17 @@ void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_lay
 
     if( "Button_SplatTextureResol" == p_widget_id )
     {
-    
+         m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_SplatTextureResol", text );
+        try
+        {
+            m_planetconfig->m_splatTextureResol = std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }   
     }
 
     if( "Button_NbLODFreeCameras" == p_widget_id )
@@ -530,6 +540,11 @@ void PlanetGroundSetupSubService::update_screen( void )
     sprintf( comment2, "%d", m_planetconfig->m_nbLODInertBodies.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_NbLODInertBodies", comment );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_NbLODInertBodies", comment2 );
+
+    sprintf( comment, "%d", m_planetconfig->m_splatTextureResol.m_value );
+    sprintf( comment2, "%d", m_planetconfig->m_splatTextureResol.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_SplatTextureResol", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_SplatTextureResol", comment2 );
 
     m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_GravityEnabled", m_planetconfig->m_gravityEnabled.m_value );
     sprintf( comment, "%s", m_planetconfig->m_gravityEnabled.m_value ? "true" : "false" );

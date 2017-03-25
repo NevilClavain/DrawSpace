@@ -84,10 +84,13 @@ protected:
     dsreal                                                      m_splatTransitionUpRelativeAlt;
     dsreal                                                      m_splatTransitionDownRelativeAlt;
 
+    dsreal                                                      m_splatTextureResol;
+
 public:
 
 	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset,
-                            dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt );
+                            dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
+                            int p_splatTextureResol );
 
 	virtual void Bind( void );
 	virtual void Unbind( void );
