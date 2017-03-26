@@ -36,6 +36,8 @@ public:
 
 	virtual void Bind( void );
 	virtual void Unbind( void );
+
+    virtual void SetBeachLimit( dsreal p_limit );
 };
 
 #endif

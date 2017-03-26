@@ -40,3 +40,12 @@ void PlanetSceneNodeConfig::LandscapeBumpFactorParam::OnUpdated( dsreal p_val )
 		m_owner->OnLandscapeBumpFactorUpdate( m_value );
 	}
 }
+
+void PlanetSceneNodeConfig::BeachLimitParam::OnUpdated( dsreal p_val )
+{
+	m_value = p_val;
+	if( m_owner )
+	{
+		m_owner->OnBeachLimitUpdate( m_value );
+	}
+}

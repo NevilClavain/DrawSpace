@@ -68,3 +68,8 @@ void PlanetClimateBinder::Unbind( void )
 {
 	MultiFractalBinder::Unbind();
 }
+
+void PlanetClimateBinder::SetBeachLimit( dsreal p_limit )
+{
+    m_beachlimit = p_limit;
+}

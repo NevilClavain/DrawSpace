@@ -92,6 +92,7 @@ public:
 
 	void OnGravityEnabledUpdate( bool p_value );
     void OnLandscapeBumpFactorUpdate( dsreal p_factor );
+    void OnBeachLimitUpdate( dsreal p_limit );
 
     void AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable );
 };

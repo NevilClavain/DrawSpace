@@ -235,6 +235,14 @@ void PlanetInstance::OnLandscapeBumpFactorUpdate( dsreal p_factor )
     }
 }
 
+void PlanetInstance::OnBeachLimitUpdate( dsreal p_limit )
+{
+	for( int i = 0; i < 6; i++ )
+	{
+        m_planet_climate_binder[i]->SetBeachLimit( p_limit );
+    }
+}
+
 void PlanetInstance::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
 {
     if( m_LODdependant_nodeinfos.count( p_dependantNodeId ) )

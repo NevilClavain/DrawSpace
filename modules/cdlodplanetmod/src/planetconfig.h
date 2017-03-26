@@ -121,6 +121,27 @@ public:
 	    }
     };
 
+    class BeachLimitParam : public DrawSpace::Module::KeySink<dsreal>
+    {
+    protected:
+
+	    PlanetInstance*	m_owner;
+
+    public:
+	    dsreal			m_value;
+
+	    BeachLimitParam( const dsstring& p_id ) : KeySink( p_id ),
+	    m_owner( NULL )
+	    {
+	    }
+
+	    virtual void OnUpdated( dsreal p_val );
+	    virtual void SetOwner( PlanetInstance* p_owner )
+	    {
+		    m_owner = p_owner;
+	    }
+    };
+
 
 	/////////////////--*- ENSEMBLE DES PARAMETRES PLANETE -*-- ////////////////////
 
@@ -131,7 +152,7 @@ public:
     RealParam                           m_moutainsAmplitude;
     RealParam                           m_moutainsOffset;
     RealParam                           m_verticalOffset;
-    RealParam                           m_beachLimit;
+    BeachLimitParam                     m_beachLimit;
     LandscapeBumpFactorParam            m_landscapeBumpFactor;
     RealParam                           m_zbufferActivationRelAlt;
     RealParam                           m_splatTransitionUpRelativeAlt;
@@ -194,6 +215,8 @@ public:
 	{
 		m_gravityEnabled.SetOwner( p_owner );
         m_landscapeBumpFactor.SetOwner( p_owner );
+        m_beachLimit.SetOwner( p_owner );
+        
 	}
 };
 
