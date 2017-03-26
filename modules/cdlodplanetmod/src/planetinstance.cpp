@@ -200,7 +200,7 @@ void PlanetInstance::Release( void )
 	_DRAWSPACE_DELETE_( m_planet_vshader );
 	_DRAWSPACE_DELETE_( m_planet_pshader );
 
-	for (int i = 0; i < 6; i++)
+	for( int i = 0; i < 6; i++ )
 	{
 		_DRAWSPACE_DELETE_( m_planet_details_binder[i] );
 		_DRAWSPACE_DELETE_( m_planet_climate_binder[i] );
@@ -225,6 +225,14 @@ void PlanetInstance::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGr
 void PlanetInstance::OnGravityEnabledUpdate( bool p_value )
 {
 	m_planet_root->SetGravityState( p_value );
+}
+
+void PlanetInstance::OnLandscapeBumpFactorUpdate( dsreal p_factor )
+{
+	for( int i = 0; i < 6; i++ )
+	{
+        m_planet_details_binder[i]->SetLandscapeBumpFactor( p_factor );
+    }
 }
 
 void PlanetInstance::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )

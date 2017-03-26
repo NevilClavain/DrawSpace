@@ -100,6 +100,27 @@ public:
 	    }
     };
 
+    class LandscapeBumpFactorParam : public DrawSpace::Module::KeySink<dsreal>
+    {
+    protected:
+
+	    PlanetInstance*	m_owner;
+
+    public:
+	    dsreal			m_value;
+
+	    LandscapeBumpFactorParam( const dsstring& p_id ) : KeySink( p_id ),
+	    m_owner( NULL )
+	    {
+	    }
+
+	    virtual void OnUpdated( dsreal p_val );
+	    virtual void SetOwner( PlanetInstance* p_owner )
+	    {
+		    m_owner = p_owner;
+	    }
+    };
+
 
 	/////////////////--*- ENSEMBLE DES PARAMETRES PLANETE -*-- ////////////////////
 
@@ -111,7 +132,7 @@ public:
     RealParam                           m_moutainsOffset;
     RealParam                           m_verticalOffset;
     RealParam                           m_beachLimit;
-    RealParam                           m_landscapeBumpFactor;
+    LandscapeBumpFactorParam            m_landscapeBumpFactor;
     RealParam                           m_zbufferActivationRelAlt;
     RealParam                           m_splatTransitionUpRelativeAlt;
     RealParam                           m_splatTransitionDownRelativeAlt;
@@ -172,6 +193,7 @@ public:
 	virtual void SetOwner( PlanetInstance* p_owner )
 	{
 		m_gravityEnabled.SetOwner( p_owner );
+        m_landscapeBumpFactor.SetOwner( p_owner );
 	}
 };
 

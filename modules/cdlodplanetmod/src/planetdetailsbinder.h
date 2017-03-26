@@ -107,6 +107,8 @@ public:
 	dsreal GetOceansDetailsAlt( void) { return m_ocean_details_alt; };
 
 	PlanetLight GetLight( int p_index ) { return m_lights[p_index]; };
+
+    void SetLandscapeBumpFactor( dsreal p_factor );
 };
 
 

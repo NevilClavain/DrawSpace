@@ -91,6 +91,7 @@ public:
     void UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph );
 
 	void OnGravityEnabledUpdate( bool p_value );
+    void OnLandscapeBumpFactorUpdate( dsreal p_factor );
 
     void AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable );
 };

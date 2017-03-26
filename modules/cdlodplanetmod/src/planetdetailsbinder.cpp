@@ -256,3 +256,8 @@ void PlanetDetailsBinder::Update( void )
 		}
 	}
 }
+
+void PlanetDetailsBinder::SetLandscapeBumpFactor( dsreal p_factor )
+{
+    m_terrain_bump_factor = p_factor;
+}
