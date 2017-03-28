@@ -27,8 +27,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-PlanetClimateBinder::PlanetClimateBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset, dsreal p_beach_limit ) : 
-MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset ),
+PlanetClimateBinder::PlanetClimateBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset, 
+                                            dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2, dsreal p_beach_limit ) : 
+MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset, p_plains_seed1, p_plains_seed2, p_mix_seed1, p_mix_seed2 ),
 m_beachlimit( p_beach_limit )
 {
 }
