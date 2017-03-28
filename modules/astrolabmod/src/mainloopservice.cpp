@@ -24,6 +24,7 @@
 #include "planetsetupsubservice.h"
 #include "planetviewsubservice.h"
 #include "planetgroundsetupsubservice.h"
+#include "planetseedssetupsubservice.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -99,6 +100,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     PlanetSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
     PlanetViewSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
 	PlanetGroundSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
+    PlanetSeedsSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
 
 
 
@@ -215,6 +217,14 @@ void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
 
 			m_current_subservice = PlanetGroundSetupSubService::GetInstance();
 			break;
+
+        case GUIEVT_PLANETSETUP_PLANETSEEDSSETUPBUTTON_CLIC:
+
+			PlanetSetupSubService::GetInstance()->Unactivate();
+			PlanetSeedsSetupSubService::GetInstance()->Activate( PlanetSetupSubService::GetInstance()->GetSelectedPlanetConfig() );
+
+			m_current_subservice = PlanetSeedsSetupSubService::GetInstance();
+            break;
 
         case GUIEVT_PLANETSETUP_F1_KEY:
 
