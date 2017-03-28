@@ -246,6 +246,15 @@ void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
 			m_current_subservice = PlanetSetupSubService::GetInstance();
 
 			break;
+
+        case GUIEVT_PLANETSEEDSSETUP_CLOSEBUTTON_CLIC:
+
+			PlanetSeedsSetupSubService::GetInstance()->Unactivate();
+			PlanetSetupSubService::GetInstance()->Activate();
+			m_current_subservice = PlanetSetupSubService::GetInstance();
+
+
+            break;
     }
 }
 

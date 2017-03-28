@@ -194,7 +194,7 @@ void PlanetSeedsSetupSubService::on_guipushbutton_clicked(const dsstring& p_layo
 
     if( "Close_Button" == p_widget_id )
     {
-		MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETGROUNDSETUP_CLOSEBUTTON_CLIC );
+		MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSEEDSSETUP_CLOSEBUTTON_CLIC );
     }
     /*
     if( "Button_PlanetRay" == p_widget_id )
