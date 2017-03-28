@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _PLANETGROUNDSETUPSUBSERVICE_H_
-#define _PLANETGROUNDSETUPSUBSERVICE_H_
+#ifndef _PLANETSEEDSSETUPSUBSERVICE_H_
+#define _PLANETSEEDSSETUPSUBSERVICE_H_
 
 #include "drawspace.h"
 #include "crtp_singleton.h"
@@ -30,12 +30,12 @@
 
 class MainLoopService;
 
-class PlanetGroundSetupSubService : public DrawSpace::Interface::Module::Service, public BaseSingleton<PlanetGroundSetupSubService>
+class PlanetSeedsSetupSubService : public DrawSpace::Interface::Module::Service, public BaseSingleton<PlanetSeedsSetupSubService>
 {
 protected:
 
-	typedef DrawSpace::Core::CallBack2<PlanetGroundSetupSubService, void, const dsstring&, const dsstring&>         GUIWidgetPushButtonClickedCallback;
-    typedef DrawSpace::Core::CallBack3<PlanetGroundSetupSubService, void, const dsstring&, const dsstring&, bool>   GUIWidgetCheckboxStateChangedCallback;
+	typedef DrawSpace::Core::CallBack2<PlanetSeedsSetupSubService, void, const dsstring&, const dsstring&>         GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack3<PlanetSeedsSetupSubService, void, const dsstring&, const dsstring&, bool>   GUIWidgetCheckboxStateChangedCallback;
 
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
@@ -48,18 +48,15 @@ protected:
 
 
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
-    GUIWidgetCheckboxStateChangedCallback*                              m_guiwidgetcheckboxstatechanged_cb;
-
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
-    void on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state );
 
     void update_screen( void );
 
 
-	PlanetGroundSetupSubService( void );
+	PlanetSeedsSetupSubService( void );
 public:
-	~PlanetGroundSetupSubService( void );
+	~PlanetSeedsSetupSubService( void );
 
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
@@ -91,7 +88,7 @@ public:
 	virtual void                            Activate( PlanetSceneNodeConfig* p_planetConfig );
     virtual void                            Unactivate( void );
 
-	friend class BaseSingleton<PlanetGroundSetupSubService>;
+	friend class BaseSingleton<PlanetSeedsSetupSubService>;
 };
 
 #endif

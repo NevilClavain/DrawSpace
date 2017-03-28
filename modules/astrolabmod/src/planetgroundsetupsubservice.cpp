@@ -64,7 +64,7 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
     p_logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
 
-    _DSDEBUG( logger, dsstring("PlanetSetup sub service : startup...") );
+    _DSDEBUG( logger, dsstring( "PlanetGroundSetup sub service : startup..." ) );
 
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_renderer->GetDescr( m_pluginDescr );
@@ -162,7 +162,7 @@ void PlanetGroundSetupSubService::Run(void)
 
 void PlanetGroundSetupSubService::Release( void )
 {
-    _DSDEBUG( logger, dsstring("PlanetGroundSetup sub service : shutdown...") );
+    _DSDEBUG( logger, dsstring( "PlanetGroundSetup sub service : shutdown..." ) );
 }
 
 DrawSpace::Core::BaseSceneNode* PlanetGroundSetupSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
