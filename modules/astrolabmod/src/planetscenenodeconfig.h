@@ -46,6 +46,10 @@ public:
     DrawSpace::Module::KeySource<int>               m_nbLODFreeCameras;
     DrawSpace::Module::KeySource<int>               m_nbLODInertBodies;
     DrawSpace::Module::KeySource<int>               m_splatTextureResol;
+    DrawSpace::Module::KeySource<dsreal>            m_plainsSeed1;
+    DrawSpace::Module::KeySource<dsreal>            m_plainsSeed2;
+    DrawSpace::Module::KeySource<dsreal>            m_mixSeed1;
+    DrawSpace::Module::KeySource<dsreal>            m_mixSeed2;
 
 
 	DrawSpace::Module::KeySource<dsstring>			m_detailsVertexShader;
@@ -75,7 +79,11 @@ public:
 		m_detailsVertexShader( "detailsVertexShader" ),
 		m_detailsPixelShader( "detailsPixelShader" ),
 		m_gravityEnabled( "gravityEnabled" ),
-        m_splatTextureResol( "splatTextureResol" )
+        m_splatTextureResol( "splatTextureResol" ),
+        m_plainsSeed1( "plainsSeed1" ),
+        m_plainsSeed2( "plainsSeed2" ),
+        m_mixSeed1( "mixSeed1" ),
+        m_mixSeed2( "mixSeed1" )
 	{
 	}
 };

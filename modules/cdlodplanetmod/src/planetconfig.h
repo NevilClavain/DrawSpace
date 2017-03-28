@@ -162,6 +162,11 @@ public:
     IntParam                            m_nbLODFreeCameras;
     IntParam                            m_nbLODInertBodies;
 
+    RealParam                           m_plainsSeed1;
+    RealParam                           m_plainsSeed2;
+    RealParam                           m_mixSeed1;
+    RealParam                           m_mixSeed2;
+
 	StringParam							m_detailsVertexShader;
 	StringParam							m_detailsPixelShader;
 
@@ -190,7 +195,11 @@ public:
 	m_gravityEnabled( "gravityEnabled" ),
     m_nbLODFreeCameras( "nbLODFreeCameras" ),
     m_nbLODInertBodies( "nbLODInertBodies" ),
-    m_splatTextureResol( "splatTextureResol" )
+    m_splatTextureResol( "splatTextureResol" ),
+    m_plainsSeed1( "plainsSeed1" ),
+    m_plainsSeed2( "plainsSeed2" ),
+    m_mixSeed1( "mixSeed1" ),
+    m_mixSeed2( "mixSeed1" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
@@ -209,6 +218,10 @@ public:
 		m_keylinksTable.RegisterModuleKey( &m_detailsVertexShader );
 		m_keylinksTable.RegisterModuleKey( &m_detailsPixelShader );
 		m_keylinksTable.RegisterModuleKey( &m_gravityEnabled );
+        m_keylinksTable.RegisterModuleKey( &m_plainsSeed1 );
+        m_keylinksTable.RegisterModuleKey( &m_plainsSeed2 );
+        m_keylinksTable.RegisterModuleKey( &m_mixSeed1 );
+        m_keylinksTable.RegisterModuleKey( &m_mixSeed2 );
 	}
 
 	virtual void SetOwner( PlanetInstance* p_owner )

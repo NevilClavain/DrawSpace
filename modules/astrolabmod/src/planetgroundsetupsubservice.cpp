@@ -234,7 +234,7 @@ void PlanetGroundSetupSubService::OnAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
 }
 
-void PlanetGroundSetupSubService::on_guipushbutton_clicked(const dsstring& p_layout, const dsstring& p_widget_id)
+void PlanetGroundSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id )
 {
     dsstring text;
 

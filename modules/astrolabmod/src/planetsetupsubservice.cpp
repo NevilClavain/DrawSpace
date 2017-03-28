@@ -272,6 +272,10 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_nbLODFreeCameras );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_nbLODInertBodies );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_splatTextureResol );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_plainsSeed1 );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_plainsSeed2 );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_mixSeed1 );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_mixSeed2 );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsVertexShader );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_detailsPixelShader );
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_gravityEnabled );
@@ -293,6 +297,11 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_nbLODFreeCameras = 14;
                 m_nodes_config[node_name].m_nbLODInertBodies = 15;
                 m_nodes_config[node_name].m_splatTextureResol = 16;
+
+                m_nodes_config[node_name].m_plainsSeed1 = 1.0;
+                m_nodes_config[node_name].m_plainsSeed2 = 2.0;
+                m_nodes_config[node_name].m_mixSeed1 = 3.0;
+                m_nodes_config[node_name].m_mixSeed2 = 4.0;
 
 			    m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
 			    m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";

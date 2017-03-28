@@ -193,7 +193,7 @@ void PlanetSeedsSetupSubService::OnAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
 }
 
-void PlanetSeedsSetupSubService::on_guipushbutton_clicked(const dsstring& p_layout, const dsstring& p_widget_id)
+void PlanetSeedsSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id )
 {
     dsstring text;
 
@@ -206,14 +206,14 @@ void PlanetSeedsSetupSubService::on_guipushbutton_clicked(const dsstring& p_layo
     {
 		MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSEEDSSETUP_CLOSEBUTTON_CLIC );
     }
-    /*
-    if( "Button_PlanetRay" == p_widget_id )
+    
+    if( "Button_PlainsSeed1" == p_widget_id )
     {
-        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_PlanetRay", text );
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_PlainsSeed1", text );
 
         try
         {
-            m_planetconfig->m_planetRay = (dsreal)std::stoi( text );
+            m_planetconfig->m_plainsSeed1 = std::stof( text );
             update_screen();
         }
         catch( std::invalid_argument )
@@ -222,8 +222,54 @@ void PlanetSeedsSetupSubService::on_guipushbutton_clicked(const dsstring& p_layo
             update_screen();
         }
     }
-    */
+    
+    if( "Button_PlainsSeed2" == p_widget_id )
+    {
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_PlainsSeed2", text );
+
+        try
+        {
+            m_planetconfig->m_plainsSeed2 = std::stof( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }
+    }
   
+    if( "Button_MixSeed1" == p_widget_id )
+    {
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_MixSeed1", text );
+
+        try
+        {
+            m_planetconfig->m_mixSeed1 = std::stof( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }
+    }
+
+    if( "Button_MixSeed2" == p_widget_id )
+    {
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_MixSeed2", text );
+
+        try
+        {
+            m_planetconfig->m_mixSeed2 = std::stof( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }
+    }
 }
 
 
@@ -244,12 +290,24 @@ void PlanetSeedsSetupSubService::update_screen( void )
 {
     char comment[64];
     char comment2[64];
-    /*
-    sprintf( comment, "%d km", (int)m_planetconfig->m_planetRay.m_value );
-    sprintf( comment2, "%d", (int)m_planetconfig->m_planetRay.m_value );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlanetRay", comment );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlanetRay", comment2 );
-    */
 
- 
+    sprintf( comment, "%.2f", m_planetconfig->m_plainsSeed1.m_value );
+    sprintf( comment2, "%.2f", m_planetconfig->m_plainsSeed1.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlainsSeed1", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlainsSeed1", comment2 );
+
+    sprintf( comment, "%.2f", m_planetconfig->m_plainsSeed2.m_value );
+    sprintf( comment2, "%.2f", m_planetconfig->m_plainsSeed2.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlainsSeed2", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlainsSeed2", comment2 );
+
+    sprintf( comment, "%.2f", m_planetconfig->m_mixSeed1.m_value );
+    sprintf( comment2, "%.2f", m_planetconfig->m_mixSeed1.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_MixSeed1", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_MixSeed1", comment2 );
+
+    sprintf( comment, "%.2f", m_planetconfig->m_mixSeed2.m_value );
+    sprintf( comment2, "%.2f", m_planetconfig->m_mixSeed2.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_MixSeed2", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_MixSeed2", comment2 );
 }
