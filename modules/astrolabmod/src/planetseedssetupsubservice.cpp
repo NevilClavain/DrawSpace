@@ -74,12 +74,22 @@ void PlanetSeedsSetupSubService::Init( DrawSpace::Logger::Configuration* p_logco
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Status" );
-    /*
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_PlanetRay" );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_PlanetRay" );
-    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_PlanetRay" );
-    */
 
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_PlainsSeed1" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_PlainsSeed1" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_PlainsSeed1" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_PlainsSeed2" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_PlainsSeed2" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_PlainsSeed2" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_MixSeed1" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_MixSeed1" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_MixSeed1" );
+
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_MixSeed2" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_MixSeed2" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_MixSeed2" );
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
