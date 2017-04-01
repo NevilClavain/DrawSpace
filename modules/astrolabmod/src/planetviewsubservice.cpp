@@ -52,6 +52,10 @@ m_ctrl( false )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
     m_loddepnodeinfosstate_cb = _DRAWSPACE_NEW_( LODDependantNodeInfoStateCallback, LODDependantNodeInfoStateCallback( this, &PlanetViewSubService::on_LODdepnodeinfosstate_update ) );
+
+    m_hotparams_list.push_back( "gravityEnabled" );
+    m_hotparams_list.push_back( "beachLimit" );
+    m_hotparams_list.push_back( "landscapeBumpFactor" );
 }
     
 PlanetViewSubService::~PlanetViewSubService( void )
@@ -530,6 +534,27 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
         set_arrow_initial_attitude();
     }
 
+    if( "Button_HotParamPrev" == p_widget_id )
+    {
+        m_hotparams_list_index--;
+
+        if( m_hotparams_list_index == -1 )
+        {
+            m_hotparams_list_index = m_hotparams_list.size() - 1;
+        }
+        hotparamslist_index_updated();
+    }
+
+    if( "Button_HotParamNext" == p_widget_id )
+    {
+        m_hotparams_list_index++;
+
+        if( m_hotparams_list_index == m_hotparams_list.size() )
+        {
+            m_hotparams_list_index = 0;
+        }
+        hotparamslist_index_updated();
+    }
 }
 
 void PlanetViewSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
@@ -545,6 +570,11 @@ void PlanetViewSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
 	create_arrow_camera();
 	create_planet( m_planet_conf->m_planetName.m_value );
     m_texturepass->GetRenderingQueue()->UpdateOutputQueue();
+
+    //////
+
+    m_hotparams_list_index = 0;
+    hotparamslist_index_updated();
 }
 
 void PlanetViewSubService::Unactivate( void )
@@ -811,4 +841,55 @@ void PlanetViewSubService::create_spacebox( void )
     m_scenenodegraph.RegisterNode( m_spacebox_transfo_node );
 
     spacebox_node->LinkTo( m_spacebox_transfo_node );
+}
+
+void PlanetViewSubService::hotparamslist_index_updated( void )
+{
+    dsstring hotparam = m_hotparams_list[m_hotparams_list_index];
+
+    bool cb_display = false;
+
+    bool        cb_state;
+    dsstring    param_value;
+    char comment[128];
+    
+    if( hotparam == "gravityEnabled" )
+    {
+        cb_display = true;
+        cb_state = m_planet_conf->m_gravityEnabled.m_value;
+    }
+
+    if( hotparam == "beachLimit" )
+    {
+        cb_display = false;
+
+        sprintf( comment, "%d", (int)m_planet_conf->m_beachLimit.m_value );
+        param_value = comment;
+    }
+
+    if( hotparam == "landscapeBumpFactor" )
+    {    
+        cb_display = false;
+
+        sprintf( comment, "%d", (int)m_planet_conf->m_landscapeBumpFactor.m_value );
+        param_value = comment;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    if( cb_display )
+    {
+        m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Checkbox_HotParam", hotparam );
+        m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_HotParam", cb_state );
+    }
+    else
+    {
+        m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_HotParamName", hotparam );
+        m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_HotParam", param_value );
+    }
+
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_HotParamName", !cb_display );
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Editbox_HotParam", !cb_display );
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Button_HotParamUpdate", !cb_display );
+    m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Checkbox_HotParam", cb_display );
 }

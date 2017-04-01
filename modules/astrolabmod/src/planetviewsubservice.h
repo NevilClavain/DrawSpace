@@ -112,6 +112,9 @@ protected:
 
     DrawSpace::Core::SceneNode<DrawSpace::Core::Transformation>*        m_spacebox_transfo_node;
 
+    std::vector<dsstring>                                               m_hotparams_list;
+    int                                                                 m_hotparams_list_index;
+
 
     void init_passes( void );
     void create_passes( void );
@@ -136,6 +139,8 @@ protected:
 	void set_arrow_initial_attitude( void );
 
     void create_spacebox( void );
+
+    void hotparamslist_index_updated( void );
 
     PlanetViewSubService( void );
 public:
