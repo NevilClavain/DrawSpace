@@ -157,27 +157,6 @@ void Rocket::ApplyRightRoll( dsreal p_norm )
     m_rigidBody->applyTorque( btVector3( m_transformed_fwd[0] * p_norm * world_scale_2, m_transformed_fwd[1] * p_norm * world_scale_2, m_transformed_fwd[2] * p_norm * world_scale_2 ) );
 }
 
-void Rocket::ZeroSpeed( void )
-{
-    m_rigidBody->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
-    m_rigidBody->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
-}
-
-void Rocket::ZeroLSpeed( void )
-{
-    m_rigidBody->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
-}
-
-void Rocket::ZeroASpeed( void )
-{
-    m_rigidBody->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
-}
-
-void Rocket::ClearForces( void )
-{
-	m_rigidBody->clearForces();
-}
-
 void Rocket::ForceLinearSpeed( const DrawSpace::Utils::Vector& p_speed )
 {
     m_rigidBody->setLinearVelocity( btVector3( p_speed[0], p_speed[1], p_speed[2] ) );

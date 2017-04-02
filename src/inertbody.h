@@ -142,6 +142,11 @@ public:
 
     void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
     void OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
+
+    void ZeroSpeed( void );
+    void ZeroLSpeed( void );
+    void ZeroASpeed( void );
+	void ClearForces( void );
 };
 }
 }

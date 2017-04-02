@@ -376,6 +376,18 @@ void Root::on_timer( DrawSpace::Utils::Timer* p_timer )
     }
 }
 
+// si on coupe la gravité, stopper tout vitesse pour tout les inertbodies qui subissaient la gravité
+void Root::gravity_stopped( void )
+{
+    for( std::map<InertBody*, RegisteredBody>::iterator it = m_registered_bodies.begin(); it != m_registered_bodies.end(); ++it )
+    {
+        if( it->second.attached )
+        {
+            it->second.body->ZeroSpeed();
+        }
+    }
+}
+
 void Root::apply_gravity( void )
 {
     for( std::map<InertBody*, RegisteredBody>::iterator it = m_registered_bodies.begin(); it != m_registered_bodies.end(); ++it )
@@ -846,6 +858,11 @@ int Root::GetSingleShotSubPassesStackSize()
 void Root::SetGravityState( bool p_state )
 {
     m_enable_gravity = p_state;
+
+    if( !p_state )
+    {
+        gravity_stopped();
+    }
 }
 
 void Root::GetRegisteredBodyInfosList( std::vector<RegisteredBody>& p_list )

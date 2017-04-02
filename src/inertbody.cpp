@@ -836,3 +836,24 @@ bool InertBody::IsEnabled( void )
     }
     return false;
 }
+
+void InertBody::ZeroSpeed( void )
+{
+    m_rigidBody->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+    m_rigidBody->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+}
+
+void InertBody::ZeroLSpeed( void )
+{
+    m_rigidBody->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+}
+
+void InertBody::ZeroASpeed( void )
+{
+    m_rigidBody->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+}
+
+void InertBody::ClearForces( void )
+{
+	m_rigidBody->clearForces();
+}

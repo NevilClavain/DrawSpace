@@ -71,11 +71,6 @@ public:
     void ApplyLeftRoll( dsreal p_norm );
     void ApplyRightRoll( dsreal p_norm );
 
-    void ZeroSpeed( void );
-    void ZeroLSpeed( void );
-    void ZeroASpeed( void );
-	void ClearForces( void );
-
     void ForceLinearSpeed( const DrawSpace::Utils::Vector& p_speed ); 
 };
 }

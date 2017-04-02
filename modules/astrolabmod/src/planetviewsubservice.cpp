@@ -557,6 +557,31 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
         }
         hotparamslist_index_updated();
     }
+
+    dsstring text;
+
+    if( "Button_HotParamUpdate" == p_widget_id )
+    {
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_HotParam", text );
+        if( m_hotparams_list[m_hotparams_list_index] == "landscapeBumpFactor" )
+        {
+            try
+            {
+                m_planet_conf->m_landscapeBumpFactor = (dsreal)std::stoi( text );
+            }
+            catch( std::invalid_argument )
+            {
+                dsstring    param_value;
+                char comment[128];
+
+                sprintf( comment, "%d", (int)m_planet_conf->m_landscapeBumpFactor.m_value );
+                param_value = comment;
+                m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_HotParam", param_value );
+            }
+        }
+
+        // ici...
+    }
 }
 
 void PlanetViewSubService::on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state )

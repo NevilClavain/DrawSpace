@@ -136,6 +136,7 @@ protected:
     void create_camera_collisions( const dsstring& p_cameraname, DrawSpace::Dynamics::CameraPoint* p_camera, RegisteredCamera& p_cameradescr, bool p_hotstate );
 
     void apply_gravity( void );
+    void gravity_stopped( void );
     void manage_bodies( void );
     void manage_camerapoints( void );
     void compute_layers( void );
