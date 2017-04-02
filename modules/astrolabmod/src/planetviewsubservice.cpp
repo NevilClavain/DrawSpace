@@ -51,6 +51,9 @@ m_shift( false ),
 m_ctrl( false )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetViewSubService::on_guipushbutton_clicked ) );
+    m_guiwidgetcheckboxstatechanged_cb = _DRAWSPACE_NEW_( GUIWidgetCheckboxStateChangedCallback, GUIWidgetCheckboxStateChangedCallback( this, &PlanetViewSubService::on_guicheckboxstatechanged_clicked ) );
+
+
     m_loddepnodeinfosstate_cb = _DRAWSPACE_NEW_( LODDependantNodeInfoStateCallback, LODDependantNodeInfoStateCallback( this, &PlanetViewSubService::on_LODdepnodeinfosstate_update ) );
 
     m_hotparams_list.push_back( "gravityEnabled" );
@@ -143,10 +146,9 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "Button_HotParamUpdate", false );
     m_renderer->GUI_SetVisibleState( LAYOUT_FILE, "SimpleLabel_HotParamName", false );
 
-    
-
-
+   
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
+    m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
 
 	m_calendar->Startup( 0 );
 }
@@ -554,6 +556,18 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
             m_hotparams_list_index = 0;
         }
         hotparamslist_index_updated();
+    }
+}
+
+void PlanetViewSubService::on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state )
+{
+    if( p_layout == LAYOUT_FILE && "Checkbox_HotParam" == p_widget_id )
+    {
+        dsstring hotparam = m_hotparams_list[m_hotparams_list_index];
+        if( hotparam == "gravityEnabled" )
+        {
+            m_planet_conf->m_gravityEnabled = p_state;
+        }
     }
 }
 

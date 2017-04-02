@@ -34,9 +34,10 @@ class PlanetViewSubService : public DrawSpace::Interface::Module::Service, publi
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack2<PlanetViewSubService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack2<PlanetViewSubService, void, const dsstring&, const dsstring&>            GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack3<PlanetViewSubService, void, const dsstring&, const dsstring&, bool>      GUIWidgetCheckboxStateChangedCallback;
 
-    typedef DrawSpace::Core::CallBack2<PlanetViewSubService, void, const dsstring&, bool>             LODDependantNodeInfoStateCallback;
+    typedef DrawSpace::Core::CallBack2<PlanetViewSubService, void, const dsstring&, bool>                       LODDependantNodeInfoStateCallback;
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
@@ -48,6 +49,8 @@ protected:
     DrawSpace::Interface::MesheImport*                                  m_meshe_import;
 
     GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
+    GUIWidgetCheckboxStateChangedCallback*                              m_guiwidgetcheckboxstatechanged_cb;
+
     DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
 
     DrawSpace::FinalPass*                                               m_finalpass;
@@ -130,6 +133,7 @@ protected:
 	void destroy_planet(const dsstring& p_planetId);
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
+    void on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state );
 
     void on_LODdepnodeinfosstate_update( const dsstring& p_nodeid, bool p_state );
 
