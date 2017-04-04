@@ -20,13 +20,13 @@
 *
 */
 
-float4x4 matWorldViewProjection : register(c0);
-float4x4 matWorldView : register(c4);
+float4x4 matWorldViewProjection: register(c0);
+float4x4 matWorldView: register(c4);
 float4x4 matWorld : register(c8);
 float4x4 matView : register(c12);
 float4x4 matProj : register(c20);
 
-float4 flag0 : register(c24);
+float4   flag0:				register(c24);
 
 	// .x -> patch orientation enum integer
 	// .y -> patch sidelenght
@@ -34,14 +34,14 @@ float4 flag0 : register(c24);
 	// .w -> relative alt
 	
 
-float4 patch_translation : register(c25);
+float4   patch_translation:	register(c25);
 	// .x, .y -> patch positionning
 
-float4 base_uv : register(c26);
+float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4 base_uv_global : register(c27);
+float4   base_uv_global: register(c27);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
@@ -52,15 +52,15 @@ float4 mirror_flag : register(c51);
     // .x -> mirror mode
     // .y -> planet ground ray
 
-struct VS_INPUT
+struct VS_INPUT 
 {
-    float4 Position : POSITION0;
-    float4 TexCoord0 : TEXCOORD0;
+   float4 Position : POSITION0;
+   float4 TexCoord0: TEXCOORD0; 
 };
 
-struct VS_OUTPUT
+struct VS_OUTPUT 
 {
-    float4 Position : POSITION0;
+   float4 Position                  : POSITION0;
 
     float4 t0 : TEXCOORD0;
     float4 t1 : TEXCOORD1;
@@ -74,25 +74,25 @@ struct VS_OUTPUT
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
-    VS_OUTPUT Output;
+	VS_OUTPUT Output;
 
-    float4 v_position;
+	float4 v_position;
 
 	// sidelenght scaling
 
-    v_position = Input.Position * flag0.y / 2.0;
-    v_position = v_position + patch_translation;
-    v_position.z = 1.0;
-    v_position.w = 1.0;
+	v_position = Input.Position * flag0.y / 2.0;
+	v_position = v_position + patch_translation;
+	v_position.z = 1.0;
+	v_position.w = 1.0;
 	
-    float4 v_position2;
-    v_position2.w = 1.0;
-    v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
+	float4 v_position2;	
+	v_position2.w = 1.0;
+	v_position2.xyz = CubeToSphere( ProjectVectorToCube( flag0.x, v_position.xyz ) );
 
 	// final scaling
-    float4 v_position3;
-    v_position3 = v_position2 * flag0.z;
-    v_position3.w = 1.0;
+	float4 v_position3;	
+	v_position3 = v_position2 * flag0.z;	
+	v_position3.w = 1.0;
     
     if (mirror_flag.x > 0.0)
     {
@@ -125,5 +125,5 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.t0 = vertex_pos;
     Output.t1 = viewer_pos;
     
-    return (Output);
+	return( Output );   
 }
