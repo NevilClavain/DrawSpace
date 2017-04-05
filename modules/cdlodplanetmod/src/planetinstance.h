@@ -42,15 +42,21 @@ protected:
 
 	PlanetDetailsBinder*                                            m_planet_details_binder[6];
 	PlanetClimateBinder*											m_planet_climate_binder[6];
+    PlanetDetailsBinder*                                            m_planet_atmosphere_binder[6];
+
 
     DrawSpace::Core::Fx*                                            m_details_fx;
 	DrawSpace::Core::Fx*                                            m_climate_fx;
+	DrawSpace::Core::Fx*                                            m_atmo_fx;
 
 	DrawSpace::Core::Shader*                                        m_climate_vshader;
 	DrawSpace::Core::Shader*                                        m_climate_pshader;
 
     DrawSpace::Core::Shader*                                        m_planet_vshader;
     DrawSpace::Core::Shader*                                        m_planet_pshader;
+
+    DrawSpace::Core::Shader*                                        m_atmo_vshader;
+    DrawSpace::Core::Shader*                                        m_atmo_pshader;
 
 	DrawSpace::Core::Texture*										m_texture_th_pixels;
 	DrawSpace::Core::Texture*										m_texture_th_splatting;
@@ -68,7 +74,7 @@ protected:
     std::map<dsstring, PlanetLODDependantNodeInfos>                 m_LODdependant_nodeinfos;
 
     void zbuffer_control_from_viewer_alt( void );
-    void update_details_binders( void );
+    void update_binders( void );
     void update_lod_dep_nodes_infos( void );
 
 public:

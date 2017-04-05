@@ -54,6 +54,16 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
                                                                                                 m_node_config->m_splatTransitionDownRelativeAlt.m_value,
                                                                                                 m_node_config->m_splatTextureResol.m_value ) );
 
+		m_planet_atmosphere_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( m_node_config->m_planetRay.m_value * 1000.0, PLANET_ATMO_THICKNESS, 
+                                                                                                m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
+                                                                                                m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
+                                                                                                m_node_config->m_plainsSeed1.m_value, m_node_config->m_plainsSeed2.m_value,
+                                                                                                m_node_config->m_mixSeed1.m_value, m_node_config->m_mixSeed2.m_value, 
+                                                                                                m_node_config->m_landscapeBumpFactor.m_value,
+                                                                                                m_node_config->m_splatTransitionUpRelativeAlt.m_value,
+                                                                                                m_node_config->m_splatTransitionDownRelativeAlt.m_value,
+                                                                                                m_node_config->m_splatTextureResol.m_value ) );
+
 		m_planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder( m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
                                                                                                 m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
                                                                                                 m_node_config->m_plainsSeed1.m_value, m_node_config->m_plainsSeed2.m_value,
@@ -122,10 +132,57 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 		m_planet_climate_binder[i]->SetFx( m_climate_fx );
 	}
 
+
+
+
+
+	m_atmo_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_atmosphere.vso", true ) );
+	m_atmo_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_atmosphere.pso", true ) );
+
+    m_atmo_vshader->LoadFromFile();
+	m_atmo_pshader->LoadFromFile();
+
+    m_atmo_fx = _DRAWSPACE_NEW_( Fx, Fx );
+    m_atmo_fx->AddShader( m_atmo_vshader );
+    m_atmo_fx->AddShader( m_atmo_pshader );
+
+
+    m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "true" ) );
+    m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDOP, "add" ) );
+    m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDFUNC, "always" ) );
+    m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDDEST, "invsrcalpha" ) );
+    m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDSRC, "srcalpha" ) );
+
+    m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
+    //m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    m_atmo_fx->AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+
+
+    m_atmo_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    m_atmo_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
+    //m_atmo_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+    m_atmo_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+
+    m_atmo_fx->AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "false" ) );
+
+    for( int i = 0; i < 6; i++ )
+    {
+        m_planet_atmosphere_binder[i]->SetFx( m_atmo_fx );
+    }
+
+
+
+
+
+
+
+
     for( int i = 0; i < 6; i++ )
     {
 		m_planet_details_binder[i]->SetRenderer( p_renderer );
 		m_planet_climate_binder[i]->SetRenderer( p_renderer );
+        m_planet_atmosphere_binder[i]->SetRenderer( p_renderer );
     }
 
     m_config.m_lod0base = 19000.0;
@@ -147,11 +204,29 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
     m_config.m_layers_descr.push_back( planet_surface );
 
+
+    SphericalLOD::Config::LayerDescriptor planet_atmosphere;
+    planet_atmosphere.enable_collisions = false;
+    planet_atmosphere.enable_datatextures = false;
+    planet_atmosphere.enable_lod = false;
+    planet_atmosphere.min_lodlevel = 0;
+    planet_atmosphere.ray = m_node_config->m_planetRay.m_value + ( PLANET_ATMO_THICKNESS / 1000.0 );
+
+    for( int i = 0; i < 6; i++ )
+    {
+        planet_atmosphere.groundCollisionsBinder[i] = NULL;
+        planet_atmosphere.patchTexturesBinder[i] = NULL;
+    }
+
+    m_config.m_layers_descr.push_back( planet_atmosphere );
+
+
 	m_planet_root = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( m_node_config->m_planetName.m_value, m_node_config->m_planetRay.m_value, p_tm, m_config ) );
 
     for( int i = 0; i < 6; i++ )
     {
 		m_planet_root->RegisterSinglePassSlot( p_ipass, m_planet_details_binder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_SKIRT_MESHE, 0, 2000 );
+        m_planet_root->RegisterSinglePassSlot( p_ipass, m_planet_atmosphere_binder[i], i, DrawSpace::SphericalLOD::Body::HIRES_MESHE, 1, 1000 );
     }
 
     m_LODDependantNodeInfosHandlers.push_back( p_LODDepNodeInfoStateHandler );
@@ -167,6 +242,7 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 	for (int i = 0; i < 6; i++)
 	{
 		m_planet_details_binder[i]->SetPlanetNode( m_planet_node );
+        m_planet_atmosphere_binder[i]->SetPlanetNode( m_planet_node );
 	}
 
 	p_calendar->RegisterWorld( m_planet_root->GetWorld() );
@@ -180,7 +256,7 @@ void PlanetInstance::Run( void )
 {
     zbuffer_control_from_viewer_alt();
     m_planet_root->DrawSubPasses();
-    update_details_binders();
+    update_binders();
     update_lod_dep_nodes_infos();
 }
 
@@ -191,8 +267,13 @@ void PlanetInstance::Release( void )
 	_DRAWSPACE_DELETE_( m_planet_node );
 	_DRAWSPACE_DELETE_( m_planet_root );
 
-	_DRAWSPACE_DELETE_( m_climate_fx );
 
+    _DRAWSPACE_DELETE_( m_atmo_fx );
+	_DRAWSPACE_DELETE_( m_atmo_vshader );
+	_DRAWSPACE_DELETE_( m_atmo_pshader );
+
+
+	_DRAWSPACE_DELETE_( m_climate_fx );
 	_DRAWSPACE_DELETE_( m_climate_vshader );
 	_DRAWSPACE_DELETE_( m_climate_pshader );
     
@@ -207,6 +288,7 @@ void PlanetInstance::Release( void )
 	for( int i = 0; i < 6; i++ )
 	{
 		_DRAWSPACE_DELETE_( m_planet_details_binder[i] );
+        _DRAWSPACE_DELETE_( m_planet_atmosphere_binder[i] );
 		_DRAWSPACE_DELETE_( m_planet_climate_binder[i] );
 	}
 }
@@ -275,11 +357,12 @@ void PlanetInstance::zbuffer_control_from_viewer_alt( void )
     }
 }
 
-void PlanetInstance::update_details_binders( void )
+void PlanetInstance::update_binders( void )
 {
 	for( int i = 0; i < 6; i++ )
 	{
 		m_planet_details_binder[i]->Update();
+        m_planet_atmosphere_binder[i]->Update();
 	}
 }
 
