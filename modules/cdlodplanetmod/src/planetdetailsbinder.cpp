@@ -42,8 +42,8 @@ m_splatTextureResol( p_splatTextureResol )
 
 	m_mirror_mode = false;
 
-	m_skyfromspace_ESun = 8.7; //9.0;
-	m_skyfromatmo_ESun = 70.0; //50.0;
+	m_skyfromspace_ESun = 8.7;
+	m_skyfromatmo_ESun = 70.0;
 	m_groundfromspace_ESun = 24.0;
 	m_groundfromatmo_ESun = 12.0;
 
@@ -53,7 +53,7 @@ m_splatTextureResol( p_splatTextureResol )
 	m_waveLength[0] = 0.650;
 	m_waveLength[1] = 0.570;
 	m_waveLength[2] = 0.475;
-	m_kr = 0.0025;
+	m_kr = 0.0048;
 	m_km = 0.0010;
 	m_scaleDepth = 0.25;
 

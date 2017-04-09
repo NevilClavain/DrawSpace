@@ -78,5 +78,14 @@
     <FxCompile Include="planet_atmosphere.psh">
       <Filter>pixel_shaders\planet</Filter>
     </FxCompile>
+    <FxCompile Include="atmospheric_scattering.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
+    <FxCompile Include="landscapes.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
+    <FxCompile Include="multifbm_height.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
