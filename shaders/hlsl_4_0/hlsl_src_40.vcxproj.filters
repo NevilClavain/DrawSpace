@@ -87,5 +87,8 @@
     <FxCompile Include="planet_atmosphere.vsh">
       <Filter>vertex_shaders\planet</Filter>
     </FxCompile>
+    <FxCompile Include="atmospheric_scattering.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

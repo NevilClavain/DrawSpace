@@ -290,7 +290,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_moutainsOffset = -120.0;
                 m_nodes_config[node_name].m_verticalOffset = 0.0;
                 m_nodes_config[node_name].m_beachLimit = 25.0;
-                m_nodes_config[node_name].m_landscapeBumpFactor = 100.0;
+                m_nodes_config[node_name].m_landscapeBumpFactor = 38.0;//
                 m_nodes_config[node_name].m_zbufferActivationRelAlt = 1.0098;
                 m_nodes_config[node_name].m_splatTransitionUpRelativeAlt = 1.095;
                 m_nodes_config[node_name].m_splatTransitionDownRelativeAlt = 1.0040;

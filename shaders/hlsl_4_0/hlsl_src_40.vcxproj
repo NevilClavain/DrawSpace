@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="atmospheric_scattering.hlsl" />
     <FxCompile Include="fbm.hlsl" />
     <FxCompile Include="landscapes.hlsl" />
     <FxCompile Include="mat_input_constants.hlsl" />

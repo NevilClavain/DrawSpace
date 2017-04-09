@@ -98,30 +98,45 @@ float4 compute_from_surface(float4 p_t0, float4 p_t1, float4 p_ldir)
 
     float4 color;
 
-    //atmo_scattering_sampling_result sampling = skyfromspace_atmo_scattering_sampling(p_t0.xyz, p_t1.xyz, p_ldir.xyz);
-    //float3 color_up = atmo_scattering_color_result(sampling, p_ldir.xyz);
+    atmo_scattering_sampling_result sampling = skyfromspace_atmo_scattering_sampling(p_t0.xyz, p_t1.xyz, p_ldir.xyz);
+    float3 color_up = atmo_scattering_color_result(sampling, p_ldir.xyz);
 
     atmo_scattering_sampling_result sampling_down = skyfromatmo_atmo_scattering_sampling(p_t0.xyz, p_t1.xyz, p_ldir.xyz);
     float3 color_down = atmo_scattering_color_result(sampling_down, p_ldir.xyz);
 
 
-    float alt_factor1 = clamp((viewer_alt - atmo_thickness) / (atmo_scattering_flag_5.x - atmo_thickness), 0.0, 1.0);
+    //float alt_factor1 = clamp((viewer_alt - atmo_thickness) / (atmo_scattering_flag_5.x - atmo_thickness), 1.0, 0.0);
+    float alt_factor1 = (viewer_alt - atmo_thickness) / (atmo_scattering_flag_5.x - atmo_thickness);
 
-    color.xyz = color_down; //lerp(color_down, color_up, alt_factor1);
-
-    float alt_factor2 = clamp(viewer_alt / atmo_scattering_flag_5.w, 0.0, 1.0);
-    float atmo_alpha_alt = 1.0 - alt_factor2;
+    if( alt_factor1 > 1.0 )
+    {
+        color.xyz = color_up;
+        color.w = color.z;
+    }
+    else if( alt_factor1 < 0.0 )
+    {
+        color.xyz = color_down;
+       
+        float alt_factor2 = clamp(viewer_alt / atmo_scattering_flag_5.w, 0.0, 1.0);
+        float atmo_alpha_alt = 1.0 - alt_factor2;
 
         // diminuer progressivement l'influence du bleu dans la composante alpha
-    float blue = lerp(color.z, 1.0, atmo_alpha_alt);
+        float blue = lerp(color.z, 1.0, atmo_alpha_alt);
 
         // ne commencer a laisser apparaitre les etoiles que lorsque le prodsca est tres proche de 0.0
         
-    float atmo_alpha_dir = lerp(color.z, 1.0, atan(clamp(dot(p_ldir, normalize(viewer_pos)), 0.0, 1.0) * 4000.0) / 1.57);
+        float atmo_alpha_dir = lerp(color.z, 1.0, atan(clamp(dot(p_ldir, normalize(viewer_pos)), 0.0, 1.0) * 4000.0) / 1.57);
 
-    float atmo_alpha = atmo_alpha_dir * atmo_alpha_alt * blue; // moduler alpha avec le bleu et l'altitude et le prod sca vecteur lumiere
+        float atmo_alpha = atmo_alpha_dir * atmo_alpha_alt * blue; // moduler alpha avec le bleu et l'altitude et le prod sca vecteur lumiere
+   
+        color.w = atmo_alpha; //lerp(atmo_alpha, color.z, alt_factor1);
 
-    color.w = lerp(atmo_alpha, color.z, alt_factor1);
+    }
+    else
+    {
+        color.xyz = lerp(color_down, color_up, alt_factor1);
+        color.w = color.z;
+    }
 
     return color;
 }
@@ -214,6 +229,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     // added S. O'Neil HDR correction
     final_color.xyz = 1.0 - exp(-0.91 * color.xyz);
     
+
     return final_color;
 
 }
