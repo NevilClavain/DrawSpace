@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="xfskin/Label" name="Label" >
+            <Property name="Area" value="{{-0.00646745,0},{0.00501551,0},{0.23381,0},{0.0852624,0}}" />
+            <Property name="Text" value="Planet atmosphere &amp; fog setup" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorizontalAlignment" value="Right" />
+        </Window>
+        <Window type="xfskin/Button" name="Close_Button" >
+            <Property name="Area" value="{{0.00972226,0},{0.900077,0},{0.176389,0},{0.980324,0}}" />
+            <Property name="Text" value="Close" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Renderer" >
+            <Property name="Area" value="{{0.00325477,0},{0.00501551,0},{0.18381,0},{0.0852624,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_GroundFogDensity" >
+            <Property name="Area" value="{{0.179862,0},{0.32716,0},{0.284029,0},{0.366666,0}}" />
+            <Property name="Text" value="XXXXXXX" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Editbox" name="Editbox_GroundFogDensity" >
+            <Property name="Area" value="{{0.284722,0},{0.301235,0},{0.423611,0},{0.393828,0}}" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel3" >
+            <Property name="Area" value="{{0,0},{0.32716,0},{0.180556,0},{0.366666,0}}" />
+            <Property name="Text" value="groundFogDensity :" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_GroundFogDensity" >
+            <Property name="Area" value="{{0.427083,0},{0.301235,0},{0.5,0},{0.393828,0}}" />
+            <Property name="Text" value="Apply" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel4" >
+            <Property name="Area" value="{{0,0},{0.438271,0},{0.180556,0},{0.477777,0}}" />
+            <Property name="Text" value="groundFogAltLimit :" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_GroundFogAltLimit" >
+            <Property name="Area" value="{{0.179862,0},{0.438271,0},{0.284029,0},{0.477777,0}}" />
+            <Property name="Text" value="XXXXXXX" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Editbox" name="Editbox_GroundFogAltLimit" >
+            <Property name="Area" value="{{0.284722,0},{0.406173,0},{0.423611,0},{0.498766,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_GroundFogAltLimit" >
+            <Property name="Area" value="{{0.427083,0},{0.406173,0},{0.5,0},{0.498766,0}}" />
+            <Property name="Text" value="Apply" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Status" >
+            <Property name="Area" value="{{0.190278,0},{0.9,0},{0.914584,0},{0.980247,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_PlanetName" >
+            <Property name="Area" value="{{0.506727,0},{0.00501526,0},{0.749782,0},{0.0852622,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_AtmoKr" >
+            <Property name="Area" value="{{0.180556,0},{0.222222,0},{0.284723,0},{0.261728,0}}" />
+            <Property name="Text" value="XXXXXXX" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel2" >
+            <Property name="Area" value="{{0,0},{0.222222,0},{0.180556,0},{0.261728,0}}" />
+            <Property name="Text" value="atmoKr :" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Editbox" name="Editbox_AtmoKr" >
+            <Property name="Area" value="{{0.284722,0},{0.197531,0},{0.423611,0},{0.290124,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_AtmoKr" >
+            <Property name="Area" value="{{0.427083,0},{0.197531,0},{0.5,0},{0.290124,0}}" />
+            <Property name="Text" value="Apply" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel13" >
+            <Property name="Area" value="{{-0.000693785,0},{0.135802,0},{0.179861,0},{0.175308,0}}" />
+            <Property name="Text" value="atmoRenderEnable :" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_AtmoRenderEnable" >
+            <Property name="Area" value="{{0.179861,0},{0.135802,0},{0.284028,0},{0.175308,0}}" />
+            <Property name="Text" value="XXXXXXX" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Checkbox" name="Checkbox_AtmoRenderEnable" >
+            <Property name="Area" value="{{0.294445,0},{0.135802,0},{0.383334,0},{0.175308,0}}" />
+        </Window>
+    </Window>
+</GUILayout>
