@@ -25,10 +25,10 @@
 
 #include "drawspace.h"
 
-#define PLANET_ATMO_THICKNESS               12000.0
-#define ATMO_SCATTERING_SPACE_GROUND_LIMIT  70000.0
+//#define PLANET_ATMO_THICKNESS               12000.0
+//#define ATMO_SCATTERING_SPACE_GROUND_LIMIT  70000.0
 #define FOG_ALT_LIMIT                       10000.0
-#define ATMO_SCATTERING_ALPHA_ALT_VIEWER    75000.0
+//#define ATMO_SCATTERING_ALPHA_ALT_VIEWER    75000.0
 #define FLAT_CLOUDS_ALT                     3300.0
 #define VOLUMETRIC_CLOUDS_DISTANCE_CLIP     60000.0
 #define VOLUMETRIC_CLOUDS_ALT               2400.0

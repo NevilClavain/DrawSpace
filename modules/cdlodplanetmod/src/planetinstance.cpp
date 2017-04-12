@@ -44,7 +44,7 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
 	for (int i = 0; i < 6; i++)
 	{
-		m_planet_details_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( m_node_config->m_planetRay.m_value * 1000.0, PLANET_ATMO_THICKNESS, 
+		m_planet_details_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( m_node_config->m_planetRay.m_value * 1000.0,
                                                                                                 m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
                                                                                                 m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
                                                                                                 m_node_config->m_plainsSeed1.m_value, m_node_config->m_plainsSeed2.m_value,
@@ -54,7 +54,7 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
                                                                                                 m_node_config->m_splatTransitionDownRelativeAlt.m_value,
                                                                                                 m_node_config->m_splatTextureResol.m_value ) );
 
-		m_planet_atmosphere_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( m_node_config->m_planetRay.m_value * 1000.0, PLANET_ATMO_THICKNESS, 
+		m_planet_atmosphere_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( m_node_config->m_planetRay.m_value * 1000.0,
                                                                                                 m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
                                                                                                 m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
                                                                                                 m_node_config->m_plainsSeed1.m_value, m_node_config->m_plainsSeed2.m_value,
@@ -210,7 +210,7 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
     planet_atmosphere.enable_datatextures = false;
     planet_atmosphere.enable_lod = false;
     planet_atmosphere.min_lodlevel = 0;
-    planet_atmosphere.ray = m_node_config->m_planetRay.m_value + ( PLANET_ATMO_THICKNESS / 1000.0 );
+    planet_atmosphere.ray = m_node_config->m_planetRay.m_value + ( m_planet_atmosphere_binder[0]->GetAtmoThickness() / 1000.0 );
 
     for( int i = 0; i < 6; i++ )
     {

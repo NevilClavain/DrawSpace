@@ -26,7 +26,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-PlanetDetailsBinder::PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, 
+PlanetDetailsBinder::PlanetDetailsBinder( dsreal p_planetRay, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, 
                                             dsreal p_mountains_offset,
                                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
@@ -47,8 +47,11 @@ m_splatTextureResol( p_splatTextureResol )
 	m_groundfromspace_ESun = 24.0;
 	m_groundfromatmo_ESun = 12.0;
 
+    m_atmoThickness = 0.03 * p_planetRay;
+
+
 	m_innerRadius = p_planetRay;
-	m_outerRadius = p_planetRay + p_atmoThickness;
+	m_outerRadius = p_planetRay + m_atmoThickness;
 
 	m_waveLength[0] = 0.650;
 	m_waveLength[1] = 0.570;
@@ -81,10 +84,10 @@ m_splatTextureResol( p_splatTextureResol )
 	m_atmo_scattering_flags4[2] = m_groundfromspace_ESun;
 	m_atmo_scattering_flags4[3] = m_groundfromatmo_ESun;
 
-	m_atmo_scattering_flags5[0] = ATMO_SCATTERING_SPACE_GROUND_LIMIT; // altitude limite de transition entre xxxfromspace_atmo_scattering et xxxfromatmo_atmo_scattering
+	m_atmo_scattering_flags5[0] = 3.5 * m_atmoThickness; //ATMO_SCATTERING_SPACE_GROUND_LIMIT; // altitude limite de transition entre xxxfromspace_atmo_scattering et xxxfromatmo_atmo_scattering
 	m_atmo_scattering_flags5[1] = FOG_ALT_LIMIT; // altitude debut d'apparition du fog "sol"
 	m_atmo_scattering_flags5[2] = FOG_DENSITY; // intensite fog "sol"
-	m_atmo_scattering_flags5[3] = ATMO_SCATTERING_ALPHA_ALT_VIEWER; // altitude limite pour prise en compte facteur altitude camera pour le calcul de l'alpha
+	m_atmo_scattering_flags5[3] = 3.75 * m_atmoThickness; //ATMO_SCATTERING_ALPHA_ALT_VIEWER; // altitude limite pour prise en compte facteur altitude camera pour le calcul de l'alpha
 
 	// couleurs fog "sol"    
 	m_atmo_scattering_flags6[0] = 0.45;

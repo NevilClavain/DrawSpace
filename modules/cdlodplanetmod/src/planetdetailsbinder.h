@@ -86,9 +86,11 @@ protected:
 
     dsreal                                                      m_splatTextureResol;
 
+    dsreal                                                      m_atmoThickness;
+
 public:
 
-	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, 
+	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, 
                             dsreal p_mountains_offset,
                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
@@ -111,6 +113,8 @@ public:
 	PlanetLight GetLight( int p_index ) { return m_lights[p_index]; };
 
     void SetLandscapeBumpFactor( dsreal p_factor );
+
+    dsreal GetAtmoThickness( void ) { return m_atmoThickness; };
 };
 
 
