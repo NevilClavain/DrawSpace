@@ -349,6 +349,24 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
             m_statusbar_timer.Print( "you must select a planet entry !" );
 		}
 	}
+	else if( "AtmoSetup_Button" == p_widget_id )
+	{
+		int lb_index;
+		dsstring lb_text;
+
+		bool select = m_renderer->GUI_GetListboxFirstSelectedItemIndex( LAYOUT_FILE, "PlanetSlots_Listbox", lb_index, lb_text );
+
+		if (select)
+		{
+			m_selected_planet_conf = &m_nodes_config[lb_text];
+			MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETSETUP_PLANETFOGATMOSETUPBUTTON_CLIC );
+		}
+		else
+		{
+            m_statusbar_timer.Print( "you must select a planet entry !" );
+		}
+	}
+
 
 }
 

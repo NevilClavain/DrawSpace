@@ -20,63 +20,46 @@
 *
 */
 
-#ifndef _MAINLOOPSERVICE_H_
-#define _MAINLOOPSERVICE_H_
+#ifndef _PLANETFOGATMOSETUPSUBSERVICE_H_
+#define _PLANETFOGATMOSETUPSUBSERVICE_H_
 
-#include "crtp_singleton.h"
 #include "drawspace.h"
+#include "crtp_singleton.h"
+#include "planetscenenodeconfig.h"
+#include "statusbartimer.h"
 
-class MainLoopService : public DrawSpace::Interface::Module::Service, public BaseSingleton<MainLoopService>
+class MainLoopService;
+
+class PlanetFogAtmoSetupSubService : public DrawSpace::Interface::Module::Service, public BaseSingleton<PlanetFogAtmoSetupSubService>
 {
-public:
-
-    typedef enum
-    {
-        GUIEVT_PLANETSETUP_QUITBUTTON_CLIC,
-        GUIEVT_PLANETSETUP_PLANETVIEWBUTTON_CLIC,
-		GUIEVT_PLANETSETUP_PLANETGROUNDSETUPBUTTON_CLIC,
-        GUIEVT_PLANETSETUP_PLANETSEEDSSETUPBUTTON_CLIC,
-        GUIEVT_PLANETSETUP_PLANETFOGATMOSETUPBUTTON_CLIC,
-        GUIEVT_PLANETSETUP_F1_KEY,
-
-        GUIEVT_PLANETVIEW_CLOSEBUTTON_CLIC,
-		GUIEVT_PLANETGROUNDSETUP_CLOSEBUTTON_CLIC,
-        GUIEVT_PLANETSEEDSSETUP_CLOSEBUTTON_CLIC,
-        GUIEVT_PLANETFOGATMOSETUP_CLOSEBUTTON_CLIC,
-    
-    } APP_GUI_EVENT;
-
 protected:
+
+	typedef DrawSpace::Core::CallBack2<PlanetFogAtmoSetupSubService, void, const dsstring&, const dsstring&>         GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack3<PlanetFogAtmoSetupSubService, void, const dsstring&, const dsstring&, bool>   GUIWidgetCheckboxStateChangedCallback;
+
 
     DrawSpace::Interface::Renderer*                                     m_renderer;
     DrawSpace::Utils::TimeManager                                       m_tm;
     dsstring                                                            m_pluginDescr;
 
-    DrawSpace::Interface::MesheImport*                                  m_meshe_import;
+	PlanetSceneNodeConfig*												m_planetconfig;
 
-    DrawSpace::Core::BaseCallback<void, int>*                           m_closeapp_cb;
-
-    DrawSpace::Interface::Module::Service*                              m_current_subservice;
-
-    DrawSpace::Interface::Module::Root*                                 m_cdlodp_root;
-    DrawSpace::Interface::Module::Service*                              m_cdlodp_service;
-
-    DrawSpace::Interface::Module::Root*                                 m_sbmod_root;
-    DrawSpace::Interface::Module::Service*                              m_sb_service;
-
-    DrawSpace::Module::KeySource<dsstring>                              m_skybox_texturesbankpath;
-    DrawSpace::Module::KeySource<dsstring>                              m_skybox_texturesbankvirtualfspath;
-    DrawSpace::Module::KeySource<std::vector<dsstring>>                 m_skybox_texturesnames;
-
-    void load_cdlodplanet_module( DrawSpace::Logger::Configuration* p_logconf );
-    
-    void load_skybox_module( DrawSpace::Logger::Configuration* p_logconf );
+    StatusBarTimer                                                      m_statusbar_timer;
 
 
-    MainLoopService( void );
+    GUIWidgetPushButtonClickedCallback*                                 m_guiwidgetpushbuttonclicked_cb;
+    GUIWidgetCheckboxStateChangedCallback*                              m_guiwidgetcheckboxstatechanged_cb;
+
+    void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
+    void on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state );
+
+    void update_screen( void );
+
+
+	PlanetFogAtmoSetupSubService( void );
 public:
+	~PlanetFogAtmoSetupSubService( void );
 
-    ~MainLoopService( void );
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
     virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, 
@@ -104,9 +87,10 @@ public:
     virtual void                            OnMouseRightButtonUp( long p_xm, long p_ym );
     virtual void                            OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
-    void                                    OnGUIEvent( APP_GUI_EVENT p_evt );
+	virtual void                            Activate( PlanetSceneNodeConfig* p_planetConfig );
+    virtual void                            Unactivate( void );
 
-    friend class BaseSingleton<MainLoopService>;
+	friend class BaseSingleton<PlanetFogAtmoSetupSubService>;
 };
 
 #endif

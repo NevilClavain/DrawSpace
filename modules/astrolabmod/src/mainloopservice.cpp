@@ -25,6 +25,7 @@
 #include "planetviewsubservice.h"
 #include "planetgroundsetupsubservice.h"
 #include "planetseedssetupsubservice.h"
+#include "planetfogatmosetupsubservice.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -101,7 +102,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     PlanetViewSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
 	PlanetGroundSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
     PlanetSeedsSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
-
+    PlanetFogAtmoSetupSubService::GetInstance()->Init( p_logconf, p_mousecircularmode_cb, p_mousevisible_cb, p_closeapp_cb );
 
 
 
@@ -226,6 +227,15 @@ void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
 			m_current_subservice = PlanetSeedsSetupSubService::GetInstance();
             break;
 
+        case GUIEVT_PLANETSETUP_PLANETFOGATMOSETUPBUTTON_CLIC:
+
+			PlanetSetupSubService::GetInstance()->Unactivate();
+			PlanetFogAtmoSetupSubService::GetInstance()->Activate( PlanetSetupSubService::GetInstance()->GetSelectedPlanetConfig() );
+
+			m_current_subservice = PlanetFogAtmoSetupSubService::GetInstance();
+
+            break;
+
         case GUIEVT_PLANETSETUP_F1_KEY:
 
             PlanetViewSubService::GetInstance()->DumpMemoryAllocs();
@@ -253,7 +263,13 @@ void MainLoopService::OnGUIEvent( APP_GUI_EVENT p_evt )
 			PlanetSetupSubService::GetInstance()->Activate();
 			m_current_subservice = PlanetSetupSubService::GetInstance();
 
+            break;
 
+        case GUIEVT_PLANETFOGATMOSETUP_CLOSEBUTTON_CLIC:
+
+			PlanetFogAtmoSetupSubService::GetInstance()->Unactivate();
+			PlanetSetupSubService::GetInstance()->Activate();
+			m_current_subservice = PlanetSetupSubService::GetInstance();
             break;
     }
 }
