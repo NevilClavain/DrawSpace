@@ -249,6 +249,9 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
 	m_planet_root->SetGravityState( m_node_config->m_gravityEnabled.m_value );
 
+    m_renderAtmo = m_node_config->m_atmoRenderEnable.m_value;
+    update_atmolayout_node_visibility();
+
     m_calendar = p_calendar;
 }
 
@@ -327,6 +330,19 @@ void PlanetInstance::OnBeachLimitUpdate( dsreal p_limit )
 	{
         m_planet_climate_binder[i]->SetBeachLimit( p_limit );
     }
+}
+
+void PlanetInstance::OnAtmoRenderEnableUpdate( bool p_value )
+{
+    // cote shaders...
+	for( int i = 0; i < 6; i++ )
+	{
+        m_planet_atmosphere_binder[i]->EnableAtmoRender( p_value );
+    }
+
+    // cote rendering node du layout atmo...
+    m_renderAtmo = m_node_config->m_atmoRenderEnable.m_value;
+    update_atmolayout_node_visibility();
 }
 
 void PlanetInstance::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
@@ -464,4 +480,9 @@ void PlanetInstance::update_lod_dep_nodes_infos( void )
             }
         }
     }
+}
+
+void PlanetInstance::update_atmolayout_node_visibility( void )
+{
+    m_planet_root->SetLayerNodeDrawingState( 1, m_renderAtmo );
 }

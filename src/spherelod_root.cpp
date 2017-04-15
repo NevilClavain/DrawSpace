@@ -592,20 +592,6 @@ void Root::GetSceneName( dsstring& p_name )
 {
     p_name = m_scenename;
 }
-/*
-void DrawSpace::SphericalLOD::Body::RegisterPlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder )
-{
-    m_drawable->RegisterPlanetBodyPassSlot( p_pass, p_binder );
-}
-*/
-
-/*
-DrawSpace::SphericalLOD::FaceDrawingNode* Root::RegisterSinglePlanetBodyPassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
-                                                                    DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index )
-{
-    return m_drawable->RegisterSinglePlanetBodyPassSlot( p_pass, p_binder, p_orientation, p_meshe_type, p_layer_index );
-}
-*/
 
 void Root::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_binder, int p_orientation, 
                                     DrawSpace::SphericalLOD::Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
@@ -889,4 +875,9 @@ int Root::GetSingleShotSubpassesStackSize( void )
 int Root::GetNbSingleShotSubpasses( void )
 {
     return m_singleshot_subpasses.size();
+}
+
+void Root::SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state )
+{  
+    m_drawable->SetLayerNodeDrawingState( p_layer_index, p_drawing_state );
 }

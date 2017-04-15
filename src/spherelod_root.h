@@ -185,6 +185,8 @@ public:
     int                                 GetSingleShotSubpassesStackSize( void );
     int                                 GetNbSingleShotSubpasses( void );
 
+    void                                SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state );
+
 };
 
 

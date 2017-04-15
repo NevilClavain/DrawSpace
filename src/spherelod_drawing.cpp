@@ -223,7 +223,6 @@ void Drawing::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawS
 
 void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
-
     if( 0 == m_planetbodies.size() )
     {
         return;
@@ -374,3 +373,13 @@ void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
     m_globaltransformation = p_mat;
 }
 
+void Drawing::SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state )
+{  
+    for( size_t i = 0; i < m_facedrawingnodes.size(); i++ )
+    {
+        if( p_layer_index == m_facedrawingnodes[i]->GetLayerIndex() )
+        {
+            m_facedrawingnodes[i]->SetDrawingState( p_drawing_state );
+        }
+    }
+}

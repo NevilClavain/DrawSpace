@@ -49,3 +49,12 @@ void PlanetSceneNodeConfig::BeachLimitParam::OnUpdated( dsreal p_val )
 		m_owner->OnBeachLimitUpdate( m_value );
 	}
 }
+
+void PlanetSceneNodeConfig::AtmoRenderEnableParam::OnUpdated( bool p_val )
+{
+	m_value = p_val;
+	if( m_owner )
+	{
+		m_owner->OnAtmoRenderEnableUpdate( m_value );
+	}
+}

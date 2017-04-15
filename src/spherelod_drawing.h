@@ -134,6 +134,8 @@ public:
     void SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat );
 
     RenderingNodeDrawCallback* GetSingleNodeDrawHandler( void );
+
+    void SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state );
 };
 }
 }

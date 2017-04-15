@@ -115,6 +115,8 @@ public:
     void SetLandscapeBumpFactor( dsreal p_factor );
 
     dsreal GetAtmoThickness( void ) { return m_atmoThickness; };
+
+    void EnableAtmoRender( bool p_value );
 };
 
 

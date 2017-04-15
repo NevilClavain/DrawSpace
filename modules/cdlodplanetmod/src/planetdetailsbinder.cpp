@@ -266,3 +266,8 @@ void PlanetDetailsBinder::SetLandscapeBumpFactor( dsreal p_factor )
 {
     m_terrain_bump_factor = p_factor;
 }
+
+void PlanetDetailsBinder::EnableAtmoRender( bool p_value )
+{
+    // completer...
+}

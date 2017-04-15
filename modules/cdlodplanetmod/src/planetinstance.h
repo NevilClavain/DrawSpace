@@ -73,9 +73,13 @@ protected:
 
     std::map<dsstring, PlanetLODDependantNodeInfos>                 m_LODdependant_nodeinfos;
 
+    bool                                                            m_renderAtmo;
+
     void zbuffer_control_from_viewer_alt( void );
     void update_binders( void );
     void update_lod_dep_nodes_infos( void );
+
+    void update_atmolayout_node_visibility( void );
 
 public:
 
@@ -99,6 +103,7 @@ public:
 	void OnGravityEnabledUpdate( bool p_value );
     void OnLandscapeBumpFactorUpdate( dsreal p_factor );
     void OnBeachLimitUpdate( dsreal p_limit );
+    void OnAtmoRenderEnableUpdate( bool p_value );
 
     void AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable );
 };
