@@ -249,6 +249,12 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
 	m_planet_root->SetGravityState( m_node_config->m_gravityEnabled.m_value );
 
+
+    // cote shaders...
+	for( int i = 0; i < 6; i++ )
+	{
+        m_planet_details_binder[i]->EnableAtmoRender( m_node_config->m_atmoRenderEnable.m_value );
+    }
     m_renderAtmo = m_node_config->m_atmoRenderEnable.m_value;
     update_atmolayout_node_visibility();
 
@@ -337,11 +343,11 @@ void PlanetInstance::OnAtmoRenderEnableUpdate( bool p_value )
     // cote shaders...
 	for( int i = 0; i < 6; i++ )
 	{
-        m_planet_atmosphere_binder[i]->EnableAtmoRender( p_value );
+        m_planet_details_binder[i]->EnableAtmoRender( p_value );
     }
 
     // cote rendering node du layout atmo...
-    m_renderAtmo = m_node_config->m_atmoRenderEnable.m_value;
+    m_renderAtmo = p_value;
     update_atmolayout_node_visibility();
 }
 

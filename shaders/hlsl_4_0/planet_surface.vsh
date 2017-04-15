@@ -233,77 +233,81 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.c0_2 = 0.0;
     Output.c1_2 = 0.0;
 
-    if (alt >= atmo_scattering_flag_5.x)
+    if (atmo_scattering_flag_5.w > 0.0) // si calcul atmo autorise
     {
-        atmo_scattering_sampling_result sampling_res;
-
-        if (flags_lights.y > 0.0)
+        
+        if (alt >= atmo_scattering_flag_5.x)
         {
-            sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light0_dir.xyz);
-            Output.c0.xyz = sampling_res.c0;
-            Output.c0.w = 1.0;
-            Output.c1.xyz = sampling_res.c1;
-            Output.c1.w = 1.0;
-        }
+            atmo_scattering_sampling_result sampling_res;
 
-        if (flags_lights.z > 0.0)
-        {
-            sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light1_dir.xyz);
-            Output.c0_1.xyz = sampling_res.c0;
-            Output.c0_1.w = 1.0;
-            Output.c1_1.xyz = sampling_res.c1;
-            Output.c1_1.w = 1.0;
-        }
+            if (flags_lights.y > 0.0)
+            {
+                sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light0_dir.xyz);
+                Output.c0.xyz = sampling_res.c0;
+                Output.c0.w = 1.0;
+                Output.c1.xyz = sampling_res.c1;
+                Output.c1.w = 1.0;
+            }
 
-        if (flags_lights.w > 0.0)
-        {
-            sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light2_dir.xyz);
-            Output.c0_2.xyz = sampling_res.c0;
-            Output.c0_2.w = 1.0;
-            Output.c1_2.xyz = sampling_res.c1;
-            Output.c1_2.w = 1.0;
+            if (flags_lights.z > 0.0)
+            {
+                sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light1_dir.xyz);
+                Output.c0_1.xyz = sampling_res.c0;
+                Output.c0_1.w = 1.0;
+                Output.c1_1.xyz = sampling_res.c1;
+                Output.c1_1.w = 1.0;
+            }
+
+            if (flags_lights.w > 0.0)
+            {
+                sampling_res = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light2_dir.xyz);
+                Output.c0_2.xyz = sampling_res.c0;
+                Output.c0_2.w = 1.0;
+                Output.c1_2.xyz = sampling_res.c1;
+                Output.c1_2.w = 1.0;
+            }
         }
-    }
-    else
-    {
+        else
+        {
         // transition douce entre les couleurs calculees de l'exterieur de l'atmosphere et les couleurs calculees de l'interieur de l'atmosphere
 
-        atmo_scattering_sampling_result sampling_res_up;
-        atmo_scattering_sampling_result sampling_res_down;
+            atmo_scattering_sampling_result sampling_res_up;
+            atmo_scattering_sampling_result sampling_res_down;
 
-        float factor_alt = clamp(alt / atmo_scattering_flag_5.x, 0.0, 1.0);
+            float factor_alt = clamp(alt / atmo_scattering_flag_5.x, 0.0, 1.0);
 
-        if (flags_lights.y > 0.0)
-        {
-            sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light0_dir.xyz);
-            sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light0_dir.xyz);
+            if (flags_lights.y > 0.0)
+            {
+                sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light0_dir.xyz);
+                sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light0_dir.xyz);
 
-            Output.c0.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
-            Output.c0.w = 1.0;
-            Output.c1.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
-            Output.c1.w = 1.0;
-        }
+                Output.c0.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
+                Output.c0.w = 1.0;
+                Output.c1.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
+                Output.c1.w = 1.0;
+            }
 
-        if (flags_lights.z > 0.0)
-        {
-            sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light1_dir.xyz);
-            sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light1_dir.xyz);
+            if (flags_lights.z > 0.0)
+            {
+                sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light1_dir.xyz);
+                sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light1_dir.xyz);
 
-            Output.c0_1.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
-            Output.c0_1.w = 1.0;
-            Output.c1_1.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
-            Output.c1_1.w = 1.0;
-        }
+                Output.c0_1.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
+                Output.c0_1.w = 1.0;
+                Output.c1_1.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
+                Output.c1_1.w = 1.0;
+            }
 
-        if (flags_lights.w > 0.0)
-        {
-            sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light2_dir.xyz);
-            sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light2_dir.xyz);
+            if (flags_lights.w > 0.0)
+            {
+                sampling_res_up = groundfromspace_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light2_dir.xyz);
+                sampling_res_down = groundfromatmo_atmo_scattering_sampling(vertex_pos.xyz, viewer_pos.xyz, light2_dir.xyz);
 
-            Output.c0_2.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
-            Output.c0_2.w = 1.0;
-            Output.c1_2.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
-            Output.c1_2.w = 1.0;
+                Output.c0_2.xyz = lerp(sampling_res_down.c0, sampling_res_up.c0, factor_alt);
+                Output.c0_2.w = 1.0;
+                Output.c1_2.xyz = lerp(sampling_res_down.c1, sampling_res_up.c1, factor_alt);
+                Output.c1_2.w = 1.0;
+            }
         }
     }
 

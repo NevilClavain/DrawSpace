@@ -84,10 +84,10 @@ m_splatTextureResol( p_splatTextureResol )
 	m_atmo_scattering_flags4[2] = m_groundfromspace_ESun;
 	m_atmo_scattering_flags4[3] = m_groundfromatmo_ESun;
 
-	m_atmo_scattering_flags5[0] = 3.5 * m_atmoThickness; //ATMO_SCATTERING_SPACE_GROUND_LIMIT; // altitude limite de transition entre xxxfromspace_atmo_scattering et xxxfromatmo_atmo_scattering
+	m_atmo_scattering_flags5[0] = 3.5 * m_atmoThickness; // altitude limite de transition entre xxxfromspace_atmo_scattering et xxxfromatmo_atmo_scattering
 	m_atmo_scattering_flags5[1] = FOG_ALT_LIMIT; // altitude debut d'apparition du fog "sol"
 	m_atmo_scattering_flags5[2] = FOG_DENSITY; // intensite fog "sol"
-	m_atmo_scattering_flags5[3] = 0;
+	m_atmo_scattering_flags5[3] = 1.0;
 
 	// couleurs fog "sol"    
 	m_atmo_scattering_flags6[0] = 0.45;
@@ -269,5 +269,5 @@ void PlanetDetailsBinder::SetLandscapeBumpFactor( dsreal p_factor )
 
 void PlanetDetailsBinder::EnableAtmoRender( bool p_value )
 {
-    // completer...
+    m_atmo_scattering_flags5[3] = ( p_value ? 1.0 : 0.0 );
 }
