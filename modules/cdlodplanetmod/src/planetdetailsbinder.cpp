@@ -87,7 +87,7 @@ m_splatTextureResol( p_splatTextureResol )
 	m_atmo_scattering_flags5[0] = 3.5 * m_atmoThickness; //ATMO_SCATTERING_SPACE_GROUND_LIMIT; // altitude limite de transition entre xxxfromspace_atmo_scattering et xxxfromatmo_atmo_scattering
 	m_atmo_scattering_flags5[1] = FOG_ALT_LIMIT; // altitude debut d'apparition du fog "sol"
 	m_atmo_scattering_flags5[2] = FOG_DENSITY; // intensite fog "sol"
-	m_atmo_scattering_flags5[3] = 3.75 * m_atmoThickness; //ATMO_SCATTERING_ALPHA_ALT_VIEWER; // altitude limite pour prise en compte facteur altitude camera pour le calcul de l'alpha
+	m_atmo_scattering_flags5[3] = 0;
 
 	// couleurs fog "sol"    
 	m_atmo_scattering_flags6[0] = 0.45;
