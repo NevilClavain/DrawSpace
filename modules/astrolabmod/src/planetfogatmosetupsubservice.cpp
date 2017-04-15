@@ -76,7 +76,13 @@ void PlanetFogAtmoSetupSubService::Init( DrawSpace::Logger::Configuration* p_log
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Status" );
 
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_AtmoRenderEnable" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Checkbox_AtmoRenderEnable" );
+
+
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
+    m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
+
 
     m_statusbar_timer.Init( m_tm );
 }
@@ -213,8 +219,17 @@ void PlanetFogAtmoSetupSubService::on_guipushbutton_clicked( const dsstring& p_l
 
 void PlanetFogAtmoSetupSubService::on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state )
 {
-}
+    if( p_layout != LAYOUT_FILE )
+    {
+        return;
+    }
 
+    if( "Checkbox_AtmoRenderEnable" == p_widget_id )
+    {
+        m_planetconfig->m_atmoRenderEnable = p_state;
+        update_screen();
+    }
+}
 
 void PlanetFogAtmoSetupSubService::Activate( PlanetSceneNodeConfig* p_planetConfig )
 {
@@ -234,10 +249,8 @@ void PlanetFogAtmoSetupSubService::update_screen( void )
     char comment[64];
     char comment2[64];
 
-    /*
-    sprintf( comment, "%.2f", m_planetconfig->m_plainsSeed1.m_value );
-    sprintf( comment2, "%.2f", m_planetconfig->m_plainsSeed1.m_value );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_PlainsSeed1", comment );
-    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_PlainsSeed1", comment2 );
-    */
+    m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_AtmoRenderEnable", m_planetconfig->m_atmoRenderEnable.m_value );
+    sprintf( comment, "%s", m_planetconfig->m_atmoRenderEnable.m_value ? "true" : "false" );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_AtmoRenderEnable", comment );
+
 }

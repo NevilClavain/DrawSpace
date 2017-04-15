@@ -58,6 +58,7 @@ m_ctrl( false )
 
     m_hotparams_list.push_back( "gravityEnabled" );
     m_hotparams_list.push_back( "landscapeBumpFactor" );
+    m_hotparams_list.push_back( "atmoRenderEnable" );
 }
     
 PlanetViewSubService::~PlanetViewSubService( void )
@@ -590,6 +591,10 @@ void PlanetViewSubService::on_guicheckboxstatechanged_clicked( const dsstring& p
         {
             m_planet_conf->m_gravityEnabled = p_state;
         }
+        if( hotparam == "atmoRenderEnable" )
+        {
+            m_planet_conf->m_atmoRenderEnable = p_state;
+        }
     }
 }
 
@@ -893,6 +898,12 @@ void PlanetViewSubService::hotparamslist_index_updated( void )
     {
         cb_display = true;
         cb_state = m_planet_conf->m_gravityEnabled.m_value;
+    }
+
+    if( hotparam == "atmoRenderEnable" )
+    {
+        cb_display = true;
+        cb_state = m_planet_conf->m_atmoRenderEnable.m_value;
     }
 
     if( hotparam == "landscapeBumpFactor" )
