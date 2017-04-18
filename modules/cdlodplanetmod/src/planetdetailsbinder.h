@@ -94,7 +94,7 @@ public:
                             dsreal p_mountains_offset,
                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
-                            int p_splatTextureResol );
+                            int p_splatTextureResol, dsreal p_atmoKr );
 
 	virtual void Bind( void );
 	virtual void Unbind( void );
@@ -117,6 +117,8 @@ public:
     dsreal GetAtmoThickness( void ) { return m_atmoThickness; };
 
     void EnableAtmoRender( bool p_value );
+
+    void SetAtmoKr( dsreal p_kr );
 };
 
 

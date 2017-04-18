@@ -104,6 +104,7 @@ public:
     void OnLandscapeBumpFactorUpdate( dsreal p_factor );
     void OnBeachLimitUpdate( dsreal p_limit );
     void OnAtmoRenderEnableUpdate( bool p_value );
+    void OnAtmoKrUpdate( dsreal p_kr );
 
     void AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable );
 };

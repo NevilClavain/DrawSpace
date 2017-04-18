@@ -30,14 +30,15 @@ PlanetDetailsBinder::PlanetDetailsBinder( dsreal p_planetRay, dsreal p_plains_am
                                             dsreal p_mountains_offset,
                                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
-                                            int p_splatTextureResol ) :
+                                            int p_splatTextureResol, dsreal p_atmoKr ) :
 MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset, p_plains_seed1, p_plains_seed2, p_mix_seed1, p_mix_seed2 ),
 m_planet_node( NULL),
 m_ocean_details_alt( 1.0010 ),
 m_terrain_bump_factor( p_terrainbump_factor ),
 m_splatTransitionUpRelativeAlt( p_splatTransitionUpRelativeAlt ),
 m_splatTransitionDownRelativeAlt( p_splatTransitionDownRelativeAlt ),
-m_splatTextureResol( p_splatTextureResol )
+m_splatTextureResol( p_splatTextureResol ),
+m_kr( p_atmoKr )
 {
 
 	m_mirror_mode = false;
@@ -56,7 +57,7 @@ m_splatTextureResol( p_splatTextureResol )
 	m_waveLength[0] = 0.650;
 	m_waveLength[1] = 0.570;
 	m_waveLength[2] = 0.475;
-	m_kr = 0.0048;
+	//m_kr = 0.0048;
 	m_km = 0.0010;
 	m_scaleDepth = 0.25;
 
@@ -77,7 +78,7 @@ m_splatTextureResol( p_splatTextureResol )
 	m_atmo_scattering_flags3[0] = m_kr;
 	m_atmo_scattering_flags3[1] = m_km;
 	m_atmo_scattering_flags3[2] = 4.0 * m_kr * 3.1415927;
-	m_atmo_scattering_flags3[3] = 4.0 * m_km * 3.1415927;
+	m_atmo_scattering_flags3[3] = 4.0 * m_kr * 3.1415927;
 
 	m_atmo_scattering_flags4[0] = m_skyfromspace_ESun;
 	m_atmo_scattering_flags4[1] = m_skyfromatmo_ESun;
@@ -270,4 +271,13 @@ void PlanetDetailsBinder::SetLandscapeBumpFactor( dsreal p_factor )
 void PlanetDetailsBinder::EnableAtmoRender( bool p_value )
 {
     m_atmo_scattering_flags5[3] = ( p_value ? 1.0 : 0.0 );
+}
+
+void PlanetDetailsBinder::SetAtmoKr( dsreal p_kr )
+{
+    m_kr = p_kr;
+	m_atmo_scattering_flags3[0] = m_kr;
+	m_atmo_scattering_flags3[1] = m_km;
+	m_atmo_scattering_flags3[2] = 4.0 * m_kr * 3.1415927;
+	m_atmo_scattering_flags3[3] = 4.0 * m_kr * 3.1415927;
 }

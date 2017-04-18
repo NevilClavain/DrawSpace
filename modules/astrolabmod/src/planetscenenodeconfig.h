@@ -56,6 +56,7 @@ public:
 	DrawSpace::Module::KeySource<dsstring>			m_detailsPixelShader;
 	DrawSpace::Module::KeySource<bool>				m_gravityEnabled;
     DrawSpace::Module::KeySource<bool>              m_atmoRenderEnable;
+    DrawSpace::Module::KeySource<dsreal>            m_atmoKr;
 
 	//////////////////////////////////////////////////////////////////
 
@@ -85,7 +86,8 @@ public:
         m_plainsSeed2( "plainsSeed2" ),
         m_mixSeed1( "mixSeed1" ),
         m_mixSeed2( "mixSeed1" ),
-        m_atmoRenderEnable( "atmoRenderEnable" )
+        m_atmoRenderEnable( "atmoRenderEnable" ),
+        m_atmoKr( "atmoKr" )
 	{
 	}
 };

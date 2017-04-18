@@ -52,7 +52,8 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
                                                                                                 m_node_config->m_landscapeBumpFactor.m_value,
                                                                                                 m_node_config->m_splatTransitionUpRelativeAlt.m_value,
                                                                                                 m_node_config->m_splatTransitionDownRelativeAlt.m_value,
-                                                                                                m_node_config->m_splatTextureResol.m_value ) );
+                                                                                                m_node_config->m_splatTextureResol.m_value,
+                                                                                                m_node_config->m_atmoKr.m_value ) );
 
 		m_planet_atmosphere_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( m_node_config->m_planetRay.m_value * 1000.0,
                                                                                                 m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
@@ -62,7 +63,8 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
                                                                                                 m_node_config->m_landscapeBumpFactor.m_value,
                                                                                                 m_node_config->m_splatTransitionUpRelativeAlt.m_value,
                                                                                                 m_node_config->m_splatTransitionDownRelativeAlt.m_value,
-                                                                                                m_node_config->m_splatTextureResol.m_value ) );
+                                                                                                m_node_config->m_splatTextureResol.m_value,
+                                                                                                m_node_config->m_atmoKr.m_value ) );
 
 		m_planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder( m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
                                                                                                 m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
@@ -349,6 +351,15 @@ void PlanetInstance::OnAtmoRenderEnableUpdate( bool p_value )
     // cote rendering node du layout atmo...
     m_renderAtmo = p_value;
     update_atmolayout_node_visibility();
+}
+
+void PlanetInstance::OnAtmoKrUpdate( dsreal p_kr )
+{
+	for( int i = 0; i < 6; i++ )
+	{
+        m_planet_details_binder[i]->SetAtmoKr( p_kr );
+        m_planet_atmosphere_binder[i]->SetAtmoKr( p_kr );
+    }
 }
 
 void PlanetInstance::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
