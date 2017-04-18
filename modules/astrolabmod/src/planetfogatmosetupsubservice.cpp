@@ -79,6 +79,10 @@ void PlanetFogAtmoSetupSubService::Init( DrawSpace::Logger::Configuration* p_log
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_AtmoRenderEnable" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Checkbox_AtmoRenderEnable" );
 
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_AtmoKr" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_AtmoKr" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_AtmoKr" );
+
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
@@ -197,14 +201,14 @@ void PlanetFogAtmoSetupSubService::on_guipushbutton_clicked( const dsstring& p_l
     {
 		MainLoopService::GetInstance()->OnGUIEvent( MainLoopService::GUIEVT_PLANETFOGATMOSETUP_CLOSEBUTTON_CLIC );
     }
-    /*
-    if( "Button_PlainsSeed1" == p_widget_id )
+    
+    if( "Button_AtmoKr" == p_widget_id )
     {
-        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_PlainsSeed1", text );
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_AtmoKr", text );
 
         try
         {
-            m_planetconfig->m_plainsSeed1 = std::stof( text );
+            m_planetconfig->m_atmoKr = std::stof( text );
             update_screen();
         }
         catch( std::invalid_argument )
@@ -212,9 +216,7 @@ void PlanetFogAtmoSetupSubService::on_guipushbutton_clicked( const dsstring& p_l
             m_statusbar_timer.Print( "bad value input!" );
             update_screen();
         }
-    }
-    */
-  
+    }    
 }
 
 void PlanetFogAtmoSetupSubService::on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state )
@@ -252,5 +254,10 @@ void PlanetFogAtmoSetupSubService::update_screen( void )
     m_renderer->GUI_SetCheckboxState( LAYOUT_FILE, "Checkbox_AtmoRenderEnable", m_planetconfig->m_atmoRenderEnable.m_value );
     sprintf( comment, "%s", m_planetconfig->m_atmoRenderEnable.m_value ? "true" : "false" );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_AtmoRenderEnable", comment );
+
+    sprintf( comment, "%.4f", m_planetconfig->m_atmoKr.m_value );
+    sprintf( comment2, "%.4f", m_planetconfig->m_atmoKr.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_AtmoKr", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_AtmoKr", comment2 );
 
 }
