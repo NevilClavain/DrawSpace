@@ -311,7 +311,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 			    m_nodes_config[node_name].m_gravityEnabled = false;
                 m_nodes_config[node_name].m_atmoRenderEnable = true;
                 m_nodes_config[node_name].m_atmoKr = 0.0048;
-                m_nodes_config[node_name].m_groundFogAltLimit = 9999.9;
+                m_nodes_config[node_name].m_groundFogAltLimit = 10000.0;
 
                 update_listbox();
             }
