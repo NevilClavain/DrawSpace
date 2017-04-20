@@ -25,7 +25,7 @@
 
 #include "drawspace.h"
 
-#define FOG_ALT_LIMIT                       10000.0
+//#define FOG_ALT_LIMIT                       10000.0
 #define FLAT_CLOUDS_ALT                     3300.0
 #define VOLUMETRIC_CLOUDS_DISTANCE_CLIP     60000.0
 #define VOLUMETRIC_CLOUDS_ALT               2400.0

@@ -105,6 +105,7 @@ public:
     void OnBeachLimitUpdate( dsreal p_limit );
     void OnAtmoRenderEnableUpdate( bool p_value );
     void OnAtmoKrUpdate( dsreal p_kr );
+    void OnGroundFogAltLimit( dsreal p_groundFogAltLimit );
 
     void AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable );
 };

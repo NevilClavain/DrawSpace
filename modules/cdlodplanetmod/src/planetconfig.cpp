@@ -67,3 +67,12 @@ void PlanetSceneNodeConfig::AtmoKrParam::OnUpdated( dsreal p_val )
 		m_owner->OnAtmoKrUpdate( p_val );
 	}
 }
+
+void PlanetSceneNodeConfig::GroundFogAltLimitParam::OnUpdated( dsreal p_val )
+{
+	m_value = p_val;
+	if( m_owner )
+	{
+		m_owner->OnGroundFogAltLimit( p_val );
+	}
+}

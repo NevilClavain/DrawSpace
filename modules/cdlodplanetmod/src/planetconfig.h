@@ -143,6 +143,27 @@ public:
 	    }
     };
 
+    class GroundFogAltLimitParam : public DrawSpace::Module::KeySink<dsreal>
+    {
+    protected:
+
+	    PlanetInstance*	m_owner;
+
+    public:
+	    dsreal			m_value;
+
+	    GroundFogAltLimitParam( const dsstring& p_id ) : KeySink( p_id ),
+	    m_owner( NULL )
+	    {
+	    }
+
+	    virtual void OnUpdated( dsreal p_val );
+	    virtual void SetOwner( PlanetInstance* p_owner )
+	    {
+		    m_owner = p_owner;
+	    }
+    };
+
 
     class LandscapeBumpFactorParam : public DrawSpace::Module::KeySink<dsreal>
     {
@@ -218,6 +239,7 @@ public:
 
     AtmoRenderEnableParam               m_atmoRenderEnable;
     AtmoKrParam                         m_atmoKr;
+    GroundFogAltLimitParam              m_groundFogAltLimit;
 
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -248,7 +270,8 @@ public:
     m_mixSeed1( "mixSeed1" ),
     m_mixSeed2( "mixSeed1" ),
     m_atmoRenderEnable( "atmoRenderEnable" ),
-    m_atmoKr( "atmoKr" )
+    m_atmoKr( "atmoKr" ),
+    m_groundFogAltLimit( "groundFogAltLimit" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
@@ -273,6 +296,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_mixSeed2 );
         m_keylinksTable.RegisterModuleKey( &m_atmoRenderEnable );
         m_keylinksTable.RegisterModuleKey( &m_atmoKr );
+        m_keylinksTable.RegisterModuleKey( &m_groundFogAltLimit );
 	}
 
 	virtual void SetOwner( PlanetInstance* p_owner )
@@ -281,7 +305,8 @@ public:
         m_landscapeBumpFactor.SetOwner( p_owner );
         m_beachLimit.SetOwner( p_owner );
         m_atmoRenderEnable.SetOwner( p_owner );
-        m_atmoKr.SetOwner( p_owner );        
+        m_atmoKr.SetOwner( p_owner );
+        m_groundFogAltLimit.SetOwner( p_owner );
 	}
 };
 

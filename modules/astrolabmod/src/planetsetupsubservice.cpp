@@ -281,6 +281,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 			    m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_gravityEnabled );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_atmoRenderEnable );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_atmoKr );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_groundFogAltLimit );
 
 			    // store planet unique name (also used as scenegraph node id)
 			    m_nodes_config[node_name].m_planetName = node_name;
@@ -310,6 +311,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 			    m_nodes_config[node_name].m_gravityEnabled = false;
                 m_nodes_config[node_name].m_atmoRenderEnable = true;
                 m_nodes_config[node_name].m_atmoKr = 0.0048;
+                m_nodes_config[node_name].m_groundFogAltLimit = 9999.9;
 
                 update_listbox();
             }

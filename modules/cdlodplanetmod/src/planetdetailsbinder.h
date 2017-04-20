@@ -53,6 +53,9 @@ protected:
 	dsreal														m_km;
 	dsreal														m_scaleDepth;
 
+    dsreal                                                      m_fog_alt_limit;
+
+
 	dsreal														m_skyfromspace_ESun;
 	dsreal														m_skyfromatmo_ESun;
 	dsreal														m_groundfromspace_ESun;
@@ -94,7 +97,7 @@ public:
                             dsreal p_mountains_offset,
                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
-                            int p_splatTextureResol, dsreal p_atmoKr );
+                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit );
 
 	virtual void Bind( void );
 	virtual void Unbind( void );
@@ -119,6 +122,8 @@ public:
     void EnableAtmoRender( bool p_value );
 
     void SetAtmoKr( dsreal p_kr );
+
+    void SetFogAltLimit( dsreal p_fogaltlimit );
 };
 
 
