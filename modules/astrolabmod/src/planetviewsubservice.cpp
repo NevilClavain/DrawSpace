@@ -60,6 +60,7 @@ m_ctrl( false )
     m_hotparams_list.push_back( "landscapeBumpFactor" );
     m_hotparams_list.push_back( "atmoRenderEnable" );
     m_hotparams_list.push_back( "atmoKr" );
+    m_hotparams_list.push_back( "groundFogAltLimit" );
 }
     
 PlanetViewSubService::~PlanetViewSubService( void )
@@ -596,6 +597,22 @@ void PlanetViewSubService::on_guipushbutton_clicked( const dsstring& p_layout, c
                 m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_HotParam", param_value );
             }        
         }
+        if( "groundFogAltLimit" == m_hotparams_list[m_hotparams_list_index] )
+        {
+            try
+            {
+                m_planet_conf->m_groundFogAltLimit = (dsreal)std::stoi( text );
+            }
+            catch( std::invalid_argument )
+            {
+                dsstring    param_value;
+                char        comment[128];
+
+                sprintf( comment, "%d", (int)m_planet_conf->m_groundFogAltLimit.m_value );
+                param_value = comment;
+                m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_HotParam", param_value );
+            }        
+        }
     }
 }
 
@@ -936,6 +953,14 @@ void PlanetViewSubService::hotparamslist_index_updated( void )
         cb_display = false;
 
         sprintf( comment, "%.4f", m_planet_conf->m_atmoKr.m_value );
+        param_value = comment;
+    }
+
+    if( hotparam == "groundFogAltLimit" )
+    {    
+        cb_display = false;
+
+        sprintf( comment, "%d", (int)m_planet_conf->m_groundFogAltLimit.m_value );
         param_value = comment;
     }
 

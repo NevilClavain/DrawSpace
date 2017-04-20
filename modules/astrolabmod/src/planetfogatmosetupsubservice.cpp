@@ -83,6 +83,11 @@ void PlanetFogAtmoSetupSubService::Init( DrawSpace::Logger::Configuration* p_log
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_AtmoKr" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_AtmoKr" );
 
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_GroundFogAltLimit" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_GroundFogAltLimit" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_GroundFogAltLimit" );
+
+
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
@@ -216,7 +221,23 @@ void PlanetFogAtmoSetupSubService::on_guipushbutton_clicked( const dsstring& p_l
             m_statusbar_timer.Print( "bad value input!" );
             update_screen();
         }
-    }    
+    }
+
+    if( "Button_GroundFogAltLimit" == p_widget_id )
+    {
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_GroundFogAltLimit", text );
+
+        try
+        {
+            m_planetconfig->m_groundFogAltLimit = (dsreal)std::stoi( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }
+    }
 }
 
 void PlanetFogAtmoSetupSubService::on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state )
@@ -260,4 +281,8 @@ void PlanetFogAtmoSetupSubService::update_screen( void )
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_AtmoKr", comment );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_AtmoKr", comment2 );
 
+    sprintf( comment, "%d", (int)m_planetconfig->m_groundFogAltLimit.m_value );
+    sprintf( comment2, "%d", (int)m_planetconfig->m_groundFogAltLimit.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_GroundFogAltLimit", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_GroundFogAltLimit", comment2 );
 }
