@@ -158,13 +158,14 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     float4 global_uv = 0.0;
     global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
     global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
-    float v_factor = ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
+    float v_factor = 1.0;
+    //ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
 
 	if( vertex_distance < /*1.015*/ /*2.0*/ 1.05 * horizon_limit )
 	{	
         	
         v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
-        v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
+        //v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
 
 		if( v_alt >= 0.0 )
 		{

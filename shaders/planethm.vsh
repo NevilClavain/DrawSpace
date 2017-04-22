@@ -97,11 +97,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     float4 global_uv = 0.0;
     global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
     global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
-
+    /*
     res += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
-
     res *= ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
-	
+	*/
 	Output.alt = 0.0;
 	Output.alt.x = res;
 
