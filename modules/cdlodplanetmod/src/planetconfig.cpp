@@ -76,3 +76,12 @@ void PlanetSceneNodeConfig::GroundFogAltLimitParam::OnUpdated( dsreal p_val )
 		m_owner->OnGroundFogAltLimit( p_val );
 	}
 }
+
+void PlanetSceneNodeConfig::GroundFogDensityParam::OnUpdated( dsreal p_val )
+{
+	m_value = p_val;
+	if( m_owner )
+	{
+		m_owner->OnGroundFogDensity( p_val );
+	}
+}

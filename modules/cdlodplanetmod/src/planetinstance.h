@@ -106,6 +106,7 @@ public:
     void OnAtmoRenderEnableUpdate( bool p_value );
     void OnAtmoKrUpdate( dsreal p_kr );
     void OnGroundFogAltLimit( dsreal p_groundFogAltLimit );
+    void OnGroundFogDensity( dsreal p_groundFogDensity );
 
     void AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable );
 };

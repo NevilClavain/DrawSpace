@@ -54,7 +54,8 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
                                                                                                 m_node_config->m_splatTransitionDownRelativeAlt.m_value,
                                                                                                 m_node_config->m_splatTextureResol.m_value,
                                                                                                 m_node_config->m_atmoKr.m_value,
-                                                                                                m_node_config->m_groundFogAltLimit.m_value ) );
+                                                                                                m_node_config->m_groundFogAltLimit.m_value,
+                                                                                                m_node_config->m_groundFogDensity.m_value ) );
 
 		m_planet_atmosphere_binder[i] = _DRAWSPACE_NEW_( PlanetDetailsBinder, PlanetDetailsBinder( m_node_config->m_planetRay.m_value * 1000.0,
                                                                                                 m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
@@ -66,7 +67,8 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
                                                                                                 m_node_config->m_splatTransitionDownRelativeAlt.m_value,
                                                                                                 m_node_config->m_splatTextureResol.m_value,
                                                                                                 m_node_config->m_atmoKr.m_value,
-                                                                                                m_node_config->m_groundFogAltLimit.m_value ) );
+                                                                                                m_node_config->m_groundFogAltLimit.m_value,
+                                                                                                m_node_config->m_groundFogDensity.m_value ) );
 
 		m_planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder( m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
                                                                                                 m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
@@ -372,6 +374,14 @@ void PlanetInstance::OnGroundFogAltLimit( dsreal p_groundFogAltLimit )
     }
 }
 
+void PlanetInstance::OnGroundFogDensity( dsreal p_groundFogDensity )
+{
+	for( int i = 0; i < 6; i++ )
+	{
+        m_planet_details_binder[i]->SetFogDensity( p_groundFogDensity );
+    }
+}
+
 void PlanetInstance::AddLODDependantNodeInfosKeyLinkTable( const dsstring& p_dependantNodeId, DrawSpace::Module::KeysLinkTable* p_keytable )
 {
     if( m_LODdependant_nodeinfos.count( p_dependantNodeId ) )
@@ -513,3 +523,4 @@ void PlanetInstance::update_atmolayout_node_visibility( void )
 {
     m_planet_root->SetLayerNodeDrawingState( 1, m_renderAtmo );
 }
+

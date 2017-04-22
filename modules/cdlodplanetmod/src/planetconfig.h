@@ -164,6 +164,27 @@ public:
 	    }
     };
 
+    class GroundFogDensityParam : public DrawSpace::Module::KeySink<dsreal>
+    {
+    protected:
+
+	    PlanetInstance*	m_owner;
+
+    public:
+	    dsreal			m_value;
+
+	    GroundFogDensityParam( const dsstring& p_id ) : KeySink( p_id ),
+	    m_owner( NULL )
+	    {
+	    }
+
+	    virtual void OnUpdated( dsreal p_val );
+	    virtual void SetOwner( PlanetInstance* p_owner )
+	    {
+		    m_owner = p_owner;
+	    }
+    };
+
 
     class LandscapeBumpFactorParam : public DrawSpace::Module::KeySink<dsreal>
     {
@@ -240,6 +261,7 @@ public:
     AtmoRenderEnableParam               m_atmoRenderEnable;
     AtmoKrParam                         m_atmoKr;
     GroundFogAltLimitParam              m_groundFogAltLimit;
+    GroundFogDensityParam               m_groundFogDensity;
 
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -271,7 +293,8 @@ public:
     m_mixSeed2( "mixSeed1" ),
     m_atmoRenderEnable( "atmoRenderEnable" ),
     m_atmoKr( "atmoKr" ),
-    m_groundFogAltLimit( "groundFogAltLimit" )
+    m_groundFogAltLimit( "groundFogAltLimit" ),
+    m_groundFogDensity( "groundFogDensty" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
@@ -297,6 +320,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_atmoRenderEnable );
         m_keylinksTable.RegisterModuleKey( &m_atmoKr );
         m_keylinksTable.RegisterModuleKey( &m_groundFogAltLimit );
+        m_keylinksTable.RegisterModuleKey( &m_groundFogDensity );
 	}
 
 	virtual void SetOwner( PlanetInstance* p_owner )
@@ -307,6 +331,7 @@ public:
         m_atmoRenderEnable.SetOwner( p_owner );
         m_atmoKr.SetOwner( p_owner );
         m_groundFogAltLimit.SetOwner( p_owner );
+        m_groundFogDensity.SetOwner( p_owner );
 	}
 };
 

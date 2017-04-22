@@ -87,6 +87,9 @@ void PlanetFogAtmoSetupSubService::Init( DrawSpace::Logger::Configuration* p_log
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_GroundFogAltLimit" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_GroundFogAltLimit" );
 
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_GroundFogDensity" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_GroundFogDensity" );
+    m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_GroundFogDensity" );
 
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
@@ -238,6 +241,22 @@ void PlanetFogAtmoSetupSubService::on_guipushbutton_clicked( const dsstring& p_l
             update_screen();
         }
     }
+
+    if( "Button_GroundFogDensity" == p_widget_id )
+    {
+        m_renderer->GUI_GetWidgetText( LAYOUT_FILE, "Editbox_GroundFogDensity", text );
+
+        try
+        {
+            m_planetconfig->m_groundFogDensity = std::stof( text );
+            update_screen();
+        }
+        catch( std::invalid_argument )
+        {
+            m_statusbar_timer.Print( "bad value input!" );
+            update_screen();
+        }
+    }
 }
 
 void PlanetFogAtmoSetupSubService::on_guicheckboxstatechanged_clicked( const dsstring& p_layout, const dsstring& p_widget_id, bool p_state )
@@ -285,4 +304,9 @@ void PlanetFogAtmoSetupSubService::update_screen( void )
     sprintf( comment2, "%d", (int)m_planetconfig->m_groundFogAltLimit.m_value );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_GroundFogAltLimit", comment );
     m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_GroundFogAltLimit", comment2 );
+
+    sprintf( comment, "%.5f", m_planetconfig->m_groundFogDensity.m_value );
+    sprintf( comment2, "%.5f", m_planetconfig->m_groundFogDensity.m_value );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "SimpleLabel_GroundFogDensity", comment );
+    m_renderer->GUI_SetWidgetText( LAYOUT_FILE, "Editbox_GroundFogDensity", comment2 );
 }

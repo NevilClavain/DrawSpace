@@ -35,7 +35,7 @@
 #define CLOUDS_PROCEDURALRULES_FILE         "planet_clouds_small_small.rules"
 #define CLOUDS_HEIGHT                       750.0
 #define CLOUDS_FOG_DENSITY                  0.000045
-#define FOG_DENSITY                         0.00050
+//#define FOG_DENSITY                         0.00050
 
 class MultiFractalBinder : public DrawSpace::SphericalLOD::Binder
 {
