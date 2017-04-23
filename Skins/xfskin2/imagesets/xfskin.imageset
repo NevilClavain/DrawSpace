@@ -128,4 +128,5 @@
     <Image height="34" name="CheckboxNormal" width="30" xPos="338" yPos="512" />
     <Image height="34" name="CheckboxHover" width="30" xPos="396" yPos="512" />
     <Image height="34" name="CheckboxChecked" width="30" xPos="444" yPos="512" />
+    <Image height="68" name="ProgressIcon" width="65" xPos="59" yPos="127" />
 </Imageset>
