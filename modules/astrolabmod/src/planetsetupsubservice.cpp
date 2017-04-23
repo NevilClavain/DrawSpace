@@ -93,6 +93,18 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
+
+    /////////////////////////////////
+
+    m_renderer->GUI_CreateSprite( "xfskin/StaticImage", "test_sprite" );
+    m_renderer->GUI_SetSpriteImage( "test_sprite", "xfskin/ProgressIcon" );
+
+    m_renderer->GUI_SetSpritePosition( "test_sprite", 0.75, 0.8 );
+
+    m_renderer->GUI_SetSpriteSize( "test_sprite", 0.05, 0.05 );
+
+    /////////////////////////////////
+
     m_statusbar_timer.Init( m_tm );
 }
 
@@ -135,7 +147,7 @@ void PlanetSetupSubService::Run( void )
 
 void PlanetSetupSubService::Release( void )
 {
-    _DSDEBUG( logger, dsstring("PlanetSetup sub service : shutdown...") );
+    _DSDEBUG( logger, dsstring( "PlanetSetup sub service : shutdown..." ) );
 }
 
 DrawSpace::Core::BaseSceneNode* PlanetSetupSubService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )

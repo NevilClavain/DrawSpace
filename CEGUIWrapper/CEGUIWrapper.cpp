@@ -658,10 +658,15 @@ void CEGUIWrapper::InitTest( void )
     Window* myRoot = wmgr.loadLayoutFromFile( "main.layout" );
     System::getSingleton().getDefaultGUIContext().setRootWindow( myRoot );
 
+    /*
+    CEGUI::Window *myImageWindow = CEGUI::WindowManager::getSingleton().createWindow("xfskin/StaticImage", "progress" );
+    myImageWindow->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5,0),CEGUI::UDim(0.5,0)));
+    */
 
+    /*
     CEGUI::Window* button0 = static_cast<CEGUI::Window*>( wmgr.createWindow( "TaharezLook/Button", "testButton0" ) );
     button0->subscribeEvent( CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber( &CEGUIWrapper::on_PushButton_EventClicked, this ) );
-
+    */
 
     /*
     Window* myRoot = wmgr.createWindow( "DefaultWindow", "root" );
@@ -745,4 +750,44 @@ CEGUI::Editbox* CEGUIWrapper::find_focused_editbox( void )
     }
 
     return NULL;
+}
+
+void CEGUIWrapper::CreateSprite( const dsstring& p_scheme_object, const dsstring& p_spriteName )
+{
+    CEGUI::Window* myImageWindow = CEGUI::WindowManager::getSingleton().createWindow( p_scheme_object, p_spriteName );
+    
+    CEGUI::Window* wRoot = m_layoutNamesTable["planetsetup.layout"];
+    wRoot->addChild( myImageWindow );
+
+    m_spritesTable[p_spriteName] = myImageWindow;
+}
+
+void CEGUIWrapper::SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos )
+{
+    if( 0 == m_spritesTable.count( p_spriteName ) )
+    {
+        _DSEXCEPTION( "unregistered CEGUI sprite ID" );
+    }
+
+    m_spritesTable[p_spriteName]->setPosition( CEGUI::UVector2( CEGUI::UDim( p_xpos, 0 ),CEGUI::UDim( p_ypos,0 ) ) );
+}
+
+void CEGUIWrapper::SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image )
+{
+    if( 0 == m_spritesTable.count( p_spriteName ) )
+    {
+        _DSEXCEPTION( "unregistered CEGUI sprite ID" );
+    }
+
+    m_spritesTable[p_spriteName]->setProperty( "Image", p_image );
+}
+
+void CEGUIWrapper::SetSpriteSize( const dsstring& p_spriteName, dsreal p_xsize, dsreal p_ysize )
+{
+    if( 0 == m_spritesTable.count( p_spriteName ) )
+    {
+        _DSEXCEPTION( "unregistered CEGUI sprite ID" );
+    }
+
+    m_spritesTable[p_spriteName]->setSize( USize(UDim( p_xsize, 0 ), UDim( p_ysize, 0 ) ) );
 }

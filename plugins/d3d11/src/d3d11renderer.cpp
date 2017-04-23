@@ -2560,3 +2560,23 @@ void D3D11Renderer::GUI_ShowMouseCursor( bool p_show )
 {
     m_guisubsystem.ShowMouseCursor( p_show );
 }
+
+void D3D11Renderer::GUI_CreateSprite( const dsstring& p_scheme_object, const dsstring& p_spriteName )
+{
+    m_guisubsystem.CreateSprite( p_scheme_object, p_spriteName );
+}
+
+void D3D11Renderer::GUI_SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos )
+{
+    m_guisubsystem.SetSpritePosition( p_spriteName, p_xpos, p_ypos );
+}
+
+void D3D11Renderer::GUI_SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image )
+{
+    m_guisubsystem.SetSpriteImage( p_spriteName, p_image );
+}
+
+void D3D11Renderer::GUI_SetSpriteSize( const dsstring& p_spriteName, dsreal p_xsize, dsreal p_ysize )
+{
+    m_guisubsystem.SetSpriteSize( p_spriteName, p_xsize, p_ysize );
+}

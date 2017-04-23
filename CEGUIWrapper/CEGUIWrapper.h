@@ -50,6 +50,8 @@ protected:
 
     std::vector<CEGUI::Editbox*>                                                m_editBoxes;
 
+    std::map<dsstring, CEGUI::Window*>                                          m_spritesTable;
+
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -116,6 +118,11 @@ public:
 
     void SetMouseCursorImage( const dsstring& p_image );
     void ShowMouseCursor( bool p_show );
+
+    void CreateSprite( const dsstring& p_scheme_object, const dsstring& p_spriteName );
+    void SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos );
+    void SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image );
+    void SetSpriteSize( const dsstring& p_spriteName, dsreal p_xsize, dsreal p_ysize );
 
 
     // temporaire, pour tests divers :-D
