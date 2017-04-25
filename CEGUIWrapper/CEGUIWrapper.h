@@ -22,6 +22,7 @@
 
 #include <CEGUI\CEGUI.h>
 #include "drawspace_commons.h"
+#include "vector.h"
 #include "callback.h"
 
 #ifndef _CEGUIWRAPPER_H_
@@ -122,9 +123,9 @@ public:
     void CreateSprite( const dsstring& p_scheme_object, const dsstring& p_spriteName );
     void SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos );
     void SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image );
-    void SetSpriteSize( const dsstring& p_spriteName, dsreal p_xsize, dsreal p_ysize );
-
-
+    void SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale );
+    void SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle );
+    
     // temporaire, pour tests divers :-D
     void InitTest( void );
 };

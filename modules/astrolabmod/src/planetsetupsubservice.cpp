@@ -37,7 +37,8 @@ _DECLARE_DS_LOGGER(logger, "planetsetupsubservice", NULL)
 
 PlanetSetupSubService::PlanetSetupSubService(void) :
 m_selected_planet_conf( NULL ),
-m_statusbar_timer( LAYOUT_FILE, "Label_Status" )
+m_statusbar_timer( LAYOUT_FILE, "Label_Status" ),
+m_rotation( 0.0 )
 {
     m_guiwidgetpushbuttonclicked_cb = _DRAWSPACE_NEW_( GUIWidgetPushButtonClickedCallback, GUIWidgetPushButtonClickedCallback( this, &PlanetSetupSubService::on_guipushbutton_clicked ) );
 
@@ -99,9 +100,9 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_CreateSprite( "xfskin/StaticImage", "test_sprite" );
     m_renderer->GUI_SetSpriteImage( "test_sprite", "xfskin/ProgressIcon" );
 
-    m_renderer->GUI_SetSpritePosition( "test_sprite", 0.75, 0.8 );
+    m_renderer->GUI_SetSpritePosition( "test_sprite", 0.94, 0.94 );
 
-    m_renderer->GUI_SetSpriteSize( "test_sprite", 0.05, 0.05 );
+    m_renderer->GUI_SetSpriteScale( "test_sprite", 0.33 );
 
     /////////////////////////////////
 
@@ -111,6 +112,8 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void PlanetSetupSubService::Run( void )
 {
+    m_renderer->GUI_SetSpriteRotation( "test_sprite", DrawSpace::Utils::Vector( 0.0, 0.0, 1.0, 1.0 ), m_rotation );
+
     m_renderer->BeginScreen();
 
     m_renderer->ClearScreen( 0, 0, 0, 0 );
@@ -138,10 +141,13 @@ void PlanetSetupSubService::Run( void )
     m_renderer->EndScreen();
 
     m_renderer->FlipScreen();
+
+
     
     m_tm.Update();
     if( m_tm.IsReady() )
     {
+        m_tm.AngleSpeedDec( &m_rotation, 360.0 );
     }
 }
 

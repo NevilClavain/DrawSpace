@@ -54,6 +54,8 @@ protected:
 
     StatusBarTimer                                                      m_statusbar_timer;
 
+    dsreal                                                              m_rotation;
+
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
 

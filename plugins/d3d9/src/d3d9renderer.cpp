@@ -2194,7 +2194,12 @@ void D3D9Renderer::GUI_SetSpriteImage( const dsstring& p_spriteName, const dsstr
     m_guisubsystem.SetSpriteImage( p_spriteName, p_image );
 }
 
-void D3D9Renderer::GUI_SetSpriteSize( const dsstring& p_spriteName, dsreal p_xsize, dsreal p_ysize )
+void D3D9Renderer::GUI_SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale )
 {
-    m_guisubsystem.SetSpriteSize( p_spriteName, p_xsize, p_ysize );
+    m_guisubsystem.SetSpriteScale( p_spriteName, p_scale );
+}
+
+void D3D9Renderer::GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle )
+{
+    m_guisubsystem.SetSpriteRotation( p_spriteName, p_axis, p_deg_angle );
 }

@@ -782,12 +782,25 @@ void CEGUIWrapper::SetSpriteImage( const dsstring& p_spriteName, const dsstring&
     m_spritesTable[p_spriteName]->setProperty( "Image", p_image );
 }
 
-void CEGUIWrapper::SetSpriteSize( const dsstring& p_spriteName, dsreal p_xsize, dsreal p_ysize )
+void CEGUIWrapper::SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale )
 {
     if( 0 == m_spritesTable.count( p_spriteName ) )
     {
         _DSEXCEPTION( "unregistered CEGUI sprite ID" );
     }
 
-    m_spritesTable[p_spriteName]->setSize( USize(UDim( p_xsize, 0 ), UDim( p_ysize, 0 ) ) );
+    CEGUI::USize us = m_spritesTable[p_spriteName]->getSize();
+
+    us = us * p_scale;
+    m_spritesTable[p_spriteName]->setSize( us );
+}
+
+void CEGUIWrapper::SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle )
+{
+    if( 0 == m_spritesTable.count( p_spriteName ) )
+    {
+        _DSEXCEPTION( "unregistered CEGUI sprite ID" );
+    }
+
+    m_spritesTable[p_spriteName]->setRotation( CEGUI::Quaternion::axisAngleDegrees( CEGUI::Vector3f( p_axis[0], p_axis[1], p_axis[2] ), p_deg_angle ) );
 }

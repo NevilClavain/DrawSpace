@@ -153,9 +153,8 @@ public:
     virtual void GUI_CreateSprite( const dsstring& p_scheme_object, const dsstring& p_spriteName ) = 0;
     virtual void GUI_SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos ) = 0;
     virtual void GUI_SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image ) = 0;
-    virtual void GUI_SetSpriteSize( const dsstring& p_spriteName, dsreal p_xsize, dsreal p_ysize ) = 0;
-
-
+    virtual void GUI_SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale ) = 0;
+    virtual void GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle ) = 0;
 
     virtual void GUI_InitTest( void ) = 0; // temporaire
 
