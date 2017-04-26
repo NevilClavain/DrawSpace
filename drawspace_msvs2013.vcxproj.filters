@@ -269,6 +269,9 @@
     <ClCompile Include="src\module_root.cpp">
       <Filter>interface\module</Filter>
     </ClCompile>
+    <ClCompile Include="src\jsonparser.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -554,6 +557,9 @@
     </ClInclude>
     <ClInclude Include="src\module_keys.h">
       <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\jsonparser.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

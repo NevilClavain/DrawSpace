@@ -102,4 +102,5 @@
 #include "module_root.h"
 #include "module_service.h"
 #include "module_keys.h"
+#include "jsonparser.h"
 #endif
