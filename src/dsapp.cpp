@@ -324,6 +324,7 @@ void App::process_input_events( void )
 
 bool App::InitApp( HINSTANCE p_hInstance )
 {
+    /*
     if( true == m_config.Run( "appconfig.txt", "    " ) )
     {
         // transferer resultats du parsing
@@ -339,6 +340,18 @@ bool App::InitApp( HINSTANCE p_hInstance )
     {
 		_DSWARN(logger, dsstring( "Failed to parse app configuration file !! -> switching to default settings" ) )
     }
+    */
+
+    m_config.ParseFromFile( "appgraphics.conf" );
+
+    // transferer resultats du parsing
+    m_w_width = m_config.m_width;
+    m_w_height = m_config.m_height;
+    m_w_fullscreen = m_config.m_fullscreen;
+    m_renderplugin = m_config.m_renderplugin;
+
+	_DSDEBUG(logger, dsstring( "configuration file reading success, new app config is now ") << m_w_width << dsstring(" x ") << m_w_height << dsstring( " fullscreen : " ) << m_w_fullscreen 
+                    << dsstring( " renderplugin : " ) << m_renderplugin )
 
     OnAppInit();
 
@@ -581,6 +594,7 @@ m_fullscreen( p_fullscreen )
 {
 }
 
+/*
 bool App::Config::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
     if( 2 == p_words.size() )
@@ -610,6 +624,86 @@ bool App::Config::on_new_line( const dsstring& p_line, long p_line_num, std::vec
         }
     }
     return true;
+}
+*/
+
+void App::Config::ParseFromFile( const dsstring& p_filepath )
+{
+    Utils::JSONParser::ParseFromFile( p_filepath );
+
+    // check tokens
+
+	int type0, size0;
+	dsstring token_text0;
+
+	int type1, size1;
+	dsstring token_text1;
+
+    if( JSMN_OBJECT == GetTokenType( 0 ) )
+    {
+        for( int i = 0; i < GetTokenSize( 0 ); i++ )
+        {
+            int tkindex = ( 2 * i ) + 1;
+
+	        type0 = GetTokenType( tkindex );
+	        size0 = GetTokenSize( tkindex );
+	        GetTokenString( tkindex, token_text0 );
+
+	        type1 = GetTokenType( tkindex + 1);
+	        size1 = GetTokenSize( tkindex + 1 );
+	        GetTokenString( tkindex + 1, token_text1 );
+
+            
+            if( "renderplugin" == token_text0 )
+            {
+                if( JSMN_STRING != type1 )
+                {
+                    _DSEXCEPTION( "string type expected for renderplugin field" );
+                }
+
+                m_renderplugin = token_text1;
+            }
+            else if( "fullscreen" == token_text0 )
+            {
+                if( JSMN_PRIMITIVE != type1 )
+                {
+                    _DSEXCEPTION( "string type expected for fullscreen field" );
+                }
+
+                if( "true" == token_text1 )
+                {
+                    m_fullscreen = true;
+                }
+                else
+                {
+                    m_fullscreen = false;
+                }
+            }
+            else if( "width" == token_text0 )
+            {
+                if( JSMN_PRIMITIVE != type1 )
+                {
+                    _DSEXCEPTION( "string type expected for width field" );
+                }
+
+                m_width = atoi( token_text1.c_str() );
+            
+            }
+            else if( "height" == token_text0 )
+            {
+                if( JSMN_PRIMITIVE != type1 )
+                {
+                    _DSEXCEPTION( "string type expected for height field" );
+                }
+            
+                m_height = atoi( token_text1.c_str() );
+            }            
+        }
+    }
+    else
+    {
+        _DSEXCEPTION( "JSON parse : unexpected type for token 0" );
+    }
 }
 
 void App::Quit( int p_code )

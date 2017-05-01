@@ -5,6 +5,10 @@
 #include <jsmn.h>
 #include "drawspace_commons.h"
 
+namespace DrawSpace
+{
+namespace Utils
+{
 class JSONParser
 {
 protected:
@@ -24,10 +28,13 @@ public:
 	~JSONParser( void );
 
 	int		    Parse( const dsstring& p_str );
+    void        ParseFromFile( const dsstring& p_filepath );
 	int		    GetTokenType( int p_index );
 	int		    GetTokenSize( int p_index );
 	void	    GetTokenString( int p_index, dsstring& p_out_tokentext );
 
 };
+}
+}
 
 #endif

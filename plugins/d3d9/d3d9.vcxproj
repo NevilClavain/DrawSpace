@@ -58,10 +58,10 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\PhysicsFS_VS2013SDK\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\PhysicsFS_VS2013SDK\lib;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib</AdditionalLibraryDirectories>
       <OutputFile>$(SolutionDir)\libs\drawspaced3d9.dll</OutputFile>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d9.lib;d3dx9.lib;drawspace.lib;CEGUIWrapper.lib;BulletDynamics_vs2013_debug.lib;BulletCollision_vs2013_debug.lib;LinearMath_vs2013_debug.lib;CEGUIBase-0_d.lib;CEGUIDirect3D9Renderer-0_d.lib;physfs.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d9.lib;d3dx9.lib;drawspace.lib;CEGUIWrapper.lib;BulletDynamics_vs2013_debug.lib;BulletCollision_vs2013_debug.lib;LinearMath_vs2013_debug.lib;CEGUIBase-0_d.lib;CEGUIDirect3D9Renderer-0_d.lib;physfs.lib;jsmn.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy .\..\..\libs\drawspaced3d9.dll .\..\..\..\Drawspace_samples\bin</Command>
@@ -85,8 +85,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(SolutionDir)\libs\drawspaced3d9_r.dll</OutputFile>
-      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\PhysicsFS_VS2013SDK\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d9.lib;d3dx9.lib;drawspace_r.lib;CEGUIWrapper_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib;CEGUIBase-0.lib;CEGUIDirect3D9Renderer-0.lib;physfs.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx9sdk\Lib;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\PhysicsFS_VS2013SDK\lib;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d9.lib;d3dx9.lib;drawspace_r.lib;CEGUIWrapper_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib;CEGUIBase-0.lib;CEGUIDirect3D9Renderer-0.lib;physfs.lib;jsmn_r.lib</AdditionalDependencies>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>

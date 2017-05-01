@@ -31,7 +31,7 @@ namespace DrawSpace
 class App
 {
 protected:
-
+    /*
     class Config : public Utils::Parser
     {
     protected:
@@ -44,6 +44,23 @@ protected:
         dsstring    m_renderplugin;
 
         Config( long p_width, long p_height, bool p_fullscreen, bool p_multithread );
+    };
+    */
+
+    class Config : public DrawSpace::Utils::JSONParser
+    {
+    protected:
+        //bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+
+    public:
+        long        m_width;
+        long        m_height;
+        bool        m_fullscreen;
+        dsstring    m_renderplugin;
+
+        Config( long p_width, long p_height, bool p_fullscreen, bool p_multithread );
+
+        void ParseFromFile( const dsstring& p_filepath );
     };
 
 

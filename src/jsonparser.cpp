@@ -1,5 +1,10 @@
 
 #include "jsonparser.h"
+#include "memalloc.h"
+#include "file.h"
+#include "exceptions.h"
+
+using namespace DrawSpace::Utils;
 
 JSONParser::JSONParser( void ) : 
 m_parse_success( false )
@@ -55,4 +60,31 @@ int JSONParser::GetTokenSize( int p_index )
 	}
 
 	return m_tokens[p_index].size;
+}
+
+void JSONParser::ParseFromFile( const dsstring& p_filepath )
+{
+    long fsize;
+    void* content = DrawSpace::Utils::File::LoadAndAllocBinaryFile( p_filepath, &fsize );
+    if( !content )
+    {
+        _DSEXCEPTION( "Cannot open JSON file : " + p_filepath );
+    }
+
+    char* text = new char[fsize + 1];
+    memcpy( text, content, fsize );
+    text[fsize] = 0;
+
+    int r = Parse( static_cast<char*>( text ) );
+
+    _DRAWSPACE_DELETE_N_( content );
+    delete[] text;
+
+
+    if( r < 0 )
+    {
+        char comment[6];
+        sprintf( comment, "%d", r );
+        _DSEXCEPTION( "JSON parse : failed with code " + dsstring( comment ) );
+    }
 }
