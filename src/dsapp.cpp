@@ -324,24 +324,6 @@ void App::process_input_events( void )
 
 bool App::InitApp( HINSTANCE p_hInstance )
 {
-    /*
-    if( true == m_config.Run( "appconfig.txt", "    " ) )
-    {
-        // transferer resultats du parsing
-
-        m_w_width = m_config.m_width;
-        m_w_height = m_config.m_height;
-        m_w_fullscreen = m_config.m_fullscreen;
-        m_renderplugin = m_config.m_renderplugin;
-
-		_DSDEBUG(logger, dsstring("configuration file reading success, new app config is now ") << m_w_width << dsstring(" x ") << m_w_height << dsstring( " fullscreen : " ) << m_w_fullscreen )
-    }
-    else
-    {
-		_DSWARN(logger, dsstring( "Failed to parse app configuration file !! -> switching to default settings" ) )
-    }
-    */
-
     m_config.ParseFromFile( "appgraphics.conf" );
 
     // transferer resultats du parsing
@@ -593,39 +575,6 @@ m_height( p_height ),
 m_fullscreen( p_fullscreen )
 {
 }
-
-/*
-bool App::Config::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    if( 2 == p_words.size() )
-    {
-        if( "width" == p_words[0] )
-        {
-            m_width = atoi( p_words[1].c_str() );
-        }
-        if( "height" == p_words[0] )
-        {
-            m_height = atoi( p_words[1].c_str() );
-        }
-        if( "fullscreen" == p_words[0] )
-        {
-            if( "true" == p_words[1] )
-            {
-                m_fullscreen = true;
-            }
-            else
-            {
-                m_fullscreen = false;
-            }
-        }
-        if( "renderplugin" == p_words[0] )
-        {
-            m_renderplugin = p_words[1];
-        }
-    }
-    return true;
-}
-*/
 
 void App::Config::ParseFromFile( const dsstring& p_filepath )
 {
