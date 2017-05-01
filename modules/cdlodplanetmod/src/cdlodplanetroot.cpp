@@ -33,6 +33,7 @@ CDLODPlanetRoot::CDLODPlanetRoot( void )
     Shader::EnableShadersDescrInFinalPath( true );
     Shader::SetRootPath( "cdlodplanet_data/shaders_bank" );
 	Texture::SetRootPath( "cdlodplanet_data/textures_bank" );
+    RenderStatesSet::SetRootPath( "test_data/renderstates_bank" );
 }
 
 CDLODPlanetRoot::~CDLODPlanetRoot( void )

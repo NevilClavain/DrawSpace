@@ -272,6 +272,9 @@
     <ClCompile Include="src\jsonparser.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderstatesset.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asset.h" />
@@ -560,6 +563,9 @@
     </ClInclude>
     <ClInclude Include="src\jsonparser.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderstatesset.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

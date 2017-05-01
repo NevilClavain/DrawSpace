@@ -20,40 +20,58 @@
 *
 */
 
-#include "test02root.h"
+#include "renderstatesset.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
-using namespace DrawSpace::Utils;
-using namespace DrawSpace::Interface::Module;
 
-Test02Root::Test02Root( void )
-{
-    Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "test_data/shaders_bank" );
-    Texture::SetRootPath( "test_data/textures_bank" );
-    RenderStatesSet::SetRootPath( "test_data/renderstates_bank" );
-
-    AC3DMesheImport::SetRootPath( "test_data/meshes_bank" );
-
-    File::MountVirtualFS( "test_data.bank" );
-}
-
-Test02Root::~Test02Root( void )
+RenderStatesSet::RenderStatesSet( void )
 {
 }
 
-void Test02Root::ServicesInit( void )
+RenderStatesSet::RenderStatesSet( const dsstring& p_filepath ) :
+m_path( p_filepath )
 {
-    m_services["mainloop"] = new MainLoopService();
 }
 
-dsstring Test02Root::GetModuleName( void )
+RenderStatesSet::~RenderStatesSet( void )
 {
-    return "Test02Root";
 }
 
-dsstring Test02Root::GetModuleDescr( void )
+void RenderStatesSet::AddRenderStateIn( const RenderState& p_renderstate )
 {
-    return "test02 module";
+    m_renderstates_in.push_back( p_renderstate );
+}
+
+void RenderStatesSet::AddRenderStateOut( const RenderState& p_renderstate )
+{
+    m_renderstates_out.push_back( p_renderstate );
+}
+
+void RenderStatesSet::UpdateRenderStateIn( int p_index,const RenderState& p_renderstate )
+{
+    m_renderstates_in[p_index] = p_renderstate;
+}
+
+void RenderStatesSet::UpdateRenderStateOut( int p_index, const RenderState& p_renderstate )
+{
+    m_renderstates_out[p_index] = p_renderstate;
+}
+
+bool RenderStatesSet::LoadFromFile( void )
+{
+    return true;
+}
+
+dsstring RenderStatesSet::compute_final_path( void )
+{
+    dsstring final_path = m_rootpath + "/";
+    
+    final_path += m_path;
+    return final_path;
+}
+
+void RenderStatesSet::SetRootPath( const dsstring& p_path )
+{
+    m_rootpath = p_path;
 }

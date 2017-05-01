@@ -56,6 +56,7 @@
 #include "pimanager.h"
 #include "piload.h"
 #include "renderstate.h"
+#include "renderstatesset.h"
 #include "renderer.h"
 #include "fx.h"
 #include "viewportquad.h"
