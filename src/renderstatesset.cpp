@@ -75,3 +75,24 @@ void RenderStatesSet::SetRootPath( const dsstring& p_path )
 {
     m_rootpath = p_path;
 }
+
+
+RenderState RenderStatesSet::GetRenderStateIn( long p_index )
+{
+    return m_renderstates_in[p_index];
+}
+
+RenderState RenderStatesSet::GetRenderStateOut( long p_index )
+{
+    return m_renderstates_out[p_index];
+}
+
+long RenderStatesSet::GetRenderStatesInListSize( void )
+{
+    return (long)m_renderstates_in.size();
+}
+
+long RenderStatesSet::GetRenderStatesOutListSize( void )
+{
+    return (long)m_renderstates_out.size();
+}

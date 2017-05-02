@@ -57,6 +57,12 @@ public:
     void UpdateRenderStateIn( int p_index,const RenderState& p_renderstate );
     void UpdateRenderStateOut( int p_index, const RenderState& p_renderstate );
 
+    RenderState GetRenderStateIn( long p_index );
+    RenderState GetRenderStateOut( long p_index );
+
+    long GetRenderStatesInListSize( void );
+    long GetRenderStatesOutListSize( void );
+
     bool LoadFromFile( void );
 
 };
