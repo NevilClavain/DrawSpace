@@ -41,6 +41,13 @@ protected:
     std::vector<RenderState>        m_renderstates_in;
     std::vector<RenderState>        m_renderstates_out;
 
+    dsstring                        m_renderstate_unique_queue_id; //si non vide, permet de forcer la rendering queue a garder
+                                                                                // une entree setrenderstates specialement dediee au node associee
+                                                                                // au lieu d'utiliser celle issue du regroupement
+                                                                                // Utile pour le cas ou on doit updater un ou plusieurs renderstate
+                                                                                // pour ce node pendant le rendu
+                                                                                
+
     dsstring                        compute_final_path( void );
 
 public:
@@ -64,6 +71,11 @@ public:
     long GetRenderStatesOutListSize( void );
 
     bool LoadFromFile( void );
+
+    void GetRenderStatesSetMD5( dsstring& p_md5 );
+
+    void SetRenderStateUniqueQueueID( const dsstring& p_id );
+
 
 };
 

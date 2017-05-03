@@ -22,8 +22,8 @@
 
 #include "fx.h"
 #include "renderer.h"
-#include "plugin.h"
 #include "md5.h"
+#include "plugin.h"
 #include "assetsbase.h"
 #include "exceptions.h"
 
@@ -54,12 +54,14 @@ Shader* Fx::GetShader( long p_index )
 
 RenderState Fx::GetRenderStateIn( long p_index )
 {
-    return m_renderstates_in[p_index];
+    //return m_renderstates_in[p_index];
+    return m_renderstates.GetRenderStateIn( p_index );
 }
 
 RenderState Fx::GetRenderStateOut( long p_index )
 {
-    return m_renderstates_out[p_index];
+    //return m_renderstates_out[p_index];
+    return m_renderstates.GetRenderStateOut( p_index );
 }
 
 long Fx::GetShadersListSize( void )
@@ -69,19 +71,21 @@ long Fx::GetShadersListSize( void )
 
 long Fx::GetRenderStatesInListSize( void )
 {
-    return (long)m_renderstates_in.size();
+    //return (long)m_renderstates_in.size();
+    return m_renderstates.GetRenderStatesInListSize();
 }
 
 long Fx::GetRenderStatesOutListSize( void )
 {
-    return (long)m_renderstates_out.size();
+    //return (long)m_renderstates_out.size();
+    return m_renderstates.GetRenderStatesOutListSize();
 }
 
 void Fx::AddShader( Shader* p_shader )
 {
     m_shaders.push_back( p_shader );
 }
-
+/*
 void Fx::AddRenderStateIn( const RenderState& p_renderstate )
 {
     m_renderstates_in.push_back( p_renderstate );
@@ -100,6 +104,12 @@ void Fx::UpdateRenderStateIn( int p_index,const RenderState& p_renderstate )
 void Fx::UpdateRenderStateOut( int p_index, const RenderState& p_renderstate )
 {
     m_renderstates_out[p_index] = p_renderstate;
+}
+*/
+
+void Fx::SetRenderStates( const RenderStatesSet& p_renderstates )
+{
+    m_renderstates = p_renderstates;
 }
 
 void Fx::Serialize( Archive& p_archive )
@@ -220,6 +230,7 @@ void Fx::GetShadersMD5( dsstring& p_md5 )
 
 void Fx::GetRenderStatesSetMD5( dsstring& p_md5 )
 {
+    /*
     MD5 md5;
 
     dsstring hash_rs = "";
@@ -260,6 +271,10 @@ void Fx::GetRenderStatesSetMD5( dsstring& p_md5 )
     }
 
     p_md5 = hash_rs + hash_rsargs + m_renderstate_unique_queue_id;
+
+    */
+
+    m_renderstates.GetRenderStatesSetMD5( p_md5 );
 }
 
 
@@ -457,6 +472,7 @@ bool Fx::ParseProperties( const dsstring& p_text )
 
 void Fx::ApplyProperties( void )
 {
+    /*
     std::vector<dsstring> shaders_list = m_properties["shaders"].GetPropValue<std::vector<dsstring>>();
     for( size_t i = 0; i < shaders_list.size(); i++ )
     {
@@ -493,6 +509,8 @@ void Fx::ApplyProperties( void )
     }
 
     //m_configname = m_properties["configname"].GetPropValue<dsstring>();
+
+    */
 }
 
 Configurable* Fx::Instanciate( void )
@@ -507,5 +525,11 @@ void Fx::GetKeyword( dsstring& p_outkeyword )
 
 void Fx::SetRenderStateUniqueQueueID( const dsstring& p_id )
 {
-    m_renderstate_unique_queue_id = p_id;
+    //m_renderstate_unique_queue_id = p_id;
+    m_renderstates.SetRenderStateUniqueQueueID( p_id );
+}
+
+RenderStatesSet* Fx::GetRenderStatesSetRef( void )
+{
+    return &m_renderstates;
 }

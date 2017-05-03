@@ -23,8 +23,7 @@
 #ifndef _FX_H_
 #define _FX_H_
 
-#include "drawspace_commons.h"
-#include "renderstate.h"
+#include "renderstatesset.h"
 #include "shader.h"
 #include "configurable.h"
 
@@ -40,15 +39,14 @@ class Fx : public Configurable
 {
 protected:
     std::vector<Shader*>                        m_shaders;
+
+    /*
     std::vector<RenderState>                    m_renderstates_in;
     std::vector<RenderState>                    m_renderstates_out;
+    */
 
-    dsstring                                    m_renderstate_unique_queue_id; //si non vide, permet de forcer la rendering queue � garder
-                                                                                // une entree setrenderstates sp�cialement d�di�e au node associ�e
-                                                                                // au lieu d'utiliser celle issue du regroupement
-                                                                                // Utile pour le cas ou on doit updater un ou plusieurs renderstate
-                                                                                // pour ce node pendant le rendu
-                                                                                
+    RenderStatesSet                             m_renderstates;
+
 
     bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
@@ -63,12 +61,14 @@ public:
     long GetRenderStatesInListSize( void );
     long GetRenderStatesOutListSize( void );
     void AddShader( Shader* p_shader );
+
+    /*
     void AddRenderStateIn( const RenderState& p_renderstate );
     void AddRenderStateOut( const RenderState& p_renderstate );
 
     void UpdateRenderStateIn( int p_index,const RenderState& p_renderstate );
     void UpdateRenderStateOut( int p_index, const RenderState& p_renderstate );
-
+    */
 
     void Serialize( Utils::Archive& p_archive  );
     bool Unserialize( Utils::Archive& p_archive );
@@ -85,6 +85,10 @@ public:
     void GetKeyword( dsstring& p_outkeyword );
 
     void SetRenderStateUniqueQueueID( const dsstring& p_id );
+
+    void SetRenderStates( const RenderStatesSet& p_renderstates );
+
+    RenderStatesSet* GetRenderStatesSetRef( void );
 
     static Configurable* Instanciate( void );
 
