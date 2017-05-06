@@ -1,0 +1,99 @@
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2017                        
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+
+cbuffer legacyargs : register(b0)
+{
+    float4 vec[512];
+    Matrix mat[512];
+};
+
+Texture2D       Pixels_HTMap_Texture            : register(t0);
+SamplerState    Pixels_HTMap_Texture_Sampler    : register(s0);
+
+Texture2D       Splatting_HTMap_Texture         : register(t1);
+SamplerState    Splatting_HTMap_Texture_Sampler : register(s1);
+
+Texture2D       HT_Texture                      : register(t7);
+SamplerState    HT_Texture_sampler              : register(s7);
+
+struct PS_INTPUT
+{
+    float4 Position                 : SV_POSITION;
+    float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
+    float4 UnitPatch_TexCoord       : TEXCOORD1;
+    float4 GlobalPatch_TexCoord     : TEXCOORD2;
+    
+    float4 c0 : COLOR0;
+    float4 c1 : COLOR1;
+
+    float4 c0_1 : COLOR2;
+    float4 c1_1 : COLOR3;
+
+    float4 c0_2 : COLOR4;
+    float4 c1_2 : COLOR5;
+
+    float Fog : FOG;  
+};
+
+#include "spherelod_commons.hlsl"
+#include "landscapes.hlsl"
+
+#define v_flags                     0
+#define v_flags2                    1
+#define v_viewer_pos                2
+#define v_flags6                    6
+#define v_flags_lights              7
+
+#define v_ambient_color             8
+#define v_light0_dir_local          9
+#define v_light0_dir                10
+#define v_light0_color              11
+
+#define v_light1_dir_local          12
+#define v_light1_dir                13
+#define v_light1_color              14
+
+#define v_light2_dir_local          15
+#define v_light2_dir                16
+#define v_light2_color              17
+
+#define v_atmo_scattering_flag_0    18
+#define v_atmo_scattering_flag_1    19
+#define v_atmo_scattering_flag_2    20
+#define v_atmo_scattering_flag_3    21
+#define v_atmo_scattering_flag_4    22
+#define v_atmo_scattering_flag_5    23
+#define v_atmo_scattering_flag_6    24
+
+#define m_matWorldRots              25
+
+#define v_terrain_bump_flag         31
+
+float4 ps_main(PS_INTPUT input) : SV_Target
+{
+
+    float4 final_color = 0.0;
+    final_color.y = 1.0;
+    final_color.w = 1.0;
+    	
+    return final_color;
+}

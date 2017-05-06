@@ -87,5 +87,11 @@
     <FxCompile Include="multifbm_height.hlsl">
       <Filter>commons</Filter>
     </FxCompile>
+    <FxCompile Include="planet_surface_flat.vsh">
+      <Filter>vertex_shaders\planet</Filter>
+    </FxCompile>
+    <FxCompile Include="planet_surface_flat.psh">
+      <Filter>pixel_shaders\planet</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

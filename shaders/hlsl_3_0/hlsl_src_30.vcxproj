@@ -227,6 +227,28 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\shaders_bank\hlsl_3_0\%(Filename).vso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="planet_surface_flat.vsh">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">vs_main</EntryPointName>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</EnableDebuggingInformation>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">3.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\shaders_bank\hlsl_3_0\%(Filename).vso</ObjectFileOutput>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="planet_surface_flat.psh">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ps_main</EntryPointName>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</EnableDebuggingInformation>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">3.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\shaders_bank\hlsl_3_0\%(Filename).pso</ObjectFileOutput>
+    </FxCompile>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E2580B46-7227-4D64-B781-B22F2BDB891B}</ProjectGuid>
     <RootNamespace>hlsl_src_3_0</RootNamespace>
