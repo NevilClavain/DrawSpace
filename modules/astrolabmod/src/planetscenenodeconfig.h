@@ -60,6 +60,8 @@ public:
     DrawSpace::Module::KeySource<dsreal>            m_groundFogAltLimit;
     DrawSpace::Module::KeySource<dsreal>            m_groundFogDensity;
 
+    DrawSpace::Module::KeySource<bool>              m_climatePassEnabled;
+
 	//////////////////////////////////////////////////////////////////
 
 	DrawSpace::Module::KeysLinkTable*               m_keylinksTable;
@@ -91,7 +93,8 @@ public:
         m_atmoRenderEnable( "atmoRenderEnable" ),
         m_atmoKr( "atmoKr" ),
         m_groundFogAltLimit( "groundFogAltLimit" ),
-        m_groundFogDensity( "groundFogDensty" )
+        m_groundFogDensity( "groundFogDensty" ),
+        m_climatePassEnabled( "climatePassEnabled" )
 	{
 	}
 };

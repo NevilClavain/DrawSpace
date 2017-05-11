@@ -79,6 +79,21 @@ public:
 	    }
     };
 
+    class BoolParam : public DrawSpace::Module::KeySink<bool>
+    {
+    public:
+	    bool		    m_value;
+
+	    BoolParam( const dsstring& p_id ) : KeySink( p_id )
+	    {
+	    }
+
+	    virtual void OnUpdated( bool p_val )
+	    {
+		    m_value = p_val;
+	    }    
+    };
+
     class GravityEnabledParam : public DrawSpace::Module::KeySink<bool>
     {
     protected:
@@ -263,6 +278,9 @@ public:
     GroundFogAltLimitParam              m_groundFogAltLimit;
     GroundFogDensityParam               m_groundFogDensity;
 
+    BoolParam                           m_climatePassEnabled;
+
+
 	////////////////////////////////////////////////////////////////////////////////
 
 	DrawSpace::Module::KeysLinkTable    m_keylinksTable;
@@ -294,7 +312,8 @@ public:
     m_atmoRenderEnable( "atmoRenderEnable" ),
     m_atmoKr( "atmoKr" ),
     m_groundFogAltLimit( "groundFogAltLimit" ),
-    m_groundFogDensity( "groundFogDensty" )
+    m_groundFogDensity( "groundFogDensty" ),
+    m_climatePassEnabled( "climatePassEnabled" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
@@ -321,6 +340,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_atmoKr );
         m_keylinksTable.RegisterModuleKey( &m_groundFogAltLimit );
         m_keylinksTable.RegisterModuleKey( &m_groundFogDensity );
+        m_keylinksTable.RegisterModuleKey( &m_climatePassEnabled );
 	}
 
 	virtual void SetOwner( PlanetInstance* p_owner )

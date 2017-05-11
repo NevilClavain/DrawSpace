@@ -70,11 +70,15 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
                                                                                                 m_node_config->m_groundFogAltLimit.m_value,
                                                                                                 m_node_config->m_groundFogDensity.m_value ) );
 
-		m_planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder( m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
-                                                                                                m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
-                                                                                                m_node_config->m_plainsSeed1.m_value, m_node_config->m_plainsSeed2.m_value,
-                                                                                                m_node_config->m_mixSeed1.m_value, m_node_config->m_mixSeed2.m_value, 
-                                                                                                m_node_config->m_beachLimit.m_value ) );
+        if( m_node_config->m_climatePassEnabled.m_value )
+        {
+
+		    m_planet_climate_binder[i] = _DRAWSPACE_NEW_( PlanetClimateBinder, PlanetClimateBinder( m_node_config->m_plainsAmplitude.m_value, m_node_config->m_moutainsAmplitude.m_value, 
+                                                                                                    m_node_config->m_verticalOffset.m_value, m_node_config->m_moutainsOffset.m_value,
+                                                                                                    m_node_config->m_plainsSeed1.m_value, m_node_config->m_plainsSeed2.m_value,
+                                                                                                    m_node_config->m_mixSeed1.m_value, m_node_config->m_mixSeed2.m_value, 
+                                                                                                    m_node_config->m_beachLimit.m_value ) );
+        }
     }
 
 	m_planet_vshader = _DRAWSPACE_NEW_( Shader, Shader( m_node_config->m_detailsVertexShader.m_value, true ) );
@@ -100,12 +104,12 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
     details_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     details_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     details_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
-    //details_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    details_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
 
     details_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     details_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none" ) );
     details_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
-    //details_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+    details_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
 
     details_rss.SetRenderStateUniqueQueueID( m_node_config->m_planetName.m_value ); // parce qu'on va updater le renderstate ENABLEZBUFFER pendant le rendu
 
@@ -119,33 +123,38 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 		m_planet_details_binder[i]->SetTexture( m_texture_th_splatting, 1 );
     }
 
-	m_climate_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.vso", true ) );
-	m_climate_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.pso", true ) );
 
-    m_climate_vshader->LoadFromFile();
-	m_climate_pshader->LoadFromFile();
+    if( m_node_config->m_climatePassEnabled.m_value )
+    {
 
-    m_climate_fx = _DRAWSPACE_NEW_( Fx, Fx );
-    m_climate_fx->AddShader( m_climate_vshader );
-    m_climate_fx->AddShader( m_climate_pshader );
+	    m_climate_vshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.vso", true ) );
+	    m_climate_pshader = _DRAWSPACE_NEW_( Shader, Shader( "planet_ht.pso", true ) );
 
-    RenderStatesSet climate_rss;
+        m_climate_vshader->LoadFromFile();
+	    m_climate_pshader->LoadFromFile();
 
-	climate_rss.AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
-    //climate_rss.AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    climate_rss.AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
 
-	climate_rss.AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
-    //climate_rss.AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    climate_rss.AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+        m_climate_fx = _DRAWSPACE_NEW_( Fx, Fx );
+        m_climate_fx->AddShader( m_climate_vshader );
+        m_climate_fx->AddShader( m_climate_pshader );
 
-    m_climate_fx->SetRenderStates( climate_rss );
+        RenderStatesSet climate_rss;
 
-	for( int i = 0; i < 6; i++ )
-	{
-		m_planet_climate_binder[i]->SetFx( m_climate_fx );
-	}
+	    climate_rss.AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear" ) );
+        //climate_rss.AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+        climate_rss.AddRenderStateIn(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
 
+	    climate_rss.AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none" ) );
+        //climate_rss.AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+        climate_rss.AddRenderStateOut(DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+
+        m_climate_fx->SetRenderStates( climate_rss );
+
+	    for( int i = 0; i < 6; i++ )
+	    {
+		    m_planet_climate_binder[i]->SetFx( m_climate_fx );
+	    }
+    }
 
 
 
@@ -198,7 +207,12 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
     for( int i = 0; i < 6; i++ )
     {
 		m_planet_details_binder[i]->SetRenderer( p_renderer );
-		m_planet_climate_binder[i]->SetRenderer( p_renderer );
+
+        if( m_node_config->m_climatePassEnabled.m_value )
+        {
+		    m_planet_climate_binder[i]->SetRenderer( p_renderer );
+        }
+        
         m_planet_atmosphere_binder[i]->SetRenderer( p_renderer );
     }
 
@@ -209,14 +223,14 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
     SphericalLOD::Config::LayerDescriptor planet_surface;
     planet_surface.enable_collisions = false;
-    planet_surface.enable_datatextures = true;
+    planet_surface.enable_datatextures = m_node_config->m_climatePassEnabled.m_value;
     planet_surface.enable_lod = true;
     planet_surface.min_lodlevel = 0;
 	planet_surface.ray = m_node_config->m_planetRay.m_value;
     for( int i = 0; i < 6; i++ )
     {
         planet_surface.groundCollisionsBinder[i] = NULL;
-		planet_surface.patchTexturesBinder[i] = m_planet_climate_binder[i];
+		planet_surface.patchTexturesBinder[i] = m_node_config->m_climatePassEnabled.m_value ? m_planet_climate_binder[i] : NULL;
     }
 
     m_config.m_layers_descr.push_back( planet_surface );
@@ -299,10 +313,13 @@ void PlanetInstance::Release( void )
 	_DRAWSPACE_DELETE_( m_atmo_pshader );
 
 
-	_DRAWSPACE_DELETE_( m_climate_fx );
-	_DRAWSPACE_DELETE_( m_climate_vshader );
-	_DRAWSPACE_DELETE_( m_climate_pshader );
-    
+    if( m_node_config->m_climatePassEnabled.m_value )
+    {
+	    _DRAWSPACE_DELETE_( m_climate_fx );
+	    _DRAWSPACE_DELETE_( m_climate_vshader );
+	    _DRAWSPACE_DELETE_( m_climate_pshader );
+
+    }
 	_DRAWSPACE_DELETE_( m_details_fx );
 
     _DRAWSPACE_DELETE_( m_texture_th_pixels );
@@ -315,7 +332,11 @@ void PlanetInstance::Release( void )
 	{
 		_DRAWSPACE_DELETE_( m_planet_details_binder[i] );
         _DRAWSPACE_DELETE_( m_planet_atmosphere_binder[i] );
-		_DRAWSPACE_DELETE_( m_planet_climate_binder[i] );
+
+        if( m_node_config->m_climatePassEnabled.m_value )
+        {
+		    _DRAWSPACE_DELETE_( m_planet_climate_binder[i] );
+        }
 	}
 }
 
@@ -351,7 +372,10 @@ void PlanetInstance::OnBeachLimitUpdate( dsreal p_limit )
 {
 	for( int i = 0; i < 6; i++ )
 	{
-        m_planet_climate_binder[i]->SetBeachLimit( p_limit );
+        if( m_node_config->m_climatePassEnabled.m_value )
+        {
+            m_planet_climate_binder[i]->SetBeachLimit( p_limit );
+        }
     }
 }
 
