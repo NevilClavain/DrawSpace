@@ -93,64 +93,6 @@ struct VS_OUTPUT
 
 
 
-double3 ProjectVectorToCube_double(int p_orientation, double3 p_vector)
-{
-    double3 res;
-
-    if (0 == p_orientation) // front
-    {
-        res.x = p_vector.x;
-        res.y = p_vector.y;
-        res.z = p_vector.z;
-    }
-    else if (1 == p_orientation) // rear
-    {
-        res.x = -p_vector.x;
-        res.y = p_vector.y;
-        res.z = -p_vector.z;
-    }
-    else if (2 == p_orientation) // left
-    {
-        res.x = -p_vector.z;
-        res.y = p_vector.y;
-        res.z = p_vector.x;
-    }
-    else if (3 == p_orientation) // right
-    {
-        res.x = p_vector.z;
-        res.y = p_vector.y;
-        res.z = -p_vector.x;
-    }
-    else if (4 == p_orientation) // top
-    {
-        res.x = p_vector.x;
-        res.y = p_vector.z;
-        res.z = -p_vector.y;
-    }
-    else //if( 5 == p_orientation ) // bottom
-    {
-        res.x = p_vector.x;
-        res.y = -p_vector.z;
-        res.z = p_vector.y;
-    }
-
-    return res;
-}
-
-double3 CubeToSphere_double(double3 p_vector)
-{
-    double3 res;
-    double xtemp = p_vector.x;
-    double ytemp = p_vector.y;
-    double ztemp = p_vector.z;
-
-    res.x = xtemp * sqrt(1.0 - ytemp * ytemp * 0.5 - ztemp * ztemp * 0.5 + ytemp * ytemp * ztemp * ztemp * 0.33333333 );
-    res.y = ytemp * sqrt(1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp * 0.33333333 );
-    res.z = ztemp * sqrt(1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp * 0.33333333 );
-
-    return res;
-}
-
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
     VS_OUTPUT Output;
@@ -192,33 +134,22 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     //////////////////////////////////////////////////////////////////////
 
 
-
-
-    //float4 v_position;
-    double4 v_position;
-
-    double ray = flag0.z;
+    float4 v_position;
 
 	// sidelenght scaling
-    double sidelength = flag0.y;
-    double3 Position = Input.Position;
 
-    v_position.xyz = Position * sidelength * 0.5;
-
-    double2 patch_translation_double = patch_translation.xy;
-
-
-    v_position.xy = v_position.xy + patch_translation_double;
+    v_position.xyz = Input.Position * flag0.y / 2.0;
+    v_position = v_position + patch_translation;
     v_position.z = 1.0;
     v_position.w = 1.0;
 	
-    double4 v_position2;
+    float4 v_position2;
     v_position2.w = 1.0;
-    v_position2.xyz = CubeToSphere_double(ProjectVectorToCube_double(flag0.x, v_position.xyz));
+    v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
 
 	// final scaling
-    double4 v_position3;
-    v_position3 = v_position2 * ray;
+    float4 v_position3;
+    v_position3 = v_position2 * flag0.z;
     v_position3.w = 1.0;
 
     Output.Position = mul(v_position3, mat[matWorldViewProjection]);
