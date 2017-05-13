@@ -91,10 +91,8 @@ void RenderingQueue::Draw( void )
         renderer->ClearScreen( m_target_clear_color_r, m_target_clear_color_g, m_target_clear_color_b, m_target_clear_color_a );
     }
 
-    //for( size_t i = 0; i < m_outputqueue.size(); i++ )
     for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it )
     {
-        //Operation curr_operation = m_outputqueue[i];
         Operation curr_operation = (*it);
 
         switch( curr_operation.type )
@@ -791,15 +789,6 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         Operation operation;
         RenderingNode* node = p_input_list[i];
 
-        /*
-        if( m_fx_datas.count( node ) )
-        {
-            operation.type = SET_FX;
-            operation.data = m_fx_datas[node];
-            m_outputqueue.push_back( operation );
-        }
-        */
-
         if( m_sh_datas.count( node ) )
         {
             operation.type = SET_SHADERS;
@@ -897,15 +886,6 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
                 }
             }
         }
-
-        /*
-        if( m_fx_datas.count( node ) )
-        {
-            operation.type = UNSET_FX;
-            operation.data = m_fx_datas[node];
-            m_outputqueue.push_back( operation );
-        }
-        */
 
         if( m_rs_datas.count( node ) )
         {
@@ -1154,238 +1134,6 @@ void RenderingQueue::cleanup_output_list( void )
             }
         }
     }
-    
-
-
-
-
-    /*
-    Operation                current_setsh_ope;
-    bool                     current_setsh_ope_set = false;
-
-    Operation                current_setrs_ope;
-    bool                     current_setrs_ope_set = false;
-
-
-    Operation                current_settex_ope[RenderingNode::NbMaxTextures];
-    bool                     current_settex_ope_set[RenderingNode::NbMaxTextures];
-
-    Operation                current_setvtex_ope[RenderingNode::NbMaxTextures];
-    bool                     current_setvtex_ope_set[RenderingNode::NbMaxTextures];
-
-
-    Operation                current_setmeshe_ope;
-    bool                     current_setmeshe_ope_set = false;
-
-    std::vector<erase_infos> to_erase_list;
-
-    for( long i = 0; i < RenderingNode::NbMaxTextures; i++ )
-    {
-        current_settex_ope_set[i] = false;
-        current_setvtex_ope_set[i] = false;
-    }
-
-    long index = 0;
-    for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
-    {
-        Operation curr_operation = (*it);
-
-        switch( curr_operation.type )
-        {
-            case SET_VERTEXTEXTURE:
-
-                if( !current_setvtex_ope_set[curr_operation.texture_stage] )
-                {
-                    current_setvtex_ope[curr_operation.texture_stage] = curr_operation;
-                    current_setvtex_ope_set[curr_operation.texture_stage] = true;
-                }
-                else
-                {
-                    if( current_setvtex_ope[curr_operation.texture_stage].data == curr_operation.data )                 
-                    {
-                        erase_infos ei;
-                        ei.index = index;
-                        ei.pos = it;
-
-                        to_erase_list.push_back( ei );
-
-                        // remonter pour rechercher le unset precedent
-                        
-                        std::list<Operation>::iterator it2 = it;
-                        long index2 = index;
-
-                        while( it2 != m_outputqueue.begin() )
-                        {
-                            Operation curr_operation_2 = (*it2);
-
-                            if( UNSET_VERTEXTEXTURE == curr_operation_2.type && current_setvtex_ope[curr_operation.texture_stage].data == curr_operation_2.data )                              
-                            {
-                                ei.index = index2;
-                                ei.pos = it2;
-                                to_erase_list.push_back( ei );  
-
-                                break;
-                            }
-                            it2--;
-                            index2--;
-                        }
-                    }
-                    else
-                    {
-                        current_setvtex_ope[curr_operation.texture_stage] = curr_operation;
-                    }
-                }
-                break;
-
-
-            case SET_TEXTURE:
-
-                if( !current_settex_ope_set[curr_operation.texture_stage] )
-                {
-                    current_settex_ope[curr_operation.texture_stage] = curr_operation;
-                    current_settex_ope_set[curr_operation.texture_stage] = true;
-                }
-                else
-                {
-                    if( current_settex_ope[curr_operation.texture_stage].data == curr_operation.data )                 
-                    {
-                        erase_infos ei;
-                        ei.index = index;
-                        ei.pos = it;
-
-                        to_erase_list.push_back( ei );
-
-                        // remonter pour rechercher le unset_tx precedent
-                        
-                        std::list<Operation>::iterator it2 = it;
-                        long index2 = index;
-
-                        while( it2 != m_outputqueue.begin() )
-                        {
-                            Operation curr_operation_2 = (*it2);
-
-                            if( UNSET_TEXTURE == curr_operation_2.type && current_settex_ope[curr_operation.texture_stage].data == curr_operation_2.data )                              
-                            {
-                                ei.index = index2;
-                                ei.pos = it2;
-                                to_erase_list.push_back( ei );  
-
-                                break;
-                            }
-                            it2--;
-                            index2--;
-                        }
-                    }
-                    else
-                    {
-                        current_settex_ope[curr_operation.texture_stage] = curr_operation;
-                    }
-                }
-                break;
-
-            case SET_MESHE:
-
-                if( !current_setmeshe_ope_set )
-                {
-                    current_setmeshe_ope = curr_operation;
-                    current_setmeshe_ope_set = true;                    
-                }
-                else
-                {
-                    if( current_setmeshe_ope.data == curr_operation.data )
-                    {
-                        erase_infos ei;
-                        ei.index = index;
-                        ei.pos = it;
-
-                        to_erase_list.push_back( ei );
-                    }
-                    else
-                    {
-                        current_setmeshe_ope = curr_operation;
-                    }
-                }
-
-                break;
-
-
-            case SET_SHADERS:
-
-                if( !current_setsh_ope_set )
-                {
-                    current_setsh_ope = curr_operation;
-                    current_setsh_ope_set = true;                    
-                }
-                else
-                {
-                    if( current_setsh_ope.data == curr_operation.data )
-                    {
-                        erase_infos ei;
-                        ei.index = index;
-                        ei.pos = it;
-
-                        to_erase_list.push_back( ei );
-                    }
-                    else
-                    {
-                        current_setsh_ope = curr_operation;
-                    }
-                }
-                break;
-
-            case SET_RENDERSTATES_IN:
-
-                if( !current_setrs_ope_set )
-                {
-                    current_setrs_ope = curr_operation;
-                    current_setrs_ope_set = true;                    
-                }
-                else
-                {
-                    if( current_setrs_ope.data == curr_operation.data )
-                    {
-                        erase_infos ei;
-                        ei.index = index;
-                        ei.pos = it;
-
-                        to_erase_list.push_back( ei );
-
-                        // remonter pour rechercher le set rs out precedent
-                        
-                        std::list<Operation>::iterator it2 = it;
-                        long index2 = index;
-
-                        while( it2 != m_outputqueue.begin() )
-                        {
-                            Operation curr_operation_2 = (*it2);
-
-                            if( SET_RENDERSTATES_OUT == curr_operation_2.type && current_setrs_ope.data == curr_operation_2.data )
-                            {
-                                ei.index = index2;
-                                ei.pos = it2;
-                                to_erase_list.push_back( ei );  
-
-                                break;
-                            }
-                            it2--;
-                            index2--;
-                        }
-                    }
-                    else
-                    {
-                        current_setrs_ope = curr_operation;
-                    }
-                }
-                
-                break;
-        }
-    }
-    
-    for( size_t i = 0; i < to_erase_list.size(); i++ )
-    {
-        m_outputqueue.erase( to_erase_list[i].pos );
-    }
-    */
 }
 
 long RenderingQueue::GetSwitchesCost( void )
