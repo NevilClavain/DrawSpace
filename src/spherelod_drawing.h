@@ -59,6 +59,8 @@ protected:
 
     int                                 m_layer_index;
 
+    bool                                m_hidehighlodpatch;
+
     void                                draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, 
                                                             const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
@@ -78,6 +80,8 @@ public:
     void SetCurrentPatch( DrawSpace::SphericalLOD::Patch* p_patch );
 
     void SetBinder( DrawSpace::SphericalLOD::Binder* p_binder );
+
+    void HideHighLODPatch( bool p_hide );
 
     DrawSpace::SphericalLOD::Binder* GetBinder( void );
 

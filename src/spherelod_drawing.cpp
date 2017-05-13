@@ -37,7 +37,8 @@ m_renderer( p_renderer ),
 m_current_patch( NULL ),
 m_config( p_config ),
 m_binder( NULL ),
-m_layer_index( p_layer_index )
+m_layer_index( p_layer_index ),
+m_hidehighlodpatch( false )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -49,6 +50,12 @@ FaceDrawingNode::~FaceDrawingNode( void )
 void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
 {
     m_display_list = p_list;
+}
+
+
+void FaceDrawingNode::HideHighLODPatch( bool p_hide )
+{
+    m_hidehighlodpatch = p_hide;
 }
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
@@ -118,7 +125,12 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_a
             m_renderer->SetTexture( refpatchtexture->GetRenderData(), 7 );
             current_texture = refpatchtexture;
         }
-        
+
+        if( 0 == m_display_list[i]->GetLodLevel() && m_hidehighlodpatch )
+        { 
+            continue;   
+        }
+
         draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
     }
 }
@@ -317,10 +329,12 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
             m_facedrawingnodes.push_back( node_skirts );
 
             // node patch terrain
-            node->SetMeshe( Body::m_patch_meshe ); 
+            node->SetMeshe( Body::m_patch_meshe );
+            //node->HideHighLODPatch( true );
 
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
+            //node_skirts->HideHighLODPatch( true );
 
             break;
 
