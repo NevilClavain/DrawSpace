@@ -330,11 +330,11 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe );
-            //node->HideHighLODPatch( true );
+            node->HideHighLODPatch( true );
 
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
-            //node_skirts->HideHighLODPatch( true );
+            node_skirts->HideHighLODPatch( true );
 
             break;
 
