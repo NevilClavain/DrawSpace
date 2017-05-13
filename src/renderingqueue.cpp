@@ -722,11 +722,16 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
                     excp_msg += path;
                     _DSEXCEPTION( excp_msg  )
                 }
-                m_tx_datas[node].push_back( tx_data );
+                //m_tx_datas[node].push_back( tx_data );
+                dsstring texture_id;
+                current_tx->GetPath( texture_id );
+                std::pair<void*, dsstring> txt_infos( tx_data, texture_id );
+                m_tx_datas[node].push_back( txt_infos );
             }
             else
             {
-                m_tx_datas[node].push_back( NULL );
+                std::pair<void*, dsstring> txt_infos( NULL, "" );
+                m_tx_datas[node].push_back( txt_infos );
             }
 
 
@@ -745,11 +750,17 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
                     excp_msg += path;
                     _DSEXCEPTION( excp_msg  )
                 }
-                m_vtx_datas[node].push_back( tx_data );
+                //m_vtx_datas[node].push_back( tx_data );
+                dsstring texture_id;
+                current_tx->GetPath( texture_id );
+                std::pair<void*, dsstring> txt_infos( tx_data, texture_id );
+                m_vtx_datas[node].push_back( txt_infos );
             }
             else
             {
-                m_vtx_datas[node].push_back( NULL );
+                //m_vtx_datas[node].push_back( NULL );
+                std::pair<void*, dsstring> txt_infos( NULL, "" );
+                m_vtx_datas[node].push_back( txt_infos );
             }
         }
 
@@ -799,8 +810,11 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
             {
                 operation.type = SET_TEXTURE;
-                operation.data = m_tx_datas[node][j];
+                //operation.data = m_tx_datas[node][j];
+                operation.data = m_tx_datas[node][j].first;
                 operation.texture_stage = (long)j;
+                operation.comment = m_tx_datas[node][j].second;
+                
 
                 if( operation.data != NULL )
                 {
@@ -814,8 +828,10 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             for( size_t j = 0; j < m_vtx_datas[node].size(); j++ )
             {
                 operation.type = SET_VERTEXTEXTURE;
-                operation.data = m_vtx_datas[node][j];
+                //operation.data = m_vtx_datas[node][j];
+                operation.data = m_vtx_datas[node][j].first;
                 operation.texture_stage = (long)j;
+                operation.comment = m_vtx_datas[node][j].second;
 
                 if( operation.data != NULL )
                 {
@@ -853,8 +869,10 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
             {
                 operation.type = UNSET_TEXTURE;
-                operation.data = m_tx_datas[node][j];
+                //operation.data = m_tx_datas[node][j];
+                operation.data = m_tx_datas[node][j].first;
                 operation.texture_stage = (long)j;
+                operation.comment = m_tx_datas[node][j].second;
 
                 if( operation.data != NULL )
                 {
@@ -868,8 +886,10 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             for( size_t j = 0; j < m_vtx_datas[node].size(); j++ )
             {
                 operation.type = UNSET_VERTEXTEXTURE;
-                operation.data = m_vtx_datas[node][j];
+                //operation.data = m_vtx_datas[node][j];
+                operation.data = m_vtx_datas[node][j].first;
                 operation.texture_stage = (long)j;
+                operation.comment = m_vtx_datas[node][j].second;
 
                 if( operation.data != NULL )
                 {

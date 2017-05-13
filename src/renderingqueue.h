@@ -110,8 +110,14 @@ protected:
     std::map<RenderingNode*, void*>                     m_sh_datas;
     std::map<RenderingNode*, void*>                     m_rs_datas;
 
+    /*
     std::map<RenderingNode*, std::vector<void*> >       m_tx_datas;
     std::map<RenderingNode*, std::vector<void*> >       m_vtx_datas;
+    */
+    std::map<RenderingNode*, std::vector<std::pair<void*, dsstring> > >       m_tx_datas;
+    std::map<RenderingNode*, std::vector<std::pair<void*, dsstring> > >       m_vtx_datas;
+
+
     std::map<RenderingNode*, void* >                    m_meshe_datas;
 
     long                                                m_switches_cost;
