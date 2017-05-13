@@ -664,8 +664,6 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 {
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
-    //void* fx_data;
-
     void* sh_data;
     void* rs_data;
     void* tx_data;
@@ -673,7 +671,6 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
     m_tx_datas.clear();
     m_vtx_datas.clear();
-    //m_fx_datas.clear();
     m_sh_datas.clear();
     m_rs_datas.clear();
 
@@ -691,12 +688,6 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         }
         m_sh_datas[node] = sh_data;
 
-        /*
-        renderer->CreateRenderStatesSet( current_fx, &rs_data );
-        m_rs_datas[node] = rs_data;
-        */
-        
-        //m_rs_datas[node] = current_fx;
 
         /////////////////////////////////////////////
         dsstring hash;
