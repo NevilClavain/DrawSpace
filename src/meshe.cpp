@@ -126,7 +126,12 @@ bool Meshe::LoadFromFile( const dsstring& p_filepath, long p_index )
     {
         return false;
     }
-    return m_importer->LoadFromFile( p_filepath, p_index, this );
+    if( m_importer->LoadFromFile( p_filepath, p_index, this ) )
+    {
+        m_path = p_filepath;
+        return true;
+    }
+    return false;
 }
 
 long Meshe::GetVertexListSize( void )
@@ -466,4 +471,14 @@ void Meshe::SetRenderData( void* p_renderdata )
 void* Meshe::GetRenderData( void )
 {
     return m_render_data;
+}
+
+void Meshe::GetPath( dsstring& p_path )
+{
+    p_path = m_path;
+}
+
+void Meshe::SetPath( const dsstring& p_path )
+{
+    m_path = p_path;
 }

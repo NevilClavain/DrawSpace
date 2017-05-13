@@ -74,6 +74,9 @@ m_ignore_camera( false )
                 v4.z = -0.5;
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
+
+                m_meshes[i]->SetPath( "Skybox FrontQuad" );
+
                 break;
 
             case RearQuad:
@@ -101,6 +104,8 @@ m_ignore_camera( false )
                 v4.z = 0.5;
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
+
+                m_meshes[i]->SetPath( "Skybox RearQuad" );
                 break;
 
             case LeftQuad:
@@ -129,6 +134,7 @@ m_ignore_camera( false )
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
+                m_meshes[i]->SetPath( "Skybox LeftQuad" );
                 break;
 
             case RightQuad:
@@ -157,6 +163,7 @@ m_ignore_camera( false )
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
+                m_meshes[i]->SetPath( "Skybox RightQuad" );
                 break;
 
             case TopQuad:
@@ -185,6 +192,7 @@ m_ignore_camera( false )
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
+                m_meshes[i]->SetPath( "Skybox TopQuad" );
                 break;
 
             case BottomQuad:
@@ -213,6 +221,7 @@ m_ignore_camera( false )
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
+                m_meshes[i]->SetPath( "Skybox BottomQuad" );
                 break;
         }
 

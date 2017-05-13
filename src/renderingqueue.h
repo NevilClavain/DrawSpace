@@ -89,54 +89,49 @@ protected:
 
     } erase_infos;
 
-    typedef std::vector<erase_infos>                    OperationsGroup;
+    typedef std::vector<erase_infos>                                        OperationsGroup;
  
-    std::map<long, std::vector<RenderingNode*>>         m_renderingorder_nodes;
+    std::map<long, std::vector<RenderingNode*>>                             m_renderingorder_nodes;
 
-    std::vector<RenderingNode*>	                        m_nodes;
+    std::vector<RenderingNode*>	                                            m_nodes;
 
-    std::list<Operation>                                m_outputqueue;
+    std::list<Operation>                                                    m_outputqueue;
 
-    Texture*                                            m_target;
-    bool                                                m_clear_depth;
-    bool                                                m_clear_target;
-    unsigned char                                       m_target_clear_color_r;
-    unsigned char                                       m_target_clear_color_g;
-    unsigned char                                       m_target_clear_color_b;
-    unsigned char                                       m_target_clear_color_a;
+    Texture*                                                                m_target;
+    bool                                                                    m_clear_depth;
+    bool                                                                    m_clear_target;
+    unsigned char                                                           m_target_clear_color_r;
+    unsigned char                                                           m_target_clear_color_g;
+    unsigned char                                                           m_target_clear_color_b;
+    unsigned char                                                           m_target_clear_color_a;
 
-    //std::map<RenderingNode*, void*>                     m_fx_datas;
-
-    std::map<RenderingNode*, void*>                     m_sh_datas;
-    std::map<RenderingNode*, void*>                     m_rs_datas;
-
-    /*
-    std::map<RenderingNode*, std::vector<void*> >       m_tx_datas;
-    std::map<RenderingNode*, std::vector<void*> >       m_vtx_datas;
-    */
-    std::map<RenderingNode*, std::vector<std::pair<void*, dsstring> > >       m_tx_datas;
-    std::map<RenderingNode*, std::vector<std::pair<void*, dsstring> > >       m_vtx_datas;
+    std::map<RenderingNode*, void*>                                         m_sh_datas;
+    std::map<RenderingNode*, void*>                                         m_rs_datas;
 
 
-    std::map<RenderingNode*, void* >                    m_meshe_datas;
-
-    long                                                m_switches_cost;
-
-
-    std::vector<OperationsGroup>                        m_setmeshe_groups;
-    std::vector<OperationsGroup>                        m_setshaders_groups;
-
-    std::vector<OperationsGroup>                        m_setrsin_groups;
-    std::vector<OperationsGroup>                        m_setrsout_groups;
-
-    std::vector<OperationsGroup>                        m_settexture_groups[RenderingNode::NbMaxTextures];
-    std::vector<OperationsGroup>                        m_unsettexture_groups[RenderingNode::NbMaxTextures];
-
-    std::vector<OperationsGroup>                        m_setvtexture_groups[RenderingNode::NbMaxTextures];
-    std::vector<OperationsGroup>                        m_unsetvtexture_groups[RenderingNode::NbMaxTextures];
+    std::map<RenderingNode*, std::vector<std::pair<void*, dsstring> > >     m_tx_datas;
+    std::map<RenderingNode*, std::vector<std::pair<void*, dsstring> > >     m_vtx_datas;
 
 
-    std::map<dsstring, DrawSpace::Core::Fx*>            m_fx_bases;
+    std::map<RenderingNode*, std::pair<void*, dsstring> >                   m_meshe_datas;
+
+    long                                                                    m_switches_cost;
+
+
+    std::vector<OperationsGroup>                                            m_setmeshe_groups;
+    std::vector<OperationsGroup>                                            m_setshaders_groups;
+
+    std::vector<OperationsGroup>                                            m_setrsin_groups;
+    std::vector<OperationsGroup>                                            m_setrsout_groups;
+
+    std::vector<OperationsGroup>                                            m_settexture_groups[RenderingNode::NbMaxTextures];
+    std::vector<OperationsGroup>                                            m_unsettexture_groups[RenderingNode::NbMaxTextures];
+
+    std::vector<OperationsGroup>                                            m_setvtexture_groups[RenderingNode::NbMaxTextures];
+    std::vector<OperationsGroup>                                            m_unsetvtexture_groups[RenderingNode::NbMaxTextures];
+
+
+    std::map<dsstring, DrawSpace::Core::Fx*>                                m_fx_bases;
 
 
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );

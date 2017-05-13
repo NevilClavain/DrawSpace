@@ -55,6 +55,8 @@ protected:
 
     void*                                       m_render_data;
 
+    dsstring                                    m_path;
+
     virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
@@ -101,6 +103,9 @@ public:
     void SetRenderData( void* p_renderdata );
 
     void* GetRenderData( void );
+
+    void GetPath( dsstring& p_path );
+    void SetPath( const dsstring& p_path );
 
     static Asset* Instanciate( void );
 };

@@ -770,6 +770,9 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             meshe_data = current_meshe->GetRenderData();
 
+            dsstring meshe_path;
+            current_meshe->GetPath( meshe_path );
+
             // optimisation pour les meshes : pas recreer dans le renderer un meshe deja cree (evite la verif via md5 hash, couteuse
             // pour les gros meshes)
 
@@ -780,7 +783,9 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
                     _DSEXCEPTION( "Cannot create Meshe" )
                 }
             }
-            m_meshe_datas[node] = meshe_data;
+            //m_meshe_datas[node] = meshe_data;
+            std::pair<void*, dsstring> meshe_infos( meshe_data, meshe_path );
+            m_meshe_datas[node] = meshe_infos;
         }
     }
 
@@ -844,7 +849,8 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         if( m_meshe_datas.count( node ) )
         {
             operation.type = SET_MESHE;
-            operation.data = m_meshe_datas[node];
+            operation.data = m_meshe_datas[node].first;
+            operation.comment = m_meshe_datas[node].second;
             m_outputqueue.push_back( operation );
         }
 
