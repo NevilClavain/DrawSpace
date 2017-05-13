@@ -58,7 +58,7 @@ void FaceDrawingNode::HideHighLODPatch( bool p_hide )
     m_hidehighlodpatch = p_hide;
 }
 
-void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
+void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
     Vector flag0;
@@ -108,7 +108,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, long p_nbv, long p_nbt,
 }
 
 
-void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
                             const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
 {
     //ZeroMemory( &m_stats, sizeof( Stats ) );
@@ -131,7 +131,7 @@ void FaceDrawingNode::Draw( long p_nbv, long p_nbt, dsreal p_ray, dsreal p_rel_a
             continue;   
         }
 
-        draw_single_patch( m_display_list[i], p_nbv, p_nbt, p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+        draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
     }
 }
 
@@ -270,7 +270,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
 
-    face_node->Draw( Body::m_patch_meshe->GetVertexListSize(), Body::m_patch_meshe->GetTrianglesListSize(), planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj, true );
+    face_node->Draw( planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj, true );
     node_binder->Unbind();
 }
 
@@ -296,7 +296,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
 
-    face_node->Draw( Body::m_patch_meshe->GetVertexListSize(), Body::m_patch_meshe->GetTrianglesListSize(), 1.0, rel_alt, view_pos, world, view, proj, false );   
+    face_node->Draw( 1.0, rel_alt, view_pos, world, view, proj, false );   
     node_binder->Unbind();
 }
 
