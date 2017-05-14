@@ -38,7 +38,7 @@ m_current_patch( NULL ),
 m_config( p_config ),
 m_binder( NULL ),
 m_layer_index( p_layer_index ),
-m_hidehighlodpatch( false )
+m_drawpatch_mode( DRAW_ALL )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -52,10 +52,9 @@ void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
     m_display_list = p_list;
 }
 
-
-void FaceDrawingNode::HideHighLODPatch( bool p_hide )
+void FaceDrawingNode::SetDrawPatchMode( DrawPatchMode p_mode )
 {
-    m_hidehighlodpatch = p_hide;
+    m_drawpatch_mode = p_mode;
 }
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
@@ -126,12 +125,21 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             current_texture = refpatchtexture;
         }
 
-        if( 0 == m_display_list[i]->GetLodLevel() && m_hidehighlodpatch )
-        { 
-            continue;   
+        if( DRAW_ALL == m_drawpatch_mode )
+        {
+            draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
         }
-
-        draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+        else
+        {
+            if( DRAW_ALL_BUTLANDPLACEPATCH == m_drawpatch_mode && 0 != m_display_list[i]->GetLodLevel() )
+            {
+                draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+            }
+            else if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode && 0 == m_display_list[i]->GetLodLevel() )
+            {
+                draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+            }
+        }
     }
 }
 
@@ -330,11 +338,11 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe );
-            node->HideHighLODPatch( true );
+            node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
-            node_skirts->HideHighLODPatch( true );
+            node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
             break;
 

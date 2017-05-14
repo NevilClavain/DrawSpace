@@ -38,6 +38,14 @@ class FaceDrawingNode : public DrawSpace::Core::RenderingNode
 {
 public:
 
+    typedef enum
+    {
+        DRAW_ALL,
+        DRAW_LANDPLACEPATCH_ONLY,
+        DRAW_ALL_BUTLANDPLACEPATCH
+    
+    } DrawPatchMode;
+
     typedef struct
     {
         int                             nb_patchs;
@@ -59,7 +67,7 @@ protected:
 
     int                                 m_layer_index;
 
-    bool                                m_hidehighlodpatch;
+    DrawPatchMode                       m_drawpatch_mode;
 
     void                                draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, 
                                                             const DrawSpace::Utils::Vector& p_invariant_view_pos,
@@ -81,11 +89,11 @@ public:
 
     void SetBinder( DrawSpace::SphericalLOD::Binder* p_binder );
 
-    void HideHighLODPatch( bool p_hide );
-
     DrawSpace::SphericalLOD::Binder* GetBinder( void );
 
     int GetLayerIndex( void );
+
+    void SetDrawPatchMode( DrawPatchMode p_mode );
     
 };
 
