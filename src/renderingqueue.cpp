@@ -686,8 +686,20 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             _DSEXCEPTION( "Cannot create Shaders" )
         }
-        m_sh_datas[node] = sh_data;
 
+        dsstring shaders_infos;
+
+        for( long i = 0; i < current_fx->GetShadersListSize(); i++ )
+        {
+             dsstring curr_shader_path;
+             current_fx->GetShader( i )->GetPath( curr_shader_path );
+
+             shaders_infos += curr_shader_path;
+             shaders_infos += "    ";
+        }
+
+        m_sh_datas[node].first = sh_data;
+        m_sh_datas[node].second = shaders_infos;
 
         /////////////////////////////////////////////
         dsstring hash;
@@ -799,7 +811,8 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         if( m_sh_datas.count( node ) )
         {
             operation.type = SET_SHADERS;
-            operation.data = m_sh_datas[node];
+            operation.data = m_sh_datas[node].first;
+            operation.comment = m_sh_datas[node].second;
             m_outputqueue.push_back( operation );
         }
 

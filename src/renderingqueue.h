@@ -105,7 +105,7 @@ protected:
     unsigned char                                                           m_target_clear_color_b;
     unsigned char                                                           m_target_clear_color_a;
 
-    std::map<RenderingNode*, void*>                                         m_sh_datas;
+    std::map<RenderingNode*, std::pair<void*, dsstring>>                    m_sh_datas;
     std::map<RenderingNode*, void*>                                         m_rs_datas;
 
 
