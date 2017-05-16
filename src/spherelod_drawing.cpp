@@ -72,7 +72,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
     patch_pos[0] = xp;
     patch_pos[1] = yp;
-    patch_pos[2] = 0.0;
+    patch_pos[2] = ( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode ? 1.0 : 0.0 );
 
 
     Vector globalrel_uvcoords;
@@ -317,6 +317,8 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
 
     FaceDrawingNode* node_skirts = NULL;
 
+    FaceDrawingNode* node_landplace = NULL;
+
     switch( p_meshe_type )
     {
         case SphericalLOD::Body::LOWRES_MESHE:
@@ -343,6 +345,11 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
             node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
+
+
+            node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+            node_landplace->SetMeshe( Body::m_patch_meshe );
+            node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
 
             break;
 
@@ -383,6 +390,22 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
 
     node->SetBinder( p_binder );
     node->SetOrderNumber( p_rendering_order );
+
+
+    if( node_landplace )
+    {
+        node_landplace->RegisterHandler( cb );
+    
+        std::pair<Pass*, FaceDrawingNode*> p_s( p_pass, node_landplace );
+        m_passesnodes.push_back( p_s );
+
+        m_nodes[node_landplace] = p_orientation;
+
+        node_landplace->SetBinder( p_binder );
+
+        // pour faire le rendu landplace terrains APRES le rendu des nodes patch terrains
+        node_landplace->SetOrderNumber( p_rendering_order + 1 );
+    }
 }
 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void )

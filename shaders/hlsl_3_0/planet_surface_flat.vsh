@@ -35,6 +35,7 @@ float4   flag0:				register(c24);
 
 float4   patch_translation:	register(c25);
 	// .x, .y -> patch positionning
+    // .z -> 1.0 = landplace patch, 0.0 otherwise
 
 float4   base_uv: register(c26);
 	// .x, .y -> u1, v1
@@ -160,6 +161,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	Output.UnitPatch_TexCoord = 0.0;
 	Output.UnitPatch_TexCoord.x = Input.TexCoord0.x;
 	Output.UnitPatch_TexCoord.y = Input.TexCoord0.y;
+    Output.UnitPatch_TexCoord.z = patch_translation.z;
 
 	
 	Output.GlobalPatch_TexCoord = 0.0;
