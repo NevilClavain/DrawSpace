@@ -767,3 +767,8 @@ void Face::GetCurrentCubeFaceHotPoint( DrawSpace::Utils::Vector& p_cubeface_hotp
 {
     p_cubeface_hotpoint = m_cubeface_hotpoint;
 }
+
+void Face::GetRelativeHotPoint( Utils::Vector& p_rhotpoint )
+{
+    p_rhotpoint = m_relative_hotpoint;
+}

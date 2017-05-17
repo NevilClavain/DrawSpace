@@ -69,10 +69,15 @@ protected:
 
     DrawPatchMode                       m_drawpatch_mode;
 
+    Utils::Vector                       m_relativehotpoint;
+
     void                                draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, 
                                                             const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
+
+
+    bool                                check_view_in_patch( dsreal p_ray, const Utils::Vector& p_view, Patch* p_patch );
     
 public:
     FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, DrawSpace::SphericalLOD::Config* p_config, int p_layer_index );
@@ -94,6 +99,9 @@ public:
     int GetLayerIndex( void );
 
     void SetDrawPatchMode( DrawPatchMode p_mode );
+
+
+    void UpdateRelativeHotPoint( const Utils::Vector p_hotpoint );
     
 };
 

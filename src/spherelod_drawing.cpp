@@ -106,6 +106,10 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     //m_stats.nb_patchs++;       
 }
 
+void FaceDrawingNode::UpdateRelativeHotPoint( const Utils::Vector p_hotpoint )
+{
+    m_relativehotpoint = p_hotpoint;
+}
 
 void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
                             const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
@@ -131,13 +135,29 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
         }
         else
         {
-            if( DRAW_ALL_BUTLANDPLACEPATCH == m_drawpatch_mode && 0 != m_display_list[i]->GetLodLevel() )
+            if( DRAW_ALL_BUTLANDPLACEPATCH == m_drawpatch_mode )
             {
-                draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+                /*
+                if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() )
+                {
+                    // dessiner les patch de niveau LOD 0 qui ne contiennent PAS la camera
+                    draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+                }
+                */
+
+                if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel()  )
+                {
+                    // dessiner les patchs de niveau LOD 0 qui ne contiennent PAS la camera... et tout les autres
+                    draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+                }
             }
             else if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode && 0 == m_display_list[i]->GetLodLevel() )
             {
-                draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+                if( check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) )
+                {
+                    // dessiner LE patch de niveau LOD 0 qui contient  la camera
+                    draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+                }
             }
         }
     }
@@ -182,6 +202,31 @@ DrawSpace::SphericalLOD::Binder* FaceDrawingNode::GetBinder( void )
 int FaceDrawingNode::GetLayerIndex( void )
 {
     return m_layer_index;
+}
+
+bool FaceDrawingNode::check_view_in_patch( dsreal p_ray, const Utils::Vector& p_view, Patch* p_patch )
+{
+    Vector viewer;
+    Patch::ConvertVectorToFrontFaceCoords( p_patch->GetOrientation(), p_view, viewer );
+ 
+    viewer.Normalize();
+    Vector projected_viewer;
+    Patch::SphereToCube( viewer, projected_viewer );    
+    projected_viewer.Scale( p_ray );
+
+    dsreal patch_xpos, patch_ypos;
+    p_patch->GetPos( patch_xpos, patch_ypos );
+
+    dsreal patch_side_size = p_patch->GetSideLength();
+
+    if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
+        ( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[1] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[1] )
+    {
+
+        return true;
+    }
+
+    return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -277,6 +322,12 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
+
+
+    Vector hotpoint;
+    planetbody->GetFace( m_nodes[face_node] )->GetRelativeHotPoint( hotpoint );
+    face_node->UpdateRelativeHotPoint( hotpoint );
+
 
     face_node->Draw( planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj, true );
     node_binder->Unbind();

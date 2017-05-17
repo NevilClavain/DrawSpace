@@ -149,6 +149,8 @@ public:
     dsreal GetRelativeAltSphere( void );
 
     void GetCurrentCubeFaceHotPoint( DrawSpace::Utils::Vector& p_cubeface_hotpoint );
+
+    void GetRelativeHotPoint( Utils::Vector& p_rhotpoint );
 };
 }
 }
