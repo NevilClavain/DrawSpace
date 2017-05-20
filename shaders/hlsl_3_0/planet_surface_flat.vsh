@@ -131,22 +131,31 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	VS_OUTPUT Output;
 
 	float4 v_position;
+    float4 v_position3;
 
-	// sidelenght scaling
+    if (patch_translation.z > 0.0 )
+    {
+        v_position3 = Input.Position;
+    }
+    else
+    {
+	    // sidelenght scaling
 
-	v_position = Input.Position * flag0.y / 2.0;
-	v_position = v_position + patch_translation;
-	v_position.z = 1.0;
-	v_position.w = 1.0;
+        v_position = Input.Position * flag0.y / 2.0;
+        v_position = v_position + patch_translation;
+        v_position.z = 1.0;
+        v_position.w = 1.0;
 	
-	float4 v_position2;	
-	v_position2.w = 1.0;
-	v_position2.xyz = CubeToSphere( ProjectVectorToCube( flag0.x, v_position.xyz ) );
+        float4 v_position2;
+        v_position2.w = 1.0;
+        v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
 
-	// final scaling
-	float4 v_position3;	
-	v_position3 = v_position2 * flag0.z;	
-	v_position3.w = 1.0;
+	    // final scaling
+
+        v_position3 = v_position2 * flag0.z;
+        v_position3.w = 1.0;
+
+    }
 
 	Output.Position = mul( v_position3, matWorldViewProjection );
 	

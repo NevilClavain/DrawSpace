@@ -133,9 +133,16 @@ protected:
     
     DrawSpace::SphericalLOD::Config*                                            m_config;
 
+    DrawSpace::Core::Meshe*                                                     m_landplace_meshes[6];
+
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
     void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+
+    void create_landplace_meshe( long p_patch_resol, int p_orientation, DrawSpace::Core::Meshe* p_meshe_dest );
+
+    void create_all_landplace_meshes( void );
+    void destroy_all_landplace_meshes( void );
 
 public:
 

@@ -102,7 +102,23 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     m_renderer->SetFxShaderParams( 1, 1, pixels_flags_2 );
     m_renderer->SetFxShaderParams( 1, 2, view_pos );
 
-    m_renderer->DrawMeshe( p_world, p_view, p_proj );
+    Matrix world;
+    
+    if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
+    {
+        Matrix local_mat;
+
+        local_mat.Translation( 0.0, 0.0, p_ray );
+
+        world = local_mat * p_world;
+    }
+    else
+    {    
+        world = p_world;
+    }
+
+    m_renderer->DrawMeshe( world, p_view, p_proj );
+
     //m_stats.nb_patchs++;       
 }
 
@@ -236,10 +252,14 @@ m_renderer( NULL ),
 m_config( p_config )
 {
     m_singlenode_draw_handler = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
+
+    create_all_landplace_meshes();
 }
 
 Drawing::~Drawing( void )
 {
+    destroy_all_landplace_meshes();
+
     _DRAWSPACE_DELETE_( m_singlenode_draw_handler );
 
     for( size_t i = 0; i < m_drawing_handlers.size(); i++ )
@@ -399,7 +419,8 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
 
 
             node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
-            node_landplace->SetMeshe( Body::m_patch_meshe );
+            //node_landplace->SetMeshe( Body::m_patch_meshe );
+            node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
             node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
 
             break;
@@ -477,5 +498,99 @@ void Drawing::SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state 
         {
             m_facedrawingnodes[i]->SetDrawingState( p_drawing_state );
         }
+    }
+}
+
+void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, DrawSpace::Core::Meshe* p_meshe_dest )
+{
+    int main_patch_nbv = 0;
+    dsreal xcurr, ycurr;
+    long patch_resolution = p_patch_resol;
+
+    // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
+    dsreal interval = 2.0 / ( patch_resolution - 1 );
+
+    float delta_uv0 = 1.0f / ( patch_resolution - 1 );
+    float current_u0 = 0.0f;
+    float current_v0 = 0.0f;
+
+    for( long i = 0; i < patch_resolution; i++ )
+    {
+        for( long j = 0; j < patch_resolution; j++ )
+        {
+            xcurr = j * interval - 1.0;
+            ycurr = i * interval - 1.0;
+                        
+            Vertex vertex;
+            vertex.x = xcurr;
+            vertex.y = ycurr;
+            vertex.z = 0.0;
+
+            /////////////////////////////////////////////////
+
+            vertex.x *= 90.0;
+            vertex.y *= 90.0;
+
+            /////////////////////////////////////////////////
+
+            vertex.tu[0] = current_u0;
+            vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
+                                            // le v des coords textures et le y du repere patch sont en sens opposes
+
+            vertex.tw[0] = 0.0;
+
+            p_meshe_dest->AddVertex( vertex );
+            main_patch_nbv++;
+
+            current_u0 += delta_uv0;
+        }
+
+        current_v0 += delta_uv0;
+        current_u0 = 0.0;
+    }
+
+    long current_index;
+
+    for( long i = 0; i < patch_resolution - 1; i++  )
+    {
+        current_index = i * patch_resolution;
+
+        for( long j = 0; j < patch_resolution - 1; j++ )
+        {
+            Triangle triangle;
+
+            triangle.vertex1 = current_index;
+            triangle.vertex2 = current_index + 1;
+            triangle.vertex3 = current_index + patch_resolution;
+            p_meshe_dest->AddTriangle( triangle );
+            
+            triangle.vertex1 = current_index + 1;
+            triangle.vertex2 = current_index + 1 + patch_resolution;
+            triangle.vertex3 = current_index + patch_resolution;
+            p_meshe_dest->AddTriangle( triangle );
+            
+            current_index++;
+        }        
+    }
+}
+
+void Drawing::create_all_landplace_meshes( void )
+{
+    for( long i = 0; i < 6; i++ )
+    {
+        m_landplace_meshes[i] = _DRAWSPACE_NEW_( Meshe, Meshe );
+
+        create_landplace_meshe( PATCH_RESOLUTION, i, m_landplace_meshes[i] );
+
+        m_landplace_meshes[i]->SetPath( "sphereLOD landplace meshe" );
+    }
+}
+
+
+void Drawing::destroy_all_landplace_meshes( void )
+{
+    for( long i = 0; i < 6; i++ )
+    {
+        _DRAWSPACE_DELETE_( m_landplace_meshes[i] );
     }
 }
