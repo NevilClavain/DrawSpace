@@ -253,13 +253,18 @@ m_config( p_config )
 {
     m_singlenode_draw_handler = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
 
-    create_all_landplace_meshes();
+    if( m_config->m_landplace_patch )
+    {
+        create_all_landplace_meshes();
+    }
 }
 
 Drawing::~Drawing( void )
 {
-    destroy_all_landplace_meshes();
-
+    if( m_config->m_landplace_patch )
+    {
+        destroy_all_landplace_meshes();
+    }
     _DRAWSPACE_DELETE_( m_singlenode_draw_handler );
 
     for( size_t i = 0; i < m_drawing_handlers.size(); i++ )
@@ -411,18 +416,19 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe );
-            node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
-            node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
+            if( m_config->m_landplace_patch )
+            {
+                node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
+                node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
-            node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
-            //node_landplace->SetMeshe( Body::m_patch_meshe );
-            node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
-            node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
-
+                node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+                node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
+                node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
+            }
             break;
 
         case SphericalLOD::Body::HIRES_MESHE:

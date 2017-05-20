@@ -217,6 +217,7 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
     }
 
     m_config.m_lod0base = 19000.0;
+    m_config.m_landplace_patch = true;
     m_config.m_ground_layer = 0;
     m_config.m_nbLODRanges_inertBodies = m_node_config->m_nbLODInertBodies.m_value;
     m_config.m_nbLODRanges_freeCameras = m_node_config->m_nbLODFreeCameras.m_value;

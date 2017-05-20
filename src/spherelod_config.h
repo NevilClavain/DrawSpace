@@ -56,6 +56,8 @@ public:
     std::vector<LayerDescriptor>    m_layers_descr;
     int                             m_ground_layer;  // index dans m_layers_descr
 
+    bool                            m_landplace_patch;
+
     Config( void );
     ~Config( void );
 };
