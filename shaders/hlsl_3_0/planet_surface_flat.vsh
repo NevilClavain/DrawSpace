@@ -133,9 +133,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float4 v_position;
     float4 v_position3;
 
-    if (patch_translation.z > 0.0 )
+    if (patch_translation.z > 0.0)
     {
-        v_position3 = Input.Position;
+        v_position3.xyz = Input.Position.xyz;
+        v_position3.w = 1.0;
     }
     else
     {

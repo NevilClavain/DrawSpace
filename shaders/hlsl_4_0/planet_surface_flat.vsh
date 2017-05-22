@@ -135,22 +135,32 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
 
     float4 v_position;
-
-	// sidelenght scaling
-
-    v_position.xyz = Input.Position * flag0.y / 2.0;
-    v_position = v_position + patch_translation;
-    v_position.z = 1.0;
-    v_position.w = 1.0;
-	
-    float4 v_position2;
-    v_position2.w = 1.0;
-    v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
-
-	// final scaling
     float4 v_position3;
-    v_position3 = v_position2 * flag0.z;
-    v_position3.w = 1.0;
+
+    if (patch_translation.z > 0.0)
+    {
+        v_position3.xyz = Input.Position.xyz;
+        v_position3.w = 1.0;
+    }
+    else
+    {
+	    // sidelenght scaling
+
+        v_position.xyz = Input.Position * flag0.y / 2.0;
+        v_position = v_position + patch_translation;
+        v_position.z = 1.0;
+        v_position.w = 1.0;
+	
+        float4 v_position2;
+        v_position2.w = 1.0;
+        v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
+
+	    // final scaling
+
+        v_position3 = v_position2 * flag0.z;
+        v_position3.w = 1.0;
+    }
+
 
     Output.Position = mul(v_position3, mat[matWorldViewProjection]);
 	
@@ -165,7 +175,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.UnitPatch_TexCoord = 0.0;
     Output.UnitPatch_TexCoord.x = Input.TexCoord0.x;
     Output.UnitPatch_TexCoord.y = Input.TexCoord0.y;
-
+    Output.UnitPatch_TexCoord.z = patch_translation.z;
 	
     Output.GlobalPatch_TexCoord = 0.0;
     Output.GlobalPatch_TexCoord.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);

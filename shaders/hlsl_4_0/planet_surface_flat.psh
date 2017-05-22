@@ -90,9 +90,17 @@ struct PS_INTPUT
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
-
     float4 final_color = 0.0;
-    final_color.y = 1.0;
+
+    if (input.UnitPatch_TexCoord.z > 0.0)
+    {
+        final_color.x = 1.0;
+    }
+    else
+    {
+        final_color.y = 1.0;
+    }
+
     final_color.w = 1.0;
     	
     return final_color;

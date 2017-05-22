@@ -25,6 +25,7 @@
 #include "memalloc.h"
 #include "exceptions.h"
 #include "spherelod_drawing.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -106,11 +107,29 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     
     if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
     {
-        Matrix local_mat;
+        dsreal rotx, roty;
 
-        local_mat.Translation( 0.0, 0.0, p_ray );
+        Vector cube_pos( xp, yp, 1.0, 1.0 );
+        Vector sphere_pos;
+        Vector spos;
 
-        world = local_mat * p_world;
+        Maths::CubeToSphere( cube_pos, sphere_pos );
+
+        Maths::CartesiantoSpherical( sphere_pos, spos );
+
+        rotx = spos[2];
+        roty = spos[1];
+
+        Matrix local_mat_trans;
+        local_mat_trans.Translation( 0.0, 0.0, p_ray );
+
+        Matrix local_mat_rot_y;
+        local_mat_rot_y.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), roty );
+
+        Matrix local_mat_rot_x;
+        local_mat_rot_x.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rotx );
+
+        world = local_mat_trans * local_mat_rot_x * local_mat_rot_y * p_world;
     }
     else
     {    
