@@ -95,6 +95,48 @@ public:
 	    p_out[1] = ytemp * sqrt( 1.0 - ztemp * ztemp * 0.5 - xtemp * xtemp * 0.5 + xtemp * xtemp * ztemp * ztemp / 3.0 );
 	    p_out[2] = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
     }
+
+    static void VectorPlanetOrientation( int p_orientation, Vector& p_in, Vector& p_out )
+    {
+        Vector res;
+
+	    if( 0 == p_orientation ) // front
+	    {
+		    p_out[0] = p_in[0];
+		    p_out[1] = p_in[1];
+		    p_out[2] = p_in[2];   
+	    }
+	    else if( 1 == p_orientation ) // rear
+	    {
+		    p_out[0] = -p_in[0];
+		    p_out[1] = p_in[1];
+		    p_out[2] = -p_in[2];   
+	    }
+	    else if( 2 == p_orientation ) // left
+	    {
+		    p_out[0] = -p_in[2];
+		    p_out[1] = p_in[1];
+		    p_out[2] = p_in[0];   
+	    }
+	    else if( 3 == p_orientation ) // right
+	    {
+		    p_out[0] = p_in[2];
+		    p_out[1] = p_in[1];
+		    p_out[2] = -p_in[0];   
+	    }
+	    else if( 4 == p_orientation ) // top
+	    {
+		    p_out[0] = p_in[0];
+		    p_out[1] = p_in[2];
+		    p_out[2] = -p_in[1];   
+	    }
+	    else //if( 5 == p_orientation ) // bottom
+	    {
+		    p_out[0] = p_in[0];
+		    p_out[1] = -p_in[2];
+		    p_out[2] = p_in[1];
+	    }
+    }
 };
 }
 }

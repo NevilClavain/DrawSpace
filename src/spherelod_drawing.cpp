@@ -107,7 +107,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     
     if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
     {
-        dsreal rotx, roty;
+        dsreal rot_phi, rot_theta;
 
         Vector cube_pos( xp, yp, 1.0, 1.0 );
         Vector sphere_pos;
@@ -117,19 +117,66 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
         Maths::CartesiantoSpherical( sphere_pos, spos );
 
-        rotx = spos[2];
-        roty = spos[1];
+        rot_phi = spos[2];
+        rot_theta = spos[1];
 
         Matrix local_mat_trans;
-        local_mat_trans.Translation( 0.0, 0.0, p_ray );
+        Matrix local_mat_rot_theta;
+        Matrix local_mat_rot_phi;
 
-        Matrix local_mat_rot_y;
-        local_mat_rot_y.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), roty );
+        switch( p_patch->GetOrientation() )
+        {   
+            case Patch::FrontPlanetFace:
+                
+                local_mat_trans.Translation( 0.0, 0.0, p_ray );
+                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
-        Matrix local_mat_rot_x;
-        local_mat_rot_x.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rotx );
+                break;
 
-        world = local_mat_trans * local_mat_rot_x * local_mat_rot_y * p_world;
+            case Patch::RightPlanetFace:
+                
+                local_mat_trans.Translation( p_ray, 0.0, 0.0 );
+                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_phi );
+
+                break;
+
+            case Patch::LeftPlanetFace:
+                
+                local_mat_trans.Translation( -p_ray, 0.0, 0.0 );
+                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.Rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_phi );
+                break;
+
+            case Patch::RearPlanetFace:
+                
+                local_mat_trans.Translation( 0.0, 0.0, -p_ray );
+                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), rot_phi );
+
+                break;
+
+            case Patch::TopPlanetFace:
+
+                local_mat_trans.Translation( 0.0, p_ray, 0.0 );
+                local_mat_rot_theta.Rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
+
+                break;
+
+
+            case Patch::BottomPlanetFace:
+
+                local_mat_trans.Translation( 0.0, -p_ray, 0.0 );
+                local_mat_rot_theta.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
+
+                break;
+
+        };
+      
+        world = local_mat_trans * local_mat_rot_phi * local_mat_rot_theta * p_world;
     }
     else
     {    
@@ -539,24 +586,60 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
     float current_u0 = 0.0f;
     float current_v0 = 0.0f;
 
+    dsreal patch_final_size = 400.0;
+
+    dsreal scale = patch_final_size / ( 2.0 * m_config->m_layers_descr[0].ray );
+
     for( long i = 0; i < patch_resolution; i++ )
     {
         for( long j = 0; j < patch_resolution; j++ )
         {
             xcurr = j * interval - 1.0;
             ycurr = i * interval - 1.0;
-                        
+
             Vertex vertex;
-            vertex.x = xcurr;
-            vertex.y = ycurr;
-            vertex.z = 0.0;
+
+            /*
+            Vector v( xcurr * scale, ycurr * scale, 1.0, 1.0 );
+
+
+            Vector v_orient;
+
+            Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
+            v_orient = v;
+
+            Vector sphere_v;
+
+            //Maths::CubeToSphere( v_orient, sphere_v );
+            sphere_v = v_orient;
+                 
+                        
+            vertex.x = sphere_v[0];
+            vertex.y = sphere_v[1];
+            vertex.z = sphere_v[2];
+            
 
             /////////////////////////////////////////////////
-
+            
             vertex.x *= 90.0;
             vertex.y *= 90.0;
+            vertex.z *= 90.0;
+            */
 
-            /////////////////////////////////////////////////
+            Vector v_scaled;
+            Vector v_orient;
+
+            Vector v( xcurr * scale, ycurr * scale, 0.0, 1.0 );
+
+            v.Scale( 90.0 );
+
+
+            Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
+
+
+            vertex.x = v_orient[0];
+            vertex.y = v_orient[1];
+            vertex.z = v_orient[2];
 
             vertex.tu[0] = current_u0;
             vertex.tv[0] = 1.0 - current_v0; // coin inferieur gauche de la grille correspond a la coord texture u = 0.0, v = 1.0 !!!!
