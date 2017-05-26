@@ -599,33 +599,6 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
 
             Vertex vertex;
 
-            /*
-            Vector v( xcurr * scale, ycurr * scale, 1.0, 1.0 );
-
-
-            Vector v_orient;
-
-            Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
-            v_orient = v;
-
-            Vector sphere_v;
-
-            //Maths::CubeToSphere( v_orient, sphere_v );
-            sphere_v = v_orient;
-                 
-                        
-            vertex.x = sphere_v[0];
-            vertex.y = sphere_v[1];
-            vertex.z = sphere_v[2];
-            
-
-            /////////////////////////////////////////////////
-            
-            vertex.x *= 90.0;
-            vertex.y *= 90.0;
-            vertex.z *= 90.0;
-            */
-
             Vector v_scaled;
             Vector v_orient;
 
