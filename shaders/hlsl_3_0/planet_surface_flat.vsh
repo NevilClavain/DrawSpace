@@ -24,6 +24,8 @@ float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
 float4x4 matWorld : register(c8);
 
+float4x4 matProj : register(c20);
+
 
 float4   flag0:				register(c24);
 
@@ -137,6 +139,18 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     {
         v_position3.xyz = Input.Position.xyz;
         v_position3.w = 1.0;
+
+        float4x4 mWorldView;
+        mWorldView = matWorldView;
+
+        float4x4 mProj;
+        mProj = matProj;
+
+        float4 v2 = mul(v_position3, mWorldView);
+        
+        
+        v2[2] = -v2[2];
+        Output.Position = mul(v2, mProj);
     }
     else
     {
@@ -156,9 +170,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         v_position3 = v_position2 * flag0.z;
         v_position3.w = 1.0;
 
+        Output.Position = mul(v_position3, matWorldViewProjection);
     }
 
-	Output.Position = mul( v_position3, matWorldViewProjection );
+	//Output.Position = mul( v_position3, matWorldViewProjection );
 	
 	Output.LODGlobalPatch_TexCoord = 0.0;
 	Output.LODGlobalPatch_TexCoord.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
