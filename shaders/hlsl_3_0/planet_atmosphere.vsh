@@ -48,7 +48,7 @@ float4   base_uv_global: register(c27);
 float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
 
-float4 mirror_flag : register(c51);
+float4 mirror_flag : register(c61);
     // .x -> mirror mode
     // .y -> planet ground ray
 

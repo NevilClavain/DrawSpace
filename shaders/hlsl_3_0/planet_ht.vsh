@@ -41,26 +41,26 @@ float4 base_uv_global : register(c27);
 	// .x, .y -> u1, v1
 	// .z, .w -> u2, v2
 
-float4 landscape_control: register(c30);
+float4 landscape_control: register(c40);
 	// .x -> plains amplitude
 	// .y -> mountains amplitude
 	// .z -> terrain offset
     // .w -> mountains offset
 
-float4 seeds: register(c31);
+float4 seeds: register(c41);
 	// .x -> plains seed 1
 	// .y -> plains seed 2
 	// .z -> mix seed 1
 	// .w -> mix seed 2
 
 
-float4 thparams: register(c32);
+float4 thparams: register(c42);
 	// .x -> humidity_k
 	// .y -> humidity_base
 	// .z -> temperature_alt_dec : nbre de degres centigrades perdus par km
 	// .w -> beach_limit
 
-float4 thparams2: register(c33);
+float4 thparams2: register(c43);
 	// .x -> lim_polar
 	// .y -> lim_tropical
 	// .z -> k_polar

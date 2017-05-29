@@ -154,35 +154,35 @@ void PlanetDetailsBinder::Bind( void )
 	flags_lights[3] = (m_lights[2].m_enable ? 1.0 : 0.0);
 
 
-	m_renderer->SetFxShaderParams(0, 32, m_atmo_scattering_flags0);
-	m_renderer->SetFxShaderParams(0, 33, m_atmo_scattering_flags1);
-	m_renderer->SetFxShaderParams(0, 34, m_atmo_scattering_flags2);
-	m_renderer->SetFxShaderParams(0, 35, m_atmo_scattering_flags3);
-	m_renderer->SetFxShaderParams(0, 36, m_atmo_scattering_flags4);
-	m_renderer->SetFxShaderParams(0, 37, m_atmo_scattering_flags5);
-	m_renderer->SetFxShaderParams(0, 38, m_atmo_scattering_flags6);
+	m_renderer->SetFxShaderParams(0, 42, m_atmo_scattering_flags0);
+	m_renderer->SetFxShaderParams(0, 43, m_atmo_scattering_flags1);
+	m_renderer->SetFxShaderParams(0, 44, m_atmo_scattering_flags2);
+	m_renderer->SetFxShaderParams(0, 45, m_atmo_scattering_flags3);
+	m_renderer->SetFxShaderParams(0, 46, m_atmo_scattering_flags4);
+	m_renderer->SetFxShaderParams(0, 47, m_atmo_scattering_flags5);
+	m_renderer->SetFxShaderParams(0, 48, m_atmo_scattering_flags6);
 
-	m_renderer->SetFxShaderParams(0, 40, flags_lights);
-	m_renderer->SetFxShaderParams(0, 41, m_ambient_color);
+	m_renderer->SetFxShaderParams(0, 50, flags_lights);
+	m_renderer->SetFxShaderParams(0, 51, m_ambient_color);
 
-	m_renderer->SetFxShaderParams(0, 42, m_lights[0].m_local_dir);
-	m_renderer->SetFxShaderParams(0, 43, m_lights[0].m_dir);
-	m_renderer->SetFxShaderParams(0, 44, m_lights[0].m_color);
+	m_renderer->SetFxShaderParams(0, 52, m_lights[0].m_local_dir);
+	m_renderer->SetFxShaderParams(0, 53, m_lights[0].m_dir);
+	m_renderer->SetFxShaderParams(0, 54, m_lights[0].m_color);
 
-	m_renderer->SetFxShaderParams(0, 45, m_lights[1].m_local_dir);
-	m_renderer->SetFxShaderParams(0, 46, m_lights[1].m_dir);
-	m_renderer->SetFxShaderParams(0, 47, m_lights[1].m_color);
+	m_renderer->SetFxShaderParams(0, 55, m_lights[1].m_local_dir);
+	m_renderer->SetFxShaderParams(0, 56, m_lights[1].m_dir);
+	m_renderer->SetFxShaderParams(0, 57, m_lights[1].m_color);
 
-	m_renderer->SetFxShaderParams(0, 48, m_lights[2].m_local_dir);
-	m_renderer->SetFxShaderParams(0, 49, m_lights[2].m_dir);
-	m_renderer->SetFxShaderParams(0, 50, m_lights[2].m_color);
+	m_renderer->SetFxShaderParams(0, 58, m_lights[2].m_local_dir);
+	m_renderer->SetFxShaderParams(0, 59, m_lights[2].m_dir);
+	m_renderer->SetFxShaderParams(0, 60, m_lights[2].m_color);
 
 	Vector mirror_flag;
 
 	mirror_flag[0] = (m_mirror_mode ? 1.0 : 0.0);
 	mirror_flag[1] = m_innerRadius;
 
-	m_renderer->SetFxShaderParams(0, 51, mirror_flag);
+	m_renderer->SetFxShaderParams(0, 61, mirror_flag);
 
 	m_renderer->SetFxShaderParams(1, 6, flags6);
 

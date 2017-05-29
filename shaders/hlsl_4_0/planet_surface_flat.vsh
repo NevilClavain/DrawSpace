@@ -33,31 +33,33 @@ cbuffer legacyargs : register(b0)
 #define v_base_uv                   26
 #define v_base_uv_global            27
 #define v_viewer_pos                28
-#define v_landscape_control         30
-#define v_seeds                     31
 
-#define v_atmo_scattering_flag_0    32
-#define v_atmo_scattering_flag_1    33
-#define v_atmo_scattering_flag_2    34
-#define v_atmo_scattering_flag_3    35
-#define v_atmo_scattering_flag_4    36
-#define v_atmo_scattering_flag_5    37
-#define v_atmo_scattering_flag_6    38
 
-#define v_flags_lights              40
-#define v_ambient_color             41
+#define v_landscape_control         40
+#define v_seeds                     41
 
-#define v_light0_dir_local          42
-#define v_light0_dir                43
-#define v_light0_color              44
+#define v_atmo_scattering_flag_0    42
+#define v_atmo_scattering_flag_1    43
+#define v_atmo_scattering_flag_2    44
+#define v_atmo_scattering_flag_3    45
+#define v_atmo_scattering_flag_4    46
+#define v_atmo_scattering_flag_5    47
+#define v_atmo_scattering_flag_6    48
 
-#define v_light1_dir_local          45
-#define v_light1_dir                46
-#define v_light1_color              47
+#define v_flags_lights              50
+#define v_ambient_color             51
 
-#define v_light2_dir_local          48
-#define v_light2_dir                49
-#define v_light2_color              50
+#define v_light0_dir_local          52
+#define v_light0_dir                53
+#define v_light0_color              54
+
+#define v_light1_dir_local          55
+#define v_light1_dir                56
+#define v_light1_color              57
+
+#define v_light2_dir_local          58
+#define v_light2_dir                59
+#define v_light2_color              60
 
 
 struct VS_INPUT

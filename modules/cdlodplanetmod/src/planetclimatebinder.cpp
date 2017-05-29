@@ -59,8 +59,8 @@ void PlanetClimateBinder::Bind( void )
 	//Vector thparams2( 0.92, 1.5, 0.37, 0.99 );
 
 
-	m_renderer->SetFxShaderParams( 0, 32, thparams );
-	m_renderer->SetFxShaderParams( 0, 33, thparams2 );
+	m_renderer->SetFxShaderParams( 0, 42, thparams );
+	m_renderer->SetFxShaderParams( 0, 43, thparams2 );
 
 	MultiFractalBinder::Bind();
 }

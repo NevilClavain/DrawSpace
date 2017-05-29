@@ -60,8 +60,8 @@ void MultiFractalBinder::Bind( void )
 	seeds[2] = m_mix_seed1;
 	seeds[3] = m_mix_seed2;
 
-	m_renderer->SetFxShaderParams( 0, 30, landscape_control );
-	m_renderer->SetFxShaderParams( 0, 31, seeds );
+	m_renderer->SetFxShaderParams( 0, 40, landscape_control );
+	m_renderer->SetFxShaderParams( 0, 41, seeds );
 }
 
 void MultiFractalBinder::Unbind( void )

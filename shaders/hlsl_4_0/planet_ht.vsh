@@ -32,10 +32,12 @@ cbuffer legacyargs : register(b0)
 #define v_patch_translation         25
 #define v_base_uv                   26
 #define v_base_uv_global            27
-#define v_landscape_control         30
-#define v_seeds                     31
-#define v_thparams                  32
-#define v_thparams2                 33
+
+
+#define v_landscape_control         40
+#define v_seeds                     41
+#define v_thparams                  42
+#define v_thparams2                 43
 
 
 

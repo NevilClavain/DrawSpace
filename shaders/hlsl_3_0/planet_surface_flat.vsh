@@ -64,34 +64,34 @@ float4 seeds: register(c31);
 	// .w -> mix seed 2
 
 
-float4 atmo_scattering_flag_0 : register(c32);
-float4 atmo_scattering_flag_1 : register(c33);
-float4 atmo_scattering_flag_2 : register(c34);
-float4 atmo_scattering_flag_3 : register(c35);
-float4 atmo_scattering_flag_4 : register(c36);
-float4 atmo_scattering_flag_5 : register(c37);
-float4 atmo_scattering_flag_6 : register(c38);
+float4 atmo_scattering_flag_0 : register(c42);
+float4 atmo_scattering_flag_1 : register(c43);
+float4 atmo_scattering_flag_2 : register(c44);
+float4 atmo_scattering_flag_3 : register(c45);
+float4 atmo_scattering_flag_4 : register(c46);
+float4 atmo_scattering_flag_5 : register(c47);
+float4 atmo_scattering_flag_6 : register(c48);
 
 
-float4 flags_lights           : register(c40);
+float4 flags_lights           : register(c50);
 	// .x -> ambient light
 	// .y -> color0 light
 	// .z -> color1 light
 	// .w -> color2 light
 
-float4 ambient_color          : register(c41);
+float4 ambient_color          : register(c51);
 
-float4 light0_dir_local       : register(c42);
-float4 light0_dir             : register(c43);
-float4 light0_color           : register(c44);
+float4 light0_dir_local       : register(c52);
+float4 light0_dir             : register(c53);
+float4 light0_color           : register(c54);
 
-float4 light1_dir_local       : register(c45);
-float4 light1_dir             : register(c46);
-float4 light1_color           : register(c47);
+float4 light1_dir_local       : register(c55);
+float4 light1_dir             : register(c56);
+float4 light1_color           : register(c57);
 
-float4 light2_dir_local       : register(c48);
-float4 light2_dir             : register(c49);
-float4 light2_color           : register(c50);
+float4 light2_dir_local       : register(c58);
+float4 light2_dir             : register(c59);
+float4 light2_color           : register(c60);
 
 
 sampler2D TextureRivers : register(s0);

@@ -34,7 +34,7 @@ cbuffer legacyargs : register(b0)
 #define v_base_uv_global            27
 #define v_viewer_pos                28
 
-#define v_mirror_flag				51
+#define v_mirror_flag				61
 
 
 struct VS_INPUT
