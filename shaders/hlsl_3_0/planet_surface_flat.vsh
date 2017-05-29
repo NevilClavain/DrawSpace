@@ -51,13 +51,13 @@ float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
 
 
-float4 landscape_control: register(c30);
+float4 landscape_control: register(c40);
 	// .x -> plains amplitude
 	// .y -> mountains amplitude
 	// .z -> terrain offset
     // .w -> mountains offset
 
-float4 seeds: register(c31);
+float4 seeds: register(c41);
 	// .x -> plains seed 1
 	// .y -> plains seed 2
 	// .z -> mix seed 1

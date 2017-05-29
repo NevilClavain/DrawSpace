@@ -120,6 +120,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         rot_phi = spos[2];
         rot_theta = spos[1];
 
+        Matrix local_mat;
         Matrix local_mat_trans;
         Matrix local_mat_rot_theta;
         Matrix local_mat_rot_phi;
@@ -174,9 +175,13 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
                 break;
 
-        };
+        }
+
+        local_mat = local_mat_trans * local_mat_rot_phi * local_mat_rot_theta;
+
+        m_renderer->SetFxShaderMatrix( 0, 29, local_mat );
       
-        world = local_mat_trans * local_mat_rot_phi * local_mat_rot_theta * p_world;
+        world = local_mat * p_world;
     }
     else
     {    
