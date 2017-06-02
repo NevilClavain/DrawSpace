@@ -49,7 +49,9 @@ float4   base_uv_global: register(c27);
 
 float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
+float4x4 matLocalPos : register(c29);
 
+float4 scaler : register(c33);
 
 float4 landscape_control: register(c40);
 	// .x -> plains amplitude
@@ -147,8 +149,31 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         mProj = matProj;
 
         float4 v2 = mul(v_position3, mWorldView);
+
+        //////////////////////////////////////////////////////
+
+        float4 v_init;
         
+        v_init.xyz = Input.Position.xyz;
+        v_init.w = 1.0;
+
+        float4 v_local_pos = mul(v_init, matLocalPos);
+
+        float4 v_local_pos_unit; 
         
+        v_local_pos_unit.xyz = normalize(v_local_pos.xyz);
+        v_local_pos_unit.w = 1.0;
+
+
+        if (v_local_pos.x < 9.0 && v_local_pos.x > -9.0 && v_local_pos.y < 9.0 && v_local_pos.y > -9.0)
+        {                      
+            v2.xyz += 12.0 * scaler.xyz;
+
+        }
+
+
+        //////////////////////////////////////////////////////
+                
         v2[2] = -v2[2];
         Output.Position = mul(v2, mProj);
     }

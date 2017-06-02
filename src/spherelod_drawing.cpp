@@ -179,9 +179,30 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
         local_mat = local_mat_trans * local_mat_rot_phi * local_mat_rot_theta;
 
-        m_renderer->SetFxShaderMatrix( 0, 29, local_mat );
-      
+        Matrix local_mat_transp = local_mat;
+        local_mat_transp.Transpose();
+
+        m_renderer->SetFxShaderMatrix( 0, 29, local_mat_transp );
+
         world = local_mat * p_world;
+
+
+        //////////////////////////////////////////////////////////////////////////////
+
+        local_mat = local_mat_rot_phi * local_mat_rot_theta * p_world * p_view;
+        local_mat.ClearTranslation();
+        Vector v( 0.0, 0.0, 1.0, 1.0 );
+
+        Vector v_orient;
+        Utils::Maths::VectorPlanetOrientation( p_patch->GetOrientation(), v, v_orient );
+
+        Vector vt;
+
+        local_mat.Transform( &v_orient, &vt );
+
+        m_renderer->SetFxShaderParams( 0, 33, vt );
+
+      
     }
     else
     {    
