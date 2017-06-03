@@ -35,6 +35,10 @@ cbuffer legacyargs : register(b0)
 #define v_viewer_pos                28
 
 
+#define matLandPlacePatchLocalPos   29
+
+#define v_landplacepatch_normale    33
+
 #define v_landscape_control         40
 #define v_seeds                     41
 
@@ -133,6 +137,9 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4 atmo_scattering_flag_6 = vec[v_atmo_scattering_flag_6];
 
 
+    float4 landplacepatch_normale = vec[v_landplacepatch_normale];
+
+
     //////////////////////////////////////////////////////////////////////
 
 
@@ -144,15 +151,37 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         v_position3.xyz = Input.Position.xyz;
         v_position3.w = 1.0;
 
-        float4x4 mWorldView; 
+        float4x4 mWorldView;
         mWorldView = mat[matWorldView];
 
         float4x4 mProj;
         mProj = mat[matProj];
 
         float4 v2 = mul(v_position3, mWorldView);
+
+        //////////////////////////////////////////////////////
+
+        float4 v_init;
         
+        v_init.xyz = Input.Position.xyz;
+        v_init.w = 1.0;
+
+        float4 v_local_pos = mul(v_init, mat[matLandPlacePatchLocalPos]);
+
+        float4 v_local_pos_unit;
         
+        v_local_pos_unit.xyz = normalize(v_local_pos.xyz);
+        v_local_pos_unit.w = 1.0;
+
+
+        if (v_local_pos.x < 9.0 && v_local_pos.x > -9.0 && v_local_pos.y < 9.0 && v_local_pos.y > -9.0)
+        {
+            v2.xyz += 12.0 * landplacepatch_normale.xyz;
+
+        }
+
+        //////////////////////////////////////////////////////
+                
         v2[2] = -v2[2];
         Output.Position = mul(v2, mProj);
 
