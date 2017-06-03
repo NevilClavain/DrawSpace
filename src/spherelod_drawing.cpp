@@ -189,18 +189,18 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
         //////////////////////////////////////////////////////////////////////////////
 
-        local_mat = local_mat_rot_phi * local_mat_rot_theta * p_world * p_view;
-        local_mat.ClearTranslation();
-        Vector v( 0.0, 0.0, 1.0, 1.0 );
+        Matrix landplace_normale_mat = local_mat_rot_phi * local_mat_rot_theta * p_world * p_view;
+        landplace_normale_mat.ClearTranslation();
+        Vector landplace_normale( 0.0, 0.0, 1.0, 1.0 );
 
-        Vector v_orient;
-        Utils::Maths::VectorPlanetOrientation( p_patch->GetOrientation(), v, v_orient );
+        Vector landplace_normale_orient;
+        Utils::Maths::VectorPlanetOrientation( p_patch->GetOrientation(), landplace_normale, landplace_normale_orient );
 
-        Vector vt;
+        Vector landplace_normale_t;
 
-        local_mat.Transform( &v_orient, &vt );
+        landplace_normale_mat.Transform( &landplace_normale_orient, &landplace_normale_t );
 
-        m_renderer->SetFxShaderParams( 0, 33, vt );
+        m_renderer->SetFxShaderParams( 0, 33, landplace_normale_t );
 
       
     }
