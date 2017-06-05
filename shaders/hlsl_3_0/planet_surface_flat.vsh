@@ -165,13 +165,20 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         v_local_pos_unit.w = 1.0;
 
 
+        float v_alt = ComputeVertexHeight(v_local_pos_unit, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
+
+        if (v_alt >= 0.0)
+        {
+            v2.xyz += landplacepatch_normale.xyz * v_alt;
+        }
+
+        /*
         if (v_local_pos.x < 9.0 && v_local_pos.x > -9.0 && v_local_pos.y < 9.0 && v_local_pos.y > -9.0)
         {                      
             v2.xyz += 12.0 * landplacepatch_normale.xyz;
 
         }
-
-
+        */
         //////////////////////////////////////////////////////
                 
         v2[2] = -v2[2];
@@ -193,6 +200,45 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	    // final scaling
 
         v_position3 = v_position2 * flag0.z;
+        v_position3.w = 1.0;
+
+        float4 v_position4 = mul(v_position3, matWorldView);
+        float vertex_distance = sqrt(v_position4.x * v_position4.x + v_position4.y * v_position4.y + v_position4.z * v_position4.z);
+
+        float viewer_alt = flag0.w * flag0.z;
+        float horizon_limit = sqrt(viewer_alt * viewer_alt - flag0.z * flag0.z);
+
+        float v_alt = 0.0;
+
+        float4 global_uv = 0.0;
+        global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
+        global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
+        float v_factor = ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
+
+        if (vertex_distance < /*1.015*//*2.0*/1.05 * horizon_limit)
+        {
+        	
+            v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
+        //v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
+
+            if (v_alt >= 0.0)
+            {
+          
+			// seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
+			// les vertex "skirt" ont toujours une altitude de zero
+
+                if (Input.TexCoord0.z == 0.0)
+                {
+                    v_position3 *= (1.0 + ( /*v_factor * */(v_alt / flag0.z)));
+                }
+                else
+                {
+                    v_position3 *= (1.0 + (-100.0 / flag0.z));
+                }
+            }
+        }
+
+
         v_position3.w = 1.0;
 
         Output.Position = mul(v_position3, matWorldViewProjection);
