@@ -493,6 +493,17 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, SphericalLOD::Binder* p_bind
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe );
+
+
+            if( m_config->m_landplace_patch )
+            {
+                node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
+
+                node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+                node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
+                node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
+            }
+
             break;
 
         case SphericalLOD::Body::AVGRES_MESHE:
