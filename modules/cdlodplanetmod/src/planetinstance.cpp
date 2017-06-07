@@ -253,12 +253,19 @@ void PlanetInstance::Init( PlanetSceneNodeConfig* p_planet_config, DrawSpace::In
 
     m_config.m_layers_descr.push_back( planet_atmosphere );
 
-
 	m_planet_root = _DRAWSPACE_NEW_( DrawSpace::SphericalLOD::Root, DrawSpace::SphericalLOD::Root( m_node_config->m_planetName.m_value, m_node_config->m_planetRay.m_value, p_tm, m_config ) );
 
     for( int i = 0; i < 6; i++ )
     {
-		m_planet_root->RegisterSinglePassSlot( p_ipass, m_planet_details_binder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_SKIRT_MESHE, 0, 2000 );
+        if( m_node_config->m_skirtsEnabled.m_value )
+        {
+		    m_planet_root->RegisterSinglePassSlot( p_ipass, m_planet_details_binder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_SKIRT_MESHE, 0, 2000 );
+        }
+        else
+        {
+            m_planet_root->RegisterSinglePassSlot( p_ipass, m_planet_details_binder[i], i, DrawSpace::SphericalLOD::Body::LOWRES_MESHE, 0, 2000 );
+        }
+
         m_planet_root->RegisterSinglePassSlot( p_ipass, m_planet_atmosphere_binder[i], i, DrawSpace::SphericalLOD::Body::HIRES_MESHE, 1, 1000 );
     }
 

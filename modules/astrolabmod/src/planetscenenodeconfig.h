@@ -61,6 +61,7 @@ public:
     DrawSpace::Module::KeySource<dsreal>            m_groundFogDensity;
 
     DrawSpace::Module::KeySource<bool>              m_climatePassEnabled;
+    DrawSpace::Module::KeySource<bool>              m_skirtsEnabled;
 
 	//////////////////////////////////////////////////////////////////
 
@@ -94,7 +95,8 @@ public:
         m_atmoKr( "atmoKr" ),
         m_groundFogAltLimit( "groundFogAltLimit" ),
         m_groundFogDensity( "groundFogDensty" ),
-        m_climatePassEnabled( "climatePassEnabled" )
+        m_climatePassEnabled( "climatePassEnabled" ),
+        m_skirtsEnabled( "skirtsEnabled" )
 	{
 	}
 };

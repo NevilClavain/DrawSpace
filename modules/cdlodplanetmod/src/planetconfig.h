@@ -280,6 +280,8 @@ public:
 
     BoolParam                           m_climatePassEnabled;
 
+    BoolParam                           m_skirtsEnabled;
+
 
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -313,7 +315,8 @@ public:
     m_atmoKr( "atmoKr" ),
     m_groundFogAltLimit( "groundFogAltLimit" ),
     m_groundFogDensity( "groundFogDensty" ),
-    m_climatePassEnabled( "climatePassEnabled" )
+    m_climatePassEnabled( "climatePassEnabled" ),
+    m_skirtsEnabled( "skirtsEnabled" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
@@ -341,6 +344,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_groundFogAltLimit );
         m_keylinksTable.RegisterModuleKey( &m_groundFogDensity );
         m_keylinksTable.RegisterModuleKey( &m_climatePassEnabled );
+        m_keylinksTable.RegisterModuleKey( &m_skirtsEnabled );
 	}
 
 	virtual void SetOwner( PlanetInstance* p_owner )
