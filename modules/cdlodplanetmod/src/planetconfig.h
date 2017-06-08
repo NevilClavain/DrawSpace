@@ -281,6 +281,7 @@ public:
     BoolParam                           m_climatePassEnabled;
 
     BoolParam                           m_skirtsEnabled;
+    BoolParam                           m_landplacePatchEnabled;
 
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -316,7 +317,8 @@ public:
     m_groundFogAltLimit( "groundFogAltLimit" ),
     m_groundFogDensity( "groundFogDensty" ),
     m_climatePassEnabled( "climatePassEnabled" ),
-    m_skirtsEnabled( "skirtsEnabled" )
+    m_skirtsEnabled( "skirtsEnabled" ),
+    m_landplacePatchEnabled( "landplacePatchEnabled" )
 	{
 		m_keylinksTable.RegisterModuleKey( &m_planetName );
 		m_keylinksTable.RegisterModuleKey( &m_planetRay );
@@ -345,6 +347,7 @@ public:
         m_keylinksTable.RegisterModuleKey( &m_groundFogDensity );
         m_keylinksTable.RegisterModuleKey( &m_climatePassEnabled );
         m_keylinksTable.RegisterModuleKey( &m_skirtsEnabled );
+        m_keylinksTable.RegisterModuleKey( &m_landplacePatchEnabled );
 	}
 
 	virtual void SetOwner( PlanetInstance* p_owner )

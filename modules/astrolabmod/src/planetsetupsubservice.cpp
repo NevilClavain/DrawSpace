@@ -303,6 +303,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_groundFogDensity );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_climatePassEnabled );
                 m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_skirtsEnabled );
+                m_nodes_config[node_name].m_keylinksTable->RegisterClientKey( &m_nodes_config[node_name].m_landplacePatchEnabled );
 
 			    // store planet unique name (also used as scenegraph node id)
 			    m_nodes_config[node_name].m_planetName = node_name;
@@ -341,7 +342,8 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_groundFogAltLimit = 10000.0;
                 m_nodes_config[node_name].m_groundFogDensity = 0.00042;
 
-                m_nodes_config[node_name].m_skirtsEnabled = true;
+                m_nodes_config[node_name].m_skirtsEnabled = false;
+                m_nodes_config[node_name].m_landplacePatchEnabled = true;
 
 
 

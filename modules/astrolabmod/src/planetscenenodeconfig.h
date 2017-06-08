@@ -62,6 +62,7 @@ public:
 
     DrawSpace::Module::KeySource<bool>              m_climatePassEnabled;
     DrawSpace::Module::KeySource<bool>              m_skirtsEnabled;
+    DrawSpace::Module::KeySource<bool>              m_landplacePatchEnabled;
 
 	//////////////////////////////////////////////////////////////////
 
@@ -96,7 +97,8 @@ public:
         m_groundFogAltLimit( "groundFogAltLimit" ),
         m_groundFogDensity( "groundFogDensty" ),
         m_climatePassEnabled( "climatePassEnabled" ),
-        m_skirtsEnabled( "skirtsEnabled" )
+        m_skirtsEnabled( "skirtsEnabled" ),
+        m_landplacePatchEnabled( "landplacePatchEnabled" )
 	{
 	}
 };
