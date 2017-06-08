@@ -328,13 +328,13 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_mixSeed1 = 3.0;
                 m_nodes_config[node_name].m_mixSeed2 = 4.0;
 
-			    m_nodes_config[node_name].m_detailsVertexShader = "planet_surface_flat.vso";
-			    m_nodes_config[node_name].m_detailsPixelShader = "planet_surface_flat.pso";
-                m_nodes_config[node_name].m_climatePassEnabled = false;
+			    //m_nodes_config[node_name].m_detailsVertexShader = "planet_surface_flat.vso";
+			    //m_nodes_config[node_name].m_detailsPixelShader = "planet_surface_flat.pso";
+                //m_nodes_config[node_name].m_climatePassEnabled = false;
 
-			    //m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
-			    //m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
-                //m_nodes_config[node_name].m_climatePassEnabled = true;
+			    m_nodes_config[node_name].m_detailsVertexShader = "planet_surface.vso";
+			    m_nodes_config[node_name].m_detailsPixelShader = "planet_surface.pso";
+                m_nodes_config[node_name].m_climatePassEnabled = true;
 
 			    m_nodes_config[node_name].m_gravityEnabled = false;
                 m_nodes_config[node_name].m_atmoRenderEnable = true;
@@ -342,7 +342,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_groundFogAltLimit = 10000.0;
                 m_nodes_config[node_name].m_groundFogDensity = 0.00042;
 
-                m_nodes_config[node_name].m_skirtsEnabled = false;
+                m_nodes_config[node_name].m_skirtsEnabled = true;
                 m_nodes_config[node_name].m_landplacePatchEnabled = true;
 
 
