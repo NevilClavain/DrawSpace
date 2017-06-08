@@ -171,14 +171,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         {
             v2.xyz += landplacepatch_normale.xyz * v_alt;
         }
-
-        /*
-        if (v_local_pos.x < 9.0 && v_local_pos.x > -9.0 && v_local_pos.y < 9.0 && v_local_pos.y > -9.0)
-        {                      
-            v2.xyz += 12.0 * landplacepatch_normale.xyz;
-
-        }
-        */
         //////////////////////////////////////////////////////
                 
         v2[2] = -v2[2];
