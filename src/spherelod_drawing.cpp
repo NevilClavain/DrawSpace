@@ -187,6 +187,12 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         world = local_mat * p_world;
 
 
+        m_renderer->SetFxShaderMatrix( 0, 29, local_mat_transp );
+        Matrix world = p_world;
+        world.Transpose();
+        m_renderer->SetFxShaderMatrix( 0, 34, world );
+
+
         //////////////////////////////////////////////////////////////////////////////
 
         Matrix landplace_normale_mat = local_mat_rot_phi * local_mat_rot_theta * p_world * p_view;
