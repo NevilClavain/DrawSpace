@@ -215,26 +215,6 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         iv.xyz = Input.Position.xyz;
         iv.w = 1.0;
         vertex_pos = mul(iv, mul(mat[matLandPlacePatchLocalPos], mPlanetWorld));
-        
-
-        /*
-        v_position.xyz = 0.0;
-        v_position.xy = v_position.xy + patch_translation.xy;
-        v_position.z = 1.0;
-        v_position.w = 1.0;
-	
-        float4 v_position2;
-        v_position2.w = 1.0;
-        v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
-
-	    // final scaling    
-        v_position3 = v_position2 * flag0.z;
-
-        v_position3 *= (1.0 + ( (v_alt / flag0.z)));
-        v_position3.w = 1.0;
-
-        vertex_pos = mul(v_position3, mPlanetWorld);
-        */
     }
     else
     {

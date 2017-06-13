@@ -23,7 +23,7 @@
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
 float4x4 matWorld : register(c8);
-
+float4x4 matProj : register(c20);
 
 float4   flag0:				register(c24);
 
@@ -47,7 +47,11 @@ float4   base_uv_global: register(c27);
 
 float4 viewer_pos : register(c28); // pos camera par rapport au centre sphere
 
+float4x4 matLandPlacePatchLocalPos : register(c29);
 
+float4 landplacepatch_normale : register(c33);
+
+float4x4 matPlanetWorld    : register(c34);
 
 float4 landscape_control: register(c40);
 	// .x -> plains amplitude
@@ -130,64 +134,142 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 {
 	VS_OUTPUT Output;
 
+
+    float4x4 matWorldRot = matWorld;
+
+    // clear translations matWorld
+    matWorldRot[3][0] = 0.0;
+    matWorldRot[3][1] = 0.0;
+    matWorldRot[3][2] = 0.0;
+
 	float4 v_position;
+    float v_alt = 0.0;
+    float vertex_distance;
+    float4 v_position3;
+    float4 vertex_pos;
+    float4 PositionWV;
 
-	// sidelenght scaling
 
-	v_position = Input.Position * flag0.y / 2.0;
-	v_position = v_position + patch_translation;
-	v_position.z = 1.0;
-	v_position.w = 1.0;
-	
-	float4 v_position2;	
-	v_position2.w = 1.0;
-	v_position2.xyz = CubeToSphere( ProjectVectorToCube( flag0.x, v_position.xyz ) );
+    if (patch_translation.z > 0.0)
+    {
+        // landplace patch
 
-	// final scaling
-	float4 v_position3;	
-	v_position3 = v_position2 * flag0.z;	
-	v_position3.w = 1.0;
+        float4 iv;
+        iv.xyz = Input.Position.xyz;
+        iv.w = 1.0;
 
-	float4 v_position4 = mul( v_position3, matWorldView );
-	float vertex_distance = sqrt( v_position4.x * v_position4.x + v_position4.y * v_position4.y + v_position4.z * v_position4.z );
+        float4x4 mWorldView;
+        mWorldView = matWorldView;
 
-	float viewer_alt = flag0.w * flag0.z;
-	float horizon_limit = sqrt( viewer_alt * viewer_alt - flag0.z * flag0.z );
+        float4x4 mProj;
+        mProj = matProj;
 
-	float v_alt = 0.0;
+        float4 v2 = mul(iv, mWorldView);
 
-    float4 global_uv = 0.0;
-    global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
-    global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
-    float v_factor = ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
+        vertex_distance = sqrt(v2.x * v2.x + v2.y * v2.y + v2.z * v2.z);
 
-	if( vertex_distance < /*1.015*/ /*2.0*/ 1.05 * horizon_limit )
-	{	
-        	
-        v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
-        //v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
+        //////////////////////////////////////////////////////
 
-		if( v_alt >= 0.0 )
-		{
-          
-			// seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
-			// les vertex "skirt" ont toujours une altitude de zero
+        float4 v_init;
+        
+        v_init.xyz = Input.Position.xyz;
+        v_init.w = 1.0;
 
-			if( Input.TexCoord0.z == 0.0 )
-			{
-                v_position3 *= (1.0 + (/*v_factor * */ (v_alt / flag0.z)));
-            }
-            else
-            {
-                v_position3 *= (1.0 + (-100.0 / flag0.z));
-            }
+        float4 v_local_pos = mul(v_init, matLandPlacePatchLocalPos);
+
+        float4 v_local_pos_unit;
+        
+        v_local_pos_unit.xyz = normalize(v_local_pos.xyz);
+        v_local_pos_unit.w = 1.0;
+
+        v_alt = ComputeVertexHeight(v_local_pos_unit, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
+
+        if (v_alt >= 0.0)
+        {
+            v2.xyz += landplacepatch_normale.xyz * v_alt;
+
         }
-	}
+
+        //////////////////////////////////////////////////////
+
+        PositionWV = v2;
+                
+        v2[2] = -v2[2];
+        Output.Position = mul(v2, mProj);
+
+        ///////////////////////////////////////////////////////////////////////////
+
+        float4x4 mPlanetWorld = matPlanetWorld;
+        mPlanetWorld[3][0] = 0.0;
+        mPlanetWorld[3][1] = 0.0;
+        mPlanetWorld[3][2] = 0.0;
+
+        
+        iv.xyz = Input.Position.xyz;
+        iv.w = 1.0;
+        vertex_pos = mul(iv, mul(matLandPlacePatchLocalPos, mPlanetWorld));
+    }
+    else
+    {
+	    // sidelenght scaling
+
+	    v_position = Input.Position * flag0.y / 2.0;
+	    v_position = v_position + patch_translation;
+	    v_position.z = 1.0;
+	    v_position.w = 1.0;
+	
+	    float4 v_position2;	
+	    v_position2.w = 1.0;
+	    v_position2.xyz = CubeToSphere( ProjectVectorToCube( flag0.x, v_position.xyz ) );
+
+	    // final scaling
+
+	    v_position3 = v_position2 * flag0.z;	
+	    v_position3.w = 1.0;
+
+	    float4 v_position4 = mul( v_position3, matWorldView );
+	    vertex_distance = sqrt( v_position4.x * v_position4.x + v_position4.y * v_position4.y + v_position4.z * v_position4.z );
+
+	    float viewer_alt = flag0.w * flag0.z;
+	    float horizon_limit = sqrt( viewer_alt * viewer_alt - flag0.z * flag0.z );
 
 
-	v_position3.w = 1.0;
 
-	Output.Position = mul( v_position3, matWorldViewProjection );
+        float4 global_uv = 0.0;
+        global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
+        global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
+        float v_factor = ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
+
+	    if( vertex_distance < /*1.015*/ /*2.0*/ 1.05 * horizon_limit )
+	    {	
+        	
+            v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
+            //v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
+
+		    if( v_alt >= 0.0 )
+		    {
+          
+			    // seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
+			    // les vertex "skirt" ont toujours une altitude de zero
+
+			    if( Input.TexCoord0.z == 0.0 )
+			    {
+                    v_position3 *= (1.0 + (/*v_factor * */ (v_alt / flag0.z)));
+                }
+                else
+                {
+                    v_position3 *= (1.0 + (-100.0 / flag0.z));
+                }
+            }
+	    }
+
+	    v_position3.w = 1.0;
+
+	    Output.Position = mul( v_position3, matWorldViewProjection );
+
+        vertex_pos = mul(v_position3, matWorldRot);
+        PositionWV = mul(v_position3, matWorldView);
+    }
 	
 	Output.LODGlobalPatch_TexCoord = 0.0;
 	Output.LODGlobalPatch_TexCoord.x = lerp( base_uv.x, base_uv.z, Input.TexCoord0.x );
@@ -212,14 +294,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     ////// atmo scattering : calcul vertex pos
 
-    float4x4 matWorldRot = matWorld;
-
-    // clear translations matWorld
-    matWorldRot[3][0] = 0.0;
-    matWorldRot[3][1] = 0.0;
-    matWorldRot[3][2] = 0.0;
-
-    float4 vertex_pos = mul(v_position3, matWorldRot);
 
     Output.c0 = 0.0;
     Output.c1 = 0.0;
@@ -313,7 +387,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
 
-    float4 PositionWV = mul(v_position3, matWorldView);
     Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
 
 	return( Output );   
