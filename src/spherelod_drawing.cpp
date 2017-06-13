@@ -251,17 +251,13 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
         {
             if( DRAW_ALL_BUTLANDPLACEPATCH == m_drawpatch_mode )
             {
-                /*
-                if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() )
-                {
-                    // dessiner les patch de niveau LOD 0 qui ne contiennent PAS la camera
-                    draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
-                }
-                */
+                // dessiner les patchs de niveau LOD 0 qui ne contiennent PAS la camera... et tout les autres
+                //if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel() )
 
-                if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel()  )
+
+                if( 0 != m_display_list[i]->GetLodLevel()  )
                 {
-                    // dessiner les patchs de niveau LOD 0 qui ne contiennent PAS la camera... et tout les autres
+                    
                     draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
                 }
             }
@@ -269,6 +265,8 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             {
                 if( check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) )
                 {
+
+                    m_renderer->ClearDepth();
                     // dessiner LE patch de niveau LOD 0 qui contient  la camera
                     draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
                 }
@@ -647,7 +645,7 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
 
             Vector v( xcurr * scale, ycurr * scale, 0.0, 1.0 );
 
-            v.Scale( 90.0 );
+            v.Scale( /*90.0*/ 400.0 );
 
 
             Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
@@ -704,7 +702,7 @@ void Drawing::create_all_landplace_meshes( void )
     {
         m_landplace_meshes[i] = _DRAWSPACE_NEW_( Meshe, Meshe );
 
-        create_landplace_meshe( PATCH_RESOLUTION, i, m_landplace_meshes[i] );
+        create_landplace_meshe( PATCH_AVG_RESOLUTION, i, m_landplace_meshes[i] );
 
         m_landplace_meshes[i]->SetPath( "sphereLOD landplace meshe" );
     }
