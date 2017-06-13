@@ -645,7 +645,7 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
 
             Vector v( xcurr * scale, ycurr * scale, 0.0, 1.0 );
 
-            v.Scale( /*90.0*/ 400.0 );
+            v.Scale( /*90.0*/ /* 400.0 */80000.0 );
 
 
             Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );

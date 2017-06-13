@@ -308,12 +308,12 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 			    // store planet unique name (also used as scenegraph node id)
 			    m_nodes_config[node_name].m_planetName = node_name;
 			    // setup default values here
-                m_nodes_config[node_name].m_planetRay = 500.0;
+                m_nodes_config[node_name].m_planetRay = 6500.0;
 
-                m_nodes_config[node_name].m_plainsAmplitude = 50.0;
-                m_nodes_config[node_name].m_moutainsAmplitude = 800.0;
-                m_nodes_config[node_name].m_moutainsOffset = -120.0;
-                m_nodes_config[node_name].m_verticalOffset = 0.0;
+                m_nodes_config[node_name].m_plainsAmplitude = 200.0;//50.0;
+                m_nodes_config[node_name].m_moutainsAmplitude = 7000.0;//800.0;
+                m_nodes_config[node_name].m_moutainsOffset = -2200.0;
+                m_nodes_config[node_name].m_verticalOffset = 20.0;
                 m_nodes_config[node_name].m_beachLimit = 25.0;
 				m_nodes_config[node_name].m_landscapeBumpFactor = 16.0;
                 m_nodes_config[node_name].m_zbufferActivationRelAlt = 1.0098;
@@ -339,7 +339,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 			    m_nodes_config[node_name].m_gravityEnabled = false;
                 m_nodes_config[node_name].m_atmoRenderEnable = true;
                 m_nodes_config[node_name].m_atmoKr = 0.0038;
-                m_nodes_config[node_name].m_groundFogAltLimit = 10000.0;
+                m_nodes_config[node_name].m_groundFogAltLimit = 30000.0;//10000.0;
                 m_nodes_config[node_name].m_groundFogDensity = 0.00042;
 
                 m_nodes_config[node_name].m_skirtsEnabled = true;

@@ -904,7 +904,9 @@ void PlanetViewSubService::SetSkyboxInfos( DrawSpace::Interface::Module::Root* p
 void PlanetViewSubService::set_arrow_initial_attitude( void )
 {
 	Matrix mat;   
-    mat.Translation( 0.0, 0.0, 4000000.0 );
+    //mat.Translation( 0.0, 0.0, 4000000.0 );
+
+    mat.Translation( 0.0, 0.0, m_planet_conf->m_planetRay.m_value * 1000 * 9.0 );
 
 	m_arrow->ForceInitialAttitude( mat );
 }
