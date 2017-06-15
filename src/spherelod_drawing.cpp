@@ -252,10 +252,8 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             if( DRAW_ALL_BUTLANDPLACEPATCH == m_drawpatch_mode )
             {
                 // dessiner les patchs de niveau LOD 0 qui ne contiennent PAS la camera... et tout les autres
-                //if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel() )
-
-
-                if( 0 != m_display_list[i]->GetLodLevel()  )
+                if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel() )
+                //if( 0 != m_display_list[i]->GetLodLevel()  )
                 {
                     
                     draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
@@ -645,7 +643,9 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
 
             Vector v( xcurr * scale, ycurr * scale, 0.0, 1.0 );
 
-            v.Scale( /*90.0*/ /* 400.0 */80000.0 );
+            dsreal patch_scale = ( 2.0 * m_config->m_layers_descr[0].ray * 1000.0 / 1024 ) * 3;
+
+            v.Scale( patch_scale );
 
 
             Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
