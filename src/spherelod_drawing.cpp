@@ -61,6 +61,9 @@ void FaceDrawingNode::SetDrawPatchMode( DrawPatchMode p_mode )
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
+    dsreal patch_dim = 28.0 * p_patch->GetUnitSideLenght() / 2.0 * p_ray; //( 2.0 * m_config->m_layers_descr[0].ray * 1000.0 / 1024 ) * 3;
+    dsreal patch_scale = 3.0;
+
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
     flag0[1] = p_patch->GetUnitSideLenght();
@@ -81,6 +84,36 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
     Vector global_uvcoords;
     p_patch->GetGlobalUVCoords( global_uvcoords );
+
+    if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
+    {
+        // dilatation des coords uv rel et global suivant le facteur d'echelle du patch landplace
+        dsreal middle_x, middle_y;
+
+        middle_x = 0.5 * ( globalrel_uvcoords[2] + globalrel_uvcoords[0] );
+        middle_y = 0.5 * ( globalrel_uvcoords[3] + globalrel_uvcoords[1] );
+
+        globalrel_uvcoords[0] = patch_scale * ( globalrel_uvcoords[0] - middle_x ) + middle_x;
+        globalrel_uvcoords[2] = patch_scale * ( globalrel_uvcoords[2] - middle_x ) + middle_x;
+
+        globalrel_uvcoords[1] = patch_scale * ( globalrel_uvcoords[1] - middle_y ) + middle_y;
+        globalrel_uvcoords[3] = patch_scale * ( globalrel_uvcoords[3] - middle_y ) + middle_y;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        middle_x = 0.5 * ( global_uvcoords[2] + global_uvcoords[0] );
+        middle_y = 0.5 * ( global_uvcoords[3] + global_uvcoords[1] );
+
+        global_uvcoords[0] = patch_scale * ( global_uvcoords[0] - middle_x ) + middle_x;
+        global_uvcoords[2] = patch_scale * ( global_uvcoords[2] - middle_x ) + middle_x;
+
+        global_uvcoords[1] = patch_scale * ( global_uvcoords[1] - middle_y ) + middle_y;
+        global_uvcoords[3] = patch_scale * ( global_uvcoords[3] - middle_y ) + middle_y;
+    }
+
+
+
 
     Vector view_pos = p_invariant_view_pos;
 
@@ -121,9 +154,18 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         rot_theta = spos[1];
 
         Matrix local_mat;
+        Matrix local_scale;
         Matrix local_mat_trans;
         Matrix local_mat_rot_theta;
         Matrix local_mat_rot_phi;
+
+        
+
+
+
+
+
+        local_scale.Scale( Vector( patch_scale * patch_dim, patch_scale * patch_dim, patch_scale * patch_dim, 1.0 ) );
 
         switch( p_patch->GetOrientation() )
         {   
@@ -177,7 +219,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
         }
 
-        local_mat = local_mat_trans * local_mat_rot_phi * local_mat_rot_theta;
+        local_mat = local_scale * local_mat_trans * local_mat_rot_phi * local_mat_rot_theta;
 
         Matrix local_mat_transp = local_mat;
         local_mat_transp.Transpose();
@@ -231,9 +273,18 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
     //ZeroMemory( &m_stats, sizeof( Stats ) );
 
     Texture* current_texture = NULL;
+
+    int min_lod_level = -1;
         
     for( size_t i = 0; i < m_display_list.size(); i++ )
     {
+        int curr_lod_level = m_display_list[i]->GetLodLevel();
+        if( -1 == min_lod_level || curr_lod_level < min_lod_level )
+        {
+            min_lod_level = curr_lod_level;
+        }
+
+
         Patch* ref_patch = m_display_list[i]->GetTextureReferent();
         Texture* refpatchtexture = ref_patch->GetDataTexture();
 
@@ -271,6 +322,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             }
         }
     }
+
 }
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
@@ -643,10 +695,9 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
 
             Vector v( xcurr * scale, ycurr * scale, 0.0, 1.0 );
 
-            dsreal patch_scale = ( 2.0 * m_config->m_layers_descr[0].ray * 1000.0 / 1024 ) * 3;
+            //dsreal patch_scale = ( 2.0 * m_config->m_layers_descr[0].ray * 1000.0 / 1024 ) * 3;
 
-            v.Scale( patch_scale );
-
+            //v.Scale( patch_scale );
 
             Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
 
