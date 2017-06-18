@@ -320,7 +320,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
                 m_nodes_config[node_name].m_splatTransitionUpRelativeAlt = 1.095;
                 m_nodes_config[node_name].m_splatTransitionDownRelativeAlt = 1.0040;
                 m_nodes_config[node_name].m_nbLODFreeCameras = 14;
-                m_nodes_config[node_name].m_nbLODInertBodies = 15;
+                m_nodes_config[node_name].m_nbLODInertBodies = 14;
                 m_nodes_config[node_name].m_splatTextureResol = 16;
 
                 m_nodes_config[node_name].m_plainsSeed1 = 1.0;

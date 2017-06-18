@@ -61,8 +61,8 @@ void FaceDrawingNode::SetDrawPatchMode( DrawPatchMode p_mode )
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
-    dsreal patch_dim = 28.0 * p_patch->GetUnitSideLenght() / 2.0 * p_ray; //( 2.0 * m_config->m_layers_descr[0].ray * 1000.0 / 1024 ) * 3;
-    dsreal patch_scale = 3.0;
+    dsreal patch_dim = p_patch->GetUnitSideLenght() / 2.0 * p_ray;
+    dsreal patch_scale = 1.5;
 
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -158,13 +158,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         Matrix local_mat_trans;
         Matrix local_mat_rot_theta;
         Matrix local_mat_rot_phi;
-
-        
-
-
-
-
-
+       
         local_scale.Scale( Vector( patch_scale * patch_dim, patch_scale * patch_dim, patch_scale * patch_dim, 1.0 ) );
 
         switch( p_patch->GetOrientation() )
@@ -677,10 +671,6 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
     float current_u0 = 0.0f;
     float current_v0 = 0.0f;
 
-    dsreal patch_final_size = 400.0;
-
-    dsreal scale = patch_final_size / ( 2.0 * m_config->m_layers_descr[0].ray );
-
     for( long i = 0; i < patch_resolution; i++ )
     {
         for( long j = 0; j < patch_resolution; j++ )
@@ -693,11 +683,8 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
             Vector v_scaled;
             Vector v_orient;
 
-            Vector v( xcurr * scale, ycurr * scale, 0.0, 1.0 );
+            Vector v( xcurr, ycurr, 0.0, 1.0 );
 
-            //dsreal patch_scale = ( 2.0 * m_config->m_layers_descr[0].ray * 1000.0 / 1024 ) * 3;
-
-            //v.Scale( patch_scale );
 
             Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
 
