@@ -312,7 +312,7 @@ void PlanetSetupSubService::on_guipushbutton_clicked( const dsstring& p_layout, 
 
                 m_nodes_config[node_name].m_plainsAmplitude = 600.0;//50.0;
                 m_nodes_config[node_name].m_moutainsAmplitude = 16000.0;//800.0;
-                m_nodes_config[node_name].m_moutainsOffset = -2200.0;
+                m_nodes_config[node_name].m_moutainsOffset = 0;//-2200.0;
                 m_nodes_config[node_name].m_verticalOffset = 20.0;
                 m_nodes_config[node_name].m_beachLimit = 25.0;
 				m_nodes_config[node_name].m_landscapeBumpFactor = 16.0;
