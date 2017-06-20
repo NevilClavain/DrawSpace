@@ -31,7 +31,7 @@
 #define VOLUMETRIC_CLOUDS_ALT               2400.0
 #define VOLUMETRIC_CLOUDS_MIN_SPEED_DEG_S   0.003
 #define VOLUMETRIC_CLOUDS_MAX_SPEED_DEG_S   0.004
-#define TEMP_DEC_PER_KM                     66.0
+#define TEMP_DEC_PER_KM                     34.0//66.0
 #define CLOUDS_PROCEDURALRULES_FILE         "planet_clouds_small_small.rules"
 #define CLOUDS_HEIGHT                       750.0
 #define CLOUDS_FOG_DENSITY                  0.000045
