@@ -28,7 +28,6 @@
 #include "pimanager.h"
 #include "cbfgfont.h"
 #include "exceptions.h"
-#include "assetsbase.h"
 
 
 using namespace DrawSpace;
@@ -168,28 +167,7 @@ void Font::GetTexturePath( dsstring& p_texturepath )
 
 bool Font::ApplyProperties( void )
 {
-    m_assetname = m_properties["assetname"].GetPropValue<dsstring>();
-
-    dsstring texturefilepath = m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
-    dsstring metricsfilepath = m_properties["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
-
-    dsstring mode = m_properties["mode"].GetPropValue<dsstring>();
-    FontImport* fontimp;
-
-    if( mode == "cbfg" )
-    {
-        //fontimp = new CBFGFontImport();
-        //fontimp = _DRAWSPACE_NEW_( CBFGFontImport, CBFGFontImport );
-        fontimp = AssetsBase::GetInstance()->GetCBFGFontImporter();
-    }
-    else
-    {
-        _DSEXCEPTION( "Bad font import name : " << mode )
-    }
-
-
-    SetImporter( fontimp );
-    return Build( texturefilepath, metricsfilepath );
+    return 0;
 }
 
 void Font::Serialize( Utils::Archive& p_archive  )

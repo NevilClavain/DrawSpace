@@ -14,7 +14,6 @@
     <ClCompile Include="src\ac3dmeshe.cpp" />
     <ClCompile Include="src\archive.cpp" />
     <ClCompile Include="src\asset.cpp" />
-    <ClCompile Include="src\assetsbase.cpp" />
     <ClCompile Include="src\body.cpp" />
     <ClCompile Include="src\calendar.cpp" />
     <ClCompile Include="src\camerapoint.cpp" />
@@ -103,7 +102,6 @@
     <ClInclude Include="src\ac3dmeshe.h" />
     <ClInclude Include="src\archive.h" />
     <ClInclude Include="src\asset.h" />
-    <ClInclude Include="src\assetsbase.h" />
     <ClInclude Include="src\body.h" />
     <ClInclude Include="src\calendar.h" />
     <ClInclude Include="src\callback.h" />

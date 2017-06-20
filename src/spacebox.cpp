@@ -24,7 +24,6 @@
 #include "memalloc.h"
 #include "exceptions.h"
 #include "configsbase.h"
-#include "assetsbase.h"
 #include "misc_utils.h"
 #include "plugin.h"
 

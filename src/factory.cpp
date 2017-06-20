@@ -21,7 +21,6 @@
 */
 
 #include "factory.h"
-#include "assetsbase.h"
 #include "configsbase.h"
 #include "exceptions.h"
 
@@ -100,128 +99,7 @@ DrawSpace::Asset* Factory::BuildAssetFromText( const dsstring& p_keyword, const 
 
 bool Factory::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
 {
-    if( m_capture_asset_props )
-    {   
-        if( "#" == p_words[0] )
-        {
-            return true;
-        }
-        else if( DECLARE_END_ASSET_KEYWORD == p_words[0] )
-        {
-            m_capture_asset_props = false;
-
-            Asset* asset = BuildAssetFromText( m_asset_keyword, m_asset_properties );
-            if( asset )
-            {
-                // register in Assetsbase
-
-                // check out if an name has been specified for asset
-                dsstring assetname;
-                asset->GetName( assetname );
-
-                if( "" == assetname )
-                {
-                    _DSEXCEPTION( "asset has no name, and so cannot be registered in AssetsBase" );
-                }
-
-                if( AssetsBase::GetInstance()->AssetIdExists( assetname ) )
-                {
-                    _DSEXCEPTION( "asset with same id " + assetname + " already registered in AssetsBase" );
-                }
-
-                AssetsBase::GetInstance()->RegisterAsset( assetname, asset );
-            }
-            else
-            {
-                // m_last_error deja positionne dans BuildAssetFromText()
-                return false;
-            }           
-        }
-        else
-        {
-            m_asset_properties += p_line;
-            m_asset_properties += "\n";
-        }
-    }
-    else if( m_capture_config_props )
-    {
-        if( "#" == p_words[0] )
-        {
-            return true;
-        }
-        else if( DECLARE_END_CONFIG_KEYWORD == p_words[0] )
-        {
-            m_capture_config_props = false;
-
-            Configurable* config = BuildConfigurableFromText( m_config_keyword, m_config_properties );
-            if( config )
-            {
-                // register instance in Configsbase
-
-                // check out if an name has been specified for config instance
-
-                if( ConfigsBase::GetInstance()->ConfigurableInstanceExists( m_config_name ) )
-                {
-                    _DSEXCEPTION( "config instance with same id already registered in ConfigsBase" );
-                }
-
-                ConfigsBase::GetInstance()->RegisterConfigurableInstance( m_config_name, config );
-
-                // instance Configurable cr��e et stock�e par fichier config resource : lui attribuer le nom specifique
-                config->SetSpecificName( m_config_name );
-            }
-            else
-            {
-                // m_last_error deja positionne dans BuildConfigurableFromText()
-                return false;
-            }
-
-        }
-        else
-        {
-            m_config_properties += p_line;
-            m_config_properties += "\n";
-        }
-    }
-    else
-    {
-        if( "#" == p_words[0] )
-        {
-            return true;
-        }
-        else if( DECLARE_ASSET_INSTANCE_KEYWORD == p_words[0] )
-        {
-            if( p_words.size() < 2 )
-            {
-                _PARSER_MISSING_ARG__
-                return false;
-            }
-            m_capture_asset_props = true;
-
-            m_asset_properties = "";
-            m_asset_keyword = p_words[1];
-
-        }
-        else if( DECLARE_CONFIG_INSTANCE_KEYWORD == p_words[0] )
-        {
-            if( p_words.size() < 3 )
-            {
-                _PARSER_MISSING_ARG__
-                return false;
-            }
-            m_capture_config_props = true;
-
-            m_config_properties = "";
-            m_config_keyword = p_words[1];
-            m_config_name = p_words[2];
-        }
-        else
-        {
-            _PARSER_UNEXPECTED_KEYWORD_
-            return false;
-        }
-    }
-    return true;
+    return 0;
 }
 
 bool Factory::ExecuteFromTextFile( const dsstring& p_path )

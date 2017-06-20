@@ -45,9 +45,6 @@
     <ClCompile Include="src\spacebox.cpp" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
-    <ClCompile Include="src\assetsbase.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\circularmovement.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -289,9 +286,6 @@
     <ClInclude Include="src\spacebox.h" />
     <ClInclude Include="src\text.h" />
     <ClInclude Include="src\viewportquad.h" />
-    <ClInclude Include="src\assetsbase.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\callback.h">
       <Filter>core</Filter>
     </ClInclude>

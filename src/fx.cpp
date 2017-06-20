@@ -24,7 +24,6 @@
 #include "renderer.h"
 #include "md5.h"
 #include "plugin.h"
-#include "assetsbase.h"
 #include "exceptions.h"
 
 using namespace DrawSpace;

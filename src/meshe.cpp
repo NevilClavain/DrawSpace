@@ -27,7 +27,6 @@
 #include "misc_utils.h"
 #include "pimanager.h"
 #include "ac3dmeshe.h"
-#include "assetsbase.h"
 #include "renderer.h"
 #include "plugin.h"
 
@@ -291,32 +290,7 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
 
 bool Meshe::ApplyProperties( void )
 {
-    m_assetname = m_properties["assetname"].GetPropValue<dsstring>();
 
-    dsstring path = m_properties["filepath"].GetPropValue<dsstring>();
-    long index = m_properties["index"].GetPropValue<long>();
-
-    dsstring mode = m_properties["mode"].GetPropValue<dsstring>();
-    
-
-    MesheImport* mesheimp;
-
-    if( mode == "ac3d" )
-    {
-        //mesheimp = new DrawSpace::Utils::AC3DMesheImport();
-        //mesheimp = _DRAWSPACE_NEW_( AC3DMesheImport, AC3DMesheImport );
-        mesheimp = AssetsBase::GetInstance()->GetAC3CMesheImporter();
-    }
-    else
-    {
-        _DSEXCEPTION( "Bad meshe import name : " << mode )
-    }
-    SetImporter( mesheimp );
-    if( LoadFromFile( path, index ) )
-    {
-        ComputeNormales( m_properties["spherical_normales"].GetPropValue<bool>() );
-        return true;
-    }
     return false;
 }
 

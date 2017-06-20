@@ -25,7 +25,6 @@
 #include "plugin.h"
 #include "misc_utils.h"
 #include "configsbase.h"
-#include "assetsbase.h"
 #include "exceptions.h"
 
 using namespace DrawSpace;
@@ -190,106 +189,7 @@ bool Pass::ParseProperties( const dsstring& p_text )
 
 
 void Pass::ApplyProperties( void )
-{      
-    bool enabledepthclear = m_properties["enabledepthclear"].GetPropValue<bool>();
-    GetRenderingQueue()->EnableDepthClearing( enabledepthclear );
-
-    bool enabletargetclear = m_properties["enabletargetclear"].GetPropValue<bool>();
-    GetRenderingQueue()->EnableTargetClearing( enabletargetclear );
-
-    unsigned char r = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "r" );
-    unsigned char g = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "g" );
-    unsigned char b = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "b" );
-    unsigned char a = m_properties["targetclearcolor"].GetPropValue<unsigned char>( "a" );
-
-    GetRenderingQueue()->SetTargetClearingColor( r, g, b, a );
-
-    bool viewportquad = m_properties["viewportquad"].GetPropValue<bool>();
-
-    dsstring passname = m_properties["passname"].GetPropValue<dsstring>();
-
-    if( viewportquad )
-    {
-        CreateViewportQuad();
-
-        dsstring viewportquad_fx = m_properties["viewportquad_fx"].GetPropValue<dsstring>();
-
-        if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( viewportquad_fx ) )
-        {
-            _DSEXCEPTION( "Config id " + viewportquad_fx + " unknown in ConfigsBase for pass " + passname );
-        }
-
-        Configurable* config = ConfigsBase::GetInstance()->GetConfigurableInstance( viewportquad_fx );
-
-        Fx* fx = dynamic_cast<Fx*>( config );
-        if( !fx )
-        {
-            _DSEXCEPTION( "Specified config " + viewportquad_fx + " is not an Fx for pass " + passname );
-        }
-
-        GetViewportQuad()->SetFx( fx );
-
-        std::vector<std::pair<long, TextureSourceName>> viewportquad_textures;
-
-        viewportquad_textures = m_properties["viewportquad_textures"].GetPropValue<std::vector<std::pair<long, TextureSourceName>>>();
-
-        for( size_t i = 0; i < viewportquad_textures.size(); i++ )
-        {
-            TextureSourceName texture_source_name = viewportquad_textures[i].second;
-            long stage = viewportquad_textures[i].first;
-
-            if( PASS_NAME == texture_source_name.source )
-            {
-                if( false == ConfigsBase::GetInstance()->ConfigurableInstanceExists( texture_source_name.name ) )
-                {
-                    _DSEXCEPTION( "Config id " + texture_source_name.name + " unknown in ConfigsBase for pass " + passname );
-                }
-
-                Configurable* pass = ConfigsBase::GetInstance()->GetConfigurableInstance( texture_source_name.name );
-
-                IntermediatePass* ipass = dynamic_cast<IntermediatePass*>( pass );
-
-                if( ipass )
-                {
-                    GetViewportQuad()->SetTexture( ipass->GetTargetTexture(), stage );
-                }
-                else
-                {
-                    _DSEXCEPTION( "Specified pass is not an Intermediate pass for pass " + passname );
-                }
-            }
-            else
-            {
-                if( false == AssetsBase::GetInstance()->AssetIdExists( texture_source_name.name ) )
-                {
-                    _DSEXCEPTION( "Asset id " + texture_source_name.name + " unknown in AssetsBase for pass " + passname );
-                }
-
-                Asset* asset = AssetsBase::GetInstance()->GetAsset( texture_source_name.name );
-
-                Texture* texture = dynamic_cast<Texture*>( asset);
-                if( !texture )
-                {
-                    _DSEXCEPTION( "Specified asset is not a texture for pass " + passname );
-                }
-
-                GetViewportQuad()->SetTexture( static_cast<Texture*>( asset ), stage );
-            }
-        }
-
-        std::map<dsstring, RenderingNode::ShadersParams> viewportquad_shaderparams = m_properties["viewportquad_shaderparams"].GetPropValue<std::map<dsstring, RenderingNode::ShadersParams>>();
-        for( std::map<dsstring, RenderingNode::ShadersParams>::iterator it = viewportquad_shaderparams.begin(); it != viewportquad_shaderparams.end(); ++ it )
-        {
-            GetViewportQuad()->AddShaderParameter( it->second.shader_index, it->first, it->second.param_register );
-
-            if( it->second.vector )
-            {
-                GetViewportQuad()->SetShaderRealVector( it->first, it->second.param_values );
-            }
-        }
-    }
-     
-    //GetRenderingQueue()->SetTargetClearingColor( r, g, b );
+{
 }
 
 bool Pass::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )

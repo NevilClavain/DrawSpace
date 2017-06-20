@@ -45,7 +45,6 @@
 #include "transformation.h"
 #include "renderingnode.h"
 #include "renderingqueue.h"
-#include "assetsbase.h"
 #include "configsbase.h"
 #include "shaderscontroller.h"
 #include "asset.h"
