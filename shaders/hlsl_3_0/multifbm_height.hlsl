@@ -67,13 +67,13 @@ float ComputeVertexHeight(float4 p_vpos, float p_plains_amplitude, float p_mount
 	
     float pn = SimplexPerlin3D(f, p_mix_seed1, p_mix_seed2);
 
-	float pn2 = 9.0 * ( ( 0.5 * pn ) + 0.5 );
+	float pn2 = 9.6 * ( ( 0.5 * pn ) + 0.5 );
 	float weight = exp( pn2 ) / 1000.0;
 
     /////////////////////////////////////////////////////////
 
 	
-	float hl = clamp( fbm_plains, 0.0, 1.0 );
+	float hl = clamp( fbm_plains - 0.48, 0.0, 1.0 );
 
     float plains_altitude = fbm_plains * p_plains_amplitude;
 
@@ -83,7 +83,7 @@ float ComputeVertexHeight(float4 p_vpos, float p_plains_amplitude, float p_mount
         highmountains_altitude = 0.0;
     }
 
-    res = lerp(plains_altitude, plains_altitude + highmountains_altitude, hl * weight);
+    res = lerp(plains_altitude, /*plains_altitude + */highmountains_altitude, hl * weight);
 
     res += p_offset;
 
