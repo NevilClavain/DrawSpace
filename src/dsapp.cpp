@@ -145,7 +145,6 @@ m_mouse_circularmode( false ),
 m_cmdline( "" ),
 m_gl_ready( false )
 {
-    Initialize();
 }
 
 App::~App( void )

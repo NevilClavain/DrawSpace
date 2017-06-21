@@ -23,7 +23,6 @@
 #include "spectatormovement.h"
 #include "maths.h"
 #include "misc_utils.h"
-#include "configsbase.h"
 #include "exceptions.h"
 
 using namespace DrawSpace;

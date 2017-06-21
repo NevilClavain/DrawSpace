@@ -26,18 +26,12 @@
 #include "texture.h"
 #include "renderingqueue.h"
 #include "viewportquad.h"
-#include "configurable.h"
 
-#define FINALPASS_TEXT_KEYWORD              "FinalPass"
-#define FINALPASS_ARC_MAGICNUMBER           0x4041
-
-#define INTERMEDIATEPASS_TEXT_KEYWORD       "IntermediatePass"
-#define INTERMEDIATEPASS_ARC_MAGICNUMBER    0x4042
 
 namespace DrawSpace
 {
 
-class Pass : public Core::Configurable
+class Pass
 {
 public:
     typedef enum
@@ -64,7 +58,6 @@ protected:
 
     bool                    m_initialized;
 
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
     // pour empecher l'instanciation
     Pass( void );    
@@ -78,44 +71,18 @@ public:
 
     virtual ViewportQuad* GetViewportQuad( void );
 
-    //virtual void SetName( const dsstring& p_name );
-    //virtual void GetName( dsstring& p_name );
-
-
-    virtual void Serialize( Utils::Archive& p_archive  );
-    virtual bool Unserialize( Utils::Archive& p_archive );
-
-    virtual void DumpProperties( dsstring& p_text );
-    virtual bool ParseProperties( const dsstring& p_text );
-
-    virtual void ApplyProperties( void );
-
     virtual void SetSpecificName( const dsstring& p_name );
     virtual void GetSpecificName( dsstring& p_name );
-
-
 };
 
 class FinalPass : public Pass
 {
-protected:
-
-    //virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
     FinalPass( void );
     FinalPass( const dsstring& p_name );
     virtual ~FinalPass( void );
 
     bool Initialize( void );
-
-    void DumpProperties( dsstring& p_text );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    virtual void ApplyProperties( void );
-
-    static Configurable* Instanciate( void );
 };
 
 class IntermediatePass : public Pass
@@ -130,9 +97,6 @@ protected:
     Core::Texture::RenderPurpose    m_renderpurpose;
     Core::Texture::RenderTarget     m_rendertarget;
 
-    void init_properties( void );
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
     IntermediatePass( void );
     IntermediatePass( const dsstring& p_name );
@@ -146,13 +110,6 @@ public:
     bool Initialize( void );
     
     Core::Texture* GetTargetTexture( void );
-
-    virtual void DumpProperties( dsstring& p_text );
-    virtual void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Configurable* Instanciate( void );
 
 };
 }

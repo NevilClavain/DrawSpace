@@ -25,30 +25,16 @@
 
 #include "renderstatesset.h"
 #include "shader.h"
-#include "configurable.h"
-
-#define FX_TEXT_KEYWORD    "Fx"
-#define FX_ARC_MAGICNUMBER 0x4040
-
 
 namespace DrawSpace
 {
 namespace Core
 {
-class Fx : public Configurable
+class Fx
 {
 protected:
     std::vector<Shader*>                        m_shaders;
-
-    /*
-    std::vector<RenderState>                    m_renderstates_in;
-    std::vector<RenderState>                    m_renderstates_out;
-    */
-
     RenderStatesSet                             m_renderstates;
-
-
-    bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
     Fx( void );
@@ -62,17 +48,9 @@ public:
     long GetRenderStatesOutListSize( void );
     void AddShader( Shader* p_shader );
 
-    /*
-    void AddRenderStateIn( const RenderState& p_renderstate );
-    void AddRenderStateOut( const RenderState& p_renderstate );
-
-    void UpdateRenderStateIn( int p_index,const RenderState& p_renderstate );
-    void UpdateRenderStateOut( int p_index, const RenderState& p_renderstate );
-    */
-
     void Serialize( Utils::Archive& p_archive  );
     bool Unserialize( Utils::Archive& p_archive );
-    //void GetMD5( dsstring& p_md5 );
+
 
     void GetShadersMD5( dsstring& p_md5 );
     void GetRenderStatesSetMD5( dsstring& p_md5 );
@@ -89,8 +67,6 @@ public:
     void SetRenderStates( const RenderStatesSet& p_renderstates );
 
     RenderStatesSet* GetRenderStatesSetRef( void );
-
-    static Configurable* Instanciate( void );
 
 };
 }

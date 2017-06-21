@@ -21,7 +21,6 @@
 */
 
 #include "factory.h"
-#include "configsbase.h"
 #include "exceptions.h"
 
 DrawSpace::Core::Factory* DrawSpace::Core::Factory::m_instance = NULL;

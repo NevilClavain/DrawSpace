@@ -24,7 +24,6 @@
 #include "memalloc.h"
 #include "chunk.h"
 #include "exceptions.h"
-#include "configsbase.h"
 #include "misc_utils.h"
 #include "renderer.h"
 #include "plugin.h"

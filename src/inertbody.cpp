@@ -22,7 +22,6 @@
 
 #include "inertbody.h"
 #include "exceptions.h"
-#include "configsbase.h"
 #include "misc_utils.h"
 #include "transformation.h"
 

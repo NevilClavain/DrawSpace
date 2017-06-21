@@ -23,7 +23,6 @@
 #include "spacebox.h"
 #include "memalloc.h"
 #include "exceptions.h"
-#include "configsbase.h"
 #include "misc_utils.h"
 #include "plugin.h"
 

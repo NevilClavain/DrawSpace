@@ -40,21 +40,11 @@
     <ClCompile Include="src\chunk.cpp" />
     <ClCompile Include="src\events.cpp" />
     <ClCompile Include="src\image.cpp" />
-    <ClCompile Include="src\inits.cpp" />
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\spacebox.cpp" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
     <ClCompile Include="src\circularmovement.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\configsbase.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\configurable.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\factory.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\font.cpp">
@@ -73,9 +63,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\linearmovement.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lod.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\longlatmovement.cpp">
@@ -281,7 +268,6 @@
     <ClInclude Include="src\events.h" />
     <ClInclude Include="src\flags.h" />
     <ClInclude Include="src\image.h" />
-    <ClInclude Include="src\inits.h" />
     <ClInclude Include="src\pass.h" />
     <ClInclude Include="src\spacebox.h" />
     <ClInclude Include="src\text.h" />
@@ -290,15 +276,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\circularmovement.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\configsbase.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\configurable.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\factory.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\font.h">
@@ -317,9 +294,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\linearmovement.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lod.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\longlatmovement.h">
