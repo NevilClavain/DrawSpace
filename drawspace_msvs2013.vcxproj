@@ -12,8 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ac3dmeshe.cpp" />
-    <ClCompile Include="src\archive.cpp" />
-    <ClCompile Include="src\asset.cpp" />
     <ClCompile Include="src\body.cpp" />
     <ClCompile Include="src\calendar.cpp" />
     <ClCompile Include="src\camerapoint.cpp" />
@@ -24,7 +22,6 @@
     <ClCompile Include="src\collider.cpp" />
     <ClCompile Include="src\drawspace_commons.cpp" />
     <ClCompile Include="src\dsapp.cpp" />
-    <ClCompile Include="src\events.cpp" />
     <ClCompile Include="src\file.cpp" />
     <ClCompile Include="src\font.cpp" />
     <ClCompile Include="src\fpsmovement.cpp" />
@@ -65,13 +62,11 @@
     <ClCompile Include="src\renderingnode.cpp" />
     <ClCompile Include="src\renderingqueue.cpp" />
     <ClCompile Include="src\renderstate.cpp" />
-    <ClCompile Include="src\reticle_widget.cpp" />
     <ClCompile Include="src\rocket.cpp" />
     <ClCompile Include="src\runner.cpp" />
     <ClCompile Include="src\scenenode.cpp" />
     <ClCompile Include="src\scenenodegraph.cpp" />
     <ClCompile Include="src\shader.cpp" />
-    <ClCompile Include="src\shaderscontroller.cpp" />
     <ClCompile Include="src\spacebox.cpp" />
     <ClCompile Include="src\spectatormovement.cpp" />
     <ClCompile Include="src\spherelod_binder.cpp" />
@@ -84,18 +79,14 @@
     <ClCompile Include="src\spherelod_subpass.cpp" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\texture.cpp" />
-    <ClCompile Include="src\text_widget.cpp" />
     <ClCompile Include="src\timemanager.cpp" />
     <ClCompile Include="src\transformation.cpp" />
     <ClCompile Include="src\vector.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
-    <ClCompile Include="src\widget.cpp" />
     <ClCompile Include="src\world.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ac3dmeshe.h" />
-    <ClInclude Include="src\archive.h" />
-    <ClInclude Include="src\asset.h" />
     <ClInclude Include="src\body.h" />
     <ClInclude Include="src\calendar.h" />
     <ClInclude Include="src\callback.h" />
@@ -109,7 +100,6 @@
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\dsapp.h" />
-    <ClInclude Include="src\events.h" />
     <ClInclude Include="src\exceptions.h" />
     <ClInclude Include="src\file.h" />
     <ClInclude Include="src\flags.h" />
@@ -162,13 +152,11 @@
     <ClInclude Include="src\renderingnode.h" />
     <ClInclude Include="src\renderingqueue.h" />
     <ClInclude Include="src\renderstate.h" />
-    <ClInclude Include="src\reticle_widget.h" />
     <ClInclude Include="src\rocket.h" />
     <ClInclude Include="src\runner.h" />
     <ClInclude Include="src\scenenode.h" />
     <ClInclude Include="src\scenenodegraph.h" />
     <ClInclude Include="src\shader.h" />
-    <ClInclude Include="src\shaderscontroller.h" />
     <ClInclude Include="src\spacebox.h" />
     <ClInclude Include="src\spectatormovement.h" />
     <ClInclude Include="src\spherelod_binder.h" />
@@ -182,7 +170,6 @@
     <ClInclude Include="src\task.h" />
     <ClInclude Include="src\text.h" />
     <ClInclude Include="src\texture.h" />
-    <ClInclude Include="src\text_widget.h" />
     <ClInclude Include="src\timemanager.h" />
     <ClInclude Include="src\tracedefs.h" />
     <ClInclude Include="src\transformation.h" />
@@ -190,7 +177,6 @@
     <ClInclude Include="src\vector.h" />
     <ClInclude Include="src\vertex.h" />
     <ClInclude Include="src\viewportquad.h" />
-    <ClInclude Include="src\widget.h" />
     <ClInclude Include="src\world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

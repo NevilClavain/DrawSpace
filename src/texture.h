@@ -24,17 +24,13 @@
 #define _TEXTURE_H_
 
 #include "drawspace_commons.h"
-#include "asset.h"
-
-#define TEXTURE_TEXT_KEYWORD    "Texture"
-#define TEXTURE_ARC_MAGICNUMBER 0x1066
 
 namespace DrawSpace
 {
 namespace Core
 {
 
-class Texture : public Asset
+class Texture
 {
 public:
 
@@ -85,7 +81,6 @@ protected:
     RenderTarget                    m_rendertarget;
     Purpose                         m_purpose;
 
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
     dsstring compute_final_path( void );
     
@@ -105,13 +100,6 @@ public:
 
     void GetPath( dsstring& p_path );
 
-    virtual bool ApplyProperties( void );
-
-    void Serialize( Utils::Archive& p_archive );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
 
     bool IsRenderTarget( void );
     void GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h );
@@ -125,7 +113,6 @@ public:
     Purpose GetPurpose( void );
     void SetPurpose( Purpose p_purpose );
 
-    void GetKeyword( dsstring& p_outkeyword );
 
     bool AllocTextureContent( void );
     void ReleaseTextureContent( void );
@@ -134,8 +121,6 @@ public:
     bool UpdateTextureContent( void );
 
     void* GetRenderData( void );
-
-    static Asset* Instanciate( void );
 
 };
 }

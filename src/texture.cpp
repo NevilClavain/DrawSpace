@@ -48,14 +48,6 @@ m_rendertarget( RENDERTARGET_GPU ),
 m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL )
 {
-    // properties array creation
-    m_properties["filepath"].AddPropValue<dsstring>( m_path );
-    m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
-    m_properties["rendertarget"].AddPropValue<bool>( m_render_target );
-    m_properties["rendertarget_size"].AddPropValue<unsigned long>( "width", m_render_target_width );
-    m_properties["rendertarget_size"].AddPropValue<unsigned long>( "height", m_render_target_height );
-    m_properties["renderpurpose"].AddPropValue<RenderPurpose>( m_renderpurpose );
-    m_properties["rendertarget"].AddPropValue<RenderTarget>( m_rendertarget );
 }
 
 Texture::Texture( const dsstring& p_path, bool p_render_target, unsigned long p_render_target_width, unsigned long p_render_target_height, 
@@ -71,14 +63,6 @@ m_rendertarget( p_rt ),
 m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL )
 {
-    // properties array creation
-    m_properties["filepath"].AddPropValue<dsstring>( m_path );
-    m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
-    m_properties["rendertarget"].AddPropValue<bool>( m_render_target );
-    m_properties["rendertarget_size"].AddPropValue<unsigned long>( "width", m_render_target_width );
-    m_properties["rendertarget_size"].AddPropValue<unsigned long>( "height", m_render_target_height );
-    m_properties["renderpurpose"].AddPropValue<RenderPurpose>( m_renderpurpose );
-    m_properties["rendertarget"].AddPropValue<RenderTarget>( m_rendertarget );
 }
 
 Texture::~Texture( void )
@@ -137,160 +121,7 @@ void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h )
     p_h = m_render_target_height;
 }
 
-bool Texture::ApplyProperties( void )
-{
-    m_path = m_properties["filepath"].GetPropValue<dsstring>();
-    if( false == LoadFromFile() )
-    {
-        return false;
-    }
-    m_assetname = m_properties["assetname"].GetPropValue<dsstring>();
 
-    m_render_target = m_properties["rendertarget"].GetPropValue<bool>();
-    m_render_target_width = m_properties["rendertarget_size"].GetPropValue<unsigned long>( "width" );
-    m_render_target_height = m_properties["rendertarget_size"].GetPropValue<unsigned long>( "height" );
-    m_renderpurpose = m_properties["renderpurpose"].GetPropValue<RenderPurpose>();
-    m_rendertarget = m_properties["rendertarget"].GetPropValue<RenderTarget>();
-
-    return true;
-}
-
-void Texture::Serialize( Archive& p_archive )
-{
-
-}
-
-bool Texture::Unserialize( Archive& p_archive )
-{
-    return false;
-}
-
-void Texture::DumpProperties( dsstring& p_text )
-{
-    dsstring text_value;
-
-    //p_text = "declare_asset ";
-    //p_text += dsstring( TEXTURE_TEXT_KEYWORD );
-
-    //p_text += "\n";
-
-    p_text += "assetname ";
-    p_text += m_properties["assetname"].GetPropValue<dsstring>();
-    p_text += "\r\n";
-
-    p_text += "filepath ";
-    p_text += m_properties["filepath"].GetPropValue<dsstring>();
-    p_text += "\r\n";
-
-    p_text += "rendertarget ";
-
-    if( m_properties["rendertarget"].GetPropValue<bool>() )
-    {
-        p_text += "true";
-    }
-    else
-    {
-        p_text += "false";
-    }
-    p_text += "\r\n";
-
-    p_text += "rendertarget_size ";
-
-    IntToString( m_properties["rendertarget_size"].GetPropValue<unsigned long>( "width" ), text_value );
-    p_text += "width ";
-    p_text += text_value;
-    p_text += " ";
-
-    IntToString( m_properties["rendertarget_size"].GetPropValue<unsigned long>( "height" ), text_value );
-    p_text += "height ";
-    p_text += text_value;
-
-    p_text += "\r\n";
-
-    p_text += "renderpurpose ";
-
-    if( m_properties["renderpurpose"].GetPropValue<RenderPurpose>() == RENDERPURPOSE_COLOR )
-    {
-        p_text += "color";
-    }
-    else
-    {
-        p_text += "float";
-    }
-    p_text += "\r\n";
-
-
-    //p_text += "end_asset\n";
-}
-
-bool Texture::ParseProperties( const dsstring& p_text )
-{
-    char seps[] = { 0x09, 0x020, 0x00 };
-
-    return RunOnTextChunk( p_text, seps );
-}
-
-bool Texture::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    if( "filepath" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["filepath"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else if( "assetname" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["assetname"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else if( "rendertarget" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["rendertarget"].SetPropValue<bool>( "true" == p_words[1] ? true : false );        
-    }
-    else if( "rendertarget_size" == p_words[0] )
-    {
-        if( p_words.size() < 5 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["rendertarget_size"].SetPropValue<unsigned long>( "width", StringToInt( p_words[2] ) );
-        m_properties["rendertarget_size"].SetPropValue<unsigned long>( "height", StringToInt( p_words[4] ) );
-    }
-    else if( "renderpurpose" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-    
-        m_properties["renderpurpose"].SetPropValue<RenderPurpose>( "color" == p_words[1] ? RENDERPURPOSE_COLOR : RENDERPURPOSE_FLOAT );        
-    }
-    else
-    {
-        _PARSER_UNEXPECTED_KEYWORD_
-        return false;
-    }
-
-    return true;
-}
 
 void Texture::SetFormat( long p_width, long p_height, long p_bpp )
 {
@@ -326,16 +157,6 @@ void Texture::GetFormat( long& p_width, long& p_height, long& p_bpp )
     p_width = m_width;
     p_height = m_height;
     p_bpp = m_bpp;
-}
-
-Asset* Texture::Instanciate( void )
-{
-    return _DRAWSPACE_NEW_( Texture, Texture );
-}
-
-void Texture::GetKeyword( dsstring& p_outkeyword )
-{
-    p_outkeyword = TEXTURE_TEXT_KEYWORD;
 }
 
 Texture::RenderPurpose Texture::GetRenderPurpose( void )

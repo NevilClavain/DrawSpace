@@ -95,45 +95,6 @@ File::~File( void )
         }    
     }
 }
-
-void File::SaveArchive( Archive& p_arc )
-{
-    if( LOCALFILESYSTEM == m_fsMode )
-    {
-        if( m_fp )
-        {
-            fwrite( p_arc.m_data, p_arc.m_total_length, 1, m_fp );	
-        }
-    }
-    else // VIRTUALFILESYSTEM
-    {
-        _DSEXCEPTION( "unsupported method on VIRTUALFILESYSTEM mode" );
-    }
-}
-
-bool File::LoadArchive( Archive& p_arc )
-{
-    if( LOCALFILESYSTEM == m_fsMode )
-    {
-        if( m_fp )
-        {
-            unsigned long fsize = fileSize( m_fp ); //obtenir taille du fichier
-
-            p_arc.SetArchiveTotalLength( fsize );
-            fread( p_arc.GetCurrentPtr(), fsize, 1, m_fp );
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else // VIRTUALFILESYSTEM
-    {
-        _DSEXCEPTION( "unsupported method on VIRTUALFILESYSTEM mode" );
-    }
-}
-
 void File::Puts( const dsstring& p_string )
 {
     if( LOCALFILESYSTEM == m_fsMode )

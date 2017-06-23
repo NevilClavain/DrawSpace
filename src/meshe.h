@@ -26,11 +26,7 @@
 #include "drawspace_commons.h"
 #include "vertex.h"
 #include "triangle.h"
-#include "asset.h"
 #include "vector.h"
-
-#define MESHE_TEXT_KEYWORD    "Meshe"
-#define MESHE_ARC_MAGICNUMBER 0x1068
 
 
 namespace DrawSpace
@@ -42,7 +38,7 @@ class MesheImport;
 namespace Core
 {
 
-class Meshe : public Asset
+class Meshe
 {
 protected:
     std::vector<Vertex>                         m_vertices;
@@ -56,8 +52,6 @@ protected:
     void*                                       m_render_data;
 
     dsstring                                    m_path;
-
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
 public:
 
@@ -88,17 +82,9 @@ public:
     void GetCenter( DrawSpace::Utils::Vector& p_vector );
     void GetAABB( Utils::Vector& p_min, Utils::Vector& p_max );
 
-    bool ApplyProperties( void );
-    
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
+  
     void GetMD5( dsstring& p_md5 );
 
-    void GetKeyword( dsstring& p_outkeyword );
 
     void SetRenderData( void* p_renderdata );
 
@@ -107,7 +93,6 @@ public:
     void GetPath( dsstring& p_path );
     void SetPath( const dsstring& p_path );
 
-    static Asset* Instanciate( void );
 };
 }
 }

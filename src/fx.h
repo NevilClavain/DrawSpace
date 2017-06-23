@@ -48,19 +48,9 @@ public:
     long GetRenderStatesOutListSize( void );
     void AddShader( Shader* p_shader );
 
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-
     void GetShadersMD5( dsstring& p_md5 );
     void GetRenderStatesSetMD5( dsstring& p_md5 );
 
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void ApplyProperties( void );
-
-    void GetKeyword( dsstring& p_outkeyword );
 
     void SetRenderStateUniqueQueueID( const dsstring& p_id );
 

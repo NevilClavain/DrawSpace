@@ -24,7 +24,6 @@
 #define _FILE_H_
 
 #include "drawspace_commons.h"
-#include "archive.h"
 #include <Physfs.h>
 
 namespace DrawSpace
@@ -69,8 +68,6 @@ public:
     static void MountVirtualFS( const dsstring& p_virtualFsArchiveName );
     static void UnmountVirtualFS( void );
 
-    void SaveArchive( Archive& p_arc );
-    bool LoadArchive( Archive& p_arc );
     long FileSize( void );
 
     void Puts( const dsstring& p_string );

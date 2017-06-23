@@ -89,7 +89,6 @@ protected:
     long                                    m_keycode;
     bool                                    m_gl_ready;
 
-    std::vector<MouseInputsProvider*>       m_mouseinputs_providers;
 
     ///////////////////Entree souris ///////////////////////
 
@@ -143,8 +142,6 @@ protected:
 
     virtual void OnAppEvent( WPARAM p_wParam, LPARAM p_lParam ) { };
 
-
-    virtual void RegisterMouseInputEventsProvider( MouseInputsProvider* p_provider );
 
 public:
     ~App( void );

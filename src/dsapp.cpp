@@ -182,10 +182,6 @@ void App::process_input_events( void )
 
             OnMouseMove( m_mousemoving_curr_x, m_mousemoving_curr_y, 0, 0 );
 
-            for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
-            {
-                m_mouseinputs_providers[i]->OnMouseMove( m_mousemoving_curr_x, m_mousemoving_curr_y );
-            }
 
             m_mousemovingstart = false;
         }
@@ -201,11 +197,6 @@ void App::process_input_events( void )
                     x_m = 3 * m_renderer_characteristics.width_resol / 4;
 
                     OnMouseMove( x_m, y_m, 0, m_mousemoving_curr_y - m_mousemoving_last_y );
-
-                    for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
-                    {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
-                    }
 
                     m_mousemoving_last_x = x_m;
 
@@ -224,11 +215,6 @@ void App::process_input_events( void )
 
                     OnMouseMove( x_m, y_m, 0, m_mousemoving_curr_y - m_mousemoving_last_y );
 
-                    for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
-                    {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
-                    }
-
                     m_mousemoving_last_x = x_m;
 
                     POINT point;
@@ -245,11 +231,6 @@ void App::process_input_events( void )
                     y_m = 3 * m_renderer_characteristics.height_resol / 4;
 
                     OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, 0 );
-
-                    for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
-                    {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
-                    }
 
                     m_mousemoving_last_y = y_m;
 
@@ -268,11 +249,6 @@ void App::process_input_events( void )
 
                     OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, 0 );
 
-                    for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
-                    {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
-                    }
-
                     m_mousemoving_last_y = y_m;
 
                     POINT point;
@@ -288,11 +264,6 @@ void App::process_input_events( void )
                 {
                     OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, m_mousemoving_curr_y - m_mousemoving_last_y );
 
-                    for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
-                    {
-                        m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
-                    }
-
                     m_mousemoving_last_x = m_mousemoving_curr_x;
                     m_mousemoving_last_y = m_mousemoving_curr_y;
                 }
@@ -300,11 +271,6 @@ void App::process_input_events( void )
             else
             {
                 OnMouseMove( x_m, y_m, m_mousemoving_curr_x - m_mousemoving_last_x, m_mousemoving_curr_y - m_mousemoving_last_y );
-
-                for( size_t i = 0; i < m_mouseinputs_providers.size(); i++ )
-                {
-                    m_mouseinputs_providers[i]->OnMouseMove( x_m, y_m );
-                }
 
                 m_mousemoving_last_x = m_mousemoving_curr_x;
                 m_mousemoving_last_y = m_mousemoving_curr_y;
@@ -468,10 +434,7 @@ void App::GetRenderPluginName( dsstring& p_plugin )
     p_plugin = m_renderplugin;
 }
 
-void App::RegisterMouseInputEventsProvider( MouseInputsProvider* p_provider )
-{
-    m_mouseinputs_providers.push_back( p_provider );
-}
+
 
 //////////////////////////OS inputs////////////////////////////////////////////
 
@@ -484,10 +447,6 @@ void App::OSInputEvtLButtonDown( long p_pos )
 
     m_base_instance->OnMouseLeftButtonDown( x_m, y_m );
 
-    for( size_t i = 0; i < m_base_instance->m_mouseinputs_providers.size(); i++ )
-    {
-        m_base_instance->m_mouseinputs_providers[i]->OnMouseLeftButtonDown( x_m, y_m );
-    }
 }
 
 void App::OSInputEvtLButtonUp( long p_pos )
@@ -497,10 +456,6 @@ void App::OSInputEvtLButtonUp( long p_pos )
     
     m_base_instance->OnMouseLeftButtonUp( x_m, y_m );
 
-    for( size_t i = 0; i < m_base_instance->m_mouseinputs_providers.size(); i++ )
-    {
-        m_base_instance->m_mouseinputs_providers[i]->OnMouseLeftButtonUp( x_m, y_m );
-    }
 }
 
 void App::OSInputEvtRButtonDown( long p_pos )
@@ -512,10 +467,6 @@ void App::OSInputEvtRButtonDown( long p_pos )
 
     m_base_instance->OnMouseRightButtonDown( x_m, y_m );
 
-    for( size_t i = 0; i < m_base_instance->m_mouseinputs_providers.size(); i++ )
-    {
-        m_base_instance->m_mouseinputs_providers[i]->OnMouseRightButtonDown( x_m, y_m );
-    }
 }
 
 void App::OSInputEvtRButtonUp( long p_pos )
@@ -525,10 +476,6 @@ void App::OSInputEvtRButtonUp( long p_pos )
 
     m_base_instance->OnMouseRightButtonUp( x_m, y_m );
 
-    for( size_t i = 0; i < m_base_instance->m_mouseinputs_providers.size(); i++ )
-    {
-        m_base_instance->m_mouseinputs_providers[i]->OnMouseRightButtonUp( x_m, y_m );
-    }
 }
 
 void App::OSInputEvtKeyDown( long p_key )

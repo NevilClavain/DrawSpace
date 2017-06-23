@@ -10,9 +10,6 @@
     <Filter Include="framework">
       <UniqueIdentifier>{2b54a03b-1159-4b94-aa4f-fed1205d17c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gui">
-      <UniqueIdentifier>{bfad6dae-6273-4629-aa70-b7409150547c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="interface">
       <UniqueIdentifier>{1e6c4210-4d75-4a94-961d-9a77e6428f00}</UniqueIdentifier>
     </Filter>
@@ -36,9 +33,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\asset.cpp" />
     <ClCompile Include="src\chunk.cpp" />
-    <ClCompile Include="src\events.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\spacebox.cpp" />
@@ -134,15 +129,6 @@
     <ClCompile Include="src\dsapp.cpp">
       <Filter>framework</Filter>
     </ClCompile>
-    <ClCompile Include="src\reticle_widget.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\text_widget.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\widget.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\spherelod_body.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
@@ -154,9 +140,6 @@
     </ClCompile>
     <ClCompile Include="src\spherelod_patch.cpp">
       <Filter>sphericalLOD</Filter>
-    </ClCompile>
-    <ClCompile Include="src\archive.cpp">
-      <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="src\file.cpp">
       <Filter>utils</Filter>
@@ -207,9 +190,6 @@
     <ClCompile Include="src\cbfgfont.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\shaderscontroller.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\clouds.cpp" />
     <ClCompile Include="src\procedural_blocs.cpp">
       <Filter>procedural</Filter>
@@ -258,11 +238,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\asset.h" />
     <ClInclude Include="src\chunk.h" />
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
-    <ClInclude Include="src\events.h" />
     <ClInclude Include="src\flags.h" />
     <ClInclude Include="src\image.h" />
     <ClInclude Include="src\pass.h" />
@@ -374,15 +352,6 @@
     <ClInclude Include="src\dsapp.h">
       <Filter>framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\reticle_widget.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\text_widget.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\widget.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="src\fontimport.h">
       <Filter>interface</Filter>
     </ClInclude>
@@ -403,9 +372,6 @@
     </ClInclude>
     <ClInclude Include="src\spherelod_patch.h">
       <Filter>sphericalLOD</Filter>
-    </ClInclude>
-    <ClInclude Include="src\archive.h">
-      <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="src\exceptions.h">
       <Filter>utils</Filter>
@@ -475,9 +441,6 @@
     </ClInclude>
     <ClInclude Include="src\cbfgfont.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\shaderscontroller.h">
-      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\clouds.h" />

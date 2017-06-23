@@ -23,13 +23,10 @@
 #ifndef _FONT_H_
 #define _FONT_H_
 
-#include "asset.h"
 #include "image.h"
 #include "texture.h"
 #include "fx.h"
 
-#define FONT_TEXT_KEYWORD    "Font"
-#define FONT_ARC_MAGICNUMBER 0x1069
 
 
 namespace DrawSpace
@@ -40,7 +37,7 @@ class FontImport;
 }
 namespace Core
 {
-class Font : public Asset
+class Font
 {
 public:
     typedef struct
@@ -56,8 +53,6 @@ protected:
     DrawSpace::Interface::FontImport*       m_importer;
     dsstring                                m_texturepath;
 
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
 public:
     Font( void );
     virtual ~Font( void );
@@ -69,19 +64,6 @@ public:
     bool GetCharMapping( unsigned char p_char, CharMapping& p_map );
 
     void GetTexturePath( dsstring& p_texturepath );
-
-    bool ApplyProperties( void );
-
-    void Serialize( Utils::Archive& p_archive  );
-    bool Unserialize( Utils::Archive& p_archive );
-
-    void DumpProperties( dsstring& p_text );
-    bool ParseProperties( const dsstring& p_text );
-
-    void GetKeyword( dsstring& p_outkeyword );
-
-    static Asset* Instanciate( void );
-
 };
 }
 }

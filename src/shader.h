@@ -24,18 +24,15 @@
 #define _SHADER_H_
 
 #include "drawspace_commons.h"
-#include "asset.h"
 #include "vector.h"
 
-#define SHADER_TEXT_KEYWORD    "Shader"
-#define SHADER_ARC_MAGICNUMBER 0x1067
 
 namespace DrawSpace
 {
 namespace Core
 {
 
-class Shader : public Asset
+class Shader 
 {
 protected:
     static dsstring                 m_rootpath;
@@ -44,8 +41,6 @@ protected:
     void*                           m_data;
     size_t                          m_datasize;
     bool                            m_compiled;
-
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
 
     dsstring compute_final_path( void );
 
@@ -65,21 +60,13 @@ public:
     bool	LoadFromFile( void );
     void	ReleaseData( void );
 
-    virtual bool ApplyProperties( void );
-
-    void	Serialize( Utils::Archive& p_archive );
-    bool	Unserialize( Utils::Archive& p_archive );
-
-    void    DumpProperties( dsstring& p_text );
-    bool    ParseProperties( const dsstring& p_text );
 
     void    SetText( const dsstring& p_text );
 
-    void    GetKeyword( dsstring& p_outkeyword );
+  
 
     void    GetPath( dsstring& p_path );
 
-    static Asset* Instanciate( void );
 };
 }
 }

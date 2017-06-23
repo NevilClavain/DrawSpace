@@ -37,57 +37,10 @@ using namespace DrawSpace::Interface;
 
 Font::Font( void ) : m_importer( NULL )/*, m_texture( NULL )*/
 {
-    // properties array creation
-    m_properties["filespath"].AddPropValue<dsstring>( "texturefilepath", "" );
-    m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
-    m_properties["filespath"].AddPropValue<dsstring>( "metricsfilepath", "" );
-    m_properties["mode"].AddPropValue<dsstring>( "" );
 }
 
 Font::~Font( void )
 {
-}
-
-bool Font::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    if( "filespath" == p_words[0] )
-    {
-        if( p_words.size() < 3 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["filespath"].SetPropValue<dsstring>( "texturefilepath", p_words[1] );
-        m_properties["filespath"].SetPropValue<dsstring>( "metricsfilepath", p_words[2] );
-    }
-    else if( "assetname" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["assetname"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else if( "mode" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["mode"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else
-    {
-        _PARSER_UNEXPECTED_KEYWORD_
-        return false;
-    }
-
-    return true;
 }
 
 void Font::SetImporter( DrawSpace::Interface::FontImport* p_importer )
@@ -165,59 +118,3 @@ void Font::GetTexturePath( dsstring& p_texturepath )
     p_texturepath = m_texturepath;
 }
 
-bool Font::ApplyProperties( void )
-{
-    return 0;
-}
-
-void Font::Serialize( Utils::Archive& p_archive  )
-{
-
-}
-
-bool Font::Unserialize( Utils::Archive& p_archive )
-{
-    return false;
-}
-
-void Font::DumpProperties( dsstring& p_text )
-{
-    //p_text = "declare_asset ";
-    //p_text += dsstring( FONT_TEXT_KEYWORD );
-
-    //p_text += "\n";
-
-    p_text += "assetname ";
-    p_text += m_properties["assetname"].GetPropValue<dsstring>();
-    p_text += "\r\n";
-
-    p_text += "filespath ";
-    p_text += m_properties["filespath"].GetPropValue<dsstring>( "texturefilepath" );
-    p_text += " ";
-    p_text += m_properties["filespath"].GetPropValue<dsstring>( "metricsfilepath" );
-    p_text += "\r\n";
-
-    p_text += "plugin ";
-    p_text += m_properties["mode"].GetPropValue<dsstring>();
-    p_text += "\r\n";
-
-    //p_text += "end_asset\n";
-
-}
-
-bool Font::ParseProperties( const dsstring& p_text )
-{
-    char seps[] = { 0x09, 0x020, 0x00 };
-
-    return RunOnTextChunk( p_text, seps );
-}
-
-Asset* Font::Instanciate( void )
-{
-    return _DRAWSPACE_NEW_( Font, Font );
-}
-
-void Font::GetKeyword( dsstring& p_outkeyword )
-{
-    p_outkeyword = FONT_TEXT_KEYWORD;
-}

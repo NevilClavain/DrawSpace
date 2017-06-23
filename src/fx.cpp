@@ -87,15 +87,6 @@ void Fx::SetRenderStates( const RenderStatesSet& p_renderstates )
     m_renderstates = p_renderstates;
 }
 
-void Fx::Serialize( Archive& p_archive )
-{
-
-}
-bool Fx::Unserialize( Archive& p_archive )
-{
-    return true;
-}
-
 
 void Fx::GetShadersMD5( dsstring& p_md5 )
 {

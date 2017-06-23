@@ -41,77 +41,11 @@ Meshe::Meshe( void ) :
 m_importer( NULL ), 
 m_render_data( NULL )
 {
-    // properties array creation
-    m_properties["filepath"].AddPropValue<dsstring>( "" );
-    m_properties["assetname"].AddPropValue<dsstring>( m_assetname );
-    m_properties["index"].AddPropValue<long>( 0 );
-    m_properties["mode"].AddPropValue<dsstring>( "" );
-    m_properties["spherical_normales"].AddPropValue<bool>( false );
 }
 
 Meshe::~Meshe( void )
 {
 
-}
-
-bool Meshe::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
-{
-    if( "filepath" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["filepath"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else if( "assetname" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["assetname"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else if( "index" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["index"].SetPropValue<long>( StringToInt( p_words[1] ) );
-    }
-    else if( "mode" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["mode"].SetPropValue<dsstring>( p_words[1] );
-    }
-    else if( "spherical_normales" == p_words[0] )
-    {
-        if( p_words.size() < 2 )
-        {
-            _PARSER_MISSING_ARG__
-            return false;
-        }
-
-        m_properties["spherical_normales"].SetPropValue<bool>( StringToInt( p_words[1] ) );
-    }
-    else
-    {
-        _PARSER_UNEXPECTED_KEYWORD_
-        return false;
-    }
-    return true;
 }
 
 void Meshe::SetImporter( DrawSpace::Interface::MesheImport* p_importer )
@@ -288,65 +222,6 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
     }
 }
 
-bool Meshe::ApplyProperties( void )
-{
-
-    return false;
-}
-
-void Meshe::Serialize( Archive& p_archive  )
-{
-
-}
-
-bool Meshe::Unserialize( Archive& p_archive )
-{
-    return false;
-}
-
-void Meshe::DumpProperties( dsstring& p_text )
-{
-    dsstring text_value;
-
-    //p_text = "declare_asset ";
-    //p_text += dsstring( MESHE_TEXT_KEYWORD );
-
-    //p_text += "\n";
-
-    p_text += "assetname ";
-    p_text += m_properties["assetname"].GetPropValue<dsstring>();
-    p_text += "\r\n";
-
-    p_text += "filepath ";
-    p_text += m_properties["filepath"].GetPropValue<dsstring>();
-    p_text += "\r\n";
-
-    p_text += "index ";
-
-    IntToString( m_properties["index"].GetPropValue<long>(), text_value );
-    p_text += text_value;
-    p_text += "\r\n";
-
-    p_text += "mode ";
-    p_text += m_properties["plugin"].GetPropValue<dsstring>();
-    p_text += "\r\n";
-
-    IntToString( m_properties["spherical_normales"].GetPropValue<bool>(), text_value );
-    p_text += text_value;
-    p_text += "\r\n";
-
-
-    //p_text += "end_asset\n";
-
-}
-
-bool Meshe::ParseProperties( const dsstring& p_text )
-{
-    char seps[] = { 0x09, 0x020, 0x00 };
-    return RunOnTextChunk( p_text, seps );
-}
-
-
 void Meshe::GetMD5( dsstring& p_md5 )
 {
     MD5 md5;
@@ -376,16 +251,6 @@ void Meshe::GetMD5( dsstring& p_md5 )
 
     delete[] vbuff;
     delete[] tbuff;
-}
-
-Asset* Meshe::Instanciate( void )
-{
-    return _DRAWSPACE_NEW_( Meshe, Meshe );
-}
-
-void Meshe::GetKeyword( dsstring& p_outkeyword )
-{
-    p_outkeyword = MESHE_TEXT_KEYWORD;
 }
 
 void Meshe::ComputeNormales( bool p_spherical_normales )
