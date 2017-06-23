@@ -89,7 +89,6 @@
     <ClCompile Include="src\transformation.cpp" />
     <ClCompile Include="src\vector.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
-    <ClCompile Include="src\vsphere.cpp" />
     <ClCompile Include="src\widget.cpp" />
     <ClCompile Include="src\world.cpp" />
   </ItemGroup>
@@ -191,7 +190,6 @@
     <ClInclude Include="src\vector.h" />
     <ClInclude Include="src\vertex.h" />
     <ClInclude Include="src\viewportquad.h" />
-    <ClInclude Include="src\vsphere.h" />
     <ClInclude Include="src\widget.h" />
     <ClInclude Include="src\world.h" />
   </ItemGroup>

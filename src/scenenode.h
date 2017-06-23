@@ -25,7 +25,6 @@
 
 #include "drawspace_commons.h"
 #include "matrix.h"
-#include "vsphere.h"
 #include "timemanager.h"
 #include "exceptions.h"
 
