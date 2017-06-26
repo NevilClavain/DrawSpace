@@ -15,7 +15,6 @@
     <ClCompile Include="src\body.cpp" />
     <ClCompile Include="src\calendar.cpp" />
     <ClCompile Include="src\camerapoint.cpp" />
-    <ClCompile Include="src\cbfgfont.cpp" />
     <ClCompile Include="src\chunk.cpp" />
     <ClCompile Include="src\circularmovement.cpp" />
     <ClCompile Include="src\clouds.cpp" />
@@ -23,7 +22,6 @@
     <ClCompile Include="src\drawspace_commons.cpp" />
     <ClCompile Include="src\dsapp.cpp" />
     <ClCompile Include="src\file.cpp" />
-    <ClCompile Include="src\font.cpp" />
     <ClCompile Include="src\fpsmovement.cpp" />
     <ClCompile Include="src\freemovement.cpp" />
     <ClCompile Include="src\fx.cpp" />
@@ -77,7 +75,6 @@
     <ClCompile Include="src\spherelod_face.cpp" />
     <ClCompile Include="src\spherelod_patch.cpp" />
     <ClCompile Include="src\spherelod_subpass.cpp" />
-    <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\timemanager.cpp" />
     <ClCompile Include="src\transformation.cpp" />
@@ -91,20 +88,16 @@
     <ClInclude Include="src\calendar.h" />
     <ClInclude Include="src\callback.h" />
     <ClInclude Include="src\camerapoint.h" />
-    <ClInclude Include="src\cbfgfont.h" />
     <ClInclude Include="src\chunk.h" />
     <ClInclude Include="src\circularmovement.h" />
     <ClInclude Include="src\clouds.h" />
     <ClInclude Include="src\collider.h" />
-    <ClInclude Include="src\descriptors.h" />
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\dsapp.h" />
     <ClInclude Include="src\exceptions.h" />
     <ClInclude Include="src\file.h" />
     <ClInclude Include="src\flags.h" />
-    <ClInclude Include="src\font.h" />
-    <ClInclude Include="src\fontimport.h" />
     <ClInclude Include="src\fpsmovement.h" />
     <ClInclude Include="src\freemovement.h" />
     <ClInclude Include="src\fx.h" />
@@ -168,7 +161,6 @@
     <ClInclude Include="src\spherelod_patch.h" />
     <ClInclude Include="src\spherelod_subpass.h" />
     <ClInclude Include="src\task.h" />
-    <ClInclude Include="src\text.h" />
     <ClInclude Include="src\texture.h" />
     <ClInclude Include="src\timemanager.h" />
     <ClInclude Include="src\tracedefs.h" />

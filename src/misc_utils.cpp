@@ -28,41 +28,10 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Utils;
 
-static std::map<dsstring, PlugInManager<FontImport>::Handle>    m_fontimportplugins;
+
 static std::map<dsstring, PlugInManager<MesheImport>::Handle>   m_mesheimportplugins;
 
 
-bool DrawSpace::Utils::LoadFontImportPlugin( const dsstring& p_path, const dsstring& p_pluginalias )
-{
-	dsstring complete_path = p_path;
-#ifdef _DEBUG
-	complete_path += ".dll";
-#else
-	complete_path += "_r.dll";
-#endif
-    PlugInManager<FontImport>::Handle pihandle;
-    PluginManagerStatus pistatus = PlugInManager<FontImport>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK )
-    {
-        return false;
-    }
-    m_fontimportplugins[p_pluginalias] = pihandle;
-    return true;
-}
-
-Interface::FontImport* DrawSpace::Utils::InstanciateFontImportFromPlugin( const dsstring& p_pluginalias )
-{
-    FontImport* fontimp;
-
-    if( m_fontimportplugins.count( p_pluginalias ) > 0 )
-    {
-        if( PIM_OK == PlugInManager<FontImport>::Instanciate( m_fontimportplugins[p_pluginalias], &fontimp ) )
-        {
-            return fontimp;
-        }        
-    }
-    return NULL;
-}
 
 void DrawSpace::Utils::BuildSpaceboxFx( Spacebox* p_spacebox, Pass* p_pass )
 {

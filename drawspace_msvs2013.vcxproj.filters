@@ -37,12 +37,8 @@
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\spacebox.cpp" />
-    <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
     <ClCompile Include="src\circularmovement.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\font.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\fpsmovement.cpp">
@@ -187,9 +183,6 @@
     <ClCompile Include="src\ac3dmeshe.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\cbfgfont.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\clouds.cpp" />
     <ClCompile Include="src\procedural_blocs.cpp">
       <Filter>procedural</Filter>
@@ -245,15 +238,11 @@
     <ClInclude Include="src\image.h" />
     <ClInclude Include="src\pass.h" />
     <ClInclude Include="src\spacebox.h" />
-    <ClInclude Include="src\text.h" />
     <ClInclude Include="src\viewportquad.h" />
     <ClInclude Include="src\callback.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\circularmovement.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\font.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\fpsmovement.h">
@@ -352,9 +341,6 @@
     <ClInclude Include="src\dsapp.h">
       <Filter>framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\fontimport.h">
-      <Filter>interface</Filter>
-    </ClInclude>
     <ClInclude Include="src\mesheimport.h">
       <Filter>interface</Filter>
     </ClInclude>
@@ -433,13 +419,7 @@
     <ClInclude Include="src\tracedefs.h">
       <Filter>logging</Filter>
     </ClInclude>
-    <ClInclude Include="src\descriptors.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\ac3dmeshe.h">
-      <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cbfgfont.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="src\impostorsdisplaylist.h" />
