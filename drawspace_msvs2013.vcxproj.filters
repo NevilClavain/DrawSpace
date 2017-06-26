@@ -34,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
-    <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\spacebox.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
@@ -235,7 +234,6 @@
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\flags.h" />
-    <ClInclude Include="src\image.h" />
     <ClInclude Include="src\pass.h" />
     <ClInclude Include="src\spacebox.h" />
     <ClInclude Include="src\viewportquad.h" />

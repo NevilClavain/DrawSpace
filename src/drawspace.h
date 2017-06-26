@@ -53,7 +53,6 @@
 #include "fx.h"
 #include "viewportquad.h"
 #include "pass.h"
-#include "image.h"
 #include "scenenodegraph.h"
 #include "memalloc.h"
 #include "fpsmovement.h"

@@ -26,7 +26,6 @@
     <ClCompile Include="src\freemovement.cpp" />
     <ClCompile Include="src\fx.cpp" />
     <ClCompile Include="src\headmovement.cpp" />
-    <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\inertbody.cpp" />
     <ClCompile Include="src\jsonparser.cpp" />
     <ClCompile Include="src\module_keys.cpp" />
@@ -102,7 +101,6 @@
     <ClInclude Include="src\freemovement.h" />
     <ClInclude Include="src\fx.h" />
     <ClInclude Include="src\headmovement.h" />
-    <ClInclude Include="src\image.h" />
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\inertbody.h" />
     <ClInclude Include="src\jsonparser.h" />
