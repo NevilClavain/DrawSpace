@@ -1,1 +1,0 @@
-dfront.exe /r1 common.txt /r2 phongfog_res.txt /s1 commonlua.lua /s2 phongfog.lua

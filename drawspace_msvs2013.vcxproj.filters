@@ -192,9 +192,6 @@
     <ClCompile Include="src\procedural_seeds.cpp">
       <Filter>procedural</Filter>
     </ClCompile>
-    <ClCompile Include="src\noise.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\spherelod_config.cpp">
       <Filter>sphericalLOD</Filter>
     </ClCompile>
@@ -430,9 +427,6 @@
     </ClInclude>
     <ClInclude Include="src\procedural_seeds.h">
       <Filter>procedural</Filter>
-    </ClInclude>
-    <ClInclude Include="src\noise.h">
-      <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="src\spherelod_config.h">
       <Filter>sphericalLOD</Filter>

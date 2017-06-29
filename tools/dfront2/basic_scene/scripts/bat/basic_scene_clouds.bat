@@ -1,1 +1,0 @@
-dfront.exe /r1 common.txt /r2 clouds_res.txt /s1 commonlua.lua /s2 clouds.lua

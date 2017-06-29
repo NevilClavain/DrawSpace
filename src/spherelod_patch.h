@@ -25,7 +25,6 @@
 
 #include "vector.h"
 #include "quadtree.h"
-#include "noise.h"
 #include "spherelod_config.h"
 #include "spherelod_subpass.h"
 #include "pass.h"

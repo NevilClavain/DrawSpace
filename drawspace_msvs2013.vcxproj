@@ -43,7 +43,6 @@
     <ClCompile Include="src\module_root.cpp" />
     <ClCompile Include="src\movement.cpp" />
     <ClCompile Include="src\mutex.cpp" />
-    <ClCompile Include="src\noise.cpp" />
     <ClCompile Include="src\orbiter.cpp" />
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\pass.cpp" />
@@ -123,7 +122,6 @@
     <ClInclude Include="src\module_root.h" />
     <ClInclude Include="src\movement.h" />
     <ClInclude Include="src\mutex.h" />
-    <ClInclude Include="src\noise.h" />
     <ClInclude Include="src\orbiter.h" />
     <ClInclude Include="src\parser.h" />
     <ClInclude Include="src\pass.h" />

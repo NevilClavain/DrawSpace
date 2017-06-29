@@ -26,7 +26,7 @@
 #include "spherelod_subpass.h"
 #include "spherelod_layer.h"
 #include "scenenodegraph.h"
-#include "noise.h"
+
 
 namespace DrawSpace
 {
