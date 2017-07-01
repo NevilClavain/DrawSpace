@@ -31,6 +31,9 @@
     <Filter Include="module">
       <UniqueIdentifier>{39bf7d1b-7ace-4f96-ba23-0ed16d8a10c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="threading">
+      <UniqueIdentifier>{e414fc7c-3a03-4c33-b975-e2a3c971bae4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
@@ -58,9 +61,6 @@
     <ClCompile Include="src\longlatmovement.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\mediator.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\meshe.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -74,9 +74,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\renderstate.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\runner.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\scenenode.cpp">
@@ -225,6 +222,12 @@
     <ClCompile Include="src\renderstatesset.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="src\runner.cpp">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mediator.cpp">
+      <Filter>threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -258,9 +261,6 @@
     <ClInclude Include="src\longlatmovement.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\mediator.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\meshe.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -279,9 +279,6 @@
     <ClInclude Include="src\renderstate.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\runner.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\scenenode.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -292,9 +289,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\spectatormovement.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\task.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\texture.h">
@@ -463,6 +457,15 @@
     </ClInclude>
     <ClInclude Include="src\renderstatesset.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\runner.h">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mediator.h">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="src\task.h">
+      <Filter>threading</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

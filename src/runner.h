@@ -29,7 +29,7 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace Threading
 {
 class Runner
 {
@@ -48,10 +48,10 @@ public:
 
 protected:
 
-    DrawSpace::Core::Task<DrawSpace::Core::Runner>*                 m_task;
-    DrawSpace::Core::Mediator                                       m_mediator;
+    DrawSpace::Threading::Task<DrawSpace::Threading::Runner>*       m_task;
+    DrawSpace::Threading::Mediator                                  m_mediator;
 
-    DrawSpace::Core::Mediator::MessageQueue*                        m_task_message_queue;
+    DrawSpace::Threading::Mediator::MessageQueue*                   m_task_message_queue;
     MediatorEventHandler*                                           m_taskhandler;
 
     EventHandler*                                                   m_clienthandler;
@@ -61,7 +61,7 @@ protected:
 
     State                                                           m_current_state_client_copy;
 
-    void unstack_messages( DrawSpace::Core::Mediator::MessageQueue* p_testqueue, DrawSpace::Core::Mediator::MessageQueue* p_signaledqueue, MediatorEventHandler* p_handler );
+    void unstack_messages( DrawSpace::Threading::Mediator::MessageQueue* p_testqueue, DrawSpace::Threading::Mediator::MessageQueue* p_signaledqueue, MediatorEventHandler* p_handler );
 
     void update_state( State p_state );
 

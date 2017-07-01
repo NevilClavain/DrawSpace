@@ -29,7 +29,7 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace Threading
 {
 
 template<typename base>
@@ -125,11 +125,11 @@ public:
         }
         return false;
     }
-
+    /*
     bool IsSuspended() 
     {
         return m_suspended_count > 0;
-    }
+    }*/
 /*
     void SuspendThread() 
     {

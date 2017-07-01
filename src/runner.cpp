@@ -23,7 +23,7 @@
 #include "runner.h"
 
 using namespace DrawSpace;
-using namespace DrawSpace::Core;
+using namespace DrawSpace::Threading;
 using namespace DrawSpace::Utils;
 
 
@@ -42,7 +42,7 @@ Runner::~Runner( void )
     _DRAWSPACE_DELETE_( m_task );
 }
 
-void Runner::unstack_messages( DrawSpace::Core::Mediator::MessageQueue* p_testqueue, DrawSpace::Core::Mediator::MessageQueue* p_signaledqueue, MediatorEventHandler* p_handler )
+void Runner::unstack_messages( DrawSpace::Threading::Mediator::MessageQueue* p_testqueue, DrawSpace::Threading::Mediator::MessageQueue* p_signaledqueue, MediatorEventHandler* p_handler )
 {
     if( p_testqueue == p_signaledqueue )
     {

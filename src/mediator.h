@@ -36,7 +36,7 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace Threading
 {
 
 class IProperty

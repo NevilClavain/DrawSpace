@@ -24,7 +24,8 @@
 #include "exceptions.h"
 
 using namespace DrawSpace;
-using namespace DrawSpace::Core;
+//using namespace DrawSpace::Core;
+using namespace DrawSpace::Threading;
 using namespace DrawSpace::Utils;
 
 Mediator::Mediator( void ) : m_nb_handles( 0 )

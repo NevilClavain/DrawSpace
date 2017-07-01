@@ -51,8 +51,6 @@ public:
 protected:
     typedef DrawSpace::Core::CallBack2<Layer, void, DrawSpace::SphericalLOD::Patch*, int>                                                    PatchUpdateCb;
 
-    typedef DrawSpace::Core::CallBack<Layer, void, DrawSpace::Core::PropertyPool*>                                                           RunnerMsgCb;
-    typedef DrawSpace::Core::CallBack<Layer, void, Core::Runner::State>                                                                      RunnerEvtCb;
 
     DrawSpace::Dynamics::World*                                 m_world;
 
