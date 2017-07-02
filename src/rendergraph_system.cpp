@@ -20,29 +20,20 @@
 *
 */
 
-#include "entityset.h"
-#include "system.h"
+#include "rendergraph_system.h"
 using namespace DrawSpace;
-using namespace DrawSpace::Interface;
 
-
-void EntitySet::InsertTree( const st_tree::tree<Entity*>& p_tree )
+void RenderGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase )
 {
-    m_entities.push_back( p_tree );
-}
-
-void EntitySet::AcceptSystemTopDownRecursive( System* p_system, Phase p_phase )
-{
-    for( auto it = m_entities.begin(); it != m_entities.end(); ++it )
+    switch( p_phase )
     {
-        st_tree::tree<Entity*> current_tree = *it;
-                       
-        for( st_tree::tree<Entity*>::df_pre_iterator it2(current_tree.df_pre_begin() );
-            it2 != current_tree.df_pre_end(); ++it2 )
-        {
-            Entity* curr_entity = it2->data();
+        case EntitySet::PHASE_INIT:
+            break;
 
-            p_system->VisitEntitySet( curr_entity, p_phase );
-        }  
+        case EntitySet::PHASE_RELEASE:
+            break;
+
+        case EntitySet::PHASE_RUN:
+            break;
     }
 }

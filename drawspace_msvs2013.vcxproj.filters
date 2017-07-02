@@ -229,6 +229,7 @@
       <Filter>threading</Filter>
     </ClCompile>
     <ClCompile Include="src\entityset.cpp" />
+    <ClCompile Include="src\rendergraph_system.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -472,6 +473,10 @@
     <ClInclude Include="src\component.h" />
     <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\entityset.h" />
-    <ClInclude Include="src\system.h" />
+    <ClInclude Include="src\system.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rendergraph_system.h" />
+    <ClInclude Include="src\renderingqueue_component.h" />
   </ItemGroup>
 </Project>

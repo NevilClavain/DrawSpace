@@ -87,5 +87,7 @@
 #include "module_service.h"
 #include "module_keys.h"
 #include "jsonparser.h"
-#include "system.h"
+
+#include "rendergraph_system.h"
+#include "renderingqueue_component.h"
 #endif

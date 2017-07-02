@@ -65,6 +65,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {   
+    /*
     m_renderer->BeginScreen();
 
     m_renderer->ClearScreen( 0, 255, 123, 255 );
@@ -74,6 +75,8 @@ void MainLoopService::Run( void )
     m_renderer->EndScreen();
 
     m_renderer->FlipScreen();
+
+    */
     
     m_tm.Update();
     if( m_tm.IsReady() )
