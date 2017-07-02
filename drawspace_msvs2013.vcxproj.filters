@@ -228,6 +228,7 @@
     <ClCompile Include="src\mediator.cpp">
       <Filter>threading</Filter>
     </ClCompile>
+    <ClCompile Include="src\entityset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -467,5 +468,10 @@
     <ClInclude Include="src\task.h">
       <Filter>threading</Filter>
     </ClInclude>
+    <ClInclude Include="src\componenttype.h" />
+    <ClInclude Include="src\component.h" />
+    <ClInclude Include="src\entity.h" />
+    <ClInclude Include="src\entityset.h" />
+    <ClInclude Include="src\system.h" />
   </ItemGroup>
 </Project>
