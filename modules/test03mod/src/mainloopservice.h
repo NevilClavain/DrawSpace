@@ -34,6 +34,13 @@ protected:
     DrawSpace::Utils::TimeManager           m_tm;
     dsstring                                m_pluginDescr;
 
+
+    DrawSpace::Entity                       m_finalpass;
+
+    DrawSpace::EntitySet                    m_renderinggraph;
+    DrawSpace::RenderGraphSystem            m_renderinggraph_system;    
+    
+
 public:
     MainLoopService( void );
     ~MainLoopService( void );

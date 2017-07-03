@@ -19,44 +19,21 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 *
 */
+#ifndef _COMPONENTS_IDS_
+#define _COMPONENTS_IDS_
 
-#ifndef _ENTITYSET_H_
-#define _ENTITYSET_H_
-
-#include "entity.h"
-#include "st_tree.h"
-#include <vector>
-#include "drawspace_commons.h"
-
+#include "componenttype.h"
 namespace DrawSpace
 {
-namespace Interface
-{
-class System;
-}
+static const ComponentType RenderingQueueComponentType  = 1;
+static const ComponentType ColorArgComponentType        = 2;
+static const ComponentType TextComponentType            = 3;
 
-using EntitiesTree = st_tree::tree<Entity*>;
 
-struct EntitySet
-{
-private:
 
-    std::vector<EntitiesTree>         m_entities;
 
-public:
+static const ComponentType CustomComponentType          = 1000000;
 
-    typedef enum
-    {
-        PHASE_INIT,
-        PHASE_RELEASE,
-        PHASE_RUN
-
-    } Phase;
-
-    void InsertTree( const st_tree::tree<Entity*>& p_tree );
-
-    void AcceptSystemTopDownRecursive( Interface::System* p_system, Phase p_phase );
-};
 }
 
 #endif

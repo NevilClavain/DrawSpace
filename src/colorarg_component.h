@@ -20,42 +20,25 @@
 *
 */
 
-#ifndef _ENTITYSET_H_
-#define _ENTITYSET_H_
+#ifndef _COLORARG_COMPONENT_H_
+#define _COLORARG_COMPONENT_H_
 
-#include "entity.h"
-#include "st_tree.h"
-#include <vector>
-#include "drawspace_commons.h"
+#include "component.h"
+#include "components_ids.h"
 
 namespace DrawSpace
 {
-namespace Interface
+struct ColorArgComponent : public ComponentBase
 {
-class System;
-}
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
 
-using EntitiesTree = st_tree::tree<Entity*>;
-
-struct EntitySet
-{
-private:
-
-    std::vector<EntitiesTree>         m_entities;
-
-public:
-
-    typedef enum
+    ColorArgComponent( void )
     {
-        PHASE_INIT,
-        PHASE_RELEASE,
-        PHASE_RUN
-
-    } Phase;
-
-    void InsertTree( const st_tree::tree<Entity*>& p_tree );
-
-    void AcceptSystemTopDownRecursive( Interface::System* p_system, Phase p_phase );
+        m_type = ColorArgComponentType;
+    }
 };
 }
 

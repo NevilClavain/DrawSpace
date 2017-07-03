@@ -28,6 +28,8 @@ void RenderGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_pha
     switch( p_phase )
     {
         case EntitySet::PHASE_INIT:
+            
+            _asm nop
             break;
 
         case EntitySet::PHASE_RELEASE:

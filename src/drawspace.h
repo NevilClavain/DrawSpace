@@ -90,4 +90,6 @@
 
 #include "rendergraph_system.h"
 #include "renderingqueue_component.h"
+#include "colorarg_component.h"
+#include "text_component.h"
 #endif

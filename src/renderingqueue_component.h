@@ -25,19 +25,15 @@
 
 #include "component.h"
 #include "renderingqueue.h"
+#include "components_ids.h"
 
 namespace DrawSpace
 {
-static const ComponentType RenderingQueueComponentType = 2;
-
-class RenderingQueueComponent : public ComponentBase
+struct RenderingQueueComponent : public ComponentBase
 {
-protected:
-
     Core::RenderingQueue* m_queue;
 
-public:
-    RenderingQueueComponent(void) :
+    RenderingQueueComponent( void ) :
         m_queue( NULL )
     {
         m_type = RenderingQueueComponentType;

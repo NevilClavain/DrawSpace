@@ -34,6 +34,12 @@
     <Filter Include="threading">
       <UniqueIdentifier>{e414fc7c-3a03-4c33-b975-e2a3c971bae4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="systems">
+      <UniqueIdentifier>{156a926f-856b-487e-b6b4-a29b6639274f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components">
+      <UniqueIdentifier>{28cee71b-b82e-4af1-bb45-8bde698c937b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
@@ -229,7 +235,9 @@
       <Filter>threading</Filter>
     </ClCompile>
     <ClCompile Include="src\entityset.cpp" />
-    <ClCompile Include="src\rendergraph_system.cpp" />
+    <ClCompile Include="src\rendergraph_system.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -476,7 +484,20 @@
     <ClInclude Include="src\system.h">
       <Filter>interface</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendergraph_system.h" />
-    <ClInclude Include="src\renderingqueue_component.h" />
+    <ClInclude Include="src\rendergraph_system.h">
+      <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingqueue_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\colorarg_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\text_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\components_ids.h">
+      <Filter>components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

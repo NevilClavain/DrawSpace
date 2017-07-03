@@ -24,10 +24,11 @@
 #define _COMPONENT_H_
 
 #include "componenttype.h"
+#include "drawspace_commons.h"
 
 namespace DrawSpace
 {
-    class ComponentBase
+    struct ComponentBase
 	{
     public:
         ComponentType m_type = DrawSpace::invalidComponentType;

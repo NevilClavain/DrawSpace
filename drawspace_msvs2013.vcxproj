@@ -92,7 +92,9 @@
     <ClInclude Include="src\circularmovement.h" />
     <ClInclude Include="src\clouds.h" />
     <ClInclude Include="src\collider.h" />
+    <ClInclude Include="src\colorarg_component.h" />
     <ClInclude Include="src\component.h" />
+    <ClInclude Include="src\components_ids.h" />
     <ClInclude Include="src\componenttype.h" />
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
@@ -167,6 +169,7 @@
     <ClInclude Include="src\system.h" />
     <ClInclude Include="src\task.h" />
     <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\text_component.h" />
     <ClInclude Include="src\timemanager.h" />
     <ClInclude Include="src\tracedefs.h" />
     <ClInclude Include="src\transformation.h" />

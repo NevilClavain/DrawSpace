@@ -20,42 +20,27 @@
 *
 */
 
-#ifndef _ENTITYSET_H_
-#define _ENTITYSET_H_
+#ifndef _TEXT_COMPONENT_H_
+#define _TEXT_COMPONENT_H_
 
-#include "entity.h"
-#include "st_tree.h"
-#include <vector>
-#include "drawspace_commons.h"
+#include "component.h"
+#include "components_ids.h"
 
 namespace DrawSpace
 {
-namespace Interface
+struct TextComponent : public ComponentBase
 {
-class System;
-}
+    dsstring text;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
 
-using EntitiesTree = st_tree::tree<Entity*>;
+    int x,y;
 
-struct EntitySet
-{
-private:
-
-    std::vector<EntitiesTree>         m_entities;
-
-public:
-
-    typedef enum
+    TextComponent( void )
     {
-        PHASE_INIT,
-        PHASE_RELEASE,
-        PHASE_RUN
-
-    } Phase;
-
-    void InsertTree( const st_tree::tree<Entity*>& p_tree );
-
-    void AcceptSystemTopDownRecursive( Interface::System* p_system, Phase p_phase );
+        m_type = TextComponentType;
+    }
 };
 }
 

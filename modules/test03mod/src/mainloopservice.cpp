@@ -60,6 +60,21 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GetDescr( m_pluginDescr );
 
+    /////////////////////////////////////////////////////////////////////////////////
+
+    m_finalpass.insert( _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent ) );
+    m_finalpass.insert( _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent ) );
+    m_finalpass.insert( _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent ) );
+
+    EntitiesTree entities_tree;
+
+    entities_tree.insert( &m_finalpass );
+
+    
+    m_renderinggraph.InsertTree( entities_tree );
+
+    m_renderinggraph.AcceptSystemTopDownRecursive( &m_renderinggraph_system, EntitySet::PHASE_INIT );
+
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
@@ -75,8 +90,8 @@ void MainLoopService::Run( void )
     m_renderer->EndScreen();
 
     m_renderer->FlipScreen();
-
     */
+    
     
     m_tm.Update();
     if( m_tm.IsReady() )
