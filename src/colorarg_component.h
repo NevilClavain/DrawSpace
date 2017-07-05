@@ -30,12 +30,16 @@ namespace DrawSpace
 {
 struct ColorArgComponent : public ComponentBase
 {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
+    unsigned char m_r;
+    unsigned char m_g;
+    unsigned char m_b;
+    unsigned char m_a;
 
-    ColorArgComponent( void )
+    ColorArgComponent( void ) :
+    m_r( 0 ),
+    m_g( 0 ),
+    m_b( 0 ),
+    m_a( 255 )
     {
         m_type = ColorArgComponentType;
     }

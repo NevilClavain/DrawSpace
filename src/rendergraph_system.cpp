@@ -24,6 +24,8 @@
 
 #include "components_ids.h"
 #include "renderingqueue_component.h"
+#include "colorarg_component.h"
+#include "memalloc.h"
 
 using namespace DrawSpace;
 
@@ -52,19 +54,33 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
 {
     if( p_entity->count( DrawSpace::RenderingQueueComponentType ) )
     {
-        _asm nop
-    }
+        RenderingQueueComponent* renderingqueue_comp = static_cast<RenderingQueueComponent*>( (*p_entity)[DrawSpace::RenderingQueueComponentType][0] );
+        renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
 
-    if( p_entity->count( DrawSpace::ColorArgComponentType ) )
-    {
-        _asm nop    
+        if( p_entity->count( DrawSpace::ColorArgComponentType ) )
+        {
+            ColorArgComponent* color_comp = static_cast<ColorArgComponent*>( (*p_entity)[DrawSpace::ColorArgComponentType][0] );
+            renderingqueue_comp->m_queue->SetTargetClearingColor( color_comp->m_r, color_comp->m_g, color_comp->m_b, color_comp->m_a );    
+
+            renderingqueue_comp->m_queue->EnableTargetClearing( true );
+        }
     }
 }
 
 void RenderGraphSystem::phase_release( Entity* p_entity )
 {
+    if( p_entity->count( DrawSpace::RenderingQueueComponentType ) )
+    {
+        RenderingQueueComponent* comp = static_cast<RenderingQueueComponent*>( (*p_entity)[DrawSpace::RenderingQueueComponentType][0] );
+        _DRAWSPACE_DELETE_( comp->m_queue );
+    }
 }
 
 void RenderGraphSystem::phase_run( Entity* p_entity )
 {
+    if( p_entity->count( DrawSpace::RenderingQueueComponentType ) )
+    {
+        RenderingQueueComponent* comp = static_cast<RenderingQueueComponent*>( (*p_entity)[DrawSpace::RenderingQueueComponentType][0] );
+        comp->m_queue->Draw();
+    }
 }

@@ -62,10 +62,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     /////////////////////////////////////////////////////////////////////////////////
 
+    DrawSpace::ColorArgComponent* color = _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent );
+    color->m_r = 255;
+    color->m_g = 0;
+    color->m_b = 255;
 
-    m_finalpass[DrawSpace::ColorArgComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent ) );
+    m_finalpass[DrawSpace::ColorArgComponentType].push_back( color );
     m_finalpass[DrawSpace::RenderingQueueComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent ) );
     m_finalpass[DrawSpace::TextComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent ) );
+
+     
 
     EntitiesTree entities_tree;
 
@@ -89,9 +95,13 @@ void MainLoopService::Run( void )
     m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 
     m_renderer->EndScreen();
+    */
+
+
+    m_renderinggraph.AcceptSystemTopDownRecursive( &m_renderinggraph_system, EntitySet::PHASE_RUN );
 
     m_renderer->FlipScreen();
-    */
+    
     
     
     m_tm.Update();
