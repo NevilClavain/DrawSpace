@@ -28,7 +28,9 @@
 
 namespace DrawSpace
 {
-    typedef std::set<ComponentBase*> Entity;
+    //typedef std::set<ComponentBase*> Entity;
+
+    typedef std::map<ComponentType, std::vector<ComponentBase*>> Entity;
 }
 
 #endif

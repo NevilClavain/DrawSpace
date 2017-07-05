@@ -62,9 +62,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_finalpass.insert( _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent ) );
-    m_finalpass.insert( _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent ) );
-    m_finalpass.insert( _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent ) );
+
+    m_finalpass[DrawSpace::ColorArgComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent ) );
+    m_finalpass[DrawSpace::RenderingQueueComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent ) );
+    m_finalpass[DrawSpace::TextComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent ) );
 
     EntitiesTree entities_tree;
 

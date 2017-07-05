@@ -21,6 +21,10 @@
 */
 
 #include "rendergraph_system.h"
+
+#include "components_ids.h"
+#include "renderingqueue_component.h"
+
 using namespace DrawSpace;
 
 void RenderGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase )
@@ -29,13 +33,38 @@ void RenderGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_pha
     {
         case EntitySet::PHASE_INIT:
             
-            _asm nop
+            phase_init( p_entity );
             break;
 
         case EntitySet::PHASE_RELEASE:
+
+            phase_release( p_entity );
             break;
 
         case EntitySet::PHASE_RUN:
+
+            phase_run( p_entity );
             break;
     }
+}
+
+void RenderGraphSystem::phase_init( Entity* p_entity )
+{
+    if( p_entity->count( DrawSpace::RenderingQueueComponentType ) )
+    {
+        _asm nop
+    }
+
+    if( p_entity->count( DrawSpace::ColorArgComponentType ) )
+    {
+        _asm nop    
+    }
+}
+
+void RenderGraphSystem::phase_release( Entity* p_entity )
+{
+}
+
+void RenderGraphSystem::phase_run( Entity* p_entity )
+{
 }
