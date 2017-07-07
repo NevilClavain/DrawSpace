@@ -38,7 +38,11 @@ protected:
     DrawSpace::Entity                       m_finalpass;
 
     DrawSpace::EntitySet                    m_renderinggraph;
-    DrawSpace::RenderGraphSystem            m_renderinggraph_system;    
+    DrawSpace::RenderGraphSystem            m_renderinggraph_system;   
+
+
+
+    DrawSpace::TextComponent*               m_fps_text;
     
 
 public:

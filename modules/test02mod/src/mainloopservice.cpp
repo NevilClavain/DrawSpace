@@ -183,7 +183,7 @@ void MainLoopService::Run( void )
     sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
     dsstring fps_text = comment;
 
-    //m_renderer->DrawText( 255, 0, 0, 10, 20, "%s", fps_text.c_str() );   
+    //m_renderer->DrawText( 255, 0, 0, 10, 20, "%s", fps_text.c_str() );
     m_renderer->GUI_SetWidgetText( "main.layout", "FPSInfoLabel", fps_text );
 
 

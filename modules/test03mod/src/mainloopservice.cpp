@@ -63,13 +63,25 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     /////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::ColorArgComponent* color = _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent );
-    color->m_r = 255;
-    color->m_g = 0;
-    color->m_b = 255;
+    color->m_r = 50;
+    color->m_g = 50;
+    color->m_b = 50;
 
     m_finalpass[DrawSpace::ColorArgComponentType].push_back( color );
     m_finalpass[DrawSpace::RenderingQueueComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent ) );
-    m_finalpass[DrawSpace::TextComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent ) );
+
+
+    m_fps_text = _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent );
+    m_fps_text->r = 255;
+    m_fps_text->g = 255;
+    m_fps_text->b = 250;
+
+    m_fps_text->x = 10;
+    m_fps_text->y = 10;
+
+    m_fps_text->text = "";
+
+    m_finalpass[DrawSpace::TextComponentType].push_back( m_fps_text );
 
      
 
@@ -87,16 +99,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {   
-    /*
-    m_renderer->BeginScreen();
 
-    m_renderer->ClearScreen( 0, 255, 123, 255 );
-
-    m_renderer->DrawText( 255, 0, 0, 10, 20, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
-
-    m_renderer->EndScreen();
-    */
-
+    m_fps_text->text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
     m_renderinggraph.AcceptSystemTopDownRecursive( &m_renderinggraph_system, EntitySet::PHASE_RUN );
 
@@ -113,6 +117,8 @@ void MainLoopService::Run( void )
 void MainLoopService::Release( void )
 {
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
+
+    m_renderinggraph.AcceptSystemTopDownRecursive( &m_renderinggraph_system, EntitySet::PHASE_RELEASE );
 }
 
 DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )

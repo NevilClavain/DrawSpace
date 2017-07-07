@@ -25,6 +25,11 @@
 #include "components_ids.h"
 #include "renderingqueue_component.h"
 #include "colorarg_component.h"
+#include "text_component.h"
+
+#include "plugin.h"
+#include "renderer.h"
+
 #include "memalloc.h"
 
 using namespace DrawSpace;
@@ -82,5 +87,14 @@ void RenderGraphSystem::phase_run( Entity* p_entity )
     {
         RenderingQueueComponent* comp = static_cast<RenderingQueueComponent*>( (*p_entity)[DrawSpace::RenderingQueueComponentType][0] );
         comp->m_queue->Draw();
+    }
+
+    if( p_entity->count( DrawSpace::TextComponentType ) )
+    {
+        TextComponent* comp = static_cast<TextComponent*>( (*p_entity)[DrawSpace::TextComponentType][0] );
+        
+        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        
+        renderer->DrawText( comp->r, comp->g, comp->b, comp->x, comp->y, comp->text.c_str() );
     }
 }
