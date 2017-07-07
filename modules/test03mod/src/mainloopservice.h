@@ -35,14 +35,17 @@ protected:
     dsstring                                m_pluginDescr;
 
 
-    DrawSpace::Entity                       m_finalpass;
+    DrawSpace::Entity                       m_Entity_finalpass;
 
-    DrawSpace::EntitySet                    m_renderinggraph;
-    DrawSpace::RenderGraphSystem            m_renderinggraph_system;   
+    DrawSpace::EntitySet                    m_EntitySet_renderinggraph;
+    DrawSpace::RenderGraphSystem            m_System_renderinggraph;   
 
+    
 
+    DrawSpace::ColorArgComponent*           m_Component_color;
+    DrawSpace::TextComponent*               m_Component_fps_text;
+    DrawSpace::RenderingQueueComponent*     m_Component_rendering_queue;
 
-    DrawSpace::TextComponent*               m_fps_text;
     
 
 public:

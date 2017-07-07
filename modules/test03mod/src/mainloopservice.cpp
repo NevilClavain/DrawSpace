@@ -62,37 +62,40 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    DrawSpace::ColorArgComponent* color = _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent );
-    color->m_r = 50;
-    color->m_g = 50;
-    color->m_b = 50;
+    m_Component_color = _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent );
+    m_Component_color->m_r = 50;
+    m_Component_color->m_g = 50;
+    m_Component_color->m_b = 50;
 
-    m_finalpass[DrawSpace::ColorArgComponentType].push_back( color );
-    m_finalpass[DrawSpace::RenderingQueueComponentType].push_back( _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent ) );
+    m_Entity_finalpass[DrawSpace::ColorArgComponentType].push_back( m_Component_color );
+
+    m_Component_rendering_queue = _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent );
+
+    m_Entity_finalpass[DrawSpace::RenderingQueueComponentType].push_back( m_Component_rendering_queue );
 
 
-    m_fps_text = _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent );
-    m_fps_text->r = 255;
-    m_fps_text->g = 255;
-    m_fps_text->b = 250;
+    m_Component_fps_text = _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent );
+    m_Component_fps_text->r = 255;
+    m_Component_fps_text->g = 255;
+    m_Component_fps_text->b = 250;
 
-    m_fps_text->x = 10;
-    m_fps_text->y = 10;
+    m_Component_fps_text->x = 10;
+    m_Component_fps_text->y = 10;
 
-    m_fps_text->text = "";
+    m_Component_fps_text->text = "";
 
-    m_finalpass[DrawSpace::TextComponentType].push_back( m_fps_text );
+    m_Entity_finalpass[DrawSpace::TextComponentType].push_back( m_Component_fps_text );
 
      
 
     EntitiesTree entities_tree;
 
-    entities_tree.insert( &m_finalpass );
+    entities_tree.insert( &m_Entity_finalpass );
 
     
-    m_renderinggraph.InsertTree( entities_tree );
+    m_EntitySet_renderinggraph.InsertTree( entities_tree );
 
-    m_renderinggraph.AcceptSystemTopDownRecursive( &m_renderinggraph_system, EntitySet::PHASE_INIT );
+    m_EntitySet_renderinggraph.AcceptSystemTopDownRecursive( &m_System_renderinggraph, EntitySet::PHASE_INIT );
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
@@ -100,9 +103,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 void MainLoopService::Run( void )
 {   
 
-    m_fps_text->text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
+    m_Component_fps_text->text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
-    m_renderinggraph.AcceptSystemTopDownRecursive( &m_renderinggraph_system, EntitySet::PHASE_RUN );
+    m_EntitySet_renderinggraph.AcceptSystemTopDownRecursive( &m_System_renderinggraph, EntitySet::PHASE_RUN );
 
     m_renderer->FlipScreen();
     
@@ -118,7 +121,7 @@ void MainLoopService::Release( void )
 {
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 
-    m_renderinggraph.AcceptSystemTopDownRecursive( &m_renderinggraph_system, EntitySet::PHASE_RELEASE );
+    m_EntitySet_renderinggraph.AcceptSystemTopDownRecursive( &m_System_renderinggraph, EntitySet::PHASE_RELEASE );
 }
 
 DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )

@@ -56,13 +56,14 @@ void RenderGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_pha
 }
 
 void RenderGraphSystem::phase_init( Entity* p_entity )
-{
-    if( p_entity->count( DrawSpace::RenderingQueueComponentType ) )
+{   
+    if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
     {
-        RenderingQueueComponent* renderingqueue_comp = static_cast<RenderingQueueComponent*>( (*p_entity)[DrawSpace::RenderingQueueComponentType][0] );
+        RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
+
         renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
 
-        if( p_entity->count( DrawSpace::ColorArgComponentType ) )
+        if( CHECK_DS_COMPONENT( p_entity, DrawSpace::ColorArgComponentType ) )
         {
             ColorArgComponent* color_comp = static_cast<ColorArgComponent*>( (*p_entity)[DrawSpace::ColorArgComponentType][0] );
             renderingqueue_comp->m_queue->SetTargetClearingColor( color_comp->m_r, color_comp->m_g, color_comp->m_b, color_comp->m_a );    
@@ -74,27 +75,27 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
 
 void RenderGraphSystem::phase_release( Entity* p_entity )
 {
-    if( p_entity->count( DrawSpace::RenderingQueueComponentType ) )
-    {
-        RenderingQueueComponent* comp = static_cast<RenderingQueueComponent*>( (*p_entity)[DrawSpace::RenderingQueueComponentType][0] );
-        _DRAWSPACE_DELETE_( comp->m_queue );
+    if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
+    {        
+        RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
+        
+        _DRAWSPACE_DELETE_( renderingqueue_comp->m_queue );
     }
 }
 
 void RenderGraphSystem::phase_run( Entity* p_entity )
 {
-    if( p_entity->count( DrawSpace::RenderingQueueComponentType ) )
+    if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
     {
-        RenderingQueueComponent* comp = static_cast<RenderingQueueComponent*>( (*p_entity)[DrawSpace::RenderingQueueComponentType][0] );
-        comp->m_queue->Draw();
+        RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
+        renderingqueue_comp->m_queue->Draw();
     }
 
-    if( p_entity->count( DrawSpace::TextComponentType ) )
-    {
-        TextComponent* comp = static_cast<TextComponent*>( (*p_entity)[DrawSpace::TextComponentType][0] );
+    if( CHECK_DS_COMPONENT( p_entity, DrawSpace::TextComponentType ) )
+    {         
+        TextComponent* text_comp = EXTRACT_DS_COMPONENT( p_entity, TextComponent, TextComponentType, 0 )
         
-        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-        
-        renderer->DrawText( comp->r, comp->g, comp->b, comp->x, comp->y, comp->text.c_str() );
+        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;        
+        renderer->DrawText( text_comp->r, text_comp->g, text_comp->b, text_comp->x, text_comp->y, text_comp->text.c_str() );
     }
 }
