@@ -178,6 +178,7 @@
     <ClInclude Include="src\vector.h" />
     <ClInclude Include="src\vertex.h" />
     <ClInclude Include="src\viewportquad.h" />
+    <ClInclude Include="src\viewportquad_component.h" />
     <ClInclude Include="src\world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -30,14 +30,20 @@ namespace DrawSpace
 {
 struct TextComponent : public ComponentBase
 {
-    dsstring text;
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
+    dsstring        m_text;
+    unsigned char   m_r;
+    unsigned char   m_g;
+    unsigned char   m_b;
 
-    int x,y;
+    int             m_x;
+    int             m_y;
 
-    TextComponent( void )
+    TextComponent( void ) :
+    m_r( 0 ),
+    m_g( 0 ),
+    m_b( 0 ),
+    m_x( 0 ),
+    m_y( 0 )
     {
         m_type = TextComponentType;
     }

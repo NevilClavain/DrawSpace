@@ -500,5 +500,8 @@
     <ClInclude Include="src\components_ids.h">
       <Filter>components</Filter>
     </ClInclude>
+    <ClInclude Include="src\viewportquad_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

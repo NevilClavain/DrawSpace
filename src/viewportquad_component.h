@@ -20,23 +20,31 @@
 *
 */
 
-#ifndef _RENDERINGQUEUE_COMPONENT_H_
-#define _RENDERINGQUEUE_COMPONENT_H_
+#ifndef _VIEWPORTQUAD_COMPONENT_H_
+#define _VIEWPORTQUAD_COMPONENT_H_
 
 #include "component.h"
-#include "renderingqueue.h"
+#include "viewportquad.h"
 #include "components_ids.h"
 
 namespace DrawSpace
 {
-struct RenderingQueueComponent : public ComponentBase
+struct ViewportQuadComponent : public ComponentBase
 {
-    Core::RenderingQueue* m_queue;
+    ViewportQuad*   m_viewportquad;
 
-    RenderingQueueComponent( void ) :
-    m_queue( NULL )
+    dsreal          m_zoffset;
+    dsreal          m_viewport_width;
+    dsreal          m_viewport_height;
+    bool            m_viewportdims_from_renderer;
+
+    ViewportQuadComponent( void ) :
+    m_viewportquad( NULL ),
+    m_viewport_width( 1.0 ),
+    m_viewport_height( 1.0 ),
+    m_viewportdims_from_renderer( false )
     {
-        m_type = RenderingQueueComponentType;
+        m_type = ViewportQuadComponentType;
     }
 };
 }

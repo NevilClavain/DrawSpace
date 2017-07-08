@@ -77,14 +77,14 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
     m_Component_fps_text = _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent );
-    m_Component_fps_text->r = 255;
-    m_Component_fps_text->g = 255;
-    m_Component_fps_text->b = 250;
+    m_Component_fps_text->m_r = 255;
+    m_Component_fps_text->m_g = 255;
+    m_Component_fps_text->m_b = 250;
 
-    m_Component_fps_text->x = 10;
-    m_Component_fps_text->y = 10;
+    m_Component_fps_text->m_x = 10;
+    m_Component_fps_text->m_y = 10;
 
-    m_Component_fps_text->text = "";
+    m_Component_fps_text->m_text = "";
 
     m_Entity_finalpass += m_Component_fps_text;
 
@@ -105,7 +105,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 void MainLoopService::Run( void )
 {   
 
-    m_Component_fps_text->text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
+    m_Component_fps_text->m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
     m_EntitySet_renderinggraph.AcceptSystemTopDownRecursive( &m_System_renderinggraph, EntitySet::PHASE_RUN );
 

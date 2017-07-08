@@ -28,6 +28,7 @@ namespace DrawSpace
 static const ComponentType RenderingQueueComponentType  = 1;
 static const ComponentType ColorArgComponentType        = 2;
 static const ComponentType TextComponentType            = 3;
+static const ComponentType ViewportQuadComponentType    = 4;
 
 
 
