@@ -26,12 +26,30 @@
 #include <set>
 #include "component.h"
 
-#define CHECK_DS_COMPONENT( __entity__, __comp_type__ ) __entity__->count( __comp_type__ )
-#define EXTRACT_DS_COMPONENT(  __entity__, __comp_decl__, __comp_type__, __index__ ) static_cast<__comp_decl__*>( (*p_entity)[__comp_type__][__index__] );
+#define CHECK_DS_COMPONENT( __entity__, __comp_type__ ) __entity__->m_components.count( __comp_type__ )
+#define EXTRACT_DS_COMPONENT(  __entity__, __comp_decl__, __comp_type__, __index__ ) static_cast<__comp_decl__*>( __entity__->m_components[__comp_type__][__index__] );
 
 namespace DrawSpace
 {
-    typedef std::map<ComponentType, std::vector<ComponentBase*>> Entity;
+
+
+
+class Entity
+{
+private:
+
+public:
+    std::map<ComponentType, std::vector<ComponentBase*>> m_components;
+
+    void operator+= (ComponentBase* p_comp)
+    {
+        m_components[p_comp->m_type].push_back( p_comp );
+    }
+};
+
+
+
+
 }
 
 #endif

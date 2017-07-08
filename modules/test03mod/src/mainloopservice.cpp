@@ -67,11 +67,13 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Component_color->m_g = 50;
     m_Component_color->m_b = 50;
 
-    m_Entity_finalpass[DrawSpace::ColorArgComponentType].push_back( m_Component_color );
+    m_Entity_finalpass += m_Component_color;
+    
 
     m_Component_rendering_queue = _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent );
 
-    m_Entity_finalpass[DrawSpace::RenderingQueueComponentType].push_back( m_Component_rendering_queue );
+    m_Entity_finalpass += m_Component_rendering_queue;
+
 
 
     m_Component_fps_text = _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent );
@@ -84,9 +86,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_Component_fps_text->text = "";
 
-    m_Entity_finalpass[DrawSpace::TextComponentType].push_back( m_Component_fps_text );
+    m_Entity_finalpass += m_Component_fps_text;
 
-     
+
 
     EntitiesTree entities_tree;
 

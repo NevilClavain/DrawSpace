@@ -21,6 +21,7 @@
     <ClCompile Include="src\collider.cpp" />
     <ClCompile Include="src\drawspace_commons.cpp" />
     <ClCompile Include="src\dsapp.cpp" />
+    <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\entityset.cpp" />
     <ClCompile Include="src\file.cpp" />
     <ClCompile Include="src\fpsmovement.cpp" />

@@ -65,7 +65,8 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
 
         if( CHECK_DS_COMPONENT( p_entity, DrawSpace::ColorArgComponentType ) )
         {
-            ColorArgComponent* color_comp = static_cast<ColorArgComponent*>( (*p_entity)[DrawSpace::ColorArgComponentType][0] );
+            ColorArgComponent* color_comp = EXTRACT_DS_COMPONENT( p_entity, ColorArgComponent, ColorArgComponentType, 0 )
+
             renderingqueue_comp->m_queue->SetTargetClearingColor( color_comp->m_r, color_comp->m_g, color_comp->m_b, color_comp->m_a );    
 
             renderingqueue_comp->m_queue->EnableTargetClearing( true );

@@ -238,6 +238,7 @@
     <ClCompile Include="src\rendergraph_system.cpp">
       <Filter>systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\entity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
