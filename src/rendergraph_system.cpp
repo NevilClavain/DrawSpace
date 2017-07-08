@@ -57,15 +57,22 @@ void RenderGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_pha
 
 void RenderGraphSystem::phase_init( Entity* p_entity )
 {   
-    if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
+    //if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
+
+    if( p_entity->CheckComponent( RenderingQueueComponentType ) )
     {
-        RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
+        //RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
+
+        RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
 
         renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
 
-        if( CHECK_DS_COMPONENT( p_entity, DrawSpace::ColorArgComponentType ) )
+        //if( CHECK_DS_COMPONENT( p_entity, DrawSpace::ColorArgComponentType ) )
+
+        if( p_entity->CheckComponent( ColorArgComponentType ) )
         {
-            ColorArgComponent* color_comp = EXTRACT_DS_COMPONENT( p_entity, ColorArgComponent, ColorArgComponentType, 0 )
+            //ColorArgComponent* color_comp = EXTRACT_DS_COMPONENT( p_entity, ColorArgComponent, ColorArgComponentType, 0 )
+            ColorArgComponent* color_comp = p_entity->ExtractComponent<ColorArgComponent>( ColorArgComponentType, 0 );
 
             renderingqueue_comp->m_queue->SetTargetClearingColor( color_comp->m_r, color_comp->m_g, color_comp->m_b, color_comp->m_a );    
 
@@ -76,25 +83,35 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
 
 void RenderGraphSystem::phase_release( Entity* p_entity )
 {
-    if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
+    //if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
+    if( p_entity->CheckComponent(RenderingQueueComponentType ) )
     {        
-        RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
+        //RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
         
+        RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
+
         _DRAWSPACE_DELETE_( renderingqueue_comp->m_queue );
     }
 }
 
 void RenderGraphSystem::phase_run( Entity* p_entity )
 {
-    if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
+    //if( CHECK_DS_COMPONENT( p_entity, DrawSpace::RenderingQueueComponentType ) )
+    if( p_entity->CheckComponent( RenderingQueueComponentType ) )
     {
-        RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
+        //RenderingQueueComponent* renderingqueue_comp = EXTRACT_DS_COMPONENT( p_entity, RenderingQueueComponent, RenderingQueueComponentType, 0 )
+
+        RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
+
         renderingqueue_comp->m_queue->Draw();
     }
 
-    if( CHECK_DS_COMPONENT( p_entity, DrawSpace::TextComponentType ) )
+    //if( CHECK_DS_COMPONENT( p_entity, DrawSpace::TextComponentType ) )
+    if( p_entity->CheckComponent( TextComponentType ) )
     {         
-        TextComponent* text_comp = EXTRACT_DS_COMPONENT( p_entity, TextComponent, TextComponentType, 0 )
+        //TextComponent* text_comp = EXTRACT_DS_COMPONENT( p_entity, TextComponent, TextComponentType, 0 )
+
+        TextComponent* text_comp = p_entity->ExtractComponent<TextComponent>( TextComponentType, 0 );
         
         DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;        
         renderer->DrawText( text_comp->r, text_comp->g, text_comp->b, text_comp->x, text_comp->y, text_comp->text.c_str() );
