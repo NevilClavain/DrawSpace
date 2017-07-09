@@ -34,15 +34,15 @@ struct ViewportQuadComponent : public ComponentBase
     ViewportQuad*   m_viewportquad;
 
     dsreal          m_zoffset;
-    dsreal          m_viewport_width;
-    dsreal          m_viewport_height;
-    bool            m_viewportdims_from_renderer;
+    dsreal          m_width;
+    dsreal          m_height;
+    bool            m_dims_from_renderer;
 
     ViewportQuadComponent( void ) :
     m_viewportquad( NULL ),
-    m_viewport_width( 1.0 ),
-    m_viewport_height( 1.0 ),
-    m_viewportdims_from_renderer( false )
+    m_width( 1.0 ),
+    m_height( 1.0 ),
+    m_dims_from_renderer( false )
     {
         m_type = ViewportQuadComponentType;
     }

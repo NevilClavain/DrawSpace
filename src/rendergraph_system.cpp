@@ -26,6 +26,7 @@
 #include "renderingqueue_component.h"
 #include "colorarg_component.h"
 #include "text_component.h"
+#include "viewportquad_component.h"
 
 #include "plugin.h"
 #include "renderer.h"
@@ -71,6 +72,27 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
 
             renderingqueue_comp->m_queue->EnableTargetClearing( true );
         }
+
+        if( p_entity->CheckComponent( ViewportQuadComponentType ) )
+        {
+            ViewportQuadComponent* viewportquad_comp = p_entity->ExtractComponent<ViewportQuadComponent>( ViewportQuadComponentType, 0 );
+
+            if( viewportquad_comp->m_dims_from_renderer )
+            {
+                DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+                DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
+                renderer->GetRenderCharacteristics( renderer_characteristics );
+            
+                viewportquad_comp->m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, viewportquad_comp->m_zoffset ) );
+
+            }
+            else
+            {
+                viewportquad_comp->m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( viewportquad_comp->m_width, viewportquad_comp->m_height, viewportquad_comp->m_zoffset ) );
+            }
+
+            renderingqueue_comp->m_queue->Add( viewportquad_comp->m_viewportquad );
+        }
     }
 }
 
@@ -81,6 +103,13 @@ void RenderGraphSystem::phase_release( Entity* p_entity )
         RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
 
         _DRAWSPACE_DELETE_( renderingqueue_comp->m_queue );
+
+        if( p_entity->CheckComponent( ViewportQuadComponentType ) )
+        {
+            ViewportQuadComponent* viewportquad_comp = p_entity->ExtractComponent<ViewportQuadComponent>( ViewportQuadComponentType, 0 );
+
+            _DRAWSPACE_DELETE_( viewportquad_comp->m_viewportquad );
+        }
     }
 }
 
