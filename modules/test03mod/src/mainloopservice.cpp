@@ -60,6 +60,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_renderer->GetDescr( m_pluginDescr );
 
+    m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+    m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
     /////////////////////////////////////////////////////////////////////////////////
 
     m_Component_color = _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent );
@@ -89,6 +93,14 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Entity_finalpass += m_Component_fps_text;
 
 
+    m_Component_viewport_quad = _DRAWSPACE_NEW_( DrawSpace::ViewportQuadComponent, DrawSpace::ViewportQuadComponent );
+
+    m_Component_viewport_quad->m_zoffset = -2.0;
+    m_Component_viewport_quad->m_dims_from_renderer = true;
+
+
+    m_Entity_finalpass += m_Component_viewport_quad;
+
 
     EntitiesTree entities_tree;
 
@@ -98,6 +110,35 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_EntitySet_renderinggraph.InsertTree( entities_tree );
 
     m_EntitySet_renderinggraph.AcceptSystemTopDownRecursive( &m_System_renderinggraph, EntitySet::PHASE_INIT );
+
+
+
+
+
+    m_Component_viewport_quad->m_viewportquad->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+
+    RenderStatesSet finalpass_rss;
+
+
+    finalpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "point" ) );
+    finalpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    finalpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    finalpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+
+    m_Component_viewport_quad->m_viewportquad->GetFx()->SetRenderStates( finalpass_rss );
+
+    m_Component_viewport_quad->m_viewportquad->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
+    m_Component_viewport_quad->m_viewportquad->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+
+    m_Component_viewport_quad->m_viewportquad->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_Component_viewport_quad->m_viewportquad->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    m_Component_viewport_quad->m_viewportquad->AddShaderParameter( 1, "color", 0 );
+    m_Component_viewport_quad->m_viewportquad->SetShaderRealVector( "color", Vector( 1.0, 0.5, 0.5, 1.0 ) );
+
+    m_Component_rendering_queue->m_queue->UpdateOutputQueue();
+
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }

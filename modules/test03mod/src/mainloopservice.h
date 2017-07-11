@@ -45,6 +45,7 @@ protected:
     DrawSpace::ColorArgComponent*           m_Component_color;
     DrawSpace::TextComponent*               m_Component_fps_text;
     DrawSpace::RenderingQueueComponent*     m_Component_rendering_queue;
+    DrawSpace::ViewportQuadComponent*       m_Component_viewport_quad;
 
     
 
