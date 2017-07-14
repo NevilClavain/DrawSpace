@@ -27,6 +27,7 @@
 #include "colorarg_component.h"
 #include "text_component.h"
 #include "viewportquad_component.h"
+#include "rendertarget_component.h"
 
 #include "plugin.h"
 #include "renderer.h"
@@ -34,6 +35,7 @@
 #include "memalloc.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
 void RenderGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase )
 {
@@ -61,8 +63,37 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
     if( p_entity->CheckComponent( RenderingQueueComponentType ) )
     {
         RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
+        
+        if( p_entity->CheckComponent( RenderTargetComponentType ) )
+        {
+            RenderTargetComponent* rendertarger_comp = p_entity->ExtractComponent<RenderTargetComponent>( RenderTargetComponentType, 0 );
 
-        renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
+            long h_resol, w_resol;
+
+            if( rendertarger_comp->m_targetdims_fromrenderer )
+            {
+                DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+                DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
+                renderer->GetRenderCharacteristics( renderer_characteristics );
+
+                h_resol = renderer_characteristics.height_resol;
+                w_resol = renderer_characteristics.width_resol;
+
+            }
+            else
+            {
+                h_resol = rendertarger_comp->m_targetdims_height;
+                w_resol = rendertarger_comp->m_targetdims_width;
+            }
+        
+            rendertarger_comp->m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( rendertarger_comp->m_name, true, w_resol, h_resol, rendertarger_comp->m_renderpurpose, rendertarger_comp->m_rendertarget ) );
+            renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( rendertarger_comp->m_targettexture ) );        
+        }
+        else
+        {
+            renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );        
+        }
 
         if( p_entity->CheckComponent( ColorArgComponentType ) )
         {
@@ -84,7 +115,6 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
                 renderer->GetRenderCharacteristics( renderer_characteristics );
             
                 viewportquad_comp->m_viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, viewportquad_comp->m_zoffset ) );
-
             }
             else
             {
@@ -103,6 +133,13 @@ void RenderGraphSystem::phase_release( Entity* p_entity )
         RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
 
         _DRAWSPACE_DELETE_( renderingqueue_comp->m_queue );
+
+        if( p_entity->CheckComponent( RenderTargetComponentType ) )
+        {
+            RenderTargetComponent* rendertarger_comp = p_entity->ExtractComponent<RenderTargetComponent>( RenderTargetComponentType, 0 );
+
+            _DRAWSPACE_DELETE_( rendertarger_comp->m_targettexture );
+        }
 
         if( p_entity->CheckComponent( ViewportQuadComponentType ) )
         {

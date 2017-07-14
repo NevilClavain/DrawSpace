@@ -102,6 +102,13 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Entity_finalpass += m_Component_viewport_quad;
 
 
+
+    m_Component_render_target = _DRAWSPACE_NEW_( DrawSpace::RenderTargetComponent, DrawSpace::RenderTargetComponent( "texturepass_target" ) );
+
+    //m_Entity_finalpass += m_Component_render_target;
+
+
+
     EntitiesTree entities_tree;
 
     entities_tree.insert( &m_Entity_finalpass );
@@ -118,13 +125,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Component_viewport_quad->m_viewportquad->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
 
+
+
+
     RenderStatesSet finalpass_rss;
 
 
     finalpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "point" ) );
     finalpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-    finalpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
-    finalpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+    //finalpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    //finalpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
 
     m_Component_viewport_quad->m_viewportquad->GetFx()->SetRenderStates( finalpass_rss );
 
@@ -138,7 +148,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Component_viewport_quad->m_viewportquad->SetShaderRealVector( "color", Vector( 1.0, 0.5, 0.5, 1.0 ) );
 
     m_Component_rendering_queue->m_queue->UpdateOutputQueue();
-
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }

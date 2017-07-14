@@ -503,5 +503,8 @@
     <ClInclude Include="src\viewportquad_component.h">
       <Filter>components</Filter>
     </ClInclude>
+    <ClInclude Include="src\rendertarget_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

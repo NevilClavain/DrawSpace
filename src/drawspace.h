@@ -93,4 +93,5 @@
 #include "colorarg_component.h"
 #include "text_component.h"
 #include "viewportquad_component.h"
+#include "rendertarget_component.h"
 #endif

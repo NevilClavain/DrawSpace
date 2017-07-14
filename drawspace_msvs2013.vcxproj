@@ -140,6 +140,7 @@
     <ClInclude Include="src\rendergraph_system.h" />
     <ClInclude Include="src\renderingqueue_component.h" />
     <ClInclude Include="src\renderstatesset.h" />
+    <ClInclude Include="src\rendertarget_component.h" />
     <ClInclude Include="src\spherelod_root.h" />
     <ClInclude Include="src\spherelod_layer.h" />
     <ClInclude Include="src\plugin.h" />
