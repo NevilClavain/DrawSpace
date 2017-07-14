@@ -37,8 +37,22 @@ void EntitySet::AcceptSystemTopDownRecursive( System* p_system, Phase p_phase )
     {
         st_tree::tree<Entity*> current_tree = *it;
                        
-        for( st_tree::tree<Entity*>::df_pre_iterator it2(current_tree.df_pre_begin() );
-            it2 != current_tree.df_pre_end(); ++it2 )
+        for( st_tree::tree<Entity*>::df_pre_iterator it2(current_tree.df_pre_begin() ); it2 != current_tree.df_pre_end(); ++it2 )
+        {
+            Entity* curr_entity = it2->data();
+
+            p_system->VisitEntitySet( curr_entity, p_phase );
+        }  
+    }
+}
+
+void EntitySet::AcceptSystemLeafsToTopRecursive( System* p_system, Phase p_phase )
+{
+    for( auto it = m_entities.begin(); it != m_entities.end(); ++it )
+    {
+        st_tree::tree<Entity*> current_tree = *it;
+                       
+        for( st_tree::tree<Entity*>::df_post_iterator it2(current_tree.df_post_begin() ); it2 != current_tree.df_post_end(); ++it2 )
         {
             Entity* curr_entity = it2->data();
 

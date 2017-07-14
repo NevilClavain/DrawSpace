@@ -56,6 +56,7 @@ public:
     void InsertTree( const st_tree::tree<Entity*>& p_tree );
 
     void AcceptSystemTopDownRecursive( Interface::System* p_system, Phase p_phase );
+    void AcceptSystemLeafsToTopRecursive( Interface::System* p_system, Phase p_phase );
 };
 }
 

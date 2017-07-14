@@ -65,53 +65,66 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
     /////////////////////////////////////////////////////////////////////////////////
+    // BUILD FINALPASS
 
     m_Component_color = _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent );
-    m_Component_color->m_r = 50;
-    m_Component_color->m_g = 50;
-    m_Component_color->m_b = 50;
+    m_Component_color->m_r = 5;
+    m_Component_color->m_g = 5;
+    m_Component_color->m_b = 250;
 
-    m_Entity_finalpass += m_Component_color;
     
-
     m_Component_rendering_queue = _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent );
-
-    m_Entity_finalpass += m_Component_rendering_queue;
-
+    m_Component_rendering_queue->m_name = "final_pass";
 
 
     m_Component_fps_text = _DRAWSPACE_NEW_( DrawSpace::TextComponent, DrawSpace::TextComponent );
     m_Component_fps_text->m_r = 255;
     m_Component_fps_text->m_g = 255;
     m_Component_fps_text->m_b = 250;
-
     m_Component_fps_text->m_x = 10;
     m_Component_fps_text->m_y = 10;
-
     m_Component_fps_text->m_text = "";
 
-    m_Entity_finalpass += m_Component_fps_text;
 
 
     m_Component_viewport_quad = _DRAWSPACE_NEW_( DrawSpace::ViewportQuadComponent, DrawSpace::ViewportQuadComponent );
-
     m_Component_viewport_quad->m_zoffset = -2.0;
     m_Component_viewport_quad->m_dims_from_renderer = true;
 
 
+    m_Entity_finalpass += m_Component_color;
+    m_Entity_finalpass += m_Component_rendering_queue;
+    m_Entity_finalpass += m_Component_fps_text;
     m_Entity_finalpass += m_Component_viewport_quad;
 
 
 
-    m_Component_render_target = _DRAWSPACE_NEW_( DrawSpace::RenderTargetComponent, DrawSpace::RenderTargetComponent( "texturepass_target" ) );
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///// BUILD TEXTUREPASS
 
-    //m_Entity_finalpass += m_Component_render_target;
+    m_Component_texturepass_rendering_queue = _DRAWSPACE_NEW_( DrawSpace::RenderingQueueComponent, DrawSpace::RenderingQueueComponent );
+    m_Component_texturepass_rendering_queue->m_name = "texture_pass";
+
+    m_Component_texturepass_render_target = _DRAWSPACE_NEW_( DrawSpace::RenderTargetComponent, DrawSpace::RenderTargetComponent( "texturepass_target" ) );
+
+    m_Component_texturepass_color = _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent );
+    m_Component_texturepass_color->m_r = 5;
+    m_Component_texturepass_color->m_g = 255;
+    m_Component_texturepass_color->m_b = 0;
 
 
+    m_Entity_texturepass += m_Component_texturepass_color;
+    m_Entity_texturepass += m_Component_texturepass_rendering_queue;
+    m_Entity_texturepass += m_Component_texturepass_render_target;
+
+    
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     EntitiesTree entities_tree;
 
     entities_tree.insert( &m_Entity_finalpass );
+    entities_tree.root().insert( &m_Entity_texturepass );
 
     
     m_EntitySet_renderinggraph.InsertTree( entities_tree );
@@ -120,12 +133,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     m_Component_viewport_quad->m_viewportquad->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-
-
-
 
 
     RenderStatesSet finalpass_rss;
@@ -138,31 +149,32 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_Component_viewport_quad->m_viewportquad->GetFx()->SetRenderStates( finalpass_rss );
 
-    m_Component_viewport_quad->m_viewportquad->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
-    m_Component_viewport_quad->m_viewportquad->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+    m_Component_viewport_quad->m_viewportquad->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    m_Component_viewport_quad->m_viewportquad->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
     m_Component_viewport_quad->m_viewportquad->GetFx()->GetShader( 0 )->LoadFromFile();
     m_Component_viewport_quad->m_viewportquad->GetFx()->GetShader( 1 )->LoadFromFile();
 
-    m_Component_viewport_quad->m_viewportquad->AddShaderParameter( 1, "color", 0 );
-    m_Component_viewport_quad->m_viewportquad->SetShaderRealVector( "color", Vector( 1.0, 0.5, 0.5, 1.0 ) );
+    //m_Component_viewport_quad->m_viewportquad->AddShaderParameter( 1, "color", 0 );
+    //m_Component_viewport_quad->m_viewportquad->SetShaderRealVector( "color", Vector( 1.0, 0.5, 0.5, 1.0 ) );
+
+    m_Component_viewport_quad->m_viewportquad->SetTexture( m_Component_texturepass_render_target->m_targettexture, 0 );
+
 
     m_Component_rendering_queue->m_queue->UpdateOutputQueue();
+    m_Component_texturepass_rendering_queue->m_queue->UpdateOutputQueue();
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
 void MainLoopService::Run( void )
 {   
-
     m_Component_fps_text->m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
-    m_EntitySet_renderinggraph.AcceptSystemTopDownRecursive( &m_System_renderinggraph, EntitySet::PHASE_RUN );
+    m_EntitySet_renderinggraph.AcceptSystemLeafsToTopRecursive( &m_System_renderinggraph, EntitySet::PHASE_RUN );
 
     m_renderer->FlipScreen();
-    
-    
-    
+            
     m_tm.Update();
     if( m_tm.IsReady() )
     {

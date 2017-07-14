@@ -31,7 +31,8 @@ namespace DrawSpace
 {
 struct RenderingQueueComponent : public ComponentBase
 {
-    Core::RenderingQueue* m_queue;
+    Core::RenderingQueue*   m_queue;
+    dsstring                m_name;
 
     RenderingQueueComponent( void ) :
     m_queue( NULL )

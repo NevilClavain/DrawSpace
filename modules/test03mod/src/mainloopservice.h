@@ -35,7 +35,6 @@ protected:
     dsstring                                m_pluginDescr;
 
 
-    DrawSpace::Entity                       m_Entity_finalpass;
 
     DrawSpace::EntitySet                    m_EntitySet_renderinggraph;
     DrawSpace::RenderGraphSystem            m_System_renderinggraph;   
@@ -46,7 +45,14 @@ protected:
     DrawSpace::TextComponent*               m_Component_fps_text;
     DrawSpace::RenderingQueueComponent*     m_Component_rendering_queue;
     DrawSpace::ViewportQuadComponent*       m_Component_viewport_quad;
-    DrawSpace::RenderTargetComponent*       m_Component_render_target;
+    DrawSpace::Entity                       m_Entity_finalpass;
+
+
+    DrawSpace::ColorArgComponent*           m_Component_texturepass_color;
+    DrawSpace::RenderTargetComponent*       m_Component_texturepass_render_target;
+    DrawSpace::RenderingQueueComponent*     m_Component_texturepass_rendering_queue;
+
+    DrawSpace::Entity                       m_Entity_texturepass;
 
     
 
