@@ -27,16 +27,20 @@
 #include "viewportquad.h"
 #include "components_ids.h"
 
+#include "rendertarget_component.h"
+
 namespace DrawSpace
 {
 struct ViewportQuadComponent : public ComponentBase
 {
-    ViewportQuad*   m_viewportquad;
+    ViewportQuad*                           m_viewportquad;
 
-    dsreal          m_zoffset;
-    dsreal          m_width;
-    dsreal          m_height;
-    bool            m_dims_from_renderer;
+    dsreal                                  m_zoffset;
+    dsreal                                  m_width;
+    dsreal                                  m_height;
+    bool                                    m_dims_from_renderer;
+
+    std::map<int, RenderTargetComponent*>   m_target_stages;
 
     ViewportQuadComponent( void ) :
     m_viewportquad( NULL ),

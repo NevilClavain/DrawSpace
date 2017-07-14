@@ -122,6 +122,11 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
             }
 
             renderingqueue_comp->m_queue->Add( viewportquad_comp->m_viewportquad );
+
+            for( auto it = viewportquad_comp->m_target_stages.begin(); it != viewportquad_comp->m_target_stages.end(); ++it )
+            {
+                viewportquad_comp->m_viewportquad->SetTexture( it->second->m_targettexture, it->first );
+            }
         }
     }
 }
