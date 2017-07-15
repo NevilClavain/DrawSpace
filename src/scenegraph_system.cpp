@@ -19,25 +19,46 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 *
 */
-#ifndef _COMPONENTS_IDS_
-#define _COMPONENTS_IDS_
 
-#include "componenttype.h"
-namespace DrawSpace
+#include "scenegraph_system.h"
+
+#include "components_ids.h"
+
+using namespace DrawSpace;
+
+
+void SceneGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase )
 {
-static const ComponentType RenderingQueueComponentType  = 1;
-static const ComponentType ColorArgComponentType        = 2;
-static const ComponentType TextComponentType            = 3;
-static const ComponentType ViewportQuadComponentType    = 4;
-static const ComponentType RenderTargetComponentType    = 5;
-static const ComponentType MesheComponentType           = 6;
-static const ComponentType TransformComponentType       = 7;
-static const ComponentType RenderingNodeComponentType   = 8;
+    switch( p_phase )
+    {
+        case EntitySet::PHASE_INIT:
+            
+            phase_init( p_entity );
+            break;
 
+        case EntitySet::PHASE_RELEASE:
 
+            phase_release( p_entity );
+            break;
 
-static const ComponentType CustomComponentType          = 1000000;
+        case EntitySet::PHASE_RUN:
+
+            phase_run( p_entity );
+            break;
+    }
+}
+
+void SceneGraphSystem::phase_init( Entity* p_entity )
+{   
 
 }
 
-#endif
+void SceneGraphSystem::phase_release( Entity* p_entity )
+{
+
+}
+
+void SceneGraphSystem::phase_run( Entity* p_entity )
+{
+ 
+}

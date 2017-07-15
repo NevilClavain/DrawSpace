@@ -19,25 +19,25 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 *
 */
-#ifndef _COMPONENTS_IDS_
-#define _COMPONENTS_IDS_
 
-#include "componenttype.h"
+#ifndef _TRANSFORM_COMPONENT_H_
+#define _TRANSFORM_COMPONENT_H_
+
+#include "component.h"
+#include "transformation.h"
+#include "components_ids.h"
+
 namespace DrawSpace
 {
-static const ComponentType RenderingQueueComponentType  = 1;
-static const ComponentType ColorArgComponentType        = 2;
-static const ComponentType TextComponentType            = 3;
-static const ComponentType ViewportQuadComponentType    = 4;
-static const ComponentType RenderTargetComponentType    = 5;
-static const ComponentType MesheComponentType           = 6;
-static const ComponentType TransformComponentType       = 7;
-static const ComponentType RenderingNodeComponentType   = 8;
+struct TransformComponent : public ComponentBase
+{
+    Core::Transformation m_matrix_chains;
 
-
-
-static const ComponentType CustomComponentType          = 1000000;
-
+    TransformComponent( void )
+    {
+        m_type = TransformComponentType;
+    }
+};
 }
 
 #endif

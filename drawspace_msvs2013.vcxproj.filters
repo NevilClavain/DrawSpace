@@ -239,6 +239,9 @@
       <Filter>systems</Filter>
     </ClCompile>
     <ClCompile Include="src\entity.cpp" />
+    <ClCompile Include="src\scenegraph_system.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -504,6 +507,18 @@
       <Filter>components</Filter>
     </ClInclude>
     <ClInclude Include="src\rendertarget_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenegraph_system.h">
+      <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\meshe_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transform_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingnode_component.h">
       <Filter>components</Filter>
     </ClInclude>
   </ItemGroup>

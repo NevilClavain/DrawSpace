@@ -51,6 +51,7 @@
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\rendergraph_system.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
+    <ClCompile Include="src\scenegraph_system.cpp" />
     <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
     <ClCompile Include="src\procedural_blocs.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\inertbody.h" />
     <ClInclude Include="src\jsonparser.h" />
+    <ClInclude Include="src\meshe_component.h" />
     <ClInclude Include="src\module_keys.h" />
     <ClInclude Include="src\linearmovement.h" />
     <ClInclude Include="src\logconf.h" />
@@ -138,9 +140,11 @@
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
     <ClInclude Include="src\rendergraph_system.h" />
+    <ClInclude Include="src\renderingnode_component.h" />
     <ClInclude Include="src\renderingqueue_component.h" />
     <ClInclude Include="src\renderstatesset.h" />
     <ClInclude Include="src\rendertarget_component.h" />
+    <ClInclude Include="src\scenegraph_system.h" />
     <ClInclude Include="src\spherelod_root.h" />
     <ClInclude Include="src\spherelod_layer.h" />
     <ClInclude Include="src\plugin.h" />
@@ -175,6 +179,7 @@
     <ClInclude Include="src\timemanager.h" />
     <ClInclude Include="src\tracedefs.h" />
     <ClInclude Include="src\transformation.h" />
+    <ClInclude Include="src\transform_component.h" />
     <ClInclude Include="src\triangle.h" />
     <ClInclude Include="src\vector.h" />
     <ClInclude Include="src\vertex.h" />

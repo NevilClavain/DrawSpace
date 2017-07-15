@@ -94,4 +94,10 @@
 #include "text_component.h"
 #include "viewportquad_component.h"
 #include "rendertarget_component.h"
+#include "meshe_component.h"
+#include "transform_component.h"
+#include "renderingnode_component.h"
+
+#include "scenegraph_system.h"
+
 #endif
