@@ -32,9 +32,11 @@ namespace DrawSpace
 {
 namespace Core
 {
-class HeadMovement : public Movement
+class HeadMovement// : public Movement
 {
 protected:
+
+    DrawSpace::Utils::Matrix        m_result;
 
     dsreal                          m_scalefactor;
     DrawSpace::Dynamics::InertBody* m_refbody;

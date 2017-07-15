@@ -31,9 +31,11 @@ namespace DrawSpace
 {
 namespace Core
 {
-class LongLatMovement : public Movement
+class LongLatMovement// : public Movement
 {
 protected:
+
+    DrawSpace::Utils::Matrix    m_result;
 
     dsreal                      m_longitud_theta;
     dsreal                      m_latitud_phi;

@@ -31,26 +31,29 @@ namespace DrawSpace
 {
 namespace Core
 {
-class FPSMovement : public Movement
+class FPSMovement// : public Movement
 {
 protected:
-    Utils::Vector           m_local_speed;
+
+    DrawSpace::Utils::Matrix    m_result;
+
+    Utils::Vector               m_local_speed;
 
 	// les angles
-	dsreal			        m_ayaw;
-	dsreal			        m_apitch;
+	dsreal			            m_ayaw;
+	dsreal			            m_apitch;
 
 	// les quaternions
-    Utils::Quaternion		m_qyaw;
-	Utils::Quaternion		m_qpitch;
+    Utils::Quaternion		    m_qyaw;
+	Utils::Quaternion		    m_qpitch;
 
-    Utils::Quaternion		m_current_res;
+    Utils::Quaternion		    m_current_res;
 		
 	// les sorties
-    Utils::Matrix			m_position;
-    Utils::Matrix			m_orientation;
+    Utils::Matrix			    m_position;
+    Utils::Matrix			    m_orientation;
 
-    bool                    m_ymvt;
+    bool                        m_ymvt;
    
 public:
 

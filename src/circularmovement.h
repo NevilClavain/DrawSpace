@@ -35,6 +35,8 @@ class CircularMovement : public Movement
 {
 protected:
 
+    DrawSpace::Utils::Matrix    m_result;
+
     dsreal                      m_angular_speed;
     Utils::Vector               m_rotaxis;
     

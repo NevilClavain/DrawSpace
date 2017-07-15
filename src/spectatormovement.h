@@ -32,11 +32,13 @@ namespace DrawSpace
 {
 namespace Core
 {
-class SpectatorMovement : public Movement
+class SpectatorMovement// : public Movement
 {
 protected:
     
     typedef DrawSpace::Core::CallBack<SpectatorMovement, void, DrawSpace::Utils::Timer*> SpectatorTimer;
+
+    DrawSpace::Utils::Matrix        m_result;
 
     dsreal                          m_scalepos;
     long                            m_posperiod;

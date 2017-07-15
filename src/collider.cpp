@@ -29,7 +29,7 @@ using namespace DrawSpace::Dynamics;
 
 Collider::Collider( void ) : Body( NULL ),
 m_orbiter( NULL ),
-m_movement( NULL ),
+//m_movement( NULL ),
 m_referent_orbiter( NULL ),
 m_owner( NULL ),
 m_parameters_set( false )
@@ -132,7 +132,7 @@ void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
     dsreal world_scale = World::m_scale;
 
     Matrix body_transf;
-
+    /*
     if( m_movement )
     {
         m_movement->Compute( p_timemanager );
@@ -140,8 +140,9 @@ void Collider::Update( Utils::TimeManager& p_timemanager, const Matrix& p_mat )
     }
     else
     {
+    */
         body_transf = p_mat;
-    }
+    //}
    
     // update meshe bullet
 
@@ -228,11 +229,12 @@ void Collider::SetRootOrbiter( Orbiter* p_orbiter )
 {
     m_orbiter = p_orbiter;
 }
-
+/*
 void Collider::RegisterMovement( DrawSpace::Core::Movement* p_movement )
 {
     m_movement = p_movement;
 }
+*/
 
 void Collider::GetLastLocalWorldTrans( DrawSpace::Utils::Matrix& p_mat )
 {

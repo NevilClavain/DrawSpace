@@ -43,7 +43,7 @@ protected:
 
     Orbiter*                        m_orbiter;
 
-    DrawSpace::Core::Movement*      m_movement;
+    //DrawSpace::Core::Movement*      m_movement;
 
     DrawSpace::Utils::Matrix        m_lastlocalworldtrans;
 
@@ -70,7 +70,7 @@ public:
     virtual void Update2( Utils::TimeManager& p_timemanager );
 
     virtual void SetRootOrbiter( Orbiter* p_orbiter );
-    virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
+    //virtual void RegisterMovement( DrawSpace::Core::Movement* p_movement );
 
 
     virtual void SetKinematic( const Body::Parameters& p_parameters );

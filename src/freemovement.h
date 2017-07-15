@@ -31,19 +31,21 @@ namespace DrawSpace
 {
 namespace Core
 {
-class FreeMovement : public Movement
+class FreeMovement// : public Movement
 {
 protected:
-    Utils::Vector           m_local_speed;
+    DrawSpace::Utils::Matrix    m_result;
 
-	Utils::Quaternion	    m_current_res;
-    Utils::Vector		    m_current_x_axis;
-	Utils::Vector		    m_current_y_axis;
-	Utils::Vector		    m_current_z_axis;
+    Utils::Vector               m_local_speed;
+
+	Utils::Quaternion	        m_current_res;
+    Utils::Vector		        m_current_x_axis;
+	Utils::Vector		        m_current_y_axis;
+	Utils::Vector		        m_current_z_axis;
 	
 	// les sorties
-	Utils::Matrix		    m_position;
-	Utils::Matrix		    m_orientation;
+	Utils::Matrix		        m_position;
+	Utils::Matrix		        m_orientation;
 
 public:
     FreeMovement( void );

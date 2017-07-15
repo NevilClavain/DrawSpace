@@ -31,9 +31,11 @@ namespace DrawSpace
 {
 namespace Core
 {
-class LinearMovement : public Movement
+class LinearMovement// : public Movement
 {
 protected:
+
+    DrawSpace::Utils::Matrix    m_result;
 
     dsreal                      m_speed;
     DrawSpace::Utils::Vector    m_direction;
