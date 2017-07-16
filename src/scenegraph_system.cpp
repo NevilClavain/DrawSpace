@@ -22,10 +22,26 @@
 
 #include "scenegraph_system.h"
 
+#include "memalloc.h"
+#include "ac3dmeshe.h"
 #include "components_ids.h"
+#include "meshe_component.h"
+
+#include "exceptions.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
+
+SceneGraphSystem::SceneGraphSystem( void )
+{
+    m_meshe_import = new DrawSpace::Utils::AC3DMesheImport();
+}
+
+SceneGraphSystem::~SceneGraphSystem( void )
+{
+    delete m_meshe_import;
+}
 
 void SceneGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase )
 {
@@ -50,12 +66,31 @@ void SceneGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phas
 
 void SceneGraphSystem::phase_init( Entity* p_entity )
 {   
+    if( p_entity->CheckComponent( MesheComponentType ) )
+    {
+        MesheComponent* meshe_comp = p_entity->ExtractComponent<MesheComponent>( MesheComponentType, 0 );
 
+        meshe_comp->m_meshe = _DRAWSPACE_NEW_( Meshe, Meshe );
+        meshe_comp->m_meshe->SetImporter( m_meshe_import );
+
+        if( meshe_comp->m_filepath != "" )
+        {
+             if( false == meshe_comp->m_meshe->LoadFromFile( meshe_comp->m_filepath, meshe_comp->m_index_in_file ) )
+             {                
+                _DSEXCEPTION( "Scenegraph system init phase : cannot load meshe : " + meshe_comp->m_filepath );               
+             }
+        }     
+    }
 }
 
 void SceneGraphSystem::phase_release( Entity* p_entity )
 {
+    if( p_entity->CheckComponent( MesheComponentType ) )
+    {
+        MesheComponent* meshe_comp = p_entity->ExtractComponent<MesheComponent>( MesheComponentType, 0 );
 
+        _DRAWSPACE_DELETE_( meshe_comp->m_meshe );
+    }
 }
 
 void SceneGraphSystem::phase_run( Entity* p_entity )

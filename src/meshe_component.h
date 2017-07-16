@@ -31,10 +31,14 @@ namespace DrawSpace
 {
 struct MesheComponent : public ComponentBase
 {
-    Core::Meshe* m_meshe;
+    Core::Meshe*    m_meshe;
+
+    dsstring        m_filepath;
+    int             m_index_in_file;
 
     MesheComponent( void ) :
-    m_meshe( NULL )
+    m_meshe( NULL ),
+    m_index_in_file( 0 )
     {
         m_type = MesheComponentType;
     }

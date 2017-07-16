@@ -24,6 +24,7 @@
 #define _SCENEGRAPH_SYSTEM_H_
 
 #include "system.h"
+#include "mesheimport.h"
 
 namespace DrawSpace
 {
@@ -31,12 +32,16 @@ namespace DrawSpace
 class SceneGraphSystem : public Interface::System
 {
 protected:
+    DrawSpace::Interface::MesheImport*      m_meshe_import;
 
     void phase_init( Entity* p_entity );
     void phase_release( Entity* p_entity );
     void phase_run( Entity* p_entity );
 
 public:
+    SceneGraphSystem( void );
+    ~SceneGraphSystem( void );
+
     virtual void VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase );
 };
 }

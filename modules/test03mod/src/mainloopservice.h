@@ -36,8 +36,11 @@ protected:
 
 
 
-    DrawSpace::EntitySet                    m_EntitySet_renderinggraph;
-    DrawSpace::RenderGraphSystem            m_System_renderinggraph;   
+    DrawSpace::EntitySet                    m_EntitySet_rendergraph;
+    DrawSpace::RenderGraphSystem            m_System_rendergraph;
+
+    DrawSpace::EntitySet                    m_EntitySet_scenegraph;
+    DrawSpace::SceneGraphSystem             m_System_scenegraph;
 
     
 
@@ -53,6 +56,10 @@ protected:
     DrawSpace::RenderingQueueComponent*     m_Component_texturepass_rendering_queue;
 
     DrawSpace::Entity                       m_Entity_texturepass;
+
+
+    DrawSpace::MesheComponent*              m_Component_cube2_meshe;
+    DrawSpace::Entity                       m_Entity_cube2;
 
     
 
