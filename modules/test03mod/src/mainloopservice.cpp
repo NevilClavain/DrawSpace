@@ -90,7 +90,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_EntitySet_scenegraph.InsertTree( scene_entities_tree );
 
-    m_EntitySet_scenegraph.AcceptSystemLeafsToTopRecursive( &m_System_scenegraph, EntitySet::PHASE_INIT );
+    m_EntitySet_scenegraph.AcceptSystemTopDownRecursive( &m_System_scenegraph, EntitySet::PHASE_INIT );
 
 
     /////////////////////////////////////////////////////////////////////////////////
