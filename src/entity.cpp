@@ -2,9 +2,9 @@
 
 using namespace DrawSpace;
 
-bool Entity::CheckComponent( ComponentType p_type )
+int Entity::CheckComponent( ComponentType p_type )
 {
-    return m_components.count( p_type ) > 0 ? true : false;
+    return m_components.count( p_type );
 }
 
 void Entity::operator+= (ComponentBase* p_comp)

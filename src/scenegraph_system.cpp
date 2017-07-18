@@ -26,6 +26,7 @@
 #include "ac3dmeshe.h"
 #include "components_ids.h"
 #include "meshe_component.h"
+#include "renderingnode_component.h"
 
 #include "exceptions.h"
 
@@ -65,21 +66,32 @@ void SceneGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phas
 }
 
 void SceneGraphSystem::phase_init( Entity* p_entity )
-{   
+{
+    MesheComponent* meshe_comp = NULL;
     if( p_entity->CheckComponent( MesheComponentType ) )
     {
-        MesheComponent* meshe_comp = p_entity->ExtractComponent<MesheComponent>( MesheComponentType, 0 );
+        meshe_comp = p_entity->ExtractComponent<MesheComponent>( MesheComponentType, 0 );
 
         meshe_comp->m_meshe = _DRAWSPACE_NEW_( Meshe, Meshe );
         meshe_comp->m_meshe->SetImporter( m_meshe_import );
 
         if( meshe_comp->m_filepath != "" )
         {
-             if( false == meshe_comp->m_meshe->LoadFromFile( meshe_comp->m_filepath, meshe_comp->m_index_in_file ) )
-             {                
+            if( false == meshe_comp->m_meshe->LoadFromFile( meshe_comp->m_filepath, meshe_comp->m_index_in_file ) )
+            {                
                 _DSEXCEPTION( "Scenegraph system init phase : cannot load meshe : " + meshe_comp->m_filepath );               
-             }
+            }
         }     
+    }
+
+    int nb_rendering_node = p_entity->CheckComponent( RenderingNodeComponentType );
+ 
+    for( int i = 0; i < nb_rendering_node; i++ )
+    {
+        RenderingNodeComponent* renderingnode_comp = p_entity->ExtractComponent<RenderingNodeComponent>( RenderingNodeComponentType, i );
+
+        renderingnode_comp->m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );    
+        renderingnode_comp->m_rendering_node->SetMeshe( meshe_comp->m_meshe );
     }
 }
 
@@ -90,6 +102,15 @@ void SceneGraphSystem::phase_release( Entity* p_entity )
         MesheComponent* meshe_comp = p_entity->ExtractComponent<MesheComponent>( MesheComponentType, 0 );
 
         _DRAWSPACE_DELETE_( meshe_comp->m_meshe );
+    }
+
+    int nb_rendering_node = p_entity->CheckComponent( RenderingNodeComponentType );
+ 
+    for( int i = 0; i < nb_rendering_node; i++ )
+    {
+        RenderingNodeComponent* renderingnode_comp = p_entity->ExtractComponent<RenderingNodeComponent>( RenderingNodeComponentType, i );
+
+        _DRAWSPACE_DELETE_( renderingnode_comp->m_rendering_node );        
     }
 }
 

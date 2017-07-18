@@ -31,10 +31,13 @@ namespace DrawSpace
 {
 struct RenderingNodeComponent : public ComponentBase
 {
-    Core::RenderingNode* m_rendering_node;
+    Core::RenderingNode*    m_rendering_node;
+
+    Core::RenderingQueue*   m_queue; // ptr sur la queue destination du node
 
     RenderingNodeComponent( void ) :
-    m_rendering_node( NULL )
+    m_rendering_node( NULL ),
+    m_queue( NULL )
     {
         m_type = RenderingNodeComponentType;
     }

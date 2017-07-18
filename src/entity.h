@@ -36,7 +36,8 @@ private:
 
 public:
 
-    bool CheckComponent( ComponentType p_type );
+    int CheckComponent( ComponentType p_type );
+
     void operator+= (ComponentBase* p_comp);
 
     template<typename T>
