@@ -23,8 +23,7 @@
 #ifndef _ENTITYSET_H_
 #define _ENTITYSET_H_
 
-#include "entity.h"
-#include "st_tree.h"
+#include "TreeContainer.h"
 #include <vector>
 #include "drawspace_commons.h"
 
@@ -37,11 +36,15 @@ class System;
 
 using EntitiesTree = st_tree::tree<Entity*>;
 
+
 struct EntitySet
 {
 private:
 
-    std::vector<EntitiesTree>         m_entities;
+    std::vector<EntitiesTree>           m_entities;
+
+    std::vector<EntityTreeContainer>    m_entities_containers;
+
 
 public:
 
@@ -57,6 +60,16 @@ public:
 
     void AcceptSystemTopDownRecursive( Interface::System* p_system, Phase p_phase );
     void AcceptSystemLeafsToTopRecursive( Interface::System* p_system, Phase p_phase );
+
+
+    void AddRoot( Entity* p_elt );
+
+    template <typename... Types>
+    void AddLeaf( Entity* p_elt, int p_root_index, Types... p_indexes )
+    {        
+        m_entities_containers[p_root_index].AddLeaf( p_elt, p_indexes...);
+    }
+
 };
 }
 

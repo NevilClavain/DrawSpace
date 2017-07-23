@@ -180,6 +180,7 @@
     <ClInclude Include="src\tracedefs.h" />
     <ClInclude Include="src\transformation.h" />
     <ClInclude Include="src\transform_component.h" />
+    <ClInclude Include="src\TreeContainer.h" />
     <ClInclude Include="src\triangle.h" />
     <ClInclude Include="src\vector.h" />
     <ClInclude Include="src\vertex.h" />

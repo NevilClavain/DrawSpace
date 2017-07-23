@@ -64,6 +64,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
+
+    /*
     /////////////////////////////////////////////////////////////////////////////////
     // BUILD CUBE2 CHUNK
 
@@ -91,6 +93,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_EntitySet_scenegraph.InsertTree( scene_entities_tree );
 
     m_EntitySet_scenegraph.AcceptSystemTopDownRecursive( &m_System_scenegraph, EntitySet::PHASE_INIT );
+    */
+
+
 
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -157,6 +162,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     rendering_entities_tree.insert( &m_Entity_finalpass );
     rendering_entities_tree.root().insert( &m_Entity_texturepass );
+
+
 
     
     m_EntitySet_rendergraph.InsertTree( rendering_entities_tree );

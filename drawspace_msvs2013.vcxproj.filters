@@ -521,5 +521,6 @@
     <ClInclude Include="src\renderingnode_component.h">
       <Filter>components</Filter>
     </ClInclude>
+    <ClInclude Include="src\TreeContainer.h" />
   </ItemGroup>
 </Project>

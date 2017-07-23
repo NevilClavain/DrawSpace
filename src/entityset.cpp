@@ -60,3 +60,10 @@ void EntitySet::AcceptSystemLeafsToTopRecursive( System* p_system, Phase p_phase
         }  
     }
 }
+
+void EntitySet::AddRoot( Entity* p_elt )
+{
+    EntityTreeContainer etc;
+    etc.AddRoot( p_elt );
+    m_entities_containers.push_back( etc );
+}
