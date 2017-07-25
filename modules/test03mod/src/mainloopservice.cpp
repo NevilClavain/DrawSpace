@@ -122,7 +122,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
     m_Component_viewport_quad = _DRAWSPACE_NEW_( DrawSpace::ViewportQuadComponent, DrawSpace::ViewportQuadComponent );
-    m_Component_viewport_quad->m_zoffset = -2.0;
+    m_Component_viewport_quad->m_zoffset = -0.3;
     m_Component_viewport_quad->m_dims_from_renderer = true;
 
 
