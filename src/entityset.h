@@ -36,31 +36,17 @@ using EntitiesTree = st_tree::tree<Entity*>;
 
 class EntitySet
 {
-private:
-
-    std::vector<EntitiesTree>           m_entities;
-
 protected:
     std::vector<EntityTreeContainer*>   m_entities_containers;
 
 
 public:
 
-    typedef enum
-    {
-        PHASE_INIT,
-        PHASE_RELEASE,
-        PHASE_RUN
-
-    } Phase;
-
     EntitySet( void );
     ~EntitySet( void );
 
-    //void InsertTree( const st_tree::tree<Entity*>& p_tree );
-
-    void AcceptSystemTopDownRecursive( Interface::System* p_system, Phase p_phase );
-    void AcceptSystemLeafsToTopRecursive( Interface::System* p_system, Phase p_phase );
+    void AcceptSystemTopDownRecursive( Interface::System* p_system );
+    void AcceptSystemLeafsToTopRecursive( Interface::System* p_system );
 
     virtual void AddRoot( Entity* p_elt );
 
@@ -69,7 +55,6 @@ public:
     {        
         m_entities_containers[p_root_index].AddLeaf( p_elt, p_indexes...);
     }
-
 };
 }
 

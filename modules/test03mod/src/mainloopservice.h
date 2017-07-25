@@ -35,18 +35,8 @@ protected:
     dsstring                                m_pluginDescr;
 
 
-
-    //DrawSpace::EntitySet                    m_EntitySet_rendergraph;
-
-    DrawSpace::RenderGraphData              m_Data_Rendergraph;
-
-    DrawSpace::RenderGraphSystem            m_System_rendergraph;
-
-    DrawSpace::EntitySet                    m_EntitySet_scenegraph;
-    DrawSpace::SceneGraphSystem             m_System_scenegraph;
-
     
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     DrawSpace::ColorArgComponent*           m_Component_color;
     DrawSpace::TextComponent*               m_Component_fps_text;
     DrawSpace::RenderingQueueComponent*     m_Component_rendering_queue;
@@ -57,12 +47,17 @@ protected:
     DrawSpace::ColorArgComponent*           m_Component_texturepass_color;
     DrawSpace::RenderTargetComponent*       m_Component_texturepass_render_target;
     DrawSpace::RenderingQueueComponent*     m_Component_texturepass_rendering_queue;
-
     DrawSpace::Entity                       m_Entity_texturepass;
+
+    DrawSpace::RenderGraphData              m_Data_Rendergraph;
+    DrawSpace::RenderGraphSystem            m_System_rendergraph;
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
     DrawSpace::MesheComponent*              m_Component_cube2_meshe;
     DrawSpace::Entity                       m_Entity_cube2;
+
+    DrawSpace::SceneGraphSystem             m_System_scenegraph;
 
     
 

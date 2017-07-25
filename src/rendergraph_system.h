@@ -30,14 +30,8 @@ namespace DrawSpace
 
 class RenderGraphSystem : public Interface::System
 {
-protected:
-
-    //void phase_init( Entity* p_entity );
-    //void phase_release( Entity* p_entity );
-    void phase_run( Entity* p_entity );
-
 public:
-    virtual void VisitEntitySet( Entity* p_entity/*, EntitySet::Phase p_phase*/ );
+    virtual void VisitEntitySet( Entity* p_entity );
 };
 }
 
