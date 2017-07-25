@@ -23,27 +23,25 @@
 #ifndef _ENTITYSET_H_
 #define _ENTITYSET_H_
 
-#include "TreeContainer.h"
+#include "tree_container.h"
 #include <vector>
 #include "drawspace_commons.h"
 
 namespace DrawSpace
 {
-namespace Interface
-{
-class System;
-}
+
 
 using EntitiesTree = st_tree::tree<Entity*>;
 
 
-struct EntitySet
+class EntitySet
 {
 private:
 
     std::vector<EntitiesTree>           m_entities;
 
-    std::vector<EntityTreeContainer>    m_entities_containers;
+protected:
+    std::vector<EntityTreeContainer*>   m_entities_containers;
 
 
 public:
@@ -56,13 +54,15 @@ public:
 
     } Phase;
 
-    void InsertTree( const st_tree::tree<Entity*>& p_tree );
+    EntitySet( void );
+    ~EntitySet( void );
+
+    //void InsertTree( const st_tree::tree<Entity*>& p_tree );
 
     void AcceptSystemTopDownRecursive( Interface::System* p_system, Phase p_phase );
     void AcceptSystemLeafsToTopRecursive( Interface::System* p_system, Phase p_phase );
 
-
-    void AddRoot( Entity* p_elt );
+    virtual void AddRoot( Entity* p_elt );
 
     template <typename... Types>
     void AddLeaf( Entity* p_elt, int p_root_index, Types... p_indexes )

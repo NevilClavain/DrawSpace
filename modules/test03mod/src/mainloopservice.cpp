@@ -142,6 +142,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Component_texturepass_rendering_queue->m_name = "texture_pass";
 
     m_Component_texturepass_render_target = _DRAWSPACE_NEW_( DrawSpace::RenderTargetComponent, DrawSpace::RenderTargetComponent( "texturepass_target" ) );
+    m_Component_texturepass_render_target->m_destination = std::pair<ViewportQuadComponent*,int>( m_Component_viewport_quad, 0 );
 
     m_Component_texturepass_color = _DRAWSPACE_NEW_( DrawSpace::ColorArgComponent, DrawSpace::ColorArgComponent );
     m_Component_texturepass_color->m_r = 5;
@@ -153,11 +154,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Entity_texturepass += m_Component_texturepass_rendering_queue;
     m_Entity_texturepass += m_Component_texturepass_render_target;
 
-    m_Component_viewport_quad->m_target_stages[0] = m_Component_texturepass_render_target;
+    //m_Component_viewport_quad->m_target_stages[0] = m_Component_texturepass_render_target;
     
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*
     EntitiesTree rendering_entities_tree;
 
     rendering_entities_tree.insert( &m_Entity_finalpass );
@@ -168,13 +170,21 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_EntitySet_rendergraph.InsertTree( rendering_entities_tree );
 
-    m_EntitySet_rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph, EntitySet::PHASE_INIT );
+
+    */
+
+
+    //m_EntitySet_rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph, EntitySet::PHASE_INIT );
+
+
+    m_Data_Rendergraph.AddRoot( &m_Entity_finalpass );
+    m_Data_Rendergraph.AddLeaf( &m_Entity_texturepass, 0 );
 
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+    
     m_Component_viewport_quad->m_viewportquad->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
 
@@ -204,6 +214,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_Component_rendering_queue->m_queue->UpdateOutputQueue();
     m_Component_texturepass_rendering_queue->m_queue->UpdateOutputQueue();
+    
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
@@ -212,7 +223,9 @@ void MainLoopService::Run( void )
 {   
     m_Component_fps_text->m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
-    m_EntitySet_rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph, EntitySet::PHASE_RUN );
+    //m_EntitySet_rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph, EntitySet::PHASE_RUN );
+
+    m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph, EntitySet::PHASE_RUN );
 
     m_renderer->FlipScreen();
             
@@ -226,7 +239,7 @@ void MainLoopService::Release( void )
 {
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 
-    m_EntitySet_rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph, EntitySet::PHASE_RELEASE );
+    //m_EntitySet_rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph, EntitySet::PHASE_RELEASE );
 }
 
 DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )

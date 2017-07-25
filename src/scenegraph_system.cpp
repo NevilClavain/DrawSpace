@@ -44,8 +44,9 @@ SceneGraphSystem::~SceneGraphSystem( void )
     delete m_meshe_import;
 }
 
-void SceneGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase )
+void SceneGraphSystem::VisitEntitySet( Entity* p_entity/*, EntitySet::Phase p_phase*/ )
 {
+    /*
     switch( p_phase )
     {
         case EntitySet::PHASE_INIT:
@@ -63,6 +64,9 @@ void SceneGraphSystem::VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phas
             phase_run( p_entity );
             break;
     }
+    */
+
+    phase_run( p_entity );
 }
 
 void SceneGraphSystem::phase_init( Entity* p_entity )

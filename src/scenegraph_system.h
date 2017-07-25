@@ -42,7 +42,7 @@ public:
     SceneGraphSystem( void );
     ~SceneGraphSystem( void );
 
-    virtual void VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase );
+    virtual void VisitEntitySet( Entity* p_entity/*, EntitySet::Phase p_phase*/ );
 };
 }
 

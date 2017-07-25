@@ -27,20 +27,25 @@
 #include "texture.h"
 #include "components_ids.h"
 
+#include "viewportquad.h"
+
 namespace DrawSpace
 {
 struct RenderTargetComponent : public ComponentBase
 {
 
-    Core::Texture*                  m_targettexture;
-    dsstring                        m_name;
+    Core::Texture*                          m_targettexture;
+    dsstring                                m_name;
 
-    bool                            m_targetdims_fromrenderer;
-    long                            m_targetdims_width;
-    long                            m_targetdims_height;
+    bool                                    m_targetdims_fromrenderer;
+    long                                    m_targetdims_width;
+    long                                    m_targetdims_height;
 
-    Core::Texture::RenderPurpose    m_renderpurpose;
-    Core::Texture::RenderTarget     m_rendertarget;
+    Core::Texture::RenderPurpose            m_renderpurpose;
+    Core::Texture::RenderTarget             m_rendertarget;
+
+
+    std::pair<ViewportQuadComponent*,int>   m_destination;
 
     RenderTargetComponent( const dsstring& p_name ) :
     m_name( p_name ),
@@ -49,9 +54,10 @@ struct RenderTargetComponent : public ComponentBase
     m_targetdims_width( 256 ),
     m_targetdims_height( 256 ),
     m_renderpurpose( Core::Texture::RENDERPURPOSE_COLOR ),
-    m_rendertarget( Core::Texture::RENDERTARGET_GPU )
+    m_rendertarget( Core::Texture::RENDERTARGET_GPU ),
+    m_destination( std::pair<ViewportQuadComponent*,int>( NULL, -1 ) )
     {
-        m_type = RenderTargetComponentType;
+        m_type = RenderTargetComponentType;        
     }
 };
 }

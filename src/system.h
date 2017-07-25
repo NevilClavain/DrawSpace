@@ -32,7 +32,7 @@ namespace Interface
 class System
 {
 public:
-    virtual void VisitEntitySet( Entity* p_entity, EntitySet::Phase p_phase ) = 0;
+    virtual void VisitEntitySet( Entity* p_entity/*, EntitySet::Phase p_phase*/ ) = 0;
 
 };
 }

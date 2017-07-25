@@ -21,18 +21,30 @@
 */
 
 #include "entityset.h"
-#include "system.h"
+#include "memalloc.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
 
-
+/*
 void EntitySet::InsertTree( const st_tree::tree<Entity*>& p_tree )
 {
     m_entities.push_back( p_tree );
 }
+*/
+
+EntitySet::EntitySet( void )
+{
+}
+
+EntitySet::~EntitySet( void )
+{
+
+}
 
 void EntitySet::AcceptSystemTopDownRecursive( System* p_system, Phase p_phase )
 {
+    /*
     for( auto it = m_entities.begin(); it != m_entities.end(); ++it )
     {
         st_tree::tree<Entity*> current_tree = *it;
@@ -44,10 +56,18 @@ void EntitySet::AcceptSystemTopDownRecursive( System* p_system, Phase p_phase )
             p_system->VisitEntitySet( curr_entity, p_phase );
         }  
     }
+    */
+
+    for( auto it = m_entities_containers.begin(); it != m_entities_containers.end(); ++it )
+    {
+        EntityTreeContainer* current_tree = *it;
+        current_tree->AcceptSystemTopDownRecursive( p_system );
+    }
 }
 
 void EntitySet::AcceptSystemLeafsToTopRecursive( System* p_system, Phase p_phase )
 {
+    /*
     for( auto it = m_entities.begin(); it != m_entities.end(); ++it )
     {
         st_tree::tree<Entity*> current_tree = *it;
@@ -59,11 +79,18 @@ void EntitySet::AcceptSystemLeafsToTopRecursive( System* p_system, Phase p_phase
             p_system->VisitEntitySet( curr_entity, p_phase );
         }  
     }
+    */
+
+    for( auto it = m_entities_containers.begin(); it != m_entities_containers.end(); ++it )
+    {
+        EntityTreeContainer* current_tree = *it;
+        current_tree->AcceptSystemLeafsToTopRecursive( p_system );
+    }
 }
 
 void EntitySet::AddRoot( Entity* p_elt )
 {
-    EntityTreeContainer etc;
-    etc.AddRoot( p_elt );
+    EntityTreeContainer* etc = _DRAWSPACE_NEW_( EntityTreeContainer, EntityTreeContainer );
+    etc->AddRoot( p_elt );
     m_entities_containers.push_back( etc );
 }

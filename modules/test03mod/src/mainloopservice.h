@@ -36,7 +36,10 @@ protected:
 
 
 
-    DrawSpace::EntitySet                    m_EntitySet_rendergraph;
+    //DrawSpace::EntitySet                    m_EntitySet_rendergraph;
+
+    DrawSpace::RenderGraphData              m_Data_Rendergraph;
+
     DrawSpace::RenderGraphSystem            m_System_rendergraph;
 
     DrawSpace::EntitySet                    m_EntitySet_scenegraph;

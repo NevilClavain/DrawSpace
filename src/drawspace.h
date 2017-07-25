@@ -89,6 +89,8 @@
 #include "jsonparser.h"
 
 #include "rendergraph_system.h"
+#include "rendergraph_data.h"
+
 #include "renderingqueue_component.h"
 #include "colorarg_component.h"
 #include "text_component.h"

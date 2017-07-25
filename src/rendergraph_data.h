@@ -20,37 +20,29 @@
 *
 */
 
-#ifndef _VIEWPORTQUAD_COMPONENT_H_
-#define _VIEWPORTQUAD_COMPONENT_H_
+#ifndef _RENDERGRAPH_DATA_H_
+#define _RENDERGRAPH_DATA_H_
 
-#include "component.h"
-#include "viewportquad.h"
-#include "components_ids.h"
-
-//#include "rendertarget_component.h"
+#include "entityset.h"
 
 namespace DrawSpace
 {
-struct ViewportQuadComponent : public ComponentBase
+
+class RenderGraphData : public EntitySet
 {
-    ViewportQuad*                           m_viewportquad;
+protected:
+    void initialize_new_entity( Entity* p_elt );
 
-    dsreal                                  m_zoffset;
-    dsreal                                  m_width;
-    dsreal                                  m_height;
-    bool                                    m_dims_from_renderer;
+public:
 
-    //std::map<int, RenderTargetComponent*>   m_target_stages;
+    void AddRoot( Entity* p_entity );
 
-    ViewportQuadComponent( void ) :
-    m_viewportquad( NULL ),
-    m_width( 1.0 ),
-    m_height( 1.0 ),
-    m_dims_from_renderer( false )
+    template <typename... Types>
+    void AddLeaf( Entity* p_elt, int p_root_index, Types... p_indexes )
     {
-        m_type = ViewportQuadComponentType;
+        initialize_new_entity( p_elt );
+        m_entities_containers[p_root_index]->AddLeaf( p_elt, p_indexes...);
     }
 };
 }
-
 #endif

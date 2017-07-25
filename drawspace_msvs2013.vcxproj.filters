@@ -242,6 +242,8 @@
     <ClCompile Include="src\scenegraph_system.cpp">
       <Filter>systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\rendergraph_data.cpp" />
+    <ClCompile Include="src\tree_container.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -521,6 +523,7 @@
     <ClInclude Include="src\renderingnode_component.h">
       <Filter>components</Filter>
     </ClInclude>
-    <ClInclude Include="src\TreeContainer.h" />
+    <ClInclude Include="src\rendergraph_data.h" />
+    <ClInclude Include="src\tree_container.h" />
   </ItemGroup>
 </Project>

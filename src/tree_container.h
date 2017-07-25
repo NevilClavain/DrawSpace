@@ -20,37 +20,42 @@
 *
 */
 
-#ifndef _VIEWPORTQUAD_COMPONENT_H_
-#define _VIEWPORTQUAD_COMPONENT_H_
+#ifndef _TREE_CONTAINER_H_
+#define _TREE_CONTAINER_H_
 
-#include "component.h"
-#include "viewportquad.h"
-#include "components_ids.h"
-
-//#include "rendertarget_component.h"
+#include "st_tree.h"
+#include "entity.h"
 
 namespace DrawSpace
 {
-struct ViewportQuadComponent : public ComponentBase
+namespace Interface
 {
-    ViewportQuad*                           m_viewportquad;
+class System;
+}
 
-    dsreal                                  m_zoffset;
-    dsreal                                  m_width;
-    dsreal                                  m_height;
-    bool                                    m_dims_from_renderer;
+class EntityTreeContainer
+{
+private:
+    
+    st_tree::tree<Entity*>                                        m_tr;
+    std::map<dsstring, st_tree::tree<Entity*>::node_type*>        m_nodes; // tout les nodes de m_tr mis a plat...
 
-    //std::map<int, RenderTargetComponent*>   m_target_stages;
+public:
+    
+    void AddRoot( Entity* p_elt );
 
-    ViewportQuadComponent( void ) :
-    m_viewportquad( NULL ),
-    m_width( 1.0 ),
-    m_height( 1.0 ),
-    m_dims_from_renderer( false )
-    {
-        m_type = ViewportQuadComponentType;
+    template <typename... Types>
+    void AddLeaf( Entity* p_elt, Types... p_indexes )
+    {        
+        AddLeaf( p_elt, { p_indexes... } );
     }
+
+    void AddLeaf( Entity* p_elt, const std::vector<int> p_indexes );
+
+    void AcceptSystemTopDownRecursive( Interface::System* p_system );
+    void AcceptSystemLeafsToTopRecursive( Interface::System* p_system );
 };
+
 }
 
 #endif

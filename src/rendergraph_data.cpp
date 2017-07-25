@@ -20,7 +20,7 @@
 *
 */
 
-#include "rendergraph_system.h"
+#include "rendergraph_data.h"
 
 #include "components_ids.h"
 #include "renderingqueue_component.h"
@@ -28,6 +28,7 @@
 #include "text_component.h"
 #include "viewportquad_component.h"
 #include "rendertarget_component.h"
+
 
 #include "plugin.h"
 #include "renderer.h"
@@ -37,34 +38,8 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-void RenderGraphSystem::VisitEntitySet( Entity* p_entity/*, EntitySet::Phase p_phase*/ )
+void RenderGraphData::initialize_new_entity( Entity* p_entity )
 {
-    /*
-    switch( p_phase )
-    {
-        case EntitySet::PHASE_INIT:
-            
-            phase_init( p_entity );
-            break;
-
-        case EntitySet::PHASE_RELEASE:
-
-            phase_release( p_entity );
-            break;
-
-        case EntitySet::PHASE_RUN:
-
-            phase_run( p_entity );
-            break;
-    }
-    */
-
-    phase_run( p_entity );
-}
-
-/*
-void RenderGraphSystem::phase_init( Entity* p_entity )
-{  
     if( p_entity->CheckComponent( RenderingQueueComponentType ) )
     {
         RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
@@ -93,7 +68,12 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
             }
         
             rendertarger_comp->m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( rendertarger_comp->m_name, true, w_resol, h_resol, rendertarger_comp->m_renderpurpose, rendertarger_comp->m_rendertarget ) );
-            renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( rendertarger_comp->m_targettexture ) );        
+            renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( rendertarger_comp->m_targettexture ) );
+
+            if( rendertarger_comp->m_destination.first && rendertarger_comp->m_destination.second > -1 )
+            {
+                rendertarger_comp->m_destination.first->m_viewportquad->SetTexture( rendertarger_comp->m_targettexture, rendertarger_comp->m_destination.second );
+            }
         }
         else
         {
@@ -128,54 +108,18 @@ void RenderGraphSystem::phase_init( Entity* p_entity )
 
             renderingqueue_comp->m_queue->Add( viewportquad_comp->m_viewportquad );
 
+            /*
             for( auto it = viewportquad_comp->m_target_stages.begin(); it != viewportquad_comp->m_target_stages.end(); ++it )
             {
                 viewportquad_comp->m_viewportquad->SetTexture( it->second->m_targettexture, it->first );
             }
+            */
         }
     }
 }
-*/
-/*
-void RenderGraphSystem::phase_release( Entity* p_entity )
+
+void RenderGraphData::AddRoot( Entity* p_elt )
 {
-    if( p_entity->CheckComponent(RenderingQueueComponentType ) )
-    {                
-        RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
-
-        _DRAWSPACE_DELETE_( renderingqueue_comp->m_queue );
-
-        if( p_entity->CheckComponent( RenderTargetComponentType ) )
-        {
-            RenderTargetComponent* rendertarger_comp = p_entity->ExtractComponent<RenderTargetComponent>( RenderTargetComponentType, 0 );
-
-            _DRAWSPACE_DELETE_( rendertarger_comp->m_targettexture );
-        }
-
-        if( p_entity->CheckComponent( ViewportQuadComponentType ) )
-        {
-            ViewportQuadComponent* viewportquad_comp = p_entity->ExtractComponent<ViewportQuadComponent>( ViewportQuadComponentType, 0 );
-
-            _DRAWSPACE_DELETE_( viewportquad_comp->m_viewportquad );
-        }
-    }
-}
-*/
-
-void RenderGraphSystem::phase_run( Entity* p_entity )
-{
-    if( p_entity->CheckComponent( RenderingQueueComponentType ) )
-    {
-        RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
-
-        renderingqueue_comp->m_queue->Draw();
-    }
-
-    if( p_entity->CheckComponent( TextComponentType ) )
-    {         
-        TextComponent* text_comp = p_entity->ExtractComponent<TextComponent>( TextComponentType, 0 );
-        
-        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;        
-        renderer->DrawText( text_comp->m_r, text_comp->m_g, text_comp->m_b, text_comp->m_x, text_comp->m_y, text_comp->m_text.c_str() );
-    }
+    initialize_new_entity( p_elt );
+    EntitySet::AddRoot( p_elt );
 }

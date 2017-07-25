@@ -20,37 +20,52 @@
 *
 */
 
-#ifndef _VIEWPORTQUAD_COMPONENT_H_
-#define _VIEWPORTQUAD_COMPONENT_H_
+#include "tree_container.h"
+#include "system.h"
 
-#include "component.h"
-#include "viewportquad.h"
-#include "components_ids.h"
+using namespace DrawSpace;
 
-//#include "rendertarget_component.h"
-
-namespace DrawSpace
+void EntityTreeContainer::AddRoot( Entity* p_elt )
 {
-struct ViewportQuadComponent : public ComponentBase
-{
-    ViewportQuad*                           m_viewportquad;
-
-    dsreal                                  m_zoffset;
-    dsreal                                  m_width;
-    dsreal                                  m_height;
-    bool                                    m_dims_from_renderer;
-
-    //std::map<int, RenderTargetComponent*>   m_target_stages;
-
-    ViewportQuadComponent( void ) :
-    m_viewportquad( NULL ),
-    m_width( 1.0 ),
-    m_height( 1.0 ),
-    m_dims_from_renderer( false )
-    {
-        m_type = ViewportQuadComponentType;
-    }
-};
+    m_tr.insert( p_elt );
+    m_nodes["root"] = &m_tr.root();
 }
 
-#endif
+void EntityTreeContainer::AddLeaf( Entity* p_elt, const std::vector<int> p_indexes )
+{
+    char comment[32];
+
+    dsstring indexes_sig = "root";
+    for( size_t i = 0; i < p_indexes.size(); i++ )
+    {
+        sprintf( comment, ".%d", p_indexes[i] );
+        indexes_sig += comment;
+    }
+
+    m_nodes[indexes_sig]->insert( p_elt );
+
+    sprintf( comment, ".%d", m_nodes[indexes_sig]->size() - 1 );
+    dsstring new_indexes_sig = indexes_sig + comment;
+
+    m_nodes[new_indexes_sig] = &(*m_nodes[indexes_sig])[m_nodes[indexes_sig]->size() - 1];
+}
+
+void EntityTreeContainer::AcceptSystemTopDownRecursive( Interface::System* p_system )
+{
+    for( st_tree::tree<Entity*>::df_pre_iterator it2( m_tr.df_pre_begin() ); it2 != m_tr.df_pre_end(); ++it2 )
+    {
+        Entity* curr_entity = it2->data();
+
+        p_system->VisitEntitySet( curr_entity );
+    }  
+}
+
+void EntityTreeContainer::AcceptSystemLeafsToTopRecursive( Interface::System* p_system )
+{
+    for( st_tree::tree<Entity*>::df_post_iterator it2( m_tr.df_post_begin() ); it2 != m_tr.df_post_end(); ++it2 )
+    {
+        Entity* curr_entity = it2->data();
+
+        p_system->VisitEntitySet( curr_entity );
+    }  
+}
