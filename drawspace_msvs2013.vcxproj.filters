@@ -244,6 +244,7 @@
     </ClCompile>
     <ClCompile Include="src\rendergraph_data.cpp" />
     <ClCompile Include="src\tree_container.cpp" />
+    <ClCompile Include="src\scenegraph_data.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -525,5 +526,6 @@
     </ClInclude>
     <ClInclude Include="src\rendergraph_data.h" />
     <ClInclude Include="src\tree_container.h" />
+    <ClInclude Include="src\scenegraph_data.h" />
   </ItemGroup>
 </Project>

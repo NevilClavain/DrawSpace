@@ -20,31 +20,35 @@
 *
 */
 
-#ifndef _SCENEGRAPH_SYSTEM_H_
-#define _SCENEGRAPH_SYSTEM_H_
+#ifndef _SCENEGRAPH_DATA_H_
+#define _SCENEGRAPH_DATA_H_
 
-#include "system.h"
+#include "entityset.h"
 #include "mesheimport.h"
-
-#include "exceptions.h"
 
 namespace DrawSpace
 {
 
-class SceneGraphSystem : public Interface::System
+class SceneGraphData : public EntitySet
 {
 protected:
     DrawSpace::Interface::MesheImport*      m_meshe_import;
 
-    void phase_init( Entity* p_entity );
-    void phase_release( Entity* p_entity );
-    void phase_run( Entity* p_entity );
+    void initialize_new_entity( Entity* p_elt );
 
 public:
-    SceneGraphSystem( void );
-    ~SceneGraphSystem( void );
 
-    virtual void VisitEntitySet( Entity* p_entity/*, EntitySet::Phase p_phase*/ );
+    SceneGraphData( void );
+    ~SceneGraphData( void );
+
+    void AddRoot( Entity* p_entity );
+
+    template <typename... Types>
+    void AddLeaf( Entity* p_elt, int p_root_index, Types... p_indexes )
+    {
+        initialize_new_entity( p_elt );
+        m_entities_containers[p_root_index]->AddLeaf( p_elt, p_indexes...);
+    }
 };
 }
 

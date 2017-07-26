@@ -52,6 +52,7 @@
     <ClCompile Include="src\rendergraph_data.cpp" />
     <ClCompile Include="src\rendergraph_system.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
+    <ClCompile Include="src\scenegraph_data.cpp" />
     <ClCompile Include="src\scenegraph_system.cpp" />
     <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="src\renderingqueue_component.h" />
     <ClInclude Include="src\renderstatesset.h" />
     <ClInclude Include="src\rendertarget_component.h" />
+    <ClInclude Include="src\scenegraph_data.h" />
     <ClInclude Include="src\scenegraph_system.h" />
     <ClInclude Include="src\spherelod_root.h" />
     <ClInclude Include="src\spherelod_layer.h" />

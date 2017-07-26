@@ -101,5 +101,6 @@
 #include "renderingnode_component.h"
 
 #include "scenegraph_system.h"
+#include "scenegraph_data.h"
 
 #endif
