@@ -530,5 +530,8 @@
     <ClInclude Include="src\draw_component.h">
       <Filter>components</Filter>
     </ClInclude>
+    <ClInclude Include="src\texture_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
