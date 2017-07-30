@@ -28,7 +28,7 @@
 
 namespace DrawSpace
 {
-    struct ComponentBase
+    class ComponentBase
 	{
     public:
         ComponentType m_type = DrawSpace::invalidComponentType;
