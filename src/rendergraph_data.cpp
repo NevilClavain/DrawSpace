@@ -68,6 +68,7 @@ void RenderGraphData::initialize_new_entity( Entity* p_entity )
             }
         
             rendertarger_comp->m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( rendertarger_comp->m_name, true, w_resol, h_resol, rendertarger_comp->m_renderpurpose, rendertarger_comp->m_rendertarget ) );
+            
             renderingqueue_comp->m_queue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( rendertarger_comp->m_targettexture ) );
 
             if( rendertarger_comp->m_destination.first && rendertarger_comp->m_destination.second > -1 )

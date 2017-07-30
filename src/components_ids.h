@@ -33,6 +33,8 @@ static const ComponentType RenderTargetComponentType    = 5;
 static const ComponentType MesheComponentType           = 6;
 static const ComponentType TransformComponentType       = 7;
 static const ComponentType RenderingNodeComponentType   = 8;
+static const ComponentType DrawComponentType            = 9;
+static const ComponentType TextureComponentType         = 10;
 
 
 

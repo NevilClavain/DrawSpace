@@ -65,18 +65,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
 
-    /*
-    /////////////////////////////////////////////////////////////////////////////////
-    // BUILD CUBE2 CHUNK
+    
 
-    m_Component_cube2_meshe = _DRAWSPACE_NEW_( DrawSpace::MesheComponent, DrawSpace::MesheComponent );
-    m_Component_cube2_meshe->m_filepath = "object.ac";
-    m_Component_cube2_meshe->m_index_in_file = 0;
-
-
-
-    m_Entity_cube2 += m_Component_cube2_meshe;
-    */
 
 
 
@@ -148,7 +138,43 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
 
+
+
+
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /////////////////////////////////////////////////////////////////////////////////
+    // BUILD CUBE2 CHUNK
+
+    m_Component_cube2_meshe = _DRAWSPACE_NEW_( DrawSpace::MesheComponent, DrawSpace::MesheComponent );
+    m_Component_cube2_meshe->m_filepath = "object.ac";
+    m_Component_cube2_meshe->m_index_in_file = 0;
+
+    m_Component_cube2_texturepass = _DRAWSPACE_NEW_( DrawSpace::RenderingNodeComponent, DrawSpace::RenderingNodeComponent );
+
+    m_Component_cube2_texturepass->m_queue = m_Component_texturepass_rendering_queue;
+    m_Component_cube2_texturepass->m_meshe = m_Component_cube2_meshe;
+
+    m_Component_cube2_draw = _DRAWSPACE_NEW_( DrawSpace::DrawComponent, DrawSpace::DrawComponent );
+
+
+    m_Entity_cube2 += m_Component_cube2_meshe;
+    m_Entity_cube2 += m_Component_cube2_texturepass;
+    m_Entity_cube2 += m_Component_cube2_draw;
+   
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    m_Data_scenegraph.AddRoot( &m_Entity_cube2 );
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
 
     
     m_Component_viewport_quad->m_viewportquad->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
@@ -176,7 +202,33 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     //m_Component_viewport_quad->m_viewportquad->SetTexture( m_Component_texturepass_render_target->m_targettexture, 0 );
 
 
+    ///////////////////////////////////////////////////////////////////////////////////
 
+
+
+    m_Component_cube2_texturepass->m_rendering_node->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+
+    m_Component_cube2_texturepass->m_rendering_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    m_Component_cube2_texturepass->m_rendering_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    m_Component_cube2_texturepass->m_rendering_node->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_Component_cube2_texturepass->m_rendering_node->GetFx()->GetShader( 1 )->LoadFromFile();
+
+
+    RenderStatesSet chunk_rss;
+
+    chunk_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    chunk_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    chunk_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    chunk_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+
+
+    m_Component_cube2_texturepass->m_rendering_node->GetFx()->SetRenderStates( chunk_rss );
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     m_Component_rendering_queue->m_queue->UpdateOutputQueue();
     m_Component_texturepass_rendering_queue->m_queue->UpdateOutputQueue();

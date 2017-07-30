@@ -55,9 +55,12 @@ protected:
 
 
     DrawSpace::MesheComponent*              m_Component_cube2_meshe;
+    DrawSpace::RenderingNodeComponent*      m_Component_cube2_texturepass;
+    DrawSpace::DrawComponent*               m_Component_cube2_draw;
     DrawSpace::Entity                       m_Entity_cube2;
 
     DrawSpace::SceneGraphSystem             m_System_scenegraph;
+    DrawSpace::SceneGraphData               m_Data_scenegraph;
 
     
 

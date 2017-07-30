@@ -103,6 +103,7 @@
     <ClInclude Include="src\componenttype.h" />
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
+    <ClInclude Include="src\draw_component.h" />
     <ClInclude Include="src\dsapp.h" />
     <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\entityset.h" />

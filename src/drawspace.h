@@ -99,6 +99,7 @@
 #include "meshe_component.h"
 #include "transform_component.h"
 #include "renderingnode_component.h"
+#include "draw_component.h"
 
 #include "scenegraph_system.h"
 #include "scenegraph_data.h"

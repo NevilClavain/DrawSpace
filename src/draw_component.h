@@ -20,31 +20,55 @@
 *
 */
 
-#ifndef _RENDERINGNODE_COMPONENT_H_
-#define _RENDERINGNODE_COMPONENT_H_
+#ifndef _DRAW_COMPONENT_H_
+#define _DRAW_COMPONENT_H_
 
 #include "component.h"
 #include "renderingnode.h"
 #include "components_ids.h"
-#include "renderingqueue_component.h"
 
-
+#include "plugin.h"
+#include "renderer.h"
+#include "vector.h"
 
 namespace DrawSpace
 {
-struct RenderingNodeComponent : public ComponentBase
+struct DrawComponent : public ComponentBase
 {
-    Core::RenderingNode*        m_rendering_node;
+public:
+    using Callback = DrawSpace::Core::CallBack<DrawComponent, void, DrawSpace::Core::RenderingNode*>;
 
-    RenderingQueueComponent*    m_queue; // ptr sur la queue destination du node
-    MesheComponent*             m_meshe;
+private:
 
-    RenderingNodeComponent( void ) :
-    m_rendering_node( NULL ),
-    m_queue( NULL ),
-    m_meshe( NULL )
+    DrawSpace::Interface::Renderer* m_renderer;
+
+public:
+    DrawComponent( void )
     {
-        m_type = RenderingNodeComponentType;
+        m_type = DrawComponentType;
+    }
+
+    void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
+    {        
+        m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
+        m_renderer->GetRenderCharacteristics( renderer_characteristics );
+
+        DrawSpace::Utils::Matrix view;
+        DrawSpace::Utils::Matrix proj;
+        DrawSpace::Utils::Matrix world;
+
+        // TEMPORAIRE : TODO : prendre la mat view de la camera courante du scenegraph
+        view.Identity();
+
+        // TEMPORAIRE : TODO : prendre la mat proj de la camera courante du scenegraph
+        proj.Perspective( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, 1.0, 100000000000.0 );
+
+
+        // TEMPORAIRE : prendre le global_word d'un cmposant transfo dans la meme entitee
+        world.Translation( Utils::Vector( 0.0, 0.0, -5.0, 1.0 ) );
+             
+        m_renderer->DrawMeshe( world, view, proj );
     }
 };
 }

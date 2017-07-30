@@ -25,6 +25,7 @@
 #include "components_ids.h"
 #include "meshe_component.h"
 #include "renderingnode_component.h"
+#include "draw_component.h"
 
 
 #include "ac3dmeshe.h"
@@ -48,6 +49,7 @@ SceneGraphData::~SceneGraphData( void )
 
 void SceneGraphData::initialize_new_entity( Entity* p_entity )
 {
+    ///////////////////////////////////////////////////////////////////////////////
     MesheComponent* meshe_comp = NULL;
     if( p_entity->CheckComponent( MesheComponentType ) )
     {
@@ -65,15 +67,35 @@ void SceneGraphData::initialize_new_entity( Entity* p_entity )
         }     
     }
 
-    int nb_rendering_node = p_entity->CheckComponent( RenderingNodeComponentType );
+    ///////////////////////////////////////////////////////////////////////////////
 
+    int nb_rendering_node = p_entity->CheckComponent( RenderingNodeComponentType );
     for( int i = 0; i < nb_rendering_node; i++ )
     {
         RenderingNodeComponent* renderingnode_comp = p_entity->ExtractComponent<RenderingNodeComponent>( RenderingNodeComponentType, i );
 
-        renderingnode_comp->m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );    
-        renderingnode_comp->m_rendering_node->SetMeshe( meshe_comp->m_meshe );
+        renderingnode_comp->m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode ); 
+
+        if( renderingnode_comp->m_meshe )
+        {
+            renderingnode_comp->m_rendering_node->SetMeshe( renderingnode_comp->m_meshe->m_meshe );
+        }
+
+        if( p_entity->CheckComponent( DrawComponentType ) )
+        {
+            DrawComponent* draw_comp = p_entity->ExtractComponent<DrawComponent>( DrawComponentType, 0 );
+
+            DrawComponent::Callback* cb = _DRAWSPACE_NEW_( DrawComponent::Callback, DrawComponent::Callback( draw_comp, &DrawComponent::on_renderingnode_draw ) );            
+            renderingnode_comp->m_rendering_node->RegisterHandler( cb );
+        }
+
+        if( renderingnode_comp->m_queue )
+        {
+            renderingnode_comp->m_queue->m_queue->Add( renderingnode_comp->m_rendering_node );
+        }
     }
+
+    ///////////////////////////////////////////////////////////////////////////////
 }
 
 void SceneGraphData::AddRoot( Entity* p_elt )

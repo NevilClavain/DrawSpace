@@ -33,7 +33,6 @@ namespace DrawSpace
     public:
         ComponentType m_type = DrawSpace::invalidComponentType;
 	};
-
 }
 
 #endif

@@ -527,5 +527,8 @@
     <ClInclude Include="src\rendergraph_data.h" />
     <ClInclude Include="src\tree_container.h" />
     <ClInclude Include="src\scenegraph_data.h" />
+    <ClInclude Include="src\draw_component.h">
+      <Filter>components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
