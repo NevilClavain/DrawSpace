@@ -46,11 +46,12 @@ public:
     DrawComponent( void )
     {
         m_type = DrawComponentType;
+        m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     }
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
     {        
-        m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+        //m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
         DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
         m_renderer->GetRenderCharacteristics( renderer_characteristics );
 
