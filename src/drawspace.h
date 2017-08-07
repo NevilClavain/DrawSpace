@@ -87,7 +87,10 @@
 #include "module_service.h"
 #include "module_keys.h"
 #include "jsonparser.h"
+#include "ecs.h"
+#include "rendergraphsystem.h"
 
+/*
 #include "rendergraph_system.h"
 #include "rendergraph_data.h"
 
@@ -104,5 +107,7 @@
 
 #include "scenegraph_system.h"
 #include "scenegraph_data.h"
+*/
+
 
 #endif

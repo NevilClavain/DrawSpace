@@ -64,12 +64,17 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
+    /////////////////////////////////////////////////////////////////////////////////
+    // BUILD FINALPASS
 
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::MakeTextOperation, &m_Component_fps_text);
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::DrawTextOperation, &m_Component_fps_text);
     
+    
+    m_Data_Rendergraph.AddRoot(&m_System_rendergraph, &m_Entity_finalpass);
 
 
-
-
+    /*
 
     /////////////////////////////////////////////////////////////////////////////////
     // BUILD FINALPASS
@@ -137,11 +142,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Data_Rendergraph.AddLeaf( &m_Entity_texturepass, 0 );
 
 
+    */
 
 
 
-
-
+    /*
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -204,7 +209,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////////////
 
+    */
 
+    /*
 
     m_Component_cube2_texturepass->m_rendering_node->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
@@ -233,15 +240,32 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Component_rendering_queue->m_queue->UpdateOutputQueue();
     m_Component_texturepass_rendering_queue->m_queue->UpdateOutputQueue();
     
-
+    */
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
 void MainLoopService::Run( void )
 {   
-    m_Component_fps_text->m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
+    
+    //m_Component_fps_text->m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
+
+    //m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
+
+    m_renderer->BeginScreen();
+
+    m_renderer->ClearScreen( 0, 0, 0, 0 );
+
+    m_Component_fps_text.getPurpose().m_r = 255;
+    m_Component_fps_text.getPurpose().m_g = 255;
+    m_Component_fps_text.getPurpose().m_b = 255;
+    m_Component_fps_text.getPurpose().m_x = 10;
+    m_Component_fps_text.getPurpose().m_y = 10;
+    m_Component_fps_text.getPurpose().m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
     m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
+
+    m_renderer->EndScreen();
+
 
     m_renderer->FlipScreen();
             
@@ -249,6 +273,7 @@ void MainLoopService::Run( void )
     if( m_tm.IsReady() )
     {
     }
+    
 }
 
 void MainLoopService::Release( void )

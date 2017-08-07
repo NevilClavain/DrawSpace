@@ -235,16 +235,13 @@
       <Filter>threading</Filter>
     </ClCompile>
     <ClCompile Include="src\entityset.cpp" />
-    <ClCompile Include="src\rendergraph_system.cpp">
-      <Filter>systems</Filter>
-    </ClCompile>
     <ClCompile Include="src\entity.cpp" />
-    <ClCompile Include="src\scenegraph_system.cpp">
-      <Filter>systems</Filter>
-    </ClCompile>
     <ClCompile Include="src\rendergraph_data.cpp" />
     <ClCompile Include="src\tree_container.cpp" />
     <ClCompile Include="src\scenegraph_data.cpp" />
+    <ClCompile Include="src\rendergraphsystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -491,9 +488,6 @@
     <ClInclude Include="src\system.h">
       <Filter>interface</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendergraph_system.h">
-      <Filter>systems</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderingqueue_component.h">
       <Filter>components</Filter>
     </ClInclude>
@@ -512,9 +506,6 @@
     <ClInclude Include="src\rendertarget_component.h">
       <Filter>components</Filter>
     </ClInclude>
-    <ClInclude Include="src\scenegraph_system.h">
-      <Filter>systems</Filter>
-    </ClInclude>
     <ClInclude Include="src\meshe_component.h">
       <Filter>components</Filter>
     </ClInclude>
@@ -532,6 +523,10 @@
     </ClInclude>
     <ClInclude Include="src\texture_component.h">
       <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ecs.h" />
+    <ClInclude Include="src\rendergraphsystem.h">
+      <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

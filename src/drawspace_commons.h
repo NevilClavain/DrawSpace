@@ -29,6 +29,11 @@
 #include <vector>
 #include <set>
 #include <exception>
+#include <memory>
+#include <unordered_map>
+#include <typeinfo>
+#include <algorithm>
+#include <functional>
 
 #include "flags.h"
 

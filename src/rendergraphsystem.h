@@ -20,38 +20,46 @@
 *
 */
 
-#include "rendergraph_system.h"
 
-#include "components_ids.h"
-#include "renderingqueue_component.h"
-#include "colorarg_component.h"
-#include "text_component.h"
-#include "viewportquad_component.h"
-#include "rendertarget_component.h"
+#ifndef _RENDERGRAPHSYSTEM_H_
+#define _RENDERGRAPHSYSTEM_H_
 
-#include "plugin.h"
+#include "ecs.h"
 #include "renderer.h"
 
-#include "memalloc.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-
-void RenderGraphSystem::VisitEntitySet( Entity* p_entity/*, EntitySet::Phase p_phase*/ )
+namespace DrawSpace
 {
-    if( p_entity->CheckComponent( RenderingQueueComponentType ) )
+class RendergraphSystem : public DrawSpace::ecs::System
+{
+public:
+
+    using Text = struct
     {
-        RenderingQueueComponent* renderingqueue_comp = p_entity->ExtractComponent<RenderingQueueComponent>( RenderingQueueComponentType, 0 );
+        dsstring        m_text;
+        unsigned char   m_r;
+        unsigned char   m_g;
+        unsigned char   m_b;
 
-        renderingqueue_comp->m_queue->Draw();
-    }
+        int             m_x;
+        int             m_y;
+    };
 
-    if( p_entity->CheckComponent( TextComponentType ) )
-    {         
-        TextComponent* text_comp = p_entity->ExtractComponent<TextComponent>( TextComponentType, 0 );
-        
-        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-        renderer->DrawText( text_comp->m_r, text_comp->m_g, text_comp->m_b, text_comp->m_x, text_comp->m_y, text_comp->m_text.c_str() );
-    }
+    static const int MakeTextOperation = 0;
+    static const int DrawTextOperation = 1;
+
+protected:
+
+    DrawSpace::Interface::Renderer* m_renderer;
+
+    virtual void on_entity_visited_action(int p_actionid, ecs::BaseArguments* p_args) const;
+    virtual void on_entity_added_action(int p_actionid, ecs::BaseArguments* p_args) const;
+
+public:
+
+    RendergraphSystem( void );
+    ~RendergraphSystem( void );
+
+};
 }
 
+#endif

@@ -30,12 +30,19 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    DrawSpace::Interface::Renderer*         m_renderer;
-    DrawSpace::Utils::TimeManager           m_tm;
-    dsstring                                m_pluginDescr;
+    DrawSpace::Interface::Renderer*                                 m_renderer;
+    DrawSpace::Utils::TimeManager                                   m_tm;
+    dsstring                                                        m_pluginDescr;
 
 
-    
+    DrawSpace::ecs::Component<DrawSpace::RendergraphSystem::Text>   m_Component_fps_text;
+    DrawSpace::RendergraphSystem                                    m_System_rendergraph;
+
+    DrawSpace::ecs::Entity                                          m_Entity_finalpass;
+
+    DrawSpace::ecs::EntityTree                                      m_Data_Rendergraph;
+
+    /*
     ///////////////////////////////////////////////////////////////////////////////////////////////
     DrawSpace::ColorArgComponent*           m_Component_color;
     DrawSpace::TextComponent*               m_Component_fps_text;
@@ -61,6 +68,8 @@ protected:
 
     DrawSpace::SceneGraphSystem             m_System_scenegraph;
     DrawSpace::SceneGraphData               m_Data_scenegraph;
+    */
+
 
     
 
