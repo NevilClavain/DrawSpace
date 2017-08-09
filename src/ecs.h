@@ -51,11 +51,11 @@ public:
     {
         m_purpose = std::make_unique<T>(p_args...);
     }
-
+    
     virtual T& getPurpose(void) const
     {
         return *( m_purpose.get() );
-    }
+    }    
 };
 
 template<typename T>
@@ -94,8 +94,8 @@ public:
 
     template<class... Args>
     void RegisterAction(int p_id, const Args&... p_args)
-    {
-        m_arguments[p_id].push_back(std::make_unique<ecs::Arguments<Args...>>(p_args...));
+    {              
+        m_arguments[p_id].push_back( std::make_unique<ecs::Arguments<Args...>>(p_args...) );
     }
 
     friend class EntityTree;
@@ -120,27 +120,27 @@ class EntityTree
 {
 private:
     st_tree::tree<Entity*>                                                      m_tr;
-    std::unordered_map<dsstring, st_tree::tree<Entity*>::node_type*>         m_nodes; // tout les nodes de m_tr mis a plat...
+    std::unordered_map<dsstring, st_tree::tree<Entity*>::node_type*>            m_nodes; // tout les nodes de m_tr mis a plat...
     
     void trigger_entity_added_actions(System* p_system, Entity* p_elt) const
     {
         for (auto it = p_elt->m_arguments.begin(); it != p_elt->m_arguments.end(); ++it)
-        {
+        {            
             for (size_t i = 0; i < it->second.size(); i++)
             {
-                p_system->on_entity_added_action(it->first, it->second[i].get());
-            }
+                p_system->on_entity_added_action( it->first, it->second[i].get() );
+            }            
         }
     }
 
     void trigger_entity_visited_actions(System* p_system, Entity* p_elt) const
     {
         for (auto it = p_elt->m_arguments.begin(); it != p_elt->m_arguments.end(); ++it)
-        {
+        {            
             for (size_t i = 0; i < it->second.size(); i++)
             {
-                p_system->on_entity_visited_action(it->first, it->second[i].get());
-            }
+                p_system->on_entity_visited_action( it->first, it->second[i].get() );
+            }            
         }
     }
 
@@ -213,6 +213,7 @@ private:
 public:
     Arguments(const Args&... p_args) : m_args(p_args...)
     {
+        _asm nop
     }
     
     std::tuple<Args...> Get(void) const
@@ -220,7 +221,32 @@ public:
         return m_args;
     }
 };
+
+struct RGBAColor
+{
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
+
+    RGBAColor( void ) :
+    r( 0 ),
+    g( 0 ),
+    b( 0 ),
+    a( 0 )
+    {};
+
+    RGBAColor( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a ) :
+    r( p_r ),
+    g( p_g ),
+    b( p_b ),
+    a( p_a )
+    {};
+};
+
 }
+
+//////////////////////////////////////////////////////////////////////
 }
 
 #endif

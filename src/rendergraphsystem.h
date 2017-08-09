@@ -44,8 +44,16 @@ public:
         int             m_y;
     };
 
-    static const int MakeTextOperation = 0;
-    static const int DrawTextOperation = 1;
+    static const int MakeTextOperation                                  = 0;
+    static const int MakeBoolParamOperation                             = 1;
+    static const int MakeColorParamOperation                            = 2;
+    static const int DrawTextOperation                                  = 3;
+    static const int MakeRenderingQueueOnScreenOperation                = 4;
+    static const int MakeRenderingQueueOnTargetOperation                = 5;
+    static const int RenderingQueueSetTargetClearingColorsOperation     = 6;
+    static const int RenderingQueueEnableTargetClearingOperation        = 7;
+    static const int RenderingEnableDepthClearingOperation              = 8;
+    static const int DrawRenderingQueueOperation                        = 9;
 
 protected:
 

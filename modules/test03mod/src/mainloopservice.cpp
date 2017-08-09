@@ -67,8 +67,15 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     /////////////////////////////////////////////////////////////////////////////////
     // BUILD FINALPASS
 
-    m_Entity_finalpass.RegisterAction(RendergraphSystem::MakeTextOperation, &m_Component_fps_text);
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::MakeTextOperation, &m_Component_fps_text);    
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::MakeBoolParamOperation, &m_Component_finalpass_enableclearscreen, true);
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::MakeColorParamOperation, &m_Component_finalpass_clearscreencolor, (unsigned char)126, (unsigned char)13, (unsigned char)14, (unsigned char)255 );
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::MakeRenderingQueueOnScreenOperation , &m_Component_finalpass_renderingqueue );
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::RenderingQueueEnableTargetClearingOperation , &m_Component_finalpass_renderingqueue, &m_Component_finalpass_enableclearscreen );
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::RenderingQueueSetTargetClearingColorsOperation , &m_Component_finalpass_renderingqueue, &m_Component_finalpass_clearscreencolor );
+    m_Entity_finalpass.RegisterAction(RendergraphSystem::DrawRenderingQueueOperation , &m_Component_finalpass_renderingqueue );
     m_Entity_finalpass.RegisterAction(RendergraphSystem::DrawTextOperation, &m_Component_fps_text);
+
     
     
     m_Data_Rendergraph.AddRoot(&m_System_rendergraph, &m_Entity_finalpass);
@@ -246,15 +253,26 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {   
+    m_Component_fps_text.getPurpose().m_r = 255;
+    m_Component_fps_text.getPurpose().m_g = 255;
+    m_Component_fps_text.getPurpose().m_b = 255;
+    m_Component_fps_text.getPurpose().m_x = 10;
+    m_Component_fps_text.getPurpose().m_y = 10;        
+    m_Component_fps_text.getPurpose().m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
+
+    //m_Component_finalpass_renderingqueue.getPurpose().EnableTargetClearing( true );
     
-    //m_Component_fps_text->m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
-    //m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
+    m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
+    
 
+    /*
     m_renderer->BeginScreen();
 
     m_renderer->ClearScreen( 0, 0, 0, 0 );
+    */
 
+    /*
     m_Component_fps_text.getPurpose().m_r = 255;
     m_Component_fps_text.getPurpose().m_g = 255;
     m_Component_fps_text.getPurpose().m_b = 255;
@@ -263,9 +281,14 @@ void MainLoopService::Run( void )
     m_Component_fps_text.getPurpose().m_text = dsstring( "fps :" ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
     m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
+    */
 
+    /*
     m_renderer->EndScreen();
-
+    
+    
+    m_renderer->DrawText( 255, 255, 255, 10, 10, "aaaa!!!" );
+    */
 
     m_renderer->FlipScreen();
             
