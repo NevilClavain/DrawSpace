@@ -120,14 +120,23 @@ public:
         size_t tid = typeid(T).hash_code();
         if( m_components.count( tid ) )
         {
-            // TODO -> slot deja occupe, reagir par une exception
-
             _DSEXCEPTION( "Entity cannot support more than one component of same type : " + dsstring( typeid(T).name() ) );
         }
         m_components[tid] = std::make_unique<Component<T>>();
     }
 
     // TODO faire AddMultiPurposeComponent
+
+    template<typename T>
+    void AddMultiPurposeComponent( void )
+    {
+        size_t tid = typeid(T).hash_code();
+        if( m_components.count( tid ) )
+        {
+            _DSEXCEPTION( "Entity cannot support more than one component of same type : " + dsstring( typeid(T).name() ) );
+        }
+        m_components[tid] = std::make_unique<MultiPurposeComponent<T>>();
+    }
 
     template<typename T, class... Args>
     void RegisterSingleComponentAction( int p_id, const Args&... p_args )
