@@ -29,6 +29,7 @@
 
 namespace DrawSpace
 {
+    
 class RendergraphSystem : public DrawSpace::ecs::System
 {
 public:
@@ -59,8 +60,8 @@ protected:
 
     DrawSpace::Interface::Renderer* m_renderer;
 
-    virtual void on_entity_visited_action(int p_actionid, ecs::BaseArguments* p_args) const;
-    virtual void on_entity_added_action(int p_actionid, ecs::BaseArguments* p_args) const;
+    virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args ) const;
+    virtual void on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_src, ecs::BaseComponent* p_dst ) const;
 
 public:
 
@@ -68,6 +69,7 @@ public:
     ~RendergraphSystem( void );
 
 };
+
 }
 
 #endif

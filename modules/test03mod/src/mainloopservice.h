@@ -35,6 +35,14 @@ protected:
     dsstring                                                                        m_pluginDescr;
 
 
+    DrawSpace::ecs::Entity                                                          m_Entity_finalpass;
+
+    DrawSpace::ecs::EntityTree                                                      m_Data_Rendergraph;
+    DrawSpace::RendergraphSystem                                                    m_System_rendergraph;
+
+
+
+    /*
     DrawSpace::ecs::Component<DrawSpace::RendergraphSystem::Text>                   m_Component_fps_text;
     DrawSpace::ecs::Component<DrawSpace::Core::RenderingQueue>                      m_Component_finalpass_renderingqueue;
     DrawSpace::ecs::Component<DrawSpace::ecs::Component<DrawSpace::ecs::RGBAColor>> m_Component_finalpass_clearscreencolor;
@@ -44,6 +52,7 @@ protected:
 
     DrawSpace::ecs::EntityTree                                                      m_Data_Rendergraph;
     DrawSpace::RendergraphSystem                                                    m_System_rendergraph;
+    */
 
     /*
     ///////////////////////////////////////////////////////////////////////////////////////////////

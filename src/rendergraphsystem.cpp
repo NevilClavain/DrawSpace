@@ -27,6 +27,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::ecs;
 
+
 RendergraphSystem::RendergraphSystem( void )
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -36,8 +37,32 @@ RendergraphSystem::~RendergraphSystem( void )
 {
 }
 
-void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args ) const
+void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_src, ecs::BaseComponent* p_dst ) const
 {
+    switch (p_actionid)
+    {
+        case MakeColorParamOperation:
+        {
+            ecs::Arguments<unsigned char, unsigned char, unsigned char, unsigned char>* args = 
+                static_cast<ecs::Arguments<unsigned char, unsigned char, unsigned char, unsigned char>*>(p_args);
+
+            ecs::Component<ecs::RGBAColor>* rgbacolor_comp = static_cast<ecs::Component<ecs::RGBAColor>*>( p_src );
+
+            unsigned char r = std::get<0>(args->GetArg());
+            unsigned char g = std::get<1>(args->GetArg());
+            unsigned char b = std::get<2>(args->GetArg());
+            unsigned char a = std::get<3>(args->GetArg());
+
+            rgbacolor_comp->MakePurpose( r, g, b, a );
+
+
+        }
+        break;
+
+    }
+
+
+    /*
     switch (p_actionid)
     {
         case MakeTextOperation:
@@ -122,12 +147,15 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
         }
         break;
     }
+    */
 }
 
 void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args ) const
 {
+    /*
     switch (p_actionid)
     {
+        
         case DrawTextOperation:
         {
             ecs::Arguments<ecs::Component<Text>*>* args = static_cast<ecs::Arguments<ecs::Component<Text>*>*>(p_args);
@@ -150,5 +178,5 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
         }
         break;
     }
+    */
 }
-
