@@ -41,6 +41,7 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 {
     switch (p_actionid)
     {
+        /*
         case MakeColorParamOperation:
         {
             ecs::Arguments<unsigned char, unsigned char, unsigned char, unsigned char>* args = 
@@ -58,6 +59,15 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 
         }
         break;
+
+        */
+
+        case MakeRenderingQueueOnScreenOperation:
+            {
+                ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
+                screen_renderingqueue_comp->MakePurpose();
+            }
+            break;
 
     }
 
@@ -150,8 +160,17 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
     */
 }
 
-void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args ) const
+void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_src, ecs::BaseComponent* p_dst ) const
 {
+    switch (p_actionid)
+    {        
+        case DrawRenderingQueueOperation:
+        {
+            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
+            screen_renderingqueue_comp->getPurpose().Draw();
+        }
+    }
+
     /*
     switch (p_actionid)
     {

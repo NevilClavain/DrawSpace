@@ -68,15 +68,19 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     // BUILD FINALPASS
 
 
+    m_Entity_finalpass.AddComponent<DrawSpace::Core::RenderingQueue>();
+    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::MakeRenderingQueueOnScreenOperation );
+    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::DrawRenderingQueueOperation );
 
+
+    m_Data_Rendergraph.AddRoot(&m_System_rendergraph, &m_Entity_finalpass);
+    
+
+    /*
     m_Entity_finalpass.AddComponent<ecs::RGBAColor>();
-
-
     m_Entity_finalpass.RegisterSingleComponentAction<ecs::RGBAColor>( RendergraphSystem::MakeColorParamOperation, (unsigned char)25, (unsigned char)128, (unsigned char)255, (unsigned char)255 );
-
-
-     m_Data_Rendergraph.AddRoot(&m_System_rendergraph, &m_Entity_finalpass);
-
+    m_Data_Rendergraph.AddRoot(&m_System_rendergraph, &m_Entity_finalpass);
+    */
 
 
     /*
@@ -269,7 +273,7 @@ void MainLoopService::Run( void )
 {
 
 
-
+    m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
 
     /*
     m_Component_fps_text.getPurpose().m_r = 255;

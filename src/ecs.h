@@ -164,7 +164,7 @@ class System abstract
 {
 protected:
 
-    virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args ) const = 0;
+    virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_src, BaseComponent* p_dst ) const = 0;
     virtual void on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_src, BaseComponent* p_dst ) const = 0;
 
 public:
@@ -214,10 +214,23 @@ private:
             for (size_t i = 0; i < it->second.size(); i++)
             {
                 BaseArguments* args = it->second[i].get();
-                size_t comp_src = args->GetSrc();
-                size_t comp_dst = args->GetDst();
+                size_t comp_src_id = args->GetSrc();
+                size_t comp_dst_id = args->GetDst();
 
-                p_system->on_entity_visited_action( it->first, args );
+                BaseComponent* src_comp = NULL;
+                BaseComponent* dst_comp = NULL;
+
+                if( p_elt->m_components.count( comp_src_id ) )
+                {
+                    src_comp = p_elt->m_components[comp_src_id].get();
+                }
+                
+                if( p_elt->m_components.count( comp_dst_id ) )
+                {
+                    dst_comp = p_elt->m_components[comp_dst_id].get();
+                }
+
+                p_system->on_entity_visited_action( it->first, args, src_comp, dst_comp );
             }            
         }
     }
@@ -303,27 +316,7 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////
 
-struct RGBAColor
-{
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
 
-    RGBAColor( void ) :
-    r( 0 ),
-    g( 0 ),
-    b( 0 ),
-    a( 0 )
-    {};
-
-    RGBAColor( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a ) :
-    r( p_r ),
-    g( p_g ),
-    b( p_b ),
-    a( p_a )
-    {};
-};
 
 
 /*

@@ -45,22 +45,32 @@ public:
         int             m_y;
     };
 
+    using Color = struct
+    {
+        unsigned char r;
+        unsigned char g;
+        unsigned char b;
+        unsigned char a;
+    };
+
     static const int MakeTextOperation                                  = 0;
     static const int MakeBoolParamOperation                             = 1;
     static const int MakeColorParamOperation                            = 2;
-    static const int DrawTextOperation                                  = 3;
-    static const int MakeRenderingQueueOnScreenOperation                = 4;
-    static const int MakeRenderingQueueOnTargetOperation                = 5;
-    static const int RenderingQueueSetTargetClearingColorsOperation     = 6;
-    static const int RenderingQueueEnableTargetClearingOperation        = 7;
-    static const int RenderingEnableDepthClearingOperation              = 8;
+    static const int MakeRenderingQueueOnScreenOperation                = 3;
+    static const int MakeRenderingQueueOnTargetOperation                = 4;
+
+    static const int RenderingQueueSetTargetClearingColorsOperation     = 5;
+    static const int RenderingQueueEnableTargetClearingOperation        = 6;
+    static const int RenderingEnableDepthClearingOperation              = 7;
+
+    static const int DrawTextOperation                                  = 8;
     static const int DrawRenderingQueueOperation                        = 9;
 
 protected:
 
     DrawSpace::Interface::Renderer* m_renderer;
 
-    virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args ) const;
+    virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_src, ecs::BaseComponent* p_dst ) const;
     virtual void on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_src, ecs::BaseComponent* p_dst ) const;
 
 public:
