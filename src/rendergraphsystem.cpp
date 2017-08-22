@@ -162,13 +162,29 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 
 void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_src, ecs::BaseComponent* p_dst ) const
 {
-    switch (p_actionid)
+    switch( p_actionid )
     {        
         case DrawRenderingQueueOperation:
         {
             ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
             screen_renderingqueue_comp->getPurpose().Draw();
         }
+        break;
+
+        case RenderingQueueSetTargetClearingColorsOperation:
+        {
+            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
+
+            
+            ecs::Arguments<Color>* args = static_cast<ecs::Arguments<Color>*>(p_args);
+
+            Color rgba = std::get<0>( args->GetArg() );
+
+            screen_renderingqueue_comp->getPurpose().EnableTargetClearing( true );
+            screen_renderingqueue_comp->getPurpose().SetTargetClearingColor( rgba.r, rgba.g, rgba.b, rgba.a );
+
+        }
+        break;
     }
 
     /*
