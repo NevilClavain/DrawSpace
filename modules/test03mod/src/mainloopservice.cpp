@@ -72,16 +72,23 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::MakeRenderingQueueOnScreenOperation );
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::DrawRenderingQueueOperation );
 
-    RendergraphSystem::Color screencolor;
-    screencolor.r = 255;
-    screencolor.g = 12;
-    screencolor.b = 12;
-    screencolor.a = 255;
+    m_screencolor.r = 255;
+    m_screencolor.g = 12;
+    m_screencolor.b = 12;
+    m_screencolor.a = 255;
 
-    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::RenderingQueueSetTargetClearingColorsOperation, screencolor );
-
+    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::RenderingQueueSetTargetClearingColorsOperation, m_screencolor );
 
 
+    
+    m_text.r = 255;
+    m_text.g = 255;
+    m_text.b = 255;
+    m_text.x = 10;
+    m_text.y = 10;
+    m_text.text = "aaa";
+
+    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Text>( RendergraphSystem::DrawTextOperation, m_text );
 
     m_Data_Rendergraph.AddRoot(&m_System_rendergraph, &m_Entity_finalpass);
     
@@ -283,15 +290,9 @@ void MainLoopService::Run( void )
 {
 
 
-    static RendergraphSystem::Color screencolor;
-    screencolor.r = 0;
-    screencolor.g = 128;
-    
-    screencolor.a = 255;
+    m_text.text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
-    m_Entity_finalpass.UpdateSingleComponentAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::RenderingQueueSetTargetClearingColorsOperation, 0, screencolor );
-
-    screencolor.b += 1;
+    m_Entity_finalpass.UpdateSingleComponentAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Text>( RendergraphSystem::DrawTextOperation, 0, m_text );
 
     m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
 

@@ -171,12 +171,23 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
         }
         break;
 
+        case DrawTextOperation:
+        {
+            ecs::Arguments<Text>* args = static_cast<ecs::Arguments<Text>*>( p_args );
+
+            Text text_descr = std::get<0>( args->GetArg() );
+
+            m_renderer->BeginScreen();
+            m_renderer->DrawText( text_descr.r, text_descr.g, text_descr.b, text_descr.x, text_descr.y, text_descr.text.c_str() );
+            m_renderer->EndScreen();
+        }
+        break;
+
         case RenderingQueueSetTargetClearingColorsOperation:
         {
             ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
-
             
-            ecs::Arguments<Color>* args = static_cast<ecs::Arguments<Color>*>(p_args);
+            ecs::Arguments<Color>* args = static_cast<ecs::Arguments<Color>*>( p_args );
 
             Color rgba = std::get<0>( args->GetArg() );
 

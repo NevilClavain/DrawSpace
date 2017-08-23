@@ -36,13 +36,13 @@ public:
 
     using Text = struct
     {
-        dsstring        m_text;
-        unsigned char   m_r;
-        unsigned char   m_g;
-        unsigned char   m_b;
+        dsstring        text;
+        unsigned char   r;
+        unsigned char   g;
+        unsigned char   b;
 
-        int             m_x;
-        int             m_y;
+        int             x;
+        int             y;
     };
 
     using Color = struct
