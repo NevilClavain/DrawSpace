@@ -53,10 +53,17 @@ public:
         unsigned char a;
     };
 
+    // TODO : remplacer par des enums
+    static const int DrawRenderingQueueOperation                        = 0;
     static const int MakeRenderingQueueOnScreenOperation                = 3;
-    static const int RenderingQueueSetTargetClearingColorsOperation     = 5;
-    static const int DrawTextOperation                                  = 8;
-    static const int DrawRenderingQueueOperation                        = 9;
+    static const int MakeScreenColorOperation                           = 4;
+    static const int InitScreenColor                                    = 5;
+    static const int UpdateScreenColor                                  = 6;
+    static const int UpdateColor                                        = 7;
+
+    //static const int RenderingQueueSetTargetClearingColorsOperation     = 8;
+    //static const int DrawTextOperation                                  = 9;
+
 
 protected:
 
