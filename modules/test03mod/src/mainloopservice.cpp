@@ -70,20 +70,48 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_Entity_finalpass.AddComponent<DrawSpace::Core::RenderingQueue>();
     m_Entity_finalpass.AddComponent<RendergraphSystem::Color>();
+    m_Entity_finalpass.AddMultiComponent<RendergraphSystem::Text>();
+
+
 
     
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::MakeRenderingQueueOnScreenOperation );
 
     m_screencolor.r = 255;
     m_screencolor.g = 0;
-    m_screencolor.b = 255;
+    m_screencolor.b = 200;
     m_screencolor.a = 255;
     m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Color, RendergraphSystem::Color>( RendergraphSystem::MakeScreenColorOperation, m_screencolor );
-    //m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::InitScreenColor );
-    m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::UpdateScreenColor );
-    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Color>( RendergraphSystem::UpdateColor, m_screencolor );
+    m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::InitScreenColor );
+
+
+    DrawSpace::RendergraphSystem::Text simple_text;
+    simple_text.r = 25;
+    simple_text.g = 255;
+    simple_text.b = 25;
+    simple_text.x = 100;
+    simple_text.y = 100;
+    simple_text.text = "green text";
+
+    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text>( RendergraphSystem::MakeTextOperation, simple_text );
+
+    m_text.r = 255;
+    m_text.g = 255;
+    m_text.b = 255;
+    m_text.x = 10;
+    m_text.y = 10;
+    m_text.text = "test test test";
+
+    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text>( RendergraphSystem::MakeTextOperation, m_text );
+
+    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text, int>( RendergraphSystem::UpdateText, m_text, 1 );
+
         
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::DrawRenderingQueueOperation );
+
+
+
+    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text>( RendergraphSystem::DrawTextsOperation );
 
 
 
@@ -187,17 +215,9 @@ void MainLoopService::Run( void )
 {
 
 
-    //m_text.text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
-    //m_Entity_finalpass.UpdateSingleComponentAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Text>( RendergraphSystem::DrawTextOperation, 0, m_text );
+    m_text.text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
+    m_Entity_finalpass.UpdateSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text, int>( RendergraphSystem::UpdateText, 0, m_text, 1 );
 
-    
-    m_screencolor.r++;
-    if( m_screencolor.r > 255 )
-    {
-        m_screencolor.r = 0;
-    }
-
-    m_Entity_finalpass.UpdateSingleComponentAction<RendergraphSystem::Color>( RendergraphSystem::UpdateColor, 0, m_screencolor );
     
 
     m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );

@@ -64,6 +64,24 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
         }
         break;
 
+        case MakeTextOperation:
+        {
+            ecs::MultiComponent<Text>* text_comp = static_cast<ecs::MultiComponent<Text>*>( p_src );
+                       
+            ecs::Arguments<Text>* args = static_cast<ecs::Arguments<Text>*>( p_args );
+            Text text = std::get<0>( args->GetArg() );
+
+            text_comp->MakePurpose();
+
+            text_comp->getLast().r = text.r;
+            text_comp->getLast().g = text.g;
+            text_comp->getLast().b = text.b;
+            text_comp->getLast().x = text.x;
+            text_comp->getLast().y = text.y;
+            text_comp->getLast().text = text.text;            
+        }
+        break;
+
         case InitScreenColor:
         {
             ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
@@ -71,7 +89,7 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
            
             Color rgba = screen_color->getPurpose();
 
-            screen_renderingqueue_comp->getPurpose().EnableTargetClearing( true );
+            screen_renderingqueue_comp->getPurpose().EnableTargetClearing( true ); // TODO temporaire : faire une action separee
             screen_renderingqueue_comp->getPurpose().SetTargetClearingColor( rgba.r, rgba.g, rgba.b, rgba.a );        
         }
         break;
@@ -87,6 +105,22 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
         {
             ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
             screen_renderingqueue_comp->getPurpose().Draw();
+        }
+        break;
+
+        case DrawTextsOperation:
+        {
+            ecs::MultiComponent<Text>* texts = static_cast<ecs::MultiComponent<Text>*>( p_src );
+
+            size_t nb_texts = texts->getSize();
+
+            m_renderer->BeginScreen();
+            for( size_t i = 0; i < nb_texts; i++ )
+            {
+                Text text_descr = texts->getPurpose( i );
+                m_renderer->DrawText( text_descr.r, text_descr.g, text_descr.b, text_descr.x, text_descr.y, text_descr.text.c_str() );
+            }
+            m_renderer->EndScreen();        
         }
         break;
 
@@ -116,32 +150,21 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
         }
         break;
 
-        /*
-        case DrawTextOperation:
+        case UpdateText:
         {
-            ecs::Arguments<Text>* args = static_cast<ecs::Arguments<Text>*>( p_args );
+            ecs::MultiComponent<Text>* texts = static_cast<ecs::MultiComponent<Text>*>( p_src );
 
-            Text text_descr = std::get<0>( args->GetArg() );
-
-            m_renderer->BeginScreen();
-            m_renderer->DrawText( text_descr.r, text_descr.g, text_descr.b, text_descr.x, text_descr.y, text_descr.text.c_str() );
-            m_renderer->EndScreen();
+            ecs::Arguments<Text, int>* args = static_cast<ecs::Arguments<Text, int>*>( p_args );
+            Text text = std::get<0>( args->GetArg() );
+            int text_index = std::get<1>( args->GetArg() );
+                    
+            texts->getPurpose( text_index ).r = text.r;
+            texts->getPurpose( text_index ).g = text.g;
+            texts->getPurpose( text_index ).b = text.b;
+            texts->getPurpose( text_index ).x = text.x;
+            texts->getPurpose( text_index ).y = text.y;
+            texts->getPurpose( text_index ).text = text.text;
         }
         break;
-
-        case RenderingQueueSetTargetClearingColorsOperation:
-        {
-            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
-            
-            ecs::Arguments<Color>* args = static_cast<ecs::Arguments<Color>*>( p_args );
-
-            Color rgba = std::get<0>( args->GetArg() );
-
-            screen_renderingqueue_comp->getPurpose().EnableTargetClearing( true );
-            screen_renderingqueue_comp->getPurpose().SetTargetClearingColor( rgba.r, rgba.g, rgba.b, rgba.a );
-
-        }
-        break;
-        */
     }
 }

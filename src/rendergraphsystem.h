@@ -60,9 +60,13 @@ public:
     static const int InitScreenColor                                    = 5;
     static const int UpdateScreenColor                                  = 6;
     static const int UpdateColor                                        = 7;
+    static const int MakeTextOperation                                  = 8;
+    static const int DrawTextsOperation                                 = 9;
+    static const int UpdateText                                         = 10;
+
 
     //static const int RenderingQueueSetTargetClearingColorsOperation     = 8;
-    //static const int DrawTextOperation                                  = 9;
+    //
 
 
 protected:

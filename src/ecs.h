@@ -58,25 +58,33 @@ public:
     }    
 };
 
+// TODO renommer MultiComponent -> ComponentMultiple
 template<typename T>
-class MultiPurposeComponent sealed : public BaseComponent
+class MultiComponent sealed : public BaseComponent
 {
 private:
     std::vector<ComponentPurpose<T>>       m_purposes;
 
 public:
     template<class... Args>
-    void MakePurposes(size_t p_nb, const Args&... p_args)
+    void MakePurpose( const Args&... p_args )
     {
-        for(size_t i = 0; i < p_nb; i++)
-        {
-            m_purposes.push_back( std::make_unique<T>(p_args...) );
-        }
+        m_purposes.push_back( std::make_unique<T>(p_args...) );       
     }
 
-    virtual T& getPurpose(long p_index) const
+    virtual T& getPurpose( long p_index ) const
     {
         return *( m_purposes[p_index].get() );
+    }
+
+    virtual T& getLast( void ) const
+    {
+        return *( m_purposes[m_purposes.size() - 1].get() );
+    }
+
+    size_t getSize( void ) const
+    {
+        return m_purposes.size();
     }
 };
 
@@ -125,16 +133,17 @@ public:
     }
 
     template<typename T>
-    void AddMultiPurposeComponent( void )
+    void AddMultiComponent( void )
     {
         size_t tid = typeid(T).hash_code();
         if( m_components.count( tid ) )
         {
             _DSEXCEPTION( "Entity cannot support more than one component of same type : " + dsstring( typeid(T).name() ) );
         }
-        m_components[tid] = std::make_unique<MultiPurposeComponent<T>>();
+        m_components[tid] = std::make_unique<MultiComponent<T>>();
     }
 
+    // TODO renvoyer un index que le client utilisera pour UpdateSingleComponentAction()
     template<typename T, class... Args>
     void RegisterSingleComponentAction( int p_id, const Args&... p_args )
     {
@@ -153,6 +162,7 @@ public:
         *arg_ptr = new_val;
     }
 
+    // TODO renvoyer un index que le client utilisera pour UpdateDoubleComponentAction()
     template<typename T1, typename T2, class... Args>
     void RegisterDoubleComponentsAction( int p_id, const Args&... p_args )
     {
@@ -184,7 +194,10 @@ class System abstract
 {
 protected:
 
+    // TODO : renommer p_src et p_dst en p_c1 et p_c2
     virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_src, BaseComponent* p_dst ) const = 0;
+
+    // TODO : renommer p_src et p_dst en p_c1 et p_c2
     virtual void on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_src, BaseComponent* p_dst ) const = 0;
 
 public:
