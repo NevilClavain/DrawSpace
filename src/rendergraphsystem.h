@@ -53,16 +53,8 @@ public:
         unsigned char a;
     };
 
-    static const int MakeTextOperation                                  = 0;
-    static const int MakeBoolParamOperation                             = 1;
-    static const int MakeColorParamOperation                            = 2;
     static const int MakeRenderingQueueOnScreenOperation                = 3;
-    static const int MakeRenderingQueueOnTargetOperation                = 4;
-
     static const int RenderingQueueSetTargetClearingColorsOperation     = 5;
-    static const int RenderingQueueEnableTargetClearingOperation        = 6;
-    static const int RenderingEnableDepthClearingOperation              = 7;
-
     static const int DrawTextOperation                                  = 8;
     static const int DrawRenderingQueueOperation                        = 9;
 
