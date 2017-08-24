@@ -27,6 +27,8 @@
 #include "exceptions.h"
 #include "st_tree.h"
 
+#define SET_COMPONENT_ACCESSIBLE using component_accessible = struct {};
+
 namespace DrawSpace
 {
 namespace ecs
@@ -143,6 +145,47 @@ public:
         m_components[tid] = std::make_unique<MultiComponent<T>>();
     }
 
+    template<typename T>
+    T& GetComponentPurpose( void )
+    {
+        if( false == component_accessible<T>().value )
+        {
+            _DSEXCEPTION( "Component purpose access not allowed : " + dsstring( typeid(T).name() ) );
+        }
+
+        size_t tid = typeid(T).hash_code();
+
+        if( 0 == m_components.count( tid ) )
+        {
+            _DSEXCEPTION( "Component type not registered in this entity : " + dsstring( typeid(T).name() ) );
+        }
+
+        Component<T>* comp = static_cast<Component<T>*>( m_components[tid].get() );
+        return comp->getPurpose();
+    }
+
+    // TODO faire GetMultiComponentPurpose()
+    
+
+    template<typename T>
+    T& GetComponentMultiPurpose( int p_index )
+    {
+        if( false == component_accessible<T>().value )
+        {
+            _DSEXCEPTION( "Component purpose access not allowed : " + dsstring( typeid(T).name() ) );
+        }
+
+        size_t tid = typeid(T).hash_code();
+
+        if( 0 == m_components.count( tid ) )
+        {
+            _DSEXCEPTION( "Component type not registered in this entity : " + dsstring( typeid(T).name() ) );
+        }
+
+        MultiComponent<T>* comp = static_cast<MultiComponent<T>*>( m_components[tid].get() );
+        return comp->getPurpose( p_index );
+    }
+
     // TODO renvoyer un index que le client utilisera pour UpdateSingleComponentAction()
     template<typename T, class... Args>
     void RegisterSingleComponentAction( int p_id, const Args&... p_args )
@@ -151,6 +194,7 @@ public:
         m_arguments[p_id].push_back( std::make_unique<ecs::Arguments<Args...>>(tid, -1, p_args...) );
     }
 
+    // TODO a supprimer
     template<typename T, class... Args>
     void UpdateSingleComponentAction( int p_id, int p_index, const Args&... p_args )
     {
@@ -172,6 +216,7 @@ public:
         m_arguments[p_id].push_back( std::make_unique<ecs::Arguments<Args...>>(tid_1, tid_2, p_args...) );
     }
 
+    // TODO a supprimer
     template<typename T1, typename T2, class... Args>
     void UpdateDoubleComponentAction( int p_id, int p_index, const Args&... p_args )
     {
@@ -348,6 +393,21 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////
+
+// SFINAE
+template <typename T>
+struct component_accessible
+{   
+    template <typename U>
+    static char test(typename U::component_accessible* x);
+ 
+    template <typename U>
+    static long test(U* x);
+ 
+    static const bool value = sizeof(test<T>(0)) == 1;
+};
+
+///////////////////////////////////////////////////////////////////////////
 
 }
 

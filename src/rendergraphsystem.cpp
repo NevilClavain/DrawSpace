@@ -131,39 +131,8 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
            
             Color rgba = screen_color->getPurpose();
 
-            screen_renderingqueue_comp->getPurpose().EnableTargetClearing( true );
+            screen_renderingqueue_comp->getPurpose().EnableTargetClearing( true ); // TODO temporaire : faire une action separee
             screen_renderingqueue_comp->getPurpose().SetTargetClearingColor( rgba.r, rgba.g, rgba.b, rgba.a );        
-        }
-        break;
-
-        case UpdateColor:
-        {
-            ecs::Component<Color>* screen_color = static_cast<ecs::Component<Color>*>( p_src );
-            
-            ecs::Arguments<Color>* args = static_cast<ecs::Arguments<Color>*>( p_args );
-            Color rgba = std::get<0>( args->GetArg() );
-
-            screen_color->getPurpose().r = rgba.r;
-            screen_color->getPurpose().g = rgba.g;
-            screen_color->getPurpose().b = rgba.b;
-            screen_color->getPurpose().a = rgba.a;
-        }
-        break;
-
-        case UpdateText:
-        {
-            ecs::MultiComponent<Text>* texts = static_cast<ecs::MultiComponent<Text>*>( p_src );
-
-            ecs::Arguments<Text, int>* args = static_cast<ecs::Arguments<Text, int>*>( p_args );
-            Text text = std::get<0>( args->GetArg() );
-            int text_index = std::get<1>( args->GetArg() );
-                    
-            texts->getPurpose( text_index ).r = text.r;
-            texts->getPurpose( text_index ).g = text.g;
-            texts->getPurpose( text_index ).b = text.b;
-            texts->getPurpose( text_index ).x = text.x;
-            texts->getPurpose( text_index ).y = text.y;
-            texts->getPurpose( text_index ).text = text.text;
         }
         break;
     }

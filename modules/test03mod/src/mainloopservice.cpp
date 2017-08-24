@@ -68,6 +68,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     // BUILD FINALPASS
 
 
+
     m_Entity_finalpass.AddComponent<DrawSpace::Core::RenderingQueue>();
     m_Entity_finalpass.AddComponent<RendergraphSystem::Color>();
     m_Entity_finalpass.AddMultiComponent<RendergraphSystem::Text>();
@@ -77,11 +78,14 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::MakeRenderingQueueOnScreenOperation );
 
-    m_screencolor.r = 255;
-    m_screencolor.g = 0;
-    m_screencolor.b = 200;
-    m_screencolor.a = 255;
-    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Color, RendergraphSystem::Color>( RendergraphSystem::MakeScreenColorOperation, m_screencolor );
+    DrawSpace::RendergraphSystem::Color screen_color;
+    screen_color.r = 90;
+    screen_color.g = 90;
+    screen_color.b = 90;
+    screen_color.a = 255;
+    
+    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Color, RendergraphSystem::Color>( RendergraphSystem::MakeScreenColorOperation, screen_color );
+    
     m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::InitScreenColor );
 
 
@@ -104,43 +108,14 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text>( RendergraphSystem::MakeTextOperation, m_text );
 
-    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text, int>( RendergraphSystem::UpdateText, m_text, 1 );
-
         
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::DrawRenderingQueueOperation );
-
-
-
     m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text>( RendergraphSystem::DrawTextsOperation );
 
 
-
-
-
-    /*
-    m_screencolor.r = 255;
-    m_screencolor.g = 12;
-    m_screencolor.b = 12;
-    m_screencolor.a = 255;
-
-    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::RenderingQueueSetTargetClearingColorsOperation, m_screencolor );
-
-
-    
-    m_text.r = 255;
-    m_text.g = 255;
-    m_text.b = 255;
-    m_text.x = 10;
-    m_text.y = 10;
-    m_text.text = "aaa";
-
-    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Text>( RendergraphSystem::DrawTextOperation, m_text );
-    */
-
-
-
+ 
     m_Data_Rendergraph.AddRoot(&m_System_rendergraph, &m_Entity_finalpass);
-    
+
 /*
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -213,12 +188,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
+    m_Entity_finalpass.GetComponentMultiPurpose<RendergraphSystem::Text>( 1 ).text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
-
-    m_text.text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
-    m_Entity_finalpass.UpdateSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text, int>( RendergraphSystem::UpdateText, 0, m_text, 1 );
-
-    
 
     m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
 
@@ -227,8 +198,7 @@ void MainLoopService::Run( void )
     m_tm.Update();
     if( m_tm.IsReady() )
     {
-    }
-    
+    }    
 }
 
 void MainLoopService::Release( void )

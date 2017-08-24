@@ -40,7 +40,6 @@ protected:
     DrawSpace::ecs::EntityTree                                                      m_Data_Rendergraph;
     DrawSpace::RendergraphSystem                                                    m_System_rendergraph;
 
-    DrawSpace::RendergraphSystem::Color                                             m_screencolor;
     DrawSpace::RendergraphSystem::Text                                              m_text;
 
 

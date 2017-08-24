@@ -43,6 +43,8 @@ public:
 
         int             x;
         int             y;
+
+        SET_COMPONENT_ACCESSIBLE
     };
 
     using Color = struct
@@ -51,6 +53,8 @@ public:
         unsigned char g;
         unsigned char b;
         unsigned char a;
+
+        SET_COMPONENT_ACCESSIBLE
     };
 
     // TODO : remplacer par des enums
@@ -59,14 +63,9 @@ public:
     static const int MakeScreenColorOperation                           = 4;
     static const int InitScreenColor                                    = 5;
     static const int UpdateScreenColor                                  = 6;
-    static const int UpdateColor                                        = 7;
     static const int MakeTextOperation                                  = 8;
     static const int DrawTextsOperation                                 = 9;
-    static const int UpdateText                                         = 10;
 
-
-    //static const int RenderingQueueSetTargetClearingColorsOperation     = 8;
-    //
 
 
 protected:
