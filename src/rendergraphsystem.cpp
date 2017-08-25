@@ -48,21 +48,6 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
         }
         break;
 
-        case MakeScreenColorOperation:
-        {
-            ecs::Component<Color>* screen_color_comp = static_cast<ecs::Component<Color>*>( p_c1 );
-
-            ecs::Arguments<Color>* args = static_cast<ecs::Arguments<Color>*>( p_args );
-            Color rgba = std::get<0>( args->GetArg() );
-
-            screen_color_comp->MakePurpose();
-
-            screen_color_comp->getPurpose().r = rgba.r;
-            screen_color_comp->getPurpose().g = rgba.g;
-            screen_color_comp->getPurpose().b = rgba.b;
-            screen_color_comp->getPurpose().a = rgba.a;
-        }
-        break;
 
         case MakeTextOperation:
         {
@@ -82,17 +67,31 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
         }
         break;
 
-        case InitScreenColor:
+        case MakeRenderingQueueStatesOperation:
         {
-            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
-            ecs::Component<Color>* screen_color = static_cast<ecs::Component<Color>*>( p_c2 );
-           
-            Color rgba = screen_color->getPurpose();
+            ecs::Component<RenderingQueueStates>* rq_states = static_cast<ecs::Component<RenderingQueueStates>*>( p_c1 );
 
-            screen_renderingqueue_comp->getPurpose().EnableTargetClearing( true ); // TODO temporaire : faire une action separee
-            screen_renderingqueue_comp->getPurpose().SetTargetClearingColor( rgba.r, rgba.g, rgba.b, rgba.a );        
+            ecs::Arguments<RenderingQueueStates>* args = static_cast<ecs::Arguments<RenderingQueueStates>*>( p_args );
+            RenderingQueueStates states = std::get<0>( args->GetArg() );
+
+            rq_states->MakePurpose(); 
+
+            rq_states->getPurpose() = states;
         }
         break;
+
+
+        case SetRenderingQueueStates:
+        {
+            ecs::Component<DrawSpace::Core::RenderingQueue>* renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
+            ecs::Component<RenderingQueueStates>* rq_states = static_cast<ecs::Component<RenderingQueueStates>*>( p_c2 );  
+
+            RenderingQueueStates states = rq_states->getPurpose();
+
+            renderingqueue_comp->getPurpose().EnableDepthClearing( states.depth_clearing_enabled );
+            renderingqueue_comp->getPurpose().EnableTargetClearing( states.target_clearing_enabled );
+            renderingqueue_comp->getPurpose().SetTargetClearingColor( states.target_clear_r, states.target_clear_g, states.target_clear_b, states.target_clear_a );        
+        }
 
     }
 }
@@ -121,18 +120,6 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
                 m_renderer->DrawText( text_descr.r, text_descr.g, text_descr.b, text_descr.x, text_descr.y, text_descr.text.c_str() );
             }
             m_renderer->EndScreen();        
-        }
-        break;
-
-        case UpdateScreenColor:
-        {
-            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
-            ecs::Component<Color>* screen_color = static_cast<ecs::Component<Color>*>( p_c2 );
-           
-            Color rgba = screen_color->getPurpose();
-
-            screen_renderingqueue_comp->getPurpose().EnableTargetClearing( true ); // TODO temporaire : faire une action separee
-            screen_renderingqueue_comp->getPurpose().SetTargetClearingColor( rgba.r, rgba.g, rgba.b, rgba.a );        
         }
         break;
     }

@@ -47,13 +47,16 @@ public:
         SET_COMPONENT_ACCESSIBLE
     };
 
-    using Color = struct
+    using RenderingQueueStates = struct
     {
-        unsigned char r;
-        unsigned char g;
-        unsigned char b;
-        unsigned char a;
-
+        bool depth_clearing_enabled;
+        bool target_clearing_enabled;
+        
+        unsigned char target_clear_r;
+        unsigned char target_clear_g;
+        unsigned char target_clear_b;
+        unsigned char target_clear_a;
+   
         SET_COMPONENT_ACCESSIBLE
     };
     
@@ -61,11 +64,10 @@ public:
     {
         DrawRenderingQueueOperation,
         MakeRenderingQueueOnScreenOperation,
-        MakeScreenColorOperation,
-        InitScreenColor,
-        UpdateScreenColor,
         MakeTextOperation,
-        DrawTextsOperation
+        DrawTextsOperation,
+        MakeRenderingQueueStatesOperation,
+        SetRenderingQueueStates,
     };
     
 protected:

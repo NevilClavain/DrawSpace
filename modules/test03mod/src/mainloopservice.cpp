@@ -70,23 +70,27 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
     m_Entity_finalpass.AddComponent<DrawSpace::Core::RenderingQueue>();
-    m_Entity_finalpass.AddComponent<RendergraphSystem::Color>();
     m_Entity_finalpass.AddMultiComponent<RendergraphSystem::Text>();
+    m_Entity_finalpass.AddComponent<RendergraphSystem::RenderingQueueStates>();
 
 
 
     
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::MakeRenderingQueueOnScreenOperation );
 
-    DrawSpace::RendergraphSystem::Color screen_color;
-    screen_color.r = 90;
-    screen_color.g = 90;
-    screen_color.b = 90;
-    screen_color.a = 255;
-    
-    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Color, RendergraphSystem::Color>( RendergraphSystem::MakeScreenColorOperation, screen_color );
-    
-    m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::Color>( RendergraphSystem::InitScreenColor );
+
+    RendergraphSystem::RenderingQueueStates rq_states;
+
+    rq_states.depth_clearing_enabled = false;
+    rq_states.target_clearing_enabled = true;
+
+    rq_states.target_clear_r = 50;
+    rq_states.target_clear_g = 50;
+    rq_states.target_clear_b = 50;
+    rq_states.target_clear_a = 255;
+
+    m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::RenderingQueueStates, RendergraphSystem::RenderingQueueStates>( RendergraphSystem::MakeRenderingQueueStatesOperation, rq_states );
+    m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::RenderingQueueStates>( RendergraphSystem::SetRenderingQueueStates );
 
 
     DrawSpace::RendergraphSystem::Text simple_text;
@@ -100,7 +104,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text>( RendergraphSystem::MakeTextOperation, simple_text );
 
     m_text.r = 255;
-    m_text.g = 255;
+    m_text.g = 0;
     m_text.b = 255;
     m_text.x = 10;
     m_text.y = 10;
