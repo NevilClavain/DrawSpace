@@ -66,7 +66,7 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 
         case MakeTextOperation:
         {
-            ecs::MultiComponent<Text>* text_comp = static_cast<ecs::MultiComponent<Text>*>( p_src );
+            ecs::ComponentMultiple<Text>* text_comp = static_cast<ecs::ComponentMultiple<Text>*>( p_src );
                        
             ecs::Arguments<Text>* args = static_cast<ecs::Arguments<Text>*>( p_args );
             Text text = std::get<0>( args->GetArg() );
@@ -110,7 +110,7 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
 
         case DrawTextsOperation:
         {
-            ecs::MultiComponent<Text>* texts = static_cast<ecs::MultiComponent<Text>*>( p_src );
+            ecs::ComponentMultiple<Text>* texts = static_cast<ecs::ComponentMultiple<Text>*>( p_src );
 
             size_t nb_texts = texts->getSize();
 

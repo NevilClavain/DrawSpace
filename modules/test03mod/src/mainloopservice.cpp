@@ -188,7 +188,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
-    m_Entity_finalpass.GetComponentMultiPurpose<RendergraphSystem::Text>( 1 ).text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
+    m_Entity_finalpass.GetComponentMultiplePurpose<RendergraphSystem::Text>( 1 ).text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
 
     m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );

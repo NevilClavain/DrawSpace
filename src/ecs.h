@@ -60,9 +60,8 @@ public:
     }    
 };
 
-// TODO renommer MultiComponent -> ComponentMultiple
 template<typename T>
-class MultiComponent sealed : public BaseComponent
+class ComponentMultiple sealed : public BaseComponent
 {
 private:
     std::vector<ComponentPurpose<T>>       m_purposes;
@@ -142,7 +141,7 @@ public:
         {
             _DSEXCEPTION( "Entity cannot support more than one component of same type : " + dsstring( typeid(T).name() ) );
         }
-        m_components[tid] = std::make_unique<MultiComponent<T>>();
+        m_components[tid] = std::make_unique<ComponentMultiple<T>>();
     }
 
     template<typename T>
@@ -164,11 +163,8 @@ public:
         return comp->getPurpose();
     }
 
-    // TODO faire GetMultiComponentPurpose()
-    
-
     template<typename T>
-    T& GetComponentMultiPurpose( int p_index )
+    T& GetComponentMultiplePurpose( int p_index )
     {
         if( false == component_accessible<T>().value )
         {
@@ -182,31 +178,17 @@ public:
             _DSEXCEPTION( "Component type not registered in this entity : " + dsstring( typeid(T).name() ) );
         }
 
-        MultiComponent<T>* comp = static_cast<MultiComponent<T>*>( m_components[tid].get() );
+        ComponentMultiple<T>* comp = static_cast<ComponentMultiple<T>*>( m_components[tid].get() );
         return comp->getPurpose( p_index );
     }
-
-    // TODO renvoyer un index que le client utilisera pour UpdateSingleComponentAction()
+    
     template<typename T, class... Args>
     void RegisterSingleComponentAction( int p_id, const Args&... p_args )
     {
         size_t tid = typeid(T).hash_code();
         m_arguments[p_id].push_back( std::make_unique<ecs::Arguments<Args...>>(tid, -1, p_args...) );
     }
-
-    // TODO a supprimer
-    template<typename T, class... Args>
-    void UpdateSingleComponentAction( int p_id, int p_index, const Args&... p_args )
-    {
-        size_t tid = typeid(T).hash_code();
-        
-        ecs::Arguments<Args...> new_val( tid, -1, p_args... );
-
-        ecs::Arguments<Args...>* arg_ptr = static_cast<ecs::Arguments<Args...>*>( m_arguments[p_id][p_index].get() );
-        *arg_ptr = new_val;
-    }
-
-    // TODO renvoyer un index que le client utilisera pour UpdateDoubleComponentAction()
+    
     template<typename T1, typename T2, class... Args>
     void RegisterDoubleComponentsAction( int p_id, const Args&... p_args )
     {
@@ -214,19 +196,6 @@ public:
         size_t tid_2 = typeid(T2).hash_code();
 
         m_arguments[p_id].push_back( std::make_unique<ecs::Arguments<Args...>>(tid_1, tid_2, p_args...) );
-    }
-
-    // TODO a supprimer
-    template<typename T1, typename T2, class... Args>
-    void UpdateDoubleComponentAction( int p_id, int p_index, const Args&... p_args )
-    {
-        size_t tid_1 = typeid(T1).hash_code();
-        size_t tid_2 = typeid(T2).hash_code();
-
-        ecs::Arguments<Args...> new_val( tid_1, tid_2, p_args... );
-
-        ecs::Arguments<Args...>* arg_ptr = static_cast<ecs::Arguments<Args...>*>( m_arguments[p_id][p_index].get() );
-        *arg_ptr = new_val;
     }
 
     friend class EntityTree;
