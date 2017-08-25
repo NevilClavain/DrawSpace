@@ -56,18 +56,18 @@ public:
 
         SET_COMPONENT_ACCESSIBLE
     };
-
-    // TODO : remplacer par des enums
-    static const int DrawRenderingQueueOperation                        = 0;
-    static const int MakeRenderingQueueOnScreenOperation                = 3;
-    static const int MakeScreenColorOperation                           = 4;
-    static const int InitScreenColor                                    = 5;
-    static const int UpdateScreenColor                                  = 6;
-    static const int MakeTextOperation                                  = 8;
-    static const int DrawTextsOperation                                 = 9;
-
-
-
+    
+    enum
+    {
+        DrawRenderingQueueOperation,
+        MakeRenderingQueueOnScreenOperation,
+        MakeScreenColorOperation,
+        InitScreenColor,
+        UpdateScreenColor,
+        MakeTextOperation,
+        DrawTextsOperation
+    };
+    
 protected:
 
     DrawSpace::Interface::Renderer* m_renderer;
