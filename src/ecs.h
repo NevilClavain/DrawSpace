@@ -208,10 +208,7 @@ class System abstract
 {
 protected:
 
-    // TODO : renommer p_src et p_dst en p_c1 et p_c2
     virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_c1, BaseComponent* p_c2 ) const = 0;
-
-    // TODO : renommer p_src et p_dst en p_c1 et p_c2
     virtual void on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_c1, BaseComponent* p_c2 ) const = 0;
 
 public:
