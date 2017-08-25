@@ -94,23 +94,23 @@ public:
 class BaseArguments abstract
 {
 protected:
-    size_t              m_comp_src;
-    size_t              m_comp_dst;
+    size_t              m_comp_1;
+    size_t              m_comp_2;
 public:
-    BaseArguments( size_t p_src, size_t p_dst ) : 
-    m_comp_src( p_src ),
-    m_comp_dst( p_dst )
+    BaseArguments( size_t p_comp_1, size_t p_comp_2 ) : 
+    m_comp_1( p_comp_1 ),
+    m_comp_2( p_comp_2 )
     {
     }
 
-    virtual size_t GetSrc( void ) const
+    virtual size_t GetComp1( void ) const
     {
-        return m_comp_src;
+        return m_comp_1;
     }
 
-    virtual size_t GetDst( void ) const
+    virtual size_t GetComp2( void ) const
     {
-        return m_comp_dst;
+        return m_comp_2;
     }
 };
 
@@ -209,10 +209,10 @@ class System abstract
 protected:
 
     // TODO : renommer p_src et p_dst en p_c1 et p_c2
-    virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_src, BaseComponent* p_dst ) const = 0;
+    virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_c1, BaseComponent* p_c2 ) const = 0;
 
     // TODO : renommer p_src et p_dst en p_c1 et p_c2
-    virtual void on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_src, BaseComponent* p_dst ) const = 0;
+    virtual void on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, BaseComponent* p_c1, BaseComponent* p_c2 ) const = 0;
 
 public:
     friend class EntityTree;
@@ -233,23 +233,23 @@ private:
             for (size_t i = 0; i < it->second.size(); i++)
             {
                 BaseArguments* args = it->second[i].get();
-                size_t comp_src_id = args->GetSrc();
-                size_t comp_dst_id = args->GetDst();
+                size_t comp_1_id = args->GetComp1();
+                size_t comp_2_id = args->GetComp2();
 
-                BaseComponent* src_comp = NULL;
-                BaseComponent* dst_comp = NULL;
+                BaseComponent* comp_1 = NULL;
+                BaseComponent* comp_2 = NULL;
 
-                if( p_elt->m_components.count( comp_src_id ) )
+                if( p_elt->m_components.count( comp_1_id ) )
                 {
-                    src_comp = p_elt->m_components[comp_src_id].get();
+                    comp_1 = p_elt->m_components[comp_1_id].get();
                 }
                 
-                if( p_elt->m_components.count( comp_dst_id ) )
+                if( p_elt->m_components.count( comp_2_id ) )
                 {
-                    dst_comp = p_elt->m_components[comp_dst_id].get();
+                    comp_2 = p_elt->m_components[comp_2_id].get();
                 }
 
-                p_system->on_entity_added_action( it->first, args, src_comp, dst_comp );
+                p_system->on_entity_added_action( it->first, args, comp_1, comp_2 );
             }            
         }
     }
@@ -261,23 +261,23 @@ private:
             for (size_t i = 0; i < it->second.size(); i++)
             {
                 BaseArguments* args = it->second[i].get();
-                size_t comp_src_id = args->GetSrc();
-                size_t comp_dst_id = args->GetDst();
+                size_t comp_1_id = args->GetComp1();
+                size_t comp_2_id = args->GetComp2();
 
-                BaseComponent* src_comp = NULL;
-                BaseComponent* dst_comp = NULL;
+                BaseComponent* comp_1 = NULL;
+                BaseComponent* comp_2 = NULL;
 
-                if( p_elt->m_components.count( comp_src_id ) )
+                if( p_elt->m_components.count( comp_1_id ) )
                 {
-                    src_comp = p_elt->m_components[comp_src_id].get();
+                    comp_1 = p_elt->m_components[comp_1_id].get();
                 }
                 
-                if( p_elt->m_components.count( comp_dst_id ) )
+                if( p_elt->m_components.count( comp_2_id ) )
                 {
-                    dst_comp = p_elt->m_components[comp_dst_id].get();
+                    comp_2 = p_elt->m_components[comp_2_id].get();
                 }
 
-                p_system->on_entity_visited_action( it->first, args, src_comp, dst_comp );
+                p_system->on_entity_visited_action( it->first, args, comp_1, comp_2 );
             }            
         }
     }

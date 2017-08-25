@@ -37,20 +37,20 @@ RendergraphSystem::~RendergraphSystem( void )
 {
 }
 
-void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_src, ecs::BaseComponent* p_dst ) const
+void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_c1, ecs::BaseComponent* p_c2 ) const
 {
     switch( p_actionid )
     {
         case MakeRenderingQueueOnScreenOperation:
         {
-            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
+            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
             screen_renderingqueue_comp->MakePurpose();
         }
         break;
 
         case MakeScreenColorOperation:
         {
-            ecs::Component<Color>* screen_color_comp = static_cast<ecs::Component<Color>*>( p_src );
+            ecs::Component<Color>* screen_color_comp = static_cast<ecs::Component<Color>*>( p_c1 );
 
             ecs::Arguments<Color>* args = static_cast<ecs::Arguments<Color>*>( p_args );
             Color rgba = std::get<0>( args->GetArg() );
@@ -66,7 +66,7 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 
         case MakeTextOperation:
         {
-            ecs::ComponentMultiple<Text>* text_comp = static_cast<ecs::ComponentMultiple<Text>*>( p_src );
+            ecs::ComponentMultiple<Text>* text_comp = static_cast<ecs::ComponentMultiple<Text>*>( p_c1 );
                        
             ecs::Arguments<Text>* args = static_cast<ecs::Arguments<Text>*>( p_args );
             Text text = std::get<0>( args->GetArg() );
@@ -84,8 +84,8 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 
         case InitScreenColor:
         {
-            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
-            ecs::Component<Color>* screen_color = static_cast<ecs::Component<Color>*>( p_dst );
+            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
+            ecs::Component<Color>* screen_color = static_cast<ecs::Component<Color>*>( p_c2 );
            
             Color rgba = screen_color->getPurpose();
 
@@ -97,20 +97,20 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
     }
 }
 
-void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_src, ecs::BaseComponent* p_dst ) const
+void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_c1, ecs::BaseComponent* p_c2 ) const
 {
     switch( p_actionid )
     {        
         case DrawRenderingQueueOperation:
         {
-            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
+            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
             screen_renderingqueue_comp->getPurpose().Draw();
         }
         break;
 
         case DrawTextsOperation:
         {
-            ecs::ComponentMultiple<Text>* texts = static_cast<ecs::ComponentMultiple<Text>*>( p_src );
+            ecs::ComponentMultiple<Text>* texts = static_cast<ecs::ComponentMultiple<Text>*>( p_c1 );
 
             size_t nb_texts = texts->getSize();
 
@@ -126,8 +126,8 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
 
         case UpdateScreenColor:
         {
-            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_src );
-            ecs::Component<Color>* screen_color = static_cast<ecs::Component<Color>*>( p_dst );
+            ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
+            ecs::Component<Color>* screen_color = static_cast<ecs::Component<Color>*>( p_c2 );
            
             Color rgba = screen_color->getPurpose();
 
