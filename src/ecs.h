@@ -54,7 +54,7 @@ public:
         m_purpose = std::make_unique<T>(p_args...);
     }
     
-    virtual T& getPurpose(void) const
+    virtual T& GetPurpose(void) const
     {
         return *( m_purpose.get() );
     }    
@@ -73,17 +73,17 @@ public:
         m_purposes.push_back( std::make_unique<T>(p_args...) );       
     }
 
-    virtual T& getPurpose( long p_index ) const
+    virtual T& GetPurpose( long p_index ) const
     {
         return *( m_purposes[p_index].get() );
     }
 
-    virtual T& getLast( void ) const
+    virtual T& GetLast( void ) const
     {
         return *( m_purposes[m_purposes.size() - 1].get() );
     }
 
-    size_t getSize( void ) const
+    size_t GetSize( void ) const
     {
         return m_purposes.size();
     }
@@ -145,7 +145,7 @@ public:
     }
 
     template<typename T>
-    T& GetComponentPurpose( void )
+    Component<T>* GetComponent( void )
     {
         if( false == component_accessible<T>().value )
         {
@@ -160,7 +160,47 @@ public:
         }
 
         Component<T>* comp = static_cast<Component<T>*>( m_components[tid].get() );
-        return comp->getPurpose();
+        
+        return comp;
+    }
+
+    template<typename T>
+    ComponentMultiple<T>* GetComponentMultiple( void )
+    {
+        if( false == component_accessible<T>().value )
+        {
+            _DSEXCEPTION( "Component purpose access not allowed : " + dsstring( typeid(T).name() ) );
+        }
+
+        size_t tid = typeid(T).hash_code();
+
+        if( 0 == m_components.count( tid ) )
+        {
+            _DSEXCEPTION( "Component type not registered in this entity : " + dsstring( typeid(T).name() ) );
+        }
+
+        ComponentMultiple<T>* comp = static_cast<ComponentMultiple<T>*>( m_components[tid].get() );
+        return comp;
+    }
+
+    /*
+    template<typename T>
+    T& GetComponentPurpose( void ) const
+    {
+        if( false == component_accessible<T>().value )
+        {
+            _DSEXCEPTION( "Component purpose access not allowed : " + dsstring( typeid(T).name() ) );
+        }
+
+        size_t tid = typeid(T).hash_code();
+
+        if( 0 == m_components.count( tid ) )
+        {
+            _DSEXCEPTION( "Component type not registered in this entity : " + dsstring( typeid(T).name() ) );
+        }
+
+        Component<T>* comp = static_cast<Component<T>*>( m_components[tid].get() );
+        return comp->GetPurpose();
     }
 
     template<typename T>
@@ -179,9 +219,10 @@ public:
         }
 
         ComponentMultiple<T>* comp = static_cast<ComponentMultiple<T>*>( m_components[tid].get() );
-        return comp->getPurpose( p_index );
+        return comp->GetPurpose( p_index );
     }
-    
+    */
+
     template<typename T, class... Args>
     void RegisterSingleComponentAction( int p_id, const Args&... p_args )
     {

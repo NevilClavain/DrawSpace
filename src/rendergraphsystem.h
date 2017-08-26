@@ -64,9 +64,9 @@ public:
     {
         DrawRenderingQueueOperation,
         MakeRenderingQueueOnScreenOperation,
-        MakeTextOperation,
+        //MakeTextOperation,
         DrawTextsOperation,
-        MakeRenderingQueueStatesOperation,
+        //MakeRenderingQueueStatesOperation,
         SetRenderingQueueStates,
     };
     

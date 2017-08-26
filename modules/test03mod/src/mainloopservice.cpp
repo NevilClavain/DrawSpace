@@ -78,7 +78,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::MakeRenderingQueueOnScreenOperation );
 
-
+    /*
     RendergraphSystem::RenderingQueueStates rq_states;
 
     rq_states.depth_clearing_enabled = false;
@@ -90,9 +90,23 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rq_states.target_clear_a = 255;
 
     m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::RenderingQueueStates, RendergraphSystem::RenderingQueueStates>( RendergraphSystem::MakeRenderingQueueStatesOperation, rq_states );
+    */
+
+    m_Entity_finalpass.GetComponent<RendergraphSystem::RenderingQueueStates>()->MakePurpose();
+
+     
+    RendergraphSystem::RenderingQueueStates& rq_states = m_Entity_finalpass.GetComponent<RendergraphSystem::RenderingQueueStates>()->GetPurpose();
+    rq_states.depth_clearing_enabled = false;
+    rq_states.target_clearing_enabled = true;
+
+    rq_states.target_clear_r = 50;
+    rq_states.target_clear_g = 50;
+    rq_states.target_clear_b = 50;
+    rq_states.target_clear_a = 255;
+    
     m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::RenderingQueueStates>( RendergraphSystem::SetRenderingQueueStates );
 
-
+    /*
     DrawSpace::RendergraphSystem::Text simple_text;
     simple_text.r = 25;
     simple_text.g = 255;
@@ -111,8 +125,26 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_text.text = "test test test";
 
     m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text, RendergraphSystem::Text>( RendergraphSystem::MakeTextOperation, m_text );
+    */
 
+    m_Entity_finalpass.GetComponentMultiple<RendergraphSystem::Text>()->MakePurpose();
+    m_Entity_finalpass.GetComponentMultiple<RendergraphSystem::Text>()->MakePurpose();
+
+    RendergraphSystem::Text& text1 = m_Entity_finalpass.GetComponentMultiple<RendergraphSystem::Text>()->GetPurpose( 0 );
+    text1.r = 25;
+    text1.g = 255;
+    text1.b = 25;
+    text1.x = 100;
+    text1.y = 100;
+    text1.text = "green text";
         
+    RendergraphSystem::Text& text2 = m_Entity_finalpass.GetComponentMultiple<RendergraphSystem::Text>()->GetPurpose( 1 );
+    text2.r = 255;
+    text2.g = 2;
+    text2.b = 255;
+    text2.x = 10;
+    text2.y = 10;
+
     m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::DrawRenderingQueueOperation );
     m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text>( RendergraphSystem::DrawTextsOperation );
 
@@ -192,8 +224,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
-    m_Entity_finalpass.GetComponentMultiplePurpose<RendergraphSystem::Text>( 1 ).text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
+    //m_Entity_finalpass.GetComponentMultiplePurpose<RendergraphSystem::Text>( 1 ).text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
+    m_Entity_finalpass.GetComponentMultiple<RendergraphSystem::Text>()->GetPurpose( 1 ).text = dsstring( "fps : " ) << m_tm.GetFPS() << dsstring( " - " ) <<  m_pluginDescr.c_str();
 
     m_Data_Rendergraph.AcceptSystemLeafsToTopRecursive( &m_System_rendergraph );
 

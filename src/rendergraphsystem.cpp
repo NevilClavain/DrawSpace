@@ -48,7 +48,7 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
         }
         break;
 
-
+        /*
         case MakeTextOperation:
         {
             ecs::ComponentMultiple<Text>* text_comp = static_cast<ecs::ComponentMultiple<Text>*>( p_c1 );
@@ -58,12 +58,12 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 
             text_comp->MakePurpose();
 
-            text_comp->getLast().r = text.r;
-            text_comp->getLast().g = text.g;
-            text_comp->getLast().b = text.b;
-            text_comp->getLast().x = text.x;
-            text_comp->getLast().y = text.y;
-            text_comp->getLast().text = text.text;            
+            text_comp->GetLast().r = text.r;
+            text_comp->GetLast().g = text.g;
+            text_comp->GetLast().b = text.b;
+            text_comp->GetLast().x = text.x;
+            text_comp->GetLast().y = text.y;
+            text_comp->GetLast().text = text.text;            
         }
         break;
 
@@ -76,21 +76,21 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 
             rq_states->MakePurpose(); 
 
-            rq_states->getPurpose() = states;
+            rq_states->GetPurpose() = states;
         }
         break;
-
+        */
 
         case SetRenderingQueueStates:
         {
             ecs::Component<DrawSpace::Core::RenderingQueue>* renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
             ecs::Component<RenderingQueueStates>* rq_states = static_cast<ecs::Component<RenderingQueueStates>*>( p_c2 );  
 
-            RenderingQueueStates states = rq_states->getPurpose();
+            RenderingQueueStates states = rq_states->GetPurpose();
 
-            renderingqueue_comp->getPurpose().EnableDepthClearing( states.depth_clearing_enabled );
-            renderingqueue_comp->getPurpose().EnableTargetClearing( states.target_clearing_enabled );
-            renderingqueue_comp->getPurpose().SetTargetClearingColor( states.target_clear_r, states.target_clear_g, states.target_clear_b, states.target_clear_a );        
+            renderingqueue_comp->GetPurpose().EnableDepthClearing( states.depth_clearing_enabled );
+            renderingqueue_comp->GetPurpose().EnableTargetClearing( states.target_clearing_enabled );
+            renderingqueue_comp->GetPurpose().SetTargetClearingColor( states.target_clear_r, states.target_clear_g, states.target_clear_b, states.target_clear_a );        
         }
 
     }
@@ -103,7 +103,7 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
         case DrawRenderingQueueOperation:
         {
             ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
-            screen_renderingqueue_comp->getPurpose().Draw();
+            screen_renderingqueue_comp->GetPurpose().Draw();
         }
         break;
 
@@ -111,12 +111,12 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
         {
             ecs::ComponentMultiple<Text>* texts = static_cast<ecs::ComponentMultiple<Text>*>( p_c1 );
 
-            size_t nb_texts = texts->getSize();
+            size_t nb_texts = texts->GetSize();
 
             m_renderer->BeginScreen();
             for( size_t i = 0; i < nb_texts; i++ )
             {
-                Text text_descr = texts->getPurpose( i );
+                Text text_descr = texts->GetPurpose( i );
                 m_renderer->DrawText( text_descr.r, text_descr.g, text_descr.b, text_descr.x, text_descr.y, text_descr.text.c_str() );
             }
             m_renderer->EndScreen();        
