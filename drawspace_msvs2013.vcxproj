@@ -50,9 +50,7 @@
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\rendergraphsystem.cpp" />
-    <ClCompile Include="src\rendergraph_data.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
-    <ClCompile Include="src\scenegraph_data.cpp" />
     <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
     <ClCompile Include="src\procedural_blocs.cpp" />
@@ -144,12 +142,10 @@
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
     <ClInclude Include="src\rendergraphsystem.h" />
-    <ClInclude Include="src\rendergraph_data.h" />
     <ClInclude Include="src\renderingnode_component.h" />
     <ClInclude Include="src\renderingqueue_component.h" />
     <ClInclude Include="src\renderstatesset.h" />
     <ClInclude Include="src\rendertarget_component.h" />
-    <ClInclude Include="src\scenegraph_data.h" />
     <ClInclude Include="src\spherelod_root.h" />
     <ClInclude Include="src\spherelod_layer.h" />
     <ClInclude Include="src\plugin.h" />

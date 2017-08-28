@@ -72,11 +72,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_Entity_finalpass.AddComponent<DrawSpace::Core::RenderingQueue>();
     m_Entity_finalpass.AddMultiComponent<RendergraphSystem::Text>();
     m_Entity_finalpass.AddComponent<RendergraphSystem::RenderingQueueStates>();
+    m_Entity_finalpass.AddComponent<DrawSpace::ViewportQuad>();
 
 
 
     
-    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::MakeRenderingQueueOnScreenOperation );
+    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::MakeRenderingQueueOnScreen );
 
     /*
     RendergraphSystem::RenderingQueueStates rq_states;
@@ -99,9 +100,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rq_states.depth_clearing_enabled = false;
     rq_states.target_clearing_enabled = true;
 
-    rq_states.target_clear_r = 50;
-    rq_states.target_clear_g = 50;
-    rq_states.target_clear_b = 50;
+    rq_states.target_clear_r = 150;
+    rq_states.target_clear_g = 150;
+    rq_states.target_clear_b = 150;
     rq_states.target_clear_a = 255;
     
     m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::Core::RenderingQueue, RendergraphSystem::RenderingQueueStates>( RendergraphSystem::SetRenderingQueueStates );
@@ -145,9 +146,15 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     text2.x = 10;
     text2.y = 10;
 
-    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::DrawRenderingQueueOperation );
+    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::DrawRenderingQueue );
     m_Entity_finalpass.RegisterSingleComponentAction<RendergraphSystem::Text>( RendergraphSystem::DrawTextsOperation );
 
+
+    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::ViewportQuad>( RendergraphSystem::MakeViewportQuadAutoAdjustedOnScren );
+
+    m_Entity_finalpass.RegisterDoubleComponentsAction<DrawSpace::ViewportQuad, DrawSpace::Core::RenderingQueue>( RendergraphSystem::SetViewportQuadOnRenderingQueue );
+
+    m_Entity_finalpass.RegisterSingleComponentAction<DrawSpace::Core::RenderingQueue>( RendergraphSystem::UpdateRenderingQueue );
 
  
     m_Data_Rendergraph.AddRoot(&m_System_rendergraph, &m_Entity_finalpass);

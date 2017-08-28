@@ -23,6 +23,7 @@
 #include "rendergraphsystem.h"
 #include "plugin.h"
 #include "renderingqueue.h"
+#include "viewportquad.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::ecs;
@@ -41,45 +42,42 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
 {
     switch( p_actionid )
     {
-        case MakeRenderingQueueOnScreenOperation:
+        case MakeRenderingQueueOnScreen:
         {
             ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
             screen_renderingqueue_comp->MakePurpose();
         }
         break;
 
-        /*
-        case MakeTextOperation:
+        case UpdateRenderingQueue:
         {
-            ecs::ComponentMultiple<Text>* text_comp = static_cast<ecs::ComponentMultiple<Text>*>( p_c1 );
-                       
-            ecs::Arguments<Text>* args = static_cast<ecs::Arguments<Text>*>( p_args );
-            Text text = std::get<0>( args->GetArg() );
+            ecs::Component<DrawSpace::Core::RenderingQueue>* renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
 
-            text_comp->MakePurpose();
-
-            text_comp->GetLast().r = text.r;
-            text_comp->GetLast().g = text.g;
-            text_comp->GetLast().b = text.b;
-            text_comp->GetLast().x = text.x;
-            text_comp->GetLast().y = text.y;
-            text_comp->GetLast().text = text.text;            
+            renderingqueue_comp->GetPurpose().UpdateOutputQueue();
         }
         break;
 
-        case MakeRenderingQueueStatesOperation:
+        case MakeViewportQuadAutoAdjustedOnScren:
         {
-            ecs::Component<RenderingQueueStates>* rq_states = static_cast<ecs::Component<RenderingQueueStates>*>( p_c1 );
+            ecs::Component<DrawSpace::ViewportQuad>* viewportquad_comp = static_cast<ecs::Component<DrawSpace::ViewportQuad>*>( p_c1 );
 
-            ecs::Arguments<RenderingQueueStates>* args = static_cast<ecs::Arguments<RenderingQueueStates>*>( p_args );
-            RenderingQueueStates states = std::get<0>( args->GetArg() );
+            DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
+            m_renderer->GetRenderCharacteristics( renderer_characteristics );
 
-            rq_states->MakePurpose(); 
+            viewportquad_comp->MakePurpose( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, -2.0 );
 
-            rq_states->GetPurpose() = states;
+            _asm nop
         }
         break;
-        */
+
+        case SetViewportQuadOnRenderingQueue:
+        {
+            ecs::Component<DrawSpace::ViewportQuad>* viewportquad_comp = static_cast<ecs::Component<DrawSpace::ViewportQuad>*>( p_c1 );
+            ecs::Component<DrawSpace::Core::RenderingQueue>* renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c2 );
+
+
+            renderingqueue_comp->GetPurpose().Add( &viewportquad_comp->GetPurpose() );        
+        }
 
         case SetRenderingQueueStates:
         {
@@ -100,7 +98,7 @@ void RendergraphSystem::on_entity_visited_action( int p_actionid, ecs::BaseArgum
 {
     switch( p_actionid )
     {        
-        case DrawRenderingQueueOperation:
+        case DrawRenderingQueue:
         {
             ecs::Component<DrawSpace::Core::RenderingQueue>* screen_renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c1 );
             screen_renderingqueue_comp->GetPurpose().Draw();

@@ -62,12 +62,13 @@ public:
     
     enum
     {
-        DrawRenderingQueueOperation,
-        MakeRenderingQueueOnScreenOperation,
-        //MakeTextOperation,
+        DrawRenderingQueue,
+        MakeRenderingQueueOnScreen,
+        MakeViewportQuadAutoAdjustedOnScren,    
+        SetViewportQuadOnRenderingQueue,
         DrawTextsOperation,
-        //MakeRenderingQueueStatesOperation,
         SetRenderingQueueStates,
+        UpdateRenderingQueue,
     };
     
 protected:

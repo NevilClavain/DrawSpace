@@ -484,7 +484,7 @@ void MainLoopService::create_passes( void )
     m_finalpass->GetViewportQuad()->SetTexture( m_texturemirrorpass->GetTargetTexture(), 1 );
     m_finalpass->GetViewportQuad()->SetTexture( m_bumppass->GetTargetTexture(), 2 );
 
-    // puisque m_coloredpass n'est connect�e a aucune passe
+    // puisque m_coloredpass n'est connectee a aucune passe
     void* data;
     m_renderer->CreateTexture( m_coloredpass->GetTargetTexture(), &data );
   

@@ -236,9 +236,7 @@
     </ClCompile>
     <ClCompile Include="src\entityset.cpp" />
     <ClCompile Include="src\entity.cpp" />
-    <ClCompile Include="src\rendergraph_data.cpp" />
     <ClCompile Include="src\tree_container.cpp" />
-    <ClCompile Include="src\scenegraph_data.cpp" />
     <ClCompile Include="src\rendergraphsystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
@@ -515,9 +513,7 @@
     <ClInclude Include="src\renderingnode_component.h">
       <Filter>components</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendergraph_data.h" />
     <ClInclude Include="src\tree_container.h" />
-    <ClInclude Include="src\scenegraph_data.h" />
     <ClInclude Include="src\draw_component.h">
       <Filter>components</Filter>
     </ClInclude>
