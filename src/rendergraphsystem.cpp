@@ -76,8 +76,11 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
             ecs::Component<DrawSpace::Core::RenderingQueue>* renderingqueue_comp = static_cast<ecs::Component<DrawSpace::Core::RenderingQueue>*>( p_c2 );
 
 
-            renderingqueue_comp->GetPurpose().Add( &viewportquad_comp->GetPurpose() );        
+            renderingqueue_comp->GetPurpose().Add( &viewportquad_comp->GetPurpose() ); 
+
+            _asm nop
         }
+        break;
 
         case SetRenderingQueueStates:
         {
@@ -90,6 +93,7 @@ void RendergraphSystem::on_entity_added_action( int p_actionid, ecs::BaseArgumen
             renderingqueue_comp->GetPurpose().EnableTargetClearing( states.target_clearing_enabled );
             renderingqueue_comp->GetPurpose().SetTargetClearingColor( states.target_clear_r, states.target_clear_g, states.target_clear_b, states.target_clear_a );        
         }
+        break;
 
     }
 }

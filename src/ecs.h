@@ -37,26 +37,33 @@ namespace ecs
 
 class BaseComponent abstract {};
 
+/*
 template<typename T>
 using ComponentPurpose = std::unique_ptr<T>;
-
+*/
 
 template<typename T>
 class Component sealed : public BaseComponent
 {
 private:
-    ComponentPurpose<T>       m_purpose;
+    //ComponentPurpose<T>       m_purpose;
+
+    T*                          m_purpose;
 
 public:
     template<class... Args>
     void MakePurpose(const Args&... p_args)
     {
-        m_purpose = std::make_unique<T>(p_args...);
+        //m_purpose = std::make_unique<T>(p_args...);
+
+        m_purpose = new T(p_args...);
     }
     
     virtual T& GetPurpose(void) const
     {
-        return *( m_purpose.get() );
+        //return *( m_purpose.get() );
+
+        return *(m_purpose);
     }    
 };
 
@@ -64,23 +71,31 @@ template<typename T>
 class ComponentMultiple sealed : public BaseComponent
 {
 private:
-    std::vector<ComponentPurpose<T>>       m_purposes;
+    //std::vector<ComponentPurpose<T>>       m_purposes;
+
+    std::vector<T*>       m_purposes;
 
 public:
     template<class... Args>
     void MakePurpose( const Args&... p_args )
     {
-        m_purposes.push_back( std::make_unique<T>(p_args...) );       
+        //m_purposes.push_back( std::make_unique<T>(p_args...) );
+
+        m_purposes.push_back( new T(p_args...) );
     }
 
     virtual T& GetPurpose( long p_index ) const
     {
-        return *( m_purposes[p_index].get() );
+        //return *( m_purposes[p_index].get() );
+
+        return *( m_purposes[p_index] );
     }
 
     virtual T& GetLast( void ) const
     {
-        return *( m_purposes[m_purposes.size() - 1].get() );
+        //return *( m_purposes[m_purposes.size() - 1].get() );
+
+        return *( m_purposes[m_purposes.size() - 1] );
     }
 
     size_t GetSize( void ) const
