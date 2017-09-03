@@ -20,19 +20,30 @@
 *
 */
 
-#ifndef _RENDERGRAPH_SYSTEM_H_
-#define _RENDERGRAPH_SYSTEM_H_
+#include "renderpassnode.h"
+#include "memalloc.h"
 
-#include "system.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
-namespace DrawSpace
+
+RenderPassNode::RenderPassNode( st_tree::tree<RenderPassNode::PassDescr*>::node_type& p_node ) :
+    m_tree_node( p_node )
 {
-
-class RenderGraphSystem : public Interface::System
-{
-public:
-    virtual void VisitEntitySet( Entity* p_entity );
 };
-}
 
-#endif
+RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name )
+{
+    st_tree::tree<RenderPassNode::PassDescr*>::node_type::iterator it = m_tree_node.insert( _DRAWSPACE_NEW_( PassDescr, PassDescr( p_name ) ) );
+
+    RenderPassNode node( *it );
+    return node;
+};
+
+void RenderPassNode::Erase( void )
+{
+    RenderPassNode::PassDescr* pass_descr = m_tree_node.data();
+
+    _DRAWSPACE_DELETE_( pass_descr );
+    m_tree_node.erase();
+};

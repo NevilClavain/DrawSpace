@@ -34,57 +34,6 @@ protected:
     DrawSpace::Utils::TimeManager                                                   m_tm;
     dsstring                                                                        m_pluginDescr;
 
-
-    DrawSpace::ecs::Entity                                                          m_Entity_finalpass;
-
-    DrawSpace::ecs::EntityTree                                                      m_Data_Rendergraph;
-    DrawSpace::RendergraphSystem                                                    m_System_rendergraph;
-
-    DrawSpace::RendergraphSystem::Text                                              m_text;
-
-
-
-    /*
-    DrawSpace::ecs::Component<DrawSpace::RendergraphSystem::Text>                   m_Component_fps_text;
-    DrawSpace::ecs::Component<DrawSpace::Core::RenderingQueue>                      m_Component_finalpass_renderingqueue;
-    DrawSpace::ecs::Component<DrawSpace::ecs::Component<DrawSpace::ecs::RGBAColor>> m_Component_finalpass_clearscreencolor;
-    DrawSpace::ecs::Component<DrawSpace::ecs::Component<bool>>                      m_Component_finalpass_enableclearscreen;
-
-    DrawSpace::ecs::Entity                                                          m_Entity_finalpass;
-
-    DrawSpace::ecs::EntityTree                                                      m_Data_Rendergraph;
-    DrawSpace::RendergraphSystem                                                    m_System_rendergraph;
-    */
-
-    /*
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    DrawSpace::ColorArgComponent*           m_Component_color;
-    DrawSpace::TextComponent*               m_Component_fps_text;
-    DrawSpace::RenderingQueueComponent*     m_Component_rendering_queue;
-    DrawSpace::ViewportQuadComponent*       m_Component_viewport_quad;
-    DrawSpace::Entity                       m_Entity_finalpass;
-
-
-    DrawSpace::ColorArgComponent*           m_Component_texturepass_color;
-    DrawSpace::RenderTargetComponent*       m_Component_texturepass_render_target;
-    DrawSpace::RenderingQueueComponent*     m_Component_texturepass_rendering_queue;
-    DrawSpace::Entity                       m_Entity_texturepass;
-
-    DrawSpace::RenderGraphData              m_Data_Rendergraph;
-    DrawSpace::RenderGraphSystem            m_System_rendergraph;
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    DrawSpace::MesheComponent*              m_Component_cube2_meshe;
-    DrawSpace::RenderingNodeComponent*      m_Component_cube2_texturepass;
-    DrawSpace::DrawComponent*               m_Component_cube2_draw;
-    DrawSpace::Entity                       m_Entity_cube2;
-
-    DrawSpace::SceneGraphSystem             m_System_scenegraph;
-    DrawSpace::SceneGraphData               m_Data_scenegraph;
-    */
-
-
     
 
 public:

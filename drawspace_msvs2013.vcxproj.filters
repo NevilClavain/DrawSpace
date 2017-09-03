@@ -34,9 +34,6 @@
     <Filter Include="threading">
       <UniqueIdentifier>{e414fc7c-3a03-4c33-b975-e2a3c971bae4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="systems">
-      <UniqueIdentifier>{156a926f-856b-487e-b6b4-a29b6639274f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="components">
       <UniqueIdentifier>{28cee71b-b82e-4af1-bb45-8bde698c937b}</UniqueIdentifier>
     </Filter>
@@ -237,8 +234,11 @@
     <ClCompile Include="src\entityset.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\tree_container.cpp" />
-    <ClCompile Include="src\rendergraphsystem.cpp">
-      <Filter>systems</Filter>
+    <ClCompile Include="src\renderpassnode.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderpassnodegraph.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -520,9 +520,11 @@
     <ClInclude Include="src\texture_component.h">
       <Filter>components</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs.h" />
-    <ClInclude Include="src\rendergraphsystem.h">
-      <Filter>systems</Filter>
+    <ClInclude Include="src\renderpassnode.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderpassnodegraph.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

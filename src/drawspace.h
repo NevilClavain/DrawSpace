@@ -53,6 +53,7 @@
 #include "fx.h"
 #include "viewportquad.h"
 #include "pass.h"
+#include "renderpassnodegraph.h"
 #include "scenenodegraph.h"
 #include "memalloc.h"
 #include "fpsmovement.h"
@@ -87,8 +88,7 @@
 #include "module_service.h"
 #include "module_keys.h"
 #include "jsonparser.h"
-#include "ecs.h"
-#include "rendergraphsystem.h"
+
 
 /*
 #include "rendergraph_system.h"

@@ -49,7 +49,8 @@
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\piload.cpp" />
-    <ClCompile Include="src\rendergraphsystem.cpp" />
+    <ClCompile Include="src\renderpassnode.cpp" />
+    <ClCompile Include="src\renderpassnodegraph.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
     <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
@@ -102,7 +103,6 @@
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\draw_component.h" />
     <ClInclude Include="src\dsapp.h" />
-    <ClInclude Include="src\ecs.h" />
     <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\entityset.h" />
     <ClInclude Include="src\exceptions.h" />
@@ -141,9 +141,10 @@
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
-    <ClInclude Include="src\rendergraphsystem.h" />
     <ClInclude Include="src\renderingnode_component.h" />
     <ClInclude Include="src\renderingqueue_component.h" />
+    <ClInclude Include="src\renderpassnode.h" />
+    <ClInclude Include="src\renderpassnodegraph.h" />
     <ClInclude Include="src\renderstatesset.h" />
     <ClInclude Include="src\rendertarget_component.h" />
     <ClInclude Include="src\spherelod_root.h" />

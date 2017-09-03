@@ -20,71 +20,55 @@
 *
 */
 
+#ifndef _RENDERPASSNODE_H_
+#define _RENDERPASSNODE_H_
 
-#ifndef _RENDERGRAPHSYSTEM_H_
-#define _RENDERGRAPHSYSTEM_H_
-
-#include "ecs.h"
-#include "renderer.h"
+#include "st_tree.h"
+#include "texture.h"
+#include "viewportquad.h"
 
 namespace DrawSpace
 {
-    
-class RendergraphSystem : public DrawSpace::ecs::System
+namespace Core
 {
-public:
 
-    using Text = struct
+class RenderPassNode
+{
+private:
+
+    class PassDescr
     {
-        dsstring        text;
-        unsigned char   r;
-        unsigned char   g;
-        unsigned char   b;
+    public:
+        DrawSpace::Core::RenderingQueue*   m_renderingqueue;
+        DrawSpace::ViewportQuad*           m_viewportquad;
+        DrawSpace::Core::Texture*          m_targettexture;
+        dsstring                           m_name;
 
-        int             x;
-        int             y;
+    public:
 
-        SET_COMPONENT_ACCESSIBLE
+        PassDescr( const dsstring& p_name ) :
+            m_renderingqueue( NULL ),
+            m_viewportquad( NULL ),
+            m_targettexture( NULL ),
+            m_name( p_name )
+        {    
+        };
+
     };
 
-    using RenderingQueueStates = struct
-    {
-        bool depth_clearing_enabled;
-        bool target_clearing_enabled;
-        
-        unsigned char target_clear_r;
-        unsigned char target_clear_g;
-        unsigned char target_clear_b;
-        unsigned char target_clear_a;
-   
-        SET_COMPONENT_ACCESSIBLE
-    };
-    
-    enum
-    {
-        DrawRenderingQueue,
-        MakeRenderingQueueOnScreen,
-        MakeViewportQuadAutoAdjustedOnScren,    
-        SetViewportQuadOnRenderingQueue,
-        DrawTextsOperation,
-        SetRenderingQueueStates,
-        UpdateRenderingQueue,
-    };
-    
-protected:
-
-    DrawSpace::Interface::Renderer* m_renderer;
-
-    virtual void on_entity_visited_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_c1, ecs::BaseComponent* p_c2 ) const;
-    virtual void on_entity_added_action( int p_actionid, ecs::BaseArguments* p_args, ecs::BaseComponent* p_c1, ecs::BaseComponent* p_c2 ) const;
+    st_tree::tree<PassDescr*>::node_type& m_tree_node;
 
 public:
+    RenderPassNode( st_tree::tree<PassDescr*>::node_type& p_node );
 
-    RendergraphSystem( void );
-    ~RendergraphSystem( void );
+    RenderPassNode CreateChild( const dsstring& p_name );
+    void Erase( void );
 
+    friend class RenderPassNodeGraph;
 };
 
 }
+}
 
 #endif
+
