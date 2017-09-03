@@ -22,6 +22,8 @@
 
 #include "renderpassnode.h"
 #include "memalloc.h"
+#include "renderer.h"
+#include "plugin.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -32,9 +34,25 @@ RenderPassNode::RenderPassNode( st_tree::tree<RenderPassNode::PassDescr*>::node_
 {
 };
 
-RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name )
+RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_targetstage )
 {
-    st_tree::tree<RenderPassNode::PassDescr*>::node_type::iterator it = m_tree_node.insert( _DRAWSPACE_NEW_( PassDescr, PassDescr( p_name ) ) );
+    // Creer PassDescr dont la cible rendu est une texture (intermediate pass)
+
+    RenderPassNode::PassDescr* descr = _DRAWSPACE_NEW_( RenderPassNode::PassDescr, RenderPassNode::PassDescr( p_name ) );
+
+    Core::RenderingQueue* renderingqueue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
+    descr->m_renderingqueue = renderingqueue;
+
+    // TODO : creer la texture cible
+
+    st_tree::tree<RenderPassNode::PassDescr*>::node_type::iterator it = m_tree_node.insert( descr );
+
+
+    // TODO : connecter les deux passes
+
+    RenderPassNode::PassDescr* current_descr = m_tree_node.data();
+
+    current_descr->m_viewportquad->SetTexture( descr->m_targettexture, p_targetstage );
 
     RenderPassNode node( *it );
     return node;
@@ -47,3 +65,25 @@ void RenderPassNode::Erase( void )
     _DRAWSPACE_DELETE_( pass_descr );
     m_tree_node.erase();
 };
+
+void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
+{
+    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
+    renderer->GetRenderCharacteristics( renderer_characteristics );
+
+    ViewportQuad* viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, p_z_offset ) );
+
+    //m_renderingqueue->Add( m_viewportquad );
+
+    PassDescr* descr = m_tree_node.data();
+
+    descr->m_viewportquad = viewportquad;
+    descr->m_renderingqueue->Add( viewportquad );
+}
+
+RenderingQueue* RenderPassNode::GetRenderingQueue( void ) const
+{
+    PassDescr* descr = m_tree_node.data();
+    return descr->m_renderingqueue;
+}

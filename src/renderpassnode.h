@@ -26,6 +26,8 @@
 #include "st_tree.h"
 #include "texture.h"
 #include "viewportquad.h"
+#include "renderingqueue.h"
+
 
 namespace DrawSpace
 {
@@ -61,8 +63,11 @@ private:
 public:
     RenderPassNode( st_tree::tree<PassDescr*>::node_type& p_node );
 
-    RenderPassNode CreateChild( const dsstring& p_name );
+    RenderPassNode CreateChild( const dsstring& p_name, int p_targetstage );
     void Erase( void );
+
+    void CreateViewportQuad( dsreal p_z_offset = 0.0 );
+    RenderingQueue* GetRenderingQueue( void ) const;
 
     friend class RenderPassNodeGraph;
 };

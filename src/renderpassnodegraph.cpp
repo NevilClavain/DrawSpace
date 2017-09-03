@@ -29,7 +29,15 @@ using namespace DrawSpace::Core;
 
 RenderPassNode RenderPassNodeGraph::CreateRoot( const dsstring& p_name )
 {
-    m_tree.insert( _DRAWSPACE_NEW_( RenderPassNode::PassDescr, RenderPassNode::PassDescr( p_name ) ) );
+    // Creer PassDescr dont la cible rendu est l'ecran (final pass)
+
+    Core::RenderingQueue* renderingqueue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
+
+
+    RenderPassNode::PassDescr* descr = _DRAWSPACE_NEW_( RenderPassNode::PassDescr, RenderPassNode::PassDescr( p_name ) );
+    descr->m_renderingqueue = renderingqueue;
+
+    m_tree.insert( descr );
 
     RenderPassNode node( m_tree.root() );
     return node;
