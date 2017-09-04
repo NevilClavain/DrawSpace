@@ -48,10 +48,7 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
     st_tree::tree<RenderPassNode::PassDescr*>::node_type::iterator it = m_tree_node.insert( descr );
 
 
-    // TODO : connecter les deux passes
-
     RenderPassNode::PassDescr* current_descr = m_tree_node.data();
-
     current_descr->m_viewportquad->SetTexture( descr->m_targettexture, p_targetstage );
 
     RenderPassNode node( *it );
