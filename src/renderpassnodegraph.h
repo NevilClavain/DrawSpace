@@ -40,6 +40,10 @@ public:
 
     RenderPassNode CreateRoot( const dsstring& p_name );
     void Erase( void );
+    void CreateViewportQuad( dsreal p_z_offset );
+
+    RenderingQueue* GetRenderingQueue( void ) const;
+
 };
 
 }

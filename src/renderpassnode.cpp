@@ -34,7 +34,12 @@ RenderPassNode::RenderPassNode( st_tree::tree<RenderPassNode::PassDescr*>::node_
 {
 };
 
-RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_targetstage )
+RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_targetstage, 
+                                                Core::Texture::RenderPurpose p_renderpurpose, 
+                                                Core::Texture::RenderTarget p_rendertarget,
+                                                bool p_targetdims_fromrenderer, 
+                                                long p_targetdims_width, 
+                                                long p_targetdims_height )
 {
     // Creer PassDescr dont la cible rendu est une texture (intermediate pass)
 
@@ -43,10 +48,28 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
     Core::RenderingQueue* renderingqueue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
     descr->m_renderingqueue = renderingqueue;
 
-    // TODO : creer la texture cible
+    long h_resol, w_resol;
+
+    if( p_targetdims_fromrenderer )
+    {
+        DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+        DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
+        renderer->GetRenderCharacteristics( renderer_characteristics );
+
+        h_resol = renderer_characteristics.height_resol;
+        w_resol = renderer_characteristics.width_resol;
+
+    }
+    else
+    {
+        h_resol = p_targetdims_height;
+        w_resol = p_targetdims_width;
+    }
+
+    descr->m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( p_name + dsstring( "/target" ), true, w_resol, h_resol, p_renderpurpose, p_rendertarget ) );
 
     st_tree::tree<RenderPassNode::PassDescr*>::node_type::iterator it = m_tree_node.insert( descr );
-
 
     RenderPassNode::PassDescr* current_descr = m_tree_node.data();
     current_descr->m_viewportquad->SetTexture( descr->m_targettexture, p_targetstage );
@@ -59,8 +82,17 @@ void RenderPassNode::Erase( void )
 {
     RenderPassNode::PassDescr* pass_descr = m_tree_node.data();
 
+    _DRAWSPACE_DELETE_( pass_descr->m_renderingqueue );
+
+    if( pass_descr->m_viewportquad )
+    {
+        _DRAWSPACE_DELETE_( pass_descr->m_viewportquad );
+    }
+
+    _DRAWSPACE_DELETE_( pass_descr->m_targettexture );
+
     _DRAWSPACE_DELETE_( pass_descr );
-    m_tree_node.erase();
+    m_tree_node.erase();    
 };
 
 void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
@@ -70,8 +102,6 @@ void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
     renderer->GetRenderCharacteristics( renderer_characteristics );
 
     ViewportQuad* viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, p_z_offset ) );
-
-    //m_renderingqueue->Add( m_viewportquad );
 
     PassDescr* descr = m_tree_node.data();
 

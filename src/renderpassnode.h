@@ -63,7 +63,12 @@ private:
 public:
     RenderPassNode( st_tree::tree<PassDescr*>::node_type& p_node );
 
-    RenderPassNode CreateChild( const dsstring& p_name, int p_targetstage );
+    RenderPassNode CreateChild( const dsstring& p_name, int p_targetstage, 
+                                Core::Texture::RenderPurpose p_renderpurpose = Texture::RENDERPURPOSE_COLOR, 
+                                Core::Texture::RenderTarget p_rendertarget = Texture::RENDERTARGET_GPU,
+                                bool p_targetdims_fromrenderer = true, 
+                                long p_targetdims_width = 255, 
+                                long p_targetdims_height = 255 );
     void Erase( void );
 
     void CreateViewportQuad( dsreal p_z_offset = 0.0 );
