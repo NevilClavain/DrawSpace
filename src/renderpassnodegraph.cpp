@@ -28,6 +28,24 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
+RenderPassNodeGraph::RenderPassNodeGraph( void )
+{
+}
+
+RenderPassNodeGraph::~RenderPassNodeGraph( void )
+{
+    cleanup_treenodes();
+}
+
+void RenderPassNodeGraph::cleanup_treenodes( void )
+{
+    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
+    {
+        it->data()->CleanUp();
+
+        _DRAWSPACE_DELETE_( it->data() );
+    }
+}
 
 RenderPassNode RenderPassNodeGraph::CreateRoot( const dsstring& p_name )
 {
@@ -49,12 +67,7 @@ void RenderPassNodeGraph::Erase( void )
 {
     RenderPassNode::PassDescr* pass_descr = m_tree.root().data();
 
-    _DRAWSPACE_DELETE_( pass_descr->m_renderingqueue );
-
-    if( pass_descr->m_viewportquad )
-    {
-        _DRAWSPACE_DELETE_( pass_descr->m_viewportquad );
-    }
+    pass_descr->CleanUp();
 
     _DRAWSPACE_DELETE_( pass_descr );
     m_tree.root().erase();
@@ -78,4 +91,12 @@ RenderingQueue* RenderPassNodeGraph::GetRenderingQueue( void ) const
 {
     RenderPassNode::PassDescr* descr = m_tree.root().data();
     return descr->m_renderingqueue;
+}
+
+void RenderPassNodeGraph::Run( void ) const
+{
+    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
+    {
+        it->data()->m_renderingqueue->Draw();
+    }
 }

@@ -29,14 +29,21 @@ namespace DrawSpace
 {
 namespace Core
 {
-
 class RenderPassNodeGraph
 {
+public:
+    using PassDescrTree = st_tree::tree<RenderPassNode::PassDescr*>;
+
 protected:
 
-    st_tree::tree<RenderPassNode::PassDescr*>                  m_tree;
+    mutable PassDescrTree                  m_tree;
+
+    void cleanup_treenodes( void );
 
 public:
+
+    RenderPassNodeGraph( void );
+    ~RenderPassNodeGraph( void );
 
     RenderPassNode CreateRoot( const dsstring& p_name );
     void Erase( void );
@@ -44,6 +51,7 @@ public:
 
     RenderingQueue* GetRenderingQueue( void ) const;
 
+    void Run( void ) const;
 };
 
 }

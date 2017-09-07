@@ -21,7 +21,6 @@
 */
 
 #include "renderpassnode.h"
-#include "memalloc.h"
 #include "renderer.h"
 #include "plugin.h"
 
@@ -29,7 +28,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
 
-RenderPassNode::RenderPassNode( st_tree::tree<RenderPassNode::PassDescr*>::node_type& p_node ) :
+RenderPassNode::RenderPassNode( PassDescrTree::node_type& p_node ) :
     m_tree_node( p_node )
 {
 };
@@ -69,7 +68,7 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
 
     descr->m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( p_name + dsstring( "/target" ), true, w_resol, h_resol, p_renderpurpose, p_rendertarget ) );
 
-    st_tree::tree<RenderPassNode::PassDescr*>::node_type::iterator it = m_tree_node.insert( descr );
+    PassDescrTree::node_type::iterator it = m_tree_node.insert( descr );
 
     RenderPassNode::PassDescr* current_descr = m_tree_node.data();
     current_descr->m_viewportquad->SetTexture( descr->m_targettexture, p_targetstage );
@@ -82,14 +81,7 @@ void RenderPassNode::Erase( void )
 {
     RenderPassNode::PassDescr* pass_descr = m_tree_node.data();
 
-    _DRAWSPACE_DELETE_( pass_descr->m_renderingqueue );
-
-    if( pass_descr->m_viewportquad )
-    {
-        _DRAWSPACE_DELETE_( pass_descr->m_viewportquad );
-    }
-
-    _DRAWSPACE_DELETE_( pass_descr->m_targettexture );
+    pass_descr->CleanUp();
 
     _DRAWSPACE_DELETE_( pass_descr );
     m_tree_node.erase();    

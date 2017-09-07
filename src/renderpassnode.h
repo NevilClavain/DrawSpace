@@ -27,13 +27,13 @@
 #include "texture.h"
 #include "viewportquad.h"
 #include "renderingqueue.h"
+#include "memalloc.h"
 
 
 namespace DrawSpace
 {
 namespace Core
 {
-
 class RenderPassNode
 {
 private:
@@ -53,15 +53,28 @@ private:
             m_viewportquad( NULL ),
             m_targettexture( NULL ),
             m_name( p_name )
-        {    
+        {
         };
 
+        void CleanUp( void )
+        {
+            _DRAWSPACE_DELETE_( m_renderingqueue );
+
+            if( m_viewportquad )
+            {
+                _DRAWSPACE_DELETE_( m_viewportquad );
+            }
+
+            _DRAWSPACE_DELETE_( m_targettexture );            
+        }
     };
 
-    st_tree::tree<PassDescr*>::node_type& m_tree_node;
+    using PassDescrTree = st_tree::tree<RenderPassNode::PassDescr*>;
+
+    PassDescrTree::node_type& m_tree_node;
 
 public:
-    RenderPassNode( st_tree::tree<PassDescr*>::node_type& p_node );
+    RenderPassNode( PassDescrTree::node_type& p_node );
 
     RenderPassNode CreateChild( const dsstring& p_name, int p_targetstage, 
                                 Core::Texture::RenderPurpose p_renderpurpose = Texture::RENDERPURPOSE_COLOR, 
