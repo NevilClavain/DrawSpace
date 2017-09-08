@@ -21,8 +21,6 @@
     <ClCompile Include="src\collider.cpp" />
     <ClCompile Include="src\drawspace_commons.cpp" />
     <ClCompile Include="src\dsapp.cpp" />
-    <ClCompile Include="src\entity.cpp" />
-    <ClCompile Include="src\entityset.cpp" />
     <ClCompile Include="src\file.cpp" />
     <ClCompile Include="src\fpsmovement.cpp" />
     <ClCompile Include="src\freemovement.cpp" />
@@ -80,7 +78,6 @@
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\timemanager.cpp" />
     <ClCompile Include="src\transformation.cpp" />
-    <ClCompile Include="src\tree_container.cpp" />
     <ClCompile Include="src\vector.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
     <ClCompile Include="src\world.cpp" />
@@ -95,16 +92,9 @@
     <ClInclude Include="src\circularmovement.h" />
     <ClInclude Include="src\clouds.h" />
     <ClInclude Include="src\collider.h" />
-    <ClInclude Include="src\colorarg_component.h" />
-    <ClInclude Include="src\component.h" />
-    <ClInclude Include="src\components_ids.h" />
-    <ClInclude Include="src\componenttype.h" />
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
-    <ClInclude Include="src\draw_component.h" />
     <ClInclude Include="src\dsapp.h" />
-    <ClInclude Include="src\entity.h" />
-    <ClInclude Include="src\entityset.h" />
     <ClInclude Include="src\exceptions.h" />
     <ClInclude Include="src\file.h" />
     <ClInclude Include="src\flags.h" />
@@ -115,7 +105,6 @@
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\inertbody.h" />
     <ClInclude Include="src\jsonparser.h" />
-    <ClInclude Include="src\meshe_component.h" />
     <ClInclude Include="src\module_keys.h" />
     <ClInclude Include="src\linearmovement.h" />
     <ClInclude Include="src\logconf.h" />
@@ -141,12 +130,9 @@
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
-    <ClInclude Include="src\renderingnode_component.h" />
-    <ClInclude Include="src\renderingqueue_component.h" />
     <ClInclude Include="src\renderpassnode.h" />
     <ClInclude Include="src\renderpassnodegraph.h" />
     <ClInclude Include="src\renderstatesset.h" />
-    <ClInclude Include="src\rendertarget_component.h" />
     <ClInclude Include="src\spherelod_root.h" />
     <ClInclude Include="src\spherelod_layer.h" />
     <ClInclude Include="src\plugin.h" />
@@ -177,18 +163,13 @@
     <ClInclude Include="src\system.h" />
     <ClInclude Include="src\task.h" />
     <ClInclude Include="src\texture.h" />
-    <ClInclude Include="src\texture_component.h" />
-    <ClInclude Include="src\text_component.h" />
     <ClInclude Include="src\timemanager.h" />
     <ClInclude Include="src\tracedefs.h" />
     <ClInclude Include="src\transformation.h" />
-    <ClInclude Include="src\transform_component.h" />
-    <ClInclude Include="src\tree_container.h" />
     <ClInclude Include="src\triangle.h" />
     <ClInclude Include="src\vector.h" />
     <ClInclude Include="src\vertex.h" />
     <ClInclude Include="src\viewportquad.h" />
-    <ClInclude Include="src\viewportquad_component.h" />
     <ClInclude Include="src\world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

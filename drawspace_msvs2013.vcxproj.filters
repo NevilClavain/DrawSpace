@@ -34,9 +34,6 @@
     <Filter Include="threading">
       <UniqueIdentifier>{e414fc7c-3a03-4c33-b975-e2a3c971bae4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="components">
-      <UniqueIdentifier>{28cee71b-b82e-4af1-bb45-8bde698c937b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
@@ -231,9 +228,6 @@
     <ClCompile Include="src\mediator.cpp">
       <Filter>threading</Filter>
     </ClCompile>
-    <ClCompile Include="src\entityset.cpp" />
-    <ClCompile Include="src\entity.cpp" />
-    <ClCompile Include="src\tree_container.cpp" />
     <ClCompile Include="src\renderpassnode.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -479,46 +473,8 @@
     <ClInclude Include="src\task.h">
       <Filter>threading</Filter>
     </ClInclude>
-    <ClInclude Include="src\componenttype.h" />
-    <ClInclude Include="src\component.h" />
-    <ClInclude Include="src\entity.h" />
-    <ClInclude Include="src\entityset.h" />
     <ClInclude Include="src\system.h">
       <Filter>interface</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderingqueue_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\colorarg_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\text_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\components_ids.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\viewportquad_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rendertarget_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\meshe_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\transform_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderingnode_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tree_container.h" />
-    <ClInclude Include="src\draw_component.h">
-      <Filter>components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\texture_component.h">
-      <Filter>components</Filter>
     </ClInclude>
     <ClInclude Include="src\renderpassnode.h">
       <Filter>core</Filter>
