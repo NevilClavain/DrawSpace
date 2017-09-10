@@ -66,6 +66,20 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     /////////////////////////////////////////////////////////////////////////////////
   
+    Entity ent;
+
+    ent.AddAspect<RenderingAspect>();
+
+    RenderingAspect* ra = ent.GetAspect<RenderingAspect>();
+
+    ra->AddComponent<dsstring>( "passs1", "aaa" );
+    ra->AddComponent<dsstring>( "pass2", "airbourne" );
+    ra->AddComponent<bool>( "bool", true );
+    ra->AddComponent<bool>( "boolf", false );
+    ra->AddComponent<int>( "beast", 666 );
+
+
+    int a = ra->GetComponent<int>( "beast")->getPurpose();
 
 
 

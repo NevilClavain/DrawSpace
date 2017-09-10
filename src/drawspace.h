@@ -88,6 +88,8 @@
 #include "module_service.h"
 #include "module_keys.h"
 #include "jsonparser.h"
+#include "entity.h"
+#include "renderingaspect.h"
 
 
 /*

@@ -234,6 +234,9 @@
     <ClCompile Include="src\renderpassnodegraph.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderingaspect.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -480,6 +483,12 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\renderpassnodegraph.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entity.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingaspect.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

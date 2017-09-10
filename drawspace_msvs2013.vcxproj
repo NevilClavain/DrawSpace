@@ -47,6 +47,7 @@
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\piload.cpp" />
+    <ClCompile Include="src\renderingaspect.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />
     <ClCompile Include="src\renderpassnodegraph.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\dsapp.h" />
+    <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\exceptions.h" />
     <ClInclude Include="src\file.h" />
     <ClInclude Include="src\flags.h" />
@@ -130,6 +132,7 @@
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
+    <ClInclude Include="src\renderingaspect.h" />
     <ClInclude Include="src\renderpassnode.h" />
     <ClInclude Include="src\renderpassnodegraph.h" />
     <ClInclude Include="src\renderstatesset.h" />
