@@ -81,6 +81,13 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     int a = ra->GetComponent<int>( "beast")->getPurpose();
 
+    dsstring str = ra->GetComponent<dsstring>( "pass2" )->getPurpose();
+
+    ra->RemoveComponent<dsstring>( "pass2" );
+
+    str = ra->GetComponent<dsstring>( "pass2" )->getPurpose();
+
+
 
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );

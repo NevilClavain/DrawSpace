@@ -75,25 +75,21 @@ public:
         m_components[p_id] = newcomp;
     }
     
-    /*
+    
     template<typename T>
-    void RemoveComponent( void )
+    void RemoveComponent( const dsstring& p_id )
     {
-        size_t tid = typeid(T).hash_code();
-
-        for( auto it = m_components.begin(); it != m_components.end(); ++it )
+        if( 0 == m_components.count( p_id ) )
         {
-            if( it->first == tid )
-            {
-                Component<T>* c = static_cast<Component<T>*>( it->second );
-                _DRAWSPACE_DELETE_( c );
-
-                m_components.erase( it );
-                break;
-            }        
+            _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
         }
+
+        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
+
+        _DRAWSPACE_DELETE_( comp );
+        m_components.erase( p_id );
     }
-    */
+    
 
     template<typename T>
     Component<T>* GetComponent( const dsstring& p_id )
