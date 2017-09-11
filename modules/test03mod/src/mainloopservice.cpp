@@ -85,7 +85,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ra->RemoveComponent<dsstring>( "pass2" );
 
-    str = ra->GetComponent<dsstring>( "pass2" )->getPurpose();
+
 
 
 

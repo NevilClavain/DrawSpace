@@ -21,6 +21,7 @@
 */
 
 #include "drawspace_commons.h"
+#include "memalloc.h"
 
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
@@ -61,6 +62,9 @@ protected:
     std::map<dsstring, BaseComponent*> m_components;
 
 public:
+
+    Aspect( void ) {};
+    virtual ~Aspect( void ) {}
    
     template<typename T, class... Args>
     void AddComponent( const dsstring& p_id, Args&&... p_args )
@@ -74,8 +78,7 @@ public:
         newcomp->MakePurpose( (std::forward<Args>(p_args))... );
         m_components[p_id] = newcomp;
     }
-    
-    
+        
     template<typename T>
     void RemoveComponent( const dsstring& p_id )
     {
@@ -90,7 +93,6 @@ public:
         m_components.erase( p_id );
     }
     
-
     template<typename T>
     Component<T>* GetComponent( const dsstring& p_id )
     {
@@ -112,13 +114,21 @@ private:
 
 public:
 
+    Entity( void ) {};
+    ~Entity( void )
+    {
+        for( auto it = m_aspects.begin(); it != m_aspects.end(); ++it )
+        {
+            _DRAWSPACE_DELETE_( it->second );
+        }
+    }
+    
+
     template<typename T>
     void AddAspect( void )
     {
         if( m_aspects.count(typeid(T).hash_code() ) )
         {
-            // TODO reagir par une exception
-
             _DSEXCEPTION( "Aspect type already exists in this entity : " + dsstring( typeid(T).name() ) );
         }
         m_aspects[typeid(T).hash_code()] = _DRAWSPACE_NEW_( T, T );
