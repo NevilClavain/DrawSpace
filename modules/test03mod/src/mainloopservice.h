@@ -34,6 +34,9 @@ protected:
     DrawSpace::Utils::TimeManager                                                   m_tm;
     dsstring                                                                        m_pluginDescr;
 
+    DrawSpace::Core::RenderPassNodeGraph                                            m_rendergraph;
+
+    DrawSpace::Core::RenderPassNode                                                 m_finalpass;
     
 
 public:

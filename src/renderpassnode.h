@@ -71,10 +71,12 @@ private:
 
     using PassDescrTree = st_tree::tree<RenderPassNode::PassDescr*>;
 
-    PassDescrTree::node_type& m_tree_node;
+    PassDescrTree::node_type* m_tree_node;
 
 public:
-    RenderPassNode( PassDescrTree::node_type& p_node );
+
+    RenderPassNode( void );
+    RenderPassNode( PassDescrTree::node_type* p_node );
 
     RenderPassNode CreateChild( const dsstring& p_name, int p_targetstage, 
                                 Core::Texture::RenderPurpose p_renderpurpose = Texture::RENDERPURPOSE_COLOR, 
@@ -85,6 +87,7 @@ public:
 
     void CreateViewportQuad( dsreal p_z_offset = 0.0 );
     RenderingQueue* GetRenderingQueue( void ) const;
+    ViewportQuad* GetViewportQuad( void ) const;
 
     friend class RenderPassNodeGraph;
 };

@@ -58,7 +58,7 @@ RenderPassNode RenderPassNodeGraph::CreateRoot( const dsstring& p_name )
 
     m_tree.insert( descr );
 
-    RenderPassNode node( m_tree.root() );
+    RenderPassNode node( &m_tree.root() );
     return node;
 }
 
@@ -68,7 +68,7 @@ void RenderPassNodeGraph::Erase( void )
 	cleanup_treenodes();
     m_tree.root().erase();
 }
-
+/*
 void RenderPassNodeGraph::CreateViewportQuad( dsreal p_z_offset )
 {
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -88,6 +88,7 @@ RenderingQueue* RenderPassNodeGraph::GetRenderingQueue( void ) const
     RenderPassNode::PassDescr* descr = m_tree.root().data();
     return descr->m_renderingqueue;
 }
+*/
 
 void RenderPassNodeGraph::Run( void ) const
 {

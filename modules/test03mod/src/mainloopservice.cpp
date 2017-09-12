@@ -65,26 +65,32 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
     /////////////////////////////////////////////////////////////////////////////////
-  
+
+    m_finalpass = m_rendergraph.CreateRoot( "final_pass" );
+
+    //m_finalpass.CreateViewportQuad( -2.0 );
+
+    m_finalpass.GetRenderingQueue()->SetTargetClearingColor( 255, 25, 2, 255 );
+
+    m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
+    m_finalpass.GetRenderingQueue()->EnableTargetClearing( true );
+
+    m_finalpass.GetRenderingQueue()->UpdateOutputQueue();
+
+    
+
+
+    /*
     Entity ent;
 
     ent.AddAspect<RenderingAspect>();
 
     RenderingAspect* ra = ent.GetAspect<RenderingAspect>();
 
-    ra->AddComponent<dsstring>( "passs1", "aaa" );
-    ra->AddComponent<dsstring>( "pass2", "airbourne" );
-    ra->AddComponent<bool>( "bool", true );
-    ra->AddComponent<bool>( "boolf", false );
-    ra->AddComponent<int>( "beast", 666 );
+    ra->AddComponent<dsstring>( "pass1", "texture_pass" );
 
 
-    int a = ra->GetComponent<int>( "beast")->getPurpose();
-
-    dsstring str = ra->GetComponent<dsstring>( "pass2" )->getPurpose();
-
-    ra->RemoveComponent<dsstring>( "pass2" );
-
+    */
 
 
 
@@ -95,7 +101,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
-
+    m_rendergraph.Run();
 
     m_renderer->FlipScreen();
             

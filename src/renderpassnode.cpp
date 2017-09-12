@@ -27,11 +27,15 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
+RenderPassNode::RenderPassNode( void ) :
+    m_tree_node( NULL )
+{
+}
 
-RenderPassNode::RenderPassNode( PassDescrTree::node_type& p_node ) :
+RenderPassNode::RenderPassNode( PassDescrTree::node_type* p_node ) :
     m_tree_node( p_node )
 {
-};
+}
 
 RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_targetstage, 
                                                 Core::Texture::RenderPurpose p_renderpurpose, 
@@ -68,12 +72,12 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
 
     descr->m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( p_name + dsstring( "/target" ), true, w_resol, h_resol, p_renderpurpose, p_rendertarget ) );
 
-    PassDescrTree::node_type::iterator it = m_tree_node.insert( descr );
+    PassDescrTree::node_type::iterator it = m_tree_node->insert( descr );
 
-    RenderPassNode::PassDescr* current_descr = m_tree_node.data();
+    RenderPassNode::PassDescr* current_descr = m_tree_node->data();
     current_descr->m_viewportquad->SetTexture( descr->m_targettexture, p_targetstage );
 
-    RenderPassNode node( *it );
+    RenderPassNode node( &(*it) );
     return node;
 };
 
@@ -85,7 +89,7 @@ void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
 
     ViewportQuad* viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, p_z_offset ) );
 
-    PassDescr* descr = m_tree_node.data();
+    PassDescr* descr = m_tree_node->data();
 
     descr->m_viewportquad = viewportquad;
     descr->m_renderingqueue->Add( viewportquad );
@@ -93,6 +97,12 @@ void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
 
 RenderingQueue* RenderPassNode::GetRenderingQueue( void ) const
 {
-    PassDescr* descr = m_tree_node.data();
+    PassDescr* descr = m_tree_node->data();
     return descr->m_renderingqueue;
+}
+
+ViewportQuad* RenderPassNode::GetViewportQuad( void ) const
+{
+    PassDescr* descr = m_tree_node->data();
+    return descr->m_viewportquad;
 }
