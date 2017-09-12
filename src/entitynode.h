@@ -31,11 +31,20 @@ namespace DrawSpace
 {
 namespace Core
 {
-class EntityNode
+class EntityNode sealed
 {
 private:
 
+	using EntityTree = st_tree::tree<Entity*>;
+
+	EntityTree::node_type& m_tree_node;
+
 public:
+
+	EntityNode(EntityTree::node_type& p_node);
+
+	EntityNode AddChild(Entity* p_entity);
+	void Erase(void);
 
 };
 

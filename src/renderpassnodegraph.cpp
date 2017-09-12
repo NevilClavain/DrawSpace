@@ -42,7 +42,6 @@ void RenderPassNodeGraph::cleanup_treenodes( void )
     for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
     {
         it->data()->CleanUp();
-
         _DRAWSPACE_DELETE_( it->data() );
     }
 }
@@ -63,13 +62,10 @@ RenderPassNode RenderPassNodeGraph::CreateRoot( const dsstring& p_name )
     return node;
 }
 
+// nettoie et efface toute la hierarchie
 void RenderPassNodeGraph::Erase( void )
 {
-    RenderPassNode::PassDescr* pass_descr = m_tree.root().data();
-
-    pass_descr->CleanUp();
-
-    _DRAWSPACE_DELETE_( pass_descr );
+	cleanup_treenodes();
     m_tree.root().erase();
 }
 

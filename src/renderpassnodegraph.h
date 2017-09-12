@@ -29,15 +29,14 @@ namespace DrawSpace
 {
 namespace Core
 {
-class RenderPassNodeGraph
+class RenderPassNodeGraph sealed
 {
 public:
     using PassDescrTree = st_tree::tree<RenderPassNode::PassDescr*>;
 
-protected:
+private:
 
-    mutable PassDescrTree                  m_tree;
-
+    mutable PassDescrTree  m_tree;
     void cleanup_treenodes( void );
 
 public:

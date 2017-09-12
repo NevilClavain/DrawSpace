@@ -90,26 +90,8 @@
 #include "jsonparser.h"
 #include "entity.h"
 #include "renderingaspect.h"
+#include "entitynodegraph.h"
 
-
-/*
-#include "rendergraph_system.h"
-#include "rendergraph_data.h"
-
-#include "renderingqueue_component.h"
-#include "colorarg_component.h"
-#include "text_component.h"
-#include "viewportquad_component.h"
-#include "rendertarget_component.h"
-#include "meshe_component.h"
-#include "transform_component.h"
-#include "renderingnode_component.h"
-#include "draw_component.h"
-#include "texture_component.h"
-
-#include "scenegraph_system.h"
-#include "scenegraph_data.h"
-*/
 
 
 #endif

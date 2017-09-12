@@ -34,7 +34,7 @@ namespace DrawSpace
 {
 namespace Core
 {
-class RenderPassNode
+class RenderPassNode sealed
 {
 private:
 
@@ -82,7 +82,6 @@ public:
                                 bool p_targetdims_fromrenderer = true, 
                                 long p_targetdims_width = 255, 
                                 long p_targetdims_height = 255 );
-    void Erase( void );
 
     void CreateViewportQuad( dsreal p_z_offset = 0.0 );
     RenderingQueue* GetRenderingQueue( void ) const;

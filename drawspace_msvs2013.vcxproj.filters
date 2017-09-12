@@ -237,6 +237,12 @@
     <ClCompile Include="src\renderingaspect.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="src\entitynode.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entitynodegraph.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -492,6 +498,9 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\entitynode.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitynodegraph.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

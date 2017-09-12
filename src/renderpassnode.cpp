@@ -77,16 +77,6 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
     return node;
 };
 
-void RenderPassNode::Erase( void )
-{
-    RenderPassNode::PassDescr* pass_descr = m_tree_node.data();
-
-    pass_descr->CleanUp();
-
-    _DRAWSPACE_DELETE_( pass_descr );
-    m_tree_node.erase();    
-};
-
 void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
 {
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
