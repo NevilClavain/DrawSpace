@@ -491,5 +491,8 @@
     <ClInclude Include="src\renderingaspect.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="src\entitynode.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

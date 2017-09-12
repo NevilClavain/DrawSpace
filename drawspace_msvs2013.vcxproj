@@ -97,6 +97,7 @@
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\dsapp.h" />
     <ClInclude Include="src\entity.h" />
+    <ClInclude Include="src\entitynode.h" />
     <ClInclude Include="src\exceptions.h" />
     <ClInclude Include="src\file.h" />
     <ClInclude Include="src\flags.h" />
