@@ -20,45 +20,66 @@
 *
 */
 
-#ifndef _RENDERINGASPECT_H_
-#define _RENDERINGASPECT_H_
+#ifndef _ASPECT_H_
+#define _ASPECT_H_
 
-#include "aspect.h"
-#include "renderingnode.h"
+#include "component.h"
+#include "exceptions.h"
+#include "memalloc.h"
 
 namespace DrawSpace
 {
 namespace Core
 {
-class RenderingAspect : public Aspect
+class Aspect abstract
 {
-public:
-    struct TextDisplay
-    {
-        dsstring        m_text;
-        int             m_posx;
-        int             m_posy;
-
-        unsigned char   m_r;
-        unsigned char   m_g;
-        unsigned char   m_b;  
-
-        TextDisplay( int p_posx, int p_posy, unsigned char p_r, unsigned char p_g, unsigned char p_b, const dsstring& p_text ) :
-            m_r( p_r ),
-            m_g( p_g ),
-            m_b( p_b ),
-            m_posx( p_posx ),
-            m_posy( p_posy ),
-            m_text( p_text )
-        {
-        }
-    };
-    
 protected:
-    virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    
-};
+    std::map<dsstring, BaseComponent*> m_components;
 
+public:
+    Aspect( void ) {};
+    virtual ~Aspect( void ) {}
+   
+    template<typename T, class... Args>
+    void AddComponent( const dsstring& p_id, Args&&... p_args )
+    {
+        if( m_components.count( p_id ) > 0 )
+        {
+            _DSEXCEPTION( "Component with same id already exists : " + p_id );
+        }
+
+        Component<T>* newcomp =  _DRAWSPACE_NEW_( Component<T>, Component<T> );
+        newcomp->MakePurpose( (std::forward<Args>(p_args))... );
+        m_components[p_id] = newcomp;
+    }
+        
+    template<typename T>
+    void RemoveComponent( const dsstring& p_id )
+    {
+        if( 0 == m_components.count( p_id ) )
+        {
+            _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
+        }
+
+        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
+
+        _DRAWSPACE_DELETE_( comp );
+        m_components.erase( p_id );
+    }
+    
+    template<typename T>
+    Component<T>* GetComponent( const dsstring& p_id )
+    {
+        if( 0 == m_components.count( p_id ) )
+        {
+            _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
+        }
+
+        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
+        
+        return comp;
+    }
+};
 }
 }
 

@@ -509,5 +509,11 @@
     <ClInclude Include="src\renderingsystem.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="src\aspect.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\component.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

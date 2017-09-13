@@ -20,45 +20,39 @@
 *
 */
 
-#ifndef _RENDERINGASPECT_H_
-#define _RENDERINGASPECT_H_
+#ifndef _COMPONENT_H_
+#define _COMPONENT_H_
 
-#include "aspect.h"
-#include "renderingnode.h"
+#include "drawspace_commons.h"
 
 namespace DrawSpace
 {
 namespace Core
 {
-class RenderingAspect : public Aspect
+class BaseComponent abstract {};
+
+template<typename T>
+using ComponentPurpose = std::unique_ptr<T>;
+
+template<typename T>
+class Component sealed : public BaseComponent
 {
+private:
+    ComponentPurpose<T>       m_purpose;
+
 public:
-    struct TextDisplay
+
+    template<class... Args>
+    void MakePurpose(Args&&... p_args)
     {
-        dsstring        m_text;
-        int             m_posx;
-        int             m_posy;
+        m_purpose = std::make_unique<T>((std::forward<Args>(p_args))...);
+    }
 
-        unsigned char   m_r;
-        unsigned char   m_g;
-        unsigned char   m_b;  
-
-        TextDisplay( int p_posx, int p_posy, unsigned char p_r, unsigned char p_g, unsigned char p_b, const dsstring& p_text ) :
-            m_r( p_r ),
-            m_g( p_g ),
-            m_b( p_b ),
-            m_posx( p_posx ),
-            m_posy( p_posy ),
-            m_text( p_text )
-        {
-        }
-    };
-    
-protected:
-    virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    
+    virtual T& getPurpose(void) const
+    {
+        return *( m_purpose.get() );
+    }
 };
-
 }
 }
 

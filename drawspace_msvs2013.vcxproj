@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ac3dmeshe.h" />
+    <ClInclude Include="src\aspect.h" />
     <ClInclude Include="src\body.h" />
     <ClInclude Include="src\calendar.h" />
     <ClInclude Include="src\callback.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="src\circularmovement.h" />
     <ClInclude Include="src\clouds.h" />
     <ClInclude Include="src\collider.h" />
+    <ClInclude Include="src\component.h" />
     <ClInclude Include="src\drawspace.h" />
     <ClInclude Include="src\drawspace_commons.h" />
     <ClInclude Include="src\dsapp.h" />

@@ -80,17 +80,17 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
 
 
-    /*
-    Entity ent;
+    
+    Entity root;
 
-    ent.AddAspect<RenderingAspect>();
+    root.AddAspect<RenderingAspect>();
 
-    RenderingAspect* ra = ent.GetAspect<RenderingAspect>();
+    RenderingAspect* ra = root.GetAspect<RenderingAspect>();
 
-    ra->AddComponent<dsstring>( "pass1", "texture_pass" );
+    ra->AddComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "pass1", 10, 10, 0, 255, 0, "Hello world !" );
 
 
-    */
+    
 
 
 

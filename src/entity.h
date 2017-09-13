@@ -20,8 +20,7 @@
 *
 */
 
-#include "drawspace_commons.h"
-#include "memalloc.h"
+#include "aspect.h"
 
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
@@ -30,83 +29,6 @@ namespace DrawSpace
 {
 namespace Core
 {
-
-class BaseComponent abstract {};
-
-template<typename T>
-using ComponentPurpose = std::unique_ptr<T>;
-
-template<typename T>
-class Component sealed : public BaseComponent
-{
-private:
-    ComponentPurpose<T>       m_purpose;
-
-public:
-
-    template<class... Args>
-    void MakePurpose(Args&&... p_args)
-    {
-        m_purpose = std::make_unique<T>((std::forward<Args>(p_args))...);
-    }
-
-    virtual T& getPurpose(void) const
-    {
-        return *( m_purpose.get() );
-    }
-};
-
-class Aspect abstract
-{
-protected:
-    std::map<dsstring, BaseComponent*> m_components;
-
-public:
-
-    Aspect( void ) {};
-    virtual ~Aspect( void ) {}
-   
-    template<typename T, class... Args>
-    void AddComponent( const dsstring& p_id, Args&&... p_args )
-    {
-        if( m_components.count( p_id ) > 0 )
-        {
-            _DSEXCEPTION( "Component with same id already exists : " + p_id );
-        }
-
-        Component<T>* newcomp =  _DRAWSPACE_NEW_( Component<T>, Component<T> );
-        newcomp->MakePurpose( (std::forward<Args>(p_args))... );
-        m_components[p_id] = newcomp;
-    }
-        
-    template<typename T>
-    void RemoveComponent( const dsstring& p_id )
-    {
-        if( 0 == m_components.count( p_id ) )
-        {
-            _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
-        }
-
-        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
-
-        _DRAWSPACE_DELETE_( comp );
-        m_components.erase( p_id );
-    }
-    
-    template<typename T>
-    Component<T>* GetComponent( const dsstring& p_id )
-    {
-        if( 0 == m_components.count( p_id ) )
-        {
-            _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
-        }
-
-        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
-        
-        return comp;
-    }
-};
-
 class Entity sealed
 {
 private:
