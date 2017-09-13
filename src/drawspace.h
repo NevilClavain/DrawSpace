@@ -91,7 +91,7 @@
 #include "entity.h"
 #include "renderingaspect.h"
 #include "entitynodegraph.h"
-
+#include "renderingsystem.h"
 
 
 #endif
