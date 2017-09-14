@@ -21,6 +21,7 @@
 */
 
 #include "entitynodegraph.h"
+#include "renderingsystem.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -43,4 +44,12 @@ EntityNode EntityNodeGraph::SetRoot(Entity* p_entity)
 void EntityNodeGraph::Erase(void)
 {
 	m_tree.root().erase();
+}
+
+void EntityNodeGraph::Accept( RenderingSystem* p_renderingsystem ) const
+{
+    for( EntityTree::df_pre_iterator it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
+    {
+        p_renderingsystem->VisitEntity( it->data() );
+    }
 }

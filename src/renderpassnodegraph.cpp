@@ -24,6 +24,7 @@
 #include "memalloc.h"
 #include "renderer.h"
 #include "plugin.h"
+#include "renderingsystem.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -68,32 +69,11 @@ void RenderPassNodeGraph::Erase( void )
 	cleanup_treenodes();
     m_tree.root().erase();
 }
-/*
-void RenderPassNodeGraph::CreateViewportQuad( dsreal p_z_offset )
-{
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    DrawSpace::Interface::Renderer::Characteristics renderer_characteristics;
-    renderer->GetRenderCharacteristics( renderer_characteristics );
 
-    ViewportQuad* viewportquad = _DRAWSPACE_NEW_( ViewportQuad, ViewportQuad( renderer_characteristics.width_viewport, renderer_characteristics.height_viewport, p_z_offset ) );
-
-    RenderPassNode::PassDescr* descr = m_tree.root().data();
-
-    descr->m_viewportquad = viewportquad;
-    descr->m_renderingqueue->Add( viewportquad );
-}
-
-RenderingQueue* RenderPassNodeGraph::GetRenderingQueue( void ) const
-{
-    RenderPassNode::PassDescr* descr = m_tree.root().data();
-    return descr->m_renderingqueue;
-}
-*/
-
-void RenderPassNodeGraph::Run( void ) const
+void RenderPassNodeGraph::Accept( RenderingSystem* p_renderingsystem ) const
 {
     for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
     {
-        it->data()->m_renderingqueue->Draw();
+        p_renderingsystem->VisitRenderPassDescr( it->data() );
     }
 }

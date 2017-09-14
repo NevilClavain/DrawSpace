@@ -35,8 +35,12 @@ protected:
     dsstring                                                                        m_pluginDescr;
 
     DrawSpace::Core::RenderPassNodeGraph                                            m_rendergraph;
+    DrawSpace::Core::EntityNodeGraph                                                m_entitygraph;
 
     DrawSpace::Core::RenderPassNode                                                 m_finalpass;
+    DrawSpace::Core::Entity                                                         m_rootEntity;
+    
+    DrawSpace::Core::RenderingSystem                                                m_renderingSystem;
     
 
 public:

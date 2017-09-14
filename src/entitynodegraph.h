@@ -29,6 +29,7 @@ namespace DrawSpace
 {
 namespace Core
 {
+class RenderingSystem;
 class EntityNodeGraph
 {
 public:
@@ -44,6 +45,8 @@ public:
 
 	EntityNode SetRoot(Entity* p_entity);
 	void Erase(void);
+
+    void Accept( RenderingSystem* p_renderingsystem ) const;
 
 };
 }

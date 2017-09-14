@@ -29,6 +29,7 @@ namespace DrawSpace
 {
 namespace Core
 {
+class RenderingSystem;
 class RenderPassNodeGraph sealed
 {
 public:
@@ -47,12 +48,7 @@ public:
     RenderPassNode CreateRoot( const dsstring& p_name );
     void Erase( void );
 
-    /*
-    void CreateViewportQuad( dsreal p_z_offset );
-    RenderingQueue* GetRenderingQueue( void ) const;
-    */
-
-    void Run( void ) const;
+    void Accept( RenderingSystem* p_renderingsystem ) const;
 };
 
 }

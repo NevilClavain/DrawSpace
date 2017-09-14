@@ -63,7 +63,8 @@ public:
 
         if( 0 == m_aspects.count( tid ) )
         {
-            _DSEXCEPTION( "Aspect type not registered in this entity : " + dsstring( typeid(T).name() ) );
+            //_DSEXCEPTION( "Aspect type not registered in this entity : " + dsstring( typeid(T).name() ) );
+            return NULL;
         }
         
         T* aspect = static_cast<T*>( m_aspects[tid] );

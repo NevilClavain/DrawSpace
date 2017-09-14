@@ -34,7 +34,12 @@ namespace Core
 class Aspect abstract
 {
 protected:
-    std::map<dsstring, BaseComponent*> m_components;
+
+    // map globale, regroupant les composants par id...
+    std::unordered_map<dsstring, BaseComponent*>              m_components;
+
+    // 2eme map pour regrouper les composants en fct de leur type
+    std::unordered_map<size_t, std::vector<BaseComponent*>>   m_components_by_type;
 
 public:
     Aspect( void ) {};
@@ -51,6 +56,11 @@ public:
         Component<T>* newcomp =  _DRAWSPACE_NEW_( Component<T>, Component<T> );
         newcomp->MakePurpose( (std::forward<Args>(p_args))... );
         m_components[p_id] = newcomp;
+
+        // ajout dans m_components_by_type
+
+        size_t tid = typeid(T).hash_code();
+        m_components_by_type[tid].push_back( newcomp );
     }
         
     template<typename T>
@@ -60,11 +70,25 @@ public:
         {
             _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
         }
-
         Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
 
-        _DRAWSPACE_DELETE_( comp );
+        
         m_components.erase( p_id );
+
+        // suppression dans m_components_by_type
+        size_t tid = typeid(T).hash_code();
+        for( auto it = m_components_by_type[tid].begin(); it != m_components_by_type[tid].end(); ++it )
+        {
+            if( m_components[p_id] == *it )
+            {
+                // on a trouve le composant en question ! suppression...
+                m_components_by_type[tid].erase( it );
+                break;
+            }
+        }
+
+        //
+        _DRAWSPACE_DELETE_( comp );
     }
     
     template<typename T>
@@ -79,6 +103,20 @@ public:
         
         return comp;
     }
+
+    template<typename T>
+    void GetComponentsByType( std::vector<Component<T>*>& p_outlist )
+    {
+        size_t tid = typeid(T).hash_code();
+        if( m_components_by_type.count( tid ) > 0 )
+        {
+            std::vector<BaseComponent*> list = m_components_by_type[tid];
+            for( size_t i = 0; i < list.size(); i++ )
+            {
+                p_outlist.push_back( static_cast<Component<T>*>( list[i] ) );
+            }
+        }
+    }   
 };
 }
 }

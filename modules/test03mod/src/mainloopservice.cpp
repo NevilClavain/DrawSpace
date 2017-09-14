@@ -77,23 +77,19 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_finalpass.GetRenderingQueue()->UpdateOutputQueue();
 
-    
-
 
     
-    Entity root;
-
-    root.AddAspect<RenderingAspect>();
-
-    RenderingAspect* ra = root.GetAspect<RenderingAspect>();
-
-    ra->AddComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "pass1", 10, 10, 0, 255, 0, "Hello world !" );
-
-
     
+    m_rootEntity.AddAspect<RenderingAspect>();
+    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
+    renderingAspect->AddComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "root_entity", 10, 10, 0, 255, 0, "Hello world !" );
 
 
 
+    //renderingAspect->RemoveComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "root_entity" );
+
+
+    m_entitygraph.SetRoot( &m_rootEntity );
 
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
@@ -101,7 +97,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
-    m_rendergraph.Run();
+    m_renderingSystem.Run( &m_rendergraph, &m_entitygraph );
 
     m_renderer->FlipScreen();
             
