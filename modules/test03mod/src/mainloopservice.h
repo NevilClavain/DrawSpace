@@ -52,6 +52,8 @@ protected:
     
     bool                                                                            m_display_switch = true;
 
+    DrawSpace::Interface::MesheImport*                                              m_meshe_import;
+
 public:
     MainLoopService( void );
     ~MainLoopService( void );

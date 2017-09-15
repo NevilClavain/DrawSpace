@@ -64,6 +64,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
+
+    m_meshe_import = new DrawSpace::Utils::AC3DMesheImport();
+
     /////////////////////////////////////////////////////////////////////////////////
 
     m_finalpass = m_rendergraph.CreateRoot( "final_pass" );
@@ -119,9 +122,17 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     mesherenderingaspect->AddComponent<MesheRenderingAspect::PassSlot>( "cube_texturepass_slot", "texture_pass" );
     mesherenderingaspect->AddComponent<Meshe>( "meshe_cube" );
 
+    mesherenderingaspect->GetComponent<Meshe>( "meshe_cube" )->getPurpose().SetImporter( m_meshe_import );
+    mesherenderingaspect->GetComponent<Meshe>( "meshe_cube" )->getPurpose().LoadFromFile( "object.ac", 0 );
+
+
+    m_cubeEntity.AddAspect<WorldAspect>();
+
     m_cubeEntity.AddAspect<TextRenderingAspect>();
     textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
     textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "cube_text", 10, 30, 0, 255, 0, "hello from cube entity !" );
+
+
 
     ///////////////////////////////////////////////////////////////////////////
 
