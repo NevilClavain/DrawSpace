@@ -681,6 +681,10 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         RenderingNode* node = p_input_list[i];
 
         Fx* current_fx = node->GetFx();
+        if( !current_fx )
+        {
+            _DSEXCEPTION( "Missing fx for rendering node " );
+        }
 
         if( false == renderer->CreateShaders( current_fx, &sh_data ) )
         {

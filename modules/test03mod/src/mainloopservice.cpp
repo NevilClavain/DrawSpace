@@ -68,7 +68,26 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_finalpass = m_rendergraph.CreateRoot( "final_pass" );
 
-    //m_finalpass.CreateViewportQuad( -2.0 );
+    m_finalpass.CreateViewportQuad( -0.24 );
+
+    m_finalpass.GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    RenderStatesSet finalpass_rss;
+    finalpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "point" ) );
+    finalpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
+    //finalpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    //finalpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+
+    m_finalpass.GetViewportQuad()->GetFx()->SetRenderStates( finalpass_rss );
+
+
+    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+
+
 
     m_finalpass.GetRenderingQueue()->SetTargetClearingColor( 255, 25, 2, 255 );
 
