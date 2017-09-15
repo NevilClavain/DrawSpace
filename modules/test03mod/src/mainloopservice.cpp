@@ -104,18 +104,20 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_texturepass.GetRenderingQueue()->EnableTargetClearing( true );
 
 
-
-    m_rendergraph.RenderingQueueModSignal();
-    
-    
-    
+    //////////////////////////////////////////////////////////////////////////
+        
     m_rootEntity.AddAspect<TextRenderingAspect>();
     TextRenderingAspect* textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
     textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
 
+    //////////////////////////////////////////////////////////////////////////
+
 
     m_cubeEntity.AddAspect<MesheRenderingAspect>();
     MesheRenderingAspect* mesherenderingaspect = m_cubeEntity.GetAspect<MesheRenderingAspect>();
+
+    mesherenderingaspect->AddComponent<MesheRenderingAspect::PassSlot>( "cube_texturepass_slot", "texture_pass" );
+    mesherenderingaspect->AddComponent<Meshe>( "meshe_cube" );
 
     m_cubeEntity.AddAspect<TextRenderingAspect>();
     textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
@@ -128,7 +130,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     
 
-    
+
+
+    m_rendergraph.RenderingQueueModSignal();
 
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );

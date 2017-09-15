@@ -33,7 +33,7 @@ namespace Core
 class TextRenderingAspect : public Aspect
 {
 public:
-    struct TextDisplay
+    struct TextDisplay sealed
     {
         dsstring        m_text;
         int             m_posx;

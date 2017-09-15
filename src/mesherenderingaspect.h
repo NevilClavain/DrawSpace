@@ -33,7 +33,24 @@ namespace Core
 class MesheRenderingAspect : public Aspect
 {
 public:
-    using PassSlot = std::pair<dsstring, Core::RenderingNode*>;
+    class PassSlot
+    {
+    private:
+        dsstring                m_pass_name;
+        RenderingNode*          m_rendering_node;
+
+    public:
+        PassSlot( const dsstring& p_pass_name ):
+            m_pass_name( p_pass_name )
+        {
+            m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
+        }
+
+        ~PassSlot( void )
+        {
+            _DRAWSPACE_DELETE_( m_rendering_node );
+        }
+    };
     
 protected:
     virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );

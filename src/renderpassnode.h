@@ -38,7 +38,7 @@ class RenderPassNode sealed
 {
 private:
 
-    class PassDescr
+    class PassDescr sealed
     {
     public:
         DrawSpace::Core::RenderingQueue*   m_renderingqueue;
