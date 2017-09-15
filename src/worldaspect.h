@@ -31,10 +31,11 @@ namespace Core
 {
 class WorldAspect : public Aspect
 {
-
-    
 protected:
-    
+
+    DrawSpace::Utils::Matrix    m_finaltransform;
+
+
 };
 
 }

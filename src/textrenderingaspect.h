@@ -20,11 +20,44 @@
 *
 */
 
-#include "renderingmesheaspect.h"
+#ifndef _RENDERINGASPECT_H_
+#define _RENDERINGASPECT_H_
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
+#include "aspect.h"
+#include "renderingnode.h"
 
-void RenderingMesheAspect::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
+namespace DrawSpace
 {
+namespace Core
+{
+class TextRenderingAspect : public Aspect
+{
+public:
+    struct TextDisplay
+    {
+        dsstring        m_text;
+        int             m_posx;
+        int             m_posy;
+
+        unsigned char   m_r;
+        unsigned char   m_g;
+        unsigned char   m_b;  
+
+        TextDisplay( int p_posx, int p_posy, unsigned char p_r, unsigned char p_g, unsigned char p_b, const dsstring& p_text ) :
+            m_r( p_r ),
+            m_g( p_g ),
+            m_b( p_b ),
+            m_posx( p_posx ),
+            m_posy( p_posy ),
+            m_text( p_text )
+        {
+        }
+    };
+    
+    
+};
+
 }
+}
+
+#endif

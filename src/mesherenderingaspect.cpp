@@ -20,27 +20,11 @@
 *
 */
 
-#ifndef _RENDERINMESHEGASPECT_H_
-#define _RENDERINGMESHEASPECT_H_
+#include "mesherenderingaspect.h"
 
-#include "renderingaspect.h"
-#include "renderingnode.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
-namespace DrawSpace
+void MesheRenderingAspect::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
-namespace Core
-{
-class RenderingMesheAspect : public Aspect
-{
-public:
-
-    
-protected:
-    virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    
-};
-
 }
-}
-
-#endif

@@ -20,11 +20,27 @@
 *
 */
 
-#include "renderingaspect.h"
+#ifndef _MESHERENDERINGASPECT_H_
+#define _MESHERENDERINGASPECT_H_
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
+#include "aspect.h"
+#include "renderingnode.h"
 
-void RenderingAspect::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
+namespace DrawSpace
 {
+namespace Core
+{
+class MesheRenderingAspect : public Aspect
+{
+public:
+    using PassSlot = std::pair<dsstring, Core::RenderingNode*>;
+    
+protected:
+    virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+    
+};
+
 }
+}
+
+#endif

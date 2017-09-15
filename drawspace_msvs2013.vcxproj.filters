@@ -234,9 +234,6 @@
     <ClCompile Include="src\renderpassnodegraph.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderingaspect.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\entitynode.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -246,10 +243,10 @@
     <ClCompile Include="src\renderingsystem.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderingmesheaspect.cpp">
+    <ClCompile Include="src\worldaspect.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\worldaspect.cpp">
+    <ClCompile Include="src\mesherenderingaspect.cpp">
       <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -503,9 +500,6 @@
     <ClInclude Include="src\entity.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderingaspect.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\entitynode.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -521,10 +515,13 @@
     <ClInclude Include="src\component.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderingmesheaspect.h">
+    <ClInclude Include="src\worldaspect.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\worldaspect.h">
+    <ClInclude Include="src\textrenderingaspect.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesherenderingaspect.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

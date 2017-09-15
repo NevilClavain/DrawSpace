@@ -109,15 +109,19 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     
     
-    m_rootEntity.AddAspect<RenderingAspect>();
-    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
-    renderingAspect->AddComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
+    m_rootEntity.AddAspect<TextRenderingAspect>();
+    TextRenderingAspect* textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
+    textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
 
 
-   
+    m_cubeEntity.AddAspect<MesheRenderingAspect>();
+    MesheRenderingAspect* mesherenderingaspect = m_cubeEntity.GetAspect<MesheRenderingAspect>();
 
+    m_cubeEntity.AddAspect<TextRenderingAspect>();
+    textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
+    textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "cube_text", 10, 30, 0, 255, 0, "Hello from cube entity!" );
 
-
+    ///////////////////////////////////////////////////////////////////////////
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
     m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
@@ -140,7 +144,7 @@ void MainLoopService::Run( void )
     {
         char comment[256];
         sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
-        m_rootEntity.GetAspect<RenderingAspect>()->GetComponent<RenderingAspect::TextDisplay>( "fps" )->getPurpose().m_text = comment;
+        m_rootEntity.GetAspect<TextRenderingAspect>()->GetComponent<TextRenderingAspect::TextDisplay>( "fps" )->getPurpose().m_text = comment;
     }
 
     m_tm.Update();
@@ -189,15 +193,15 @@ void MainLoopService::OnKeyPulse( long p_key )
                 
                 if( m_display_switch )
                 {
-                    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
-                    renderingAspect->RemoveComponent<RenderingAspect::TextDisplay>( "fps");
+                    TextRenderingAspect* textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
+                    textrenderingAspect->RemoveComponent<TextRenderingAspect::TextDisplay>( "fps");
 
                     m_display_switch = false;
                 }
                 else
                 {
-                    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
-                    renderingAspect->AddComponent<RenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "Hello world !" );
+                    TextRenderingAspect* textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
+                    textrenderingAspect->AddComponent<TextRenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "Hello world !" );
 
                     m_display_switch = true;
                 }

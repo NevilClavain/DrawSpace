@@ -21,7 +21,7 @@
 */
 
 #include "renderingsystem.h"
-#include "renderingaspect.h"
+#include "textrenderingaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -51,17 +51,17 @@ void RenderingSystem::VisitRenderPassDescr( RenderPassNode::PassDescr* p_passdes
 
 void RenderingSystem::VisitEntity( Entity* p_entity ) const
 {
-    RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
-    if( rendering_aspect )
+    TextRenderingAspect* textrendering_aspect = p_entity->GetAspect<TextRenderingAspect>();
+    if( textrendering_aspect )
     {
         // extraire tout les composants "texts display"
-        std::vector<Component<DrawSpace::Core::RenderingAspect::TextDisplay>*> texts;
+        std::vector<Component<DrawSpace::Core::TextRenderingAspect::TextDisplay>*> texts;
 
-        rendering_aspect->GetComponentsByType<DrawSpace::Core::RenderingAspect::TextDisplay>( texts );
+        textrendering_aspect->GetComponentsByType<DrawSpace::Core::TextRenderingAspect::TextDisplay>( texts );
 
         for( size_t i = 0; i < texts.size(); i++ )
         {
-            DrawSpace::Core::RenderingAspect::TextDisplay text_descr = texts[i]->getPurpose();
+            DrawSpace::Core::TextRenderingAspect::TextDisplay text_descr = texts[i]->getPurpose();
 
             m_renderer->BeginScreen();
             m_renderer->DrawText( text_descr.m_r, text_descr.m_g, text_descr.m_b, text_descr.m_posx, text_descr.m_posy, text_descr.m_text.c_str() );
