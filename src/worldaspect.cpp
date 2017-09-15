@@ -20,11 +20,6 @@
 *
 */
 
-#include "renderingaspect.h"
+#include "worldaspect.h"
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
 
-void RenderingAspect::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
-{
-}

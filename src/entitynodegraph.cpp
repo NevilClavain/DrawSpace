@@ -37,7 +37,7 @@ EntityNodeGraph::~EntityNodeGraph(void)
 EntityNode EntityNodeGraph::SetRoot(Entity* p_entity)
 {
 	m_tree.insert(p_entity);
-	EntityNode node(m_tree.root());
+	EntityNode node( &m_tree.root() );
 	return node;
 }
 

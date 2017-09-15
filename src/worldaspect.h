@@ -20,11 +20,24 @@
 *
 */
 
-#include "renderingaspect.h"
+#ifndef _WORLDASPECT_H_
+#define _WORLDASPECT_H_
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
+#include "aspect.h"
 
-void RenderingAspect::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
+namespace DrawSpace
 {
+namespace Core
+{
+class WorldAspect : public Aspect
+{
+
+    
+protected:
+    
+};
+
 }
+}
+
+#endif
