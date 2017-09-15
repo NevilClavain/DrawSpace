@@ -71,10 +71,7 @@ public:
             _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
         }
         Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
-
-        
-        m_components.erase( p_id );
-
+              
         // suppression dans m_components_by_type
         size_t tid = typeid(T).hash_code();
         for( auto it = m_components_by_type[tid].begin(); it != m_components_by_type[tid].end(); ++it )
@@ -86,7 +83,7 @@ public:
                 break;
             }
         }
-
+        m_components.erase( p_id );
         //
         _DRAWSPACE_DELETE_( comp );
     }

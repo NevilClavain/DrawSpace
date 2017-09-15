@@ -82,7 +82,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_rootEntity.AddAspect<RenderingAspect>();
     RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
-    renderingAspect->AddComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "root_entity", 10, 10, 0, 255, 0, "Hello world !" );
+    renderingAspect->AddComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
 
 
 
@@ -100,7 +100,14 @@ void MainLoopService::Run( void )
     m_renderingSystem.Run( &m_rendergraph, &m_entitygraph );
 
     m_renderer->FlipScreen();
-            
+
+    if( m_display_switch )
+    {
+        char comment[256];
+        sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
+        m_rootEntity.GetAspect<RenderingAspect>()->GetComponent<RenderingAspect::TextDisplay>( "fps" )->getPurpose().m_text = comment;
+    }
+
     m_tm.Update();
     if( m_tm.IsReady() )
     {
@@ -140,6 +147,28 @@ void MainLoopService::OnEndKeyPress( long p_key )
 
 void MainLoopService::OnKeyPulse( long p_key )
 {
+    switch( p_key )
+    {
+        case VK_F1:
+            {
+                
+                if( m_display_switch )
+                {
+                    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
+                    renderingAspect->RemoveComponent<RenderingAspect::TextDisplay>( "fps");
+
+                    m_display_switch = false;
+                }
+                else
+                {
+                    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
+                    renderingAspect->AddComponent<RenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "Hello world !" );
+
+                    m_display_switch = true;
+                }
+            }       
+            break;
+    }
 }
 
 void MainLoopService::OnChar( long p_char, long p_scan )

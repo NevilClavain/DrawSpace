@@ -54,7 +54,7 @@ void RenderingSystem::VisitEntity( Entity* p_entity ) const
     RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
     if( rendering_aspect )
     {
-        // extraire tout les composants "textes display"
+        // extraire tout les composants "texts display"
         std::vector<Component<DrawSpace::Core::RenderingAspect::TextDisplay>*> texts;
 
         rendering_aspect->GetComponentsByType<DrawSpace::Core::RenderingAspect::TextDisplay>( texts );
@@ -63,7 +63,9 @@ void RenderingSystem::VisitEntity( Entity* p_entity ) const
         {
             DrawSpace::Core::RenderingAspect::TextDisplay text_descr = texts[i]->getPurpose();
 
-            m_renderer->DrawText( text_descr.m_r, text_descr.m_g, text_descr.m_b, text_descr.m_posx, text_descr.m_posy, text_descr.m_text.c_str() );        
+            m_renderer->BeginScreen();
+            m_renderer->DrawText( text_descr.m_r, text_descr.m_g, text_descr.m_b, text_descr.m_posx, text_descr.m_posy, text_descr.m_text.c_str() );
+            m_renderer->EndScreen();
         }
     }
 }

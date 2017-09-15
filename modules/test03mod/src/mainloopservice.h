@@ -42,6 +42,7 @@ protected:
     
     DrawSpace::Core::RenderingSystem                                                m_renderingSystem;
     
+    bool                                                                            m_display_switch = true;
 
 public:
     MainLoopService( void );
