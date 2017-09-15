@@ -45,6 +45,7 @@ private:
         DrawSpace::ViewportQuad*           m_viewportquad;
         DrawSpace::Core::Texture*          m_targettexture;
         dsstring                           m_name;
+        bool                               m_renderingqueue_update_flag;
 
     public:
 
@@ -52,7 +53,8 @@ private:
             m_renderingqueue( NULL ),
             m_viewportquad( NULL ),
             m_targettexture( NULL ),
-            m_name( p_name )
+            m_name( p_name ),
+            m_renderingqueue_update_flag( false )
         {
         };
 

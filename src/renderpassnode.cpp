@@ -92,7 +92,9 @@ void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
     PassDescr* descr = m_tree_node->data();
 
     descr->m_viewportquad = viewportquad;
+
     descr->m_renderingqueue->Add( viewportquad );
+    descr->m_renderingqueue_update_flag = true;
 }
 
 RenderingQueue* RenderPassNode::GetRenderingQueue( void ) const

@@ -49,6 +49,8 @@ public:
     void Erase( void );
 
     void Accept( RenderingSystem* p_renderingsystem ) const;
+
+    void RenderingQueueModSignal( void );
 };
 
 }

@@ -77,3 +77,19 @@ void RenderPassNodeGraph::Accept( RenderingSystem* p_renderingsystem ) const
         p_renderingsystem->VisitRenderPassDescr( it->data() );
     }
 }
+
+// signaler qu'au moins une RenderingQueue de pass a ete modifiee (ajout ou retrait d'un renderingnode)
+void RenderPassNodeGraph::RenderingQueueModSignal( void )
+{
+    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
+    {
+        if( it->data()->m_renderingqueue_update_flag )
+        {
+            // mise a jour buffer renderingqueue
+            it->data()->m_renderingqueue->UpdateOutputQueue();
+
+            // reset flag
+            it->data()->m_renderingqueue_update_flag = false;
+        }
+    }
+}

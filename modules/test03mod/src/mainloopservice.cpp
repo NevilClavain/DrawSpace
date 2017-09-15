@@ -105,8 +105,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
 
-    m_texturepass.GetRenderingQueue()->UpdateOutputQueue();
-    m_finalpass.GetRenderingQueue()->UpdateOutputQueue();
+    m_rendergraph.RenderingQueueModSignal();
     
     
     
