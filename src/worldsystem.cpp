@@ -20,38 +20,24 @@
 *
 */
 
-#ifndef _RENDERINGSYSTEM_H_
-#define _RENDERINGSYSTEM_H_
+#include "worldsystem.h"
 
-#include "renderpassnodegraph.h"
-#include "entitynodegraph.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
-#include "plugin.h"
-#include "renderer.h"
-
-namespace DrawSpace
+WorldSystem::WorldSystem( void )
 {
-namespace Core
-{
-
-class RenderingSystem
-{
-protected:
-
-    DrawSpace::Interface::Renderer* m_renderer;
-
-public:
-    RenderingSystem( void );
-    ~RenderingSystem( void );
-
-    void Run( RenderPassNodeGraph* p_rendergraph, EntityNodeGraph* p_entitygraph );
-
-    void VisitRenderPassDescr( RenderPassNode::PassDescr* p_passdescr ) const;
-    void VisitEntity( Entity* p_entity ) const;
-
-};
-
-}
 }
 
-#endif
+WorldSystem::~WorldSystem( void )
+{
+}
+
+void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
+{
+}
+
+void WorldSystem::VisitEntity( Entity* p_entity ) const
+{
+
+}

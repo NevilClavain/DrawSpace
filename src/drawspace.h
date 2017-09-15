@@ -94,6 +94,7 @@
 #include "mesherenderingaspect.h"
 #include "worldaspect.h"
 #include "renderingsystem.h"
+#include "worldsystem.h"
 
 
 #endif

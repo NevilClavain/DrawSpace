@@ -249,6 +249,9 @@
     <ClCompile Include="src\mesherenderingaspect.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="src\worldsystem.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -522,6 +525,9 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\mesherenderingaspect.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\worldsystem.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

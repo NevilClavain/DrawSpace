@@ -119,7 +119,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_cubeEntity.AddAspect<TextRenderingAspect>();
     textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
-    textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "cube_text", 10, 30, 0, 255, 0, "Hello from cube entity!" );
+    textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "cube_text", 10, 30, 0, 255, 0, "hello from cube entity !" );
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -136,7 +136,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
+    m_worldSystem.Run( &m_entitygraph );
     m_renderingSystem.Run( &m_rendergraph, &m_entitygraph );
+    
 
     m_renderer->FlipScreen();
 

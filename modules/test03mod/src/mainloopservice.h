@@ -48,6 +48,7 @@ protected:
 
     
     DrawSpace::Core::RenderingSystem                                                m_renderingSystem;
+    DrawSpace::Core::WorldSystem                                                    m_worldSystem;
     
     bool                                                                            m_display_switch = true;
 

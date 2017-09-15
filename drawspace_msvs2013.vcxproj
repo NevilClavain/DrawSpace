@@ -86,6 +86,7 @@
     <ClCompile Include="src\viewportquad.cpp" />
     <ClCompile Include="src\world.cpp" />
     <ClCompile Include="src\worldaspect.cpp" />
+    <ClCompile Include="src\worldsystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ac3dmeshe.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\viewportquad.h" />
     <ClInclude Include="src\world.h" />
     <ClInclude Include="src\worldaspect.h" />
+    <ClInclude Include="src\worldsystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}</ProjectGuid>

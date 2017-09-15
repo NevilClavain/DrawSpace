@@ -41,7 +41,7 @@ void RenderingSystem::Run( RenderPassNodeGraph* p_rendergraph, EntityNodeGraph* 
     p_rendergraph->Accept( this );
 
     // rendu des eventuels displaytexts dans l'entitygraph
-    p_entitygraph->Accept( this );
+    p_entitygraph->AcceptRenderingSystem( this );
 }
 
 void RenderingSystem::VisitRenderPassDescr( RenderPassNode::PassDescr* p_passdescr ) const
