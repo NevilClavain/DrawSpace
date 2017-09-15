@@ -94,9 +94,20 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
     m_finalpass.GetRenderingQueue()->EnableTargetClearing( true );
 
+
+
+
+    m_texturepass = m_finalpass.CreateChild( "texture_pass", 0 );
+
+    m_texturepass.GetRenderingQueue()->SetTargetClearingColor( 0, 0, 200, 255 );
+    m_texturepass.GetRenderingQueue()->EnableDepthClearing( false );
+    m_texturepass.GetRenderingQueue()->EnableTargetClearing( true );
+
+
+
+    m_texturepass.GetRenderingQueue()->UpdateOutputQueue();
     m_finalpass.GetRenderingQueue()->UpdateOutputQueue();
-
-
+    
     
     
     m_rootEntity.AddAspect<RenderingAspect>();

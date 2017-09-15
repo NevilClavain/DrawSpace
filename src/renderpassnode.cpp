@@ -48,9 +48,6 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
 
     RenderPassNode::PassDescr* descr = _DRAWSPACE_NEW_( RenderPassNode::PassDescr, RenderPassNode::PassDescr( p_name ) );
 
-    Core::RenderingQueue* renderingqueue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
-    descr->m_renderingqueue = renderingqueue;
-
     long h_resol, w_resol;
 
     if( p_targetdims_fromrenderer )
@@ -71,6 +68,9 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
     }
 
     descr->m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( p_name + dsstring( "/target" ), true, w_resol, h_resol, p_renderpurpose, p_rendertarget ) );
+
+    Core::RenderingQueue* renderingqueue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue( descr->m_targettexture ) );
+    descr->m_renderingqueue = renderingqueue;
 
     PassDescrTree::node_type::iterator it = m_tree_node->insert( descr );
 

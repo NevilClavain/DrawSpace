@@ -41,7 +41,6 @@ private:
     ComponentPurpose<T>       m_purpose;
 
 public:
-
     template<class... Args>
     void MakePurpose(Args&&... p_args)
     {

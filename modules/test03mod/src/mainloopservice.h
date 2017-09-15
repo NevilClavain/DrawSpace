@@ -37,6 +37,7 @@ protected:
     DrawSpace::Core::RenderPassNodeGraph                                            m_rendergraph;
     DrawSpace::Core::EntityNodeGraph                                                m_entitygraph;
 
+    DrawSpace::Core::RenderPassNode                                                 m_texturepass;
     DrawSpace::Core::RenderPassNode                                                 m_finalpass;
     DrawSpace::Core::Entity                                                         m_rootEntity;
     
