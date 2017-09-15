@@ -25,19 +25,24 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-EntityNode::EntityNode(EntityNode::EntityTree::node_type& p_node) :
+EntityNode::EntityNode( void ) :
+    m_tree_node( NULL )
+{
+}
+
+EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node ) :
 	m_tree_node(p_node)
 {
 }
 
 EntityNode EntityNode::AddChild(Entity* p_entity)
 {
-	EntityTree::node_type::iterator it = m_tree_node.insert(p_entity);
-	EntityNode node(*it);
+	EntityTree::node_type::iterator it = m_tree_node->insert( p_entity );
+	EntityNode node(&(*it));
 	return node;
 }
 
 void EntityNode::Erase(void)
 {
-	m_tree_node.erase();
+	m_tree_node->erase();
 }

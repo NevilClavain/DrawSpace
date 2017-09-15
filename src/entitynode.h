@@ -37,14 +37,15 @@ private:
 
 	using EntityTree = st_tree::tree<Entity*>;
 
-	EntityTree::node_type& m_tree_node;
+	EntityTree::node_type* m_tree_node;
 
 public:
 
-	EntityNode(EntityTree::node_type& p_node);
+    EntityNode( void );
+	EntityNode( EntityTree::node_type* p_node );
 
-	EntityNode AddChild(Entity* p_entity);
-	void Erase(void);
+	EntityNode AddChild( Entity* p_entity );
+	void Erase( void );
 
 };
 

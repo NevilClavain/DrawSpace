@@ -114,11 +114,17 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     renderingAspect->AddComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
 
 
+   
 
-    //renderingAspect->RemoveComponent<DrawSpace::Core::RenderingAspect::TextDisplay>( "root_entity" );
 
 
-    m_entitygraph.SetRoot( &m_rootEntity );
+
+    m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
+    m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
+
+    
+
+    
 
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );

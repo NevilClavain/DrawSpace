@@ -39,7 +39,13 @@ protected:
 
     DrawSpace::Core::RenderPassNode                                                 m_texturepass;
     DrawSpace::Core::RenderPassNode                                                 m_finalpass;
+
     DrawSpace::Core::Entity                                                         m_rootEntity;
+    DrawSpace::Core::EntityNode                                                     m_rootEntityNode;
+
+    DrawSpace::Core::Entity                                                         m_cubeEntity;
+    DrawSpace::Core::EntityNode                                                     m_cubeEntityNode;
+
     
     DrawSpace::Core::RenderingSystem                                                m_renderingSystem;
     
