@@ -24,6 +24,7 @@
 #define _WORLDASPECT_H_
 
 #include "aspect.h"
+#include "matrix.h"
 
 namespace DrawSpace
 {

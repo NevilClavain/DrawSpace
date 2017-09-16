@@ -39,7 +39,7 @@ public:
     ~WorldSystem(void);
 
     void Run( EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Entity* p_entity ) const;
+    void VisitEntity( Entity* p_parent, Entity* p_entity ) const;
 };
 
 }

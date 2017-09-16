@@ -49,7 +49,7 @@ void EntityNodeGraph::Erase(void)
 
 void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem ) const
 {
-    for( EntityTree::df_pre_iterator it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
+    for( EntityTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )    
     {
         p_renderingsystem->VisitEntity( it->data() );
     }
@@ -57,8 +57,15 @@ void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem 
 
 void EntityNodeGraph::AcceptWorldSystem( WorldSystem* p_worldsystem ) const
 {
-    for( EntityTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
+    for( EntityTree::df_pre_iterator it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
     {
-        p_worldsystem->VisitEntity( it->data() );
+        if( it->is_root() )
+        {
+            p_worldsystem->VisitEntity( NULL, it->data() );
+        }
+        else
+        {
+            p_worldsystem->VisitEntity( it->parent().data(), it->data() );
+        }
     }
 }

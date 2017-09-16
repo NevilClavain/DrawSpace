@@ -35,9 +35,10 @@ WorldSystem::~WorldSystem( void )
 
 void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
 {
+    p_entitygraph->AcceptWorldSystem( this );
 }
 
-void WorldSystem::VisitEntity( Entity* p_entity ) const
+void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity ) const
 {
 
 }
