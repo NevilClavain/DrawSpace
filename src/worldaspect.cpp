@@ -22,4 +22,13 @@
 
 #include "worldaspect.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+
+WorldAspect::WorldAspect( void )
+{
+    m_globaltransform.Identity();
+}
+
+
 

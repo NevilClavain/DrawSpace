@@ -31,12 +31,12 @@ namespace DrawSpace
 namespace Core
 {
 class WorldAspect : public Aspect
-{
-protected:
+{    
+public:
 
-    DrawSpace::Utils::Matrix    m_finaltransform;
+    DrawSpace::Utils::Matrix    m_globaltransform;
 
-
+    WorldAspect( void );
 };
 
 }

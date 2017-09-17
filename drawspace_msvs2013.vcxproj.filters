@@ -252,6 +252,12 @@
     <ClCompile Include="src\worldsystem.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="src\textrenderingaspectimpl.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderingaspect.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -521,13 +527,19 @@
     <ClInclude Include="src\worldaspect.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\textrenderingaspect.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\mesherenderingaspect.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\worldsystem.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingaspect.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingaspectimpl.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\textrenderingaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

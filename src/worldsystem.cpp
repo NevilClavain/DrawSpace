@@ -21,9 +21,11 @@
 */
 
 #include "worldsystem.h"
+#include "worldaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 WorldSystem::WorldSystem( void )
 {
@@ -41,4 +43,45 @@ void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
 void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity ) const
 {
 
+    DrawSpace::Utils::Matrix base_mat;
+    DrawSpace::Utils::Matrix finaltransform_mat;
+
+    base_mat.Identity();
+
+    WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
+    if( world_aspect )
+    {
+        std::vector<Component<Matrix>*> mats;
+        world_aspect->GetComponentsByType<Matrix>( mats );
+
+        Matrix curr;
+        curr.Identity();
+        for( size_t i = 0; i < mats.size(); i++ )
+        {
+            curr = curr * mats[i]->getPurpose();
+        }
+
+        base_mat = base_mat * curr;
+    }
+
+    if( p_parent )
+    {
+        DrawSpace::Utils::Matrix parent_final_transform;
+        // lire parent_final_transform
+        WorldAspect* parent_world_aspect = p_parent->GetAspect<WorldAspect>();
+
+        if( parent_world_aspect )
+        {
+            finaltransform_mat = base_mat * parent_world_aspect->m_globaltransform;
+        }
+    }
+    else
+    {
+        finaltransform_mat = base_mat;
+    }
+
+    if( world_aspect )
+    {
+        world_aspect->m_globaltransform = finaltransform_mat;
+    }
 }

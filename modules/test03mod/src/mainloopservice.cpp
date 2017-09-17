@@ -108,10 +108,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
     //////////////////////////////////////////////////////////////////////////
-        
+
+    /*
     m_rootEntity.AddAspect<TextRenderingAspect>();
     TextRenderingAspect* textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
     textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
+    */
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -128,10 +130,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_cubeEntity.AddAspect<WorldAspect>();
 
+    /*
     m_cubeEntity.AddAspect<TextRenderingAspect>();
     textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
     textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "cube_text", 10, 30, 0, 255, 0, "hello from cube entity !" );
-
+    */
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -161,7 +164,7 @@ void MainLoopService::Run( void )
     {
         char comment[256];
         sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
-        m_rootEntity.GetAspect<TextRenderingAspect>()->GetComponent<TextRenderingAspect::TextDisplay>( "fps" )->getPurpose().m_text = comment;
+        //m_rootEntity.GetAspect<TextRenderingAspect>()->GetComponent<TextRenderingAspect::TextDisplay>( "fps" )->getPurpose().m_text = comment;
     }
 
     m_tm.Update();
@@ -207,7 +210,7 @@ void MainLoopService::OnKeyPulse( long p_key )
     {
         case VK_F1:
             {
-                
+                /*
                 if( m_display_switch )
                 {
                     TextRenderingAspect* textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
@@ -222,6 +225,7 @@ void MainLoopService::OnKeyPulse( long p_key )
 
                     m_display_switch = true;
                 }
+                */
             }       
             break;
     }

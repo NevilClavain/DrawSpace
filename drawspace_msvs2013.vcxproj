@@ -50,6 +50,7 @@
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\mesherenderingaspect.cpp" />
+    <ClCompile Include="src\renderingaspect.cpp" />
     <ClCompile Include="src\renderingsystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />
     <ClCompile Include="src\renderpassnodegraph.cpp" />
@@ -79,6 +80,7 @@
     <ClCompile Include="src\spherelod_face.cpp" />
     <ClCompile Include="src\spherelod_patch.cpp" />
     <ClCompile Include="src\spherelod_subpass.cpp" />
+    <ClCompile Include="src\textrenderingaspectimpl.cpp" />
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\timemanager.cpp" />
     <ClCompile Include="src\transformation.cpp" />
@@ -141,7 +143,9 @@
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
-    <ClInclude Include="src\textrenderingaspect.h" />
+    <ClInclude Include="src\renderingaspect.h" />
+    <ClInclude Include="src\renderingaspectimpl.h" />
+    <ClInclude Include="src\textrenderingaspectimpl.h" />
     <ClInclude Include="src\mesherenderingaspect.h" />
     <ClInclude Include="src\renderingsystem.h" />
     <ClInclude Include="src\renderpassnode.h" />

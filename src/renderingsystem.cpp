@@ -21,7 +21,8 @@
 */
 
 #include "renderingsystem.h"
-#include "textrenderingaspect.h"
+//#include "textrenderingaspect.h"
+#include "renderingaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -51,6 +52,14 @@ void RenderingSystem::VisitRenderPassDescr( RenderPassNode::PassDescr* p_passdes
 
 void RenderingSystem::VisitEntity( Entity* p_entity ) const
 {
+    RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
+    if( rendering_aspect )
+    {
+        rendering_aspect->draw();
+    }
+
+
+    /*
     TextRenderingAspect* textrendering_aspect = p_entity->GetAspect<TextRenderingAspect>();
     if( textrendering_aspect )
     {
@@ -68,4 +77,5 @@ void RenderingSystem::VisitEntity( Entity* p_entity ) const
             m_renderer->EndScreen();
         }
     }
+    */
 }
