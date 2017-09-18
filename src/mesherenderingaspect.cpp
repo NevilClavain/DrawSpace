@@ -34,7 +34,7 @@ void MesheRenderingAspect::PassSlot::on_renderingnode_draw( DrawSpace::Core::Ren
 
     view.Identity();
 
-    world.Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
+    world.Translation( Vector( 0.0, 0.0, -3.0, 1.0 ) );
 
     proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
 
