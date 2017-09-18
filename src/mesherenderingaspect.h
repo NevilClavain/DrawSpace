@@ -25,6 +25,7 @@
 
 #include "aspect.h"
 #include "renderingnode.h"
+#include "renderpassnodegraph.h"
 
 namespace DrawSpace
 {
@@ -50,10 +51,23 @@ public:
         {
             _DRAWSPACE_DELETE_( m_rendering_node );
         }
+
+        virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+
+        friend class MesheRenderingAspect;
     };
     
 protected:
-    virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+
+    bool m_add_in_rendergraph;
+
+    
+
+public:
+    bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
+
+    void RegisterToRendering( const RenderPassNodeGraph& p_rendergraph );
+    void UnregisterFromRendering( const RenderPassNodeGraph& p_rendergraph );
     
 };
 

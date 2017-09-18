@@ -78,6 +78,15 @@ void RenderPassNodeGraph::Accept( RenderingSystem* p_renderingsystem ) const
     }
 }
 
+void RenderPassNodeGraph::Accept( Aspect* p_aspect ) const
+{
+    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
+    {
+        bool updated_queue = p_aspect->VisitRenderPassDescr( it->data()->m_name, it->data()->m_renderingqueue );
+        it->data()->m_renderingqueue_update_flag = it->data()->m_renderingqueue_update_flag | updated_queue;
+    }
+}
+
 // signaler qu'au moins une RenderingQueue de pass a ete modifiee (ajout ou retrait d'un renderingnode)
 void RenderPassNodeGraph::RenderingQueueModSignal( void )
 {

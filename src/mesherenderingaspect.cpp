@@ -25,6 +25,46 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-void MesheRenderingAspect::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
+void MesheRenderingAspect::PassSlot::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
+}
+
+bool MesheRenderingAspect::VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue )
+{
+    bool updated_queue = false;
+    std::vector<Component<PassSlot>*> pass_slots;
+    GetComponentsByType<PassSlot>( pass_slots );
+
+    for( size_t i = 0; i < pass_slots.size(); i++ )
+    {
+        if( pass_slots[i]->getPurpose().m_pass_name == p_name )
+        {
+            if( m_add_in_rendergraph )
+            {
+                // ajout du renderingnode dans la renderingqueue  
+
+                p_passqueue->Add( pass_slots[i]->getPurpose().m_rendering_node );
+            }
+            else
+            {
+                // suppression du renderingnode de la renderingqueue
+
+                p_passqueue->Remove( pass_slots[i]->getPurpose().m_rendering_node );
+            }
+            updated_queue = true;
+        }
+    }
+    return updated_queue;
+}
+
+void MesheRenderingAspect::RegisterToRendering( const RenderPassNodeGraph& p_rendergraph )
+{
+    m_add_in_rendergraph = true;
+    p_rendergraph.Accept( this );
+}
+
+void MesheRenderingAspect::UnregisterFromRendering( const RenderPassNodeGraph& p_rendergraph )
+{
+    m_add_in_rendergraph = false;
+    p_rendergraph.Accept( this );
 }

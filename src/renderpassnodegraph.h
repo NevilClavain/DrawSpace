@@ -24,6 +24,7 @@
 #define _RENDERPASSNODEGRAPH_H_
 
 #include "renderpassnode.h"
+#include "aspect.h"
 
 namespace DrawSpace
 {
@@ -49,6 +50,7 @@ public:
     void Erase( void );
 
     void Accept( RenderingSystem* p_renderingsystem ) const;
+    void Accept( Aspect* p_aspect ) const;
 
     void RenderingQueueModSignal( void );
 };

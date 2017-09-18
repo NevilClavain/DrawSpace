@@ -26,6 +26,7 @@
 #include "component.h"
 #include "exceptions.h"
 #include "memalloc.h"
+#include "renderingqueue.h"
 
 namespace DrawSpace
 {
@@ -44,7 +45,7 @@ protected:
 public:
     Aspect( void ) {};
     virtual ~Aspect( void ) {}
-   
+      
     template<typename T, class... Args>
     void AddComponent( const dsstring& p_id, Args&&... p_args )
     {
@@ -113,7 +114,9 @@ public:
                 p_outlist.push_back( static_cast<Component<T>*>( list[i] ) );
             }
         }
-    }   
+    }
+
+    virtual bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue ) = 0;
 };
 }
 }

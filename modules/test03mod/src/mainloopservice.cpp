@@ -138,10 +138,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     ///////////////////////////////////////////////////////////////////////////
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
+
+
     m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
-
     
-
+    m_cubeEntity.GetAspect<MesheRenderingAspect>()->RegisterToRendering( m_rendergraph );
 
 
     m_rendergraph.RenderingQueueModSignal();

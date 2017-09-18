@@ -33,18 +33,17 @@ namespace Core
 class ScreenRenderingAspect : public Aspect
 {
 protected:
-
     std::vector<ScreenRenderingAspectImpl*>       m_impls;
 
     void draw( void );
 
 public:
-
     ScreenRenderingAspect( void );
     void AddImplementation( ScreenRenderingAspectImpl* p_impl );
 
-    friend class RenderingSystem;
-        
+    bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue ) { return false; };
+
+    friend class RenderingSystem;        
 };
 
 }
