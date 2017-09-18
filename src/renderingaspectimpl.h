@@ -30,10 +30,12 @@ namespace DrawSpace
 {
 namespace Core
 {
+class RenderingAspect;
+
 class RenderingAspectImpl abstract
 {
 protected:
-    virtual void draw( std::unordered_map<size_t, std::vector<BaseComponent*>>& p_components ) = 0;
+    virtual void draw( RenderingAspect* p_renderingaspect ) = 0;
 
     friend class RenderingAspect;
 };

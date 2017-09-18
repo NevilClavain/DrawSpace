@@ -115,6 +115,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
     */
 
+    m_rootEntity.AddAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    rendering_aspect->SetImplementation( &m_textRender );
+    rendering_aspect->AddComponent<DrawSpace::Core::TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
+
     //////////////////////////////////////////////////////////////////////////
 
 
@@ -164,7 +169,7 @@ void MainLoopService::Run( void )
     {
         char comment[256];
         sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
-        //m_rootEntity.GetAspect<TextRenderingAspect>()->GetComponent<TextRenderingAspect::TextDisplay>( "fps" )->getPurpose().m_text = comment;
+        m_rootEntity.GetAspect<RenderingAspect>()->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
     }
 
     m_tm.Update();

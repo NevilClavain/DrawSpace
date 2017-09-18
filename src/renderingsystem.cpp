@@ -29,7 +29,6 @@ using namespace DrawSpace::Core;
 
 RenderingSystem::RenderingSystem(void)
 {
-    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
 RenderingSystem::~RenderingSystem(void)
@@ -57,25 +56,4 @@ void RenderingSystem::VisitEntity( Entity* p_entity ) const
     {
         rendering_aspect->draw();
     }
-
-
-    /*
-    TextRenderingAspect* textrendering_aspect = p_entity->GetAspect<TextRenderingAspect>();
-    if( textrendering_aspect )
-    {
-        // extraire tout les composants "texts display"
-        std::vector<Component<DrawSpace::Core::TextRenderingAspect::TextDisplay>*> texts;
-
-        textrendering_aspect->GetComponentsByType<DrawSpace::Core::TextRenderingAspect::TextDisplay>( texts );
-
-        for( size_t i = 0; i < texts.size(); i++ )
-        {
-            DrawSpace::Core::TextRenderingAspect::TextDisplay text_descr = texts[i]->getPurpose();
-
-            m_renderer->BeginScreen();
-            m_renderer->DrawText( text_descr.m_r, text_descr.m_g, text_descr.m_b, text_descr.m_posx, text_descr.m_posy, text_descr.m_text.c_str() );
-            m_renderer->EndScreen();
-        }
-    }
-    */
 }

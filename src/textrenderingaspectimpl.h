@@ -24,6 +24,8 @@
 #define _TEXTRENDERINGASPECTIMPL_H_
 
 #include "renderingaspectimpl.h"
+#include "plugin.h"
+#include "renderer.h"
 
 namespace DrawSpace
 {
@@ -31,6 +33,9 @@ namespace Core
 {
 class TextRenderingAspectImpl : public RenderingAspectImpl
 {
+protected:
+    DrawSpace::Interface::Renderer* m_renderer;
+
 public:
     struct TextDisplay sealed
     {
@@ -54,7 +59,10 @@ public:
     };
     
 protected:
-    virtual void draw( std::unordered_map<size_t, std::vector<BaseComponent*>>& p_components );
+    virtual void draw( RenderingAspect* p_renderingaspect );
+
+public:
+    TextRenderingAspectImpl( void );
 };
 
 }

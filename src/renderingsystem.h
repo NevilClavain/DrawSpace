@@ -26,9 +26,6 @@
 #include "renderpassnodegraph.h"
 #include "entitynodegraph.h"
 
-#include "plugin.h"
-#include "renderer.h"
-
 namespace DrawSpace
 {
 namespace Core
@@ -36,10 +33,6 @@ namespace Core
 
 class RenderingSystem
 {
-protected:
-
-    DrawSpace::Interface::Renderer* m_renderer;
-
 public:
     RenderingSystem( void );
     ~RenderingSystem( void );

@@ -21,11 +21,29 @@
 */
 
 #include "textrenderingaspectimpl.h"
+#include "renderingaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-void TextRenderingAspectImpl::draw( std::unordered_map<size_t, std::vector<BaseComponent*>>& p_components )
+TextRenderingAspectImpl::TextRenderingAspectImpl( void )
 {
+    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+}
 
+void TextRenderingAspectImpl::draw( RenderingAspect* p_renderingaspect )
+{
+    // extraire tout les composants "texts display"
+    std::vector<Component<TextDisplay>*> texts;
+
+    p_renderingaspect->GetComponentsByType<TextDisplay>( texts );
+
+    for( size_t i = 0; i < texts.size(); i++ )
+    {
+        TextDisplay text_descr = texts[i]->getPurpose();
+
+        m_renderer->BeginScreen();
+        m_renderer->DrawText( text_descr.m_r, text_descr.m_g, text_descr.m_b, text_descr.m_posx, text_descr.m_posy, text_descr.m_text.c_str() );
+        m_renderer->EndScreen();
+    }
 }

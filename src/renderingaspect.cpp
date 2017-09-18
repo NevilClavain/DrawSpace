@@ -39,6 +39,6 @@ void RenderingAspect::draw( void )
 {
     if( m_impl )
     {
-        m_impl->draw( m_components_by_type );
+        m_impl->draw( this );
     }
 }
