@@ -129,8 +129,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
-    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
     cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
     cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
@@ -145,13 +145,15 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     cube_texturepass->GetFx()->SetRenderStates( cube_texturepass_rss );
 
-    cube_texturepass->AddShaderParameter( 1, "color", 0 );
-    cube_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
+    //cube_texturepass->AddShaderParameter( 1, "color", 0 );
+    //cube_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
 
     cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
     cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
 
+    cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
+    cube_texturepass->GetTexture( 0 )->LoadFromFile();
 
     
     m_cubeEntity.AddAspect<ScreenRenderingAspect>();
