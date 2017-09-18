@@ -109,20 +109,15 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     //////////////////////////////////////////////////////////////////////////
 
-    /*
-    m_rootEntity.AddAspect<TextRenderingAspect>();
-    TextRenderingAspect* textrenderingAspect = m_rootEntity.GetAspect<TextRenderingAspect>();
-    textrenderingAspect->AddComponent<DrawSpace::Core::TextRenderingAspect::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
-    */
 
-    m_rootEntity.AddAspect<RenderingAspect>();
-    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
-    rendering_aspect->AddImplementation( &m_textRender );
-    rendering_aspect->AddComponent<DrawSpace::Core::TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
+
+    m_rootEntity.AddAspect<ScreenRenderingAspect>();
+    ScreenRenderingAspect* screen_rendering_aspect = m_rootEntity.GetAspect<ScreenRenderingAspect>();
+    screen_rendering_aspect->AddImplementation( &m_textRender );
+    screen_rendering_aspect->AddComponent<DrawSpace::Core::TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
 
     //////////////////////////////////////////////////////////////////////////
 
-    /*
     m_cubeEntity.AddAspect<MesheRenderingAspect>();
     MesheRenderingAspect* mesherenderingaspect = m_cubeEntity.GetAspect<MesheRenderingAspect>();
 
@@ -131,15 +126,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     mesherenderingaspect->GetComponent<Meshe>( "meshe_cube" )->getPurpose().SetImporter( m_meshe_import );
     mesherenderingaspect->GetComponent<Meshe>( "meshe_cube" )->getPurpose().LoadFromFile( "object.ac", 0 );
-    */
-
-    m_cubeEntity.AddAspect<WorldAspect>();
-
+    
 
     
-    m_cubeEntity.AddAspect<RenderingAspect>();
-    rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
-    rendering_aspect->AddComponent<DrawSpace::Core::TextRenderingAspectImpl::TextDisplay>( "cube_text", 10, 30, 0, 255, 0, "hello from cube entity !" );
+    m_cubeEntity.AddAspect<ScreenRenderingAspect>();
+    screen_rendering_aspect = m_rootEntity.GetAspect<ScreenRenderingAspect>();
+    screen_rendering_aspect->AddComponent<DrawSpace::Core::TextRenderingAspectImpl::TextDisplay>( "cube_text", 10, 30, 0, 255, 0, "hello from cube entity !" );
     
 
 
@@ -170,7 +162,7 @@ void MainLoopService::Run( void )
     {
         char comment[256];
         sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
-        m_rootEntity.GetAspect<RenderingAspect>()->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
+        m_rootEntity.GetAspect<ScreenRenderingAspect>()->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
     }
 
     m_tm.Update();
@@ -219,15 +211,15 @@ void MainLoopService::OnKeyPulse( long p_key )
                 
                 if( m_display_switch )
                 {
-                    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
-                    renderingAspect->RemoveComponent<TextRenderingAspectImpl::TextDisplay>( "fps");
+                    ScreenRenderingAspect* screen_renderingAspect = m_rootEntity.GetAspect<ScreenRenderingAspect>();
+                    screen_renderingAspect->RemoveComponent<TextRenderingAspectImpl::TextDisplay>( "fps");
 
                     m_display_switch = false;
                 }
                 else
                 {
-                    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
-                    renderingAspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "Hello world !" );
+                    ScreenRenderingAspect* screen_renderingAspect = m_rootEntity.GetAspect<ScreenRenderingAspect>();
+                    screen_renderingAspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "Hello world !" );
 
                     m_display_switch = true;
                 }

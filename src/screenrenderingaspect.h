@@ -20,28 +20,28 @@
 *
 */
 
-#ifndef _RENDERINGASPECT_H_
-#define _RENDERINGASPECT_H_
+#ifndef _SCREENRENDERINGASPECT_H_
+#define _SCREENRENDERINGASPECT_H_
 
 #include "aspect.h"
-#include "renderingaspectimpl.h"
+#include "screenrenderingaspectimpl.h"
 
 namespace DrawSpace
 {
 namespace Core
 {
-class RenderingAspect : public Aspect
+class ScreenRenderingAspect : public Aspect
 {
 protected:
 
-    std::vector<RenderingAspectImpl*>       m_impls;
+    std::vector<ScreenRenderingAspectImpl*>       m_impls;
 
     void draw( void );
 
 public:
 
-    RenderingAspect( void );
-    void AddImplementation( RenderingAspectImpl* p_impl );
+    ScreenRenderingAspect( void );
+    void AddImplementation( ScreenRenderingAspectImpl* p_impl );
 
     friend class RenderingSystem;
         

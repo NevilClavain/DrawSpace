@@ -21,7 +21,7 @@
 */
 
 #include "textrenderingaspectimpl.h"
-#include "renderingaspect.h"
+#include "screenrenderingaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -31,7 +31,7 @@ TextRenderingAspectImpl::TextRenderingAspectImpl( void )
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
-void TextRenderingAspectImpl::draw( RenderingAspect* p_renderingaspect )
+void TextRenderingAspectImpl::draw( ScreenRenderingAspect* p_renderingaspect )
 {
     // extraire tout les composants "texts display"
     std::vector<Component<TextDisplay>*> texts;

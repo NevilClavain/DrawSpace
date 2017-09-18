@@ -20,29 +20,24 @@
 *
 */
 
-#ifndef _MESHERENDERINGASPECTIMPL_H_
-#define _MESHERENDERINGASPECTIMPL_H_
+#include "screenrenderingaspect.h"
 
-#include "renderingaspectimpl.h"
-#include "plugin.h"
-#include "renderer.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
 
-namespace DrawSpace
+ScreenRenderingAspect::ScreenRenderingAspect( void )
 {
-namespace Core
-{
-class MesheRenderingAspectImpl : public RenderingAspectImpl
-{
-protected:
-    DrawSpace::Interface::Renderer* m_renderer;
-
-protected:
-    virtual void draw( RenderingAspect* p_renderingaspect );
-
-public:
-    MesheRenderingAspectImpl( void );
-};
-}
 }
 
-#endif
+void ScreenRenderingAspect::AddImplementation( ScreenRenderingAspectImpl* p_impl )
+{
+    m_impls.push_back( p_impl );
+}
+
+void ScreenRenderingAspect::draw( void )
+{
+    for( auto it = m_impls.begin(); it != m_impls.end(); ++it )
+    {
+        (*it)->draw( this );      
+    }
+}
