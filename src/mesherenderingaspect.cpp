@@ -24,8 +24,24 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 void MesheRenderingAspect::PassSlot::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
+{
+    DrawSpace::Utils::Matrix world;
+    DrawSpace::Utils::Matrix view;
+    DrawSpace::Utils::Matrix proj;
+
+    view.Identity();
+
+    world.Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
+
+    proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
+
+    m_renderer->DrawMeshe( world, view, proj );
+}
+
+MesheRenderingAspect::MesheRenderingAspect( void )
 {
 }
 

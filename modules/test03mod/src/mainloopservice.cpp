@@ -122,11 +122,36 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     MesheRenderingAspect* mesherenderingaspect = m_cubeEntity.GetAspect<MesheRenderingAspect>();
 
     mesherenderingaspect->AddComponent<MesheRenderingAspect::PassSlot>( "cube_texturepass_slot", "texture_pass" );
-    mesherenderingaspect->AddComponent<Meshe>( "meshe_cube" );
 
-    mesherenderingaspect->GetComponent<Meshe>( "meshe_cube" )->getPurpose().SetImporter( m_meshe_import );
-    mesherenderingaspect->GetComponent<Meshe>( "meshe_cube" )->getPurpose().LoadFromFile( "object.ac", 0 );
-    
+
+
+    RenderingNode* cube_texturepass = mesherenderingaspect->GetComponent<MesheRenderingAspect::PassSlot>( "cube_texturepass_slot" )->getPurpose().GetRenderingNode();
+
+    cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+
+    cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet cube_texturepass_rss;
+    cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, /*"true"*/ "false" ) );
+    cube_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "line" ) );
+    cube_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETFILLMODE, "solid" ) );
+    cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "none" ) );
+    cube_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+
+    cube_texturepass->GetFx()->SetRenderStates( cube_texturepass_rss );
+
+    cube_texturepass->AddShaderParameter( 1, "color", 0 );
+    cube_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
+
+    cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
+    cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
 
     
     m_cubeEntity.AddAspect<ScreenRenderingAspect>();

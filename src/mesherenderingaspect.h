@@ -24,6 +24,8 @@
 #define _MESHERENDERINGASPECT_H_
 
 #include "aspect.h"
+#include "renderer.h"
+#include "plugin.h"
 #include "renderingnode.h"
 #include "renderpassnodegraph.h"
 
@@ -37,14 +39,25 @@ public:
     class PassSlot
     {
     private:
-        dsstring                m_pass_name;
-        RenderingNode*          m_rendering_node;
+        typedef DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
+
+        dsstring                            m_pass_name;
+        RenderingNode*                      m_rendering_node;
+        RenderingNodeDrawCallback*          m_cb;
+        DrawSpace::Interface::Renderer*     m_renderer;
+
+        virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
     public:
         PassSlot( const dsstring& p_pass_name ):
             m_pass_name( p_pass_name )
         {
+            m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
             m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
+
+            m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );
+            m_rendering_node->RegisterHandler( m_cb );
         }
 
         ~PassSlot( void )
@@ -52,18 +65,19 @@ public:
             _DRAWSPACE_DELETE_( m_rendering_node );
         }
 
-        virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+        RenderingNode* GetRenderingNode( void ) { return m_rendering_node; };
 
         friend class MesheRenderingAspect;
     };
     
 protected:
 
-    bool m_add_in_rendergraph;
-
-    
+    bool                                m_add_in_rendergraph;
+        
 
 public:
+    MesheRenderingAspect( void );
+
     bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
 
     void RegisterToRendering( const RenderPassNodeGraph& p_rendergraph );
