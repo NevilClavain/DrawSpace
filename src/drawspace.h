@@ -93,9 +93,11 @@
 
 #include "renderingaspect.h"
 #include "textrenderingaspectimpl.h"
+#include "mesherenderingaspectimpl.h"
 
-#include "mesherenderingaspect.h"
 #include "worldaspect.h"
+
+
 #include "renderingsystem.h"
 #include "worldsystem.h"
 

@@ -30,6 +30,7 @@
     <ClCompile Include="src\headmovement.cpp" />
     <ClCompile Include="src\inertbody.cpp" />
     <ClCompile Include="src\jsonparser.cpp" />
+    <ClCompile Include="src\mesherenderingaspectimpl.cpp" />
     <ClCompile Include="src\module_keys.cpp" />
     <ClCompile Include="src\linearmovement.cpp" />
     <ClCompile Include="src\logconf.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\inertbody.h" />
     <ClInclude Include="src\jsonparser.h" />
+    <ClInclude Include="src\mesherenderingaspectimpl.h" />
     <ClInclude Include="src\module_keys.h" />
     <ClInclude Include="src\linearmovement.h" />
     <ClInclude Include="src\logconf.h" />
