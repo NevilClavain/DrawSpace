@@ -34,14 +34,14 @@ class RenderingAspect : public Aspect
 {
 protected:
 
-    RenderingAspectImpl* m_impl;
+    std::vector<RenderingAspectImpl*>       m_impls;
 
     void draw( void );
 
 public:
 
     RenderingAspect( void );
-    void SetImplementation( RenderingAspectImpl* p_impl );
+    void AddImplementation( RenderingAspectImpl* p_impl );
 
     friend class RenderingSystem;
         

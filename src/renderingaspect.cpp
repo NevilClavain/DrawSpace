@@ -25,20 +25,19 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-RenderingAspect::RenderingAspect( void ) :
-m_impl( NULL )
+RenderingAspect::RenderingAspect( void )
 {
 }
 
-void RenderingAspect::SetImplementation( RenderingAspectImpl* p_impl )
+void RenderingAspect::AddImplementation( RenderingAspectImpl* p_impl )
 {
-    m_impl = p_impl;
+    m_impls.push_back( p_impl );
 }
 
 void RenderingAspect::draw( void )
 {
-    if( m_impl )
+    for( auto it = m_impls.begin(); it != m_impls.end(); ++it )
     {
-        m_impl->draw( this );
+        (*it)->draw( this );      
     }
 }
