@@ -25,18 +25,29 @@
 
 #include "aspect.h"
 #include "matrix.h"
+#include "worldaspectimpl.h"
+#include "entity.h"
 
 namespace DrawSpace
 {
 namespace Core
 {
 class WorldAspect : public Aspect
-{    
+{
+protected:
+    DrawSpace::Utils::Matrix        m_worldtransform;
+    std::vector<WorldAspectImpl*>   m_impls;
+
+    void compute_transforms( Entity* p_parent, Entity* p_entity );
+
 public:
-
-    DrawSpace::Utils::Matrix    m_globaltransform;
-
     WorldAspect( void );
+
+    void AddImplementation( WorldAspectImpl* p_impl );
+    bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue ) { return false; };
+    void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
+
+    friend class WorldSystem;   
 };
 
 }

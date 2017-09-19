@@ -20,59 +20,26 @@
 *
 */
 
-#include "worldaspect.h"
+#ifndef _WORLDASPECTIMPL_H_
+#define _WORLDASPECTIMPL_H_
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Utils;
+#include "matrix.h"
 
-WorldAspect::WorldAspect( void )
+namespace DrawSpace
 {
-    m_worldtransform.Identity();
+namespace Core
+{
+class WorldAspect;
+
+class WorldAspectImpl abstract
+{
+protected:
+    virtual void get_locale_transform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform ) = 0;
+
+    friend class WorldAspect;
+};
+}
 }
 
-void WorldAspect::AddImplementation( WorldAspectImpl* p_impl )
-{
-    m_impls.push_back( p_impl );
-}
 
-void WorldAspect::compute_transforms( Entity* p_parent, Entity* p_entity )
-{
-    DrawSpace::Utils::Matrix locale_mat;
-    DrawSpace::Utils::Matrix finaltransform_mat;
-
-    locale_mat.Identity();
-
-    Matrix cumul;
-    cumul.Identity();
-    for( size_t i = 0; i < m_impls.size(); i++ )
-    {
-        Matrix curr;
-        m_impls[i]->get_locale_transform( this, curr );
-        cumul = cumul * curr;
-    }
-
-    locale_mat = locale_mat * cumul;
-
-    if( p_parent )
-    {
-        DrawSpace::Utils::Matrix parent_finaltransform_mat;
-        WorldAspect* parent_world_aspect = p_parent->GetAspect<WorldAspect>();
-
-        if( parent_world_aspect )
-        {
-            finaltransform_mat = locale_mat * parent_world_aspect->m_worldtransform;
-        }
-    }
-    else
-    {
-        finaltransform_mat = locale_mat;
-    }
-
-    m_worldtransform = finaltransform_mat;
-}
-
-void WorldAspect::GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform )
-{
-    p_worldtransform = m_worldtransform;
-}
+#endif

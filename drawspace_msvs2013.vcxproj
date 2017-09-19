@@ -190,6 +190,7 @@
     <ClInclude Include="src\viewportquad.h" />
     <ClInclude Include="src\world.h" />
     <ClInclude Include="src\worldaspect.h" />
+    <ClInclude Include="src\worldaspectimpl.h" />
     <ClInclude Include="src\worldsystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

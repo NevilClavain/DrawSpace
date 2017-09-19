@@ -24,7 +24,6 @@
 #define _SCREENRENDERINGASPECTIMPL_H_
 
 #include "drawspace_commons.h"
-#include "component.h"
 
 namespace DrawSpace
 {

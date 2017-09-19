@@ -542,5 +542,8 @@
     <ClInclude Include="src\screenrenderingaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="src\worldaspectimpl.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
