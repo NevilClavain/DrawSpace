@@ -51,6 +51,8 @@ protected:
     DrawSpace::Core::WorldSystem                                                    m_worldSystem;
 
     DrawSpace::Core::TextRenderingAspectImpl                                        m_textRender;
+
+    DrawSpace::Core::RawTransformAspectImpl                                         m_cubeTransformer;
     
     bool                                                                            m_display_switch = true;
 

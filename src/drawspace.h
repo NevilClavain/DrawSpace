@@ -97,6 +97,7 @@
 
 
 #include "worldaspect.h"
+#include "rawtransformaspectimpl.h"
 
 
 #include "renderingsystem.h"

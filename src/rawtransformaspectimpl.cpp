@@ -20,63 +20,26 @@
 *
 */
 
+#include "rawtransformaspectimpl.h"
+#include "component.h"
 #include "worldaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-WorldAspect::WorldAspect( void )
+void RawTransformAspectImpl::get_locale_transform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
 {
-    m_worldtransform.Identity();
-}
-
-void WorldAspect::AddImplementation( WorldAspectImpl* p_impl )
-{
-    m_impls.push_back( p_impl );
-}
-
-void WorldAspect::compute_transforms( Entity* p_parent, Entity* p_entity )
-{
-    DrawSpace::Utils::Matrix locale_mat;
-    DrawSpace::Utils::Matrix finaltransform_mat;
-
-    locale_mat.Identity();
+    std::vector<Component<Matrix>*> mats;
+    p_worldaspect->GetComponentsByType<Matrix>( mats );
 
     Matrix cumul;
     cumul.Identity();
-    for( size_t i = 0; i < m_impls.size(); i++ )
+    for( size_t i = 0; i < mats.size(); i++ )
     {
-        Matrix curr;
-        m_impls[i]->get_locale_transform( this, curr );
-        cumul = cumul * curr;
+        Matrix curr_mat = mats[i]->getPurpose();    
+        cumul = cumul * curr_mat;
     }
 
-    locale_mat = locale_mat * cumul;
-
-    if( p_parent )
-    {
-        DrawSpace::Utils::Matrix parent_finaltransform_mat;
-        WorldAspect* parent_world_aspect = p_parent->GetAspect<WorldAspect>();
-
-        if( parent_world_aspect )
-        {
-            finaltransform_mat = locale_mat * parent_world_aspect->m_worldtransform;
-        }
-        else
-        {
-            finaltransform_mat = locale_mat;
-        }
-    }
-    else
-    {
-        finaltransform_mat = locale_mat;
-    }
-
-    m_worldtransform = finaltransform_mat;
-}
-
-void WorldAspect::GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform )
-{
-    p_worldtransform = m_worldtransform;
+    p_out_base_transform = cumul;
 }

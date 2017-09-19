@@ -157,9 +157,17 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     
     m_cubeEntity.AddAspect<ScreenRenderingAspect>();
-    screen_rendering_aspect = m_rootEntity.GetAspect<ScreenRenderingAspect>();
+    screen_rendering_aspect = m_cubeEntity.GetAspect<ScreenRenderingAspect>();
+    screen_rendering_aspect->AddImplementation( &m_textRender );
     screen_rendering_aspect->AddComponent<DrawSpace::Core::TextRenderingAspectImpl::TextDisplay>( "cube_text", 10, 30, 0, 255, 0, "hello from cube entity !" );
     
+
+    m_cubeEntity.AddAspect<WorldAspect>();
+    WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
+    world_aspect->AddImplementation( &m_cubeTransformer );
+    world_aspect->AddComponent<Matrix>( "cube_translation" );
+
+    world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -12.0, 1.0) );
 
 
     ///////////////////////////////////////////////////////////////////////////

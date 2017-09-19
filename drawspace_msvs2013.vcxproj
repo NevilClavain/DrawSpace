@@ -50,6 +50,7 @@
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\mesherenderingaspect.cpp" />
+    <ClCompile Include="src\rawtransformaspectimpl.cpp" />
     <ClCompile Include="src\screenrenderingaspect.cpp" />
     <ClCompile Include="src\renderingsystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
+    <ClInclude Include="src\rawtransformaspectimpl.h" />
     <ClInclude Include="src\screenrenderingaspect.h" />
     <ClInclude Include="src\screenrenderingaspectimpl.h" />
     <ClInclude Include="src\textrenderingaspectimpl.h" />

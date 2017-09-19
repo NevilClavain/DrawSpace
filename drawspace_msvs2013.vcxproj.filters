@@ -258,6 +258,9 @@
     <ClCompile Include="src\screenrenderingaspect.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="src\rawtransformaspectimpl.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -543,6 +546,9 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\worldaspectimpl.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rawtransformaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
