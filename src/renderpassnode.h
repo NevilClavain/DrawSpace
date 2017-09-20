@@ -92,7 +92,8 @@ public:
     ViewportQuad* GetViewportQuad( void ) const;
 
     friend class RenderPassNodeGraph;
-    friend class RenderingSystem;
+    //friend class RenderingSystem;
+    friend class PassesRenderingAspectImpl;
 };
 
 }

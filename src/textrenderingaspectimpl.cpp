@@ -21,7 +21,7 @@
 */
 
 #include "textrenderingaspectimpl.h"
-#include "screenrenderingaspect.h"
+#include "renderingaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -31,7 +31,7 @@ TextRenderingAspectImpl::TextRenderingAspectImpl( void )
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
-void TextRenderingAspectImpl::draw( ScreenRenderingAspect* p_renderingaspect )
+void TextRenderingAspectImpl::run( RenderingAspect* p_renderingaspect )
 {
     // extraire tout les composants "texts display"
     std::vector<Component<TextDisplay>*> texts;
@@ -46,4 +46,9 @@ void TextRenderingAspectImpl::draw( ScreenRenderingAspect* p_renderingaspect )
         m_renderer->DrawText( text_descr.m_r, text_descr.m_g, text_descr.m_b, text_descr.m_posx, text_descr.m_posy, text_descr.m_text.c_str() );
         m_renderer->EndScreen();
     }
+}
+
+bool TextRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue )
+{
+    return false;
 }

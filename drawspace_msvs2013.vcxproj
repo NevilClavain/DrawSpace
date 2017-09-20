@@ -30,6 +30,7 @@
     <ClCompile Include="src\headmovement.cpp" />
     <ClCompile Include="src\inertbody.cpp" />
     <ClCompile Include="src\jsonparser.cpp" />
+    <ClCompile Include="src\mesherenderingaspectimpl.cpp" />
     <ClCompile Include="src\module_keys.cpp" />
     <ClCompile Include="src\linearmovement.cpp" />
     <ClCompile Include="src\logconf.cpp" />
@@ -48,9 +49,11 @@
     <ClCompile Include="src\orbiter.cpp" />
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\pass.cpp" />
+    <ClCompile Include="src\passesrenderingaspectimpl.cpp" />
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\mesherenderingaspect.cpp" />
     <ClCompile Include="src\rawtransformaspectimpl.cpp" />
+    <ClCompile Include="src\renderingaspect.cpp" />
     <ClCompile Include="src\screenrenderingaspect.cpp" />
     <ClCompile Include="src\renderingsystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />
@@ -119,6 +122,7 @@
     <ClInclude Include="src\impostorsdisplaylist.h" />
     <ClInclude Include="src\inertbody.h" />
     <ClInclude Include="src\jsonparser.h" />
+    <ClInclude Include="src\mesherenderingaspectimpl.h" />
     <ClInclude Include="src\module_keys.h" />
     <ClInclude Include="src\linearmovement.h" />
     <ClInclude Include="src\logconf.h" />
@@ -141,10 +145,13 @@
     <ClInclude Include="src\orbiter.h" />
     <ClInclude Include="src\parser.h" />
     <ClInclude Include="src\pass.h" />
+    <ClInclude Include="src\passesrenderingaspectimpl.h" />
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
     <ClInclude Include="src\rawtransformaspectimpl.h" />
+    <ClInclude Include="src\renderingaspect.h" />
+    <ClInclude Include="src\renderingaspectimpl.h" />
     <ClInclude Include="src\screenrenderingaspect.h" />
     <ClInclude Include="src\screenrenderingaspectimpl.h" />
     <ClInclude Include="src\textrenderingaspectimpl.h" />

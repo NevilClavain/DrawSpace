@@ -73,14 +73,14 @@ bool MesheRenderingAspect::VisitRenderPassDescr( const dsstring& p_name, Renderi
     return updated_queue;
 }
 
-void MesheRenderingAspect::RegisterToRendering( const RenderPassNodeGraph& p_rendergraph )
+void MesheRenderingAspect::RegisterToRendering( RenderPassNodeGraph* p_rendergraph )
 {
     m_add_in_rendergraph = true;
-    p_rendergraph.Accept( this );
+    //p_rendergraph->Accept( this );
 }
 
-void MesheRenderingAspect::UnregisterFromRendering( const RenderPassNodeGraph& p_rendergraph )
+void MesheRenderingAspect::UnregisterFromRendering( RenderPassNodeGraph* p_rendergraph )
 {
     m_add_in_rendergraph = false;
-    p_rendergraph.Accept( this );
+    //p_rendergraph->Accept( this );
 }

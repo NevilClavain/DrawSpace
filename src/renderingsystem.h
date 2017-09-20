@@ -23,7 +23,7 @@
 #ifndef _RENDERINGSYSTEM_H_
 #define _RENDERINGSYSTEM_H_
 
-#include "renderpassnodegraph.h"
+//#include "renderpassnodegraph.h"
 #include "entitynodegraph.h"
 
 namespace DrawSpace
@@ -37,9 +37,9 @@ public:
     RenderingSystem( void );
     ~RenderingSystem( void );
 
-    void Run( RenderPassNodeGraph* p_rendergraph, EntityNodeGraph* p_entitygraph );
+    void Run( /*RenderPassNodeGraph* p_rendergraph,*/ EntityNodeGraph* p_entitygraph );
 
-    void VisitRenderPassDescr( RenderPassNode::PassDescr* p_passdescr ) const;
+    //void VisitRenderPassDescr( RenderPassNode::PassDescr* p_passdescr ) const;
     void VisitEntity( Entity* p_entity ) const;
 
 };

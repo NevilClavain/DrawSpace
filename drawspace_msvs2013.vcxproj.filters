@@ -261,6 +261,15 @@
     <ClCompile Include="src\rawtransformaspectimpl.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderingaspect.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\passesrenderingaspectimpl.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesherenderingaspectimpl.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -549,6 +558,18 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\rawtransformaspectimpl.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingaspect.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingaspectimpl.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\passesrenderingaspectimpl.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesherenderingaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

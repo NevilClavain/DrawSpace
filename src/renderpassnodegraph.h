@@ -24,13 +24,14 @@
 #define _RENDERPASSNODEGRAPH_H_
 
 #include "renderpassnode.h"
-#include "aspect.h"
+#include "renderingaspectimpl.h"
 
 namespace DrawSpace
 {
 namespace Core
 {
-class RenderingSystem;
+//class RenderingSystem;
+class PassesRenderingAspectImpl;
 class RenderPassNodeGraph sealed
 {
 public:
@@ -49,8 +50,13 @@ public:
     RenderPassNode CreateRoot( const dsstring& p_name );
     void Erase( void );
 
-    void Accept( RenderingSystem* p_renderingsystem ) const;
-    void Accept( Aspect* p_aspect ) const;
+    //void Accept( RenderingSystem* p_renderingsystem ) const;
+    //void Accept( PassesRenderingAspectImpl* p_passrenderingacceptimpl );
+
+
+    //void Accept( Aspect* p_aspect ) const;
+    void Accept( RenderingAspectImpl* p_renderingaspectimpl );
+
 
     void RenderingQueueModSignal( void );
 };

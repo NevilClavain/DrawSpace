@@ -23,7 +23,7 @@
 #ifndef _TEXTRENDERINGASPECTIMPL_H_
 #define _TEXTRENDERINGASPECTIMPL_H_
 
-#include "screenrenderingaspectimpl.h"
+#include "renderingaspectimpl.h"
 #include "plugin.h"
 #include "renderer.h"
 
@@ -31,7 +31,7 @@ namespace DrawSpace
 {
 namespace Core
 {
-class TextRenderingAspectImpl : public ScreenRenderingAspectImpl
+class TextRenderingAspectImpl : public RenderingAspectImpl
 {
 protected:
     DrawSpace::Interface::Renderer* m_renderer;
@@ -59,10 +59,12 @@ public:
     };
     
 protected:
-    virtual void draw( ScreenRenderingAspect* p_renderingaspect );
+    virtual void run( RenderingAspect* p_renderingaspect );
 
 public:
     TextRenderingAspectImpl( void );
+
+    bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
 };
 
 }

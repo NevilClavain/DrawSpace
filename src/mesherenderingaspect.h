@@ -80,8 +80,8 @@ public:
 
     bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
 
-    void RegisterToRendering( const RenderPassNodeGraph& p_rendergraph );
-    void UnregisterFromRendering( const RenderPassNodeGraph& p_rendergraph );
+    void RegisterToRendering( RenderPassNodeGraph* p_rendergraph );
+    void UnregisterFromRendering( RenderPassNodeGraph* p_rendergraph );
     
 };
 
