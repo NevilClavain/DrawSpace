@@ -44,7 +44,7 @@ public:
     {    
     }
 
-    virtual bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue ) = 0;
+    virtual bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue ) { return false; };
 
     friend class RenderingAspect;
 };

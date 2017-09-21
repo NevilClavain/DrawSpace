@@ -50,8 +50,3 @@ void TextRenderingAspectImpl::run( Entity* p_entity )
         m_renderer->EndScreen();
     }
 }
-
-bool TextRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue )
-{
-    return false;
-}

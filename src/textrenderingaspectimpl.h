@@ -63,8 +63,6 @@ protected:
 
 public:
     TextRenderingAspectImpl( void );
-
-    bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
 };
 
 }
