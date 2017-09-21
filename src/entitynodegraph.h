@@ -30,10 +30,10 @@ namespace DrawSpace
 namespace Systems
 {
 class WorldSystem;
+class RenderingSystem;
 }
 namespace Core
 {
-class RenderingSystem;
 class EntityNodeGraph
 {
 public:
@@ -50,7 +50,7 @@ public:
 	EntityNode SetRoot(Entity* p_entity);
 	void Erase(void);
 
-    void AcceptRenderingSystem( RenderingSystem* p_renderingsystem );
+    void AcceptRenderingSystem( Systems::RenderingSystem* p_renderingsystem );
     void AcceptWorldSystem( Systems::WorldSystem* p_worldsystem );
 
 };

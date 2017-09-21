@@ -21,11 +21,11 @@
 */
 
 #include "renderingsystem.h"
-//#include "screenrenderingaspect.h"
 #include "renderingaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Systems;
 
 RenderingSystem::RenderingSystem(void)
 {
@@ -45,6 +45,6 @@ void RenderingSystem::VisitEntity( Entity* p_entity )
     RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
     if( rendering_aspect )
     {
-        rendering_aspect->draw( p_entity );
+        rendering_aspect->Draw( p_entity );
     }
 }

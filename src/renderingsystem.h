@@ -23,22 +23,20 @@
 #ifndef _RENDERINGSYSTEM_H_
 #define _RENDERINGSYSTEM_H_
 
-//#include "renderpassnodegraph.h"
 #include "entitynodegraph.h"
 
 namespace DrawSpace
 {
-namespace Core
+namespace Systems
 {
-
 class RenderingSystem
 {
 public:
     RenderingSystem( void );
     ~RenderingSystem( void );
 
-    void Run( EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Entity* p_entity );
+    void Run( Core::EntityNodeGraph* p_entitygraph );
+    void VisitEntity( Core::Entity* p_entity );
 };
 
 }

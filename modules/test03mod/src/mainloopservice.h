@@ -47,7 +47,7 @@ protected:
     DrawSpace::Core::EntityNode                                                     m_cubeEntityNode;
 
     
-    DrawSpace::Core::RenderingSystem                                                m_renderingSystem;
+    DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
     DrawSpace::Systems::WorldSystem                                                 m_worldSystem;
 
     DrawSpace::Core::PassesRenderingAspectImpl                                      m_passesRender;

@@ -35,7 +35,7 @@ void RenderingAspect::AddImplementation( RenderingAspectImpl* p_impl )
     p_impl->m_owner = this;
 }
 
-void RenderingAspect::draw( Entity* p_owner_entity )
+void RenderingAspect::Draw( Entity* p_owner_entity )
 {
     for( size_t i = 0; i < m_impls.size(); i++ )
     {

@@ -243,9 +243,6 @@
     <ClCompile Include="src\entitynodegraph.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderingsystem.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\worldaspect.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -266,6 +263,9 @@
     </ClCompile>
     <ClCompile Include="src\worldsystem.cpp">
       <Filter>systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderingsystem.cpp">
+      <Filter>module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -521,9 +521,6 @@
     <ClInclude Include="src\entitynodegraph.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderingsystem.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\aspect.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -556,6 +553,9 @@
     </ClInclude>
     <ClInclude Include="src\worldsystem.h">
       <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingsystem.h">
+      <Filter>module</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
