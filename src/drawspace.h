@@ -91,10 +91,6 @@
 #include "entitynodegraph.h"
 #include "renderpassnodegraph.h"
 
-//#include "mesherenderingaspect.h"
-//#include "screenrenderingaspect.h"
-
-
 #include "renderingaspect.h"
 #include "passesrenderingaspectimpl.h"
 #include "mesherenderingaspectimpl.h"

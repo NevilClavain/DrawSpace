@@ -117,6 +117,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rendering_aspect->AddImplementation( &m_textRender );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
 
+    m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -158,17 +159,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
-    m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
-
-
     m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
     m_cubeRender.RegisterToRendering( m_rendergraph );
 
-    //m_cubeEntity.GetAspect<MesheRenderingAspect>()->RegisterToRendering( m_rendergraph );
-    
-
     m_rendergraph.RenderingQueueModSignal();
-
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
