@@ -27,19 +27,31 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
+MesheRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
+    m_pass_name( p_pass_name )
+{
+    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+
+    m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
+
+    m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );
+    m_rendering_node->RegisterHandler( m_cb );
+
+    //m_world.Identity();
+    m_world.Translation( Vector( 0.0, 0.0, -3.0, 1.0 ) );
+
+    m_view.Identity();
+    m_proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
+}
+
+MesheRenderingAspectImpl::PassSlot::~PassSlot( void )
+{
+    _DRAWSPACE_DELETE_( m_rendering_node );
+}       
+
 void MesheRenderingAspectImpl::PassSlot::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
-    DrawSpace::Utils::Matrix world;
-    DrawSpace::Utils::Matrix view;
-    DrawSpace::Utils::Matrix proj;
-
-    view.Identity();
-
-    world.Translation( Vector( 0.0, 0.0, -3.0, 1.0 ) );
-
-    proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
-
-    m_renderer->DrawMeshe( world, view, proj );
+    m_renderer->DrawMeshe( m_world, m_view, m_proj );
 }
 
 MesheRenderingAspectImpl::MesheRenderingAspectImpl( void )
@@ -86,7 +98,6 @@ void MesheRenderingAspectImpl::UnregisterFromRendering( RenderPassNodeGraph& p_r
     p_rendergraph.Accept( this );
 }
 
-void MesheRenderingAspectImpl::run( RenderingAspect* p_renderingaspect )
+void MesheRenderingAspectImpl::run( Entity* p_entity )
 {
-
 }

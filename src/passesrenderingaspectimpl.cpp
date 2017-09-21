@@ -30,9 +30,9 @@ m_rendergraph( p_rendergraph )
 {
 }
 
-void PassesRenderingAspectImpl::run( RenderingAspect* p_renderingaspect )
+void PassesRenderingAspectImpl::run( Entity* p_entity )
 {
-    m_rendergraph->Accept( this );   
+    m_rendergraph->Accept( this );
 }
 
 bool PassesRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue )

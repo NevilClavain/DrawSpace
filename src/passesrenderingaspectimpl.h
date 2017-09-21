@@ -35,7 +35,7 @@ class PassesRenderingAspectImpl : public RenderingAspectImpl
 protected:
     RenderPassNodeGraph* m_rendergraph;
 
-    virtual void run( RenderingAspect* p_renderingaspect );
+    virtual void run( Entity* p_entity );
 
 public:
 

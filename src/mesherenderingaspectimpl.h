@@ -46,24 +46,15 @@ public:
         RenderingNodeDrawCallback*          m_cb;
         DrawSpace::Interface::Renderer*     m_renderer;
 
+        Utils::Matrix                       m_world;
+        Utils::Matrix                       m_view;
+        Utils::Matrix                       m_proj;
+
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
     public:
-        PassSlot( const dsstring& p_pass_name ):
-            m_pass_name( p_pass_name )
-        {
-            m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-
-            m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
-
-            m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );
-            m_rendering_node->RegisterHandler( m_cb );
-        }
-
-        ~PassSlot( void )
-        {
-            _DRAWSPACE_DELETE_( m_rendering_node );
-        }
+        PassSlot( const dsstring& p_pass_name );
+        ~PassSlot( void );
 
         RenderingNode* GetRenderingNode( void ) { return m_rendering_node; };
 
@@ -74,7 +65,7 @@ protected:
 
     bool                                m_add_in_rendergraph;
 
-    virtual void run( RenderingAspect* p_renderingaspect );
+    virtual void run( Entity* p_entity );
 
 public:
     MesheRenderingAspectImpl( void );

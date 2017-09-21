@@ -50,7 +50,6 @@ protected:
     DrawSpace::Core::RenderingSystem                                                m_renderingSystem;
     DrawSpace::Core::WorldSystem                                                    m_worldSystem;
 
-    //DrawSpace::Core::TextRenderingAspectImpl                                        m_textRender;
     DrawSpace::Core::PassesRenderingAspectImpl*                                     m_passesRender;
     DrawSpace::Core::MesheRenderingAspectImpl                                       m_cubeRender;
     DrawSpace::Core::TextRenderingAspectImpl                                        m_textRender;

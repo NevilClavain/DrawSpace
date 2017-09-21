@@ -59,7 +59,7 @@ public:
     };
     
 protected:
-    virtual void run( RenderingAspect* p_renderingaspect );
+    virtual void run( Entity* p_entity );
 
 public:
     TextRenderingAspectImpl( void );

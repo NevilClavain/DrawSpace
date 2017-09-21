@@ -36,14 +36,12 @@ protected:
 
     std::vector<RenderingAspectImpl*>   m_impls;
 
-    void draw( void );
+    void draw( Entity* p_owner_entity );
 
 public:
     RenderingAspect( void );
 
     void AddImplementation( RenderingAspectImpl* p_impl );
-
-    //bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
 
     friend class RenderingSystem;
 };

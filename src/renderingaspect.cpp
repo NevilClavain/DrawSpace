@@ -29,23 +29,16 @@ RenderingAspect::RenderingAspect( void )
 {
 }
 
-/*
-bool RenderingAspect::VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue )
-{
-    return false;
-}
-*/
-
 void RenderingAspect::AddImplementation( RenderingAspectImpl* p_impl )
 {
     m_impls.push_back( p_impl );
     p_impl->m_owner = this;
 }
 
-void RenderingAspect::draw( void )
+void RenderingAspect::draw( Entity* p_owner_entity )
 {
     for( size_t i = 0; i < m_impls.size(); i++ )
     {
-        m_impls[i]->run( this );
+        m_impls[i]->run( p_owner_entity );
     }
 }

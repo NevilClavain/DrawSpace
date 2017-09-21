@@ -23,6 +23,7 @@
 #ifndef _RENDERINGASPECTIMPL_H_
 #define _RENDERINGASPECTIMPL_H_
 
+#include "entity.h"
 #include "renderingqueue.h"
 
 namespace DrawSpace
@@ -36,7 +37,7 @@ class RenderingAspectImpl abstract
 protected:
     RenderingAspect* m_owner;
 
-    virtual void run( RenderingAspect* p_renderingaspect ) = 0;
+    virtual void run( Entity* p_entity ) = 0;
     
 public:
     RenderingAspectImpl( void ) : m_owner( NULL )

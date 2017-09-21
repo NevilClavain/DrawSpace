@@ -35,35 +35,16 @@ RenderingSystem::~RenderingSystem(void)
 {
 }
 
-void RenderingSystem::Run( /*RenderPassNodeGraph* p_rendergraph,*/ EntityNodeGraph* p_entitygraph )
+void RenderingSystem::Run( EntityNodeGraph* p_entitygraph )
 {
-    /*
-    // rendu des passes du rendergraph
-    p_rendergraph->Accept( this );
-    */
-
     p_entitygraph->AcceptRenderingSystem( this );
 }
-/*
-void RenderingSystem::VisitRenderPassDescr( RenderPassNode::PassDescr* p_passdescr ) const
-{
-    p_passdescr->m_renderingqueue->Draw();
-}
-*/
 
 void RenderingSystem::VisitEntity( Entity* p_entity ) const
 {
-    /*
-    ScreenRenderingAspect* screen_rendering_aspect = p_entity->GetAspect<ScreenRenderingAspect>();
-    if( screen_rendering_aspect )
-    {
-        screen_rendering_aspect->draw();
-    }
-    */
-
     RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
     if( rendering_aspect )
     {
-        rendering_aspect->draw();
+        rendering_aspect->draw( p_entity );
     }
 }

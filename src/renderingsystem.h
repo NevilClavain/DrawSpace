@@ -37,11 +37,8 @@ public:
     RenderingSystem( void );
     ~RenderingSystem( void );
 
-    void Run( /*RenderPassNodeGraph* p_rendergraph,*/ EntityNodeGraph* p_entitygraph );
-
-    //void VisitRenderPassDescr( RenderPassNode::PassDescr* p_passdescr ) const;
+    void Run( EntityNodeGraph* p_entitygraph );
     void VisitEntity( Entity* p_entity ) const;
-
 };
 
 }
