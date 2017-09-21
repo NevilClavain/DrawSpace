@@ -22,6 +22,7 @@
 
 #include "mesherenderingaspectimpl.h"
 #include "renderingaspect.h"
+#include "worldaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -100,4 +101,21 @@ void MesheRenderingAspectImpl::UnregisterFromRendering( RenderPassNodeGraph& p_r
 
 void MesheRenderingAspectImpl::run( Entity* p_entity )
 {
+    WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
+
+    if( world_aspect )
+    {
+        Matrix world;
+        world_aspect->GetWorldTransform( world );
+
+        // redistribution de la transfo world...
+
+        std::vector<Component<PassSlot>*> pass_slots;
+        m_owner->GetComponentsByType<PassSlot>( pass_slots );
+
+        for( size_t i = 0; i < pass_slots.size(); i++ )
+        {
+            pass_slots[i]->getPurpose().m_world = world;
+        }
+    }
 }

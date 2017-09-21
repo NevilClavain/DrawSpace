@@ -157,6 +157,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
     cube_texturepass->GetTexture( 0 )->LoadFromFile();
 
+    m_cubeEntity.AddAspect<WorldAspect>();
+
+    WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
+
+    world_aspect->AddImplementation( &m_cubeTransformer );
+    world_aspect->AddComponent<Matrix>( "cube_translation" );
+
+    world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -12.0, 1.0 ) );
+
+
 
     ///////////////////////////////////////////////////////////////////////////
 
