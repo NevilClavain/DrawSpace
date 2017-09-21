@@ -25,18 +25,30 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-PassesRenderingAspectImpl::PassesRenderingAspectImpl( RenderPassNodeGraph* p_rendergraph ) :
-m_rendergraph( p_rendergraph )
+PassesRenderingAspectImpl::PassesRenderingAspectImpl( void ) :
+m_rendergraph( NULL )
 {
 }
 
 void PassesRenderingAspectImpl::run( Entity* p_entity )
 {
-    m_rendergraph->Accept( this );
+    if( m_rendergraph )
+    {
+        m_rendergraph->Accept( this );
+    }
+    else
+    {
+        _DSEXCEPTION( "no rendergraph associated with PassesRenderingAspectImpl : please use PassesRenderingAspectImpl::SetRendergraph()" )
+    }
 }
 
 bool PassesRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue )
 {
     p_passqueue->Draw();
     return false;
+}
+
+void PassesRenderingAspectImpl::SetRendergraph( RenderPassNodeGraph* p_rendergraph )
+{
+    m_rendergraph = p_rendergraph;
 }

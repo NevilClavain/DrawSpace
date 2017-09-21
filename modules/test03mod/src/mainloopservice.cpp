@@ -108,11 +108,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
     //////////////////////////////////////////////////////////////////////////
-    m_passesRender = _DRAWSPACE_NEW_( PassesRenderingAspectImpl, PassesRenderingAspectImpl( &m_rendergraph ) );
-
+    
     m_rootEntity.AddAspect<RenderingAspect>();
     RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
-    rendering_aspect->AddImplementation( m_passesRender );
+    rendering_aspect->AddImplementation( &m_passesRender );
+
+    m_passesRender.SetRendergraph( &m_rendergraph );
 
     rendering_aspect->AddImplementation( &m_textRender );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "" );
@@ -170,10 +171,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 void MainLoopService::Run( void )
 {
     m_worldSystem.Run( &m_entitygraph );
-    //m_renderingSystem.Run( &m_rendergraph, &m_entitygraph );
     m_renderingSystem.Run( &m_entitygraph );
-    
-
     m_renderer->FlipScreen();
 
     if( m_display_switch )

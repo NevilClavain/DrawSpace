@@ -39,9 +39,9 @@ protected:
 
 public:
 
-    PassesRenderingAspectImpl( RenderPassNodeGraph* p_rendergraph );
+    PassesRenderingAspectImpl( void );
     bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
-
+    void SetRendergraph( RenderPassNodeGraph* p_rendergraph );
 };
 }
 }
