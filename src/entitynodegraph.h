@@ -27,10 +27,13 @@
 
 namespace DrawSpace
 {
+namespace Systems
+{
+class WorldSystem;
+}
 namespace Core
 {
 class RenderingSystem;
-class WorldSystem;
 class EntityNodeGraph
 {
 public:
@@ -48,7 +51,7 @@ public:
 	void Erase(void);
 
     void AcceptRenderingSystem( RenderingSystem* p_renderingsystem );
-    void AcceptWorldSystem( WorldSystem* p_worldsystem );
+    void AcceptWorldSystem( Systems::WorldSystem* p_worldsystem );
 
 };
 }

@@ -27,6 +27,7 @@
 #include "matrix.h"
 #include "worldaspectimpl.h"
 #include "entity.h"
+//#include "worldsystem.h"
 
 namespace DrawSpace
 {
@@ -38,8 +39,6 @@ protected:
     DrawSpace::Utils::Matrix        m_worldtransform;
     std::vector<WorldAspectImpl*>   m_impls;
 
-    void compute_transforms( Entity* p_parent, Entity* p_entity );
-
 public:
     WorldAspect( void );
 
@@ -47,7 +46,7 @@ public:
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
 
-    friend class WorldSystem;   
+    void ComputeTransforms( Entity* p_parent, Entity* p_entity );
 };
 
 }

@@ -27,9 +27,8 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace Systems
 {
-
 class WorldSystem
 {
 protected:
@@ -38,10 +37,9 @@ public:
     WorldSystem(void);
     ~WorldSystem(void);
 
-    void Run( EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Entity* p_parent, Entity* p_entity );
+    void Run( Core::EntityNodeGraph* p_entitygraph );
+    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
 };
-
 }
 }
 

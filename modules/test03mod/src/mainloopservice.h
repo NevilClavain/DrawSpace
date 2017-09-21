@@ -48,7 +48,7 @@ protected:
 
     
     DrawSpace::Core::RenderingSystem                                                m_renderingSystem;
-    DrawSpace::Core::WorldSystem                                                    m_worldSystem;
+    DrawSpace::Systems::WorldSystem                                                 m_worldSystem;
 
     DrawSpace::Core::PassesRenderingAspectImpl                                      m_passesRender;
     DrawSpace::Core::MesheRenderingAspectImpl                                       m_cubeRender;

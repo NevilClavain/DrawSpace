@@ -26,6 +26,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Systems;
 
 EntityNodeGraph::EntityNodeGraph(void)
 {

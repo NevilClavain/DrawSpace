@@ -36,7 +36,7 @@ void WorldAspect::AddImplementation( WorldAspectImpl* p_impl )
     m_impls.push_back( p_impl );
 }
 
-void WorldAspect::compute_transforms( Entity* p_parent, Entity* p_entity )
+void WorldAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 {
     DrawSpace::Utils::Matrix locale_mat;
     DrawSpace::Utils::Matrix finaltransform_mat;

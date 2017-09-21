@@ -25,7 +25,8 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Systems;
+
 
 WorldSystem::WorldSystem( void )
 {
@@ -46,6 +47,7 @@ void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 
     if( world_aspect )
     {
-        world_aspect->compute_transforms( p_parent, p_entity );
+        world_aspect->ComputeTransforms( p_parent, p_entity );
     }
 }
+
