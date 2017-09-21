@@ -30,7 +30,6 @@ namespace DrawSpace
 {
 namespace Core
 {
-//class RenderingSystem;
 class PassesRenderingAspectImpl;
 class RenderPassNodeGraph sealed
 {
@@ -49,12 +48,6 @@ public:
 
     RenderPassNode CreateRoot( const dsstring& p_name );
     void Erase( void );
-
-    //void Accept( RenderingSystem* p_renderingsystem ) const;
-    //void Accept( PassesRenderingAspectImpl* p_passrenderingacceptimpl );
-
-
-    //void Accept( Aspect* p_aspect ) const;
     void Accept( RenderingAspectImpl* p_renderingaspectimpl );
 
 

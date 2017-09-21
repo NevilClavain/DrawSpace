@@ -71,7 +71,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_finalpass = m_rendergraph.CreateRoot( "final_pass" );
 
-    m_finalpass.CreateViewportQuad( -0.24 );
+    m_finalpass.CreateViewportQuad();
 
     m_finalpass.GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
@@ -90,12 +90,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_finalpass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
     m_finalpass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
 
-
-
-    m_finalpass.GetRenderingQueue()->SetTargetClearingColor( 255, 25, 2, 255 );
-
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
-    m_finalpass.GetRenderingQueue()->EnableTargetClearing( true );
+    m_finalpass.GetRenderingQueue()->EnableTargetClearing( false );
 
 
 
@@ -161,10 +157,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
 
-    world_aspect->AddImplementation( &m_cubeTransformer );
+    world_aspect->AddImplementation( &m_cubeTransformer );    
+    world_aspect->AddComponent<Matrix>( "cube_rotation" );
     world_aspect->AddComponent<Matrix>( "cube_translation" );
 
-    world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -12.0, 1.0 ) );
+    world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
+    world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( 67.0 ) );
 
 
 

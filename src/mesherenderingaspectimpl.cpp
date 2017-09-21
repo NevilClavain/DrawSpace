@@ -38,9 +38,8 @@ MesheRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
     m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );
     m_rendering_node->RegisterHandler( m_cb );
 
-    //m_world.Identity();
-    m_world.Translation( Vector( 0.0, 0.0, -3.0, 1.0 ) );
-
+    m_world.Identity();
+    
     m_view.Identity();
     m_proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
 }

@@ -47,8 +47,8 @@ public:
 	EntityNode SetRoot(Entity* p_entity);
 	void Erase(void);
 
-    void AcceptRenderingSystem( RenderingSystem* p_renderingsystem ) const;
-    void AcceptWorldSystem( WorldSystem* p_worldsystem ) const;
+    void AcceptRenderingSystem( RenderingSystem* p_renderingsystem );
+    void AcceptWorldSystem( WorldSystem* p_worldsystem );
 
 };
 }

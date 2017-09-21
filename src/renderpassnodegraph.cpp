@@ -71,35 +71,6 @@ void RenderPassNodeGraph::Erase( void )
     m_tree.root().erase();
 }
 
-/*
-void RenderPassNodeGraph::Accept( RenderingSystem* p_renderingsystem ) const
-{
-    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
-    {
-        p_renderingsystem->VisitRenderPassDescr( it->data() );
-    }
-}
-*/
-/*
-void RenderPassNodeGraph::Accept( PassesRenderingAspectImpl* p_passrenderingacceptimpl )
-{
-    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
-    {
-        p_passrenderingacceptimpl->VisitRenderPassDescr( it->data() );
-    }
-}
-*/
-/*
-void RenderPassNodeGraph::Accept( Aspect* p_aspect ) const
-{
-    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
-    {
-        bool updated_queue = p_aspect->VisitRenderPassDescr( it->data()->m_name, it->data()->m_renderingqueue );
-        it->data()->m_renderingqueue_update_flag = it->data()->m_renderingqueue_update_flag | updated_queue;
-    }
-}
-*/
-
 void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
 {
     for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 

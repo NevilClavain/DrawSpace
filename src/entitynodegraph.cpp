@@ -47,7 +47,7 @@ void EntityNodeGraph::Erase(void)
 	m_tree.root().erase();
 }
 
-void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem ) const
+void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem )
 {
     for( EntityTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )    
     {
@@ -55,7 +55,7 @@ void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem 
     }
 }
 
-void EntityNodeGraph::AcceptWorldSystem( WorldSystem* p_worldsystem ) const
+void EntityNodeGraph::AcceptWorldSystem( WorldSystem* p_worldsystem )
 {
     for( EntityTree::df_pre_iterator it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
     {

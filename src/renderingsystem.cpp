@@ -40,7 +40,7 @@ void RenderingSystem::Run( EntityNodeGraph* p_entitygraph )
     p_entitygraph->AcceptRenderingSystem( this );
 }
 
-void RenderingSystem::VisitEntity( Entity* p_entity ) const
+void RenderingSystem::VisitEntity( Entity* p_entity )
 {
     RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
     if( rendering_aspect )

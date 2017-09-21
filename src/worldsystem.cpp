@@ -40,7 +40,7 @@ void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
     p_entitygraph->AcceptWorldSystem( this );
 }
 
-void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity ) const
+void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 {
     WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
 
