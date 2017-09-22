@@ -252,9 +252,6 @@
     <ClCompile Include="src\entitynodegraph.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderingaspect.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\textrenderingaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
@@ -275,6 +272,9 @@
     </ClCompile>
     <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\worldaspect.cpp">
+      <Filter>aspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderingaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
   </ItemGroup>
@@ -537,9 +537,6 @@
     <ClInclude Include="src\component.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderingaspect.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderingsystem.h">
       <Filter>module</Filter>
     </ClInclude>
@@ -568,6 +565,9 @@
       <Filter>systems</Filter>
     </ClInclude>
     <ClInclude Include="src\worldaspect.h">
+      <Filter>aspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingaspect.h">
       <Filter>aspect</Filter>
     </ClInclude>
   </ItemGroup>
