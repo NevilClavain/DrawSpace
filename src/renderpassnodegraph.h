@@ -28,7 +28,7 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace RenderGraph
 {
 class RenderPassNodeGraph sealed
 {
@@ -41,14 +41,12 @@ private:
     void cleanup_treenodes( void );
 
 public:
-
     RenderPassNodeGraph( void );
     ~RenderPassNodeGraph( void );
 
     RenderPassNode CreateRoot( const dsstring& p_name );
     void Erase( void );
     void Accept( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_renderingaspectimpl );
-
 
     void RenderingQueueModSignal( void );
 };

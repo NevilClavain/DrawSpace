@@ -70,8 +70,8 @@ public:
 
     bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue );
 
-    void RegisterToRendering( DrawSpace::Core::RenderPassNodeGraph& p_rendergraph );
-    void UnregisterFromRendering( DrawSpace::Core::RenderPassNodeGraph& p_rendergraph );
+    void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
+    void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
     virtual void Run( DrawSpace::Core::Entity* p_entity );
 };

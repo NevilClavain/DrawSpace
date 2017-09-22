@@ -26,6 +26,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::RenderGraph;
 
 RenderPassNode::RenderPassNode( void ) :
     m_tree_node( NULL )

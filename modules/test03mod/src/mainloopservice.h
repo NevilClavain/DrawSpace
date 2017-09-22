@@ -34,11 +34,11 @@ protected:
     DrawSpace::Utils::TimeManager                                                   m_tm;
     dsstring                                                                        m_pluginDescr;
 
-    DrawSpace::Core::RenderPassNodeGraph                                            m_rendergraph;
+    DrawSpace::RenderGraph::RenderPassNodeGraph                                     m_rendergraph;
     DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
 
-    DrawSpace::Core::RenderPassNode                                                 m_texturepass;
-    DrawSpace::Core::RenderPassNode                                                 m_finalpass;
+    DrawSpace::RenderGraph::RenderPassNode                                          m_texturepass;
+    DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;
 
     DrawSpace::Core::Entity                                                         m_rootEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;

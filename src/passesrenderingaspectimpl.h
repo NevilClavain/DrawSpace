@@ -33,13 +33,13 @@ namespace AspectImplementations
 class PassesRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 protected:
-    DrawSpace::Core::RenderPassNodeGraph* m_rendergraph;
+    DrawSpace::RenderGraph::RenderPassNodeGraph* m_rendergraph;
 
 public:
 
     PassesRenderingAspectImpl( void );
     bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue );
-    void SetRendergraph( DrawSpace::Core::RenderPassNodeGraph* p_rendergraph );
+    void SetRendergraph( DrawSpace::RenderGraph::RenderPassNodeGraph* p_rendergraph );
     virtual void Run( DrawSpace::Core::Entity* p_entity );
 };
 }
