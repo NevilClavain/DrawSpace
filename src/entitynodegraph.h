@@ -32,12 +32,12 @@ namespace Systems
 class WorldSystem;
 class RenderingSystem;
 }
-namespace Core
+namespace EntityGraph
 {
 class EntityNodeGraph sealed
 {
 public:
-	using EntityTree = st_tree::tree<Entity*>;
+	using EntityTree = st_tree::tree<Core::Entity*>;
 
 private:
 	mutable EntityTree  m_tree;
@@ -46,7 +46,7 @@ public:
 	EntityNodeGraph(void);
 	~EntityNodeGraph(void);
 
-	EntityNode SetRoot(Entity* p_entity);
+	EntityNode SetRoot(Core::Entity* p_entity);
 	void Erase(void);
 
     void AcceptRenderingSystem( Systems::RenderingSystem* p_renderingsystem );

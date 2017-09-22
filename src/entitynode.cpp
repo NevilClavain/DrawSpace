@@ -24,6 +24,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::EntityGraph;
 
 EntityNode::EntityNode( void ) :
     m_tree_node( NULL )

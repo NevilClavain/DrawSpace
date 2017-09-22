@@ -37,7 +37,7 @@ public:
     WorldSystem(void);
     ~WorldSystem(void);
 
-    void Run( Core::EntityNodeGraph* p_entitygraph );
+    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
 };
 }

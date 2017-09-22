@@ -46,6 +46,9 @@
     <Filter Include="aspect">
       <UniqueIdentifier>{55d4a296-3734-4ae7-a5f1-b0cbe2d336c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="entitygraph">
+      <UniqueIdentifier>{b3c8ef2b-8c89-4ab6-a9c4-718549d2b7f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
@@ -246,12 +249,6 @@
     <ClCompile Include="src\renderpassnodegraph.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\entitynode.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entitynodegraph.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\textrenderingaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
@@ -276,6 +273,12 @@
     </ClCompile>
     <ClCompile Include="src\renderingaspect.cpp">
       <Filter>aspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entitynode.cpp">
+      <Filter>entitygraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entitynodegraph.cpp">
+      <Filter>entitygraph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -525,12 +528,6 @@
     <ClInclude Include="src\entity.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\entitynode.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entitynodegraph.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\aspect.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -569,6 +566,12 @@
     </ClInclude>
     <ClInclude Include="src\renderingaspect.h">
       <Filter>aspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitynode.h">
+      <Filter>entitygraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitynodegraph.h">
+      <Filter>entitygraph</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

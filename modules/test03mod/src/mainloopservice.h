@@ -35,16 +35,16 @@ protected:
     dsstring                                                                        m_pluginDescr;
 
     DrawSpace::Core::RenderPassNodeGraph                                            m_rendergraph;
-    DrawSpace::Core::EntityNodeGraph                                                m_entitygraph;
+    DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
 
     DrawSpace::Core::RenderPassNode                                                 m_texturepass;
     DrawSpace::Core::RenderPassNode                                                 m_finalpass;
 
     DrawSpace::Core::Entity                                                         m_rootEntity;
-    DrawSpace::Core::EntityNode                                                     m_rootEntityNode;
+    DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
 
     DrawSpace::Core::Entity                                                         m_cubeEntity;
-    DrawSpace::Core::EntityNode                                                     m_cubeEntityNode;
+    DrawSpace::EntityGraph::EntityNode                                              m_cubeEntityNode;
 
     
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;

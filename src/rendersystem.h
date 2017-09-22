@@ -35,7 +35,7 @@ public:
     RenderingSystem( void );
     ~RenderingSystem( void );
 
-    void Run( Core::EntityNodeGraph* p_entitygraph );
+    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_entity );
 };
 
