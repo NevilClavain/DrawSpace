@@ -55,7 +55,7 @@ protected:
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
 
-    DrawSpace::Core::RawTransformAspectImpl                                         m_cubeTransformer;
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_cubeTransformer;
     
     bool                                                                            m_display_switch = true;
 

@@ -27,13 +27,12 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace AspectImplementations
 {
-
 class RawTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::WorldAspectImpl
 {
 public:
-    virtual void GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform );
+    virtual void GetLocaleTransform( Core::WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform );
 };
 }
 }
