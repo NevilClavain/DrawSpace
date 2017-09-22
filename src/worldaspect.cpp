@@ -24,6 +24,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 

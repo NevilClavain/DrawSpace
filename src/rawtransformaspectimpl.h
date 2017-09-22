@@ -32,7 +32,7 @@ namespace AspectImplementations
 class RawTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::WorldAspectImpl
 {
 public:
-    virtual void GetLocaleTransform( Core::WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform );
+    virtual void GetLocaleTransform( Aspect::WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform );
 };
 }
 }

@@ -29,9 +29,9 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace Aspect
 {
-class WorldAspect : public Aspect
+class WorldAspect : public Core::Aspect
 {
 protected:
     DrawSpace::Utils::Matrix                                                        m_worldtransform;
@@ -44,7 +44,7 @@ public:
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
 
-    void ComputeTransforms( Entity* p_parent, Entity* p_entity );
+    void ComputeTransforms( Core::Entity* p_parent, Core::Entity* p_entity );
 };
 }
 }
