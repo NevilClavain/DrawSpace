@@ -31,23 +31,28 @@ namespace DrawSpace
 namespace Core
 {
 class RenderingAspect;
-
+}
+namespace Interface
+{
+namespace AspectImplementations
+{
 class RenderingAspectImpl abstract
 {
 protected:
-    RenderingAspect* m_owner;
+    DrawSpace::Core::RenderingAspect* m_owner;
 
-    virtual void run( Entity* p_entity ) = 0;
-    
 public:
     RenderingAspectImpl( void ) : m_owner( NULL )
     {    
     }
 
-    virtual bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue ) { return false; };
+    virtual bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue ) { return false; };
 
-    friend class RenderingAspect;
+    virtual void Run( DrawSpace::Core::Entity* p_entity ) = 0;
+
+    virtual void SetOwner( DrawSpace::Core::RenderingAspect* p_owner ) { m_owner = p_owner; };
 };
+}
 }
 }
 

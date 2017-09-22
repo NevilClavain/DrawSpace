@@ -27,19 +27,24 @@
 
 namespace DrawSpace
 {
+
 namespace Core
 {
 class WorldAspect;
+}
+
+namespace Interface
+{
+namespace AspectImplementations
+{
 
 class WorldAspectImpl abstract
 {
-protected:
-    virtual void get_locale_transform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform ) = 0;
-
-    friend class WorldAspect;
+public:
+    virtual void GetLocaleTransform( DrawSpace::Core::WorldAspect* p_worldaspect, DrawSpace::Utils::Matrix& p_out_base_transform ) = 0;
 };
 }
 }
-
+}
 
 #endif

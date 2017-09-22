@@ -37,6 +37,9 @@
     <Filter Include="systems">
       <UniqueIdentifier>{f8d617ed-baa1-4feb-950c-46722fc682d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interface\AspectImplementations">
+      <UniqueIdentifier>{0430660f-b891-44a1-baad-ca751813ea0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
@@ -533,16 +536,10 @@
     <ClInclude Include="src\textrenderingaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\worldaspectimpl.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\rawtransformaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\renderingaspect.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderingaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\passesrenderingaspectimpl.h">
@@ -556,6 +553,12 @@
     </ClInclude>
     <ClInclude Include="src\renderingsystem.h">
       <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderingaspectimpl.h">
+      <Filter>interface\AspectImplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\worldaspectimpl.h">
+      <Filter>interface\AspectImplementations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

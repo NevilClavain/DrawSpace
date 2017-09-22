@@ -28,7 +28,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-void RawTransformAspectImpl::get_locale_transform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
+void RawTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
 {
     std::vector<Component<Matrix>*> mats;
     p_worldaspect->GetComponentsByType<Matrix>( mats );

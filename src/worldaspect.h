@@ -23,11 +23,9 @@
 #ifndef _WORLDASPECT_H_
 #define _WORLDASPECT_H_
 
-#include "aspect.h"
-#include "matrix.h"
 #include "worldaspectimpl.h"
 #include "entity.h"
-//#include "worldsystem.h"
+
 
 namespace DrawSpace
 {
@@ -36,19 +34,18 @@ namespace Core
 class WorldAspect : public Aspect
 {
 protected:
-    DrawSpace::Utils::Matrix        m_worldtransform;
-    std::vector<WorldAspectImpl*>   m_impls;
+    DrawSpace::Utils::Matrix                                                        m_worldtransform;
+    std::vector<DrawSpace::Interface::AspectImplementations::WorldAspectImpl*>      m_impls;
 
 public:
     WorldAspect( void );
 
-    void AddImplementation( WorldAspectImpl* p_impl );
+    void AddImplementation( DrawSpace::Interface::AspectImplementations::WorldAspectImpl* p_impl );
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
 
     void ComputeTransforms( Entity* p_parent, Entity* p_entity );
 };
-
 }
 }
 

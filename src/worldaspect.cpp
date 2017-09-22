@@ -25,38 +25,41 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface;
 
 WorldAspect::WorldAspect( void )
 {
     m_worldtransform.Identity();
 }
 
-void WorldAspect::AddImplementation( WorldAspectImpl* p_impl )
+void WorldAspect::AddImplementation( AspectImplementations::WorldAspectImpl* p_impl )
 {
     m_impls.push_back( p_impl );
 }
 
+
 void WorldAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 {
-    DrawSpace::Utils::Matrix locale_mat;
-    DrawSpace::Utils::Matrix finaltransform_mat;
+    Matrix locale_mat;
+    Matrix finaltransform_mat;
 
     locale_mat.Identity();
 
     Matrix cumul;
     cumul.Identity();
+    
     for( size_t i = 0; i < m_impls.size(); i++ )
     {
         Matrix curr;
-        m_impls[i]->get_locale_transform( this, curr );
+        m_impls[i]->GetLocaleTransform( this, curr );
         cumul = cumul * curr;
     }
-
+   
     locale_mat = locale_mat * cumul;
 
     if( p_parent )
     {
-        DrawSpace::Utils::Matrix parent_finaltransform_mat;
+        Matrix parent_finaltransform_mat;
         WorldAspect* parent_world_aspect = p_parent->GetAspect<WorldAspect>();
 
         if( parent_world_aspect )
@@ -76,7 +79,7 @@ void WorldAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     m_worldtransform = finaltransform_mat;
 }
 
-void WorldAspect::GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform )
+void WorldAspect::GetWorldTransform( Matrix& p_worldtransform )
 {
     p_worldtransform = m_worldtransform;
 }

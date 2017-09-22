@@ -48,7 +48,7 @@ public:
 
     RenderPassNode CreateRoot( const dsstring& p_name );
     void Erase( void );
-    void Accept( RenderingAspectImpl* p_renderingaspectimpl );
+    void Accept( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_renderingaspectimpl );
 
 
     void RenderingQueueModSignal( void );

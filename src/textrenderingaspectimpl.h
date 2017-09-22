@@ -31,7 +31,7 @@ namespace DrawSpace
 {
 namespace Core
 {
-class TextRenderingAspectImpl : public RenderingAspectImpl
+class TextRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 protected:
     DrawSpace::Interface::Renderer* m_renderer;
@@ -58,11 +58,10 @@ public:
         }
     };
     
-protected:
-    virtual void run( Entity* p_entity );
-
 public:
     TextRenderingAspectImpl( void );
+    virtual void Run( Entity* p_entity );
+
 };
 
 }

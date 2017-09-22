@@ -33,12 +33,12 @@ namespace Core
 class RenderingAspect : public Aspect
 {
 protected:
-    std::vector<RenderingAspectImpl*>   m_impls;
+    std::vector<DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*>   m_impls;
 
 public:
     RenderingAspect( void );
 
-    void AddImplementation( RenderingAspectImpl* p_impl );
+    void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
     void Draw( Entity* p_owner_entity );
 };
 }

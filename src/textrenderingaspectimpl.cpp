@@ -31,7 +31,7 @@ TextRenderingAspectImpl::TextRenderingAspectImpl( void )
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
-void TextRenderingAspectImpl::run( Entity* p_entity )
+void TextRenderingAspectImpl::Run( Entity* p_entity )
 {
     RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
     // NB : rendering_aspect ne peut pas etre NULL (si on arrive ici c'est qu'il y a forcement un RenderingAspect dans l'entite

@@ -29,6 +29,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Interface::AspectImplementations;
 
 RenderPassNodeGraph::RenderPassNodeGraph( void )
 {

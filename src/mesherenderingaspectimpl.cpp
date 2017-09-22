@@ -98,7 +98,7 @@ void MesheRenderingAspectImpl::UnregisterFromRendering( RenderPassNodeGraph& p_r
     p_rendergraph.Accept( this );
 }
 
-void MesheRenderingAspectImpl::run( Entity* p_entity )
+void MesheRenderingAspectImpl::Run( Entity* p_entity )
 {
     WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
 

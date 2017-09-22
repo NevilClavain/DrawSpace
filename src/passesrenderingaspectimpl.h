@@ -30,18 +30,17 @@ namespace DrawSpace
 {
 namespace Core
 {
-class PassesRenderingAspectImpl : public RenderingAspectImpl
+class PassesRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 protected:
     RenderPassNodeGraph* m_rendergraph;
-
-    virtual void run( Entity* p_entity );
 
 public:
 
     PassesRenderingAspectImpl( void );
     bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
     void SetRendergraph( RenderPassNodeGraph* p_rendergraph );
+    virtual void Run( Entity* p_entity );
 };
 }
 }

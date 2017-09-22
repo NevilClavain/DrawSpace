@@ -30,7 +30,7 @@ m_rendergraph( NULL )
 {
 }
 
-void PassesRenderingAspectImpl::run( Entity* p_entity )
+void PassesRenderingAspectImpl::Run( Entity* p_entity )
 {
     if( m_rendergraph )
     {

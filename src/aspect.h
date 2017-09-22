@@ -26,7 +26,6 @@
 #include "component.h"
 #include "exceptions.h"
 #include "memalloc.h"
-#include "renderingqueue.h"
 
 namespace DrawSpace
 {

@@ -30,10 +30,10 @@ namespace DrawSpace
 namespace Core
 {
 
-class RawTransformAspectImpl : public WorldAspectImpl
+class RawTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::WorldAspectImpl
 {
-protected:
-    virtual void get_locale_transform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform );
+public:
+    virtual void GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform );
 };
 }
 }

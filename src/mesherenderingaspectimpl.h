@@ -33,7 +33,7 @@ namespace DrawSpace
 {
 namespace Core
 {
-class MesheRenderingAspectImpl : public RenderingAspectImpl
+class MesheRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 public:
     class PassSlot
@@ -64,9 +64,7 @@ public:
 protected:
 
     bool                                m_add_in_rendergraph;
-
-    virtual void run( Entity* p_entity );
-
+    
 public:
     MesheRenderingAspectImpl( void );
 
@@ -75,6 +73,7 @@ public:
     void RegisterToRendering( RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( RenderPassNodeGraph& p_rendergraph );
 
+    virtual void Run( Entity* p_entity );
 };
 }
 }

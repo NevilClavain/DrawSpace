@@ -24,21 +24,22 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Interface;
 
 RenderingAspect::RenderingAspect( void )
 {
 }
 
-void RenderingAspect::AddImplementation( RenderingAspectImpl* p_impl )
+void RenderingAspect::AddImplementation( AspectImplementations::RenderingAspectImpl* p_impl )
 {
     m_impls.push_back( p_impl );
-    p_impl->m_owner = this;
+    p_impl->SetOwner( this );
 }
 
 void RenderingAspect::Draw( Entity* p_owner_entity )
 {
     for( size_t i = 0; i < m_impls.size(); i++ )
     {
-        m_impls[i]->run( p_owner_entity );
+        m_impls[i]->Run( p_owner_entity );
     }
 }
