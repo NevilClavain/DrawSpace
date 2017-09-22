@@ -21,7 +21,7 @@
 */
 
 #include "entitynodegraph.h"
-#include "renderingsystem.h"
+#include "rendersystem.h"
 #include "worldsystem.h"
 
 using namespace DrawSpace;

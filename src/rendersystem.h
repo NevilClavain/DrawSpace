@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _RENDERINGSYSTEM_H_
-#define _RENDERINGSYSTEM_H_
+#ifndef _RENDERSYSTEM_H_
+#define _RENDERSYSTEM_H_
 
 #include "entitynodegraph.h"
 

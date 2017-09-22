@@ -24,7 +24,7 @@
 #include "memalloc.h"
 #include "renderer.h"
 #include "plugin.h"
-#include "renderingsystem.h"
+#include "rendersystem.h"
 #include "passesrenderingaspectimpl.h"
 
 using namespace DrawSpace;

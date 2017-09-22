@@ -20,7 +20,7 @@
 *
 */
 
-#include "renderingsystem.h"
+#include "rendersystem.h"
 #include "renderingaspect.h"
 
 using namespace DrawSpace;
