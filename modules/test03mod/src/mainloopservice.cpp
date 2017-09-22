@@ -128,8 +128,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot", "texture_pass" );
 
-    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot" )->getPurpose().GetRenderingNode();
+    rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot" )->getPurpose().m_proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
 
+    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot" )->getPurpose().GetRenderingNode();
     cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
     cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );

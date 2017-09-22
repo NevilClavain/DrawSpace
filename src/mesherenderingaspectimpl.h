@@ -46,13 +46,14 @@ public:
         RenderingNodeDrawCallback*              m_cb;
         DrawSpace::Interface::Renderer*         m_renderer;
 
+        virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+
+    public:
+
         Utils::Matrix                           m_world;
         Utils::Matrix                           m_view;
         Utils::Matrix                           m_proj;
 
-        virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-
-    public:
         PassSlot( const dsstring& p_pass_name );
         ~PassSlot( void );
 

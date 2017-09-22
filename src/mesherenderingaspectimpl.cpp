@@ -44,7 +44,8 @@ MesheRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
     m_world.Identity();
     
     m_view.Identity();
-    m_proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
+    //m_proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
+    m_proj.Identity();
 }
 
 MesheRenderingAspectImpl::PassSlot::~PassSlot( void )
