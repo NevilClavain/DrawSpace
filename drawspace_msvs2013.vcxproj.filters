@@ -40,6 +40,9 @@
     <Filter Include="interface\AspectImplementations">
       <UniqueIdentifier>{0430660f-b891-44a1-baad-ca751813ea0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AspectImplementations">
+      <UniqueIdentifier>{ba0c2578-adf7-4170-bdbe-149efc7215a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
@@ -249,19 +252,10 @@
     <ClCompile Include="src\worldaspect.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src\textrenderingaspectimpl.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\rawtransformaspectimpl.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\renderingaspect.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\passesrenderingaspectimpl.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mesherenderingaspectimpl.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src\worldsystem.cpp">
@@ -269,6 +263,15 @@
     </ClCompile>
     <ClCompile Include="src\renderingsystem.cpp">
       <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="src\textrenderingaspectimpl.cpp">
+      <Filter>AspectImplementations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\passesrenderingaspectimpl.cpp">
+      <Filter>AspectImplementations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesherenderingaspectimpl.cpp">
+      <Filter>AspectImplementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -533,19 +536,10 @@
     <ClInclude Include="src\worldaspect.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\textrenderingaspectimpl.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\rawtransformaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\renderingaspect.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\passesrenderingaspectimpl.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\mesherenderingaspectimpl.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src\worldsystem.h">
@@ -559,6 +553,15 @@
     </ClInclude>
     <ClInclude Include="src\worldaspectimpl.h">
       <Filter>interface\AspectImplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\textrenderingaspectimpl.h">
+      <Filter>AspectImplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\passesrenderingaspectimpl.h">
+      <Filter>AspectImplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesherenderingaspectimpl.h">
+      <Filter>AspectImplementations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
