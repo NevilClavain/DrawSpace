@@ -37,8 +37,7 @@ namespace Core
 class RenderPassNode sealed
 {
 private:
-
-    class PassDescr sealed
+    class PassDescr
     {
     public:
         DrawSpace::Core::RenderingQueue*   m_renderingqueue;

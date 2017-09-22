@@ -46,10 +46,7 @@ public:
 
 	EntityNode AddChild( Entity* p_entity );
 	void Erase( void );
-
 };
-
-
 }
 }
 

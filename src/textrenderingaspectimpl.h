@@ -37,7 +37,7 @@ protected:
     DrawSpace::Interface::Renderer* m_renderer;
 
 public:
-    struct TextDisplay sealed
+    struct TextDisplay
     {
         dsstring        m_text;
         int             m_posx;
