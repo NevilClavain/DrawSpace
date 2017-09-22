@@ -30,7 +30,6 @@ namespace DrawSpace
 {
 namespace Core
 {
-class PassesRenderingAspectImpl;
 class RenderPassNodeGraph sealed
 {
 public:

@@ -50,9 +50,9 @@ protected:
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
     DrawSpace::Systems::WorldSystem                                                 m_worldSystem;
 
-    DrawSpace::Core::PassesRenderingAspectImpl                                      m_passesRender;
-    DrawSpace::Core::MesheRenderingAspectImpl                                       m_cubeRender;
-    DrawSpace::Core::TextRenderingAspectImpl                                        m_textRender;
+    DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
+    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
+    DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
 
     DrawSpace::Core::RawTransformAspectImpl                                         m_cubeTransformer;

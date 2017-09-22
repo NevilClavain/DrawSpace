@@ -24,6 +24,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::AspectImplementations;
 
 PassesRenderingAspectImpl::PassesRenderingAspectImpl( void ) :
 m_rendergraph( NULL )

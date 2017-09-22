@@ -29,7 +29,7 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace AspectImplementations
 {
 class TextRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
@@ -60,8 +60,7 @@ public:
     
 public:
     TextRenderingAspectImpl( void );
-    virtual void Run( Entity* p_entity );
-
+    virtual void Run( DrawSpace::Core::Entity* p_entity );
 };
 
 }

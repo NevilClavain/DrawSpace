@@ -26,6 +26,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 
 MesheRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
@@ -49,7 +50,7 @@ MesheRenderingAspectImpl::PassSlot::~PassSlot( void )
     _DRAWSPACE_DELETE_( m_rendering_node );
 }       
 
-void MesheRenderingAspectImpl::PassSlot::on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
+void MesheRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
     m_renderer->DrawMeshe( m_world, m_view, m_proj );
 }

@@ -28,19 +28,19 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace AspectImplementations
 {
 class PassesRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 protected:
-    RenderPassNodeGraph* m_rendergraph;
+    DrawSpace::Core::RenderPassNodeGraph* m_rendergraph;
 
 public:
 
     PassesRenderingAspectImpl( void );
-    bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
-    void SetRendergraph( RenderPassNodeGraph* p_rendergraph );
-    virtual void Run( Entity* p_entity );
+    bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue );
+    void SetRendergraph( DrawSpace::Core::RenderPassNodeGraph* p_rendergraph );
+    virtual void Run( DrawSpace::Core::Entity* p_entity );
 };
 }
 }

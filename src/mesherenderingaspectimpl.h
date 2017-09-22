@@ -31,7 +31,7 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace AspectImplementations
 {
 class MesheRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
@@ -41,14 +41,14 @@ public:
     private:
         typedef DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
 
-        dsstring                            m_pass_name;
-        RenderingNode*                      m_rendering_node;
-        RenderingNodeDrawCallback*          m_cb;
-        DrawSpace::Interface::Renderer*     m_renderer;
+        dsstring                                m_pass_name;
+        DrawSpace::Core::RenderingNode*         m_rendering_node;
+        RenderingNodeDrawCallback*              m_cb;
+        DrawSpace::Interface::Renderer*         m_renderer;
 
-        Utils::Matrix                       m_world;
-        Utils::Matrix                       m_view;
-        Utils::Matrix                       m_proj;
+        Utils::Matrix                           m_world;
+        Utils::Matrix                           m_view;
+        Utils::Matrix                           m_proj;
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -56,7 +56,7 @@ public:
         PassSlot( const dsstring& p_pass_name );
         ~PassSlot( void );
 
-        RenderingNode* GetRenderingNode( void ) { return m_rendering_node; };
+        DrawSpace::Core::RenderingNode* GetRenderingNode( void ) { return m_rendering_node; };
 
         friend class MesheRenderingAspectImpl;
     };
@@ -68,12 +68,12 @@ protected:
 public:
     MesheRenderingAspectImpl( void );
 
-    bool VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue );
+    bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue );
 
-    void RegisterToRendering( RenderPassNodeGraph& p_rendergraph );
-    void UnregisterFromRendering( RenderPassNodeGraph& p_rendergraph );
+    void RegisterToRendering( DrawSpace::Core::RenderPassNodeGraph& p_rendergraph );
+    void UnregisterFromRendering( DrawSpace::Core::RenderPassNodeGraph& p_rendergraph );
 
-    virtual void Run( Entity* p_entity );
+    virtual void Run( DrawSpace::Core::Entity* p_entity );
 };
 }
 }
