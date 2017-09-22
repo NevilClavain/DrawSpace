@@ -25,6 +25,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 
 TextRenderingAspectImpl::TextRenderingAspectImpl( void )

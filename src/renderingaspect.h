@@ -28,9 +28,9 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace Aspect
 {
-class RenderingAspect : public Aspect
+class RenderingAspect : public Core::Aspect
 {
 protected:
     std::vector<DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*>   m_impls;
@@ -39,7 +39,7 @@ public:
     RenderingAspect( void );
 
     void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
-    void Draw( Entity* p_owner_entity );
+    void Draw( Core::Entity* p_owner_entity );
 };
 }
 }

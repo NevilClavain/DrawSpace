@@ -28,7 +28,7 @@
 
 namespace DrawSpace
 {
-namespace Core
+namespace Aspect
 {
 class RenderingAspect;
 }
@@ -39,7 +39,7 @@ namespace AspectImplementations
 class RenderingAspectImpl abstract
 {
 protected:
-    DrawSpace::Core::RenderingAspect* m_owner;
+    DrawSpace::Aspect::RenderingAspect* m_owner;
 
 public:
     RenderingAspectImpl( void ) : m_owner( NULL )
@@ -50,7 +50,7 @@ public:
 
     virtual void Run( DrawSpace::Core::Entity* p_entity ) = 0;
 
-    virtual void SetOwner( DrawSpace::Core::RenderingAspect* p_owner ) { m_owner = p_owner; };
+    virtual void SetOwner( DrawSpace::Aspect::RenderingAspect* p_owner ) { m_owner = p_owner; };
 };
 }
 }

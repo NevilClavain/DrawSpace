@@ -26,7 +26,6 @@
 #include "worldaspectimpl.h"
 #include "entity.h"
 
-
 namespace DrawSpace
 {
 namespace Aspect
