@@ -51,6 +51,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
+    m_roty = 0.0;
+
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 
@@ -166,7 +168,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     world_aspect->AddComponent<Matrix>( "cube_translation" );
 
     world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
-    world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( 67.0 ) );
+    world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
 
 
 
@@ -191,12 +193,15 @@ void MainLoopService::Run( void )
       
         char comment[256];
         sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
-        m_rootEntity.GetAspect<RenderingAspect>()->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;        
     }
 
     m_tm.Update();
     if( m_tm.IsReady() )
     {
+        m_tm.AngleSpeedInc( &m_roty, 15 );
+
+        WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
+        world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
     }    
 }
 

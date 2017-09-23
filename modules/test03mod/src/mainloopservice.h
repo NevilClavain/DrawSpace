@@ -54,6 +54,8 @@ protected:
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
+    dsreal                                                                          m_roty;
+
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_cubeTransformer;
     
