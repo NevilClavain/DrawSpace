@@ -99,6 +99,7 @@
 #include "worldaspect.h"
 #include "rawtransformaspectimpl.h"
 
+#include "cameraaspect.h"
 
 #include "rendersystem.h"
 #include "worldsystem.h"

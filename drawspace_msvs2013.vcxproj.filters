@@ -280,6 +280,10 @@
     <ClCompile Include="src\entitynodegraph.cpp">
       <Filter>entitygraph</Filter>
     </ClCompile>
+    <ClCompile Include="src\rendersystem.cpp" />
+    <ClCompile Include="src\cameraaspect.cpp">
+      <Filter>aspect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -572,6 +576,9 @@
     </ClInclude>
     <ClInclude Include="src\entitynodegraph.h">
       <Filter>entitygraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cameraaspect.h">
+      <Filter>aspect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
