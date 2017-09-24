@@ -22,14 +22,17 @@
 
 #include "worldsystem.h"
 #include "worldaspect.h"
+#include "cameraaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Systems;
 
-WorldSystem::WorldSystem( void )
+WorldSystem::WorldSystem( void ) :
+m_curr_entity_camera( NULL )
 {
 }
 
@@ -39,16 +42,62 @@ WorldSystem::~WorldSystem( void )
 
 void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
 {
+    m_step = 0;
+    p_entitygraph->AcceptWorldSystem( this );
+
+    if( m_curr_entity_camera )
+    {
+        CameraAspect* camera_aspect = m_curr_entity_camera->GetAspect<CameraAspect>();
+        if( camera_aspect )
+        {
+            /*
+            Matrix view;
+            Matrix proj;
+            camera_aspect->GetProjTransform( proj );
+            camera_aspect->GetViewTransform( view );
+            */
+
+            // chercher si worldaspect associe a cette camera
+            // si oui, inverser cette matrice, qui servira de view
+            // si non, identite pour view
+
+            WorldAspect* world_aspect = m_curr_entity_camera->GetAspect<WorldAspect>();
+            if( world_aspect )
+            {
+                Matrix camera_world_transform;
+                world_aspect->GetWorldTransform( camera_world_transform );
+                camera_world_transform.Inverse();
+            }
+
+            // chercher si composant Mat associe a camera_aspect
+            // si oui, servira de proj
+            // si on, identite pour proj
+        }
+    }
+
+    m_step = 1;
     p_entitygraph->AcceptWorldSystem( this );
 }
 
 void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 {
-    WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
-
-    if( world_aspect )
+    if( 0 == m_step )
     {
-        world_aspect->ComputeTransforms( p_parent, p_entity );
+        //calculer les matrices world pour tt le monde
+        WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
+        if( world_aspect )
+        {
+            world_aspect->ComputeTransforms( p_parent, p_entity );
+        }
+    }
+    else if( 1 == m_step )
+    {
+        // distribuer view et proj a tout les world_aspect de ttes les entites
+        // sauf l'entite correspondant a la camera            
     }
 }
 
+void WorldSystem::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera )
+{
+    m_curr_entity_camera = p_curr_entity_camera;
+}

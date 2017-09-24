@@ -33,12 +33,17 @@ class WorldSystem
 {
 protected:
 
+    int             m_step;
+    Core::Entity*   m_curr_entity_camera;
+
 public:
     WorldSystem(void);
     ~WorldSystem(void);
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    void SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera );
 };
 }
 }

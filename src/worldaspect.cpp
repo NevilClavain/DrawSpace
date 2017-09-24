@@ -31,13 +31,14 @@ using namespace DrawSpace::Interface;
 WorldAspect::WorldAspect( void )
 {
     m_worldtransform.Identity();
+    m_dispatched_viewtransform.Identity();
+    m_dispatched_projtransform.Identity();
 }
 
 void WorldAspect::AddImplementation( AspectImplementations::WorldAspectImpl* p_impl )
 {
     m_impls.push_back( p_impl );
 }
-
 
 void WorldAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 {
@@ -80,7 +81,23 @@ void WorldAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     m_worldtransform = finaltransform_mat;
 }
 
+void WorldAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj )
+{
+    m_dispatched_viewtransform = p_view;
+    m_dispatched_projtransform = p_proj;
+}
+
 void WorldAspect::GetWorldTransform( Matrix& p_worldtransform )
 {
     p_worldtransform = m_worldtransform;
+}
+
+void WorldAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform )
+{
+    p_viewtransform = m_dispatched_viewtransform;
+}
+
+void WorldAspect::GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform )
+{
+    p_projtransform = m_dispatched_projtransform;
 }

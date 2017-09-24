@@ -34,6 +34,12 @@ class WorldAspect : public Core::Aspect
 {
 protected:
     DrawSpace::Utils::Matrix                                                        m_worldtransform;
+
+    // transfos view et proj "distribuees" par le worldsystem
+    DrawSpace::Utils::Matrix                                                        m_dispatched_viewtransform;
+    DrawSpace::Utils::Matrix                                                        m_dispatched_projtransform;
+
+
     std::vector<DrawSpace::Interface::AspectImplementations::WorldAspectImpl*>      m_impls;
 
 public:
@@ -42,8 +48,11 @@ public:
     void AddImplementation( DrawSpace::Interface::AspectImplementations::WorldAspectImpl* p_impl );
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
+    void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform );
+    void GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform );
 
     void ComputeTransforms( Core::Entity* p_parent, Core::Entity* p_entity );
+    void DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj );
 };
 }
 }

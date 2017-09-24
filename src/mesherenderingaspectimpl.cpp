@@ -44,7 +44,6 @@ MesheRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
     m_world.Identity();
     
     m_view.Identity();
-    //m_proj.Perspective( 1.0, 0.75, 1.0, 100000000000.0 );
     m_proj.Identity();
 }
 
@@ -111,7 +110,14 @@ void MesheRenderingAspectImpl::Run( Entity* p_entity )
         Matrix world;
         world_aspect->GetWorldTransform( world );
 
+        Matrix view;
+        world_aspect->GetViewTransform( view );
+
+        Matrix proj;
+        world_aspect->GetProjTransform( proj );
+
         // redistribution de la transfo world...
+        // + redistribution des proj/view distribues
 
         std::vector<Component<PassSlot>*> pass_slots;
         m_owner->GetComponentsByType<PassSlot>( pass_slots );
@@ -119,6 +125,8 @@ void MesheRenderingAspectImpl::Run( Entity* p_entity )
         for( size_t i = 0; i < pass_slots.size(); i++ )
         {
             pass_slots[i]->getPurpose().m_world = world;
+            pass_slots[i]->getPurpose().m_view = view;
+            pass_slots[i]->getPurpose().m_proj = proj;
         }
     }
 }
