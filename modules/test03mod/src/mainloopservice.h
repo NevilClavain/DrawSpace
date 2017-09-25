@@ -61,7 +61,7 @@ protected:
     dsreal                                                                          m_roty;
 
 
-    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_cubeTransformer;
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;
     
     bool                                                                            m_display_switch = true;
 

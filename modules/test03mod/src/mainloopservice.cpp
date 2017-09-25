@@ -163,7 +163,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
 
-    world_aspect->AddImplementation( &m_cubeTransformer );    
+    world_aspect->AddImplementation( &m_transformer );    
     world_aspect->AddComponent<Matrix>( "cube_rotation" );
     world_aspect->AddComponent<Matrix>( "cube_translation" );
 
@@ -173,12 +173,20 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     ///////////////////////////////////////////////////////////////////////////
 
     m_cameraEntity.AddAspect<WorldAspect>();
+    world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+    world_aspect->AddImplementation( &m_transformer );   
+    world_aspect->AddComponent<Matrix>( "camera_pos" );
+    world_aspect->GetComponent<Matrix>( "camera_pos" )->getPurpose().Translation( Vector( 0.0, 0.0, -4.0, 1.0 ) );
+
+
     m_cameraEntity.AddAspect<CameraAspect>();
 
     CameraAspect* camera_aspect = m_cameraEntity.GetAspect<CameraAspect>();
     camera_aspect->AddComponent<Matrix>( "camera_proj" );
 
-    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( 1.0, 0.75, 1.0, 100000.0 );
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    m_renderer->GetRenderCharacteristics( characteristics );
+    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
 
 
     ///////////////////////////////////////////////////////////////////////////
