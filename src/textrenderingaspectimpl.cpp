@@ -39,8 +39,8 @@ void TextRenderingAspectImpl::Run( Entity* p_entity )
     // NB : rendering_aspect ne peut pas etre NULL (si on arrive ici c'est qu'il y a forcement un RenderingAspect dans l'entite
 
     // extraire tout les composants "texts display"
-    std::vector<Component<TextDisplay>*> texts;
-
+    ComponentList<TextDisplay> texts;
+    
     rendering_aspect->GetComponentsByType<TextDisplay>( texts );
 
     for( size_t i = 0; i < texts.size(); i++ )

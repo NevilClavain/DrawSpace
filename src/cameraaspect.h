@@ -32,18 +32,7 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class CameraAspect : public Core::Aspect
-{
-protected:
-    DrawSpace::Utils::Matrix            m_viewtransform;
-    DrawSpace::Utils::Matrix            m_projtransform;
-    DrawSpace::Interface::Renderer*     m_renderer;
-
-public:
-    CameraAspect( void );
-    void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform );
-    void GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform );
-};
+class CameraAspect : public Core::Aspect {};
 }
 }
 

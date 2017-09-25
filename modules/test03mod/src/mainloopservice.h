@@ -46,6 +46,10 @@ protected:
     DrawSpace::Core::Entity                                                         m_cubeEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_cubeEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_cameraEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_cameraEntityNode;
+
+
     
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
     DrawSpace::Systems::WorldSystem                                                 m_worldSystem;

@@ -45,18 +45,14 @@ void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
     m_step = 0;
     p_entitygraph->AcceptWorldSystem( this );
 
+    m_viewtransform_todispatch.Identity();
+    m_projtransform_todispatch.Identity();
+
     if( m_curr_entity_camera )
     {
         CameraAspect* camera_aspect = m_curr_entity_camera->GetAspect<CameraAspect>();
         if( camera_aspect )
         {
-            /*
-            Matrix view;
-            Matrix proj;
-            camera_aspect->GetProjTransform( proj );
-            camera_aspect->GetViewTransform( view );
-            */
-
             // chercher si worldaspect associe a cette camera
             // si oui, inverser cette matrice, qui servira de view
             // si non, identite pour view
@@ -67,11 +63,20 @@ void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
                 Matrix camera_world_transform;
                 world_aspect->GetWorldTransform( camera_world_transform );
                 camera_world_transform.Inverse();
+
+                m_viewtransform_todispatch = camera_world_transform;
             }
 
             // chercher si composant Mat associe a camera_aspect
             // si oui, servira de proj
-            // si on, identite pour proj
+            // si non, identite pour proj
+
+            ComponentList<Matrix> mats;
+            camera_aspect->GetComponentsByType<Matrix>( mats );
+            if( mats.size() > 0 )
+            {
+                m_projtransform_todispatch = mats[0]->getPurpose();
+            }
         }
     }
 
@@ -93,7 +98,12 @@ void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     else if( 1 == m_step )
     {
         // distribuer view et proj a tout les world_aspect de ttes les entites
-        // sauf l'entite correspondant a la camera            
+        
+        WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
+        if( world_aspect )
+        {
+            world_aspect->DispatchViewProj( m_viewtransform_todispatch, m_projtransform_todispatch );
+        }
     }
 }
 

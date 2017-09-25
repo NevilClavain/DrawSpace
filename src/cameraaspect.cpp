@@ -22,28 +22,3 @@
 
 #include "cameraaspect.h"
 #include "renderer.h"
-
-using namespace DrawSpace::Aspect;
-using namespace DrawSpace::Utils;
-
-CameraAspect::CameraAspect( void )
-{
-    m_viewtransform.Identity();
-    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-
-    // initialiser une matrice proj par defaut
-    DrawSpace::Interface::Renderer::Characteristics characteristics;
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    renderer->GetRenderCharacteristics( characteristics );
-    m_projtransform.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000000000.0 ); 
-}
-
-void CameraAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform )
-{
-    p_viewtransform = m_viewtransform;
-}
-
-void CameraAspect::GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform )
-{
-    p_projtransform = m_viewtransform;
-}

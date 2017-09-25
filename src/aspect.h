@@ -31,6 +31,9 @@ namespace DrawSpace
 {
 namespace Core
 {
+template<typename T>
+using ComponentList = std::vector<Component<T>*>;
+
 class Aspect abstract
 {
 protected:
@@ -102,7 +105,7 @@ public:
     }
 
     template<typename T>
-    void GetComponentsByType( std::vector<Component<T>*>& p_outlist )
+    void GetComponentsByType( ComponentList<T>& p_outlist )
     {
         size_t tid = typeid(T).hash_code();
         if( m_components_by_type.count( tid ) > 0 )

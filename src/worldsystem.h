@@ -24,6 +24,7 @@
 #define _WORLDSYSTEM_H_
 
 #include "entitynodegraph.h"
+#include "matrix.h"
 
 namespace DrawSpace
 {
@@ -33,8 +34,11 @@ class WorldSystem
 {
 protected:
 
-    int             m_step;
-    Core::Entity*   m_curr_entity_camera;
+    int                         m_step;
+    Core::Entity*               m_curr_entity_camera;
+
+    DrawSpace::Utils::Matrix    m_viewtransform_todispatch;
+    DrawSpace::Utils::Matrix    m_projtransform_todispatch;
 
 public:
     WorldSystem(void);

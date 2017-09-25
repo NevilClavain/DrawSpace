@@ -170,12 +170,28 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
     world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
 
+    ///////////////////////////////////////////////////////////////////////////
+
+    m_cameraEntity.AddAspect<WorldAspect>();
+    m_cameraEntity.AddAspect<CameraAspect>();
+
+    CameraAspect* camera_aspect = m_cameraEntity.GetAspect<CameraAspect>();
+    camera_aspect->AddComponent<Matrix>( "camera_proj" );
+
+    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( 1.0, 0.75, 1.0, 100000.0 );
 
 
     ///////////////////////////////////////////////////////////////////////////
 
+    // ajouter le cube a la scene
     m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
     m_cubeRender.RegisterToRendering( m_rendergraph );
+
+    // ajouter la camera a la scene
+    m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
+
+
+    m_worldSystem.SetCurrentCameraEntity( &m_cameraEntity );
 
     m_rendergraph.RenderingQueueModSignal();
 
@@ -224,7 +240,7 @@ void MainLoopService::RegisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGra
 }
 
 void MainLoopService::UnregisterScenegraphCallbacks( DrawSpace::Core::SceneNodeGraph& p_scenegraph )
-{
+{ 
 }
 
 void MainLoopService::ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar )

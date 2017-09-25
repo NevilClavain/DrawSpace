@@ -64,7 +64,9 @@ MesheRenderingAspectImpl::MesheRenderingAspectImpl( void )
 bool MesheRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue )
 {
     bool updated_queue = false;
-    std::vector<Component<PassSlot>*> pass_slots;
+
+    ComponentList<PassSlot> pass_slots;
+
     m_owner->GetComponentsByType<PassSlot>( pass_slots );
 
     for( size_t i = 0; i < pass_slots.size(); i++ )
@@ -119,7 +121,7 @@ void MesheRenderingAspectImpl::Run( Entity* p_entity )
         // redistribution de la transfo world...
         // + redistribution des proj/view distribues
 
-        std::vector<Component<PassSlot>*> pass_slots;
+        ComponentList<PassSlot> pass_slots;
         m_owner->GetComponentsByType<PassSlot>( pass_slots );
 
         for( size_t i = 0; i < pass_slots.size(); i++ )
