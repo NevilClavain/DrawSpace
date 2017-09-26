@@ -36,6 +36,7 @@ class FPSTransformAspectImpl : public DrawSpace::Interface::AspectImplementation
 protected:
 
     Utils::TimeManager&         m_timemanager;
+    Utils::Matrix			    m_position;
 
 public:
     FPSTransformAspectImpl( Utils::TimeManager& p_timemanager );

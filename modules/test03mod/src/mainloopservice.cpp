@@ -267,11 +267,37 @@ void MainLoopService::ReleaseSceneNode( const dsstring& p_sceneNodeName, DrawSpa
 }
 
 void MainLoopService::OnKeyPress( long p_key )
-{
+{   
+    switch( p_key )
+    {
+        case 'Q':
+        {
+            WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0;
+        }
+        break;
+
+        case 'W':
+        {
+            WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;        
+        }
+        break;
+    }
 }
 
 void MainLoopService::OnEndKeyPress( long p_key )
 {
+    switch( p_key )
+    {
+        case 'Q':
+        case 'W':
+        {
+            WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0;        
+        }
+        break;      
+    }
 }
 
 void MainLoopService::OnKeyPulse( long p_key )

@@ -33,7 +33,7 @@ using namespace DrawSpace::Utils;
 FPSTransformAspectImpl::FPSTransformAspectImpl( TimeManager& p_timemanager ) :
 m_timemanager( p_timemanager )
 {
-
+    m_position.Identity();
 }
 
 void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
@@ -62,7 +62,7 @@ void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Uti
     Utils::Quaternion		    current_res;
 
     // les sorties
-    Utils::Matrix			    position;
+    //Utils::Matrix			    position;
     Utils::Matrix			    orientation;
 
 	Vector gs;
@@ -70,7 +70,7 @@ void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Uti
 	Vector yaxis( 0.0, 1.0, 0.0, 1.0 );
 	Vector xaxis( 1.0, 0.0, 0.0, 1.0 );
 
-    position.Identity();
+    //position.Identity();
 
 	qyaw.RotationAxis( yaxis, angle_yaw );
 	qpitch.RotationAxis( xaxis, angle_pitch );
@@ -80,21 +80,21 @@ void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Uti
 
     orientation.Transform( &local_speed, &gs );
 
-	m_timemanager.TranslationSpeedInc( &position( 3, 0 ), gs[0] );
+	m_timemanager.TranslationSpeedInc( &m_position( 3, 0 ), gs[0] );
 
     
 	if( y_mvt )
 	{
 		// prendre aussi en compte la composante en Y (la camera peut aussi evoluer "en hauteur")
-		m_timemanager.TranslationSpeedInc( &position( 3, 1 ), gs[1] );
+		m_timemanager.TranslationSpeedInc( &m_position( 3, 1 ), gs[1] );
 	}
     
 
-	m_timemanager.TranslationSpeedInc( &position( 3, 2 ), gs[2] );
+	m_timemanager.TranslationSpeedInc( &m_position( 3, 2 ), gs[2] );
 
-    position( 3, 0 ) += init_pos[0];
-    position( 3, 1 ) += init_pos[1];
-    position( 3, 2 ) += init_pos[2];
+    //m_position( 3, 0 ) += init_pos[0];
+    //m_position( 3, 1 ) += init_pos[1];
+    //m_position( 3, 2 ) += init_pos[2];
 
-    p_out_base_transform = orientation * position;
+    p_out_base_transform = orientation * m_position;
 }
