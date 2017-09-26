@@ -284,6 +284,10 @@
     <ClCompile Include="src\cameraaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
+    <ClCompile Include="src\rendersystem.cpp" />
+    <ClCompile Include="src\fpstransformaspectimpl.cpp">
+      <Filter>aspectimplementations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -579,6 +583,9 @@
     </ClInclude>
     <ClInclude Include="src\cameraaspect.h">
       <Filter>aspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fpstransformaspectimpl.h">
+      <Filter>aspectimplementations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

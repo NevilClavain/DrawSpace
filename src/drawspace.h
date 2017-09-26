@@ -98,6 +98,7 @@
 
 #include "worldaspect.h"
 #include "rawtransformaspectimpl.h"
+#include "fpstransformaspectimpl.h"
 
 #include "cameraaspect.h"
 

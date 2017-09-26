@@ -26,6 +26,7 @@
     <ClCompile Include="src\entitynodegraph.cpp" />
     <ClCompile Include="src\file.cpp" />
     <ClCompile Include="src\fpsmovement.cpp" />
+    <ClCompile Include="src\fpstransformaspectimpl.cpp" />
     <ClCompile Include="src\freemovement.cpp" />
     <ClCompile Include="src\fx.cpp" />
     <ClCompile Include="src\headmovement.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="src\file.h" />
     <ClInclude Include="src\flags.h" />
     <ClInclude Include="src\fpsmovement.h" />
+    <ClInclude Include="src\fpstransformaspectimpl.h" />
     <ClInclude Include="src\freemovement.h" />
     <ClInclude Include="src\fx.h" />
     <ClInclude Include="src\headmovement.h" />

@@ -33,7 +33,8 @@ using namespace DrawSpace::Interface::Module;
 
 _DECLARE_DS_LOGGER( logger, "test01mainloopservice", NULL )
 
-MainLoopService::MainLoopService( void )
+MainLoopService::MainLoopService( void ) :
+m_fps_transformer( m_tm )
 {
 }
 
@@ -174,10 +175,20 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_cameraEntity.AddAspect<WorldAspect>();
     world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+    /*
     world_aspect->AddImplementation( &m_transformer );   
     world_aspect->AddComponent<Matrix>( "camera_pos" );
     world_aspect->GetComponent<Matrix>( "camera_pos" )->getPurpose().Translation( Vector( 0.0, 0.0, -4.0, 1.0 ) );
+    */
 
+    world_aspect->AddImplementation( &m_fps_transformer );
+    world_aspect->AddComponent<dsreal>( "yaw", 0.0 );
+    world_aspect->AddComponent<dsreal>( "pitch", 0.0 );
+
+    world_aspect->AddComponent<Vector>( "speed" );
+    world_aspect->AddComponent<Vector>( "init_pos", Vector( 0.0, 2.0, 10.0, 1.0 ) );
+
+    world_aspect->AddComponent<bool>( "ymvt", true );
 
     m_cameraEntity.AddAspect<CameraAspect>();
 

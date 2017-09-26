@@ -62,6 +62,7 @@ protected:
 
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;
+    DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
     
     bool                                                                            m_display_switch = true;
 
