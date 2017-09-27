@@ -186,7 +186,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     world_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 
     world_aspect->AddComponent<Vector>( "speed" );
-    world_aspect->AddComponent<Vector>( "init_pos", Vector( 0.0, 2.0, 10.0, 1.0 ) );
+    world_aspect->AddComponent<Matrix>( "pos" );
+
+    world_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 0.0, 10.0, 1.0 ) );
 
     world_aspect->AddComponent<bool>( "ymvt", true );
 
