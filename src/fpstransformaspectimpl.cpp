@@ -33,7 +33,6 @@ using namespace DrawSpace::Utils;
 FPSTransformAspectImpl::FPSTransformAspectImpl( TimeManager& p_timemanager ) :
 m_timemanager( p_timemanager )
 {
-    //m_position.Identity();
 }
 
 void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
@@ -49,8 +48,9 @@ void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Uti
     p_worldaspect->GetComponentsByType<Vector>( vectors );
 
     Vector local_speed = vectors[0]->getPurpose();
-    //Vector pos = vectors[1]->getPurpose();
 
+    local_speed[2] = -local_speed[2];
+    
     ComponentList<Matrix> mats;
     p_worldaspect->GetComponentsByType<Matrix>( mats );
 
@@ -67,7 +67,6 @@ void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Uti
     Utils::Quaternion		    current_res;
 
     // les sorties
-    //Utils::Matrix			    position;
     Utils::Matrix			    orientation;
 
 	Vector gs;
@@ -75,7 +74,6 @@ void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Uti
 	Vector yaxis( 0.0, 1.0, 0.0, 1.0 );
 	Vector xaxis( 1.0, 0.0, 0.0, 1.0 );
 
-    //position.Identity();
 
 	qyaw.RotationAxis( yaxis, angle_yaw );
 	qpitch.RotationAxis( xaxis, angle_pitch );
@@ -94,12 +92,7 @@ void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Uti
 		m_timemanager.TranslationSpeedInc( &pos( 3, 1 ), gs[1] );
 	}
     
-
 	m_timemanager.TranslationSpeedInc( &pos( 3, 2 ), gs[2] );
-
-    //m_position( 3, 0 ) += init_pos[0];
-    //m_position( 3, 1 ) += init_pos[1];
-    //m_position( 3, 2 ) += init_pos[2];
 
     p_out_base_transform = orientation * pos;
 

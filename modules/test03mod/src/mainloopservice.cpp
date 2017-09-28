@@ -54,6 +54,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 {
     m_roty = 0.0;
 
+    (*p_mousecircularmode_cb)( true )
+        ;
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 
@@ -238,10 +240,13 @@ void MainLoopService::Run( void )
     m_tm.Update();
     if( m_tm.IsReady() )
     {
+
+        /*
         m_tm.AngleSpeedInc( &m_roty, 15 );
 
         WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
         world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
+        */
     }    
 }
 
@@ -335,6 +340,13 @@ void MainLoopService::OnChar( long p_char, long p_scan )
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
+    //m_fpsmove.RotateYaw( - p_dx / 4.0, m_tm );
+	//m_fpsmove.RotatePitch( - p_dy / 4.0, m_tm );
+
+    WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+
+    m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "yaw" )->getPurpose(), - p_dx / 4.0 );
+    m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "pitch" )->getPurpose(), - p_dy / 4.0 );
 }
 
 void MainLoopService::OnMouseWheel( long p_delta )
