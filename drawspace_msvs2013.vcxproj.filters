@@ -288,6 +288,10 @@
     <ClCompile Include="src\fpstransformaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
+    <ClCompile Include="src\rendersystem.cpp" />
+    <ClCompile Include="src\skyboxrenderingaspectimpl.cpp">
+      <Filter>aspectimplementations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -585,6 +589,9 @@
       <Filter>aspect</Filter>
     </ClInclude>
     <ClInclude Include="src\fpstransformaspectimpl.h">
+      <Filter>aspectimplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\skyboxrenderingaspectimpl.h">
       <Filter>aspectimplementations</Filter>
     </ClInclude>
   </ItemGroup>

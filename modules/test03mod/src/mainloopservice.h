@@ -46,6 +46,10 @@ protected:
     DrawSpace::Core::Entity                                                         m_cubeEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_cubeEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_skyboxEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_skyboxEntityNode;
+
+
     DrawSpace::Core::Entity                                                         m_cameraEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_cameraEntityNode;
 
@@ -57,6 +61,7 @@ protected:
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
+    DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl                     m_skyboxRender;
 
     dsreal                                                                          m_roty;
 
