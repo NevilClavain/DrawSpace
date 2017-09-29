@@ -205,31 +205,25 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     rendering_aspect->AddComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot", "texture_pass" );
 
+    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_( Fx, Fx );
+
+    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    skybox_texturepass_fx->GetShader( 0 )->LoadFromFile();
+    skybox_texturepass_fx->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet skybox_texturepass_rss;
+    skybox_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    skybox_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    skybox_texturepass_fx->SetRenderStates( skybox_texturepass_rss );
+
     for( int i = 0; i < 6; i++ )
     {
-
         RenderingNode* skybox_texturepass = rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( i );
-
-        skybox_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-
-        skybox_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-        skybox_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-        skybox_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-        skybox_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
-
-
-        RenderStatesSet skybox_texturepass_rss;
-        skybox_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-        skybox_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-
-        skybox_texturepass->GetFx()->SetRenderStates( skybox_texturepass_rss );
-
         skybox_texturepass->SetOrderNumber( -1000 );
-
-
-        //skybox_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
-        //skybox_texturepass->GetTexture( 0 )->LoadFromFile();
+        skybox_texturepass->SetFx( skybox_texturepass_fx );
     }
 
     rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
