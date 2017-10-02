@@ -100,6 +100,7 @@
 #include "worldaspect.h"
 #include "rawtransformaspectimpl.h"
 #include "fpstransformaspectimpl.h"
+#include "freetransformaspectimpl.h"
 
 #include "cameraaspect.h"
 

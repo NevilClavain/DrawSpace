@@ -28,6 +28,7 @@
     <ClCompile Include="src\fpsmovement.cpp" />
     <ClCompile Include="src\fpstransformaspectimpl.cpp" />
     <ClCompile Include="src\freemovement.cpp" />
+    <ClCompile Include="src\freetransformaspectimpl.cpp" />
     <ClCompile Include="src\fx.cpp" />
     <ClCompile Include="src\headmovement.cpp" />
     <ClCompile Include="src\inertbody.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="src\fpsmovement.h" />
     <ClInclude Include="src\fpstransformaspectimpl.h" />
     <ClInclude Include="src\freemovement.h" />
+    <ClInclude Include="src\freetransformaspectimpl.h" />
     <ClInclude Include="src\fx.h" />
     <ClInclude Include="src\headmovement.h" />
     <ClInclude Include="src\impostorsdisplaylist.h" />
