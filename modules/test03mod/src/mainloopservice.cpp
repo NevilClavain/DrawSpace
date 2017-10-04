@@ -34,7 +34,8 @@ using namespace DrawSpace::Interface::Module;
 _DECLARE_DS_LOGGER( logger, "test01mainloopservice", NULL )
 
 MainLoopService::MainLoopService( void ) :
-m_fps_transformer( m_tm )
+m_fps_transformer( m_tm ),
+m_free_transformer( m_tm )
 {
 }
 
@@ -198,6 +199,32 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
+    m_camera2Entity.AddAspect<WorldAspect>();
+    world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+
+    world_aspect->AddImplementation( &m_free_transformer );
+
+    world_aspect->AddComponent<dsreal>( "rspeed", 0.0 );
+
+    world_aspect->AddComponent<Vector>( "speed" );
+    world_aspect->AddComponent<Vector>( "rot_axis", Vector( 0.0, 1.0, 0.0, 1.0 ) );
+
+    world_aspect->AddComponent<Matrix>( "pos" );
+    world_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 5.0, 1.0 ) );
+
+    world_aspect->AddComponent<Quaternion>( "quat" );
+    world_aspect->GetComponent<Quaternion>( "quat" )->getPurpose().Identity();
+
+    m_camera2Entity.AddAspect<CameraAspect>();
+    camera_aspect = m_camera2Entity.GetAspect<CameraAspect>();
+    camera_aspect->AddComponent<Matrix>( "camera_proj" );
+
+    m_renderer->GetRenderCharacteristics( characteristics );
+    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
     m_skyboxEntity.AddAspect<RenderingAspect>();
     rendering_aspect = m_skyboxEntity.GetAspect<RenderingAspect>();
 
@@ -267,8 +294,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     // ajouter la camera a la scene
     m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
 
+    m_camera2EntityNode = m_rootEntityNode.AddChild( &m_camera2Entity );
 
-    m_worldSystem.SetCurrentCameraEntity( &m_cameraEntity );
+
+
+    //m_worldSystem.SetCurrentCameraEntity( &m_cameraEntity );
+    m_worldSystem.SetCurrentCameraEntity( &m_camera2Entity );
 
     m_rendergraph.RenderingQueueModSignal();
 
@@ -333,14 +364,14 @@ void MainLoopService::OnKeyPress( long p_key )
     {
         case 'Q':
         {
-            WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+            WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
             world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0;
         }
         break;
 
         case 'W':
         {
-            WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+            WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
             world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;        
         }
         break;
@@ -354,7 +385,7 @@ void MainLoopService::OnEndKeyPress( long p_key )
         case 'Q':
         case 'W':
         {
-            WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+            WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
             world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0;        
         }
         break;      
@@ -394,13 +425,14 @@ void MainLoopService::OnChar( long p_char, long p_scan )
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-    //m_fpsmove.RotateYaw( - p_dx / 4.0, m_tm );
-	//m_fpsmove.RotatePitch( - p_dy / 4.0, m_tm );
-
+    /*
     WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
 
     m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "yaw" )->getPurpose(), - p_dx / 4.0 );
     m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "pitch" )->getPurpose(), - p_dy / 4.0 );
+    */
+
+    WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
 }
 
 void MainLoopService::OnMouseWheel( long p_delta )

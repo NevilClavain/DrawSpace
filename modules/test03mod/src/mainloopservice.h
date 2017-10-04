@@ -53,6 +53,8 @@ protected:
     DrawSpace::Core::Entity                                                         m_cameraEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_cameraEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_camera2Entity;
+    DrawSpace::EntityGraph::EntityNode                                              m_camera2EntityNode;
 
     
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
@@ -68,6 +70,7 @@ protected:
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;
     DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
+    DrawSpace::AspectImplementations::FreeTransformAspectImpl                       m_free_transformer;
     
     bool                                                                            m_display_switch = true;
 
