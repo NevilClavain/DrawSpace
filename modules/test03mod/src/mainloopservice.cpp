@@ -204,16 +204,25 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     world_aspect->AddImplementation( &m_free_transformer );
 
-    world_aspect->AddComponent<dsreal>( "rspeed", 0.0 );
+    m_free_transformer.Init( Vector( 0.0, 0.0, 10.0, 1.0 ) );
+
+    /*
+    world_aspect->AddComponent<dsreal>( "rspeed0", 0.0 );
+    world_aspect->AddComponent<dsreal>( "rspeed1", 0.0 );
+    world_aspect->AddComponent<dsreal>( "rspeed2", 0.0 );
 
     world_aspect->AddComponent<Vector>( "speed" );
-    world_aspect->AddComponent<Vector>( "rot_axis", Vector( 0.0, 1.0, 0.0, 1.0 ) );
+    world_aspect->AddComponent<Vector>( "rot_axis0", Vector( 0.0, 1.0, 0.0, 1.0 ) );
+    world_aspect->AddComponent<Vector>( "rot_axis1", Vector( 1.0, 0.0, 0.0, 1.0 ) );
+    world_aspect->AddComponent<Vector>( "rot_axis2", Vector( 0.0, 0.0, 1.0, 1.0 ) );
 
     world_aspect->AddComponent<Matrix>( "pos" );
     world_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 5.0, 1.0 ) );
 
     world_aspect->AddComponent<Quaternion>( "quat" );
     world_aspect->GetComponent<Quaternion>( "quat" )->getPurpose().Identity();
+    */
+
 
     m_camera2Entity.AddAspect<CameraAspect>();
     camera_aspect = m_camera2Entity.GetAspect<CameraAspect>();
@@ -332,7 +341,13 @@ void MainLoopService::Run( void )
         WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
         world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
         */
-    }    
+    }
+    /*
+    WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+    world_aspect->GetComponent<dsreal>( "rspeed0" )->getPurpose() = 0.0;
+    world_aspect->GetComponent<dsreal>( "rspeed1" )->getPurpose() = 0.0;
+    world_aspect->GetComponent<dsreal>( "rspeed2" )->getPurpose() = 0.0;
+    */
 }
 
 void MainLoopService::Release( void )
@@ -364,15 +379,23 @@ void MainLoopService::OnKeyPress( long p_key )
     {
         case 'Q':
         {
+            /*
             WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
             world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0;
+            */
+
+            m_free_transformer.SetSpeed( 10.0 );
         }
         break;
 
         case 'W':
         {
+            /*
             WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;        
+            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;
+            */
+
+            m_free_transformer.SetSpeed( -2.0 );
         }
         break;
     }
@@ -385,8 +408,12 @@ void MainLoopService::OnEndKeyPress( long p_key )
         case 'Q':
         case 'W':
         {
+            /*
             WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0;        
+            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
+            */
+
+            m_free_transformer.SetSpeed( 0.0 );
         }
         break;      
     }
@@ -432,7 +459,9 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
     m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "pitch" )->getPurpose(), - p_dy / 4.0 );
     */
 
-    WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+	m_free_transformer.RotateYaw( -p_dx * 0.2 );
+	m_free_transformer.RotatePitch( -p_dy * 0.2 );
+    
 }
 
 void MainLoopService::OnMouseWheel( long p_delta )
