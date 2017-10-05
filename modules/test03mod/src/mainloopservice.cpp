@@ -37,7 +37,8 @@ MainLoopService::MainLoopService( void ) :
 m_fps_transformer( m_tm ),
 m_free_transformer( m_tm ),
 m_left_mousebutton( false ),
-m_right_mousebutton( false )
+m_right_mousebutton( false ),
+m_current_camera( 0 )
 {
 }
 
@@ -305,9 +306,14 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_camera2EntityNode = m_rootEntityNode.AddChild( &m_camera2Entity );
 
 
-
-    //m_worldSystem.SetCurrentCameraEntity( &m_cameraEntity );
-    m_worldSystem.SetCurrentCameraEntity( &m_camera2Entity );
+    if( 0 == m_current_camera )
+    {
+        m_worldSystem.SetCurrentCameraEntity( &m_cameraEntity );
+    }
+    else
+    {
+        m_worldSystem.SetCurrentCameraEntity( &m_camera2Entity );
+    }
 
     m_rendergraph.RenderingQueueModSignal();
 
@@ -342,11 +348,13 @@ void MainLoopService::Run( void )
         */
     }
     
-    WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-    world_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = 0.0;
-    world_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = 0.0;
-    world_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = 0.0;
-    
+    if( 1 == m_current_camera )
+    {
+        WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+        world_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = 0.0;
+        world_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = 0.0;
+        world_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = 0.0;
+    }
 }
 
 void MainLoopService::Release( void )
@@ -378,23 +386,31 @@ void MainLoopService::OnKeyPress( long p_key )
     {
         case 'Q':
         {
-            
-            WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0;
-            
-
-            //m_free_transformer.SetSpeed( 10.0 );
+            if( 0 == m_current_camera )
+            {
+                WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0; 
+            }
+            else
+            {
+                WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0;    
+            }
         }
         break;
 
         case 'W':
         {
-            
-            WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;
-            
-
-            //m_free_transformer.SetSpeed( -2.0 );
+            if( 0 == m_current_camera )
+            {
+                WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;
+            }
+            else
+            {
+                WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;    
+            }
         }
         break;
     }
@@ -407,12 +423,16 @@ void MainLoopService::OnEndKeyPress( long p_key )
         case 'Q':
         case 'W':
         {
-            
-            WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-            world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
-            
-
-            //m_free_transformer.SetSpeed( 0.0 );
+            if( 0 == m_current_camera )
+            {
+                WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
+            }
+            else
+            {
+                WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0;             
+            }
         }
         break;      
     }
@@ -442,6 +462,28 @@ void MainLoopService::OnKeyPulse( long p_key )
                 
             }       
             break;
+
+        case VK_F2:
+            {
+                if( 0 == m_current_camera )
+                {
+                    m_current_camera = 1;
+                }
+                else
+                {
+                    m_current_camera = 0;
+                }
+
+                if( 0 == m_current_camera )
+                {
+                    m_worldSystem.SetCurrentCameraEntity( &m_cameraEntity );
+                }
+                else
+                {
+                    m_worldSystem.SetCurrentCameraEntity( &m_camera2Entity );
+                }
+            }
+            break;
     }
 }
 
@@ -451,18 +493,29 @@ void MainLoopService::OnChar( long p_char, long p_scan )
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-
-
-    WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-
-    if( m_left_mousebutton )
+    if( 0 == m_current_camera )
     {
-        world_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = - p_dy / 4.0;
-        world_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = - p_dx / 4.0;
+        WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+
+        if( m_left_mousebutton )
+        {
+            m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "yaw" )->getPurpose(), - p_dx / 4.0 );
+            m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "pitch" )->getPurpose(), - p_dy / 4.0 );
+        }
     }
-    else if( m_right_mousebutton )
+    else
     {
-        world_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = - p_dx;
+        WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+
+        if( m_left_mousebutton )
+        {
+            world_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = - p_dy / 4.0;
+            world_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = - p_dx / 4.0;
+        }
+        else if( m_right_mousebutton )
+        {
+            world_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = - p_dx;
+        }
     }
 }
 

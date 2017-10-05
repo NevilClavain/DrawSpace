@@ -79,6 +79,8 @@ protected:
 
     DrawSpace::Interface::MesheImport*                                              m_meshe_import;
 
+    int                                                                             m_current_camera;
+
 public:
     MainLoopService( void );
     ~MainLoopService( void );
