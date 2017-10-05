@@ -38,7 +38,8 @@ m_fps_transformer( m_tm ),
 m_free_transformer( m_tm ),
 m_left_mousebutton( false ),
 m_right_mousebutton( false ),
-m_current_camera( 0 )
+m_current_camera( 0 ),
+m_camera_evt_handler( this, &MainLoopService::on_camera_evt )
 {
 }
 
@@ -199,6 +200,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GetRenderCharacteristics( characteristics );
     camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
 
+    camera_aspect->AddComponent<dsstring>( "camera_debug_name", "camera1 (fps)" );
+
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -231,6 +234,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GetRenderCharacteristics( characteristics );
     camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
 
+    camera_aspect->AddComponent<dsstring>( "camera_debug_name", "camera2 (free)" );
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -290,6 +294,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     world_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
 
     ///////////////////////////////////////////////////////////////////////////
+
+    m_worldSystem.RegisterCameraEvtHandler( &m_camera_evt_handler );
+
 
     // ajouter la skybox a la scene
 
@@ -546,6 +553,11 @@ void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 
 void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
+}
+
+void MainLoopService::on_camera_evt( Systems::WorldSystem::CameraEvent p_evt, Core::Entity* p_entity )
+{
+
 }
 
 

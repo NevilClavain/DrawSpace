@@ -30,6 +30,8 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
+    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::Systems::WorldSystem::CameraEvent, DrawSpace::Core::Entity*>       CameraEventHandler;
+
     bool                                                                            m_left_mousebutton;
     bool                                                                            m_right_mousebutton;
 
@@ -80,6 +82,11 @@ protected:
     DrawSpace::Interface::MesheImport*                                              m_meshe_import;
 
     int                                                                             m_current_camera;
+
+    CameraEventHandler                                                              m_camera_evt_handler;
+
+
+    void on_camera_evt( DrawSpace::Systems::WorldSystem::CameraEvent p_evt, DrawSpace::Core::Entity* p_entity );
 
 public:
     MainLoopService( void );

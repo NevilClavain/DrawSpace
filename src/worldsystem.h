@@ -25,6 +25,7 @@
 
 #include "entitynodegraph.h"
 #include "matrix.h"
+#include "callback.h"
 
 namespace DrawSpace
 {
@@ -32,10 +33,21 @@ namespace Systems
 {
 class WorldSystem
 {
+public:
+
+    typedef enum
+    {
+        ACTIVE,
+
+    } CameraEvent;
+
+    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>       CameraEventHandler;
+
 protected:
 
-    int                         m_step;
-    Core::Entity*               m_curr_entity_camera;
+    int                                 m_step;
+    Core::Entity*                       m_curr_entity_camera;
+    std::vector<CameraEventHandler*>    m_cameraevt_handlers;
 
     DrawSpace::Utils::Matrix    m_viewtransform_todispatch;
     DrawSpace::Utils::Matrix    m_projtransform_todispatch;
@@ -48,6 +60,10 @@ public:
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
 
     void SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera );
+
+    void RegisterCameraEvtHandler( CameraEventHandler* p_handler );
+
+    void UnregisterCameraEvtHandler( CameraEventHandler* p_handler );
 };
 }
 }

@@ -110,4 +110,30 @@ void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 void WorldSystem::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera )
 {
     m_curr_entity_camera = p_curr_entity_camera;
+
+    for( std::vector<CameraEventHandler*>::iterator it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
+    {
+        ( **it )( ACTIVE, m_curr_entity_camera );
+    }
+}
+
+void WorldSystem::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
+{
+    m_cameraevt_handlers.push_back( p_handler );
+
+    // annoncer la camera active au nouvel abonne de cet evt...
+    (*p_handler)( ACTIVE, m_curr_entity_camera );
+
+}
+
+void WorldSystem::UnregisterCameraEvtHandler( CameraEventHandler* p_handler )
+{
+    for( auto it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
+    {
+        if( (*it) == p_handler )
+        {
+            m_cameraevt_handlers.erase( it );
+            break;
+        }
+    }
 }
