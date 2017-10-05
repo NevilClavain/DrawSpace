@@ -36,82 +36,11 @@ m_timemanager( p_timemanager )
 {
 }
 
-void FreeTransformAspectImpl::Init( const Utils::Vector& p_init_pos )
-{
-	// init du quaternion resultat
-	m_current_res.Identity();
 
-	// init des axes tournants	
-	m_current_x_axis[0] = 1.0;
-	m_current_x_axis[1] = 0.0;
-	m_current_x_axis[2] = 0.0;
-	m_current_x_axis[3] = 1.0;
-
-	m_current_y_axis[0] = 0.0;
-	m_current_y_axis[1] = 1.0;
-	m_current_y_axis[2] = 0.0;
-	m_current_y_axis[3] = 1.0;
-
-	m_current_z_axis[0] = 0.0;
-	m_current_z_axis[1] = 0.0;
-	m_current_z_axis[2] = 1.0;
-	m_current_z_axis[3] = 1.0;
-		
-	// init des matrices resultats
-    m_position.Translation( p_init_pos );
-	m_orientation.Identity();
-}
-
-void FreeTransformAspectImpl::SetSpeed( dsreal p_speed )
-{
-    m_local_speed[2] = -p_speed;
-}
-
-void FreeTransformAspectImpl::RotateYaw( dsreal p_rspeed )
-{
-	Quaternion q, qres;
-
-	dsreal fps = m_timemanager.ConvertUnitPerSecFramePerSec( p_rspeed );
-	
-	q.RotationAxis( m_current_y_axis, fps );
-	qres = m_current_res * q;
-	m_current_res = qres;
-
-	// maj de la matrice resultat
-	m_current_res.RotationMatFrom( m_orientation );
-
-	// maj de l'axe
-    
-	m_current_y_axis[0] = m_orientation( 1, 0 );
-	m_current_y_axis[1] = m_orientation( 1, 1 );
-	m_current_y_axis[2] = m_orientation( 1, 2 );
-    
-}
-
-void FreeTransformAspectImpl::RotatePitch( dsreal p_rspeed )
-{
-	Quaternion q, qres;
-
-	dsreal fps = m_timemanager.ConvertUnitPerSecFramePerSec( p_rspeed );
-
-	q.RotationAxis( m_current_x_axis, fps );
-	qres = m_current_res * q;
-	m_current_res = qres;
-
-	// maj de la matrice resultat
-	m_current_res.RotationMatFrom( m_orientation );
-
-	// maj de l'axe
-    
-	m_current_x_axis[0] = m_orientation( 0, 0 );
-	m_current_x_axis[1] = m_orientation( 0, 1 );
-	m_current_x_axis[2] = m_orientation( 0, 2 );
-    
-}
 
 void FreeTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
 {
-    /*
+    
     // recup des composants donnees d'entrées
 
     ComponentList<Vector> vectors;
@@ -125,25 +54,23 @@ void FreeTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Ut
 
     Matrix pos = mats[0]->getPurpose();
 
-    //vitesse demandée...
+    //vitesses demandées...
 
     ComponentList<dsreal> reals;
     p_worldaspect->GetComponentsByType<dsreal>( reals );
-    dsreal rspeed0 = reals[0]->getPurpose();
-    dsreal rspeed1 = reals[1]->getPurpose();
-    dsreal rspeed2 = reals[2]->getPurpose();
+    dsreal rspeed_x = reals[0]->getPurpose();
+    dsreal rspeed_y = reals[1]->getPurpose();
+    dsreal rspeed_z = reals[2]->getPurpose();
 
     // axe demandé
-    Vector rot_axis0 = vectors[1]->getPurpose();
-    Vector rot_axis1 = vectors[2]->getPurpose();
-    Vector rot_axis2 = vectors[3]->getPurpose();
+    Vector rot_axis_x = vectors[1]->getPurpose();
+    Vector rot_axis_y = vectors[2]->getPurpose();    
+    Vector rot_axis_z = vectors[3]->getPurpose();
 
     // quaternion resultat courant
     ComponentList<Quaternion>   quats;
     p_worldaspect->GetComponentsByType<Quaternion>( quats );
     Quaternion	                current_res = quats[0]->getPurpose();
-
-
     
     Utils::Matrix			    orientation;
     Vector                      gs;
@@ -154,25 +81,45 @@ void FreeTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Ut
 	Quaternion q, qres;    
     dsreal fps;
 
-    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed0 );
-	q.RotationAxis( rot_axis0, fps );
+
+    /// NB: l'ordre dans lequel sont traites les axes n'a pas d'importance...
+
+    /////////////////Axe X /////////////////////////////
+
+    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed_x );
+	q.RotationAxis( rot_axis_x, fps );
     qres = current_res * q;
     current_res = qres;
-
-    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed1 );
-	q.RotationAxis( rot_axis1, fps );
-    qres = current_res * q;
-    current_res = qres;
-    
-
-    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed2 );
-	q.RotationAxis( rot_axis2, fps );
-    qres = current_res * q;
-    current_res = qres;
-
-
 
     current_res.RotationMatFrom( orientation );
+    rot_axis_x[0] = orientation( 0, 0 );
+    rot_axis_x[1] = orientation( 0, 1 );
+    rot_axis_x[2] = orientation( 0, 2 );
+
+    /////////////////Axe Y /////////////////////////////
+
+    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed_y );
+	q.RotationAxis( rot_axis_y, fps );
+    qres = current_res * q;
+    current_res = qres;
+
+    current_res.RotationMatFrom( orientation );
+    rot_axis_y[0] = orientation( 1, 0 );
+    rot_axis_y[1] = orientation( 1, 1 );
+    rot_axis_y[2] = orientation( 1, 2 );
+
+    /////////////////Axe Z /////////////////////////////
+
+    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed_z );
+	q.RotationAxis( rot_axis_z, fps );
+    qres = current_res * q;
+    current_res = qres;
+
+    current_res.RotationMatFrom( orientation );
+    rot_axis_z[0] = orientation( 2, 0 );
+    rot_axis_z[1] = orientation( 2, 1 );
+    rot_axis_z[2] = orientation( 2, 2 );
+
 
     // resultat calcul est dans 'orientation'
 
@@ -187,27 +134,9 @@ void FreeTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Ut
 
     mats[0]->getPurpose() = pos;
     quats[0]->getPurpose() = current_res;
-    */
 
-
-	Vector gs;
-	m_orientation.Transform( &m_local_speed, &gs );
-
-	dsreal x, y, z;
-	x = m_position( 3, 0 );
-	y = m_position( 3, 1 );
-	z = m_position( 3, 2 );
-
-	m_timemanager.TranslationSpeedInc( &x, gs[0] );
-	m_timemanager.TranslationSpeedInc( &y, gs[1] );
-	m_timemanager.TranslationSpeedInc( &z, gs[2] );
-
-	m_position( 3, 0 ) = x;
-	m_position( 3, 1 ) = y;
-	m_position( 3, 2 ) = z;   
-
-    m_result = m_orientation * m_position;
-
-    p_out_base_transform = m_result;
+    vectors[1]->getPurpose() = rot_axis_x;
+    vectors[2]->getPurpose() = rot_axis_y;
+    vectors[3]->getPurpose() = rot_axis_z;
 }
 

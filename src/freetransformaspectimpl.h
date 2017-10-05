@@ -37,29 +37,10 @@ protected:
 
     Utils::TimeManager&         m_timemanager;
 
-    DrawSpace::Utils::Matrix    m_result;
-
-    Utils::Vector               m_local_speed;
-
-	Utils::Quaternion	        m_current_res;
-    Utils::Vector		        m_current_x_axis;
-	Utils::Vector		        m_current_y_axis;
-	Utils::Vector		        m_current_z_axis;
-	
-	// les sorties
-	Utils::Matrix		        m_position;
-	Utils::Matrix		        m_orientation;
-
 public:
     FreeTransformAspectImpl( Utils::TimeManager& p_timemanager );
 
     virtual void GetLocaleTransform( Aspect::WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform );
-
-    void RotateYaw( dsreal p_rspeed );
-    void RotatePitch( dsreal p_rspeed );
-
-    void Init( const Utils::Vector& p_init_pos );
-    void SetSpeed( dsreal p_speed );
 };
 }
 }

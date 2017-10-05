@@ -35,7 +35,9 @@ _DECLARE_DS_LOGGER( logger, "test01mainloopservice", NULL )
 
 MainLoopService::MainLoopService( void ) :
 m_fps_transformer( m_tm ),
-m_free_transformer( m_tm )
+m_free_transformer( m_tm ),
+m_left_mousebutton( false ),
+m_right_mousebutton( false )
 {
 }
 
@@ -203,25 +205,22 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
 
     world_aspect->AddImplementation( &m_free_transformer );
-
-    m_free_transformer.Init( Vector( 0.0, 0.0, 10.0, 1.0 ) );
-
-    /*
-    world_aspect->AddComponent<dsreal>( "rspeed0", 0.0 );
-    world_aspect->AddComponent<dsreal>( "rspeed1", 0.0 );
-    world_aspect->AddComponent<dsreal>( "rspeed2", 0.0 );
+  
+    world_aspect->AddComponent<dsreal>( "rspeed_x", 0.0 );
+    world_aspect->AddComponent<dsreal>( "rspeed_y", 0.0 );
+    world_aspect->AddComponent<dsreal>( "rspeed_z", 0.0 );
 
     world_aspect->AddComponent<Vector>( "speed" );
-    world_aspect->AddComponent<Vector>( "rot_axis0", Vector( 0.0, 1.0, 0.0, 1.0 ) );
-    world_aspect->AddComponent<Vector>( "rot_axis1", Vector( 1.0, 0.0, 0.0, 1.0 ) );
-    world_aspect->AddComponent<Vector>( "rot_axis2", Vector( 0.0, 0.0, 1.0, 1.0 ) );
+    world_aspect->AddComponent<Vector>( "rot_axis_x", Vector( 1.0, 0.0, 0.0, 1.0 ) );
+    world_aspect->AddComponent<Vector>( "rot_axis_y", Vector( 0.0, 1.0, 0.0, 1.0 ) );
+    world_aspect->AddComponent<Vector>( "rot_axis_z", Vector( 0.0, 0.0, 1.0, 1.0 ) );
 
     world_aspect->AddComponent<Matrix>( "pos" );
     world_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 5.0, 1.0 ) );
 
     world_aspect->AddComponent<Quaternion>( "quat" );
     world_aspect->GetComponent<Quaternion>( "quat" )->getPurpose().Identity();
-    */
+    
 
 
     m_camera2Entity.AddAspect<CameraAspect>();
@@ -342,12 +341,12 @@ void MainLoopService::Run( void )
         world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
         */
     }
-    /*
+    
     WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-    world_aspect->GetComponent<dsreal>( "rspeed0" )->getPurpose() = 0.0;
-    world_aspect->GetComponent<dsreal>( "rspeed1" )->getPurpose() = 0.0;
-    world_aspect->GetComponent<dsreal>( "rspeed2" )->getPurpose() = 0.0;
-    */
+    world_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = 0.0;
+    world_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = 0.0;
+    world_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = 0.0;
+    
 }
 
 void MainLoopService::Release( void )
@@ -379,23 +378,23 @@ void MainLoopService::OnKeyPress( long p_key )
     {
         case 'Q':
         {
-            /*
+            
             WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
             world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0;
-            */
+            
 
-            m_free_transformer.SetSpeed( 10.0 );
+            //m_free_transformer.SetSpeed( 10.0 );
         }
         break;
 
         case 'W':
         {
-            /*
+            
             WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
             world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;
-            */
+            
 
-            m_free_transformer.SetSpeed( -2.0 );
+            //m_free_transformer.SetSpeed( -2.0 );
         }
         break;
     }
@@ -408,12 +407,12 @@ void MainLoopService::OnEndKeyPress( long p_key )
         case 'Q':
         case 'W':
         {
-            /*
+            
             WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
             world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
-            */
+            
 
-            m_free_transformer.SetSpeed( 0.0 );
+            //m_free_transformer.SetSpeed( 0.0 );
         }
         break;      
     }
@@ -452,16 +451,19 @@ void MainLoopService::OnChar( long p_char, long p_scan )
 
 void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-    /*
-    WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
 
-    m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "yaw" )->getPurpose(), - p_dx / 4.0 );
-    m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "pitch" )->getPurpose(), - p_dy / 4.0 );
-    */
 
-	m_free_transformer.RotateYaw( -p_dx * 0.2 );
-	m_free_transformer.RotatePitch( -p_dy * 0.2 );
-    
+    WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+
+    if( m_left_mousebutton )
+    {
+        world_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = - p_dy / 4.0;
+        world_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = - p_dx / 4.0;
+    }
+    else if( m_right_mousebutton )
+    {
+        world_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = - p_dx;
+    }
 }
 
 void MainLoopService::OnMouseWheel( long p_delta )
@@ -471,18 +473,22 @@ void MainLoopService::OnMouseWheel( long p_delta )
 
 void MainLoopService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
+    m_left_mousebutton = true;
 }
 
 void MainLoopService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
+    m_left_mousebutton = false;
 }
 
 void MainLoopService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
+    m_right_mousebutton = true;
 }
 
 void MainLoopService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
+    m_right_mousebutton = false;
 }
 
 void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )

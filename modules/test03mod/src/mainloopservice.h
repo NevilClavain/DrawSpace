@@ -30,6 +30,9 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
+    bool                                                                            m_left_mousebutton;
+    bool                                                                            m_right_mousebutton;
+
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     DrawSpace::Utils::TimeManager                                                   m_tm;
     dsstring                                                                        m_pluginDescr;
