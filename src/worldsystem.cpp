@@ -40,8 +40,18 @@ WorldSystem::~WorldSystem( void )
 {
 }
 
+void WorldSystem::notify_event( Event p_evt, Entity* p_entity )
+{
+    for( std::vector<CameraEventHandler*>::iterator it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
+    {
+        ( **it )( p_evt, p_entity );
+    }
+}
+
 void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
 {
+    notify_event( RUN_BEGIN, NULL );
+
     m_step = 0;
     p_entitygraph->AcceptWorldSystem( this );
 
@@ -82,6 +92,9 @@ void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
 
     m_step = 1;
     p_entitygraph->AcceptWorldSystem( this );
+
+    notify_event( RUN_END, NULL );
+
 }
 
 void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
@@ -111,10 +124,7 @@ void WorldSystem::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera )
 {
     m_curr_entity_camera = p_curr_entity_camera;
 
-    for( std::vector<CameraEventHandler*>::iterator it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
-    {
-        ( **it )( ACTIVE, m_curr_entity_camera );
-    }
+    notify_event( CAMERA_ACTIVE, m_curr_entity_camera );
 }
 
 void WorldSystem::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
@@ -122,7 +132,7 @@ void WorldSystem::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
     m_cameraevt_handlers.push_back( p_handler );
 
     // annoncer la camera active au nouvel abonne de cet evt...
-    (*p_handler)( ACTIVE, m_curr_entity_camera );
+    (*p_handler)( CAMERA_ACTIVE, m_curr_entity_camera );
 
 }
 

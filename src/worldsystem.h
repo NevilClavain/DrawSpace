@@ -37,11 +37,13 @@ public:
 
     typedef enum
     {
-        ACTIVE,
+        CAMERA_ACTIVE,
+        RUN_BEGIN,
+        RUN_END
 
-    } CameraEvent;
+    } Event;
 
-    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>       CameraEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>       CameraEventHandler;
 
 protected:
 
@@ -49,8 +51,10 @@ protected:
     Core::Entity*                       m_curr_entity_camera;
     std::vector<CameraEventHandler*>    m_cameraevt_handlers;
 
-    DrawSpace::Utils::Matrix    m_viewtransform_todispatch;
-    DrawSpace::Utils::Matrix    m_projtransform_todispatch;
+    DrawSpace::Utils::Matrix            m_viewtransform_todispatch;
+    DrawSpace::Utils::Matrix            m_projtransform_todispatch;
+
+    void notify_event( Event p_evt, Core::Entity* p_entity );
 
 public:
     WorldSystem(void);

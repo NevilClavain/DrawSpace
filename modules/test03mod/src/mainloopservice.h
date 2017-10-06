@@ -30,7 +30,7 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::Systems::WorldSystem::CameraEvent, DrawSpace::Core::Entity*>       CameraEventHandler;
+    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::Systems::WorldSystem::Event, DrawSpace::Core::Entity*>             CameraEventHandler;
     typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::EntityGraph::EntityNode::Event, DrawSpace::Core::Entity*>          EntitygraphNodeEventHandler;
 
     bool                                                                            m_left_mousebutton;
@@ -84,13 +84,13 @@ protected:
 
     int                                                                             m_current_camera;
 
-    CameraEventHandler                                                              m_camera_evt_handler;
+    CameraEventHandler                                                              m_worldsystem_evt_handler;
     EntitygraphNodeEventHandler                                                     m_entitygraph_evt_handler;
 
     
 
 
-    void on_camera_evt( DrawSpace::Systems::WorldSystem::CameraEvent p_evt, DrawSpace::Core::Entity* p_entity );
+    void on_worldsystem_evt( DrawSpace::Systems::WorldSystem::Event p_evt, DrawSpace::Core::Entity* p_entity );
 
     void on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Event p_evt, DrawSpace::Core::Entity* p_entity );
 

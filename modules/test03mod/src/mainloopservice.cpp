@@ -39,7 +39,7 @@ m_free_transformer( m_tm ),
 m_left_mousebutton( false ),
 m_right_mousebutton( false ),
 m_current_camera( 0 ),
-m_camera_evt_handler( this, &MainLoopService::on_camera_evt ),
+m_worldsystem_evt_handler( this, &MainLoopService::on_worldsystem_evt ),
 m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt )
 {
 }
@@ -299,7 +299,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
-    m_worldSystem.RegisterCameraEvtHandler( &m_camera_evt_handler );
+    m_worldSystem.RegisterCameraEvtHandler( &m_worldsystem_evt_handler );
 
 
     // ajouter la skybox a la scene
@@ -561,17 +561,24 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
-void MainLoopService::on_camera_evt( Systems::WorldSystem::CameraEvent p_evt, Core::Entity* p_entity )
+void MainLoopService::on_worldsystem_evt( Systems::WorldSystem::Event p_evt, Core::Entity* p_entity )
 {
-    if( NULL == p_entity )
+    if( Systems::WorldSystem::CAMERA_ACTIVE == p_evt && p_entity )
     {
-        return;
-    }
-    CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
-    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+        CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
+        RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
     
-    // mise a jour affichage avec le nom de la camera courante...
-    rendering_aspect->GetComponent<dsstring>( "current camera" )->getPurpose() = curr_camera_aspect->GetComponent<dsstring>( "camera_debug_name" )->getPurpose();
+        // mise a jour affichage avec le nom de la camera courante...
+        rendering_aspect->GetComponent<dsstring>( "current camera" )->getPurpose() = curr_camera_aspect->GetComponent<dsstring>( "camera_debug_name" )->getPurpose();
+    }
+    else if( Systems::WorldSystem::RUN_BEGIN == p_evt )
+    {
+        _asm nop
+    }
+    else if( Systems::WorldSystem::RUN_END == p_evt )
+    {
+        _asm nop
+    }
 }
 
 void MainLoopService::on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Event p_evt, DrawSpace::Core::Entity* p_entity )
