@@ -39,7 +39,8 @@ m_free_transformer( m_tm ),
 m_left_mousebutton( false ),
 m_right_mousebutton( false ),
 m_current_camera( 0 ),
-m_camera_evt_handler( this, &MainLoopService::on_camera_evt )
+m_camera_evt_handler( this, &MainLoopService::on_camera_evt ),
+m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt )
 {
 }
 
@@ -58,6 +59,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
     m_roty = 0.0;
+
+    m_entitygraph.RegisterNodesEvtHandler( &m_entitygraph_evt_handler );
 
     (*p_mousecircularmode_cb)( true )
         ;
@@ -325,6 +328,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_rendergraph.RenderingQueueModSignal();
 
+    
+
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
@@ -569,4 +574,8 @@ void MainLoopService::on_camera_evt( Systems::WorldSystem::CameraEvent p_evt, Co
     rendering_aspect->GetComponent<dsstring>( "current camera" )->getPurpose() = curr_camera_aspect->GetComponent<dsstring>( "camera_debug_name" )->getPurpose();
 }
 
+void MainLoopService::on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Event p_evt, DrawSpace::Core::Entity* p_entity )
+{
+
+}
 

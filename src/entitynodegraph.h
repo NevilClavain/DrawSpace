@@ -38,19 +38,22 @@ class EntityNodeGraph sealed
 {
 public:
 	using EntityTree = st_tree::tree<Core::Entity*>;
-
+ 
 private:
-	mutable EntityTree  m_tree;
+	mutable EntityTree                          m_tree;
+    std::vector<EntityNode::EventsHandler*>     m_nodesevt_handlers;
 
 public:
 	EntityNodeGraph(void);
 	~EntityNodeGraph(void);
 
-	EntityNode SetRoot(Core::Entity* p_entity);
+	EntityNode SetRoot( Core::Entity* p_entity );
 	void Erase(void);
 
     void AcceptRenderingSystem( Systems::RenderingSystem* p_renderingsystem );
     void AcceptWorldSystem( Systems::WorldSystem* p_worldsystem );
+
+    void RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );
 };
 }
 }

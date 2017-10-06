@@ -26,6 +26,7 @@
 
 #include "st_tree.h"
 #include "entity.h"
+#include "callback.h"
 
 namespace DrawSpace
 {
@@ -33,17 +34,34 @@ namespace EntityGraph
 {
 class EntityNode sealed
 {
+public:
+
+    typedef enum
+    {
+        ADDED_IN_TREE,
+		REMONVED_FROM_TREE,
+
+    } Event;
+
+    typedef DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>        EventsHandler;
+   
+
 private:
 	using EntityTree = st_tree::tree<Core::Entity*>;
 
-	EntityTree::node_type* m_tree_node;
+	EntityTree::node_type*                      m_tree_node;
+    std::vector<EntityNode::EventsHandler*>*    m_nodesevt_handlers;
+
+    // personne n'a le droit d'appeler ce ctor directement hormis EntityNodeGraph (friend)
+    EntityNode( EntityTree::node_type* p_node, std::vector<EntityNode::EventsHandler*>* p_nodesevt_handlers );
 
 public:
     EntityNode( void );
-	EntityNode( EntityTree::node_type* p_node );
 
 	EntityNode AddChild( Core::Entity* p_entity );
 	void Erase( void );
+
+    friend class EntityNodeGraph;
 };
 }
 }

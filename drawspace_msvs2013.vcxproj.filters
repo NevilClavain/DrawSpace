@@ -49,6 +49,9 @@
     <Filter Include="entitygraph">
       <UniqueIdentifier>{b3c8ef2b-8c89-4ab6-a9c4-718549d2b7f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rendergraph">
+      <UniqueIdentifier>{902b295c-6ff0-438e-b512-8255edd13bbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
@@ -243,12 +246,6 @@
     <ClCompile Include="src\mediator.cpp">
       <Filter>threading</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderpassnode.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\renderpassnodegraph.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src\textrenderingaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
@@ -295,6 +292,13 @@
     <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\freetransformaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rendersystem.cpp" />
+    <ClCompile Include="src\renderpassnode.cpp">
+      <Filter>rendergraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderpassnodegraph.cpp">
+      <Filter>rendergraph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -535,12 +539,6 @@
     <ClInclude Include="src\task.h">
       <Filter>threading</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderpassnode.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderpassnodegraph.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\entity.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -600,6 +598,12 @@
     </ClInclude>
     <ClInclude Include="src\freetransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderpassnode.h">
+      <Filter>rendergraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderpassnodegraph.h">
+      <Filter>rendergraph</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

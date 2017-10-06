@@ -40,7 +40,7 @@ EntityNodeGraph::~EntityNodeGraph(void)
 EntityNode EntityNodeGraph::SetRoot(Entity* p_entity)
 {
 	m_tree.insert(p_entity);
-	EntityNode node( &m_tree.root() );
+	EntityNode node( &m_tree.root(), &m_nodesevt_handlers );
 	return node;
 }
 
@@ -69,5 +69,16 @@ void EntityNodeGraph::AcceptWorldSystem( WorldSystem* p_worldsystem )
         {
             p_worldsystem->VisitEntity( it->parent().data(), it->data() );
         }
+    }
+}
+
+void EntityNodeGraph::RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler )
+{
+    m_nodesevt_handlers.push_back( p_handler );
+
+    // balancer la liste des nodes deja enregistres
+    for( EntityTree::iterator it = m_tree.begin(); it != m_tree.end(); ++it )
+    {
+        (*p_handler)( EntityNode::ADDED_IN_TREE, it->data() );
     }
 }

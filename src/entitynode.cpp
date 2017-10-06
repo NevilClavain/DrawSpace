@@ -26,24 +26,47 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
 
+
 EntityNode::EntityNode( void ) :
-    m_tree_node( NULL )
+    m_tree_node( NULL ),
+    m_nodesevt_handlers( NULL )
 {
 }
 
-EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node ) :
-	m_tree_node(p_node)
+
+EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, std::vector<EntityNode::EventsHandler*>* p_nodesevt_handlers ) :
+	m_tree_node(p_node),
+    m_nodesevt_handlers( p_nodesevt_handlers )
 {
+    // si on passe dans ce ctor c'est que l'entitee a été ajoutée au graph
+    // donc notif de l'evt
+    for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
+    {
+        EntityNode::EventsHandler* curr_h = (*m_nodesevt_handlers)[i];
+        ( *curr_h )( EntityNode::ADDED_IN_TREE, m_tree_node->data() );
+    }
 }
 
 EntityNode EntityNode::AddChild(Entity* p_entity)
 {
+    if( NULL == m_nodesevt_handlers )
+    {
+        //si m_nodesevt_handlers est a NULL c'est que cet EntityNode n'est pas rataché a un EntityTree
+        _DSEXCEPTION( "Detached node; cannot add child to it!" );
+    }
+
 	EntityTree::node_type::iterator it = m_tree_node->insert( p_entity );
-	EntityNode node(&(*it));
+	EntityNode node(&(*it), m_nodesevt_handlers );
 	return node;
 }
 
 void EntityNode::Erase(void)
 {
 	m_tree_node->erase();
+
+    for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
+    {
+        EntityNode::EventsHandler* curr_h = (*m_nodesevt_handlers)[i];
+        ( *curr_h )( EntityNode::REMONVED_FROM_TREE, m_tree_node->data() );
+    }
 }
