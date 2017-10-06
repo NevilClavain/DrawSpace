@@ -85,6 +85,8 @@ protected:
 
     CameraEventHandler                                                              m_camera_evt_handler;
 
+    
+
 
     void on_camera_evt( DrawSpace::Systems::WorldSystem::CameraEvent p_evt, DrawSpace::Core::Entity* p_entity );
 

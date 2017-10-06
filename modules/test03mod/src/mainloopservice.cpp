@@ -126,6 +126,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     rendering_aspect->AddImplementation( &m_textRender );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "..." );
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "current camera", 10, 30, 255, 0, 255, "..." );
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
@@ -557,7 +558,15 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 
 void MainLoopService::on_camera_evt( Systems::WorldSystem::CameraEvent p_evt, Core::Entity* p_entity )
 {
-
+    if( NULL == p_entity )
+    {
+        return;
+    }
+    CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
+    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    
+    // mise a jour affichage avec le nom de la camera courante...
+    rendering_aspect->GetComponent<dsstring>( "current camera" )->getPurpose() = curr_camera_aspect->GetComponent<dsstring>( "camera_debug_name" )->getPurpose();
 }
 
 
