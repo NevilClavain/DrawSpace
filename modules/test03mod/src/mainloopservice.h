@@ -94,6 +94,10 @@ protected:
 
     void on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Event p_evt, DrawSpace::Core::Entity* p_entity );
 
+
+    void create_cube( const DrawSpace::Utils::Matrix& p_transform );
+    void create_skybox( void );
+
 public:
     MainLoopService( void );
     ~MainLoopService( void );

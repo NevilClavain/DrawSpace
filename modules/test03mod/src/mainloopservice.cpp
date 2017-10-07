@@ -135,53 +135,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     //////////////////////////////////////////////////////////////////////////
 
-    m_cubeEntity.AddAspect<RenderingAspect>();
-    rendering_aspect = m_cubeEntity.GetAspect<RenderingAspect>();
+    Matrix cube_transf;
 
-    rendering_aspect->AddImplementation( &m_cubeRender );
+    cube_transf.Translation( 0.0, 2.0, -10.0 );
 
-    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot", "texture_pass" );
-
-    
-
-    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot" )->getPurpose().GetRenderingNode();
-    cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-
-    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-    cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
-
-    RenderStatesSet cube_texturepass_rss;
-    cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
-    cube_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-
-    cube_texturepass->GetFx()->SetRenderStates( cube_texturepass_rss );
-
-
-    cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
-    cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
-
-    cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
-    cube_texturepass->GetTexture( 0 )->LoadFromFile();
-
-    m_cubeEntity.AddAspect<WorldAspect>();
-
-    WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
-
-    world_aspect->AddImplementation( &m_transformer );  
-    world_aspect->AddComponent<Matrix>( "cube_rotation" );
-    world_aspect->AddComponent<Matrix>( "cube_translation" );
-
-    world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
-    world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
+    create_cube( cube_transf );
 
     ///////////////////////////////////////////////////////////////////////////
 
     m_cameraEntity.AddAspect<WorldAspect>();
-    world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+    WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
 
 
     world_aspect->AddImplementation( &m_fps_transformer );
@@ -585,4 +548,61 @@ void MainLoopService::on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Ev
 {
 
 }
+
+void MainLoopService::create_cube( const Matrix& p_transform )
+{
+    m_cubeEntity.AddAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_cubeEntity.GetAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation( &m_cubeRender );
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot", "texture_pass" );
+
+    
+    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot" )->getPurpose().GetRenderingNode();
+    cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet cube_texturepass_rss;
+    cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    cube_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    cube_texturepass->GetFx()->SetRenderStates( cube_texturepass_rss );
+
+
+    cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
+    cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
+    cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
+    cube_texturepass->GetTexture( 0 )->LoadFromFile();
+
+    m_cubeEntity.AddAspect<WorldAspect>();
+
+    WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
+
+    world_aspect->AddImplementation( &m_transformer );
+
+    world_aspect->AddComponent<Matrix>( "cube_mat" );       
+    world_aspect->GetComponent<Matrix>( "cube_mat" )->getPurpose() = p_transform;
+
+    /*
+    world_aspect->AddComponent<Matrix>( "cube_rotation" );
+    world_aspect->AddComponent<Matrix>( "cube_translation" );
+
+    world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
+    world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
+    */
+}
+
+void MainLoopService::create_skybox( void )
+{
+
+}
+
 
