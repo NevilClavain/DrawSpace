@@ -261,9 +261,6 @@
     <ClCompile Include="src\worldsystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendersystem.cpp">
-      <Filter>systems</Filter>
-    </ClCompile>
     <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\worldaspect.cpp">
       <Filter>aspect</Filter>

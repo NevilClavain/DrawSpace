@@ -56,11 +56,9 @@
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\rawtransformaspectimpl.cpp" />
     <ClCompile Include="src\renderingaspect.cpp" />
-    <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />
     <ClCompile Include="src\renderpassnodegraph.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
-    <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\skyboxrenderingaspectimpl.cpp" />
     <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
