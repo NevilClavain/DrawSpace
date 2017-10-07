@@ -261,7 +261,6 @@
     <ClCompile Include="src\worldsystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\worldaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
@@ -296,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="src\renderpassnodegraph.cpp">
       <Filter>rendergraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rendersystem.cpp">
+      <Filter>systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
