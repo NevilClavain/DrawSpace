@@ -138,8 +138,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     Matrix cube_transf;
 
     cube_transf.Translation( 0.0, 2.0, -10.0 );
-
     create_cube( cube_transf );
+
+
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -205,60 +206,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
-    m_skyboxEntity.AddAspect<RenderingAspect>();
-    rendering_aspect = m_skyboxEntity.GetAspect<RenderingAspect>();
-
-    rendering_aspect->AddImplementation( &m_skyboxRender );
-
-    rendering_aspect->AddComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot", "texture_pass" );
-
-    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_( Fx, Fx );
-
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-    skybox_texturepass_fx->GetShader( 0 )->LoadFromFile();
-    skybox_texturepass_fx->GetShader( 1 )->LoadFromFile();
-
-    RenderStatesSet skybox_texturepass_rss;
-    skybox_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    skybox_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-
-    skybox_texturepass_fx->SetRenderStates( skybox_texturepass_rss );
-
-    for( int i = 0; i < 6; i++ )
-    {
-        RenderingNode* skybox_texturepass = rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( i );
-        skybox_texturepass->SetOrderNumber( -1000 );
-        skybox_texturepass->SetFx( skybox_texturepass_fx );
-    }
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::FrontQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RearQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::LeftQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RightQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::TopQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::BottomQuad )->GetTexture( 0 )->LoadFromFile();
-
-
-    m_skyboxEntity.AddAspect<WorldAspect>();
-    world_aspect = m_skyboxEntity.GetAspect<WorldAspect>();
-    world_aspect->AddImplementation( &m_transformer );
-
-    world_aspect->AddComponent<Matrix>( "skybox_scaling" );
-
-    world_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
+    create_skybox();
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -602,7 +550,60 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
 void MainLoopService::create_skybox( void )
 {
+    m_skyboxEntity.AddAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_skyboxEntity.GetAspect<RenderingAspect>();
 
+    rendering_aspect->AddImplementation( &m_skyboxRender );
+
+    rendering_aspect->AddComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot", "texture_pass" );
+
+    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_( Fx, Fx );
+
+    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    skybox_texturepass_fx->GetShader( 0 )->LoadFromFile();
+    skybox_texturepass_fx->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet skybox_texturepass_rss;
+    skybox_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    skybox_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    skybox_texturepass_fx->SetRenderStates( skybox_texturepass_rss );
+
+    for( int i = 0; i < 6; i++ )
+    {
+        RenderingNode* skybox_texturepass = rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( i );
+        skybox_texturepass->SetOrderNumber( -1000 );
+        skybox_texturepass->SetFx( skybox_texturepass_fx );
+    }
+
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::FrontQuad )->GetTexture( 0 )->LoadFromFile();
+
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ), 0 );
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RearQuad )->GetTexture( 0 )->LoadFromFile();
+
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ), 0 );
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::LeftQuad )->GetTexture( 0 )->LoadFromFile();
+
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ), 0 );
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RightQuad )->GetTexture( 0 )->LoadFromFile();
+
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::TopQuad )->GetTexture( 0 )->LoadFromFile();
+
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
+    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::BottomQuad )->GetTexture( 0 )->LoadFromFile();
+
+
+    m_skyboxEntity.AddAspect<WorldAspect>();
+    WorldAspect* world_aspect = m_skyboxEntity.GetAspect<WorldAspect>();
+    world_aspect->AddImplementation( &m_transformer );
+
+    world_aspect->AddComponent<Matrix>( "skybox_scaling" );
+
+    world_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
 }
 
 
