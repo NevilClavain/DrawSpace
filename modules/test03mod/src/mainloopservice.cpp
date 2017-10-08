@@ -142,6 +142,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
 
+    create_ground();
+
     ///////////////////////////////////////////////////////////////////////////
 
     m_cameraEntity.AddAspect<WorldAspect>();
@@ -155,7 +157,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     world_aspect->AddComponent<Vector>( "speed" );
     world_aspect->AddComponent<Matrix>( "pos" );
 
-    world_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 0.0, 10.0, 1.0 ) );
+    world_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 5.0, 10.0, 1.0 ) );
 
     world_aspect->AddComponent<bool>( "ymvt", true );
 
@@ -221,6 +223,13 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     // ajouter le cube a la scene
     m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
     m_cubeRender.RegisterToRendering( m_rendergraph );
+
+
+
+    // ajouter le ground a la scene
+    m_groundEntityNode = m_rootEntityNode.AddChild( &m_groundEntity );
+    m_groundRender.RegisterToRendering( m_rendergraph );
+
 
     // ajouter la camera a la scene
     m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
@@ -606,4 +615,46 @@ void MainLoopService::create_skybox( void )
     world_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
 }
 
+void MainLoopService::create_ground( void )
+{
+    m_groundEntity.AddAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_groundEntity.GetAspect<RenderingAspect>();
 
+    rendering_aspect->AddImplementation( &m_groundRender );
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
+
+    
+    RenderingNode* ground_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
+    ground_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    ground_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    ground_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet ground_texturepass_rss;
+    ground_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    ground_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    ground_texturepass->GetFx()->SetRenderStates( ground_texturepass_rss );
+
+
+    ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
+    ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
+
+    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    ground_texturepass->GetTexture( 0 )->LoadFromFile();
+
+    m_groundEntity.AddAspect<WorldAspect>();
+
+    WorldAspect* world_aspect = m_groundEntity.GetAspect<WorldAspect>();
+
+    world_aspect->AddImplementation( &m_transformer );
+
+    world_aspect->AddComponent<Matrix>( "ground_mat" );       
+    world_aspect->GetComponent<Matrix>( "ground_mat" )->getPurpose().Identity();
+
+}

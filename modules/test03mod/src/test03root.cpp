@@ -36,7 +36,7 @@ Test03Root::Test03Root( void )
 
     AC3DMesheImport::SetRootPath( "test_data/meshes_bank" );
 
-    File::MountVirtualFS( "test_data.bank" );
+    //File::MountVirtualFS( "test_data.bank" );
 
 }
 
