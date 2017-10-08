@@ -91,7 +91,7 @@ protected:
     CameraEventHandler                                                              m_worldsystem_evt_handler;
     EntitygraphNodeEventHandler                                                     m_entitygraph_evt_handler;
 
-    
+    bool                                                                            m_show_cube;
 
 
     void on_worldsystem_evt( DrawSpace::Systems::WorldSystem::Event p_evt, DrawSpace::Core::Entity* p_entity );

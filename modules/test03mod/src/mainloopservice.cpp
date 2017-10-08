@@ -40,7 +40,8 @@ m_left_mousebutton( false ),
 m_right_mousebutton( false ),
 m_current_camera( 0 ),
 m_worldsystem_evt_handler( this, &MainLoopService::on_worldsystem_evt ),
-m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt )
+m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt ),
+m_show_cube( true )
 {
 }
 
@@ -414,6 +415,29 @@ void MainLoopService::OnKeyPulse( long p_key )
                 else
                 {
                     m_worldSystem.SetCurrentCameraEntity( &m_camera2Entity );
+                }
+            }
+            break;
+
+        case VK_F3:
+            {
+                if( m_show_cube )
+                {
+                    m_show_cube = false;
+
+                    m_cubeEntityNode.Erase();
+                    m_cubeRender.UnregisterFromRendering( m_rendergraph );
+                    m_rendergraph.RenderingQueueModSignal();
+
+                }
+                else
+                {
+                    m_show_cube = true;
+
+                    m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
+                    m_cubeRender.RegisterToRendering( m_rendergraph );
+                    m_rendergraph.RenderingQueueModSignal();
+
                 }
             }
             break;

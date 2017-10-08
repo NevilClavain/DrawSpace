@@ -39,7 +39,7 @@ public:
     typedef enum
     {
         ADDED_IN_TREE,
-		REMONVED_FROM_TREE,
+		REMOVED_FROM_TREE,
 
     } Event;
 
