@@ -62,11 +62,12 @@ EntityNode EntityNode::AddChild(Entity* p_entity)
 
 void EntityNode::Erase(void)
 {
+    Entity* entity = m_tree_node->data();
 	m_tree_node->erase();
 
     for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
     {
         EntityNode::EventsHandler* curr_h = (*m_nodesevt_handlers)[i];
-        ( *curr_h )( EntityNode::REMOVED_FROM_TREE, m_tree_node->data() );
+        ( *curr_h )( EntityNode::REMOVED_FROM_TREE, entity );
     }
 }
