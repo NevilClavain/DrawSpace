@@ -151,6 +151,7 @@
     <ClInclude Include="src\parser.h" />
     <ClInclude Include="src\pass.h" />
     <ClInclude Include="src\passesrenderingaspectimpl.h" />
+    <ClInclude Include="src\physicsaspect.h" />
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />

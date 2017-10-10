@@ -604,5 +604,8 @@
     <ClInclude Include="src\transformsystem.h">
       <Filter>systems</Filter>
     </ClInclude>
+    <ClInclude Include="src\physicsaspect.h">
+      <Filter>aspect</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
