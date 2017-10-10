@@ -22,7 +22,7 @@
 
 #include "mesherenderingaspectimpl.h"
 #include "renderingaspect.h"
-#include "worldaspect.h"
+#include "transformaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -105,18 +105,18 @@ void MesheRenderingAspectImpl::UnregisterFromRendering( RenderPassNodeGraph& p_r
 
 void MesheRenderingAspectImpl::Run( Entity* p_entity )
 {
-    WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
+    TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
 
-    if( world_aspect )
+    if( transform_aspect )
     {
         Matrix world;
-        world_aspect->GetWorldTransform( world );
+        transform_aspect->GetWorldTransform( world );
 
         Matrix view;
-        world_aspect->GetViewTransform( view );
+        transform_aspect->GetViewTransform( view );
 
         Matrix proj;
-        world_aspect->GetProjTransform( proj );
+        transform_aspect->GetProjTransform( proj );
 
         // redistribution de la transfo world...
         // + redistribution des proj/view distribues

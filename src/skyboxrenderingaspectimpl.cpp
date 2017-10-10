@@ -22,7 +22,7 @@
 
 #include "skyboxrenderingaspectimpl.h"
 #include "renderingaspect.h"
-#include "worldaspect.h"
+#include "transformaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -311,21 +311,21 @@ void SkyboxRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph:
 
 void SkyboxRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 {
-    WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
+    TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
 
-    if( world_aspect )
+    if( transform_aspect )
     {
         Matrix world;
         //world.Scale( Vector( 100.0, 100.0, 100.0, 1.0) );
-        world_aspect->GetWorldTransform( world );
+        transform_aspect->GetWorldTransform( world );
         world.ClearTranslation();
 
         Matrix view;
-        world_aspect->GetViewTransform( view );
+        transform_aspect->GetViewTransform( view );
         view.ClearTranslation();
 
         Matrix proj;
-        world_aspect->GetProjTransform( proj ); 
+        transform_aspect->GetProjTransform( proj ); 
 
         ComponentList<PassSlot> pass_slots;
         m_owner->GetComponentsByType<PassSlot>( pass_slots );

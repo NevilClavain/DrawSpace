@@ -40,7 +40,7 @@ protected:
 public:
     FreeTransformAspectImpl( Utils::TimeManager& p_timemanager );
 
-    virtual void GetLocaleTransform( Aspect::WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform );
+    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
 };
 }
 }

@@ -20,7 +20,7 @@
 *
 */
 
-#include "worldaspect.h"
+#include "transformaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -28,19 +28,19 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
-WorldAspect::WorldAspect( void )
+TransformAspect::TransformAspect( void )
 {
     m_worldtransform.Identity();
     m_dispatched_viewtransform.Identity();
     m_dispatched_projtransform.Identity();
 }
 
-void WorldAspect::AddImplementation( AspectImplementations::WorldAspectImpl* p_impl )
+void TransformAspect::AddImplementation( AspectImplementations::WorldAspectImpl* p_impl )
 {
     m_impls.push_back( p_impl );
 }
 
-void WorldAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
+void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 {
     Matrix locale_mat;
     Matrix finaltransform_mat;
@@ -62,7 +62,7 @@ void WorldAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     if( p_parent )
     {
         Matrix parent_finaltransform_mat;
-        WorldAspect* parent_world_aspect = p_parent->GetAspect<WorldAspect>();
+        TransformAspect* parent_world_aspect = p_parent->GetAspect<TransformAspect>();
 
         if( parent_world_aspect )
         {
@@ -81,23 +81,23 @@ void WorldAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     m_worldtransform = finaltransform_mat;
 }
 
-void WorldAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj )
+void TransformAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj )
 {
     m_dispatched_viewtransform = p_view;
     m_dispatched_projtransform = p_proj;
 }
 
-void WorldAspect::GetWorldTransform( Matrix& p_worldtransform )
+void TransformAspect::GetWorldTransform( Matrix& p_worldtransform )
 {
     p_worldtransform = m_worldtransform;
 }
 
-void WorldAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform )
+void TransformAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform )
 {
     p_viewtransform = m_dispatched_viewtransform;
 }
 
-void WorldAspect::GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform )
+void TransformAspect::GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform )
 {
     p_projtransform = m_dispatched_projtransform;
 }

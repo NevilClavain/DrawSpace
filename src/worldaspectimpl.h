@@ -29,7 +29,7 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class WorldAspect;
+class TransformAspect;
 }
 
 namespace Interface
@@ -40,7 +40,7 @@ namespace AspectImplementations
 class WorldAspectImpl abstract
 {
 public:
-    virtual void GetLocaleTransform( DrawSpace::Aspect::WorldAspect* p_worldaspect, DrawSpace::Utils::Matrix& p_out_base_transform ) = 0;
+    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform ) = 0;
 };
 }
 }

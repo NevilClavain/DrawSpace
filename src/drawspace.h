@@ -97,7 +97,7 @@
 #include "textrenderingaspectimpl.h"
 #include "skyboxrenderingaspectimpl.h"
 
-#include "worldaspect.h"
+#include "transformaspect.h"
 #include "rawtransformaspectimpl.h"
 #include "fpstransformaspectimpl.h"
 #include "freetransformaspectimpl.h"

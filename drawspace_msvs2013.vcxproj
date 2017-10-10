@@ -93,7 +93,7 @@
     <ClCompile Include="src\vector.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
     <ClCompile Include="src\world.cpp" />
-    <ClCompile Include="src\worldaspect.cpp" />
+    <ClCompile Include="src\transformaspect.cpp" />
     <ClCompile Include="src\worldsystem.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -201,7 +201,7 @@
     <ClInclude Include="src\vertex.h" />
     <ClInclude Include="src\viewportquad.h" />
     <ClInclude Include="src\world.h" />
-    <ClInclude Include="src\worldaspect.h" />
+    <ClInclude Include="src\transformaspect.h" />
     <ClInclude Include="src\worldaspectimpl.h" />
     <ClInclude Include="src\worldsystem.h" />
   </ItemGroup>

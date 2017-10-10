@@ -147,20 +147,20 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
-    m_cameraEntity.AddAspect<WorldAspect>();
-    WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+    m_cameraEntity.AddAspect<TransformAspect>();
+    TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
 
 
-    world_aspect->AddImplementation( &m_fps_transformer );
-    world_aspect->AddComponent<dsreal>( "yaw", 0.0 );
-    world_aspect->AddComponent<dsreal>( "pitch", 0.0 );
+    transform_aspect->AddImplementation( &m_fps_transformer );
+    transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
+    transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 
-    world_aspect->AddComponent<Vector>( "speed" );
-    world_aspect->AddComponent<Matrix>( "pos" );
+    transform_aspect->AddComponent<Vector>( "speed" );
+    transform_aspect->AddComponent<Matrix>( "pos" );
 
-    world_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 5.0, 10.0, 1.0 ) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 5.0, 10.0, 1.0 ) );
 
-    world_aspect->AddComponent<bool>( "ymvt", true );
+    transform_aspect->AddComponent<bool>( "ymvt", true );
 
     m_cameraEntity.AddAspect<CameraAspect>();
 
@@ -176,25 +176,25 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
-    m_camera2Entity.AddAspect<WorldAspect>();
-    world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+    m_camera2Entity.AddAspect<TransformAspect>();
+    transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
 
-    world_aspect->AddImplementation( &m_free_transformer );
+    transform_aspect->AddImplementation( &m_free_transformer );
   
-    world_aspect->AddComponent<dsreal>( "rspeed_x", 0.0 );
-    world_aspect->AddComponent<dsreal>( "rspeed_y", 0.0 );
-    world_aspect->AddComponent<dsreal>( "rspeed_z", 0.0 );
+    transform_aspect->AddComponent<dsreal>( "rspeed_x", 0.0 );
+    transform_aspect->AddComponent<dsreal>( "rspeed_y", 0.0 );
+    transform_aspect->AddComponent<dsreal>( "rspeed_z", 0.0 );
 
-    world_aspect->AddComponent<Vector>( "speed" );
-    world_aspect->AddComponent<Vector>( "rot_axis_x", Vector( 1.0, 0.0, 0.0, 1.0 ) );
-    world_aspect->AddComponent<Vector>( "rot_axis_y", Vector( 0.0, 1.0, 0.0, 1.0 ) );
-    world_aspect->AddComponent<Vector>( "rot_axis_z", Vector( 0.0, 0.0, 1.0, 1.0 ) );
+    transform_aspect->AddComponent<Vector>( "speed" );
+    transform_aspect->AddComponent<Vector>( "rot_axis_x", Vector( 1.0, 0.0, 0.0, 1.0 ) );
+    transform_aspect->AddComponent<Vector>( "rot_axis_y", Vector( 0.0, 1.0, 0.0, 1.0 ) );
+    transform_aspect->AddComponent<Vector>( "rot_axis_z", Vector( 0.0, 0.0, 1.0, 1.0 ) );
 
-    world_aspect->AddComponent<Matrix>( "pos" );
-    world_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 5.0, 1.0 ) );
+    transform_aspect->AddComponent<Matrix>( "pos" );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 5.0, 1.0 ) );
 
-    world_aspect->AddComponent<Quaternion>( "quat" );
-    world_aspect->GetComponent<Quaternion>( "quat" )->getPurpose().Identity();
+    transform_aspect->AddComponent<Quaternion>( "quat" );
+    transform_aspect->GetComponent<Quaternion>( "quat" )->getPurpose().Identity();
     
 
 
@@ -277,17 +277,17 @@ void MainLoopService::Run( void )
         /*
         m_tm.AngleSpeedInc( &m_roty, 15 );
 
-        WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
-        world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
+        TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
+        transform_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
         */
     }
     
     if( 1 == m_current_camera )
     {
-        WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-        world_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = 0.0;
-        world_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = 0.0;
-        world_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = 0.0;
+        TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
+        transform_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = 0.0;
+        transform_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = 0.0;
+        transform_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = 0.0;
     }
 }
 
@@ -322,13 +322,13 @@ void MainLoopService::OnKeyPress( long p_key )
         {
             if( 0 == m_current_camera )
             {
-                WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
-                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0; 
+                TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0; 
             }
             else
             {
-                WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0;    
+                TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
+                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0;    
             }
         }
         break;
@@ -337,13 +337,13 @@ void MainLoopService::OnKeyPress( long p_key )
         {
             if( 0 == m_current_camera )
             {
-                WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
-                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;
+                TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;
             }
             else
             {
-                WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;    
+                TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
+                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;    
             }
         }
         break;
@@ -359,13 +359,13 @@ void MainLoopService::OnEndKeyPress( long p_key )
         {
             if( 0 == m_current_camera )
             {
-                WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
-                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
+                TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
             }
             else
             {
-                WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
-                world_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0;             
+                TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
+                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0;             
             }
         }
         break;      
@@ -452,26 +452,26 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
     if( 0 == m_current_camera )
     {
-        WorldAspect* world_aspect = m_cameraEntity.GetAspect<WorldAspect>();
+        TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
 
         if( m_left_mousebutton )
         {
-            m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "yaw" )->getPurpose(), - p_dx / 4.0 );
-            m_tm.AngleSpeedInc( &world_aspect->GetComponent<dsreal>( "pitch" )->getPurpose(), - p_dy / 4.0 );
+            m_tm.AngleSpeedInc( &transform_aspect->GetComponent<dsreal>( "yaw" )->getPurpose(), - p_dx / 4.0 );
+            m_tm.AngleSpeedInc( &transform_aspect->GetComponent<dsreal>( "pitch" )->getPurpose(), - p_dy / 4.0 );
         }
     }
     else
     {
-        WorldAspect* world_aspect = m_camera2Entity.GetAspect<WorldAspect>();
+        TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
 
         if( m_left_mousebutton )
         {
-            world_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = - p_dy / 4.0;
-            world_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = - p_dx / 4.0;
+            transform_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = - p_dy / 4.0;
+            transform_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = - p_dx / 4.0;
         }
         else if( m_right_mousebutton )
         {
-            world_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = - p_dx;
+            transform_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = - p_dx;
         }
     }
 }
@@ -563,21 +563,21 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
     cube_texturepass->GetTexture( 0 )->LoadFromFile();
 
-    m_cubeEntity.AddAspect<WorldAspect>();
+    m_cubeEntity.AddAspect<TransformAspect>();
 
-    WorldAspect* world_aspect = m_cubeEntity.GetAspect<WorldAspect>();
+    TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
 
-    world_aspect->AddImplementation( &m_transformer );
+    transform_aspect->AddImplementation( &m_transformer );
 
-    world_aspect->AddComponent<Matrix>( "cube_mat" );       
-    world_aspect->GetComponent<Matrix>( "cube_mat" )->getPurpose() = p_transform;
+    transform_aspect->AddComponent<Matrix>( "cube_mat" );       
+    transform_aspect->GetComponent<Matrix>( "cube_mat" )->getPurpose() = p_transform;
 
     /*
-    world_aspect->AddComponent<Matrix>( "cube_rotation" );
-    world_aspect->AddComponent<Matrix>( "cube_translation" );
+    transform_aspect->AddComponent<Matrix>( "cube_rotation" );
+    transform_aspect->AddComponent<Matrix>( "cube_translation" );
 
-    world_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
-    world_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
+    transform_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
+    transform_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
     */
 }
 
@@ -630,13 +630,13 @@ void MainLoopService::create_skybox( void )
     rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::BottomQuad )->GetTexture( 0 )->LoadFromFile();
 
 
-    m_skyboxEntity.AddAspect<WorldAspect>();
-    WorldAspect* world_aspect = m_skyboxEntity.GetAspect<WorldAspect>();
-    world_aspect->AddImplementation( &m_transformer );
+    m_skyboxEntity.AddAspect<TransformAspect>();
+    TransformAspect* transform_aspect = m_skyboxEntity.GetAspect<TransformAspect>();
+    transform_aspect->AddImplementation( &m_transformer );
 
-    world_aspect->AddComponent<Matrix>( "skybox_scaling" );
+    transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
 
-    world_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
+    transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
 }
 
 void MainLoopService::create_ground( void )
@@ -672,13 +672,13 @@ void MainLoopService::create_ground( void )
     ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
     ground_texturepass->GetTexture( 0 )->LoadFromFile();
 
-    m_groundEntity.AddAspect<WorldAspect>();
+    m_groundEntity.AddAspect<TransformAspect>();
 
-    WorldAspect* world_aspect = m_groundEntity.GetAspect<WorldAspect>();
+    TransformAspect* transform_aspect = m_groundEntity.GetAspect<TransformAspect>();
 
-    world_aspect->AddImplementation( &m_transformer );
+    transform_aspect->AddImplementation( &m_transformer );
 
-    world_aspect->AddComponent<Matrix>( "ground_mat" );       
-    world_aspect->GetComponent<Matrix>( "ground_mat" )->getPurpose().Identity();
+    transform_aspect->AddComponent<Matrix>( "ground_mat" );       
+    transform_aspect->GetComponent<Matrix>( "ground_mat" )->getPurpose().Identity();
 
 }

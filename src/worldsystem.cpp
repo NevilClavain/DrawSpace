@@ -21,7 +21,7 @@
 */
 
 #include "worldsystem.h"
-#include "worldaspect.h"
+#include "transformaspect.h"
 #include "cameraaspect.h"
 
 using namespace DrawSpace;
@@ -67,11 +67,11 @@ void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
             // si oui, inverser cette matrice, qui servira de view
             // si non, identite pour view
 
-            WorldAspect* world_aspect = m_curr_entity_camera->GetAspect<WorldAspect>();
-            if( world_aspect )
+            TransformAspect* transform_aspect = m_curr_entity_camera->GetAspect<TransformAspect>();
+            if( transform_aspect )
             {
                 Matrix camera_world_transform;
-                world_aspect->GetWorldTransform( camera_world_transform );
+                transform_aspect->GetWorldTransform( camera_world_transform );
                 camera_world_transform.Inverse();
 
                 m_viewtransform_todispatch = camera_world_transform;
@@ -102,7 +102,7 @@ void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     if( 0 == m_step )
     {
         //calculer les matrices world pour tt le monde
-        WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
+        TransformAspect* world_aspect = p_entity->GetAspect<TransformAspect>();
         if( world_aspect )
         {
             world_aspect->ComputeTransforms( p_parent, p_entity );
@@ -112,10 +112,10 @@ void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     {
         // distribuer view et proj a tout les world_aspect de ttes les entites
         
-        WorldAspect* world_aspect = p_entity->GetAspect<WorldAspect>();
-        if( world_aspect )
+        TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+        if( transform_aspect )
         {
-            world_aspect->DispatchViewProj( m_viewtransform_todispatch, m_projtransform_todispatch );
+            transform_aspect->DispatchViewProj( m_viewtransform_todispatch, m_projtransform_todispatch );
         }
     }
 }

@@ -22,7 +22,7 @@
 
 #include "fpstransformaspectimpl.h"
 #include "component.h"
-#include "worldaspect.h"
+#include "transformaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -35,29 +35,29 @@ m_timemanager( p_timemanager )
 {
 }
 
-void FPSTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
+void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
 {
     // recup des composants donnees d'entrées
     ComponentList<dsreal> angles;
-    p_worldaspect->GetComponentsByType<dsreal>( angles );
+    p_transformaspect->GetComponentsByType<dsreal>( angles );
 
     dsreal angle_yaw = angles[0]->getPurpose();
     dsreal angle_pitch = angles[1]->getPurpose();
 
     ComponentList<Vector> vectors;
-    p_worldaspect->GetComponentsByType<Vector>( vectors );
+    p_transformaspect->GetComponentsByType<Vector>( vectors );
 
     Vector local_speed = vectors[0]->getPurpose();
 
     local_speed[2] = -local_speed[2];
     
     ComponentList<Matrix> mats;
-    p_worldaspect->GetComponentsByType<Matrix>( mats );
+    p_transformaspect->GetComponentsByType<Matrix>( mats );
 
     Matrix pos = mats[0]->getPurpose();
 
     ComponentList<bool> flags;
-    p_worldaspect->GetComponentsByType<bool>( flags );
+    p_transformaspect->GetComponentsByType<bool>( flags );
 
     bool y_mvt = flags[0]->getPurpose();
 

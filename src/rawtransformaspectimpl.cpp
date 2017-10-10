@@ -22,7 +22,7 @@
 
 #include "rawtransformaspectimpl.h"
 #include "component.h"
-#include "worldaspect.h"
+#include "transformaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -30,10 +30,10 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 
-void RawTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
+void RawTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformaspect, Matrix& p_out_base_transform )
 {
     ComponentList<Matrix> mats;
-    p_worldaspect->GetComponentsByType<Matrix>( mats );
+    p_transformaspect->GetComponentsByType<Matrix>( mats );
 
     Matrix cumul;
     cumul.Identity();

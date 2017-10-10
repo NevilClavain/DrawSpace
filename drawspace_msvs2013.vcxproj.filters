@@ -261,9 +261,6 @@
     <ClCompile Include="src\worldsystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
-    <ClCompile Include="src\worldaspect.cpp">
-      <Filter>aspect</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderingaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
@@ -298,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="src\rendersystem.cpp">
       <Filter>systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transformaspect.cpp">
+      <Filter>aspect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -574,9 +574,6 @@
     <ClInclude Include="src\rendersystem.h">
       <Filter>systems</Filter>
     </ClInclude>
-    <ClInclude Include="src\worldaspect.h">
-      <Filter>aspect</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderingaspect.h">
       <Filter>aspect</Filter>
     </ClInclude>
@@ -603,6 +600,9 @@
     </ClInclude>
     <ClInclude Include="src\renderpassnodegraph.h">
       <Filter>rendergraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transformaspect.h">
+      <Filter>aspect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

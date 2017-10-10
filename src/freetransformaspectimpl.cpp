@@ -22,7 +22,7 @@
 
 #include "freetransformaspectimpl.h"
 #include "component.h"
-#include "worldaspect.h"
+#include "transformaspect.h"
 
 
 using namespace DrawSpace;
@@ -38,26 +38,26 @@ m_timemanager( p_timemanager )
 
 
 
-void FreeTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Utils::Matrix& p_out_base_transform )
+void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
 {
     
     // recup des composants donnees d'entrées
 
     ComponentList<Vector> vectors;
-    p_worldaspect->GetComponentsByType<Vector>( vectors );
+    p_transformaspect->GetComponentsByType<Vector>( vectors );
 
     Vector local_speed = vectors[0]->getPurpose();
     local_speed[2] = -local_speed[2];
 
     ComponentList<Matrix> mats;
-    p_worldaspect->GetComponentsByType<Matrix>( mats );
+    p_transformaspect->GetComponentsByType<Matrix>( mats );
 
     Matrix pos = mats[0]->getPurpose();
 
     //vitesses demandées...
 
     ComponentList<dsreal> reals;
-    p_worldaspect->GetComponentsByType<dsreal>( reals );
+    p_transformaspect->GetComponentsByType<dsreal>( reals );
     dsreal rspeed_x = reals[0]->getPurpose();
     dsreal rspeed_y = reals[1]->getPurpose();
     dsreal rspeed_z = reals[2]->getPurpose();
@@ -69,7 +69,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( WorldAspect* p_worldaspect, Ut
 
     // quaternion resultat courant
     ComponentList<Quaternion>   quats;
-    p_worldaspect->GetComponentsByType<Quaternion>( quats );
+    p_transformaspect->GetComponentsByType<Quaternion>( quats );
     Quaternion	                current_res = quats[0]->getPurpose();
     
     Utils::Matrix			    orientation;

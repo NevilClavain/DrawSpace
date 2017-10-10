@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _WORLDASPECT_H_
-#define _WORLDASPECT_H_
+#ifndef _TRANSFORMASPECT_H_
+#define _TRANSFORMASPECT_H_
 
 #include "worldaspectimpl.h"
 #include "entity.h"
@@ -30,7 +30,7 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class WorldAspect : public Core::Aspect
+class TransformAspect : public Core::Aspect
 {
 protected:
     DrawSpace::Utils::Matrix                                                        m_worldtransform;
@@ -43,7 +43,7 @@ protected:
     std::vector<DrawSpace::Interface::AspectImplementations::WorldAspectImpl*>      m_impls;
 
 public:
-    WorldAspect( void );
+    TransformAspect( void );
 
     void AddImplementation( DrawSpace::Interface::AspectImplementations::WorldAspectImpl* p_impl );
     
