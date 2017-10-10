@@ -23,7 +23,7 @@
 #ifndef _TRANSFORMASPECT_H_
 #define _TRANSFORMASPECT_H_
 
-#include "worldaspectimpl.h"
+#include "transformaspectimpl.h"
 #include "entity.h"
 
 namespace DrawSpace
@@ -40,12 +40,12 @@ protected:
     DrawSpace::Utils::Matrix                                                        m_dispatched_projtransform;
 
 
-    std::vector<DrawSpace::Interface::AspectImplementations::WorldAspectImpl*>      m_impls;
+    std::vector<DrawSpace::Interface::AspectImplementations::TransformAspectImpl*>      m_impls;
 
 public:
     TransformAspect( void );
 
-    void AddImplementation( DrawSpace::Interface::AspectImplementations::WorldAspectImpl* p_impl );
+    void AddImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
     void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform );

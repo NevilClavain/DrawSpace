@@ -23,13 +23,13 @@
 #ifndef _RAWTRANSFORMASPECTIMPL_H_
 #define _RAWTRANSFORMASPECTIMPL_H_
 
-#include "worldaspectimpl.h"
+#include "transformaspectimpl.h"
 
 namespace DrawSpace
 {
 namespace AspectImplementations
 {
-class RawTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::WorldAspectImpl
+class RawTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 public:
     virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );

@@ -23,7 +23,7 @@
 #ifndef _FREETRANSFORMASPECTIMPL_H_
 #define _FREETRANSFORMASPECTIMPL_H_
 
-#include "worldaspectimpl.h"
+#include "transformaspectimpl.h"
 #include "quaternion.h"
 #include "timemanager.h"
 
@@ -31,7 +31,7 @@ namespace DrawSpace
 {
 namespace AspectImplementations
 {
-class FreeTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::WorldAspectImpl
+class FreeTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 protected:
 

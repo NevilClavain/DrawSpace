@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _WORLDASPECTIMPL_H_
-#define _WORLDASPECTIMPL_H_
+#ifndef _TRANSFORMASPECTIMPL_H_
+#define _TRANSFORMASPECTIMPL_H_
 
 #include "matrix.h"
 
@@ -37,7 +37,7 @@ namespace Interface
 namespace AspectImplementations
 {
 
-class WorldAspectImpl abstract
+class TransformAspectImpl abstract
 {
 public:
     virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform ) = 0;

@@ -553,9 +553,6 @@
     <ClInclude Include="src\renderingaspectimpl.h">
       <Filter>interface\aspectimplementations</Filter>
     </ClInclude>
-    <ClInclude Include="src\worldaspectimpl.h">
-      <Filter>interface\aspectimplementations</Filter>
-    </ClInclude>
     <ClInclude Include="src\textrenderingaspectimpl.h">
       <Filter>aspectimplementations</Filter>
     </ClInclude>
@@ -603,6 +600,9 @@
     </ClInclude>
     <ClInclude Include="src\transformaspect.h">
       <Filter>aspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transformaspectimpl.h">
+      <Filter>interface\aspectimplementations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

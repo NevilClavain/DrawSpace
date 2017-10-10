@@ -35,7 +35,7 @@ TransformAspect::TransformAspect( void )
     m_dispatched_projtransform.Identity();
 }
 
-void TransformAspect::AddImplementation( AspectImplementations::WorldAspectImpl* p_impl )
+void TransformAspect::AddImplementation( AspectImplementations::TransformAspectImpl* p_impl )
 {
     m_impls.push_back( p_impl );
 }
