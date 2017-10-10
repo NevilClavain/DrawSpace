@@ -39,7 +39,7 @@ m_free_transformer( m_tm ),
 m_left_mousebutton( false ),
 m_right_mousebutton( false ),
 m_current_camera( 0 ),
-m_worldsystem_evt_handler( this, &MainLoopService::on_worldsystem_evt ),
+m_worldsystem_evt_handler( this, &MainLoopService::on_transformsystem_evt ),
 m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt ),
 m_show_cube( true )
 {
@@ -213,7 +213,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
-    m_worldSystem.RegisterCameraEvtHandler( &m_worldsystem_evt_handler );
+    m_transformSystem.RegisterCameraEvtHandler( &m_worldsystem_evt_handler );
 
 
     // ajouter la skybox a la scene
@@ -240,11 +240,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     if( 0 == m_current_camera )
     {
-        m_worldSystem.SetCurrentCameraEntity( &m_cameraEntity );
+        m_transformSystem.SetCurrentCameraEntity( &m_cameraEntity );
     }
     else
     {
-        m_worldSystem.SetCurrentCameraEntity( &m_camera2Entity );
+        m_transformSystem.SetCurrentCameraEntity( &m_camera2Entity );
     }
 
     m_rendergraph.RenderingQueueModSignal();
@@ -256,7 +256,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
-    m_worldSystem.Run( &m_entitygraph );
+    m_transformSystem.Run( &m_entitygraph );
     m_renderingSystem.Run( &m_entitygraph );
     m_renderer->FlipScreen();
 
@@ -410,11 +410,11 @@ void MainLoopService::OnKeyPulse( long p_key )
 
                 if( 0 == m_current_camera )
                 {
-                    m_worldSystem.SetCurrentCameraEntity( &m_cameraEntity );
+                    m_transformSystem.SetCurrentCameraEntity( &m_cameraEntity );
                 }
                 else
                 {
-                    m_worldSystem.SetCurrentCameraEntity( &m_camera2Entity );
+                    m_transformSystem.SetCurrentCameraEntity( &m_camera2Entity );
                 }
             }
             break;
@@ -505,9 +505,9 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
-void MainLoopService::on_worldsystem_evt( Systems::WorldSystem::Event p_evt, Core::Entity* p_entity )
+void MainLoopService::on_transformsystem_evt( Systems::TransformSystem::Event p_evt, Core::Entity* p_entity )
 {
-    if( Systems::WorldSystem::CAMERA_ACTIVE == p_evt && p_entity )
+    if( Systems::TransformSystem::CAMERA_ACTIVE == p_evt && p_entity )
     {
         CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
         RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
@@ -515,11 +515,11 @@ void MainLoopService::on_worldsystem_evt( Systems::WorldSystem::Event p_evt, Cor
         // mise a jour affichage avec le nom de la camera courante...
         rendering_aspect->GetComponent<dsstring>( "current camera" )->getPurpose() = curr_camera_aspect->GetComponent<dsstring>( "camera_debug_name" )->getPurpose();
     }
-    else if( Systems::WorldSystem::RUN_BEGIN == p_evt )
+    else if( Systems::TransformSystem::RUN_BEGIN == p_evt )
     {
         _asm nop
     }
-    else if( Systems::WorldSystem::RUN_END == p_evt )
+    else if( Systems::TransformSystem::RUN_END == p_evt )
     {
         _asm nop
     }

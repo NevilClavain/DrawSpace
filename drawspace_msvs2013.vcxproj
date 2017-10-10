@@ -94,7 +94,7 @@
     <ClCompile Include="src\viewportquad.cpp" />
     <ClCompile Include="src\world.cpp" />
     <ClCompile Include="src\transformaspect.cpp" />
-    <ClCompile Include="src\worldsystem.cpp" />
+    <ClCompile Include="src\transformsystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ac3dmeshe.h" />
@@ -203,7 +203,7 @@
     <ClInclude Include="src\world.h" />
     <ClInclude Include="src\transformaspect.h" />
     <ClInclude Include="src\transformaspectimpl.h" />
-    <ClInclude Include="src\worldsystem.h" />
+    <ClInclude Include="src\transformsystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}</ProjectGuid>

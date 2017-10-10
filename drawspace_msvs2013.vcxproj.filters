@@ -258,9 +258,6 @@
     <ClCompile Include="src\rawtransformaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
-    <ClCompile Include="src\worldsystem.cpp">
-      <Filter>systems</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderingaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
@@ -298,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="src\transformaspect.cpp">
       <Filter>aspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transformsystem.cpp">
+      <Filter>systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -565,9 +565,6 @@
     <ClInclude Include="src\rawtransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
     </ClInclude>
-    <ClInclude Include="src\worldsystem.h">
-      <Filter>systems</Filter>
-    </ClInclude>
     <ClInclude Include="src\rendersystem.h">
       <Filter>systems</Filter>
     </ClInclude>
@@ -603,6 +600,9 @@
     </ClInclude>
     <ClInclude Include="src\transformaspectimpl.h">
       <Filter>interface\aspectimplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transformsystem.h">
+      <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

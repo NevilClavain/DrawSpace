@@ -20,8 +20,8 @@
 *
 */
 
-#ifndef _WORLDSYSTEM_H_
-#define _WORLDSYSTEM_H_
+#ifndef _TRANSFORMSYSTEM_H_
+#define _TRANSFORMSYSTEM_H_
 
 #include "entitynodegraph.h"
 #include "matrix.h"
@@ -31,7 +31,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-class WorldSystem
+class TransformSystem
 {
 public:
 
@@ -57,8 +57,8 @@ protected:
     void notify_event( Event p_evt, Core::Entity* p_entity );
 
 public:
-    WorldSystem(void);
-    ~WorldSystem(void);
+    TransformSystem(void);
+    ~TransformSystem(void);
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );

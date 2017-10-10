@@ -22,7 +22,7 @@
 
 #include "entitynodegraph.h"
 #include "rendersystem.h"
-#include "worldsystem.h"
+#include "transformsystem.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -57,17 +57,17 @@ void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem 
     }
 }
 
-void EntityNodeGraph::AcceptWorldSystem( WorldSystem* p_worldsystem )
+void EntityNodeGraph::AcceptWorldSystem( TransformSystem* p_transformsystem )
 {
     for( EntityTree::df_pre_iterator it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
     {
         if( it->is_root() )
         {
-            p_worldsystem->VisitEntity( NULL, it->data() );
+            p_transformsystem->VisitEntity( NULL, it->data() );
         }
         else
         {
-            p_worldsystem->VisitEntity( it->parent().data(), it->data() );
+            p_transformsystem->VisitEntity( it->parent().data(), it->data() );
         }
     }
 }

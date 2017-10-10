@@ -29,7 +29,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-class WorldSystem;
+class TransformSystem;
 class RenderingSystem;
 }
 namespace EntityGraph
@@ -51,7 +51,7 @@ public:
 	void Erase(void);
 
     void AcceptRenderingSystem( Systems::RenderingSystem* p_renderingsystem );
-    void AcceptWorldSystem( Systems::WorldSystem* p_worldsystem );
+    void AcceptWorldSystem( Systems::TransformSystem* p_transformsystem );
 
     void RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );
 };

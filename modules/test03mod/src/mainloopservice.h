@@ -30,7 +30,7 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::Systems::WorldSystem::Event, DrawSpace::Core::Entity*>             CameraEventHandler;
+    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::Systems::TransformSystem::Event, DrawSpace::Core::Entity*>             CameraEventHandler;
     typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::EntityGraph::EntityNode::Event, DrawSpace::Core::Entity*>          EntitygraphNodeEventHandler;
 
     bool                                                                            m_left_mousebutton;
@@ -67,7 +67,7 @@ protected:
 
     
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
-    DrawSpace::Systems::WorldSystem                                                 m_worldSystem;
+    DrawSpace::Systems::TransformSystem                                             m_transformSystem;
 
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
@@ -94,7 +94,7 @@ protected:
     bool                                                                            m_show_cube;
 
 
-    void on_worldsystem_evt( DrawSpace::Systems::WorldSystem::Event p_evt, DrawSpace::Core::Entity* p_entity );
+    void on_transformsystem_evt( DrawSpace::Systems::TransformSystem::Event p_evt, DrawSpace::Core::Entity* p_entity );
 
     void on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Event p_evt, DrawSpace::Core::Entity* p_entity );
 

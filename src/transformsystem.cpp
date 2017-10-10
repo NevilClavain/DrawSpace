@@ -20,7 +20,7 @@
 *
 */
 
-#include "worldsystem.h"
+#include "transformsystem.h"
 #include "transformaspect.h"
 #include "cameraaspect.h"
 
@@ -31,16 +31,16 @@ using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Systems;
 
-WorldSystem::WorldSystem( void ) :
+TransformSystem::TransformSystem( void ) :
 m_curr_entity_camera( NULL )
 {
 }
 
-WorldSystem::~WorldSystem( void )
+TransformSystem::~TransformSystem( void )
 {
 }
 
-void WorldSystem::notify_event( Event p_evt, Entity* p_entity )
+void TransformSystem::notify_event( Event p_evt, Entity* p_entity )
 {
     for( std::vector<CameraEventHandler*>::iterator it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
     {
@@ -48,7 +48,7 @@ void WorldSystem::notify_event( Event p_evt, Entity* p_entity )
     }
 }
 
-void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
+void TransformSystem::Run( EntityNodeGraph* p_entitygraph )
 {
     notify_event( RUN_BEGIN, NULL );
 
@@ -97,7 +97,7 @@ void WorldSystem::Run( EntityNodeGraph* p_entitygraph )
 
 }
 
-void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
+void TransformSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 {
     if( 0 == m_step )
     {
@@ -120,14 +120,14 @@ void WorldSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     }
 }
 
-void WorldSystem::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera )
+void TransformSystem::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera )
 {
     m_curr_entity_camera = p_curr_entity_camera;
 
     notify_event( CAMERA_ACTIVE, m_curr_entity_camera );
 }
 
-void WorldSystem::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
+void TransformSystem::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
 {
     m_cameraevt_handlers.push_back( p_handler );
 
@@ -136,7 +136,7 @@ void WorldSystem::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
 
 }
 
-void WorldSystem::UnregisterCameraEvtHandler( CameraEventHandler* p_handler )
+void TransformSystem::UnregisterCameraEvtHandler( CameraEventHandler* p_handler )
 {
     for( auto it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
     {
