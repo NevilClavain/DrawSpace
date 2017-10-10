@@ -23,14 +23,29 @@
 #ifndef _PHYSICSASPECT_H_
 #define _PHYSICSASPECT_H_
 
+#include <btBulletCollisionCommon.h>
+#include <btBulletDynamicsCommon.h>
 #include "aspect.h"
+
 
 namespace DrawSpace
 {
 namespace Aspect
 {
-class TransformAspect : public Core::Aspect
+class PhysicsAspect : public Core::Aspect
 {
+protected:
+
+    btDefaultCollisionConfiguration             m_collisionConfiguration;
+    btCollisionDispatcher                       m_collisionDispatcher;
+    btDbvtBroadphase                            m_broadphase;
+    btSequentialImpulseConstraintSolver         m_sequentialImpulseConstraintSolver;
+    btDiscreteDynamicsWorld                     m_world;
+
+public:
+
+    PhysicsAspect( void );
+    void StepSimulation( dsreal p_fps, int p_nbsteps );
 };
 }
 }

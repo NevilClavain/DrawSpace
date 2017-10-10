@@ -299,6 +299,9 @@
     <ClCompile Include="src\transformsystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\physicsaspect.cpp">
+      <Filter>aspect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />

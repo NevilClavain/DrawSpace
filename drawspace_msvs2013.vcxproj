@@ -53,6 +53,7 @@
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\passesrenderingaspectimpl.cpp" />
+    <ClCompile Include="src\physicsaspect.cpp" />
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\rawtransformaspectimpl.cpp" />
     <ClCompile Include="src\renderingaspect.cpp" />

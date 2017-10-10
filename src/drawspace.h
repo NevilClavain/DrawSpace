@@ -102,6 +102,8 @@
 #include "fpstransformaspectimpl.h"
 #include "freetransformaspectimpl.h"
 
+#include "physicsaspect.h"
+
 #include "cameraaspect.h"
 
 #include "rendersystem.h"
