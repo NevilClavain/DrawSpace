@@ -267,23 +267,18 @@
     <ClCompile Include="src\entitynodegraph.cpp">
       <Filter>entitygraph</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\cameraaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\fpstransformaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\skyboxrenderingaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\freetransformaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp">
       <Filter>rendergraph</Filter>
     </ClCompile>
@@ -297,6 +292,9 @@
       <Filter>aspect</Filter>
     </ClCompile>
     <ClCompile Include="src\transformsystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physicssystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
     <ClCompile Include="src\physicsaspect.cpp">
@@ -605,6 +603,9 @@
       <Filter>interface\aspectimplementations</Filter>
     </ClInclude>
     <ClInclude Include="src\transformsystem.h">
+      <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physicssystem.h">
       <Filter>systems</Filter>
     </ClInclude>
     <ClInclude Include="src\physicsaspect.h">
