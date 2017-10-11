@@ -108,6 +108,7 @@
 
 #include "rendersystem.h"
 #include "transformsystem.h"
+#include "physicssystem.h"
 
 
 #endif

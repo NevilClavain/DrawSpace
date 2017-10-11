@@ -23,6 +23,7 @@
 #include "entitynodegraph.h"
 #include "rendersystem.h"
 #include "transformsystem.h"
+#include "physicssystem.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -69,6 +70,14 @@ void EntityNodeGraph::AcceptWorldSystem( TransformSystem* p_transformsystem )
         {
             p_transformsystem->VisitEntity( it->parent().data(), it->data() );
         }
+    }
+}
+
+void EntityNodeGraph::AcceptPhysicsSystem( Systems::PhysicsSystem* p_physicssystem )
+{
+    for( EntityTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )    
+    {
+        p_physicssystem->VisitEntity( it->data() );
     }
 }
 

@@ -31,6 +31,7 @@ namespace Systems
 {
 class TransformSystem;
 class RenderingSystem;
+class PhysicsSystem;
 }
 namespace EntityGraph
 {
@@ -52,6 +53,7 @@ public:
 
     void AcceptRenderingSystem( Systems::RenderingSystem* p_renderingsystem );
     void AcceptWorldSystem( Systems::TransformSystem* p_transformsystem );
+    void AcceptPhysicsSystem( Systems::PhysicsSystem* p_physicssystem );
 
     void RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );
 };

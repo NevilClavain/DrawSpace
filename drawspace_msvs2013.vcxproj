@@ -54,9 +54,12 @@
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\passesrenderingaspectimpl.cpp" />
     <ClCompile Include="src\physicsaspect.cpp" />
+    <ClCompile Include="src\physicssystem.cpp" />
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\rawtransformaspectimpl.cpp" />
     <ClCompile Include="src\renderingaspect.cpp" />
+    <ClInclude Include="src\physicssystem.h" />
+    <ClInclude Include="src\rendersystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />
     <ClCompile Include="src\renderpassnodegraph.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
@@ -91,11 +94,11 @@
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\timemanager.cpp" />
     <ClCompile Include="src\transformation.cpp" />
+    <ClCompile Include="src\transformsystem.cpp" />
     <ClCompile Include="src\vector.cpp" />
     <ClCompile Include="src\viewportquad.cpp" />
     <ClCompile Include="src\world.cpp" />
     <ClCompile Include="src\transformaspect.cpp" />
-    <ClCompile Include="src\transformsystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ac3dmeshe.h" />
@@ -162,7 +165,7 @@
     <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\skyboxrenderingaspectimpl.h" />
     <ClInclude Include="src\textrenderingaspectimpl.h" />
-    <ClInclude Include="src\renderingsystem.h" />
+    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\renderpassnode.h" />
     <ClInclude Include="src\renderpassnodegraph.h" />
     <ClInclude Include="src\renderstatesset.h" />
@@ -198,6 +201,7 @@
     <ClInclude Include="src\timemanager.h" />
     <ClInclude Include="src\tracedefs.h" />
     <ClInclude Include="src\transformation.h" />
+    <ClInclude Include="src\transformsystem.h" />
     <ClInclude Include="src\triangle.h" />
     <ClInclude Include="src\vector.h" />
     <ClInclude Include="src\vertex.h" />
@@ -205,7 +209,6 @@
     <ClInclude Include="src\world.h" />
     <ClInclude Include="src\transformaspect.h" />
     <ClInclude Include="src\transformaspectimpl.h" />
-    <ClInclude Include="src\transformsystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}</ProjectGuid>
