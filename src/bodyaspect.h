@@ -23,6 +23,8 @@
 #ifndef _BODYASPECT_H_
 #define _BODYASPECT_H_
 
+#include <btBulletCollisionCommon.h>
+#include <btBulletDynamicsCommon.h>
 #include "aspect.h"
 
 
@@ -30,7 +32,16 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class BodyAspect : public Core::Aspect {};
+class BodyAspect : public Core::Aspect 
+{
+protected:
+    btRigidBody*                                m_rigidBody;
+    btCollisionShape*                           m_collisionShape;
+    btTriangleMesh*                             m_meshe_data;
+    btDefaultMotionState*                       m_motionState;
+
+public:
+};
 }
 }
 
