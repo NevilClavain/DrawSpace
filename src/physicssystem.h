@@ -44,6 +44,8 @@ public:
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_entity );
 
+    void SetTimeManager( DrawSpace::Utils::TimeManager* p_tm );
+
 };
 }
 }

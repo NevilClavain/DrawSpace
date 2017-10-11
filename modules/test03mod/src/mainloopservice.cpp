@@ -132,6 +132,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "..." );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "current camera", 10, 30, 255, 0, 255, "..." );
 
+
+    m_rootEntity.AddAspect<PhysicsAspect>();
+
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
     //////////////////////////////////////////////////////////////////////////
@@ -249,13 +252,14 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_rendergraph.RenderingQueueModSignal();
 
-    
+    m_physicsSystem.SetTimeManager( &m_tm );
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
 
 void MainLoopService::Run( void )
 {
+    m_physicsSystem.Run( &m_entitygraph );
     m_transformSystem.Run( &m_entitygraph );
     m_renderingSystem.Run( &m_entitygraph );
     m_renderer->FlipScreen();

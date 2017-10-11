@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\ac3dmeshe.cpp" />
     <ClCompile Include="src\body.cpp" />
+    <ClCompile Include="src\bodyaspect.cpp" />
     <ClCompile Include="src\calendar.cpp" />
     <ClCompile Include="src\cameraaspect.cpp" />
     <ClCompile Include="src\camerapoint.cpp" />
@@ -58,6 +59,7 @@
     <ClCompile Include="src\piload.cpp" />
     <ClCompile Include="src\rawtransformaspectimpl.cpp" />
     <ClCompile Include="src\renderingaspect.cpp" />
+    <ClInclude Include="src\bodyaspect.h" />
     <ClInclude Include="src\physicssystem.h" />
     <ClInclude Include="src\rendersystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />

@@ -20,45 +20,4 @@
 *
 */
 
-#include "physicssystem.h"
-#include "physicsaspect.h"
-#include "exceptions.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::EntityGraph;
-using namespace DrawSpace::Aspect;
-using namespace DrawSpace::Systems;
-
-PhysicsSystem::PhysicsSystem( void ) : 
-m_tm( NULL )
-{
-}
-
-PhysicsSystem::~PhysicsSystem( void )
-{
-}
-
-void PhysicsSystem::Run( EntityNodeGraph* p_entitygraph )
-{
-    if( NULL == m_tm )
-    {
-        _DSEXCEPTION( "no time manager setted for physics system" );
-    }
-
-    p_entitygraph->AcceptPhysicsSystem( this );
-}
-
-void PhysicsSystem::VisitEntity( Entity* p_entity )
-{
-    PhysicsAspect* physics_aspect = p_entity->GetAspect<PhysicsAspect>();
-    if( physics_aspect )
-    {
-        physics_aspect->StepSimulation( m_tm->GetFPS(), 15 );
-    }
-}
-
-void PhysicsSystem::SetTimeManager( DrawSpace::Utils::TimeManager* p_tm )
-{
-    m_tm = p_tm;
-}
+#include "bodyaspect.h"

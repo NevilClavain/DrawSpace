@@ -68,6 +68,7 @@ protected:
     
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
     DrawSpace::Systems::TransformSystem                                             m_transformSystem;
+    DrawSpace::Systems::PhysicsSystem                                               m_physicsSystem;
 
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;

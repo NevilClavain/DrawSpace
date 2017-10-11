@@ -300,6 +300,9 @@
     <ClCompile Include="src\physicsaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
+    <ClCompile Include="src\bodyaspect.cpp">
+      <Filter>aspect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -548,9 +551,6 @@
     <ClInclude Include="src\component.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderingsystem.h">
-      <Filter>module</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderingaspectimpl.h">
       <Filter>interface\aspectimplementations</Filter>
     </ClInclude>
@@ -609,6 +609,11 @@
       <Filter>systems</Filter>
     </ClInclude>
     <ClInclude Include="src\physicsaspect.h">
+      <Filter>aspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rendersystem.cpp" />
+    <ClInclude Include="src\rendersystem.h" />
+    <ClInclude Include="src\bodyaspect.h">
       <Filter>aspect</Filter>
     </ClInclude>
   </ItemGroup>

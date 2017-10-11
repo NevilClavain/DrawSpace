@@ -21,4 +21,3 @@
 */
 
 #include "cameraaspect.h"
-#include "renderer.h"
