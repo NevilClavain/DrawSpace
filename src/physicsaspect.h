@@ -26,8 +26,7 @@
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 #include "aspect.h"
-
-
+#include "entity.h"
 
 namespace DrawSpace
 {
@@ -49,6 +48,7 @@ public:
 
     PhysicsAspect( void );
     void StepSimulation( dsreal p_fps, int p_nbsteps );
+    void UpdateBodiesList( const std::vector<DrawSpace::Core::Entity*> p_list );
 };
 }
 }

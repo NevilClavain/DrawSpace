@@ -36,6 +36,8 @@ protected:
 
     DrawSpace::Utils::TimeManager* m_tm;
 
+    std::vector<Core::Entity*> m_bodies_list; // pour chaque entitee comportant un aspect "Physics", liste des Entite comportant un aspect "Body" trouvees "sous" celle ci (entites filles)
+
 public:
 
     PhysicsSystem( void );

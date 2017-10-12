@@ -22,6 +22,7 @@
 
 #include "physicssystem.h"
 #include "physicsaspect.h"
+#include "bodyaspect.h"
 #include "exceptions.h"
 
 using namespace DrawSpace;
@@ -46,6 +47,7 @@ void PhysicsSystem::Run( EntityNodeGraph* p_entitygraph )
         _DSEXCEPTION( "no time manager setted for physics system" );
     }
 
+    m_bodies_list.clear(); // clear list of entities with body aspect
     p_entitygraph->AcceptPhysicsSystem( this );
 }
 
@@ -54,7 +56,20 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
     PhysicsAspect* physics_aspect = p_entity->GetAspect<PhysicsAspect>();
     if( physics_aspect )
     {
+        // submit current Body entities list to physic aspect
+        physics_aspect->UpdateBodiesList( m_bodies_list );
+
         physics_aspect->StepSimulation( m_tm->GetFPS(), 15 );
+
+        m_bodies_list.clear(); // clear list for next entity with Physics aspect (if exists)
+    }
+    else
+    {
+        BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+        if( body_aspect )
+        {
+            m_bodies_list.push_back( p_entity ); // memorize this entity with Body aspect
+        }
     }
 }
 

@@ -35,6 +35,11 @@ m_gravity_applied( false )
 {
 }
 
+void PhysicsAspect::UpdateBodiesList( const std::vector<Entity*> p_list )
+{
+
+}
+
 void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
 {
 

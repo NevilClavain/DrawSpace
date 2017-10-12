@@ -583,6 +583,8 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     transform_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
     transform_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
     */
+
+    m_cubeEntity.AddAspect<BodyAspect>();
 }
 
 void MainLoopService::create_skybox( void )
