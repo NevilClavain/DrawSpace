@@ -36,9 +36,33 @@ m_gravity_applied( false )
     m_world.setGravity( btVector3( 0.0, 0.0, 0.0 ) );
 }
 
-void PhysicsAspect::UpdateBodiesList( const std::vector<Entity*> p_list )
+void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 {
 
+}
+
+void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
+{
+
+}
+
+void PhysicsAspect::UpdateBodiesList( const std::vector<Entity*>& p_list )
+{
+    for( size_t i = 0; i < p_list.size(); ++i )
+    {
+        Entity* curr_entity = p_list[i]; 
+
+        if( 0 == m_bodies_set.count( curr_entity ) )
+        {
+            on_added_bodyentity( curr_entity );
+            m_bodies_set.insert( curr_entity );
+        }
+    }
+
+    for( auto& it = m_bodies.begin(); it != m_bodies.end(); ++it )
+    {
+        //chercher dans p_list... (passer plutot un set dans p_list ?)
+    }
 }
 
 void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
