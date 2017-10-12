@@ -28,6 +28,7 @@
 #include "aspect.h"
 
 
+
 namespace DrawSpace
 {
 namespace Aspect
@@ -41,6 +42,8 @@ protected:
     btDbvtBroadphase                            m_broadphase;
     btSequentialImpulseConstraintSolver         m_sequentialImpulseConstraintSolver;
     btDiscreteDynamicsWorld                     m_world;
+
+    bool                                        m_gravity_applied;
 
 public:
 

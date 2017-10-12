@@ -21,19 +21,47 @@
 */
 
 #include "physicsaspect.h"
+#include "vector.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Utils;
 
 PhysicsAspect::PhysicsAspect( void ) :
 m_collisionDispatcher( &m_collisionConfiguration ),
-m_world( &m_collisionDispatcher, &m_broadphase, &m_sequentialImpulseConstraintSolver, &m_collisionConfiguration)
+m_world( &m_collisionDispatcher, &m_broadphase, &m_sequentialImpulseConstraintSolver, &m_collisionConfiguration),
+m_gravity_applied( false )
 {
 }
 
 void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
 {
+
+    ComponentList<bool> flags;
+    GetComponentsByType<bool>( flags );
+
+    ComponentList<Vector> vecs;
+    GetComponentsByType<Vector>( vecs );
+
+    Vector gravity = vecs[0]->getPurpose();
+
+
+    if( m_gravity_applied != flags[0]->getPurpose() )
+    {
+        m_gravity_applied = flags[0]->getPurpose();
+
+        if( m_gravity_applied )
+        {
+            m_world.setGravity( btVector3( gravity[0], gravity[1], gravity[2] ) );
+        }
+        else
+        {
+            m_world.setGravity( btVector3( 0.0, 0.0, 0.0 ) );
+        }
+    }
+
+
     /*
     // doing timestep < fixedtimestep * 5 (see http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World )
         
