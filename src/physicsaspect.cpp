@@ -46,15 +46,25 @@ void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
     ComponentList<bool> flags;
     GetComponentsByType<bool>( flags );
 
-    ComponentList<Vector> vecs;
-    GetComponentsByType<Vector>( vecs );
+    bool enable_gravity = false;
+    Vector gravity;
 
-    Vector gravity = vecs[0]->getPurpose();
-
-
-    if( m_gravity_applied != flags[0]->getPurpose() )
+    if( flags.size() > 0 && true == flags[0]->getPurpose() )
     {
-        m_gravity_applied = flags[0]->getPurpose();
+        enable_gravity = true;
+    }
+
+    if( enable_gravity )
+    {
+        ComponentList<Vector> vecs;
+        GetComponentsByType<Vector>( vecs );
+
+        gravity = vecs[0]->getPurpose();
+    }
+
+    if( m_gravity_applied != enable_gravity )
+    {
+        m_gravity_applied = enable_gravity;
 
         if( m_gravity_applied )
         {
