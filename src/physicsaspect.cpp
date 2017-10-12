@@ -33,6 +33,7 @@ m_collisionDispatcher( &m_collisionConfiguration ),
 m_world( &m_collisionDispatcher, &m_broadphase, &m_sequentialImpulseConstraintSolver, &m_collisionConfiguration),
 m_gravity_applied( false )
 {
+    m_world.setGravity( btVector3( 0.0, 0.0, 0.0 ) );
 }
 
 void PhysicsAspect::UpdateBodiesList( const std::vector<Entity*> p_list )
