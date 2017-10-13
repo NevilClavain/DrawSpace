@@ -47,14 +47,14 @@ protected:
     std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies;
     std::set<DrawSpace::Core::Entity*>                              m_bodies_set; // les memes entities que dans m_bodies
 
-    void on_added_bodyentity( Entity* p_entity );
-    void on_removed_bodyentity( Entity* p_entity );
+    void on_added_bodyentity( DrawSpace::Core::Entity* p_entity );
+    void on_removed_bodyentity( DrawSpace::Core::Entity* p_entity );
 
 public:
 
     PhysicsAspect( void );
     void StepSimulation( dsreal p_fps, int p_nbsteps );
-    void UpdateBodiesList( const std::vector<DrawSpace::Core::Entity*>& p_list );
+    void UpdateBodiesList( const std::set<DrawSpace::Core::Entity*>& p_list );
 };
 }
 }

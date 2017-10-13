@@ -68,7 +68,7 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
         BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
         if( body_aspect )
         {
-            m_bodies_list.push_back( p_entity ); // memorize this entity with Body aspect
+            m_bodies_list.insert( p_entity ); // memorize this entity with Body aspect
         }
     }
 }

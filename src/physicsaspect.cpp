@@ -38,19 +38,20 @@ m_gravity_applied( false )
 
 void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 {
-
+    _asm nop
 }
 
 void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 {
-
+    _asm nop
 }
 
-void PhysicsAspect::UpdateBodiesList( const std::vector<Entity*>& p_list )
+void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
 {
-    for( size_t i = 0; i < p_list.size(); ++i )
+    
+    for( auto& it = p_list.begin(); it != p_list.end(); ++it )
     {
-        Entity* curr_entity = p_list[i]; 
+        Entity* curr_entity = *it; 
 
         if( 0 == m_bodies_set.count( curr_entity ) )
         {
@@ -59,9 +60,36 @@ void PhysicsAspect::UpdateBodiesList( const std::vector<Entity*>& p_list )
         }
     }
 
-    for( auto& it = m_bodies.begin(); it != m_bodies.end(); ++it )
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    std::vector<Entity*> to_remove;
+    for( auto& it = m_bodies_set.begin(); it != m_bodies_set.end(); ++it )
     {
         //chercher dans p_list... (passer plutot un set dans p_list ?)
+        Entity* curr_entity = *it;
+
+        if( 0 == p_list.count( curr_entity ) )
+        {
+            // cette entité n'est pas dans la liste fournie en entrée -> a été retirée du graph
+            on_removed_bodyentity( curr_entity );
+            to_remove.push_back( curr_entity );
+        }
+    }
+
+    for( size_t i = 0; i < to_remove.size(); ++i )
+    {
+        // effacer de m_bodies_set
+        m_bodies_set.erase( to_remove[i] );
+
+        // effacer de m_bodies
+        for( auto& it = m_bodies.begin(); it != m_bodies.end(); ++it )
+        {
+            if( (*it).second == to_remove[i] )
+            {
+                m_bodies.erase( it );
+                break;
+            }
+        }
     }
 }
 
