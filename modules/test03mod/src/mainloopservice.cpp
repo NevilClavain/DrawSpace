@@ -571,20 +571,27 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
     TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
 
+
+    /*
     transform_aspect->AddImplementation( &m_transformer );
 
     transform_aspect->AddComponent<Matrix>( "cube_mat" );       
     transform_aspect->GetComponent<Matrix>( "cube_mat" )->getPurpose() = p_transform;
-
-    /*
-    transform_aspect->AddComponent<Matrix>( "cube_rotation" );
-    transform_aspect->AddComponent<Matrix>( "cube_translation" );
-
-    transform_aspect->GetComponent<Matrix>( "cube_translation" )->getPurpose().Translation( Vector( 0.0, 0.0, -6.0, 1.0 ) );
-    transform_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
     */
 
+    
     m_cubeEntity.AddAspect<BodyAspect>();
+
+    BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+
+    body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
+    body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 1.0, 1.0, 1.0, 1.0 ) );
+
+    body_aspect->AddComponent<Matrix>( "init_attitude", p_transform );
+
+    body_aspect->AddComponent<dsreal>( "mass", 5.0 );
+    
+
 }
 
 void MainLoopService::create_skybox( void )

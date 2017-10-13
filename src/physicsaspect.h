@@ -27,6 +27,7 @@
 #include <btBulletDynamicsCommon.h>
 #include "aspect.h"
 #include "entity.h"
+#include "bodyaspect.h"
 
 namespace DrawSpace
 {
@@ -47,8 +48,8 @@ protected:
     std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies;
     std::set<DrawSpace::Core::Entity*>                              m_bodies_set; // les memes entities que dans m_bodies
 
-    void on_added_bodyentity( DrawSpace::Core::Entity* p_entity );
-    void on_removed_bodyentity( DrawSpace::Core::Entity* p_entity );
+    void                on_added_bodyentity( DrawSpace::Core::Entity* p_entity );
+    void                on_removed_bodyentity( DrawSpace::Core::Entity* p_entity );
 
 public:
 

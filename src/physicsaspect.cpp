@@ -23,6 +23,7 @@
 #include "physicsaspect.h"
 #include "vector.h"
 
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
@@ -36,19 +37,21 @@ m_gravity_applied( false )
     m_world.setGravity( btVector3( 0.0, 0.0, 0.0 ) );
 }
 
+
+
 void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 {
-    _asm nop
+    BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+    m_bodies[body_aspect->Init()] = p_entity;
 }
 
 void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 {
-    _asm nop
+    BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
 }
 
 void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
-{
-    
+{    
     for( auto& it = p_list.begin(); it != p_list.end(); ++it )
     {
         Entity* curr_entity = *it; 

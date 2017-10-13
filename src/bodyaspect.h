@@ -27,6 +27,8 @@
 #include <btBulletDynamicsCommon.h>
 #include "aspect.h"
 
+#include "matrix.h"
+#include "meshe.h"
 
 namespace DrawSpace
 {
@@ -35,12 +37,28 @@ namespace Aspect
 class BodyAspect : public Core::Aspect 
 {
 protected:
-    btRigidBody*                                m_rigidBody;
-    btCollisionShape*                           m_collisionShape;
-    btTriangleMesh*                             m_meshe_data;
+
     btDefaultMotionState*                       m_motionState;
+    btCollisionShape*                           m_collisionShape;
+    btTriangleMesh*                             m_mesh;
+    btRigidBody*                                m_rigidBody;
 
 public:
+    typedef enum
+    {
+        BOX_SHAPE,
+        SPHERE_SHAPE,
+        MESHE_SHAPE,
+
+    } Shape;
+
+public:
+
+    BodyAspect( void );
+    ~BodyAspect( void );
+
+    btRigidBody* Init( void );
+
 };
 }
 }

@@ -21,3 +21,158 @@
 */
 
 #include "bodyaspect.h"
+#include "memalloc.h"
+
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Utils;
+
+
+BodyAspect::BodyAspect( void ) :
+m_motionState( NULL ),
+m_collisionShape( NULL ),
+m_rigidBody( NULL )
+{
+}
+
+BodyAspect::~BodyAspect( void )
+{
+}
+
+btRigidBody* BodyAspect::Init( void )
+{
+    ///////////////////////////////////////
+    
+
+    ComponentList<Matrix> mats;     
+    GetComponentsByType<Matrix>( mats );
+
+    Matrix init_attitude_mat;
+    if( mats.size() )
+    {
+        init_attitude_mat = mats[0]->getPurpose();
+    }
+    else
+    {
+        init_attitude_mat.Identity();
+    }
+
+
+    ComponentList<Shape> shapes;
+    GetComponentsByType<Shape>( shapes );
+
+    Shape shape = shapes[0]->getPurpose();
+
+
+    ComponentList<dsreal> reals;
+    GetComponentsByType<dsreal>( reals );
+
+    dsreal mass = reals[0]->getPurpose();
+
+    ///////////////////////////////////////
+
+
+    btScalar    btmat[16];
+    btTransform bt_transform;
+
+    btmat[0] = init_attitude_mat( 0, 0 );
+    btmat[1] = init_attitude_mat( 0, 1 );
+    btmat[2] = init_attitude_mat( 0, 2 );
+    btmat[3] = init_attitude_mat( 0, 3 );
+
+    btmat[4] = init_attitude_mat( 1, 0 );
+    btmat[5] = init_attitude_mat( 1, 1 );
+    btmat[6] = init_attitude_mat( 1, 2 );
+    btmat[7] = init_attitude_mat( 1, 3 );
+
+    btmat[8] = init_attitude_mat( 2, 0 );
+    btmat[9] = init_attitude_mat( 2, 1 );
+    btmat[10] = init_attitude_mat( 2, 2 );
+    btmat[11] = init_attitude_mat( 2, 3 );
+
+    btmat[12] = init_attitude_mat( 3, 0 );
+    btmat[13] = init_attitude_mat( 3, 1 );
+    btmat[14] = init_attitude_mat( 3, 2 );
+    btmat[15] = init_attitude_mat( 3, 3 );
+
+    bt_transform.setFromOpenGLMatrix( btmat );
+
+    //////////////////////////////////////////////////////
+
+    switch( shape )
+    {
+        case BOX_SHAPE:
+            {
+                ComponentList<Vector> vecs;
+                GetComponentsByType<Vector>( vecs );
+                DrawSpace::Utils::Vector    box_dims;
+                box_dims = vecs[0]->getPurpose();
+
+                btBoxShape* shape = _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( box_dims[0], box_dims[1], box_dims[2] ) ) );
+                m_collisionShape = shape;
+            }
+            break;
+
+
+        case SPHERE_SHAPE:
+            {
+                dsreal sphere_radius = reals[1]->getPurpose();
+
+                m_collisionShape = _DRAWSPACE_NEW_( btSphereShape, btSphereShape( sphere_radius ) );
+            }
+            break;
+
+
+        case MESHE_SHAPE:
+            {
+                ComponentList<Meshe> meshes;
+                GetComponentsByType<Meshe>( meshes );
+
+                Meshe meshe = meshes[0]->getPurpose();
+
+                m_mesh = _DRAWSPACE_NEW_( btTriangleMesh, btTriangleMesh );
+
+                for( long i = 0; i < meshe.GetTrianglesListSize(); i++ )
+                {
+                    Triangle curr_triangle;
+                    meshe.GetTriangles( i, curr_triangle );
+
+                    Vertex v1, v2, v3;
+
+                    meshe.GetVertex( curr_triangle.vertex1, v1 );
+                    meshe.GetVertex( curr_triangle.vertex2, v2 );
+                    meshe.GetVertex( curr_triangle.vertex3, v3 );
+
+                    btVector3 a( v1.x, v1.y, v1.z );
+                    btVector3 b( v2.x, v2.y, v2.z );
+                    btVector3 c( v3.x, v3.y, v3.z );
+
+                    m_mesh->addTriangle( a, b, c, false );
+                }
+
+                m_collisionShape = _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( m_mesh, true, true ) );
+
+            }
+            break;    
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
+
+    btVector3 localInertia( 0, 0, 0 );
+    if( mass > 0.0 )
+    {        
+        m_collisionShape->calculateLocalInertia( mass, localInertia );
+    }
+
+    btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( mass, m_motionState, m_collisionShape, localInertia );
+
+    m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
+
+    return m_rigidBody;
+    
+
+    return NULL;
+}
