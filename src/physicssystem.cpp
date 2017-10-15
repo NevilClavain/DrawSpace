@@ -59,7 +59,10 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
         // submit current Body entities list to physic aspect
         physics_aspect->UpdateBodiesList( m_bodies_list );
 
-        physics_aspect->StepSimulation( m_tm->GetFPS(), 15 );
+        if( m_tm->IsReady() )
+        {
+            physics_aspect->StepSimulation( m_tm->GetFPS(), 15 );
+        }
 
         m_bodies_list.clear(); // clear list for next entity with Physics aspect (if exists)
     }

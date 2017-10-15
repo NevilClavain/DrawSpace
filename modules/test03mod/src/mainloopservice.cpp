@@ -587,7 +587,7 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
     body_aspect->AddComponent<Matrix>( "init_attitude", p_transform );
 
-    body_aspect->AddComponent<dsreal>( "mass", 5.0 );
+    body_aspect->AddComponent<dsreal>( "mass", 1.0 );
 
 
     transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );

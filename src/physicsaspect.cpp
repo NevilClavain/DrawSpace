@@ -30,20 +30,36 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 
 PhysicsAspect::PhysicsAspect( void ) :
-m_collisionDispatcher( &m_collisionConfiguration ),
-m_world( &m_collisionDispatcher, &m_broadphase, &m_sequentialImpulseConstraintSolver, &m_collisionConfiguration),
 m_gravity_applied( false )
 {
-    m_world.setGravity( btVector3( 0.0, 0.0, 0.0 ) );
+    m_collisionConfiguration            = _DRAWSPACE_NEW_( btDefaultCollisionConfiguration, btDefaultCollisionConfiguration );
+    m_collisionDispatcher               = _DRAWSPACE_NEW_( btCollisionDispatcher, btCollisionDispatcher( m_collisionConfiguration ) );
+    m_broadphase                        = _DRAWSPACE_NEW_( btDbvtBroadphase, btDbvtBroadphase );
+    m_sequentialImpulseConstraintSolver = _DRAWSPACE_NEW_( btSequentialImpulseConstraintSolver, btSequentialImpulseConstraintSolver );
+    m_world = _DRAWSPACE_NEW_( btDiscreteDynamicsWorld, btDiscreteDynamicsWorld( m_collisionDispatcher, m_broadphase, m_sequentialImpulseConstraintSolver, m_collisionConfiguration ) );
+
+    m_world->setGravity( btVector3( 0.0, 0.0, 0.0 ) );
 }
 
-
+PhysicsAspect::~PhysicsAspect( void )
+{
+    _DRAWSPACE_DELETE_( m_world );    
+    _DRAWSPACE_DELETE_( m_collisionConfiguration );
+    _DRAWSPACE_DELETE_( m_collisionDispatcher );
+    _DRAWSPACE_DELETE_( m_broadphase );
+    _DRAWSPACE_DELETE_( m_sequentialImpulseConstraintSolver );
+}
 
 void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 {
     BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
-    m_bodies[body_aspect->Init()] = p_entity;
-}
+    btRigidBody* bd = body_aspect->Init();
+
+    m_bodies[bd] = p_entity;
+    m_world->addRigidBody( bd );
+
+    bd->setActivationState( DISABLE_DEACTIVATION );
+ }
 
 void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 {
@@ -124,11 +140,11 @@ void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
 
         if( m_gravity_applied )
         {
-            m_world.setGravity( btVector3( gravity[0], gravity[1], gravity[2] ) );
+            m_world->setGravity( btVector3( gravity[0], gravity[1], gravity[2] ) );
         }
         else
         {
-            m_world.setGravity( btVector3( 0.0, 0.0, 0.0 ) );
+            m_world->setGravity( btVector3( 0.0, 0.0, 0.0 ) );
         }
     }
 
@@ -142,8 +158,8 @@ void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
 
     m_world.stepSimulation( timestep, 5 );
     */
-
-    m_world.stepSimulation( 1.0 / p_fps, p_nbsteps );
+    btScalar ts = 1.0 / p_fps;
+    m_world->stepSimulation( ts, p_nbsteps );
 
     // check for collisions
 
@@ -155,11 +171,11 @@ void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
     }
     */
 
-    int numManifolds = m_world.getDispatcher()->getNumManifolds();
+    int numManifolds = m_world->getDispatcher()->getNumManifolds();
 
 	for (int i = 0; i < numManifolds; i++ )
 	{
-		btPersistentManifold* contactManifold =  m_world.getDispatcher()->getManifoldByIndexInternal(i);
+		btPersistentManifold* contactManifold =  m_world->getDispatcher()->getManifoldByIndexInternal(i);
 
         //btRigidBody* obA = static_cast<btRigidBody*>( contactManifold->getBody0() );
 

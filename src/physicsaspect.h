@@ -37,11 +37,11 @@ class PhysicsAspect : public Core::Aspect
 {
 protected:
 
-    btDefaultCollisionConfiguration                                 m_collisionConfiguration;
-    btCollisionDispatcher                                           m_collisionDispatcher;
-    btDbvtBroadphase                                                m_broadphase;
-    btSequentialImpulseConstraintSolver                             m_sequentialImpulseConstraintSolver;
-    btDiscreteDynamicsWorld                                         m_world;
+    btDefaultCollisionConfiguration*                                m_collisionConfiguration;
+    btCollisionDispatcher*                                          m_collisionDispatcher;
+    btDbvtBroadphase*                                               m_broadphase;
+    btSequentialImpulseConstraintSolver*                            m_sequentialImpulseConstraintSolver;
+    btDiscreteDynamicsWorld*                                        m_world;
 
     bool                                                            m_gravity_applied;
 
@@ -54,6 +54,7 @@ protected:
 public:
 
     PhysicsAspect( void );
+    ~PhysicsAspect( void );
     void StepSimulation( dsreal p_fps, int p_nbsteps );
     void UpdateBodiesList( const std::set<DrawSpace::Core::Entity*>& p_list );
 };
