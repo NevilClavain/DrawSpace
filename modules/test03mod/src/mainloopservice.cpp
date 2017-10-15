@@ -450,6 +450,22 @@ void MainLoopService::OnKeyPulse( long p_key )
                 }
             }
             break;
+
+        case VK_F4:
+            {
+                BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+
+                if( body_aspect->GetComponent<bool>( "enable" )->getPurpose() )
+                {
+                    body_aspect->GetComponent<bool>( "enable" )->getPurpose() = false;
+                }
+                else
+                {
+                    body_aspect->GetComponent<bool>( "enable" )->getPurpose() = true;
+                }
+
+            }
+            break;
     }
 }
 
@@ -589,6 +605,8 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
     body_aspect->AddComponent<dsreal>( "mass", 1.0 );
 
+
+    body_aspect->AddComponent<bool>( "enable", false );
 
     transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
     

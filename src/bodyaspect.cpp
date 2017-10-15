@@ -33,7 +33,8 @@ BodyAspect::BodyAspect( void ) :
 m_motionState( NULL ),
 m_collisionShape( NULL ),
 m_rigidBody( NULL ),
-m_tr_aspectimpl( &m_motionState )
+m_tr_aspectimpl( &m_motionState ),
+m_body_active( true )
 {
 }
 
@@ -178,4 +179,37 @@ btRigidBody* BodyAspect::Init( void )
 AspectImplementations::BodyTransformAspectImpl* BodyAspect::GetTransformAspectImpl( void )
 {
     return &m_tr_aspectimpl;
+}
+
+void BodyAspect::Update( void )
+{
+    ComponentList<bool> flags;
+    GetComponentsByType<bool>( flags );
+
+    if( flags.size() )
+    {
+        bool enable_body = flags[0]->getPurpose();
+
+        if( enable_body != m_body_active )
+        {
+            body_state( enable_body );            
+        }
+    }
+}
+
+void BodyAspect::body_state( bool p_enabled )
+{
+    if( m_rigidBody )
+    {
+        if( p_enabled )
+        {
+            m_rigidBody->activate();
+        }
+        else
+        {
+            m_rigidBody->forceActivationState( WANTS_DEACTIVATION );
+        }
+
+        m_body_active = p_enabled;
+    }
 }

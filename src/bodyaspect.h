@@ -46,6 +46,8 @@ protected:
 
     AspectImplementations::BodyTransformAspectImpl          m_tr_aspectimpl;
 
+    bool                                                    m_body_active;
+
 public:
     typedef enum
     {
@@ -54,6 +56,8 @@ public:
         MESHE_SHAPE,
 
     } Shape;
+
+    void body_state( bool p_enabled );
 
 public:
 
@@ -64,6 +68,7 @@ public:
 
     AspectImplementations::BodyTransformAspectImpl* GetTransformAspectImpl( void );
 
+    void Update( void );
 };
 }
 }

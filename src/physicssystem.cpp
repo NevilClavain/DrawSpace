@@ -72,6 +72,8 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
         if( body_aspect )
         {
             m_bodies_list.insert( p_entity ); // memorize this entity with Body aspect
+
+            body_aspect->Update();
         }
     }
 }
