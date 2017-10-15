@@ -32,7 +32,8 @@ using namespace DrawSpace::Utils;
 BodyAspect::BodyAspect( void ) :
 m_motionState( NULL ),
 m_collisionShape( NULL ),
-m_rigidBody( NULL )
+m_rigidBody( NULL ),
+m_tr_aspectimpl( &m_motionState )
 {
 }
 
@@ -172,7 +173,9 @@ btRigidBody* BodyAspect::Init( void )
     m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 
     return m_rigidBody;
-    
+}
 
-    return NULL;
+AspectImplementations::BodyTransformAspectImpl* BodyAspect::GetTransformAspectImpl( void )
+{
+    return &m_tr_aspectimpl;
 }

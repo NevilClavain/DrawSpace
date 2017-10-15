@@ -101,6 +101,7 @@
 #include "rawtransformaspectimpl.h"
 #include "fpstransformaspectimpl.h"
 #include "freetransformaspectimpl.h"
+#include "bodytransformaspectimpl.h"
 
 #include "cameraaspect.h"
 

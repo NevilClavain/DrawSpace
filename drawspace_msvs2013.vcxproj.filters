@@ -303,6 +303,9 @@
     <ClCompile Include="src\bodyaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
+    <ClCompile Include="src\bodytransformaspectimpl.cpp">
+      <Filter>aspectimplementations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -615,6 +618,10 @@
     <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\bodyaspect.h">
       <Filter>aspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rendersystem.h" />
+    <ClInclude Include="src\bodytransformaspectimpl.h">
+      <Filter>aspectimplementations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

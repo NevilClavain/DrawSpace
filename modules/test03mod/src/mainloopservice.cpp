@@ -135,13 +135,18 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_rootEntity.AddAspect<PhysicsAspect>();
 
+    PhysicsAspect* physic_aspect = m_rootEntity.GetAspect<PhysicsAspect>();
+
+    physic_aspect->AddComponent<bool>( "gravity_state", true );
+    physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
+
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
     //////////////////////////////////////////////////////////////////////////
 
     Matrix cube_transf;
 
-    cube_transf.Translation( 0.0, 2.0, -10.0 );
+    cube_transf.Translation( 0.0, 10.0, -10.0 );
     create_cube( cube_transf );
 
 
@@ -572,13 +577,6 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
 
 
-    /*
-    transform_aspect->AddImplementation( &m_transformer );
-
-    transform_aspect->AddComponent<Matrix>( "cube_mat" );       
-    transform_aspect->GetComponent<Matrix>( "cube_mat" )->getPurpose() = p_transform;
-    */
-
     
     m_cubeEntity.AddAspect<BodyAspect>();
 
@@ -590,8 +588,10 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     body_aspect->AddComponent<Matrix>( "init_attitude", p_transform );
 
     body_aspect->AddComponent<dsreal>( "mass", 5.0 );
-    
 
+
+    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+    
 }
 
 void MainLoopService::create_skybox( void )

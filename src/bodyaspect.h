@@ -26,6 +26,7 @@
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 #include "aspect.h"
+#include "bodytransformaspectimpl.h"
 
 #include "matrix.h"
 #include "meshe.h"
@@ -38,10 +39,12 @@ class BodyAspect : public Core::Aspect
 {
 protected:
 
-    btDefaultMotionState*                       m_motionState;
-    btCollisionShape*                           m_collisionShape;
-    btTriangleMesh*                             m_mesh;
-    btRigidBody*                                m_rigidBody;
+    btDefaultMotionState*                                   m_motionState;
+    btCollisionShape*                                       m_collisionShape;
+    btTriangleMesh*                                         m_mesh;
+    btRigidBody*                                            m_rigidBody;
+
+    AspectImplementations::BodyTransformAspectImpl          m_tr_aspectimpl;
 
 public:
     typedef enum
@@ -58,6 +61,8 @@ public:
     ~BodyAspect( void );
 
     btRigidBody* Init( void );
+
+    AspectImplementations::BodyTransformAspectImpl* GetTransformAspectImpl( void );
 
 };
 }
