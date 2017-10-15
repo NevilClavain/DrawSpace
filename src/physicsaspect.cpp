@@ -148,6 +148,8 @@ void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /*
     // doing timestep < fixedtimestep * 5 (see http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World )
