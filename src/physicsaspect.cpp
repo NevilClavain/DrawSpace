@@ -64,6 +64,12 @@ void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 {
     BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+    btRigidBody* bd = body_aspect->GetRigidBody();
+
+    m_world->removeRigidBody( bd );
+    m_bodies.erase( bd );
+
+    body_aspect->Release();
 }
 
 void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
@@ -84,7 +90,7 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
     std::vector<Entity*> to_remove;
     for( auto& it = m_bodies_set.begin(); it != m_bodies_set.end(); ++it )
     {
-        //chercher dans p_list... (passer plutot un set dans p_list ?)
+        //chercher dans p_list...
         Entity* curr_entity = *it;
 
         if( 0 == p_list.count( curr_entity ) )
@@ -100,6 +106,7 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
         // effacer de m_bodies_set
         m_bodies_set.erase( to_remove[i] );
 
+        /* FAIT DANS on_removed_bodyentity
         // effacer de m_bodies
         for( auto& it = m_bodies.begin(); it != m_bodies.end(); ++it )
         {
@@ -109,43 +116,37 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
                 break;
             }
         }
+        */
     }
 }
 
 void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
 {
-
     ComponentList<bool> flags;
     GetComponentsByType<bool>( flags );
 
-    bool enable_gravity = false;
-    Vector gravity;
-
-    if( flags.size() > 0 && true == flags[0]->getPurpose() )
+    if( flags.size() )
     {
-        enable_gravity = true;
-    }
+        bool enable_gravity = flags[0]->getPurpose();
 
-    if( enable_gravity )
-    {
-        ComponentList<Vector> vecs;
-        GetComponentsByType<Vector>( vecs );
-
-        gravity = vecs[0]->getPurpose();
-    }
-
-    if( m_gravity_applied != enable_gravity )
-    {
-        m_gravity_applied = enable_gravity;
-
-        if( m_gravity_applied )
+        if( m_gravity_applied != enable_gravity )
         {
-            m_world->setGravity( btVector3( gravity[0], gravity[1], gravity[2] ) );
-        }
-        else
-        {
-            m_world->setGravity( btVector3( 0.0, 0.0, 0.0 ) );
-        }
+            m_gravity_applied = enable_gravity;
+
+            if( m_gravity_applied )
+            {
+                Vector gravity;
+                ComponentList<Vector> vecs;
+                GetComponentsByType<Vector>( vecs );
+                gravity = vecs[0]->getPurpose();
+                
+                m_world->setGravity( btVector3( gravity[0], gravity[1], gravity[2] ) );
+            }
+            else
+            {
+                m_world->setGravity( btVector3( 0.0, 0.0, 0.0 ) );
+            }
+        }    
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

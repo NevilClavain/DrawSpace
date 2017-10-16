@@ -33,6 +33,7 @@ BodyAspect::BodyAspect( void ) :
 m_motionState( NULL ),
 m_collisionShape( NULL ),
 m_rigidBody( NULL ),
+m_mesh( NULL ),
 m_tr_aspectimpl( &m_motionState ),
 m_body_active( true )
 {
@@ -40,6 +41,10 @@ m_body_active( true )
 
 BodyAspect::~BodyAspect( void )
 {
+}
+
+{
+    return m_rigidBody;
 }
 
 btRigidBody* BodyAspect::Init( void )
@@ -50,14 +55,14 @@ btRigidBody* BodyAspect::Init( void )
     ComponentList<Matrix> mats;     
     GetComponentsByType<Matrix>( mats );
 
-    Matrix init_attitude_mat;
+    Matrix attitude_mat;
     if( mats.size() )
     {
-        init_attitude_mat = mats[0]->getPurpose();
+        attitude_mat = mats[0]->getPurpose();
     }
     else
     {
-        init_attitude_mat.Identity();
+        attitude_mat.Identity();
     }
 
 
@@ -78,25 +83,25 @@ btRigidBody* BodyAspect::Init( void )
     btScalar    btmat[16];
     btTransform bt_transform;
 
-    btmat[0] = init_attitude_mat( 0, 0 );
-    btmat[1] = init_attitude_mat( 0, 1 );
-    btmat[2] = init_attitude_mat( 0, 2 );
-    btmat[3] = init_attitude_mat( 0, 3 );
+    btmat[0] = attitude_mat( 0, 0 );
+    btmat[1] = attitude_mat( 0, 1 );
+    btmat[2] = attitude_mat( 0, 2 );
+    btmat[3] = attitude_mat( 0, 3 );
 
-    btmat[4] = init_attitude_mat( 1, 0 );
-    btmat[5] = init_attitude_mat( 1, 1 );
-    btmat[6] = init_attitude_mat( 1, 2 );
-    btmat[7] = init_attitude_mat( 1, 3 );
+    btmat[4] = attitude_mat( 1, 0 );
+    btmat[5] = attitude_mat( 1, 1 );
+    btmat[6] = attitude_mat( 1, 2 );
+    btmat[7] = attitude_mat( 1, 3 );
 
-    btmat[8] = init_attitude_mat( 2, 0 );
-    btmat[9] = init_attitude_mat( 2, 1 );
-    btmat[10] = init_attitude_mat( 2, 2 );
-    btmat[11] = init_attitude_mat( 2, 3 );
+    btmat[8] = attitude_mat( 2, 0 );
+    btmat[9] = attitude_mat( 2, 1 );
+    btmat[10] = attitude_mat( 2, 2 );
+    btmat[11] = attitude_mat( 2, 3 );
 
-    btmat[12] = init_attitude_mat( 3, 0 );
-    btmat[13] = init_attitude_mat( 3, 1 );
-    btmat[14] = init_attitude_mat( 3, 2 );
-    btmat[15] = init_attitude_mat( 3, 3 );
+    btmat[12] = attitude_mat( 3, 0 );
+    btmat[13] = attitude_mat( 3, 1 );
+    btmat[14] = attitude_mat( 3, 2 );
+    btmat[15] = attitude_mat( 3, 3 );
 
     bt_transform.setFromOpenGLMatrix( btmat );
 
@@ -176,6 +181,18 @@ btRigidBody* BodyAspect::Init( void )
     return m_rigidBody;
 }
 
+void BodyAspect::Release( void )
+{
+    _DRAWSPACE_DELETE_( m_motionState );
+    _DRAWSPACE_DELETE_( m_collisionShape );
+    _DRAWSPACE_DELETE_( m_rigidBody );
+
+    if( m_mesh )
+    {
+        _DRAWSPACE_DELETE_( m_mesh );
+    }
+}
+
 AspectImplementations::BodyTransformAspectImpl* BodyAspect::GetTransformAspectImpl( void )
 {
     return &m_tr_aspectimpl;
@@ -193,6 +210,47 @@ void BodyAspect::Update( void )
         if( enable_body != m_body_active )
         {
             body_state( enable_body );            
+        }
+    }
+
+    ///////////////////////////////////////////////
+
+    // update du composant matrice index 0 ("attitude"), si ce composant existe bien sur :)
+
+    ComponentList<Matrix> mats;     
+    GetComponentsByType<Matrix>( mats );
+
+    Matrix attitude_mat;
+    if( mats.size() )
+    {
+        btScalar                 bt_matrix[16];
+        DrawSpace::Utils::Matrix updated_matrix;
+
+        if( m_motionState )
+        {
+            m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
+   
+            updated_matrix( 0, 0 ) = bt_matrix[0];
+            updated_matrix( 0, 1 ) = bt_matrix[1];
+            updated_matrix( 0, 2 ) = bt_matrix[2];
+            updated_matrix( 0, 3 ) = bt_matrix[3];
+
+            updated_matrix( 1, 0 ) = bt_matrix[4];
+            updated_matrix( 1, 1 ) = bt_matrix[5];
+            updated_matrix( 1, 2 ) = bt_matrix[6];
+            updated_matrix( 1, 3 ) = bt_matrix[7];
+
+            updated_matrix( 2, 0 ) = bt_matrix[8];
+            updated_matrix( 2, 1 ) = bt_matrix[9];
+            updated_matrix( 2, 2 ) = bt_matrix[10];
+            updated_matrix( 2, 3 ) = bt_matrix[11];
+
+            updated_matrix( 3, 0 ) = bt_matrix[12];
+            updated_matrix( 3, 1 ) = bt_matrix[13];
+            updated_matrix( 3, 2 ) = bt_matrix[14];
+            updated_matrix( 3, 3 ) = bt_matrix[15];
+
+            mats[0]->getPurpose() = updated_matrix;
         }
     }
 }

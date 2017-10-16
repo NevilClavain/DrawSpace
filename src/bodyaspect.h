@@ -65,10 +65,13 @@ public:
     ~BodyAspect( void );
 
     btRigidBody* Init( void );
+    void Release( void );
 
     AspectImplementations::BodyTransformAspectImpl* GetTransformAspectImpl( void );
 
     void Update( void );
+
+
 };
 }
 }

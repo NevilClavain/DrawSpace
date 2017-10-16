@@ -453,15 +453,15 @@ void MainLoopService::OnKeyPulse( long p_key )
 
         case VK_F4:
             {
-                BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+                PhysicsAspect* physic_aspect = m_rootEntity.GetAspect<PhysicsAspect>();
 
-                if( body_aspect->GetComponent<bool>( "enable" )->getPurpose() )
+                if( physic_aspect->GetComponent<bool>( "gravity_state" )->getPurpose() )
                 {
-                    body_aspect->GetComponent<bool>( "enable" )->getPurpose() = false;
+                    physic_aspect->GetComponent<bool>( "gravity_state" )->getPurpose() = false;
                 }
                 else
                 {
-                    body_aspect->GetComponent<bool>( "enable" )->getPurpose() = true;
+                    physic_aspect->GetComponent<bool>( "gravity_state" )->getPurpose() = true;
                 }
 
             }
@@ -601,12 +601,12 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
     body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 1.0, 1.0, 1.0, 1.0 ) );
 
-    body_aspect->AddComponent<Matrix>( "init_attitude", p_transform );
+    body_aspect->AddComponent<Matrix>( "attitude", p_transform );
 
     body_aspect->AddComponent<dsreal>( "mass", 1.0 );
 
 
-    body_aspect->AddComponent<bool>( "enable", false );
+    body_aspect->AddComponent<bool>( "enable", true );
 
     transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
     
