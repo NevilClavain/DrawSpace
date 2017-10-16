@@ -43,6 +43,7 @@ BodyAspect::~BodyAspect( void )
 {
 }
 
+btRigidBody* BodyAspect::GetRigidBody( void ) const
 {
     return m_rigidBody;
 }

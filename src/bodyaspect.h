@@ -71,6 +71,7 @@ public:
 
     void Update( void );
 
+    btRigidBody* GetRigidBody( void ) const;
 
 };
 }
