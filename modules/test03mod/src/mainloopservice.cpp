@@ -714,7 +714,12 @@ void MainLoopService::create_ground( void )
     body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
     body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 100.0, 0.3, 100.0, 1.0 ) );
 
-    //body_aspect->AddComponent<Matrix>( "attitude", p_transform );
+    Matrix ground_attitude;
+    
+
+    ground_attitude.Rotation( Vector( 0.0, 0.0, 1.0, 1.0), Utils::Maths::DegToRad( 45.0 ) );
+
+    body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
 
 
     body_aspect->AddComponent<bool>( "collider", true );

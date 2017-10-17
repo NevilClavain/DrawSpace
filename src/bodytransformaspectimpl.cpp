@@ -55,7 +55,21 @@ void BodyTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformas
     {
         btTransform bt_transform;
 
-        updated_matrix.Identity(); // TEMPORAIRE : aller chercher les eventuels composants matrice (comme pour RawTransformAspectImpl)
+        //updated_matrix.Identity(); // TEMPORAIRE : aller chercher les eventuels composants matrice (comme pour RawTransformAspectImpl)
+
+        ComponentList<Matrix> mats;     
+        p_transformaspect->GetComponentsByType<Matrix>( mats );
+
+        Matrix attitude_mat;
+        if( mats.size() )
+        {
+            updated_matrix = mats[0]->getPurpose();
+        }
+        else
+        {
+            updated_matrix.Identity();
+        }
+
 
         bt_matrix[0] = updated_matrix( 0, 0 );
         bt_matrix[1] = updated_matrix( 0, 1 );

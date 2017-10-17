@@ -61,6 +61,7 @@ btRigidBody* BodyAspect::Init( void )
         collider = flags[0]->getPurpose();
     }
 
+
     ComponentList<Matrix> mats;     
     GetComponentsByType<Matrix>( mats );
 
@@ -97,53 +98,26 @@ btRigidBody* BodyAspect::Init( void )
     btScalar    btmat[16];
     btTransform bt_transform;
 
-    /*
-    if( collider )
-    {
-        // TEMPORAIRE
-        btmat[0] = 1.0;
-        btmat[1] = 0.0;
-        btmat[2] = 0.0;
-        btmat[3] = 0.0;
+    btmat[0] = attitude_mat( 0, 0 );
+    btmat[1] = attitude_mat( 0, 1 );
+    btmat[2] = attitude_mat( 0, 2 );
+    btmat[3] = attitude_mat( 0, 3 );
 
-        btmat[4] = 0.0;
-        btmat[5] = 1.0;
-        btmat[6] = 0.0;
-        btmat[7] = 0.0;
+    btmat[4] = attitude_mat( 1, 0 );
+    btmat[5] = attitude_mat( 1, 1 );
+    btmat[6] = attitude_mat( 1, 2 );
+    btmat[7] = attitude_mat( 1, 3 );
 
-        btmat[8] = 0.0;
-        btmat[9] = 0.0;
-        btmat[10] = 1.0;
-        btmat[11] = 0.0;
+    btmat[8] = attitude_mat( 2, 0 );
+    btmat[9] = attitude_mat( 2, 1 );
+    btmat[10] = attitude_mat( 2, 2 );
+    btmat[11] = attitude_mat( 2, 3 );
 
-        btmat[12] = 0.0;
-        btmat[13] = 0.0;
-        btmat[14] = 0.0;
-        btmat[15] = 1.0;
-    }
-    else
-    {
-    */
-        btmat[0] = attitude_mat( 0, 0 );
-        btmat[1] = attitude_mat( 0, 1 );
-        btmat[2] = attitude_mat( 0, 2 );
-        btmat[3] = attitude_mat( 0, 3 );
+    btmat[12] = attitude_mat( 3, 0 );
+    btmat[13] = attitude_mat( 3, 1 );
+    btmat[14] = attitude_mat( 3, 2 );
+    btmat[15] = attitude_mat( 3, 3 );
 
-        btmat[4] = attitude_mat( 1, 0 );
-        btmat[5] = attitude_mat( 1, 1 );
-        btmat[6] = attitude_mat( 1, 2 );
-        btmat[7] = attitude_mat( 1, 3 );
-
-        btmat[8] = attitude_mat( 2, 0 );
-        btmat[9] = attitude_mat( 2, 1 );
-        btmat[10] = attitude_mat( 2, 2 );
-        btmat[11] = attitude_mat( 2, 3 );
-
-        btmat[12] = attitude_mat( 3, 0 );
-        btmat[13] = attitude_mat( 3, 1 );
-        btmat[14] = attitude_mat( 3, 2 );
-        btmat[15] = attitude_mat( 3, 3 );
-    //}
 
     bt_transform.setFromOpenGLMatrix( btmat );
 
