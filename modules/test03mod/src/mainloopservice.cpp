@@ -606,7 +606,7 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     body_aspect->AddComponent<dsreal>( "mass", 1.0 );
 
 
-    body_aspect->AddComponent<bool>( "enable", true );
+    //body_aspect->AddComponent<bool>( "enable", true );
 
     transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
     
@@ -707,9 +707,19 @@ void MainLoopService::create_ground( void )
 
     TransformAspect* transform_aspect = m_groundEntity.GetAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( &m_transformer );
+    m_groundEntity.AddAspect<BodyAspect>();
 
-    transform_aspect->AddComponent<Matrix>( "ground_mat" );       
-    transform_aspect->GetComponent<Matrix>( "ground_mat" )->getPurpose().Identity();
+    BodyAspect* body_aspect = m_groundEntity.GetAspect<BodyAspect>();
+
+    body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
+    body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 100.0, 0.3, 100.0, 1.0 ) );
+
+    //body_aspect->AddComponent<Matrix>( "attitude", p_transform );
+
+
+    body_aspect->AddComponent<bool>( "collider", true );
+    //body_aspect->AddComponent<bool>( "enable", true );
+
+    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
 
 }

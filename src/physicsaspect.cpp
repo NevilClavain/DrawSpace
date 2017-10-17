@@ -56,9 +56,7 @@ void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
     btRigidBody* bd = body_aspect->Init();
 
     m_bodies[bd] = p_entity;
-    m_world->addRigidBody( bd );
-
-    bd->setActivationState( DISABLE_DEACTIVATION );
+    m_world->addRigidBody( bd );   
  }
 
 void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )

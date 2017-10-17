@@ -51,7 +51,15 @@ btRigidBody* BodyAspect::GetRigidBody( void ) const
 btRigidBody* BodyAspect::Init( void )
 {
     ///////////////////////////////////////
-    
+
+    ComponentList<bool> flags;
+    GetComponentsByType<bool>( flags );
+    bool collider = false;
+
+    if( flags.size() > 0 )
+    {    
+        collider = flags[0]->getPurpose();
+    }
 
     ComponentList<Matrix> mats;     
     GetComponentsByType<Matrix>( mats );
@@ -76,7 +84,12 @@ btRigidBody* BodyAspect::Init( void )
     ComponentList<dsreal> reals;
     GetComponentsByType<dsreal>( reals );
 
-    dsreal mass = reals[0]->getPurpose();
+    dsreal mass = 0.0;
+    
+    if( reals.size() > 0 && !collider )
+    {
+        mass = reals[0]->getPurpose();
+    }
 
     ///////////////////////////////////////
 
@@ -84,25 +97,53 @@ btRigidBody* BodyAspect::Init( void )
     btScalar    btmat[16];
     btTransform bt_transform;
 
-    btmat[0] = attitude_mat( 0, 0 );
-    btmat[1] = attitude_mat( 0, 1 );
-    btmat[2] = attitude_mat( 0, 2 );
-    btmat[3] = attitude_mat( 0, 3 );
+    /*
+    if( collider )
+    {
+        // TEMPORAIRE
+        btmat[0] = 1.0;
+        btmat[1] = 0.0;
+        btmat[2] = 0.0;
+        btmat[3] = 0.0;
 
-    btmat[4] = attitude_mat( 1, 0 );
-    btmat[5] = attitude_mat( 1, 1 );
-    btmat[6] = attitude_mat( 1, 2 );
-    btmat[7] = attitude_mat( 1, 3 );
+        btmat[4] = 0.0;
+        btmat[5] = 1.0;
+        btmat[6] = 0.0;
+        btmat[7] = 0.0;
 
-    btmat[8] = attitude_mat( 2, 0 );
-    btmat[9] = attitude_mat( 2, 1 );
-    btmat[10] = attitude_mat( 2, 2 );
-    btmat[11] = attitude_mat( 2, 3 );
+        btmat[8] = 0.0;
+        btmat[9] = 0.0;
+        btmat[10] = 1.0;
+        btmat[11] = 0.0;
 
-    btmat[12] = attitude_mat( 3, 0 );
-    btmat[13] = attitude_mat( 3, 1 );
-    btmat[14] = attitude_mat( 3, 2 );
-    btmat[15] = attitude_mat( 3, 3 );
+        btmat[12] = 0.0;
+        btmat[13] = 0.0;
+        btmat[14] = 0.0;
+        btmat[15] = 1.0;
+    }
+    else
+    {
+    */
+        btmat[0] = attitude_mat( 0, 0 );
+        btmat[1] = attitude_mat( 0, 1 );
+        btmat[2] = attitude_mat( 0, 2 );
+        btmat[3] = attitude_mat( 0, 3 );
+
+        btmat[4] = attitude_mat( 1, 0 );
+        btmat[5] = attitude_mat( 1, 1 );
+        btmat[6] = attitude_mat( 1, 2 );
+        btmat[7] = attitude_mat( 1, 3 );
+
+        btmat[8] = attitude_mat( 2, 0 );
+        btmat[9] = attitude_mat( 2, 1 );
+        btmat[10] = attitude_mat( 2, 2 );
+        btmat[11] = attitude_mat( 2, 3 );
+
+        btmat[12] = attitude_mat( 3, 0 );
+        btmat[13] = attitude_mat( 3, 1 );
+        btmat[14] = attitude_mat( 3, 2 );
+        btmat[15] = attitude_mat( 3, 3 );
+    //}
 
     bt_transform.setFromOpenGLMatrix( btmat );
 
@@ -170,14 +211,22 @@ btRigidBody* BodyAspect::Init( void )
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
 
     btVector3 localInertia( 0, 0, 0 );
-    if( mass > 0.0 )
+
+    if( mass > 0.0 && !collider )
     {        
         m_collisionShape->calculateLocalInertia( mass, localInertia );
     }
 
+    //si collider, mass == 0.0
     btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( mass, m_motionState, m_collisionShape, localInertia );
 
     m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
+
+    if( collider )
+    {
+        m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+    }
+    m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
     return m_rigidBody;
 }
@@ -204,9 +253,18 @@ void BodyAspect::Update( void )
     ComponentList<bool> flags;
     GetComponentsByType<bool>( flags );
 
-    if( flags.size() )
+    bool collider = false;
+    if( flags.size() > 0 )
+    {    
+        collider = flags[0]->getPurpose();
+    }
+    
+
+    //////////////////////////////////////////////
+
+    if( flags.size() > 1 )
     {
-        bool enable_body = flags[0]->getPurpose();
+        bool enable_body = flags[1]->getPurpose();
 
         if( enable_body != m_body_active )
         {
@@ -227,7 +285,7 @@ void BodyAspect::Update( void )
         btScalar                 bt_matrix[16];
         DrawSpace::Utils::Matrix updated_matrix;
 
-        if( m_motionState )
+        if( m_motionState && !collider )
         {
             m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
    
@@ -251,6 +309,7 @@ void BodyAspect::Update( void )
             updated_matrix( 3, 2 ) = bt_matrix[14];
             updated_matrix( 3, 3 ) = bt_matrix[15];
 
+            // updater le composant matrice 'attitude'
             mats[0]->getPurpose() = updated_matrix;
         }
     }
