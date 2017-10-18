@@ -47,13 +47,15 @@ public:
     
 
     template<typename T>
-    void AddAspect( void )
+    T* AddAspect( void )
     {
         if( m_aspects.count(typeid(T).hash_code() ) )
         {
             _DSEXCEPTION( "Aspect type already exists in this entity : " + dsstring( typeid(T).name() ) );
         }
-        m_aspects[typeid(T).hash_code()] = _DRAWSPACE_NEW_( T, T );
+        T* p = _DRAWSPACE_NEW_( T, T );
+        m_aspects[typeid(T).hash_code()] = p;
+        return p;
     }
 
     template<typename T>

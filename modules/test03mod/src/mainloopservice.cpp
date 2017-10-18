@@ -122,8 +122,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     //////////////////////////////////////////////////////////////////////////
     
-    m_rootEntity.AddAspect<RenderingAspect>();
-    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
+
     rendering_aspect->AddImplementation( &m_passesRender );
 
     m_passesRender.SetRendergraph( &m_rendergraph );
@@ -133,9 +133,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "current camera", 10, 30, 255, 0, 255, "..." );
 
 
-    m_rootEntity.AddAspect<PhysicsAspect>();
-
-    PhysicsAspect* physic_aspect = m_rootEntity.GetAspect<PhysicsAspect>();
+    PhysicsAspect* physic_aspect = m_rootEntity.AddAspect<PhysicsAspect>();
 
     physic_aspect->AddComponent<bool>( "gravity_state", true );
     physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
@@ -155,9 +153,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
-    m_cameraEntity.AddAspect<TransformAspect>();
-    TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
-
+    TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
     transform_aspect->AddImplementation( &m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
@@ -170,9 +166,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     transform_aspect->AddComponent<bool>( "ymvt", true );
 
-    m_cameraEntity.AddAspect<CameraAspect>();
+    CameraAspect* camera_aspect = m_cameraEntity.AddAspect<CameraAspect>();
 
-    CameraAspect* camera_aspect = m_cameraEntity.GetAspect<CameraAspect>();
     camera_aspect->AddComponent<Matrix>( "camera_proj" );
 
     DrawSpace::Interface::Renderer::Characteristics characteristics;
@@ -184,8 +179,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     ///////////////////////////////////////////////////////////////////////////
 
-    m_camera2Entity.AddAspect<TransformAspect>();
-    transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
+    transform_aspect = m_camera2Entity.AddAspect<TransformAspect>();
 
     transform_aspect->AddImplementation( &m_free_transformer );
   
@@ -206,8 +200,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
 
 
-    m_camera2Entity.AddAspect<CameraAspect>();
-    camera_aspect = m_camera2Entity.GetAspect<CameraAspect>();
+    camera_aspect = m_camera2Entity.AddAspect<CameraAspect>();
+
     camera_aspect->AddComponent<Matrix>( "camera_proj" );
 
     m_renderer->GetRenderCharacteristics( characteristics );
@@ -557,8 +551,7 @@ void MainLoopService::on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Ev
 
 void MainLoopService::create_cube( const Matrix& p_transform )
 {
-    m_cubeEntity.AddAspect<RenderingAspect>();
-    RenderingAspect* rendering_aspect = m_cubeEntity.GetAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_cubeEntity.AddAspect<RenderingAspect>();
 
     rendering_aspect->AddImplementation( &m_cubeRender );
 
@@ -589,14 +582,8 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     cube_texturepass->GetTexture( 0 )->LoadFromFile();
 
     m_cubeEntity.AddAspect<TransformAspect>();
-
-    TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
-
-
     
-    m_cubeEntity.AddAspect<BodyAspect>();
-
-    BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+    BodyAspect* body_aspect = m_cubeEntity.AddAspect<BodyAspect>();
 
     body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
     body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 1.0, 1.0, 1.0, 1.0 ) );
@@ -608,14 +595,15 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
     //body_aspect->AddComponent<bool>( "enable", true );
 
+    TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
     transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
     
 }
 
 void MainLoopService::create_skybox( void )
 {
-    m_skyboxEntity.AddAspect<RenderingAspect>();
-    RenderingAspect* rendering_aspect = m_skyboxEntity.GetAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_skyboxEntity.AddAspect<RenderingAspect>();
+    
 
     rendering_aspect->AddImplementation( &m_skyboxRender );
 
@@ -661,8 +649,8 @@ void MainLoopService::create_skybox( void )
     rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::BottomQuad )->GetTexture( 0 )->LoadFromFile();
 
 
-    m_skyboxEntity.AddAspect<TransformAspect>();
-    TransformAspect* transform_aspect = m_skyboxEntity.GetAspect<TransformAspect>();
+    TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
+
     transform_aspect->AddImplementation( &m_transformer );
 
     transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
@@ -672,8 +660,7 @@ void MainLoopService::create_skybox( void )
 
 void MainLoopService::create_ground( void )
 {
-    m_groundEntity.AddAspect<RenderingAspect>();
-    RenderingAspect* rendering_aspect = m_groundEntity.GetAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
 
     rendering_aspect->AddImplementation( &m_groundRender );
 
@@ -703,21 +690,18 @@ void MainLoopService::create_ground( void )
     ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
     ground_texturepass->GetTexture( 0 )->LoadFromFile();
 
-    m_groundEntity.AddAspect<TransformAspect>();
+    TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
 
-    TransformAspect* transform_aspect = m_groundEntity.GetAspect<TransformAspect>();
 
-    m_groundEntity.AddAspect<BodyAspect>();
+    BodyAspect* body_aspect = m_groundEntity.AddAspect<BodyAspect>();
 
-    BodyAspect* body_aspect = m_groundEntity.GetAspect<BodyAspect>();
 
     body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
     body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 100.0, 0.3, 100.0, 1.0 ) );
 
     Matrix ground_attitude;
     
-
-    ground_attitude.Rotation( Vector( 0.0, 0.0, 1.0, 1.0), Utils::Maths::DegToRad( 45.0 ) );
+    ground_attitude.Identity();
 
     body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
 
