@@ -51,8 +51,8 @@ void EntityNodeGraph::Erase(void)
 }
 
 void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem )
-{
-    for( EntityTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )    
+{    
+    for( auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
     {
         p_renderingsystem->VisitEntity( it->data() );
     }
@@ -60,7 +60,7 @@ void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem 
 
 void EntityNodeGraph::AcceptWorldSystem( TransformSystem* p_transformsystem )
 {
-    for( EntityTree::df_pre_iterator it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
+    for( auto& it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
     {
         if( it->is_root() )
         {
@@ -75,7 +75,7 @@ void EntityNodeGraph::AcceptWorldSystem( TransformSystem* p_transformsystem )
 
 void EntityNodeGraph::AcceptPhysicsSystem( Systems::PhysicsSystem* p_physicssystem )
 {
-    for( EntityTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )    
+    for( auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
     {
         p_physicssystem->VisitEntity( it->data() );
     }
@@ -86,7 +86,7 @@ void EntityNodeGraph::RegisterNodesEvtHandler( EntityNode::EventsHandler* p_hand
     m_nodesevt_handlers.push_back( p_handler );
 
     // balancer la liste des nodes deja enregistres
-    for( EntityTree::iterator it = m_tree.begin(); it != m_tree.end(); ++it )
+    for( auto& it = m_tree.begin(); it != m_tree.end(); ++it )
     {
         (*p_handler)( EntityNode::ADDED_IN_TREE, it->data() );
     }

@@ -232,11 +232,40 @@ void BodyAspect::Update( void )
     {    
         collider = flags[0]->getPurpose();
     }
+
+    btScalar                 bt_matrix[16];
+    DrawSpace::Utils::Matrix local_transf;
+
+    if( m_motionState && !collider )
+    {
+        m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
+   
+        local_transf( 0, 0 ) = bt_matrix[0];
+        local_transf( 0, 1 ) = bt_matrix[1];
+        local_transf( 0, 2 ) = bt_matrix[2];
+        local_transf( 0, 3 ) = bt_matrix[3];
+
+        local_transf( 1, 0 ) = bt_matrix[4];
+        local_transf( 1, 1 ) = bt_matrix[5];
+        local_transf( 1, 2 ) = bt_matrix[6];
+        local_transf( 1, 3 ) = bt_matrix[7];
+
+        local_transf( 2, 0 ) = bt_matrix[8];
+        local_transf( 2, 1 ) = bt_matrix[9];
+        local_transf( 2, 2 ) = bt_matrix[10];
+        local_transf( 2, 3 ) = bt_matrix[11];
+
+        local_transf( 3, 0 ) = bt_matrix[12];
+        local_transf( 3, 1 ) = bt_matrix[13];
+        local_transf( 3, 2 ) = bt_matrix[14];
+        local_transf( 3, 3 ) = bt_matrix[15];
+    }
+
     
-
     //////////////////////////////////////////////
+    // activer/desactiver cinematique du body (si pas collider)
 
-    if( flags.size() > 1 )
+    if( flags.size() > 1 && !collider )
     {
         bool enable_body = flags[1]->getPurpose();
 
@@ -247,7 +276,71 @@ void BodyAspect::Update( void )
     }
 
     ///////////////////////////////////////////////
+    // application des forces & torques
 
+    if( m_motionState && !collider )
+    {
+        ComponentList<Force> forces;
+        GetComponentsByType<Force>( forces );
+
+        for( size_t i = 0; i < forces.size(); ++i )
+        {
+            Force applied_force = forces[i]->getPurpose();
+
+            if( applied_force.m_enabled )
+            {
+                Vector force_v = applied_force.m_force_dir;
+                force_v.Scale( applied_force.m_force_scale );
+
+                Vector final_force_v;
+        
+                if( Force::LOCALE == applied_force.m_mode )
+                {
+                    Matrix local_rot = local_transf;
+                    local_rot.ClearTranslation();
+                    local_rot.Transform( &force_v, &final_force_v );            
+                }
+                else
+                {
+                    final_force_v = force_v;
+                }
+
+                m_rigidBody->applyForce( btVector3( final_force_v[0], final_force_v[1], final_force_v[2] ), 
+                                            btVector3( 0.0, 0.0, 0.0 ) );
+            }
+        }
+
+        ComponentList<Torque> torques;
+        GetComponentsByType<Torque>( torques );
+
+        for( size_t i = 0; i < torques.size(); ++i )
+        {
+            Torque applied_torque = torques[i]->getPurpose();
+
+            if( applied_torque.m_enabled )
+            {
+                Vector torque_v = applied_torque.m_torque_axis;
+                torque_v.Scale( applied_torque.m_torque_scale );
+
+                Vector final_torque_v;
+        
+                if( Torque::LOCALE == applied_torque.m_mode )
+                {
+                    Matrix local_rot = local_transf;
+                    local_rot.ClearTranslation();
+                    local_rot.Transform( &torque_v, &final_torque_v );            
+                }
+                else
+                {
+                    final_torque_v = torque_v;
+                }
+
+                m_rigidBody->applyTorque( btVector3( final_torque_v[0], final_torque_v[1], final_torque_v[2] ) );
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////
     // update du composant matrice index 0 ("attitude"), si ce composant existe bien sur :)
 
     ComponentList<Matrix> mats;     
@@ -256,35 +349,10 @@ void BodyAspect::Update( void )
     Matrix attitude_mat;
     if( mats.size() )
     {
-        btScalar                 bt_matrix[16];
-        DrawSpace::Utils::Matrix updated_matrix;
-
         if( m_motionState && !collider )
         {
-            m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
-   
-            updated_matrix( 0, 0 ) = bt_matrix[0];
-            updated_matrix( 0, 1 ) = bt_matrix[1];
-            updated_matrix( 0, 2 ) = bt_matrix[2];
-            updated_matrix( 0, 3 ) = bt_matrix[3];
-
-            updated_matrix( 1, 0 ) = bt_matrix[4];
-            updated_matrix( 1, 1 ) = bt_matrix[5];
-            updated_matrix( 1, 2 ) = bt_matrix[6];
-            updated_matrix( 1, 3 ) = bt_matrix[7];
-
-            updated_matrix( 2, 0 ) = bt_matrix[8];
-            updated_matrix( 2, 1 ) = bt_matrix[9];
-            updated_matrix( 2, 2 ) = bt_matrix[10];
-            updated_matrix( 2, 3 ) = bt_matrix[11];
-
-            updated_matrix( 3, 0 ) = bt_matrix[12];
-            updated_matrix( 3, 1 ) = bt_matrix[13];
-            updated_matrix( 3, 2 ) = bt_matrix[14];
-            updated_matrix( 3, 3 ) = bt_matrix[15];
-
             // updater le composant matrice 'attitude'
-            mats[0]->getPurpose() = updated_matrix;
+            mats[0]->getPurpose() = local_transf;
         }
     }
 }

@@ -43,7 +43,7 @@ RenderPassNodeGraph::~RenderPassNodeGraph( void )
 
 void RenderPassNodeGraph::cleanup_treenodes( void )
 {
-    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
+    for( auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
     {
         it->data()->CleanUp();
         _DRAWSPACE_DELETE_( it->data() );
@@ -75,7 +75,7 @@ void RenderPassNodeGraph::Erase( void )
 
 void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
 {
-    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
+    for( auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
     {
         bool updated_queue = p_renderingaspectimpl->VisitRenderPassDescr( it->data()->m_name, it->data()->m_renderingqueue );
         it->data()->m_renderingqueue_update_flag = it->data()->m_renderingqueue_update_flag | updated_queue;
@@ -85,7 +85,7 @@ void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
 // signaler qu'au moins une RenderingQueue de pass a ete modifiee (ajout ou retrait d'un renderingnode)
 void RenderPassNodeGraph::RenderingQueueModSignal( void )
 {
-    for( PassDescrTree::df_post_iterator it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it ) 
+    for( auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
     {
         if( it->data()->m_renderingqueue_update_flag )
         {

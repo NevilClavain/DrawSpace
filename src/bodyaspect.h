@@ -57,6 +57,79 @@ public:
 
     } Shape;
 
+    class Force
+    {
+    public:
+        typedef enum
+        {
+            GLOBAL,
+            LOCALE
+        } Mode;
+
+    protected:
+        DrawSpace::Utils::Vector    m_force_dir;
+        dsreal                      m_force_scale;
+        Mode                        m_mode;
+        bool                        m_enabled;
+        
+    public:
+        Force( const DrawSpace::Utils::Vector& p_dir, Mode p_mode = LOCALE, bool p_enabled = false ) :
+        m_force_dir( p_dir ),
+        m_mode( p_mode ),
+        m_enabled( p_enabled ),
+        m_force_scale( 1.0 ) {}
+
+        Force( void ) :
+        m_mode( LOCALE ),
+        m_enabled( false ),
+        m_force_scale( 1.0 ) {}
+
+        inline void UpdateForce( const DrawSpace::Utils::Vector& p_dir ) { m_force_dir = p_dir; }
+        inline void UpdateForceScale( dsreal p_scale ) { m_force_scale = p_scale;}
+        inline void Enable( void ) { m_enabled = true; }
+        inline void Disable( void ) { m_enabled = false; }
+
+        friend class BodyAspect;
+    };
+
+    class Torque
+    {
+    public:
+        typedef enum
+        {
+            GLOBAL,
+            LOCALE
+        } Mode;
+
+    protected:
+        DrawSpace::Utils::Vector    m_torque_axis;
+        dsreal                      m_torque_scale;
+        Mode                        m_mode;
+        bool                        m_enabled;
+        
+    public:
+        Torque( const DrawSpace::Utils::Vector& p_axis, Mode p_mode = LOCALE, bool p_enabled = false ) :
+        m_torque_axis( p_axis ),
+        m_mode( p_mode ),
+        m_enabled( p_enabled ),
+        m_torque_scale( 1.0 ) {}
+
+        Torque( void ) :
+        m_mode( LOCALE ),
+        m_enabled( false ),
+        m_torque_scale( 1.0 ) {}
+
+        inline void UpdateForce( const DrawSpace::Utils::Vector& p_axis ) { m_torque_axis = p_axis; }
+        inline void UpdateForceScale( dsreal p_scale ) { m_torque_scale = p_scale;}
+        inline void Enable( void ) { m_enabled = true; }
+        inline void Disable( void ) { m_enabled = false; }
+
+        friend class BodyAspect;
+    };
+
+
+
+private:
     void body_state( bool p_enabled );
 
 public:

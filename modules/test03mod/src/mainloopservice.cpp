@@ -350,6 +350,21 @@ void MainLoopService::OnKeyPress( long p_key )
             }
         }
         break;
+
+        case 'A':
+        {
+            BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+            body_aspect->GetComponent<BodyAspect::Force>( "up_force" )->getPurpose().Enable();
+        }
+        break;
+
+        case 'Z':
+        {
+            BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+            body_aspect->GetComponent<BodyAspect::Torque>( "torque" )->getPurpose().Enable();        
+        }
+        break;
+
     }
 }
 
@@ -371,7 +386,22 @@ void MainLoopService::OnEndKeyPress( long p_key )
                 transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0;             
             }
         }
-        break;      
+        break;  
+
+        case 'A':
+        {
+            BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+            body_aspect->GetComponent<BodyAspect::Force>( "up_force" )->getPurpose().Disable();
+        }
+        break;
+
+        case 'Z':
+        {
+            BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+            body_aspect->GetComponent<BodyAspect::Torque>( "torque" )->getPurpose().Disable();
+        
+        }
+        break;
     }
 }
 
@@ -586,12 +616,15 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     BodyAspect* body_aspect = m_cubeEntity.AddAspect<BodyAspect>();
 
     body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
-    body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 1.0, 1.0, 1.0, 1.0 ) );
+    body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 0.5, 0.5, 0.5, 1.0 ) );
 
     body_aspect->AddComponent<Matrix>( "attitude", p_transform );
 
-    body_aspect->AddComponent<dsreal>( "mass", 1.0 );
+    body_aspect->AddComponent<dsreal>( "mass", 7.0 );
 
+    body_aspect->AddComponent<BodyAspect::Force>( "up_force", Vector( 0.0, 90.0, 0.0, 1.0 ) );
+
+    body_aspect->AddComponent<BodyAspect::Torque>( "torque", Vector( 0.0, 0.0, 200.0, 1.0 ) );
 
     //body_aspect->AddComponent<bool>( "enable", true );
 
@@ -697,7 +730,7 @@ void MainLoopService::create_ground( void )
 
 
     body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
-    body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 100.0, 0.3, 100.0, 1.0 ) );
+    body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 100.0, 0.0, 100.0, 1.0 ) );
 
     Matrix ground_attitude;
     
