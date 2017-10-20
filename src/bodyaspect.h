@@ -49,13 +49,26 @@ protected:
     bool                                                    m_body_active;
 
 public:
-    typedef enum
-    {
-        BOX_SHAPE,
-        SPHERE_SHAPE,
-        MESHE_SHAPE,
 
-    } Shape;
+    struct BoxCollisionShape
+    {
+        BoxCollisionShape( const Utils::Vector& p_box ) : m_box( p_box ) {};
+        Utils::Vector m_box;
+    };
+
+    struct SphereCollisionShape
+    {
+        SphereCollisionShape( dsreal p_ray ) : m_ray( p_ray ) {};
+        dsreal m_ray;
+    };
+
+    struct MesheCollisionShape
+    {
+        MesheCollisionShape( const Core::Meshe& p_meshe ) : m_meshe( p_meshe ) {};
+        Core::Meshe m_meshe;
+    };
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     class Force
     {
@@ -127,7 +140,7 @@ public:
         friend class BodyAspect;
     };
 
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 private:
     void body_state( bool p_enabled );

@@ -96,27 +96,35 @@ void BodyTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformas
     }
     else
     {
-        (*m_motionState)->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
+
+        if( *m_motionState )
+        {        
+            (*m_motionState)->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
    
-        updated_matrix( 0, 0 ) = bt_matrix[0];
-        updated_matrix( 0, 1 ) = bt_matrix[1];
-        updated_matrix( 0, 2 ) = bt_matrix[2];
-        updated_matrix( 0, 3 ) = bt_matrix[3];
+            updated_matrix( 0, 0 ) = bt_matrix[0];
+            updated_matrix( 0, 1 ) = bt_matrix[1];
+            updated_matrix( 0, 2 ) = bt_matrix[2];
+            updated_matrix( 0, 3 ) = bt_matrix[3];
 
-        updated_matrix( 1, 0 ) = bt_matrix[4];
-        updated_matrix( 1, 1 ) = bt_matrix[5];
-        updated_matrix( 1, 2 ) = bt_matrix[6];
-        updated_matrix( 1, 3 ) = bt_matrix[7];
+            updated_matrix( 1, 0 ) = bt_matrix[4];
+            updated_matrix( 1, 1 ) = bt_matrix[5];
+            updated_matrix( 1, 2 ) = bt_matrix[6];
+            updated_matrix( 1, 3 ) = bt_matrix[7];
 
-        updated_matrix( 2, 0 ) = bt_matrix[8];
-        updated_matrix( 2, 1 ) = bt_matrix[9];
-        updated_matrix( 2, 2 ) = bt_matrix[10];
-        updated_matrix( 2, 3 ) = bt_matrix[11];
+            updated_matrix( 2, 0 ) = bt_matrix[8];
+            updated_matrix( 2, 1 ) = bt_matrix[9];
+            updated_matrix( 2, 2 ) = bt_matrix[10];
+            updated_matrix( 2, 3 ) = bt_matrix[11];
 
-        updated_matrix( 3, 0 ) = bt_matrix[12];
-        updated_matrix( 3, 1 ) = bt_matrix[13];
-        updated_matrix( 3, 2 ) = bt_matrix[14];
-        updated_matrix( 3, 3 ) = bt_matrix[15];
+            updated_matrix( 3, 0 ) = bt_matrix[12];
+            updated_matrix( 3, 1 ) = bt_matrix[13];
+            updated_matrix( 3, 2 ) = bt_matrix[14];
+            updated_matrix( 3, 3 ) = bt_matrix[15];
+        }
+        else
+        {
+            updated_matrix.Identity();
+        }
     }
 
     p_out_base_transform = updated_matrix;

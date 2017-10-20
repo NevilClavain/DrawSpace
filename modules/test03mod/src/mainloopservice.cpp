@@ -133,12 +133,17 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "current camera", 10, 30, 255, 0, 255, "..." );
 
 
-    PhysicsAspect* physic_aspect = m_rootEntity.AddAspect<PhysicsAspect>();
+    m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
+    
+
+    //////////////////////////////////////////////////////////////////////////
+
+    PhysicsAspect* physic_aspect = m_world1Entity.AddAspect<PhysicsAspect>();
 
     physic_aspect->AddComponent<bool>( "gravity_state", true );
     physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
 
-    m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
+    m_World1EntityNode = m_rootEntityNode.AddChild( &m_world1Entity );
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -219,25 +224,25 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
     // ajouter la skybox a la scene
-
-    m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );
+    m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity ); // comme la skybox n'a aucune interaction/influence avec le monde physique bullet, on peut la mettre directement sous rootEntity
+                                                                        // mettre la skybox sous World1Entity fonctionne aussi, mais n'a aucune utilité
     m_skyboxRender.RegisterToRendering( m_rendergraph );
 
     // ajouter le cube a la scene
-    m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
+    m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
     m_cubeRender.RegisterToRendering( m_rendergraph );
 
 
 
     // ajouter le ground a la scene
-    m_groundEntityNode = m_rootEntityNode.AddChild( &m_groundEntity );
+    m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
     m_groundRender.RegisterToRendering( m_rendergraph );
 
 
     // ajouter la camera a la scene
-    m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
+    m_cameraEntityNode = m_World1EntityNode.AddChild( &m_cameraEntity );
 
-    m_camera2EntityNode = m_rootEntityNode.AddChild( &m_camera2Entity );
+    m_camera2EntityNode = m_World1EntityNode.AddChild( &m_camera2Entity );
 
 
     if( 0 == m_current_camera )
@@ -467,7 +472,7 @@ void MainLoopService::OnKeyPulse( long p_key )
                 {
                     m_show_cube = true;
 
-                    m_cubeEntityNode = m_rootEntityNode.AddChild( &m_cubeEntity );
+                    m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
                     m_cubeRender.RegisterToRendering( m_rendergraph );
                     m_rendergraph.RenderingQueueModSignal();
 
@@ -615,8 +620,7 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     
     BodyAspect* body_aspect = m_cubeEntity.AddAspect<BodyAspect>();
 
-    body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
-    body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 0.5, 0.5, 0.5, 1.0 ) );
+    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 0.5, 0.5, 0.5, 1.0 ) );
 
     body_aspect->AddComponent<Matrix>( "attitude", p_transform );
 
@@ -729,8 +733,11 @@ void MainLoopService::create_ground( void )
     BodyAspect* body_aspect = m_groundEntity.AddAspect<BodyAspect>();
 
 
-    body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
-    body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 100.0, 0.0, 100.0, 1.0 ) );
+    //body_aspect->AddComponent<BodyAspect::Shape>( "shape", BodyAspect::BOX_SHAPE );
+    //body_aspect->AddComponent<Vector>( "shape_box_dims", Vector( 100.0, 0.0, 100.0, 1.0 ) );
+
+    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 100.0, 0.0, 100.0, 1.0 ) );
+
 
     Matrix ground_attitude;
     

@@ -75,12 +75,12 @@ btRigidBody* BodyAspect::Init( void )
         attitude_mat.Identity();
     }
 
-
+    /*
     ComponentList<Shape> shapes;
     GetComponentsByType<Shape>( shapes );
 
     Shape shape = shapes[0]->getPurpose();
-
+    */
 
     ComponentList<dsreal> reals;
     GetComponentsByType<dsreal>( reals );
@@ -123,61 +123,52 @@ btRigidBody* BodyAspect::Init( void )
 
     //////////////////////////////////////////////////////
 
-    switch( shape )
+    ComponentList<BoxCollisionShape> boxcollision_shapes;
+    ComponentList<SphereCollisionShape> spherecollision_shapes;
+    ComponentList<MesheCollisionShape> meshecollision_shapes;
+
+    GetComponentsByType<BoxCollisionShape>( boxcollision_shapes );
+    GetComponentsByType<SphereCollisionShape>( spherecollision_shapes );
+    GetComponentsByType<MesheCollisionShape>( meshecollision_shapes );
+
+    if( boxcollision_shapes.size() )
     {
-        case BOX_SHAPE:
-            {
-                ComponentList<Vector> vecs;
-                GetComponentsByType<Vector>( vecs );
-                DrawSpace::Utils::Vector    box_dims;
-                box_dims = vecs[0]->getPurpose();
+        DrawSpace::Utils::Vector box_dims;
+        box_dims = boxcollision_shapes[0]->getPurpose().m_box;
 
-                btBoxShape* shape = _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( box_dims[0], box_dims[1], box_dims[2] ) ) );
-                m_collisionShape = shape;
-            }
-            break;
+        btBoxShape* shape = _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( box_dims[0], box_dims[1], box_dims[2] ) ) );
+        m_collisionShape = shape;
+    }
+    else if( spherecollision_shapes.size() )
+    {
+        dsreal sphere_radius = spherecollision_shapes[0]->getPurpose().m_ray;
+        m_collisionShape = _DRAWSPACE_NEW_( btSphereShape, btSphereShape( sphere_radius ) );
+    }
+    else if( meshecollision_shapes.size() )
+    {
+        Meshe meshe = meshecollision_shapes[0]->getPurpose().m_meshe;
 
+        m_mesh = _DRAWSPACE_NEW_( btTriangleMesh, btTriangleMesh );
 
-        case SPHERE_SHAPE:
-            {
-                dsreal sphere_radius = reals[1]->getPurpose();
+        for( long i = 0; i < meshe.GetTrianglesListSize(); i++ )
+        {
+            Triangle curr_triangle;
+            meshe.GetTriangles( i, curr_triangle );
 
-                m_collisionShape = _DRAWSPACE_NEW_( btSphereShape, btSphereShape( sphere_radius ) );
-            }
-            break;
+            Vertex v1, v2, v3;
 
+            meshe.GetVertex( curr_triangle.vertex1, v1 );
+            meshe.GetVertex( curr_triangle.vertex2, v2 );
+            meshe.GetVertex( curr_triangle.vertex3, v3 );
 
-        case MESHE_SHAPE:
-            {
-                ComponentList<Meshe> meshes;
-                GetComponentsByType<Meshe>( meshes );
+            btVector3 a( v1.x, v1.y, v1.z );
+            btVector3 b( v2.x, v2.y, v2.z );
+            btVector3 c( v3.x, v3.y, v3.z );
 
-                Meshe meshe = meshes[0]->getPurpose();
+            m_mesh->addTriangle( a, b, c, false );
+        }
 
-                m_mesh = _DRAWSPACE_NEW_( btTriangleMesh, btTriangleMesh );
-
-                for( long i = 0; i < meshe.GetTrianglesListSize(); i++ )
-                {
-                    Triangle curr_triangle;
-                    meshe.GetTriangles( i, curr_triangle );
-
-                    Vertex v1, v2, v3;
-
-                    meshe.GetVertex( curr_triangle.vertex1, v1 );
-                    meshe.GetVertex( curr_triangle.vertex2, v2 );
-                    meshe.GetVertex( curr_triangle.vertex3, v3 );
-
-                    btVector3 a( v1.x, v1.y, v1.z );
-                    btVector3 b( v2.x, v2.y, v2.z );
-                    btVector3 c( v3.x, v3.y, v3.z );
-
-                    m_mesh->addTriangle( a, b, c, false );
-                }
-
-                m_collisionShape = _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( m_mesh, true, true ) );
-
-            }
-            break;    
+        m_collisionShape = _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( m_mesh, true, true ) );   
     }
 
     ///////////////////////////////////////////////////////////////////////////
