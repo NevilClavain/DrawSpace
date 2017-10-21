@@ -48,6 +48,8 @@ protected:
 
     bool                                                    m_body_active;
 
+    Utils::Matrix                                           m_collider_local_mat;
+
 public:
 
     struct BoxCollisionShape
@@ -142,7 +144,7 @@ public:
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-private:
+protected:
     void body_state( bool p_enabled );
 
 public:

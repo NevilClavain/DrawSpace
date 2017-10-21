@@ -34,7 +34,7 @@ m_motionState( NULL ),
 m_collisionShape( NULL ),
 m_rigidBody( NULL ),
 m_mesh( NULL ),
-m_tr_aspectimpl( &m_motionState ),
+m_tr_aspectimpl( &m_motionState, &m_collider_local_mat ),
 m_body_active( true )
 {
 }
@@ -189,9 +189,11 @@ btRigidBody* BodyAspect::Init( void )
 
     if( collider )
     {
-        m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+        m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );        
     }
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
+
+    m_tr_aspectimpl.SetColliderMode( collider );
 
     return m_rigidBody;
 }
@@ -332,18 +334,50 @@ void BodyAspect::Update( void )
     }
 
     ///////////////////////////////////////////////
-    // update du composant matrice index 0 ("attitude"), si ce composant existe bien sur :)
 
     ComponentList<Matrix> mats;     
     GetComponentsByType<Matrix>( mats );
 
-    Matrix attitude_mat;
     if( mats.size() )
     {
-        if( m_motionState && !collider )
+        if( m_motionState && collider )
         {
-            // updater le composant matrice 'attitude'
-            mats[0]->getPurpose() = local_transf;
+            m_collider_local_mat = mats[0]->getPurpose(); 
+
+            btScalar    btmat[16];
+            btTransform bt_transform;
+
+            btmat[0] = m_collider_local_mat( 0, 0 );
+            btmat[1] = m_collider_local_mat( 0, 1 );
+            btmat[2] = m_collider_local_mat( 0, 2 );
+            btmat[3] = m_collider_local_mat( 0, 3 );
+
+            btmat[4] = m_collider_local_mat( 1, 0 );
+            btmat[5] = m_collider_local_mat( 1, 1 );
+            btmat[6] = m_collider_local_mat( 1, 2 );
+            btmat[7] = m_collider_local_mat( 1, 3 );
+
+            btmat[8] = m_collider_local_mat( 2, 0 );
+            btmat[9] = m_collider_local_mat( 2, 1 );
+            btmat[10] = m_collider_local_mat( 2, 2 );
+            btmat[11] = m_collider_local_mat( 2, 3 );
+
+            btmat[12] = m_collider_local_mat( 3, 0 );
+            btmat[13] = m_collider_local_mat( 3, 1 );
+            btmat[14] = m_collider_local_mat( 3, 2 );
+            btmat[15] = m_collider_local_mat( 3, 3 );
+
+            bt_transform.setFromOpenGLMatrix( btmat );
+
+            m_motionState->m_graphicsWorldTrans = bt_transform;
+        }
+        else
+        {
+            if( m_motionState && !collider )
+            {
+                // updater le composant matrice 'attitude'
+                mats[0]->getPurpose() = local_transf;
+            }
         }
     }
 }

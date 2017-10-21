@@ -140,7 +140,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     PhysicsAspect* physic_aspect = m_world1Entity.AddAspect<PhysicsAspect>();
 
-    physic_aspect->AddComponent<bool>( "gravity_state", true );
+    //physic_aspect->AddComponent<bool>( "gravity_state", true );
+    physic_aspect->AddComponent<bool>( "gravity_state", false );
     physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
 
     m_World1EntityNode = m_rootEntityNode.AddChild( &m_world1Entity );
@@ -152,7 +153,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     cube_transf.Translation( 0.0, 10.0, -10.0 );
     create_cube( cube_transf );
 
+    Matrix sphere_transf;
 
+    sphere_transf.Translation( 0.0, 10.0, 10.0 );
+
+    
+    create_sphere( sphere_transf );
 
     create_ground();
 
@@ -167,7 +173,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     transform_aspect->AddComponent<Vector>( "speed" );
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 5.0, 10.0, 1.0 ) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( -8.0, 12.0, 5.0, 1.0 ) );
 
     transform_aspect->AddComponent<bool>( "ymvt", true );
 
@@ -232,7 +238,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
     m_cubeRender.RegisterToRendering( m_rendergraph );
 
-
+    // ajouter la sphere a la scene
+    m_sphereEntityNode = m_World1EntityNode.AddChild( &m_sphereEntity );
+    m_sphereRender.RegisterToRendering( m_rendergraph );
 
     // ajouter le ground a la scene
     m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
@@ -282,12 +290,21 @@ void MainLoopService::Run( void )
     if( m_tm.IsReady() )
     {
 
-        /*
+        
         m_tm.AngleSpeedInc( &m_roty, 15 );
 
-        TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
-        transform_aspect->GetComponent<Matrix>( "cube_rotation" )->getPurpose().Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
-        */
+        BodyAspect* body_aspect = m_sphereEntity.GetAspect<BodyAspect>();
+
+        Matrix planet_rot;
+
+        planet_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
+
+        Matrix planet_transf;
+        planet_transf.Translation( 0.0, 10.0, 10.0 );
+
+        Matrix planet_mat = planet_rot * planet_transf;
+
+        body_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = planet_mat;
     }
     
     if( 1 == m_current_camera )
@@ -370,6 +387,14 @@ void MainLoopService::OnKeyPress( long p_key )
         }
         break;
 
+        case 'E':
+        {
+            BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+            body_aspect->GetComponent<BodyAspect::Torque>( "torque_neg" )->getPurpose().Enable();        
+        }
+        break;
+
+
     }
 }
 
@@ -403,7 +428,14 @@ void MainLoopService::OnEndKeyPress( long p_key )
         case 'Z':
         {
             BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
-            body_aspect->GetComponent<BodyAspect::Torque>( "torque" )->getPurpose().Disable();
+            body_aspect->GetComponent<BodyAspect::Torque>( "torque" )->getPurpose().Disable();        
+        }
+        break;
+
+        case 'E':
+        {
+            BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+            body_aspect->GetComponent<BodyAspect::Torque>( "torque_neg" )->getPurpose().Disable();        
         
         }
         break;
@@ -626,9 +658,10 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
     body_aspect->AddComponent<dsreal>( "mass", 7.0 );
 
-    body_aspect->AddComponent<BodyAspect::Force>( "up_force", Vector( 0.0, 90.0, 0.0, 1.0 ) );
+    body_aspect->AddComponent<BodyAspect::Force>( "up_force", Vector( 0.0, 0.0, 90.0, 1.0 ) );
 
-    body_aspect->AddComponent<BodyAspect::Torque>( "torque", Vector( 0.0, 0.0, 200.0, 1.0 ) );
+    body_aspect->AddComponent<BodyAspect::Torque>( "torque", Vector( 0.0, 7.0, 0.0, 1.0 ) );
+    body_aspect->AddComponent<BodyAspect::Torque>( "torque_neg", Vector( 0.0, -7.0, 0.0, 1.0 ) );
 
     //body_aspect->AddComponent<bool>( "enable", true );
 
@@ -751,4 +784,55 @@ void MainLoopService::create_ground( void )
 
     transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
 
+}
+
+void MainLoopService::create_sphere( const Matrix& p_transform )
+{
+    RenderingAspect* rendering_aspect = m_sphereEntity.AddAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation( &m_sphereRender );
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "sphere_texturepass_slot", "texture_pass" );
+
+    
+    RenderingNode* sphere_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "sphere_texturepass_slot" )->getPurpose().GetRenderingNode();
+    sphere_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    sphere_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    sphere_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    sphere_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    sphere_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet sphere_texturepass_rss;
+    sphere_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    sphere_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    sphere_texturepass->GetFx()->SetRenderStates( sphere_texturepass_rss );
+
+
+    sphere_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    sphere_texturepass->GetMeshe()->SetImporter( m_meshe_import );
+    sphere_texturepass->GetMeshe()->LoadFromFile( "planet.ac", 0 );
+
+    sphere_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
+    sphere_texturepass->GetTexture( 0 )->LoadFromFile();
+
+    m_sphereEntity.AddAspect<TransformAspect>();
+    
+    BodyAspect* body_aspect = m_sphereEntity.AddAspect<BodyAspect>();
+
+    body_aspect->AddComponent<BodyAspect::SphereCollisionShape>( "shape", 2.0 );
+
+    body_aspect->AddComponent<Matrix>( "attitude", p_transform );
+
+    body_aspect->AddComponent<bool>( "collider", true );
+    
+
+
+    //body_aspect->AddComponent<bool>( "enable", true );
+
+    TransformAspect* transform_aspect = m_sphereEntity.GetAspect<TransformAspect>();
+    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+   
 }
