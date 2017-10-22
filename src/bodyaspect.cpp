@@ -34,7 +34,7 @@ m_motionState( NULL ),
 m_collisionShape( NULL ),
 m_rigidBody( NULL ),
 m_mesh( NULL ),
-m_tr_aspectimpl( &m_motionState, &m_collider_local_mat ),
+m_tr_aspectimpl( &m_motionState ),
 m_body_active( true )
 {
 }
@@ -192,8 +192,6 @@ btRigidBody* BodyAspect::Init( void )
         m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );        
     }
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
-
-    m_tr_aspectimpl.SetColliderMode( collider );
 
     return m_rigidBody;
 }

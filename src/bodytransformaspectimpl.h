@@ -35,12 +35,10 @@ class BodyTransformAspectImpl : public DrawSpace::Interface::AspectImplementatio
 {
 protected:
     btDefaultMotionState**                      m_motionState;
-    Utils::Matrix*                              m_collider_mat;
-    bool                                        m_collider_mode;
-public:
-    BodyTransformAspectImpl( btDefaultMotionState** p_motionState, Utils::Matrix* p_collider_mat );
 
-    void SetColliderMode( bool p_collider_mode );
+public:
+    BodyTransformAspectImpl( btDefaultMotionState** p_motionState );
+
     virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
 };
 }
