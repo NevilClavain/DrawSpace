@@ -41,7 +41,7 @@ EntityNodeGraph::~EntityNodeGraph(void)
 EntityNode EntityNodeGraph::SetRoot(Entity* p_entity)
 {
 	m_tree.insert(p_entity);
-	EntityNode node( &m_tree.root(), &m_nodesevt_handlers );
+	EntityNode node( &m_tree.root(), /*&m_nodesevt_handlers*/ this );
 	return node;
 }
 
@@ -89,5 +89,19 @@ void EntityNodeGraph::RegisterNodesEvtHandler( EntityNode::EventsHandler* p_hand
     for( auto& it = m_tree.begin(); it != m_tree.end(); ++it )
     {
         (*p_handler)( EntityNode::ADDED_IN_TREE, it->data() );
+    }
+}
+
+void EntityNodeGraph::GetEntityAncestorsList( Entity* p_entity, std::vector<Entity*>& p_ancestors ) const
+{
+    if( m_entity_to_node.count( p_entity ) )
+    {
+        EntityNode::EntityTree::node_type* curr_node = m_entity_to_node.at( p_entity );
+    
+        while( !curr_node->is_root() )
+        {
+            curr_node = &curr_node->parent();
+            p_ancestors.push_back( curr_node->data() );
+        }
     }
 }

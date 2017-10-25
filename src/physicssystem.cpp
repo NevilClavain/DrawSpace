@@ -48,7 +48,8 @@ void PhysicsSystem::Run( EntityNodeGraph* p_entitygraph )
     }
 
     m_world_bodies_list.clear(); // clear list of entities with body aspect
-    p_entitygraph->AcceptPhysicsSystem( this );
+    m_current_graph = p_entitygraph;
+    m_current_graph->AcceptPhysicsSystem( this );
 }
 
 void PhysicsSystem::VisitEntity( Entity* p_entity )
@@ -72,6 +73,43 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
         if( body_aspect )
         {
             m_world_bodies_list.insert( p_entity ); // memorize this entity with Body aspect
+
+            //////////////////////////////////////////////////////////////////////////////////////////
+
+            // recup liste de tout les noeuds entity ancetre de cet entity
+            std::vector<Core::Entity*> ancestors;
+            m_current_graph->GetEntityAncestorsList( p_entity, ancestors );
+
+            BodyAspect* attached_to = NULL;
+
+            for( auto& it = ancestors.begin(); it != ancestors.end(); ++it )
+            {
+                Entity* entity_ancestor = *it;
+
+                BodyAspect* body_candidate = entity_ancestor->GetAspect<BodyAspect>();
+                if( body_candidate )
+                {
+                    attached_to = body_candidate;
+                    break;
+                }
+            }
+
+            if( attached_to )
+            {
+                // si pas attache : faire un ATTACH()
+
+                // sinon si attache mais pas au meme : faire DETACH() puis ATTACH() au nouveau
+
+                // sinon rien
+            }
+            else
+            {
+                // si on etait attache : faire un DETATCH()
+
+                // sinon rien
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////
 
             body_aspect->Update();
         }

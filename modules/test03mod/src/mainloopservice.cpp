@@ -148,6 +148,17 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     //////////////////////////////////////////////////////////////////////////
 
+    physic_aspect = m_world2Entity.AddAspect<PhysicsAspect>();
+
+    //physic_aspect->AddComponent<bool>( "gravity_state", true );
+    physic_aspect->AddComponent<bool>( "gravity_state", false );
+    physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
+
+    m_World2EntityNode = m_rootEntityNode.AddChild( &m_world2Entity );
+
+    //////////////////////////////////////////////////////////////////////////
+
+
     Matrix cube_transf;
 
     cube_transf.Translation( 0.0, 10.0, -10.0 );
@@ -239,7 +250,10 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_cubeRender.RegisterToRendering( m_rendergraph );
 
     // ajouter la sphere a la scene
+    /*
     m_sphereEntityNode = m_World1EntityNode.AddChild( &m_sphereEntity );
+    */
+    m_sphereEntityNode = m_World2EntityNode.AddChild( &m_sphereEntity );
     m_sphereRender.RegisterToRendering( m_rendergraph );
 
     // ajouter le ground a la scene

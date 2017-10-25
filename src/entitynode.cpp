@@ -21,6 +21,7 @@
 */
 
 #include "entitynode.h"
+#include "entitynodegraph.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -29,45 +30,68 @@ using namespace DrawSpace::EntityGraph;
 
 EntityNode::EntityNode( void ) :
     m_tree_node( NULL ),
-    m_nodesevt_handlers( NULL )
+    m_owner_graph( NULL )
+    //m_nodesevt_handlers( NULL )
 {
 }
 
 
-EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, std::vector<EntityNode::EventsHandler*>* p_nodesevt_handlers ) :
+EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector<EntityNode::EventsHandler*>* p_nodesevt_handlers*/ EntityNodeGraph* p_owner ) :
 	m_tree_node(p_node),
-    m_nodesevt_handlers( p_nodesevt_handlers )
+    m_owner_graph( p_owner )
+    //m_nodesevt_handlers( p_nodesevt_handlers )
 {
     // si on passe dans ce ctor c'est que l'entitee a été ajoutée au graph
     // donc notif de l'evt
-    for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
+    //for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
+
+    std::vector<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
+    for( size_t i = 0; i < nodesevt_handlers.size(); i++ )
     {
-        EntityNode::EventsHandler* curr_h = (*m_nodesevt_handlers)[i];
+        EntityNode::EventsHandler* curr_h = nodesevt_handlers[i];
         ( *curr_h )( EntityNode::ADDED_IN_TREE, m_tree_node->data() );
     }
+
+    // inscription dans la table EntityNodeGraph::m_entity_to_node
+    m_owner_graph->m_entity_to_node[m_tree_node->data()] = m_tree_node;
 }
 
 EntityNode EntityNode::AddChild(Entity* p_entity)
 {
+    /*
     if( NULL == m_nodesevt_handlers )
     {
         //si m_nodesevt_handlers est a NULL c'est que cet EntityNode n'est pas rataché a un EntityTree
         _DSEXCEPTION( "Detached node; cannot add child to it!" );
     }
+    */
+
+    if( NULL == m_owner_graph )
+    {
+        //si m_owner_graph est a NULL c'est que cet EntityNode n'est pas rataché a un EntityTree
+        _DSEXCEPTION( "Detached node; cannot add child to it!" );
+    }
+
 
 	EntityTree::node_type::iterator it = m_tree_node->insert( p_entity );
-	EntityNode node(&(*it), m_nodesevt_handlers );
+	//EntityNode node(&(*it), m_nodesevt_handlers );
+    EntityNode node(&(*it), m_owner_graph );
 	return node;
 }
 
 void EntityNode::Erase(void)
 {
+    // desinscription dans la table EntityNodeGraph::m_entity_to_node
+    m_owner_graph->m_entity_to_node.erase( m_tree_node->data() );
+
     Entity* entity = m_tree_node->data();
 	m_tree_node->erase();
 
-    for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
+    //for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
+    std::vector<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
+    for( size_t i = 0; i < nodesevt_handlers.size(); i++ )
     {
-        EntityNode::EventsHandler* curr_h = (*m_nodesevt_handlers)[i];
+        EntityNode::EventsHandler* curr_h = nodesevt_handlers[i];        
         ( *curr_h )( EntityNode::REMOVED_FROM_TREE, entity );
     }
 }

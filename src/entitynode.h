@@ -32,6 +32,7 @@ namespace DrawSpace
 {
 namespace EntityGraph
 {
+class EntityNodeGraph;
 class EntityNode sealed
 {
 public:
@@ -50,10 +51,13 @@ private:
 	using EntityTree = st_tree::tree<Core::Entity*>;
 
 	EntityTree::node_type*                      m_tree_node;
-    std::vector<EntityNode::EventsHandler*>*    m_nodesevt_handlers;
+    //std::vector<EntityNode::EventsHandler*>*    m_nodesevt_handlers;
+
+    EntityNodeGraph*                            m_owner_graph;
+
 
     // personne n'a le droit d'appeler ce ctor directement hormis EntityNodeGraph (friend)
-    EntityNode( EntityTree::node_type* p_node, std::vector<EntityNode::EventsHandler*>* p_nodesevt_handlers );
+    EntityNode( EntityTree::node_type* p_node, /*std::vector<EntityNode::EventsHandler*>* p_nodesevt_handlers*/ EntityNodeGraph* p_owner );
 
 public:
     EntityNode( void );

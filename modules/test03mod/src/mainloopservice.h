@@ -52,6 +52,8 @@ protected:
     DrawSpace::Core::Entity                                                         m_world1Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_World1EntityNode;
 
+    DrawSpace::Core::Entity                                                         m_world2Entity;
+    DrawSpace::EntityGraph::EntityNode                                              m_World2EntityNode;
 
     DrawSpace::Core::Entity                                                         m_cubeEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_cubeEntityNode;

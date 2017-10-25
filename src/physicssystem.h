@@ -34,11 +34,11 @@ class PhysicsSystem
 {
 protected:
 
-    DrawSpace::Utils::TimeManager*  m_tm;
+    DrawSpace::Utils::TimeManager*      m_tm;
     
-    std::set<Core::Entity*>         m_world_bodies_list; // pour chaque entitee comportant un aspect "Physics", liste des Entites comportant un aspect "Body" trouvees "sous" celle ci (entites filles et sous filles)
+    std::set<Core::Entity*>             m_world_bodies_list; // pour chaque entitee comportant un aspect "Physics", liste des Entites comportant un aspect "Body" trouvees "sous" celle ci (entites filles et sous filles)
 
-    std::set<Core::Entity*>         m_body_bodies_list; // pour chaque entitee comportant un aspect "body", liste des 1ere Entites comportant un aspect "Body" trouvees "sous" celle ci (entites filles seulement, pas sous filles)
+    EntityGraph::EntityNodeGraph*       m_current_graph;
 
 public:
 

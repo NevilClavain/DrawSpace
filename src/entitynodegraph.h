@@ -41,8 +41,10 @@ public:
 	using EntityTree = st_tree::tree<Core::Entity*>;
  
 private:
-	mutable EntityTree                          m_tree;
-    std::vector<EntityNode::EventsHandler*>     m_nodesevt_handlers;
+	mutable EntityTree                                          m_tree;
+    std::vector<EntityNode::EventsHandler*>                     m_nodesevt_handlers;
+
+    std::map<Core::Entity*, EntityNode::EntityTree::node_type*> m_entity_to_node;
 
 public:
 	EntityNodeGraph(void);
@@ -56,6 +58,10 @@ public:
     void AcceptPhysicsSystem( Systems::PhysicsSystem* p_physicssystem );
 
     void RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );
+
+    void GetEntityAncestorsList( Core::Entity* p_entity, std::vector<Core::Entity*>& p_ancestors ) const;
+    
+    friend class EntityNode;
 };
 }
 }
