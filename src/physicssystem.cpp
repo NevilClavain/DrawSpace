@@ -101,6 +101,8 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
                 // sinon si attache mais pas au meme : faire DETACH() puis ATTACH() au nouveau
 
                 // sinon rien
+
+                _asm nop
             }
             else
             {

@@ -518,7 +518,9 @@ void MainLoopService::OnKeyPulse( long p_key )
                 {
                     m_show_cube = true;
 
-                    m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
+                    //m_cubeEntityNode = m_World2EntityNode.AddChild( &m_cubeEntity );
+
+                    m_cubeEntityNode = m_sphereEntityNode.AddChild( &m_cubeEntity );
                     m_cubeRender.RegisterToRendering( m_rendergraph );
                     m_rendergraph.RenderingQueueModSignal();
 
