@@ -28,17 +28,26 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
-TransformAspect::TransformAspect( void )
+TransformAspect::TransformAspect( void ) :
+m_impl( NULL )
 {
     m_worldtransform.Identity();
     m_dispatched_viewtransform.Identity();
     m_dispatched_projtransform.Identity();
 }
 
+/*
 void TransformAspect::AddImplementation( AspectImplementations::TransformAspectImpl* p_impl )
 {
     m_impls.push_back( p_impl );
 }
+*/
+
+void TransformAspect::SetImplementation( AspectImplementations::TransformAspectImpl* p_impl )
+{
+    m_impl = p_impl;
+}
+
 
 void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 {
@@ -47,24 +56,20 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 
     locale_mat.Identity();
 
-    Matrix cumul;
-    cumul.Identity();
-    
-    for( size_t i = 0; i < m_impls.size(); i++ )
+    bool ignore_parent_transform = false;
+
+    if( m_impl )
     {
-        Matrix curr;
-        m_impls[i]->GetLocaleTransform( this, curr );
-        cumul = cumul * curr;
+        m_impl->GetLocaleTransform( this, locale_mat );
+        ignore_parent_transform = m_impl->IgnoreParentTransformation();
     }
-   
-    locale_mat = locale_mat * cumul;
 
     if( p_parent )
     {
         Matrix parent_finaltransform_mat;
         TransformAspect* parent_world_aspect = p_parent->GetAspect<TransformAspect>();
 
-        if( parent_world_aspect )
+        if( parent_world_aspect && !ignore_parent_transform )
         {
             finaltransform_mat = locale_mat * parent_world_aspect->m_worldtransform;
         }

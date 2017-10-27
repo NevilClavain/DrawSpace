@@ -29,17 +29,25 @@
 
 namespace DrawSpace
 {
+namespace Aspect
+{
+class BodyAspect;
+}
 namespace AspectImplementations
 {
 class BodyTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 protected:
-    btDefaultMotionState**                      m_motionState;
+    //btDefaultMotionState**                      m_motionState;
+    Aspect::BodyAspect*   m_aspect;
 
 public:
-    BodyTransformAspectImpl( btDefaultMotionState** p_motionState );
+    //BodyTransformAspectImpl( btDefaultMotionState** p_motionState );
+
+    BodyTransformAspectImpl( Aspect::BodyAspect* p_aspect );
 
     virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
+    virtual bool IgnoreParentTransformation( void ) const { return true; };
 };
 }
 }

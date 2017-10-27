@@ -237,11 +237,11 @@ mat_b => matrice du body auxquel on s'attache (exemple : planete)
 
     2/ pendant la phase d'attachement :
 
-        body attach� : injecter dans le drawable (via SetLocalTransform()) la matrice transfo suivante :
+        body attache : injecter dans le drawable (via SetLocalTransform()) la matrice transfo suivante :
                     
                         mat_body * mat_b
 
-                        avec mat_body = la transfo du body calcul�e par bullet
+                        avec mat_body = la transfo du body calculee par bullet
 
                         (au tout debut de l'attachement, mat_body = mat_a2)
 

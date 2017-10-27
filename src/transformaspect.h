@@ -40,12 +40,15 @@ protected:
     DrawSpace::Utils::Matrix                                                        m_dispatched_projtransform;
 
 
-    std::vector<DrawSpace::Interface::AspectImplementations::TransformAspectImpl*>      m_impls;
+    //std::vector<DrawSpace::Interface::AspectImplementations::TransformAspectImpl*>      m_impls;
+
+    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_impl;
 
 public:
     TransformAspect( void );
 
-    void AddImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
+    //void AddImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
+    void SetImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
     void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform );

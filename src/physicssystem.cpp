@@ -93,7 +93,8 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
                     break;
                 }
             }
-
+            
+            /*
             if( attached_to )
             {
                 // si pas attache : faire un ATTACH()
@@ -110,6 +111,9 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
 
                 // sinon rien
             }
+            */
+
+            body_aspect->ManageAttachment( attached_to );
 
             //////////////////////////////////////////////////////////////////////////////////////////
 

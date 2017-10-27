@@ -41,7 +41,8 @@ m_right_mousebutton( false ),
 m_current_camera( 0 ),
 m_worldsystem_evt_handler( this, &MainLoopService::on_transformsystem_evt ),
 m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt ),
-m_show_cube( true )
+//m_show_cube( true ),
+m_cube_is_relative( false )
 {
 }
 
@@ -162,13 +163,12 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     Matrix cube_transf;
 
     cube_transf.Translation( 0.0, 10.0, -10.0 );
+    //cube_transf.Translation( 0.0, 0.0, -10.0 );
     create_cube( cube_transf );
 
     Matrix sphere_transf;
-
     sphere_transf.Translation( 0.0, 10.0, 10.0 );
-
-    
+    //sphere_transf.Identity();
     create_sphere( sphere_transf );
 
     create_ground();
@@ -177,7 +177,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( &m_fps_transformer );
+    transform_aspect->SetImplementation( &m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
     transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 
@@ -203,7 +203,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     transform_aspect = m_camera2Entity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( &m_free_transformer );
+    transform_aspect->SetImplementation( &m_free_transformer );
   
     transform_aspect->AddComponent<dsreal>( "rspeed_x", 0.0 );
     transform_aspect->AddComponent<dsreal>( "rspeed_y", 0.0 );
@@ -250,16 +250,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_cubeRender.RegisterToRendering( m_rendergraph );
 
     // ajouter la sphere a la scene
-    /*
-    m_sphereEntityNode = m_World1EntityNode.AddChild( &m_sphereEntity );
-    */
+    
+    //m_sphereEntityNode = m_World1EntityNode.AddChild( &m_sphereEntity );    
     m_sphereEntityNode = m_World2EntityNode.AddChild( &m_sphereEntity );
     m_sphereRender.RegisterToRendering( m_rendergraph );
 
+    
     // ajouter le ground a la scene
     m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
     m_groundRender.RegisterToRendering( m_rendergraph );
-
+    
 
     // ajouter la camera a la scene
     m_cameraEntityNode = m_World1EntityNode.AddChild( &m_cameraEntity );
@@ -315,6 +315,7 @@ void MainLoopService::Run( void )
 
         Matrix planet_transf;
         planet_transf.Translation( 0.0, 10.0, 10.0 );
+        //planet_transf.Identity();
 
         Matrix planet_mat = planet_rot * planet_transf;
 
@@ -390,7 +391,14 @@ void MainLoopService::OnKeyPress( long p_key )
         case 'A':
         {
             BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
-            body_aspect->GetComponent<BodyAspect::Force>( "up_force" )->getPurpose().Enable();
+            body_aspect->GetComponent<BodyAspect::Force>( "fwd_force" )->getPurpose().Enable();
+        }
+        break;
+
+        case 'R':
+        {
+            BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+            body_aspect->GetComponent<BodyAspect::Force>( "rev_force" )->getPurpose().Enable();
         }
         break;
 
@@ -435,7 +443,14 @@ void MainLoopService::OnEndKeyPress( long p_key )
         case 'A':
         {
             BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
-            body_aspect->GetComponent<BodyAspect::Force>( "up_force" )->getPurpose().Disable();
+            body_aspect->GetComponent<BodyAspect::Force>( "fwd_force" )->getPurpose().Disable();
+        }
+        break;
+
+        case 'R':
+        {
+            BodyAspect* body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+            body_aspect->GetComponent<BodyAspect::Force>( "rev_force" )->getPurpose().Disable();
         }
         break;
 
@@ -505,6 +520,8 @@ void MainLoopService::OnKeyPulse( long p_key )
 
         case VK_F3:
             {
+
+                   /*   
                 if( m_show_cube )
                 {
                     m_show_cube = false;
@@ -518,19 +535,51 @@ void MainLoopService::OnKeyPulse( long p_key )
                 {
                     m_show_cube = true;
 
-                    //m_cubeEntityNode = m_World2EntityNode.AddChild( &m_cubeEntity );
+                    if( m_cube_is_relative )
+                    {
+                        m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
+                        m_cube_is_relative = false;
+                    }
+                    else
+                    {
+                        m_cubeEntityNode = m_sphereEntityNode.AddChild( &m_cubeEntity );
+                        m_cube_is_relative = true;
+                    }
 
-                    m_cubeEntityNode = m_sphereEntityNode.AddChild( &m_cubeEntity );
                     m_cubeRender.RegisterToRendering( m_rendergraph );
                     m_rendergraph.RenderingQueueModSignal();
 
                 }
+                */
+
+
+                if( m_cube_is_relative )
+                {
+                    m_cubeEntityNode.Erase();
+                    m_physicsSystem.Run( &m_entitygraph );
+
+                    m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
+                    m_physicsSystem.Run( &m_entitygraph );
+
+                    m_cube_is_relative = false;
+                }
+                else
+                {
+                    m_cubeEntityNode.Erase();
+                    m_physicsSystem.Run( &m_entitygraph );
+
+                    m_cubeEntityNode = m_sphereEntityNode.AddChild( &m_cubeEntity );
+                    m_physicsSystem.Run( &m_entitygraph );
+
+                    m_cube_is_relative = true;
+                }
+
             }
             break;
 
         case VK_F4:
             {
-                PhysicsAspect* physic_aspect = m_rootEntity.GetAspect<PhysicsAspect>();
+                PhysicsAspect* physic_aspect = m_world1Entity.GetAspect<PhysicsAspect>();
 
                 if( physic_aspect->GetComponent<bool>( "gravity_state" )->getPurpose() )
                 {
@@ -540,7 +589,6 @@ void MainLoopService::OnKeyPulse( long p_key )
                 {
                     physic_aspect->GetComponent<bool>( "gravity_state" )->getPurpose() = true;
                 }
-
             }
             break;
     }
@@ -674,7 +722,8 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
     body_aspect->AddComponent<dsreal>( "mass", 7.0 );
 
-    body_aspect->AddComponent<BodyAspect::Force>( "up_force", Vector( 0.0, 0.0, 90.0, 1.0 ) );
+    body_aspect->AddComponent<BodyAspect::Force>( "fwd_force", Vector( 0.0, 0.0, 90.0, 1.0 ) );
+    body_aspect->AddComponent<BodyAspect::Force>( "rev_force", Vector( 0.0, 0.0, -90.0, 1.0 ) );
 
     body_aspect->AddComponent<BodyAspect::Torque>( "torque", Vector( 0.0, 7.0, 0.0, 1.0 ) );
     body_aspect->AddComponent<BodyAspect::Torque>( "torque_neg", Vector( 0.0, -7.0, 0.0, 1.0 ) );
@@ -682,7 +731,7 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     //body_aspect->AddComponent<bool>( "enable", true );
 
     TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
-    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
     
 }
 
@@ -737,7 +786,7 @@ void MainLoopService::create_skybox( void )
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( &m_transformer );
+    transform_aspect->SetImplementation( &m_transformer );
 
     transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
 
@@ -795,10 +844,12 @@ void MainLoopService::create_ground( void )
     body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
 
 
-    body_aspect->AddComponent<bool>( "collider", true );
+    //body_aspect->AddComponent<bool>( "collider", true );
+    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
+
     //body_aspect->AddComponent<bool>( "enable", true );
 
-    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
 }
 
@@ -842,13 +893,13 @@ void MainLoopService::create_sphere( const Matrix& p_transform )
 
     body_aspect->AddComponent<Matrix>( "attitude", p_transform );
 
-    body_aspect->AddComponent<bool>( "collider", true );
-    
+    //body_aspect->AddComponent<bool>( "collider", true );
+    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::ATTRACTOR_COLLIDER );
 
 
     //body_aspect->AddComponent<bool>( "enable", true );
 
     TransformAspect* transform_aspect = m_sphereEntity.GetAspect<TransformAspect>();
-    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
    
 }

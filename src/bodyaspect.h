@@ -37,6 +37,16 @@ namespace Aspect
 {
 class BodyAspect : public Core::Aspect 
 {
+public:
+
+    typedef enum
+    {
+        BODY,
+        COLLIDER,
+        ATTRACTOR_COLLIDER
+    
+    } Mode;
+
 protected:
 
     btDefaultMotionState*                                   m_motionState;
@@ -49,6 +59,21 @@ protected:
     bool                                                    m_body_active;
 
     Utils::Matrix                                           m_collider_local_mat;
+
+    BodyAspect*                                             m_attachment_owner; // si pas NULL, le body auquel on est attaché
+
+    Mode                                                    m_mode;
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    Utils::Matrix                                           m_mem_transform;
+    Utils::Matrix                                           m_mem_localbt_transform; // la transform pure calculee par bullet
+    BodyAspect*                                             m_prev_attachment_owner;
+    btVector3*                                              m_mem_linearspeed;
+    btVector3*                                              m_mem_angularspeed;
+    bool                                                    m_init_as_attached;
+    bool                                                    m_init_as_detached;
+
 
 public:
 
@@ -147,6 +172,13 @@ public:
 protected:
     void body_state( bool p_enabled );
 
+    void attach_to( BodyAspect* body_aspect );
+    void detach( void );
+
+
+    void convert_matrix_to_bt( const Utils::Matrix& p_mat, btScalar* bt_matrix );
+    void convert_matrix_from_bt( btScalar* bt_matrix, Utils::Matrix& p_mat );
+
 public:
 
     BodyAspect( void );
@@ -160,6 +192,10 @@ public:
     void Update( void );
 
     btRigidBody* GetRigidBody( void ) const;
+
+    void ManageAttachment( BodyAspect* p_owner );
+
+    void GetLastTransform( Utils::Matrix& p_mat );
 
 };
 }

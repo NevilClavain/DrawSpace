@@ -34,13 +34,68 @@ m_motionState( NULL ),
 m_collisionShape( NULL ),
 m_rigidBody( NULL ),
 m_mesh( NULL ),
-m_tr_aspectimpl( &m_motionState ),
-m_body_active( true )
+m_tr_aspectimpl( this ),
+m_body_active( true ),
+m_attachment_owner( NULL ),
+m_init_as_attached( false ),
+m_init_as_detached( false ),
+m_mode( BODY ),
+m_prev_attachment_owner( NULL )
 {
+    m_mem_transform.Identity();
+    m_mem_linearspeed = _DRAWSPACE_NEW_( btVector3, btVector3( 0.0, 0.0, 0.0 ) );
+    m_mem_angularspeed = _DRAWSPACE_NEW_( btVector3, btVector3( 0.0, 0.0, 0.0 ) );
 }
 
 BodyAspect::~BodyAspect( void )
 {
+}
+
+
+void BodyAspect::convert_matrix_to_bt( const Matrix& p_mat, btScalar* bt_matrix )
+{
+    bt_matrix[0] = p_mat( 0, 0 );
+    bt_matrix[1] = p_mat( 0, 1 );
+    bt_matrix[2] = p_mat( 0, 2 );
+    bt_matrix[3] = p_mat( 0, 3 );
+
+    bt_matrix[4] = p_mat( 1, 0 );
+    bt_matrix[5] = p_mat( 1, 1 );
+    bt_matrix[6] = p_mat( 1, 2 );
+    bt_matrix[7] = p_mat( 1, 3 );
+
+    bt_matrix[8] = p_mat( 2, 0 );
+    bt_matrix[9] = p_mat( 2, 1 );
+    bt_matrix[10] = p_mat( 2, 2 );
+    bt_matrix[11] = p_mat( 2, 3 );
+
+    bt_matrix[12] = p_mat( 3, 0 );
+    bt_matrix[13] = p_mat( 3, 1 );
+    bt_matrix[14] = p_mat( 3, 2 );
+    bt_matrix[15] = p_mat( 3, 3 );
+}
+
+void BodyAspect::convert_matrix_from_bt( btScalar* bt_matrix, Utils::Matrix& p_mat )
+{
+    p_mat( 0, 0 ) = bt_matrix[0];
+    p_mat( 0, 1 ) = bt_matrix[1];
+    p_mat( 0, 2 ) = bt_matrix[2];
+    p_mat( 0, 3 ) = bt_matrix[3];
+
+    p_mat( 1, 0 ) = bt_matrix[4];
+    p_mat( 1, 1 ) = bt_matrix[5];
+    p_mat( 1, 2 ) = bt_matrix[6];
+    p_mat( 1, 3 ) = bt_matrix[7];
+
+    p_mat( 2, 0 ) = bt_matrix[8];
+    p_mat( 2, 1 ) = bt_matrix[9];
+    p_mat( 2, 2 ) = bt_matrix[10];
+    p_mat( 2, 3 ) = bt_matrix[11];
+
+    p_mat( 3, 0 ) = bt_matrix[12];
+    p_mat( 3, 1 ) = bt_matrix[13];
+    p_mat( 3, 2 ) = bt_matrix[14];
+    p_mat( 3, 3 ) = bt_matrix[15];
 }
 
 btRigidBody* BodyAspect::GetRigidBody( void ) const
@@ -52,16 +107,14 @@ btRigidBody* BodyAspect::Init( void )
 {
     ///////////////////////////////////////
 
-    ComponentList<bool> flags;
-    GetComponentsByType<bool>( flags );
-    bool collider = false;
+    ComponentList<Mode> modes;
+    GetComponentsByType<Mode>( modes );
 
-    if( flags.size() > 0 )
-    {    
-        collider = flags[0]->getPurpose();
+    if( modes.size() > 0 )
+    {
+        m_mode = modes[0]->getPurpose();
     }
-
-
+    
     ComponentList<Matrix> mats;     
     GetComponentsByType<Matrix>( mats );
 
@@ -75,49 +128,43 @@ btRigidBody* BodyAspect::Init( void )
         attitude_mat.Identity();
     }
 
-    /*
-    ComponentList<Shape> shapes;
-    GetComponentsByType<Shape>( shapes );
-
-    Shape shape = shapes[0]->getPurpose();
-    */
-
     ComponentList<dsreal> reals;
     GetComponentsByType<dsreal>( reals );
 
     dsreal mass = 0.0;
     
-    if( reals.size() > 0 && !collider )
+    if( reals.size() > 0 && BODY == m_mode )
     {
         mass = reals[0]->getPurpose();
     }
 
     ///////////////////////////////////////
 
-
     btScalar    btmat[16];
     btTransform bt_transform;
 
-    btmat[0] = attitude_mat( 0, 0 );
-    btmat[1] = attitude_mat( 0, 1 );
-    btmat[2] = attitude_mat( 0, 2 );
-    btmat[3] = attitude_mat( 0, 3 );
+    if( m_init_as_attached )
+    {
+        Matrix mat_b;
+        m_attachment_owner->GetLastTransform( mat_b );
+        mat_b.Inverse();
 
-    btmat[4] = attitude_mat( 1, 0 );
-    btmat[5] = attitude_mat( 1, 1 );
-    btmat[6] = attitude_mat( 1, 2 );
-    btmat[7] = attitude_mat( 1, 3 );
+        DrawSpace::Utils::Matrix mat_a2 = m_mem_transform * mat_b;
 
-    btmat[8] = attitude_mat( 2, 0 );
-    btmat[9] = attitude_mat( 2, 1 );
-    btmat[10] = attitude_mat( 2, 2 );
-    btmat[11] = attitude_mat( 2, 3 );
+        convert_matrix_to_bt( mat_a2, btmat );
+    }
+    else if( m_init_as_detached )
+    {
+        Matrix mat_b;
+        m_prev_attachment_owner->GetLastTransform( mat_b );
+        DrawSpace::Utils::Matrix mat_a3 = m_mem_localbt_transform * mat_b;
 
-    btmat[12] = attitude_mat( 3, 0 );
-    btmat[13] = attitude_mat( 3, 1 );
-    btmat[14] = attitude_mat( 3, 2 );
-    btmat[15] = attitude_mat( 3, 3 );
-
+        convert_matrix_to_bt( mat_a3, btmat );
+    }
+    else
+    {
+        convert_matrix_to_bt( attitude_mat, btmat );
+    }
 
     bt_transform.setFromOpenGLMatrix( btmat );
 
@@ -177,7 +224,7 @@ btRigidBody* BodyAspect::Init( void )
 
     btVector3 localInertia( 0, 0, 0 );
 
-    if( mass > 0.0 && !collider )
+    if( mass > 0.0 && BODY == m_mode )
     {        
         m_collisionShape->calculateLocalInertia( mass, localInertia );
     }
@@ -187,7 +234,7 @@ btRigidBody* BodyAspect::Init( void )
 
     m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
 
-    if( collider )
+    if( COLLIDER == m_mode || ATTRACTOR_COLLIDER == m_mode )
     {
         m_rigidBody->setCollisionFlags( m_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );        
     }
@@ -198,6 +245,25 @@ btRigidBody* BodyAspect::Init( void )
 
 void BodyAspect::Release( void )
 {
+    //////////// memoriser differentes choses avant de nettoyer...////////////////
+
+    if( BODY == m_mode )
+    {
+        GetLastTransform( m_mem_transform );
+        
+        if( m_motionState )
+        {
+            btScalar bt_matrix[16];
+            m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
+            convert_matrix_from_bt( bt_matrix, m_mem_localbt_transform );
+        }
+
+        *m_mem_linearspeed = m_rigidBody->getLinearVelocity();
+        *m_mem_angularspeed = m_rigidBody->getAngularVelocity();
+        
+    }
+    ////////////////////////////////////////////////////////////
+
     _DRAWSPACE_DELETE_( m_motionState );
     _DRAWSPACE_DELETE_( m_collisionShape );
     _DRAWSPACE_DELETE_( m_rigidBody );
@@ -218,47 +284,65 @@ void BodyAspect::Update( void )
     ComponentList<bool> flags;
     GetComponentsByType<bool>( flags );
 
-    bool collider = false;
-    if( flags.size() > 0 )
-    {    
-        collider = flags[0]->getPurpose();
-    }
-
     btScalar                 bt_matrix[16];
     DrawSpace::Utils::Matrix local_transf;
 
-    if( m_motionState && !collider )
+
+    if( ( m_init_as_attached || m_init_as_detached ) && m_rigidBody )
+    {
+        Matrix mat_b;
+
+        if( m_init_as_attached )
+        {
+            m_attachment_owner->GetLastTransform( mat_b );
+            mat_b.Inverse();
+        }
+        else if( m_init_as_detached )
+        {
+            m_prev_attachment_owner->GetLastTransform( mat_b );
+        }
+                       
+        // restitution des vitesses angulaires et lineaires...
+        Vector angularspeed_mem, linearspeed_mem;
+        Vector angularspeed_mem_2, linearspeed_mem_2;
+
+        angularspeed_mem[0] = m_mem_angularspeed->x();
+        angularspeed_mem[1] = m_mem_angularspeed->y();
+        angularspeed_mem[2] = m_mem_angularspeed->z();
+        angularspeed_mem[3] = 1.0;
+
+        linearspeed_mem[0] = m_mem_linearspeed->x();
+        linearspeed_mem[1] = m_mem_linearspeed->y();
+        linearspeed_mem[2] = m_mem_linearspeed->z();
+        linearspeed_mem[3] = 1.0;
+
+        mat_b.ClearTranslation();
+
+        mat_b.Transform( &angularspeed_mem, &angularspeed_mem_2 );
+        mat_b.Transform( &linearspeed_mem, &linearspeed_mem_2 );
+   
+        m_rigidBody->setAngularVelocity( btVector3( angularspeed_mem_2[0], angularspeed_mem_2[1], angularspeed_mem_2[2] ) );
+        m_rigidBody->setLinearVelocity( btVector3( linearspeed_mem_2[0], linearspeed_mem_2[1], linearspeed_mem_2[2] ) );
+
+        ///////////////
+
+        m_init_as_attached = false;
+        m_init_as_detached = false;
+    }
+
+    if( m_motionState && BODY == m_mode )
     {
         m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
-   
-        local_transf( 0, 0 ) = bt_matrix[0];
-        local_transf( 0, 1 ) = bt_matrix[1];
-        local_transf( 0, 2 ) = bt_matrix[2];
-        local_transf( 0, 3 ) = bt_matrix[3];
-
-        local_transf( 1, 0 ) = bt_matrix[4];
-        local_transf( 1, 1 ) = bt_matrix[5];
-        local_transf( 1, 2 ) = bt_matrix[6];
-        local_transf( 1, 3 ) = bt_matrix[7];
-
-        local_transf( 2, 0 ) = bt_matrix[8];
-        local_transf( 2, 1 ) = bt_matrix[9];
-        local_transf( 2, 2 ) = bt_matrix[10];
-        local_transf( 2, 3 ) = bt_matrix[11];
-
-        local_transf( 3, 0 ) = bt_matrix[12];
-        local_transf( 3, 1 ) = bt_matrix[13];
-        local_transf( 3, 2 ) = bt_matrix[14];
-        local_transf( 3, 3 ) = bt_matrix[15];
+        convert_matrix_from_bt( bt_matrix, local_transf );
     }
 
     
     //////////////////////////////////////////////
     // activer/desactiver cinematique du body (si pas collider)
 
-    if( flags.size() > 1 && !collider )
+    if( flags.size() > 0 && BODY == m_mode )
     {
-        bool enable_body = flags[1]->getPurpose();
+        bool enable_body = flags[0]->getPurpose();
 
         if( enable_body != m_body_active )
         {
@@ -269,7 +353,7 @@ void BodyAspect::Update( void )
     ///////////////////////////////////////////////
     // application des forces & torques
 
-    if( m_motionState && !collider )
+    if( m_motionState && BODY == m_mode )
     {
         ComponentList<Force> forces;
         GetComponentsByType<Force>( forces );
@@ -338,32 +422,25 @@ void BodyAspect::Update( void )
 
     if( mats.size() )
     {
-        if( m_motionState && collider )
+        if( m_motionState && ( COLLIDER == m_mode || ATTRACTOR_COLLIDER == m_mode ))
         {
             m_collider_local_mat = mats[0]->getPurpose(); 
 
             btScalar    btmat[16];
             btTransform bt_transform;
 
-            btmat[0] = m_collider_local_mat( 0, 0 );
-            btmat[1] = m_collider_local_mat( 0, 1 );
-            btmat[2] = m_collider_local_mat( 0, 2 );
-            btmat[3] = m_collider_local_mat( 0, 3 );
+            Matrix local_mat;
 
-            btmat[4] = m_collider_local_mat( 1, 0 );
-            btmat[5] = m_collider_local_mat( 1, 1 );
-            btmat[6] = m_collider_local_mat( 1, 2 );
-            btmat[7] = m_collider_local_mat( 1, 3 );
+            if( ATTRACTOR_COLLIDER == m_mode )
+            {
+                local_mat.Identity();
+            }
+            else
+            {
+                local_mat = m_collider_local_mat;
+            }
 
-            btmat[8] = m_collider_local_mat( 2, 0 );
-            btmat[9] = m_collider_local_mat( 2, 1 );
-            btmat[10] = m_collider_local_mat( 2, 2 );
-            btmat[11] = m_collider_local_mat( 2, 3 );
-
-            btmat[12] = m_collider_local_mat( 3, 0 );
-            btmat[13] = m_collider_local_mat( 3, 1 );
-            btmat[14] = m_collider_local_mat( 3, 2 );
-            btmat[15] = m_collider_local_mat( 3, 3 );
+            convert_matrix_to_bt( local_mat, btmat );
 
             bt_transform.setFromOpenGLMatrix( btmat );
 
@@ -371,7 +448,7 @@ void BodyAspect::Update( void )
         }
         else
         {
-            if( m_motionState && !collider )
+            if( m_motionState && BODY == m_mode )
             {
                 // updater le composant matrice 'attitude'
                 mats[0]->getPurpose() = local_transf;
@@ -395,4 +472,126 @@ void BodyAspect::body_state( bool p_enabled )
 
         m_body_active = p_enabled;
     }
+}
+
+void BodyAspect::ManageAttachment( BodyAspect* p_owner )
+{
+    if( NULL == p_owner )  // plus de noeud body ancetre dans la hierarchie d'entites : on se "detache" si c'est pas deja fait
+    {
+        if( m_attachment_owner )
+        {
+            detach();
+        }
+    }
+    else // un noeud body ancetre dans la hierarchie d'entites : on s'attache a celui-ci si c'est pas deja fait
+    {
+        if( m_attachment_owner )
+        {
+            if( p_owner != m_attachment_owner )
+            {
+                detach();
+                attach_to( p_owner );
+            }
+        }
+        else
+        {
+            attach_to( p_owner );
+        }
+    }
+}
+
+/*
+
+mat_a => matrice du body a attacher (exemple : ship)
+mat_b => matrice du body auxquel on s'attache (exemple : planete)
+
+   1/ attachement :
+    
+        a: mat_a2 = mat_a * ( mat_b ^ -1 )
+        b: detruire puis recreer le body en lui donnant mat_a2 comme matrice initiale
+
+
+    2/ pendant la phase d'attachement :
+
+        body attache : injecter dans le drawable (via SetLocalTransform()) la matrice transfo suivante :
+                    
+                        mat_body * mat_b
+
+                        avec mat_body = la transfo du body calculee par bullet
+
+                        (au tout debut de l'attachement, mat_body = mat_a2)
+
+
+
+    3/ detachement
+
+        a: mat_a3 = mat_body * mat_b
+        b: detruire puis recreer le body en lui donnant mat_a3 comme matrice initiale
+
+
+*/
+void BodyAspect::attach_to( BodyAspect* body_aspect )
+{
+     // pour l'instant, seul les BODY peuvent être attaché/détachés a un ATTRACTOR_COLLIDER
+
+    if( m_mode != BODY )
+    {
+        _DSEXCEPTION( "Cannot attach : body must be in BODY mode" )
+    }
+
+    if( body_aspect->m_mode != ATTRACTOR_COLLIDER )
+    {
+        _DSEXCEPTION( "Cannot attach : target body must be in ATTRACTOR_COLLIDER mode" )
+    }
+
+    m_attachment_owner = body_aspect;
+    m_init_as_attached = true; // pour le prochain passage dans Init()
+}
+
+void BodyAspect::detach( void )
+{
+    m_prev_attachment_owner = m_attachment_owner;
+    m_attachment_owner = NULL;
+
+    m_init_as_detached = true; // pour le prochain passage dans Init()
+}
+
+void BodyAspect::GetLastTransform( Utils::Matrix& p_mat )
+{
+    btScalar                 bt_matrix[16];
+    DrawSpace::Utils::Matrix updated_matrix;
+
+    if( m_motionState )
+    {
+        if( ATTRACTOR_COLLIDER == m_mode )
+        {
+            updated_matrix = m_collider_local_mat;
+        }
+        else
+        {
+            m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
+
+            convert_matrix_from_bt( bt_matrix, updated_matrix );
+        }
+    }
+    else
+    {
+        updated_matrix.Identity();
+    }
+   
+    if( NULL == m_attachment_owner )
+    {
+        p_mat = updated_matrix;
+    }
+    else
+    {
+        // attached : ajouter la transfo du body auquel on est attache
+        DrawSpace::Utils::Matrix mat_b;
+        m_attachment_owner->GetLastTransform( mat_b );
+
+        DrawSpace::Utils::Matrix res = updated_matrix * mat_b;
+
+        p_mat = res;    
+    }
+    
 }

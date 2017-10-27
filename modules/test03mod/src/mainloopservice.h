@@ -104,6 +104,8 @@ protected:
 
     bool                                                                            m_show_cube;
 
+    bool                                                                            m_cube_is_relative;
+
 
     void on_transformsystem_evt( DrawSpace::Systems::TransformSystem::Event p_evt, DrawSpace::Core::Entity* p_entity );
 
