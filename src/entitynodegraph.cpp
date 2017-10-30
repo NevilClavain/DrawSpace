@@ -58,7 +58,7 @@ void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem 
     }
 }
 
-void EntityNodeGraph::AcceptWorldSystem( TransformSystem* p_transformsystem )
+void EntityNodeGraph::AcceptTransformSystem( TransformSystem* p_transformsystem )
 {
     for( auto& it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
     {

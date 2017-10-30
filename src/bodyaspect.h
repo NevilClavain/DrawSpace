@@ -41,6 +41,7 @@ public:
 
     typedef enum
     {
+        NOT_READY,
         BODY,
         COLLIDER,
         ATTRACTOR_COLLIDER

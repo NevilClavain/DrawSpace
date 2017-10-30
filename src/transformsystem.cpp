@@ -53,7 +53,7 @@ void TransformSystem::Run( EntityNodeGraph* p_entitygraph )
     notify_event( RUN_BEGIN, NULL );
 
     m_step = 0;
-    p_entitygraph->AcceptWorldSystem( this );
+    p_entitygraph->AcceptTransformSystem( this );
 
     m_viewtransform_todispatch.Identity();
     m_projtransform_todispatch.Identity();
@@ -91,7 +91,7 @@ void TransformSystem::Run( EntityNodeGraph* p_entitygraph )
     }
 
     m_step = 1;
-    p_entitygraph->AcceptWorldSystem( this );
+    p_entitygraph->AcceptTransformSystem( this );
 
     notify_event( RUN_END, NULL );
 

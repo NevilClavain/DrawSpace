@@ -88,6 +88,8 @@
 #include "module_keys.h"
 #include "jsonparser.h"
 
+#include "system.h"
+
 #include "entitynodegraph.h"
 #include "renderpassnodegraph.h"
 

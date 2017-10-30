@@ -94,25 +94,6 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
                 }
             }
             
-            /*
-            if( attached_to )
-            {
-                // si pas attache : faire un ATTACH()
-
-                // sinon si attache mais pas au meme : faire DETACH() puis ATTACH() au nouveau
-
-                // sinon rien
-
-                _asm nop
-            }
-            else
-            {
-                // si on etait attache : faire un DETATCH()
-
-                // sinon rien
-            }
-            */
-
             body_aspect->ManageAttachment( attached_to );
 
             //////////////////////////////////////////////////////////////////////////////////////////

@@ -39,7 +39,7 @@ m_body_active( true ),
 m_attachment_owner( NULL ),
 m_init_as_attached( false ),
 m_init_as_detached( false ),
-m_mode( BODY ),
+m_mode( NOT_READY ),
 m_prev_attachment_owner( NULL )
 {
     m_mem_transform.Identity();
@@ -532,6 +532,13 @@ mat_b => matrice du body auxquel on s'attache (exemple : planete)
 */
 void BodyAspect::attach_to( BodyAspect* body_aspect )
 {
+    
+    if( NOT_READY == m_mode )
+    {
+        // pas encore prêt, ignorer; on repassera ici au prochain cycle ( attach_to appelé cycliquement tant que m_attachment_owner == NULL : cf BodyAspect::ManageAttachment() )
+        return;
+    }
+    
      // pour l'instant, seul les BODY peuvent être attaché/détachés a un ATTRACTOR_COLLIDER
 
     if( m_mode != BODY )

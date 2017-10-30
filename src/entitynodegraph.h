@@ -54,7 +54,7 @@ public:
 	void Erase(void);
 
     void AcceptRenderingSystem( Systems::RenderingSystem* p_renderingsystem );
-    void AcceptWorldSystem( Systems::TransformSystem* p_transformsystem );
+    void AcceptTransformSystem( Systems::TransformSystem* p_transformsystem );
     void AcceptPhysicsSystem( Systems::PhysicsSystem* p_physicssystem );
 
     void RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );

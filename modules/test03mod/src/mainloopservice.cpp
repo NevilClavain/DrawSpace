@@ -42,7 +42,8 @@ m_current_camera( 0 ),
 m_worldsystem_evt_handler( this, &MainLoopService::on_transformsystem_evt ),
 m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt ),
 //m_show_cube( true ),
-m_cube_is_relative( false )
+//m_cube_is_relative( false )
+m_cube_is_relative( true )
 {
 }
 
@@ -162,8 +163,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     Matrix cube_transf;
 
-    cube_transf.Translation( 0.0, 10.0, -10.0 );
-    //cube_transf.Translation( 0.0, 0.0, -10.0 );
+    //cube_transf.Translation( 0.0, 10.0, -10.0 );
+    cube_transf.Translation( 0.0, 0.0, -10.0 );
     create_cube( cube_transf );
 
     Matrix sphere_transf;
@@ -245,15 +246,18 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                                                                         // mettre la skybox sous World1Entity fonctionne aussi, mais n'a aucune utilité
     m_skyboxRender.RegisterToRendering( m_rendergraph );
 
-    // ajouter le cube a la scene
-    m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
-    m_cubeRender.RegisterToRendering( m_rendergraph );
-
     // ajouter la sphere a la scene
     
     //m_sphereEntityNode = m_World1EntityNode.AddChild( &m_sphereEntity );    
     m_sphereEntityNode = m_World2EntityNode.AddChild( &m_sphereEntity );
     m_sphereRender.RegisterToRendering( m_rendergraph );
+
+
+
+    // ajouter le cube a la scene
+    //m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
+    m_cubeEntityNode = m_sphereEntityNode.AddChild( &m_cubeEntity );
+    m_cubeRender.RegisterToRendering( m_rendergraph );
 
     
     // ajouter le ground a la scene
@@ -727,6 +731,8 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
     body_aspect->AddComponent<BodyAspect::Torque>( "torque", Vector( 0.0, 7.0, 0.0, 1.0 ) );
     body_aspect->AddComponent<BodyAspect::Torque>( "torque_neg", Vector( 0.0, -7.0, 0.0, 1.0 ) );
+
+    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::BODY );
 
     //body_aspect->AddComponent<bool>( "enable", true );
 
