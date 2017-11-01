@@ -28,6 +28,7 @@
 #include "aspect.h"
 #include "entity.h"
 #include "bodyaspect.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
@@ -45,6 +46,8 @@ protected:
 
     bool                                                            m_gravity_applied;
 
+    Utils::TimeManager*                                             m_tm;
+
     std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies;
     std::set<DrawSpace::Core::Entity*>                              m_bodies_set; // les memes entities que dans m_bodies
 
@@ -55,8 +58,9 @@ public:
 
     PhysicsAspect( void );
     ~PhysicsAspect( void );
-    void StepSimulation( dsreal p_fps, int p_nbsteps );
+    void StepSimulation( void );
     void UpdateBodiesList( const std::set<DrawSpace::Core::Entity*>& p_list );
+    void SetTimeParameters( Utils::TimeManager* p_tm, dsreal p_time_factor );
 };
 }
 }

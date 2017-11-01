@@ -53,7 +53,7 @@ void TransformSystem::Run( EntityNodeGraph* p_entitygraph )
     notify_event( RUN_BEGIN, NULL );
 
     m_step = 0;
-    p_entitygraph->AcceptTransformSystem( this );
+    p_entitygraph->AcceptSystemRootToLeaf( this );
 
     m_viewtransform_todispatch.Identity();
     m_projtransform_todispatch.Identity();
@@ -91,7 +91,7 @@ void TransformSystem::Run( EntityNodeGraph* p_entitygraph )
     }
 
     m_step = 1;
-    p_entitygraph->AcceptTransformSystem( this );
+    p_entitygraph->AcceptSystemRootToLeaf( this );
 
     notify_event( RUN_END, NULL );
 
@@ -102,10 +102,10 @@ void TransformSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     if( 0 == m_step )
     {
         //calculer les matrices world pour tt le monde
-        TransformAspect* world_aspect = p_entity->GetAspect<TransformAspect>();
-        if( world_aspect )
+        TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+        if( transform_aspect )
         {
-            world_aspect->ComputeTransforms( p_parent, p_entity );
+            transform_aspect->ComputeTransforms( p_parent, p_entity );
         }
     }
     else if( 1 == m_step )

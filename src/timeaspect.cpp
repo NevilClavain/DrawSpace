@@ -20,24 +20,4 @@
 *
 */
 
-#ifndef _SYSTEM_H_
-#define _SYSTEM_H_
-
-#include "entity.h"
-
-namespace DrawSpace
-{
-namespace Systems
-{
-class System
-{
-public:
-    virtual void Init( void ) = 0;
-    virtual void Release( void ) = 0;
-    virtual void Run( void ) = 0;
-    virtual void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity ) = 0;
-};
-}
-}
-
-#endif
+#include "timeaspect.h"

@@ -20,23 +20,33 @@
 *
 */
 
-#ifndef _SYSTEM_H_
-#define _SYSTEM_H_
+#ifndef _TIMESYSTEM_H_
+#define _TIMESYSTEM_H_
 
-#include "entity.h"
+#include "systems.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
 namespace Systems
 {
-class System
+class TimeSystem : public Interface::System
 {
+protected:
+
+    Utils::TimeManager* m_currtm;
+
 public:
-    virtual void Init( void ) = 0;
-    virtual void Release( void ) = 0;
-    virtual void Run( void ) = 0;
-    virtual void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity ) = 0;
+    TimeSystem( void );
+    ~TimeSystem( void );
+
+    void Init( void ) {};
+    void Release( void ) {};
+
+    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
+    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
 };
+
 }
 }
 

@@ -23,6 +23,7 @@
 #ifndef _PHYSICSSYSTEM_H_
 #define _PHYSICSSYSTEM_H_
 
+#include "systems.h"
 #include "entitynodegraph.h"
 #include "timemanager.h"
 
@@ -30,14 +31,11 @@ namespace DrawSpace
 {
 namespace Systems
 {
-class PhysicsSystem
+class PhysicsSystem : public Interface::System
 {
 protected:
-
-    DrawSpace::Utils::TimeManager*      m_tm;
     
     std::set<Core::Entity*>             m_world_bodies_list; // pour chaque entitee comportant un aspect "Physics", liste des Entites comportant un aspect "Body" trouvees "sous" celle ci (entites filles et sous filles)
-
     EntityGraph::EntityNodeGraph*       m_current_graph;
 
 public:
@@ -45,11 +43,11 @@ public:
     PhysicsSystem( void );
     ~PhysicsSystem( void );
 
+    void Init( void ) {};
+    void Release( void ) {};
+
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Core::Entity* p_entity );
-
-    void SetTimeManager( DrawSpace::Utils::TimeManager* p_tm );
-
+    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
 };
 }
 }

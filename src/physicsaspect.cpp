@@ -30,7 +30,8 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 
 PhysicsAspect::PhysicsAspect( void ) :
-m_gravity_applied( false )
+m_gravity_applied( false ),
+m_tm( NULL )
 {
     m_collisionConfiguration            = _DRAWSPACE_NEW_( btDefaultCollisionConfiguration, btDefaultCollisionConfiguration );
     m_collisionDispatcher               = _DRAWSPACE_NEW_( btCollisionDispatcher, btCollisionDispatcher( m_collisionConfiguration ) );
@@ -118,8 +119,23 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
     }
 }
 
-void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
+void PhysicsAspect::SetTimeParameters( Utils::TimeManager* p_tm, dsreal p_time_factor )
 {
+    m_tm = p_tm;
+}
+
+void PhysicsAspect::StepSimulation( void )
+{
+    if( NULL == m_tm )
+    {
+        _DSEXCEPTION( "Physic world need a time object!!!" )
+    }
+
+    if( !m_tm->IsReady() )
+    {
+        return;
+    }
+
     ComponentList<bool> flags;
     GetComponentsByType<bool>( flags );
 
@@ -159,8 +175,10 @@ void PhysicsAspect::StepSimulation( dsreal p_fps, int p_nbsteps )
 
     m_world.stepSimulation( timestep, 5 );
     */
-    btScalar ts = 1.0 / p_fps;
-    m_world->stepSimulation( ts, p_nbsteps );
+
+    int fps = m_tm->GetFPS();
+    btScalar ts = 1.0 / fps;
+    m_world->stepSimulation( ts, 15 );
 
     // check for collisions
 

@@ -21,14 +21,12 @@
 */
 
 #include "entitynodegraph.h"
-#include "rendersystem.h"
-#include "transformsystem.h"
-#include "physicssystem.h"
+#include "systems.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
-using namespace DrawSpace::Systems;
 
 EntityNodeGraph::EntityNodeGraph(void)
 {
@@ -41,7 +39,7 @@ EntityNodeGraph::~EntityNodeGraph(void)
 EntityNode EntityNodeGraph::SetRoot(Entity* p_entity)
 {
 	m_tree.insert(p_entity);
-	EntityNode node( &m_tree.root(), /*&m_nodesevt_handlers*/ this );
+	EntityNode node( &m_tree.root(), this );
 	return node;
 }
 
@@ -50,34 +48,33 @@ void EntityNodeGraph::Erase(void)
 	m_tree.root().erase();
 }
 
-void EntityNodeGraph::AcceptRenderingSystem( RenderingSystem* p_renderingsystem )
-{    
+void EntityNodeGraph::AcceptSystemLeafToRoot( Interface::System* p_system )
+{
     for( auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
     {
-        p_renderingsystem->VisitEntity( it->data() );
-    }
+        if( it->is_root() )
+        {
+            p_system->VisitEntity( NULL, it->data() );
+        }
+        else
+        {
+            p_system->VisitEntity( it->parent().data(), it->data() );
+        }
+    } 
 }
 
-void EntityNodeGraph::AcceptTransformSystem( TransformSystem* p_transformsystem )
+void EntityNodeGraph::AcceptSystemRootToLeaf( Interface::System* p_system )
 {
     for( auto& it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
     {
         if( it->is_root() )
         {
-            p_transformsystem->VisitEntity( NULL, it->data() );
+            p_system->VisitEntity( NULL, it->data() );
         }
         else
         {
-            p_transformsystem->VisitEntity( it->parent().data(), it->data() );
+            p_system->VisitEntity( it->parent().data(), it->data() );
         }
-    }
-}
-
-void EntityNodeGraph::AcceptPhysicsSystem( Systems::PhysicsSystem* p_physicssystem )
-{
-    for( auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
-    {
-        p_physicssystem->VisitEntity( it->data() );
     }
 }
 

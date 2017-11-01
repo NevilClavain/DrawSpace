@@ -24,15 +24,14 @@
 #define _ENTITYNODEGRAPH_H_
 
 #include "entitynode.h"
-
 namespace DrawSpace
 {
-namespace Systems
+
+namespace Interface
 {
-class TransformSystem;
-class RenderingSystem;
-class PhysicsSystem;
+class System;
 }
+
 namespace EntityGraph
 {
 class EntityNodeGraph sealed
@@ -52,10 +51,15 @@ public:
 
 	EntityNode SetRoot( Core::Entity* p_entity );
 	void Erase(void);
-
+    
+    /*
     void AcceptRenderingSystem( Systems::RenderingSystem* p_renderingsystem );
     void AcceptTransformSystem( Systems::TransformSystem* p_transformsystem );
     void AcceptPhysicsSystem( Systems::PhysicsSystem* p_physicssystem );
+    */
+
+    void AcceptSystemLeafToRoot( DrawSpace::Interface::System* p_system );
+    void AcceptSystemRootToLeaf( DrawSpace::Interface::System* p_system );
 
     void RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );
 

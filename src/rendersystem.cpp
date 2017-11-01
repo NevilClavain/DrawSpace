@@ -39,10 +39,10 @@ RenderingSystem::~RenderingSystem(void)
 
 void RenderingSystem::Run( EntityNodeGraph* p_entitygraph )
 {
-    p_entitygraph->AcceptRenderingSystem( this );
+    p_entitygraph->AcceptSystemLeafToRoot( this );
 }
 
-void RenderingSystem::VisitEntity( Entity* p_entity )
+void RenderingSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 {
     RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
     if( rendering_aspect )

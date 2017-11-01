@@ -20,21 +20,21 @@
 *
 */
 
-#ifndef _SYSTEM_H_
-#define _SYSTEM_H_
+#ifndef _SYSTEMS_H_
+#define _SYSTEMS_H_
 
-#include "entity.h"
+#include "entitynodegraph.h"
 
 namespace DrawSpace
 {
-namespace Systems
+namespace Interface
 {
 class System
 {
 public:
     virtual void Init( void ) = 0;
     virtual void Release( void ) = 0;
-    virtual void Run( void ) = 0;
+    virtual void Run( EntityGraph::EntityNodeGraph* p_entitygraph ) = 0;
     virtual void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity ) = 0;
 };
 }

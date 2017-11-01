@@ -20,24 +20,60 @@
 *
 */
 
-#ifndef _SYSTEM_H_
-#define _SYSTEM_H_
+#include "timesystem.h"
+#include "timeaspect.h"
+#include "physicsaspect.h"
 
-#include "entity.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::EntityGraph;
+using namespace DrawSpace::Systems;
+using namespace DrawSpace::Aspect;
 
-namespace DrawSpace
+TimeSystem::TimeSystem(void)
 {
-namespace Systems
-{
-class System
-{
-public:
-    virtual void Init( void ) = 0;
-    virtual void Release( void ) = 0;
-    virtual void Run( void ) = 0;
-    virtual void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity ) = 0;
-};
-}
 }
 
-#endif
+TimeSystem::~TimeSystem(void)
+{
+}
+
+void TimeSystem::Run( EntityNodeGraph* p_entitygraph )
+{
+    m_currtm = NULL;
+    p_entitygraph->AcceptSystemRootToLeaf( this );
+}
+
+void TimeSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
+{   
+    TimeAspect* time_aspect = p_entity->GetAspect<TimeAspect>();
+    if( time_aspect )
+    {
+        ComponentList<TimeManager> tms;
+
+        time_aspect->GetComponentsByType<TimeManager>( tms );
+
+        if( tms.size() > 0 )
+        {
+            m_currtm = &tms[0]->getPurpose();
+            m_currtm->Update();
+        }
+    }
+    else
+    {    
+        PhysicsAspect* physics_aspect = p_entity->GetAspect<PhysicsAspect>();
+        if( physics_aspect )
+        {
+            if( m_currtm )
+            {
+                physics_aspect->SetTimeParameters( m_currtm, 1.0 );
+
+            }
+            else
+            {
+                _DSEXCEPTION( "No time manager available tu run physic world" );
+            }
+        }    
+    }
+}

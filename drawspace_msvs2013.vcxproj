@@ -96,7 +96,9 @@
     <ClCompile Include="src\spherelod_subpass.cpp" />
     <ClCompile Include="src\textrenderingaspectimpl.cpp" />
     <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\timeaspect.cpp" />
     <ClCompile Include="src\timemanager.cpp" />
+    <ClCompile Include="src\timesystem.cpp" />
     <ClCompile Include="src\transformation.cpp" />
     <ClCompile Include="src\transformsystem.cpp" />
     <ClCompile Include="src\vector.cpp" />
@@ -168,6 +170,7 @@
     <ClInclude Include="src\renderingaspectimpl.h" />
     <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\skyboxrenderingaspectimpl.h" />
+    <ClInclude Include="src\systems.h" />
     <ClInclude Include="src\textrenderingaspectimpl.h" />
     <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\renderpassnode.h" />
@@ -202,7 +205,9 @@
     <ClInclude Include="src\spherelod_subpass.h" />
     <ClInclude Include="src\task.h" />
     <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\timeaspect.h" />
     <ClInclude Include="src\timemanager.h" />
+    <ClInclude Include="src\timesystem.h" />
     <ClInclude Include="src\tracedefs.h" />
     <ClInclude Include="src\transformation.h" />
     <ClInclude Include="src\transformsystem.h" />

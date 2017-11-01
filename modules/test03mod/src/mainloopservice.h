@@ -74,10 +74,11 @@ protected:
     DrawSpace::Core::Entity                                                         m_camera2Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_camera2EntityNode;
 
-    
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
     DrawSpace::Systems::TransformSystem                                             m_transformSystem;
     DrawSpace::Systems::PhysicsSystem                                               m_physicsSystem;
+    DrawSpace::Systems::TimeSystem                                                  m_timeSystem;
+
 
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;

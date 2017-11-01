@@ -20,23 +20,17 @@
 *
 */
 
-#ifndef _SYSTEM_H_
-#define _SYSTEM_H_
+#ifndef _TIMEASPECT_H_
+#define _TIMEASPECT_H_
 
-#include "entity.h"
+#include "aspect.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
-namespace Systems
+namespace Aspect
 {
-class System
-{
-public:
-    virtual void Init( void ) = 0;
-    virtual void Release( void ) = 0;
-    virtual void Run( void ) = 0;
-    virtual void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity ) = 0;
-};
+class TimeAspect : public Core::Aspect {};
 }
 }
 

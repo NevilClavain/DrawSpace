@@ -31,8 +31,7 @@ using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Systems;
 
-PhysicsSystem::PhysicsSystem( void ) : 
-m_tm( NULL )
+PhysicsSystem::PhysicsSystem( void )
 {
 }
 
@@ -42,17 +41,12 @@ PhysicsSystem::~PhysicsSystem( void )
 
 void PhysicsSystem::Run( EntityNodeGraph* p_entitygraph )
 {
-    if( NULL == m_tm )
-    {
-        _DSEXCEPTION( "no time manager setted for physics system" );
-    }
-
     m_world_bodies_list.clear(); // clear list of entities with body aspect
     m_current_graph = p_entitygraph;
-    m_current_graph->AcceptPhysicsSystem( this );
+    m_current_graph->AcceptSystemLeafToRoot( this );
 }
 
-void PhysicsSystem::VisitEntity( Entity* p_entity )
+void PhysicsSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 {
     PhysicsAspect* physics_aspect = p_entity->GetAspect<PhysicsAspect>();
     if( physics_aspect )
@@ -60,10 +54,7 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
         // submit current Body entities list to physic aspect
         physics_aspect->UpdateBodiesList( m_world_bodies_list );
 
-        if( m_tm->IsReady() )
-        {
-            physics_aspect->StepSimulation( m_tm->GetFPS(), 15 );
-        }
+        physics_aspect->StepSimulation();
 
         m_world_bodies_list.clear(); // clear list for next entity with Physics aspect (if exists)
     }
@@ -101,9 +92,4 @@ void PhysicsSystem::VisitEntity( Entity* p_entity )
             body_aspect->Update();
         }
     }
-}
-
-void PhysicsSystem::SetTimeManager( DrawSpace::Utils::TimeManager* p_tm )
-{
-    m_tm = p_tm;
 }

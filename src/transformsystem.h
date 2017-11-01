@@ -23,6 +23,7 @@
 #ifndef _TRANSFORMSYSTEM_H_
 #define _TRANSFORMSYSTEM_H_
 
+#include "systems.h"
 #include "entitynodegraph.h"
 #include "matrix.h"
 #include "callback.h"
@@ -31,7 +32,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-class TransformSystem
+class TransformSystem : public Interface::System
 {
 public:
 
@@ -57,8 +58,11 @@ protected:
     void notify_event( Event p_evt, Core::Entity* p_entity );
 
 public:
-    TransformSystem(void);
-    ~TransformSystem(void);
+    TransformSystem( void );
+    ~TransformSystem( void );
+
+    void Init( void ) {};
+    void Release( void ) {};
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );

@@ -88,8 +88,6 @@
 #include "module_keys.h"
 #include "jsonparser.h"
 
-#include "system.h"
-
 #include "entitynodegraph.h"
 #include "renderpassnodegraph.h"
 
@@ -110,9 +108,12 @@
 #include "bodyaspect.h"
 #include "physicsaspect.h"
 
+#include "timeaspect.h"
+
 #include "rendersystem.h"
 #include "transformsystem.h"
 #include "physicssystem.h"
+#include "timesystem.h"
 
 
 #endif

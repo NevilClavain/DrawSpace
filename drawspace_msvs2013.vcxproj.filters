@@ -52,6 +52,9 @@
     <Filter Include="rendergraph">
       <UniqueIdentifier>{902b295c-6ff0-438e-b512-8255edd13bbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interface\system">
+      <UniqueIdentifier>{3818ccd6-97c3-450b-a45c-a6048becbb0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chunk.cpp" />
@@ -305,6 +308,12 @@
     </ClCompile>
     <ClCompile Include="src\bodytransformaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timesystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timeaspect.cpp">
+      <Filter>aspect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -622,6 +631,18 @@
     <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\bodytransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rendersystem.h" />
+    <ClInclude Include="src\rendersystem.h" />
+    <ClInclude Include="src\systems.h">
+      <Filter>interface\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\timesystem.h">
+      <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rendersystem.h" />
+    <ClInclude Include="src\timeaspect.h">
+      <Filter>aspect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
