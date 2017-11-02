@@ -34,8 +34,6 @@ using namespace DrawSpace::Interface::Module;
 _DECLARE_DS_LOGGER( logger, "test01mainloopservice", NULL )
 
 MainLoopService::MainLoopService( void ) :
-m_fps_transformer( m_tm ),
-m_free_transformer( m_tm ),
 m_left_mousebutton( false ),
 m_right_mousebutton( false ),
 m_current_camera( 0 ),

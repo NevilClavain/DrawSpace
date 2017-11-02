@@ -24,6 +24,7 @@
 #define _TRANSFORMASPECT_H_
 
 #include "transformaspectimpl.h"
+#include "timemanager.h"
 #include "entity.h"
 
 namespace DrawSpace
@@ -39,15 +40,14 @@ protected:
     DrawSpace::Utils::Matrix                                                        m_dispatched_viewtransform;
     DrawSpace::Utils::Matrix                                                        m_dispatched_projtransform;
 
-
-    //std::vector<DrawSpace::Interface::AspectImplementations::TransformAspectImpl*>      m_impls;
+    Utils::TimeManager*                                                             m_tm;
+    dsreal                                                                          m_time_factor;
 
     DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_impl;
 
 public:
     TransformAspect( void );
 
-    //void AddImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
     void SetImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
@@ -56,6 +56,8 @@ public:
 
     void ComputeTransforms( Core::Entity* p_parent, Core::Entity* p_entity );
     void DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj );
+
+    void SetTimeParameters( Utils::TimeManager* p_tm, dsreal p_time_factor );
 };
 }
 }

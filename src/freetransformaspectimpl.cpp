@@ -31,14 +31,13 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 
-FreeTransformAspectImpl::FreeTransformAspectImpl( TimeManager& p_timemanager ) :
-m_timemanager( p_timemanager )
+FreeTransformAspectImpl::FreeTransformAspectImpl( void )
 {
 }
 
 
 
-void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
+void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, Utils::Matrix& p_out_base_transform )
 {
     
     // recup des composants donnees d'entrées
@@ -86,7 +85,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
 
     /////////////////Axe X /////////////////////////////
 
-    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed_x );
+    fps = p_tm->ConvertUnitPerSecFramePerSec( rspeed_x ) * p_time_factor;
 	q.RotationAxis( rot_axis_x, fps );
     qres = current_res * q;
     current_res = qres;
@@ -98,7 +97,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
 
     /////////////////Axe Y /////////////////////////////
 
-    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed_y );
+    fps = p_tm->ConvertUnitPerSecFramePerSec( rspeed_y ) * p_time_factor;
 	q.RotationAxis( rot_axis_y, fps );
     qres = current_res * q;
     current_res = qres;
@@ -110,7 +109,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
 
     /////////////////Axe Z /////////////////////////////
 
-    fps = m_timemanager.ConvertUnitPerSecFramePerSec( rspeed_z );
+    fps = p_tm->ConvertUnitPerSecFramePerSec( rspeed_z ) * p_time_factor;
 	q.RotationAxis( rot_axis_z, fps );
     qres = current_res * q;
     current_res = qres;
@@ -126,9 +125,9 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
     ////////////////////////////////////////
 
     orientation.Transform( &local_speed, &gs );
-    m_timemanager.TranslationSpeedInc( &pos( 3, 0 ), gs[0] );
-    m_timemanager.TranslationSpeedInc( &pos( 3, 1 ), gs[1] );
-    m_timemanager.TranslationSpeedInc( &pos( 3, 2 ), gs[2] );
+    p_tm->TranslationSpeedInc( &pos( 3, 0 ), gs[0] * p_time_factor );
+    p_tm->TranslationSpeedInc( &pos( 3, 1 ), gs[1] * p_time_factor );
+    p_tm->TranslationSpeedInc( &pos( 3, 2 ), gs[2] * p_time_factor );
 
     p_out_base_transform = orientation * pos;
 

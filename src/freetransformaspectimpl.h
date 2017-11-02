@@ -25,7 +25,6 @@
 
 #include "transformaspectimpl.h"
 #include "quaternion.h"
-#include "timemanager.h"
 
 namespace DrawSpace
 {
@@ -33,14 +32,10 @@ namespace AspectImplementations
 {
 class FreeTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
-protected:
-
-    Utils::TimeManager&         m_timemanager;
-
 public:
-    FreeTransformAspectImpl( Utils::TimeManager& p_timemanager );
+    FreeTransformAspectImpl( void );
 
-    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
+    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, Utils::Matrix& p_out_base_transform );
 };
 }
 }

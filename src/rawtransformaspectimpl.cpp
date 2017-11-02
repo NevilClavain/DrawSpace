@@ -30,7 +30,7 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 
-void RawTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformaspect, Matrix& p_out_base_transform )
+void RawTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, Matrix& p_out_base_transform )
 {
     ComponentList<Matrix> mats;
     p_transformaspect->GetComponentsByType<Matrix>( mats );

@@ -24,6 +24,7 @@
 #define _TRANSFORMASPECTIMPL_H_
 
 #include "matrix.h"
+#include "timemanager.h"
 
 namespace DrawSpace
 {
@@ -40,7 +41,7 @@ namespace AspectImplementations
 class TransformAspectImpl abstract
 {
 public:
-    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform ) = 0;
+    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, DrawSpace::Utils::Matrix& p_out_base_transform ) = 0;
     virtual bool IgnoreParentTransformation( void ) const { return false; };
 };
 }

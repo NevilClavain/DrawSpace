@@ -30,12 +30,11 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 
-FPSTransformAspectImpl::FPSTransformAspectImpl( TimeManager& p_timemanager ) :
-m_timemanager( p_timemanager )
+FPSTransformAspectImpl::FPSTransformAspectImpl( void )
 {
 }
 
-void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
+void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, Utils::Matrix& p_out_base_transform )
 {
     // recup des composants donnees d'entrées
     ComponentList<dsreal> angles;
@@ -83,16 +82,15 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
 
     orientation.Transform( &local_speed, &gs );
 
-	m_timemanager.TranslationSpeedInc( &pos( 3, 0 ), gs[0] );
-
+    p_tm->TranslationSpeedInc( &pos( 3, 0 ), gs[0] * p_time_factor );
     
 	if( y_mvt )
 	{
 		// prendre aussi en compte la composante en Y (la camera peut aussi evoluer "en hauteur")
-		m_timemanager.TranslationSpeedInc( &pos( 3, 1 ), gs[1] );
+		p_tm->TranslationSpeedInc( &pos( 3, 1 ), gs[1] * p_time_factor );
 	}
     
-	m_timemanager.TranslationSpeedInc( &pos( 3, 2 ), gs[2] );
+	p_tm->TranslationSpeedInc( &pos( 3, 2 ), gs[2] * p_time_factor );
 
     p_out_base_transform = orientation * pos;
 

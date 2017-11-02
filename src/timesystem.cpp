@@ -23,6 +23,7 @@
 #include "timesystem.h"
 #include "timeaspect.h"
 #include "physicsaspect.h"
+#include "transformaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -72,8 +73,25 @@ void TimeSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
             }
             else
             {
-                _DSEXCEPTION( "No time manager available tu run physic world" );
+                _DSEXCEPTION( "No time manager available to run physic world" );
             }
-        }    
+        }
+        else
+        {
+
+            TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+            if( transform_aspect )
+            {
+                if( m_currtm )
+                {
+                    transform_aspect->SetTimeParameters( m_currtm, 1.0 );
+
+                }
+                else
+                {
+                    _DSEXCEPTION( "No time manager available to run transformations" );
+                }
+            }
+        }
     }
 }
