@@ -43,6 +43,7 @@ TimeSystem::~TimeSystem(void)
 void TimeSystem::Run( EntityNodeGraph* p_entitygraph )
 {
     m_currtm = NULL;
+    m_time_aspect = NULL;
     p_entitygraph->AcceptSystemRootToLeaf( this );
 }
 
@@ -51,10 +52,10 @@ void TimeSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     TimeAspect* time_aspect = p_entity->GetAspect<TimeAspect>();
     if( time_aspect )
     {
+        m_time_aspect = time_aspect; // memorize for children & descendants
+
         ComponentList<TimeManager> tms;
-
         time_aspect->GetComponentsByType<TimeManager>( tms );
-
         if( tms.size() > 0 )
         {
             m_currtm = &tms[0]->getPurpose();
@@ -68,8 +69,7 @@ void TimeSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
         {
             if( m_currtm )
             {
-                physics_aspect->SetTimeParameters( m_currtm, 1.0 );
-
+                physics_aspect->SetTimeAspect( m_time_aspect );
             }
             else
             {
@@ -84,8 +84,7 @@ void TimeSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
             {
                 if( m_currtm )
                 {
-                    transform_aspect->SetTimeParameters( m_currtm, 1.0 );
-
+                    transform_aspect->SetTimeAspect( m_time_aspect );
                 }
                 else
                 {

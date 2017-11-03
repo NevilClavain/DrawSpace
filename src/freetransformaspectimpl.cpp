@@ -37,9 +37,13 @@ FreeTransformAspectImpl::FreeTransformAspectImpl( void )
 
 
 
-void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, Utils::Matrix& p_out_base_transform )
+void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
 {
-    
+    if( NULL == m_time_aspect )
+    {
+        _DSEXCEPTION( "Need a time reference!!!" )
+    }    
+
     // recup des composants donnees d'entrées
 
     ComponentList<Vector> vectors;
@@ -85,7 +89,8 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
 
     /////////////////Axe X /////////////////////////////
 
-    fps = p_tm->ConvertUnitPerSecFramePerSec( rspeed_x ) * p_time_factor;
+    //fps = tm->ConvertUnitPerSecFramePerSec( rspeed_x );
+    fps = m_time_aspect->ConvertUnitPerSecFramePerSec( rspeed_x );
 	q.RotationAxis( rot_axis_x, fps );
     qres = current_res * q;
     current_res = qres;
@@ -97,7 +102,8 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
 
     /////////////////Axe Y /////////////////////////////
 
-    fps = p_tm->ConvertUnitPerSecFramePerSec( rspeed_y ) * p_time_factor;
+    //fps = tm->ConvertUnitPerSecFramePerSec( rspeed_y );
+    fps = m_time_aspect->ConvertUnitPerSecFramePerSec( rspeed_y );
 	q.RotationAxis( rot_axis_y, fps );
     qres = current_res * q;
     current_res = qres;
@@ -109,7 +115,8 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
 
     /////////////////Axe Z /////////////////////////////
 
-    fps = p_tm->ConvertUnitPerSecFramePerSec( rspeed_z ) * p_time_factor;
+    //fps = tm->ConvertUnitPerSecFramePerSec( rspeed_z );
+    fps = m_time_aspect->ConvertUnitPerSecFramePerSec( rspeed_z );
 	q.RotationAxis( rot_axis_z, fps );
     qres = current_res * q;
     current_res = qres;
@@ -125,9 +132,18 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
     ////////////////////////////////////////
 
     orientation.Transform( &local_speed, &gs );
-    p_tm->TranslationSpeedInc( &pos( 3, 0 ), gs[0] * p_time_factor );
-    p_tm->TranslationSpeedInc( &pos( 3, 1 ), gs[1] * p_time_factor );
-    p_tm->TranslationSpeedInc( &pos( 3, 2 ), gs[2] * p_time_factor );
+
+    TimeAspect::TimeScalar pos_30 = m_time_aspect->TimeScalarFactory( pos( 3, 0 ) );
+    TimeAspect::TimeScalar pos_31 = m_time_aspect->TimeScalarFactory( pos( 3, 1 ) );
+    TimeAspect::TimeScalar pos_32 = m_time_aspect->TimeScalarFactory( pos( 3, 2 ) );
+
+    pos_30 += gs[0];
+    pos_31 += gs[1];
+    pos_32 += gs[2];
+
+    pos( 3, 0 ) = pos_30.GetValue();
+    pos( 3, 1 ) = pos_31.GetValue();
+    pos( 3, 2 ) = pos_32.GetValue();
 
     p_out_base_transform = orientation * pos;
 

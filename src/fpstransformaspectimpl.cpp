@@ -34,8 +34,13 @@ FPSTransformAspectImpl::FPSTransformAspectImpl( void )
 {
 }
 
-void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, Utils::Matrix& p_out_base_transform )
+void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
 {
+    if( NULL == m_time_aspect )
+    {
+        _DSEXCEPTION( "Need a time reference!!!" )
+    }    
+
     // recup des composants donnees d'entrées
     ComponentList<dsreal> angles;
     p_transformaspect->GetComponentsByType<dsreal>( angles );
@@ -82,15 +87,38 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
 
     orientation.Transform( &local_speed, &gs );
 
-    p_tm->TranslationSpeedInc( &pos( 3, 0 ), gs[0] * p_time_factor );
+
+    TimeAspect::TimeScalar pos_30 = m_time_aspect->TimeScalarFactory( pos( 3, 0 ) );
+    TimeAspect::TimeScalar pos_31 = m_time_aspect->TimeScalarFactory( pos( 3, 1 ) );
+    TimeAspect::TimeScalar pos_32 = m_time_aspect->TimeScalarFactory( pos( 3, 2 ) );
+
+    /*
+
+    tm->TranslationSpeedInc( &pos( 3, 0 ), gs[0] );
     
 	if( y_mvt )
 	{
 		// prendre aussi en compte la composante en Y (la camera peut aussi evoluer "en hauteur")
-		p_tm->TranslationSpeedInc( &pos( 3, 1 ), gs[1] * p_time_factor );
+		tm->TranslationSpeedInc( &pos( 3, 1 ), gs[1] );
 	}
     
-	p_tm->TranslationSpeedInc( &pos( 3, 2 ), gs[2] * p_time_factor );
+    tm->TranslationSpeedInc( &pos( 3, 2 ), gs[2] );
+    */
+
+
+    pos_30 += gs[0];
+
+    if( y_mvt )
+    {
+        // prendre aussi en compte la composante en Y (la camera peut aussi evoluer "en hauteur")
+        pos_31 += gs[1];
+    }
+
+    pos_32 += gs[2];
+
+    pos( 3, 0 ) = pos_30.GetValue();
+    pos( 3, 1 ) = pos_31.GetValue();
+    pos( 3, 2 ) = pos_32.GetValue();
 
     p_out_base_transform = orientation * pos;
 

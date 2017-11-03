@@ -35,7 +35,7 @@ class FPSTransformAspectImpl : public DrawSpace::Interface::AspectImplementation
 public:
     FPSTransformAspectImpl( void );
 
-    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, Utils::Matrix& p_out_base_transform );
+    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
 };
 }
 }

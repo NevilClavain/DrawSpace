@@ -22,7 +22,7 @@
 
 #include "physicsaspect.h"
 #include "vector.h"
-
+#include "timemanager.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -31,7 +31,8 @@ using namespace DrawSpace::Utils;
 
 PhysicsAspect::PhysicsAspect( void ) :
 m_gravity_applied( false ),
-m_tm( NULL )
+//m_tm( NULL )
+m_time_aspect( NULL )
 {
     m_collisionConfiguration            = _DRAWSPACE_NEW_( btDefaultCollisionConfiguration, btDefaultCollisionConfiguration );
     m_collisionDispatcher               = _DRAWSPACE_NEW_( btCollisionDispatcher, btCollisionDispatcher( m_collisionConfiguration ) );
@@ -119,22 +120,38 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
     }
 }
 
-void PhysicsAspect::SetTimeParameters( Utils::TimeManager* p_tm, dsreal p_time_factor )
+
+void PhysicsAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 {
-    m_tm = p_tm;
+    m_time_aspect = p_time_aspect;
 }
 
 void PhysicsAspect::StepSimulation( void )
 {
-    if( NULL == m_tm )
+    if( NULL == m_time_aspect )
     {
-        _DSEXCEPTION( "Physic world need a time object!!!" )
+        _DSEXCEPTION( "Physic world need a time reference!!!" )
     }
 
-    if( !m_tm->IsReady() )
+    ComponentList<TimeManager> tms;
+    m_time_aspect->GetComponentsByType<TimeManager>( tms );
+
+    TimeManager* tm = NULL;
+
+    if( tms.size() > 0 )
+    {
+        tm = &tms[0]->getPurpose();
+    }
+    else
+    {
+         _DSEXCEPTION( "No Time manager associated with TimeAspect!!!" )
+    }
+
+    if( !tm->IsReady() )
     {
         return;
     }
+
 
     ComponentList<bool> flags;
     GetComponentsByType<bool>( flags );
@@ -176,7 +193,7 @@ void PhysicsAspect::StepSimulation( void )
     m_world.stepSimulation( timestep, 5 );
     */
 
-    int fps = m_tm->GetFPS();
+    int fps = tm->GetFPS();
     btScalar ts = 1.0 / fps;
     m_world->stepSimulation( ts, 15 );
 

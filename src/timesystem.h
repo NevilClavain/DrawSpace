@@ -25,6 +25,7 @@
 
 #include "systems.h"
 #include "timemanager.h"
+#include "timeaspect.h"
 
 namespace DrawSpace
 {
@@ -35,6 +36,7 @@ class TimeSystem : public Interface::System
 protected:
 
     Utils::TimeManager* m_currtm;
+    Aspect::TimeAspect* m_time_aspect;
 
 public:
     TimeSystem( void );

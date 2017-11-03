@@ -21,3 +21,67 @@
 */
 
 #include "timeaspect.h"
+
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Utils;
+
+TimeAspect::TimeAspect( void ) : 
+m_time_factor( 1.0 )
+{
+}
+
+TimeAspect::TimeAngle TimeAspect::TimeAngleFactory( dsreal p_initvalue )
+{
+    ComponentList<TimeManager> tms;
+    GetComponentsByType<TimeManager>( tms );
+
+    TimeManager* tm = NULL;
+    if( tms.size() > 0 )
+    {
+        tm = &tms[0]->getPurpose();
+    }
+    else
+    {
+         _DSEXCEPTION( "No time manager associated with TimeAspect!!!" )
+    }
+
+    return TimeAngle( p_initvalue, tm, &m_time_factor );
+}
+
+
+TimeAspect::TimeScalar TimeAspect::TimeScalarFactory( dsreal p_initvalue )
+{
+    ComponentList<TimeManager> tms;
+    GetComponentsByType<TimeManager>( tms );
+
+    TimeManager* tm = NULL;
+    if( tms.size() > 0 )
+    {
+        tm = &tms[0]->getPurpose();
+    }
+    else
+    {
+         _DSEXCEPTION( "No time manager associated with TimeAspect!!!" )
+    }
+
+    return TimeScalar( p_initvalue, tm, &m_time_factor );
+}
+
+dsreal TimeAspect::ConvertUnitPerSecFramePerSec( dsreal p_speed )
+{
+    ComponentList<TimeManager> tms;
+    GetComponentsByType<TimeManager>( tms );
+
+    TimeManager* tm = NULL;
+    if( tms.size() > 0 )
+    {
+        tm = &tms[0]->getPurpose();
+    }
+    else
+    {
+         _DSEXCEPTION( "No time manager associated with TimeAspect!!!" )
+    }
+
+    return tm->ConvertUnitPerSecFramePerSec( p_speed ) * m_time_factor;
+}

@@ -136,6 +136,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
+    time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
 
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );

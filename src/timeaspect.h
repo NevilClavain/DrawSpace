@@ -30,7 +30,148 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class TimeAspect : public Core::Aspect {};
+class TimeAspect : public Core::Aspect 
+{
+public:
+
+    typedef enum
+    {
+        NORMAL_TIME,
+        MUL2_TIME,
+        MUL4_TIME,
+        MUL10_TIME,
+        MUL100_TIME,
+        MUL500_TIME,
+
+        SEC_1HOUR_TIME, // 1 sec = 1 hour -> x 3600
+        
+        SEC_1DAY_TIME, // 1 sec = 24 hour -> x 86400
+
+        SEC_30DAYS_TIME, // 1 sec = 30 days -> x 2592000
+
+        SEC_1YEAR_TIME, // 1sec = 1 year -> x 31536000
+
+
+        DIV2_TIME,
+        DIV4_TIME,
+        DIV10_TIME
+
+    } TimeScale;
+
+    class TimeAngle
+    {
+    private:
+        dsreal                  m_value;
+        Utils::TimeManager*     m_tm;
+        dsreal*                 m_timefactor;
+
+    public:
+
+        TimeAngle( void ) :
+        m_value( 0.0 ),
+        m_tm( NULL ),
+        m_timefactor( NULL )
+        {
+        }
+
+        TimeAngle( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor ) :
+        m_value( p_initval ),
+        m_tm( p_tm ),
+        m_timefactor( p_timefactor )
+        {        
+        }
+
+        void Increase( dsreal p_delta )
+        {
+            if( m_tm->IsReady() )
+            {
+                m_tm->AngleSpeedInc( &m_value, p_delta * (*m_timefactor) );
+            }
+        }
+        void Decrease( dsreal p_delta )
+        {
+            if( m_tm->IsReady() )
+            {
+                m_tm->AngleSpeedDec( &m_value, p_delta * (*m_timefactor) );
+            }
+        }
+        void operator +=( dsreal p_delta )
+        {
+            Increase( p_delta );
+        }
+        void operator -=( dsreal p_delta )
+        {
+            Decrease( p_delta );
+        }
+
+        dsreal GetValue( void ) const { return m_value; };
+    };
+
+    class TimeScalar
+    {
+    private:
+        dsreal                  m_value;
+        Utils::TimeManager*     m_tm;
+        dsreal*                 m_timefactor;
+
+    public:
+
+        TimeScalar( void ) :
+        m_value( 0.0 ),
+        m_tm( NULL ),
+        m_timefactor( NULL )
+        {
+        }
+
+        TimeScalar( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor ) :
+        m_value( p_initval ),
+        m_tm( p_tm ),
+        m_timefactor( p_timefactor )
+        {        
+        }
+
+        void Increase( dsreal p_delta )
+        {
+            if( m_tm->IsReady() )
+            {
+                m_tm->TranslationSpeedInc( &m_value, p_delta * (*m_timefactor) );
+            }
+        }
+        void Decrease( dsreal p_delta )
+        {
+            if( m_tm->IsReady() )
+            {
+                m_tm->TranslationSpeedDec( &m_value, p_delta * (*m_timefactor) );
+            }
+        }
+        void operator +=( dsreal p_delta )
+        {
+            Increase( p_delta );
+        }
+        void operator -=( dsreal p_delta )
+        {
+            Decrease( p_delta );
+        }
+
+        dsreal GetValue( void ) const { return m_value; };
+    };
+
+protected:
+
+    dsreal             m_time_factor;  // calculé...
+
+public:
+
+
+    TimeAspect( void );
+
+    
+    TimeAngle TimeAngleFactory( dsreal p_initvalue );
+    TimeScalar TimeScalarFactory( dsreal p_initvalue );
+
+    dsreal ConvertUnitPerSecFramePerSec( dsreal p_speed );
+    
+};
 }
 }
 

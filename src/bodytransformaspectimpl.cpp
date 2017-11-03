@@ -31,15 +31,13 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 
-//BodyTransformAspectImpl::BodyTransformAspectImpl( btDefaultMotionState** p_motionState ) :
-//m_motionState( p_motionState )
 BodyTransformAspectImpl::BodyTransformAspectImpl( BodyAspect* p_aspect ) :
 m_aspect( p_aspect )
 {
 }
 
 
-void BodyTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformaspect, Utils::TimeManager* p_tm, dsreal p_time_factor, Utils::Matrix& p_out_base_transform )
+void BodyTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
 {
     m_aspect->GetLastTransform( p_out_base_transform );
 }

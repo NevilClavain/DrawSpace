@@ -30,8 +30,7 @@ using namespace DrawSpace::Interface;
 
 TransformAspect::TransformAspect( void ) :
 m_impl( NULL ),
-m_tm( NULL ),
-m_time_factor( 1.0 )
+m_time_aspect( NULL )
 {
     m_worldtransform.Identity();
     m_dispatched_viewtransform.Identity();
@@ -41,6 +40,10 @@ m_time_factor( 1.0 )
 void TransformAspect::SetImplementation( AspectImplementations::TransformAspectImpl* p_impl )
 {
     m_impl = p_impl;
+    if( m_time_aspect )
+    {
+        m_impl->SetTimeAspect( m_time_aspect );
+    }
 }
 
 
@@ -55,7 +58,7 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 
     if( m_impl )
     {
-        m_impl->GetLocaleTransform( this, m_tm, m_time_factor, locale_mat );
+        m_impl->GetLocaleTransform( this, locale_mat );
         ignore_parent_transform = m_impl->IgnoreParentTransformation();
     }
 
@@ -102,7 +105,11 @@ void TransformAspect::GetProjTransform( DrawSpace::Utils::Matrix& p_projtransfor
     p_projtransform = m_dispatched_projtransform;
 }
 
-void TransformAspect::SetTimeParameters( Utils::TimeManager* p_tm, dsreal p_time_factor )
+void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 {
-    m_tm = p_tm;
+    m_time_aspect = p_time_aspect;
+    if( m_impl )
+    {
+        m_impl->SetTimeAspect( p_time_aspect );
+    }
 }
