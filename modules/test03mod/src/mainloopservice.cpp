@@ -305,27 +305,17 @@ void MainLoopService::Run( void )
 
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
-      
     char comment[256];
     sprintf( comment, "%d fps - %s", time_aspect->GetFPS(), m_pluginDescr.c_str() );
-
-    
-
-
-
-
     RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
-
     rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
 
+
+
     m_planet_rot += 15.0;
-
     BodyAspect* body_aspect = m_sphereEntity.GetAspect<BodyAspect>();
-
     Matrix planet_rot;
-
     planet_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_planet_rot.GetValue() ) );
-
     Matrix planet_transf;
     planet_transf.Translation( 0.0, 10.0, 10.0 );
     Matrix planet_mat = planet_rot * planet_transf;
@@ -334,30 +324,8 @@ void MainLoopService::Run( void )
 
     
     m_tm.Update();
-    if( m_tm.IsReady() )
-    {
 
-      /*  
-        m_tm.AngleSpeedInc( &m_roty, 15 );
-
-        BodyAspect* body_aspect = m_sphereEntity.GetAspect<BodyAspect>();
-
-        Matrix planet_rot;
-
-        planet_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_roty ) );
-
-        Matrix planet_transf;
-        planet_transf.Translation( 0.0, 10.0, 10.0 );
-        //planet_transf.Identity();
-
-        Matrix planet_mat = planet_rot * planet_transf;
-
-        body_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = planet_mat;
-        */
-
-    }
-    
-    
+        
     if( 1 == m_current_camera )
     {
         TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
