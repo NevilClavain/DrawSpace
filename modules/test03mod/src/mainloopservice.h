@@ -25,6 +25,7 @@
 
 #include "module_service.h"
 #include "drawspace.h"
+#include "timeaspect.h"
 
 class MainLoopService : public DrawSpace::Interface::Module::Service
 {
@@ -87,15 +88,14 @@ protected:
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
     DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl                     m_skyboxRender;
 
-    dsreal                                                                          m_roty;
+    DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_planet_rot;
+
 
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;
     DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
     DrawSpace::AspectImplementations::FreeTransformAspectImpl                       m_free_transformer;
     
-    bool                                                                            m_display_switch = true;
-
     DrawSpace::Interface::MesheImport*                                              m_meshe_import;
 
     int                                                                             m_current_camera;

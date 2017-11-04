@@ -59,8 +59,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
-    m_roty = 0.0;
-
     m_entitygraph.RegisterNodesEvtHandler( &m_entitygraph_evt_handler );
 
     (*p_mousecircularmode_cb)( true )
@@ -137,6 +135,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
     time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
+
+
+    m_planet_rot = time_aspect->TimeAngleFactory( 0.0 );
 
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
@@ -302,21 +303,41 @@ void MainLoopService::Run( void )
 
     m_renderer->FlipScreen();
 
-    if( m_display_switch )
-    {      
-        char comment[256];
-        sprintf( comment, "%d fps - %s", m_tm.GetFPS(), m_pluginDescr.c_str() );
 
-        RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+      
+    char comment[256];
+    sprintf( comment, "%d fps - %s", time_aspect->GetFPS(), m_pluginDescr.c_str() );
 
-        rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
-    }
+    
 
+
+
+
+    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
+
+    m_planet_rot += 15.0;
+
+    BodyAspect* body_aspect = m_sphereEntity.GetAspect<BodyAspect>();
+
+    Matrix planet_rot;
+
+    planet_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_planet_rot.GetValue() ) );
+
+    Matrix planet_transf;
+    planet_transf.Translation( 0.0, 10.0, 10.0 );
+    Matrix planet_mat = planet_rot * planet_transf;
+
+    body_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = planet_mat;
+
+    
     m_tm.Update();
     if( m_tm.IsReady() )
     {
 
-        
+      /*  
         m_tm.AngleSpeedInc( &m_roty, 15 );
 
         BodyAspect* body_aspect = m_sphereEntity.GetAspect<BodyAspect>();
@@ -332,7 +353,10 @@ void MainLoopService::Run( void )
         Matrix planet_mat = planet_rot * planet_transf;
 
         body_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = planet_mat;
+        */
+
     }
+    
     
     if( 1 == m_current_camera )
     {
@@ -487,25 +511,7 @@ void MainLoopService::OnKeyPulse( long p_key )
 {
     switch( p_key )
     {
-        case VK_F1:
-            {
-                
-                if( m_display_switch )
-                {
-                    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
-                    renderingAspect->RemoveComponent<TextRenderingAspectImpl::TextDisplay>( "fps");
-
-                    m_display_switch = false;
-                }
-                else
-                {
-                    RenderingAspect* renderingAspect = m_rootEntity.GetAspect<RenderingAspect>();
-                    renderingAspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "..." );
-
-                    m_display_switch = true;
-                }
-                
-            }       
+        case VK_F1:     
             break;
 
         case VK_F2:

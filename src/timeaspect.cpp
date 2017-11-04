@@ -41,47 +41,12 @@ TimeAspect::TimeAngle TimeAspect::TimeAngleFactory( dsreal p_initvalue )
 
 TimeAspect::TimeScalar TimeAspect::TimeScalarFactory( dsreal p_initvalue )
 {
-    /*
-    ComponentList<TimeManager> tms;
-    GetComponentsByType<TimeManager>( tms );
-
-    TimeManager* tm = NULL;
-    if( tms.size() > 0 )
-    {
-        tm = &tms[0]->getPurpose();
-    }
-    else
-    {
-         _DSEXCEPTION( "No time manager associated with TimeAspect!!!" )
-    }
-
-    return TimeScalar( p_initvalue, tm, &m_time_factor );
-    */
-
-
     get_tm();
     return TimeScalar( p_initvalue, m_tm, &m_time_factor );
 }
 
 dsreal TimeAspect::ConvertUnitPerSecFramePerSec( dsreal p_speed )
 {
-    /*
-    ComponentList<TimeManager> tms;
-    GetComponentsByType<TimeManager>( tms );
-
-    TimeManager* tm = NULL;
-    if( tms.size() > 0 )
-    {
-        tm = &tms[0]->getPurpose();
-    }
-    else
-    {
-         _DSEXCEPTION( "No time manager associated with TimeAspect!!!" )
-    }
-
-    return tm->ConvertUnitPerSecFramePerSec( p_speed ) * m_time_factor;
-    */
-
     get_tm();
     return m_tm->ConvertUnitPerSecFramePerSec( p_speed ) * m_time_factor;
 }
@@ -112,8 +77,11 @@ void TimeAspect::get_tm( void )
 void TimeAspect::Update( void )
 {
     get_tm();
-
-
-
     m_tm->Update();
+}
+
+long TimeAspect::GetFPS( void )
+{
+    get_tm();
+    return m_tm->GetFPS();
 }

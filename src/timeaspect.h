@@ -175,6 +175,7 @@ public:
     dsreal ConvertUnitPerSecFramePerSec( dsreal p_speed );
     
     void Update( void );
+    long GetFPS( void );
 
 };
 }
