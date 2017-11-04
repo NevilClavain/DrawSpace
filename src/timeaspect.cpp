@@ -27,31 +27,21 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 
 TimeAspect::TimeAspect( void ) : 
-m_time_factor( 1.0 )
+m_time_factor( 1.0 ),
+m_tm( NULL )
 {
 }
 
 TimeAspect::TimeAngle TimeAspect::TimeAngleFactory( dsreal p_initvalue )
 {
-    ComponentList<TimeManager> tms;
-    GetComponentsByType<TimeManager>( tms );
-
-    TimeManager* tm = NULL;
-    if( tms.size() > 0 )
-    {
-        tm = &tms[0]->getPurpose();
-    }
-    else
-    {
-         _DSEXCEPTION( "No time manager associated with TimeAspect!!!" )
-    }
-
-    return TimeAngle( p_initvalue, tm, &m_time_factor );
+    get_tm();
+    return TimeAngle( p_initvalue, m_tm, &m_time_factor );
 }
 
 
 TimeAspect::TimeScalar TimeAspect::TimeScalarFactory( dsreal p_initvalue )
 {
+    /*
     ComponentList<TimeManager> tms;
     GetComponentsByType<TimeManager>( tms );
 
@@ -66,10 +56,16 @@ TimeAspect::TimeScalar TimeAspect::TimeScalarFactory( dsreal p_initvalue )
     }
 
     return TimeScalar( p_initvalue, tm, &m_time_factor );
+    */
+
+
+    get_tm();
+    return TimeScalar( p_initvalue, m_tm, &m_time_factor );
 }
 
 dsreal TimeAspect::ConvertUnitPerSecFramePerSec( dsreal p_speed )
 {
+    /*
     ComponentList<TimeManager> tms;
     GetComponentsByType<TimeManager>( tms );
 
@@ -84,4 +80,40 @@ dsreal TimeAspect::ConvertUnitPerSecFramePerSec( dsreal p_speed )
     }
 
     return tm->ConvertUnitPerSecFramePerSec( p_speed ) * m_time_factor;
+    */
+
+    get_tm();
+    return m_tm->ConvertUnitPerSecFramePerSec( p_speed ) * m_time_factor;
+}
+
+void TimeAspect::get_tm( void )
+{
+    if( m_tm )
+    {
+        return;
+    }
+
+    ComponentList<TimeManager> tms;
+    GetComponentsByType<TimeManager>( tms );
+
+    TimeManager* tm = NULL;
+    if( tms.size() > 0 )
+    {
+        tm = &tms[0]->getPurpose();
+    }
+    else
+    {
+         _DSEXCEPTION( "No time manager associated with TimeAspect!!!" )
+    }
+
+    m_tm = tm;
+}
+
+void TimeAspect::Update( void )
+{
+    get_tm();
+
+
+
+    m_tm->Update();
 }

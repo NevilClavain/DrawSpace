@@ -158,7 +158,10 @@ public:
 
 protected:
 
-    dsreal             m_time_factor;  // calculé...
+    Utils::TimeManager*     m_tm;       
+    dsreal                  m_time_factor;  // calculé...
+
+    void get_tm( void );
 
 public:
 
@@ -171,6 +174,8 @@ public:
 
     dsreal ConvertUnitPerSecFramePerSec( dsreal p_speed );
     
+    void Update( void );
+
 };
 }
 }

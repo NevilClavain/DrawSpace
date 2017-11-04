@@ -35,7 +35,7 @@ class TimeSystem : public Interface::System
 {
 protected:
 
-    Utils::TimeManager* m_currtm;
+    //Utils::TimeManager* m_currtm;
     Aspect::TimeAspect* m_time_aspect;
 
 public:
