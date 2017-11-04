@@ -90,6 +90,9 @@ protected:
 
     DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_planet_rot;
 
+    DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_yaw;
+    DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_pitch;
+
 
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;

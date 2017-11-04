@@ -139,6 +139,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_planet_rot = time_aspect->TimeAngleFactory( 0.0 );
 
+    m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
+    m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
+
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
     
@@ -592,8 +595,11 @@ void MainLoopService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 
         if( m_left_mousebutton )
         {
-            m_tm.AngleSpeedInc( &transform_aspect->GetComponent<dsreal>( "yaw" )->getPurpose(), - p_dx / 4.0 );
-            m_tm.AngleSpeedInc( &transform_aspect->GetComponent<dsreal>( "pitch" )->getPurpose(), - p_dy / 4.0 );
+            m_fps_yaw += - p_dx / 1.0;
+            m_fps_pitch += - p_dy / 1.0;
+
+            transform_aspect->GetComponent<dsreal>( "yaw" )->getPurpose() = m_fps_yaw.GetValue();
+            transform_aspect->GetComponent<dsreal>( "pitch" )->getPurpose() = m_fps_pitch.GetValue();
         }
     }
     else
