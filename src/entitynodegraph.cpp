@@ -102,3 +102,35 @@ void EntityNodeGraph::GetEntityAncestorsList( Entity* p_entity, std::vector<Enti
         }
     }
 }
+
+void EntityNodeGraph::OnSceneRenderBegin( void )
+{
+    for( auto& it = m_tree.begin(); it != m_tree.end(); ++it )
+    {
+        Entity* ent = it->data();
+
+        std::vector<Aspect*> aspects;
+        ent->GetAllAspects( aspects );
+
+        for( size_t i = 0; i < aspects.size(); ++i )
+        {
+            aspects[i]->OnSceneRenderBegin();
+        }
+    }
+}
+
+void EntityNodeGraph::OnSceneRenderEnd( void )
+{
+    for( auto& it = m_tree.begin(); it != m_tree.end(); ++it )
+    {
+        Entity* ent = it->data();
+
+        std::vector<Aspect*> aspects;
+        ent->GetAllAspects( aspects );
+
+        for( size_t i = 0; i < aspects.size(); ++i )
+        {
+            aspects[i]->OnSceneRenderEnd();
+        }
+    }
+}

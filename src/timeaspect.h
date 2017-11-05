@@ -177,6 +177,9 @@ public:
     void Update( void );
     long GetFPS( void );
 
+    void OnSceneRenderBegin( void );
+    void OnSceneRenderEnd( void );
+
 };
 }
 }

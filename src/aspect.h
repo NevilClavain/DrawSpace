@@ -117,6 +117,9 @@ public:
             }
         }
     }
+
+    virtual void OnSceneRenderBegin( void ) {};
+    virtual void OnSceneRenderEnd( void ) {};
 };
 }
 }

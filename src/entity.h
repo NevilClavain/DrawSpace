@@ -45,7 +45,6 @@ public:
         }
     }
     
-
     template<typename T>
     T* AddAspect( void )
     {
@@ -71,6 +70,14 @@ public:
         
         T* aspect = static_cast<T*>( m_aspects[tid] );
         return aspect;
+    }
+
+    void GetAllAspects( std::vector<Aspect*>& p_list )
+    {
+        for( auto& it = m_aspects.begin(); it != m_aspects.end(); ++it )
+        {
+            p_list.push_back( it->second );
+        }
     }
 };
 }

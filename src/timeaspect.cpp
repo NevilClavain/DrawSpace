@@ -85,3 +85,12 @@ long TimeAspect::GetFPS( void )
     get_tm();
     return m_tm->GetFPS();
 }
+
+void TimeAspect::OnSceneRenderBegin( void )
+{
+}
+
+void TimeAspect::OnSceneRenderEnd( void )
+{
+
+}

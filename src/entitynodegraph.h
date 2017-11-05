@@ -52,18 +52,15 @@ public:
 	EntityNode SetRoot( Core::Entity* p_entity );
 	void Erase(void);
     
-    /*
-    void AcceptRenderingSystem( Systems::RenderingSystem* p_renderingsystem );
-    void AcceptTransformSystem( Systems::TransformSystem* p_transformsystem );
-    void AcceptPhysicsSystem( Systems::PhysicsSystem* p_physicssystem );
-    */
-
     void AcceptSystemLeafToRoot( DrawSpace::Interface::System* p_system );
     void AcceptSystemRootToLeaf( DrawSpace::Interface::System* p_system );
 
     void RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );
 
     void GetEntityAncestorsList( Core::Entity* p_entity, std::vector<Core::Entity*>& p_ancestors ) const;
+
+    virtual void OnSceneRenderBegin( void );
+    virtual void OnSceneRenderEnd( void );
     
     friend class EntityNode;
 };

@@ -293,6 +293,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_rendergraph.RenderingQueueModSignal();
 
+    m_entitygraph.OnSceneRenderBegin();
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
@@ -342,6 +343,7 @@ void MainLoopService::Release( void )
 {
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 
+    m_entitygraph.OnSceneRenderEnd();
 }
 
 DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
