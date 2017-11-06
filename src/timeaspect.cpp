@@ -20,6 +20,7 @@
 *
 */
 
+#include <time.h>
 #include "timeaspect.h"
 
 using namespace DrawSpace::Core;
@@ -28,8 +29,25 @@ using namespace DrawSpace::Utils;
 
 TimeAspect::TimeAspect( void ) : 
 m_time_factor( 1.0 ),
-m_tm( NULL )
+m_tm( NULL ),
+m_time_period( 1000 ),
+m_current_time_increment( 1 ),
+m_sub_sec_count( 0 ),
+m_sub_sec_count_lim( 0 ),
+m_mode( NORMAL_TIME ),
+m_active( false ),
+m_world_nbsteps( 5 ),
+m_freeze( false )
 {
+    m_timercb = _DRAWSPACE_NEW_( TimerCb, TimerCb( this, &TimeAspect::on_timer ) );
+
+    m_timer.SetHandler( m_timercb );
+    m_timer.SetPeriod( m_time_period );
+}
+
+TimeAspect::~TimeAspect( void )
+{
+    _DRAWSPACE_DELETE_( m_timercb );
 }
 
 TimeAspect::TimeAngle TimeAspect::TimeAngleFactory( dsreal p_initvalue )
@@ -72,25 +90,251 @@ void TimeAspect::get_tm( void )
     }
 
     m_tm = tm;
+    m_tm->RegisterTimer( &m_timer );
 }
 
 void TimeAspect::Update( void )
 {
     get_tm();
     m_tm->Update();
-}
 
-long TimeAspect::GetFPS( void )
-{
-    get_tm();
-    return m_tm->GetFPS();
+    ComponentList<dsstring> strs;
+    GetComponentsByType<dsstring>( strs );
+
+    // put current formated date/time in component string[0]
+    struct tm* mytime;
+
+    mytime = _gmtime64( &m_current_time );
+    if( mytime )
+    {
+        strs[0]->getPurpose() = asctime( mytime );
+    }
+    else
+    {
+        strs[0]->getPurpose() = "???";
+    }
+
+    ComponentList<int> ints;
+    GetComponentsByType<int>( ints );
+
+    // put current fps
+
+    if( m_tm->IsReady() )
+    {
+        ints[1]->getPurpose() = m_tm->GetFPS();
+    }
+    else
+    {
+        ints[1]->getPurpose() = 0;
+    }
+
+    // update current time
+
+    ints[0]->getPurpose() = m_current_time;
 }
 
 void TimeAspect::OnSceneRenderBegin( void )
 {
+     //p_start_time; TEMPORAIRE
+
+    ComponentList<int> ints;
+    GetComponentsByType<int>( ints );
+
+    if( ints.size() > 1 )
+    {
+        m_current_time = ints[0]->getPurpose();
+    }
+    
+    m_timer.SetPeriod( m_time_period );
+    m_timer.SetState( true );
+
+    m_active = true;
 }
 
 void TimeAspect::OnSceneRenderEnd( void )
 {
+    m_timer.SetState( false );
 
+    m_active = false;
+}
+
+void TimeAspect::on_timer( DrawSpace::Utils::Timer* p_timer )
+{
+    if( 0 == m_sub_sec_count_lim )
+    {
+        m_current_time += m_current_time_increment;
+    }
+    else
+    {
+        m_sub_sec_count++;
+        if( m_sub_sec_count == m_sub_sec_count_lim )
+        {
+            m_sub_sec_count = 0;
+            m_current_time++;
+        }
+    }
+}
+
+void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
+{
+    switch( p_scale )
+    {
+        case NORMAL_TIME:
+
+            m_time_period = 1000;
+            m_time_factor = 1;
+            m_current_time_increment = 1;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep;
+            break;
+
+        case MUL2_TIME:
+
+            m_time_period = 500;
+            m_time_factor = 2;
+            m_current_time_increment = 1;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep * 2;
+            break;
+
+        case MUL4_TIME:
+           
+            m_time_period = 250;
+            m_time_factor = 4;
+            m_current_time_increment = 1;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep * 4;
+            break;
+
+        case MUL10_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 10;
+            m_current_time_increment = 1;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep * 10;
+            break;
+
+        case MUL100_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 100.0;
+            m_current_time_increment = 10;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep * 10;
+            break;
+
+        case MUL500_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 500.0;
+            m_current_time_increment = 50;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep * 10;
+            break;
+
+
+        case SEC_1HOUR_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 3600.0;
+            m_current_time_increment = 360;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep * 10;
+            break;
+
+        case SEC_1DAY_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 86400.0;
+            m_current_time_increment = 8640;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep * 10;
+            break;
+
+        case SEC_30DAYS_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 2592000.0;
+            m_current_time_increment = 259200;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = 200;
+
+            m_world_nbsteps = m_base_timestep * 10;
+            break;
+
+        case SEC_1YEAR_TIME:
+
+            m_time_period = 100;
+            m_time_factor = 86400.0 * 365.0;
+            m_current_time_increment = 86400 * 365;
+
+            m_sub_sec_count_lim = 0;
+
+            m_world_nbsteps = m_base_timestep * 10;
+            break;
+
+        case DIV2_TIME:
+
+            m_time_period = 1000;
+            m_time_factor = 0.5;
+            m_sub_sec_count_lim = 2;
+            m_sub_sec_count = 0;
+
+            m_current_time_increment = 0;
+
+            m_world_nbsteps = m_base_timestep;
+            break;
+
+        case DIV4_TIME:
+
+            m_time_period = 1000;
+            m_time_factor = 0.25;
+            m_sub_sec_count_lim = 4;
+            m_sub_sec_count = 0;
+
+            m_current_time_increment = 0;
+
+            m_world_nbsteps = m_base_timestep;
+            break;
+
+        case DIV10_TIME:
+
+            m_time_period = 1000;
+            m_time_factor = 0.1;
+            m_sub_sec_count_lim = 10;
+            m_sub_sec_count = 0;
+
+            m_current_time_increment = 0;
+
+            m_world_nbsteps = m_base_timestep;
+            break;
+    }
+
+    m_mode = p_scale;
+
+    if( m_active && !m_freeze )
+    {
+        m_timer.SetState( false );
+        m_timer.SetPeriod( m_time_period );
+        m_timer.SetState( true );
+    }
 }

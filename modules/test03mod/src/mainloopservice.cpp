@@ -129,12 +129,16 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rendering_aspect->AddImplementation( &m_textRender );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "..." );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "current camera", 10, 30, 255, 0, 255, "..." );
-
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "datetime", 10, 50, 0, 255, 0, "..." );
 
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
     time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
+    time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
+
+    time_aspect->AddComponent<int>( "time", 1576800000 );
+    time_aspect->AddComponent<int>( "output_fps" );
 
 
     m_planet_rot = time_aspect->TimeAngleFactory( 0.0 );
@@ -310,10 +314,16 @@ void MainLoopService::Run( void )
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
     char comment[256];
-    sprintf( comment, "%d fps - %s", time_aspect->GetFPS(), m_pluginDescr.c_str() );
+    //sprintf( comment, "%d fps - %s", time_aspect->GetFPS(), m_pluginDescr.c_str() );
+
+
+    sprintf( comment, "%d fps - %s", time_aspect->GetComponent<int>( "output_fps" )->getPurpose(), m_pluginDescr.c_str() );
+
     RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
     rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
 
+
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "datetime" )->getPurpose().m_text = time_aspect->GetComponent<dsstring>( "output_formated_datetime" )->getPurpose();
 
 
     m_planet_rot += 15.0;

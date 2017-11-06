@@ -54,7 +54,8 @@ public:
 
         DIV2_TIME,
         DIV4_TIME,
-        DIV10_TIME
+        DIV10_TIME,
+        FREEZE,
 
     } TimeScale;
 
@@ -158,15 +159,40 @@ public:
 
 protected:
 
-    Utils::TimeManager*     m_tm;       
+    typedef DrawSpace::Core::CallBack<TimeAspect, void, DrawSpace::Utils::Timer*> TimerCb;
+
+    static const int        m_base_timestep = 8;
+
+    Utils::TimeManager*     m_tm;    
+    TimeScale               m_mode;
     dsreal                  m_time_factor;  // calculé...
 
+    TimerCb*                m_timercb;
+    DrawSpace::Utils::Timer m_timer;
+    long                    m_time_period;
+    bool                    m_active;
+
+    dstime                  m_current_time;
+    long                    m_current_time_increment;
+
+    long                    m_sub_sec_count;
+    long                    m_sub_sec_count_lim;
+
+    int                     m_world_nbsteps;
+
+    bool                    m_freeze;
+
     void get_tm( void );
+
+    void on_timer( DrawSpace::Utils::Timer* p_timer );
+
+    void set_time_factor( TimeAspect::TimeScale p_scale );
 
 public:
 
 
     TimeAspect( void );
+    ~TimeAspect( void );
 
     
     TimeAngle TimeAngleFactory( dsreal p_initvalue );
@@ -175,7 +201,7 @@ public:
     dsreal ConvertUnitPerSecFramePerSec( dsreal p_speed );
     
     void Update( void );
-    long GetFPS( void );
+
 
     void OnSceneRenderBegin( void );
     void OnSceneRenderEnd( void );
