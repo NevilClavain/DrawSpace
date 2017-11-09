@@ -133,6 +133,12 @@ void PhysicsAspect::StepSimulation( void )
         _DSEXCEPTION( "Physic world need a time reference!!!" )
     }
 
+    ComponentList<int> ints;
+    m_time_aspect->GetComponentsByType<int>( ints );
+
+    ComponentList<TimeAspect::TimeScale> time_scales;
+    m_time_aspect->GetComponentsByType<TimeAspect::TimeScale>( time_scales );
+
     ComponentList<TimeManager> tms;
     m_time_aspect->GetComponentsByType<TimeManager>( tms );
 
@@ -182,60 +188,71 @@ void PhysicsAspect::StepSimulation( void )
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    /*
-    // doing timestep < fixedtimestep * 5 (see http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World )
-        
-    dsreal timestep = 1.0 / p_fps;
-    dsreal fixedtimestep = timestep / 5.0;
-    fixedtimestep *= 1.1;
-
-    m_world.stepSimulation( timestep, 5 );
-    */
-
-    int fps = tm->GetFPS();
-    btScalar ts = 1.0 / fps;
-    m_world->stepSimulation( ts, 15 );
-
-    // check for collisions
-
-    // provisoire
-    /*
-    for( std::map<btRigidBody*, Body*>::iterator it = m_bodies.begin(); it != m_bodies.end(); ++it )
+    if( time_scales[0]->getPurpose() != TimeAspect::FREEZE )
     {
-        (*it).second->SetContactState( false );
+        ComponentList<dsreal> reals;
+        m_time_aspect->GetComponentsByType<dsreal>( reals );
+
+
+
+        // doing timestep < fixedtimestep * 5 (see http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World )
+       
+        int world_nb_steps = ints[2]->getPurpose();
+
+        dsreal fps = (dsreal)tm->GetFPS() / reals[0]->getPurpose();;
+
+
+        btScalar ts = 1.0 / fps;
+        m_world->stepSimulation( ts, world_nb_steps );
+
+        // check for collisions
+
+        for( auto& it = m_bodies.begin(); it != m_bodies.end(); ++it )
+        {
+            BodyAspect* body_aspect = it->second->GetAspect<BodyAspect>();
+
+            ComponentList<bool> bools;
+            body_aspect->GetComponentsByType<bool>( bools );
+
+            // reset du composant "contactState" (bools[1])
+            bools[1]->getPurpose() = false;
+        }
+
+        int numManifolds = m_world->getDispatcher()->getNumManifolds();
+
+	    for (int i = 0; i < numManifolds; i++ )
+	    {
+		    btPersistentManifold* contactManifold =  m_world->getDispatcher()->getManifoldByIndexInternal(i);
+
+            btRigidBody* obA = (btRigidBody*)( contactManifold->getBody0() );
+            btRigidBody* obB = (btRigidBody*)( contactManifold->getBody1() );
+
+            int numContacts = contactManifold->getNumContacts();
+            
+            if( m_bodies.count( obA ) > 0 )
+            {
+                if( numContacts > 0 )
+                {
+                    BodyAspect* body_aspect = m_bodies[obA]->GetAspect<BodyAspect>();
+
+                    ComponentList<bool> bools;
+                    body_aspect->GetComponentsByType<bool>( bools );
+
+                    bools[1]->getPurpose() = true;
+                }
+            }
+            else if( m_bodies.count( obB ) > 0 )
+            {
+                if( numContacts > 0 )
+                {
+                    BodyAspect* body_aspect = m_bodies[obB]->GetAspect<BodyAspect>();
+
+                    ComponentList<bool> bools;
+                    body_aspect->GetComponentsByType<bool>( bools );
+
+                    bools[1]->getPurpose() = true;
+                }
+            }            
+	    }
     }
-    */
-
-    int numManifolds = m_world->getDispatcher()->getNumManifolds();
-
-	for (int i = 0; i < numManifolds; i++ )
-	{
-		btPersistentManifold* contactManifold =  m_world->getDispatcher()->getManifoldByIndexInternal(i);
-
-        //btRigidBody* obA = static_cast<btRigidBody*>( contactManifold->getBody0() );
-
-        btRigidBody* obA = (btRigidBody*)( contactManifold->getBody0() );
-        btRigidBody* obB = (btRigidBody*)( contactManifold->getBody1() );
-
-        int numContacts = contactManifold->getNumContacts();
-
-        // provisoire
-        /*
-        if( m_bodies.count( obA ) > 0 )
-        {
-            if( numContacts > 0 )
-            {
-                m_bodies[obA]->SetContactState( true );
-            }
-        }
-        else if( m_bodies.count( obB ) > 0 )
-        {
-            if( numContacts > 0 )
-            {
-                m_bodies[obB]->SetContactState( true );
-            }
-        }
-        */
-	}
 }

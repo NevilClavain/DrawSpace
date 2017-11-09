@@ -139,7 +139,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     time_aspect->AddComponent<int>( "time", 1576800000 );
     time_aspect->AddComponent<int>( "output_fps" );
+    time_aspect->AddComponent<int>( "output_world_nbsteps" );
 
+    time_aspect->AddComponent<dsreal>( "output_time_factor" );
 
     m_planet_rot = time_aspect->TimeAngleFactory( 0.0 );
 
@@ -592,6 +594,36 @@ void MainLoopService::OnKeyPulse( long p_key )
                 }
             }
             break;
+
+
+        case VK_F5:
+            {
+                TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::NORMAL_TIME;        
+            }
+            break;
+
+        case VK_F6:
+            {
+                TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::MUL2_TIME;        
+            }
+            break;
+
+
+        case VK_F7:
+            {
+                TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::DIV10_TIME;        
+            }
+            break;
+
+        case VK_F8:
+            {
+                TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::FREEZE;        
+            }
+            break;
     }
 }
 
@@ -734,7 +766,8 @@ void MainLoopService::create_cube( const Matrix& p_transform )
 
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::BODY );
 
-    //body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "contact_state", false );
 
     TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
@@ -849,11 +882,11 @@ void MainLoopService::create_ground( void )
 
     body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
 
-
-    //body_aspect->AddComponent<bool>( "collider", true );
+    
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
 
-    //body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "contact_state", false );
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
@@ -899,11 +932,10 @@ void MainLoopService::create_sphere( const Matrix& p_transform )
 
     body_aspect->AddComponent<Matrix>( "attitude", p_transform );
 
-    //body_aspect->AddComponent<bool>( "collider", true );
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::ATTRACTOR_COLLIDER );
 
-
-    //body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "contact_state", false );
 
     TransformAspect* transform_aspect = m_sphereEntity.GetAspect<TransformAspect>();
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );

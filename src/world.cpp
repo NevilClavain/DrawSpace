@@ -112,9 +112,7 @@ bool World::StepSimulation( dsreal p_fps, int p_nbsteps )
 	    for (int i = 0; i < numManifolds; i++ )
 	    {
 		    btPersistentManifold* contactManifold =  m_world->getDispatcher()->getManifoldByIndexInternal(i);
-
-            //btRigidBody* obA = static_cast<btRigidBody*>( contactManifold->getBody0() );
-
+            
             btRigidBody* obA = (btRigidBody*)( contactManifold->getBody0() );
             btRigidBody* obB = (btRigidBody*)( contactManifold->getBody1() );
 
@@ -136,7 +134,6 @@ bool World::StepSimulation( dsreal p_fps, int p_nbsteps )
             }
 	    }
         
-
         return true;
     }
     return false;

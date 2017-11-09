@@ -55,6 +55,7 @@ protected:
     btTriangleMesh*                                         m_mesh;
     btRigidBody*                                            m_rigidBody;
 
+
     AspectImplementations::BodyTransformAspectImpl          m_tr_aspectimpl;
 
     bool                                                    m_body_active;

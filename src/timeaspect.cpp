@@ -131,6 +131,28 @@ void TimeAspect::Update( void )
     // update current time
 
     ints[0]->getPurpose() = m_current_time;
+
+    // update physic world nb steps
+
+    ints[2]->getPurpose() = m_world_nbsteps;
+
+    // update time factor
+
+    ComponentList<dsreal> reals;
+    GetComponentsByType<dsreal>( reals );
+
+    reals[0]->getPurpose() = m_time_factor;
+
+    // gestion scale (ou mode) temp
+
+    ComponentList<TimeScale> time_scales;
+    GetComponentsByType<TimeScale>( time_scales );
+
+    if( m_mode != time_scales[0]->getPurpose() )
+    {
+        // update !
+        set_time_factor( time_scales[0]->getPurpose() );
+    }
 }
 
 void TimeAspect::OnSceneRenderBegin( void )
@@ -188,6 +210,10 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
             break;
 
         case MUL2_TIME:
@@ -199,6 +225,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep * 2;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case MUL4_TIME:
@@ -210,6 +241,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep * 4;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case MUL10_TIME:
@@ -221,6 +257,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep * 10;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case MUL100_TIME:
@@ -232,6 +273,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep * 10;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case MUL500_TIME:
@@ -243,6 +289,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep * 10;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
 
@@ -255,6 +306,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep * 10;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case SEC_1DAY_TIME:
@@ -266,6 +322,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep * 10;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case SEC_30DAYS_TIME:
@@ -279,6 +340,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_world_nbsteps = 200;
 
             m_world_nbsteps = m_base_timestep * 10;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case SEC_1YEAR_TIME:
@@ -290,6 +356,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_sub_sec_count_lim = 0;
 
             m_world_nbsteps = m_base_timestep * 10;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case DIV2_TIME:
@@ -302,6 +373,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_current_time_increment = 0;
 
             m_world_nbsteps = m_base_timestep;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case DIV4_TIME:
@@ -314,6 +390,11 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_current_time_increment = 0;
 
             m_world_nbsteps = m_base_timestep;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
             break;
 
         case DIV10_TIME:
@@ -326,6 +407,17 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
             m_current_time_increment = 0;
 
             m_world_nbsteps = m_base_timestep;
+
+            m_freeze = false;
+            m_timer.Suspend( false );
+
+
+            break;
+
+        case FREEZE:
+
+            m_freeze = true;
+            m_timer.Suspend( true );
             break;
     }
 
