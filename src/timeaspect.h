@@ -65,25 +65,33 @@ public:
         dsreal                  m_value;
         Utils::TimeManager*     m_tm;
         dsreal*                 m_timefactor;
+        bool*                   m_freeze;
 
     public:
 
         TimeAngle( void ) :
         m_value( 0.0 ),
         m_tm( NULL ),
-        m_timefactor( NULL )
+        m_timefactor( NULL ),
+        m_freeze( NULL )
         {
         }
 
-        TimeAngle( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor ) :
+        TimeAngle( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze ) :
         m_value( p_initval ),
         m_tm( p_tm ),
-        m_timefactor( p_timefactor )
+        m_timefactor( p_timefactor ),
+        m_freeze( p_freeze )
         {        
         }
 
         void Increase( dsreal p_delta )
         {
+            if( true == *m_freeze )
+            {
+                return;
+            }
+
             if( m_tm->IsReady() )
             {
                 m_tm->AngleSpeedInc( &m_value, p_delta * (*m_timefactor) );
@@ -91,6 +99,11 @@ public:
         }
         void Decrease( dsreal p_delta )
         {
+            if( true == *m_freeze )
+            {
+                return;
+            }
+
             if( m_tm->IsReady() )
             {
                 m_tm->AngleSpeedDec( &m_value, p_delta * (*m_timefactor) );
@@ -114,25 +127,33 @@ public:
         dsreal                  m_value;
         Utils::TimeManager*     m_tm;
         dsreal*                 m_timefactor;
+        bool*                   m_freeze;
 
     public:
 
         TimeScalar( void ) :
         m_value( 0.0 ),
         m_tm( NULL ),
-        m_timefactor( NULL )
+        m_timefactor( NULL ),
+        m_freeze( NULL )
         {
         }
 
-        TimeScalar( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor ) :
+        TimeScalar( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze ) :
         m_value( p_initval ),
         m_tm( p_tm ),
-        m_timefactor( p_timefactor )
+        m_timefactor( p_timefactor ),
+        m_freeze( p_freeze )
         {        
         }
 
         void Increase( dsreal p_delta )
         {
+            if( true == *m_freeze )
+            {
+                return;
+            }
+
             if( m_tm->IsReady() )
             {
                 m_tm->TranslationSpeedInc( &m_value, p_delta * (*m_timefactor) );
@@ -140,6 +161,11 @@ public:
         }
         void Decrease( dsreal p_delta )
         {
+            if( true == *m_freeze )
+            {
+                return;
+            }
+
             if( m_tm->IsReady() )
             {
                 m_tm->TranslationSpeedDec( &m_value, p_delta * (*m_timefactor) );

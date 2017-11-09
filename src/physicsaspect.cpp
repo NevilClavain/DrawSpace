@@ -241,7 +241,7 @@ void PhysicsAspect::StepSimulation( void )
                     bools[1]->getPurpose() = true;
                 }
             }
-            else if( m_bodies.count( obB ) > 0 )
+            if( m_bodies.count( obB ) > 0 )
             {
                 if( numContacts > 0 )
                 {

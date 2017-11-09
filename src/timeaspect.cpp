@@ -53,14 +53,14 @@ TimeAspect::~TimeAspect( void )
 TimeAspect::TimeAngle TimeAspect::TimeAngleFactory( dsreal p_initvalue )
 {
     get_tm();
-    return TimeAngle( p_initvalue, m_tm, &m_time_factor );
+    return TimeAngle( p_initvalue, m_tm, &m_time_factor, &m_freeze );
 }
 
 
 TimeAspect::TimeScalar TimeAspect::TimeScalarFactory( dsreal p_initvalue )
 {
     get_tm();
-    return TimeScalar( p_initvalue, m_tm, &m_time_factor );
+    return TimeScalar( p_initvalue, m_tm, &m_time_factor, &m_freeze );
 }
 
 dsreal TimeAspect::ConvertUnitPerSecFramePerSec( dsreal p_speed )

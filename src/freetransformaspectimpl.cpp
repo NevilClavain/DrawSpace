@@ -57,6 +57,10 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
 
     Matrix pos = mats[0]->getPurpose();
 
+    ComponentList<TimeAspect::TimeScale> time_scales;
+    m_time_aspect->GetComponentsByType<TimeAspect::TimeScale>( time_scales );
+
+
     //vitesses demandées...
 
     ComponentList<dsreal> reals;
@@ -64,6 +68,12 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
     dsreal rspeed_x = reals[0]->getPurpose();
     dsreal rspeed_y = reals[1]->getPurpose();
     dsreal rspeed_z = reals[2]->getPurpose();
+
+    if( TimeAspect::FREEZE == time_scales[0]->getPurpose() )
+    {
+        rspeed_x = rspeed_y = rspeed_z = 0.0;    
+    }
+
 
     // axe demandé
     Vector rot_axis_x = vectors[1]->getPurpose();
