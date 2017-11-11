@@ -50,6 +50,13 @@ protected:
     DrawSpace::Core::Entity                                                         m_rootEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_timeEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_timeEntityNode;
+
+    DrawSpace::Core::Entity                                                         m_camerasTimeEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_camerasTimeEntityNode;
+
+
     DrawSpace::Core::Entity                                                         m_world1Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_World1EntityNode;
 
@@ -129,7 +136,7 @@ protected:
     void create_skybox( void );
     void create_ground( void );
 
-    void create_sphere( const DrawSpace::Utils::Matrix& p_transform, DrawSpace::Core::Entity& p_entity, DrawSpace::AspectImplementations::MesheRenderingAspectImpl* p_render );
+    void create_sphere( const DrawSpace::Utils::Matrix& p_transform, DrawSpace::Core::Entity& p_entity, DrawSpace::AspectImplementations::MesheRenderingAspectImpl* p_render, DrawSpace::Aspect::BodyAspect::Mode p_mode );
 
 public:
     MainLoopService( void );

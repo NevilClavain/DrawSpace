@@ -130,7 +130,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "..." );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "current camera", 10, 30, 255, 0, 255, "..." );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "datetime", 10, 50, 0, 255, 0, "..." );
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "cubecontact_state", 10, 70, 0, 255, 0, "..." );
 
+    /*
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
@@ -148,9 +150,49 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
     m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
 
+    */
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
     
+    //////////////////////////////////////////////////////////////////////////
+
+    TimeAspect* time_aspect = m_timeEntity.AddAspect<TimeAspect>();
+
+    time_aspect->AddComponent<TimeManager>( "time_manager" );
+    time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
+    time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
+
+    time_aspect->AddComponent<int>( "time", 1576800000 );
+    time_aspect->AddComponent<int>( "output_fps" );
+    time_aspect->AddComponent<int>( "output_world_nbsteps" );
+
+    time_aspect->AddComponent<dsreal>( "output_time_factor" );
+
+    m_planet_rot = time_aspect->TimeAngleFactory( 0.0 );
+
+    //m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
+    //m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
+
+    m_timeEntityNode = m_rootEntityNode.AddChild( &m_timeEntity );
+
+    //////////////////////////////////////////////////////////////////////////
+
+    time_aspect = m_camerasTimeEntity.AddAspect<TimeAspect>();
+
+    time_aspect->AddComponent<TimeManager>( "time_manager" );
+    time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
+    time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
+
+    time_aspect->AddComponent<int>( "time", 0 );
+    time_aspect->AddComponent<int>( "output_fps" );
+    time_aspect->AddComponent<int>( "output_world_nbsteps" );
+
+    time_aspect->AddComponent<dsreal>( "output_time_factor" );
+
+    m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
+    m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
+
+    m_camerasTimeEntityNode = m_rootEntityNode.AddChild( &m_camerasTimeEntity );
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -160,7 +202,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     physic_aspect->AddComponent<bool>( "gravity_state", false );
     physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
 
-    m_World1EntityNode = m_rootEntityNode.AddChild( &m_world1Entity );
+    //m_World1EntityNode = m_rootEntityNode.AddChild( &m_world1Entity );
+
+    m_World1EntityNode = m_timeEntityNode.AddChild( &m_world1Entity );
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -170,7 +214,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     physic_aspect->AddComponent<bool>( "gravity_state", false );
     physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
 
-    m_World2EntityNode = m_rootEntityNode.AddChild( &m_world2Entity );
+    //m_World2EntityNode = m_rootEntityNode.AddChild( &m_world2Entity );
+
+    m_World2EntityNode = m_timeEntityNode.AddChild( &m_world2Entity );
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -184,7 +230,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     Matrix sphere_transf;
     sphere_transf.Translation( 0.0, 10.0, 10.0 );
     //sphere_transf.Identity();
-    create_sphere( sphere_transf, m_sphereEntity, &m_sphereRender );
+    create_sphere( sphere_transf, m_sphereEntity, &m_sphereRender, BodyAspect::ATTRACTOR_COLLIDER );
 
     create_ground();
 
@@ -193,7 +239,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     Matrix central_sphere_transf;
     central_sphere_transf.Translation( 0.0, 10.0, 50.0 );
 
-    create_sphere( central_sphere_transf, m_centralSphereEntity, &m_centralSphereRender );
+    create_sphere( central_sphere_transf, m_centralSphereEntity, &m_centralSphereRender, BodyAspect::COLLIDER );
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -290,19 +336,22 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_groundRender.RegisterToRendering( m_rendergraph );
 
 
-
-
     m_centralSphereEntityNode = m_World1EntityNode.AddChild( &m_centralSphereEntity );    
     m_centralSphereRender.RegisterToRendering( m_rendergraph );
 
 
-    
 
     // ajouter la camera a la scene
-    m_cameraEntityNode = m_World1EntityNode.AddChild( &m_cameraEntity );
+    //m_cameraEntityNode = m_World1EntityNode.AddChild( &m_cameraEntity );
 
-    m_camera2EntityNode = m_World1EntityNode.AddChild( &m_camera2Entity );
+    //m_camera2EntityNode = m_World1EntityNode.AddChild( &m_camera2Entity );
 
+    //m_cameraEntityNode = m_timeEntityNode.AddChild( &m_cameraEntity );
+
+    //m_camera2EntityNode = m_timeEntityNode.AddChild( &m_camera2Entity );
+
+    m_cameraEntityNode = m_camerasTimeEntityNode.AddChild( &m_cameraEntity );
+    m_camera2EntityNode = m_camerasTimeEntityNode.AddChild( &m_camera2Entity );
 
     if( 0 == m_current_camera )
     {
@@ -330,7 +379,7 @@ void MainLoopService::Run( void )
     m_renderer->FlipScreen();
 
 
-    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+    TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
     char comment[256];
     //sprintf( comment, "%d fps - %s", time_aspect->GetFPS(), m_pluginDescr.c_str() );
 
@@ -342,6 +391,11 @@ void MainLoopService::Run( void )
 
 
     rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "datetime" )->getPurpose().m_text = time_aspect->GetComponent<dsstring>( "output_formated_datetime" )->getPurpose();
+
+    BodyAspect* cube_body_aspect = m_cubeEntity.GetAspect<BodyAspect>();
+    bool cube_contact = cube_body_aspect->GetComponent<bool>( "contact_state" )->getPurpose();
+
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "cubecontact_state" )->getPurpose().m_text = cube_contact ? "contact !" : "...";
 
 
     m_planet_rot += 15.0;
@@ -614,29 +668,29 @@ void MainLoopService::OnKeyPulse( long p_key )
 
         case VK_F5:
             {
-                TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+                TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>(); //m_rootEntity.GetAspect<TimeAspect>();
                 time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::NORMAL_TIME;        
             }
             break;
 
         case VK_F6:
             {
-                TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
-                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::SEC_30DAYS_TIME;        
+                TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::MUL2_TIME;        
             }
             break;
 
 
         case VK_F7:
             {
-                TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+                TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
                 time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::DIV10_TIME;        
             }
             break;
 
         case VK_F8:
             {
-                TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+                TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
                 time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::FREEZE;        
             }
             break;
@@ -908,7 +962,7 @@ void MainLoopService::create_ground( void )
 
 }
 
-void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core::Entity& p_entity, DrawSpace::AspectImplementations::MesheRenderingAspectImpl* p_render )
+void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core::Entity& p_entity, DrawSpace::AspectImplementations::MesheRenderingAspectImpl* p_render, BodyAspect::Mode p_mode )
 {
     RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
 
@@ -948,7 +1002,7 @@ void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core:
 
     body_aspect->AddComponent<Matrix>( "attitude", p_transform );
 
-    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
+    body_aspect->AddComponent<BodyAspect::Mode>( "mode", p_mode );
 
     body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
