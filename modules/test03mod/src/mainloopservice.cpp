@@ -179,14 +179,22 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     cube_transf.Translation( 0.0, 10.0, -10.0 );
     //cube_transf.Translation( 0.0, 0.0, -10.0 );
-    create_cube( cube_transf );
+    create_cube( cube_transf, m_cubeEntity );
 
     Matrix sphere_transf;
     sphere_transf.Translation( 0.0, 10.0, 10.0 );
     //sphere_transf.Identity();
-    create_sphere( sphere_transf );
+    create_sphere( sphere_transf, m_sphereEntity, &m_sphereRender );
 
     create_ground();
+
+
+
+    Matrix central_sphere_transf;
+    central_sphere_transf.Translation( 0.0, 10.0, 50.0 );
+
+    create_sphere( central_sphere_transf, m_centralSphereEntity, &m_centralSphereRender );
+
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -280,6 +288,14 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     // ajouter le ground a la scene
     m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
     m_groundRender.RegisterToRendering( m_rendergraph );
+
+
+
+
+    m_centralSphereEntityNode = m_World1EntityNode.AddChild( &m_centralSphereEntity );    
+    m_centralSphereRender.RegisterToRendering( m_rendergraph );
+
+
     
 
     // ajouter la camera a la scene
@@ -716,9 +732,9 @@ void MainLoopService::on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Ev
 
 }
 
-void MainLoopService::create_cube( const Matrix& p_transform )
+void MainLoopService::create_cube( const Matrix& p_transform, DrawSpace::Core::Entity& p_entity )
 {
-    RenderingAspect* rendering_aspect = m_cubeEntity.AddAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
 
     rendering_aspect->AddImplementation( &m_cubeRender );
 
@@ -748,9 +764,9 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
     cube_texturepass->GetTexture( 0 )->LoadFromFile();
 
-    m_cubeEntity.AddAspect<TransformAspect>();
+    p_entity.AddAspect<TransformAspect>();
     
-    BodyAspect* body_aspect = m_cubeEntity.AddAspect<BodyAspect>();
+    BodyAspect* body_aspect = p_entity.AddAspect<BodyAspect>();
 
     body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 0.5, 0.5, 0.5, 1.0 ) );
 
@@ -769,7 +785,7 @@ void MainLoopService::create_cube( const Matrix& p_transform )
     body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    TransformAspect* transform_aspect = m_cubeEntity.GetAspect<TransformAspect>();
+    TransformAspect* transform_aspect = p_entity.GetAspect<TransformAspect>();
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
     
 }
@@ -892,11 +908,11 @@ void MainLoopService::create_ground( void )
 
 }
 
-void MainLoopService::create_sphere( const Matrix& p_transform )
+void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core::Entity& p_entity, DrawSpace::AspectImplementations::MesheRenderingAspectImpl* p_render )
 {
-    RenderingAspect* rendering_aspect = m_sphereEntity.AddAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_sphereRender );
+    rendering_aspect->AddImplementation( p_render );
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "sphere_texturepass_slot", "texture_pass" );
 
@@ -924,20 +940,20 @@ void MainLoopService::create_sphere( const Matrix& p_transform )
     sphere_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
     sphere_texturepass->GetTexture( 0 )->LoadFromFile();
 
-    m_sphereEntity.AddAspect<TransformAspect>();
+    p_entity.AddAspect<TransformAspect>();
     
-    BodyAspect* body_aspect = m_sphereEntity.AddAspect<BodyAspect>();
+    BodyAspect* body_aspect = p_entity.AddAspect<BodyAspect>();
 
     body_aspect->AddComponent<BodyAspect::SphereCollisionShape>( "shape", 2.0 );
 
     body_aspect->AddComponent<Matrix>( "attitude", p_transform );
 
-    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::ATTRACTOR_COLLIDER );
+    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
 
     body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    TransformAspect* transform_aspect = m_sphereEntity.GetAspect<TransformAspect>();
+    TransformAspect* transform_aspect = p_entity.GetAspect<TransformAspect>();
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
    
 }

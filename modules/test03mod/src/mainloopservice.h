@@ -75,6 +75,14 @@ protected:
     DrawSpace::Core::Entity                                                         m_camera2Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_camera2EntityNode;
 
+
+
+    DrawSpace::Core::Entity                                                         m_centralSphereEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_centralSphereEntityNode;
+
+
+
+
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
     DrawSpace::Systems::TransformSystem                                             m_transformSystem;
     DrawSpace::Systems::PhysicsSystem                                               m_physicsSystem;
@@ -84,6 +92,7 @@ protected:
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_sphereRender;
+    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_centralSphereRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
     DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl                     m_skyboxRender;
@@ -116,11 +125,11 @@ protected:
     void on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Event p_evt, DrawSpace::Core::Entity* p_entity );
 
 
-    void create_cube( const DrawSpace::Utils::Matrix& p_transform );
+    void create_cube( const DrawSpace::Utils::Matrix& p_transform, DrawSpace::Core::Entity& p_entity );
     void create_skybox( void );
     void create_ground( void );
 
-    void create_sphere( const DrawSpace::Utils::Matrix& p_transform );
+    void create_sphere( const DrawSpace::Utils::Matrix& p_transform, DrawSpace::Core::Entity& p_entity, DrawSpace::AspectImplementations::MesheRenderingAspectImpl* p_render );
 
 public:
     MainLoopService( void );
