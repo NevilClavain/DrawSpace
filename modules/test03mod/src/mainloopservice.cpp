@@ -622,6 +622,7 @@ void MainLoopService::OnKeyPulse( long p_key )
         case VK_F6:
             {
                 TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::SEC_30DAYS_TIME;        
             }
             break;
 
