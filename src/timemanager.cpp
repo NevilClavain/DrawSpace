@@ -156,11 +156,13 @@ void TimeManager::AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed )
     // la vitesse en degres / frame -> on fait donc (deg/sec)/(frame/sec) 
     dsreal angleSpeedDegPerFrame = p_angleSpeed / m_fps;
 
-    *p_angle += angleSpeedDegPerFrame;
-    if( *p_angle >= 360.0 )
-    {
-        *p_angle -= 360.0;
-    }
+ 
+    dsreal angle = *p_angle;
+
+    angle += angleSpeedDegPerFrame;
+    angle = std::fmod( angle, 360.0 );
+
+    *p_angle = angle;
 }
 
 void TimeManager::AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
@@ -171,11 +173,20 @@ void TimeManager::AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
     // la vitesse en degres / frame -> on fait donc (deg/sec)/(frame/sec) 
     dsreal angleSpeedDegPerFrame = p_angleSpeed / m_fps;
 
-    *p_angle -= angleSpeedDegPerFrame;
-    if( *p_angle <= 0.0f )
+   
+    
+    dsreal angle = *p_angle;
+
+    angle -= angleSpeedDegPerFrame;
+    angle = std::fmod( angle, 360.0 );
+       
+   if( *p_angle <= 0.0f )
     {
-        *p_angle = 360.0 + *p_angle;
+        angle = 360.0 + angle;
     }
+
+    *p_angle = angle;
+    
 }
 
 void TimeManager::TranslationSpeedInc( dsreal *p_translation, dsreal p_speed )

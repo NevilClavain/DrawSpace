@@ -132,25 +132,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "datetime", 10, 50, 0, 255, 0, "..." );
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "cubecontact_state", 10, 70, 0, 255, 0, "..." );
 
-    /*
-    TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
-
-    time_aspect->AddComponent<TimeManager>( "time_manager" );
-    time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
-    time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
-
-    time_aspect->AddComponent<int>( "time", 1576800000 );
-    time_aspect->AddComponent<int>( "output_fps" );
-    time_aspect->AddComponent<int>( "output_world_nbsteps" );
-
-    time_aspect->AddComponent<dsreal>( "output_time_factor" );
-
-    m_planet_rot = time_aspect->TimeAngleFactory( 0.0 );
-
-    m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
-    m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
-
-    */
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
     
@@ -170,8 +151,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_planet_rot = time_aspect->TimeAngleFactory( 0.0 );
 
-    //m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
-    //m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
 
     m_timeEntityNode = m_rootEntityNode.AddChild( &m_timeEntity );
 
@@ -341,14 +320,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
 
-    // ajouter la camera a la scene
-    //m_cameraEntityNode = m_World1EntityNode.AddChild( &m_cameraEntity );
-
-    //m_camera2EntityNode = m_World1EntityNode.AddChild( &m_camera2Entity );
-
-    //m_cameraEntityNode = m_timeEntityNode.AddChild( &m_cameraEntity );
-
-    //m_camera2EntityNode = m_timeEntityNode.AddChild( &m_camera2Entity );
+    // ajouter les cameras a la scene
 
     m_cameraEntityNode = m_camerasTimeEntityNode.AddChild( &m_cameraEntity );
     m_camera2EntityNode = m_camerasTimeEntityNode.AddChild( &m_camera2Entity );
@@ -676,7 +648,7 @@ void MainLoopService::OnKeyPulse( long p_key )
         case VK_F6:
             {
                 TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
-                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::MUL2_TIME;        
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::MUL100_TIME;        
             }
             break;
 
