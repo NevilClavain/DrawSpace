@@ -41,3 +41,14 @@ void BodyTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformas
 {
     m_aspect->GetLastTransform( p_out_base_transform );
 }
+
+bool BodyTransformAspectImpl::IgnoreParentTransformation( void ) const
+{
+    // ignorer la transfo parent seulement pour si mode BODY; pour les autres non
+    if( BodyAspect::BODY == m_aspect->m_mode )
+    {
+        return true;
+    }
+
+    return false;
+}

@@ -199,6 +199,7 @@ public:
 
     void GetLastTransform( Utils::Matrix& p_mat );
 
+    friend class AspectImplementations::BodyTransformAspectImpl;
 };
 }
 }

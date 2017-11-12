@@ -45,7 +45,8 @@ public:
     BodyTransformAspectImpl( Aspect::BodyAspect* p_aspect );
 
     virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
-    virtual bool IgnoreParentTransformation( void ) const { return true; };
+    //virtual bool IgnoreParentTransformation( void ) const { return true; };
+    virtual bool IgnoreParentTransformation( void ) const;
 };
 }
 }
