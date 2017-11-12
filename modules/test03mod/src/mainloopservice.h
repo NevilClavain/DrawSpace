@@ -87,6 +87,8 @@ protected:
     DrawSpace::Core::Entity                                                         m_planet0Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_planet0EntityNode;
 
+    DrawSpace::Core::Entity                                                         m_planet0PosEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_planet0PosEntityNode;
 
 
 
@@ -110,7 +112,7 @@ protected:
     DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_pitch;
 
 
-
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_planet0pos_transformer;
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;
     DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
     DrawSpace::AspectImplementations::FreeTransformAspectImpl                       m_free_transformer;

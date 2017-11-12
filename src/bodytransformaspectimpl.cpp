@@ -44,11 +44,11 @@ void BodyTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformas
 
 bool BodyTransformAspectImpl::IgnoreParentTransformation( void ) const
 {
-    // ignorer la transfo parent seulement pour si mode BODY; pour les autres non
-    if( BodyAspect::BODY == m_aspect->m_mode )
+    if( BodyAspect::ATTRACTOR_COLLIDER == m_aspect->m_mode )
     {
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
+   
 }

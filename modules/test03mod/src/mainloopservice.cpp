@@ -215,10 +215,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
 
-    Matrix central_sphere_transf;
-    central_sphere_transf.Translation( 0.0, 10.0, 50.0 );
 
-    create_sphere( central_sphere_transf, m_planet0Entity, &m_centralSphereRender, BodyAspect::COLLIDER );
+
+    Matrix id;
+    id.Identity();
+    create_sphere( id, m_planet0Entity, &m_centralSphereRender, BodyAspect::ATTRACTOR_COLLIDER );
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -299,8 +300,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     // ajouter la sphere a la scene
     
     //m_sphereEntityNode = m_World1EntityNode.AddChild( &m_sphereEntity );    
-    m_sphereEntityNode = m_World2EntityNode.AddChild( &m_sphereEntity );
-    m_sphereRender.RegisterToRendering( m_rendergraph );
+    //m_sphereEntityNode = m_World2EntityNode.AddChild( &m_sphereEntity );
+    //m_sphereRender.RegisterToRendering( m_rendergraph );
 
 
 
@@ -315,10 +316,26 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_groundRender.RegisterToRendering( m_rendergraph );
 
 
-    m_planet0EntityNode = m_World1EntityNode.AddChild( &m_planet0Entity );    
+    ////////////////////////////////// planetes & orbites :)
+
+
+    //m_planet0EntityNode = m_World1EntityNode.AddChild( &m_planet0Entity );
+    //m_centralSphereRender.RegisterToRendering( m_rendergraph );
+
+
+    Matrix central_sphere_transf;
+    central_sphere_transf.Translation( 0.0, 10.0, 50.0 );
+
+    TransformAspect* planet0PosTransform = m_planet0PosEntity.AddAspect<TransformAspect>();
+    planet0PosTransform->SetImplementation( &m_planet0pos_transformer );
+    planet0PosTransform->AddComponent<Matrix>( "pos", central_sphere_transf );
+
+    m_planet0PosEntityNode = m_World2EntityNode.AddChild( &m_planet0PosEntity );
+    m_planet0EntityNode = m_planet0PosEntityNode.AddChild( &m_planet0Entity );
     m_centralSphereRender.RegisterToRendering( m_rendergraph );
 
 
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     // ajouter les cameras a la scene
 
@@ -371,6 +388,7 @@ void MainLoopService::Run( void )
 
 
     m_planet_rot += 15.0;
+    /*
     BodyAspect* body_aspect = m_sphereEntity.GetAspect<BodyAspect>();
     Matrix planet_rot;
     planet_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( m_planet_rot.GetValue() ) );
@@ -379,7 +397,7 @@ void MainLoopService::Run( void )
     Matrix planet_mat = planet_rot * planet_transf;
 
     body_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = planet_mat;
-
+    */
     
     m_tm.Update();
 
@@ -613,7 +631,9 @@ void MainLoopService::OnKeyPulse( long p_key )
                     m_cubeEntityNode.Erase();
                     m_physicsSystem.Run( &m_entitygraph );
 
-                    m_cubeEntityNode = m_sphereEntityNode.AddChild( &m_cubeEntity );
+                    //m_cubeEntityNode = m_sphereEntityNode.AddChild( &m_cubeEntity );
+
+                    m_cubeEntityNode = m_planet0EntityNode.AddChild( &m_cubeEntity );
                     m_physicsSystem.Run( &m_entitygraph );
 
                     m_cube_is_relative = true;
