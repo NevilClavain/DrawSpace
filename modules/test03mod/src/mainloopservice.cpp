@@ -218,7 +218,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     Matrix central_sphere_transf;
     central_sphere_transf.Translation( 0.0, 10.0, 50.0 );
 
-    create_sphere( central_sphere_transf, m_centralSphereEntity, &m_centralSphereRender, BodyAspect::COLLIDER );
+    create_sphere( central_sphere_transf, m_planet0Entity, &m_centralSphereRender, BodyAspect::COLLIDER );
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -315,7 +315,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_groundRender.RegisterToRendering( m_rendergraph );
 
 
-    m_centralSphereEntityNode = m_World1EntityNode.AddChild( &m_centralSphereEntity );    
+    m_planet0EntityNode = m_World1EntityNode.AddChild( &m_planet0Entity );    
     m_centralSphereRender.RegisterToRendering( m_rendergraph );
 
 

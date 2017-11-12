@@ -84,8 +84,8 @@ protected:
 
 
 
-    DrawSpace::Core::Entity                                                         m_centralSphereEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_centralSphereEntityNode;
+    DrawSpace::Core::Entity                                                         m_planet0Entity;
+    DrawSpace::EntityGraph::EntityNode                                              m_planet0EntityNode;
 
 
 
