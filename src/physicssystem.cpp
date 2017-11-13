@@ -71,6 +71,8 @@ void PhysicsSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
             std::vector<Core::Entity*> ancestors;
             m_current_graph->GetEntityAncestorsList( p_entity, ancestors );
 
+            body_aspect->SetAncestorsList( ancestors );
+
             BodyAspect* attached_to = NULL;
 
             for( auto& it = ancestors.begin(); it != ancestors.end(); ++it )

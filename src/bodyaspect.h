@@ -33,6 +33,10 @@
 
 namespace DrawSpace
 {
+namespace Core
+{
+class Entity;
+}
 namespace Aspect
 {
 class BodyAspect : public Core::Aspect 
@@ -65,6 +69,8 @@ protected:
     BodyAspect*                                             m_attachment_owner; // si pas NULL, le body auquel on est attaché
 
     Mode                                                    m_mode;
+
+    std::vector<Core::Entity*>                              m_ancestors;
 
     ///////////////////////////////////////////////////////////////////////////////////
 
@@ -181,6 +187,8 @@ protected:
     void convert_matrix_to_bt( const Utils::Matrix& p_mat, btScalar* bt_matrix );
     void convert_matrix_from_bt( btScalar* bt_matrix, Utils::Matrix& p_mat );
 
+    void compute_global_transf( Utils::Matrix& p_result );
+
 public:
 
     BodyAspect( void );
@@ -198,6 +206,8 @@ public:
     void ManageAttachment( BodyAspect* p_owner );
 
     void GetLastTransform( Utils::Matrix& p_mat );
+
+    void SetAncestorsList( std::vector<Core::Entity*>& p_ancestors );
 
     friend class AspectImplementations::BodyTransformAspectImpl;
 };

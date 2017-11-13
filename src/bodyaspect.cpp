@@ -23,6 +23,9 @@
 #include "bodyaspect.h"
 #include "memalloc.h"
 
+#include "entity.h"
+#include "transformaspect.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
@@ -601,4 +604,43 @@ void BodyAspect::GetLastTransform( Utils::Matrix& p_mat )
         p_mat = res;    
     }
     
+}
+
+void BodyAspect::SetAncestorsList( std::vector<Core::Entity*>& p_ancestors )
+{
+    m_ancestors = p_ancestors;
+}
+
+void BodyAspect::compute_global_transf( Utils::Matrix& p_result )
+{
+    p_result.Identity();
+
+    Matrix loc;
+    GetLastTransform( loc );
+        
+    Entity* parent = NULL;
+
+    for( auto& it = m_ancestors.rbegin(); it != m_ancestors.rend(); ++it )
+    {
+        TransformAspect* transform_aspect = (*it)->GetAspect<TransformAspect>();
+
+        if( transform_aspect )
+        {
+            transform_aspect->ComputeTransforms( parent, (*it) );
+            parent = (*it);
+        }
+    }
+
+    if( m_ancestors.size() )
+    {
+        TransformAspect* transform_aspect = m_ancestors[0]->GetAspect<TransformAspect>();
+
+        if( transform_aspect )
+        {
+            Matrix finalmat;
+            transform_aspect->GetWorldTransform( finalmat );
+
+            p_result = loc * finalmat;
+        }
+    }
 }
