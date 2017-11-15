@@ -20,33 +20,20 @@
 *
 */
 
-#include "bodytransformaspectimpl.h"
-#include "component.h"
-#include "transformaspect.h"
-#include "bodyaspect.h"
+#ifndef _ORBITTRANSFORMASPECTIMPL_H_
+#define _ORBITTRANSFORMASPECTIMPL_H_
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Aspect;
-using namespace DrawSpace::AspectImplementations;
-using namespace DrawSpace::Utils;
+#include "transformaspectimpl.h"
 
-BodyTransformAspectImpl::BodyTransformAspectImpl( BodyAspect* p_aspect ) :
-m_aspect( p_aspect )
+namespace DrawSpace
 {
-}
-
-
-void BodyTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
+namespace AspectImplementations
 {
-    m_aspect->GetLastTransform( p_out_base_transform );
-}
-
-bool BodyTransformAspectImpl::IgnoreParentTransformation( void ) const
+class OrbitTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
-    if( BodyAspect::ATTRACTOR_COLLIDER == m_aspect->m_mode )
-    {
-        return false;
-    }
-    return true;   
+public:
+    virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
+};
 }
+}
+#endif

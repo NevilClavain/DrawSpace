@@ -52,6 +52,7 @@
     <ClCompile Include="src\movement.cpp" />
     <ClCompile Include="src\mutex.cpp" />
     <ClCompile Include="src\orbiter.cpp" />
+    <ClCompile Include="src\orbittransformaspectimpl.cpp" />
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\pass.cpp" />
     <ClCompile Include="src\passesrenderingaspectimpl.cpp" />
@@ -62,6 +63,7 @@
     <ClCompile Include="src\renderingaspect.cpp" />
     <ClInclude Include="src\bodyaspect.h" />
     <ClInclude Include="src\bodytransformaspectimpl.h" />
+    <ClInclude Include="src\orbittransformaspectimpl.h" />
     <ClInclude Include="src\physicssystem.h" />
     <ClInclude Include="src\rendersystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />

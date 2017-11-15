@@ -20,10 +20,10 @@
 *
 */
 
-#include "bodytransformaspectimpl.h"
+#include "orbittransformaspectimpl.h"
 #include "component.h"
 #include "transformaspect.h"
-#include "bodyaspect.h"
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -31,22 +31,39 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 
-BodyTransformAspectImpl::BodyTransformAspectImpl( BodyAspect* p_aspect ) :
-m_aspect( p_aspect )
+void OrbitTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformaspect, Matrix& p_out_base_transform )
 {
-}
+    ComponentList<dsreal> orbit_params;
+    p_transformaspect->GetComponentsByType<dsreal>( orbit_params );
+
+    dsreal orbit_ray = orbit_params[0]->getPurpose();
+    dsreal excentricity = orbit_params[1]->getPurpose();
+    dsreal angle = orbit_params[2]->getPurpose();
+
+    dsreal a = 1.0;
+    dsreal b = excentricity;
+
+    dsreal rad_ang = Maths::DegToRad( angle );
+    dsreal x = a * cos( rad_ang );
+    dsreal z = b * sin( rad_ang );
+
+    x = ( x * orbit_ray );
+    z = ( z * orbit_ray );
+
+    Matrix orbit;
+    orbit.Translation( x, 0.0, z );
+
+    Matrix sync_rot;
+    sync_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( 360.0 - angle ) );
 
 
-void BodyTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform )
-{
-    m_aspect->GetLastTransform( p_out_base_transform );
-}
+    p_out_base_transform = sync_rot * orbit;
 
-bool BodyTransformAspectImpl::IgnoreParentTransformation( void ) const
-{
-    if( BodyAspect::ATTRACTOR_COLLIDER == m_aspect->m_mode )
-    {
-        return false;
-    }
-    return true;   
+
+
+    TimeAspect::TimeScalar orbit_angle_evo = m_time_aspect->TimeScalarFactory( angle );
+
+    orbit_angle_evo += 20.0;
+
+    orbit_params[2]->getPurpose() = orbit_angle_evo.GetValue();
 }

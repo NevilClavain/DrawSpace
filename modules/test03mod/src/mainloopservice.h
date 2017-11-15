@@ -66,9 +66,6 @@ protected:
     DrawSpace::Core::Entity                                                         m_cubeEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_cubeEntityNode;
 
-    DrawSpace::Core::Entity                                                         m_sphereEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_sphereEntityNode;
-
     DrawSpace::Core::Entity                                                         m_groundEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_groundEntityNode;
 
@@ -87,9 +84,15 @@ protected:
     DrawSpace::Core::Entity                                                         m_planet0Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_planet0EntityNode;
 
-    DrawSpace::Core::Entity                                                         m_planet0PosEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_planet0PosEntityNode;
+    DrawSpace::Core::Entity                                                         m_planet1Entity;
+    DrawSpace::EntityGraph::EntityNode                                              m_planet1EntityNode;
 
+
+    DrawSpace::Core::Entity                                                         m_center_planet0_Entity;
+    DrawSpace::EntityGraph::EntityNode                                              m_center_planet0_EntityNode;
+
+    DrawSpace::Core::Entity                                                         m_center_planet1_Entity;
+    DrawSpace::EntityGraph::EntityNode                                              m_center_planet1_EntityNode;
 
 
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
@@ -101,7 +104,8 @@ protected:
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_sphereRender;
-    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_centralSphereRender;
+    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_planet0Render;
+    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_planet1Render;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
     DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl                     m_skyboxRender;
@@ -112,7 +116,10 @@ protected:
     DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_pitch;
 
 
-    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_planet0pos_transformer;
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_center_planet0_transformer;
+    DrawSpace::AspectImplementations::OrbitTransformAspectImpl                      m_center_planet1_transformer;
+
+
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;
     DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
     DrawSpace::AspectImplementations::FreeTransformAspectImpl                       m_free_transformer;

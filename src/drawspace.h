@@ -102,6 +102,7 @@
 #include "fpstransformaspectimpl.h"
 #include "freetransformaspectimpl.h"
 #include "bodytransformaspectimpl.h"
+#include "orbittransformaspectimpl.h"
 
 #include "cameraaspect.h"
 
