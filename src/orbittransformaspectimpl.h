@@ -31,6 +31,9 @@ namespace AspectImplementations
 {
 class OrbitTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
+protected:
+
+    dsreal compute_orbit_angle( dsreal p_orbit_duration, dstime p_currtime );
 public:
     virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
 };

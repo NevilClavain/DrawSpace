@@ -197,7 +197,7 @@ void PhysicsAspect::StepSimulation( void )
 
         // doing timestep < fixedtimestep * 5 (see http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World )
        
-        int world_nb_steps = ints[2]->getPurpose();
+        int world_nb_steps = ints[1]->getPurpose();
 
         dsreal fps = (dsreal)tm->GetFPS() / reals[0]->getPurpose();;
 

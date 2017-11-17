@@ -143,7 +143,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
     time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
 
-    time_aspect->AddComponent<int>( "time", 1576800000 );
+    time_aspect->AddComponent<dstime>( "time", 1576800000 + 12528056 );
     time_aspect->AddComponent<int>( "output_fps" );
     time_aspect->AddComponent<int>( "output_world_nbsteps" );
 
@@ -162,7 +162,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
     time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
 
-    time_aspect->AddComponent<int>( "time", 0 );
+    time_aspect->AddComponent<dstime>( "time", 0 );
     time_aspect->AddComponent<int>( "output_fps" );
     time_aspect->AddComponent<int>( "output_world_nbsteps" );
 
@@ -330,6 +330,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     center_planet1_transform->AddComponent<dsreal>( "orbit_ray", 25.0 );
     center_planet1_transform->AddComponent<dsreal>( "excentricity", 1.0 / 0.7 );
     center_planet1_transform->AddComponent<dsreal>( "current_angle", 90.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_duration", 1.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_offset_rot", 0.0 );
 
     m_center_planet1_EntityNode = m_center_planet0_EntityNode.AddChild( &m_center_planet1_Entity );
     m_planet1EntityNode = m_center_planet1_EntityNode.AddChild( &m_planet1Entity );
@@ -648,7 +650,7 @@ void MainLoopService::OnKeyPulse( long p_key )
         case VK_F6:
             {
                 TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
-                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::MUL100_TIME;        
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::SEC_30DAYS_TIME;        
             }
             break;
 

@@ -114,6 +114,11 @@ void TimeAspect::Update( void )
         strs[0]->getPurpose() = "???";
     }
 
+    ComponentList<dstime> times_count;
+    GetComponentsByType<dstime>( times_count );
+    // update current time
+    times_count[0]->getPurpose() = m_current_time;
+
     ComponentList<int> ints;
     GetComponentsByType<int>( ints );
 
@@ -121,20 +126,17 @@ void TimeAspect::Update( void )
 
     if( m_tm->IsReady() )
     {
-        ints[1]->getPurpose() = m_tm->GetFPS();
+        ints[0]->getPurpose() = m_tm->GetFPS();
     }
     else
     {
-        ints[1]->getPurpose() = 0;
+        ints[0]->getPurpose() = 0;
     }
 
-    // update current time
-
-    ints[0]->getPurpose() = m_current_time;
 
     // update physic world nb steps
 
-    ints[2]->getPurpose() = m_world_nbsteps;
+    ints[1]->getPurpose() = m_world_nbsteps;
 
     // update time factor
 
@@ -157,14 +159,12 @@ void TimeAspect::Update( void )
 
 void TimeAspect::OnSceneRenderBegin( void )
 {
-     //p_start_time; TEMPORAIRE
+    ComponentList<dstime> times_count;
+    GetComponentsByType<dstime>( times_count );
 
-    ComponentList<int> ints;
-    GetComponentsByType<int>( ints );
-
-    if( ints.size() > 1 )
+    if( times_count.size() > 0 )
     {
-        m_current_time = ints[0]->getPurpose();
+        m_current_time = times_count[0]->getPurpose();
     }
     
     m_timer.SetPeriod( m_time_period );

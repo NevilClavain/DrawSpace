@@ -44,8 +44,6 @@
 #define dstime      __time64_t
 #define dsexception std::exception
 
-#define DRAWSPACE_GUI_WIDTH 200
-#define DRAWSPACE_GUI_HEIGHT 150
 
 dsstring operator<< ( dsstring& p_s1, dsstring& p_s2 );
 dsstring operator<< ( dsstring& p_s1, const char* p_s2 );
