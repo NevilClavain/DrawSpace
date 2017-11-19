@@ -331,7 +331,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     center_planet1_transform->AddComponent<dsreal>( "excentricity", 1.0 / 0.7 );
     center_planet1_transform->AddComponent<dsreal>( "current_angle", 90.0 );
     center_planet1_transform->AddComponent<dsreal>( "orbit_duration", 1.0 );
-    center_planet1_transform->AddComponent<dsreal>( "orbit_offset_rot", 0.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_offset_rot", 90.0 );
 
     m_center_planet1_EntityNode = m_center_planet0_EntityNode.AddChild( &m_center_planet1_Entity );
     m_planet1EntityNode = m_center_planet1_EntityNode.AddChild( &m_planet1Entity );

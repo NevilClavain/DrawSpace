@@ -42,6 +42,9 @@ void OrbitTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transforma
     dsreal orbit_duration = orbit_params[3]->getPurpose();  // duree de parcours complet d'une orbite : 1.0 = 1 annee terrestre (365 jours)
     dsreal orbit_offset_rot = orbit_params[4]->getPurpose();
 
+
+    angle += orbit_offset_rot;
+
     dsreal a = 1.0;
     dsreal b = excentricity;
 
