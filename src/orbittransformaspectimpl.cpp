@@ -41,6 +41,10 @@ void OrbitTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transforma
     dsreal angle = orbit_params[2]->getPurpose();
     dsreal orbit_duration = orbit_params[3]->getPurpose();  // duree de parcours complet d'une orbite : 1.0 = 1 annee terrestre (365 jours)
     dsreal orbit_offset_rot = orbit_params[4]->getPurpose();
+    dsreal orbit_pan_angle = orbit_params[5]->getPurpose();
+    dsreal orbit_tilt_angle = orbit_params[6]->getPurpose();
+    dsreal orbit_translation_x = orbit_params[7]->getPurpose();
+    dsreal orbit_translation_z = orbit_params[8]->getPurpose();
 
 
     angle += orbit_offset_rot;
@@ -61,8 +65,16 @@ void OrbitTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transforma
     Matrix sync_rot;
     sync_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( 360.0 - angle ) );
 
+    Matrix orbit_tilt;
+    orbit_tilt.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), Maths::DegToRad( orbit_tilt_angle ) );
 
-    p_out_base_transform = sync_rot * orbit;
+    Matrix orbit_pan;
+    orbit_pan.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( orbit_pan_angle ) );
+
+    Matrix orbit_translation;
+    orbit_translation.Translation( orbit_translation_x, 0.0, orbit_translation_z );
+
+    p_out_base_transform = sync_rot * orbit * orbit_translation * orbit_tilt * orbit_pan;
 
 
     ComponentList<dstime> times_count;

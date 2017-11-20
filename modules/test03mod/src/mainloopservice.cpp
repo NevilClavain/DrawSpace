@@ -327,11 +327,15 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     TransformAspect* center_planet1_transform = m_center_planet1_Entity.AddAspect<TransformAspect>();
     center_planet1_transform->SetImplementation( &m_center_planet1_transformer );
-    center_planet1_transform->AddComponent<dsreal>( "orbit_ray", 25.0 );
-    center_planet1_transform->AddComponent<dsreal>( "excentricity", 1.0 / 0.7 );
-    center_planet1_transform->AddComponent<dsreal>( "current_angle", 90.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_ray", 60.0 );
+    center_planet1_transform->AddComponent<dsreal>( "excentricity", 0.4 );
+    center_planet1_transform->AddComponent<dsreal>( "current_angle", 00.0 );
     center_planet1_transform->AddComponent<dsreal>( "orbit_duration", 1.0 );
-    center_planet1_transform->AddComponent<dsreal>( "orbit_offset_rot", 90.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_offset_rot", 0.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_pan_angle", 90.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_tilt_angle", 34.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_translation_x", 50.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_translation_z", 0.0 );
 
     m_center_planet1_EntityNode = m_center_planet0_EntityNode.AddChild( &m_center_planet1_Entity );
     m_planet1EntityNode = m_center_planet1_EntityNode.AddChild( &m_planet1Entity );
@@ -451,7 +455,7 @@ void MainLoopService::OnKeyPress( long p_key )
             if( 0 == m_current_camera )
             {
                 TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
-                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 2.0; 
+                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 12.0; 
             }
             else
             {
@@ -466,7 +470,7 @@ void MainLoopService::OnKeyPress( long p_key )
             if( 0 == m_current_camera )
             {
                 TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
-                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -2.0;
+                transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -12.0;
             }
             else
             {
@@ -922,7 +926,8 @@ void MainLoopService::create_ground( void )
 
     Matrix ground_attitude;
     
-    ground_attitude.Identity();
+    //ground_attitude.Identity();
+    ground_attitude.Translation( 0.0, -100.0, 0.0 );
 
     body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
 
