@@ -70,6 +70,7 @@
     <ClCompile Include="src\renderpassnodegraph.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
     <ClCompile Include="src\rendersystem.cpp" />
+    <ClCompile Include="src\revolutiontransformaspectimpl.cpp" />
     <ClCompile Include="src\skyboxrenderingaspectimpl.cpp" />
     <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="src\renderingaspect.h" />
     <ClInclude Include="src\renderingaspectimpl.h" />
     <ClInclude Include="src\rendersystem.h" />
+    <ClInclude Include="src\revolutiontransformaspectimpl.h" />
     <ClInclude Include="src\skyboxrenderingaspectimpl.h" />
     <ClInclude Include="src\systems.h" />
     <ClInclude Include="src\textrenderingaspectimpl.h" />

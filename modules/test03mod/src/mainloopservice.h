@@ -118,6 +118,7 @@ protected:
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_center_planet0_transformer;
     DrawSpace::AspectImplementations::OrbitTransformAspectImpl                      m_center_planet1_transformer;
+    DrawSpace::AspectImplementations::RevolutionTransformAspectImpl                 m_planet1_transformer;
 
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;
