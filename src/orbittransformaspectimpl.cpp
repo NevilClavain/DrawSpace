@@ -45,6 +45,7 @@ void OrbitTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transforma
     dsreal orbit_tilt_angle = orbit_params[6]->getPurpose();
     dsreal orbit_translation_x = orbit_params[7]->getPurpose();
     dsreal orbit_translation_z = orbit_params[8]->getPurpose();
+    dsreal revol_axe_inclination = orbit_params[9]->getPurpose();
 
 
     angle += orbit_offset_rot;
@@ -62,8 +63,8 @@ void OrbitTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transforma
     Matrix orbit;
     orbit.Translation( x, 0.0, z );
 
-    Matrix sync_rot;
-    sync_rot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Maths::DegToRad( 360.0 - angle ) );
+    Matrix revol_ax;
+    revol_ax.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), Maths::DegToRad( revol_axe_inclination ) ); // inclinaison de l'objet en orbite ( les saisons, pour une planete !!)
 
     Matrix orbit_tilt;
     orbit_tilt.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), Maths::DegToRad( orbit_tilt_angle ) );
@@ -74,7 +75,7 @@ void OrbitTransformAspectImpl::GetLocaleTransform( TransformAspect* p_transforma
     Matrix orbit_translation;
     orbit_translation.Translation( orbit_translation_x, 0.0, orbit_translation_z );
 
-    p_out_base_transform = sync_rot * orbit * orbit_translation * orbit_tilt * orbit_pan;
+    p_out_base_transform = revol_ax * orbit * orbit_translation * orbit_tilt * orbit_pan;
 
 
     ComponentList<dstime> times_count;

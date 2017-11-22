@@ -95,6 +95,10 @@ protected:
     DrawSpace::EntityGraph::EntityNode                                              m_center_planet1_EntityNode;
 
 
+    DrawSpace::Core::Entity                                                         m_revol_planet1_Entity;
+    DrawSpace::EntityGraph::EntityNode                                              m_revol_planet1_EntityNode;
+
+
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
     DrawSpace::Systems::TransformSystem                                             m_transformSystem;
     DrawSpace::Systems::PhysicsSystem                                               m_physicsSystem;
@@ -118,7 +122,7 @@ protected:
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_center_planet0_transformer;
     DrawSpace::AspectImplementations::OrbitTransformAspectImpl                      m_center_planet1_transformer;
-    DrawSpace::AspectImplementations::RevolutionTransformAspectImpl                 m_planet1_transformer;
+    DrawSpace::AspectImplementations::RevolutionTransformAspectImpl                 m_revol_planet1_transformer;
 
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;

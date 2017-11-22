@@ -327,20 +327,40 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     TransformAspect* center_planet1_transform = m_center_planet1_Entity.AddAspect<TransformAspect>();
     center_planet1_transform->SetImplementation( &m_center_planet1_transformer );
-    center_planet1_transform->AddComponent<dsreal>( "orbit_ray", 60.0 );
-    center_planet1_transform->AddComponent<dsreal>( "excentricity", 0.4 );
-    center_planet1_transform->AddComponent<dsreal>( "current_angle", 00.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_ray", 15.0 );
+    center_planet1_transform->AddComponent<dsreal>( "excentricity", 0.99 );
+    center_planet1_transform->AddComponent<dsreal>( "current_angle", 0.0 );
     center_planet1_transform->AddComponent<dsreal>( "orbit_duration", 1.0 );
     center_planet1_transform->AddComponent<dsreal>( "orbit_offset_rot", 0.0 );
-    center_planet1_transform->AddComponent<dsreal>( "orbit_pan_angle", 90.0 );
-    center_planet1_transform->AddComponent<dsreal>( "orbit_tilt_angle", 34.0 );
-    center_planet1_transform->AddComponent<dsreal>( "orbit_translation_x", 50.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_pan_angle", 0.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_tilt_angle", 0.0 );
+    center_planet1_transform->AddComponent<dsreal>( "orbit_translation_x", 0.0 );
     center_planet1_transform->AddComponent<dsreal>( "orbit_translation_z", 0.0 );
+    center_planet1_transform->AddComponent<dsreal>( "axis_inclination", 67.0 );
 
     m_center_planet1_EntityNode = m_center_planet0_EntityNode.AddChild( &m_center_planet1_Entity );
-    m_planet1EntityNode = m_center_planet1_EntityNode.AddChild( &m_planet1Entity );
 
+
+    TransformAspect* revol_planet1_transform = m_revol_planet1_Entity.AddAspect<TransformAspect>();
+    revol_planet1_transform->SetImplementation( &m_revol_planet1_transformer );
+
+    revol_planet1_transform->AddComponent<dsreal>( "current_angle", 0.0 );
+    revol_planet1_transform->AddComponent<dsreal>( "revol_duration", 1.0 );
+
+    m_revol_planet1_EntityNode = m_center_planet1_EntityNode.AddChild( &m_revol_planet1_Entity );
+
+
+    m_planet1EntityNode = m_revol_planet1_EntityNode.AddChild( &m_planet1Entity );
     m_planet1Render.RegisterToRendering( m_rendergraph );
+
+
+
+
+
+
+
+
+
 
     //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -654,7 +674,7 @@ void MainLoopService::OnKeyPulse( long p_key )
         case VK_F6:
             {
                 TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
-                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::SEC_30DAYS_TIME;        
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::SEC_1HOUR_TIME;        
             }
             break;
 
@@ -662,7 +682,7 @@ void MainLoopService::OnKeyPulse( long p_key )
         case VK_F7:
             {
                 TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
-                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::DIV10_TIME;        
+                time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = TimeAspect::SEC_30DAYS_TIME;        
             }
             break;
 
