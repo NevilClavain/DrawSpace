@@ -23,8 +23,10 @@
 #include "CEGUIWrapper.h"
 #include "exceptions.h"
 #include "memalloc.h"
+#include "jsonparser.h"
 
 using namespace CEGUI;
+using namespace DrawSpace::Utils;
 
 CEGUIWrapper::CEGUIWrapper( void ) :
 m_ready( false ),
@@ -208,6 +210,12 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path )
     
     dsstring rootName = wRoot->getName().c_str();
     m_layoutsTable[wRoot][rootName] = wRoot;
+
+    ////
+
+    JSONParser parser;
+
+    parser.ParseFromFile( "testskin/layouts/main_widgets.conf" );
 }
 
 void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )

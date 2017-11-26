@@ -47,7 +47,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../src;./../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../src;./../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0;./../../DrawSpace_thirdparts/JSON-jsmn/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
