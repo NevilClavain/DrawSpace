@@ -23,7 +23,6 @@
 #include "CEGUIWrapper.h"
 #include "exceptions.h"
 #include "memalloc.h"
-#include "jsonparser.h"
 
 using namespace CEGUI;
 using namespace DrawSpace::Utils;
@@ -212,10 +211,63 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path )
     m_layoutsTable[wRoot][rootName] = wRoot;
 
     ////
-
+    
     JSONParser parser;
+    int token_index = 1;
 
     parser.ParseFromFile( "testskin/layouts/main_widgets.conf" );
+
+    if( JSMN_OBJECT == parser.GetTokenType( 0 ) )
+    {
+        recurs_register_widgets( parser, token_index, p_layout_path, "" );
+    }
+    else
+    {
+        _DSEXCEPTION( "JSON parse : unexpected type for token 0" );
+    }  
+}
+
+void CEGUIWrapper::recurs_register_widgets( JSONParser& p_parser, int& p_token_index, const dsstring& p_layout_path, const dsstring& p_parent )
+{
+    int type0 = p_parser.GetTokenType( p_token_index );
+    int size0 = p_parser.GetTokenSize( p_token_index );
+    int type1 = p_parser.GetTokenType( p_token_index + 1 );
+    int size1 = p_parser.GetTokenSize( p_token_index + 1 );
+
+    if( JSMN_STRING == type0 )
+    {
+        dsstring widget_name;
+        p_parser.GetTokenString( p_token_index, widget_name );
+
+        p_token_index++;
+
+        if( JSMN_OBJECT == type1 )
+        {
+            p_token_index++;
+
+            if( "" != p_parent )
+            {
+                Store( p_layout_path, p_parent, widget_name );
+            }
+
+            if( size1 != 0 )
+            {
+                for( int i = 0; i < size1; i++ )
+                {
+                    recurs_register_widgets( p_parser, p_token_index, p_layout_path, widget_name );                
+                }
+
+            }
+        }
+        else
+        {
+            _DSEXCEPTION( "JSON parse : unexpected type for token (object expected)" );
+        }
+    }
+    else
+    {
+        _DSEXCEPTION( "JSON parse : unexpected type for token (string expected)" );
+    }
 }
 
 void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
@@ -229,7 +281,7 @@ void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
     else
     {
         _DSEXCEPTION( "unregistered CEGUI layout" );
-    }
+    }  
 }
 
 void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName )

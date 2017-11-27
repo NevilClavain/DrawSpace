@@ -24,6 +24,7 @@
 #include "drawspace_commons.h"
 #include "vector.h"
 #include "callback.h"
+#include "jsonparser.h"
 
 #ifndef _CEGUIWRAPPER_H_
 #define _CEGUIWRAPPER_H_
@@ -64,6 +65,8 @@ protected:
     bool            on_PushButton_EventClicked(const CEGUI::EventArgs& p_evt );
 
     bool            on_ToggleButton_EventSelectStateChanged(const CEGUI::EventArgs& p_evt );
+
+    void            recurs_register_widgets( DrawSpace::Utils::JSONParser& p_parser, int& p_token_index, const dsstring& p_layout_path, const dsstring& p_parent );
 
     CEGUI::Editbox* find_focused_editbox( void );
 
