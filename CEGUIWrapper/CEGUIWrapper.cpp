@@ -199,7 +199,7 @@ void CEGUIWrapper::LoadScheme( const dsstring& p_scheme_path )
     SchemeManager::getSingleton().createFromFile( p_scheme_path );
 }
 
-void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path )
+void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path )
 {
     WindowManager& wmgr = WindowManager::getSingleton();
 
@@ -215,7 +215,8 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path )
     JSONParser parser;
     int token_index = 1;
 
-    parser.ParseFromFile( "testskin/layouts/main_widgets.conf" );
+    //parser.ParseFromFile( "testskin/layouts/main_widgets.conf" );
+    parser.ParseFromFile( p_widgets_path );
 
     if( JSMN_OBJECT == parser.GetTokenType( 0 ) )
     {

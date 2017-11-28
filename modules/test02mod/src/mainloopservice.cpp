@@ -115,18 +115,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     
     m_renderer->GUI_LoadScheme( "AlfiskoSkin.scheme" );
 
-    m_renderer->GUI_LoadLayout( "main.layout" );
+    m_renderer->GUI_LoadLayout( "main.layout", "testskin/layouts/main_widgets.conf" );
 
     m_renderer->GUI_SetLayout( "main.layout" );
-
-    /*
-    m_renderer->GUI_StoreWidget( "main.layout", "root", "testWindow" );
-    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", "FPSInfoLabel" );
-    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", "Trigger" );
-    m_renderer->GUI_StoreWidget( "main.layout", "testWindow", "Quit" );
-    m_renderer->GUI_StoreWidget( "main.layout", "root", "Button_Create" );
-    m_renderer->GUI_StoreWidget( "main.layout", "root", "Button_Destroy" );
-    */
 
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );

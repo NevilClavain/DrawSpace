@@ -274,7 +274,7 @@ public:
     virtual void GUI_OnKeyDown( long p_key );
     virtual void GUI_OnKeyUp( long p_key );
     virtual void GUI_OnChar( long p_key );
-    virtual void GUI_LoadLayout( const dsstring& p_layout_path );
+    virtual void GUI_LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path );
     virtual void GUI_LoadScheme( const dsstring& p_scheme_path );
     virtual void GUI_SetLayout( const dsstring& p_layoutpath );
     virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName );

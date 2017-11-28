@@ -89,7 +89,7 @@ public:
     void OnKeyUp( long p_key );
     void OnChar( long p_key );
 
-    void LoadLayout( const dsstring& p_layout_path );
+    void LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path );
 
     void LoadScheme( const dsstring& p_scheme_path );
 

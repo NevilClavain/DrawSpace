@@ -126,7 +126,7 @@ public:
     virtual void GUI_OnKeyDown( long p_key ) = 0;
     virtual void GUI_OnKeyUp( long p_key ) = 0;
     virtual void GUI_OnChar( long p_key ) = 0;
-    virtual void GUI_LoadLayout( const dsstring& p_layout_path ) = 0;
+    virtual void GUI_LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path ) = 0;
     virtual void GUI_LoadScheme( const dsstring& p_scheme_path ) = 0;
     virtual void GUI_SetLayout( const dsstring& p_layoutpath ) = 0;
     virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName ) = 0;
