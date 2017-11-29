@@ -71,6 +71,7 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
 
     m_renderer->GUI_LoadLayout( LAYOUT_FILE, "xfskin2/layouts/planetgroundsetup_widgets.conf" );
 
+    /*
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
@@ -130,6 +131,7 @@ void PlanetGroundSetupSubService::Init( DrawSpace::Logger::Configuration* p_logc
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_NbLODInertBodies" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_NbLODInertBodies" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_NbLODInertBodies" );
+    */
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
     m_renderer->GUI_RegisterCheckboxEventStateChangedHandler( m_guiwidgetcheckboxstatechanged_cb );
