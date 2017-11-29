@@ -117,8 +117,9 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     init_passes();
 
-    m_renderer->GUI_LoadLayout( LAYOUT_FILE );
+    m_renderer->GUI_LoadLayout( LAYOUT_FILE, "xfskin2/layouts/planetview_widgets.conf" );
 
+    /*
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_FPS" );
@@ -127,7 +128,7 @@ void PlanetViewSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Relative" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_Altitude" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_SubPasses" );
-
+    */
 
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_HotParamName" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_HotParam" );

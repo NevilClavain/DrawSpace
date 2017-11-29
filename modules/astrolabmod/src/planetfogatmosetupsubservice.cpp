@@ -69,7 +69,7 @@ void PlanetFogAtmoSetupSubService::Init( DrawSpace::Logger::Configuration* p_log
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_renderer->GetDescr( m_pluginDescr );
 
-    m_renderer->GUI_LoadLayout( LAYOUT_FILE );
+    m_renderer->GUI_LoadLayout( LAYOUT_FILE, "xfskin2/layouts/planetfogatmosetup_widgets.conf" );
 
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );

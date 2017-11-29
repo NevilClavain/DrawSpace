@@ -68,8 +68,9 @@ void PlanetSeedsSetupSubService::Init( DrawSpace::Logger::Configuration* p_logco
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_renderer->GetDescr( m_pluginDescr );
 
-    m_renderer->GUI_LoadLayout( LAYOUT_FILE );
+    m_renderer->GUI_LoadLayout( LAYOUT_FILE, "xfskin2/layouts/planetseedssetup_widgets.conf" );
 
+    /*
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Close_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_PlanetName" );
@@ -90,7 +91,7 @@ void PlanetSeedsSetupSubService::Init( DrawSpace::Logger::Configuration* p_logco
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "SimpleLabel_MixSeed2" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Editbox_MixSeed2" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Button_MixSeed2" );
-
+    */
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
     m_statusbar_timer.Init( m_tm );

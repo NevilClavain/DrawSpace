@@ -72,8 +72,9 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_renderer->GetDescr( m_pluginDescr );
 
-    m_renderer->GUI_LoadLayout( LAYOUT_FILE );
-
+    m_renderer->GUI_LoadLayout( LAYOUT_FILE, "xfskin2/layouts/planetsetup_widgets.conf" );
+    
+    /*
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Quit_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "PlanetView_Button" );
     m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "Label_Renderer" );
@@ -91,7 +92,8 @@ void PlanetSetupSubService::Init( DrawSpace::Logger::Configuration* p_logconf,
 	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "AtmoSetup_Button" );
 	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "CloudsSetup_Button" );
 	m_renderer->GUI_StoreWidget( LAYOUT_FILE, "root", "ResourcesSetup_Button" );
-    
+    */
+
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( m_guiwidgetpushbuttonclicked_cb );
 
 
