@@ -35,7 +35,7 @@ GUILabRoot::~GUILabRoot( void )
 {
 }
 
-void GUILabRoot::ServicesInit( void )
+void GUILabRoot::Init( void )
 {
     m_services["mainloop"] = new MainLoopService();
 }

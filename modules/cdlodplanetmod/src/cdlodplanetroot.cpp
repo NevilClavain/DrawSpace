@@ -50,7 +50,7 @@ dsstring CDLODPlanetRoot::GetModuleDescr( void )
     return "CDLOD/Procedural planet module";
 }
 
-void CDLODPlanetRoot::ServicesInit( void )
+void CDLODPlanetRoot::Init( void )
 {
     m_services["cdlodplanet"] = new CDLODPlanetService( m_id );
 }

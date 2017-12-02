@@ -104,6 +104,8 @@ protected:
     DrawSpace::Systems::PhysicsSystem                                               m_physicsSystem;
     DrawSpace::Systems::TimeSystem                                                  m_timeSystem;
 
+    std::vector<DrawSpace::Interface::System*>                                      m_systems;
+
 
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
@@ -112,7 +114,11 @@ protected:
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_planet1Render;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
-    DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl                     m_skyboxRender;
+    //DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl                     m_skyboxRender;
+
+
+    DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
+
 
     DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_planet_rot;
 

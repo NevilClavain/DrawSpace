@@ -43,6 +43,14 @@ m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt ),
 m_cube_is_relative( false )
 //m_cube_is_relative( true )
 {
+    // creation des systemes
+   
+    
+    // attention ! l'ordre est important ! ( par ex. time system doit etre execute avant tt les autres!)
+    m_systems.push_back( &m_timeSystem );
+    m_systems.push_back( &m_physicsSystem );
+    m_systems.push_back( &m_transformSystem );
+    m_systems.push_back( &m_renderingSystem );
 }
 
 MainLoopService::~MainLoopService( void )
@@ -61,13 +69,19 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 {
     m_entitygraph.RegisterNodesEvtHandler( &m_entitygraph_evt_handler );
 
-    (*p_mousecircularmode_cb)( true )
-        ;
+    (*p_mousecircularmode_cb)( true );
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 
     p_logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    for( size_t i = 0; i < m_systems.size(); i++ )
+    {
+        m_systems[i]->Init();
+    }
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -293,7 +307,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     // ajouter la skybox a la scene
     m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity ); // comme la skybox n'a aucune interaction/influence avec le monde physique bullet, on peut la mettre directement sous rootEntity
                                                                         // mettre la skybox sous World1Entity fonctionne aussi, mais n'a aucune utilité
-    m_skyboxRender.RegisterToRendering( m_rendergraph );
+    m_skyboxRender->RegisterToRendering( m_rendergraph );
 
 
     // ajouter le cube a la scene
@@ -389,10 +403,18 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
+    /*
     m_timeSystem.Run( &m_entitygraph );
     m_physicsSystem.Run( &m_entitygraph );
     m_transformSystem.Run( &m_entitygraph );
     m_renderingSystem.Run( &m_entitygraph );
+    */
+
+    for( size_t i = 0; i < m_systems.size(); i++ )
+    {
+        m_systems[i]->Run( &m_entitygraph );
+    }
+
 
     m_renderer->FlipScreen();
 
@@ -447,6 +469,10 @@ void MainLoopService::Release( void )
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 
     m_entitygraph.OnSceneRenderEnd();
+    for( size_t i = 0; i < m_systems.size(); i++ )
+    {
+        m_systems[i]->Release();
+    }
 }
 
 DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
@@ -843,13 +869,46 @@ void MainLoopService::create_cube( const Matrix& p_transform, DrawSpace::Core::E
 }
 
 void MainLoopService::create_skybox( void )
-{
+{    
+    DrawSpace::Interface::Module::Root* sbmod_root;
+
+    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", &sbmod_root ) )
+    {
+        _DSEXCEPTION( "fail to load skyboxmod module root" )
+    }
+    m_skyboxRender = sbmod_root->InstanciateRenderingAspectImpls( "skyboxRender" );
+
+
     RenderingAspect* rendering_aspect = m_skyboxEntity.AddAspect<RenderingAspect>();
     
+    rendering_aspect->AddImplementation( m_skyboxRender );
 
-    rendering_aspect->AddImplementation( &m_skyboxRender );
+    ////////////// noms des passes
 
-    rendering_aspect->AddComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot", "texture_pass" );
+    std::vector<dsstring> skybox_passes;
+
+    skybox_passes.push_back( "texture_pass" );
+
+    rendering_aspect->AddComponent<std::vector<dsstring>>( "skybox_passes", skybox_passes );
+
+    ////////////// jeu de 6 textures par slot pass
+
+    std::vector<Texture*> skybox_textures;
+    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ) );
+    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ) );
+    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ) );
+    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ) );
+    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ) );
+    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ) );
+
+    for( int i = 0; i < 6; i++ )
+    {
+        skybox_textures[i]->LoadFromFile();    
+    }
+
+    rendering_aspect->AddComponent<std::vector<Texture*>>( "skybox_textures", skybox_textures );
+
+    /////////////// les FX pour chaque slot pass
 
     Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_( Fx, Fx );
 
@@ -865,30 +924,11 @@ void MainLoopService::create_skybox( void )
 
     skybox_texturepass_fx->SetRenderStates( skybox_texturepass_rss );
 
-    for( int i = 0; i < 6; i++ )
-    {
-        RenderingNode* skybox_texturepass = rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( i );
-        skybox_texturepass->SetOrderNumber( -1000 );
-        skybox_texturepass->SetFx( skybox_texturepass_fx );
-    }
+    rendering_aspect->AddComponent<Fx*>( "skybox_fx", skybox_texturepass_fx );
 
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::FrontQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::FrontQuad )->GetTexture( 0 )->LoadFromFile();
 
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RearQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RearQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::LeftQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::LeftQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RightQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::RightQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::TopQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::TopQuad )->GetTexture( 0 )->LoadFromFile();
-
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::BottomQuad )->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ), 0 );
-    rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>( "skybox_texturepass_slot" )->getPurpose().GetRenderingNode( SkyboxRenderingAspectImpl::PassSlot::BottomQuad )->GetTexture( 0 )->LoadFromFile();
+    //////////////// valeur du rendering order pour chaque slot pass
+    rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
 
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
@@ -898,7 +938,9 @@ void MainLoopService::create_skybox( void )
     transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
 
     transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
+    
 }
+
 
 void MainLoopService::create_ground( void )
 {

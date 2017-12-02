@@ -48,7 +48,16 @@ dsstring SkyboxRoot::GetModuleDescr( void )
     return "Skybox module";
 }
 
-void SkyboxRoot::ServicesInit( void )
+void SkyboxRoot::Init( void )
 {
     m_services["skybox"] = new SkyboxService( m_id );
+}
+
+DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* SkyboxRoot::InstanciateRenderingAspectImpls( const dsstring& p_id )
+{    
+    if( "skyboxRender" == p_id )
+    {
+        return new DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl;
+    }
+    return NULL;
 }

@@ -39,7 +39,7 @@ AstrolabRoot::~AstrolabRoot( void )
 {
 }
 
-void AstrolabRoot::ServicesInit( void )
+void AstrolabRoot::Init( void )
 {
     m_services["mainloop"] = MainLoopService::GetInstance();
 }

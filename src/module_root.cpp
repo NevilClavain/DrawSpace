@@ -50,6 +50,18 @@ Service* Root::InstanciateService( const dsstring& p_id )
     return NULL;
 }
 
+
+DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* Root::InstanciateRenderingAspectImpls( const dsstring& p_id )
+{
+    return NULL;
+}
+
+
+DrawSpace::Interface::AspectImplementations::TransformAspectImpl* Root::InstanciateTransformAspectImpls( const dsstring& p_id )
+{
+    return NULL;
+}
+
 void Root::DumpMemoryAllocs( void )
 {
     DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();

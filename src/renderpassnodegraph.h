@@ -30,7 +30,7 @@ namespace DrawSpace
 {
 namespace RenderGraph
 {
-class RenderPassNodeGraph sealed
+class RenderPassNodeGraph
 {
 public:
     using PassDescrTree = st_tree::tree<RenderPassNode::PassDescr*>;

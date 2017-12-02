@@ -43,7 +43,7 @@ Test02Root::~Test02Root( void )
 {
 }
 
-void Test02Root::ServicesInit( void )
+void Test02Root::Init( void )
 {
     m_services["mainloop"] = new MainLoopService();
 }

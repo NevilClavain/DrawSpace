@@ -35,7 +35,7 @@ public:
 
     virtual dsstring GetModuleName( void );
     virtual dsstring GetModuleDescr( void );
-    virtual void ServicesInit( void );
+    virtual void Init( void );
 };
 
 #endif

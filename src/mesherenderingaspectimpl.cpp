@@ -50,6 +50,7 @@ MesheRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 MesheRenderingAspectImpl::PassSlot::~PassSlot( void )
 {
     _DRAWSPACE_DELETE_( m_rendering_node );
+    _DRAWSPACE_DELETE_( m_cb );
 }       
 
 void MesheRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )

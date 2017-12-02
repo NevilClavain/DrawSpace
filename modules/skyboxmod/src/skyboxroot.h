@@ -25,7 +25,7 @@
 
 #include "module_root.h"
 #include "skyboxservice.h"
-
+#include "skyboxrenderingaspectimpl.h"
 
 class SkyboxRoot : public DrawSpace::Interface::Module::Root
 {
@@ -35,7 +35,9 @@ public:
 
     virtual dsstring GetModuleName( void );
     virtual dsstring GetModuleDescr( void );
-    virtual void ServicesInit( void );
+    virtual void Init( void );
+
+    virtual DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   InstanciateRenderingAspectImpls( const dsstring& p_id );
 };
 
 #endif

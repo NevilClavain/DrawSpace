@@ -92,11 +92,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\skyboxrenderingaspectimpl.cpp" />
     <ClCompile Include="src\skyboxroot.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\skyboxservice.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\skyboxrenderingaspectimpl.h" />
     <ClInclude Include="src\skyboxroot.h" />
     <ClInclude Include="src\skyboxservice.h" />
   </ItemGroup>

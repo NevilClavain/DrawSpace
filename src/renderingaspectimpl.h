@@ -32,6 +32,12 @@ namespace Aspect
 {
 class RenderingAspect;
 }
+
+namespace RenderGraph
+{
+class RenderPassNodeGraph;
+}
+
 namespace Interface
 {
 namespace AspectImplementations
@@ -45,12 +51,14 @@ public:
     RenderingAspectImpl( void ) : m_owner( NULL )
     {    
     }
+    virtual void SetOwner( DrawSpace::Aspect::RenderingAspect* p_owner ) { m_owner = p_owner; };
+
+    ///////////// API ///////////////////////////////////////////
 
     virtual bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue ) { return false; };
-
+    virtual void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph ) {};
+    virtual void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph ) {};
     virtual void Run( DrawSpace::Core::Entity* p_entity ) = 0;
-
-    virtual void SetOwner( DrawSpace::Aspect::RenderingAspect* p_owner ) { m_owner = p_owner; };
 };
 }
 }

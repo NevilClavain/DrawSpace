@@ -85,7 +85,7 @@ bool PILoad::LoadModule( const dsstring& p_file, const dsstring& p_module_instan
     
     module_root->UpdateRenderer( DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface );
     module_root->SetInstanceId( p_module_instance_id );
-    module_root->ServicesInit();
+    module_root->Init();
 
     return true;
 }

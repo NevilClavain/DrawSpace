@@ -95,7 +95,7 @@
 #include "passesrenderingaspectimpl.h"
 #include "mesherenderingaspectimpl.h"
 #include "textrenderingaspectimpl.h"
-#include "skyboxrenderingaspectimpl.h"
+
 
 #include "transformaspect.h"
 #include "rawtransformaspectimpl.h"

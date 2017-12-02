@@ -26,6 +26,9 @@
 #include "module_service.h"
 #include "plugin.h"
 
+#include "renderingaspectimpl.h"
+#include "transformaspectimpl.h"
+
 namespace DrawSpace
 {
 namespace Interface
@@ -37,22 +40,31 @@ class Root
 protected:
 
     // table des differents services
-    std::map<dsstring, DrawSpace::Interface::Module::Service*>  m_services;
-    dsstring                                                    m_id;           //identifiant instance de module
+    std::map<dsstring, DrawSpace::Interface::Module::Service*>                              m_services;
+
+
+    dsstring                                                                                m_id;           //identifiant instance de module
 
 public:
 
-    virtual void                    UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer );
+    virtual void                                                                UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer );
 
-    virtual void                    SetInstanceId( const dsstring& p_id ) { m_id = p_id; };
+    virtual void                                                                SetInstanceId( const dsstring& p_id ) { m_id = p_id; };
 
-    virtual dsstring                GetModuleName( void ) = 0;
-    virtual dsstring                GetModuleDescr( void ) = 0;
-    virtual void                    ServicesInit( void ) = 0;
+    virtual dsstring                                                            GetModuleName( void ) = 0;
+    virtual dsstring                                                            GetModuleDescr( void ) = 0;
+    
+    virtual void                                                                Init( void ) = 0;
 
-    virtual void                    DumpMemoryAllocs( void ); 
-    virtual std::vector<dsstring>   GetServicesList( void );
-    virtual Service*                InstanciateService( const dsstring& p_id );
+    virtual void                                                                DumpMemoryAllocs( void );
+
+    virtual std::vector<dsstring>                                               GetServicesList( void );
+    virtual Service*                                                            InstanciateService( const dsstring& p_id );
+
+    virtual DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   InstanciateRenderingAspectImpls( const dsstring& p_id );
+
+    virtual DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   InstanciateTransformAspectImpls( const dsstring& p_id );
+
 
 };
 }
