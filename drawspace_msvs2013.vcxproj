@@ -170,6 +170,7 @@
     <ClInclude Include="src\rawtransformaspectimpl.h" />
     <ClInclude Include="src\renderingaspect.h" />
     <ClInclude Include="src\renderingaspectimpl.h" />
+    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\revolutiontransformaspectimpl.h" />
     <ClInclude Include="src\skyboxrenderingaspectimpl.h" />
     <ClInclude Include="src\systems.h" />

@@ -584,9 +584,6 @@
     <ClInclude Include="src\rawtransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendersystem.h">
-      <Filter>systems</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderingaspect.h">
       <Filter>aspect</Filter>
     </ClInclude>
@@ -656,6 +653,9 @@
     <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\revolutiontransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rendersystem.h">
+      <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
