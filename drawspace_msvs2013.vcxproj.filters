@@ -626,36 +626,29 @@
     <ClInclude Include="src\physicsaspect.h">
       <Filter>aspect</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendersystem.h" />
+    <ClInclude Include="src\rendersystem.h">
+      <Filter>systems</Filter>
+    </ClInclude>
     <ClInclude Include="src\bodyaspect.h">
       <Filter>aspect</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\bodytransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendersystem.h" />
-    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\systems.h">
       <Filter>interface\system</Filter>
     </ClInclude>
     <ClInclude Include="src\timesystem.h">
       <Filter>systems</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\timeaspect.h">
       <Filter>aspect</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\orbittransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\revolutiontransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rendersystem.h">
-      <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
