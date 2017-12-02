@@ -629,7 +629,6 @@
     <ClInclude Include="src\physicsaspect.h">
       <Filter>aspect</Filter>
     </ClInclude>
-    <ClInclude Include="src\rendersystem.cpp" />
     <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\bodyaspect.h">
       <Filter>aspect</Filter>

@@ -65,7 +65,6 @@
     <ClInclude Include="src\bodytransformaspectimpl.h" />
     <ClInclude Include="src\orbittransformaspectimpl.h" />
     <ClInclude Include="src\physicssystem.h" />
-    <ClInclude Include="src\rendersystem.cpp" />
     <ClCompile Include="src\renderpassnode.cpp" />
     <ClCompile Include="src\renderpassnodegraph.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
@@ -171,12 +170,10 @@
     <ClInclude Include="src\rawtransformaspectimpl.h" />
     <ClInclude Include="src\renderingaspect.h" />
     <ClInclude Include="src\renderingaspectimpl.h" />
-    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\revolutiontransformaspectimpl.h" />
     <ClInclude Include="src\skyboxrenderingaspectimpl.h" />
     <ClInclude Include="src\systems.h" />
     <ClInclude Include="src\textrenderingaspectimpl.h" />
-    <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\renderpassnode.h" />
     <ClInclude Include="src\renderpassnodegraph.h" />
     <ClInclude Include="src\renderstatesset.h" />
