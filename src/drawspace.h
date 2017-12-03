@@ -105,6 +105,9 @@
 #include "orbittransformaspectimpl.h"
 #include "revolutiontransformaspectimpl.h"
 
+#include "serviceaspect.h"
+#include "serviceaspectimpl.h"
+
 #include "cameraaspect.h"
 
 #include "bodyaspect.h"

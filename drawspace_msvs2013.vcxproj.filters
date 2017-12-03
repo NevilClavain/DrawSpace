@@ -321,6 +321,9 @@
     <ClCompile Include="src\revolutiontransformaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
+    <ClCompile Include="src\serviceaspect.cpp">
+      <Filter>aspect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -649,6 +652,12 @@
     </ClInclude>
     <ClInclude Include="src\revolutiontransformaspectimpl.h">
       <Filter>aspectimplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serviceaspectimpl.h">
+      <Filter>interface\aspectimplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serviceaspect.h">
+      <Filter>aspect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
