@@ -31,10 +31,10 @@ _DECLARE_DS_LOGGER( logger, "vmapp", DrawSpace::Logger::Configuration::GetInstan
 
 
 dsAppClient::dsAppClient( void ) :
-m_mousecursor_visible( true )
+m_mousecursor_visible( true ),
+m_service( NULL )
 {    
-    _INIT_LOGGER( "logvm.conf" )
-    m_w_title = "DrawSpace Runtime";
+    _INIT_LOGGER( "logrt.conf" )
 
     m_mouse_visible_cb = _DRAWSPACE_NEW_( MouseVisibleCallback, MouseVisibleCallback( this, &dsAppClient::on_mouse_visible ) );
     m_mouse_circularmode_update_cb = _DRAWSPACE_NEW_( MouseCircularModeupdateCallback, MouseCircularModeupdateCallback( this, &dsAppClient::on_mousecircularmode_update ) );
@@ -61,11 +61,29 @@ bool dsAppClient::OnIdleAppInit( void )
 
     Root* root = DrawSpace::Core::SingletonPlugin<Root>::GetInstance()->m_interface;
 
+    m_service = root->InstanciateServiceAspectImpl( "main_app_service" );
+
+    if( m_service )
+    {
+        dsstring win_title = "DrawSpace Runtime - ";
+        
+        win_title += root->GetModuleDescr();
+        ::SetWindowText( m_hwnd, win_title.c_str() ); 
+
+        // to be continued...
+    
+    }
+    else
+    {
+        _DSWARN( logger, dsstring( "no main_app_service found, leaving..." ) )
+        return false;
+    }
+
     /*
     m_mainloopservice = root->InstanciateService( "mainloop" );
     if( m_mainloopservice )
     {
-        dsstring win_title = "DrawSpace VM - ";
+        dsstring win_title = "DrawSpace Runtime - ";
         
         win_title += root->GetModuleDescr();
         ::SetWindowText( m_hwnd, win_title.c_str() );
@@ -91,7 +109,7 @@ void dsAppClient::OnAppInit( void )
 
 void dsAppClient::OnClose( void )
 {
-    _DSDEBUG(logger, dsstring("VM shutdown..."))
+    _DSDEBUG(logger, dsstring("RT shutdown..."))
     /*
     if( m_mainloopservice )
     {

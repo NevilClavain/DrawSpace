@@ -33,13 +33,15 @@ protected:
 
     typedef DrawSpace::Core::CallBack<dsAppClient, void, int>                                  CloseAppCallback;
 
-    MouseCircularModeupdateCallback*            m_mouse_circularmode_update_cb;
-    MouseVisibleCallback*                       m_mouse_visible_cb;
+    MouseCircularModeupdateCallback*                                m_mouse_circularmode_update_cb;
+    MouseVisibleCallback*                                           m_mouse_visible_cb;
 
-    CloseAppCallback*                           m_close_app_cb;
-    static dsAppClient*                         m_instance;
+    CloseAppCallback*                                               m_close_app_cb;
+    static dsAppClient*                                             m_instance;
     
-    bool                                        m_mousecursor_visible;
+    bool                                                            m_mousecursor_visible;
+
+    DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* m_service;
 
     void on_mouse_visible( bool p_state );
     void on_mousecircularmode_update( bool p_state );
