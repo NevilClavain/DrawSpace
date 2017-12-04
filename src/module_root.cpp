@@ -56,8 +56,12 @@ DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* Root::Instanci
     return NULL;
 }
 
-
 DrawSpace::Interface::AspectImplementations::TransformAspectImpl* Root::InstanciateTransformAspectImpls( const dsstring& p_id )
+{
+    return NULL;
+}
+
+DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* Root::InstanciateServiceAspectImpl( const dsstring& p_id )
 {
     return NULL;
 }

@@ -28,6 +28,7 @@
 
 #include "renderingaspectimpl.h"
 #include "transformaspectimpl.h"
+#include "serviceaspectimpl.h"
 
 namespace DrawSpace
 {
@@ -62,8 +63,8 @@ public:
     virtual Service*                                                            InstanciateService( const dsstring& p_id );
 
     virtual DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   InstanciateRenderingAspectImpls( const dsstring& p_id );
-
     virtual DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   InstanciateTransformAspectImpls( const dsstring& p_id );
+    virtual DrawSpace::Interface::AspectImplementations::ServiceAspectImpl*     InstanciateServiceAspectImpl( const dsstring& p_id );
 
 
 };
