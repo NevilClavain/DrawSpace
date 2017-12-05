@@ -80,7 +80,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     for( size_t i = 0; i < m_systems.size(); i++ )
     {
-        m_systems[i]->Init();
+        m_systems[i]->Init( &m_entitygraph );
     }
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -471,7 +471,7 @@ void MainLoopService::Release( void )
     m_entitygraph.OnSceneRenderEnd();
     for( size_t i = 0; i < m_systems.size(); i++ )
     {
-        m_systems[i]->Release();
+        m_systems[i]->Release( &m_entitygraph );
     }
 }
 

@@ -20,36 +20,61 @@
 *
 */
 
-#ifndef _TIMESYSTEM_H_
-#define _TIMESYSTEM_H_
+#include "mainservice.h"
 
-#include "systems.h"
-#include "timemanager.h"
-#include "timeaspect.h"
-
-namespace DrawSpace
+bool MainService::Init( void )
 {
-namespace Systems
-{
-class TimeSystem : public Interface::System
-{
-protected:
-
-    //Utils::TimeManager* m_currtm;
-    Aspect::TimeAspect* m_time_aspect;
-
-public:
-    TimeSystem( void );
-    ~TimeSystem( void );
-
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
-};
-
-}
+    return true;
 }
 
-#endif
+void MainService::Run( void )
+{
+}
+
+void MainService::Release( void )
+{
+}
+
+void MainService::OnKeyPress( long p_key )
+{
+}
+
+void MainService::OnEndKeyPress( long p_key )
+{
+}
+
+void MainService::OnKeyPulse( long p_key )
+{
+}
+
+void MainService::OnChar( long p_char, long p_scan )
+{
+}
+
+void MainService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
+{
+}
+
+void MainService::OnMouseWheel( long p_delta )
+{
+}
+
+void MainService::OnMouseLeftButtonDown( long p_xm, long p_ym )
+{
+}
+
+void MainService::OnMouseLeftButtonUp( long p_xm, long p_ym )
+{
+}
+
+void MainService::OnMouseRightButtonDown( long p_xm, long p_ym )
+{
+}
+
+void MainService::OnMouseRightButtonUp( long p_xm, long p_ym )
+{
+}
+
+void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
+{
+}

@@ -23,6 +23,8 @@
 #ifndef _SERVICEASPECTIMPL_H_
 #define _SERVICEASPECTIMPL_H_
 
+#include "drawspace_commons.h"
+
 namespace DrawSpace
 {
 namespace Interface

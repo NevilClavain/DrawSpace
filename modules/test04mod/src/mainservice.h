@@ -20,36 +20,34 @@
 *
 */
 
-#ifndef _TIMESYSTEM_H_
-#define _TIMESYSTEM_H_
+#ifndef _MAINSERVICE_H_
+#define _MAINSERVICE_H_
 
-#include "systems.h"
-#include "timemanager.h"
-#include "timeaspect.h"
+#include "serviceaspectimpl.h"
 
-namespace DrawSpace
-{
-namespace Systems
-{
-class TimeSystem : public Interface::System
+class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl
 {
 protected:
 
-    //Utils::TimeManager* m_currtm;
-    Aspect::TimeAspect* m_time_aspect;
+    
 
 public:
-    TimeSystem( void );
-    ~TimeSystem( void );
+    bool Init( void );
+    void Run( void );
+    void Release( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
+    void OnKeyPress( long p_key );
+    void OnEndKeyPress( long p_key );
+    void OnKeyPulse( long p_key );
+    void OnChar( long p_char, long p_scan );
+    void OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
+    void OnMouseWheel( long p_delta );
+    void OnMouseLeftButtonDown( long p_xm, long p_ym );
+    void OnMouseLeftButtonUp( long p_xm, long p_ym );
+    void OnMouseRightButtonDown( long p_xm, long p_ym );
+    void OnMouseRightButtonUp( long p_xm, long p_ym );
+    void OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
 };
-
-}
-}
 
 #endif

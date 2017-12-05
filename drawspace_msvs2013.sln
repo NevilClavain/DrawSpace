@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspace", "drawspace_msvs2013.vcxproj", "{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}"
 EndProject
@@ -73,6 +73,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test03mod", "modules\test03
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rt", "rt\rt.vcxproj", "{092A030C-DCE8-4C6C-97BD-E13B1A3EA116}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test04mod", "modules\test04mod\test04mod.vcxproj", "{78B5BF3F-5376-4389-BB6B-737083D19172}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -212,6 +214,14 @@ Global
 		{092A030C-DCE8-4C6C-97BD-E13B1A3EA116}.Release|Win32.ActiveCfg = Release|Win32
 		{092A030C-DCE8-4C6C-97BD-E13B1A3EA116}.Release|Win32.Build.0 = Release|Win32
 		{092A030C-DCE8-4C6C-97BD-E13B1A3EA116}.Release|x64.ActiveCfg = Release|Win32
+		{78B5BF3F-5376-4389-BB6B-737083D19172}.Debug|ARM.ActiveCfg = Debug|Win32
+		{78B5BF3F-5376-4389-BB6B-737083D19172}.Debug|Win32.ActiveCfg = Debug|Win32
+		{78B5BF3F-5376-4389-BB6B-737083D19172}.Debug|Win32.Build.0 = Debug|Win32
+		{78B5BF3F-5376-4389-BB6B-737083D19172}.Debug|x64.ActiveCfg = Debug|Win32
+		{78B5BF3F-5376-4389-BB6B-737083D19172}.Release|ARM.ActiveCfg = Release|Win32
+		{78B5BF3F-5376-4389-BB6B-737083D19172}.Release|Win32.ActiveCfg = Release|Win32
+		{78B5BF3F-5376-4389-BB6B-737083D19172}.Release|Win32.Build.0 = Release|Win32
+		{78B5BF3F-5376-4389-BB6B-737083D19172}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -224,5 +234,6 @@ Global
 		{B09637F4-8086-4754-A85F-058EA996B787} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{765F5A95-12B4-4141-8EDA-4126A896C8DA} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{43C2A2DD-020A-4456-986E-5505D06B0A2B} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
+		{78B5BF3F-5376-4389-BB6B-737083D19172} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 	EndGlobalSection
 EndGlobal

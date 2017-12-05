@@ -20,36 +20,51 @@
 *
 */
 
-#ifndef _TIMESYSTEM_H_
-#define _TIMESYSTEM_H_
+#include "test04root.h"
 
-#include "systems.h"
-#include "timemanager.h"
-#include "timeaspect.h"
+#include "shader.h"
+#include "texture.h"
+#include "renderstate.h"
+#include "AC3DMeshe.h"
+#include "mainservice.h"
 
-namespace DrawSpace
-{
-namespace Systems
-{
-class TimeSystem : public Interface::System
-{
-protected:
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface::Module;
 
-    //Utils::TimeManager* m_currtm;
-    Aspect::TimeAspect* m_time_aspect;
+Test04Root::Test04Root( void )
+{ 
+    Shader::EnableShadersDescrInFinalPath( true );
+    Shader::SetRootPath( "test_data/shaders_bank" );
+    Texture::SetRootPath( "test_data/textures_bank" );
+    RenderStatesSet::SetRootPath( "test_data/renderstates_bank" );
 
-public:
-    TimeSystem( void );
-    ~TimeSystem( void );
+    AC3DMesheImport::SetRootPath( "test_data/meshes_bank" );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
-};
+    //File::MountVirtualFS( "test_data.bank" );
 
 }
+
+Test04Root::~Test04Root( void )
+{
 }
 
-#endif
+void Test04Root::Init( void )
+{
+}
+
+dsstring Test04Root::GetModuleName( void )
+{
+    return "Test04Root";
+}
+
+dsstring Test04Root::GetModuleDescr( void )
+{
+    return "Test04 module";
+}
+
+DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* Test04Root::InstanciateServiceAspectImpl( const dsstring& p_id )
+{
+    return _DRAWSPACE_NEW_( MainService, MainService );
+}

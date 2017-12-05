@@ -25,6 +25,7 @@
 dsAppClient* dsAppClient::m_instance = NULL;
 
 using namespace DrawSpace::Interface::Module;
+using namespace DrawSpace::Aspect;
 
 
 _DECLARE_DS_LOGGER( logger, "vmapp", DrawSpace::Logger::Configuration::GetInstance() )
@@ -47,12 +48,7 @@ dsAppClient::~dsAppClient( void )
 
 void dsAppClient::OnRenderFrame( void )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->Run();
-    }
-    */
+    m_serviceSystem.Run( &m_entitygraph );
 }
 
 bool dsAppClient::OnIdleAppInit( void )
@@ -70,7 +66,14 @@ bool dsAppClient::OnIdleAppInit( void )
         win_title += root->GetModuleDescr();
         ::SetWindowText( m_hwnd, win_title.c_str() ); 
 
-        // to be continued...
+
+        // construction du graph avec une entité :)
+        ServiceAspect* service_aspect = m_rootEntity.AddAspect<ServiceAspect>();
+        service_aspect->AddImplementation( m_service );
+
+        m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
+
+        m_serviceSystem.Init( &m_entitygraph );
     
     }
     else
@@ -110,13 +113,8 @@ void dsAppClient::OnAppInit( void )
 void dsAppClient::OnClose( void )
 {
     _DSDEBUG(logger, dsstring("RT shutdown..."))
-    /*
-    if( m_mainloopservice )
-    {
-        _DSDEBUG(logger, dsstring("closing main loop service..."))
-        m_mainloopservice->Release();
-    }
-    */
+
+    m_serviceSystem.Release( &m_entitygraph );
 }
 
 void dsAppClient::OnKeyPress( long p_key ) 

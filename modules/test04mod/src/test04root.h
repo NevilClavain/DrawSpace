@@ -20,36 +20,21 @@
 *
 */
 
-#ifndef _TIMESYSTEM_H_
-#define _TIMESYSTEM_H_
+#ifndef _TEST04ROOT_H_
+#define _TEST04ROOT_H_
 
-#include "systems.h"
-#include "timemanager.h"
-#include "timeaspect.h"
+#include "module_root.h"
 
-namespace DrawSpace
+class Test04Root : public DrawSpace::Interface::Module::Root
 {
-namespace Systems
-{
-class TimeSystem : public Interface::System
-{
-protected:
-
-    //Utils::TimeManager* m_currtm;
-    Aspect::TimeAspect* m_time_aspect;
-
 public:
-    TimeSystem( void );
-    ~TimeSystem( void );
+    Test04Root( void );
+    virtual ~Test04Root( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+    virtual dsstring GetModuleName( void );
+    virtual dsstring GetModuleDescr( void );
+    virtual void Init( void );
+    DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* InstanciateServiceAspectImpl( const dsstring& p_id );
 };
-
-}
-}
 
 #endif

@@ -324,6 +324,9 @@
     <ClCompile Include="src\serviceaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
+    <ClCompile Include="src\servicesystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -658,6 +661,9 @@
     </ClInclude>
     <ClInclude Include="src\serviceaspect.h">
       <Filter>aspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\servicesystem.h">
+      <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

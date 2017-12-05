@@ -119,6 +119,7 @@
 #include "transformsystem.h"
 #include "physicssystem.h"
 #include "timesystem.h"
+#include "servicesystem.h"
 
 
 #endif

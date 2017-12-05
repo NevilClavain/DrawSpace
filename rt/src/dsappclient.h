@@ -43,6 +43,13 @@ protected:
 
     DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* m_service;
 
+    DrawSpace::Systems::ServiceSystem                               m_serviceSystem;
+    DrawSpace::EntityGraph::EntityNodeGraph                         m_entitygraph;
+
+    DrawSpace::Core::Entity                                         m_rootEntity;
+    DrawSpace::EntityGraph::EntityNode                              m_rootEntityNode;
+
+
     void on_mouse_visible( bool p_state );
     void on_mousecircularmode_update( bool p_state );
     void on_closeapp( int p_code );

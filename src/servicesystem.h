@@ -20,30 +20,29 @@
 *
 */
 
-#ifndef _TIMESYSTEM_H_
-#define _TIMESYSTEM_H_
+#ifndef _SERVICESYSTEM_H_
+#define _SERVICESYSTEM_H_
 
 #include "systems.h"
-#include "timemanager.h"
-#include "timeaspect.h"
+#include "entitynodegraph.h"
 
 namespace DrawSpace
 {
 namespace Systems
 {
-class TimeSystem : public Interface::System
+class ServiceSystem : public Interface::System
 {
 protected:
 
-    //Utils::TimeManager* m_currtm;
-    Aspect::TimeAspect* m_time_aspect;
+    int         m_callsource;
+    bool        m_init_status;
 
 public:
-    TimeSystem( void );
-    ~TimeSystem( void );
+    ServiceSystem( void );
+    ~ServiceSystem( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
+    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
+    void Release( EntityGraph::EntityNodeGraph* p_entitygraph );
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );

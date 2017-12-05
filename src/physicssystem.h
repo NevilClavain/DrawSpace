@@ -43,8 +43,8 @@ public:
     PhysicsSystem( void );
     ~PhysicsSystem( void );
 
-    void Init( void ) {};
-    void Release( void ) {};
+    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
+    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );

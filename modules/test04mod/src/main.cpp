@@ -20,36 +20,12 @@
 *
 */
 
-#ifndef _TIMESYSTEM_H_
-#define _TIMESYSTEM_H_
+#include "test04root.h"
 
-#include "systems.h"
-#include "timemanager.h"
-#include "timeaspect.h"
-
-namespace DrawSpace
+extern "C"
 {
-namespace Systems
+__declspec(dllexport) DrawSpace::Interface::Module::Root* PIFactory( void )
 {
-class TimeSystem : public Interface::System
-{
-protected:
-
-    //Utils::TimeManager* m_currtm;
-    Aspect::TimeAspect* m_time_aspect;
-
-public:
-    TimeSystem( void );
-    ~TimeSystem( void );
-
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
-};
-
+    return new Test04Root;
 }
 }
-
-#endif

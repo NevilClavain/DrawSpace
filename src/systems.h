@@ -32,8 +32,8 @@ namespace Interface
 class System
 {
 public:
-    virtual void Init( void ) = 0;
-    virtual void Release( void ) = 0;
+    virtual bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) = 0;
+    virtual void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) = 0;
     virtual void Run( EntityGraph::EntityNodeGraph* p_entitygraph ) = 0;
     virtual void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity ) = 0;
 };

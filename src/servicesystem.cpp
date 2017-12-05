@@ -20,36 +20,65 @@
 *
 */
 
-#ifndef _TIMESYSTEM_H_
-#define _TIMESYSTEM_H_
+#include "servicesystem.h"
+#include "serviceaspect.h"
 
-#include "systems.h"
-#include "timemanager.h"
-#include "timeaspect.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::EntityGraph;
+using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Systems;
 
-namespace DrawSpace
+ServiceSystem::ServiceSystem(void)
 {
-namespace Systems
-{
-class TimeSystem : public Interface::System
-{
-protected:
-
-    //Utils::TimeManager* m_currtm;
-    Aspect::TimeAspect* m_time_aspect;
-
-public:
-    TimeSystem( void );
-    ~TimeSystem( void );
-
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
-};
-
-}
 }
 
-#endif
+ServiceSystem::~ServiceSystem(void)
+{
+}
+
+bool ServiceSystem::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
+{
+    m_init_status = true;
+    m_callsource = 0;
+    p_entitygraph->AcceptSystemLeafToRoot( this );
+
+    return m_init_status;
+}
+
+void ServiceSystem::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
+{
+    m_callsource = 2;
+    p_entitygraph->AcceptSystemLeafToRoot( this );
+}
+
+void ServiceSystem::Run( EntityNodeGraph* p_entitygraph )
+{
+    m_callsource = 1;
+    p_entitygraph->AcceptSystemLeafToRoot( this );
+}
+
+void ServiceSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
+{
+    ServiceAspect* service_aspect = p_entity->GetAspect<ServiceAspect>();
+    if( service_aspect )
+    {
+        switch( m_callsource )
+        {
+            case 0:
+                if( false == service_aspect->Init() )
+                {
+                    m_init_status = false;
+                }
+                break;
+
+            case 1:
+                service_aspect->Run();
+                break;
+
+            case 2:
+                service_aspect->Release();
+                break;
+        }        
+    }
+}
