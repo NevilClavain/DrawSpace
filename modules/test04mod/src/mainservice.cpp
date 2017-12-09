@@ -140,11 +140,29 @@ bool MainService::Init( void )
 
     time_aspect->AddComponent<dsreal>( "output_time_factor" );
 
+    m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
+    m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
+
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
     /////////////////////////////////////////////////////////////////////////////////////
 
+
+
+    PhysicsAspect* physic_aspect = m_world1Entity.AddAspect<PhysicsAspect>();
+
+    //physic_aspect->AddComponent<bool>( "gravity_state", true );
+    physic_aspect->AddComponent<bool>( "gravity_state", false );
+    physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
+
+    //m_World1EntityNode = m_rootEntityNode.AddChild( &m_world1Entity );
+
+    m_World1EntityNode = m_rootEntityNode.AddChild( &m_world1Entity );
+
+    //////////////////////////////////////////////////////////////////////////////////////
+
     create_skybox();
+    create_ground();
 
     /////////////////////////////////////////////////////////////////////////////////////
 
@@ -181,6 +199,11 @@ bool MainService::Init( void )
     m_skyboxRender->RegisterToRendering( m_rendergraph );
 
 
+    // ajouter le ground a la scene
+    m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
+    m_groundRender.RegisterToRendering( m_rendergraph );
+
+
 
     // ajouter la cameras a la scene
     m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
@@ -189,6 +212,20 @@ bool MainService::Init( void )
 
     // designer la camera courante
     m_transformSystem.SetCurrentCameraEntity( &m_cameraEntity );
+
+
+
+    ////////////////GUI ///////////////////////////////////////////////////////////////////
+
+
+    m_renderer->GUI_InitSubSystem();
+    m_renderer->GUI_SetResourcesRootDirectory( "./testskin" );
+    
+    m_renderer->GUI_LoadScheme( "AlfiskoSkin.scheme" );
+
+    m_renderer->GUI_LoadLayout( "main.layout", "testskin/layouts/main_widgets.conf" );
+
+    m_renderer->GUI_SetLayout( "main.layout" );
 
 
     m_rendergraph.RenderingQueueModSignal();
@@ -206,6 +243,8 @@ void MainService::Run( void )
     {
         m_systems[i]->Run( &m_entitygraph );
     }
+
+    m_renderer->GUI_Render();
 
     m_renderer->FlipScreen();
 }
@@ -239,6 +278,13 @@ void MainService::OnChar( long p_char, long p_scan )
 
 void MainService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
+    TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+
+    m_fps_yaw += - p_dx / 1.0;
+    m_fps_pitch += - p_dy / 1.0;
+
+    transform_aspect->GetComponent<dsreal>( "yaw" )->getPurpose() = m_fps_yaw.GetValue();
+    transform_aspect->GetComponent<dsreal>( "pitch" )->getPurpose() = m_fps_pitch.GetValue();
 }
 
 void MainService::OnMouseWheel( long p_delta )
@@ -337,4 +383,62 @@ void MainService::create_skybox( void )
 
     transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
     
+}
+
+void MainService::create_ground( void )
+{
+    RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation( &m_groundRender );
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
+
+    
+    RenderingNode* ground_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
+    ground_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    ground_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    ground_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet ground_texturepass_rss;
+    ground_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    ground_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    ground_texturepass->GetFx()->SetRenderStates( ground_texturepass_rss );
+
+
+    ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
+    ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
+
+    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    ground_texturepass->GetTexture( 0 )->LoadFromFile();
+
+    TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
+
+
+    BodyAspect* body_aspect = m_groundEntity.AddAspect<BodyAspect>();
+
+
+    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 100.0, 0.0, 100.0, 1.0 ) );
+
+
+    Matrix ground_attitude;
+    
+    //ground_attitude.Identity();
+    ground_attitude.Translation( 0.0, -4.0, 0.0 );
+
+    body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
+
+    
+    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
+
+    body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "contact_state", false );
+
+    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
+
 }
