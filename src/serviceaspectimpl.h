@@ -27,13 +27,22 @@
 
 namespace DrawSpace
 {
+namespace Aspect
+{
+class ServiceAspect;
+}
 namespace Interface
 {
 namespace AspectImplementations
 {
 class ServiceAspectImpl abstract
 {
+protected:
+    DrawSpace::Aspect::ServiceAspect* m_owner;
+
 public:
+    virtual void SetOwner( DrawSpace::Aspect::ServiceAspect* p_owner ) { m_owner = p_owner; };
+
     virtual bool Init( void ) = 0;
     virtual void Run( void ) = 0;
     virtual void Release( void ) = 0;

@@ -44,6 +44,19 @@ public:
     void Run( void );
     void Release( void );
 
+    void OnKeyPress( long p_key );
+    void OnEndKeyPress( long p_key );
+    void OnKeyPulse( long p_key );
+    void OnChar( long p_char, long p_scan );
+    void OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
+    void OnMouseWheel( long p_delta );
+    void OnMouseLeftButtonDown( long p_xm, long p_ym );
+    void OnMouseLeftButtonUp( long p_xm, long p_ym );
+    void OnMouseRightButtonDown( long p_xm, long p_ym );
+    void OnMouseRightButtonUp( long p_xm, long p_ym );
+    void OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
+
+
 };
 }
 }

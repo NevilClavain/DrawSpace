@@ -34,8 +34,16 @@ class ServiceSystem : public Interface::System
 {
 protected:
 
-    int         m_callsource;
+    dsstring    m_callsource;
     bool        m_init_status;
+
+    long        m_key;
+    long        m_char;
+    long        m_scan;
+    long        m_xm, m_ym, m_dx, m_dy;
+    long        m_delta;
+    WPARAM      m_wParam;
+    LPARAM      m_lParam;
 
 public:
     ServiceSystem( void );
@@ -46,6 +54,18 @@ public:
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    void OnKeyPress( EntityGraph::EntityNodeGraph* p_entitygraph, long p_key );
+    void OnEndKeyPress( EntityGraph::EntityNodeGraph* p_entitygraph, long p_key );
+    void OnKeyPulse( EntityGraph::EntityNodeGraph* p_entitygraph, long p_key );
+    void OnChar( EntityGraph::EntityNodeGraph* p_entitygraph, long p_char, long p_scan );
+    void OnMouseMove( EntityGraph::EntityNodeGraph* p_entitygraph, long p_xm, long p_ym, long p_dx, long p_dy );
+    void OnMouseWheel( EntityGraph::EntityNodeGraph* p_entitygraph, long p_delta );
+    void OnMouseLeftButtonDown( EntityGraph::EntityNodeGraph* p_entitygraph, long p_xm, long p_ym );
+    void OnMouseLeftButtonUp( EntityGraph::EntityNodeGraph* p_entitygraph, long p_xm, long p_ym );
+    void OnMouseRightButtonDown( EntityGraph::EntityNodeGraph* p_entitygraph, long p_xm, long p_ym );
+    void OnMouseRightButtonUp( EntityGraph::EntityNodeGraph* p_entitygraph, long p_xm, long p_ym );
+    void OnAppEvent( EntityGraph::EntityNodeGraph* p_entitygraph, WPARAM p_wParam, LPARAM p_lParam );
 };
 
 }

@@ -66,13 +66,19 @@ bool dsAppClient::OnIdleAppInit( void )
         win_title += root->GetModuleDescr();
         ::SetWindowText( m_hwnd, win_title.c_str() ); 
 
-
         // construction du graph avec une entité :)
         ServiceAspect* service_aspect = m_rootEntity.AddAspect<ServiceAspect>();
         service_aspect->AddImplementation( m_service );
 
+        // quelques parametres a passer au service...
+        service_aspect->AddComponent<DrawSpace::Logger::Configuration*>( "logconf", DrawSpace::Logger::Configuration::GetInstance() );
+        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, bool>*>( "mousecircularmode_cb", m_mouse_circularmode_update_cb );
+        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, bool>*>( "mousevisible_cb", m_mouse_visible_cb );
+        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, int>*>( "closeapp_cb", m_close_app_cb );
+
         m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
+        // lancer init du service
         m_serviceSystem.Init( &m_entitygraph );
     
     }
@@ -81,28 +87,6 @@ bool dsAppClient::OnIdleAppInit( void )
         _DSWARN( logger, dsstring( "no main_app_service found, leaving..." ) )
         return false;
     }
-
-    /*
-    m_mainloopservice = root->InstanciateService( "mainloop" );
-    if( m_mainloopservice )
-    {
-        dsstring win_title = "DrawSpace Runtime - ";
-        
-        win_title += root->GetModuleDescr();
-        ::SetWindowText( m_hwnd, win_title.c_str() );
-
-        _DSDEBUG(logger, dsstring("mainloop service initialisation"))
-        m_mainloopservice->Init( DrawSpace::Logger::Configuration::GetInstance(), m_mouse_circularmode_update_cb, m_mouse_visible_cb, m_close_app_cb );
-
-        return true;
-    }
-    else
-    {
-        _DSWARN(logger, dsstring("no mainloop service found, leaving..."))
-        return false;
-    }
-    */
-
     return true;
 }
 
@@ -119,117 +103,62 @@ void dsAppClient::OnClose( void )
 
 void dsAppClient::OnKeyPress( long p_key ) 
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnKeyPress( p_key );
-    }
-    */
+    m_serviceSystem.OnKeyPress( &m_entitygraph, p_key );
 }
 
 void dsAppClient::OnEndKeyPress( long p_key )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnEndKeyPress( p_key );
-    }
-    */
+    m_serviceSystem.OnEndKeyPress( &m_entitygraph, p_key );
 }
 
 void dsAppClient::OnKeyPulse( long p_key )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnKeyPulse( p_key );
-    }
-    */
+    m_serviceSystem.OnKeyPulse( &m_entitygraph, p_key );
 }
 
 void dsAppClient::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnMouseMove( p_xm, p_ym, p_dx, p_dy );
-    }
-    */
+    m_serviceSystem.OnMouseMove( &m_entitygraph, p_xm, p_ym, p_dx, p_dy );
 }
 
 void dsAppClient::OnMouseWheel( long p_delta )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnMouseWheel( p_delta );
-    }
-    */
+    m_serviceSystem.OnMouseWheel( &m_entitygraph, p_delta );
 }
 
 void dsAppClient::OnChar( long p_char, long p_scan )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnChar( p_char, p_scan );
-    }
-    */
+    m_serviceSystem.OnChar( &m_entitygraph, p_char, p_scan );
 }
 
 void dsAppClient::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnMouseLeftButtonDown( p_xm, p_ym );
-    }
-    */
+    m_serviceSystem.OnMouseLeftButtonDown( &m_entitygraph, p_xm, p_ym );
 }
 
 void dsAppClient::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnMouseLeftButtonUp( p_xm, p_ym );
-    }
-    */
+    m_serviceSystem.OnMouseLeftButtonUp( &m_entitygraph, p_xm, p_ym );
 }
 
 void dsAppClient::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnMouseRightButtonDown( p_xm, p_ym );
-    }
-    */
+    m_serviceSystem.OnMouseRightButtonDown( &m_entitygraph, p_xm, p_ym );
 }
 
 void dsAppClient::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnMouseRightButtonUp( p_xm, p_ym );
-    }
-    */
+    m_serviceSystem.OnMouseRightButtonUp( &m_entitygraph, p_xm, p_ym );
 }
 
 void dsAppClient::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
-    /*
-    if( m_mainloopservice )
-    {
-        m_mainloopservice->OnAppEvent( p_wParam, p_lParam );
-    }
-    */
+    m_serviceSystem.OnAppEvent( &m_entitygraph, p_wParam, p_lParam );
 }
 
 void dsAppClient::on_mouse_visible( bool p_state )
 {
-    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est d�ja visible), car sinon
+    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est deja visible), car sinon
     // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
 
     if( !p_state )
@@ -255,7 +184,7 @@ void dsAppClient::on_mousecircularmode_update( bool p_state )
     m_mouse_circularmode = p_state;
 
     /*
-    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est d�ja visible), car sinon
+    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est deja visible), car sinon
     // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
 
     if( p_state )

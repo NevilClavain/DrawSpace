@@ -31,7 +31,7 @@ using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
 
-_DECLARE_DS_LOGGER( logger, "test01mainloopservice", NULL )
+_DECLARE_DS_LOGGER( logger, "test03mainloopservice", NULL )
 
 MainLoopService::MainLoopService( void ) :
 m_left_mousebutton( false ),
@@ -403,13 +403,6 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
-    /*
-    m_timeSystem.Run( &m_entitygraph );
-    m_physicsSystem.Run( &m_entitygraph );
-    m_transformSystem.Run( &m_entitygraph );
-    m_renderingSystem.Run( &m_entitygraph );
-    */
-
     for( size_t i = 0; i < m_systems.size(); i++ )
     {
         m_systems[i]->Run( &m_entitygraph );
@@ -451,8 +444,7 @@ void MainLoopService::Run( void )
     //transform_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = planet_mat;
     body_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = planet_mat;
     
-    
-    m_tm.Update();
+
 
         
     if( 1 == m_current_camera )

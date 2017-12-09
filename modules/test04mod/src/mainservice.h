@@ -23,13 +23,49 @@
 #ifndef _MAINSERVICE_H_
 #define _MAINSERVICE_H_
 
+#include "drawspace.h"
 #include "serviceaspectimpl.h"
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl
 {
 protected:
 
-    
+    DrawSpace::Interface::Renderer*                                                 m_renderer;
+    dsstring                                                                        m_pluginDescr;
+
+    DrawSpace::Interface::MesheImport*                                              m_meshe_import;
+
+    DrawSpace::RenderGraph::RenderPassNodeGraph                                     m_rendergraph;
+    DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
+
+    DrawSpace::RenderGraph::RenderPassNode                                          m_texturepass;
+    DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;    
+
+    DrawSpace::Core::Entity                                                         m_rootEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
+
+    DrawSpace::Core::Entity                                                         m_skyboxEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_skyboxEntityNode;
+
+
+    DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
+    DrawSpace::Systems::TransformSystem                                             m_transformSystem;
+    DrawSpace::Systems::PhysicsSystem                                               m_physicsSystem;
+    DrawSpace::Systems::TimeSystem                                                  m_timeSystem;
+
+    std::vector<DrawSpace::Interface::System*>                                      m_systems;
+
+    DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
+    DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
+
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
+    DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
+
+    DrawSpace::Core::Entity                                                         m_cameraEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_cameraEntityNode;
+
+
+    void create_skybox( void );
 
 public:
     bool Init( void );

@@ -38,7 +38,6 @@ protected:
     bool                                                                            m_right_mousebutton;
 
     DrawSpace::Interface::Renderer*                                                 m_renderer;
-    DrawSpace::Utils::TimeManager                                                   m_tm;
     dsstring                                                                        m_pluginDescr;
 
     DrawSpace::RenderGraph::RenderPassNodeGraph                                     m_rendergraph;
