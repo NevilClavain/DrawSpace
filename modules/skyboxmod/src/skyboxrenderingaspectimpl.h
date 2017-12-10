@@ -85,6 +85,8 @@ protected:
     void        init_rendering_objects( void );
     void        release_rendering_objects( void );
 
+    void        update_shader_params( void ); // for all passes
+
 public:
     SkyboxRenderingAspectImpl( void );
 

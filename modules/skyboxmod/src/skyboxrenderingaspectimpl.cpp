@@ -337,6 +337,10 @@ void SkyboxRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
             m_pass_slots[i]->m_proj = proj;
         }
     }
+
+    update_shader_params();
+
+    ////////////////////////////////////////////////////////
 }
 
 void SkyboxRenderingAspectImpl::init_rendering_objects( void )
@@ -372,7 +376,9 @@ void SkyboxRenderingAspectImpl::init_rendering_objects( void )
         }
 
         m_pass_slots.push_back( pass_slot );
-    }    
+    }
+    
+    update_shader_params();   
 }
 
 void SkyboxRenderingAspectImpl::release_rendering_objects( void )
@@ -382,4 +388,38 @@ void SkyboxRenderingAspectImpl::release_rendering_objects( void )
         _DRAWSPACE_DELETE_( m_pass_slots[i] );
     }
     m_pass_slots.clear();
+}
+
+void SkyboxRenderingAspectImpl::update_shader_params( void ) // for all passes
+{
+    ////////////////////////////////////////////////////////
+    //recup des params shaders
+
+    ComponentList<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>> skybox_shaders_params;
+
+    m_owner->GetComponentsByType<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>( skybox_shaders_params );
+
+    for( size_t i = 0; i < skybox_shaders_params.size(); i++ )
+    {
+        std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> shaders_params = skybox_shaders_params[i]->getPurpose();
+
+        for( size_t j = 0; j < shaders_params.size(); j++ ) // pour chaque passe
+        {
+            PassSlot* curr_pass = m_pass_slots[j];
+
+            std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = shaders_params[j];
+
+            for( size_t k = 0; k < pass_shaders_params.size(); k++ )
+            {
+                std::pair<dsstring, RenderingNode::ShadersParams> shader_params_pair = pass_shaders_params[k];
+
+                curr_pass->GetRenderingNode( PassSlot::FrontQuad )->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
+                curr_pass->GetRenderingNode( PassSlot::RearQuad )->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
+                curr_pass->GetRenderingNode( PassSlot::LeftQuad )->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
+                curr_pass->GetRenderingNode( PassSlot::RightQuad )->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
+                curr_pass->GetRenderingNode( PassSlot::TopQuad )->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
+                curr_pass->GetRenderingNode( PassSlot::BottomQuad )->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
+            }
+        }
+    }
 }

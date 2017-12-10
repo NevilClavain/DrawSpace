@@ -153,6 +153,16 @@ void RenderingNode::SetShaderBool( const dsstring& p_id, bool p_value )
     }
 }
 
+void RenderingNode::UpdateShaderParams( const dsstring& p_id, RenderingNode::ShadersParams& p_params )
+{
+    if( 0 == m_shader_params.count( p_id ) > 0 )
+    {
+        m_shader_params[p_id] = _DRAWSPACE_NEW_( ShadersParams, ShadersParams );
+    }
+
+    *( m_shader_params[p_id] ) = p_params;
+}
+
 void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist )
 {
     p_outlist = m_shader_params;
