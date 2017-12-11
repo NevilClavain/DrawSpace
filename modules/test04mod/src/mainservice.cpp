@@ -265,10 +265,38 @@ void MainService::Release( void )
 
 void MainService::OnKeyPress( long p_key )
 {
+    switch( p_key )
+    {
+        case 'Q':
+        {
+            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 12.0;    
+        }
+        break;
+
+        case 'W':
+        {
+            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -12.0;
+        }
+        break;
+    }
 }
 
 void MainService::OnEndKeyPress( long p_key )
 {
+    switch( p_key )
+    {
+        case 'Q':
+        case 'W':
+        {
+
+            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
+
+        }
+        break;
+    }
 }
 
 void MainService::OnKeyPulse( long p_key )
