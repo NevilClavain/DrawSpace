@@ -425,7 +425,7 @@ void MainService::create_skybox( void )
 
     /////////// params shaders
     
-    std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> skybox_shaders_params;
+    //std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> skybox_shaders_params;
 
     std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params;
 
@@ -452,10 +452,13 @@ void MainService::create_skybox( void )
     skybox_texturemirrorpass_shaders_params.push_back( reflector_normale );
     
 
-    skybox_shaders_params.push_back( skybox_texturepass_shaders_params );
-    skybox_shaders_params.push_back( skybox_texturemirrorpass_shaders_params );
+    //skybox_shaders_params.push_back( skybox_texturepass_shaders_params );
+    //skybox_shaders_params.push_back( skybox_texturemirrorpass_shaders_params );
 
-    rendering_aspect->AddComponent<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>( "skybox_shaders_params", skybox_shaders_params );
+    //rendering_aspect->AddComponent<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>( "skybox_shaders_params", skybox_shaders_params );
+
+    rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( "skybox_texturepass_shaders_params", skybox_texturepass_shaders_params );
+    rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( "skybox_texturemirrorpass_shaders_params", skybox_texturemirrorpass_shaders_params );
 
     //////////////// valeur du rendering order pour chaque slot pass
     rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
