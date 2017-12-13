@@ -127,7 +127,7 @@ bool MainService::Init( void )
     m_texturemirrorpass.GetRenderingQueue()->EnableTargetClearing( false );
 
     
-    m_wavespass = m_finalpass.CreateChild( "wave_pass", 2, Core::Texture::RENDERPURPOSE_COLOR, Core::Texture::RENDERTARGET_GPU, false, 512, 512 );
+    m_wavespass = m_finalpass.CreateChild( "wave_pass", 3, Core::Texture::RENDERPURPOSE_COLOR, Core::Texture::RENDERTARGET_GPU, false, 512, 512 );
 
     m_wavespass.CreateViewportQuad();
 
@@ -281,8 +281,6 @@ void MainService::Run( void )
     {
         if( m_waves.GetValue() > 0.0 )
         {
-            //m_tm.TranslationSpeedDec( &m_waves, 1.0 );
-
             m_waves -= 1.0;
         }
         else
@@ -532,13 +530,13 @@ void MainService::create_ground( void )
 
     ////////////////////////////////////////////////////////
 
-    //ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
-    //ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
 
     ////////////////////////////////////////////////////////
 
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+    //ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    //ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
 
     ////////////////////////////////////////////////////////
@@ -566,7 +564,7 @@ void MainService::create_ground( void )
     //ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
     //ground_texturepass->GetTexture( 0 )->LoadFromFile();
     
-    ground_texturepass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
+    //ground_texturepass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
 
 
     TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
