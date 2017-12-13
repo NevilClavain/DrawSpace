@@ -109,3 +109,9 @@ ViewportQuad* RenderPassNode::GetViewportQuad( void ) const
     PassDescr* descr = m_tree_node->data();
     return descr->m_viewportquad;
 }
+
+Texture* RenderPassNode::GetTargetTexture( void ) const
+{
+    PassDescr* descr = m_tree_node->data();
+    return descr->m_targettexture;
+}

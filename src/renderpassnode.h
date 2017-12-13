@@ -89,6 +89,7 @@ public:
     void CreateViewportQuad( dsreal p_z_offset = 0.0 );
     Core::RenderingQueue* GetRenderingQueue( void ) const;
     ViewportQuad* GetViewportQuad( void ) const;
+    Core::Texture* GetTargetTexture( void ) const;
 
     friend class RenderPassNodeGraph;
 };

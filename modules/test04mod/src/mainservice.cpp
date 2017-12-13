@@ -33,6 +33,8 @@ _DECLARE_DS_LOGGER( logger, "test04mainloopservice", NULL )
 
 bool MainService::Init( void )
 {
+    m_waves_inc = false;
+
     m_systems.push_back( &m_timeSystem );
     m_systems.push_back( &m_physicsSystem );
     m_systems.push_back( &m_transformSystem );
@@ -124,6 +126,18 @@ bool MainService::Init( void )
     m_texturemirrorpass.GetRenderingQueue()->EnableDepthClearing( true );
     m_texturemirrorpass.GetRenderingQueue()->EnableTargetClearing( false );
 
+    
+    m_wavespass = m_finalpass.CreateChild( "wave_pass", 2, Core::Texture::RENDERPURPOSE_COLOR, Core::Texture::RENDERTARGET_GPU, false, 512, 512 );
+
+    m_wavespass.CreateViewportQuad();
+
+    m_wavespass.GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+    m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.vso", true ) ) );
+    m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.pso", true ) ) );
+    m_wavespass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
+    m_wavespass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+    m_wavespass.GetViewportQuad()->AddShaderParameter( 1, "waves", 0 );
+    
 
     ////////////////////////////////////////////////////////////////////////////////////
 
@@ -145,6 +159,8 @@ bool MainService::Init( void )
 
     m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
     m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
+
+    m_waves = time_aspect->TimeScalarFactory( 0.0 );
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
@@ -248,8 +264,35 @@ void MainService::Run( void )
     }
 
     m_renderer->GUI_Render();
-
     m_renderer->FlipScreen();
+
+    if( m_waves_inc )
+    {
+        if( m_waves.GetValue() < 200.0 )
+        {
+            m_waves += 1.0;
+        }
+        else
+        {
+            m_waves_inc = false;
+        }
+    }
+    else
+    {
+        if( m_waves.GetValue() > 0.0 )
+        {
+            //m_tm.TranslationSpeedDec( &m_waves, 1.0 );
+
+            m_waves -= 1.0;
+        }
+        else
+        {
+            m_waves_inc = true;
+        }        
+    }
+
+    m_wavespass.GetViewportQuad()->SetShaderRealVector( "waves", DrawSpace::Utils::Vector( m_waves.GetValue(), 0.0, 0.0, 0.0 ) );
+
 }
 
 void MainService::Release( void )
@@ -487,8 +530,20 @@ void MainService::create_ground( void )
     RenderingNode* ground_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
     ground_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+    ////////////////////////////////////////////////////////
+
+    //ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
+    //ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+
+    ////////////////////////////////////////////////////////
+
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+
+    ////////////////////////////////////////////////////////
+
+
 
     ground_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
     ground_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
@@ -508,8 +563,11 @@ void MainService::create_ground( void )
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
     ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
-    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    ground_texturepass->GetTexture( 0 )->LoadFromFile();
+    //ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    //ground_texturepass->GetTexture( 0 )->LoadFromFile();
+    
+    ground_texturepass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
+
 
     TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
 

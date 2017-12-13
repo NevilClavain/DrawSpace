@@ -40,6 +40,7 @@ protected:
 
     DrawSpace::RenderGraph::RenderPassNode                                          m_texturepass;
     DrawSpace::RenderGraph::RenderPassNode                                          m_texturemirrorpass;
+    DrawSpace::RenderGraph::RenderPassNode                                          m_wavespass;
     DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;    
 
     DrawSpace::Core::Entity                                                         m_rootEntity;
@@ -75,6 +76,9 @@ protected:
 
     DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_yaw;
     DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_pitch;
+
+    DrawSpace::Aspect::TimeAspect::TimeScalar                                       m_waves;
+    bool                                                                            m_waves_inc;
 
 
 
