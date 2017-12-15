@@ -76,7 +76,11 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
     PassDescrTree::node_type::iterator it = m_tree_node->insert( descr );
 
     RenderPassNode::PassDescr* current_descr = m_tree_node->data();
-    current_descr->m_viewportquad->SetTexture( descr->m_targettexture, p_targetstage );
+
+    if( p_targetstage != noTextureStageConnection )
+    {
+        current_descr->m_viewportquad->SetTexture( descr->m_targettexture, p_targetstage );
+    }
 
     RenderPassNode node( &(*it) );
     return node;

@@ -31,10 +31,15 @@ using namespace DrawSpace::Utils;
 
 _DECLARE_DS_LOGGER( logger, "test04mainloopservice", NULL )
 
+MainService::MainService( void ) :
+m_waves_inc( true ),
+m_hmi_mode( true ),
+m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked )
+{
+}
+
 bool MainService::Init( void )
 {
-    m_waves_inc = false;
-
     m_systems.push_back( &m_timeSystem );
     m_systems.push_back( &m_physicsSystem );
     m_systems.push_back( &m_transformSystem );
@@ -62,9 +67,14 @@ bool MainService::Init( void )
     DrawSpace::Core::BaseCallback<void, int>* closeapp_cb;
     closeapp_cb = app_cbs[0]->getPurpose();
 
+
+    m_mousecircularmode_cb = mousecircularmode_cb;
+    m_closeapp_cb = closeapp_cb;
+
     ////////////////////////////////////////////////////////
 
-    (*mousecircularmode_cb)( true );
+    
+    
     logconf->RegisterSink( &logger );
     logger.SetConfiguration( logconf );
 
@@ -89,6 +99,9 @@ bool MainService::Init( void )
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
     m_meshe_import = new DrawSpace::Utils::AC3DMesheImport();
+
+
+    m_renderer->GUI_RegisterPushButtonEventClickedHandler( &m_guiwidgetpushbuttonclicked_cb );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -126,8 +139,16 @@ bool MainService::Init( void )
     m_texturemirrorpass.GetRenderingQueue()->EnableDepthClearing( true );
     m_texturemirrorpass.GetRenderingQueue()->EnableTargetClearing( false );
 
+
+    m_bumppass = m_finalpass.CreateChild( "bump_pass", 2, Texture::RENDERPURPOSE_FLOATVECTOR );
+
+
+    m_bumppass.GetRenderingQueue()->EnableDepthClearing( true );
+    m_bumppass.GetRenderingQueue()->EnableTargetClearing( true );
+    m_bumppass.GetRenderingQueue()->SetTargetClearingColor( 255, 255, 255, 255 );
+
     
-    m_wavespass = m_finalpass.CreateChild( "wave_pass", 3, Core::Texture::RENDERPURPOSE_COLOR, Core::Texture::RENDERTARGET_GPU, false, 512, 512 );
+    m_wavespass = m_finalpass.CreateChild( "wave_pass", RenderGraph::RenderPassNode::noTextureStageConnection, Core::Texture::RENDERPURPOSE_COLOR, Core::Texture::RENDERTARGET_GPU, false, 512, 512 );
 
     m_wavespass.CreateViewportQuad();
 
@@ -137,7 +158,7 @@ bool MainService::Init( void )
     m_wavespass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
     m_wavespass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
     m_wavespass.GetViewportQuad()->AddShaderParameter( 1, "waves", 0 );
-    
+
 
     ////////////////////////////////////////////////////////////////////////////////////
 
@@ -250,6 +271,10 @@ bool MainService::Init( void )
     m_rendergraph.RenderingQueueModSignal();
     m_entitygraph.OnSceneRenderBegin();
 
+
+
+    set_mouse_circular_mode( !m_hmi_mode );
+
     _DSDEBUG( logger, dsstring("MainService : startup...") );
 
     return true;
@@ -306,6 +331,12 @@ void MainService::Release( void )
 
 void MainService::OnKeyPress( long p_key )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnKeyUp( p_key );
+        return;
+    }
+
     switch( p_key )
     {
         case 'Q':
@@ -326,6 +357,12 @@ void MainService::OnKeyPress( long p_key )
 
 void MainService::OnEndKeyPress( long p_key )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnKeyDown( p_key );
+        return;
+    }
+
     switch( p_key )
     {
         case 'Q':
@@ -342,21 +379,41 @@ void MainService::OnEndKeyPress( long p_key )
 
 void MainService::OnKeyPulse( long p_key )
 {
+    switch( p_key )
+    {
+        case VK_F1:
+
+            m_hmi_mode = !m_hmi_mode;
+            set_mouse_circular_mode( !m_hmi_mode );            
+            break;
+    }
 }
 
 void MainService::OnChar( long p_char, long p_scan )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnChar( p_char );
+        return;
+    }
 }
 
 void MainService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-    TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+    if( !m_hmi_mode )
+    {
+        TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
 
-    m_fps_yaw += - p_dx / 1.0;
-    m_fps_pitch += - p_dy / 1.0;
+        m_fps_yaw += - p_dx / 1.0;
+        m_fps_pitch += - p_dy / 1.0;
 
-    transform_aspect->GetComponent<dsreal>( "yaw" )->getPurpose() = m_fps_yaw.GetValue();
-    transform_aspect->GetComponent<dsreal>( "pitch" )->getPurpose() = m_fps_pitch.GetValue();
+        transform_aspect->GetComponent<dsreal>( "yaw" )->getPurpose() = m_fps_yaw.GetValue();
+        transform_aspect->GetComponent<dsreal>( "pitch" )->getPurpose() = m_fps_pitch.GetValue();
+    }
+    else
+    {
+        m_renderer->GUI_OnMouseMove( p_xm, p_ym, p_dx, p_dy );
+    }
 }
 
 void MainService::OnMouseWheel( long p_delta )
@@ -365,18 +422,34 @@ void MainService::OnMouseWheel( long p_delta )
 
 void MainService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnMouseLeftButtonDown();
+    }
 }
 
 void MainService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnMouseLeftButtonUp();
+    }
 }
 
 void MainService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnMouseRightButtonDown();
+    }
 }
 
 void MainService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
+    if( m_hmi_mode )
+    {
+        m_renderer->GUI_OnMouseRightButtonUp();
+    }
 }
 
 void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
@@ -519,8 +592,10 @@ void MainService::create_skybox( void )
 void MainService::create_ground( void )
 {
     RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
-
     rendering_aspect->AddImplementation( &m_groundRender );
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -561,11 +636,39 @@ void MainService::create_ground( void )
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
     ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
-    //ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    //ground_texturepass->GetTexture( 0 )->LoadFromFile();
+    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    ground_texturepass->GetTexture( 0 )->LoadFromFile();
     
     //ground_texturepass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "bumppass_slot", "bump_pass" );
+
+    RenderingNode* ground_bumppass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "bumppass_slot" )->getPurpose().GetRenderingNode();
+
+    ground_bumppass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+    ground_bumppass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump.vso", true ) ) );
+    ground_bumppass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump.pso", true ) ) );
+    ground_bumppass->GetFx()->GetShader( 0 )->LoadFromFile();
+    ground_bumppass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet ground_bumppass_rss;
+
+    ground_bumppass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    ground_bumppass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    ground_bumppass->GetFx()->SetRenderStates( ground_bumppass_rss );
+
+
+    ground_bumppass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    ground_bumppass->GetMeshe()->SetImporter( m_meshe_import );
+    ground_bumppass->GetMeshe()->LoadFromFile( "water.ac", 0 );
+
+    ground_bumppass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
 
@@ -591,4 +694,35 @@ void MainService::create_ground( void )
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
+}
+
+
+void MainService::set_mouse_circular_mode( bool p_state )
+{
+    if( m_mousecircularmode_cb )
+    {
+        (*m_mousecircularmode_cb)( p_state );
+
+        m_renderer->GUI_ShowMouseCursor( !p_state );
+    }
+}
+
+void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id )
+{
+    if( "Trigger" == p_widget_id )
+    {
+        _asm nop
+    }
+    else if( "Quit" == p_widget_id )
+    {
+        (*m_closeapp_cb)( 0 );
+    }
+    else if( "Button_Create" == p_widget_id )
+    {
+        _asm nop
+    }
+    else if( "Button_Destroy" == p_widget_id )
+    {
+        _asm nop
+    }
 }

@@ -30,6 +30,8 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
+    typedef DrawSpace::Core::CallBack2<MainService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
+
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
 
@@ -41,6 +43,7 @@ protected:
     DrawSpace::RenderGraph::RenderPassNode                                          m_texturepass;
     DrawSpace::RenderGraph::RenderPassNode                                          m_texturemirrorpass;
     DrawSpace::RenderGraph::RenderPassNode                                          m_wavespass;
+    DrawSpace::RenderGraph::RenderPassNode                                          m_bumppass;
     DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;    
 
     DrawSpace::Core::Entity                                                         m_rootEntity;
@@ -80,12 +83,24 @@ protected:
     DrawSpace::Aspect::TimeAspect::TimeScalar                                       m_waves;
     bool                                                                            m_waves_inc;
 
+    bool                                                                            m_hmi_mode;
 
+    DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousecircularmode_cb;
+    DrawSpace::Core::BaseCallback<void, int>*                                       m_closeapp_cb;
+
+    GUIWidgetPushButtonClickedCallback                                              m_guiwidgetpushbuttonclicked_cb;
+
+    void set_mouse_circular_mode( bool p_state );
+
+    void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
     void create_skybox( void );
     void create_ground( void );
 
 public:
+
+    MainService( void );
+
     bool Init( void );
     void Run( void );
     void Release( void );

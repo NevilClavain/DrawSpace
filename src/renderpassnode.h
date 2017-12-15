@@ -76,6 +76,8 @@ private:
 
 public:
 
+    static const int noTextureStageConnection = -1;
+
     RenderPassNode( void );
     RenderPassNode( PassDescrTree::node_type* p_node );
 
