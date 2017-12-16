@@ -55,6 +55,10 @@ protected:
     DrawSpace::Core::Entity                                                         m_groundEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_groundEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_staticCubeEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_staticCubeEntityNode;
+
+
     DrawSpace::Core::Entity                                                         m_world1Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_World1EntityNode;
 
@@ -69,6 +73,7 @@ protected:
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
+    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_staticCubeRender;
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
     DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
@@ -96,6 +101,7 @@ protected:
 
     void create_skybox( void );
     void create_ground( void );
+    void create_static_cube( void );
 
 public:
 

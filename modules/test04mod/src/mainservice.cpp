@@ -203,6 +203,7 @@ bool MainService::Init( void )
 
     create_skybox();
     create_ground();
+    create_static_cube();
 
     /////////////////////////////////////////////////////////////////////////////////////
 
@@ -215,7 +216,7 @@ bool MainService::Init( void )
     transform_aspect->AddComponent<Vector>( "speed" );
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 0.0, 0.0, 1.0 ) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 1.0, 10.0, 1.0 ) );
 
     transform_aspect->AddComponent<bool>( "ymvt", true );
 
@@ -244,6 +245,9 @@ bool MainService::Init( void )
     m_groundRender.RegisterToRendering( m_rendergraph );
 
 
+    // ajout static cube a la scene
+    m_staticCubeEntityNode = m_World1EntityNode.AddChild( &m_staticCubeEntity );
+    m_staticCubeRender.RegisterToRendering( m_rendergraph );
 
     // ajouter la cameras a la scene
     m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
@@ -456,7 +460,6 @@ void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
-
 void MainService::create_skybox( void )
 {    
     DrawSpace::Interface::Module::Root* sbmod_root;
@@ -589,6 +592,104 @@ void MainService::create_skybox( void )
     
 }
 
+void MainService::create_static_cube( void )
+{
+    RenderingAspect* rendering_aspect = m_staticCubeEntity.AddAspect<RenderingAspect>();
+    rendering_aspect->AddImplementation( &m_staticCubeRender );
+
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
+
+    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
+    cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+
+    cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    cube_texturepass->GetTexture( 0 )->LoadFromFile();
+
+
+    RenderStatesSet cube_texturepass_rss;
+    cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    cube_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+
+    cube_texturepass->GetFx()->SetRenderStates( cube_texturepass_rss );
+
+
+    cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
+    cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
+    //////////////////////////////////////////////////////////////////////////
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturemirrorpass_slot", "texturemirror_pass" );
+
+    RenderingNode* cube_texturemirrorpass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturemirrorpass_slot" )->getPurpose().GetRenderingNode();
+    cube_texturemirrorpass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
+    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );
+
+
+    cube_texturemirrorpass->GetFx()->GetShader( 0 )->LoadFromFile();
+    cube_texturemirrorpass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    cube_texturemirrorpass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    cube_texturemirrorpass->GetTexture( 0 )->LoadFromFile();
+
+
+    RenderStatesSet cube_texturemirrorpass_rss;
+    cube_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    cube_texturemirrorpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+
+    cube_texturemirrorpass->GetFx()->SetRenderStates( cube_texturemirrorpass_rss );
+
+
+    cube_texturemirrorpass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    cube_texturemirrorpass->GetMeshe()->SetImporter( m_meshe_import );
+    cube_texturemirrorpass->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
+    cube_texturemirrorpass->AddShaderParameter( 0, "reflector_pos", 24 );
+    cube_texturemirrorpass->AddShaderParameter( 0, "reflector_normale", 25 );
+
+    cube_texturemirrorpass->SetShaderRealVector( "reflector_pos", Vector( 0.0, -4.0, 0.0, 1.0 ) );
+    cube_texturemirrorpass->SetShaderRealVector( "reflector_normale", Vector( 0.0, 1.0, 0.0, 1.0 ) );
+
+    //////////////////////////////////////////////////////////////////////////
+
+
+   TransformAspect* transform_aspect = m_staticCubeEntity.AddAspect<TransformAspect>();
+
+
+    BodyAspect* body_aspect = m_staticCubeEntity.AddAspect<BodyAspect>();
+
+
+    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 0.5, 0.5, 0.5, 1.0 ) );
+
+
+    Matrix cube_attitude;
+    
+    cube_attitude.Translation( 0.8, 1.1, 0.3 );
+
+    body_aspect->AddComponent<Matrix>( "attitude", cube_attitude );
+
+    
+    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
+
+    body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "contact_state", false );
+
+    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
+
+}
+
 void MainService::create_ground( void )
 {
     RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
@@ -636,8 +737,8 @@ void MainService::create_ground( void )
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
     ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
-    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    ground_texturepass->GetTexture( 0 )->LoadFromFile();
+    //ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    //ground_texturepass->GetTexture( 0 )->LoadFromFile();
     
     //ground_texturepass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
 
