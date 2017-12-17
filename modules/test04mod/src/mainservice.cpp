@@ -158,7 +158,7 @@ bool MainService::Init( void )
     m_wavespass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
     m_wavespass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
     m_wavespass.GetViewportQuad()->AddShaderParameter( 1, "waves", 0 );
-
+    
 
     ////////////////////////////////////////////////////////////////////////////////////
 
@@ -191,9 +191,9 @@ bool MainService::Init( void )
 
     PhysicsAspect* physic_aspect = m_world1Entity.AddAspect<PhysicsAspect>();
 
-    //physic_aspect->AddComponent<bool>( "gravity_state", true );
-    physic_aspect->AddComponent<bool>( "gravity_state", false );
+    physic_aspect->AddComponent<bool>( "gravity_state", true );    
     physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
+
 
     //m_World1EntityNode = m_rootEntityNode.AddChild( &m_world1Entity );
 
@@ -592,6 +592,127 @@ void MainService::create_skybox( void )
     
 }
 
+void MainService::create_dynamic_cube( void )
+{
+    dynamic_cube cube;
+
+    cube.dynCubeRender = _DRAWSPACE_NEW_( DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl );
+    cube.dynCubeEntity = _DRAWSPACE_NEW_( DrawSpace::Core::Entity, DrawSpace::Core::Entity );
+    cube.dynCubeEntityNode = _DRAWSPACE_NEW_( DrawSpace::EntityGraph::EntityNode, DrawSpace::EntityGraph::EntityNode );
+
+    RenderingAspect* rendering_aspect = cube.dynCubeEntity->AddAspect<RenderingAspect>();
+    rendering_aspect->AddImplementation( cube.dynCubeRender );
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
+
+    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
+    cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+
+    cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
+    cube_texturepass->GetTexture( 0 )->LoadFromFile();
+
+
+    RenderStatesSet cube_texturepass_rss;
+    cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    cube_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+
+    cube_texturepass->GetFx()->SetRenderStates( cube_texturepass_rss );
+
+
+    cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
+    cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturemirrorpass_slot", "texturemirror_pass" );
+
+    RenderingNode* cube_texturemirrorpass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturemirrorpass_slot" )->getPurpose().GetRenderingNode();
+    cube_texturemirrorpass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
+    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );
+
+
+    cube_texturemirrorpass->GetFx()->GetShader( 0 )->LoadFromFile();
+    cube_texturemirrorpass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    cube_texturemirrorpass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
+    cube_texturemirrorpass->GetTexture( 0 )->LoadFromFile();
+
+
+    RenderStatesSet cube_texturemirrorpass_rss;
+    cube_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    cube_texturemirrorpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    cube_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
+    cube_texturemirrorpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+
+    cube_texturemirrorpass->GetFx()->SetRenderStates( cube_texturemirrorpass_rss );
+
+
+    cube_texturemirrorpass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+    cube_texturemirrorpass->GetMeshe()->SetImporter( m_meshe_import );
+    cube_texturemirrorpass->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
+    cube_texturemirrorpass->AddShaderParameter( 0, "reflector_pos", 24 );
+    cube_texturemirrorpass->AddShaderParameter( 0, "reflector_normale", 25 );
+
+    cube_texturemirrorpass->SetShaderRealVector( "reflector_pos", Vector( 0.0, -4.0, 0.0, 1.0 ) );
+    cube_texturemirrorpass->SetShaderRealVector( "reflector_normale", Vector( 0.0, 1.0, 0.0, 1.0 ) );
+
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Matrix cube_attitude;
+    
+    cube_attitude.Translation( 0.0, 3.5, 0.0 );    
+
+
+    BodyAspect* body_aspect = cube.dynCubeEntity->AddAspect<BodyAspect>();
+
+    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 0.5, 0.5, 0.5, 1.0 ) );
+
+    body_aspect->AddComponent<Matrix>( "attitude", cube_attitude );
+
+    body_aspect->AddComponent<dsreal>( "mass", 7.0 );
+    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::BODY );
+
+    body_aspect->AddComponent<bool>( "enable", true );
+    body_aspect->AddComponent<bool>( "contact_state", false );
+
+
+    TransformAspect* transform_aspect = cube.dynCubeEntity->AddAspect<TransformAspect>();
+
+    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    *cube.dynCubeEntityNode = m_World1EntityNode.AddChild( cube.dynCubeEntity );
+    cube.dynCubeRender->RegisterToRendering( m_rendergraph );
+
+
+    m_dynamic_cubes.push_back( cube );
+
+    m_rendergraph.RenderingQueueModSignal();
+}
+
 void MainService::create_static_cube( void )
 {
     RenderingAspect* rendering_aspect = m_staticCubeEntity.AddAspect<RenderingAspect>();
@@ -647,6 +768,9 @@ void MainService::create_static_cube( void )
     RenderStatesSet cube_texturemirrorpass_rss;
     cube_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     cube_texturemirrorpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    cube_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
+    cube_texturemirrorpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
 
 
     cube_texturemirrorpass->GetFx()->SetRenderStates( cube_texturemirrorpass_rss );
@@ -737,12 +861,6 @@ void MainService::create_ground( void )
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
     ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
-    //ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    //ground_texturepass->GetTexture( 0 )->LoadFromFile();
-    
-    //ground_texturepass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
-
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "bumppass_slot", "bump_pass" );
@@ -820,7 +938,7 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
     }
     else if( "Button_Create" == p_widget_id )
     {
-        _asm nop
+        create_dynamic_cube();
     }
     else if( "Button_Destroy" == p_widget_id )
     {

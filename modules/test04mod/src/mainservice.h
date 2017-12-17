@@ -95,6 +95,16 @@ protected:
 
     GUIWidgetPushButtonClickedCallback                                              m_guiwidgetpushbuttonclicked_cb;
 
+    typedef struct
+    {
+        DrawSpace::Core::Entity*                                                    dynCubeEntity;
+        DrawSpace::EntityGraph::EntityNode*                                         dynCubeEntityNode;
+        DrawSpace::AspectImplementations::MesheRenderingAspectImpl*                 dynCubeRender;
+
+    } dynamic_cube;
+
+    std::vector<dynamic_cube>                                                       m_dynamic_cubes;
+
     void set_mouse_circular_mode( bool p_state );
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
@@ -102,6 +112,7 @@ protected:
     void create_skybox( void );
     void create_ground( void );
     void create_static_cube( void );
+    void create_dynamic_cube( void );
 
 public:
 
