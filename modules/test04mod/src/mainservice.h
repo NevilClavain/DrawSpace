@@ -114,6 +114,8 @@ protected:
     void create_static_cube( void );
     void create_dynamic_cube( void );
 
+    void clean_cubes( void );
+
 public:
 
     MainService( void );

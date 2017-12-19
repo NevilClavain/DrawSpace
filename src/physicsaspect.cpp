@@ -74,7 +74,7 @@ void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 
 void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
 {    
-    for( auto& it = p_list.begin(); it != p_list.end(); ++it )
+    for( auto it = p_list.begin(); it != p_list.end(); ++it )
     {
         Entity* curr_entity = *it; 
 
@@ -88,7 +88,7 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
     //////////////////////////////////////////////////////////////////////////////////////
 
     std::vector<Entity*> to_remove;
-    for( auto& it = m_bodies_set.begin(); it != m_bodies_set.end(); ++it )
+    for( auto it = m_bodies_set.begin(); it != m_bodies_set.end(); ++it )
     {
         //chercher dans p_list...
         Entity* curr_entity = *it;
@@ -108,7 +108,7 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
 
         /* FAIT DANS on_removed_bodyentity
         // effacer de m_bodies
-        for( auto& it = m_bodies.begin(); it != m_bodies.end(); ++it )
+        for( auto it = m_bodies.begin(); it != m_bodies.end(); ++it )
         {
             if( (*it).second == to_remove[i] )
             {
@@ -207,7 +207,7 @@ void PhysicsAspect::StepSimulation( void )
 
         // check for collisions
 
-        for( auto& it = m_bodies.begin(); it != m_bodies.end(); ++it )
+        for( auto it = m_bodies.begin(); it != m_bodies.end(); ++it )
         {
             BodyAspect* body_aspect = it->second->GetAspect<BodyAspect>();
 

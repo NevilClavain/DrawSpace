@@ -50,7 +50,7 @@ void EntityNodeGraph::Erase(void)
 
 void EntityNodeGraph::AcceptSystemLeafToRoot( Interface::System* p_system )
 {
-    for( auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
+    for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
     {
         if( it->is_root() )
         {
@@ -65,7 +65,7 @@ void EntityNodeGraph::AcceptSystemLeafToRoot( Interface::System* p_system )
 
 void EntityNodeGraph::AcceptSystemRootToLeaf( Interface::System* p_system )
 {
-    for( auto& it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
+    for( auto it = m_tree.df_pre_begin(); it != m_tree.df_pre_end(); ++it )
     {
         if( it->is_root() )
         {
@@ -83,7 +83,7 @@ void EntityNodeGraph::RegisterNodesEvtHandler( EntityNode::EventsHandler* p_hand
     m_nodesevt_handlers.push_back( p_handler );
 
     // balancer la liste des nodes deja enregistres
-    for( auto& it = m_tree.begin(); it != m_tree.end(); ++it )
+    for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
     {
         (*p_handler)( EntityNode::ADDED_IN_TREE, it->data() );
     }
@@ -105,7 +105,7 @@ void EntityNodeGraph::GetEntityAncestorsList( Entity* p_entity, std::vector<Enti
 
 void EntityNodeGraph::OnSceneRenderBegin( void )
 {
-    for( auto& it = m_tree.begin(); it != m_tree.end(); ++it )
+    for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
     {
         Entity* ent = it->data();
 
@@ -121,7 +121,7 @@ void EntityNodeGraph::OnSceneRenderBegin( void )
 
 void EntityNodeGraph::OnSceneRenderEnd( void )
 {
-    for( auto& it = m_tree.begin(); it != m_tree.end(); ++it )
+    for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
     {
         Entity* ent = it->data();
 

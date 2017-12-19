@@ -75,7 +75,7 @@ void PhysicsSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 
             BodyAspect* attached_to = NULL;
 
-            for( auto& it = ancestors.begin(); it != ancestors.end(); ++it )
+            for( auto it = ancestors.begin(); it != ancestors.end(); ++it )
             {
                 Entity* entity_ancestor = *it;
 

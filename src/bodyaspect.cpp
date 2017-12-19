@@ -625,7 +625,7 @@ void BodyAspect::compute_global_transf( Utils::Matrix& p_result )
         
     Entity* parent = NULL;
 
-    for( auto& it = m_ancestors.rbegin(); it != m_ancestors.rend(); ++it )
+    for( auto it = m_ancestors.rbegin(); it != m_ancestors.rend(); ++it )
     {
         TransformAspect* transform_aspect = (*it)->GetAspect<TransformAspect>();
 

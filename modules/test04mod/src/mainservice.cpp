@@ -592,6 +592,31 @@ void MainService::create_skybox( void )
     
 }
 
+void MainService::clean_cubes( void )
+{
+    for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
+    {
+        m_dynamic_cubes[i].dynCubeEntityNode->Erase();
+        m_dynamic_cubes[i].dynCubeRender->UnregisterFromRendering( m_rendergraph );
+    }
+
+    // pour traiter correctement tout les evts provoques par le retrait des entites
+    m_physicsSystem.Run( &m_entitygraph );
+    m_rendergraph.RenderingQueueModSignal();
+
+
+    // seulement ensuite on peut desallouer
+    for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
+    {      
+        _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntity );
+        _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntityNode );
+        _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeRender );
+    }
+
+    m_dynamic_cubes.clear();
+    
+}
+
 void MainService::create_dynamic_cube( void )
 {
     dynamic_cube cube;
@@ -942,6 +967,6 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
     }
     else if( "Button_Destroy" == p_widget_id )
     {
-        _asm nop
+        clean_cubes();
     }
 }
