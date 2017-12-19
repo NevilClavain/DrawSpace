@@ -72,7 +72,6 @@
     <ClCompile Include="src\revolutiontransformaspectimpl.cpp" />
     <ClCompile Include="src\serviceaspect.cpp" />
     <ClCompile Include="src\servicesystem.cpp" />
-    <ClCompile Include="src\skyboxrenderingaspectimpl.cpp" />
     <ClCompile Include="src\spherelod_root.cpp" />
     <ClCompile Include="src\spherelod_layer.cpp" />
     <ClCompile Include="src\procedural_blocs.cpp" />
@@ -177,7 +176,6 @@
     <ClInclude Include="src\serviceaspect.h" />
     <ClInclude Include="src\serviceaspectimpl.h" />
     <ClInclude Include="src\servicesystem.h" />
-    <ClInclude Include="src\skyboxrenderingaspectimpl.h" />
     <ClInclude Include="src\systems.h" />
     <ClInclude Include="src\textrenderingaspectimpl.h" />
     <ClInclude Include="src\renderpassnode.h" />
