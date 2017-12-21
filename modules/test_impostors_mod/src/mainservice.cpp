@@ -169,6 +169,7 @@ bool MainService::Init( void )
     create_camera();
     create_skybox();
     create_ground();
+    create_impostors();
 
 
 
@@ -188,6 +189,9 @@ bool MainService::Init( void )
     m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
     m_groundRender.RegisterToRendering( m_rendergraph );
 
+    // ajout du champ d'impostors a la scene
+    m_impostorsEntityNode = m_World1EntityNode.AddChild( &m_impostorsEntity );
+    m_impostorsRender.RegisterToRendering( m_rendergraph );
 
 
     m_rendergraph.RenderingQueueModSignal();
@@ -312,6 +316,44 @@ void MainService::create_skybox( void )
         
 }
 
+void MainService::create_impostors( void )
+{
+    RenderingAspect* rendering_aspect = m_impostorsEntity.AddAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation( &m_impostorsRender );
+
+    rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
+
+    ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
+
+    impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    impostors_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    impostors_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet impostors_texturepass_rss;
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    impostors_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
+
+    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
+    impostors_texturepass->GetTexture( 0 )->LoadFromFile();
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    TransformAspect* transform_aspect = m_impostorsEntity.AddAspect<TransformAspect>();
+
+    transform_aspect->SetImplementation( &m_impostors_transformer );
+
+    transform_aspect->AddComponent<Matrix>( "pos" );
+
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 3.0, -12.0, 1.0) );
+}
+
 void MainService::create_ground( void )
 {
     RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
@@ -336,30 +378,27 @@ void MainService::create_ground( void )
 
     ground_texturepass->GetFx()->SetRenderStates( ground_texturepass_rss );
 
+    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    ground_texturepass->GetTexture( 0 )->LoadFromFile();
+
 
     ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
     ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
-    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    ground_texturepass->GetTexture( 0 )->LoadFromFile();
 
-    TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    
+    TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();    
+
     BodyAspect* body_aspect = m_groundEntity.AddAspect<BodyAspect>();
-
-
     body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 100.0, 0.0, 100.0, 1.0 ) );
-
 
     Matrix ground_attitude;
     
     ground_attitude.Translation( 0.0, -3.0, 0.0 );
-
     body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
 
-    
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
 
     body_aspect->AddComponent<bool>( "enable", true );
@@ -396,10 +435,36 @@ void MainService::create_camera( void )
 
 void MainService::OnKeyPress( long p_key )
 {
+    switch( p_key )
+    {
+        case 'Q':
+        {
+            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 12.0;    
+        }
+        break;
+
+        case 'W':
+        {
+            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -12.0;
+        }
+        break;
+    }
 }
 
 void MainService::OnEndKeyPress( long p_key )
 {
+    switch( p_key )
+    {
+        case 'Q':
+        case 'W':
+        {
+            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
+        }
+        break;
+    }
 }
 
 void MainService::OnKeyPulse( long p_key )

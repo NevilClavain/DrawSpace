@@ -57,7 +57,7 @@ public:
         PassSlot( const dsstring& p_pass_name );
         ~PassSlot( void );
 
-        DrawSpace::Core::RenderingNode* GetRenderingNode( void ) { return m_rendering_node; };
+        DrawSpace::Core::RenderingNode* GetRenderingNode( void ) const { return m_rendering_node; };
 
         friend class MesheRenderingAspectImpl;
     };
