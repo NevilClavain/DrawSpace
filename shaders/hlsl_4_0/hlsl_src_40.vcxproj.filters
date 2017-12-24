@@ -96,5 +96,11 @@
     <FxCompile Include="planet_surface_flat.psh">
       <Filter>pixel_shaders\planet</Filter>
     </FxCompile>
+    <FxCompile Include="screenimpostor.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="screenimpostor.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

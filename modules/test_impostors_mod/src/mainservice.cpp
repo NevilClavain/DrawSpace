@@ -324,15 +324,47 @@ void MainService::create_impostors( void )
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
+    ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
+
+    id.localpos = Vector( 0.0, 0.0, 0.0, 1.0 );
+    id.width_scale = 1.0;
+    id.height_scale = 1.0;
+    id.u1 = 0.0;
+    id.v1 = 0.0;
+
+    id.u2 = 1.0;
+    id.v2 = 0.0;
+
+    id.u3 = 1.0;
+    id.v3 = 1.0;
+
+    id.u4 = 0.0;
+    id.v4 = 1.0;
+
+    rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>( "0", id );
+
+
     ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
 
     impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+    //impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    //impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor.vso", true ) ) );
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor.pso", true ) ) );
 
     impostors_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
     impostors_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    impostors_texturepass->AddShaderParameter( 0, "globalscale", 24 );
+    impostors_texturepass->SetShaderRealVector( "globalscale", Vector( 5.0, 5.0, 0.0, 1.0 ) );
+
+    impostors_texturepass->AddShaderParameter( 1, "flags", 0 );
+    impostors_texturepass->SetShaderRealVector( "flags", Vector( 0.0, 0.0, 0.0, 0.0 ) );
+
+    impostors_texturepass->AddShaderParameter( 1, "color", 1 );
+    impostors_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
 
     RenderStatesSet impostors_texturepass_rss;
     impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
@@ -340,7 +372,7 @@ void MainService::create_impostors( void )
 
     impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
 
-    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
+    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "map.jpg" ) ), 0 );
     impostors_texturepass->GetTexture( 0 )->LoadFromFile();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////

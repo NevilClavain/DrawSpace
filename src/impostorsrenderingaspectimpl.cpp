@@ -159,6 +159,99 @@ ImpostorsRenderingAspectImpl::ImpostorsRenderingAspectImpl( void )
 
 void ImpostorsRenderingAspectImpl::build_quads( const PassSlot& p_pass_slot )
 {
+    ComponentList<ImpostorDescriptor> impostors;
+    m_owner->GetComponentsByType<ImpostorDescriptor>( impostors );
+
+    
+    Meshe* meshe = p_pass_slot.GetRenderingNodeProxy()->GetMeshe();
+
+    for( size_t i = 0; i < impostors.size(); ++i )
+    {
+        ImpostorDescriptor descr = impostors[i]->getPurpose();
+
+        Vertex v1, v2, v3, v4;
+
+        // vertex x,y,z set by impostors shaders
+        v1.x = 0.0;
+        v1.y = 0.0;
+        v1.z = 0.0;
+
+        v1.tu[0] = descr.u1;
+        v1.tv[0] = descr.v1;
+        v1.nx = 1.0;
+
+        v1.tu[7] = descr.localpos[0];
+        v1.tv[7] = descr.localpos[1];
+        v1.tw[7] = descr.localpos[2];
+        v1.tu[8] = descr.width_scale;
+        v1.tv[8] = descr.height_scale;
+
+        // vertex x,y,z set by impostors shaders
+        v2.x = 0.0;
+        v2.y = 0.0;
+        v2.z = 0.0;
+
+        v2.tu[0] = descr.u2;
+        v2.tv[0] = descr.v2;
+        v2.nx = 2.0;
+
+
+
+        v2.tu[7] = descr.localpos[0];
+        v2.tv[7] = descr.localpos[1];
+        v2.tw[7] = descr.localpos[2];
+        v2.tu[8] = descr.width_scale;
+        v2.tv[8] = descr.height_scale;
+
+        // vertex x,y,z set by impostors shaders
+        v3.x = 0.0;
+        v3.y = 0.0;
+        v3.z = 0.0;
+
+        v3.tu[0] = descr.u3;
+        v3.tv[0] = descr.v3;
+        v3.nx = 3.0;
+
+ 
+
+        v3.tu[7] = descr.localpos[0];
+        v3.tv[7] = descr.localpos[1];
+        v3.tw[7] = descr.localpos[2];
+        v3.tu[8] = descr.width_scale;
+        v3.tv[8] = descr.height_scale;
+
+        // vertex x,y,z set by impostors shaders
+        v4.x = 0.0;
+        v4.y = 0.0;
+        v4.z = 0.0;
+
+        v4.tu[0] = descr.u4;
+        v4.tv[0] = descr.v4;
+        v4.nx = 4.0;
+
+        v4.tu[7] = descr.localpos[0];
+        v4.tv[7] = descr.localpos[1];
+        v4.tw[7] = descr.localpos[2];
+        v4.tu[8] = descr.width_scale;
+        v4.tv[8] = descr.height_scale;
+
+
+
+    
+        meshe->AddVertex( v1 );
+        meshe->AddVertex( v2 );
+        meshe->AddVertex( v3 );
+        meshe->AddVertex( v4 );
+
+        size_t index_base = 4 * i;
+
+        meshe->AddTriangle( Triangle( index_base, 3 + index_base, 1 + index_base ) );
+        meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );
+
+    }
+
+    /////////////////////////
+    /*
     Vertex v1, v2, v3, v4;
 
     v1.x = 0.0;
@@ -202,6 +295,8 @@ void ImpostorsRenderingAspectImpl::build_quads( const PassSlot& p_pass_slot )
 
     meshe->AddTriangle( Triangle( index_base, 3 + index_base, 1 + index_base ) );
     meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );
+    */
+    
 }
 
 bool ImpostorsRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue )
