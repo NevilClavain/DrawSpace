@@ -40,7 +40,7 @@ m_lpd3dswapchain( NULL ),
 m_lpd3ddevice( NULL ),
 m_lpd3ddevcontext( NULL ),
 m_screentarget( NULL ),
-m_inputLayout( NULL ),
+//m_inputLayout( NULL ),
 m_pDepthStencil( NULL ),
 m_pDepthStencilView( NULL ),
 m_currentTarget( NULL ),
@@ -516,6 +516,7 @@ void D3D11Renderer::Release( void )
     {
         it->second->vertex_shader->Release();
         it->second->pixel_shader->Release();
+        it->second->input_layout->Release();
 
         _DRAWSPACE_DELETE_( it->second );
     }
@@ -665,6 +666,10 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
         v[i].pos.x = (float)vertex.x;
         v[i].pos.y = (float)vertex.y;
         v[i].pos.z = (float)vertex.z;
+
+        v[i].normale.x = (float)vertex.nx;
+        v[i].normale.y = (float)vertex.ny;
+        v[i].normale.z = (float)vertex.nz;
 
         for( size_t j = 0; j < 9; j++ )
         {
@@ -1633,6 +1638,7 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
     {
         ID3D11VertexShader*         vs;
         ID3D11PixelShader*          ps;
+        ID3D11InputLayout*          input_layout;
 
         /////////////////// Shaders loading
 
@@ -1671,6 +1677,7 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
             hRes = m_lpd3ddevice->CreateVertexShader( pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &vs );
             D3D11_CHECK( CreateVertexShader );
 
+            /*
             if( NULL == m_inputLayout )
             {
                 //////////////////////// au premier vshader créé, instancier et setter l'objet inputLayout
@@ -1682,13 +1689,19 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
                 m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );                
             }
+            */
+
+            hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &input_layout );
+            D3D11_CHECK( CreateInputLayout )
+
+            pVSBlob->Release();
         }
         else
         {
             hRes = m_lpd3ddevice->CreateVertexShader( vertex_shader->GetData(), vertex_shader->GetDataSize(), NULL, &vs );
             D3D11_CHECK( CreateVertexShader );
 
-
+            /*
             if( NULL == m_inputLayout )
             {
                 //////////////////////// au premier vshader créé, instancier et setter l'objet inputLayout
@@ -1698,7 +1711,13 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
                 m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );                
             }
+            */
+
+            hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), vertex_shader->GetData(), vertex_shader->GetDataSize(), &input_layout );
+            D3D11_CHECK( CreateInputLayout )
         }
+
+        sdata->input_layout = input_layout;
 
         sdata->vertex_shader = vs; 
 
@@ -1753,6 +1772,7 @@ bool D3D11Renderer::SetShaders( void* p_data )
 {
 	ShadersData* sdata = (ShadersData*)p_data;
 
+    m_lpd3ddevcontext->IASetInputLayout( sdata->input_layout );
     m_lpd3ddevcontext->VSSetShader( sdata->vertex_shader, NULL, 0 );
     m_lpd3ddevcontext->PSSetShader( sdata->pixel_shader, NULL, 0 );
 
@@ -2396,7 +2416,7 @@ void D3D11Renderer::GUI_Render( void )
     m_guisubsystem.RenderGUI();
 
     // restore my input layout, 'cause CEGUI puts its own...
-    m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );
+    // m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );
 
     // then restore current RS state
     m_lpd3ddevcontext->RSSetState( curr_rs );

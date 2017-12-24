@@ -102,6 +102,7 @@ protected:
     {
         ID3D11VertexShader*                                         vertex_shader;
         ID3D11PixelShader*                                          pixel_shader;
+        ID3D11InputLayout*                                          input_layout;
 
     } ShadersData;
     
@@ -155,7 +156,7 @@ protected:
     ID3D11DepthStencilState*                                        m_DSState_DepthTestDisabled;
     ID3D11DepthStencilState*                                        m_DSState_DepthTestEnabled;
 
-    ID3D11InputLayout*                                              m_inputLayout;
+    //ID3D11InputLayout*                                              m_inputLayout;
 
     ID3D11RenderTargetView*                                         m_screentarget;
 
