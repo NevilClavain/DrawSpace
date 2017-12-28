@@ -326,9 +326,10 @@ void MainService::create_impostors( void )
 
     ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
 
-    id.localpos = Vector( 0.0, 0.0, 0.0, 1.0 );
-    id.width_scale = 1.0;
-    id.height_scale = 1.0;
+    /*
+    id.localpos = Vector( 0.0, 1.0, 0.0, 1.0 );
+    id.width_scale = 0.2;
+    id.height_scale = 0.2;
     id.u1 = 0.0;
     id.v1 = 0.0;
 
@@ -342,6 +343,59 @@ void MainService::create_impostors( void )
     id.v4 = 1.0;
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>( "0", id );
+    */
+
+    id.width_scale = 0.1;
+    id.height_scale = 0.1;
+    id.u1 = 0.0;
+    id.v1 = 0.0;
+
+    id.u2 = 1.0;
+    id.v2 = 0.0;
+
+    id.u3 = 1.0;
+    id.v3 = 1.0;
+
+    id.u4 = 0.0;
+    id.v4 = 1.0;
+
+
+    int nb_w = 30;
+    int nb_h = 30;
+
+    dsreal field_w = 8.0;
+    dsreal field_h = 8.0;
+
+    dsreal w_step = field_w / ( nb_w - 1 );
+    dsreal h_step = field_h / ( nb_h - 1 );
+   
+    dsreal w_pos;
+    dsreal h_pos = -field_h * 0.5;
+
+    dsstring particle_id;
+
+    for( int h = 0; h < nb_h; h++ )
+    {
+        w_pos = -field_w * 0.5;
+
+        for( int w = 0; w < nb_w; w++ )
+        {
+            id.localpos[0] = w_pos;
+            id.localpos[1] = h_pos;
+
+            id.localpos[2] = 0.0;
+
+            char comment[64];
+            sprintf( comment, "%f.%f", w_pos, h_pos );
+            particle_id = comment;
+
+            rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>( particle_id, id );
+
+            w_pos += w_step;
+        }
+
+        h_pos += h_step;
+    }
 
 
     ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
@@ -367,12 +421,23 @@ void MainService::create_impostors( void )
     impostors_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
 
     RenderStatesSet impostors_texturepass_rss;
-    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    //impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "true" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDOP, "add" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDFUNC, "always" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDDEST, "one" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDSRC, "srcalpha" ) );
+    
+
+
     impostors_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    impostors_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "false" ) );
 
     impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
 
-    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "map.jpg" ) ), 0 );
+    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "star.bmp" ) ), 0 );
     impostors_texturepass->GetTexture( 0 )->LoadFromFile();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -383,7 +448,7 @@ void MainService::create_impostors( void )
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 3.0, -12.0, 1.0) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 6.0, -12.0, 1.0) );
 }
 
 void MainService::create_ground( void )

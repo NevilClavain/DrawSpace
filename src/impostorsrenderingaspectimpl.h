@@ -39,8 +39,8 @@ public:
 
     struct ImpostorDescriptor
     {
-        float                       width_scale;
-        float                       height_scale;
+        dsreal                      width_scale;
+        dsreal                      height_scale;
         DrawSpace::Utils::Vector    localpos;
         dsreal                      u1, v1;
         dsreal                      u2, v2;
