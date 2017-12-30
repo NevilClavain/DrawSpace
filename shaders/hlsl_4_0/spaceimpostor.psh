@@ -20,7 +20,6 @@
 *
 */
 
-
 cbuffer legacyargs : register(b0)
 {
     float4 vec[512];
@@ -31,40 +30,38 @@ cbuffer legacyargs : register(b0)
 Texture2D txDiffuse : register(t0);
 SamplerState sam : register(s0);
 
+
 struct PS_INTPUT
 {
     float4 Position : SV_POSITION;
     float2 TexCoord0 : TEXCOORD0;
+    float4 Color : TEXCOORD1; //specifique aux nuages volumetriques
 };
 
-
 float4 ps_main(PS_INTPUT input) : SV_Target
-{   
+{
     float4 flags = vec[0];
     float4 color = vec[1];
+
     float4 ret_color;
-    if (flags.x > 0.0)
+    if (flags.x == 1.0)
     {
+		// mode "couleur unie" (pour des passes de type "z mask")
         ret_color = color;
+    }
+    else if (flags.x == 0.5)
+    {
+		// mode specifique pour les nuages volumetriques
+	
+        ret_color = input.Color;
+        ret_color.a = txDiffuse.Sample(sam, input.TexCoord0).r;
     }
     else
     {
-        ret_color = color * txDiffuse.Sample(sam, input.TexCoord0);
+		// mode "normal"
+		
+        ret_color = txDiffuse.Sample(sam, input.TexCoord0);
     }
 
     return ret_color;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
