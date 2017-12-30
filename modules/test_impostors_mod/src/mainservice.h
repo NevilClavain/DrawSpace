@@ -59,6 +59,8 @@ protected:
     DrawSpace::Core::Entity                                                         m_impostorsEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_impostorsEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_worldImpostorsEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_worldImpostorsEntityNode;
 
     DrawSpace::Core::Entity                                                         m_skyboxEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_skyboxEntityNode;
@@ -77,6 +79,7 @@ protected:
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
     DrawSpace::AspectImplementations::ImpostorsRenderingAspectImpl                  m_impostorsRender;
+    DrawSpace::AspectImplementations::ImpostorsRenderingAspectImpl                  m_worldImpostorsRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
@@ -98,7 +101,8 @@ protected:
     void create_skybox( void );
     void create_ground( void );
     void create_camera( void );
-    void create_impostors( void );
+    void create_screen_impostors( void );
+    void create_world_impostor( void );
 
 
 public:

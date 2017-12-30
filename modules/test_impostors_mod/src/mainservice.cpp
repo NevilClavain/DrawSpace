@@ -169,7 +169,8 @@ bool MainService::Init( void )
     create_camera();
     create_skybox();
     create_ground();
-    create_impostors();
+    create_screen_impostors();
+    create_world_impostor();
 
 
 
@@ -193,6 +194,9 @@ bool MainService::Init( void )
     m_impostorsEntityNode = m_World1EntityNode.AddChild( &m_impostorsEntity );
     m_impostorsRender.RegisterToRendering( m_rendergraph );
 
+    // ajout de l'impostor world a la scene
+    m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
+    m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
 
     m_rendergraph.RenderingQueueModSignal();
     m_entitygraph.OnSceneRenderBegin();
@@ -316,20 +320,20 @@ void MainService::create_skybox( void )
         
 }
 
-void MainService::create_impostors( void )
+void MainService::create_world_impostor( void )
 {
-    RenderingAspect* rendering_aspect = m_impostorsEntity.AddAspect<RenderingAspect>();
+    RenderingAspect* rendering_aspect = m_worldImpostorsEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_impostorsRender );
+    rendering_aspect->AddImplementation( &m_worldImpostorsRender );
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
     ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
 
-    /*
+    
     id.localpos = Vector( 0.0, 1.0, 0.0, 1.0 );
-    id.width_scale = 0.2;
-    id.height_scale = 0.2;
+    id.width_scale = 1.0;
+    id.height_scale = 1.0;
     id.u1 = 0.0;
     id.v1 = 0.0;
 
@@ -343,7 +347,62 @@ void MainService::create_impostors( void )
     id.v4 = 1.0;
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>( "0", id );
-    */
+    
+
+
+
+    ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
+
+    impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "spaceimpostor.vso", true ) ) );
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "spaceimpostor.pso", true ) ) );
+
+    impostors_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    impostors_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    impostors_texturepass->AddShaderParameter( 0, "globalscale", 24 );
+    impostors_texturepass->SetShaderRealVector( "globalscale", Vector( 5.0, 5.0, 0.0, 1.0 ) );
+
+    impostors_texturepass->AddShaderParameter( 1, "flags", 0 );
+    impostors_texturepass->SetShaderRealVector( "flags", Vector( 0.0, 0.0, 0.0, 0.0 ) );
+
+    impostors_texturepass->AddShaderParameter( 1, "color", 1 );
+    impostors_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
+
+    RenderStatesSet impostors_texturepass_rss;
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    impostors_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
+
+    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "map.jpg" ) ), 0 );
+    impostors_texturepass->GetTexture( 0 )->LoadFromFile();
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    TransformAspect* transform_aspect = m_worldImpostorsEntity.AddAspect<TransformAspect>();
+
+    transform_aspect->SetImplementation( &m_impostors_transformer );
+
+    transform_aspect->AddComponent<Matrix>( "pos" );
+
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( -15.0, 2.0, -12.0, 1.0) );
+
+}
+
+
+void MainService::create_screen_impostors( void )
+{
+    RenderingAspect* rendering_aspect = m_impostorsEntity.AddAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation( &m_impostorsRender );
+
+    rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
+
+    ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
+
 
     id.width_scale = 0.1;
     id.height_scale = 0.1;
@@ -402,9 +461,6 @@ void MainService::create_impostors( void )
 
     impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    //impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    //impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
     impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor.vso", true ) ) );
     impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor.pso", true ) ) );
 
@@ -419,6 +475,8 @@ void MainService::create_impostors( void )
 
     impostors_texturepass->AddShaderParameter( 1, "color", 1 );
     impostors_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
+
+    impostors_texturepass->SetOrderNumber( 1000 );
 
     RenderStatesSet impostors_texturepass_rss;
     //impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
@@ -482,6 +540,8 @@ void MainService::create_ground( void )
     ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
     ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
+
+    ground_texturepass->SetOrderNumber( -500 );
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
