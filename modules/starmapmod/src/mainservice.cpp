@@ -154,6 +154,7 @@ bool MainService::Init( void )
 
 
     create_skybox();
+    create_screen_impostors();
     create_camera();
 
 
@@ -163,6 +164,10 @@ bool MainService::Init( void )
 
     m_camera2EntityNode = m_rootEntityNode.AddChild( &m_camera2Entity );
     m_transformSystem.SetCurrentCameraEntity( &m_camera2Entity );
+
+    // ajout du champ d'impostors a la scene
+    m_impostorsEntityNode = m_rootEntityNode.AddChild( &m_impostorsEntity );
+    m_impostorsRender.RegisterToRendering( m_rendergraph );
 
     m_rendergraph.RenderingQueueModSignal();
     m_entitygraph.OnSceneRenderBegin();
@@ -247,6 +252,122 @@ void MainService::create_camera( void )
     camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
 
     camera_aspect->AddComponent<dsstring>( "camera_debug_name", "camera2 (free)" );
+}
+
+void MainService::create_screen_impostors( void )
+{
+    RenderingAspect* rendering_aspect = m_impostorsEntity.AddAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation( &m_impostorsRender );
+
+    rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
+
+    ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
+
+
+    id.width_scale = 3.0;
+    id.height_scale = 3.0;
+    id.u1 = 0.0;
+    id.v1 = 0.0;
+
+    id.u2 = 1.0;
+    id.v2 = 0.0;
+
+    id.u3 = 1.0;
+    id.v3 = 1.0;
+
+    id.u4 = 0.0;
+    id.v4 = 1.0;
+
+
+    int nb_w = 30;
+    int nb_h = 30;
+
+    dsreal field_w = 3000.0;
+    dsreal field_h = 3000.0;
+
+    dsreal w_step = field_w / ( nb_w - 1 );
+    dsreal h_step = field_h / ( nb_h - 1 );
+   
+    dsreal w_pos;
+    dsreal h_pos = -field_h * 0.5;
+
+    dsstring particle_id;
+
+    for( int h = 0; h < nb_h; h++ )
+    {
+        w_pos = -field_w * 0.5;
+
+        for( int w = 0; w < nb_w; w++ )
+        {
+            id.localpos[0] = w_pos;
+            id.localpos[1] = h_pos;
+
+            id.localpos[2] = 0.0;
+
+            char comment[64];
+            sprintf( comment, "%f.%f", w_pos, h_pos );
+            particle_id = comment;
+
+            rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>( particle_id, id );
+
+            w_pos += w_step;
+        }
+
+        h_pos += h_step;
+    }
+
+
+    ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
+
+    impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor.vso", true ) ) );
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor.pso", true ) ) );
+
+    impostors_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
+    impostors_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    impostors_texturepass->AddShaderParameter( 0, "globalscale", 24 );
+    impostors_texturepass->SetShaderRealVector( "globalscale", Vector( 5.0, 5.0, 0.0, 1.0 ) );
+
+    impostors_texturepass->AddShaderParameter( 1, "flags", 0 );
+    impostors_texturepass->SetShaderRealVector( "flags", Vector( 0.0, 0.0, 0.0, 0.0 ) );
+
+    impostors_texturepass->AddShaderParameter( 1, "color", 1 );
+    impostors_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
+
+    impostors_texturepass->SetOrderNumber( 1000 );
+
+    RenderStatesSet impostors_texturepass_rss;
+    //impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "true" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDOP, "add" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDFUNC, "always" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDDEST, "one" ) );
+    impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDSRC, "srcalpha" ) );
+    
+
+
+    impostors_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    impostors_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "false" ) );
+
+    impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
+
+    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "star_far.bmp" ) ), 0 );
+    impostors_texturepass->GetTexture( 0 )->LoadFromFile();
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    TransformAspect* transform_aspect = m_impostorsEntity.AddAspect<TransformAspect>();
+
+    //transform_aspect->SetImplementation( &m_impostors_transformer );
+
+    transform_aspect->AddComponent<Matrix>( "pos" );
+
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 6.0, -12.0, 1.0) );
 }
 
 void MainService::create_skybox( void )
@@ -379,10 +500,36 @@ void MainService::create_skybox( void )
 
 void MainService::OnKeyPress( long p_key )
 {
+    switch( p_key )
+    {
+        case 'Q':
+        {
+            TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 20.0;    
+        }
+        break;
+
+        case 'W':
+        {
+            TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -20.0;    
+        }
+        break;
+    }
 }
 
 void MainService::OnEndKeyPress( long p_key )
 {
+    switch( p_key )
+    {
+        case 'Q':
+        case 'W':
+        {
+            TransformAspect* transform_aspect = m_camera2Entity.GetAspect<TransformAspect>();
+            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0;             
+        }
+        break;
+    }
 }
 
 void MainService::OnKeyPulse( long p_key )

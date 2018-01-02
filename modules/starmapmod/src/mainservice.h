@@ -50,6 +50,10 @@ protected:
     DrawSpace::Core::Entity                                                         m_camera2Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_camera2EntityNode;
 
+    DrawSpace::Core::Entity                                                         m_impostorsEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_impostorsEntityNode;
+
+
 
     DrawSpace::Systems::TransformSystem                                             m_transformSystem;
     DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
@@ -60,6 +64,7 @@ protected:
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
+    DrawSpace::AspectImplementations::ImpostorsRenderingAspectImpl                  m_impostorsRender;
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
     DrawSpace::AspectImplementations::FreeTransformAspectImpl                       m_free_transformer;
@@ -76,6 +81,7 @@ protected:
 
     void create_skybox( void );
     void create_camera( void );
+    void create_screen_impostors( void );
 
 public:
 
