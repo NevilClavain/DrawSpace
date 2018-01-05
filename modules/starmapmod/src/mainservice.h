@@ -53,13 +53,7 @@ protected:
     DrawSpace::Core::Entity                                                         m_impostorsEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_impostorsEntityNode;
 
-
-
-    DrawSpace::Systems::TransformSystem                                             m_transformSystem;
-    DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
-    DrawSpace::Systems::TimeSystem                                                  m_timeSystem;
-
-    std::vector<DrawSpace::Interface::System*>                                      m_systems;
+    DrawSpace::Systems::Hub                                                         m_systemsHub;
 
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;

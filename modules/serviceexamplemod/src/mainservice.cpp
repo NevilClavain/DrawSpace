@@ -37,8 +37,7 @@ MainService::MainService( void )
 
 bool MainService::Init( void )
 {
-    m_systems.push_back( &m_timeSystem );
-    m_systems.push_back( &m_renderingSystem );
+
 
     //////////////recup params du service //////////////////
 
@@ -77,10 +76,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Init( &m_entitygraph );
-    }
+    m_systemsHub.Init( &m_entitygraph );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -165,13 +161,8 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Run( &m_entitygraph );
-    }
+    m_systemsHub.Run( &m_entitygraph );
     
-    m_renderer->FlipScreen();
-
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
     char comment[256];
 
@@ -179,7 +170,6 @@ void MainService::Run( void )
 
     RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
     rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
-
 }
 
 void MainService::Release( void )
@@ -187,10 +177,8 @@ void MainService::Release( void )
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
     m_entitygraph.OnSceneRenderEnd();
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Release( &m_entitygraph );
-    }
+    
+    m_systemsHub.Release( &m_entitygraph );
 }
 
 void MainService::OnKeyPress( long p_key )

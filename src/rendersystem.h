@@ -25,6 +25,7 @@
 
 #include "systems.h"
 #include "entitynodegraph.h"
+#include "renderer.h"
 
 namespace DrawSpace
 {
@@ -32,9 +33,14 @@ namespace Systems
 {
 class RenderingSystem : public Interface::System
 {
+private:
+    DrawSpace::Interface::Renderer*  m_renderer;
+    bool                             m_gui_enabled;
 public:
     RenderingSystem( void );
     ~RenderingSystem( void );
+
+    void EnableGUI( bool p_state );
 
     bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
     void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};

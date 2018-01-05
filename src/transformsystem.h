@@ -44,13 +44,13 @@ public:
 
     } Event;
 
-    typedef DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>       CameraEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>       EventHandler;
 
 protected:
 
     int                                 m_step;
     Core::Entity*                       m_curr_entity_camera;
-    std::vector<CameraEventHandler*>    m_cameraevt_handlers;
+    std::vector<EventHandler*>          m_evt_handlers;
 
     DrawSpace::Utils::Matrix            m_viewtransform_todispatch;
     DrawSpace::Utils::Matrix            m_projtransform_todispatch;
@@ -69,9 +69,9 @@ public:
 
     void SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera );
 
-    void RegisterCameraEvtHandler( CameraEventHandler* p_handler );
+    void RegisterEvtHandler( EventHandler* p_handler );
 
-    void UnregisterCameraEvtHandler( CameraEventHandler* p_handler );
+    void UnregisterEvtHandler( EventHandler* p_handler );
 };
 }
 }

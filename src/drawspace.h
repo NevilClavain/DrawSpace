@@ -121,6 +121,7 @@
 #include "physicssystem.h"
 #include "timesystem.h"
 #include "servicesystem.h"
+#include "hub.h"
 
 
 #endif

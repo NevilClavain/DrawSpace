@@ -74,12 +74,14 @@ private:
 
     PassDescrTree::node_type* m_tree_node;
 
+    RenderPassNode( PassDescrTree::node_type* p_node );
+
 public:
 
     static const int noTextureStageConnection = -1;
 
     RenderPassNode( void );
-    RenderPassNode( PassDescrTree::node_type* p_node );
+    
 
     RenderPassNode CreateChild( const dsstring& p_name, int p_targetstage, 
                                 Core::Texture::RenderPurpose p_renderpurpose = Core::Texture::RENDERPURPOSE_COLOR, 

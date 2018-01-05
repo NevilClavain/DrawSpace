@@ -33,6 +33,7 @@
     <ClCompile Include="src\freetransformaspectimpl.cpp" />
     <ClCompile Include="src\fx.cpp" />
     <ClCompile Include="src\headmovement.cpp" />
+    <ClCompile Include="src\hub.cpp" />
     <ClCompile Include="src\impostorsrenderingaspectimpl.cpp" />
     <ClCompile Include="src\inertbody.cpp" />
     <ClCompile Include="src\jsonparser.cpp" />
@@ -64,6 +65,7 @@
     <ClCompile Include="src\renderingaspect.cpp" />
     <ClInclude Include="src\bodyaspect.h" />
     <ClInclude Include="src\bodytransformaspectimpl.h" />
+    <ClInclude Include="src\hub.h" />
     <ClInclude Include="src\impostorsrenderingaspectimpl.h" />
     <ClInclude Include="src\orbittransformaspectimpl.h" />
     <ClInclude Include="src\physicssystem.h" />

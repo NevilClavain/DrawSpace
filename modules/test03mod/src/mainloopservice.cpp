@@ -37,20 +37,14 @@ MainLoopService::MainLoopService( void ) :
 m_left_mousebutton( false ),
 m_right_mousebutton( false ),
 m_current_camera( 0 ),
-m_worldsystem_evt_handler( this, &MainLoopService::on_transformsystem_evt ),
-m_entitygraph_evt_handler( this, &MainLoopService::on_entitygraph_evt ),
+//m_worldsystem_evt_handler( this, &MainLoopService::on_transformsystem_evt ),
+m_entitygraph_evt_cb( this, &MainLoopService::on_entitygraph_evt ),
+m_transfo_evt_cb( this, &MainLoopService::on_transformsystem_evt ),
+m_systems_update_evt_cb( this, &MainLoopService::on_systems_update_evt ),
 //m_show_cube( true ),
 m_cube_is_relative( false )
 //m_cube_is_relative( true )
 {
-    // creation des systemes
-   
-    
-    // attention ! l'ordre est important ! ( par ex. time system doit etre execute avant tt les autres!)
-    m_systems.push_back( &m_timeSystem );
-    m_systems.push_back( &m_physicsSystem );
-    m_systems.push_back( &m_transformSystem );
-    m_systems.push_back( &m_renderingSystem );
 }
 
 MainLoopService::~MainLoopService( void )
@@ -67,7 +61,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
                             DrawSpace::Core::BaseCallback<void, bool>* p_mousevisible_cb, 
                             DrawSpace::Core::BaseCallback<void, int>* p_closeapp_cb )
 {
-    m_entitygraph.RegisterNodesEvtHandler( &m_entitygraph_evt_handler );
+    m_entitygraph.RegisterNodesEvtHandler( &m_entitygraph_evt_cb );
 
     (*p_mousecircularmode_cb)( true );
     p_logconf->RegisterSink( &logger );
@@ -78,10 +72,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Init( &m_entitygraph );
-    }
+    m_systemsHub.Init( &m_entitygraph );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -301,8 +292,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 
 
-    m_transformSystem.RegisterCameraEvtHandler( &m_worldsystem_evt_handler );
+    //m_transformSystem.RegisterCameraEvtHandler( &m_worldsystem_evt_handler );
+    //m_systemsHub.RegisterCameraEvtHandler( &m_worldsystem_evt_handler );
 
+    m_systemsHub.RegisterSystemsUpdateEvtHandler( &m_systems_update_evt_cb );
+    m_systemsHub.RegisterTransformationEvtHandler( &m_transfo_evt_cb );
 
     // ajouter la skybox a la scene
     m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity ); // comme la skybox n'a aucune interaction/influence avec le monde physique bullet, on peut la mettre directement sous rootEntity
@@ -387,11 +381,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     if( 0 == m_current_camera )
     {
-        m_transformSystem.SetCurrentCameraEntity( &m_cameraEntity );
+        m_systemsHub.SetCurrentCameraEntity( &m_cameraEntity );
     }
     else
     {
-        m_transformSystem.SetCurrentCameraEntity( &m_camera2Entity );
+        m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
     }
 
     m_rendergraph.RenderingQueueModSignal();
@@ -403,15 +397,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
 void MainLoopService::Run( void )
 {
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Run( &m_entitygraph );
-    }
-
-
-    m_renderer->FlipScreen();
-
-
+    m_systemsHub.Run( &m_entitygraph );
+   
     TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();//m_rootEntity.GetAspect<TimeAspect>();
     char comment[256];
     //sprintf( comment, "%d fps - %s", time_aspect->GetFPS(), m_pluginDescr.c_str() );
@@ -461,10 +448,7 @@ void MainLoopService::Release( void )
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 
     m_entitygraph.OnSceneRenderEnd();
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Release( &m_entitygraph );
-    }
+    m_systemsHub.Release( &m_entitygraph );
 }
 
 DrawSpace::Core::BaseSceneNode* MainLoopService::InstanciateSceneNode( const dsstring& p_sceneNodeName, DrawSpace::Dynamics::Calendar* p_calendar, LODDependantNodeInfoStateHandler* p_handler )
@@ -621,11 +605,11 @@ void MainLoopService::OnKeyPulse( long p_key )
 
                 if( 0 == m_current_camera )
                 {
-                    m_transformSystem.SetCurrentCameraEntity( &m_cameraEntity );
+                    m_systemsHub.SetCurrentCameraEntity( &m_cameraEntity );
                 }
                 else
                 {
-                    m_transformSystem.SetCurrentCameraEntity( &m_camera2Entity );
+                    m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
                 }
             }
             break;
@@ -637,12 +621,12 @@ void MainLoopService::OnKeyPulse( long p_key )
                     m_camera2EntityNode.Erase();
                     m_cubeEntityNode.Erase();
                     
-                    m_physicsSystem.Run( &m_entitygraph );
+                    m_systemsHub.Run( &m_entitygraph );
 
                     m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
                     m_camera2EntityNode = m_cubeEntityNode.AddChild( &m_camera2Entity );
 
-                    m_physicsSystem.Run( &m_entitygraph );
+                    m_systemsHub.Run( &m_entitygraph );
 
                     m_cube_is_relative = false;
                 }
@@ -652,13 +636,12 @@ void MainLoopService::OnKeyPulse( long p_key )
                     m_cubeEntityNode.Erase();
                     
 
-                    m_physicsSystem.Run( &m_entitygraph );
-
-                    //m_cubeEntityNode = m_planet0EntityNode.AddChild( &m_cubeEntity );
+                    m_systemsHub.Run( &m_entitygraph );
+                    
                     m_cubeEntityNode = m_planet1EntityNode.AddChild( &m_cubeEntity );
                     m_camera2EntityNode = m_cubeEntityNode.AddChild( &m_camera2Entity );
 
-                    m_physicsSystem.Run( &m_entitygraph );
+                    m_systemsHub.Run( &m_entitygraph );
 
                     m_cube_is_relative = true;
                 }
@@ -777,6 +760,7 @@ void MainLoopService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
+/*
 void MainLoopService::on_transformsystem_evt( Systems::TransformSystem::Event p_evt, Core::Entity* p_entity )
 {
     if( Systems::TransformSystem::CAMERA_ACTIVE == p_evt && p_entity )
@@ -796,6 +780,34 @@ void MainLoopService::on_transformsystem_evt( Systems::TransformSystem::Event p_
         _asm nop
     }
 }
+*/
+
+void MainLoopService::on_transformsystem_evt( DrawSpace::Systems::Hub::TransformationEvent p_evt, DrawSpace::Core::Entity* p_entity )
+{
+    if( Systems::Hub::CAMERA_ACTIVE == p_evt && p_entity )
+    {
+        CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
+        RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    
+        // mise a jour affichage avec le nom de la camera courante...
+        rendering_aspect->GetComponent<dsstring>( "current camera" )->getPurpose() = curr_camera_aspect->GetComponent<dsstring>( "camera_debug_name" )->getPurpose();
+    }
+    else if( Systems::Hub::TRANSFORMATIONS_BEGIN == p_evt )
+    {
+        _asm nop
+    }
+    else if( Systems::Hub::TRANSFORMATIONS_END == p_evt )
+    {
+        _asm nop
+    }
+}
+
+void MainLoopService::on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateEvent p_evt )
+{
+
+}
+
+
 
 void MainLoopService::on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Event p_evt, DrawSpace::Core::Entity* p_entity )
 {

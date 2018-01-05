@@ -42,7 +42,7 @@ TransformSystem::~TransformSystem( void )
 
 void TransformSystem::notify_event( Event p_evt, Entity* p_entity )
 {
-    for( std::vector<CameraEventHandler*>::iterator it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
+    for( auto it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
         ( **it )( p_evt, p_entity );
     }
@@ -127,22 +127,22 @@ void TransformSystem::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera
     notify_event( CAMERA_ACTIVE, m_curr_entity_camera );
 }
 
-void TransformSystem::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
+void TransformSystem::RegisterEvtHandler( EventHandler* p_handler )
 {
-    m_cameraevt_handlers.push_back( p_handler );
+    m_evt_handlers.push_back( p_handler );
 
     // annoncer la camera active au nouvel abonne de cet evt...
     (*p_handler)( CAMERA_ACTIVE, m_curr_entity_camera );
 
 }
 
-void TransformSystem::UnregisterCameraEvtHandler( CameraEventHandler* p_handler )
+void TransformSystem::UnregisterEvtHandler( EventHandler* p_handler )
 {
-    for( auto it = m_cameraevt_handlers.begin(); it != m_cameraevt_handlers.end(); ++it )
+    for( auto it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
     {
         if( (*it) == p_handler )
         {
-            m_cameraevt_handlers.erase( it );
+            m_evt_handlers.erase( it );
             break;
         }
     }

@@ -63,12 +63,7 @@ protected:
     DrawSpace::EntityGraph::EntityNode                                              m_World1EntityNode;
 
 
-    DrawSpace::Systems::RenderingSystem                                             m_renderingSystem;
-    DrawSpace::Systems::TransformSystem                                             m_transformSystem;
-    DrawSpace::Systems::PhysicsSystem                                               m_physicsSystem;
-    DrawSpace::Systems::TimeSystem                                                  m_timeSystem;
-
-    std::vector<DrawSpace::Interface::System*>                                      m_systems;
+    DrawSpace::Systems::Hub                                                         m_systemsHub;
 
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;

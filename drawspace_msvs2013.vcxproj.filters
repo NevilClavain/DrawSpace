@@ -327,6 +327,9 @@
     <ClCompile Include="src\impostorsrenderingaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
+    <ClCompile Include="src\hub.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -664,6 +667,9 @@
     </ClInclude>
     <ClInclude Include="src\impostorsrenderingaspectimpl.h">
       <Filter>aspectimplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hub.h">
+      <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

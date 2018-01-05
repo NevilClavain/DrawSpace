@@ -39,10 +39,6 @@ m_right_mousebutton( false )
 
 bool MainService::Init( void )
 {
-    m_systems.push_back( &m_timeSystem );
-    m_systems.push_back( &m_transformSystem );
-    m_systems.push_back( &m_renderingSystem );
-
     //////////////recup params du service //////////////////
 
     ComponentList<DrawSpace::Logger::Configuration*> logconfs;
@@ -80,10 +76,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Init( &m_entitygraph );
-    }
+    m_systemsHub.Init( &m_entitygraph );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -163,7 +156,8 @@ bool MainService::Init( void )
     m_skyboxRender->RegisterToRendering( m_rendergraph );
 
     m_camera2EntityNode = m_rootEntityNode.AddChild( &m_camera2Entity );
-    m_transformSystem.SetCurrentCameraEntity( &m_camera2Entity );
+
+    m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
 
     // ajout du champ d'impostors a la scene
     m_impostorsEntityNode = m_rootEntityNode.AddChild( &m_impostorsEntity );
@@ -184,12 +178,7 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Run( &m_entitygraph );
-    }
-    
-    m_renderer->FlipScreen();
+    m_systemsHub.Run( &m_entitygraph );
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
     char comment[256];
@@ -204,7 +193,6 @@ void MainService::Run( void )
     transform_aspect->GetComponent<dsreal>( "rspeed_x" )->getPurpose() = 0.0;
     transform_aspect->GetComponent<dsreal>( "rspeed_y" )->getPurpose() = 0.0;
     transform_aspect->GetComponent<dsreal>( "rspeed_z" )->getPurpose() = 0.0;
-
 }
 
 void MainService::Release( void )
@@ -212,10 +200,8 @@ void MainService::Release( void )
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
     m_entitygraph.OnSceneRenderEnd();
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Release( &m_entitygraph );
-    }
+
+    m_systemsHub.Release( &m_entitygraph );
 }
 
 void MainService::create_camera( void )
@@ -241,7 +227,6 @@ void MainService::create_camera( void )
     
 
     DrawSpace::Interface::Renderer::Characteristics characteristics;
-    m_renderer->GetRenderCharacteristics( characteristics );
 
 
     CameraAspect* camera_aspect = m_camera2Entity.AddAspect<CameraAspect>();

@@ -40,10 +40,7 @@ m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked )
 
 bool MainService::Init( void )
 {
-    m_systems.push_back( &m_timeSystem );
-    m_systems.push_back( &m_physicsSystem );
-    m_systems.push_back( &m_transformSystem );
-    m_systems.push_back( &m_renderingSystem );
+
 
     //////////////recup params du service //////////////////
 
@@ -83,10 +80,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Init( &m_entitygraph );
-    }
+    m_systemsHub.Init( &m_entitygraph );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -254,8 +248,8 @@ bool MainService::Init( void )
 
 
 
-    // designer la camera courante
-    m_transformSystem.SetCurrentCameraEntity( &m_cameraEntity );
+    // designer la camera courante    
+    m_systemsHub.SetCurrentCameraEntity( &m_cameraEntity );
 
 
 
@@ -275,7 +269,7 @@ bool MainService::Init( void )
     m_rendergraph.RenderingQueueModSignal();
     m_entitygraph.OnSceneRenderBegin();
 
-
+    m_systemsHub.EnableGUI( true );
 
     set_mouse_circular_mode( !m_hmi_mode );
 
@@ -287,13 +281,7 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Run( &m_entitygraph );
-    }
-
-    m_renderer->GUI_Render();
-    m_renderer->FlipScreen();
+    m_systemsHub.Run( &m_entitygraph );
 
     if( m_waves_inc )
     {
@@ -327,10 +315,8 @@ void MainService::Release( void )
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
     m_entitygraph.OnSceneRenderEnd();
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Release( &m_entitygraph );
-    }
+
+    m_systemsHub.Release( &m_entitygraph );
 }
 
 void MainService::OnKeyPress( long p_key )
@@ -596,10 +582,9 @@ void MainService::clean_cubes( void )
         m_dynamic_cubes[i].dynCubeRender->UnregisterFromRendering( m_rendergraph );
     }
 
-    // pour traiter correctement tout les evts provoques par le retrait des entites
-    m_physicsSystem.Run( &m_entitygraph );
+    // pour traiter correctement tout les evts provoques par le retrait des entites    
+    m_systemsHub.Run( &m_entitygraph );
     m_rendergraph.RenderingQueueModSignal();
-
 
     // seulement ensuite on peut desallouer
     for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )

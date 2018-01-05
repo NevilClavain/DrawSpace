@@ -37,11 +37,6 @@ MainService::MainService( void )
 
 bool MainService::Init( void )
 {
-    m_systems.push_back( &m_timeSystem );
-    m_systems.push_back( &m_physicsSystem );
-    m_systems.push_back( &m_transformSystem );
-    m_systems.push_back( &m_renderingSystem );
-
     //////////////recup params du service //////////////////
 
     ComponentList<DrawSpace::Logger::Configuration*> logconfs;
@@ -79,10 +74,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Init( &m_entitygraph );
-    }
+    m_systemsHub.Init( &m_entitygraph );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -183,8 +175,8 @@ bool MainService::Init( void )
     // ajouter la cameras a la scene
     m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
 
-    // designer la camera courante
-    m_transformSystem.SetCurrentCameraEntity( &m_cameraEntity );
+    // designer la camera courante    
+    m_systemsHub.SetCurrentCameraEntity( &m_cameraEntity );
 
     // ajouter le ground a la scene
     m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
@@ -211,13 +203,8 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Run( &m_entitygraph );
-    }
+    m_systemsHub.Run( &m_entitygraph );
     
-    m_renderer->FlipScreen();
-
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
     char comment[256];
 
@@ -233,10 +220,8 @@ void MainService::Release( void )
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
     m_entitygraph.OnSceneRenderEnd();
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Release( &m_entitygraph );
-    }
+
+    m_systemsHub.Release( &m_entitygraph );
 }
 
 void MainService::create_skybox( void )
