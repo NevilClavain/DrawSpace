@@ -1,3 +1,27 @@
+/* -*-LIC_BEGIN-*- */
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2018                        
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+/* -*-LIC_END-*- */
+
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -542,11 +566,11 @@ void BodyAspect::attach_to( BodyAspect* body_aspect )
     
     if( NOT_READY == m_mode )
     {
-        // pas encore prêt, ignorer; on repassera ici au prochain cycle ( attach_to appelé cycliquement tant que m_attachment_owner == NULL : cf BodyAspect::ManageAttachment() )
+        // pas encore prï¿½t, ignorer; on repassera ici au prochain cycle ( attach_to appelï¿½ cycliquement tant que m_attachment_owner == NULL : cf BodyAspect::ManageAttachment() )
         return;
     }
     
-     // pour l'instant, seul les BODY peuvent être attaché/détachés a un ATTRACTOR_COLLIDER
+     // pour l'instant, seul les BODY peuvent ï¿½tre attachï¿½/dï¿½tachï¿½s a un ATTRACTOR_COLLIDER
 
     if( m_mode != BODY )
     {

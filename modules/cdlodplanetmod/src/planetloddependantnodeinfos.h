@@ -1,3 +1,27 @@
+/* -*-LIC_BEGIN-*- */
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2018                        
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+/* -*-LIC_END-*- */
+
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -44,9 +68,9 @@ public:
     DrawSpace::Module::KeySource<bool>              m_groundAltValid;
     DrawSpace::Module::KeySource<dsreal>            m_groundAlt;
 
-    /// donnees globales, pas specifiquement liée au nodes, mais je le met là car c'est plus simple
+    /// donnees globales, pas specifiquement liï¿½e au nodes, mais je le met lï¿½ car c'est plus simple
     /// que de remettre en place un autre key bindings ;-)
-    //  comme ces données sont globales à l'instance planete, ces valeurs seront identiques quelquesoit le nodes LOD dependant de l'instance planete
+    //  comme ces donnï¿½es sont globales ï¿½ l'instance planete, ces valeurs seront identiques quelquesoit le nodes LOD dependant de l'instance planete
 
     DrawSpace::Module::KeySource<int>               m_nbSubPasses; // nombre de subpasses en cours d'execution pour la planete
 

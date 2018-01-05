@@ -1,3 +1,27 @@
+/* -*-LIC_BEGIN-*- */
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2018                        
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+/* -*-LIC_END-*- */
+
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -44,7 +68,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
         _DSEXCEPTION( "Need a time reference!!!" )
     }    
 
-    // recup des composants donnees d'entrées
+    // recup des composants donnees d'entrï¿½es
 
     ComponentList<Vector> vectors;
     p_transformaspect->GetComponentsByType<Vector>( vectors );
@@ -61,7 +85,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
     m_time_aspect->GetComponentsByType<TimeAspect::TimeScale>( time_scales );
 
 
-    //vitesses demandées...
+    //vitesses demandï¿½es...
 
     ComponentList<dsreal> reals;
     p_transformaspect->GetComponentsByType<dsreal>( reals );
@@ -75,7 +99,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
     }
 
 
-    // axe demandé
+    // axe demandï¿½
     Vector rot_axis_x = vectors[1]->getPurpose();
     Vector rot_axis_y = vectors[2]->getPurpose();    
     Vector rot_axis_z = vectors[3]->getPurpose();

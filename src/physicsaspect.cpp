@@ -1,3 +1,27 @@
+/* -*-LIC_BEGIN-*- */
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2018                        
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+/* -*-LIC_END-*- */
+
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
@@ -95,7 +119,7 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
 
         if( 0 == p_list.count( curr_entity ) )
         {
-            // cette entité n'est pas dans la liste fournie en entrée -> a été retirée du graph
+            // cette entitï¿½ n'est pas dans la liste fournie en entrï¿½e -> a ï¿½tï¿½ retirï¿½e du graph
             on_removed_bodyentity( curr_entity );
             to_remove.push_back( curr_entity );
         }

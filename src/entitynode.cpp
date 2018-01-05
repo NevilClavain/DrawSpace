@@ -1,3 +1,27 @@
+/* -*-LIC_BEGIN-*- */
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2018                        
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+/* -*-LIC_END-*- */
+
 /*
 *
 * DrawSpace Rendering engine
@@ -41,7 +65,7 @@ EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector
     m_owner_graph( p_owner )
     //m_nodesevt_handlers( p_nodesevt_handlers )
 {
-    // si on passe dans ce ctor c'est que l'entitee a été ajoutée au graph
+    // si on passe dans ce ctor c'est que l'entitee a ï¿½tï¿½ ajoutï¿½e au graph
     // donc notif de l'evt
     //for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
 
@@ -61,14 +85,14 @@ EntityNode EntityNode::AddChild(Entity* p_entity)
     /*
     if( NULL == m_nodesevt_handlers )
     {
-        //si m_nodesevt_handlers est a NULL c'est que cet EntityNode n'est pas rataché a un EntityTree
+        //si m_nodesevt_handlers est a NULL c'est que cet EntityNode n'est pas ratachï¿½ a un EntityTree
         _DSEXCEPTION( "Detached node; cannot add child to it!" );
     }
     */
 
     if( NULL == m_owner_graph )
     {
-        //si m_owner_graph est a NULL c'est que cet EntityNode n'est pas rataché a un EntityTree
+        //si m_owner_graph est a NULL c'est que cet EntityNode n'est pas ratachï¿½ a un EntityTree
         _DSEXCEPTION( "Detached node; cannot add child to it!" );
     }
 
