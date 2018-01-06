@@ -22,33 +22,12 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
-
 #ifndef _RENDERPASSNODEGRAPH_H_
 #define _RENDERPASSNODEGRAPH_H_
 
 #include "renderpassnode.h"
 #include "renderingaspectimpl.h"
+#include <queue>
 
 namespace DrawSpace
 {
@@ -61,7 +40,16 @@ public:
 
 private:
 
-    mutable PassDescrTree  m_tree;
+    typedef enum
+    {
+        SIGNAL_UPDATED_RENDERINGQUEUE
+
+    } Signals;
+
+    mutable PassDescrTree   m_tree;
+    std::queue<Signals>     m_signals;
+
+
     void cleanup_treenodes( void );
 
 public:
@@ -72,7 +60,10 @@ public:
     void Erase( void );
     void Accept( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_renderingaspectimpl );
 
-    void RenderingQueueModSignal( void );
+    void ProcessSignals( void );
+
+    //void RenderingQueueModSignal( void );
+    void PushSignal_UpdatedRenderingQueue( void );
 };
 
 }

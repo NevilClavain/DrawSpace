@@ -413,7 +413,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
         m_entitygraph.SetCurrentCameraEntity( &m_camera2Entity );
     }
 
-    m_rendergraph.RenderingQueueModSignal();
+    m_rendergraph.PushSignal_UpdatedRenderingQueue();
 
     m_entitygraph.OnSceneRenderBegin();
 

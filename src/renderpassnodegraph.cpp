@@ -22,27 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 #include "renderpassnodegraph.h"
 #include "memalloc.h"
@@ -106,6 +85,7 @@ void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
     }
 }
 
+/*
 // signaler qu'au moins une RenderingQueue de pass a ete modifiee (ajout ou retrait d'un renderingnode)
 void RenderPassNodeGraph::RenderingQueueModSignal( void )
 {
@@ -119,5 +99,37 @@ void RenderPassNodeGraph::RenderingQueueModSignal( void )
             // reset flag
             it->data()->m_renderingqueue_update_flag = false;
         }
+    }
+}
+*/
+
+void RenderPassNodeGraph::PushSignal_UpdatedRenderingQueue( void )
+{
+    m_signals.push( SIGNAL_UPDATED_RENDERINGQUEUE );
+}
+
+void RenderPassNodeGraph::ProcessSignals( void )
+{   
+    while( !m_signals.empty() )
+    {
+        Signals sig = m_signals.front();
+
+        if( SIGNAL_UPDATED_RENDERINGQUEUE == sig )
+        {
+            /// update all rendering queues
+            for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
+            {
+                if( it->data()->m_renderingqueue_update_flag )
+                {
+                    // mise a jour buffer renderingqueue
+                    it->data()->m_renderingqueue->UpdateOutputQueue();
+
+                    // reset flag
+                    it->data()->m_renderingqueue_update_flag = false;
+                }
+            }            
+        }
+
+        m_signals.pop();
     }
 }

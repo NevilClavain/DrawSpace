@@ -168,7 +168,9 @@ bool MainService::Init( void )
     m_impostorsEntityNode = m_rootEntityNode.AddChild( &m_impostorsEntity );
     m_impostorsRender.RegisterToRendering( m_rendergraph );
 
-    m_rendergraph.RenderingQueueModSignal();
+
+
+    m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.OnSceneRenderBegin();
 
 

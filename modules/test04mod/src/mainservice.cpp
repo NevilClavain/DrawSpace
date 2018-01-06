@@ -290,7 +290,7 @@ bool MainService::Init( void )
     m_renderer->GUI_SetLayout( "main.layout" );
 
 
-    m_rendergraph.RenderingQueueModSignal();
+    m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.OnSceneRenderBegin();
 
     m_systemsHub.EnableGUI( true );
@@ -608,7 +608,7 @@ void MainService::clean_cubes( void )
 
     // pour traiter correctement tout les evts provoques par le retrait des entites    
     m_systemsHub.Run( &m_entitygraph );
-    m_rendergraph.RenderingQueueModSignal();
+    m_rendergraph.PushSignal_UpdatedRenderingQueue();
 
     // seulement ensuite on peut desallouer
     for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
@@ -740,7 +740,7 @@ void MainService::create_dynamic_cube( void )
 
     m_dynamic_cubes.push_back( cube );
 
-    m_rendergraph.RenderingQueueModSignal();
+    m_rendergraph.PushSignal_UpdatedRenderingQueue();
 }
 
 void MainService::create_static_cube( void )

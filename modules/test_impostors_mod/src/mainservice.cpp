@@ -192,7 +192,7 @@ bool MainService::Init( void )
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
 
-    m_rendergraph.RenderingQueueModSignal();
+    m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.OnSceneRenderBegin();
 
     set_mouse_circular_mode( true );

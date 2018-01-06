@@ -170,7 +170,7 @@ bool MainService::Init( void )
 
 
 
-    m_rendergraph.RenderingQueueModSignal();
+    m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.OnSceneRenderBegin();
 
 
