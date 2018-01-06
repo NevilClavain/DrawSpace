@@ -68,15 +68,6 @@ public:
 
     typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>       SystemsUpdateEventHandler;
 
-    typedef enum
-    {
-        CAMERA_ACTIVE,
-        TRANSFORMATIONS_BEGIN,
-        TRANSFORMATIONS_END
-
-    } TransformationEvent;
-
-    typedef DrawSpace::Core::BaseCallback2<void, TransformationEvent, DrawSpace::Core::Entity*>                              TransformationsEventHandler;
 
     typedef DrawSpace::Core::CallBack2<Hub, void, DrawSpace::Systems::TransformSystem::Event, DrawSpace::Core::Entity*>      TransformationsEventCallback;
 
@@ -90,12 +81,6 @@ private:
 
     std::set<SystemsUpdateEventHandler*>        m_systems_update_evt_handlers;
 
-    std::set<TransformationsEventHandler*>      m_transformations_evt_handlers;
-
-    TransformationsEventCallback                m_transfos_evt_cb;
-
-    void on_transformsystem_evt( DrawSpace::Systems::TransformSystem::Event p_evt, DrawSpace::Core::Entity* p_entity );
-
 public:
     Hub( void );
 
@@ -104,22 +89,10 @@ public:
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
 
     void EnableGUI( bool p_state );
-    void SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera );
 
     void RegisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
     void UnregisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
 
-    void RegisterTransformationEvtHandler( TransformationsEventHandler* p_handler );
-    void UnregisterTransformationEvtHandler( TransformationsEventHandler* p_handler );
-    
-
-
-
-
-    /*
-    void RegisterCameraEvtHandler( TransformSystem::CameraEventHandler* p_handler );
-    void UnregisterCameraEvtHandler( TransformSystem::CameraEventHandler* p_handler );
-    */
 };
 }
 }

@@ -52,11 +52,12 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
 
-EntityNodeGraph::EntityNodeGraph(void)
+EntityNodeGraph::EntityNodeGraph( void ) :
+m_curr_entity_camera( NULL )
 {
 }
 
-EntityNodeGraph::~EntityNodeGraph(void)
+EntityNodeGraph::~EntityNodeGraph( void )
 {
 }
 
@@ -104,13 +105,30 @@ void EntityNodeGraph::AcceptSystemRootToLeaf( Interface::System* p_system )
 
 void EntityNodeGraph::RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler )
 {
-    m_nodesevt_handlers.push_back( p_handler );
-
+    m_nodesevt_handlers.insert( p_handler );
     // balancer la liste des nodes deja enregistres
     for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
     {
         (*p_handler)( EntityNode::ADDED_IN_TREE, it->data() );
     }
+}
+
+void EntityNodeGraph::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
+{
+    m_camevt_handlers.insert( p_handler );
+
+    // annoncer la camera active au nouvel abonne de cet evt...
+    (*p_handler)( CAMERA_ACTIVE, m_curr_entity_camera );
+}
+
+void EntityNodeGraph::UnregisterNodesEvtHandler( EntityNode::EventsHandler* p_handler )
+{
+    m_nodesevt_handlers.erase( p_handler );
+}
+
+void EntityNodeGraph::UnregisterCameraEvtHandler( CameraEventHandler* p_handler )
+{
+    m_camevt_handlers.erase( p_handler );
 }
 
 void EntityNodeGraph::GetEntityAncestorsList( Entity* p_entity, std::vector<Entity*>& p_ancestors ) const
@@ -156,5 +174,30 @@ void EntityNodeGraph::OnSceneRenderEnd( void )
         {
             aspects[i]->OnSceneRenderEnd();
         }
+    }
+}
+
+void EntityNodeGraph::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera )
+{
+    Entity* prev_camera = m_curr_entity_camera;
+    m_curr_entity_camera = p_curr_entity_camera;
+
+    if( prev_camera )
+    {
+        notify_cam_event( CAMERA_INACTIVE, prev_camera );
+    }
+    notify_cam_event( CAMERA_ACTIVE, m_curr_entity_camera );
+}
+
+Core::Entity* EntityNodeGraph::GetCurrentCameraEntity( void ) const
+{
+    return m_curr_entity_camera;
+}
+
+void EntityNodeGraph::notify_cam_event( CameraEvent p_evt, Entity* p_entity )
+{
+    for( auto it = m_camevt_handlers.begin(); it != m_camevt_handlers.end(); ++it )
+    {
+        ( **it )( p_evt, p_entity );
     }
 }

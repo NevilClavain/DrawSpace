@@ -62,12 +62,27 @@ class EntityNodeGraph sealed
 {
 public:
 	using EntityTree = st_tree::tree<Core::Entity*>;
- 
+
+    typedef enum
+    {
+        CAMERA_ACTIVE,
+        CAMERA_INACTIVE
+
+    } CameraEvent;
+
+    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>       CameraEventHandler;
+
 private:
 	mutable EntityTree                                          m_tree;
-    std::vector<EntityNode::EventsHandler*>                     m_nodesevt_handlers;
+
+    std::set<EntityNode::EventsHandler*>                        m_nodesevt_handlers;
+    std::set<CameraEventHandler*>                               m_camevt_handlers;
 
     std::map<Core::Entity*, EntityNode::EntityTree::node_type*> m_entity_to_node;
+
+    Core::Entity*                                               m_curr_entity_camera;
+
+    void notify_cam_event( CameraEvent p_evt, Core::Entity* p_entity );
 
 public:
 	EntityNodeGraph(void);
@@ -80,11 +95,19 @@ public:
     void AcceptSystemRootToLeaf( DrawSpace::Interface::System* p_system );
 
     void RegisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );
+    void RegisterCameraEvtHandler( CameraEventHandler* p_handler );
+
+    void UnregisterNodesEvtHandler( EntityNode::EventsHandler* p_handler );
+    void UnregisterCameraEvtHandler( CameraEventHandler* p_handler );
+
 
     void GetEntityAncestorsList( Core::Entity* p_entity, std::vector<Core::Entity*>& p_ancestors ) const;
 
     virtual void OnSceneRenderBegin( void );
     virtual void OnSceneRenderEnd( void );
+
+    void SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera );
+    Core::Entity* GetCurrentCameraEntity( void ) const;
     
     friend class EntityNode;
 };

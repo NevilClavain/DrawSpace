@@ -273,7 +273,7 @@ bool MainService::Init( void )
 
 
     // designer la camera courante    
-    m_systemsHub.SetCurrentCameraEntity( &m_cameraEntity );
+    m_entitygraph.SetCurrentCameraEntity( &m_cameraEntity );
 
 
 

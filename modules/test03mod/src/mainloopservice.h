@@ -55,10 +55,10 @@ class MainLoopService : public DrawSpace::Interface::Module::Service
 {
 protected:
     
-    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::EntityGraph::EntityNode::Event, DrawSpace::Core::Entity*>          EntitygraphNodeEventCb;
+    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::EntityGraph::EntityNode::Event, DrawSpace::Core::Entity*>              EntitygraphNodeEventCb;
 
-    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::Systems::Hub::TransformationEvent, DrawSpace::Core::Entity*>       TransformationEvtCb;
-    typedef DrawSpace::Core::CallBack<MainLoopService, void, DrawSpace::Systems::Hub::SystemsUpdateEvent>                                   SystemsUpdateEvtCb;
+    typedef DrawSpace::Core::CallBack2<MainLoopService, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, DrawSpace::Core::Entity*>   CameraEvtCb;
+    typedef DrawSpace::Core::CallBack<MainLoopService, void, DrawSpace::Systems::Hub::SystemsUpdateEvent>                                       SystemsUpdateEvtCb;
 
 
     bool                                                                            m_left_mousebutton;
@@ -160,11 +160,9 @@ protected:
 
     int                                                                             m_current_camera;
 
-    //CameraEventHandler                                                              m_worldsystem_evt_handler;
-
 
     EntitygraphNodeEventCb                                                          m_entitygraph_evt_cb;
-    TransformationEvtCb                                                             m_transfo_evt_cb;
+    CameraEvtCb                                                                     m_camera_evt_cb;
     SystemsUpdateEvtCb                                                              m_systems_update_evt_cb;
 
 
@@ -175,7 +173,7 @@ protected:
 
     //void on_transformsystem_evt( DrawSpace::Systems::TransformSystem::Event p_evt, DrawSpace::Core::Entity* p_entity );
 
-    void on_transformsystem_evt( DrawSpace::Systems::Hub::TransformationEvent p_evt, DrawSpace::Core::Entity* p_entity );
+    void on_camera_evt( DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_evt, DrawSpace::Core::Entity* p_entity );
     void on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateEvent p_evt );
 
     void on_entitygraph_evt( DrawSpace::EntityGraph::EntityNode::Event p_evt, DrawSpace::Core::Entity* p_entity );

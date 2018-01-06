@@ -69,11 +69,10 @@ EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector
     // donc notif de l'evt
     //for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
 
-    std::vector<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
-    for( size_t i = 0; i < nodesevt_handlers.size(); i++ )
+    std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
+    for( auto it = nodesevt_handlers.begin(); it != nodesevt_handlers.end(); ++it )
     {
-        EntityNode::EventsHandler* curr_h = nodesevt_handlers[i];
-        ( *curr_h )( EntityNode::ADDED_IN_TREE, m_tree_node->data() );
+        (**it )( EntityNode::ADDED_IN_TREE, m_tree_node->data() );
     }
 
     // inscription dans la table EntityNodeGraph::m_entity_to_node
@@ -82,20 +81,11 @@ EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector
 
 EntityNode EntityNode::AddChild(Entity* p_entity)
 {
-    /*
-    if( NULL == m_nodesevt_handlers )
-    {
-        //si m_nodesevt_handlers est a NULL c'est que cet EntityNode n'est pas ratach� a un EntityTree
-        _DSEXCEPTION( "Detached node; cannot add child to it!" );
-    }
-    */
-
     if( NULL == m_owner_graph )
     {
         //si m_owner_graph est a NULL c'est que cet EntityNode n'est pas ratach� a un EntityTree
         _DSEXCEPTION( "Detached node; cannot add child to it!" );
     }
-
 
 	EntityTree::node_type::iterator it = m_tree_node->insert( p_entity );
 	//EntityNode node(&(*it), m_nodesevt_handlers );
@@ -112,10 +102,9 @@ void EntityNode::Erase(void)
 	m_tree_node->erase();
 
     //for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
-    std::vector<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
-    for( size_t i = 0; i < nodesevt_handlers.size(); i++ )
+    std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
+    for( auto it = nodesevt_handlers.begin(); it != nodesevt_handlers.end(); ++it )
     {
-        EntityNode::EventsHandler* curr_h = nodesevt_handlers[i];        
-        ( *curr_h )( EntityNode::REMOVED_FROM_TREE, entity );
+        (**it )( EntityNode::REMOVED_FROM_TREE, entity );
     }
 }

@@ -63,7 +63,7 @@ m_right_mousebutton( false ),
 m_current_camera( 0 ),
 //m_worldsystem_evt_handler( this, &MainLoopService::on_transformsystem_evt ),
 m_entitygraph_evt_cb( this, &MainLoopService::on_entitygraph_evt ),
-m_transfo_evt_cb( this, &MainLoopService::on_transformsystem_evt ),
+m_camera_evt_cb( this, &MainLoopService::on_camera_evt ),
 m_systems_update_evt_cb( this, &MainLoopService::on_systems_update_evt ),
 //m_show_cube( true ),
 m_cube_is_relative( false )
@@ -320,7 +320,8 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     //m_systemsHub.RegisterCameraEvtHandler( &m_worldsystem_evt_handler );
 
     m_systemsHub.RegisterSystemsUpdateEvtHandler( &m_systems_update_evt_cb );
-    m_systemsHub.RegisterTransformationEvtHandler( &m_transfo_evt_cb );
+
+    m_entitygraph.RegisterCameraEvtHandler( &m_camera_evt_cb );
 
     // ajouter la skybox a la scene
     m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity ); // comme la skybox n'a aucune interaction/influence avec le monde physique bullet, on peut la mettre directement sous rootEntity
@@ -405,11 +406,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     if( 0 == m_current_camera )
     {
-        m_systemsHub.SetCurrentCameraEntity( &m_cameraEntity );
+        m_entitygraph.SetCurrentCameraEntity( &m_cameraEntity );
     }
     else
     {
-        m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
+        m_entitygraph.SetCurrentCameraEntity( &m_camera2Entity );
     }
 
     m_rendergraph.RenderingQueueModSignal();
@@ -629,11 +630,11 @@ void MainLoopService::OnKeyPulse( long p_key )
 
                 if( 0 == m_current_camera )
                 {
-                    m_systemsHub.SetCurrentCameraEntity( &m_cameraEntity );
+                    m_entitygraph.SetCurrentCameraEntity( &m_cameraEntity );
                 }
                 else
                 {
-                    m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
+                    m_entitygraph.SetCurrentCameraEntity( &m_camera2Entity );
                 }
             }
             break;
@@ -806,23 +807,15 @@ void MainLoopService::on_transformsystem_evt( Systems::TransformSystem::Event p_
 }
 */
 
-void MainLoopService::on_transformsystem_evt( DrawSpace::Systems::Hub::TransformationEvent p_evt, DrawSpace::Core::Entity* p_entity )
+void MainLoopService::on_camera_evt( DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_evt, DrawSpace::Core::Entity* p_entity )
 {
-    if( Systems::Hub::CAMERA_ACTIVE == p_evt && p_entity )
+    if( EntityNodeGraph::CAMERA_ACTIVE == p_evt && p_entity )
     {
         CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
         RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
     
         // mise a jour affichage avec le nom de la camera courante...
         rendering_aspect->GetComponent<dsstring>( "current camera" )->getPurpose() = curr_camera_aspect->GetComponent<dsstring>( "camera_debug_name" )->getPurpose();
-    }
-    else if( Systems::Hub::TRANSFORMATIONS_BEGIN == p_evt )
-    {
-        _asm nop
-    }
-    else if( Systems::Hub::TRANSFORMATIONS_END == p_evt )
-    {
-        _asm nop
     }
 }
 

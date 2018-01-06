@@ -181,7 +181,9 @@ bool MainService::Init( void )
 
     m_camera2EntityNode = m_rootEntityNode.AddChild( &m_camera2Entity );
 
-    m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
+    //m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
+
+    m_entitygraph.SetCurrentCameraEntity( &m_camera2Entity );
 
     // ajout du champ d'impostors a la scene
     m_impostorsEntityNode = m_rootEntityNode.AddChild( &m_impostorsEntity );
