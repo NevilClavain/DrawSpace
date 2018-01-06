@@ -55,8 +55,7 @@ using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Systems;
 
-TransformSystem::TransformSystem( void ) :
-m_curr_entity_camera( NULL )
+TransformSystem::TransformSystem( void )
 {
 }
 
@@ -64,34 +63,27 @@ TransformSystem::~TransformSystem( void )
 {
 }
 
-void TransformSystem::notify_event( Event p_evt, Entity* p_entity )
-{
-    for( auto it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
-    {
-        ( **it )( p_evt, p_entity );
-    }
-}
 
 void TransformSystem::Run( EntityNodeGraph* p_entitygraph )
 {
-    notify_event( RUN_BEGIN, NULL );
-
     m_step = 0;
     p_entitygraph->AcceptSystemRootToLeaf( this );
 
     m_viewtransform_todispatch.Identity();
     m_projtransform_todispatch.Identity();
 
-    if( m_curr_entity_camera )
+    Entity* curr_entity_camera = p_entitygraph->GetCurrentCameraEntity();
+
+    if( curr_entity_camera )
     {
-        CameraAspect* camera_aspect = m_curr_entity_camera->GetAspect<CameraAspect>();
+        CameraAspect* camera_aspect = curr_entity_camera->GetAspect<CameraAspect>();
         if( camera_aspect )
         {
             // chercher si worldaspect associe a cette camera
             // si oui, inverser cette matrice, qui servira de view
             // si non, identite pour view
 
-            TransformAspect* transform_aspect = m_curr_entity_camera->GetAspect<TransformAspect>();
+            TransformAspect* transform_aspect = curr_entity_camera->GetAspect<TransformAspect>();
             if( transform_aspect )
             {
                 Matrix camera_world_transform;
@@ -115,10 +107,7 @@ void TransformSystem::Run( EntityNodeGraph* p_entitygraph )
     }
 
     m_step = 1;
-    p_entitygraph->AcceptSystemRootToLeaf( this );
-
-    notify_event( RUN_END, NULL );
-
+    p_entitygraph->AcceptSystemRootToLeaf( this );  
 }
 
 void TransformSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
@@ -140,34 +129,6 @@ void TransformSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
         if( transform_aspect )
         {
             transform_aspect->DispatchViewProj( m_viewtransform_todispatch, m_projtransform_todispatch );
-        }
-    }
-}
-
-void TransformSystem::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera )
-{
-    m_curr_entity_camera = p_curr_entity_camera;
-
-    notify_event( CAMERA_ACTIVE, m_curr_entity_camera );
-}
-
-void TransformSystem::RegisterEvtHandler( EventHandler* p_handler )
-{
-    m_evt_handlers.push_back( p_handler );
-
-    // annoncer la camera active au nouvel abonne de cet evt...
-    (*p_handler)( CAMERA_ACTIVE, m_curr_entity_camera );
-
-}
-
-void TransformSystem::UnregisterEvtHandler( EventHandler* p_handler )
-{
-    for( auto it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it )
-    {
-        if( (*it) == p_handler )
-        {
-            m_evt_handlers.erase( it );
-            break;
         }
     }
 }

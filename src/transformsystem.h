@@ -72,14 +72,10 @@ public:
 
 protected:
 
-    int                                 m_step;
-    Core::Entity*                       m_curr_entity_camera;
-    std::vector<EventHandler*>          m_evt_handlers;
+    int                                 m_step;   
 
     DrawSpace::Utils::Matrix            m_viewtransform_todispatch;
     DrawSpace::Utils::Matrix            m_projtransform_todispatch;
-
-    void notify_event( Event p_evt, Core::Entity* p_entity );
 
 public:
     TransformSystem( void );
@@ -90,12 +86,6 @@ public:
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
-
-    void SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera );
-
-    void RegisterEvtHandler( EventHandler* p_handler );
-
-    void UnregisterEvtHandler( EventHandler* p_handler );
 };
 }
 }
