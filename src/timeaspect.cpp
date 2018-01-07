@@ -159,7 +159,7 @@ void TimeAspect::Update( void )
     }
 }
 
-void TimeAspect::OnSceneRenderBegin( void )
+void TimeAspect::Activate( void )
 {
     ComponentList<dstime> times_count;
     GetComponentsByType<dstime>( times_count );
@@ -175,10 +175,9 @@ void TimeAspect::OnSceneRenderBegin( void )
     m_active = true;
 }
 
-void TimeAspect::OnSceneRenderEnd( void )
+void TimeAspect::Deactivate( void )
 {
     m_timer.SetState( false );
-
     m_active = false;
 }
 

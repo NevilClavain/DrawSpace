@@ -232,8 +232,8 @@ public:
     void Update( void );
 
 
-    void OnSceneRenderBegin( void );
-    void OnSceneRenderEnd( void );
+    void Activate( void );
+    void Deactivate( void );
 
 };
 }

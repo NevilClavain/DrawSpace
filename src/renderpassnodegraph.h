@@ -62,7 +62,6 @@ public:
 
     void ProcessSignals( void );
 
-    //void RenderingQueueModSignal( void );
     void PushSignal_UpdatedRenderingQueue( void );
 };
 

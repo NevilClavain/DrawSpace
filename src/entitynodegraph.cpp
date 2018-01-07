@@ -25,6 +25,7 @@
 
 #include "entitynodegraph.h"
 #include "systems.h"
+#include "timeaspect.h"
 
 
 using namespace DrawSpace;
@@ -124,6 +125,17 @@ void EntityNodeGraph::GetEntityAncestorsList( Entity* p_entity, std::vector<Enti
     }
 }
 
+void EntityNodeGraph::PushSignal_RenderSceneBegin( void )
+{
+    m_signals.push( SIGNAL_RENDERSCENE_BEGIN );
+}
+
+void EntityNodeGraph::PushSignal_RenderSceneEnd( void )
+{
+    m_signals.push( SIGNAL_RENDERSCENE_END );
+}
+
+/*
 void EntityNodeGraph::OnSceneRenderBegin( void )
 {
     for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
@@ -155,6 +167,55 @@ void EntityNodeGraph::OnSceneRenderEnd( void )
         }
     }
 }
+*/
+
+void EntityNodeGraph::ProcessSignals( void )
+{   
+    while( !m_signals.empty() )
+    {
+        Signals sig = m_signals.front();
+
+        if( SIGNAL_RENDERSCENE_BEGIN == sig )
+        {
+            for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
+            {
+                Entity* ent = it->data();
+
+                std::vector<Core::Aspect*> aspects;
+                ent->GetAllAspects( aspects );
+
+                for( size_t i = 0; i < aspects.size(); ++i )
+                {                    
+                    Aspect::TimeAspect* timeAspect = dynamic_cast<Aspect::TimeAspect*>( aspects[i] );
+                    if( timeAspect )
+                    {
+                        timeAspect->Activate();
+                    }
+                }
+            }         
+        }
+        else if( SIGNAL_RENDERSCENE_END == sig )
+        {
+            for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
+            {
+                Entity* ent = it->data();
+
+                std::vector<Core::Aspect*> aspects;
+                ent->GetAllAspects( aspects );
+
+                for( size_t i = 0; i < aspects.size(); ++i )
+                {
+                    Aspect::TimeAspect* timeAspect = dynamic_cast<Aspect::TimeAspect*>( aspects[i] );
+                    if( timeAspect )
+                    {
+                        timeAspect->Deactivate();
+                    }
+                }
+            }                
+        }
+        m_signals.pop();
+    }
+}
 
 void EntityNodeGraph::SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera )
 {
@@ -180,3 +241,5 @@ void EntityNodeGraph::notify_cam_event( CameraEvent p_evt, Entity* p_entity )
         ( **it )( p_evt, p_entity );
     }
 }
+
+

@@ -66,6 +66,8 @@ void Hub::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
     }
     ///////
 
+    p_entitygraph->ProcessSignals();
+
     for( size_t i = 0; i < m_systems.size(); i++ )
     {
         m_systems[i]->Run( p_entitygraph );

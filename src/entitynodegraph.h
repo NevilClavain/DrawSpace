@@ -27,6 +27,8 @@
 #define _ENTITYNODEGRAPH_H_
 
 #include "entitynode.h"
+#include <queue>
+
 namespace DrawSpace
 {
 
@@ -49,9 +51,19 @@ public:
 
     } CameraEvent;
 
+
+
     typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>       CameraEventHandler;
 
 private:
+
+    typedef enum
+    {
+        SIGNAL_RENDERSCENE_BEGIN,
+        SIGNAL_RENDERSCENE_END
+
+    } Signals;
+
 	mutable EntityTree                                          m_tree;
 
     std::set<EntityNode::EventsHandler*>                        m_nodesevt_handlers;
@@ -60,6 +72,8 @@ private:
     std::map<Core::Entity*, EntityNode::EntityTree::node_type*> m_entity_to_node;
 
     Core::Entity*                                               m_curr_entity_camera;
+
+    std::queue<Signals>                                         m_signals;
 
     void notify_cam_event( CameraEvent p_evt, Core::Entity* p_entity );
 
@@ -82,8 +96,12 @@ public:
 
     void GetEntityAncestorsList( Core::Entity* p_entity, std::vector<Core::Entity*>& p_ancestors ) const;
 
-    virtual void OnSceneRenderBegin( void );
-    virtual void OnSceneRenderEnd( void );
+    //virtual void OnSceneRenderBegin( void );
+    //virtual void OnSceneRenderEnd( void );
+    void PushSignal_RenderSceneBegin( void );
+    void PushSignal_RenderSceneEnd( void );
+
+    void ProcessSignals( void );
 
     void SetCurrentCameraEntity( Core::Entity* p_curr_entity_camera );
     Core::Entity* GetCurrentCameraEntity( void ) const;
