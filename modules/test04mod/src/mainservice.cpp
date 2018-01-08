@@ -22,27 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 #include "mainservice.h"
 #include "component.h"
@@ -58,7 +37,9 @@ _DECLARE_DS_LOGGER( logger, "test04mainloopservice", NULL )
 MainService::MainService( void ) :
 m_waves_inc( true ),
 m_hmi_mode( true ),
-m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked )
+m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked ),
+m_systems_update_evt_cb( this, &MainService::on_systems_update_evt ),
+m_clean_cubes( false )
 {
 }
 
@@ -252,6 +233,9 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////////
 
+
+    m_systemsHub.RegisterSystemsUpdateEvtHandler( &m_systems_update_evt_cb );
+
     // ajouter la skybox a la scene
     m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity ); // comme la skybox n'a aucune interaction/influence avec le monde physique bullet, on peut la mettre directement sous rootEntity
                                                                         // mettre la skybox sous World1Entity fonctionne aussi, mais n'a aucune utilit�
@@ -291,7 +275,7 @@ bool MainService::Init( void )
 
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
-    m_entitygraph.OnSceneRenderBegin();
+    m_entitygraph.PushSignal_RenderSceneBegin();
 
     m_systemsHub.EnableGUI( true );
 
@@ -337,8 +321,6 @@ void MainService::Run( void )
 void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
-
-    m_entitygraph.OnSceneRenderEnd();
 
     m_systemsHub.Release( &m_entitygraph );
 }
@@ -606,6 +588,9 @@ void MainService::clean_cubes( void )
         m_dynamic_cubes[i].dynCubeRender->UnregisterFromRendering( m_rendergraph );
     }
 
+    m_clean_cubes = true;
+
+    /*
     // pour traiter correctement tout les evts provoques par le retrait des entites    
     m_systemsHub.Run( &m_entitygraph );
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
@@ -619,7 +604,7 @@ void MainService::clean_cubes( void )
     }
 
     m_dynamic_cubes.clear();
-    
+    */
 }
 
 void MainService::create_dynamic_cube( void )
@@ -973,5 +958,29 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
     else if( "Button_Destroy" == p_widget_id )
     {
         clean_cubes();
+    }
+}
+
+void MainService::on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateEvent p_evt )
+{
+    if( DrawSpace::Systems::Hub::SYSTEMS_UPDATE_END == p_evt )
+    {
+        if( m_clean_cubes )
+        {
+    
+            m_rendergraph.PushSignal_UpdatedRenderingQueue();
+
+            // seulement ensuite on peut desallouer
+            for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
+            {      
+                _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntity );
+                _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntityNode );
+                _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeRender );
+            }
+
+            m_dynamic_cubes.clear();
+
+            m_clean_cubes = false;
+        }
     }
 }

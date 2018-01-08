@@ -22,27 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 #ifndef _MAINSERVICE_H_
 #define _MAINSERVICE_H_
@@ -54,7 +33,8 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack2<MainService, void, const dsstring&, const dsstring&>  GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack2<MainService, void, const dsstring&, const dsstring&>                     GUIWidgetPushButtonClickedCallback;
+    typedef DrawSpace::Core::CallBack<MainService, void, DrawSpace::Systems::Hub::SystemsUpdateEvent>           SystemsUpdateEvtCb;
 
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
@@ -124,9 +104,14 @@ protected:
 
     std::vector<dynamic_cube>                                                       m_dynamic_cubes;
 
+    SystemsUpdateEvtCb                                                              m_systems_update_evt_cb;
+
+    bool                                                                            m_clean_cubes;
+
     void set_mouse_circular_mode( bool p_state );
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
+    void on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateEvent p_evt );
 
     void create_skybox( void );
     void create_ground( void );

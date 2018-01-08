@@ -231,7 +231,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     Matrix cube_transf;
 
-    cube_transf.Translation( 0.0, 10.0, -10.0 );
+    cube_transf.Translation( -20.0, 10.0, 20.0 );
     //cube_transf.Translation( 0.0, 0.0, -10.0 );
     create_cube( cube_transf, m_cubeEntity );
 
@@ -415,7 +415,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
 
-    m_entitygraph.OnSceneRenderBegin();
+    m_entitygraph.PushSignal_RenderSceneBegin();
 
     _DSDEBUG( logger, dsstring("main loop service : startup...") );
 }
@@ -472,7 +472,6 @@ void MainLoopService::Release( void )
 {
     _DSDEBUG( logger, dsstring("main loop service : shutdown...") );
 
-    m_entitygraph.OnSceneRenderEnd();
     m_systemsHub.Release( &m_entitygraph );
 }
 
