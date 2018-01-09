@@ -22,27 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 #include "mainloopservice.h"
 #include "drawspace.h"
@@ -66,7 +45,9 @@ m_entitygraph_evt_cb( this, &MainLoopService::on_entitygraph_evt ),
 m_camera_evt_cb( this, &MainLoopService::on_camera_evt ),
 m_systems_update_evt_cb( this, &MainLoopService::on_systems_update_evt ),
 //m_show_cube( true ),
-m_cube_is_relative( false )
+m_cube_is_relative( false ),
+m_attaching( 0 ),
+m_detaching( 0 )
 //m_cube_is_relative( true )
 {
 }
@@ -644,7 +625,10 @@ void MainLoopService::OnKeyPulse( long p_key )
                 {
                     m_camera2EntityNode.Erase();
                     m_cubeEntityNode.Erase();
+
+                    m_attaching = 1;
                     
+                    /*
                     m_systemsHub.Run( &m_entitygraph );
 
                     m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
@@ -653,13 +637,16 @@ void MainLoopService::OnKeyPulse( long p_key )
                     m_systemsHub.Run( &m_entitygraph );
 
                     m_cube_is_relative = false;
+                    */
                 }
                 else
                 {
                     m_camera2EntityNode.Erase();
                     m_cubeEntityNode.Erase();
-                    
 
+                    m_detaching = 1;
+                    
+                    /*
                     m_systemsHub.Run( &m_entitygraph );
                     
                     m_cubeEntityNode = m_planet1EntityNode.AddChild( &m_cubeEntity );
@@ -668,6 +655,7 @@ void MainLoopService::OnKeyPulse( long p_key )
                     m_systemsHub.Run( &m_entitygraph );
 
                     m_cube_is_relative = true;
+                    */
                 }
 
             }
@@ -820,7 +808,33 @@ void MainLoopService::on_camera_evt( DrawSpace::EntityGraph::EntityNodeGraph::Ca
 
 void MainLoopService::on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateEvent p_evt )
 {
+    if( DrawSpace::Systems::Hub::SYSTEMS_UPDATE_END == p_evt )
+    {
+        if( 1 == m_attaching )
+        {
+            m_cubeEntityNode = m_World1EntityNode.AddChild( &m_cubeEntity );
+            m_camera2EntityNode = m_cubeEntityNode.AddChild( &m_camera2Entity );
 
+            m_attaching = 2;
+        }
+        else if( 2 == m_attaching )
+        {
+            m_cube_is_relative = false;
+            m_attaching = 0;
+        }
+        else if( 1 == m_detaching )
+        {
+            m_cubeEntityNode = m_planet1EntityNode.AddChild( &m_cubeEntity );
+            m_camera2EntityNode = m_cubeEntityNode.AddChild( &m_camera2Entity );
+
+            m_detaching = 2;
+        }
+        else if( 2 == m_detaching )
+        {
+            m_cube_is_relative = true;
+            m_detaching = 0;
+        }
+    }
 }
 
 
