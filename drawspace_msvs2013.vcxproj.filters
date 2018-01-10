@@ -330,6 +330,9 @@
     <ClCompile Include="src\hub.cpp">
       <Filter>systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\proceduralsystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -669,6 +672,9 @@
       <Filter>aspectimplementations</Filter>
     </ClInclude>
     <ClInclude Include="src\hub.h">
+      <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\proceduralsystem.h">
       <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>

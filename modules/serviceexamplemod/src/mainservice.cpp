@@ -171,7 +171,7 @@ bool MainService::Init( void )
 
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
-    m_entitygraph.OnSceneRenderBegin();
+    m_entitygraph.PushSignal_RenderSceneBegin();
 
 
 
@@ -200,7 +200,7 @@ void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
-    m_entitygraph.OnSceneRenderEnd();
+
     
     m_systemsHub.Release( &m_entitygraph );
 }

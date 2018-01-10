@@ -22,57 +22,26 @@
 */
 /* -*-LIC_END-*- */
 
-
-#ifndef _HUB_H_
-#define _HUB_H_
-
-#include "transformsystem.h"
-#include "timesystem.h"
-#include "physicssystem.h"
-#include "rendersystem.h"
 #include "proceduralsystem.h"
 
-namespace DrawSpace
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::EntityGraph;
+//using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Systems;
+
+ProceduralSystem::ProceduralSystem( void )
 {
-namespace Systems
-{
-class Hub : public Interface::System
-{
-public:
-    typedef enum
-    {
-        SYSTEMS_UPDATE_BEGIN,
-        SYSTEMS_UPDATE_END
-
-    } SystemsUpdateEvent;
-
-    typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>       SystemsUpdateEventHandler;
-
-private:
-    DrawSpace::Systems::RenderingSystem         m_renderingSystem;
-    DrawSpace::Systems::TransformSystem         m_transformSystem;
-    DrawSpace::Systems::PhysicsSystem           m_physicsSystem;
-    DrawSpace::Systems::TimeSystem              m_timeSystem;
-    DrawSpace::Systems::ProceduralSystem        m_proceduralSystem;
-
-    std::vector<DrawSpace::Interface::System*>  m_systems;
-
-    std::set<SystemsUpdateEventHandler*>        m_systems_update_evt_handlers;
-
-public:
-    Hub( void );
-
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-
-    void EnableGUI( bool p_state );
-
-    void RegisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
-    void UnregisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
-
-};
-}
 }
 
-#endif
+ProceduralSystem::~ProceduralSystem( void )
+{
+}
+
+void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
+{
+}
+
+void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
+{
+}
