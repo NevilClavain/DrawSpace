@@ -153,6 +153,10 @@ bool MainService::Init( void )
     create_screen_impostors();
     create_camera();
 
+    m_procEntity.AddAspect<ProceduralAspect>();
+
+
+
 
     // ajouter la skybox a la scene
     m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );
@@ -169,6 +173,8 @@ bool MainService::Init( void )
     m_impostorsRender.RegisterToRendering( m_rendergraph );
 
 
+
+    m_procEntityNode = m_rootEntityNode.AddChild( &m_procEntity );
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.PushSignal_RenderSceneBegin();

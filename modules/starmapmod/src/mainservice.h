@@ -56,6 +56,10 @@ protected:
     DrawSpace::Core::Entity                                                         m_impostorsEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_impostorsEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_procEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_procEntityNode;
+
+
     DrawSpace::Systems::Hub                                                         m_systemsHub;
 
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;

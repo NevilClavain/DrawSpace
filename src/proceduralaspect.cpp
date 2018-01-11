@@ -22,33 +22,19 @@
 */
 /* -*-LIC_END-*- */
 
-#include "proceduralsystem.h"
 #include "proceduralaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
-using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
-using namespace DrawSpace::Systems;
 
-ProceduralSystem::ProceduralSystem( void )
+
+ProceduralAspect::ProceduralAspect( void )
 {
+
 }
 
-ProceduralSystem::~ProceduralSystem( void )
+void ProceduralAspect::Run( void )
 {
-}
 
-void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
-{
-    p_entitygraph->AcceptSystemRootToLeaf( this );
-}
-
-void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
-{
-    ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
-    if( procedural_aspect )
-    {
-        procedural_aspect->Run();
-    }
 }

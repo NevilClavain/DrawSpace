@@ -119,6 +119,8 @@
 
 #include "timeaspect.h"
 
+#include "proceduralaspect.h"
+
 #include "rendersystem.h"
 #include "transformsystem.h"
 #include "physicssystem.h"

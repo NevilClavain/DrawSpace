@@ -333,6 +333,9 @@
     <ClCompile Include="src\proceduralsystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\proceduralaspect.cpp">
+      <Filter>aspect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -676,6 +679,9 @@
     </ClInclude>
     <ClInclude Include="src\proceduralsystem.h">
       <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\proceduralaspect.h">
+      <Filter>aspect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
