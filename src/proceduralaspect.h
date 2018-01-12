@@ -26,6 +26,7 @@
 #define _PROCEDURALASPECT_H_
 
 #include "aspect.h"
+#include "entity.h"
 
 namespace DrawSpace
 {
@@ -33,12 +34,27 @@ namespace Aspect
 {
 class ProceduralAspect : public Core::Aspect 
 {
+public:
+
+    typedef enum
+    {
+        ROOT,
+        PUBLISH,
+        REPEAT,
+
+    } Operation;
+
 protected:
+    
+    bool m_to_update;
+    
+    void update( void );
 
 public:
     ProceduralAspect( void );
 
-    void Run( void );
+    void SetToUpdate( void );
+    void Run( Core::Entity* p_parent, Core::Entity* p_entity  );
 };
 }
 }

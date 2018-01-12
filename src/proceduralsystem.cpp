@@ -49,6 +49,6 @@ void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_enti
     ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
     if( procedural_aspect )
     {
-        procedural_aspect->Run();
+        procedural_aspect->Run( p_parent, p_entity );
     }
 }

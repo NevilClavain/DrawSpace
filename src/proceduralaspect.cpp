@@ -29,12 +29,36 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 
 
-ProceduralAspect::ProceduralAspect( void )
+ProceduralAspect::ProceduralAspect( void ) :
+m_to_update( false )
 {
 
 }
 
-void ProceduralAspect::Run( void )
-{
+void ProceduralAspect::Run( Core::Entity* p_parent, Core::Entity* p_entity )
+{   
+    if( m_to_update )
+    {
+        update();
+        m_to_update = false;
+    }
+}
 
+void ProceduralAspect::SetToUpdate( void )
+{
+    m_to_update = true;
+}
+
+void ProceduralAspect::update( void )
+{
+    ComponentList<ProceduralAspect::Operation> operations;
+    GetComponentsByType<ProceduralAspect::Operation>( operations );
+
+    switch( operations[0]->getPurpose() )
+    {
+        case PUBLISH:
+
+            _asm nop
+            break;    
+    }
 }

@@ -60,7 +60,8 @@ private:
     typedef enum
     {
         SIGNAL_RENDERSCENE_BEGIN,
-        SIGNAL_RENDERSCENE_END
+        SIGNAL_RENDERSCENE_END,
+        SIGNAL_EVALUATE_PROCEDURALS,
 
     } Signals;
 
@@ -96,10 +97,9 @@ public:
 
     void GetEntityAncestorsList( Core::Entity* p_entity, std::vector<Core::Entity*>& p_ancestors ) const;
 
-    //virtual void OnSceneRenderBegin( void );
-    //virtual void OnSceneRenderEnd( void );
     void PushSignal_RenderSceneBegin( void );
     void PushSignal_RenderSceneEnd( void );
+    void PushSignal_EvaluateProcedurals( void );
 
     void ProcessSignals( void );
 

@@ -26,6 +26,7 @@
 #include "entitynodegraph.h"
 #include "systems.h"
 #include "timeaspect.h"
+#include "proceduralaspect.h"
 
 
 using namespace DrawSpace;
@@ -135,39 +136,10 @@ void EntityNodeGraph::PushSignal_RenderSceneEnd( void )
     m_signals.push( SIGNAL_RENDERSCENE_END );
 }
 
-/*
-void EntityNodeGraph::OnSceneRenderBegin( void )
+void EntityNodeGraph::PushSignal_EvaluateProcedurals( void )
 {
-    for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
-    {
-        Entity* ent = it->data();
-
-        std::vector<Aspect*> aspects;
-        ent->GetAllAspects( aspects );
-
-        for( size_t i = 0; i < aspects.size(); ++i )
-        {
-            aspects[i]->OnSceneRenderBegin();
-        }
-    }
+    m_signals.push( SIGNAL_EVALUATE_PROCEDURALS );
 }
-
-void EntityNodeGraph::OnSceneRenderEnd( void )
-{
-    for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
-    {
-        Entity* ent = it->data();
-
-        std::vector<Aspect*> aspects;
-        ent->GetAllAspects( aspects );
-
-        for( size_t i = 0; i < aspects.size(); ++i )
-        {
-            aspects[i]->OnSceneRenderEnd();
-        }
-    }
-}
-*/
 
 void EntityNodeGraph::ProcessSignals( void )
 {   
@@ -175,43 +147,71 @@ void EntityNodeGraph::ProcessSignals( void )
     {
         Signals sig = m_signals.front();
 
-        if( SIGNAL_RENDERSCENE_BEGIN == sig )
+        switch( sig )
         {
-            for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
+            case SIGNAL_RENDERSCENE_BEGIN:
             {
-                Entity* ent = it->data();
-
-                std::vector<Core::Aspect*> aspects;
-                ent->GetAllAspects( aspects );
-
-                for( size_t i = 0; i < aspects.size(); ++i )
-                {                    
-                    Aspect::TimeAspect* timeAspect = dynamic_cast<Aspect::TimeAspect*>( aspects[i] );
-                    if( timeAspect )
-                    {
-                        timeAspect->Activate();
-                    }
-                }
-            }         
-        }
-        else if( SIGNAL_RENDERSCENE_END == sig )
-        {
-            for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
-            {
-                Entity* ent = it->data();
-
-                std::vector<Core::Aspect*> aspects;
-                ent->GetAllAspects( aspects );
-
-                for( size_t i = 0; i < aspects.size(); ++i )
+                for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
                 {
-                    Aspect::TimeAspect* timeAspect = dynamic_cast<Aspect::TimeAspect*>( aspects[i] );
-                    if( timeAspect )
+                    Entity* ent = it->data();
+
+                    std::vector<Core::Aspect*> aspects;
+                    ent->GetAllAspects( aspects );
+
+                    for( size_t i = 0; i < aspects.size(); ++i )
+                    {                    
+                        Aspect::TimeAspect* timeAspect = dynamic_cast<Aspect::TimeAspect*>( aspects[i] );
+                        if( timeAspect )
+                        {
+                            timeAspect->Activate();
+                        }
+                    }
+                }            
+            }
+            break;
+
+            case SIGNAL_RENDERSCENE_END:
+            {
+                for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
+                {
+                    Entity* ent = it->data();
+
+                    std::vector<Core::Aspect*> aspects;
+                    ent->GetAllAspects( aspects );
+
+                    for( size_t i = 0; i < aspects.size(); ++i )
                     {
-                        timeAspect->Deactivate();
+                        Aspect::TimeAspect* timeAspect = dynamic_cast<Aspect::TimeAspect*>( aspects[i] );
+                        if( timeAspect )
+                        {
+                            timeAspect->Deactivate();
+                        }
                     }
                 }
-            }                
+            }
+            break;
+
+            case SIGNAL_EVALUATE_PROCEDURALS:
+            {
+                for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
+                {
+                    Entity* ent = it->data();
+
+                    std::vector<Core::Aspect*> aspects;
+                    ent->GetAllAspects( aspects );
+
+                    for( size_t i = 0; i < aspects.size(); ++i )
+                    {                    
+                        Aspect::ProceduralAspect* proceduralAspect = dynamic_cast<Aspect::ProceduralAspect*>( aspects[i] );
+                        if( proceduralAspect )
+                        {
+                            proceduralAspect->SetToUpdate();
+                        }
+                    }
+                }            
+            }
+            break;
+
         }
         m_signals.pop();
     }

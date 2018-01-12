@@ -153,7 +153,16 @@ bool MainService::Init( void )
     create_screen_impostors();
     create_camera();
 
-    m_procEntity.AddAspect<ProceduralAspect>();
+
+    ProceduralAspect* procedural_aspect = m_procRootEntity.AddAspect<ProceduralAspect>();
+
+    procedural_aspect->AddComponent<ProceduralAspect::Operation>( "operation", ProceduralAspect::ROOT );
+    procedural_aspect->AddComponent<dsstring>( "name", "stars generator" );
+
+
+
+    procedural_aspect = m_procPubEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect->AddComponent<ProceduralAspect::Operation>( "operation", ProceduralAspect::PUBLISH );
 
 
 
@@ -174,7 +183,8 @@ bool MainService::Init( void )
 
 
 
-    m_procEntityNode = m_rootEntityNode.AddChild( &m_procEntity );
+    m_procRootEntityNode = m_rootEntityNode.AddChild( &m_procRootEntity );
+    m_procPubEntityNode = m_procRootEntityNode.AddChild( &m_procPubEntity );
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.PushSignal_RenderSceneBegin();
@@ -530,6 +540,13 @@ void MainService::OnEndKeyPress( long p_key )
 
 void MainService::OnKeyPulse( long p_key )
 {
+    switch( p_key )
+    {
+        case VK_F2:
+
+            m_entitygraph.PushSignal_EvaluateProcedurals();
+            break;
+    }
 }
 
 void MainService::OnChar( long p_char, long p_scan )
