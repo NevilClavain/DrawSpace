@@ -544,7 +544,7 @@ void MainService::OnKeyPulse( long p_key )
     {
         case VK_F2:
 
-            m_entitygraph.PushSignal_EvaluateProcedurals();
+            m_entitygraph.PushSignal_EvaluateProcedurals( "stars generator" );
             break;
     }
 }

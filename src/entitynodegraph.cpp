@@ -136,9 +136,9 @@ void EntityNodeGraph::PushSignal_RenderSceneEnd( void )
     m_signals.push( SIGNAL_RENDERSCENE_END );
 }
 
-void EntityNodeGraph::PushSignal_EvaluateProcedurals( void )
+void EntityNodeGraph::PushSignal_EvaluateProcedurals( const dsstring& p_procedural_id )
 {
-    m_signals.push( SIGNAL_EVALUATE_PROCEDURALS );
+    m_proc_signals.push( p_procedural_id );
 }
 
 void EntityNodeGraph::ProcessSignals( void )
@@ -191,29 +191,39 @@ void EntityNodeGraph::ProcessSignals( void )
             }
             break;
 
-            case SIGNAL_EVALUATE_PROCEDURALS:
-            {
-                for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
-                {
-                    Entity* ent = it->data();
-
-                    std::vector<Core::Aspect*> aspects;
-                    ent->GetAllAspects( aspects );
-
-                    for( size_t i = 0; i < aspects.size(); ++i )
-                    {                    
-                        Aspect::ProceduralAspect* proceduralAspect = dynamic_cast<Aspect::ProceduralAspect*>( aspects[i] );
-                        if( proceduralAspect )
-                        {
-                            proceduralAspect->SetToUpdate();
-                        }
-                    }
-                }            
-            }
-            break;
-
         }
         m_signals.pop();
+    }
+
+    while( !m_proc_signals.empty() )
+    {
+        dsstring id = m_proc_signals.front();
+
+        for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
+        {
+            Entity* ent = it->data();
+
+            std::vector<Core::Aspect*> aspects;
+            ent->GetAllAspects( aspects );
+
+            for( size_t i = 0; i < aspects.size(); ++i )
+            {                    
+                Aspect::ProceduralAspect* proceduralAspect = dynamic_cast<Aspect::ProceduralAspect*>( aspects[i] );
+                if( proceduralAspect )
+                {
+                    ComponentList<dsstring> ids;
+
+                    proceduralAspect->GetComponentsByType<dsstring>( ids );
+
+                    if( ids.size() > 0 && ids[0]->getPurpose() == id )
+                    {
+                        proceduralAspect->SetToUpdate();
+                    }
+                }
+            }
+        }
+
+        m_proc_signals.pop();
     }
 }
 

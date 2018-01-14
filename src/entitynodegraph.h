@@ -61,7 +61,6 @@ private:
     {
         SIGNAL_RENDERSCENE_BEGIN,
         SIGNAL_RENDERSCENE_END,
-        SIGNAL_EVALUATE_PROCEDURALS,
 
     } Signals;
 
@@ -75,6 +74,8 @@ private:
     Core::Entity*                                               m_curr_entity_camera;
 
     std::queue<Signals>                                         m_signals;
+
+    std::queue<dsstring>                                        m_proc_signals;
 
     void notify_cam_event( CameraEvent p_evt, Core::Entity* p_entity );
 
@@ -99,7 +100,7 @@ public:
 
     void PushSignal_RenderSceneBegin( void );
     void PushSignal_RenderSceneEnd( void );
-    void PushSignal_EvaluateProcedurals( void );
+    void PushSignal_EvaluateProcedurals( const dsstring& p_procedural_id );
 
     void ProcessSignals( void );
 
