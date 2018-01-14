@@ -217,7 +217,7 @@ void EntityNodeGraph::ProcessSignals( void )
 
                     if( ids.size() > 0 && ids[0]->getPurpose() == id )
                     {
-                        proceduralAspect->SetToUpdate();
+                        proceduralAspect->SetToUpdate( true );
                     }
                 }
             }

@@ -37,16 +37,17 @@ m_to_update( false )
 
 void ProceduralAspect::Run( Core::Entity* p_parent, Core::Entity* p_entity )
 {   
-    if( m_to_update )
-    {
-        update();
-        m_to_update = false;
-    }
+    update();
 }
 
-void ProceduralAspect::SetToUpdate( void )
+void ProceduralAspect::SetToUpdate( bool p_state )
 {
-    m_to_update = true;
+    m_to_update = p_state;
+}
+
+bool ProceduralAspect::GetToUpdate( void ) const
+{
+    return m_to_update;
 }
 
 void ProceduralAspect::update( void )

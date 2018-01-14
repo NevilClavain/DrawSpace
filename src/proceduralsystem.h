@@ -36,6 +36,9 @@ namespace Systems
 {
 class ProceduralSystem : public Interface::System
 {
+protected:
+
+    bool m_exec_flag;
 
 public:
     ProceduralSystem( void );

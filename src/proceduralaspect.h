@@ -53,7 +53,9 @@ protected:
 public:
     ProceduralAspect( void );
 
-    void SetToUpdate( void );
+    void SetToUpdate( bool p_state );
+    bool GetToUpdate( void ) const;
+
     void Run( Core::Entity* p_parent, Core::Entity* p_entity  );
 };
 }

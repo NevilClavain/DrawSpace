@@ -41,6 +41,7 @@ ProceduralSystem::~ProceduralSystem( void )
 
 void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
+    m_exec_flag = false;
     p_entitygraph->AcceptSystemRootToLeaf( this );
 }
 
@@ -49,6 +50,25 @@ void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_enti
     ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
     if( procedural_aspect )
     {
-        procedural_aspect->Run( p_parent, p_entity );
+        ComponentList<ProceduralAspect::Operation> operations;
+        procedural_aspect->GetComponentsByType<ProceduralAspect::Operation>( operations );
+
+        if( ProceduralAspect::ROOT == operations[0]->getPurpose() )
+        {
+            // si true, on va executer une fois cette hierarchie d'entites avec aspect procedural (sous ce ROOT) 
+            // jusqu'a rencontrer un prochain root procedural...
+
+            // pour cette raison, eviter d'imbriquer les ROOT dans l'entity Tree ! (pas mettre de ROOT procedural sous un autre ROOT procedural!)
+            // chacun chez soi, et les vaches seront bien gardees ;)
+
+            m_exec_flag = procedural_aspect->GetToUpdate();
+
+        }
+
+        if( m_exec_flag )
+        {
+            procedural_aspect->Run( p_parent, p_entity );
+            procedural_aspect->SetToUpdate( false ); // one shot exec for this root and all its children
+        }
     }
 }
