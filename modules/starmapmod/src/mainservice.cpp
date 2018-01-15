@@ -156,13 +156,13 @@ bool MainService::Init( void )
 
     ProceduralAspect* procedural_aspect = m_procRootEntity.AddAspect<ProceduralAspect>();
 
-    procedural_aspect->AddComponent<ProceduralAspect::Operation>( "operation", ProceduralAspect::ROOT );
+    //procedural_aspect->AddComponent<ProceduralAspect::Operation>( "operation", ProceduralAspect::ROOT );
     procedural_aspect->AddComponent<dsstring>( "name", "stars generator" );
-
+    procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID(ProceduralAspect::RootProceduralBloc));
 
 
     procedural_aspect = m_procPubEntity.AddAspect<ProceduralAspect>();
-    procedural_aspect->AddComponent<ProceduralAspect::Operation>( "operation", ProceduralAspect::PUBLISH );
+    //procedural_aspect->AddComponent<ProceduralAspect::Operation>( "operation", ProceduralAspect::PUBLISH );
 
 
 

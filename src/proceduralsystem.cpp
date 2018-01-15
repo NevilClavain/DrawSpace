@@ -50,6 +50,8 @@ void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_enti
     ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
     if( procedural_aspect )
     {
+        // temporaire
+        /*
         ComponentList<ProceduralAspect::Operation> operations;
         procedural_aspect->GetComponentsByType<ProceduralAspect::Operation>( operations );
 
@@ -64,7 +66,7 @@ void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_enti
             m_exec_flag = procedural_aspect->GetToUpdate();
 
         }
-
+        */
         if( m_exec_flag )
         {
             procedural_aspect->Run( p_parent, p_entity );

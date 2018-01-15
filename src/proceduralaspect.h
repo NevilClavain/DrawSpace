@@ -28,6 +28,8 @@
 #include "aspect.h"
 #include "entity.h"
 
+#define PROCEDURALBLOCID( __type__) typeid(__type__).hash_code()
+
 namespace DrawSpace
 {
 namespace Aspect
@@ -36,13 +38,62 @@ class ProceduralAspect : public Core::Aspect
 {
 public:
 
+
+
     typedef enum
     {
-        ROOT,
-        PUBLISH,
-        REPEAT,
+        NOARG,
+        ARG0,
+        ARG1,
+        ARG2,
+        ARG3,
+        ARG4
+    
+    } Args;
 
-    } Operation;
+    class ProceduralBloc
+    {
+    public:
+        std::vector<ProceduralBloc*> m_children;
+
+    public:
+        virtual void Evaluate( void ) = 0;
+    };
+
+    class RootProceduralBloc : public ProceduralBloc
+    {
+    public:
+        virtual void Evaluate( void );
+    };
+
+    class PublishProceduralBloc : public ProceduralBloc
+    {
+    public:
+        virtual void Evaluate( void );   
+    };
+
+    class RepeatProceduralBloc : public ProceduralBloc
+    {
+    public:
+        ProceduralBloc* m_nbIteration;
+        ProceduralBloc* m_action;
+
+    public:
+        virtual void Evaluate( void );   
+
+    };
+
+    class RandomProceduralBloc : public ProceduralBloc
+    {
+    public:
+
+    public:
+        virtual void Evaluate( void );
+        
+    };
+
+    ////////////////////////////
+
 
 protected:
     
@@ -58,6 +109,9 @@ public:
 
     void Run( Core::Entity* p_parent, Core::Entity* p_entity  );
 };
+
+
+
 }
 }
 

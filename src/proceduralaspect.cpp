@@ -52,6 +52,8 @@ bool ProceduralAspect::GetToUpdate( void ) const
 
 void ProceduralAspect::update( void )
 {
+    // temporaire
+    /*
     ComponentList<ProceduralAspect::Operation> operations;
     GetComponentsByType<ProceduralAspect::Operation>( operations );
 
@@ -62,4 +64,5 @@ void ProceduralAspect::update( void )
             _asm nop
             break;    
     }
+    */
 }
