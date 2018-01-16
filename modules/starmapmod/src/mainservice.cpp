@@ -36,7 +36,8 @@ _DECLARE_DS_LOGGER( logger, "star_map_mainservice", NULL )
 
 MainService::MainService( void ) :
 m_left_mousebutton( false ),
-m_right_mousebutton( false )
+m_right_mousebutton( false ),
+m_procedural_publication_evt_cb( this, &MainService::on_procedural_publication )
 {
 }
 
@@ -78,6 +79,8 @@ bool MainService::Init( void )
     MemAlloc::GetLogSink()->SetConfiguration( logconf );
 
     /////////////////////////////////////////////////////////////////////////////////
+
+    m_systemsHub.RegisterProceduralPublicationEvtHandler( &m_procedural_publication_evt_cb );
 
     m_systemsHub.Init( &m_entitygraph );
 
@@ -154,17 +157,17 @@ bool MainService::Init( void )
     create_camera();
 
 
-    ProceduralAspect* procedural_aspect = m_procRootEntity.AddAspect<ProceduralAspect>();
+    /////////////////////// arbre procedural /////////////////////////////////////////////////////////////////////////
 
-    //procedural_aspect->AddComponent<ProceduralAspect::Operation>( "operation", ProceduralAspect::ROOT );
+    ProceduralAspect* procedural_aspect = m_procRootEntity.AddAspect<ProceduralAspect>();
     procedural_aspect->AddComponent<dsstring>( "name", "stars generator" );
-    procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID(ProceduralAspect::RootProceduralBloc));
+    procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID( ProceduralAspect::RootProceduralBloc ) );
 
 
     procedural_aspect = m_procPubEntity.AddAspect<ProceduralAspect>();
-    //procedural_aspect->AddComponent<ProceduralAspect::Operation>( "operation", ProceduralAspect::PUBLISH );
+    procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID( ProceduralAspect::PublishProceduralBloc ) );
 
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     // ajouter la skybox a la scene
@@ -605,4 +608,10 @@ void MainService::set_mouse_circular_mode( bool p_state )
     {
         (*m_mousecircularmode_cb)( p_state );        
     }
+}
+
+
+void MainService::on_procedural_publication( const dsstring& p_id )
+{
+
 }

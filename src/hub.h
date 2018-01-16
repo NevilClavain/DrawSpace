@@ -46,18 +46,27 @@ public:
 
     } SystemsUpdateEvent;
 
+    typedef DrawSpace::Core::CallBack<Hub, void, const dsstring&>         ProceduralPublicationEvtCb;
+
     typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>       SystemsUpdateEventHandler;
+    typedef DrawSpace::Core::BaseCallback<void, const dsstring&>          ProceduralPublicationEventHandler;
+    
 
 private:
-    DrawSpace::Systems::RenderingSystem         m_renderingSystem;
-    DrawSpace::Systems::TransformSystem         m_transformSystem;
-    DrawSpace::Systems::PhysicsSystem           m_physicsSystem;
-    DrawSpace::Systems::TimeSystem              m_timeSystem;
-    DrawSpace::Systems::ProceduralSystem        m_proceduralSystem;
+    DrawSpace::Systems::RenderingSystem             m_renderingSystem;
+    DrawSpace::Systems::TransformSystem             m_transformSystem;
+    DrawSpace::Systems::PhysicsSystem               m_physicsSystem;
+    DrawSpace::Systems::TimeSystem                  m_timeSystem;
+    DrawSpace::Systems::ProceduralSystem            m_proceduralSystem;
 
-    std::vector<DrawSpace::Interface::System*>  m_systems;
+    ProceduralPublicationEvtCb                      m_procedural_publication_evt_cb;
 
-    std::set<SystemsUpdateEventHandler*>        m_systems_update_evt_handlers;
+    std::vector<DrawSpace::Interface::System*>      m_systems;
+
+    std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
+    std::set<ProceduralPublicationEventHandler*>    m_proc_pub_evt_handlers;
+
+    void on_procedural_publication( const dsstring& p_id );
 
 public:
     Hub( void );
@@ -70,6 +79,9 @@ public:
 
     void RegisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
     void UnregisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
+
+    void RegisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
+    void UnregisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
 
 };
 }

@@ -28,7 +28,8 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Systems;
 
-Hub::Hub( void )
+Hub::Hub( void ) :
+m_procedural_publication_evt_cb( this, &Hub::on_procedural_publication)
 {
     // attention ! l'ordre est important ! ( par ex. time system doit etre execute avant tt les autres!)
     m_systems.push_back( &m_proceduralSystem );
@@ -36,6 +37,8 @@ Hub::Hub( void )
     m_systems.push_back( &m_physicsSystem );
     m_systems.push_back( &m_transformSystem );
     m_systems.push_back( &m_renderingSystem );
+
+    m_proceduralSystem.RegisterProceduralPublicationEvtHandler( &m_procedural_publication_evt_cb );
 }
 
 bool Hub::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
@@ -96,4 +99,22 @@ void Hub::RegisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler 
 void Hub::UnregisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler )
 {
     m_systems_update_evt_handlers.erase( p_handler );
+}
+
+void Hub::RegisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler )
+{
+    m_proc_pub_evt_handlers.insert( p_handler );
+}
+
+void Hub::UnregisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler )
+{
+    m_proc_pub_evt_handlers.erase( p_handler );
+}
+
+void Hub::on_procedural_publication( const dsstring& p_id )
+{
+    for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
+    {
+        (**it)( p_id );
+    }
 }

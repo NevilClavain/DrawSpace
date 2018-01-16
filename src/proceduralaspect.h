@@ -38,11 +38,8 @@ class ProceduralAspect : public Core::Aspect
 {
 public:
 
-
-
     typedef enum
     {
-        NOARG,
         ARG0,
         ARG1,
         ARG2,
@@ -51,46 +48,64 @@ public:
     
     } Args;
 
-    class ProceduralBloc
+    struct ProceduralBloc
     {
-    public:
         std::vector<ProceduralBloc*> m_children;
 
-    public:
         virtual void Evaluate( void ) = 0;
     };
 
-    class RootProceduralBloc : public ProceduralBloc
+    struct RootProceduralBloc : public ProceduralBloc
     {
-    public:
-        virtual void Evaluate( void );
+        virtual void Evaluate( void )
+        {
+        }
     };
 
-    class PublishProceduralBloc : public ProceduralBloc
+    struct PublishProceduralBloc : public ProceduralBloc
     {
-    public:
-        virtual void Evaluate( void );   
+        dsstring        m_id;
+        ProceduralBloc* m_toPublish;
+
+        PublishProceduralBloc( void ) : 
+        m_toPublish( NULL )
+        {
+        }
+
+        virtual void Evaluate( void )
+        {
+        }
     };
 
-    class RepeatProceduralBloc : public ProceduralBloc
+    struct RepeatProceduralBloc : public ProceduralBloc
     {
-    public:
+
         ProceduralBloc* m_nbIteration;
         ProceduralBloc* m_action;
 
-    public:
-        virtual void Evaluate( void );   
+        RepeatProceduralBloc( void ) :
+        m_nbIteration( NULL ),
+        m_action( NULL )
+        {
+        }
 
+        virtual void Evaluate( void )
+        {
+        }
     };
 
-    class RandomProceduralBloc : public ProceduralBloc
+    template<typename T>
+    struct ValueProceduralBloc : public ProceduralBloc
     {
-    public:
+        T m_value;
 
-    public:
-        virtual void Evaluate( void );
-        
+        virtual void Evaluate( void ) {};
+        T GetValue( void )
+        {
+            return m_value;
+        }
     };
+
 
     ////////////////////////////
 

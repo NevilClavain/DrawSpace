@@ -51,18 +51,16 @@ bool ProceduralAspect::GetToUpdate( void ) const
 }
 
 void ProceduralAspect::update( void )
-{
-    // temporaire
-    /*
-    ComponentList<ProceduralAspect::Operation> operations;
-    GetComponentsByType<ProceduralAspect::Operation>( operations );
+{   
+    ComponentList<size_t> operations;
+    GetComponentsByType<size_t>( operations );
 
-    switch( operations[0]->getPurpose() )
+    if( PROCEDURALBLOCID(RootProceduralBloc) == operations[0]->getPurpose() )
     {
-        case PUBLISH:
-
-            _asm nop
-            break;    
+        _asm nop
     }
-    */
+    else if( PROCEDURALBLOCID(PublishProceduralBloc) == operations[0]->getPurpose() )
+    {
+        _asm nop
+    }    
 }

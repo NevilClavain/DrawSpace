@@ -30,6 +30,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Systems;
+using namespace DrawSpace::Aspect;
 
 ProceduralSystem::ProceduralSystem( void )
 {
@@ -43,6 +44,25 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     m_exec_flag = false;
     p_entitygraph->AcceptSystemRootToLeaf( this );
+
+    // execute procedurals...
+
+    ////////////// TEMPORAIRE, POUR TESTS....
+
+    ProceduralAspect::RootProceduralBloc* rootpb = new ProceduralAspect::RootProceduralBloc;
+
+    rootpb->m_children.push_back( new ProceduralAspect::PublishProceduralBloc() );
+
+    m_procedurals["stars generator"] = rootpb;
+
+
+    for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
+    {
+        (**it)( "fait chier cette réunion" );
+    }
+
+
+    //////////
 }
 
 void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
@@ -51,11 +71,11 @@ void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_enti
     if( procedural_aspect )
     {
         // temporaire
-        /*
-        ComponentList<ProceduralAspect::Operation> operations;
-        procedural_aspect->GetComponentsByType<ProceduralAspect::Operation>( operations );
+        
+        ComponentList<size_t> operations;
+        procedural_aspect->GetComponentsByType<size_t>( operations );
 
-        if( ProceduralAspect::ROOT == operations[0]->getPurpose() )
+        if( PROCEDURALBLOCID(ProceduralAspect::RootProceduralBloc) == operations[0]->getPurpose() )
         {
             // si true, on va executer une fois cette hierarchie d'entites avec aspect procedural (sous ce ROOT) 
             // jusqu'a rencontrer un prochain root procedural...
@@ -65,12 +85,23 @@ void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_enti
 
             m_exec_flag = procedural_aspect->GetToUpdate();
 
+            // TODO : recup du composant string accompagnant le root, pour cle dans la map m_procedurals qui recevra l'arbre procedural genere
         }
-        */
+        
         if( m_exec_flag )
         {
             procedural_aspect->Run( p_parent, p_entity );
             procedural_aspect->SetToUpdate( false ); // one shot exec for this root and all its children
         }
     }
+}
+
+void ProceduralSystem::RegisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler )
+{
+    m_proc_pub_evt_handlers.insert( p_handler );
+}
+
+void ProceduralSystem::UnregisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler )
+{
+    m_proc_pub_evt_handlers.erase( p_handler );
 }

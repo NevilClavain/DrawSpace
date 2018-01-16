@@ -31,7 +31,6 @@
 
 namespace DrawSpace
 {
-
 namespace Interface
 {
 class System;
@@ -53,7 +52,7 @@ public:
 
 
 
-    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>       CameraEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>                            CameraEventHandler;
 
 private:
 

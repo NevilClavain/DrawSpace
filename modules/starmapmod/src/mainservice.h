@@ -33,6 +33,8 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
+    typedef DrawSpace::Core::CallBack<MainService, void, const dsstring&>           ProceduralPublicationEvtCb;
+
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
 
@@ -79,13 +81,15 @@ protected:
     bool                                                                            m_left_mousebutton;
     bool                                                                            m_right_mousebutton;
 
-
+    ProceduralPublicationEvtCb                                                      m_procedural_publication_evt_cb;
 
     void set_mouse_circular_mode( bool p_state );
 
     void create_skybox( void );
     void create_camera( void );
     void create_screen_impostors( void );
+
+    void on_procedural_publication( const dsstring& p_id );
 
 public:
 

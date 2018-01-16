@@ -29,6 +29,7 @@
 
 #include "systems.h"
 #include "entitynodegraph.h"
+#include "proceduralaspect.h"
 
 namespace DrawSpace
 {
@@ -36,9 +37,16 @@ namespace Systems
 {
 class ProceduralSystem : public Interface::System
 {
+public:
+
+    typedef DrawSpace::Core::BaseCallback<void, const dsstring&>                    ProceduralPublicationEventHandler;
+
 protected:
 
-    bool m_exec_flag;
+    bool                                                                            m_exec_flag;
+    std::unordered_map<dsstring, Aspect::ProceduralAspect::RootProceduralBloc*>     m_procedurals;
+
+    std::set<ProceduralPublicationEventHandler*>                                    m_proc_pub_evt_handlers;
 
 public:
     ProceduralSystem( void );
@@ -49,6 +57,9 @@ public:
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    void RegisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
+    void UnregisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
 };
 
 }
