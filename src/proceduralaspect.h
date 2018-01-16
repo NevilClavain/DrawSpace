@@ -27,6 +27,7 @@
 
 #include "aspect.h"
 #include "entity.h"
+#include "callback.h"
 
 #define PROCEDURALBLOCID( __type__) typeid(__type__).hash_code()
 
@@ -49,23 +50,31 @@ public:
     } Args;
 
     struct ProceduralBloc
-    {
-        std::vector<ProceduralBloc*> m_children;
-
+    {      
         virtual void Evaluate( void ) = 0;
     };
 
     struct RootProceduralBloc : public ProceduralBloc
     {
+        std::vector<ProceduralBloc*> m_children;
+
         virtual void Evaluate( void )
         {
+            for( size_t i = 0; i < m_children.size(); i++ )
+            {
+                m_children[i]->Evaluate();
+            }
         }
     };
 
     struct PublishProceduralBloc : public ProceduralBloc
     {
-        dsstring        m_id;
-        ProceduralBloc* m_toPublish;
+        typedef DrawSpace::Core::BaseCallback<void, const dsstring&> ProceduralPublicationEventHandler;
+
+        dsstring                                        m_id;
+        ProceduralBloc*                                 m_toPublish;
+        
+        std::set<ProceduralPublicationEventHandler*>    m_proc_pub_evt_handlers;
 
         PublishProceduralBloc( void ) : 
         m_toPublish( NULL )
@@ -74,8 +83,14 @@ public:
 
         virtual void Evaluate( void )
         {
+            for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
+            {
+                ( **it )( m_id );
+            }
         }
     };
+
+
 
     struct RepeatProceduralBloc : public ProceduralBloc
     {

@@ -49,17 +49,26 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 
     ////////////// TEMPORAIRE, POUR TESTS....
 
+    ///// build...
+
     ProceduralAspect::RootProceduralBloc* rootpb = new ProceduralAspect::RootProceduralBloc;
 
-    rootpb->m_children.push_back( new ProceduralAspect::PublishProceduralBloc() );
+    ProceduralAspect::PublishProceduralBloc* pubpb = new ProceduralAspect::PublishProceduralBloc();
+
+    pubpb->m_proc_pub_evt_handlers = m_proc_pub_evt_handlers;
+    pubpb->m_id = "publisher!";
+
+    rootpb->m_children.push_back( pubpb );
 
     m_procedurals["stars generator"] = rootpb;
 
 
-    for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
-    {
-        (**it)( "fait chier cette réunion" );
-    }
+    ///// execute...
+
+    m_procedurals["stars generator"]->Evaluate();
+
+
+    ///// cleanup...
 
 
     //////////
