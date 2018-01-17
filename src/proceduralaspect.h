@@ -106,13 +106,36 @@ public:
 
         virtual void Evaluate( void )
         {
+            int nb_ite = -1;
+            ProceduralAspect::ValueProceduralBloc<int>* intpb = dynamic_cast<ProceduralAspect::ValueProceduralBloc<int>*>( m_nbIteration );
+
+            if( intpb )
+            {
+                nb_ite = intpb->GetValue();
+            }
+
+            if( nb_ite != -1 )
+            {
+                for( int i = 0; i < nb_ite; i++ )
+                {
+                    m_action->Evaluate();
+                }
+            }
         }
     };
 
     template<typename T>
     struct ValueProceduralBloc : public ProceduralBloc
     {
+    protected:
         T m_value;
+
+    public:
+
+        ValueProceduralBloc( const T& p_val ):
+        m_value( p_val )
+        {        
+        }
 
         virtual void Evaluate( void ) {};
         T GetValue( void )

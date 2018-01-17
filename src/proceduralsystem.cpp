@@ -53,12 +53,21 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 
     ProceduralAspect::RootProceduralBloc* rootpb = new ProceduralAspect::RootProceduralBloc;
 
-    ProceduralAspect::PublishProceduralBloc* pubpb = new ProceduralAspect::PublishProceduralBloc();
+    ProceduralAspect::RepeatProceduralBloc* reppb = new ProceduralAspect::RepeatProceduralBloc;
+
+    ProceduralAspect::PublishProceduralBloc* pubpb = new ProceduralAspect::PublishProceduralBloc;
+
+    ProceduralAspect::ValueProceduralBloc<int>* intpb = new ProceduralAspect::ValueProceduralBloc<int>( 5 );
+
+    ProceduralAspect::ValueProceduralBloc<dsstring>* strpb = new ProceduralAspect::ValueProceduralBloc<dsstring>( "megadeth" );
+
+    reppb->m_action = pubpb;
+    reppb->m_nbIteration = intpb;
 
     pubpb->m_proc_pub_evt_handlers = m_proc_pub_evt_handlers;
     pubpb->m_id = "publisher!";
 
-    rootpb->m_children.push_back( pubpb );
+    rootpb->m_children.push_back( reppb );
 
     m_procedurals["stars generator"] = rootpb;
 
