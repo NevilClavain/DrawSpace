@@ -42,6 +42,9 @@ ProceduralSystem::~ProceduralSystem( void )
 
 void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
+    //std::unordered_map<dsstring,std::vector<Aspect::ProceduralAspect::ProceduralBloc*>> procedurals_blocs;
+    //std::unordered_map<dsstring, Aspect::ProceduralAspect::RootProceduralBloc*>         procedurals_tree;
+
     m_exec_flag = false;
     p_entitygraph->AcceptSystemRootToLeaf( this );
 
@@ -51,33 +54,39 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 
     ///// build...
 
-    ProceduralAspect::RootProceduralBloc* rootpb = new ProceduralAspect::RootProceduralBloc;
+    ProceduralAspect::ProceduralBlocsFactory factory;
 
-    ProceduralAspect::RepeatProceduralBloc* reppb = new ProceduralAspect::RepeatProceduralBloc;
+    ProceduralAspect::RootProceduralBloc* rootpb = factory.CreateRootBloc( "stars generator" );
 
-    ProceduralAspect::PublishProceduralBloc* pubpb = new ProceduralAspect::PublishProceduralBloc;
+    ProceduralAspect::RepeatProceduralBloc<int>* reppb = factory.CreateBloc<ProceduralAspect::RepeatProceduralBloc<int>>( "stars generator" );
+    ProceduralAspect::PublishProceduralBloc* pubpb = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc>( "stars generator" );
+    ProceduralAspect::UniformRandomValueProceduralBloc<int>* uripb = factory.CreateBloc<ProceduralAspect::UniformRandomValueProceduralBloc<int>>( "stars generator" );
+    ProceduralAspect::SimpleValueProceduralBloc<int>* rminpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator" );
+    ProceduralAspect::SimpleValueProceduralBloc<int>* rmaxpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator" );
+    ProceduralAspect::SimpleValueProceduralBloc<int>* rseedpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator" );
 
-    ProceduralAspect::ValueProceduralBloc<int>* intpb = new ProceduralAspect::ValueProceduralBloc<int>( 5 );
+    rminpb->SetValue( 7 );
+    rmaxpb->SetValue( 11 );
+    rseedpb->SetValue( 3455776 );
 
-    ProceduralAspect::ValueProceduralBloc<dsstring>* strpb = new ProceduralAspect::ValueProceduralBloc<dsstring>( "megadeth" );
+    uripb->m_inf = rminpb;
+    uripb->m_sup = rmaxpb;
+    uripb->m_seed = rseedpb;
 
     reppb->m_action = pubpb;
-    reppb->m_nbIteration = intpb;
+    reppb->m_nbIteration = uripb;
 
     pubpb->m_proc_pub_evt_handlers = m_proc_pub_evt_handlers;
     pubpb->m_id = "publisher!";
 
     rootpb->m_children.push_back( reppb );
 
-    m_procedurals["stars generator"] = rootpb;
-
-
     ///// execute...
 
-    m_procedurals["stars generator"]->Evaluate();
+    rootpb->Evaluate();
 
-
-    ///// cleanup...
+    factory.CleanTreeBlocs( "stars generator" );    
+    
 
 
     //////////

@@ -25,6 +25,7 @@
 #ifndef _PROCEDURALASPECT_H_
 #define _PROCEDURALASPECT_H_
 
+#include <random>
 #include "aspect.h"
 #include "entity.h"
 #include "callback.h"
@@ -49,7 +50,7 @@ public:
     
     } Args;
 
-    struct ProceduralBloc
+    struct ProceduralBloc abstract
     {      
         virtual void Evaluate( void ) = 0;
     };
@@ -90,13 +91,82 @@ public:
         }
     };
 
+    template<typename T>
+    struct ValueProceduralBloc abstract : public ProceduralBloc
+    {
+    protected:
+        T m_value { 0 };
+    public:
 
+        virtual T GetValue( void ) const
+        {
+            return m_value;
+        }
+    };
 
+    template<typename T>
+    struct SimpleValueProceduralBloc : public ValueProceduralBloc<T>
+    {        
+        virtual void SetValue( T p_val )
+        {
+            m_value = p_val;
+        }
+
+        virtual void Evaluate( void ) {};
+    };
+
+    template<typename T>
+    struct UniformRandomValueProceduralBloc : public ValueProceduralBloc<T>
+    {
+        ValueProceduralBloc<int>*               m_seed;
+        ValueProceduralBloc<T>*                 m_sup;
+        ValueProceduralBloc<T>*                 m_inf;
+
+    protected:
+        std::default_random_engine              m_generator;        
+        std::uniform_int_distribution<T>*       m_distribution;
+        bool                                    m_initialized;
+
+    public:
+
+        UniformRandomValueProceduralBloc( void ):
+        m_seed( NULL ),
+        m_sup( NULL ),
+        m_inf( NULL ),
+        m_initialized( false )
+        {
+        }
+
+        ~UniformRandomValueProceduralBloc( void )
+        {
+            _DRAWSPACE_DELETE_( m_distribution );
+        }
+
+        virtual void Evaluate( void )
+        {
+            if( !m_initialized )
+            {
+                m_inf->Evaluate();
+                m_sup->Evaluate();
+                m_seed->Evaluate();
+
+                T inf = m_inf->GetValue();
+                T sup = m_sup->GetValue();
+                int seed = m_seed->GetValue();
+
+                m_distribution =  _DRAWSPACE_NEW_( std::uniform_int_distribution<T>, std::uniform_int_distribution<T>( inf, sup ) );
+                m_generator.seed( seed );
+                m_initialized = true;
+            }
+            m_value = (*m_distribution)( m_generator );
+        }
+    };
+
+    template<typename T>
     struct RepeatProceduralBloc : public ProceduralBloc
     {
-
-        ProceduralBloc* m_nbIteration;
-        ProceduralBloc* m_action;
+        ValueProceduralBloc<T>*     m_nbIteration;
+        ProceduralBloc*             m_action;
 
         RepeatProceduralBloc( void ) :
         m_nbIteration( NULL ),
@@ -106,47 +176,84 @@ public:
 
         virtual void Evaluate( void )
         {
-            int nb_ite = -1;
-            ProceduralAspect::ValueProceduralBloc<int>* intpb = dynamic_cast<ProceduralAspect::ValueProceduralBloc<int>*>( m_nbIteration );
+            T nb_ite;
 
-            if( intpb )
-            {
-                nb_ite = intpb->GetValue();
-            }
+            m_nbIteration->Evaluate();
+            
+            nb_ite = m_nbIteration->GetValue();
 
-            if( nb_ite != -1 )
+            for( T i = 0; i < nb_ite; i++ )
             {
-                for( int i = 0; i < nb_ite; i++ )
-                {
-                    m_action->Evaluate();
-                }
+                m_action->Evaluate();
             }
         }
     };
+    
+    ////////////////////////////
 
-    template<typename T>
-    struct ValueProceduralBloc : public ProceduralBloc
+
+    class ProceduralBlocsFactory
     {
     protected:
-        T m_value;
+        std::unordered_map<dsstring,std::vector<ProceduralBloc*>>               m_procedurals_blocs;
+        std::unordered_map<dsstring, RootProceduralBloc*>                       m_procedurals_tree;
 
     public:
 
-        ValueProceduralBloc( const T& p_val ):
-        m_value( p_val )
-        {        
+        ~ProceduralBlocsFactory( void )
+        {
+            CleanAllTreeBlocs();
         }
 
-        virtual void Evaluate( void ) {};
-        T GetValue( void )
+        RootProceduralBloc* CreateRootBloc( const dsstring& p_procedural_tree_id )
         {
-            return m_value;
+            ProceduralAspect::RootProceduralBloc* rootpb = _DRAWSPACE_NEW_( RootProceduralBloc, RootProceduralBloc );
+
+            m_procedurals_blocs[p_procedural_tree_id].push_back( rootpb );
+            m_procedurals_tree[p_procedural_tree_id] = rootpb;
+            return rootpb;
+        }
+
+        template<typename B>
+        B* CreateBloc( const dsstring& p_procedural_tree_id )
+        {
+            B* procedural_bloc =  _DRAWSPACE_NEW_( B, B );
+
+            m_procedurals_blocs[p_procedural_tree_id].push_back( procedural_bloc );
+            return procedural_bloc;
+        }
+
+        void CleanTreeBlocs( const dsstring& p_procedural_tree_id )
+        {
+            if( m_procedurals_blocs.count( p_procedural_tree_id ) )
+            {
+                for( auto it2 = m_procedurals_blocs[p_procedural_tree_id].begin(); it2 != m_procedurals_blocs[p_procedural_tree_id].end(); ++it2 )
+                {
+                    _DRAWSPACE_DELETE_( *it2 );
+                }
+                m_procedurals_blocs.erase( p_procedural_tree_id );
+            }
+
+            if( m_procedurals_tree.count( p_procedural_tree_id ) )
+            {
+                m_procedurals_tree.erase( p_procedural_tree_id );
+            }
+        }
+
+        void CleanAllTreeBlocs( void )
+        {
+            for( auto it = m_procedurals_blocs.begin(); it != m_procedurals_blocs.end(); ++it )
+            {
+                for( auto it2 = it->second.begin(); it2 != it->second.end(); ++it2 )
+                {
+                    _DRAWSPACE_DELETE_( *it2 );
+                }
+            }
+
+            m_procedurals_blocs.clear();
+            m_procedurals_tree.clear();
         }
     };
-
-
-    ////////////////////////////
-
 
 protected:
     

@@ -44,7 +44,9 @@ public:
 protected:
 
     bool                                                                            m_exec_flag;
-    std::unordered_map<dsstring, Aspect::ProceduralAspect::RootProceduralBloc*>     m_procedurals;
+    
+    
+    
 
     std::set<ProceduralPublicationEventHandler*>                                    m_proc_pub_evt_handlers;
 
