@@ -106,7 +106,18 @@ public:
 
     template<typename T>
     struct SimpleValueProceduralBloc : public ValueProceduralBloc<T>
-    {        
+    {
+        SimpleValueProceduralBloc( void )
+        {
+            SetValue( 0 );
+        }
+
+
+        SimpleValueProceduralBloc( T p_val )
+        {
+            SetValue( p_val );
+        }
+
         virtual void SetValue( T p_val )
         {
             m_value = p_val;
@@ -214,10 +225,21 @@ public:
             return rootpb;
         }
 
+        /*
         template<typename B>
         B* CreateBloc( const dsstring& p_procedural_tree_id )
         {
             B* procedural_bloc =  _DRAWSPACE_NEW_( B, B );
+
+            m_procedurals_blocs[p_procedural_tree_id].push_back( procedural_bloc );
+            return procedural_bloc;
+        }
+        */
+
+        template<typename B, class... Args>
+        B* CreateBloc( const dsstring& p_procedural_tree_id, Args&&... p_args )
+        {
+            B* procedural_bloc =  _DRAWSPACE_NEW_( B, B(p_args...) );
 
             m_procedurals_blocs[p_procedural_tree_id].push_back( procedural_bloc );
             return procedural_bloc;
