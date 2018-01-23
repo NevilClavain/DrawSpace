@@ -164,8 +164,8 @@ bool MainService::Init( void )
     procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID( ProceduralAspect::RootProceduralBloc ) );
 
 
-    procedural_aspect = m_procPubEntity.AddAspect<ProceduralAspect>();
-    procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID( ProceduralAspect::PublishProceduralBloc ) );
+    //procedural_aspect = m_procPubEntity.AddAspect<ProceduralAspect>();
+    //procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID( ProceduralAspect::PublishProceduralBloc ) );
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -611,7 +611,20 @@ void MainService::set_mouse_circular_mode( bool p_state )
 }
 
 
-void MainService::on_procedural_publication( const dsstring& p_id )
+void MainService::on_procedural_publication( const dsstring& p_id, DrawSpace::Aspect::ProceduralAspect::ProceduralBloc* p_bloc )
 {
+    if( "publisher!" == p_id )
+    {
+        ProceduralAspect::ValueProceduralBloc<dsreal>* b = static_cast<ProceduralAspect::ValueProceduralBloc<dsreal>*>( p_bloc );
 
+        dsreal val = b->GetValue();
+        _asm nop
+    }
+    else if( "x value!" == p_id )
+    {
+        ProceduralAspect::ValueProceduralBloc<dsstring>* b = static_cast<ProceduralAspect::ValueProceduralBloc<dsstring>*>( p_bloc );
+
+        dsstring val = b->GetValue();
+        _asm nop    
+    }
 }

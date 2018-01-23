@@ -59,22 +59,46 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
     ProceduralAspect::RootProceduralBloc* rootpb = factory.CreateRootBloc( "stars generator" );
 
     ProceduralAspect::RepeatProceduralBloc<int>* reppb = factory.CreateBloc<ProceduralAspect::RepeatProceduralBloc<int>>( "stars generator" );
-    ProceduralAspect::PublishProceduralBloc* pubpb = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc>( "stars generator" );
+    ProceduralAspect::PublishProceduralBloc<dsreal>* pubpb = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc<dsreal>>( "stars generator" );
+    ProceduralAspect::PublishProceduralBloc<dsstring>* pubpb2 = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc<dsstring>>( "star x value" );
     ProceduralAspect::UniformRandomValueProceduralBloc<int>* uripb = factory.CreateBloc<ProceduralAspect::UniformRandomValueProceduralBloc<int>>( "stars generator" );
     ProceduralAspect::SimpleValueProceduralBloc<int>* rminpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 7 );
     ProceduralAspect::SimpleValueProceduralBloc<int>* rmaxpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 11 );
     ProceduralAspect::SimpleValueProceduralBloc<int>* rseedpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 3455776 );
+    
+    ProceduralAspect::ArrayProceduralBloc<dsreal>* apb = factory.CreateBloc<ProceduralAspect::ArrayProceduralBloc<dsreal>>( "stars generator" );
+    ProceduralAspect::SimpleValueProceduralBloc<int>* index1 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 2 );
 
+    ProceduralAspect::ArrayProceduralBloc<dsstring>* apb2 = factory.CreateBloc<ProceduralAspect::ArrayProceduralBloc<dsstring>>( "stars generator" );
+    ProceduralAspect::SimpleValueProceduralBloc<int>* index2 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 2 );
+    
+
+    apb->PushValue( 0.1 );
+    apb->PushValue( 0.2 );
+    apb->PushValue( 0.3 );
+    apb->m_index = index1;
+
+    apb2->PushValue( "alpha" );
+    apb2->PushValue( "beta" );
+    apb2->PushValue( "gamma" );
+    apb2->m_index = index2;
 
     uripb->m_inf = rminpb;
     uripb->m_sup = rmaxpb;
     uripb->m_seed = rseedpb;
 
-    reppb->m_action = pubpb;
+    reppb->m_actions.push_back( pubpb );
+    reppb->m_actions.push_back( pubpb2 );
     reppb->m_nbIteration = uripb;
 
     pubpb->m_proc_pub_evt_handlers = m_proc_pub_evt_handlers;
     pubpb->m_id = "publisher!";
+    pubpb->m_toPublish = apb;
+
+
+    pubpb2->m_proc_pub_evt_handlers = m_proc_pub_evt_handlers;
+    pubpb2->m_id = "x value!";
+    pubpb2->m_toPublish = apb2;
 
     rootpb->m_children.push_back( reppb );
 

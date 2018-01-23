@@ -55,6 +55,7 @@ void ProceduralAspect::update( void )
     ComponentList<size_t> operations;
     GetComponentsByType<size_t>( operations );
 
+    /*
     if( PROCEDURALBLOCID(RootProceduralBloc) == operations[0]->getPurpose() )
     {
         _asm nop
@@ -62,5 +63,6 @@ void ProceduralAspect::update( void )
     else if( PROCEDURALBLOCID(PublishProceduralBloc) == operations[0]->getPurpose() )
     {
         _asm nop
-    }    
+    } 
+    */
 }

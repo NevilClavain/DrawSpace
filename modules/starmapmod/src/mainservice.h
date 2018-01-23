@@ -33,7 +33,7 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
-    typedef DrawSpace::Core::CallBack<MainService, void, const dsstring&>           ProceduralPublicationEvtCb;
+    typedef DrawSpace::Core::CallBack2<MainService, void, const dsstring&, DrawSpace::Aspect::ProceduralAspect::ProceduralBloc*>           ProceduralPublicationEvtCb;
 
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
@@ -89,7 +89,7 @@ protected:
     void create_camera( void );
     void create_screen_impostors( void );
 
-    void on_procedural_publication( const dsstring& p_id );
+    void on_procedural_publication( const dsstring& p_id, DrawSpace::Aspect::ProceduralAspect::ProceduralBloc* p_bloc );
 
 public:
 

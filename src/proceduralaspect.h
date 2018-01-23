@@ -68,34 +68,11 @@ public:
         }
     };
 
-    struct PublishProceduralBloc : public ProceduralBloc
-    {
-        typedef DrawSpace::Core::BaseCallback<void, const dsstring&> ProceduralPublicationEventHandler;
-
-        dsstring                                        m_id;
-        ProceduralBloc*                                 m_toPublish;
-        
-        std::set<ProceduralPublicationEventHandler*>    m_proc_pub_evt_handlers;
-
-        PublishProceduralBloc( void ) : 
-        m_toPublish( NULL )
-        {
-        }
-
-        virtual void Evaluate( void )
-        {
-            for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
-            {
-                ( **it )( m_id );
-            }
-        }
-    };
-
     template<typename T>
     struct ValueProceduralBloc abstract : public ProceduralBloc
     {
     protected:
-        T m_value { 0 };
+        T m_value;// { 0 };
     public:
 
         virtual T GetValue( void ) const
@@ -109,16 +86,9 @@ public:
     {
         SimpleValueProceduralBloc( void )
         {
-            SetValue( 0 );
         }
-
 
         SimpleValueProceduralBloc( T p_val )
-        {
-            SetValue( p_val );
-        }
-
-        virtual void SetValue( T p_val )
         {
             m_value = p_val;
         }
@@ -174,14 +144,38 @@ public:
     };
 
     template<typename T>
+    struct ArrayProceduralBloc : public ValueProceduralBloc<T>
+    {
+    public:
+        ValueProceduralBloc<int>*               m_index;
+
+    protected:
+        std::vector<T>  m_array;
+        
+    public:
+
+        void PushValue( T p_value )
+        {
+            m_array.push_back( p_value );
+        }
+
+        virtual void Evaluate( void ) 
+        {
+            m_index->Evaluate();
+            int index = m_index->GetValue();
+            m_value = m_array[index];
+        };
+    };
+
+
+    template<typename T>
     struct RepeatProceduralBloc : public ProceduralBloc
     {
-        ValueProceduralBloc<T>*     m_nbIteration;
-        ProceduralBloc*             m_action;
+        ValueProceduralBloc<T>*      m_nbIteration;
+        std::vector<ProceduralBloc*> m_actions;
 
         RepeatProceduralBloc( void ) :
-        m_nbIteration( NULL ),
-        m_action( NULL )
+        m_nbIteration( NULL )
         {
         }
 
@@ -195,10 +189,40 @@ public:
 
             for( T i = 0; i < nb_ite; i++ )
             {
-                m_action->Evaluate();
+                for( size_t i2 = 0; i2 < m_actions.size(); ++i2 )
+                {
+                    m_actions[i2]->Evaluate();
+                }
             }
         }
     };
+
+    template<typename T>
+    struct PublishProceduralBloc : public ProceduralBloc
+    {
+        typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, ProceduralBloc*> ProceduralPublicationEventHandler;
+
+        dsstring                                        m_id;
+        ValueProceduralBloc<T>*                         m_toPublish;
+        
+        std::set<ProceduralPublicationEventHandler*>    m_proc_pub_evt_handlers;
+
+        PublishProceduralBloc( void ) : 
+        m_toPublish( NULL )
+        {
+        }
+
+        virtual void Evaluate( void )
+        {
+            m_toPublish->Evaluate();
+
+            for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
+            {
+                ( **it )( m_id, m_toPublish );
+            }
+        }
+    };
+
     
     ////////////////////////////
 
@@ -224,17 +248,6 @@ public:
             m_procedurals_tree[p_procedural_tree_id] = rootpb;
             return rootpb;
         }
-
-        /*
-        template<typename B>
-        B* CreateBloc( const dsstring& p_procedural_tree_id )
-        {
-            B* procedural_bloc =  _DRAWSPACE_NEW_( B, B );
-
-            m_procedurals_blocs[p_procedural_tree_id].push_back( procedural_bloc );
-            return procedural_bloc;
-        }
-        */
 
         template<typename B, class... Args>
         B* CreateBloc( const dsstring& p_procedural_tree_id, Args&&... p_args )

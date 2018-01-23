@@ -46,10 +46,10 @@ public:
 
     } SystemsUpdateEvent;
 
-    typedef DrawSpace::Core::CallBack<Hub, void, const dsstring&>         ProceduralPublicationEvtCb;
+    typedef DrawSpace::Core::CallBack2<Hub, void, const dsstring&, Aspect::ProceduralAspect::ProceduralBloc*>     ProceduralPublicationEvtCb;
 
-    typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>       SystemsUpdateEventHandler;
-    typedef DrawSpace::Core::BaseCallback<void, const dsstring&>          ProceduralPublicationEventHandler;
+    typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>                                                     SystemsUpdateEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, Aspect::ProceduralAspect::ProceduralBloc*>      ProceduralPublicationEventHandler;
     
 
 private:
@@ -66,7 +66,7 @@ private:
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
     std::set<ProceduralPublicationEventHandler*>    m_proc_pub_evt_handlers;
 
-    void on_procedural_publication( const dsstring& p_id );
+    void on_procedural_publication( const dsstring& p_id, Aspect::ProceduralAspect::ProceduralBloc* );
 
 public:
     Hub( void );

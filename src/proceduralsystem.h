@@ -39,16 +39,16 @@ class ProceduralSystem : public Interface::System
 {
 public:
 
-    typedef DrawSpace::Core::BaseCallback<void, const dsstring&>                    ProceduralPublicationEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, Aspect::ProceduralAspect::ProceduralBloc*> ProceduralPublicationEventHandler;
 
 protected:
 
-    bool                                                                            m_exec_flag;
+    bool                                              m_exec_flag;
     
     
     
 
-    std::set<ProceduralPublicationEventHandler*>                                    m_proc_pub_evt_handlers;
+    std::set<ProceduralPublicationEventHandler*>  m_proc_pub_evt_handlers;
 
 public:
     ProceduralSystem( void );

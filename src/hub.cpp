@@ -111,10 +111,10 @@ void Hub::UnregisterProceduralPublicationEvtHandler( ProceduralPublicationEventH
     m_proc_pub_evt_handlers.erase( p_handler );
 }
 
-void Hub::on_procedural_publication( const dsstring& p_id )
+void Hub::on_procedural_publication( const dsstring& p_id, DrawSpace::Aspect::ProceduralAspect::ProceduralBloc* p_bloc )
 {
     for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
     {
-        (**it)( p_id );
+        (**it)( p_id, p_bloc );
     }
 }
