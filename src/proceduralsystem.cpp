@@ -34,6 +34,7 @@ using namespace DrawSpace::Aspect;
 
 ProceduralSystem::ProceduralSystem( void )
 {
+    ProceduralAspect::SeedSourceProceduralBloc::Initialize( 123 );
 }
 
 ProceduralSystem::~ProceduralSystem( void )
@@ -42,9 +43,6 @@ ProceduralSystem::~ProceduralSystem( void )
 
 void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
-    //std::unordered_map<dsstring,std::vector<Aspect::ProceduralAspect::ProceduralBloc*>> procedurals_blocs;
-    //std::unordered_map<dsstring, Aspect::ProceduralAspect::RootProceduralBloc*>         procedurals_tree;
-
     m_exec_flag = false;
     p_entitygraph->AcceptSystemRootToLeaf( this );
 
@@ -62,15 +60,22 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
     ProceduralAspect::PublishProceduralBloc<dsreal>* pubpb = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc<dsreal>>( "stars generator" );
     ProceduralAspect::PublishProceduralBloc<dsstring>* pubpb2 = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc<dsstring>>( "star x value" );
     ProceduralAspect::UniformRandomValueProceduralBloc<int>* uripb = factory.CreateBloc<ProceduralAspect::UniformRandomValueProceduralBloc<int>>( "stars generator" );
+    ProceduralAspect::UniformRandomValueProceduralBloc<int>* uripb2 = factory.CreateBloc<ProceduralAspect::UniformRandomValueProceduralBloc<int>>( "stars generator" );
     ProceduralAspect::SimpleValueProceduralBloc<int>* rminpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 7 );
     ProceduralAspect::SimpleValueProceduralBloc<int>* rmaxpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 11 );
-    ProceduralAspect::SimpleValueProceduralBloc<int>* rseedpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 3455776 );
-    
+
+    ProceduralAspect::SimpleValueProceduralBloc<int>* rminpb2 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 0 );
+    ProceduralAspect::SimpleValueProceduralBloc<int>* rmaxpb2 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 5 );
+
+
+    ProceduralAspect::SeedSourceProceduralBloc* seedsrc = factory.CreateBloc<ProceduralAspect::SeedSourceProceduralBloc>( "stars generator" );
+    ProceduralAspect::SeedSourceProceduralBloc* seedsrc2 = factory.CreateBloc<ProceduralAspect::SeedSourceProceduralBloc>( "stars generator" );
+
     ProceduralAspect::ArrayProceduralBloc<dsreal>* apb = factory.CreateBloc<ProceduralAspect::ArrayProceduralBloc<dsreal>>( "stars generator" );
     ProceduralAspect::SimpleValueProceduralBloc<int>* index1 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 2 );
 
     ProceduralAspect::ArrayProceduralBloc<dsstring>* apb2 = factory.CreateBloc<ProceduralAspect::ArrayProceduralBloc<dsstring>>( "stars generator" );
-    ProceduralAspect::SimpleValueProceduralBloc<int>* index2 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 2 );
+    //ProceduralAspect::SimpleValueProceduralBloc<int>* index2 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 2 );
     
 
     apb->PushValue( 0.1 );
@@ -80,12 +85,21 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 
     apb2->PushValue( "alpha" );
     apb2->PushValue( "beta" );
+    apb2->PushValue( "delta" );
+    apb2->PushValue( "echo" );
+    apb2->PushValue( "foxtrot" );
     apb2->PushValue( "gamma" );
-    apb2->m_index = index2;
+    //apb2->m_index = index2;
+    apb2->m_index = uripb2;
+    
+
+    uripb2->m_inf = rminpb2;
+    uripb2->m_sup = rmaxpb2;
+    uripb2->m_seed = seedsrc2;
 
     uripb->m_inf = rminpb;
     uripb->m_sup = rmaxpb;
-    uripb->m_seed = rseedpb;
+    uripb->m_seed = seedsrc; //rseedpb;
 
     reppb->m_actions.push_back( pubpb );
     reppb->m_actions.push_back( pubpb2 );

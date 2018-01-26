@@ -61,6 +61,11 @@ protected:
     DrawSpace::Core::Entity                                                         m_procRootEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_procRootEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_procRepEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_procRepEntityNode;
+
+
+
     DrawSpace::Core::Entity                                                         m_procPubEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_procPubEntityNode;
 

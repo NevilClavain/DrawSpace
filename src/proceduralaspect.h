@@ -51,7 +51,7 @@ public:
     } Args;
 
     struct ProceduralBloc abstract
-    {      
+    {
         virtual void Evaluate( void ) = 0;
     };
 
@@ -164,6 +164,25 @@ public:
             m_index->Evaluate();
             int index = m_index->GetValue();
             m_value = m_array[index];
+        };
+    };
+    
+    struct SeedSourceProceduralBloc : public ValueProceduralBloc<int>
+    {
+    
+    protected:        
+        static std::default_random_engine               m_generator;                
+        static std::uniform_int_distribution<int>       m_distribution;
+
+    public:
+        static void Initialize( int p_global_seed )
+        {
+            m_generator.seed( p_global_seed );        
+        }
+
+        virtual void Evaluate( void ) 
+        {
+            m_value = m_distribution( m_generator );
         };
     };
 

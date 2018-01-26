@@ -29,6 +29,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 
 
+std::uniform_int_distribution<int> ProceduralAspect::SeedSourceProceduralBloc::m_distribution( 1, 12 );
+std::default_random_engine ProceduralAspect::SeedSourceProceduralBloc::m_generator;
+
 ProceduralAspect::ProceduralAspect( void ) :
 m_to_update( false )
 {
