@@ -41,6 +41,17 @@ ProceduralSystem::~ProceduralSystem( void )
 {
 }
 
+bool ProceduralSystem::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
+{
+    return true;
+}
+
+void ProceduralSystem::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
+{
+
+}
+
+
 void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     m_exec_flag = false;
@@ -52,6 +63,7 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 
     ///// build...
 
+    /*
     ProceduralAspect::ProceduralBlocsFactory factory;
 
     ProceduralAspect::RootProceduralBloc* rootpb = factory.CreateRootBloc( "stars generator" );
@@ -124,7 +136,9 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 
     rootpb->Evaluate();
 
-    factory.CleanTreeBlocs( "stars generator" );    
+    factory.CleanTreeBlocs( "stars generator" );
+
+    */
     
     //////////
 }

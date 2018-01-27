@@ -52,8 +52,10 @@ public:
 
     struct ProceduralBloc abstract
     {
-        std::vector<ProceduralBloc*> m_args;
+        std::vector<ProceduralBloc*> m_args;        
         virtual void Evaluate( void ) = 0;
+        virtual void Init( void ) {};
+        virtual void Release( void ) {};
     };
 
     struct RootProceduralBloc : public ProceduralBloc
@@ -106,14 +108,30 @@ public:
     public:
 
         UniformRandomValueProceduralBloc( void ) :
+        m_distribution( NULL ),
         m_initialized( false )
         {
         }
 
         ~UniformRandomValueProceduralBloc( void )
         {
-            _DRAWSPACE_DELETE_( m_distribution );
+            Release();
         }
+
+        virtual void Init( void ) 
+        {
+            m_initialized = false;
+            m_distribution = NULL;
+        };
+        
+        virtual void Release( void ) 
+        {
+            if( m_distribution )
+            {
+                 _DRAWSPACE_DELETE_( m_distribution );
+                 m_distribution = NULL;
+            }            
+        };
 
         virtual void Evaluate( void )
         {

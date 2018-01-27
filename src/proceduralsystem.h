@@ -54,8 +54,8 @@ public:
     ProceduralSystem( void );
     ~ProceduralSystem( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
+    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
+    void Release( EntityGraph::EntityNodeGraph* p_entitygraph );
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
