@@ -52,18 +52,17 @@ public:
 
     struct ProceduralBloc abstract
     {
+        std::vector<ProceduralBloc*> m_args;
         virtual void Evaluate( void ) = 0;
     };
 
     struct RootProceduralBloc : public ProceduralBloc
     {
-        std::vector<ProceduralBloc*> m_children;
-
         virtual void Evaluate( void )
         {
-            for( size_t i = 0; i < m_children.size(); i++ )
+            for( size_t i = 0; i < m_args.size(); i++ )
             {
-                m_children[i]->Evaluate();
+                m_args[i]->Evaluate();
             }
         }
     };
@@ -99,10 +98,6 @@ public:
     template<typename T>
     struct UniformRandomValueProceduralBloc : public ValueProceduralBloc<T>
     {
-        ValueProceduralBloc<int>*               m_seed;
-        ValueProceduralBloc<T>*                 m_sup;
-        ValueProceduralBloc<T>*                 m_inf;
-
     protected:
         std::default_random_engine              m_generator;        
         std::uniform_int_distribution<T>*       m_distribution;
@@ -110,10 +105,7 @@ public:
 
     public:
 
-        UniformRandomValueProceduralBloc( void ):
-        m_seed( NULL ),
-        m_sup( NULL ),
-        m_inf( NULL ),
+        UniformRandomValueProceduralBloc( void ) :
         m_initialized( false )
         {
         }
@@ -125,17 +117,21 @@ public:
 
         virtual void Evaluate( void )
         {
+            ValueProceduralBloc<int>* seed_a = static_cast<ValueProceduralBloc<int>*>( m_args[0] );
+            ValueProceduralBloc<T>* sup_a = static_cast<ValueProceduralBloc<T>*>( m_args[1] );
+            ValueProceduralBloc<T>* inf_a = static_cast<ValueProceduralBloc<T>*>( m_args[2] );
+
             if( !m_initialized )
-            {
-                m_inf->Evaluate();
-                m_sup->Evaluate();
-                m_seed->Evaluate();
+            {                
+                inf_a->Evaluate();
+                sup_a->Evaluate();
+                seed_a->Evaluate();
 
-                T inf = m_inf->GetValue();
-                T sup = m_sup->GetValue();
-                int seed = m_seed->GetValue();
+                T inf = inf_a->GetValue();
+                T sup = sup_a->GetValue();
+                int seed = seed_a->GetValue();
 
-                m_distribution =  _DRAWSPACE_NEW_( std::uniform_int_distribution<T>, std::uniform_int_distribution<T>( inf, sup ) );
+                m_distribution = _DRAWSPACE_NEW_( std::uniform_int_distribution<T>, std::uniform_int_distribution<T>( inf, sup ) );
                 m_generator.seed( seed );
                 m_initialized = true;
             }
@@ -146,9 +142,6 @@ public:
     template<typename T>
     struct ArrayProceduralBloc : public ValueProceduralBloc<T>
     {
-    public:
-        ValueProceduralBloc<int>*               m_index;
-
     protected:
         std::vector<T>  m_array;
         
@@ -161,15 +154,16 @@ public:
 
         virtual void Evaluate( void ) 
         {
-            m_index->Evaluate();
-            int index = m_index->GetValue();
+            ValueProceduralBloc<int>* index_a = static_cast<ValueProceduralBloc<int>*>( m_args[0] );
+
+            index_a->Evaluate();
+            int index = index_a->GetValue();
             m_value = m_array[index];
         };
     };
     
     struct SeedSourceProceduralBloc : public ValueProceduralBloc<int>
-    {
-    
+    {    
     protected:        
         static std::default_random_engine               m_generator;                
         static std::uniform_int_distribution<int>       m_distribution;
@@ -190,54 +184,54 @@ public:
     template<typename T>
     struct RepeatProceduralBloc : public ProceduralBloc
     {
-        ValueProceduralBloc<T>*      m_nbIteration;
-        std::vector<ProceduralBloc*> m_actions;
-
-        RepeatProceduralBloc( void ) :
-        m_nbIteration( NULL )
+        RepeatProceduralBloc( void )
         {
         }
 
         virtual void Evaluate( void )
         {
+            ValueProceduralBloc<T>* nb_iteration_a = static_cast<ValueProceduralBloc<T>*>( m_args[0] );
+            std::vector<ProceduralBloc*> actions_a;
+
+            for( size_t i = 1; i < m_args.size(); i++ )
+            {
+                actions_a.push_back( m_args[i] );
+            }
+
             T nb_ite;
 
-            m_nbIteration->Evaluate();
-            
-            nb_ite = m_nbIteration->GetValue();
+            nb_iteration_a->Evaluate();            
+            nb_ite = nb_iteration_a->GetValue();
 
             for( T i = 0; i < nb_ite; i++ )
             {
-                for( size_t i2 = 0; i2 < m_actions.size(); ++i2 )
+                for( size_t i2 = 0; i2 < actions_a.size(); ++i2 )
                 {
-                    m_actions[i2]->Evaluate();
+                    actions_a[i2]->Evaluate();
                 }
             }
         }
     };
 
-    template<typename T>
     struct PublishProceduralBloc : public ProceduralBloc
     {
         typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, ProceduralBloc*> ProceduralPublicationEventHandler;
 
         dsstring                                        m_id;
-        ValueProceduralBloc<T>*                         m_toPublish;
         
         std::set<ProceduralPublicationEventHandler*>    m_proc_pub_evt_handlers;
 
-        PublishProceduralBloc( void ) : 
-        m_toPublish( NULL )
+        PublishProceduralBloc( void )
         {
         }
 
         virtual void Evaluate( void )
         {
-            m_toPublish->Evaluate();
+            m_args[0]->Evaluate();
 
             for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
             {
-                ( **it )( m_id, m_toPublish );
+                ( **it )( m_id, m_args[0] );
             }
         }
     };
@@ -250,7 +244,6 @@ public:
     {
     protected:
         std::unordered_map<dsstring,std::vector<ProceduralBloc*>>               m_procedurals_blocs;
-        std::unordered_map<dsstring, RootProceduralBloc*>                       m_procedurals_tree;
 
     public:
 
@@ -264,7 +257,6 @@ public:
             ProceduralAspect::RootProceduralBloc* rootpb = _DRAWSPACE_NEW_( RootProceduralBloc, RootProceduralBloc );
 
             m_procedurals_blocs[p_procedural_tree_id].push_back( rootpb );
-            m_procedurals_tree[p_procedural_tree_id] = rootpb;
             return rootpb;
         }
 
@@ -287,11 +279,6 @@ public:
                 }
                 m_procedurals_blocs.erase( p_procedural_tree_id );
             }
-
-            if( m_procedurals_tree.count( p_procedural_tree_id ) )
-            {
-                m_procedurals_tree.erase( p_procedural_tree_id );
-            }
         }
 
         void CleanAllTreeBlocs( void )
@@ -305,7 +292,6 @@ public:
             }
 
             m_procedurals_blocs.clear();
-            m_procedurals_tree.clear();
         }
     };
 

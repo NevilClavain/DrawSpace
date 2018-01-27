@@ -57,8 +57,15 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
     ProceduralAspect::RootProceduralBloc* rootpb = factory.CreateRootBloc( "stars generator" );
 
     ProceduralAspect::RepeatProceduralBloc<int>* reppb = factory.CreateBloc<ProceduralAspect::RepeatProceduralBloc<int>>( "stars generator" );
+    /*
     ProceduralAspect::PublishProceduralBloc<dsreal>* pubpb = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc<dsreal>>( "stars generator" );
     ProceduralAspect::PublishProceduralBloc<dsstring>* pubpb2 = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc<dsstring>>( "star x value" );
+    */
+
+    ProceduralAspect::PublishProceduralBloc* pubpb = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc>( "stars generator" );
+    ProceduralAspect::PublishProceduralBloc* pubpb2 = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc>( "star x value" );
+
+
     ProceduralAspect::UniformRandomValueProceduralBloc<int>* uripb = factory.CreateBloc<ProceduralAspect::UniformRandomValueProceduralBloc<int>>( "stars generator" );
     ProceduralAspect::UniformRandomValueProceduralBloc<int>* uripb2 = factory.CreateBloc<ProceduralAspect::UniformRandomValueProceduralBloc<int>>( "stars generator" );
     ProceduralAspect::SimpleValueProceduralBloc<int>* rminpb = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 7 );
@@ -75,13 +82,13 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
     ProceduralAspect::SimpleValueProceduralBloc<int>* index1 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 2 );
 
     ProceduralAspect::ArrayProceduralBloc<dsstring>* apb2 = factory.CreateBloc<ProceduralAspect::ArrayProceduralBloc<dsstring>>( "stars generator" );
-    //ProceduralAspect::SimpleValueProceduralBloc<int>* index2 = factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 2 );
     
 
     apb->PushValue( 0.1 );
     apb->PushValue( 0.2 );
     apb->PushValue( 0.3 );
-    apb->m_index = index1;
+    //apb->m_index = index1;
+    apb->m_args.push_back( index1 );
 
     apb2->PushValue( "alpha" );
     apb2->PushValue( "beta" );
@@ -89,32 +96,55 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
     apb2->PushValue( "echo" );
     apb2->PushValue( "foxtrot" );
     apb2->PushValue( "gamma" );
-    //apb2->m_index = index2;
-    apb2->m_index = uripb2;
+    //apb2->m_index = uripb2;
+    apb2->m_args.push_back( uripb2 );
     
 
-    uripb2->m_inf = rminpb2;
-    uripb2->m_sup = rmaxpb2;
-    uripb2->m_seed = seedsrc2;
+    //uripb2->m_inf = rminpb2;
+    //uripb2->m_sup = rmaxpb2;
+    //uripb2->m_seed = seedsrc2;
 
+    uripb2->m_args.push_back( seedsrc2 );
+    uripb2->m_args.push_back( rmaxpb2 );
+    uripb2->m_args.push_back( rminpb2 );
+
+    /*
     uripb->m_inf = rminpb;
     uripb->m_sup = rmaxpb;
     uripb->m_seed = seedsrc; //rseedpb;
+    */
+    uripb->m_args.push_back( seedsrc );
+    uripb->m_args.push_back( rmaxpb );
+    uripb->m_args.push_back( rminpb );
 
+
+    /*
     reppb->m_actions.push_back( pubpb );
     reppb->m_actions.push_back( pubpb2 );
     reppb->m_nbIteration = uripb;
+    */
+
+    reppb->m_args.push_back( uripb );
+    reppb->m_args.push_back( pubpb );
+    reppb->m_args.push_back( pubpb2 );
+
+
 
     pubpb->m_proc_pub_evt_handlers = m_proc_pub_evt_handlers;
     pubpb->m_id = "publisher!";
-    pubpb->m_toPublish = apb;
+    //pubpb->m_toPublish = apb;
+    pubpb->m_args.push_back( apb );
 
 
     pubpb2->m_proc_pub_evt_handlers = m_proc_pub_evt_handlers;
     pubpb2->m_id = "x value!";
-    pubpb2->m_toPublish = apb2;
+    //pubpb2->m_toPublish = apb2;
 
-    rootpb->m_children.push_back( reppb );
+    pubpb2->m_args.push_back( apb2 );
+
+    //rootpb->m_children.push_back( reppb );
+
+    rootpb->m_args.push_back( reppb );
 
     ///// execute...
 
