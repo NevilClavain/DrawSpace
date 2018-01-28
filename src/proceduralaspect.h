@@ -262,6 +262,7 @@ public:
     {
     protected:
         std::unordered_map<dsstring,std::vector<ProceduralBloc*>>               m_procedurals_blocs;
+        std::unordered_map<dsstring, RootProceduralBloc*>                       m_procedurals_tree;
 
     public:
 
@@ -275,6 +276,7 @@ public:
             ProceduralAspect::RootProceduralBloc* rootpb = _DRAWSPACE_NEW_( RootProceduralBloc, RootProceduralBloc );
 
             m_procedurals_blocs[p_procedural_tree_id].push_back( rootpb );
+            m_procedurals_tree[p_procedural_tree_id] = rootpb;
             return rootpb;
         }
 
@@ -297,6 +299,11 @@ public:
                 }
                 m_procedurals_blocs.erase( p_procedural_tree_id );
             }
+
+            if( m_procedurals_tree.count( p_procedural_tree_id ) )
+            {
+                m_procedurals_tree.erase( p_procedural_tree_id );
+            }
         }
 
         void CleanAllTreeBlocs( void )
@@ -310,6 +317,7 @@ public:
             }
 
             m_procedurals_blocs.clear();
+            m_procedurals_tree.clear();
         }
     };
 
