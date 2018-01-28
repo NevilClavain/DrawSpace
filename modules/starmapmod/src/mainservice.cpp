@@ -82,8 +82,6 @@ bool MainService::Init( void )
 
     m_systemsHub.RegisterProceduralPublicationEvtHandler( &m_procedural_publication_evt_cb );
 
-    m_systemsHub.Init( &m_entitygraph );
-
     /////////////////////////////////////////////////////////////////////////////////
 
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -188,6 +186,9 @@ bool MainService::Init( void )
 
     m_procRootEntityNode = m_rootEntityNode.AddChild( &m_procRootEntity );
     m_procPubEntityNode = m_procRootEntityNode.AddChild( &m_procPubEntity );
+
+
+    m_systemsHub.Init( &m_entitygraph );
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.PushSignal_RenderSceneBegin();

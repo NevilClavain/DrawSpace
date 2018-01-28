@@ -75,9 +75,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     p_logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
 
-    /////////////////////////////////////////////////////////////////////////////////
 
-    m_systemsHub.Init( &m_entitygraph );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -393,6 +391,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     {
         m_entitygraph.SetCurrentCameraEntity( &m_camera2Entity );
     }
+
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    m_systemsHub.Init( &m_entitygraph );
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
 

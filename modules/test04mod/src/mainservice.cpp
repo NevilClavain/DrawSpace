@@ -83,9 +83,7 @@ bool MainService::Init( void )
     logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( logconf );
 
-    /////////////////////////////////////////////////////////////////////////////////
 
-    m_systemsHub.Init( &m_entitygraph );
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -273,6 +271,9 @@ bool MainService::Init( void )
 
     m_renderer->GUI_SetLayout( "main.layout" );
 
+    /////////////////////////////////////////////////////////////////////////////////
+
+    m_systemsHub.Init( &m_entitygraph );
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.PushSignal_RenderSceneBegin();

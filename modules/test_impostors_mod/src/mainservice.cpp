@@ -76,10 +76,6 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_systemsHub.Init( &m_entitygraph );
-
-    /////////////////////////////////////////////////////////////////////////////////
-
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
     m_renderer->GetDescr( m_pluginDescr );
@@ -191,6 +187,10 @@ bool MainService::Init( void )
     // ajout de l'impostor world a la scene
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    m_systemsHub.Init( &m_entitygraph );
 
     m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.PushSignal_RenderSceneBegin();
