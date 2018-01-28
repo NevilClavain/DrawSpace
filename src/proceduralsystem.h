@@ -43,12 +43,10 @@ public:
 
 protected:
 
-    bool                                              m_exec_flag;
+    bool                                                m_exec_flag;    
+    Aspect::ProceduralAspect::ProceduralBlocsFactory    m_factory;
     
-    
-    
-
-    std::set<ProceduralPublicationEventHandler*>  m_proc_pub_evt_handlers;
+    std::set<ProceduralPublicationEventHandler*>        m_proc_pub_evt_handlers;
 
 public:
     ProceduralSystem( void );
@@ -62,6 +60,8 @@ public:
 
     void RegisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
     void UnregisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
+
+    Aspect::ProceduralAspect::ProceduralBlocsFactory& GetFactory( void );
 };
 
 }

@@ -183,3 +183,8 @@ void ProceduralSystem::UnregisterProceduralPublicationEvtHandler( ProceduralPubl
 {
     m_proc_pub_evt_handlers.erase( p_handler );
 }
+
+ProceduralAspect::ProceduralBlocsFactory& ProceduralSystem::GetFactory( void )
+{
+    return m_factory;
+}
