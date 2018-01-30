@@ -48,7 +48,7 @@ public:
 
     typedef DrawSpace::Core::CallBack2<Hub, void, const dsstring&, Aspect::ProceduralAspect::ProceduralBloc*>     ProceduralPublicationEvtCb;
 
-    typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>                                                     SystemsUpdateEventHandler;
+    typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>                                               SystemsUpdateEventHandler;
     typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, Aspect::ProceduralAspect::ProceduralBloc*>      ProceduralPublicationEventHandler;
     
 
@@ -82,6 +82,8 @@ public:
 
     void RegisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
     void UnregisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
+
+    Aspect::ProceduralAspect::ProceduralBlocsFactory& GetProceduralFactory( void );
 
 };
 }

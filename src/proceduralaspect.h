@@ -30,8 +30,6 @@
 #include "entity.h"
 #include "callback.h"
 
-#define PROCEDURALBLOCID( __type__) typeid(__type__).hash_code()
-
 namespace DrawSpace
 {
 namespace Aspect
@@ -39,17 +37,6 @@ namespace Aspect
 class ProceduralAspect : public Core::Aspect 
 {
 public:
-
-    typedef enum
-    {
-        ARG0,
-        ARG1,
-        ARG2,
-        ARG3,
-        ARG4
-    
-    } Args;
-
     struct ProceduralBloc abstract
     {
         std::vector<ProceduralBloc*> m_args;        
@@ -243,13 +230,23 @@ public:
         {
         }
 
+        PublishProceduralBloc( const dsstring& p_id ) : m_id( p_id )
+        {
+        }
+
         virtual void Evaluate( void )
         {
-            m_args[0]->Evaluate();
+            ProceduralBloc* arg = NULL;
+
+            if( m_args.size() > 0 )
+            {
+                arg = m_args[0];
+                arg->Evaluate();
+            }
 
             for( auto it = m_proc_pub_evt_handlers.begin(); it != m_proc_pub_evt_handlers.end(); ++it )
             {
-                ( **it )( m_id, m_args[0] );
+                ( **it )( m_id, arg );
             }
         }
     };
@@ -321,19 +318,15 @@ public:
         }
     };
 
-protected:
-    
+protected:   
     bool m_to_update;
     
-    void update( void );
-
 public:
     ProceduralAspect( void );
 
     void SetToUpdate( bool p_state );
     bool GetToUpdate( void ) const;
 
-    void Run( Core::Entity* p_parent, Core::Entity* p_entity  );
 };
 
 

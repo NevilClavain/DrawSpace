@@ -154,16 +154,49 @@ bool MainService::Init( void )
     create_screen_impostors();
     create_camera();
 
+    ProceduralAspect::ProceduralBlocsFactory& factory = m_systemsHub.GetProceduralFactory();
+
+    ProceduralAspect* procedural_aspect;
+
 
     /////////////////////// arbre procedural /////////////////////////////////////////////////////////////////////////
 
-    ProceduralAspect* procedural_aspect = m_procRootEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect = m_procRootEntity.AddAspect<ProceduralAspect>();
     procedural_aspect->AddComponent<dsstring>( "name", "stars generator" );
-    procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID( ProceduralAspect::RootProceduralBloc ) );
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "root", factory.CreateBloc<ProceduralAspect::RootProceduralBloc>( "stars generator" ) );
 
 
-    //procedural_aspect = m_procPubEntity.AddAspect<ProceduralAspect>();
-    //procedural_aspect->AddComponent<size_t>( "ope", PROCEDURALBLOCID( ProceduralAspect::PublishProceduralBloc ) );
+    procedural_aspect = m_procIntEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "nb_ite", factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<int>>( "stars generator", 5 ) );
+
+
+    procedural_aspect = m_procRepEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "rep", factory.CreateBloc<ProceduralAspect::RepeatProceduralBloc<int>>( "stars generator" ) );
+
+
+
+    ProceduralAspect::PublishProceduralBloc* pub1 = factory.CreateBloc<ProceduralAspect::PublishProceduralBloc>( "stars generator", "msg1" );
+    pub1->m_proc_pub_evt_handlers.insert( &m_procedural_publication_evt_cb );
+    procedural_aspect = m_procPubEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "pub1", pub1 );
+
+
+
+    procedural_aspect = m_procRandInfEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "rand_inf", factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<long>>( "stars generator", 1 ) );
+
+
+    procedural_aspect = m_procRandSupEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "rand_sup", factory.CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<long>>( "stars generator", 555 ) );
+
+
+    procedural_aspect = m_procUniformRandEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "rand", factory.CreateBloc<ProceduralAspect::UniformRandomValueProceduralBloc<long>>( "stars generator" ) );
+
+
+    procedural_aspect = m_procSeedSourceEntity.AddAspect<ProceduralAspect>();
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "seed", factory.CreateBloc<ProceduralAspect::SeedSourceProceduralBloc>( "stars generator" ) );
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -185,7 +218,26 @@ bool MainService::Init( void )
 
 
     m_procRootEntityNode = m_rootEntityNode.AddChild( &m_procRootEntity );
-    m_procPubEntityNode = m_procRootEntityNode.AddChild( &m_procPubEntity );
+    m_procRepEntityNode = m_procRootEntityNode.AddChild( &m_procRepEntity );
+
+    // 1er arg = nb iterations
+    m_procIntEntityNode = m_procRepEntityNode.AddChild( &m_procIntEntity );
+
+    // les autres args : actions de l'iteration
+    m_procPubEntityNode = m_procRepEntityNode.AddChild( &m_procPubEntity );
+
+
+    m_procUniformRandEntityNode = m_procPubEntityNode.AddChild( &m_procUniformRandEntity );
+
+
+    // 1er arg du rand : le seed
+    m_procSeedSourceEntityNode = m_procUniformRandEntityNode.AddChild( &m_procSeedSourceEntity );
+
+    // 2eme arg du rand : le max
+    m_procRandSupEntityNode = m_procUniformRandEntityNode.AddChild( &m_procRandSupEntity );
+
+    // 3eme arg du rand : le min
+    m_procRandInfEntityNode = m_procUniformRandEntityNode.AddChild( &m_procRandInfEntity );
 
 
     m_systemsHub.Init( &m_entitygraph );
@@ -627,5 +679,15 @@ void MainService::on_procedural_publication( const dsstring& p_id, DrawSpace::As
 
         dsstring val = b->GetValue();
         _asm nop    
+    }
+    else if( "msg1" == p_id )
+    {
+        ProceduralAspect::ValueProceduralBloc<long>* b = static_cast<ProceduralAspect::ValueProceduralBloc<long>*>( p_bloc );
+
+        if( b )
+        {
+            long val = b->GetValue();
+            _asm nop    
+        }
     }
 }

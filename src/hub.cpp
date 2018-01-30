@@ -27,6 +27,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Systems;
+using namespace DrawSpace::Aspect;
 
 Hub::Hub( void ) :
 m_procedural_publication_evt_cb( this, &Hub::on_procedural_publication)
@@ -117,4 +118,9 @@ void Hub::on_procedural_publication( const dsstring& p_id, DrawSpace::Aspect::Pr
     {
         (**it)( p_id, p_bloc );
     }
+}
+
+ProceduralAspect::ProceduralBlocsFactory& Hub::GetProceduralFactory( void )
+{
+    return m_proceduralSystem.GetFactory();
 }

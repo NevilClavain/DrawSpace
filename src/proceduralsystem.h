@@ -43,10 +43,16 @@ public:
 
 protected:
 
-    bool                                                m_exec_flag;    
+    bool                                                m_init_phase;
+    bool                                                m_release_phase;
     Aspect::ProceduralAspect::ProceduralBlocsFactory    m_factory;
     
     std::set<ProceduralPublicationEventHandler*>        m_proc_pub_evt_handlers;
+
+
+    void visit_entity_on_init( Core::Entity* p_parent, Core::Entity* p_entity );
+    void visit_entity_on_run( Core::Entity* p_parent, Core::Entity* p_entity );
+    void visit_entity_on_release( Core::Entity* p_parent, Core::Entity* p_entity );
 
 public:
     ProceduralSystem( void );

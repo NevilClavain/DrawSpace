@@ -58,17 +58,33 @@ protected:
     DrawSpace::Core::Entity                                                         m_impostorsEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_impostorsEntityNode;
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     DrawSpace::Core::Entity                                                         m_procRootEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_procRootEntityNode;
 
     DrawSpace::Core::Entity                                                         m_procRepEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_procRepEntityNode;
 
-
-
     DrawSpace::Core::Entity                                                         m_procPubEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_procPubEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_procIntEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_procIntEntityNode;
+
+    DrawSpace::Core::Entity                                                         m_procUniformRandEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_procUniformRandEntityNode;
+
+    DrawSpace::Core::Entity                                                         m_procRandInfEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_procRandInfEntityNode;
+
+    DrawSpace::Core::Entity                                                         m_procRandSupEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_procRandSupEntityNode;
+
+    DrawSpace::Core::Entity                                                         m_procSeedSourceEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_procSeedSourceEntityNode;
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::Systems::Hub                                                         m_systemsHub;
 

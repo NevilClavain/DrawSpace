@@ -43,18 +43,25 @@ ProceduralSystem::~ProceduralSystem( void )
 
 bool ProceduralSystem::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
+    m_init_phase = true;
+    m_release_phase = false;
+    p_entitygraph->AcceptSystemRootToLeaf( this );
     return true;
 }
 
 void ProceduralSystem::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
-
+    m_init_phase = false;
+    m_release_phase = true;
+    p_entitygraph->AcceptSystemRootToLeaf( this );
+    m_factory.CleanAllTreeBlocs();
 }
 
 
 void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
-    m_exec_flag = false;
+    m_init_phase = false;
+    m_release_phase = false;
     p_entitygraph->AcceptSystemRootToLeaf( this );
 
     // execute procedurals...
@@ -143,17 +150,56 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
     //////////
 }
 
-void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
+void ProceduralSystem::visit_entity_on_init( Core::Entity* p_parent, Core::Entity* p_entity )
+{
+    ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
+
+    if( procedural_aspect )
+    {
+        ComponentList<ProceduralAspect::ProceduralBloc*> blocs;
+        procedural_aspect->GetComponentsByType<ProceduralAspect::ProceduralBloc*>( blocs );
+
+        blocs[0]->getPurpose()->Init();
+
+        if( p_parent )
+        {
+            ProceduralAspect* parent_procedural_aspect = p_parent->GetAspect<ProceduralAspect>();
+            ComponentList<ProceduralAspect::ProceduralBloc*> parent_blocs;
+            
+            if( parent_procedural_aspect )
+            {
+                parent_procedural_aspect->GetComponentsByType<ProceduralAspect::ProceduralBloc*>( parent_blocs );
+               
+                // connecter le bloc procedural a son pere (il est un "argument" a celui ci")
+                parent_blocs[0]->getPurpose()->m_args.push_back( blocs[0]->getPurpose() );
+            }            
+        }
+    }
+}
+
+void ProceduralSystem::visit_entity_on_release( Core::Entity* p_parent, Core::Entity* p_entity )
+{
+    ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
+
+    if( procedural_aspect )
+    {
+        ComponentList<ProceduralAspect::ProceduralBloc*> blocs;
+        procedural_aspect->GetComponentsByType<ProceduralAspect::ProceduralBloc*>( blocs );
+
+        blocs[0]->getPurpose()->Release();
+    }
+}
+
+void ProceduralSystem::visit_entity_on_run( Core::Entity* p_parent, Core::Entity* p_entity )
 {
     ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
     if( procedural_aspect )
     {
-        // temporaire
-        
-        ComponentList<size_t> operations;
-        procedural_aspect->GetComponentsByType<size_t>( operations );
+        ComponentList<ProceduralAspect::ProceduralBloc*> blocs;
+        procedural_aspect->GetComponentsByType<ProceduralAspect::ProceduralBloc*>( blocs );
 
-        if( PROCEDURALBLOCID(ProceduralAspect::RootProceduralBloc) == operations[0]->getPurpose() )
+        ProceduralAspect::RootProceduralBloc* root = dynamic_cast<ProceduralAspect::RootProceduralBloc*>( blocs[0]->getPurpose() );
+        if( root )
         {
             // si true, on va executer une fois cette hierarchie d'entites avec aspect procedural (sous ce ROOT) 
             // jusqu'a rencontrer un prochain root procedural...
@@ -161,16 +207,28 @@ void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_enti
             // pour cette raison, eviter d'imbriquer les ROOT dans l'entity Tree ! (pas mettre de ROOT procedural sous un autre ROOT procedural!)
             // chacun chez soi, et les vaches seront bien gardees ;)
 
-            m_exec_flag = procedural_aspect->GetToUpdate();
+            if( procedural_aspect->GetToUpdate() )
+            {
+                root->Evaluate();
+                procedural_aspect->SetToUpdate( false ); // one shot exec for this root and all its children
+            }
+        }
+    }
+}
 
-            // TODO : recup du composant string accompagnant le root, pour cle dans la map m_procedurals qui recevra l'arbre procedural genere
-        }
-        
-        if( m_exec_flag )
-        {
-            procedural_aspect->Run( p_parent, p_entity );
-            procedural_aspect->SetToUpdate( false ); // one shot exec for this root and all its children
-        }
+void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
+{
+    if( m_init_phase )
+    {
+        visit_entity_on_init( p_parent, p_entity );
+    }
+    else if( m_release_phase )
+    {
+        visit_entity_on_release( p_parent, p_entity );
+    }
+    else
+    {
+        visit_entity_on_run( p_parent, p_entity );
     }
 }
 

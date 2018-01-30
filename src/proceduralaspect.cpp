@@ -29,18 +29,13 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 
 
-std::uniform_int_distribution<int> ProceduralAspect::SeedSourceProceduralBloc::m_distribution( 1, 12 );
+std::uniform_int_distribution<int> ProceduralAspect::SeedSourceProceduralBloc::m_distribution( 1, 999999 );
 std::default_random_engine ProceduralAspect::SeedSourceProceduralBloc::m_generator;
 
 ProceduralAspect::ProceduralAspect( void ) :
 m_to_update( false )
 {
 
-}
-
-void ProceduralAspect::Run( Core::Entity* p_parent, Core::Entity* p_entity )
-{   
-    update();
 }
 
 void ProceduralAspect::SetToUpdate( bool p_state )
@@ -53,19 +48,3 @@ bool ProceduralAspect::GetToUpdate( void ) const
     return m_to_update;
 }
 
-void ProceduralAspect::update( void )
-{   
-    ComponentList<size_t> operations;
-    GetComponentsByType<size_t>( operations );
-
-    /*
-    if( PROCEDURALBLOCID(RootProceduralBloc) == operations[0]->getPurpose() )
-    {
-        _asm nop
-    }
-    else if( PROCEDURALBLOCID(PublishProceduralBloc) == operations[0]->getPurpose() )
-    {
-        _asm nop
-    } 
-    */
-}
