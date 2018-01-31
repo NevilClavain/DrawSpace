@@ -41,8 +41,21 @@ public:
     {
         std::vector<ProceduralBloc*> m_args;        
         virtual void Evaluate( void ) = 0;
-        virtual void Init( void ) {};
-        virtual void Release( void ) {};
+        virtual void Reset( void ) 
+        {
+            for(size_t i = 0; i < m_args.size(); i++ )
+            {
+                m_args[i]->Reset();
+            }
+        };
+        
+        virtual void Terminate( void ) 
+        {
+            for(size_t i = 0; i < m_args.size(); i++ )
+            {
+                m_args[i]->Terminate();
+            }
+        };
     };
 
     struct RootProceduralBloc : public ProceduralBloc
@@ -90,56 +103,52 @@ public:
     protected:
         std::default_random_engine              m_generator;        
         std::uniform_int_distribution<T>*       m_distribution;
-        bool                                    m_initialized;
 
     public:
 
         UniformRandomValueProceduralBloc( void ) :
-        m_distribution( NULL ),
-        m_initialized( false )
+        m_distribution( NULL )
         {
         }
 
         ~UniformRandomValueProceduralBloc( void )
         {
-            Release();
+            Terminate();
         }
 
-        virtual void Init( void ) 
+        virtual void Reset( void ) 
         {
-            m_initialized = false;
-            m_distribution = NULL;
+            ProceduralBloc::Reset();
+
+            ValueProceduralBloc<int>* seed_a = static_cast<ValueProceduralBloc<int>*>( m_args[0] );
+            ValueProceduralBloc<T>* sup_a = static_cast<ValueProceduralBloc<T>*>( m_args[1] );
+            ValueProceduralBloc<T>* inf_a = static_cast<ValueProceduralBloc<T>*>( m_args[2] );
+
+            inf_a->Evaluate();
+            sup_a->Evaluate();
+            seed_a->Evaluate();
+
+            T inf = inf_a->GetValue();
+            T sup = sup_a->GetValue();
+            int seed = seed_a->GetValue();
+
+            m_distribution = _DRAWSPACE_NEW_( std::uniform_int_distribution<T>, std::uniform_int_distribution<T>( inf, sup ) );
+            m_generator.seed( seed );
         };
         
-        virtual void Release( void ) 
+        virtual void Terminate( void ) 
         {
+            ProceduralBloc::Terminate();
+
             if( m_distribution )
             {
                  _DRAWSPACE_DELETE_( m_distribution );
-                 m_distribution = NULL;
+                 m_distribution = NULL;            
             }            
         };
 
         virtual void Evaluate( void )
         {
-            ValueProceduralBloc<int>* seed_a = static_cast<ValueProceduralBloc<int>*>( m_args[0] );
-            ValueProceduralBloc<T>* sup_a = static_cast<ValueProceduralBloc<T>*>( m_args[1] );
-            ValueProceduralBloc<T>* inf_a = static_cast<ValueProceduralBloc<T>*>( m_args[2] );
-
-            if( !m_initialized )
-            {                
-                inf_a->Evaluate();
-                sup_a->Evaluate();
-                seed_a->Evaluate();
-
-                T inf = inf_a->GetValue();
-                T sup = sup_a->GetValue();
-                int seed = seed_a->GetValue();
-
-                m_distribution = _DRAWSPACE_NEW_( std::uniform_int_distribution<T>, std::uniform_int_distribution<T>( inf, sup ) );
-                m_generator.seed( seed );
-                m_initialized = true;
-            }
             m_value = (*m_distribution)( m_generator );
         }
     };
@@ -168,21 +177,51 @@ public:
     };
     
     struct SeedSourceProceduralBloc : public ValueProceduralBloc<int>
-    {    
-    protected:        
-        static std::default_random_engine               m_generator;                
-        static std::uniform_int_distribution<int>       m_distribution;
+    { 
+    public:
+        static int m_seed;
+
+    protected:
+        static const int SeedMin = 1;
+        static const int SeedMax= 999999;
+
+        std::default_random_engine              m_generator;        
+        std::uniform_int_distribution<int>*     m_distribution;
 
     public:
-        static void Initialize( int p_global_seed )
+
+        SeedSourceProceduralBloc( void ) :
+        m_distribution( NULL )
         {
-            m_generator.seed( p_global_seed );        
         }
 
-        virtual void Evaluate( void ) 
+        ~SeedSourceProceduralBloc( void )
         {
-            m_value = m_distribution( m_generator );
+            Terminate();
+        }
+
+        virtual void Reset( void ) 
+        {
+            ProceduralBloc::Reset();
+            m_distribution = _DRAWSPACE_NEW_( std::uniform_int_distribution<int>, std::uniform_int_distribution<int>( SeedMin, SeedMax ) );
+            m_generator.seed( m_seed );
         };
+        
+        virtual void Terminate( void ) 
+        {
+            ProceduralBloc::Terminate();
+
+            if( m_distribution )
+            {
+                 _DRAWSPACE_DELETE_( m_distribution );
+                 m_distribution = NULL;            
+            }            
+        };
+
+        virtual void Evaluate( void )
+        {
+            m_value = (*m_distribution)( m_generator );
+        }
     };
 
 
@@ -259,8 +298,7 @@ public:
     {
     protected:
         std::unordered_map<dsstring,std::vector<ProceduralBloc*>>               m_procedurals_blocs;
-        std::unordered_map<dsstring, RootProceduralBloc*>                       m_procedurals_tree;
-
+       
     public:
 
         ~ProceduralBlocsFactory( void )
@@ -273,7 +311,6 @@ public:
             ProceduralAspect::RootProceduralBloc* rootpb = _DRAWSPACE_NEW_( RootProceduralBloc, RootProceduralBloc );
 
             m_procedurals_blocs[p_procedural_tree_id].push_back( rootpb );
-            m_procedurals_tree[p_procedural_tree_id] = rootpb;
             return rootpb;
         }
 
@@ -296,11 +333,6 @@ public:
                 }
                 m_procedurals_blocs.erase( p_procedural_tree_id );
             }
-
-            if( m_procedurals_tree.count( p_procedural_tree_id ) )
-            {
-                m_procedurals_tree.erase( p_procedural_tree_id );
-            }
         }
 
         void CleanAllTreeBlocs( void )
@@ -313,8 +345,7 @@ public:
                 }
             }
 
-            m_procedurals_blocs.clear();
-            m_procedurals_tree.clear();
+            m_procedurals_blocs.clear();            
         }
     };
 

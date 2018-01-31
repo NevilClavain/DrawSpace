@@ -39,6 +39,7 @@ m_left_mousebutton( false ),
 m_right_mousebutton( false ),
 m_procedural_publication_evt_cb( this, &MainService::on_procedural_publication )
 {
+    ProceduralAspect::SeedSourceProceduralBloc::m_seed = 123;
 }
 
 bool MainService::Init( void )

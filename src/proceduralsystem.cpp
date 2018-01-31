@@ -34,7 +34,7 @@ using namespace DrawSpace::Aspect;
 
 ProceduralSystem::ProceduralSystem( void )
 {
-    ProceduralAspect::SeedSourceProceduralBloc::Initialize( 123 );
+    //roceduralAspect::SeedSourceProceduralBloc::Initialize( 123 );
 }
 
 ProceduralSystem::~ProceduralSystem( void )
@@ -43,17 +43,15 @@ ProceduralSystem::~ProceduralSystem( void )
 
 bool ProceduralSystem::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
+    
     m_init_phase = true;
-    m_release_phase = false;
     p_entitygraph->AcceptSystemRootToLeaf( this );
+    
     return true;
 }
 
 void ProceduralSystem::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
-    m_init_phase = false;
-    m_release_phase = true;
-    p_entitygraph->AcceptSystemRootToLeaf( this );
     m_factory.CleanAllTreeBlocs();
 }
 
@@ -61,7 +59,6 @@ void ProceduralSystem::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
 void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     m_init_phase = false;
-    m_release_phase = false;
     p_entitygraph->AcceptSystemRootToLeaf( this );
 
     // execute procedurals...
@@ -150,6 +147,7 @@ void ProceduralSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
     //////////
 }
 
+
 void ProceduralSystem::visit_entity_on_init( Core::Entity* p_parent, Core::Entity* p_entity )
 {
     ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
@@ -158,8 +156,6 @@ void ProceduralSystem::visit_entity_on_init( Core::Entity* p_parent, Core::Entit
     {
         ComponentList<ProceduralAspect::ProceduralBloc*> blocs;
         procedural_aspect->GetComponentsByType<ProceduralAspect::ProceduralBloc*>( blocs );
-
-        blocs[0]->getPurpose()->Init();
 
         if( p_parent )
         {
@@ -174,19 +170,6 @@ void ProceduralSystem::visit_entity_on_init( Core::Entity* p_parent, Core::Entit
                 parent_blocs[0]->getPurpose()->m_args.push_back( blocs[0]->getPurpose() );
             }            
         }
-    }
-}
-
-void ProceduralSystem::visit_entity_on_release( Core::Entity* p_parent, Core::Entity* p_entity )
-{
-    ProceduralAspect* procedural_aspect = p_entity->GetAspect<ProceduralAspect>();
-
-    if( procedural_aspect )
-    {
-        ComponentList<ProceduralAspect::ProceduralBloc*> blocs;
-        procedural_aspect->GetComponentsByType<ProceduralAspect::ProceduralBloc*>( blocs );
-
-        blocs[0]->getPurpose()->Release();
     }
 }
 
@@ -209,7 +192,10 @@ void ProceduralSystem::visit_entity_on_run( Core::Entity* p_parent, Core::Entity
 
             if( procedural_aspect->GetToUpdate() )
             {
+                root->Reset();
                 root->Evaluate();
+                root->Terminate();
+
                 procedural_aspect->SetToUpdate( false ); // one shot exec for this root and all its children
             }
         }
@@ -222,14 +208,27 @@ void ProceduralSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_enti
     {
         visit_entity_on_init( p_parent, p_entity );
     }
-    else if( m_release_phase )
+
+    else
     {
-        visit_entity_on_release( p_parent, p_entity );
+        visit_entity_on_run( p_parent, p_entity );          
+    }
+    
+    /*
+    else if( m_terminate_phase )
+    {
+        visit_entity_on_terminate( p_parent, p_entity );
+    }
+    
+    else if( m_reset_phase )
+    {
+        visit_entity_on_reset( p_parent, p_entity );
     }
     else
     {
         visit_entity_on_run( p_parent, p_entity );
     }
+    */
 }
 
 void ProceduralSystem::RegisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler )
