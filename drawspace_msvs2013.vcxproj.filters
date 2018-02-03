@@ -336,6 +336,9 @@
     <ClCompile Include="src\proceduralaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
+    <ClCompile Include="src\entityfactory.cpp">
+      <Filter>entitygraph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -682,6 +685,9 @@
     </ClInclude>
     <ClInclude Include="src\proceduralaspect.h">
       <Filter>aspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entityfactory.h">
+      <Filter>entitygraph</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

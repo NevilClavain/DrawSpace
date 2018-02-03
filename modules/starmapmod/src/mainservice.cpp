@@ -160,7 +160,32 @@ bool MainService::Init( void )
     ProceduralAspect* procedural_aspect;
 
 
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // ajouter la skybox a la scene
+    m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );
+    m_skyboxRender->RegisterToRendering( m_rendergraph );
+
+    m_camera2EntityNode = m_rootEntityNode.AddChild( &m_camera2Entity );
+
+    //m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
+
+    m_entitygraph.SetCurrentCameraEntity( &m_camera2Entity );
+
+    // ajout du champ d'impostors a la scene
+    m_impostorsEntityNode = m_rootEntityNode.AddChild( &m_impostorsEntity );
+    m_impostorsRender.RegisterToRendering( m_rendergraph );
+
+
+
+
+
     /////////////////////// arbre procedural /////////////////////////////////////////////////////////////////////////
+
+    m_entityFactory.BuildFromFile( "stars.json", m_rootEntityNode );
 
     procedural_aspect = m_procRootEntity.AddAspect<ProceduralAspect>();
     procedural_aspect->AddComponent<dsstring>( "name", "stars generator" );
@@ -199,25 +224,6 @@ bool MainService::Init( void )
     procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "seed", factory.CreateBloc<ProceduralAspect::SeedSourceProceduralBloc>( "stars generator" ) );
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    // ajouter la skybox a la scene
-    m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );
-    m_skyboxRender->RegisterToRendering( m_rendergraph );
-
-    m_camera2EntityNode = m_rootEntityNode.AddChild( &m_camera2Entity );
-
-    //m_systemsHub.SetCurrentCameraEntity( &m_camera2Entity );
-
-    m_entitygraph.SetCurrentCameraEntity( &m_camera2Entity );
-
-    // ajout du champ d'impostors a la scene
-    m_impostorsEntityNode = m_rootEntityNode.AddChild( &m_impostorsEntity );
-    m_impostorsRender.RegisterToRendering( m_rendergraph );
-
-
-
     m_procRootEntityNode = m_rootEntityNode.AddChild( &m_procRootEntity );
     m_procRepEntityNode = m_procRootEntityNode.AddChild( &m_procRepEntity );
 
@@ -240,6 +246,9 @@ bool MainService::Init( void )
     // 3eme arg du rand : le min
     m_procRandInfEntityNode = m_procUniformRandEntityNode.AddChild( &m_procRandInfEntity );
 
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
 
     m_systemsHub.Init( &m_entitygraph );
 

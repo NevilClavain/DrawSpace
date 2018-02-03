@@ -60,6 +60,8 @@ protected:
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    DrawSpace::EntityGraph::Factory                                                 m_entityFactory;
+
     DrawSpace::Core::Entity                                                         m_procRootEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_procRootEntityNode;
 

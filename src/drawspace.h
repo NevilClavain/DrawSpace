@@ -129,5 +129,6 @@
 #include "proceduralsystem.h"
 #include "hub.h"
 
+#include "entityfactory.h"
 
 #endif

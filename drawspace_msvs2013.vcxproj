@@ -24,6 +24,7 @@
     <ClCompile Include="src\collider.cpp" />
     <ClCompile Include="src\drawspace_commons.cpp" />
     <ClCompile Include="src\dsapp.cpp" />
+    <ClCompile Include="src\entityfactory.cpp" />
     <ClCompile Include="src\entitynode.cpp" />
     <ClCompile Include="src\entitynodegraph.cpp" />
     <ClCompile Include="src\file.cpp" />
@@ -67,6 +68,7 @@
     <ClCompile Include="src\renderingaspect.cpp" />
     <ClInclude Include="src\bodyaspect.h" />
     <ClInclude Include="src\bodytransformaspectimpl.h" />
+    <ClInclude Include="src\entityfactory.h" />
     <ClInclude Include="src\hub.h" />
     <ClInclude Include="src\impostorsrenderingaspectimpl.h" />
     <ClInclude Include="src\orbittransformaspectimpl.h" />
