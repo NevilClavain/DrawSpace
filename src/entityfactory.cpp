@@ -40,7 +40,7 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
 
     if( JSMN_OBJECT == parser.GetTokenType( 0 ) )
     {
-        recurs_explore_entities( parser, token_index );
+        recurs_explore_entities( parser, token_index, NULL, NULL );
     }
     else
     {
@@ -50,8 +50,11 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
     return true;
 }
 
-void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index )
+void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode )
 {
+    DrawSpace::Core::Entity*             entity = NULL;
+    DrawSpace::EntityGraph::EntityNode*  entityNode = NULL;
+
     int type0 = p_parser.GetTokenType( p_token_index );
     int size0 = p_parser.GetTokenSize( p_token_index );
     int type1 = p_parser.GetTokenType( p_token_index + 1 );
@@ -78,7 +81,7 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index 
                         m_parser_state = EXPECT_ENTITY_ARGS;
                         for( int i = 0; i < size1; i++ )
                         {
-                            recurs_explore_entities( p_parser, p_token_index );
+                            recurs_explore_entities( p_parser, p_token_index, entity, entityNode );
                         }
                     }
                     else
@@ -122,7 +125,6 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index 
                     {
                         p_token_index++; // pointe sur le array
 
-
                         for( int i = 0; i < size1; i++ )
                         {
                             int type2 = p_parser.GetTokenType( p_token_index + 1 );
@@ -132,9 +134,9 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index 
                             {
                                 if( size2 > 0 )
                                 {
-                                    p_token_index += 3;
+                                    p_token_index += 2;
                                     m_parser_state = EXPECT_ENTITY_DECL;
-                                    recurs_explore_entities( p_parser, p_token_index );
+                                    recurs_explore_entities( p_parser, p_token_index, NULL, NULL );
                                 }
                             }
                             else
