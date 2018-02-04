@@ -45,7 +45,7 @@ protected:
 
     ParserState m_parser_state;
 
-    void recurs_explore_entities( DrawSpace::Utils::JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode );
+    void recurs_explore_entities( DrawSpace::Utils::JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode, DrawSpace::EntityGraph::EntityNode* p_parentEntityNode  );
 
 public:
     bool BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node );

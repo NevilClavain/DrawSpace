@@ -40,7 +40,7 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
 
     if( JSMN_OBJECT == parser.GetTokenType( 0 ) )
     {
-        recurs_explore_entities( parser, token_index, NULL, NULL );
+        recurs_explore_entities( parser, token_index, NULL, NULL, &p_node );
     }
     else
     {
@@ -50,10 +50,10 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
     return true;
 }
 
-void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode )
+void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode, DrawSpace::EntityGraph::EntityNode* p_parentEntityNode )
 {
     DrawSpace::Core::Entity*             entity = NULL;
-    DrawSpace::EntityGraph::EntityNode*  entityNode = NULL;
+    DrawSpace::EntityGraph::EntityNode   entityNode;
 
     int type0 = p_parser.GetTokenType( p_token_index );
     int size0 = p_parser.GetTokenSize( p_token_index );
@@ -76,12 +76,18 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index,
                         // ici creer une nvelle entite
                         //////
 
+                        entity = _DRAWSPACE_NEW_( DrawSpace::Core::Entity, DrawSpace::Core::Entity );
+                        
+
+                        entityNode = p_parentEntityNode->AddChild( entity );
+
+
                         p_token_index += 2;
 
                         m_parser_state = EXPECT_ENTITY_ARGS;
                         for( int i = 0; i < size1; i++ )
                         {
-                            recurs_explore_entities( p_parser, p_token_index, entity, entityNode );
+                            recurs_explore_entities( p_parser, p_token_index, entity, &entityNode, NULL );
                         }
                     }
                     else
@@ -136,7 +142,7 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index,
                                 {
                                     p_token_index += 2;
                                     m_parser_state = EXPECT_ENTITY_DECL;
-                                    recurs_explore_entities( p_parser, p_token_index, NULL, NULL );
+                                    recurs_explore_entities( p_parser, p_token_index, NULL, NULL, &entityNode );
                                 }
                             }
                             else
