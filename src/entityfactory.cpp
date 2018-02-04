@@ -119,11 +119,14 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index 
                 else if( "Children" == name )
                 {
                     if( JSMN_ARRAY == type1 )
-                    {                        
+                    {
+                        p_token_index++; // pointe sur le array
+
+
                         for( int i = 0; i < size1; i++ )
                         {
-                            int type2 = p_parser.GetTokenType( p_token_index + 2 );
-                            int size2 = p_parser.GetTokenSize( p_token_index + 2 );
+                            int type2 = p_parser.GetTokenType( p_token_index + 1 );
+                            int size2 = p_parser.GetTokenSize( p_token_index + 1 );
 
                             if( JSMN_OBJECT == type2 )
                             {
@@ -139,6 +142,8 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index 
                                 _DSEXCEPTION( "JSON parse : unexpected type for token in array ( object expected)" );
                             }
                         }
+
+                        p_token_index++; // pointe sur apres le array
                     }
                     else
                     {
