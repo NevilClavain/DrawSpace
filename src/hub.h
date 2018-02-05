@@ -31,6 +31,7 @@
 #include "physicssystem.h"
 #include "rendersystem.h"
 #include "proceduralsystem.h"
+#include "tracesystem.h"
 
 namespace DrawSpace
 {
@@ -58,6 +59,7 @@ private:
     DrawSpace::Systems::PhysicsSystem               m_physicsSystem;
     DrawSpace::Systems::TimeSystem                  m_timeSystem;
     DrawSpace::Systems::ProceduralSystem            m_proceduralSystem;
+    DrawSpace::Systems::TraceSystem                 m_traceSystem;
 
     ProceduralPublicationEvtCb                      m_procedural_publication_evt_cb;
 
@@ -74,6 +76,8 @@ public:
     bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
     void Release( EntityGraph::EntityNodeGraph* p_entitygraph );
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
+
+    void SetLogConf( DrawSpace::Logger::Configuration* p_logconf );
 
     void EnableGUI( bool p_state );
 

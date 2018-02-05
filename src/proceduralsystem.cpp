@@ -30,7 +30,6 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Systems;
-using namespace DrawSpace::Aspect;
 
 ProceduralSystem::ProceduralSystem( void )
 {

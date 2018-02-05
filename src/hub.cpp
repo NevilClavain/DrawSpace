@@ -38,6 +38,7 @@ m_procedural_publication_evt_cb( this, &Hub::on_procedural_publication)
     m_systems.push_back( &m_physicsSystem );
     m_systems.push_back( &m_transformSystem );
     m_systems.push_back( &m_renderingSystem );
+    m_systems.push_back( &m_traceSystem );
 
     m_proceduralSystem.RegisterProceduralPublicationEvtHandler( &m_procedural_publication_evt_cb );
 }
@@ -123,4 +124,9 @@ void Hub::on_procedural_publication( const dsstring& p_id, DrawSpace::Aspect::Pr
 ProceduralAspect::ProceduralBlocsFactory& Hub::GetProceduralFactory( void )
 {
     return m_proceduralSystem.GetFactory();
+}
+
+void Hub::SetLogConf( DrawSpace::Logger::Configuration* p_logconf )
+{
+    m_traceSystem.SetLogConf( p_logconf );
 }

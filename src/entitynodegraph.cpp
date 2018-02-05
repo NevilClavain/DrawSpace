@@ -34,7 +34,8 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
 
 EntityNodeGraph::EntityNodeGraph( void ) :
-m_curr_entity_camera( NULL )
+m_curr_entity_camera( NULL ),
+m_dump_me( false )
 {
 }
 
@@ -136,6 +137,11 @@ void EntityNodeGraph::PushSignal_RenderSceneEnd( void )
     m_signals.push( SIGNAL_RENDERSCENE_END );
 }
 
+void EntityNodeGraph::PushSignal_DumpToTrace( void )
+{
+    m_signals.push( SIGNAL_DUMP_TO_TRACE );
+}
+
 void EntityNodeGraph::PushSignal_EvaluateProcedurals( const dsstring& p_procedural_id )
 {
     m_proc_signals.push( p_procedural_id );
@@ -191,6 +197,11 @@ void EntityNodeGraph::ProcessSignals( void )
             }
             break;
 
+            case SIGNAL_DUMP_TO_TRACE:
+            {
+                m_dump_me = true;
+            }
+            break;
         }
         m_signals.pop();
     }
@@ -252,4 +263,13 @@ void EntityNodeGraph::notify_cam_event( CameraEvent p_evt, Entity* p_entity )
     }
 }
 
+bool EntityNodeGraph::ToDump( void ) const
+{
+    return m_dump_me;
+}
+
+void EntityNodeGraph::ResetDumpFlag( void )
+{
+    m_dump_me = false;
+}
 

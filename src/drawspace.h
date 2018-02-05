@@ -131,4 +131,6 @@
 
 #include "entityfactory.h"
 
+#include "tracesystem.h"
+
 #endif

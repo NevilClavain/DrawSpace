@@ -110,6 +110,7 @@
     <ClCompile Include="src\timeaspect.cpp" />
     <ClCompile Include="src\timemanager.cpp" />
     <ClCompile Include="src\timesystem.cpp" />
+    <ClCompile Include="src\tracesystem.cpp" />
     <ClCompile Include="src\transformation.cpp" />
     <ClCompile Include="src\transformsystem.cpp" />
     <ClCompile Include="src\vector.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="src\timemanager.h" />
     <ClInclude Include="src\timesystem.h" />
     <ClInclude Include="src\tracedefs.h" />
+    <ClInclude Include="src\tracesystem.h" />
     <ClInclude Include="src\transformation.h" />
     <ClInclude Include="src\transformsystem.h" />
     <ClInclude Include="src\triangle.h" />

@@ -87,7 +87,7 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index,
                         m_parser_state = EXPECT_ENTITY_ARGS;
                         for( int i = 0; i < size1; i++ )
                         {
-                            recurs_explore_entities( p_parser, p_token_index, entity, &entityNode, NULL );
+                            recurs_explore_entities( p_parser, p_token_index, entity, &entityNode, &entityNode );
                         }
                     }
                     else
@@ -142,7 +142,7 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index,
                                 {
                                     p_token_index += 2;
                                     m_parser_state = EXPECT_ENTITY_DECL;
-                                    recurs_explore_entities( p_parser, p_token_index, NULL, NULL, &entityNode );
+                                    recurs_explore_entities( p_parser, p_token_index, NULL, NULL, p_parentEntityNode );
                                 }
                             }
                             else

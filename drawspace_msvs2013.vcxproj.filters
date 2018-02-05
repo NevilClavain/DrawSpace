@@ -339,6 +339,9 @@
     <ClCompile Include="src\entityfactory.cpp">
       <Filter>entitygraph</Filter>
     </ClCompile>
+    <ClCompile Include="src\tracesystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -688,6 +691,9 @@
     </ClInclude>
     <ClInclude Include="src\entityfactory.h">
       <Filter>entitygraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tracesystem.h">
+      <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

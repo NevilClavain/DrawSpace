@@ -81,6 +81,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
+    m_systemsHub.SetLogConf( logconf );
     m_systemsHub.RegisterProceduralPublicationEvtHandler( &m_procedural_publication_evt_cb );
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -611,6 +612,11 @@ void MainService::OnKeyPulse( long p_key )
         case VK_F2:
 
             m_entitygraph.PushSignal_EvaluateProcedurals( "stars generator" );
+            break;
+
+        case VK_F3:
+
+            m_entitygraph.PushSignal_DumpToTrace();
             break;
     }
 }
