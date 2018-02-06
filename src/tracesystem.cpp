@@ -179,6 +179,36 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
 
 
                 _DSDEBUG( logger, dsstring ( "procedural aspect component " ) << i << dsstring( " is " ) << ClassDump::m_text )
+
+                Aspect::ProceduralAspect::ValueProceduralBloc<int>* pint = dynamic_cast<Aspect::ProceduralAspect::ValueProceduralBloc<int>*>( components[j]->getPurpose() );
+                if( pint )
+                {
+                    _DSDEBUG( logger, dsstring ( "value = " ) << pint->GetValue() );
+                }
+                else
+                {
+                    Aspect::ProceduralAspect::ValueProceduralBloc<long>* plong = dynamic_cast<Aspect::ProceduralAspect::ValueProceduralBloc<long>*>( components[j]->getPurpose() );
+                    if( plong )
+                    {
+                        _DSDEBUG( logger, dsstring ( "value = " ) << plong->GetValue() );
+                    }
+                    else
+                    {
+                        Aspect::ProceduralAspect::ValueProceduralBloc<float>* pfloat = dynamic_cast<Aspect::ProceduralAspect::ValueProceduralBloc<float>*>( components[j]->getPurpose() );
+                        if( pfloat )
+                        {
+                            _DSDEBUG( logger, dsstring ( "value = " ) << pfloat->GetValue() );
+                        }
+                        else
+                        {
+                            Aspect::ProceduralAspect::ValueProceduralBloc<dsreal>* preal = dynamic_cast<Aspect::ProceduralAspect::ValueProceduralBloc<dsreal>*>( components[j]->getPurpose() );
+                            if( preal )
+                            {
+                                _DSDEBUG( logger, dsstring ( "value = " ) << preal->GetValue() );
+                            }
+                        }                    
+                    }                
+                }
             }
         }
         //////////////////////////////////////////////////////

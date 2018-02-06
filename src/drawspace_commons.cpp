@@ -97,3 +97,10 @@ dsstring operator<< ( dsstring& p_s1, float p_s2 )
 	sprintf( buff, "%f", p_s2 );
 	return dsstring( p_s1 ) + dsstring( buff );
 }
+
+dsstring operator<< ( dsstring& p_s1, dsreal p_s2 )
+{
+	char buff[32];
+	sprintf( buff, "%f", p_s2 );
+	return dsstring( p_s1 ) + dsstring( buff );
+}

@@ -78,5 +78,6 @@ dsstring operator<< ( dsstring& p_s1, void* p_s2 );
 dsstring operator<< ( dsstring& p_s1, bool p_s2 );
 dsstring operator<< ( dsstring& p_s1, DWORD p_s2 );
 dsstring operator<< ( dsstring& p_s1, float p_s2 );
+dsstring operator<< ( dsstring& p_s1, dsreal p_s2 );
 
 #endif
