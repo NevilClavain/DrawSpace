@@ -43,10 +43,30 @@ class ClassDump
 public:
     static dsstring m_text;
 
+    /*
     template<typename T>
     static void Dump( DrawSpace::Core::Aspect* p_aspect )
     {
         if( dynamic_cast<T*>( p_aspect ) )
+        {
+            m_text = typeid(T).name();
+        }     
+    }
+
+    template<typename T>
+    static void Dump( DrawSpace::Aspect::ProceduralAspect::ProceduralBloc* p_bloc )
+    {
+        if( dynamic_cast<T*>( p_bloc ) )
+        {
+            m_text = typeid(T).name();
+        }     
+    }
+    */
+
+    template<typename BaseClass, typename T>
+    static void Dump( BaseClass* p_bloc )
+    {
+        if( dynamic_cast<T*>( p_bloc ) )
         {
             m_text = typeid(T).name();
         }     
@@ -111,17 +131,57 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
 
     for( size_t i = 0; i < aspects.size(); i++ )
     {
-        // find aspect's name to sump it on trace...
-        ClassDump::Dump<Aspect::BodyAspect>( aspects[i] );
-        ClassDump::Dump<Aspect::CameraAspect>( aspects[i] );
-        ClassDump::Dump<Aspect::PhysicsAspect>( aspects[i] );
-        ClassDump::Dump<Aspect::ProceduralAspect>( aspects[i] );
-        ClassDump::Dump<Aspect::RenderingAspect>( aspects[i] );
-        ClassDump::Dump<Aspect::TimeAspect>( aspects[i] );
-        ClassDump::Dump<Aspect::TransformAspect>( aspects[i] );
+        // find aspect's name to dump it on trace...
+        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::BodyAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::CameraAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::PhysicsAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::ProceduralAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::RenderingAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::TimeAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::TransformAspect>( aspects[i] );
 
         _DSDEBUG( logger, dsstring ( " aspect " ) << i << dsstring( " is " ) << ClassDump::m_text )
-    
+
+        Aspect::ProceduralAspect* procedural_aspect = dynamic_cast<Aspect::ProceduralAspect*>( aspects[i] );
+
+        /////////////////////////////////dump detaille aspect procedural......
+        if( procedural_aspect )
+        {
+            ClassDump::m_text = "unknown";
+
+            ComponentList<Aspect::ProceduralAspect::ProceduralBloc*> components;
+
+            procedural_aspect->GetComponentsByType<Aspect::ProceduralAspect::ProceduralBloc*>( components );
+
+            _DSDEBUG( logger, dsstring ( "procedural aspect has " ) << components.size() << dsstring( " component(s)" ) )
+
+            for( size_t j = 0; j < components.size(); j++ )
+            {
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::RootProceduralBloc>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SeedSourceProceduralBloc>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::PublishProceduralBloc>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<int>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<long>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<float>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<dsreal>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<dsstring>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::UniformRandomIntValueProceduralBloc<int>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::UniformRandomIntValueProceduralBloc<long>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::UniformRandomIntValueProceduralBloc<size_t>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<int>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<long>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<float>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<dsreal>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<dsstring>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::RepeatProceduralBloc<int>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::RepeatProceduralBloc<long>>( components[j]->getPurpose() );
+                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::RepeatProceduralBloc<size_t>>( components[j]->getPurpose() );
+
+
+                _DSDEBUG( logger, dsstring ( "procedural aspect component " ) << i << dsstring( " is " ) << ClassDump::m_text )
+            }
+        }
+        //////////////////////////////////////////////////////
 
     }
 

@@ -218,7 +218,7 @@ bool MainService::Init( void )
 
 
     procedural_aspect = m_procUniformRandEntity.AddAspect<ProceduralAspect>();
-    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "rand", factory.CreateBloc<ProceduralAspect::UniformRandomValueProceduralBloc<long>>( "stars generator" ) );
+    procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "rand", factory.CreateBloc<ProceduralAspect::UniformRandomIntValueProceduralBloc<long>>( "stars generator" ) );
 
 
     procedural_aspect = m_procSeedSourceEntity.AddAspect<ProceduralAspect>();

@@ -98,7 +98,7 @@ public:
     };
 
     template<typename T>
-    struct UniformRandomValueProceduralBloc : public ValueProceduralBloc<T>
+    struct UniformRandomIntValueProceduralBloc : public ValueProceduralBloc<T>
     {
     protected:
         std::default_random_engine              m_generator;        
@@ -106,12 +106,12 @@ public:
 
     public:
 
-        UniformRandomValueProceduralBloc( void ) :
+        UniformRandomIntValueProceduralBloc( void ) :
         m_distribution( NULL )
         {
         }
 
-        ~UniformRandomValueProceduralBloc( void )
+        ~UniformRandomIntValueProceduralBloc( void )
         {
             Terminate();
         }
