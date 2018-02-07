@@ -36,14 +36,18 @@ class Factory
 {
 protected:
 
+    using EntityData = std::pair<DrawSpace::EntityGraph::EntityNode, DrawSpace::Core::Entity*>;
+
     typedef enum
     {
         EXPECT_ENTITY_DECL,
         EXPECT_ENTITY_ARGS,
+        EXPECT_ASPECT_ARGS,
     
     } ParserState;
 
-    ParserState m_parser_state;
+    ParserState                     m_parser_state;  
+    std::map<dsstring, EntityData>  m_nodes;
 
     void recurs_explore_entities( DrawSpace::Utils::JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode, DrawSpace::EntityGraph::EntityNode* p_parentEntityNode  );
 
