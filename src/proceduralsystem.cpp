@@ -180,6 +180,11 @@ void ProceduralSystem::visit_entity_on_run( Core::Entity* p_parent, Core::Entity
         ComponentList<ProceduralAspect::ProceduralBloc*> blocs;
         procedural_aspect->GetComponentsByType<ProceduralAspect::ProceduralBloc*>( blocs );
 
+        if( 0 == blocs.size() )
+        {
+            return;
+        }
+
         ProceduralAspect::RootProceduralBloc* root = dynamic_cast<ProceduralAspect::RootProceduralBloc*>( blocs[0]->getPurpose() );
         if( root )
         {

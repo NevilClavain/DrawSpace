@@ -42,6 +42,7 @@ protected:
     {
         EXPECT_ENTITY_DECL,
         EXPECT_ENTITY_ARGS,
+        EXPECT_ENTITY_ASPECTS_ARGS,
         EXPECT_ASPECT_ARGS,
     
     } ParserState;
@@ -49,7 +50,7 @@ protected:
     ParserState                     m_parser_state;  
     std::map<dsstring, EntityData>  m_nodes;
 
-    void recurs_explore_entities( DrawSpace::Utils::JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode, DrawSpace::EntityGraph::EntityNode* p_parentEntityNode  );
+    void recurs_explore_entities( DrawSpace::Utils::JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode, DrawSpace::EntityGraph::EntityNode* p_parentEntityNode, DrawSpace::Core::Aspect* p_aspect );
 
 public:
     bool BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node );
