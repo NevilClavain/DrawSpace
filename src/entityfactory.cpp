@@ -115,9 +115,7 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index,
                 if( "Aspects" == name )
                 {
                     if( JSMN_ARRAY == type1 )
-                    {
-                        //p_token_index += 1 + 1 + size1; // le token string "Array" + le token array lui meme + la taille de son contenu
-                        
+                    {                                               
                         p_token_index++; // pointe sur le array
 
                         m_parser_state = EXPECT_ENTITY_ASPECTS_ARGS;
@@ -231,9 +229,9 @@ void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index,
                         Core::Aspect* aspect = p_entity->AddAspect<ProceduralAspect>();
 
                         m_parser_state = EXPECT_ASPECT_ARGS;
+                        p_token_index += 2;
                         for( int i = 0; i < size1; i++ )
-                        {
-                            p_token_index += 2;                                                                        
+                        {                            
                             recurs_explore_entities( p_parser, p_token_index, NULL, NULL, NULL, aspect );
                         }
                         m_parser_state = EXPECT_ENTITY_ARGS;
