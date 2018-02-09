@@ -28,6 +28,7 @@
 
 #include <jsmn.h>
 #include "drawspace_commons.h"
+#include "callback.h"
 
 namespace DrawSpace
 {
@@ -35,6 +36,14 @@ namespace Utils
 {
 class JSONParser
 {
+public:
+
+
+    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>                      ObjectContentEventHandler;
+    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>                      ArrayContentEventHandler;
+    typedef DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, const dsstring&>     StringContentEventHandler;
+    
+
 protected:
 	static const int max_tokens = 1024;
 
@@ -47,6 +56,10 @@ protected:
 
 	std::string     m_text;
 
+    int             m_index;
+
+    void            recurs_analyze( const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler );
+
 public:
 	JSONParser( void );
 	~JSONParser( void );
@@ -56,6 +69,8 @@ public:
 	int		    GetTokenType( int p_index );
 	int		    GetTokenSize( int p_index );
 	void	    GetTokenString( int p_index, dsstring& p_out_tokentext );
+
+    void        AnalyzeTokens( ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler );
 
 };
 }

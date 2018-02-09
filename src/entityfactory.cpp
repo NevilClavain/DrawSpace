@@ -32,6 +32,13 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
 
+Factory::Factory( void ) :
+m_object_content_cb( this, &Factory::on_object_content ),
+m_array_content_cb( this, &Factory::on_array_content ),
+m_string_content_cb( this, &Factory::on_string_content )
+{
+}
+
 bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node )
 {
     m_parser_state = EXPECT_ENTITY_DECL;
@@ -39,241 +46,20 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
     int token_index = 1;
 
     parser.ParseFromFile( p_filepath );
-
-    if( JSMN_OBJECT == parser.GetTokenType( 0 ) )
-    {
-        recurs_explore_entities( parser, token_index, NULL, NULL, &p_node, NULL );
-    }
-    else
-    {
-        _DSEXCEPTION( "JSON parse : unexpected type for token 0" );
-    }
-
+    parser.AnalyzeTokens( &m_object_content_cb, &m_array_content_cb, &m_string_content_cb );
+    
     return true;
 }
 
-void Factory::recurs_explore_entities( JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode, DrawSpace::EntityGraph::EntityNode* p_parentEntityNode, DrawSpace::Core::Aspect* p_aspect )
+void Factory::on_object_content( const dsstring& p_owner_id, const dsstring& p_id )
 {
-    DrawSpace::Core::Entity*             entity = NULL;
-    DrawSpace::EntityGraph::EntityNode   entityNode;
+}
 
-    int type0 = p_parser.GetTokenType( p_token_index );
-    int size0 = p_parser.GetTokenSize( p_token_index );
-    int type1 = p_parser.GetTokenType( p_token_index + 1 );
-    int size1 = p_parser.GetTokenSize( p_token_index + 1 );
+void Factory::on_array_content( const dsstring& p_owner_id, const dsstring& p_id )
+{
+}
 
-    switch( m_parser_state )
-    {
-        case EXPECT_ENTITY_DECL:
-        {
-            dsstring name;
-            if( JSMN_STRING == type0 )
-            {
-                p_parser.GetTokenString( p_token_index, name );
-
-                if( "Entity" == name )
-                {
-                    if( JSMN_OBJECT == type1 )
-                    {
-                        // ici creer une nvelle entite
-                        //////
-
-                        entity = _DRAWSPACE_NEW_( DrawSpace::Core::Entity, DrawSpace::Core::Entity );                       
-                        entityNode = p_parentEntityNode->AddChild( entity );
-                        p_token_index += 2;
-
-                        m_parser_state = EXPECT_ENTITY_ARGS;
-                        for( int i = 0; i < size1; i++ )
-                        {
-                            recurs_explore_entities( p_parser, p_token_index, entity, &entityNode, &entityNode, NULL );
-                        }
-                    }
-                    else
-                    {
-                        _DSEXCEPTION( "JSON parse : unexpected type for 2nd token (object expected)" );
-                    }                
-                }
-                else
-                {
-                    _DSEXCEPTION( "JSON parse : unexpected value for string in 1st token (Entity expected)" );
-                }
-            }
-            else
-            {
-                _DSEXCEPTION( "JSON parse : unexpected type for 1st token (string expected)" );
-            }            
-        }
-        break;
-
-        case EXPECT_ENTITY_ARGS:
-        {
-            dsstring name;
-            if( JSMN_STRING == type0 )
-            {
-                p_parser.GetTokenString( p_token_index, name );
-
-                if( "Aspects" == name )
-                {
-                    if( JSMN_ARRAY == type1 )
-                    {                                               
-                        p_token_index++; // pointe sur le array
-
-                        m_parser_state = EXPECT_ENTITY_ASPECTS_ARGS;
-                        for( int i = 0; i < size1; i++ )
-                        {
-                            int type2 = p_parser.GetTokenType( p_token_index + 1 );
-                            int size2 = p_parser.GetTokenSize( p_token_index + 1 );
-
-                            if( JSMN_OBJECT == type2 )
-                            {
-                                if( size2 > 0 )
-                                {
-                                    p_token_index += 2;
-                                                                        
-                                    recurs_explore_entities( p_parser, p_token_index, p_entity, p_entityNode, NULL, NULL );
-                                }
-                            }
-                            else
-                            {
-                                _DSEXCEPTION( "JSON parse : unexpected type for token in array ( object expected)" );
-                            }                       
-                        }
-                        m_parser_state = EXPECT_ENTITY_ARGS;
-                        p_token_index++; // pointe apres le array
-                    }
-                    else
-                    {
-                        _DSEXCEPTION( "JSON parse : unexpected type for 2nd token ( Aspects -> array expected)" );
-                    } 
-                }
-                else if( "Children" == name )
-                {
-                    if( JSMN_ARRAY == type1 )
-                    {
-                        p_token_index++; // pointe sur le array
-
-                        for( int i = 0; i < size1; i++ )
-                        {
-                            int type2 = p_parser.GetTokenType( p_token_index + 1 );
-                            int size2 = p_parser.GetTokenSize( p_token_index + 1 );
-
-                            if( JSMN_OBJECT == type2 )
-                            {
-                                if( size2 > 0 )
-                                {
-                                    p_token_index += 2;
-                                    m_parser_state = EXPECT_ENTITY_DECL;
-                                    recurs_explore_entities( p_parser, p_token_index, NULL, NULL, p_parentEntityNode, NULL );
-                                }
-                            }
-                            else
-                            {
-                                _DSEXCEPTION( "JSON parse : unexpected type for token in array ( object expected)" );
-                            }
-                        }
-
-                        p_token_index++; // pointe apres le array
-                    }
-                    else
-                    {
-                        _DSEXCEPTION( "JSON parse : unexpected type for 2nd token ( Children -> array expected)" );
-                    } 
-                }
-                else if( "Id" == name )
-                {
-                    if( JSMN_STRING == type1 )
-                    {
-                        p_parser.GetTokenString( p_token_index + 1, name );
-
-
-                        EntityData data;
-
-                        data.first = *p_entityNode;
-                        data.second = p_entity;
-
-                        m_nodes[name] = data;
-
-                        p_token_index += 2;
-                    }
-                    else
-                    {
-                        _DSEXCEPTION( "JSON parse : unexpected type for entity Id ( string expected)" );
-                    }
-                }
-                else
-                {
-                    _DSEXCEPTION( "JSON parse : unexpected value for string in 1st token (Aspects or Children expected)" );
-                }
-            }
-            else
-            {
-                _DSEXCEPTION( "JSON parse : unexpected type for 1st token (string expected)" );
-            }            
-        }
-        break;
-
-        case EXPECT_ENTITY_ASPECTS_ARGS:
-        {
-            dsstring name;
-            if( JSMN_STRING == type0 )
-            {
-                p_parser.GetTokenString( p_token_index, name );
-
-                if( "ProceduralAspect" == name )
-                {
-
-                    if( JSMN_OBJECT == type1 )
-                    {
-
-                        // add procedural aspect
-                        Core::Aspect* aspect = p_entity->AddAspect<ProceduralAspect>();
-
-                        m_parser_state = EXPECT_ASPECT_ARGS;
-                        p_token_index += 2;
-                        for( int i = 0; i < size1; i++ )
-                        {                            
-                            recurs_explore_entities( p_parser, p_token_index, NULL, NULL, NULL, aspect );
-                        }
-                        m_parser_state = EXPECT_ENTITY_ARGS;
-                        
-                        p_token_index++;
-                    }
-                    else
-                    {
-                        _DSEXCEPTION( "JSON parse : unexpected type for 1st token (object expected)" );
-                    }
-                }
-                else
-                {
-                    _DSEXCEPTION( "JSON parse : unexpected aspect type" );
-                }
-            }
-            else
-            {
-                _DSEXCEPTION( "JSON parse : unexpected type for 1st token (string expected)" );
-            }
-        }
-        break;
-
-
-        case EXPECT_ASPECT_ARGS:
-        {
-            dsstring name;
-            if( JSMN_STRING == type0 )
-            {
-                p_parser.GetTokenString( p_token_index, name );
-
-                if( "Components" == name )
-                {
-                    _asm nop
-                }
-            }            
-            else
-            {
-                _DSEXCEPTION( "JSON parse : unexpected type for 1st token (string expected)" );
-            }
-        }
-        break;
-    }
+void Factory::on_string_content( const dsstring& p_owner_id, const dsstring& p_id, const dsstring& p_str )
+{
 
 }

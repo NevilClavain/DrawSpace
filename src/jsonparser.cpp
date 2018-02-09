@@ -112,3 +112,64 @@ void JSONParser::ParseFromFile( const dsstring& p_filepath )
         _DSEXCEPTION( "JSON parse : failed with code " + dsstring( comment ) );
     }
 }
+
+void JSONParser::AnalyzeTokens( ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler )
+{
+    m_index = 0;
+    int size = GetTokenSize( m_index );
+    
+    if( JSMN_OBJECT == GetTokenType( m_index ) )
+    {
+        m_index++;
+
+        for( int i = 0; i < size; i++ )
+        {
+            recurs_analyze( "<root>", p_object_handler, p_array_handler, p_string_handler );
+        }        
+    }
+    else
+    {
+        _DSEXCEPTION( "JSON parse : unexpected type for token 0" );
+    }    
+}
+
+void JSONParser::recurs_analyze( const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler )
+{
+    dsstring id;
+    GetTokenString( m_index, id );
+    m_index++;
+
+    int content_type = GetTokenType( m_index );
+    int content_size = GetTokenSize( m_index );
+
+    switch( content_type )
+    {
+        case JSMN_OBJECT:
+        {
+            (*p_object_handler)( p_owner_id, id );
+            m_index++;
+            
+            for( int i = 0; i < content_size; i++ )
+            {
+                recurs_analyze( id, p_object_handler, p_array_handler, p_string_handler );
+            }
+        }
+        break;
+
+        case JSMN_ARRAY:
+        {
+        
+        }
+        break;
+
+        case JSMN_STRING:
+        {
+            dsstring value;
+               
+            GetTokenString( m_index, value );
+            (*p_string_handler)( p_owner_id, id, value );
+            m_index++;
+        }
+        break;
+    }
+}

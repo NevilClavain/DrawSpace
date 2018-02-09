@@ -36,6 +36,11 @@ class Factory
 {
 protected:
 
+    typedef DrawSpace::Core::CallBack2<Factory, void, const dsstring&, const dsstring&>                     ObjectContentEventCb;
+    typedef DrawSpace::Core::CallBack2<Factory, void, const dsstring&, const dsstring&>                     ArrayContentEventCb;
+    typedef DrawSpace::Core::CallBack3<Factory, void, const dsstring&, const dsstring&, const dsstring&>    StringContentEventCb;
+
+
     using EntityData = std::pair<DrawSpace::EntityGraph::EntityNode, DrawSpace::Core::Entity*>;
 
     typedef enum
@@ -50,9 +55,16 @@ protected:
     ParserState                     m_parser_state;  
     std::map<dsstring, EntityData>  m_nodes;
 
-    void recurs_explore_entities( DrawSpace::Utils::JSONParser& p_parser, int& p_token_index, DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNode* p_entityNode, DrawSpace::EntityGraph::EntityNode* p_parentEntityNode, DrawSpace::Core::Aspect* p_aspect );
+    ObjectContentEventCb            m_object_content_cb;
+    ArrayContentEventCb             m_array_content_cb;
+    StringContentEventCb            m_string_content_cb;
+
+    void on_object_content( const dsstring& p_owner_id, const dsstring& p_id );
+    void on_array_content( const dsstring& p_owner_id, const dsstring& p_id );
+    void on_string_content( const dsstring& p_owner_id, const dsstring& p_id, const dsstring& p_str );
 
 public:
+    Factory( void );
     bool BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node );
 
 };
