@@ -35,7 +35,8 @@ using namespace DrawSpace::Aspect;
 Factory::Factory( void ) :
 m_object_content_cb( this, &Factory::on_object_content ),
 m_array_content_cb( this, &Factory::on_array_content ),
-m_string_content_cb( this, &Factory::on_string_content )
+m_string_content_cb( this, &Factory::on_string_content ),
+m_num_content_cb( this, &Factory::on_num_content )
 {
 }
 
@@ -46,7 +47,7 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
     int token_index = 1;
 
     parser.ParseFromFile( p_filepath );
-    parser.AnalyzeTokens( &m_object_content_cb, &m_array_content_cb, &m_string_content_cb );
+    parser.AnalyzeTokens( &m_object_content_cb, &m_array_content_cb, &m_string_content_cb, &m_num_content_cb );
     
     return true;
 }
@@ -60,6 +61,11 @@ void Factory::on_array_content( const dsstring& p_owner_id, const dsstring& p_id
 }
 
 void Factory::on_string_content( const dsstring& p_owner_id, const dsstring& p_id, const dsstring& p_str )
+{
+
+}
+
+void Factory::on_num_content( const dsstring& p_owner_id, const dsstring& p_id, dsreal p_val )
 {
 
 }

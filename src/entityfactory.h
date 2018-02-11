@@ -39,6 +39,7 @@ protected:
     typedef DrawSpace::Core::CallBack2<Factory, void, const dsstring&, const dsstring&>                     ObjectContentEventCb;
     typedef DrawSpace::Core::CallBack2<Factory, void, const dsstring&, const dsstring&>                     ArrayContentEventCb;
     typedef DrawSpace::Core::CallBack3<Factory, void, const dsstring&, const dsstring&, const dsstring&>    StringContentEventCb;
+    typedef DrawSpace::Core::CallBack3<Factory, void, const dsstring&, const dsstring&, dsreal>             NumericContentEventCb;
 
 
     using EntityData = std::pair<DrawSpace::EntityGraph::EntityNode, DrawSpace::Core::Entity*>;
@@ -58,10 +59,12 @@ protected:
     ObjectContentEventCb            m_object_content_cb;
     ArrayContentEventCb             m_array_content_cb;
     StringContentEventCb            m_string_content_cb;
+    NumericContentEventCb           m_num_content_cb;
 
     void on_object_content( const dsstring& p_owner_id, const dsstring& p_id );
     void on_array_content( const dsstring& p_owner_id, const dsstring& p_id );
     void on_string_content( const dsstring& p_owner_id, const dsstring& p_id, const dsstring& p_str );
+    void on_num_content( const dsstring& p_owner_id, const dsstring& p_id, dsreal p_val );
 
 public:
     Factory( void );

@@ -113,7 +113,7 @@ void JSONParser::ParseFromFile( const dsstring& p_filepath )
     }
 }
 
-void JSONParser::AnalyzeTokens( ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler )
+void JSONParser::AnalyzeTokens( ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler )
 {
     m_index = 0;
     int size = GetTokenSize( m_index );
@@ -124,7 +124,7 @@ void JSONParser::AnalyzeTokens( ObjectContentEventHandler* p_object_handler, Arr
 
         for( int i = 0; i < size; i++ )
         {
-            recurs_analyze( "<root>", p_object_handler, p_array_handler, p_string_handler );
+            recurs_analyze( "<root>", p_object_handler, p_array_handler, p_string_handler, p_num_handler );
         }        
     }
     else
@@ -133,7 +133,7 @@ void JSONParser::AnalyzeTokens( ObjectContentEventHandler* p_object_handler, Arr
     }    
 }
 
-void JSONParser::recurs_analyze( const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler )
+void JSONParser::recurs_analyze( const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler )
 {
     dsstring id;
     GetTokenString( m_index, id );
@@ -151,7 +151,7 @@ void JSONParser::recurs_analyze( const std::string& p_owner_id, ObjectContentEve
             
             for( int i = 0; i < content_size; i++ )
             {
-                recurs_analyze( id, p_object_handler, p_array_handler, p_string_handler );
+                recurs_analyze( id, p_object_handler, p_array_handler, p_string_handler, p_num_handler );
             }
         }
         break;
@@ -161,10 +161,8 @@ void JSONParser::recurs_analyze( const std::string& p_owner_id, ObjectContentEve
             (*p_array_handler)( p_owner_id, id );
             m_index++;
 
-
             for( int i = 0; i < content_size; i++ )
-            {
-                
+            {                
                 int sub_content_type = GetTokenType( m_index );
                 int sub_content_size = GetTokenSize( m_index );
 
@@ -178,7 +176,7 @@ void JSONParser::recurs_analyze( const std::string& p_owner_id, ObjectContentEve
 
                     for( int j = 0; j < sub_content_size; j++ )
                     {
-                        recurs_analyze( comment, p_object_handler, p_array_handler, p_string_handler );
+                        recurs_analyze( comment, p_object_handler, p_array_handler, p_string_handler, p_num_handler );
                     }                    
                 }
                 else
@@ -196,6 +194,17 @@ void JSONParser::recurs_analyze( const std::string& p_owner_id, ObjectContentEve
             GetTokenString( m_index, value );
             (*p_string_handler)( p_owner_id, id, value );
             m_index++;
+        }
+        break;
+
+        case JSMN_PRIMITIVE:
+        {
+            dsstring value;
+                       
+            GetTokenString( m_index, value );
+
+            dsreal fval = std::stof( value );
+            (*p_num_handler)( p_owner_id, id, fval );  
         }
         break;
     }

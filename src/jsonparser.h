@@ -42,6 +42,7 @@ public:
     typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>                      ObjectContentEventHandler;
     typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>                      ArrayContentEventHandler;
     typedef DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, const dsstring&>     StringContentEventHandler;
+    typedef DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, dsreal>              NumericContentEventHandler;
     
 
 protected:
@@ -58,7 +59,7 @@ protected:
 
     int             m_index;
 
-    void            recurs_analyze( const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler );
+    void            recurs_analyze( const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
 
 public:
 	JSONParser( void );
@@ -70,7 +71,7 @@ public:
 	int		    GetTokenSize( int p_index );
 	void	    GetTokenString( int p_index, dsstring& p_out_tokentext );
 
-    void        AnalyzeTokens( ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler );
+    void        AnalyzeTokens( ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
 
 };
 }
