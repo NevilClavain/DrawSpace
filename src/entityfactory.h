@@ -35,36 +35,38 @@ namespace EntityGraph
 class Factory
 {
 protected:
-
-    typedef DrawSpace::Core::CallBack2<Factory, void, const dsstring&, const dsstring&>                     ObjectContentEventCb;
-    typedef DrawSpace::Core::CallBack2<Factory, void, const dsstring&, const dsstring&>                     ArrayContentEventCb;
-    typedef DrawSpace::Core::CallBack3<Factory, void, const dsstring&, const dsstring&, const dsstring&>    StringContentEventCb;
-    typedef DrawSpace::Core::CallBack3<Factory, void, const dsstring&, const dsstring&, dsreal>             NumericContentEventCb;
-
-
+    using ObjectContentEventCb = DrawSpace::Core::CallBack3<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&>;
+    using ArrayContentEventCb = DrawSpace::Core::CallBack3<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&>;
+    using ArrayObjectContentEventCb = DrawSpace::Core::CallBack3<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, int>;
+    using StringContentEventCb = DrawSpace::Core::CallBack4<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&, const dsstring&>;
+    using NumericContentEventCb = DrawSpace::Core::CallBack4<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&, dsreal>;
+    
     using EntityData = std::pair<DrawSpace::EntityGraph::EntityNode, DrawSpace::Core::Entity*>;
+    using ParserData = DrawSpace::Utils::JSONParser::UserDataImpl<EntityData>;
+    
 
-    typedef enum
+    using ParserState = enum
     {
         EXPECT_ENTITY_DECL,
         EXPECT_ENTITY_ARGS,
-        EXPECT_ENTITY_ASPECTS_ARGS,
-        EXPECT_ASPECT_ARGS,
+    };
     
-    } ParserState;
+    //ParserState                                                         m_parser_state;  
+    
+    ObjectContentEventCb                                                m_object_content_cb;
+    ArrayContentEventCb                                                 m_array_content_cb;
+    ArrayObjectContentEventCb                                           m_array_object_content_cb;
+    StringContentEventCb                                                m_string_content_cb;
+    NumericContentEventCb                                               m_num_content_cb;
 
-    ParserState                     m_parser_state;  
-    std::map<dsstring, EntityData>  m_nodes;
+    std::list<ParserData>                                               m_parser_data;
+    std::map<dsstring, EntityData>                                      m_nodes;
 
-    ObjectContentEventCb            m_object_content_cb;
-    ArrayContentEventCb             m_array_content_cb;
-    StringContentEventCb            m_string_content_cb;
-    NumericContentEventCb           m_num_content_cb;
-
-    void on_object_content( const dsstring& p_owner_id, const dsstring& p_id );
-    void on_array_content( const dsstring& p_owner_id, const dsstring& p_id );
-    void on_string_content( const dsstring& p_owner_id, const dsstring& p_id, const dsstring& p_str );
-    void on_num_content( const dsstring& p_owner_id, const dsstring& p_id, dsreal p_val );
+    DrawSpace::Utils::JSONParser::UserData* on_object_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id );
+    DrawSpace::Utils::JSONParser::UserData* on_array_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id );
+    DrawSpace::Utils::JSONParser::UserData* on_array_object_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, int p_index );
+    DrawSpace::Utils::JSONParser::UserData* on_string_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, const dsstring& p_str );
+    DrawSpace::Utils::JSONParser::UserData* on_num_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, dsreal p_val );
 
 public:
     Factory( void );

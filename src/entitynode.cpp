@@ -33,7 +33,10 @@ using namespace DrawSpace::EntityGraph;
 EntityNode::EntityNode( void ) :
     m_tree_node( NULL ),
     m_owner_graph( NULL )
-    //m_nodesevt_handlers( NULL )
+{
+}
+
+EntityNode::~EntityNode( void )
 {
 }
 
@@ -41,12 +44,9 @@ EntityNode::EntityNode( void ) :
 EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector<EntityNode::EventsHandler*>* p_nodesevt_handlers*/ EntityNodeGraph* p_owner ) :
 	m_tree_node(p_node),
     m_owner_graph( p_owner )
-    //m_nodesevt_handlers( p_nodesevt_handlers )
 {
     // si on passe dans ce ctor c'est que l'entitee a �t� ajout�e au graph
     // donc notif de l'evt
-    //for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
-
     std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
     for( auto it = nodesevt_handlers.begin(); it != nodesevt_handlers.end(); ++it )
     {
@@ -66,7 +66,6 @@ EntityNode EntityNode::AddChild(Entity* p_entity)
     }
 
 	EntityTree::node_type::iterator it = m_tree_node->insert( p_entity );
-	//EntityNode node(&(*it), m_nodesevt_handlers );
     EntityNode node(&(*it), m_owner_graph );
 	return node;
 }

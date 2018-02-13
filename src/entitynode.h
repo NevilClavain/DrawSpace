@@ -34,7 +34,7 @@ namespace DrawSpace
 namespace EntityGraph
 {
 class EntityNodeGraph;
-class EntityNode sealed
+class EntityNode
 {
 public:
 
@@ -47,21 +47,20 @@ public:
 
     typedef DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>        EventsHandler;
    
-
+    // no need of copy ctor, because m_tree_node and m_owner_graph are shared by all instances
+    // (they represent not private resources as it's the case in RAII for example)
 private:
 	using EntityTree = st_tree::tree<Core::Entity*>;
 
 	EntityTree::node_type*                      m_tree_node;
-    //std::vector<EntityNode::EventsHandler*>*    m_nodesevt_handlers;
-
     EntityNodeGraph*                            m_owner_graph;
 
-
     // personne n'a le droit d'appeler ce ctor directement hormis EntityNodeGraph (friend)
-    EntityNode( EntityTree::node_type* p_node, /*std::vector<EntityNode::EventsHandler*>* p_nodesevt_handlers*/ EntityNodeGraph* p_owner );
+    EntityNode( EntityTree::node_type* p_node, EntityNodeGraph* p_owner );
 
 public:
     EntityNode( void );
+    ~EntityNode( void );
 
 	EntityNode AddChild( Core::Entity* p_entity );
 	void Erase( void );

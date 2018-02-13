@@ -38,11 +38,19 @@ class JSONParser
 {
 public:
 
+    struct UserData abstract {};
 
-    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>                      ObjectContentEventHandler;
-    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>                      ArrayContentEventHandler;
-    typedef DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, const dsstring&>     StringContentEventHandler;
-    typedef DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, dsreal>              NumericContentEventHandler;
+    template<typename T>
+    struct UserDataImpl : public UserData
+    {
+        T m_data;
+    };
+
+    typedef DrawSpace::Core::BaseCallback3<UserData*, UserData*, const dsstring&, const dsstring&>                      ObjectContentEventHandler;
+    typedef DrawSpace::Core::BaseCallback3<UserData*, UserData*, const dsstring&, int>                                  ArrayObjectContentEventHandler;
+    typedef DrawSpace::Core::BaseCallback3<UserData*, UserData*, const dsstring&, const dsstring&>                      ArrayContentEventHandler;
+    typedef DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, const dsstring&>     StringContentEventHandler;
+    typedef DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, dsreal>              NumericContentEventHandler;
     
 
 protected:
@@ -52,14 +60,14 @@ protected:
 
 	jsmntok_t	    m_tokens[max_tokens];
 
-	int			    m_nb_tokens; // significatif seulement apr�s avoir appel� Parse() sans erreur;
+	int			    m_nb_tokens; // significatif seulement apres avoir appele Parse() sans erreur;
 	bool		    m_parse_success;
 
 	std::string     m_text;
 
     int             m_index;
 
-    void            recurs_analyze( const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
+    UserData*   recurs_analyze( UserData* p_user_data, const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
 
 public:
 	JSONParser( void );
@@ -71,7 +79,7 @@ public:
 	int		    GetTokenSize( int p_index );
 	void	    GetTokenString( int p_index, dsstring& p_out_tokentext );
 
-    void        AnalyzeTokens( ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
+    void        AnalyzeTokens( UserData* p_user_data, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
 
 };
 }
