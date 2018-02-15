@@ -166,7 +166,10 @@ void ProceduralSystem::visit_entity_on_init( Core::Entity* p_parent, Core::Entit
                 parent_procedural_aspect->GetComponentsByType<ProceduralAspect::ProceduralBloc*>( parent_blocs );
                
                 // connecter le bloc procedural a son pere (il est un "argument" a celui ci")
-                parent_blocs[0]->getPurpose()->m_args.push_back( blocs[0]->getPurpose() );
+                if( blocs.size() > 0 )
+                {
+                    parent_blocs[0]->getPurpose()->m_args.push_back( blocs[0]->getPurpose() );
+                }
             }            
         }
     }
