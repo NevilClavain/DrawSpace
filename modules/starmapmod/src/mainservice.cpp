@@ -37,7 +37,8 @@ _DECLARE_DS_LOGGER( logger, "star_map_mainservice", NULL )
 MainService::MainService( void ) :
 m_left_mousebutton( false ),
 m_right_mousebutton( false ),
-m_procedural_publication_evt_cb( this, &MainService::on_procedural_publication )
+m_procedural_publication_evt_cb( this, &MainService::on_procedural_publication ),
+m_entityFactory( m_systemsHub )
 {
     ProceduralAspect::SeedSourceProceduralBloc::m_seed = 123;
 }

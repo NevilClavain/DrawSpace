@@ -32,29 +32,28 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
 
-Factory::Factory( void ) :
+Factory::Factory( DrawSpace::Systems::Hub& p_hub ) :
 m_object_content_cb( this, &Factory::on_object_content ),
 m_array_content_cb( this, &Factory::on_array_content ),
 m_array_object_content_cb( this, &Factory::on_array_object_content ),
 m_string_content_cb( this, &Factory::on_string_content ),
-m_num_content_cb( this, &Factory::on_num_content )
+m_num_content_cb( this, &Factory::on_num_content ),
+m_hub( p_hub )
 {
 }
 
 bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node )
-{    
+{
     JSONParser parser;
-
     parser.ParseFromFile( p_filepath );
     
     m_parser_data.clear();
-    
-    ParserData parser_data;
-    EntityData entity_data;
-    entity_data.first = p_node;
-    entity_data.second = NULL;
-    parser_data.m_data = entity_data;
-    
+
+    ParserDataImpl parser_data;
+    parser_data.m_data.m_parser_state = EXPECT_ENTITY_DECL;
+    parser_data.m_data.m_entity_data.first = p_node;
+    parser_data.m_data.m_entity_data.second = NULL;
+
     parser.AnalyzeTokens( &parser_data, &m_object_content_cb, &m_array_content_cb, &m_array_object_content_cb, &m_string_content_cb, &m_num_content_cb );
     
     return true;
@@ -62,30 +61,63 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
 
 JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id )
 {
-    if( "Entity" == p_id )
+    ParserDataImpl* parent_parser_data = static_cast<ParserDataImpl*>( p_userdata );
+    ParserState parser_state = parent_parser_data->m_data.m_parser_state;
+
+    switch( parser_state )
     {
-        ParserData* parent_parser_data = static_cast<ParserData*>( p_userdata );
-        
-        DrawSpace::Core::Entity* entity = _DRAWSPACE_NEW_( DrawSpace::Core::Entity, DrawSpace::Core::Entity );
-        DrawSpace::EntityGraph::EntityNode node = parent_parser_data->m_data.first.AddChild( entity );
+        case EXPECT_ENTITY_DECL:
+        {
+            if( "Entity" == p_id )
+            {        
+                DrawSpace::Core::Entity* entity = _DRAWSPACE_NEW_( DrawSpace::Core::Entity, DrawSpace::Core::Entity );
+                DrawSpace::EntityGraph::EntityNode node = parent_parser_data->m_data.m_entity_data.first.AddChild( entity );
 
-        ParserData parser_data;
-        EntityData entity_data;
-        entity_data.first = node;
-        entity_data.second = entity;
-        parser_data.m_data = entity_data;
+                ParserDataImpl parser_data;
+                parser_data.m_data.m_parser_state = EXPECT_ENTITY_ARGS;
+                parser_data.m_data.m_entity_data.first = node;
+                parser_data.m_data.m_entity_data.second = entity;
 
-        m_parser_data.push_back( parser_data );
+                m_parser_data.push_back( parser_data );
 
-        JSONParser::UserData* userdata = &m_parser_data.back();
-        return userdata;
-    }
-    else if( "ProceduralAspect" == p_id )
-    {
-        ParserData* parent_parser_data = static_cast<ParserData*>( p_userdata );
-        DrawSpace::Core::Entity* entity = parent_parser_data->m_data.second;
+                JSONParser::UserData* userdata = &m_parser_data.back();
+                return userdata;
+            }                
+        }
+        break;
 
-        entity->AddAspect<ProceduralAspect>();    
+        case EXPECT_ASPECT_ARGS:
+        {
+            if( "ProceduralAspect" == p_id )
+            {
+                DrawSpace::Core::Entity* entity = parent_parser_data->m_data.m_entity_data.second;
+                entity->AddAspect<ProceduralAspect>();
+
+                ParserDataImpl parser_data;
+                parser_data.m_data.m_parser_state = EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL;
+                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+
+                m_parser_data.push_back( parser_data );
+
+                JSONParser::UserData* userdata = &m_parser_data.back();
+                return userdata;
+            }   
+        }
+        break;
+
+        case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
+        {
+            if( "RootProceduralBloc" == p_id )
+            {
+                ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+
+                dsstring procedural_group_id = parent_parser_data->m_data.m_procedural_group_id;
+
+                procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "root", m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::RootProceduralBloc>( procedural_group_id ) );
+            }
+        }
+
     }
 
     return p_userdata;
@@ -93,6 +125,57 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
 
 JSONParser::UserData* Factory::on_array_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id )
 {
+    ParserDataImpl* parent_parser_data = static_cast<ParserDataImpl*>( p_userdata );
+    ParserState parser_state = parent_parser_data->m_data.m_parser_state;
+
+    switch( parser_state )
+    {
+        case EXPECT_ENTITY_ARGS:
+        {
+            if( "Aspects" == p_id )
+            {
+                ParserDataImpl parser_data;
+                parser_data.m_data.m_parser_state = EXPECT_ASPECT_ARGS;
+                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+
+                m_parser_data.push_back( parser_data );
+
+                JSONParser::UserData* userdata = &m_parser_data.back();
+                return userdata;           
+            }
+            else if( "Children" == p_id )
+            {
+                ParserDataImpl parser_data;
+                parser_data.m_data.m_parser_state = EXPECT_ENTITY_DECL;
+                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+
+                m_parser_data.push_back( parser_data );
+
+                JSONParser::UserData* userdata = &m_parser_data.back();
+                return userdata;
+            }
+        }
+        break;
+
+        case EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL:
+        {
+            if( "Components" == p_id )
+            {
+                ParserDataImpl parser_data;
+                parser_data.m_data.m_parser_state = EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS;
+                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+
+                m_parser_data.push_back( parser_data );
+
+                JSONParser::UserData* userdata = &m_parser_data.back();
+                return userdata;            
+            }        
+        }
+    }
+
     return p_userdata;
 }
 
@@ -103,11 +186,30 @@ JSONParser::UserData* Factory::on_array_object_content( JSONParser::UserData* p_
 
 JSONParser::UserData* Factory::on_string_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, const dsstring& p_str )
 {
-    if( "Id" == p_id )
-    {
-        ParserData* parent_parser_data = static_cast<ParserData*>( p_userdata );
+    ParserDataImpl* parent_parser_data = static_cast<ParserDataImpl*>( p_userdata );
+    ParserState parser_state = parent_parser_data->m_data.m_parser_state;
 
-        m_nodes[p_str] = parent_parser_data->m_data;
+    switch( parser_state )
+    {
+        case EXPECT_ENTITY_ARGS:
+        {
+            if( "Id" == p_id )
+            {
+                m_nodes[p_str] = parent_parser_data->m_data.m_entity_data;
+            }
+        }
+        break;
+
+        case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
+        {
+            if( "String" == p_id )
+            {
+                ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+                procedural_aspect->AddComponent<dsstring>( "name", p_str );
+
+                parent_parser_data->m_data.m_procedural_group_id = p_str;
+            }
+        }
     }
     return p_userdata;
 }

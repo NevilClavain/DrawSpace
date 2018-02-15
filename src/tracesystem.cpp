@@ -43,26 +43,6 @@ class ClassDump
 public:
     static dsstring m_text;
 
-    /*
-    template<typename T>
-    static void Dump( DrawSpace::Core::Aspect* p_aspect )
-    {
-        if( dynamic_cast<T*>( p_aspect ) )
-        {
-            m_text = typeid(T).name();
-        }     
-    }
-
-    template<typename T>
-    static void Dump( DrawSpace::Aspect::ProceduralAspect::ProceduralBloc* p_bloc )
-    {
-        if( dynamic_cast<T*>( p_bloc ) )
-        {
-            m_text = typeid(T).name();
-        }     
-    }
-    */
-
     template<typename BaseClass, typename T>
     static void Dump( BaseClass* p_bloc )
     {
@@ -150,10 +130,9 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
             ClassDump::m_text = "unknown";
 
             ComponentList<Aspect::ProceduralAspect::ProceduralBloc*> components;
-
             procedural_aspect->GetComponentsByType<Aspect::ProceduralAspect::ProceduralBloc*>( components );
 
-            _DSDEBUG( logger, dsstring ( "procedural aspect has " ) << components.size() << dsstring( " component(s)" ) )
+            _DSDEBUG( logger, dsstring ( "procedural aspect has " ) << components.size() << dsstring( " procedural component(s)" ) )
 
             for( size_t j = 0; j < components.size(); j++ )
             {
@@ -205,6 +184,27 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
                             if( preal )
                             {
                                 _DSDEBUG( logger, dsstring ( "value = " ) << preal->GetValue() );
+                            }
+                            else
+                            {
+                                Aspect::ProceduralAspect::RootProceduralBloc* proot = dynamic_cast<Aspect::ProceduralAspect::RootProceduralBloc*>( components[j]->getPurpose() );
+
+                                if( proot )
+                                {
+                                    // chercher le component de type string qui doit normalement accompagner ce component procedural root
+
+                                    ComponentList<dsstring> components_string;
+                                    procedural_aspect->GetComponentsByType<dsstring>( components_string );
+
+                                    if( components_string.size() > 0 )
+                                    {
+                                        _DSDEBUG( logger, dsstring ( "string component = " ) << components_string[0]->getPurpose() );
+                                    }
+                                    else
+                                    {
+                                        _DSDEBUG( logger, dsstring ( "WARNING ! no string component found with procedural root !!" ) );    
+                                    }
+                                }                     
                             }
                         }                    
                     }                

@@ -27,6 +27,7 @@
 
 #include "entitynodegraph.h"
 #include "jsonparser.h"
+#include "hub.h"
 
 namespace DrawSpace
 {
@@ -42,24 +43,34 @@ protected:
     using NumericContentEventCb = DrawSpace::Core::CallBack4<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&, dsreal>;
     
     using EntityData = std::pair<DrawSpace::EntityGraph::EntityNode, DrawSpace::Core::Entity*>;
-    using ParserData = DrawSpace::Utils::JSONParser::UserDataImpl<EntityData>;
     
-
     using ParserState = enum
     {
         EXPECT_ENTITY_DECL,
         EXPECT_ENTITY_ARGS,
+        EXPECT_ASPECT_ARGS,
+        EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL,
+        EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS
     };
-    
-    //ParserState                                                         m_parser_state;  
-    
+
+    struct ParserData
+    {
+        EntityData  m_entity_data;
+        ParserState m_parser_state;
+        dsstring    m_procedural_group_id;
+    };
+        
+    using ParserDataImpl = DrawSpace::Utils::JSONParser::UserDataImpl<ParserData>;
+
     ObjectContentEventCb                                                m_object_content_cb;
     ArrayContentEventCb                                                 m_array_content_cb;
     ArrayObjectContentEventCb                                           m_array_object_content_cb;
     StringContentEventCb                                                m_string_content_cb;
     NumericContentEventCb                                               m_num_content_cb;
 
-    std::list<ParserData>                                               m_parser_data;
+    DrawSpace::Systems::Hub&                                            m_hub;
+
+    std::list<ParserDataImpl>                                           m_parser_data;
     std::map<dsstring, EntityData>                                      m_nodes;
 
     DrawSpace::Utils::JSONParser::UserData* on_object_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id );
@@ -69,7 +80,7 @@ protected:
     DrawSpace::Utils::JSONParser::UserData* on_num_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, dsreal p_val );
 
 public:
-    Factory( void );
+    Factory( DrawSpace::Systems::Hub& p_hub );
     bool BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node );
 
 };
