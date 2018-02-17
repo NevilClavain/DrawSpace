@@ -108,16 +108,11 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
 
         case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
         {
-            if( "RootProceduralBloc" == p_id )
+            if( "PublishProceduralBloc" == p_id )
             {
-                ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
-
-                dsstring procedural_group_id = parent_parser_data->m_data.m_procedural_group_id;
-
-                procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "root", m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::RootProceduralBloc>( procedural_group_id ) );
             }
         }
-
+        break;
     }
 
     return p_userdata;
@@ -202,14 +197,15 @@ JSONParser::UserData* Factory::on_string_content( JSONParser::UserData* p_userda
 
         case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
         {
-            if( "String" == p_id )
+            if( "RootProceduralBloc" == p_id )
             {
                 ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
                 procedural_aspect->AddComponent<dsstring>( "name", p_str );
-
+                procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "root", m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::RootProceduralBloc>( p_str ) );
                 parent_parser_data->m_data.m_procedural_group_id = p_str;
             }
         }
+            break;
     }
     return p_userdata;
 }
