@@ -62,16 +62,18 @@ protected:
         
     using ParserDataImpl = DrawSpace::Utils::JSONParser::UserDataImpl<ParserData>;
 
-    ObjectContentEventCb                                                m_object_content_cb;
-    ArrayContentEventCb                                                 m_array_content_cb;
-    ArrayObjectContentEventCb                                           m_array_object_content_cb;
-    StringContentEventCb                                                m_string_content_cb;
-    NumericContentEventCb                                               m_num_content_cb;
+    ObjectContentEventCb                                                            m_object_content_cb;
+    ArrayContentEventCb                                                             m_array_content_cb;
+    ArrayObjectContentEventCb                                                       m_array_object_content_cb;
+    StringContentEventCb                                                            m_string_content_cb;
+    NumericContentEventCb                                                           m_num_content_cb;
 
-    DrawSpace::Systems::Hub&                                            m_hub;
+    DrawSpace::Systems::Hub&                                                        m_hub;
 
-    std::list<ParserDataImpl>                                           m_parser_data;
-    std::map<dsstring, EntityData>                                      m_nodes;
+    std::list<ParserDataImpl>                                                       m_parser_data;
+    std::map<dsstring, EntityData>                                                  m_nodes;
+
+    DrawSpace::Aspect::ProceduralAspect::PublishProceduralBloc::ProceduralPublicationEventHandler*     m_pub_evt_handlers;
 
     DrawSpace::Utils::JSONParser::UserData* on_object_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id );
     DrawSpace::Utils::JSONParser::UserData* on_array_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id );
@@ -81,7 +83,7 @@ protected:
 
 public:
     Factory( DrawSpace::Systems::Hub& p_hub );
-    bool BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node );
+    bool BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node, DrawSpace::Aspect::ProceduralAspect::PublishProceduralBloc::ProceduralPublicationEventHandler* p_pub_evt_handler );
 
 };
 }

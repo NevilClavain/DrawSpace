@@ -42,7 +42,7 @@ m_hub( p_hub )
 {
 }
 
-bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node )
+bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGraph::EntityNode& p_node, ProceduralAspect::PublishProceduralBloc::ProceduralPublicationEventHandler* p_pub_evt_handler )
 {
     JSONParser parser;
     parser.ParseFromFile( p_filepath );
@@ -53,6 +53,8 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
     parser_data.m_data.m_parser_state = EXPECT_ENTITY_DECL;
     parser_data.m_data.m_entity_data.first = p_node;
     parser_data.m_data.m_entity_data.second = NULL;
+
+    m_pub_evt_handlers = p_pub_evt_handler;
 
     parser.AnalyzeTokens( &parser_data, &m_object_content_cb, &m_array_content_cb, &m_array_object_content_cb, &m_string_content_cb, &m_num_content_cb );
     
@@ -221,6 +223,7 @@ JSONParser::UserData* Factory::on_string_content( JSONParser::UserData* p_userda
         {
             ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
             ProceduralAspect::PublishProceduralBloc* pub = m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::PublishProceduralBloc>( p_str, p_id );
+            pub->m_proc_pub_evt_handlers.insert( m_pub_evt_handlers );
             procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( p_id, pub );
         }
         break;

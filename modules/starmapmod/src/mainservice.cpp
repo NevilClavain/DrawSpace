@@ -187,7 +187,7 @@ bool MainService::Init( void )
 
     /////////////////////// arbre procedural /////////////////////////////////////////////////////////////////////////
 
-    m_entityFactory.BuildFromFile( "stars.json", m_rootEntityNode );
+    m_entityFactory.BuildFromFile( "stars.json", m_rootEntityNode, &m_procedural_publication_evt_cb );
 
     /*
     procedural_aspect = m_procRootEntity.AddAspect<ProceduralAspect>();
