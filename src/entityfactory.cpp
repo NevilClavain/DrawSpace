@@ -106,6 +106,7 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
         }
         break;
 
+        
         case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
         {
             if( "PublishProceduralBloc" == p_id )
@@ -122,6 +123,7 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
             }
         }
         break;
+        
     }
 
     return p_userdata;
@@ -211,18 +213,18 @@ JSONParser::UserData* Factory::on_string_content( JSONParser::UserData* p_userda
                 ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
                 procedural_aspect->AddComponent<dsstring>( "name", p_str );
                 procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( "root", m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::RootProceduralBloc>( p_str ) );
-                parent_parser_data->m_data.m_procedural_group_id = p_str;
             }
         }
         break;
-
+        
         case EXPECT_PROCEDURAL_PUBLISHER_ARGS:
         {
             ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
-            ProceduralAspect::PublishProceduralBloc* pub = m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::PublishProceduralBloc>( parent_parser_data->m_data.m_procedural_group_id, p_str );
+            ProceduralAspect::PublishProceduralBloc* pub = m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::PublishProceduralBloc>( p_str, p_id );
             procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( p_id, pub );
         }
         break;
+        
     }
     return p_userdata;
 }

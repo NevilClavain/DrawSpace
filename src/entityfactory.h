@@ -58,7 +58,6 @@ protected:
     {
         EntityData  m_entity_data;
         ParserState m_parser_state;
-        dsstring    m_procedural_group_id;
     };
         
     using ParserDataImpl = DrawSpace::Utils::JSONParser::UserDataImpl<ParserData>;
