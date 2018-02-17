@@ -110,6 +110,15 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
         {
             if( "PublishProceduralBloc" == p_id )
             {
+                ParserDataImpl parser_data;
+                parser_data.m_data.m_parser_state = EXPECT_PROCEDURAL_PUBLISHER_ARGS;
+                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+
+                m_parser_data.push_back( parser_data );
+
+                JSONParser::UserData* userdata = &m_parser_data.back();
+                return userdata;
             }
         }
         break;
@@ -205,7 +214,15 @@ JSONParser::UserData* Factory::on_string_content( JSONParser::UserData* p_userda
                 parent_parser_data->m_data.m_procedural_group_id = p_str;
             }
         }
-            break;
+        break;
+
+        case EXPECT_PROCEDURAL_PUBLISHER_ARGS:
+        {
+            ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+            ProceduralAspect::PublishProceduralBloc* pub = m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::PublishProceduralBloc>( parent_parser_data->m_data.m_procedural_group_id, p_str );
+            procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( p_id, pub );
+        }
+        break;
     }
     return p_userdata;
 }
