@@ -36,9 +36,9 @@ namespace EntityGraph
 class Factory
 {
 protected:
-    using ObjectContentEventCb = DrawSpace::Core::CallBack3<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&>;
-    using ArrayContentEventCb = DrawSpace::Core::CallBack3<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&>;
-    using ArrayObjectContentEventCb = DrawSpace::Core::CallBack3<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, int>;
+    using ObjectContentEventCb = DrawSpace::Core::CallBack4<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&, DrawSpace::Utils::JSONParser::ParseState>;
+    using ArrayContentEventCb = DrawSpace::Core::CallBack4<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&, DrawSpace::Utils::JSONParser::ParseState>;
+    using ArrayObjectContentEventCb = DrawSpace::Core::CallBack4<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, int, DrawSpace::Utils::JSONParser::ParseState>;
     using StringContentEventCb = DrawSpace::Core::CallBack4<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&, const dsstring&>;
     using NumericContentEventCb = DrawSpace::Core::CallBack4<Factory, DrawSpace::Utils::JSONParser::UserData*, DrawSpace::Utils::JSONParser::UserData*, const dsstring&, const dsstring&, dsreal>;
     
@@ -51,7 +51,7 @@ protected:
         EXPECT_ASPECT_ARGS,
         EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL,
         EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS,
-        EXPECT_PROCEDURAL_PUBLISHER_ARGS
+        /*EXPECT_PROCEDURAL_PUBLISHER_ARGS*/        
     };
 
     struct ParserData
@@ -73,11 +73,15 @@ protected:
     std::list<ParserDataImpl>                                                       m_parser_data;
     std::map<dsstring, EntityData>                                                  m_nodes;
 
+
+    std::map<dsstring, dsstring>                                                    m_procedural_bloc_strings_args;
+    std::map<dsstring, dsreal>                                                      m_procedural_bloc_num_args;
+
     DrawSpace::Aspect::ProceduralAspect::PublishProceduralBloc::ProceduralPublicationEventHandler*     m_pub_evt_handlers;
 
-    DrawSpace::Utils::JSONParser::UserData* on_object_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id );
-    DrawSpace::Utils::JSONParser::UserData* on_array_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id );
-    DrawSpace::Utils::JSONParser::UserData* on_array_object_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, int p_index );
+    DrawSpace::Utils::JSONParser::UserData* on_object_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, DrawSpace::Utils::JSONParser::ParseState p_parser_state );
+    DrawSpace::Utils::JSONParser::UserData* on_array_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, DrawSpace::Utils::JSONParser::ParseState p_parser_state );
+    DrawSpace::Utils::JSONParser::UserData* on_array_object_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, int p_index, DrawSpace::Utils::JSONParser::ParseState p_parser_state );
     DrawSpace::Utils::JSONParser::UserData* on_string_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, const dsstring& p_str );
     DrawSpace::Utils::JSONParser::UserData* on_num_content( DrawSpace::Utils::JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, dsreal p_val );
 

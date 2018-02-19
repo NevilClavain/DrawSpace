@@ -61,7 +61,7 @@ bool Factory::BuildFromFile( const std::string& p_filepath, DrawSpace::EntityGra
     return true;
 }
 
-JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id )
+JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, JSONParser::ParseState p_parser_state )
 {
     ParserDataImpl* parent_parser_data = static_cast<ParserDataImpl*>( p_userdata );
     ParserState parser_state = parent_parser_data->m_data.m_parser_state;
@@ -71,19 +71,22 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
         case EXPECT_ENTITY_DECL:
         {
             if( "Entity" == p_id )
-            {        
-                DrawSpace::Core::Entity* entity = _DRAWSPACE_NEW_( DrawSpace::Core::Entity, DrawSpace::Core::Entity );
-                DrawSpace::EntityGraph::EntityNode node = parent_parser_data->m_data.m_entity_data.first.AddChild( entity );
+            {
+                if( JSONParser::JSON_NODE_PARSE_BEGIN == p_parser_state )
+                {
+                    DrawSpace::Core::Entity* entity = _DRAWSPACE_NEW_( DrawSpace::Core::Entity, DrawSpace::Core::Entity );
+                    DrawSpace::EntityGraph::EntityNode node = parent_parser_data->m_data.m_entity_data.first.AddChild( entity );
 
-                ParserDataImpl parser_data;
-                parser_data.m_data.m_parser_state = EXPECT_ENTITY_ARGS;
-                parser_data.m_data.m_entity_data.first = node;
-                parser_data.m_data.m_entity_data.second = entity;
+                    ParserDataImpl parser_data;
+                    parser_data.m_data.m_parser_state = EXPECT_ENTITY_ARGS;
+                    parser_data.m_data.m_entity_data.first = node;
+                    parser_data.m_data.m_entity_data.second = entity;
 
-                m_parser_data.push_back( parser_data );
+                    m_parser_data.push_back( parser_data );
 
-                JSONParser::UserData* userdata = &m_parser_data.back();
-                return userdata;
+                    JSONParser::UserData* userdata = &m_parser_data.back();
+                    return userdata;
+                }
             }                
         }
         break;
@@ -92,37 +95,99 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
         {
             if( "ProceduralAspect" == p_id )
             {
-                DrawSpace::Core::Entity* entity = parent_parser_data->m_data.m_entity_data.second;
-                entity->AddAspect<ProceduralAspect>();
+                if( JSONParser::JSON_NODE_PARSE_BEGIN == p_parser_state )
+                {
+                    DrawSpace::Core::Entity* entity = parent_parser_data->m_data.m_entity_data.second;
+                    entity->AddAspect<ProceduralAspect>();
 
-                ParserDataImpl parser_data;
-                parser_data.m_data.m_parser_state = EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL;
-                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
-                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+                    ParserDataImpl parser_data;
+                    parser_data.m_data.m_parser_state = EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL;
+                    parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                    parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
 
-                m_parser_data.push_back( parser_data );
+                    m_parser_data.push_back( parser_data );
 
-                JSONParser::UserData* userdata = &m_parser_data.back();
-                return userdata;
+                    JSONParser::UserData* userdata = &m_parser_data.back();
+                    return userdata;
+                }
             }   
         }
         break;
-
         
         case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
         {
-            if( "PublishProceduralBloc" == p_id )
+            if( "RootProceduralBloc" == p_id )
             {
-                ParserDataImpl parser_data;
-                parser_data.m_data.m_parser_state = EXPECT_PROCEDURAL_PUBLISHER_ARGS;
-                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
-                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+                if( JSONParser::JSON_NODE_PARSE_END == p_parser_state )
+                {
+                    if( m_procedural_bloc_strings_args.count( "Group" ) && m_procedural_bloc_strings_args.count( "BlocId" ) )
+                    {
+                        dsstring group = m_procedural_bloc_strings_args["Group"];
+                        dsstring BlocId = m_procedural_bloc_strings_args["BlocId"];
+                   
+                        ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+                        procedural_aspect->AddComponent<dsstring>( "name", group );
+                        procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( BlocId, m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::RootProceduralBloc>( group ) );
 
-                m_parser_data.push_back( parser_data );
 
-                JSONParser::UserData* userdata = &m_parser_data.back();
-                return userdata;
+                        m_procedural_bloc_strings_args.clear();
+                    }
+                }
             }
+            else if( "RepProceduralBloc" == p_id )
+            {
+                if( JSONParser::JSON_NODE_PARSE_END == p_parser_state )
+                {
+                    if( m_procedural_bloc_strings_args.count( "Group" ) && m_procedural_bloc_strings_args.count( "BlocId" ) )
+                    {
+                        dsstring group = m_procedural_bloc_strings_args["Group"];
+                        dsstring BlocId = m_procedural_bloc_strings_args["BlocId"];
+                   
+                        ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+
+                        procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( BlocId, m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::RepeatProceduralBloc<int>>( group ) );
+
+                        m_procedural_bloc_strings_args.clear();
+                    }
+                }
+            }
+            else if( "IntegerProceduralBloc" == p_id )
+            {
+                if( JSONParser::JSON_NODE_PARSE_END == p_parser_state )
+                {
+                    if( m_procedural_bloc_strings_args.count( "Group" ) && m_procedural_bloc_strings_args.count( "BlocId" ) &&  
+                        m_procedural_bloc_num_args.count( "Value" ) )
+                    {
+                        dsstring group = m_procedural_bloc_strings_args["Group"];
+                        dsstring BlocId = m_procedural_bloc_strings_args["BlocId"];
+                        int nb_loop = m_procedural_bloc_num_args["Value"];
+                   
+                        ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+
+                        procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( BlocId, m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::SimpleValueProceduralBloc<long>>( group, nb_loop ) );
+
+                        m_procedural_bloc_strings_args.clear();
+                    }
+                }            
+            }
+            else if( "PublishProceduralBloc" == p_id )
+            {
+                if( JSONParser::JSON_NODE_PARSE_END == p_parser_state )
+                {
+                    if( m_procedural_bloc_strings_args.count( "Group" ) && m_procedural_bloc_strings_args.count( "BlocId" ) &&  
+                        m_procedural_bloc_strings_args.count( "MessageId" ) )
+                    {
+                        dsstring group = m_procedural_bloc_strings_args["Group"];
+                        dsstring BlocId = m_procedural_bloc_strings_args["BlocId"];
+                        dsstring MessageId = m_procedural_bloc_strings_args["MessageId"];
+
+                        ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+                        ProceduralAspect::PublishProceduralBloc* pub = m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::PublishProceduralBloc>( group, MessageId );
+                        pub->m_proc_pub_evt_handlers.insert( m_pub_evt_handlers );
+                        procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( BlocId, pub );
+                    }
+                }                
+            }            
         }
         break;
         
@@ -131,63 +196,65 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
     return p_userdata;
 }
 
-JSONParser::UserData* Factory::on_array_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id )
+JSONParser::UserData* Factory::on_array_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, JSONParser::ParseState p_parser_state )
 {
-    ParserDataImpl* parent_parser_data = static_cast<ParserDataImpl*>( p_userdata );
-    ParserState parser_state = parent_parser_data->m_data.m_parser_state;
-
-    switch( parser_state )
+    if( JSONParser::JSON_NODE_PARSE_BEGIN == p_parser_state )
     {
-        case EXPECT_ENTITY_ARGS:
+        ParserDataImpl* parent_parser_data = static_cast<ParserDataImpl*>( p_userdata );
+        ParserState parser_state = parent_parser_data->m_data.m_parser_state;
+
+        switch( parser_state )
         {
-            if( "Aspects" == p_id )
+            case EXPECT_ENTITY_ARGS:
             {
-                ParserDataImpl parser_data;
-                parser_data.m_data.m_parser_state = EXPECT_ASPECT_ARGS;
-                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
-                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+                if( "Aspects" == p_id )
+                {
+                    ParserDataImpl parser_data;
+                    parser_data.m_data.m_parser_state = EXPECT_ASPECT_ARGS;
+                    parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                    parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
 
-                m_parser_data.push_back( parser_data );
+                    m_parser_data.push_back( parser_data );
 
-                JSONParser::UserData* userdata = &m_parser_data.back();
-                return userdata;           
+                    JSONParser::UserData* userdata = &m_parser_data.back();
+                    return userdata;           
+                }
+                else if( "Children" == p_id )
+                {
+                    ParserDataImpl parser_data;
+                    parser_data.m_data.m_parser_state = EXPECT_ENTITY_DECL;
+                    parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                    parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+
+                    m_parser_data.push_back( parser_data );
+
+                    JSONParser::UserData* userdata = &m_parser_data.back();
+                    return userdata;
+                }
             }
-            else if( "Children" == p_id )
+            break;
+
+            case EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL:
             {
-                ParserDataImpl parser_data;
-                parser_data.m_data.m_parser_state = EXPECT_ENTITY_DECL;
-                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
-                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+                if( "Components" == p_id )
+                {
+                    ParserDataImpl parser_data;
+                    parser_data.m_data.m_parser_state = EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS;
+                    parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                    parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
 
-                m_parser_data.push_back( parser_data );
+                    m_parser_data.push_back( parser_data );
 
-                JSONParser::UserData* userdata = &m_parser_data.back();
-                return userdata;
+                    JSONParser::UserData* userdata = &m_parser_data.back();
+                    return userdata;            
+                }        
             }
-        }
-        break;
-
-        case EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL:
-        {
-            if( "Components" == p_id )
-            {
-                ParserDataImpl parser_data;
-                parser_data.m_data.m_parser_state = EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS;
-                parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
-                parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
-
-                m_parser_data.push_back( parser_data );
-
-                JSONParser::UserData* userdata = &m_parser_data.back();
-                return userdata;            
-            }        
         }
     }
-
     return p_userdata;
 }
 
-JSONParser::UserData* Factory::on_array_object_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, int p_index )
+JSONParser::UserData* Factory::on_array_object_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, int p_index, JSONParser::ParseState p_parser_state )
 {
     return p_userdata;
 }
@@ -210,6 +277,12 @@ JSONParser::UserData* Factory::on_string_content( JSONParser::UserData* p_userda
 
         case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
         {
+            m_procedural_bloc_strings_args[p_id] = p_str;        
+        }
+
+        /*
+        case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
+        {
             if( "RootProceduralBloc" == p_id )
             {
                 ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
@@ -227,12 +300,23 @@ JSONParser::UserData* Factory::on_string_content( JSONParser::UserData* p_userda
             procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( p_id, pub );
         }
         break;
-        
+        */
     }
     return p_userdata;
 }
 
 JSONParser::UserData* Factory::on_num_content( JSONParser::UserData* p_userdata, const dsstring& p_owner_id, const dsstring& p_id, dsreal p_val )
 {
+    ParserDataImpl* parent_parser_data = static_cast<ParserDataImpl*>( p_userdata );
+    ParserState parser_state = parent_parser_data->m_data.m_parser_state;
+
+    switch( parser_state )
+    {
+        case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
+        {
+            m_procedural_bloc_num_args[p_id] = p_val;        
+        }
+
+    }
     return p_userdata;
 }

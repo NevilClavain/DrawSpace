@@ -38,6 +38,12 @@ class JSONParser
 {
 public:
 
+    using ParseState = enum
+    {
+        JSON_NODE_PARSE_BEGIN,
+        JSON_NODE_PARSE_END,
+    };
+
     struct UserData abstract {};
 
     template<typename T>
@@ -46,12 +52,13 @@ public:
         T m_data;
     };
 
-    typedef DrawSpace::Core::BaseCallback3<UserData*, UserData*, const dsstring&, const dsstring&>                      ObjectContentEventHandler;
-    typedef DrawSpace::Core::BaseCallback3<UserData*, UserData*, const dsstring&, int>                                  ArrayObjectContentEventHandler;
-    typedef DrawSpace::Core::BaseCallback3<UserData*, UserData*, const dsstring&, const dsstring&>                      ArrayContentEventHandler;
-    typedef DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, const dsstring&>     StringContentEventHandler;
-    typedef DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, dsreal>              NumericContentEventHandler;
+    using ObjectContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, ParseState>;
+    using ArrayObjectContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, int, ParseState>;
+    using ArrayContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, ParseState>;
+    using StringContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, const dsstring&>;
+    using NumericContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, dsreal>;
     
+
 
 protected:
 	static const int max_tokens = 1024;

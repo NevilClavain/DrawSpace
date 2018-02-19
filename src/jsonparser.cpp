@@ -145,19 +145,21 @@ JSONParser::UserData* JSONParser::recurs_analyze( JSONParser::UserData* p_user_d
     {
         case JSMN_OBJECT:
         {
-            JSONParser::UserData* sub_user_data = (*p_object_handler)( p_user_data, p_owner_id, id );
+            JSONParser::UserData* sub_user_data = (*p_object_handler)( p_user_data, p_owner_id, id, JSON_NODE_PARSE_BEGIN );
             m_index++;
             
             for( int i = 0; i < content_size; i++ )
             {
                 recurs_analyze( sub_user_data, id, p_object_handler, p_array_handler, p_array_object_handler, p_string_handler, p_num_handler );
             }
+
+            (*p_object_handler)( sub_user_data, p_owner_id, id, JSON_NODE_PARSE_END );
         }
         break;
 
         case JSMN_ARRAY:
         {
-            JSONParser::UserData* sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id );
+            JSONParser::UserData* sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id, JSON_NODE_PARSE_BEGIN );
             m_index++;
 
             for( int i = 0; i < content_size; i++ )
@@ -170,19 +172,24 @@ JSONParser::UserData* JSONParser::recurs_analyze( JSONParser::UserData* p_user_d
                     char comment[32];
                     sprintf( comment, "%s_%d", id.c_str(), i );
 
-                    JSONParser::UserData* sub_user_data2 = (*p_array_object_handler)( sub_user_data, id, i );
+                    sub_user_data = (*p_array_object_handler)( sub_user_data, id, i, JSON_NODE_PARSE_BEGIN );
                     m_index++;
 
                     for( int j = 0; j < sub_content_size; j++ )
                     {
-                        recurs_analyze( sub_user_data2, comment, p_object_handler, p_array_handler, p_array_object_handler, p_string_handler, p_num_handler );
-                    }                    
+                        recurs_analyze( sub_user_data, comment, p_object_handler, p_array_handler, p_array_object_handler, p_string_handler, p_num_handler );
+                    }
+
+                    sub_user_data = (*p_array_object_handler)( sub_user_data, id, i, JSON_NODE_PARSE_END );
                 }
                 else
                 {
+                    _DSEXCEPTION( "JSON Array content must be a JSON Object" )
                     // exception ici
                 }
             }
+
+            sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id, JSON_NODE_PARSE_END );
         }
         break;
 
@@ -203,7 +210,8 @@ JSONParser::UserData* JSONParser::recurs_analyze( JSONParser::UserData* p_user_d
             GetTokenString( m_index, value );
 
             dsreal fval = std::stof( value );
-            (*p_num_handler)( p_user_data, p_owner_id, id, fval );  
+            (*p_num_handler)( p_user_data, p_owner_id, id, fval );
+            m_index++;
         }
         break;
     }
