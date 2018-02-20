@@ -134,6 +134,23 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
                     }
                 }
             }
+            else if( "UniformRandomIntValueProceduralBloc" == p_id )
+            {
+                if( JSONParser::JSON_NODE_PARSE_END == p_parser_state )
+                {
+                    if( m_procedural_bloc_strings_args.count( "Group" ) && m_procedural_bloc_strings_args.count( "BlocId" ) )
+                    {
+                        dsstring group = m_procedural_bloc_strings_args["Group"];
+                        dsstring BlocId = m_procedural_bloc_strings_args["BlocId"];
+                   
+                        ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+                        procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( BlocId, m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::UniformRandomIntValueProceduralBloc<long>>( group ) );
+
+
+                        m_procedural_bloc_strings_args.clear();
+                    }
+                }
+            }
             else if( "RepProceduralBloc" == p_id )
             {
                 if( JSONParser::JSON_NODE_PARSE_END == p_parser_state )
