@@ -75,7 +75,7 @@ private:
 
     std::queue<Signals>                                         m_signals;
 
-    std::queue<dsstring>                                        m_proc_signals;
+
 
     bool                                                        m_dump_me;
 
@@ -103,7 +103,6 @@ public:
     void PushSignal_RenderSceneBegin( void );
     void PushSignal_RenderSceneEnd( void );
     void PushSignal_DumpToTrace( void );
-    void PushSignal_EvaluateProcedurals( const dsstring& p_procedural_id );
 
     void ProcessSignals( void );
 
