@@ -220,6 +220,29 @@ JSONParser::UserData* Factory::on_object_content( JSONParser::UserData* p_userda
                     }
                 }
             }
+            else if( "IntegerArrayProceduralBloc" == p_id )
+            {
+                if( JSONParser::JSON_NODE_PARSE_END == p_parser_state )
+                {  
+                    if( m_procedural_bloc_strings_args.count( "Group" ) && m_procedural_bloc_strings_args.count( "BlocId" ) )
+                    {
+
+                        dsstring group = m_procedural_bloc_strings_args["Group"];
+                        dsstring BlocId = m_procedural_bloc_strings_args["BlocId"];
+
+                        ProceduralAspect* procedural_aspect = parent_parser_data->m_data.m_entity_data.second->GetAspect<ProceduralAspect>();
+
+                        ProceduralAspect::ArrayProceduralBloc<int>* ar = m_hub.GetProceduralFactory().CreateBloc<ProceduralAspect::ArrayProceduralBloc<int>>( group );
+
+                        procedural_aspect->AddComponent<ProceduralAspect::ProceduralBloc*>( BlocId, ar );
+
+                        for( size_t i = 0; i < m_procedural_bloc_int_array_args.size(); i++ )
+                        {
+                            ar->PushValue( m_procedural_bloc_int_array_args[i] );
+                        }
+                    }
+                }            
+            }
         }
         break;
         
@@ -249,7 +272,7 @@ JSONParser::UserData* Factory::on_array_content( JSONParser::UserData* p_userdat
                     m_parser_data.push_back( parser_data );
 
                     JSONParser::UserData* userdata = &m_parser_data.back();
-                    return userdata;           
+                    return userdata;
                 }
                 else if( "Children" == p_id )
                 {
@@ -281,6 +304,24 @@ JSONParser::UserData* Factory::on_array_content( JSONParser::UserData* p_userdat
                     return userdata;            
                 }        
             }
+            break;
+
+            case EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS:
+            {
+                if( "IntegerArray" == p_id )
+                {
+                    ParserDataImpl parser_data;
+                    parser_data.m_data.m_parser_state = EXPECT_INT_ARRAY_ARGS;
+                    parser_data.m_data.m_entity_data.first = parent_parser_data->m_data.m_entity_data.first;
+                    parser_data.m_data.m_entity_data.second = parent_parser_data->m_data.m_entity_data.second;
+
+                    m_parser_data.push_back( parser_data );
+
+                    JSONParser::UserData* userdata = &m_parser_data.back();
+                    return userdata;                                
+                }
+            }
+            break;
         }
     }
     return p_userdata;
@@ -311,6 +352,7 @@ JSONParser::UserData* Factory::on_string_content( JSONParser::UserData* p_userda
         {
             m_procedural_bloc_strings_args[p_id] = p_str;        
         }
+        break;
     }
     return p_userdata;
 }
@@ -326,7 +368,13 @@ JSONParser::UserData* Factory::on_num_content( JSONParser::UserData* p_userdata,
         {
             m_procedural_bloc_num_args[p_id] = p_val;        
         }
+        break;
 
+        case EXPECT_INT_ARRAY_ARGS:
+        {
+            m_procedural_bloc_int_array_args.push_back( p_val );
+        }
+        break;
     }
     return p_userdata;
 }

@@ -50,7 +50,8 @@ protected:
         EXPECT_ENTITY_ARGS,
         EXPECT_ASPECT_ARGS,
         EXPECT_PROCEDURAL_ASPECT_COMPONENT_DECL,
-        EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS,      
+        EXPECT_PROCEDURAL_ASPECT_COMPONENT_ARGS,
+        EXPECT_INT_ARRAY_ARGS
     };
 
     struct ParserData
@@ -75,6 +76,7 @@ protected:
 
     std::map<dsstring, dsstring>                                                    m_procedural_bloc_strings_args;
     std::map<dsstring, dsreal>                                                      m_procedural_bloc_num_args;
+    std::vector<int>                                                                m_procedural_bloc_int_array_args;
 
     DrawSpace::Aspect::ProceduralAspect::PublishProceduralBloc::ProceduralPublicationEventHandler*     m_pub_evt_handlers;
 
