@@ -30,7 +30,6 @@
 #include "timesystem.h"
 #include "physicssystem.h"
 #include "rendersystem.h"
-#include "proceduralsystem.h"
 #include "tracesystem.h"
 
 namespace DrawSpace
@@ -47,10 +46,7 @@ public:
 
     } SystemsUpdateEvent;
 
-    typedef DrawSpace::Core::CallBack2<Hub, void, const dsstring&, Aspect::ProceduralAspect::ProceduralBloc*>     ProceduralPublicationEvtCb;
-
     typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>                                               SystemsUpdateEventHandler;
-    typedef DrawSpace::Core::BaseCallback2<void, const dsstring&, Aspect::ProceduralAspect::ProceduralBloc*>      ProceduralPublicationEventHandler;
     
 
 private:
@@ -58,17 +54,13 @@ private:
     DrawSpace::Systems::TransformSystem             m_transformSystem;
     DrawSpace::Systems::PhysicsSystem               m_physicsSystem;
     DrawSpace::Systems::TimeSystem                  m_timeSystem;
-    DrawSpace::Systems::ProceduralSystem            m_proceduralSystem;
     DrawSpace::Systems::TraceSystem                 m_traceSystem;
 
-    ProceduralPublicationEvtCb                      m_procedural_publication_evt_cb;
 
     std::vector<DrawSpace::Interface::System*>      m_systems;
 
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
-    std::set<ProceduralPublicationEventHandler*>    m_proc_pub_evt_handlers;
 
-    void on_procedural_publication( const dsstring& p_id, Aspect::ProceduralAspect::ProceduralBloc* );
 
 public:
     Hub( void );
@@ -83,11 +75,6 @@ public:
 
     void RegisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
     void UnregisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
-
-    void RegisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
-    void UnregisterProceduralPublicationEvtHandler( ProceduralPublicationEventHandler* p_handler );
-
-    Aspect::ProceduralAspect::ProceduralBlocsFactory& GetProceduralFactory( void );
 
 };
 }

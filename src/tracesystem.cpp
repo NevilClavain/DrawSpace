@@ -26,7 +26,6 @@
 #include "bodyaspect.h"
 #include "cameraaspect.h"
 #include "physicsaspect.h"
-#include "proceduralaspect.h"
 #include "renderingaspect.h"
 #include "timeaspect.h"
 #include "transformaspect.h"
@@ -87,9 +86,6 @@ void TraceSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
 }
 
 
-
-
-
 void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
 {
     _DSDEBUG( logger, " " )
@@ -115,104 +111,12 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
         ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::BodyAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::CameraAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::PhysicsAspect>( aspects[i] );
-        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::ProceduralAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::RenderingAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::TimeAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::TransformAspect>( aspects[i] );
 
         _DSDEBUG( logger, dsstring ( " aspect " ) << i << dsstring( " is " ) << ClassDump::m_text )
-
-        Aspect::ProceduralAspect* procedural_aspect = dynamic_cast<Aspect::ProceduralAspect*>( aspects[i] );
-
-        /////////////////////////////////dump detaille aspect procedural......
-        if( procedural_aspect )
-        {
-            ClassDump::m_text = "unknown";
-
-            ComponentList<Aspect::ProceduralAspect::ProceduralBloc*> components;
-            procedural_aspect->GetComponentsByType<Aspect::ProceduralAspect::ProceduralBloc*>( components );
-
-            _DSDEBUG( logger, dsstring ( "procedural aspect has " ) << components.size() << dsstring( " procedural component(s)" ) )
-
-            for( size_t j = 0; j < components.size(); j++ )
-            {
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::RootProceduralBloc>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SeedSourceProceduralBloc>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::PublishProceduralBloc>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<int>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<long>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<float>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<dsreal>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::SimpleValueProceduralBloc<dsstring>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::UniformRandomIntValueProceduralBloc<int>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::UniformRandomIntValueProceduralBloc<long>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::UniformRandomIntValueProceduralBloc<size_t>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<int>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<long>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<float>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<dsreal>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::ArrayProceduralBloc<dsstring>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::RepeatProceduralBloc<int>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::RepeatProceduralBloc<long>>( components[j]->getPurpose() );
-                ClassDump::Dump<DrawSpace::Aspect::ProceduralAspect::ProceduralBloc, Aspect::ProceduralAspect::RepeatProceduralBloc<size_t>>( components[j]->getPurpose() );
-
-
-                _DSDEBUG( logger, dsstring ( "procedural aspect component " ) << i << dsstring( " is " ) << ClassDump::m_text )
-
-                Aspect::ProceduralAspect::ValueProceduralBloc<int>* pint = dynamic_cast<Aspect::ProceduralAspect::ValueProceduralBloc<int>*>( components[j]->getPurpose() );
-                if( pint )
-                {
-                    _DSDEBUG( logger, dsstring ( "value = " ) << pint->GetValue() );
-                }
-                else
-                {
-                    Aspect::ProceduralAspect::ValueProceduralBloc<long>* plong = dynamic_cast<Aspect::ProceduralAspect::ValueProceduralBloc<long>*>( components[j]->getPurpose() );
-                    if( plong )
-                    {
-                        _DSDEBUG( logger, dsstring ( "value = " ) << plong->GetValue() );
-                    }
-                    else
-                    {
-                        Aspect::ProceduralAspect::ValueProceduralBloc<float>* pfloat = dynamic_cast<Aspect::ProceduralAspect::ValueProceduralBloc<float>*>( components[j]->getPurpose() );
-                        if( pfloat )
-                        {
-                            _DSDEBUG( logger, dsstring ( "value = " ) << pfloat->GetValue() );
-                        }
-                        else
-                        {
-                            Aspect::ProceduralAspect::ValueProceduralBloc<dsreal>* preal = dynamic_cast<Aspect::ProceduralAspect::ValueProceduralBloc<dsreal>*>( components[j]->getPurpose() );
-                            if( preal )
-                            {
-                                _DSDEBUG( logger, dsstring ( "value = " ) << preal->GetValue() );
-                            }
-                            else
-                            {
-                                Aspect::ProceduralAspect::RootProceduralBloc* proot = dynamic_cast<Aspect::ProceduralAspect::RootProceduralBloc*>( components[j]->getPurpose() );
-
-                                if( proot )
-                                {
-                                    // chercher le component de type string qui doit normalement accompagner ce component procedural root
-
-                                    ComponentList<dsstring> components_string;
-                                    procedural_aspect->GetComponentsByType<dsstring>( components_string );
-
-                                    if( components_string.size() > 0 )
-                                    {
-                                        _DSDEBUG( logger, dsstring ( "string component = " ) << components_string[0]->getPurpose() );
-                                    }
-                                    else
-                                    {
-                                        _DSDEBUG( logger, dsstring ( "WARNING ! no string component found with procedural root !!" ) );    
-                                    }
-                                }                     
-                            }
-                        }                    
-                    }                
-                }
-            }
-        }
-        //////////////////////////////////////////////////////
-
+       
     }
 
     _DSDEBUG( logger, " " )

@@ -26,7 +26,7 @@
 #include "entitynodegraph.h"
 #include "systems.h"
 #include "timeaspect.h"
-#include "proceduralaspect.h"
+
 
 
 using namespace DrawSpace;
@@ -142,10 +142,6 @@ void EntityNodeGraph::PushSignal_DumpToTrace( void )
     m_signals.push( SIGNAL_DUMP_TO_TRACE );
 }
 
-void EntityNodeGraph::PushSignal_EvaluateProcedurals( const dsstring& p_procedural_id )
-{
-    m_proc_signals.push( p_procedural_id );
-}
 
 void EntityNodeGraph::ProcessSignals( void )
 {   
@@ -204,37 +200,6 @@ void EntityNodeGraph::ProcessSignals( void )
             break;
         }
         m_signals.pop();
-    }
-
-    while( !m_proc_signals.empty() )
-    {
-        dsstring id = m_proc_signals.front();
-
-        for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
-        {
-            Entity* ent = it->data();
-
-            std::vector<Core::Aspect*> aspects;
-            ent->GetAllAspects( aspects );
-
-            for( size_t i = 0; i < aspects.size(); ++i )
-            {                    
-                Aspect::ProceduralAspect* proceduralAspect = dynamic_cast<Aspect::ProceduralAspect*>( aspects[i] );
-                if( proceduralAspect )
-                {
-                    ComponentList<dsstring> ids;
-
-                    proceduralAspect->GetComponentsByType<dsstring>( ids );
-
-                    if( ids.size() > 0 && ids[0]->getPurpose() == id )
-                    {
-                        proceduralAspect->SetToUpdate( true );
-                    }
-                }
-            }
-        }
-
-        m_proc_signals.pop();
     }
 }
 

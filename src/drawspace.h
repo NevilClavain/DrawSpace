@@ -119,17 +119,13 @@
 
 #include "timeaspect.h"
 
-#include "proceduralaspect.h"
 
 #include "rendersystem.h"
 #include "transformsystem.h"
 #include "physicssystem.h"
 #include "timesystem.h"
 #include "servicesystem.h"
-#include "proceduralsystem.h"
 #include "hub.h"
-
-#include "entityfactory.h"
 
 #include "tracesystem.h"
 

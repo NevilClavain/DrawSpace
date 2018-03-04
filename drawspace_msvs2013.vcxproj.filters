@@ -330,15 +330,6 @@
     <ClCompile Include="src\hub.cpp">
       <Filter>systems</Filter>
     </ClCompile>
-    <ClCompile Include="src\proceduralsystem.cpp">
-      <Filter>systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\proceduralaspect.cpp">
-      <Filter>aspect</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entityfactory.cpp">
-      <Filter>entitygraph</Filter>
-    </ClCompile>
     <ClCompile Include="src\tracesystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
@@ -682,15 +673,6 @@
     </ClInclude>
     <ClInclude Include="src\hub.h">
       <Filter>systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\proceduralsystem.h">
-      <Filter>systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\proceduralaspect.h">
-      <Filter>aspect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entityfactory.h">
-      <Filter>entitygraph</Filter>
     </ClInclude>
     <ClInclude Include="src\tracesystem.h">
       <Filter>systems</Filter>

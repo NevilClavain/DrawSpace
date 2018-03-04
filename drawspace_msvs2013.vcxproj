@@ -24,7 +24,6 @@
     <ClCompile Include="src\collider.cpp" />
     <ClCompile Include="src\drawspace_commons.cpp" />
     <ClCompile Include="src\dsapp.cpp" />
-    <ClCompile Include="src\entityfactory.cpp" />
     <ClCompile Include="src\entitynode.cpp" />
     <ClCompile Include="src\entitynodegraph.cpp" />
     <ClCompile Include="src\file.cpp" />
@@ -62,13 +61,10 @@
     <ClCompile Include="src\physicsaspect.cpp" />
     <ClCompile Include="src\physicssystem.cpp" />
     <ClCompile Include="src\piload.cpp" />
-    <ClCompile Include="src\proceduralaspect.cpp" />
-    <ClCompile Include="src\proceduralsystem.cpp" />
     <ClCompile Include="src\rawtransformaspectimpl.cpp" />
     <ClCompile Include="src\renderingaspect.cpp" />
     <ClInclude Include="src\bodyaspect.h" />
     <ClInclude Include="src\bodytransformaspectimpl.h" />
-    <ClInclude Include="src\entityfactory.h" />
     <ClInclude Include="src\hub.h" />
     <ClInclude Include="src\impostorsrenderingaspectimpl.h" />
     <ClInclude Include="src\orbittransformaspectimpl.h" />
@@ -177,8 +173,6 @@
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
-    <ClInclude Include="src\proceduralaspect.h" />
-    <ClInclude Include="src\proceduralsystem.h" />
     <ClInclude Include="src\rawtransformaspectimpl.h" />
     <ClInclude Include="src\renderingaspect.h" />
     <ClInclude Include="src\renderingaspectimpl.h" />
