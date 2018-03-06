@@ -570,7 +570,11 @@ void MainService::process_console_command( const dsstring& p_cmd )
 {
     //print_console_line( "OK! " + p_cmd );
 
-    LuaContext::GetInstance()->Execute( p_cmd );
+    if( false == LuaContext::GetInstance()->Execute( p_cmd ) )
+    {
+        dsstring lua_err = LuaContext::GetInstance()->GetLastError();
+        print_console_line( lua_err );
+    }
 }
 
 void MainService::print_console_line( const dsstring& p_text )
