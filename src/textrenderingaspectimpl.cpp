@@ -64,7 +64,6 @@ void TextRenderingAspectImpl::Run( Entity* p_entity )
 
     // extraire tout les composants "texts display"
     ComponentList<TextDisplay> texts;
-    
     rendering_aspect->GetComponentsByType<TextDisplay>( texts );
 
     for( size_t i = 0; i < texts.size(); i++ )
@@ -74,5 +73,22 @@ void TextRenderingAspectImpl::Run( Entity* p_entity )
         m_renderer->BeginScreen();
         m_renderer->DrawText( text_descr.m_r, text_descr.m_g, text_descr.m_b, text_descr.m_posx, text_descr.m_posy, text_descr.m_text.c_str() );
         m_renderer->EndScreen();
+    }
+
+    ComponentList<std::vector<TextDisplay>> texts_v;
+    rendering_aspect->GetComponentsByType<std::vector<TextDisplay>>( texts_v );
+
+    for( size_t i = 0; i < texts_v.size(); i++ )
+    {
+        std::vector<TextDisplay> texts = texts_v[i]->getPurpose();
+
+        for( size_t j = 0; j < texts.size(); j++ )
+        {
+            TextDisplay text_descr = texts[j];
+
+            m_renderer->BeginScreen();
+            m_renderer->DrawText( text_descr.m_r, text_descr.m_g, text_descr.m_b, text_descr.m_posx, text_descr.m_posy, text_descr.m_text.c_str() );
+            m_renderer->EndScreen();
+        }
     }
 }

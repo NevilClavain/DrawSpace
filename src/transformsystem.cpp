@@ -102,7 +102,7 @@ void TransformSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     }
     else if( 1 == m_step )
     {
-        // distribuer view et proj a tout les world_aspect de ttes les entites
+        // distribuer view et proj a tout les transform_aspect de ttes les entites
         
         TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
         if( transform_aspect )

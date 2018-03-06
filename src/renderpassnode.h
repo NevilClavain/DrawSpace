@@ -37,7 +37,7 @@ namespace DrawSpace
 {
 namespace RenderGraph
 {
-class RenderPassNode sealed
+class RenderPassNode
 {
 private:
     class PassDescr
