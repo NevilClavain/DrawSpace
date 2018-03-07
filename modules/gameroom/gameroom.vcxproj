@@ -96,6 +96,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\luaclass_globals.cpp" />
+    <ClCompile Include="src\luaclass_renderpassnodegraph.cpp" />
     <ClCompile Include="src\luacontext.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mainservice.cpp" />
@@ -104,6 +105,7 @@
   <ItemGroup>
     <ClInclude Include="src\crtp_singleton.h" />
     <ClInclude Include="src\luaclass_globals.h" />
+    <ClInclude Include="src\luaclass_renderpassnodegraph.h" />
     <ClInclude Include="src\luacontext.h" />
     <ClInclude Include="src\mainservice.h" />
     <ClInclude Include="src\rootimpl.h" />

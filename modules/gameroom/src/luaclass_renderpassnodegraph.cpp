@@ -22,23 +22,18 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_GLOBALS_H_
-#define _LUACLASS_GLOBALS_H_
+#include "luaclass_renderpassnodegraph.h"
 
-#include "luna.h"
-
-class LuaClass_Globals
+const char LuaClass_RenderPassNodeGraph::className[] = "RenderPassNodeGraph";
+const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::methods[] =
 {
-public:
-	LuaClass_Globals( lua_State* p_L );
-	~LuaClass_Globals( void );
-
-    int LUA_quit( lua_State* p_L );
-    int LUA_clearconsole( lua_State* p_L );
-
-    static const char className[];
-    static const Luna<LuaClass_Globals>::RegType methods[];
-
+	{ 0, 0 }
 };
 
-#endif
+LuaClass_RenderPassNodeGraph::LuaClass_RenderPassNodeGraph( lua_State* p_L )
+{
+}
+
+LuaClass_RenderPassNodeGraph::~LuaClass_RenderPassNodeGraph( void )
+{
+}

@@ -16,6 +16,9 @@
     <ClCompile Include="src\luaclass_globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\luaclass_renderpassnodegraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luaclass_globals.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_renderpassnodegraph.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -23,23 +23,32 @@
 /* -*-LIC_END-*- */
 
 #include "luaclass_globals.h"
+#include "mainservice.h"
 
-const char Globals::className[] = "Globals";
-const Luna<Globals>::RegType Globals::methods[] =
+const char LuaClass_Globals::className[] = "Globals";
+const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 {
-	{ "Test", &Globals::LUA_test },
+    { "quit", &LuaClass_Globals::LUA_quit },
+    { "clear_console", &LuaClass_Globals::LUA_clearconsole },
 	{ 0, 0 }
 };
 
-Globals::Globals( lua_State* p_L )
+LuaClass_Globals::LuaClass_Globals( lua_State* p_L )
 {
 }
 
-Globals::~Globals( void )
+LuaClass_Globals::~LuaClass_Globals( void )
 {
 }
 
-int Globals::LUA_test( lua_State* p_L )
+int LuaClass_Globals::LUA_quit( lua_State* p_L )
 {
+    MainService::GetInstance()->RequestClose();
+    return 0;
+}
+
+int LuaClass_Globals::LUA_clearconsole( lua_State* p_L )
+{
+    MainService::GetInstance()->RequestClearConsole();
     return 0;
 }

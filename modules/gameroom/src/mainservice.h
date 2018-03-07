@@ -28,13 +28,15 @@
 
 #include "drawspace.h"
 #include "serviceaspectimpl.h"
+#include "crtp_singleton.h"
 
-class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl
+class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public BaseSingleton<MainService>
 {
 protected:
 
     static const int                                                                m_console_max_lines_display = 18;
     static const int                                                                m_console_y_pos = 50;
+
 
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
@@ -45,7 +47,9 @@ protected:
     DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
 
     //DrawSpace::RenderGraph::RenderPassNode                                          m_texturepass;
-    DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;    
+    //DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;
+
+    std::unordered_map<dsstring, DrawSpace::RenderGraph::RenderPassNode>            m_render_passes;
 
 
 
@@ -114,6 +118,7 @@ protected:
 public:
 
     MainService( void );
+    ~MainService( void );
 
     bool Init( void );
     void Run( void );
@@ -131,6 +136,13 @@ public:
     void OnMouseRightButtonUp( long p_xm, long p_ym );
     void OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
+
+
+    void RequestClose( void );
+    void RequestClearConsole( void );
+
+
+    friend class BaseSingleton<MainService>;
 };
 
 #endif

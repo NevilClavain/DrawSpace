@@ -36,11 +36,20 @@ _DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
 
 MainService::MainService( void ) :
 m_console_active( true ),
-m_console_current_line( 0 )
+m_console_current_line( 0 ),
+m_meshe_import( NULL )
 {
     m_console_texts.push_back( "Command input ready" );
     m_console_texts.push_back( ">" );
     m_console_current_line++;
+}
+
+MainService::~MainService( void )
+{
+    if( m_meshe_import )
+    {
+        _DRAWSPACE_DELETE_( m_meshe_import );
+    }
 }
 
 bool MainService::Init( void )
@@ -100,8 +109,9 @@ bool MainService::Init( void )
     /////////////////////////////////////////////////////////////////////////////////
     
     
-    m_finalpass = m_rendergraph.CreateRoot( "final_pass" );
+    //m_finalpass = m_rendergraph.CreateRoot( "final_pass" );
 
+    /*
     m_finalpass.CreateViewportQuad();
 
     m_finalpass.GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
@@ -119,10 +129,19 @@ bool MainService::Init( void )
 
     m_finalpass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
     m_finalpass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+    */
 
+    /*
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
-    m_finalpass.GetRenderingQueue()->EnableTargetClearing( false );
-    
+    m_finalpass.GetRenderingQueue()->EnableTargetClearing( true );
+    m_finalpass.GetRenderingQueue()->SetTargetClearingColor( 26, 27, 28, 255 );
+    */
+
+    m_render_passes["final_pass"] = m_rendergraph.CreateRoot( "final_pass" );
+
+    m_render_passes["final_pass"].GetRenderingQueue()->EnableDepthClearing( false );
+    m_render_passes["final_pass"].GetRenderingQueue()->EnableTargetClearing( true );
+    m_render_passes["final_pass"].GetRenderingQueue()->SetTargetClearingColor( 26, 27, 28, 255 );
 
     /*
     m_texturepass = m_finalpass.CreateChild( "texture_pass", 0 );    
@@ -142,7 +161,7 @@ bool MainService::Init( void )
     //rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
     rendering_aspect->AddComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" );
 
-
+    
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
@@ -153,6 +172,7 @@ bool MainService::Init( void )
     time_aspect->AddComponent<int>( "output_world_nbsteps" );
 
     time_aspect->AddComponent<dsreal>( "output_time_factor" );
+    
 
     //m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
     //m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
@@ -200,7 +220,7 @@ bool MainService::Init( void )
 
     m_systemsHub.Init( &m_entitygraph );
 
-    m_rendergraph.PushSignal_UpdatedRenderingQueue();
+    //m_rendergraph.PushSignal_UpdatedRenderingQueue();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
     //set_mouse_circular_mode( true );
@@ -213,12 +233,16 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
+
+
+
     m_systemsHub.Run( &m_entitygraph );
     
+    /*
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
     char comment[256];
-
     sprintf( comment, "%d fps - %s", time_aspect->GetComponent<int>( "output_fps" )->getPurpose(), m_pluginDescr.c_str() );
+    */
 
     RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
     //rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
@@ -236,12 +260,14 @@ void MainService::Release( void )
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
     m_systemsHub.Release( &m_entitygraph );
+    m_entitygraph.PushSignal_RenderSceneEnd();
 
     LuaContext::GetInstance()->Shutdown();
 }
 
 void MainService::draw_console( void )
 {
+    
     RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
 
     if( m_console_texts.size() <= m_console_max_lines_display )
@@ -256,11 +282,12 @@ void MainService::draw_console( void )
     {
         for( size_t i = 0; i < m_console_max_lines_display; i++ )
         {
-            TextRenderingAspectImpl::TextDisplay myline( 10, 80 + ( i * 15 ), 255, 10, 10, m_console_texts[m_console_texts.size() - m_console_max_lines_display + i] );
+            TextRenderingAspectImpl::TextDisplay myline( 10, m_console_y_pos + ( i * 15 ), 255, 10, 10, m_console_texts[m_console_texts.size() - m_console_max_lines_display + i] );
 
             rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
         }
     }
+    
 }
 
 /*
@@ -526,7 +553,7 @@ void MainService::OnChar( long p_char, long p_scan )
         {
             m_console_texts[m_console_current_line] += p_char;
         }
-        }
+    }
 }
 
 void MainService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
@@ -568,8 +595,6 @@ void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 
 void MainService::process_console_command( const dsstring& p_cmd )
 {
-    //print_console_line( "OK! " + p_cmd );
-
     if( false == LuaContext::GetInstance()->Execute( p_cmd ) )
     {
         dsstring lua_err = LuaContext::GetInstance()->GetLastError();
@@ -590,4 +615,17 @@ void MainService::set_mouse_circular_mode( bool p_state )
     {
         (*m_mousecircularmode_cb)( p_state );        
     }
+}
+
+void MainService::RequestClose( void )
+{
+    (*m_closeapp_cb)( 0 );
+}
+
+void MainService::RequestClearConsole( void )
+{
+    m_console_texts.clear();
+    m_console_texts.push_back( "Command input ready" );
+    //m_console_texts.push_back( ">" );
+    m_console_current_line = 0;
 }

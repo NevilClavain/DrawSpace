@@ -38,8 +38,9 @@ public:
     {
         if( !m_instance )
         {
-            static T t;
-            m_instance = &t;
+            //static T t;
+            //m_instance = &t;
+            m_instance = new T;
         }
         return m_instance;
     };

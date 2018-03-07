@@ -62,14 +62,20 @@ private:
 
         void CleanUp( void )
         {
-            _DRAWSPACE_DELETE_( m_renderingqueue );
+            if( m_renderingqueue )
+            {
+                _DRAWSPACE_DELETE_( m_renderingqueue );
+            }
 
             if( m_viewportquad )
             {
                 _DRAWSPACE_DELETE_( m_viewportquad );
             }
 
-            _DRAWSPACE_DELETE_( m_targettexture );            
+            if( m_targettexture )
+            {
+                _DRAWSPACE_DELETE_( m_targettexture );
+            }
         }
     };
 

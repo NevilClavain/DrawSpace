@@ -25,6 +25,7 @@
 
 #include "luacontext.h"
 #include "luaclass_globals.h"
+#include "luaclass_renderpassnodegraph.h"
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -44,7 +45,8 @@ void LuaContext::Startup( void )
     luaopen_table( m_L );
     luaopen_string( m_L );
 
-    Luna<Globals>::Register( m_L );
+    Luna<LuaClass_Globals>::Register( m_L );
+    Luna<LuaClass_RenderPassNodeGraph>::Register( m_L );
 }
 
 void LuaContext::Shutdown( void )
