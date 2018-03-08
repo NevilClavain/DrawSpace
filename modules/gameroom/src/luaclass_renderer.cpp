@@ -22,26 +22,26 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_RENDERPASSNODEGRAPH_H_
-#define _LUACLASS_RENDERPASSNODEGRAPH_H_
+#include "luaclass_renderer.h"
+#include "mainservice.h"
 
-#include "luna.h"
-
-class LuaClass_RenderPassNodeGraph
+const char LuaClass_Renderer::className[] = "Renderer";
+const Luna<LuaClass_Renderer>::RegType LuaClass_Renderer::methods[] =
 {
-protected:
-
-public:
-	LuaClass_RenderPassNodeGraph( lua_State* p_L );
-	~LuaClass_RenderPassNodeGraph( void );
-
-    int LUA_setpasstargetclearcolor( lua_State* p_L );
-    int LUA_setpasstargetclearstate( lua_State* p_L );
-    int LUA_setpassdepthclearstate( lua_State* p_L );
-
-    static const char className[];
-    static const Luna<LuaClass_RenderPassNodeGraph>::RegType methods[];
-
+    { "descr", &LuaClass_Renderer::LUA_getinfos },
+	{ 0, 0 }
 };
 
-#endif
+LuaClass_Renderer::LuaClass_Renderer( lua_State* p_L )
+{
+}
+
+LuaClass_Renderer::~LuaClass_Renderer( void )
+{
+}
+
+int LuaClass_Renderer::LUA_getinfos( lua_State* p_L )
+{
+    lua_pushstring( p_L, MainService::GetInstance()->RequestRendererInfos().c_str() );
+    return 1;
+}

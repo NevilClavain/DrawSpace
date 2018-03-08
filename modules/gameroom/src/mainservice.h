@@ -140,6 +140,13 @@ public:
 
     void RequestClose( void );
     void RequestClearConsole( void );
+    void RequestConsolePrint( const dsstring& p_msg );
+    dsstring RequestRendererInfos( void );
+    void RequestLuaFileExec( const dsstring& p_path );
+
+    void RequestPassTargetClearColor( const dsstring& p_passname, int p_r, int p_g, int p_b );
+    void RequestPassTargetClearState( const dsstring& p_passname, bool p_state );
+    void RequestPassDepthClearState( const dsstring& p_passname, bool p_state );
 
 
     friend class BaseSingleton<MainService>;

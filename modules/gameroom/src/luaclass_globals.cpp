@@ -30,6 +30,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 {
     { "quit", &LuaClass_Globals::LUA_quit },
     { "clear_console", &LuaClass_Globals::LUA_clearconsole },
+    { "print", &LuaClass_Globals::LUA_print },
+    { "dofile", &LuaClass_Globals::LUA_dofile },
 	{ 0, 0 }
 };
 
@@ -50,5 +52,36 @@ int LuaClass_Globals::LUA_quit( lua_State* p_L )
 int LuaClass_Globals::LUA_clearconsole( lua_State* p_L )
 {
     MainService::GetInstance()->RequestClearConsole();
+    return 0;
+}
+
+int LuaClass_Globals::LUA_print( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "Globals::print : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+	dsstring msg = luaL_checkstring( p_L, 1 );
+
+    MainService::GetInstance()->RequestConsolePrint( msg );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_dofile( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "Globals::dofile : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+	dsstring path = luaL_checkstring( p_L, 1 );
+
+    MainService::GetInstance()->RequestLuaFileExec( path );
+
     return 0;
 }

@@ -105,6 +105,9 @@ bool MainService::Init( void )
     /////////////////////////////////////////////////////////////////////////////////
 
     LuaContext::GetInstance()->Startup();
+    LuaContext::GetInstance()->Execute( "g=Globals()");
+    LuaContext::GetInstance()->Execute( "renderer=Renderer()");
+    LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph()");
 
     /////////////////////////////////////////////////////////////////////////////////
     
@@ -626,6 +629,65 @@ void MainService::RequestClearConsole( void )
 {
     m_console_texts.clear();
     m_console_texts.push_back( "Command input ready" );
-    //m_console_texts.push_back( ">" );
     m_console_current_line = 0;
+}
+
+void MainService::RequestConsolePrint( const dsstring& p_msg )
+{
+    print_console_line( p_msg );
+}
+
+dsstring MainService::RequestRendererInfos( void )
+{
+    dsstring descr;
+    m_renderer->GetDescr( descr );
+    return descr;
+}
+
+void MainService::RequestLuaFileExec( const dsstring& p_path )
+{
+    if( false == LuaContext::GetInstance()->ExecuteFromFile( p_path ) )
+    {
+        dsstring lua_err = LuaContext::GetInstance()->GetLastError();
+        print_console_line( lua_err );
+    }
+}
+
+void MainService::RequestPassTargetClearColor( const dsstring& p_passname, int p_r, int p_g, int p_b )
+{
+    if( m_render_passes.count( p_passname ) > 0 )
+    {
+        m_render_passes[p_passname].GetRenderingQueue()->SetTargetClearingColor( p_r, p_g, p_b, 255 );
+    }
+    else
+    {
+        dsstring err_msg = "RequestPassTargetClearColor error : no passes with id " + p_passname;
+        print_console_line( err_msg );
+    }
+}
+
+void MainService::RequestPassTargetClearState( const dsstring& p_passname, bool p_state )
+{
+    if( m_render_passes.count( p_passname ) > 0 )
+    {
+        m_render_passes[p_passname].GetRenderingQueue()->EnableTargetClearing( p_state );
+    }
+    else
+    {
+        dsstring err_msg = "RequestPassTargetClearState error : no passes with id " + p_passname;
+        print_console_line( err_msg );
+    }
+}
+
+void MainService::RequestPassDepthClearState( const dsstring& p_passname, bool p_state )
+{
+    if( m_render_passes.count( p_passname ) > 0 )
+    {
+        m_render_passes[p_passname].GetRenderingQueue()->EnableDepthClearing( p_state );
+    }
+    else
+    {
+        dsstring err_msg = "RequestPassDepthClearState error : no passes with id " + p_passname;
+        print_console_line( err_msg );
+    }
 }
