@@ -30,6 +30,8 @@
 #include "serviceaspectimpl.h"
 #include "crtp_singleton.h"
 
+#include "luaclass_renderpassnodegraph.h"
+
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public BaseSingleton<MainService>
 {
 protected:
@@ -43,15 +45,15 @@ protected:
 
     DrawSpace::Interface::MesheImport*                                              m_meshe_import;
 
-    DrawSpace::RenderGraph::RenderPassNodeGraph                                     m_rendergraph;
+    //DrawSpace::RenderGraph::RenderPassNodeGraph                                     m_rendergraph;
     DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
 
     //DrawSpace::RenderGraph::RenderPassNode                                          m_texturepass;
     //DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;
 
-    std::unordered_map<dsstring, DrawSpace::RenderGraph::RenderPassNode>            m_render_passes;
+    //std::unordered_map<dsstring, DrawSpace::RenderGraph::RenderPassNode>            m_render_passes;
 
-
+    std::unordered_map<dsstring, LuaClass_RenderPassNodeGraph*>                     m_rendergraphs; // table des rendergraph
 
     DrawSpace::Core::Entity                                                         m_rootEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
@@ -80,7 +82,7 @@ protected:
 
     DrawSpace::Systems::Hub                                                         m_systemsHub;
 
-    DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
+    //DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
 
     //DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
     //DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
@@ -136,17 +138,15 @@ public:
     void OnMouseRightButtonUp( long p_xm, long p_ym );
     void OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
+    //////////////////////////////////////////////////////////////////////////
 
+    void RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg );
 
     void RequestClose( void );
     void RequestClearConsole( void );
     void RequestConsolePrint( const dsstring& p_msg );
-    dsstring RequestRendererInfos( void );
     void RequestLuaFileExec( const dsstring& p_path );
 
-    void RequestPassTargetClearColor( const dsstring& p_passname, int p_r, int p_g, int p_b );
-    void RequestPassTargetClearState( const dsstring& p_passname, bool p_state );
-    void RequestPassDepthClearState( const dsstring& p_passname, bool p_state );
 
 
     friend class BaseSingleton<MainService>;

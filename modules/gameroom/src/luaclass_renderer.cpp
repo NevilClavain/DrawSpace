@@ -24,6 +24,7 @@
 
 #include "luaclass_renderer.h"
 #include "mainservice.h"
+#include "plugin.h"
 
 const char LuaClass_Renderer::className[] = "Renderer";
 const Luna<LuaClass_Renderer>::RegType LuaClass_Renderer::methods[] =
@@ -34,6 +35,7 @@ const Luna<LuaClass_Renderer>::RegType LuaClass_Renderer::methods[] =
 
 LuaClass_Renderer::LuaClass_Renderer( lua_State* p_L )
 {
+    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
 LuaClass_Renderer::~LuaClass_Renderer( void )
@@ -42,6 +44,11 @@ LuaClass_Renderer::~LuaClass_Renderer( void )
 
 int LuaClass_Renderer::LUA_getinfos( lua_State* p_L )
 {
-    lua_pushstring( p_L, MainService::GetInstance()->RequestRendererInfos().c_str() );
+    //lua_pushstring( p_L, MainService::GetInstance()->RequestRendererInfos().c_str() );
+
+    dsstring descr;
+    m_renderer->GetDescr( descr );
+
+    lua_pushstring( p_L, descr.c_str() );
     return 1;
 }

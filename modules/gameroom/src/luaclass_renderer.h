@@ -26,10 +26,12 @@
 #define _LUACLASS_RENDERER_H_
 
 #include "luna.h"
+#include "renderer.h"
 
 class LuaClass_Renderer
 {
 protected:
+    DrawSpace::Interface::Renderer* m_renderer;
 
 public:
 	LuaClass_Renderer( lua_State* p_L );

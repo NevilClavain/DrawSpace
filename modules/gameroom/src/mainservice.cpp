@@ -107,7 +107,8 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Startup();
     LuaContext::GetInstance()->Execute( "g=Globals()");
     LuaContext::GetInstance()->Execute( "renderer=Renderer()");
-    LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph()");
+    LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph('rg')");
+    LuaContext::GetInstance()->Execute( "rg:create_rootpass('final_pass')");
 
     /////////////////////////////////////////////////////////////////////////////////
     
@@ -140,11 +141,13 @@ bool MainService::Init( void )
     m_finalpass.GetRenderingQueue()->SetTargetClearingColor( 26, 27, 28, 255 );
     */
 
+    /*
     m_render_passes["final_pass"] = m_rendergraph.CreateRoot( "final_pass" );
 
     m_render_passes["final_pass"].GetRenderingQueue()->EnableDepthClearing( false );
     m_render_passes["final_pass"].GetRenderingQueue()->EnableTargetClearing( true );
     m_render_passes["final_pass"].GetRenderingQueue()->SetTargetClearingColor( 26, 27, 28, 255 );
+    */
 
     /*
     m_texturepass = m_finalpass.CreateChild( "texture_pass", 0 );    
@@ -156,8 +159,13 @@ bool MainService::Init( void )
 
     RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_passesRender );
-    m_passesRender.SetRendergraph( &m_rendergraph );
+    //rendering_aspect->AddImplementation( &m_passesRender );
+    //m_passesRender.SetRendergraph( &m_rendergraph );
+
+
+    // TEMPORAIRE !!!!
+    rendering_aspect->AddImplementation( &m_rendergraphs["rg"]->GetPassesRenderAspectImpl() );
+
 
     rendering_aspect->AddImplementation( &m_textRender );
     
@@ -620,6 +628,14 @@ void MainService::set_mouse_circular_mode( bool p_state )
     }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void MainService::RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg )
+{
+    m_rendergraphs[p_id] = p_rg;
+}
+
 void MainService::RequestClose( void )
 {
     (*m_closeapp_cb)( 0 );
@@ -637,12 +653,6 @@ void MainService::RequestConsolePrint( const dsstring& p_msg )
     print_console_line( p_msg );
 }
 
-dsstring MainService::RequestRendererInfos( void )
-{
-    dsstring descr;
-    m_renderer->GetDescr( descr );
-    return descr;
-}
 
 void MainService::RequestLuaFileExec( const dsstring& p_path )
 {
@@ -650,44 +660,5 @@ void MainService::RequestLuaFileExec( const dsstring& p_path )
     {
         dsstring lua_err = LuaContext::GetInstance()->GetLastError();
         print_console_line( lua_err );
-    }
-}
-
-void MainService::RequestPassTargetClearColor( const dsstring& p_passname, int p_r, int p_g, int p_b )
-{
-    if( m_render_passes.count( p_passname ) > 0 )
-    {
-        m_render_passes[p_passname].GetRenderingQueue()->SetTargetClearingColor( p_r, p_g, p_b, 255 );
-    }
-    else
-    {
-        dsstring err_msg = "RequestPassTargetClearColor error : no passes with id " + p_passname;
-        print_console_line( err_msg );
-    }
-}
-
-void MainService::RequestPassTargetClearState( const dsstring& p_passname, bool p_state )
-{
-    if( m_render_passes.count( p_passname ) > 0 )
-    {
-        m_render_passes[p_passname].GetRenderingQueue()->EnableTargetClearing( p_state );
-    }
-    else
-    {
-        dsstring err_msg = "RequestPassTargetClearState error : no passes with id " + p_passname;
-        print_console_line( err_msg );
-    }
-}
-
-void MainService::RequestPassDepthClearState( const dsstring& p_passname, bool p_state )
-{
-    if( m_render_passes.count( p_passname ) > 0 )
-    {
-        m_render_passes[p_passname].GetRenderingQueue()->EnableDepthClearing( p_state );
-    }
-    else
-    {
-        dsstring err_msg = "RequestPassDepthClearState error : no passes with id " + p_passname;
-        print_console_line( err_msg );
     }
 }

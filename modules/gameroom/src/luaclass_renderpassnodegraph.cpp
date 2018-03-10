@@ -29,6 +29,7 @@
 const char LuaClass_RenderPassNodeGraph::className[] = "RenderPassNodeGraph";
 const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::methods[] =
 {
+    { "create_rootpass", &LuaClass_RenderPassNodeGraph::LUA_createrootpass },
     { "set_pass_targetclearcolor", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor },
     { "set_pass_targetclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate },
     { "set_pass_depthclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate },
@@ -37,10 +38,45 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
 
 LuaClass_RenderPassNodeGraph::LuaClass_RenderPassNodeGraph( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "RenderPassNodeGraph::RenderPassNodeGraph : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+    dsstring id = luaL_checkstring( p_L, 1 );
+    m_passes_render.SetRendergraph( &m_rendergraph );
+    MainService::GetInstance()->RegisterRenderGraph( id, this );
 }
 
 LuaClass_RenderPassNodeGraph::~LuaClass_RenderPassNodeGraph( void )
 {
+}
+
+DrawSpace::AspectImplementations::PassesRenderingAspectImpl& LuaClass_RenderPassNodeGraph::GetPassesRenderAspectImpl( void )
+{
+    return m_passes_render;
+}
+
+int LuaClass_RenderPassNodeGraph::LUA_createrootpass( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "RenderPassNodeGraph::create_rootpass : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+    m_passes[pass_id] = m_rendergraph.CreateRoot( pass_id );
+
+    // reglages par defaut
+    m_passes[pass_id].GetRenderingQueue()->EnableDepthClearing( false );
+    m_passes[pass_id].GetRenderingQueue()->EnableTargetClearing( true );
+    m_passes[pass_id].GetRenderingQueue()->SetTargetClearingColor( 26, 27, 180, 255 );
+
+    return 0;
 }
 
 int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor( lua_State* p_L )
@@ -52,12 +88,21 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor( lua_State* p_L )
 		lua_error( p_L );		
 	}
 
-	dsstring pass = luaL_checkstring( p_L, 1 );
+	dsstring pass_id = luaL_checkstring( p_L, 1 );
     int r = luaL_checkint( p_L, 2 );
     int g = luaL_checkint( p_L, 3 );
     int b = luaL_checkint( p_L, 4 );
 
-    MainService::GetInstance()->RequestPassTargetClearColor( pass, r, g, b );
+    if( m_passes.count( pass_id ) )
+    {
+        m_passes[pass_id].GetRenderingQueue()->SetTargetClearingColor( r, g, b, 255 );
+    }
+    else
+    {
+        lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearcolor : unknown pass id" );
+    }
+
+    //MainService::GetInstance()->RequestPassTargetClearColor( pass_id, r, g, b );
     return 0;
 }
 
@@ -70,10 +115,19 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate( lua_State* p_L )
 		lua_error( p_L );		
 	}
 
-	dsstring pass = luaL_checkstring( p_L, 1 );
+	dsstring pass_id = luaL_checkstring( p_L, 1 );
     int state = luaL_checkint( p_L, 2 );
 
-    MainService::GetInstance()->RequestPassTargetClearState( pass, state );
+    if( m_passes.count( pass_id ) )
+    {
+        m_passes[pass_id].GetRenderingQueue()->EnableTargetClearing( state );
+    }
+    else
+    {
+        lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearstate : unknown pass id" );
+    }
+
+    //MainService::GetInstance()->RequestPassTargetClearState( pass_id, state );
     return 0;
 }
 
@@ -86,9 +140,18 @@ int LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate( lua_State* p_L )
 		lua_error( p_L );		
 	}
 
-	dsstring pass = luaL_checkstring( p_L, 1 );
+	dsstring pass_id = luaL_checkstring( p_L, 1 );
     int state = luaL_checkint( p_L, 2 );
 
-    MainService::GetInstance()->RequestPassDepthClearState( pass, state );
+    if( m_passes.count( pass_id ) )
+    {
+        m_passes[pass_id].GetRenderingQueue()->EnableDepthClearing( state );
+    }
+    else
+    {
+        lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_depthclearstate : unknown pass id" );
+    }
+
+    //MainService::GetInstance()->RequestPassDepthClearState( pass_id, state );
     return 0;
 }

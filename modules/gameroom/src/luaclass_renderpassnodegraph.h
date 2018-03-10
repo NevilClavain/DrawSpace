@@ -25,16 +25,28 @@
 #ifndef _LUACLASS_RENDERPASSNODEGRAPH_H_
 #define _LUACLASS_RENDERPASSNODEGRAPH_H_
 
+#include "renderpassnodegraph.h"
+#include "passesrenderingaspectimpl.h"
+
 #include "luna.h"
 
 class LuaClass_RenderPassNodeGraph
 {
 protected:
 
+    
+    DrawSpace::RenderGraph::RenderPassNodeGraph                             m_rendergraph;
+    DrawSpace::AspectImplementations::PassesRenderingAspectImpl             m_passes_render; // le RenderingAspectImpl associe au m_rendergraph et permettant de lancer les rendu des passes stockees dans m_rendergraph
+
+    std::unordered_map<dsstring, DrawSpace::RenderGraph::RenderPassNode>    m_passes; // Collection des RenderPassNode permettant d'acceder aux differents RenderPassNode::PassDescr stockees dans m_rendergraph
+
 public:
 	LuaClass_RenderPassNodeGraph( lua_State* p_L );
 	~LuaClass_RenderPassNodeGraph( void );
 
+    DrawSpace::AspectImplementations::PassesRenderingAspectImpl& GetPassesRenderAspectImpl( void );
+
+    int LUA_createrootpass( lua_State* p_L );
     int LUA_setpasstargetclearcolor( lua_State* p_L );
     int LUA_setpasstargetclearstate( lua_State* p_L );
     int LUA_setpassdepthclearstate( lua_State* p_L );
