@@ -59,6 +59,7 @@ public:
     int LUA_setpasstargetclearcolor( lua_State* p_L );
     int LUA_setpasstargetclearstate( lua_State* p_L );
     int LUA_setpassdepthclearstate( lua_State* p_L );
+    int LUA_createpassviewportquad( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaClass_RenderPassNodeGraph>::RegType methods[];

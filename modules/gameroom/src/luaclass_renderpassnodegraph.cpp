@@ -33,6 +33,7 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
     { "set_pass_targetclearcolor", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor },
     { "set_pass_targetclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate },
     { "set_pass_depthclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate },
+    { "create_pass_viewportquad", &LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad },
 	{ 0, 0 }
 };
 
@@ -103,7 +104,6 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor( lua_State* p_L )
         lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearcolor : unknown pass id" );
     }
 
-    //MainService::GetInstance()->RequestPassTargetClearColor( pass_id, r, g, b );
     return 0;
 }
 
@@ -128,7 +128,6 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate( lua_State* p_L )
         lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearstate : unknown pass id" );
     }
 
-    //MainService::GetInstance()->RequestPassTargetClearState( pass_id, state );
     return 0;
 }
 
@@ -152,7 +151,28 @@ int LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate( lua_State* p_L )
     {
         lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_depthclearstate : unknown pass id" );
     }
+    return 0;
+}
 
-    //MainService::GetInstance()->RequestPassDepthClearState( pass_id, state );
+int LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "RenderPassNodeGraph::create_pass_viewportquad : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+	dsstring pass_id = luaL_checkstring( p_L, 1 );
+
+    if( m_passes.count( pass_id ) )
+    {
+        m_passes[pass_id].m_renderpassnode.CreateViewportQuad();
+    }
+    else
+    {
+        lua_pushstring( p_L, "RenderPassNodeGraph::create_pass_viewportquad : unknown pass id" );
+    }
+
     return 0;
 }
