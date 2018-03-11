@@ -168,6 +168,7 @@ int LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad( lua_State* p_L )
     if( m_passes.count( pass_id ) )
     {
         m_passes[pass_id].m_renderpassnode.CreateViewportQuad();
+        m_passes[pass_id].m_renderpassnode.GetViewportQuad()->SetFx( &( m_passes[pass_id].m_fx ) );
     }
     else
     {
