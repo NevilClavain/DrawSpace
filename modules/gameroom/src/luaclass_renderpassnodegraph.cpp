@@ -69,13 +69,14 @@ int LuaClass_RenderPassNodeGraph::LUA_createrootpass( lua_State* p_L )
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
-    m_passes[pass_id] = m_rendergraph.CreateRoot( pass_id );
+
+    
+    m_passes[pass_id].m_renderpassnode = m_rendergraph.CreateRoot( pass_id );
 
     // reglages par defaut
-    m_passes[pass_id].GetRenderingQueue()->EnableDepthClearing( false );
-    m_passes[pass_id].GetRenderingQueue()->EnableTargetClearing( true );
-    m_passes[pass_id].GetRenderingQueue()->SetTargetClearingColor( 26, 27, 180, 255 );
-
+    m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->EnableDepthClearing( false );
+    m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->EnableTargetClearing( true );
+    m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->SetTargetClearingColor( 26, 27, 180, 255 );   
     return 0;
 }
 
@@ -95,7 +96,7 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor( lua_State* p_L )
 
     if( m_passes.count( pass_id ) )
     {
-        m_passes[pass_id].GetRenderingQueue()->SetTargetClearingColor( r, g, b, 255 );
+        m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->SetTargetClearingColor( r, g, b, 255 );
     }
     else
     {
@@ -120,7 +121,7 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate( lua_State* p_L )
 
     if( m_passes.count( pass_id ) )
     {
-        m_passes[pass_id].GetRenderingQueue()->EnableTargetClearing( state );
+        m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->EnableTargetClearing( state );
     }
     else
     {
@@ -145,7 +146,7 @@ int LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate( lua_State* p_L )
 
     if( m_passes.count( pass_id ) )
     {
-        m_passes[pass_id].GetRenderingQueue()->EnableDepthClearing( state );
+        m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->EnableDepthClearing( state );
     }
     else
     {
