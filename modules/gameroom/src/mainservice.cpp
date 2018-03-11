@@ -105,10 +105,26 @@ bool MainService::Init( void )
     /////////////////////////////////////////////////////////////////////////////////
 
     LuaContext::GetInstance()->Startup();
+
     LuaContext::GetInstance()->Execute( "g=Globals()");
     LuaContext::GetInstance()->Execute( "renderer=Renderer()");
     LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph('rg')");
     LuaContext::GetInstance()->Execute( "rg:create_rootpass('final_pass')");
+
+    // creation cote lua de l'enum RenderState::Operation
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_NONE=0");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETCULLING=1");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ENABLEZBUFFER=2");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETTEXTUREFILTERTYPE=3");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE=4");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETFILLMODE=5");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDENABLE=6");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDOP=7");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDFUNC=8");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDDEST=9");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDSRC=10");
+
+    
 
     /////////////////////////////////////////////////////////////////////////////////
     
