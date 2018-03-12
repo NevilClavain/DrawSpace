@@ -27,6 +27,9 @@
 #include <drawspace_commons.h>
 #include "mainservice.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+
 const char LuaClass_RenderPassNodeGraph::className[] = "RenderPassNodeGraph";
 const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::methods[] =
 {
@@ -228,6 +231,44 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadshader( lua_State* p_L
     else
     {
         lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_shader : unknown pass id" );
+        lua_error( p_L );	
+    }
+
+    return 0;
+}
+
+int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadtexture( lua_State* p_L )
+{
+    return 0;
+}
+
+int LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadtextures( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "RenderPassNodeGraph::release_pass_viewportquad_textures : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+
+    if( m_passes.count( pass_id ) )
+    {
+        ViewportQuad* vpq = m_passes[pass_id].m_renderpassnode.GetViewportQuad();
+
+        for( long i = 0; i < vpq->GetTextureListSize(); i++ )
+        {
+            Texture* texture = vpq->GetTexture( i );
+            if( texture )
+            {
+                _DRAWSPACE_DELETE_( texture );
+            }
+        }
+    }
+    else
+    {
+        lua_pushstring( p_L, "RenderPassNodeGraph::release_pass_viewportquad_textures : unknown pass id" );
         lua_error( p_L );	
     }
 

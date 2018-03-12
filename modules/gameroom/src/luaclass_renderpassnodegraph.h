@@ -61,6 +61,8 @@ public:
     int LUA_setpassdepthclearstate( lua_State* p_L );
     int LUA_createpassviewportquad( lua_State* p_L );
     int LUA_loadpassviewportquadshader( lua_State* p_L );
+    int LUA_loadpassviewportquadtexture( lua_State* p_L );
+    int LUA_releasepassviewportquadtextures( lua_State* p_L );
     int LUA_setpassviewportquadrenderstateset( lua_State* p_L );
     int LUA_updaterenderingqueues( lua_State* p_L );
 
