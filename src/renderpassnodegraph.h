@@ -42,7 +42,7 @@ private:
 
     typedef enum
     {
-        SIGNAL_UPDATED_RENDERINGQUEUE
+        SIGNAL_UPDATED_RENDERINGQUEUES
 
     } Signals;
 
@@ -62,7 +62,7 @@ public:
 
     void ProcessSignals( void );
 
-    void PushSignal_UpdatedRenderingQueue( void );
+    void PushSignal_UpdatedRenderingQueues( void );
 };
 
 }

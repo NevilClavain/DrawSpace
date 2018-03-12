@@ -61,6 +61,7 @@ public:
     size_t	GetDataSize( void );
 
     bool	LoadFromFile( void );
+    bool    LoadFromFile( const dsstring& p_filepath, bool p_compiled );
     void	ReleaseData( void );
 
 

@@ -86,9 +86,9 @@ void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
 }
 
 
-void RenderPassNodeGraph::PushSignal_UpdatedRenderingQueue( void )
+void RenderPassNodeGraph::PushSignal_UpdatedRenderingQueues( void )
 {
-    m_signals.push( SIGNAL_UPDATED_RENDERINGQUEUE );
+    m_signals.push( SIGNAL_UPDATED_RENDERINGQUEUES );
 }
 
 void RenderPassNodeGraph::ProcessSignals( void )
@@ -97,7 +97,7 @@ void RenderPassNodeGraph::ProcessSignals( void )
     {
         Signals sig = m_signals.front();
 
-        if( SIGNAL_UPDATED_RENDERINGQUEUE == sig )
+        if( SIGNAL_UPDATED_RENDERINGQUEUES == sig )
         {
             /// update all rendering queues
             for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )

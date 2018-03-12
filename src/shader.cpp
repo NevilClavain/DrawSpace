@@ -98,6 +98,16 @@ size_t Shader::GetDataSize( void )
 
 bool Shader::LoadFromFile( void )
 {
+    if( m_data )
+    {
+        // nettoyer
+        ReleaseData();
+    }
+
+    if( "" == m_filepath )
+    {
+        _DSEXCEPTION( "Shader filepath not initialized!" );
+    }
     long size;
     void* data = Utils::File::LoadAndAllocBinaryFile( compute_final_path(), &size );
     if( !data )
@@ -110,12 +120,20 @@ bool Shader::LoadFromFile( void )
     return true;
 }
 
+bool Shader::LoadFromFile( const dsstring& p_filepath, bool p_compiled )
+{
+    m_filepath = p_filepath;
+    m_compiled = p_compiled;
+    return LoadFromFile();
+}
+
 void Shader::ReleaseData( void )
 {
     if( m_data )
     {
         _DRAWSPACE_DELETE_N_( m_data );
         m_data = NULL;
+        m_datasize = -1;
     }
 }
 

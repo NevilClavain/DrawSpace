@@ -44,6 +44,8 @@ public:
     int LUA_updaterenderstatein( lua_State* p_L );
     int LUA_updaterenderstateout( lua_State* p_L );
 
+    DrawSpace::Core::RenderStatesSet& GetRenderStatesSet( void );
+
     static const char className[];
     static const Luna<LuaClass_RenderStatesSet>::RegType methods[];
 

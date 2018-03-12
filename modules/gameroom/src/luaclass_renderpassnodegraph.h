@@ -39,13 +39,13 @@ protected:
     {
         DrawSpace::RenderGraph::RenderPassNode  m_renderpassnode;
         DrawSpace::Core::Fx                     m_fx;
+        DrawSpace::Core::Shader                 m_v_shader;
+        DrawSpace::Core::Shader                 m_p_shader;
 
     } Passe;
     
     DrawSpace::RenderGraph::RenderPassNodeGraph                             m_rendergraph;
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl             m_passes_render; // le RenderingAspectImpl associe au m_rendergraph et permettant de lancer les rendu des passes stockees dans m_rendergraph
-
-    //std::unordered_map<dsstring, DrawSpace::RenderGraph::RenderPassNode>    m_passes; // Collection des RenderPassNode permettant d'acceder aux differents RenderPassNode::PassDescr stockees dans m_rendergraph
 
     std::unordered_map<dsstring, Passe>                                     m_passes;
 
@@ -60,6 +60,9 @@ public:
     int LUA_setpasstargetclearstate( lua_State* p_L );
     int LUA_setpassdepthclearstate( lua_State* p_L );
     int LUA_createpassviewportquad( lua_State* p_L );
+    int LUA_loadpassviewportquadshader( lua_State* p_L );
+    int LUA_setpassviewportquadrenderstateset( lua_State* p_L );
+    int LUA_updaterenderingqueues( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaClass_RenderPassNodeGraph>::RegType methods[];

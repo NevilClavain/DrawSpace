@@ -111,3 +111,8 @@ int LuaClass_RenderStatesSet::LUA_updaterenderstateout( lua_State* p_L )
 
     return 0;
 }
+
+DrawSpace::Core::RenderStatesSet& LuaClass_RenderStatesSet::GetRenderStatesSet( void )
+{
+    return m_renderstatesset;
+}

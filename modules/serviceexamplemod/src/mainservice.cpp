@@ -149,7 +149,7 @@ bool MainService::Init( void )
     /////////////////////////////////////////////////////////////////////////////////
 
 
-    m_rendergraph.PushSignal_UpdatedRenderingQueue();
+    m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
 

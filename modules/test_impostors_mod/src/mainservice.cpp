@@ -192,7 +192,7 @@ bool MainService::Init( void )
 
     m_systemsHub.Init( &m_entitygraph );
 
-    m_rendergraph.PushSignal_UpdatedRenderingQueue();
+    m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
     set_mouse_circular_mode( true );

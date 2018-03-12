@@ -124,6 +124,11 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDDEST=9");
     LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDSRC=10");
 
+    // args loading shaders
+    LuaContext::GetInstance()->Execute( "VERTEX_SHADER=0");
+    LuaContext::GetInstance()->Execute( "PIXEL_SHADER=1");
+    LuaContext::GetInstance()->Execute( "SHADER_COMPILED=1");
+    LuaContext::GetInstance()->Execute( "SHADER_NOT_COMPILED=0");
     
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -247,7 +252,7 @@ bool MainService::Init( void )
 
     m_systemsHub.Init( &m_entitygraph );
 
-    //m_rendergraph.PushSignal_UpdatedRenderingQueue();
+    //m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
     //set_mouse_circular_mode( true );

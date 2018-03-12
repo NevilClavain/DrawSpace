@@ -397,7 +397,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     m_systemsHub.Init( &m_entitygraph );
 
-    m_rendergraph.PushSignal_UpdatedRenderingQueue();
+    m_rendergraph.PushSignal_UpdatedRenderingQueues();
 
     m_entitygraph.PushSignal_RenderSceneBegin();
 
