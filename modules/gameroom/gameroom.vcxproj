@@ -111,6 +111,7 @@
     <ClInclude Include="src\luaclass_renderpassnodegraph.h" />
     <ClInclude Include="src\luaclass_renderstatesset.h" />
     <ClInclude Include="src\luacontext.h" />
+    <ClInclude Include="src\luna.h" />
     <ClInclude Include="src\mainservice.h" />
     <ClInclude Include="src\rootimpl.h" />
   </ItemGroup>

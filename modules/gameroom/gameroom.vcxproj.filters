@@ -56,5 +56,8 @@
     <ClInclude Include="src\luaclass_renderstatesset.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\luna.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
