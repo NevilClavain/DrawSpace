@@ -73,6 +73,7 @@ protected:
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_staticCubeRender;
+    DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
     DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;

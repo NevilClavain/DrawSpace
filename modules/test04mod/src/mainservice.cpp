@@ -164,6 +164,10 @@ bool MainService::Init( void )
     rendering_aspect->AddImplementation( &m_passesRender );
     m_passesRender.SetRendergraph( &m_rendergraph );
 
+    rendering_aspect->AddImplementation( &m_textRender );
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "queue_debug", 600, 10, 255, 100, 255, "..." );
+
+
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
@@ -316,6 +320,14 @@ void MainService::Run( void )
     }
 
     m_wavespass.GetViewportQuad()->SetShaderRealVector( "waves", DrawSpace::Utils::Vector( m_waves.GetValue(), 0.0, 0.0, 0.0 ) );
+
+
+    char comment[256];
+
+    sprintf( comment, "Queue infos : %d %d\n", m_texturepass.GetRenderingQueue()->GetTheoricalSwitchesCost(), m_texturepass.GetRenderingQueue()->GetSwitchesCost() );
+
+    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "queue_debug" )->getPurpose().m_text = comment;
 
 }
 
