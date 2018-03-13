@@ -39,6 +39,9 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
     { "set_pass_depthclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate },
     { "create_pass_viewportquad", &LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad },
     { "load_pass_viewportquad_shader", &LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadshader },
+    { "unload_pass_viewportquad_shaders", &LuaClass_RenderPassNodeGraph::LUA_unloadpassviewportquadshaders },
+    { "load_pass_viewportquad_texture", &LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadtexture },
+    { "release_pass_viewportquad_textures", &LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadtextures },
     { "set_pass_viewportquad_renderstateset", &LuaClass_RenderPassNodeGraph::LUA_setpassviewportquadrenderstateset },
     { "update_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_updaterenderingqueues },
 	{ 0, 0 }
@@ -185,8 +188,10 @@ int LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad( lua_State* p_L )
         m_passes[pass_id].m_renderpassnode.CreateViewportQuad( zdepth );
         m_passes[pass_id].m_renderpassnode.GetViewportQuad()->SetFx( &( m_passes[pass_id].m_fx ) );
 
+        /*
         m_passes[pass_id].m_fx.AddShader( &m_passes[pass_id].m_v_shader );
         m_passes[pass_id].m_fx.AddShader( &m_passes[pass_id].m_p_shader );
+        */
     }
     else
     {
@@ -200,32 +205,32 @@ int LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad( lua_State* p_L )
 int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadshader( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 4 )
+	if( argc < 3 )
 	{
 		lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_shader : argument(s) missing" );
 		lua_error( p_L );		
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
-    int shader_index = luaL_checkint( p_L, 2 );
-    dsstring shader_path = luaL_checkstring( p_L, 3 );
-    bool is_compiled = luaL_checkstring( p_L, 4 );
+    dsstring shader_path = luaL_checkstring( p_L, 2 );
+    bool is_compiled = luaL_checkstring( p_L, 3 );
 
     if( m_passes.count( pass_id ) )
     {
         bool status;
-        if( 0 == shader_index )
-        {
-            status = m_passes[pass_id].m_v_shader.LoadFromFile( shader_path, is_compiled );
-        }
-        else if( 1 == shader_index )
-        {
-            status = m_passes[pass_id].m_p_shader.LoadFromFile( shader_path, is_compiled );
-        }
+
+        Shader* shader = _DRAWSPACE_NEW_( Shader, Shader );
+        status = shader->LoadFromFile( shader_path, is_compiled );
+
         if( !status )
         {
             lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_shader : shader loading operation failed" );
             lua_error( p_L );	        
+        }
+        else
+        {
+            m_passes[pass_id].m_fx.AddShader( shader );
+            m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
         }
     }
     else
@@ -237,8 +242,89 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadshader( lua_State* p_L
     return 0;
 }
 
+int LuaClass_RenderPassNodeGraph::LUA_unloadpassviewportquadshaders( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "RenderPassNodeGraph::unload_pass_viewportquad_shaders : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+
+
+    if( m_passes.count( pass_id ) )
+    {
+        bool update_queue = false;
+        for( long i = 0; i < m_passes[pass_id].m_fx.GetShadersListSize(); i++ )
+        {
+            Shader* shader = m_passes[pass_id].m_fx.GetShader( i );
+            _DRAWSPACE_DELETE_( shader );
+
+            update_queue = true;
+        }
+        m_passes[pass_id].m_fx.ClearShaders();
+
+        if( update_queue )
+        {
+            m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
+        }
+    }
+    else
+    {
+        lua_pushstring( p_L, "RenderPassNodeGraph::unload_pass_viewportquad_shaders : unknown pass id" );
+        lua_error( p_L );	   
+    }
+
+    return 0;
+}
+
 int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadtexture( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc < 3 )
+	{
+		lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_texture : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+    dsstring texture_path = luaL_checkstring( p_L, 2 );
+    int stage = luaL_checkint( p_L, 3 );
+
+    if( m_passes.count( pass_id ) )
+    {
+        bool status;
+        ViewportQuad* vpq = m_passes[pass_id].m_renderpassnode.GetViewportQuad();
+
+        if( vpq )
+        {
+            Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
+            status = texture->LoadFromFile();
+            if( !status )
+            {
+                lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_texture : texture loading operation failed" );
+                lua_error( p_L );	        
+            }
+            else
+            {
+                m_passes[pass_id].m_renderpassnode.GetViewportQuad()->SetTexture( texture, stage );
+                m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
+            }
+        }
+        else
+        {
+            lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_texture : no viewportquad created for this pass" );
+            lua_error( p_L );        
+        }        
+    }
+    else
+    {
+        lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_texture : unknown pass id" );
+        lua_error( p_L );	
+    }
+
     return 0;
 }
 
@@ -256,14 +342,30 @@ int LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadtextures( lua_State
     if( m_passes.count( pass_id ) )
     {
         ViewportQuad* vpq = m_passes[pass_id].m_renderpassnode.GetViewportQuad();
-
-        for( long i = 0; i < vpq->GetTextureListSize(); i++ )
+        
+        if( vpq )
         {
-            Texture* texture = vpq->GetTexture( i );
-            if( texture )
+            bool update_queue = false;
+            for( long i = 0; i < vpq->GetTextureListSize(); i++ )
             {
-                _DRAWSPACE_DELETE_( texture );
+                Texture* texture = vpq->GetTexture( i );
+                if( texture )
+                {
+                    _DRAWSPACE_DELETE_( texture );
+                     vpq->SetTexture( NULL, i );
+                     update_queue = true;
+                }
             }
+
+            if( update_queue )
+            {
+                m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
+            }
+        }
+        else
+        {
+            lua_pushstring( p_L, "RenderPassNodeGraph::release_pass_viewportquad_textures : no viewportquad created for this pass" );
+            lua_error( p_L );	        
         }
     }
     else

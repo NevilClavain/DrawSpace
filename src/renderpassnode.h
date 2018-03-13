@@ -104,6 +104,8 @@ public:
     ViewportQuad* GetViewportQuad( void ) const;
     Core::Texture* GetTargetTexture( void ) const;
 
+    void SetRenderingQueueUpdateFlag( void );
+
     friend class RenderPassNodeGraph;
 };
 

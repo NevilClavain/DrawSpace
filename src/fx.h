@@ -68,6 +68,7 @@ public:
     RenderState GetRenderStateIn( long p_index );
     RenderState GetRenderStateOut( long p_index );
     long GetShadersListSize( void );
+    void ClearShaders( void );
     long GetRenderStatesInListSize( void );
     long GetRenderStatesOutListSize( void );
     void AddShader( Shader* p_shader );

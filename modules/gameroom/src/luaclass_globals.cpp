@@ -32,6 +32,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "clear_console", &LuaClass_Globals::LUA_clearconsole },
     { "print", &LuaClass_Globals::LUA_print },
     { "dofile", &LuaClass_Globals::LUA_dofile },
+    { "dumpmem", &LuaClass_Globals::LUA_dumpmem },
 	{ 0, 0 }
 };
 
@@ -83,5 +84,11 @@ int LuaClass_Globals::LUA_dofile( lua_State* p_L )
 
     MainService::GetInstance()->RequestLuaFileExec( path );
 
+    return 0;
+}
+
+int LuaClass_Globals::LUA_dumpmem( lua_State* p_L )
+{
+    MainService::GetInstance()->RequestMemAllocDump();
     return 0;
 }

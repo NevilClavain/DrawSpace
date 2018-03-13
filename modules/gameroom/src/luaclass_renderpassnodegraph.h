@@ -39,8 +39,10 @@ protected:
     {
         DrawSpace::RenderGraph::RenderPassNode  m_renderpassnode;
         DrawSpace::Core::Fx                     m_fx;
+        /*
         DrawSpace::Core::Shader                 m_v_shader;
         DrawSpace::Core::Shader                 m_p_shader;
+        */
 
     } Passe;
     
@@ -61,6 +63,7 @@ public:
     int LUA_setpassdepthclearstate( lua_State* p_L );
     int LUA_createpassviewportquad( lua_State* p_L );
     int LUA_loadpassviewportquadshader( lua_State* p_L );
+    int LUA_unloadpassviewportquadshaders( lua_State* p_L );
     int LUA_loadpassviewportquadtexture( lua_State* p_L );
     int LUA_releasepassviewportquadtextures( lua_State* p_L );
     int LUA_setpassviewportquadrenderstateset( lua_State* p_L );

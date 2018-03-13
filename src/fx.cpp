@@ -88,6 +88,11 @@ long Fx::GetShadersListSize( void )
     return (long)m_shaders.size();
 }
 
+void Fx::ClearShaders( void )
+{
+    m_shaders.clear();
+}
+
 long Fx::GetRenderStatesInListSize( void )
 {
     //return (long)m_renderstates_in.size();

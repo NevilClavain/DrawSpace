@@ -147,7 +147,7 @@ public:
     void RequestConsolePrint( const dsstring& p_msg );
     void RequestLuaFileExec( const dsstring& p_path );
 
-
+    void RequestMemAllocDump( void );
 
     friend class BaseSingleton<MainService>;
 };

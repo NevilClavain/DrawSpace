@@ -125,8 +125,6 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDSRC=10");
 
     // args loading shaders
-    LuaContext::GetInstance()->Execute( "VERTEX_SHADER=0");
-    LuaContext::GetInstance()->Execute( "PIXEL_SHADER=1");
     LuaContext::GetInstance()->Execute( "SHADER_COMPILED=1");
     LuaContext::GetInstance()->Execute( "SHADER_NOT_COMPILED=0");
     
@@ -651,7 +649,6 @@ void MainService::set_mouse_circular_mode( bool p_state )
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 void MainService::RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg )
 {
     m_rendergraphs[p_id] = p_rg;
@@ -682,4 +679,9 @@ void MainService::RequestLuaFileExec( const dsstring& p_path )
         dsstring lua_err = LuaContext::GetInstance()->GetLastError();
         print_console_line( lua_err );
     }
+}
+
+void MainService::RequestMemAllocDump( void )
+{
+    MemAlloc::GetInstance()->DumpContent();
 }

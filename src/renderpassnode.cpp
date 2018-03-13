@@ -121,3 +121,9 @@ Texture* RenderPassNode::GetTargetTexture( void ) const
     PassDescr* descr = m_tree_node->data();
     return descr->m_targettexture;
 }
+
+void RenderPassNode::SetRenderingQueueUpdateFlag( void )
+{
+    PassDescr* descr = m_tree_node->data();
+    descr->m_renderingqueue_update_flag = true;
+}

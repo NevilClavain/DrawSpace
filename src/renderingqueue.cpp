@@ -710,24 +710,27 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             _DSEXCEPTION( "Missing fx for rendering node " );
         }
 
-        if( false == renderer->CreateShaders( current_fx, &sh_data ) )
+        if( current_fx->GetShadersListSize() )
         {
-            _DSEXCEPTION( "Cannot create Shaders" )
+            if( false == renderer->CreateShaders( current_fx, &sh_data ) )
+            {
+                _DSEXCEPTION( "Cannot create Shaders" )
+            }
+
+            dsstring shaders_infos;
+
+            for( long i = 0; i < current_fx->GetShadersListSize(); i++ )
+            {
+                 dsstring curr_shader_path;
+                 current_fx->GetShader( i )->GetPath( curr_shader_path );
+
+                 shaders_infos += curr_shader_path;
+                 shaders_infos += "    ";
+            }
+
+            m_sh_datas[node].first = sh_data;
+            m_sh_datas[node].second = shaders_infos;
         }
-
-        dsstring shaders_infos;
-
-        for( long i = 0; i < current_fx->GetShadersListSize(); i++ )
-        {
-             dsstring curr_shader_path;
-             current_fx->GetShader( i )->GetPath( curr_shader_path );
-
-             shaders_infos += curr_shader_path;
-             shaders_infos += "    ";
-        }
-
-        m_sh_datas[node].first = sh_data;
-        m_sh_datas[node].second = shaders_infos;
 
         /////////////////////////////////////////////
         dsstring hash;

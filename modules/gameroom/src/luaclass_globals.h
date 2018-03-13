@@ -37,6 +37,7 @@ public:
     int LUA_clearconsole( lua_State* p_L );
     int LUA_print( lua_State* p_L );
     int LUA_dofile( lua_State* p_L );
+    int LUA_dumpmem( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaClass_Globals>::RegType methods[];
