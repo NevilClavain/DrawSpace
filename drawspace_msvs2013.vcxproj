@@ -61,6 +61,7 @@
     <ClCompile Include="src\physicsaspect.cpp" />
     <ClCompile Include="src\physicssystem.cpp" />
     <ClCompile Include="src\piload.cpp" />
+    <ClCompile Include="src\quadrenderingaspectimpl.cpp" />
     <ClCompile Include="src\rawtransformaspectimpl.cpp" />
     <ClCompile Include="src\renderingaspect.cpp" />
     <ClInclude Include="src\bodyaspect.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="src\piload.h" />
     <ClInclude Include="src\pimanager.h" />
     <ClInclude Include="src\pimanager_impl.h" />
+    <ClInclude Include="src\quadrenderingaspectimpl.h" />
     <ClInclude Include="src\rawtransformaspectimpl.h" />
     <ClInclude Include="src\renderingaspect.h" />
     <ClInclude Include="src\renderingaspectimpl.h" />

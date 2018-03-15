@@ -68,6 +68,9 @@ protected:
     DrawSpace::Core::Entity                                                         m_skyboxEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_skyboxEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_quadEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_quadEntityNode;
+
 
     DrawSpace::Systems::Hub                                                         m_systemsHub;
 
@@ -78,10 +81,12 @@ protected:
     DrawSpace::AspectImplementations::ImpostorsRenderingAspectImpl                  m_worldImpostorsRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
+    DrawSpace::AspectImplementations::QuadRenderingAspectImpl                       m_quadRender;
+
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_impostors_transformer;
     DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
-
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_quadTransformer;
 
     DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousecircularmode_cb;
     DrawSpace::Core::BaseCallback<void, int>*                                       m_closeapp_cb;
@@ -96,6 +101,7 @@ protected:
 
     void create_skybox( void );
     void create_ground( void );
+    void create_quad( void );
     void create_camera( void );
     void create_screen_impostors( void );
     void create_world_impostor( void );

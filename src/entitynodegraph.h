@@ -86,7 +86,7 @@ public:
 	~EntityNodeGraph(void);
 
 	EntityNode SetRoot( Core::Entity* p_entity );
-	void Erase(void);
+	void Erase( void );
     
     void AcceptSystemLeafToRoot( DrawSpace::Interface::System* p_system );
     void AcceptSystemRootToLeaf( DrawSpace::Interface::System* p_system );

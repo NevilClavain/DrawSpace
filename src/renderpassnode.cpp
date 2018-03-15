@@ -62,7 +62,6 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
 
         h_resol = renderer_characteristics.height_resol;
         w_resol = renderer_characteristics.width_resol;
-
     }
     else
     {
@@ -82,11 +81,33 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
     if( p_targetstage != noTextureStageConnection )
     {
         current_descr->m_viewportquad->SetTexture( descr->m_targettexture, p_targetstage );
+        current_descr->m_renderingqueue_update_flag = true;
     }
 
     RenderPassNode node( &(*it) );
     return node;
 };
+
+void RenderPassNode::Erase( void )
+{
+    PassDescr* pass = m_tree_node->data();
+    if( !m_tree_node->is_root() )
+    {
+        PassDescr* parent_pass = m_tree_node->parent().data();
+        for( size_t i = 0; i < parent_pass->m_viewportquad->GetTextureListSize(); i++ )
+        {
+            Texture* parent_texture = parent_pass->m_viewportquad->GetTexture( i );
+
+            if( parent_texture != NULL && parent_texture == pass->m_targettexture )
+            {
+                parent_pass->m_viewportquad->SetTexture( NULL, i ); // supprimer la m_targettexture texture chez le parent; La m_targettexture en elle meme est proprement dessallouée un peu plus bas lors du pass->CleanUp();
+            }
+        }
+    }    
+    pass->CleanUp();
+    _DRAWSPACE_DELETE_( pass );
+	m_tree_node->erase();
+}
 
 void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
 {
@@ -102,6 +123,16 @@ void RenderPassNode::CreateViewportQuad( dsreal p_z_offset )
 
     descr->m_renderingqueue->Add( viewportquad );
     descr->m_renderingqueue_update_flag = true;
+}
+
+void RenderPassNode::RemoveViewportQuad( void )
+{
+    PassDescr* descr = m_tree_node->data();
+
+    descr->m_renderingqueue->Remove( descr->m_viewportquad );
+    descr->m_renderingqueue_update_flag = true;
+
+    _DRAWSPACE_DELETE_( descr->m_viewportquad );
 }
 
 RenderingQueue* RenderPassNode::GetRenderingQueue( void ) const

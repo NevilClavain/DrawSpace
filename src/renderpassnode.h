@@ -99,7 +99,10 @@ public:
                                 long p_targetdims_width = 255, 
                                 long p_targetdims_height = 255 );
 
+    void Erase( void );
+
     void CreateViewportQuad( dsreal p_z_offset = 0.0 );
+    void RemoveViewportQuad( void );
     Core::RenderingQueue* GetRenderingQueue( void ) const;
     ViewportQuad* GetViewportQuad( void ) const;
     Core::Texture* GetTargetTexture( void ) const;

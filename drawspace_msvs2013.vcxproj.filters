@@ -333,6 +333,9 @@
     <ClCompile Include="src\tracesystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\quadrenderingaspectimpl.cpp">
+      <Filter>aspectimplementations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -676,6 +679,9 @@
     </ClInclude>
     <ClInclude Include="src\tracesystem.h">
       <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\quadrenderingaspectimpl.h">
+      <Filter>aspectimplementations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

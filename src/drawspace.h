@@ -97,6 +97,7 @@
 #include "renderingaspect.h"
 #include "passesrenderingaspectimpl.h"
 #include "mesherenderingaspectimpl.h"
+#include "quadrenderingaspectimpl.h"
 #include "impostorsrenderingaspectimpl.h"
 #include "textrenderingaspectimpl.h"
 

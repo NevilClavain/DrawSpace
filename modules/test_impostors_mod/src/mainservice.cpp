@@ -161,11 +161,11 @@ bool MainService::Init( void )
     create_ground();
     create_screen_impostors();
     create_world_impostor();
-
+    create_quad();
 
 
     // ajouter la skybox a la scene
-    m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );                                                                      
+    m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );
     m_skyboxRender->RegisterToRendering( m_rendergraph );
 
 
@@ -187,6 +187,11 @@ bool MainService::Init( void )
     // ajout de l'impostor world a la scene
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
+
+    // ajout du quad a la scene
+    m_quadEntityNode = m_rootEntityNode.AddChild( &m_quadEntity );
+    m_quadRender.RegisterToRendering( m_rendergraph );
+
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -336,7 +341,9 @@ void MainService::create_world_impostor( void )
 
 
 
-    ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
+    //ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
+    RenderingNode* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
+
 
     impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
@@ -442,7 +449,8 @@ void MainService::create_screen_impostors( void )
     }
 
 
-    ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
+    //ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
+    RenderingNode* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
 
     impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
@@ -492,6 +500,46 @@ void MainService::create_screen_impostors( void )
     transform_aspect->AddComponent<Matrix>( "pos" );
 
     transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 6.0, -12.0, 1.0) );
+}
+
+void MainService::create_quad( void )
+{
+    RenderingAspect* rendering_aspect = m_quadEntity.AddAspect<RenderingAspect>();
+    rendering_aspect->AddImplementation( &m_quadRender );
+
+    rendering_aspect->AddComponent<QuadRenderingAspectImpl::PassSlot>( "finalpass_slot", "final_pass" );
+    RenderingNode* quad_pass = rendering_aspect->GetComponent<QuadRenderingAspectImpl::PassSlot>( "finalpass_slot" )->getPurpose().GetRenderingNode();
+    quad_pass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    quad_pass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
+    quad_pass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+
+    quad_pass->GetFx()->GetShader( 0 )->LoadFromFile();
+    quad_pass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    RenderStatesSet quadpass_rss;
+    quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    quadpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+
+    quad_pass->GetFx()->SetRenderStates( quadpass_rss );
+
+    quad_pass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
+    quad_pass->GetTexture( 0 )->LoadFromFile();
+
+    quad_pass->SetOrderNumber( 11000 );
+
+
+    TransformAspect* transform_aspect = m_quadEntity.AddAspect<TransformAspect>();
+
+    transform_aspect->SetImplementation( &m_quadTransformer );
+
+    
+    transform_aspect->AddComponent<Matrix>( "quad_scaling" );
+    transform_aspect->GetComponent<Matrix>( "quad_scaling" )->getPurpose().Scale( 0.1, 0.1, 1.0 );
+    
+
+    transform_aspect->AddComponent<Matrix>( "quad_pos" );
+    transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.3, -0.15, -1.0 );
 }
 
 void MainService::create_ground( void )

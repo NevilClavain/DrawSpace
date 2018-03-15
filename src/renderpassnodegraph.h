@@ -49,7 +49,6 @@ private:
     mutable PassDescrTree   m_tree;
     std::queue<Signals>     m_signals;
 
-
     void cleanup_treenodes( void );
 
 public:

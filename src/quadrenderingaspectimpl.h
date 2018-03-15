@@ -22,10 +22,8 @@
 */
 /* -*-LIC_END-*- */
 
-
-
-#ifndef _IMPOSTORSRENDERINGASPECTIMPL_H_
-#define _IMPOSTORSRENDERINGASPECTIMPL_H_
+#ifndef _QUADRENDERINGASPECTIMPL_H_
+#define _QUADRENDERINGASPECTIMPL_H_
 
 #include "renderingaspectimpl.h"
 #include "renderer.h"
@@ -37,20 +35,9 @@ namespace DrawSpace
 {
 namespace AspectImplementations
 {
-class ImpostorsRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
+class QuadRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 public:
-
-    struct ImpostorDescriptor
-    {
-        dsreal                      width_scale;
-        dsreal                      height_scale;
-        DrawSpace::Utils::Vector    localpos;
-        dsreal                      u1, v1;
-        dsreal                      u2, v2;
-        dsreal                      u3, v3;
-        dsreal                      u4, v4;     
-    };
 
     class PassSlot
     {
@@ -67,7 +54,6 @@ public:
     public:
 
         Utils::Matrix                           m_world;
-        Utils::Matrix                           m_view;
         Utils::Matrix                           m_proj;
 
         PassSlot( const dsstring& p_pass_name );
@@ -75,18 +61,14 @@ public:
 
         DrawSpace::Core::RenderingNode* GetRenderingNode( void ) const { return m_rendering_node; };
         
-        friend class ImpostorsRenderingAspectImpl;
+        friend class QuadRenderingAspectImpl;
     };
 
 private:
-
-    void build_quads( const PassSlot& p_pass_slot );
-
     bool                                m_add_in_rendergraph;
 
-    
 public:
-    ImpostorsRenderingAspectImpl( void );
+    QuadRenderingAspectImpl( void );
 
     bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue );
 

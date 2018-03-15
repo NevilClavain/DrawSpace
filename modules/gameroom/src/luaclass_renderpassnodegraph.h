@@ -58,14 +58,17 @@ public:
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl& GetPassesRenderAspectImpl( void );
 
     int LUA_createrootpass( lua_State* p_L );
+    int LUA_createchildpass( lua_State* p_L );
+    int LUA_removepass( lua_State* p_L );
     int LUA_setpasstargetclearcolor( lua_State* p_L );
     int LUA_setpasstargetclearstate( lua_State* p_L );
     int LUA_setpassdepthclearstate( lua_State* p_L );
     int LUA_createpassviewportquad( lua_State* p_L );
+    int LUA_removepassviewportquad( lua_State* p_L );
     int LUA_loadpassviewportquadshader( lua_State* p_L );
     int LUA_unloadpassviewportquadshaders( lua_State* p_L );
     int LUA_loadpassviewportquadtexture( lua_State* p_L );
-    int LUA_releasepassviewportquadtextures( lua_State* p_L );
+    int LUA_unloadpassviewportquadtextures( lua_State* p_L );
     int LUA_setpassviewportquadrenderstateset( lua_State* p_L );
     int LUA_updaterenderingqueues( lua_State* p_L );
 
