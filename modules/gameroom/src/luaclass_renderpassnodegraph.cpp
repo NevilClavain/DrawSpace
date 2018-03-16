@@ -24,7 +24,6 @@
 
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_renderstatesset.h"
-#include <drawspace_commons.h>
 #include "mainservice.h"
 
 using namespace DrawSpace;
@@ -33,8 +32,8 @@ using namespace DrawSpace::Core;
 const char LuaClass_RenderPassNodeGraph::className[] = "RenderPassNodeGraph";
 const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::methods[] =
 {
-    { "create_rootpass", &LuaClass_RenderPassNodeGraph::LUA_createrootpass },
-    { "create_childpass", &LuaClass_RenderPassNodeGraph::LUA_createchildpass },
+    { "create_root", &LuaClass_RenderPassNodeGraph::LUA_createroot },
+    { "create_child", &LuaClass_RenderPassNodeGraph::LUA_createchild },
     { "remove_pass", &LuaClass_RenderPassNodeGraph::LUA_removepass },
     { "set_pass_targetclearcolor", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor },
     { "set_pass_targetclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate },
@@ -73,7 +72,12 @@ DrawSpace::AspectImplementations::PassesRenderingAspectImpl& LuaClass_RenderPass
     return m_passes_render;
 }
 
-int LuaClass_RenderPassNodeGraph::LUA_createrootpass( lua_State* p_L )
+DrawSpace::RenderGraph::RenderPassNodeGraph& LuaClass_RenderPassNodeGraph::GetRenderGraph( void )
+{
+    return m_rendergraph;
+}
+
+int LuaClass_RenderPassNodeGraph::LUA_createroot( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
@@ -93,7 +97,7 @@ int LuaClass_RenderPassNodeGraph::LUA_createrootpass( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_RenderPassNodeGraph::LUA_createchildpass( lua_State* p_L )
+int LuaClass_RenderPassNodeGraph::LUA_createchild( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 3 )

@@ -39,15 +39,11 @@ protected:
     {
         DrawSpace::RenderGraph::RenderPassNode  m_renderpassnode;
         DrawSpace::Core::Fx                     m_fx;
-        /*
-        DrawSpace::Core::Shader                 m_v_shader;
-        DrawSpace::Core::Shader                 m_p_shader;
-        */
 
     } Passe;
     
     DrawSpace::RenderGraph::RenderPassNodeGraph                             m_rendergraph;
-    DrawSpace::AspectImplementations::PassesRenderingAspectImpl             m_passes_render; // le RenderingAspectImpl associe au m_rendergraph et permettant de lancer les rendu des passes stockees dans m_rendergraph
+    DrawSpace::AspectImplementations::PassesRenderingAspectImpl             m_passes_render; // le RenderingAspectImpl associe au m_rendergraph et permettant de lancer les rendus des passes stockees dans m_rendergraph
 
     std::unordered_map<dsstring, Passe>                                     m_passes;
 
@@ -56,9 +52,10 @@ public:
 	~LuaClass_RenderPassNodeGraph( void );
 
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl& GetPassesRenderAspectImpl( void );
+    DrawSpace::RenderGraph::RenderPassNodeGraph& GetRenderGraph( void );
 
-    int LUA_createrootpass( lua_State* p_L );
-    int LUA_createchildpass( lua_State* p_L );
+    int LUA_createroot( lua_State* p_L );
+    int LUA_createchild( lua_State* p_L );
     int LUA_removepass( lua_State* p_L );
     int LUA_setpasstargetclearcolor( lua_State* p_L );
     int LUA_setpasstargetclearstate( lua_State* p_L );

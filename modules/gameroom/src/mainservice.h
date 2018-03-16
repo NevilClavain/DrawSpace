@@ -36,7 +36,7 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
-    static const int                                                                m_console_max_lines_display = 18;
+    static const int                                                                m_console_max_lines_display = 31;
     static const int                                                                m_console_y_pos = 50;
 
 
@@ -57,6 +57,10 @@ protected:
 
     DrawSpace::Core::Entity                                                         m_rootEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
+    
+    DrawSpace::Core::Entity                                                         m_quadEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_quadEntityNode;
+
 
     /*
     DrawSpace::Core::Entity                                                         m_world1Entity;
@@ -87,11 +91,12 @@ protected:
     //DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
     //DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
+    DrawSpace::AspectImplementations::QuadRenderingAspectImpl                       m_quadRender;
 
 
     //DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
     //DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
-
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_quadTransformer;
 
     DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousecircularmode_cb;
     DrawSpace::Core::BaseCallback<void, int>*                                       m_closeapp_cb;
@@ -112,10 +117,11 @@ protected:
     void create_skybox( void );
     void create_ground( void );
     void create_camera( void );
+    void create_console_quad( void );
 
     void process_console_command( const dsstring& p_cmd );
     void print_console_line( const dsstring& p_text );
-    void draw_console( void );
+    void print_console_content( void );
 
 public:
 

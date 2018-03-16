@@ -22,69 +22,25 @@
 */
 /* -*-LIC_END-*- */
 
+#ifndef _LUACLASS_ENTITY_H_
+#define _LUACLASS_ENTITY_H_
 
-#include "aspect.h"
+#include "entity.h"
+#include "luna.h"
 
-#ifndef _ENTITY_H_
-#define _ENTITY_H_
-
-namespace DrawSpace
+class LuaClass_Entity
 {
-namespace Core
-{
-class Entity
-{
-private:
-    std::unordered_map<size_t, Aspect*> m_aspects;
+protected:
+    DrawSpace::Core::Entity m_entity;
 
 public:
+	LuaClass_Entity( lua_State* p_L );
+	~LuaClass_Entity( void );
 
-    Entity( void ) {};
-    ~Entity( void )
-    {
-        for( auto it = m_aspects.begin(); it != m_aspects.end(); ++it )
-        {
-            _DRAWSPACE_DELETE_( it->second );
-        }
-    }
-    
-    template<typename T>
-    T* AddAspect( void )
-    {
-        if( m_aspects.count(typeid(T).hash_code() ) )
-        {
-            _DSEXCEPTION( "Aspect type already exists in this entity : " + dsstring( typeid(T).name() ) );
-        }
-        T* p = _DRAWSPACE_NEW_( T, T );
-        m_aspects[typeid(T).hash_code()] = p;
-        return p;
-    }
+    DrawSpace::Core::Entity& GetEntity( void );
 
-    template<typename T>
-    T* GetAspect( void )
-    {
-        size_t tid = typeid(T).hash_code();
-
-        if( 0 == m_aspects.count( tid ) )
-        {
-            //_DSEXCEPTION( "Aspect type not registered in this entity : " + dsstring( typeid(T).name() ) );
-            return NULL;
-        }
-        
-        T* aspect = static_cast<T*>( m_aspects[tid] );
-        return aspect;
-    }
-
-    void GetAllAspects( std::vector<Aspect*>& p_list )
-    {
-        for( auto it = m_aspects.begin(); it != m_aspects.end(); ++it )
-        {
-            p_list.push_back( it->second );
-        }
-    }
+    static const char className[];
+    static const Luna<LuaClass_Entity>::RegType methods[];
 };
-}
-}
-
 
 #endif

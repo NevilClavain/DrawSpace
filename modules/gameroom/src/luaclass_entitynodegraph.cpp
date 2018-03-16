@@ -22,78 +22,40 @@
 */
 /* -*-LIC_END-*- */
 
-
-#include "luacontext.h"
-#include "luaclass_globals.h"
-#include "luaclass_renderpassnodegraph.h"
-#include "luaclass_renderer.h"
-#include "luaclass_renderstatesset.h"
-#include "luaclass_entity.h"
 #include "luaclass_entitynodegraph.h"
+#include "luaclass_entity.h"
 
-LuaContext::LuaContext( void ) :
-m_L( NULL )
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+
+const char LuaClass_EntityNodeGraph::className[] = "EntityNodeGraph";
+const Luna<LuaClass_EntityNodeGraph>::RegType LuaClass_EntityNodeGraph::methods[] =
+{
+    { "set_root", &LuaClass_EntityNodeGraph::LUA_setroot },
+	{ 0, 0 }
+};
+
+LuaClass_EntityNodeGraph::LuaClass_EntityNodeGraph( lua_State* p_L )
 {
 }
 
-LuaContext::~LuaContext( void )
+LuaClass_EntityNodeGraph::~LuaClass_EntityNodeGraph( void )
 {
 }
 
-void LuaContext::Startup( void )
+int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
 {
-	m_L = luaL_newstate();
-	
-	luaopen_io( m_L );
-    luaopen_base( m_L );
-    luaopen_table( m_L );
-    luaopen_string( m_L );
-
-    Luna<LuaClass_Globals>::Register( m_L );
-    Luna<LuaClass_RenderPassNodeGraph>::Register( m_L );
-    Luna<LuaClass_Renderer>::Register( m_L );
-    Luna<LuaClass_RenderStatesSet>::Register( m_L );
-    Luna<LuaClass_Entity>::Register( m_L );
-    Luna<LuaClass_EntityNodeGraph>::Register( m_L );
-}
-
-void LuaContext::Shutdown( void )
-{
-    if( m_L )
-    {
-        lua_close( m_L );
-        m_L = NULL;
-    }
-}
-
-bool LuaContext::Execute( const std::string& p_script )
-{
-	int status = luaL_dostring( m_L, p_script.c_str() );
-	if( status )
+	int argc = lua_gettop( p_L );
+	if( argc < 2 )
 	{
-        m_error = lua_tostring( m_L, -1 );
-		// popper le message d'erreur
-		lua_pop( m_L, 1 );
-        return false;
-	}
-    return true;
-}
-
-bool LuaContext::ExecuteFromFile( const std::string& p_fichier )
-{
-	int status = luaL_dofile( m_L, p_fichier.c_str() );
-	if( status )
-	{
-        m_error = lua_tostring( m_L, -1 );
-		// popper le message d'erreur
-		lua_pop( m_L, 1 );
-        return false;
+		lua_pushstring( p_L, "EntityNodeGraph::set_root : argument(s) missing" );
+		lua_error( p_L );		
 	}
 
-	return true;
-}
+    dsstring entity_id = luaL_checkstring( p_L, 1 );
+    LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 2 );
+    
+    m_entities[entity_id] = m_entitygraph.SetRoot( &lua_ent->GetEntity() );
 
-dsstring LuaContext::GetLastError( void )
-{
-    return m_error;
+    return 0;
 }

@@ -2143,6 +2143,8 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                     m_currentBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MAX;
                     m_currentBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
                 }
+
+                set_cache_blendstate();
             }
             break;
 
@@ -2152,6 +2154,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                 {
                     _DSEXCEPTION( "unsupported alpha blending func for D3D11" )
                 }
+                set_cache_blendstate();
             }
             break;
 
@@ -2207,11 +2210,12 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                     m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_DEST_COLOR;
                     m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_DEST_COLOR;
                 }
+                set_cache_blendstate();
             }
             break;
 
         case DrawSpace::Core::RenderState::ALPHABLENDSRC:
-
+            {
                 if( "zero" == arg )
                 {
                     m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ZERO;
@@ -2262,6 +2266,8 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                     m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_INV_DEST_COLOR;
                     m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_INV_DEST_COLOR;
                 }
+                set_cache_blendstate();
+            }
 
             break;
     }

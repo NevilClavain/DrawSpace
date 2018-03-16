@@ -25,6 +25,12 @@
     <ClCompile Include="src\luaclass_renderstatesset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\luaclass_entitynodegraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\luaclass_entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -57,6 +63,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luna.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_entitynodegraph.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_entity.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

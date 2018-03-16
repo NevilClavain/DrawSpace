@@ -22,78 +22,27 @@
 */
 /* -*-LIC_END-*- */
 
-
-#include "luacontext.h"
-#include "luaclass_globals.h"
-#include "luaclass_renderpassnodegraph.h"
-#include "luaclass_renderer.h"
-#include "luaclass_renderstatesset.h"
 #include "luaclass_entity.h"
-#include "luaclass_entitynodegraph.h"
 
-LuaContext::LuaContext( void ) :
-m_L( NULL )
+
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+
+const char LuaClass_Entity::className[] = "Entity";
+const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
+{
+	{ 0, 0 }
+};
+
+LuaClass_Entity::LuaClass_Entity( lua_State* p_L )
 {
 }
 
-LuaContext::~LuaContext( void )
+LuaClass_Entity::~LuaClass_Entity( void )
 {
 }
 
-void LuaContext::Startup( void )
+DrawSpace::Core::Entity& LuaClass_Entity::GetEntity( void )
 {
-	m_L = luaL_newstate();
-	
-	luaopen_io( m_L );
-    luaopen_base( m_L );
-    luaopen_table( m_L );
-    luaopen_string( m_L );
-
-    Luna<LuaClass_Globals>::Register( m_L );
-    Luna<LuaClass_RenderPassNodeGraph>::Register( m_L );
-    Luna<LuaClass_Renderer>::Register( m_L );
-    Luna<LuaClass_RenderStatesSet>::Register( m_L );
-    Luna<LuaClass_Entity>::Register( m_L );
-    Luna<LuaClass_EntityNodeGraph>::Register( m_L );
-}
-
-void LuaContext::Shutdown( void )
-{
-    if( m_L )
-    {
-        lua_close( m_L );
-        m_L = NULL;
-    }
-}
-
-bool LuaContext::Execute( const std::string& p_script )
-{
-	int status = luaL_dostring( m_L, p_script.c_str() );
-	if( status )
-	{
-        m_error = lua_tostring( m_L, -1 );
-		// popper le message d'erreur
-		lua_pop( m_L, 1 );
-        return false;
-	}
-    return true;
-}
-
-bool LuaContext::ExecuteFromFile( const std::string& p_fichier )
-{
-	int status = luaL_dofile( m_L, p_fichier.c_str() );
-	if( status )
-	{
-        m_error = lua_tostring( m_L, -1 );
-		// popper le message d'erreur
-		lua_pop( m_L, 1 );
-        return false;
-	}
-
-	return true;
-}
-
-dsstring LuaContext::GetLastError( void )
-{
-    return m_error;
+    return m_entity;
 }

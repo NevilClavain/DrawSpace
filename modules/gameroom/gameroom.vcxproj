@@ -95,6 +95,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\luaclass_entity.cpp" />
+    <ClCompile Include="src\luaclass_entitynodegraph.cpp" />
     <ClCompile Include="src\luaclass_globals.cpp" />
     <ClCompile Include="src\luaclass_renderer.cpp" />
     <ClCompile Include="src\luaclass_renderpassnodegraph.cpp" />
@@ -106,11 +108,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\crtp_singleton.h" />
+    <ClInclude Include="src\luaclass_entity.h" />
     <ClInclude Include="src\luaclass_globals.h" />
     <ClInclude Include="src\luaclass_renderer.h" />
     <ClInclude Include="src\luaclass_renderpassnodegraph.h" />
     <ClInclude Include="src\luaclass_renderstatesset.h" />
     <ClInclude Include="src\luacontext.h" />
+    <ClInclude Include="src\luaclass_entitynodegraph.h" />
     <ClInclude Include="src\luna.h" />
     <ClInclude Include="src\mainservice.h" />
     <ClInclude Include="src\rootimpl.h" />

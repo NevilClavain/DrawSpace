@@ -35,7 +35,7 @@ using namespace DrawSpace::Utils;
 _DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
 
 MainService::MainService( void ) :
-m_console_active( true ),
+m_console_active( false ),
 m_console_current_line( 0 ),
 m_meshe_import( NULL )
 {
@@ -106,23 +106,28 @@ bool MainService::Init( void )
 
     LuaContext::GetInstance()->Startup();
 
-    LuaContext::GetInstance()->Execute( "g=Globals()");
-    LuaContext::GetInstance()->Execute( "renderer=Renderer()");
-    LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph('rg')");
-    LuaContext::GetInstance()->Execute( "rg:create_rootpass('final_pass')");
+    LuaContext::GetInstance()->Execute( "g=Globals()" );
+    LuaContext::GetInstance()->Execute( "renderer=Renderer()" );
+    LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph('rg')" );
+    LuaContext::GetInstance()->Execute( "rg:create_root('final_pass')" );
+
+    LuaContext::GetInstance()->Execute( "eg=EntityNodeGraph()" );
+    LuaContext::GetInstance()->Execute( "root_entity=Entity()" );
+    LuaContext::GetInstance()->Execute( "eg:set_root('root', root_entity )" );
+
 
     // creation cote lua de l'enum RenderState::Operation
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_NONE=0");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETCULLING=1");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ENABLEZBUFFER=2");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETTEXTUREFILTERTYPE=3");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE=4");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETFILLMODE=5");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDENABLE=6");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDOP=7");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDFUNC=8");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDDEST=9");
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDSRC=10");
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_NONE=0" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETCULLING=1" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ENABLEZBUFFER=2" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETTEXTUREFILTERTYPE=3" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE=4" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETFILLMODE=5" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDENABLE=6" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDOP=7" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDFUNC=8" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDDEST=9" );
+    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDSRC=10" );
 
     // args loading shaders
     LuaContext::GetInstance()->Execute( "SHADER_COMPILED=1");
@@ -182,10 +187,7 @@ bool MainService::Init( void )
     //m_passesRender.SetRendergraph( &m_rendergraph );
 
 
-    // TEMPORAIRE !!!!
     rendering_aspect->AddImplementation( &m_rendergraphs["rg"]->GetPassesRenderAspectImpl() );
-
-
     rendering_aspect->AddImplementation( &m_textRender );
     
     //rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
@@ -228,6 +230,8 @@ bool MainService::Init( void )
     create_ground();
     */
 
+    create_console_quad();
+
     /*
     // ajouter la skybox a la scene
     m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );                                                                      
@@ -246,6 +250,11 @@ bool MainService::Init( void )
     m_groundRender.RegisterToRendering( m_rendergraph );
     */
 
+    // ajout du quad console a la scene
+    m_quadEntityNode = m_rootEntityNode.AddChild( &m_quadEntity );
+    m_quadRender.RegisterToRendering( m_rendergraphs["rg"]->GetRenderGraph() );
+    m_rendergraphs["rg"]->GetRenderGraph().PushSignal_UpdatedRenderingQueues();
+
     /////////////////////////////////////////////////////////////////////////////////
 
     m_systemsHub.Init( &m_entitygraph );
@@ -263,9 +272,6 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
-
-
-
     m_systemsHub.Run( &m_entitygraph );
     
     /*
@@ -281,7 +287,7 @@ void MainService::Run( void )
     rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().clear();
     if( m_console_active )
     {
-        draw_console();
+        print_console_content();
     }
 }
 
@@ -295,7 +301,7 @@ void MainService::Release( void )
     LuaContext::GetInstance()->Shutdown();
 }
 
-void MainService::draw_console( void )
+void MainService::print_console_content( void )
 {
     
     RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
@@ -304,7 +310,7 @@ void MainService::draw_console( void )
     {
         for( size_t i = 0; i < m_console_texts.size(); i++ )
         {
-            TextRenderingAspectImpl::TextDisplay myline( 10, m_console_y_pos + ( i * 15 ), 255, 10, 10, m_console_texts[i] );
+            TextRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 10, 70, 10, m_console_texts[i] );
             rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
         }
     }
@@ -312,7 +318,7 @@ void MainService::draw_console( void )
     {
         for( size_t i = 0; i < m_console_max_lines_display; i++ )
         {
-            TextRenderingAspectImpl::TextDisplay myline( 10, m_console_y_pos + ( i * 15 ), 255, 10, 10, m_console_texts[m_console_texts.size() - m_console_max_lines_display + i] );
+            TextRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 10, 70, 10, m_console_texts[m_console_texts.size() - m_console_max_lines_display + i] );
 
             rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
         }
@@ -541,13 +547,17 @@ void MainService::OnChar( long p_char, long p_scan )
     {
         if( m_console_active )
         {
-            m_console_active = false;
+            m_console_active = false;       
         }
         else
         {
             m_console_active = true;            
         }
 
+        RenderingAspect* rendering_aspect = m_quadEntity.GetAspect<RenderingAspect>();
+        RenderingNode* quad_pass = rendering_aspect->GetComponent<QuadRenderingAspectImpl::PassSlot>( "finalpass_slot" )->getPurpose().GetRenderingNode();
+        quad_pass->SetDrawingState( m_console_active );
+     
         return;
     }
 
@@ -646,6 +656,62 @@ void MainService::set_mouse_circular_mode( bool p_state )
         (*m_mousecircularmode_cb)( p_state );        
     }
 }
+
+void MainService::create_console_quad( void )
+{
+    RenderingAspect* rendering_aspect = m_quadEntity.AddAspect<RenderingAspect>();
+    rendering_aspect->AddImplementation( &m_quadRender );
+
+    rendering_aspect->AddComponent<QuadRenderingAspectImpl::PassSlot>( "finalpass_slot", "final_pass" );
+    RenderingNode* quad_pass = rendering_aspect->GetComponent<QuadRenderingAspectImpl::PassSlot>( "finalpass_slot" )->getPurpose().GetRenderingNode();
+    quad_pass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+
+    quad_pass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
+    quad_pass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+
+    quad_pass->GetFx()->GetShader( 0 )->LoadFromFile();
+    quad_pass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    quad_pass->AddShaderParameter( 1, "color", 0 );
+    quad_pass->SetShaderRealVector( "color", Vector( 0.5, 0.5, 0.5, 0.85 ) );
+
+    RenderStatesSet quadpass_rss;
+    quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    
+    quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "true" ) );
+    quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDOP, "add" ) );
+    quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDFUNC, "always" ) );
+    quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDDEST, "invsrcalpha" ) );
+    quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDSRC, "srcalpha" ) );
+
+
+    quadpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    quadpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "false" ) );
+
+    quad_pass->GetFx()->SetRenderStates( quadpass_rss );
+
+    quad_pass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
+    quad_pass->GetTexture( 0 )->LoadFromFile();
+
+    quad_pass->SetOrderNumber( 11000 );
+
+
+    TransformAspect* transform_aspect = m_quadEntity.AddAspect<TransformAspect>();
+
+    transform_aspect->SetImplementation( &m_quadTransformer );
+
+    
+    transform_aspect->AddComponent<Matrix>( "quad_scaling" );
+    transform_aspect->GetComponent<Matrix>( "quad_scaling" )->getPurpose().Scale( 2.0, 2.0, 1.0 );
+    
+
+    transform_aspect->AddComponent<Matrix>( "quad_pos" );
+    transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, 0.0, -1.0 );
+
+    quad_pass->SetDrawingState( m_console_active );
+
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
