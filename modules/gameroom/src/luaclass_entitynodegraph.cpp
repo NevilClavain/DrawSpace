@@ -53,6 +53,18 @@ LuaClass_EntityNodeGraph::~LuaClass_EntityNodeGraph( void )
 {
 }
 
+DrawSpace::EntityGraph::EntityNode& LuaClass_EntityNodeGraph::GetEntityNode( const dsstring& p_id )
+{
+    if( m_entities.count( p_id ) )
+    {
+        return m_entities[p_id];
+    }
+    else
+    {
+        _DSEXCEPTION( "Unknown entity" )
+    }
+}
+
 int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );

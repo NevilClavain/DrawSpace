@@ -38,6 +38,8 @@ public:
 	LuaClass_EntityNodeGraph( lua_State* p_L );
 	~LuaClass_EntityNodeGraph( void );
 
+    DrawSpace::EntityGraph::EntityNode& GetEntityNode( const dsstring& p_id );
+
     int LUA_setroot( lua_State* p_L );
 
     static const char className[];
