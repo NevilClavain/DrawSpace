@@ -39,6 +39,10 @@ public:
 
     DrawSpace::Core::Entity& GetEntity( void );
 
+    int LUA_addrenderingaspect( lua_State* p_L );
+    int LUA_addtimeaspect( lua_State* p_L );
+    int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
+
     static const char className[];
     static const Luna<LuaClass_Entity>::RegType methods[];
 };
