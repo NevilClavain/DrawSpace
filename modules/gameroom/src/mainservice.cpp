@@ -111,8 +111,11 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph('rg')" );
     LuaContext::GetInstance()->Execute( "rg:create_root('final_pass')" );
 
-    LuaContext::GetInstance()->Execute( "eg=EntityNodeGraph()" );
+    LuaContext::GetInstance()->Execute( "eg=EntityNodeGraph('eg')" );
     LuaContext::GetInstance()->Execute( "root_entity=Entity()" );
+    LuaContext::GetInstance()->Execute( "root_entity:add_renderingaspect()" );
+    LuaContext::GetInstance()->Execute( "root_entity:add_timeaspect()" );
+    LuaContext::GetInstance()->Execute( "root_entity:connect_renderingaspect_rendergraph(rg)" );
     LuaContext::GetInstance()->Execute( "eg:set_root('root', root_entity )" );
 
 
@@ -718,6 +721,11 @@ void MainService::create_console_quad( void )
 void MainService::RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg )
 {
     m_rendergraphs[p_id] = p_rg;
+}
+
+void MainService::RegisterEntityGraph( const std::string& p_id, LuaClass_EntityNodeGraph* p_eg )
+{
+    m_entitygraphs[p_id] = p_eg;
 }
 
 void MainService::RequestClose( void )

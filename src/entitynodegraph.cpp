@@ -35,7 +35,8 @@ using namespace DrawSpace::EntityGraph;
 
 EntityNodeGraph::EntityNodeGraph( void ) :
 m_curr_entity_camera( NULL ),
-m_dump_me( false )
+m_dump_me( false ),
+m_root_entity( NULL )
 {
 }
 
@@ -43,11 +44,17 @@ EntityNodeGraph::~EntityNodeGraph( void )
 {
 }
 
-EntityNode EntityNodeGraph::SetRoot(Entity* p_entity)
+EntityNode EntityNodeGraph::SetRoot( Entity* p_entity )
 {
-	m_tree.insert(p_entity);
+    m_root_entity = p_entity;
+	m_tree.insert( m_root_entity );
 	EntityNode node( &m_tree.root(), this );
 	return node;
+}
+
+Core::Entity* EntityNodeGraph::GetRoot( void ) const
+{
+    return m_root_entity;
 }
 
 void EntityNodeGraph::Erase(void)

@@ -31,6 +31,8 @@
 #include "crtp_singleton.h"
 
 #include "luaclass_renderpassnodegraph.h"
+#include "luaclass_entitynodegraph.h"
+#include "luaclass_entity.h"
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public BaseSingleton<MainService>
 {
@@ -54,6 +56,8 @@ protected:
     //std::unordered_map<dsstring, DrawSpace::RenderGraph::RenderPassNode>            m_render_passes;
 
     std::unordered_map<dsstring, LuaClass_RenderPassNodeGraph*>                     m_rendergraphs; // table des rendergraph
+
+    std::unordered_map<dsstring, LuaClass_EntityNodeGraph*>                         m_entitygraphs;
 
     DrawSpace::Core::Entity                                                         m_rootEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
@@ -147,6 +151,7 @@ public:
     //////////////////////////////////////////////////////////////////////////
 
     void RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg );
+    void RegisterEntityGraph( const std::string& p_id, LuaClass_EntityNodeGraph* p_eg );
 
     void RequestClose( void );
     void RequestClearConsole( void );

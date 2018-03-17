@@ -24,6 +24,7 @@
 
 #include "luaclass_entitynodegraph.h"
 #include "luaclass_entity.h"
+#include "mainservice.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -37,6 +38,15 @@ const Luna<LuaClass_EntityNodeGraph>::RegType LuaClass_EntityNodeGraph::methods[
 
 LuaClass_EntityNodeGraph::LuaClass_EntityNodeGraph( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "EntityNodeGraph::EntityNodeGraph : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+    dsstring id = luaL_checkstring( p_L, 1 );
+    MainService::GetInstance()->RegisterEntityGraph( id, this );
 }
 
 LuaClass_EntityNodeGraph::~LuaClass_EntityNodeGraph( void )

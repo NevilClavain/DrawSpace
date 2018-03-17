@@ -50,8 +50,6 @@ public:
 
     } CameraEvent;
 
-
-
     typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>                            CameraEventHandler;
 
 private:
@@ -75,9 +73,9 @@ private:
 
     std::queue<Signals>                                         m_signals;
 
-
-
     bool                                                        m_dump_me;
+
+    Core::Entity*                                               m_root_entity; // on memorise le root juste comme ca, ca peut servir
 
     void notify_cam_event( CameraEvent p_evt, Core::Entity* p_entity );
 
@@ -87,6 +85,8 @@ public:
 
 	EntityNode SetRoot( Core::Entity* p_entity );
 	void Erase( void );
+
+    Core::Entity* GetRoot( void ) const;
     
     void AcceptSystemLeafToRoot( DrawSpace::Interface::System* p_system );
     void AcceptSystemRootToLeaf( DrawSpace::Interface::System* p_system );
