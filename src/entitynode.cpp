@@ -85,3 +85,8 @@ void EntityNode::Erase(void)
         (**it )( EntityNode::REMOVED_FROM_TREE, entity );
     }
 }
+
+Core::Entity* EntityNode::GetEntity( void ) const
+{
+    return m_tree_node->data();
+}

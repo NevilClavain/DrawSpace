@@ -139,130 +139,20 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
     
-    
-    //m_finalpass = m_rendergraph.CreateRoot( "final_pass" );
 
-    /*
-    m_finalpass.CreateViewportQuad();
-
-    m_finalpass.GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-
-    RenderStatesSet finalpass_rss;
-    finalpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "point" ) );
-    finalpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
-
-
-    m_finalpass.GetViewportQuad()->GetFx()->SetRenderStates( finalpass_rss );
-
-
-    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
-    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
-    */
-
-    /*
-    m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
-    m_finalpass.GetRenderingQueue()->EnableTargetClearing( true );
-    m_finalpass.GetRenderingQueue()->SetTargetClearingColor( 26, 27, 28, 255 );
-    */
-
-    /*
-    m_render_passes["final_pass"] = m_rendergraph.CreateRoot( "final_pass" );
-
-    m_render_passes["final_pass"].GetRenderingQueue()->EnableDepthClearing( false );
-    m_render_passes["final_pass"].GetRenderingQueue()->EnableTargetClearing( true );
-    m_render_passes["final_pass"].GetRenderingQueue()->SetTargetClearingColor( 26, 27, 28, 255 );
-    */
-
-    /*
-    m_texturepass = m_finalpass.CreateChild( "texture_pass", 0 );    
-    m_texturepass.GetRenderingQueue()->EnableDepthClearing( true );
-    m_texturepass.GetRenderingQueue()->EnableTargetClearing( false );
-    */
-
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    //RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
-
-    DrawSpace::Core::Entity* root_entity = m_entitygraphs["eg"]->GetEntityGraph().GetRoot();
     DrawSpace::EntityGraph::EntityNode& root_entity_node = m_entitygraphs["eg"]->GetEntityNode( "root" );
+    DrawSpace::Core::Entity* root_entity = root_entity_node.GetEntity();
 
     RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
 
-    //rendering_aspect->AddImplementation( &m_passesRender );
-    //m_passesRender.SetRendergraph( &m_rendergraph );
-
-
-    //rendering_aspect->AddImplementation( &m_rendergraphs["rg"]->GetPassesRenderAspectImpl() );
     rendering_aspect->AddImplementation( &m_textRender );
     
-    //rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
     rendering_aspect->AddComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" );
 
-    /*
-    TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
-
-    time_aspect->AddComponent<TimeManager>( "time_manager" );
-    time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
-    time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
-    time_aspect->AddComponent<dstime>( "time", 0 );
-    time_aspect->AddComponent<int>( "output_fps" );
-    time_aspect->AddComponent<int>( "output_world_nbsteps" );
-
-    time_aspect->AddComponent<dsreal>( "output_time_factor" );
-    */
-
-    //m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
-    //m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
-
-
-    //m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
-
-    /*
-    //////////////////////////////////////////////////////////////////////////////////////
-
-    PhysicsAspect* physic_aspect = m_world1Entity.AddAspect<PhysicsAspect>();
-
-    physic_aspect->AddComponent<bool>( "gravity_state", true );    
-    physic_aspect->AddComponent<Vector>( "gravity", Vector( 0.0, -9.81, 0.0, 0.0 ) );
-
-    m_World1EntityNode = m_rootEntityNode.AddChild( &m_world1Entity );
-    */
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    /*
-    create_camera();
-    create_skybox();
-    create_ground();
-    */
 
     create_console_quad();
 
-    /*
-    // ajouter la skybox a la scene
-    m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );                                                                      
-    m_skyboxRender->RegisterToRendering( m_rendergraph );
-
-
-
-    // ajouter la cameras a la scene
-    m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
-
-    // designer la camera courante    
-    m_entitygraph.SetCurrentCameraEntity( &m_cameraEntity );
-
-    // ajouter le ground a la scene
-    m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
-    m_groundRender.RegisterToRendering( m_rendergraph );
-    */
-
     // ajout du quad console a la scene
-
-
-    
-    //m_quadEntityNode = m_rootEntityNode.AddChild( &m_quadEntity );
     m_quadEntityNode = root_entity_node.AddChild( &m_quadEntity );
 
     m_quadRender.RegisterToRendering( m_rendergraphs["rg"]->GetRenderGraph() );
@@ -270,13 +160,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    //m_systemsHub.Init( &m_entitygraph );
-
     m_systemsHub.Init( &m_entitygraphs["eg"]->GetEntityGraph() );
-
-    //m_rendergraph.PushSignal_UpdatedRenderingQueues();
-    //m_entitygraph.PushSignal_RenderSceneBegin();
-
     m_entitygraphs["eg"]->GetEntityGraph().PushSignal_RenderSceneBegin();
 
     //set_mouse_circular_mode( true );
@@ -289,25 +173,12 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
-    //m_systemsHub.Run( &m_entitygraph );
-
     m_systemsHub.Run( &m_entitygraphs["eg"]->GetEntityGraph() );
     
-    /*
-    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
-    char comment[256];
-    sprintf( comment, "%d fps - %s", time_aspect->GetComponent<int>( "output_fps" )->getPurpose(), m_pluginDescr.c_str() );
-    */
-
-    //RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
-
-    DrawSpace::Core::Entity* root_entity = m_entitygraphs["eg"]->GetEntityGraph().GetRoot();
+    DrawSpace::EntityGraph::EntityNode& root_entity_node = m_entitygraphs["eg"]->GetEntityNode( "root" );
+    DrawSpace::Core::Entity* root_entity = root_entity_node.GetEntity();
     RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
 
-
-    //rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
-
-    
     rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().clear();
     if( m_console_active )
     {
@@ -319,19 +190,15 @@ void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
-    //m_systemsHub.Release( &m_entitygraph );
-
     m_systemsHub.Release( &m_entitygraphs["eg"]->GetEntityGraph() );
-
 
     LuaContext::GetInstance()->Shutdown();
 }
 
 void MainService::print_console_content( void )
 {
-    
-    //RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
-    DrawSpace::Core::Entity* root_entity = m_entitygraphs["eg"]->GetEntityGraph().GetRoot();
+    DrawSpace::EntityGraph::EntityNode& root_entity_node = m_entitygraphs["eg"]->GetEntityNode( "root" );
+    DrawSpace::Core::Entity* root_entity = root_entity_node.GetEntity();
     RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
 
     if( m_console_texts.size() <= m_console_max_lines_display )
@@ -354,193 +221,11 @@ void MainService::print_console_content( void )
     
 }
 
-/*
-void MainService::create_skybox( void )
-{
-    DrawSpace::Interface::Module::Root* sbmod_root;
-
-    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", &sbmod_root ) )
-    {
-        _DSEXCEPTION( "fail to load skyboxmod module root" )
-    }
-    m_skyboxRender = sbmod_root->InstanciateRenderingAspectImpls( "skyboxRender" );
-
-
-    RenderingAspect* rendering_aspect = m_skyboxEntity.AddAspect<RenderingAspect>();
-    
-    rendering_aspect->AddImplementation( m_skyboxRender );
-
-    ////////////// noms des passes
-
-    std::vector<dsstring> skybox_passes;
-
-    skybox_passes.push_back( "texture_pass" );
-
-    rendering_aspect->AddComponent<std::vector<dsstring>>( "skybox_passes", skybox_passes );
-
-    ////////////// jeu de 6 textures par slot pass
-
-    std::vector<Texture*> skybox_textures;
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ) );
-
-    for( int i = 0; i < 6; i++ )
-    {
-        skybox_textures[i]->LoadFromFile();    
-    }
-
-    rendering_aspect->AddComponent<std::vector<Texture*>>( "skybox_textures", skybox_textures );
-
-    /////////////// les FX pour chaque slot pass
-
-    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_( Fx, Fx );
-
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-    skybox_texturepass_fx->GetShader( 0 )->LoadFromFile();
-    skybox_texturepass_fx->GetShader( 1 )->LoadFromFile();
-
-    RenderStatesSet skybox_texturepass_rss;
-    skybox_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    skybox_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-
-    skybox_texturepass_fx->SetRenderStates( skybox_texturepass_rss );
-
-    rendering_aspect->AddComponent<Fx*>( "skybox_fx", skybox_texturepass_fx );
-       
-    /////////// params shaders
-    
-    //std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> skybox_shaders_params;
-
-    std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params;
-
-        
-    rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( "skybox_texturepass_shaders_params", skybox_texturepass_shaders_params );
-
-    //////////////// valeur du rendering order pour chaque slot pass
-    rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
-
-
-    TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
-
-    transform_aspect->SetImplementation( &m_skybox_transformer );
-
-    transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
-
-    transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
-        
-}
-
-void MainService::create_ground( void )
-{
-    RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
-
-    rendering_aspect->AddImplementation( &m_groundRender );
-
-    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
-
-    
-    RenderingNode* ground_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
-    ground_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-    ground_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    ground_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
-
-    RenderStatesSet ground_texturepass_rss;
-    ground_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
-    ground_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-
-    ground_texturepass->GetFx()->SetRenderStates( ground_texturepass_rss );
-
-    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    ground_texturepass->GetTexture( 0 )->LoadFromFile();
-
-
-    ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
-    ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
-
-    ground_texturepass->SetOrderNumber( -500 );
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();    
-
-    BodyAspect* body_aspect = m_groundEntity.AddAspect<BodyAspect>();
-    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 100.0, 0.0, 100.0, 1.0 ) );
-
-    Matrix ground_attitude;
-    
-    ground_attitude.Translation( 0.0, -3.0, 0.0 );
-    body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
-
-    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
-
-    body_aspect->AddComponent<bool>( "enable", true );
-    body_aspect->AddComponent<bool>( "contact_state", false );
-
-    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
-
-}
-
-void MainService::create_camera( void )
-{
-    TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
-
-    transform_aspect->SetImplementation( &m_fps_transformer );
-    transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
-    transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
-
-    transform_aspect->AddComponent<Vector>( "speed" );
-    transform_aspect->AddComponent<Matrix>( "pos" );
-
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 10.0, 1.0 ) );
-
-    transform_aspect->AddComponent<bool>( "ymvt", true );
-
-    CameraAspect* camera_aspect = m_cameraEntity.AddAspect<CameraAspect>();
-
-    camera_aspect->AddComponent<Matrix>( "camera_proj" );
-
-    DrawSpace::Interface::Renderer::Characteristics characteristics;
-    m_renderer->GetRenderCharacteristics( characteristics );
-    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
-
-}
-*/
 void MainService::OnKeyPress( long p_key )
 {
     if( m_console_active )
     {
         return;
-    }
-
-    switch( p_key )
-    {
-        /*
-        case 'Q':
-        {
-            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
-            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 12.0;    
-        }
-        break;
-
-        case 'W':
-        {
-            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
-            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = -12.0;
-        }
-        break;
-        */
     }
 }
 
@@ -549,19 +234,6 @@ void MainService::OnEndKeyPress( long p_key )
     if( m_console_active )
     {
         return;
-    }
-
-    switch( p_key )
-    {
-        /*
-        case 'Q':
-        case 'W':
-        {
-            TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
-            transform_aspect->GetComponent<Vector>( "speed" )->getPurpose()[2] = 0.0; 
-        }
-        break;
-        */
     }
 }
 
@@ -626,15 +298,6 @@ void MainService::OnChar( long p_char, long p_scan )
 
 void MainService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
-    /*
-    TransformAspect* transform_aspect = m_cameraEntity.GetAspect<TransformAspect>();
-
-    m_fps_yaw += - p_dx / 1.0;
-    m_fps_pitch += - p_dy / 1.0;
-
-    transform_aspect->GetComponent<dsreal>( "yaw" )->getPurpose() = m_fps_yaw.GetValue();
-    transform_aspect->GetComponent<dsreal>( "pitch" )->getPurpose() = m_fps_pitch.GetValue();
-    */
 }
 
 void MainService::OnMouseWheel( long p_delta )

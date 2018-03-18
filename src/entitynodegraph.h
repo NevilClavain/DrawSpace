@@ -85,8 +85,6 @@ public:
 
 	EntityNode SetRoot( Core::Entity* p_entity );
 	void Erase( void );
-
-    Core::Entity* GetRoot( void ) const;
     
     void AcceptSystemLeafToRoot( DrawSpace::Interface::System* p_system );
     void AcceptSystemRootToLeaf( DrawSpace::Interface::System* p_system );

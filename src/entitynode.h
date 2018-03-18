@@ -62,6 +62,8 @@ public:
     EntityNode( void );
     ~EntityNode( void );
 
+    Core::Entity* GetEntity( void ) const;
+
 	EntityNode AddChild( Core::Entity* p_entity );
 	void Erase( void );
 

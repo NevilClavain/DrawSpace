@@ -52,10 +52,6 @@ EntityNode EntityNodeGraph::SetRoot( Entity* p_entity )
 	return node;
 }
 
-Core::Entity* EntityNodeGraph::GetRoot( void ) const
-{
-    return m_root_entity;
-}
 
 void EntityNodeGraph::Erase(void)
 {

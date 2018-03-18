@@ -47,68 +47,23 @@ protected:
 
     DrawSpace::Interface::MesheImport*                                              m_meshe_import;
 
-    //DrawSpace::RenderGraph::RenderPassNodeGraph                                     m_rendergraph;
-    //DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
-
-    //DrawSpace::RenderGraph::RenderPassNode                                          m_texturepass;
-    //DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;
-
-    //std::unordered_map<dsstring, DrawSpace::RenderGraph::RenderPassNode>            m_render_passes;
-
     std::unordered_map<dsstring, LuaClass_RenderPassNodeGraph*>                     m_rendergraphs; // table des rendergraph
-
     std::unordered_map<dsstring, LuaClass_EntityNodeGraph*>                         m_entitygraphs;
 
-    //DrawSpace::Core::Entity                                                         m_rootEntity;
-    //DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
+
     
     DrawSpace::Core::Entity                                                         m_quadEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_quadEntityNode;
 
-
-    /*
-    DrawSpace::Core::Entity                                                         m_world1Entity;
-    DrawSpace::EntityGraph::EntityNode                                              m_World1EntityNode;
-
-
-    DrawSpace::Core::Entity                                                         m_cameraEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_cameraEntityNode;
-
-    DrawSpace::Core::Entity                                                         m_groundEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_groundEntityNode;
-
-
-    DrawSpace::Core::Entity                                                         m_impostorsEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_impostorsEntityNode;
-
-    DrawSpace::Core::Entity                                                         m_worldImpostorsEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_worldImpostorsEntityNode;
-
-    DrawSpace::Core::Entity                                                         m_skyboxEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_skyboxEntityNode;
-    */
-
     DrawSpace::Systems::Hub                                                         m_systemsHub;
-
-    //DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
-
-    //DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
-    //DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
     DrawSpace::AspectImplementations::QuadRenderingAspectImpl                       m_quadRender;
 
-
-    //DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
-    //DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_quadTransformer;
 
     DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousecircularmode_cb;
     DrawSpace::Core::BaseCallback<void, int>*                                       m_closeapp_cb;
 
-
-
-    //DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_yaw;
-    //DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_pitch;
 
     //////////////gestion de la console///////////////////
     bool                                                                            m_console_active;
