@@ -65,6 +65,11 @@ DrawSpace::EntityGraph::EntityNode& LuaClass_EntityNodeGraph::GetEntityNode( con
     }
 }
 
+DrawSpace::EntityGraph::EntityNodeGraph& LuaClass_EntityNodeGraph::GetEntityGraph( void )
+{
+    return m_entitygraph;
+}
+
 int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );

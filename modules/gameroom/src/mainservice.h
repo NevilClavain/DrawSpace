@@ -48,7 +48,7 @@ protected:
     DrawSpace::Interface::MesheImport*                                              m_meshe_import;
 
     //DrawSpace::RenderGraph::RenderPassNodeGraph                                     m_rendergraph;
-    DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
+    //DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
 
     //DrawSpace::RenderGraph::RenderPassNode                                          m_texturepass;
     //DrawSpace::RenderGraph::RenderPassNode                                          m_finalpass;
@@ -59,8 +59,8 @@ protected:
 
     std::unordered_map<dsstring, LuaClass_EntityNodeGraph*>                         m_entitygraphs;
 
-    DrawSpace::Core::Entity                                                         m_rootEntity;
-    DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
+    //DrawSpace::Core::Entity                                                         m_rootEntity;
+    //DrawSpace::EntityGraph::EntityNode                                              m_rootEntityNode;
     
     DrawSpace::Core::Entity                                                         m_quadEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_quadEntityNode;

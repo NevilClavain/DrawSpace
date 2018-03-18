@@ -184,19 +184,24 @@ bool MainService::Init( void )
 
     ////////////////////////////////////////////////////////////////////////////////////
 
-    RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
+    //RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
+
+    DrawSpace::Core::Entity* root_entity = m_entitygraphs["eg"]->GetEntityGraph().GetRoot();
+    DrawSpace::EntityGraph::EntityNode& root_entity_node = m_entitygraphs["eg"]->GetEntityNode( "root" );
+
+    RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
 
     //rendering_aspect->AddImplementation( &m_passesRender );
     //m_passesRender.SetRendergraph( &m_rendergraph );
 
 
-    rendering_aspect->AddImplementation( &m_rendergraphs["rg"]->GetPassesRenderAspectImpl() );
+    //rendering_aspect->AddImplementation( &m_rendergraphs["rg"]->GetPassesRenderAspectImpl() );
     rendering_aspect->AddImplementation( &m_textRender );
     
     //rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
     rendering_aspect->AddComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" );
 
-    
+    /*
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
@@ -207,13 +212,13 @@ bool MainService::Init( void )
     time_aspect->AddComponent<int>( "output_world_nbsteps" );
 
     time_aspect->AddComponent<dsreal>( "output_time_factor" );
-    
+    */
 
     //m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
     //m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
 
 
-    m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
+    //m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
     /*
     //////////////////////////////////////////////////////////////////////////////////////
@@ -254,16 +259,25 @@ bool MainService::Init( void )
     */
 
     // ajout du quad console a la scene
-    m_quadEntityNode = m_rootEntityNode.AddChild( &m_quadEntity );
+
+
+    
+    //m_quadEntityNode = m_rootEntityNode.AddChild( &m_quadEntity );
+    m_quadEntityNode = root_entity_node.AddChild( &m_quadEntity );
+
     m_quadRender.RegisterToRendering( m_rendergraphs["rg"]->GetRenderGraph() );
     m_rendergraphs["rg"]->GetRenderGraph().PushSignal_UpdatedRenderingQueues();
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_systemsHub.Init( &m_entitygraph );
+    //m_systemsHub.Init( &m_entitygraph );
+
+    m_systemsHub.Init( &m_entitygraphs["eg"]->GetEntityGraph() );
 
     //m_rendergraph.PushSignal_UpdatedRenderingQueues();
-    m_entitygraph.PushSignal_RenderSceneBegin();
+    //m_entitygraph.PushSignal_RenderSceneBegin();
+
+    m_entitygraphs["eg"]->GetEntityGraph().PushSignal_RenderSceneBegin();
 
     //set_mouse_circular_mode( true );
 
@@ -275,7 +289,9 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
-    m_systemsHub.Run( &m_entitygraph );
+    //m_systemsHub.Run( &m_entitygraph );
+
+    m_systemsHub.Run( &m_entitygraphs["eg"]->GetEntityGraph() );
     
     /*
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
@@ -283,7 +299,12 @@ void MainService::Run( void )
     sprintf( comment, "%d fps - %s", time_aspect->GetComponent<int>( "output_fps" )->getPurpose(), m_pluginDescr.c_str() );
     */
 
-    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    //RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+
+    DrawSpace::Core::Entity* root_entity = m_entitygraphs["eg"]->GetEntityGraph().GetRoot();
+    RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
+
+
     //rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
 
     
@@ -298,8 +319,10 @@ void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
-    m_systemsHub.Release( &m_entitygraph );
-    m_entitygraph.PushSignal_RenderSceneEnd();
+    //m_systemsHub.Release( &m_entitygraph );
+
+    m_systemsHub.Release( &m_entitygraphs["eg"]->GetEntityGraph() );
+
 
     LuaContext::GetInstance()->Shutdown();
 }
@@ -307,7 +330,9 @@ void MainService::Release( void )
 void MainService::print_console_content( void )
 {
     
-    RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    //RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
+    DrawSpace::Core::Entity* root_entity = m_entitygraphs["eg"]->GetEntityGraph().GetRoot();
+    RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
 
     if( m_console_texts.size() <= m_console_max_lines_display )
     {
