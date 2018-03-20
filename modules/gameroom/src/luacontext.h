@@ -53,6 +53,8 @@ public:
 	bool ExecuteFromFile( const std::string& p_fichier );
 	dsstring GetLastError( void );
 
+    void CallLuaAppRunFunc( int p_regindex );
+
     friend class BaseSingleton<LuaContext>;
 };
 

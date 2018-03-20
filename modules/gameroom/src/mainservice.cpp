@@ -39,7 +39,7 @@ m_console_active( false ),
 m_console_current_line( 0 ),
 m_meshe_import( NULL )
 {
-    m_console_texts.push_back( "Command input ready" );
+    m_console_texts.push_back( "Console: input ready" );
     m_console_texts.push_back( ">" );
     m_console_current_line++;
 }
@@ -132,6 +132,23 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDDEST=9" );
     LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDSRC=10" );
 
+    // type d'aspect
+    LuaContext::GetInstance()->Execute( "BODY_ASPECT=0" );
+    LuaContext::GetInstance()->Execute( "CAMERA_ASPECT=1" );
+    LuaContext::GetInstance()->Execute( "PHYSICS_ASPECT=2" );
+    LuaContext::GetInstance()->Execute( "RENDERING_ASPECT=3" );
+    LuaContext::GetInstance()->Execute( "SERVICE_ASPECT=4" );
+    LuaContext::GetInstance()->Execute( "TIME_ASPECT=5" );
+    LuaContext::GetInstance()->Execute( "TRANSFORM_ASPECT=6" );
+
+    // type de composant
+    LuaContext::GetInstance()->Execute( "COMP_INT=0" );
+    LuaContext::GetInstance()->Execute( "COMP_LONG=1" );
+    LuaContext::GetInstance()->Execute( "COMP_DSREAL=2" );
+    LuaContext::GetInstance()->Execute( "COMP_FLOAT=3" );
+    LuaContext::GetInstance()->Execute( "COMP_DSSTRING=4" );
+    LuaContext::GetInstance()->Execute( "COMP_TEXTDISPLAY=5" );
+
     // args loading shaders
     LuaContext::GetInstance()->Execute( "SHADER_COMPILED=1");
     LuaContext::GetInstance()->Execute( "SHADER_NOT_COMPILED=0");
@@ -184,6 +201,10 @@ void MainService::Run( void )
     {
         print_console_content();
     }
+
+    /////////////////////////////////////////////////////
+
+    execute_lua_run_cbs();
 }
 
 void MainService::Release( void )
@@ -404,6 +425,15 @@ void MainService::create_console_quad( void )
 }
 
 
+void MainService::execute_lua_run_cbs( void )
+{
+    for( size_t i = 0; i < m_run_lua_callbacks.size(); i++ )
+    {
+        LuaContext::GetInstance()->CallLuaAppRunFunc( m_run_lua_callbacks[i] );
+    }
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MainService::RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg )
@@ -414,6 +444,11 @@ void MainService::RegisterRenderGraph( const std::string& p_id, LuaClass_RenderP
 void MainService::RegisterEntityGraph( const std::string& p_id, LuaClass_EntityNodeGraph* p_eg )
 {
     m_entitygraphs[p_id] = p_eg;
+}
+
+void MainService::RegisterRunCallback( int p_regindex )
+{
+    m_run_lua_callbacks.push_back( p_regindex );
 }
 
 void MainService::RequestClose( void )

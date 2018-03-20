@@ -27,11 +27,20 @@
 #include "renderingaspect.h"
 #include "timeaspect.h"
 
+#include "bodyaspect.h"
+#include "cameraaspect.h"
+#include "physicsaspect.h"
+#include "renderingaspect.h"
+#include "serviceaspect.h"
+#include "timeaspect.h"
+#include "transformaspect.h"
+#include "textrenderingaspectimpl.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
+using namespace DrawSpace::AspectImplementations;
 
 const char LuaClass_Entity::className[] = "Entity";
 const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
@@ -39,6 +48,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "add_renderingaspect", &LuaClass_Entity::LUA_addrenderingaspect },
     { "add_timeaspect", &LuaClass_Entity::LUA_addtimeaspect },
     { "connect_renderingaspect_rendergraph", &LuaClass_Entity::LUA_connect_renderingaspect_rendergraph },
+    { "add_component", &LuaClass_Entity::LUA_addcomponent },
 	{ 0, 0 }
 };
 
@@ -97,6 +107,94 @@ int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
     {
 		lua_pushstring( p_L, "Entity::connect_renderingaspect_rendergraph : entity has no rendering aspect. Call add_renderingaspect() method first" );
 		lua_error( p_L );    
+    }
+
+    return 0;
+}
+
+int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 2 )
+	{
+		lua_pushstring( p_L, "Entity::add_component : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+    AspectType aspect_type = static_cast<AspectType>( luaL_checkint( p_L, 1 ) );
+    ComponentType comp_type = static_cast<ComponentType>( luaL_checkint( p_L, 2 ) );
+
+    static std::map<AspectType, std::function<Core::Aspect*( DrawSpace::Core::Entity& )>> aspect_type_aig = 
+    {
+        { BODY_ASPECT, []( DrawSpace::Core::Entity& p_entity )->Core::Aspect* { return p_entity.GetAspect<BodyAspect>(); } },
+        { CAMERA_ASPECT, []( DrawSpace::Core::Entity& p_entity )->Core::Aspect* { return p_entity.GetAspect<CameraAspect>(); } },
+        { PHYSICS_ASPECT, []( DrawSpace::Core::Entity& p_entity )->Core::Aspect* { return p_entity.GetAspect<PhysicsAspect>(); } },
+        { RENDERING_ASPECT, []( DrawSpace::Core::Entity& p_entity )->Core::Aspect* { return p_entity.GetAspect<RenderingAspect>(); } },
+        { SERVICE_ASPECT, []( DrawSpace::Core::Entity& p_entity )->Core::Aspect* { return p_entity.GetAspect<ServiceAspect>(); } },
+        { TIME_ASPECT, []( DrawSpace::Core::Entity& p_entity )->Core::Aspect* { return p_entity.GetAspect<TimeAspect>(); } },
+        { TRANSFORM_ASPECT, []( DrawSpace::Core::Entity& p_entity )->Core::Aspect* { return p_entity.GetAspect<TransformAspect>(); } },
+    };
+    
+    Core::Aspect* aspect = aspect_type_aig[aspect_type]( m_entity );
+    if( NULL == aspect )
+    {
+		lua_pushstring( p_L, "Entity::add_component : aspect doesnt exists in this entity!" );
+		lua_error( p_L );		    
+    }
+
+    int argc_compl = argc - 2; // nbre d'args apres le aspect_type et le comp_type
+
+    switch( comp_type )
+    {
+        case COMP_INT:
+        {
+            //todo
+        }
+        break;
+    
+        case COMP_LONG:
+        {
+            //todo
+        }
+        break;
+
+        case COMP_DSREAL:
+        {
+            //todo
+        }
+        break;
+
+        case COMP_FLOAT:
+        {
+            //todo
+        }
+        break;
+
+        case COMP_DSSTRING:
+        {
+            //todo
+        }
+        break;
+
+        case COMP_TEXTDISPLAY:
+        {
+            if( argc_compl < 7 )
+            {
+		        lua_pushstring( p_L, "Entity::add_component : argument(s) missing for text display" );
+		        lua_error( p_L );	            
+            }
+
+            dsstring id = luaL_checkstring( p_L, 3 );
+            int posx = luaL_checkint( p_L, 4 );
+            int posy = luaL_checkint( p_L, 5 );
+            int r = luaL_checkint( p_L, 6 );
+            int g = luaL_checkint( p_L, 7 );
+            int b = luaL_checkint( p_L, 8 );
+            dsstring text = luaL_checkstring( p_L, 9 );
+
+            aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( id, posx, posy, r, g, b, text );
+        }
+        break;
     }
 
     return 0;

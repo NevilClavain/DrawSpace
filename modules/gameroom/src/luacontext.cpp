@@ -93,6 +93,12 @@ bool LuaContext::ExecuteFromFile( const std::string& p_fichier )
 	return true;
 }
 
+void LuaContext::CallLuaAppRunFunc( int p_regindex )
+{
+    lua_rawgeti( m_L, LUA_REGISTRYINDEX, p_regindex );
+    lua_call( m_L, 0, 0 );
+}
+
 dsstring LuaContext::GetLastError( void )
 {
     return m_error;

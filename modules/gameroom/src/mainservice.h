@@ -64,6 +64,9 @@ protected:
     DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousecircularmode_cb;
     DrawSpace::Core::BaseCallback<void, int>*                                       m_closeapp_cb;
 
+    /// callbacks lua sur le Run()
+    std::vector<int>                                                                m_run_lua_callbacks;
+
 
     //////////////gestion de la console///////////////////
     bool                                                                            m_console_active;
@@ -81,6 +84,9 @@ protected:
     void process_console_command( const dsstring& p_cmd );
     void print_console_line( const dsstring& p_text );
     void print_console_content( void );
+
+
+    void execute_lua_run_cbs( void );
 
 public:
 
@@ -107,6 +113,7 @@ public:
 
     void RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg );
     void RegisterEntityGraph( const std::string& p_id, LuaClass_EntityNodeGraph* p_eg );
+    void RegisterRunCallback( int p_regindex );
 
     void RequestClose( void );
     void RequestClearConsole( void );

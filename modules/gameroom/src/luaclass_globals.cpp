@@ -33,6 +33,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "print", &LuaClass_Globals::LUA_print },
     { "dofile", &LuaClass_Globals::LUA_dofile },
     { "dumpmem", &LuaClass_Globals::LUA_dumpmem },
+    { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
 	{ 0, 0 }
 };
 
@@ -90,5 +91,30 @@ int LuaClass_Globals::LUA_dofile( lua_State* p_L )
 int LuaClass_Globals::LUA_dumpmem( lua_State* p_L )
 {
     MainService::GetInstance()->RequestMemAllocDump();
+    return 0;
+}
+
+int LuaClass_Globals::LUA_addappruncb( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+		lua_pushstring( p_L, "Globals::add_appruncb : argument(s) missing" );
+		lua_error( p_L );		
+	}
+
+    int status = lua_isfunction( p_L, 1 );
+
+    if( status > 0 )
+    {
+        int reffunc = luaL_ref( p_L, LUA_REGISTRYINDEX );     
+        MainService::GetInstance()->RegisterRunCallback( reffunc );
+    }
+    else
+    {
+		lua_pushstring( p_L, "Globals::add_appruncb : argument 1 must be a function" );
+		lua_error( p_L );		
+    }
+
     return 0;
 }

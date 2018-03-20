@@ -33,6 +33,29 @@ class LuaClass_Entity
 protected:
     DrawSpace::Core::Entity m_entity;
 
+    typedef enum
+    {
+        BODY_ASPECT,
+        CAMERA_ASPECT,
+        PHYSICS_ASPECT,
+        RENDERING_ASPECT,
+        SERVICE_ASPECT,
+        TIME_ASPECT,
+        TRANSFORM_ASPECT,
+
+    } AspectType;
+
+    typedef enum
+    {
+        COMP_INT,
+        COMP_LONG,
+        COMP_DSREAL,
+        COMP_FLOAT,
+        COMP_DSSTRING,
+        COMP_TEXTDISPLAY,
+    
+    } ComponentType;
+
 public:
 	LuaClass_Entity( lua_State* p_L );
 	~LuaClass_Entity( void );
@@ -42,6 +65,8 @@ public:
     int LUA_addrenderingaspect( lua_State* p_L );
     int LUA_addtimeaspect( lua_State* p_L );
     int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
+
+    int LUA_addcomponent( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaClass_Entity>::RegType methods[];
