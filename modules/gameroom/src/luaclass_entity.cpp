@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "luacontext.h"
 #include "luaclass_entity.h"
 #include "luaclass_renderpassnodegraph.h"
 #include "renderingaspect.h"
@@ -110,8 +111,7 @@ int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{
-		lua_pushstring( p_L, "Entity::connect_renderingaspect_rendergraph : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "Entity::connect_renderingaspect_rendergraph : argument(s) missing" );
 	}
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
@@ -135,8 +135,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
 	{
-		lua_pushstring( p_L, "Entity::add_component : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "Entity::add_component : argument(s) missing" );
 	}
 
     AspectType aspect_type = static_cast<AspectType>( luaL_checkint( p_L, 1 ) );
@@ -145,8 +144,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
     Core::Aspect* aspect = get_aspect( aspect_type );
     if( NULL == aspect )
     {
-		lua_pushstring( p_L, "Entity::add_component : aspect doesnt exists in this entity!" );
-		lua_error( p_L );		    
+        LUA_ERROR( "Entity::add_component : aspect doesnt exists in this entity!" );
     }
 
     int argc_compl = argc - 2; // nbre d'args apres le aspect_type et le comp_type
@@ -159,8 +157,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
             {
                 if( argc_compl < 1 )
                 {
-		            lua_pushstring( p_L, "Entity::add_component : argument(s) missing : component id" );
-		            lua_error( p_L );	            
+                    LUA_ERROR( "Entity::add_component : argument(s) missing : component id" );
                 }
 
                 dsstring id = luaL_checkstring( p_L, 3 );
@@ -180,8 +177,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
             {
                 if( argc_compl < 1 )
                 {
-		            lua_pushstring( p_L, "Entity::add_component : argument(s) missing : component id" );
-		            lua_error( p_L );	            
+                    LUA_ERROR( "Entity::add_component : argument(s) missing : component id" );
                 }
 
                 dsstring id = luaL_checkstring( p_L, 3 );
@@ -201,8 +197,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
             {
                 if( argc_compl < 1 )
                 {
-		            lua_pushstring( p_L, "Entity::add_component : argument(s) missing : component id" );
-		            lua_error( p_L );	            
+                    LUA_ERROR( "Entity::add_component : argument(s) missing : component id" );
                 }
 
                 dsstring id = luaL_checkstring( p_L, 3 );
@@ -222,8 +217,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
             {
                 if( argc_compl < 1 )
                 {
-		            lua_pushstring( p_L, "Entity::add_component : argument(s) missing : component id" );
-		            lua_error( p_L );	            
+                    LUA_ERROR( "Entity::add_component : argument(s) missing : component id" );
                 }
 
                 dsstring id = luaL_checkstring( p_L, 3 );
@@ -243,8 +237,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
             {
                 if( argc_compl < 1 )
                 {
-		            lua_pushstring( p_L, "Entity::add_component : argument(s) missing : component id" );
-		            lua_error( p_L );	            
+                    LUA_ERROR( "Entity::add_component : argument(s) missing : component id" );
                 }
 
                 dsstring id = luaL_checkstring( p_L, 3 );
@@ -264,8 +257,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
             {
                 if( argc_compl < 1 )
                 {
-		            lua_pushstring( p_L, "Entity::add_component : argument(s) missing : component id" );
-		            lua_error( p_L );	            
+                    LUA_ERROR( "Entity::add_component : argument(s) missing : component id" );
                 }
 
                 dsstring id = luaL_checkstring( p_L, 3 );
@@ -285,8 +277,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
             {
                 if( argc_compl < 7 )
                 {
-		            lua_pushstring( p_L, "Entity::add_component : argument(s) missing for text display" );
-		            lua_error( p_L );	            
+                    LUA_ERROR( "Entity::add_component : argument(s) missing for text display" );
                 }
 
                 dsstring id = luaL_checkstring( p_L, 3 );
@@ -306,9 +297,8 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
     {
         const char* what = p_e.what();
         char msgexcp[1024];
-        sprintf( msgexcp, "exception catch : %s", what ); 
-		lua_pushstring( p_L, msgexcp );
-		lua_error( p_L );	
+        sprintf( msgexcp, "exception catch : %s", what );
+        LUA_ERROR( dsstring( msgexcp ) );
     }
 
     return 0;
@@ -319,8 +309,7 @@ int LuaClass_Entity::LUA_readcomponentfromid( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
 	{
-		lua_pushstring( p_L, "Entity::read_component_fromid : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "Entity::read_component_fromid : argument(s) missing" );
 	}
 
     AspectType aspect_type = static_cast<AspectType>( luaL_checkint( p_L, 1 ) );
@@ -329,8 +318,7 @@ int LuaClass_Entity::LUA_readcomponentfromid( lua_State* p_L )
     Core::Aspect* aspect = get_aspect( aspect_type );
     if( NULL == aspect )
     {
-		lua_pushstring( p_L, "Entity::read_component_fromid : aspect doesnt exists in this entity!" );
-		lua_error( p_L );		    
+        LUA_ERROR( "Entity::read_component_fromid : aspect doesnt exists in this entity!" );
     }
 
     int argc_compl = argc - 2; // nbre d'args apres le aspect_type et le comp_type
@@ -341,8 +329,7 @@ int LuaClass_Entity::LUA_readcomponentfromid( lua_State* p_L )
         {
             if( argc_compl < 1 )
             {
-		        lua_pushstring( p_L, "Entity::read_component_fromid : argument(s) missing : component id" );
-		        lua_error( p_L );	            
+                LUA_ERROR( "Entity::read_component_fromid : argument(s) missing : component id" );
             }
 
             try
@@ -357,9 +344,8 @@ int LuaClass_Entity::LUA_readcomponentfromid( lua_State* p_L )
             {
                 const char* what = p_e.what();
                 char msgexcp[1024];
-                sprintf( msgexcp, "exception catch : %s", what ); 
-		        lua_pushstring( p_L, msgexcp );
-		        lua_error( p_L );	
+                sprintf( msgexcp, "exception catch : %s", what );		      
+                LUA_ERROR( dsstring( msgexcp ) );
             }
         }
         break;
@@ -408,8 +394,7 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
 	{
-		lua_pushstring( p_L, "Entity::write_component_fromid : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "Entity::write_component_fromid : argument(s) missing" );
 	}
 
     AspectType aspect_type = static_cast<AspectType>( luaL_checkint( p_L, 1 ) );
@@ -418,8 +403,7 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
     Core::Aspect* aspect = get_aspect( aspect_type );
     if( NULL == aspect )
     {
-		lua_pushstring( p_L, "Entity::write_component_fromid : aspect doesnt exists in this entity!" );
-		lua_error( p_L );		    
+        LUA_ERROR( "Entity::write_component_fromid : aspect doesnt exists in this entity!" );
     }
 
     int argc_compl = argc - 2; // nbre d'args apres le aspect_type et le comp_type
@@ -430,8 +414,7 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
         {
             if( argc_compl < 2 )
             {
-		        lua_pushstring( p_L, "Entity::write_component_fromid : argument(s) missing" );
-		        lua_error( p_L );	            
+                LUA_ERROR( "Entity::write_component_fromid : argument(s) missing" );
             }
 
             try
@@ -445,8 +428,7 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
                 const char* what = p_e.what();
                 char msgexcp[1024];
                 sprintf( msgexcp, "exception catch : %s", what ); 
-		        lua_pushstring( p_L, msgexcp );
-		        lua_error( p_L );	
+                LUA_ERROR( dsstring( msgexcp ) );
             }
         }
         break;
@@ -485,8 +467,7 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
         {
             if( argc_compl < 7 )
             {
-		        lua_pushstring( p_L, "Entity::write_component_fromid : argument(s) missing for text display" );
-		        lua_error( p_L );
+                LUA_ERROR( "Entity::write_component_fromid : argument(s) missing for text display" );
             }
             try
             {
@@ -507,9 +488,8 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
             {
                 const char* what = p_e.what();
                 char msgexcp[1024];
-                sprintf( msgexcp, "exception catch : %s", what ); 
-		        lua_pushstring( p_L, msgexcp );
-		        lua_error( p_L );	
+                sprintf( msgexcp, "exception catch : %s", what ); 		        
+                LUA_ERROR( dsstring( msgexcp ) );
             }          
         }
         break;

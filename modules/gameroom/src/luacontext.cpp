@@ -103,3 +103,9 @@ dsstring LuaContext::GetLastError( void )
 {
     return m_error;
 }
+
+void LuaContext::PushError( lua_State* p_L, const dsstring& p_text )
+{
+	lua_pushstring( p_L, p_text.c_str() );
+	lua_error( p_L );
+}

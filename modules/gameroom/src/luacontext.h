@@ -35,6 +35,7 @@ extern "C" {
 #include "lauxlib.h"
 };
 
+#define LUA_ERROR( __msg__ ) LuaContext::PushError( p_L, __msg__ )
 
 class LuaContext : public BaseSingleton<LuaContext>
 {
@@ -54,6 +55,8 @@ public:
 	dsstring GetLastError( void );
 
     void CallLuaAppRunFunc( int p_regindex );
+
+    static void PushError( lua_State* p_L, const dsstring& p_text );
 
     friend class BaseSingleton<LuaContext>;
 };
