@@ -147,7 +147,8 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Execute( "COMP_DSREAL=2" );
     LuaContext::GetInstance()->Execute( "COMP_FLOAT=3" );
     LuaContext::GetInstance()->Execute( "COMP_DSSTRING=4" );
-    LuaContext::GetInstance()->Execute( "COMP_TEXTDISPLAY=5" );
+    LuaContext::GetInstance()->Execute( "COMP_BOOL=5" );
+    LuaContext::GetInstance()->Execute( "COMP_TEXTDISPLAY=6" );
 
     // args loading shaders
     LuaContext::GetInstance()->Execute( "SHADER_COMPILED=1");

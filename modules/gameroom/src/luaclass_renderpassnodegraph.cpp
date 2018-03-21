@@ -117,7 +117,7 @@ int LuaClass_RenderPassNodeGraph::LUA_createchild( lua_State* p_L )
         // reglages par defaut
         m_passes[child_pass_id].m_renderpassnode.GetRenderingQueue()->EnableDepthClearing( true );
         m_passes[child_pass_id].m_renderpassnode.GetRenderingQueue()->EnableTargetClearing( true );
-        m_passes[child_pass_id].m_renderpassnode.GetRenderingQueue()->SetTargetClearingColor( 26, 130, 18, 255 );   
+        m_passes[child_pass_id].m_renderpassnode.GetRenderingQueue()->SetTargetClearingColor( 0, 50, 0, 255 );   
     }
     else
     {

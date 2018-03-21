@@ -27,6 +27,7 @@
 
 #include "entity.h"
 #include "luna.h"
+#include "aspect.h"
 
 class LuaClass_Entity
 {
@@ -52,9 +53,12 @@ protected:
         COMP_DSREAL,
         COMP_FLOAT,
         COMP_DSSTRING,
+        COMP_BOOL,
         COMP_TEXTDISPLAY,
     
     } ComponentType;
+
+    DrawSpace::Core::Aspect* get_aspect( AspectType p_type );
 
 public:
 	LuaClass_Entity( lua_State* p_L );
@@ -67,6 +71,8 @@ public:
     int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
 
     int LUA_addcomponent( lua_State* p_L );
+    int LUA_readcomponentfromid( lua_State* p_L );
+    int LUA_writecomponentfromid( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaClass_Entity>::RegType methods[];
