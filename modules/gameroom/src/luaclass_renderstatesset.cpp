@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "luacontext.h"
 #include "luaclass_renderstatesset.h"
 
 const char LuaClass_RenderStatesSet::className[] = "RenderStatesSet";
@@ -47,9 +48,8 @@ int LuaClass_RenderStatesSet::LUA_addrenderstatein( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
-	{
-		lua_pushstring( p_L, "RenderStatesSet::add_renderstate_in : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderStatesSet::add_renderstate_in : argument(s) missing" );
 	}
 
     DrawSpace::Core::RenderState::Operation ope = static_cast<DrawSpace::Core::RenderState::Operation>( luaL_checkint( p_L, 1 ) );
@@ -63,9 +63,8 @@ int LuaClass_RenderStatesSet::LUA_addrenderstateout( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
-	{
-		lua_pushstring( p_L, "RenderStatesSet::add_renderstate_out : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderStatesSet::add_renderstate_out : argument(s) missing" );
 	}
 
     DrawSpace::Core::RenderState::Operation ope = static_cast<DrawSpace::Core::RenderState::Operation>( luaL_checkint( p_L, 1 ) );
@@ -80,9 +79,8 @@ int LuaClass_RenderStatesSet::LUA_updaterenderstatein( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 3 )
-	{
-		lua_pushstring( p_L, "RenderStatesSet::update_renderstate_in : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderStatesSet::update_renderstate_in : argument(s) missing" );
 	}
 
     int index = luaL_checkint( p_L, 1 );
@@ -98,9 +96,8 @@ int LuaClass_RenderStatesSet::LUA_updaterenderstateout( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 3 )
-	{
-		lua_pushstring( p_L, "RenderStatesSet::update_renderstate_out : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderStatesSet::update_renderstate_out : argument(s) missing" );
 	}
 
     int index = luaL_checkint( p_L, 1 );

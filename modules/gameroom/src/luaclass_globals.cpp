@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "luacontext.h"
 #include "luaclass_globals.h"
 #include "mainservice.h"
 
@@ -34,6 +35,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "dofile", &LuaClass_Globals::LUA_dofile },
     { "dumpmem", &LuaClass_Globals::LUA_dumpmem },
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
+    { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
 	{ 0, 0 }
 };
 
@@ -62,8 +64,7 @@ int LuaClass_Globals::LUA_print( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{
-		lua_pushstring( p_L, "Globals::print : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "Globals::print : argument(s) missing" );
 	}
 
 	dsstring msg = luaL_checkstring( p_L, 1 );
@@ -77,8 +78,7 @@ int LuaClass_Globals::LUA_dofile( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{
-		lua_pushstring( p_L, "Globals::dofile : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "Globals::dofile : argument(s) missing" );
 	}
 
 	dsstring path = luaL_checkstring( p_L, 1 );
@@ -97,24 +97,46 @@ int LuaClass_Globals::LUA_dumpmem( lua_State* p_L )
 int LuaClass_Globals::LUA_addappruncb( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 1 )
+	if( argc < 2 )
 	{
-		lua_pushstring( p_L, "Globals::add_appruncb : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "Globals::add_appruncb : argument(s) missing" );
 	}
 
-    int status = lua_isfunction( p_L, 1 );
+    dsstring cbid = luaL_checkstring( p_L, 1 );
+    int status = lua_isfunction( p_L, 2 );
 
     if( status > 0 )
     {
         int reffunc = luaL_ref( p_L, LUA_REGISTRYINDEX );     
-        MainService::GetInstance()->RegisterRunCallback( reffunc );
+        MainService::GetInstance()->RegisterRunCallback( cbid, reffunc );
     }
     else
     {
-		lua_pushstring( p_L, "Globals::add_appruncb : argument 1 must be a function" );
-		lua_error( p_L );		
+        LUA_ERROR( "Globals::add_appruncb : argument 2 must be a function" );
     }
 
+    return 0;
+}
+
+int LuaClass_Globals::LUA_removeappruncb( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Globals::remove_appruncb : argument(s) missing" );
+	}
+    dsstring cbid = luaL_checkstring( p_L, 1 );
+
+    int reffunc = MainService::GetInstance()->UnregisterRunCallback( cbid );
+
+    if( -1 == reffunc )
+    {
+        LUA_ERROR( "Globals::remove_appruncb : unknown callback id" );
+    }
+    else
+    {
+        // liberer la ref...
+        luaL_unref( p_L, LUA_REGISTRYINDEX, reffunc );
+    }
     return 0;
 }

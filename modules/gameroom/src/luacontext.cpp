@@ -96,7 +96,12 @@ bool LuaContext::ExecuteFromFile( const std::string& p_fichier )
 void LuaContext::CallLuaAppRunFunc( int p_regindex )
 {
     lua_rawgeti( m_L, LUA_REGISTRYINDEX, p_regindex );
-    lua_call( m_L, 0, 0 );
+    if( lua_pcall( m_L, 0, 0, NULL ) != 0 )
+    {
+        // si erreur lua (syntaxe ou autre) dans une callback function lua, faire une exception, car inutile de boucler a l'infini sur la meme erreur (notamment pour les calbacks fonction lua appelees depuis le Run())
+        dsstring err_text = lua_tostring( m_L, -1 );
+        _DSEXCEPTION( err_text );
+    }
 }
 
 dsstring LuaContext::GetLastError( void )

@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "luacontext.h"
 #include "luaclass_entitynodegraph.h"
 #include "luaclass_entity.h"
 #include "mainservice.h"
@@ -33,6 +34,7 @@ const char LuaClass_EntityNodeGraph::className[] = "EntityNodeGraph";
 const Luna<LuaClass_EntityNodeGraph>::RegType LuaClass_EntityNodeGraph::methods[] =
 {
     { "set_root", &LuaClass_EntityNodeGraph::LUA_setroot },
+    { "dump", &LuaClass_EntityNodeGraph::LUA_dumpcontent },
 	{ 0, 0 }
 };
 
@@ -41,8 +43,7 @@ LuaClass_EntityNodeGraph::LuaClass_EntityNodeGraph( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{
-		lua_pushstring( p_L, "EntityNodeGraph::EntityNodeGraph : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "EntityNodeGraph::EntityNodeGraph : argument(s) missing" );
 	}
 
     dsstring id = luaL_checkstring( p_L, 1 );
@@ -75,8 +76,7 @@ int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
 	{
-		lua_pushstring( p_L, "EntityNodeGraph::set_root : argument(s) missing" );
-		lua_error( p_L );		
+        LUA_ERROR( "EntityNodeGraph::set_root : argument(s) missing" );
 	}
 
     dsstring entity_id = luaL_checkstring( p_L, 1 );
@@ -84,5 +84,11 @@ int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
     
     m_entities[entity_id] = m_entitygraph.SetRoot( &lua_ent->GetEntity() );
 
+    return 0;
+}
+
+int LuaClass_EntityNodeGraph::LUA_dumpcontent( lua_State* p_L )
+{
+    m_entitygraph.PushSignal_DumpToTrace();
     return 0;
 }

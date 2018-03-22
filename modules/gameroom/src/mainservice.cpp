@@ -89,6 +89,8 @@ bool MainService::Init( void )
     logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( logconf );
 
+    m_systemsHub.SetLogConf( logconf );
+
     /////////////////////////////////////////////////////////////////////////////////
 
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -403,11 +405,7 @@ void MainService::create_console_quad( void )
 
     quad_pass->GetFx()->SetRenderStates( quadpass_rss );
 
-    quad_pass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
-    quad_pass->GetTexture( 0 )->LoadFromFile();
-
     quad_pass->SetOrderNumber( 11000 );
-
 
     TransformAspect* transform_aspect = m_quadEntity.AddAspect<TransformAspect>();
 
@@ -422,15 +420,16 @@ void MainService::create_console_quad( void )
     transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, 0.0, -1.0 );
 
     quad_pass->SetDrawingState( m_console_active );
-
 }
 
 
 void MainService::execute_lua_run_cbs( void )
 {
-    for( size_t i = 0; i < m_run_lua_callbacks.size(); i++ )
+    //for( size_t i = 0; i < m_run_lua_callbacks.size(); i++ )
+    for( auto it = m_run_lua_callbacks.begin(); it != m_run_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaAppRunFunc( m_run_lua_callbacks[i] );
+        //LuaContext::GetInstance()->CallLuaAppRunFunc( m_run_lua_callbacks[i] );
+        LuaContext::GetInstance()->CallLuaAppRunFunc( it->second );
     }
 }
 
@@ -447,9 +446,20 @@ void MainService::RegisterEntityGraph( const std::string& p_id, LuaClass_EntityN
     m_entitygraphs[p_id] = p_eg;
 }
 
-void MainService::RegisterRunCallback( int p_regindex )
+void MainService::RegisterRunCallback( const dsstring& p_id, int p_regindex )
 {
-    m_run_lua_callbacks.push_back( p_regindex );
+    m_run_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterRunCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_run_lua_callbacks.count( p_id ) )
+    {
+        index = m_run_lua_callbacks[p_id];
+        m_run_lua_callbacks.erase( p_id );       
+    }
+    return index;
 }
 
 void MainService::RequestClose( void )

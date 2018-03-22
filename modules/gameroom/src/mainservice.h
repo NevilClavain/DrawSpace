@@ -65,7 +65,8 @@ protected:
     DrawSpace::Core::BaseCallback<void, int>*                                       m_closeapp_cb;
 
     /// callbacks lua sur le Run()
-    std::vector<int>                                                                m_run_lua_callbacks;
+    //std::vector<int>                                                                m_run_lua_callbacks;
+    std::map<dsstring, int>                                                         m_run_lua_callbacks;
 
 
     //////////////gestion de la console///////////////////
@@ -113,7 +114,8 @@ public:
 
     void RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg );
     void RegisterEntityGraph( const std::string& p_id, LuaClass_EntityNodeGraph* p_eg );
-    void RegisterRunCallback( int p_regindex );
+    void RegisterRunCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterRunCallback( const dsstring& p_id );
 
     void RequestClose( void );
     void RequestClearConsole( void );

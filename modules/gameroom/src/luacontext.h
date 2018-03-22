@@ -37,6 +37,16 @@ extern "C" {
 
 #define LUA_ERROR( __msg__ ) LuaContext::PushError( p_L, __msg__ )
 
+#define LUA_TRY try
+
+#define LUA_CATCH catch( dsexception& p_e )\
+            {\
+                const char* what = p_e.what();\
+                char msgexcp[1024];\
+                sprintf( msgexcp, "exception catch : %s", what );\
+                LUA_ERROR( dsstring( msgexcp ) );\
+            }
+
 class LuaContext : public BaseSingleton<LuaContext>
 {
 protected:

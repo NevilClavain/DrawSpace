@@ -50,6 +50,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "add_timeaspect", &LuaClass_Entity::LUA_addtimeaspect },
     { "connect_renderingaspect_rendergraph", &LuaClass_Entity::LUA_connect_renderingaspect_rendergraph },
     { "add_component", &LuaClass_Entity::LUA_addcomponent },
+    { "remove_component", &LuaClass_Entity::LUA_removecomponent },
     { "read_component_fromid", &LuaClass_Entity::LUA_readcomponentfromid },
     { "write_component_fromid", &LuaClass_Entity::LUA_writecomponentfromid },
 	{ 0, 0 }
@@ -123,8 +124,7 @@ int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
     }
     else
     {
-		lua_pushstring( p_L, "Entity::connect_renderingaspect_rendergraph : entity has no rendering aspect. Call add_renderingaspect() method first" );
-		lua_error( p_L );    
+        LUA_ERROR( "Entity::connect_renderingaspect_rendergraph : entity has no rendering aspect. Call add_renderingaspect() method first" );
     }
 
     return 0;
@@ -149,7 +149,7 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
 
     int argc_compl = argc - 2; // nbre d'args apres le aspect_type et le comp_type
 
-    try
+    LUA_TRY
     {
         switch( comp_type )
         {
@@ -292,14 +292,54 @@ int LuaClass_Entity::LUA_addcomponent( lua_State* p_L )
             }
             break;
         }
-    }
-    catch( dsexception& p_e )
+    } LUA_CATCH
+
+    return 0;
+}
+
+int LuaClass_Entity::LUA_removecomponent( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 2 )
+	{
+        LUA_ERROR( "Entity::remove_component : argument(s) missing" );
+	}
+
+    AspectType aspect_type = static_cast<AspectType>( luaL_checkint( p_L, 1 ) );
+    ComponentType comp_type = static_cast<ComponentType>( luaL_checkint( p_L, 2 ) );
+
+    Core::Aspect* aspect = get_aspect( aspect_type );
+    if( NULL == aspect )
     {
-        const char* what = p_e.what();
-        char msgexcp[1024];
-        sprintf( msgexcp, "exception catch : %s", what );
-        LUA_ERROR( dsstring( msgexcp ) );
+        LUA_ERROR( "Entity::remove_component : aspect doesnt exists in this entity!" );
     }
+
+    int argc_compl = argc - 2; // nbre d'args apres le aspect_type et le comp_type
+
+    if( argc_compl < 1 )
+    {
+        LUA_ERROR( "Entity::remove_component : argument(s) missing : component id" );
+    }
+
+    dsstring id = luaL_checkstring( p_L, 3 );
+
+    static std::map<ComponentType, std::function<void( DrawSpace::Core::Aspect*, const dsstring& )>> comp_remove_aig = 
+    {
+        { COMP_INT, []( DrawSpace::Core::Aspect* p_aspect, const dsstring& p_id ) { p_aspect->RemoveComponent<int>( p_id ); } },
+        { COMP_LONG, []( DrawSpace::Core::Aspect* p_aspect, const dsstring& p_id ) { p_aspect->RemoveComponent<long>( p_id ); } },
+        { COMP_DSREAL, []( DrawSpace::Core::Aspect* p_aspect, const dsstring& p_id ) { p_aspect->RemoveComponent<dsstring>( p_id ); } },
+        { COMP_DSREAL, []( DrawSpace::Core::Aspect* p_aspect, const dsstring& p_id ) { p_aspect->RemoveComponent<dsstring>( p_id ); } },
+        { COMP_FLOAT, []( DrawSpace::Core::Aspect* p_aspect, const dsstring& p_id ) { p_aspect->RemoveComponent<float>( p_id ); } },
+        { COMP_DSSTRING, []( DrawSpace::Core::Aspect* p_aspect, const dsstring& p_id ) { p_aspect->RemoveComponent<dsstring>( p_id ); } },
+        { COMP_BOOL, []( DrawSpace::Core::Aspect* p_aspect, const dsstring& p_id ) { p_aspect->RemoveComponent<bool>( p_id ); } },
+        { COMP_TEXTDISPLAY, []( DrawSpace::Core::Aspect* p_aspect, const dsstring& p_id ) { p_aspect->RemoveComponent<TextRenderingAspectImpl::TextDisplay>( p_id ); } },
+    };
+
+    LUA_TRY
+    {
+        comp_remove_aig[comp_type]( aspect, id );
+
+    } LUA_CATCH
 
     return 0;
 }
@@ -323,66 +363,113 @@ int LuaClass_Entity::LUA_readcomponentfromid( lua_State* p_L )
 
     int argc_compl = argc - 2; // nbre d'args apres le aspect_type et le comp_type
 
+    if( argc_compl < 1 )
+    {
+        LUA_ERROR( "Entity::read_component_fromid : argument(s) missing : component id" );
+    }
+
     switch( comp_type )
     {
         case COMP_INT:
         {
-            if( argc_compl < 1 )
-            {
-                LUA_ERROR( "Entity::read_component_fromid : argument(s) missing : component id" );
-            }
-
-            try
+            LUA_TRY
             {
                 dsstring id = luaL_checkstring( p_L, 3 );
                 int i = aspect->GetComponent<int>( id )->getPurpose();
 
                 lua_pushinteger( p_L, i );
                 return 1;
-            }
-            catch( dsexception& p_e )
-            {
-                const char* what = p_e.what();
-                char msgexcp[1024];
-                sprintf( msgexcp, "exception catch : %s", what );		      
-                LUA_ERROR( dsstring( msgexcp ) );
-            }
+
+            } LUA_CATCH
         }
         break;
     
         case COMP_LONG:
         {
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                long l = aspect->GetComponent<long>( id )->getPurpose();
 
+                lua_pushinteger( p_L, l );
+                return 1;
+
+            } LUA_CATCH
         }
         break;
 
         case COMP_DSREAL:
         {
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                dsreal r = aspect->GetComponent<dsreal>( id )->getPurpose();
 
+                lua_pushnumber( p_L, r );
+                return 1;
+
+            } LUA_CATCH
         }
         break;
 
         case COMP_FLOAT:
         {
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                float f = aspect->GetComponent<float>( id )->getPurpose();
 
+                lua_pushnumber( p_L, f );
+                return 1;
+
+            } LUA_CATCH
         }
         break;
 
         case COMP_DSSTRING:
         {
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                dsstring s = aspect->GetComponent<dsstring>( id )->getPurpose();
 
+                lua_pushstring( p_L, s.c_str() );
+                return 1;
+
+            } LUA_CATCH
         }
         break;
 
         case COMP_BOOL:
         {
-               
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                bool b = aspect->GetComponent<bool>( id )->getPurpose();
+
+                lua_pushinteger( p_L, b );
+                return 1;
+
+            } LUA_CATCH               
         }
         break;
 
         case COMP_TEXTDISPLAY:
         {
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                TextRenderingAspectImpl::TextDisplay t = aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( id )->getPurpose();
 
+                lua_pushinteger( p_L, t.m_posx );
+                lua_pushinteger( p_L, t.m_posy );
+                lua_pushinteger( p_L, t.m_r );
+                lua_pushinteger( p_L, t.m_g );
+                lua_pushinteger( p_L, t.m_b );
+                lua_pushstring( p_L, t.m_text.c_str() );
+                return 6;
+
+            } LUA_CATCH    
         }
         break;
     }
@@ -417,49 +504,98 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
                 LUA_ERROR( "Entity::write_component_fromid : argument(s) missing" );
             }
 
-            try
+            LUA_TRY
             {
                 dsstring id = luaL_checkstring( p_L, 3 );
                 int i = luaL_checkint( p_L, 4 );
                 aspect->GetComponent<int>( id )->getPurpose() = i;
-            }
-            catch( dsexception& p_e )
-            {
-                const char* what = p_e.what();
-                char msgexcp[1024];
-                sprintf( msgexcp, "exception catch : %s", what ); 
-                LUA_ERROR( dsstring( msgexcp ) );
-            }
+
+            } LUA_CATCH
         }
         break;
     
         case COMP_LONG:
         {
+            if( argc_compl < 2 )
+            {
+                LUA_ERROR( "Entity::write_component_fromid : argument(s) missing" );
+            }
 
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                long l = luaL_checkint( p_L, 4 );
+                aspect->GetComponent<long>( id )->getPurpose() = l;
+
+            } LUA_CATCH
         }
         break;
 
         case COMP_DSREAL:
         {
+            if( argc_compl < 2 )
+            {
+                LUA_ERROR( "Entity::write_component_fromid : argument(s) missing" );
+            }
 
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                dsreal r = luaL_checknumber( p_L, 4 );
+                aspect->GetComponent<dsreal>( id )->getPurpose() = r;
+
+            } LUA_CATCH
         }
         break;
 
         case COMP_FLOAT:
         {
+            if( argc_compl < 2 )
+            {
+                LUA_ERROR( "Entity::write_component_fromid : argument(s) missing" );
+            }
 
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                float f = luaL_checknumber( p_L, 4 );
+                aspect->GetComponent<float>( id )->getPurpose() = f;
+
+            } LUA_CATCH
         }
         break;
 
         case COMP_DSSTRING:
         {
+            if( argc_compl < 2 )
+            {
+                LUA_ERROR( "Entity::write_component_fromid : argument(s) missing" );
+            }
 
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                dsstring s = luaL_checkstring( p_L, 4 );
+                aspect->GetComponent<dsstring>( id )->getPurpose() = s;
+
+            } LUA_CATCH
         }
         break;
 
         case COMP_BOOL:
         {
-               
+            if( argc_compl < 2 )
+            {
+                LUA_ERROR( "Entity::write_component_fromid : argument(s) missing" );
+            }
+
+            LUA_TRY
+            {
+                dsstring id = luaL_checkstring( p_L, 3 );
+                bool b = luaL_checkint( p_L, 4 );
+                aspect->GetComponent<bool>( id )->getPurpose() = b;
+
+            } LUA_CATCH               
         }
         break;
 
@@ -469,7 +605,7 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
             {
                 LUA_ERROR( "Entity::write_component_fromid : argument(s) missing for text display" );
             }
-            try
+            LUA_TRY
             {
                 dsstring id = luaL_checkstring( p_L, 3 );
                 int posx = luaL_checkint( p_L, 4 );
@@ -481,16 +617,8 @@ int LuaClass_Entity::LUA_writecomponentfromid( lua_State* p_L )
 
                 TextRenderingAspectImpl::TextDisplay td( posx, posy, r, g, b, text );
                 aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( id )->getPurpose() = td;
-
                 
-            }
-            catch( dsexception& p_e )
-            {
-                const char* what = p_e.what();
-                char msgexcp[1024];
-                sprintf( msgexcp, "exception catch : %s", what ); 		        
-                LUA_ERROR( dsstring( msgexcp ) );
-            }          
+            } LUA_CATCH
         }
         break;
     }

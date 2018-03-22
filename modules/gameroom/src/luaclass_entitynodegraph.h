@@ -43,6 +43,7 @@ public:
     DrawSpace::EntityGraph::EntityNodeGraph& GetEntityGraph( void );
 
     int LUA_setroot( lua_State* p_L );
+    int LUA_dumpcontent( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaClass_EntityNodeGraph>::RegType methods[];

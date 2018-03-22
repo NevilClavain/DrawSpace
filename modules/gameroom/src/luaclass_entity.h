@@ -71,6 +71,8 @@ public:
     int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
 
     int LUA_addcomponent( lua_State* p_L );
+    int LUA_removecomponent( lua_State* p_L );
+
     int LUA_readcomponentfromid( lua_State* p_L );
     int LUA_writecomponentfromid( lua_State* p_L );
 

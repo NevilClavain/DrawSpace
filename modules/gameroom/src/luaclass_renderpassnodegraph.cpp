@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "luacontext.h"
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_renderstatesset.h"
 #include "mainservice.h"
@@ -53,9 +54,8 @@ LuaClass_RenderPassNodeGraph::LuaClass_RenderPassNodeGraph( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::RenderPassNodeGraph : argument(s) missing" );
-		lua_error( p_L );		
+	{	
+        LUA_ERROR( "RenderPassNodeGraph::RenderPassNodeGraph : argument(s) missing" );
 	}
 
     dsstring id = luaL_checkstring( p_L, 1 );
@@ -81,9 +81,8 @@ int LuaClass_RenderPassNodeGraph::LUA_createroot( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::create_rootpass : argument(s) missing" );
-		lua_error( p_L );		
+	{	
+        LUA_ERROR( "RenderPassNodeGraph::create_rootpass : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -101,9 +100,8 @@ int LuaClass_RenderPassNodeGraph::LUA_createchild( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 3 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::create_childpass : argument(s) missing" );
-		lua_error( p_L );		
+	{	
+        LUA_ERROR( "RenderPassNodeGraph::create_childpass : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -120,9 +118,8 @@ int LuaClass_RenderPassNodeGraph::LUA_createchild( lua_State* p_L )
         m_passes[child_pass_id].m_renderpassnode.GetRenderingQueue()->SetTargetClearingColor( 0, 50, 0, 255 );   
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearcolor : unknown pass id" );
-        lua_error( p_L );	
+    {       
+        LUA_ERROR( "RenderPassNodeGraph::set_pass_targetclearcolor : unknown pass id" );
     }
 
     return 0;
@@ -132,9 +129,8 @@ int LuaClass_RenderPassNodeGraph::LUA_removepass( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::remove_pass : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::remove_pass : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -145,9 +141,8 @@ int LuaClass_RenderPassNodeGraph::LUA_removepass( lua_State* p_L )
         m_passes.erase( pass_id );
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::remove_pass : unknown pass id" );
-        lua_error( p_L );    
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::remove_pass : unknown pass id" );
     }
     return 0;
 }
@@ -156,9 +151,8 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 4 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearcolor : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::set_pass_targetclearcolor : argument(s) missing" );
 	}
 
 	dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -171,9 +165,8 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor( lua_State* p_L )
         m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->SetTargetClearingColor( r, g, b, 255 );
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearcolor : unknown pass id" );
-        lua_error( p_L );	
+    {       
+        LUA_ERROR( "RenderPassNodeGraph::set_pass_targetclearcolor : unknown pass id" );
     }
 
     return 0;
@@ -183,9 +176,8 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearstate : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::set_pass_targetclearstate : argument(s) missing" );
 	}
 
 	dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -196,9 +188,8 @@ int LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate( lua_State* p_L )
         m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->EnableTargetClearing( state );
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_targetclearstate : unknown pass id" );
-        lua_error( p_L );	
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::set_pass_targetclearstate : unknown pass id" );
     }
 
     return 0;
@@ -208,9 +199,8 @@ int LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_depthclearstate : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::set_pass_depthclearstate : argument(s) missing" );
 	}
 
 	dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -221,9 +211,8 @@ int LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate( lua_State* p_L )
         m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->EnableDepthClearing( state );
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_depthclearstate : unknown pass id" );
-        lua_error( p_L );	
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::set_pass_depthclearstate : unknown pass id" );
     }
     return 0;
 }
@@ -232,9 +221,8 @@ int LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::create_pass_viewportquad : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::create_pass_viewportquad : argument(s) missing" );
 	}
 
 	dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -256,9 +244,8 @@ int LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad( lua_State* p_L )
         */
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::create_pass_viewportquad : unknown pass id" );
-        lua_error( p_L );	
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::create_pass_viewportquad : unknown pass id" );
     }
 
     return 0;
@@ -268,9 +255,8 @@ int LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::remove_pass_viewportquad : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::remove_pass_viewportquad : argument(s) missing" );
 	}
 
 	dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -280,9 +266,8 @@ int LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad( lua_State* p_L )
         m_passes[pass_id].m_renderpassnode.RemoveViewportQuad();
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::remove_pass_viewportquad : unknown pass id" );
-        lua_error( p_L );    
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::remove_pass_viewportquad : unknown pass id" );
     }
 
     return 0;
@@ -292,9 +277,8 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadshader( lua_State* p_L
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 3 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_shader : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_shader : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -309,9 +293,8 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadshader( lua_State* p_L
         status = shader->LoadFromFile( shader_path, is_compiled );
 
         if( !status )
-        {
-            lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_shader : shader loading operation failed" );
-            lua_error( p_L );	        
+        {            
+            LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_shader : shader loading operation failed" );
         }
         else
         {
@@ -320,9 +303,8 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadshader( lua_State* p_L
         }
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_shader : unknown pass id" );
-        lua_error( p_L );	
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_shader : unknown pass id" );
     }
 
     return 0;
@@ -332,9 +314,8 @@ int LuaClass_RenderPassNodeGraph::LUA_unloadpassviewportquadshaders( lua_State* 
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::unload_pass_viewportquad_shaders : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::unload_pass_viewportquad_shaders : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -358,9 +339,8 @@ int LuaClass_RenderPassNodeGraph::LUA_unloadpassviewportquadshaders( lua_State* 
         }
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::unload_pass_viewportquad_shaders : unknown pass id" );
-        lua_error( p_L );	   
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::unload_pass_viewportquad_shaders : unknown pass id" );
     }
 
     return 0;
@@ -370,9 +350,8 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadtexture( lua_State* p_
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 3 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_texture : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_texture : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -389,9 +368,8 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadtexture( lua_State* p_
             Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
             status = texture->LoadFromFile();
             if( !status )
-            {
-                lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_texture : texture loading operation failed" );
-                lua_error( p_L );	        
+            {                
+                LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_texture : texture loading operation failed" );
             }
             else
             {
@@ -400,15 +378,13 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadtexture( lua_State* p_
             }
         }
         else
-        {
-            lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_texture : no viewportquad created for this pass" );
-            lua_error( p_L );        
+        {            
+            LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_texture : no viewportquad created for this pass" );
         }        
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_texture : unknown pass id" );
-        lua_error( p_L );	
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_texture : unknown pass id" );
     }
 
     return 0;
@@ -418,9 +394,8 @@ int LuaClass_RenderPassNodeGraph::LUA_unloadpassviewportquadtextures( lua_State*
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::unload_pass_viewportquad_textures : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::unload_pass_viewportquad_textures : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -449,15 +424,13 @@ int LuaClass_RenderPassNodeGraph::LUA_unloadpassviewportquadtextures( lua_State*
             }
         }
         else
-        {
-            lua_pushstring( p_L, "RenderPassNodeGraph::unload_pass_viewportquad_textures : no viewportquad created for this pass" );
-            lua_error( p_L );	        
+        {            
+            LUA_ERROR( "RenderPassNodeGraph::unload_pass_viewportquad_textures : no viewportquad created for this pass" );
         }
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::unload_pass_viewportquad_textures : unknown pass id" );
-        lua_error( p_L );	
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::unload_pass_viewportquad_textures : unknown pass id" );
     }
 
     return 0;
@@ -467,9 +440,8 @@ int LuaClass_RenderPassNodeGraph::LUA_setpassviewportquadrenderstateset( lua_Sta
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
-	{
-		lua_pushstring( p_L, "RenderPassNodeGraph::set_pass_viewportquad_renderstateset : argument(s) missing" );
-		lua_error( p_L );		
+	{		
+        LUA_ERROR( "RenderPassNodeGraph::set_pass_viewportquad_renderstateset : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
@@ -482,9 +454,8 @@ int LuaClass_RenderPassNodeGraph::LUA_setpassviewportquadrenderstateset( lua_Sta
         m_passes[pass_id].m_fx.SetRenderStates( rss );
     }
     else
-    {
-        lua_pushstring( p_L, "RenderPassNodeGraph::load_pass_viewportquad_shader : unknown pass id" );
-        lua_error( p_L );	
+    {        
+        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_shader : unknown pass id" );
     }
 
     return 0;
