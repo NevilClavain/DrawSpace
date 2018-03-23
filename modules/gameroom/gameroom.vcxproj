@@ -101,6 +101,7 @@
     <ClCompile Include="src\luaclass_renderer.cpp" />
     <ClCompile Include="src\luaclass_renderpassnodegraph.cpp" />
     <ClCompile Include="src\luaclass_renderstatesset.cpp" />
+    <ClCompile Include="src\luaclass_transformationaspectfpsimpl.cpp" />
     <ClCompile Include="src\luacontext.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mainservice.cpp" />
@@ -109,6 +110,7 @@
   <ItemGroup>
     <ClInclude Include="src\crtp_singleton.h" />
     <ClInclude Include="src\luaclass_entity.h" />
+    <ClInclude Include="src\luaclass_transformationaspectfpsimpl.h" />
     <ClInclude Include="src\luaclass_globals.h" />
     <ClInclude Include="src\luaclass_renderer.h" />
     <ClInclude Include="src\luaclass_renderpassnodegraph.h" />

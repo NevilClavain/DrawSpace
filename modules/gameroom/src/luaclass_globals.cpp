@@ -25,6 +25,7 @@
 #include "luacontext.h"
 #include "luaclass_globals.h"
 #include "mainservice.h"
+#include "memalloc.h"
 
 const char LuaClass_Globals::className[] = "Globals";
 const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
@@ -34,6 +35,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "print", &LuaClass_Globals::LUA_print },
     { "dofile", &LuaClass_Globals::LUA_dofile },
     { "dumpmem", &LuaClass_Globals::LUA_dumpmem },
+    { "totalmem", &LuaClass_Globals::LUA_totalmem },
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
 	{ 0, 0 }
@@ -139,4 +141,10 @@ int LuaClass_Globals::LUA_removeappruncb( lua_State* p_L )
         luaL_unref( p_L, LUA_REGISTRYINDEX, reffunc );
     }
     return 0;
+}
+
+int LuaClass_Globals::LUA_totalmem( lua_State* p_L )
+{
+    lua_pushinteger( p_L, DrawSpace::Utils::MemAlloc::GetInstance()->GetTotalSize() );
+    return 1;
 }

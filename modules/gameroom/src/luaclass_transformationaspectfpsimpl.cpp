@@ -22,46 +22,21 @@
 */
 /* -*-LIC_END-*- */
 
+#include "luacontext.h"
+#include "luaclass_transformationaspectfpsimpl.h"
 
-#ifndef _SERVICEASPECT_H_
-#define _SERVICEASPECT_H_
-
-#include "aspect.h"
-#include "serviceaspectimpl.h"
-
-namespace DrawSpace
+const char LuaClass_TransformationAspectFPSImpl::className[] = "TransformationAspectFPSImpl";
+const Luna<LuaClass_TransformationAspectFPSImpl>::RegType LuaClass_TransformationAspectFPSImpl::methods[] =
 {
-namespace Aspect
-{
-class ServiceAspect : public Core::Aspect
-{
-protected:
-    std::vector<DrawSpace::Interface::AspectImplementations::ServiceAspectImpl*>   m_impls;
-
-public:
-    ServiceAspect( void );
-
-    void AddImplementation( DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* p_impl );
-
-    bool Init( void );
-    void Run( void );
-    void Release( void );
-
-    void OnKeyPress( long p_key );
-    void OnEndKeyPress( long p_key );
-    void OnKeyPulse( long p_key );
-    void OnChar( long p_char, long p_scan );
-    void OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy );
-    void OnMouseWheel( long p_delta );
-    void OnMouseLeftButtonDown( long p_xm, long p_ym );
-    void OnMouseLeftButtonUp( long p_xm, long p_ym );
-    void OnMouseRightButtonDown( long p_xm, long p_ym );
-    void OnMouseRightButtonUp( long p_xm, long p_ym );
-    void OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
-
-
+	{ 0, 0 }
 };
-}
+
+LuaClass_TransformationAspectFPSImpl::LuaClass_TransformationAspectFPSImpl( lua_State* p_L )
+{
 }
 
-#endif
+LuaClass_TransformationAspectFPSImpl::~LuaClass_TransformationAspectFPSImpl( void )
+{
+}
+
+// to be continued...

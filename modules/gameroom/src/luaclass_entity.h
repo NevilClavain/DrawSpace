@@ -66,8 +66,11 @@ public:
 
     DrawSpace::Core::Entity& GetEntity( void );
 
-    int LUA_addrenderingaspect( lua_State* p_L );
-    int LUA_addtimeaspect( lua_State* p_L );
+    int LUA_addaspect( lua_State* p_L );
+
+    int LUA_configuretimemmanager( lua_State* p_L );
+    int LUA_readtimemmanager( lua_State* p_L );
+
     int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
 
     int LUA_addcomponent( lua_State* p_L );

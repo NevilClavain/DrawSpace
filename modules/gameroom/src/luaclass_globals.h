@@ -38,6 +38,7 @@ public:
     int LUA_print( lua_State* p_L );
     int LUA_dofile( lua_State* p_L );
     int LUA_dumpmem( lua_State* p_L );
+    int LUA_totalmem( lua_State* p_L );
     int LUA_addappruncb( lua_State* p_L );
     int LUA_removeappruncb( lua_State* p_L );
 
