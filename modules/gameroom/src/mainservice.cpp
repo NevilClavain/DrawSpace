@@ -118,15 +118,6 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Execute( "TIME_ASPECT=5" );
     LuaContext::GetInstance()->Execute( "TRANSFORM_ASPECT=6" );
 
-    // type de composant
-    LuaContext::GetInstance()->Execute( "COMP_INT=0" );
-    LuaContext::GetInstance()->Execute( "COMP_LONG=1" );
-    LuaContext::GetInstance()->Execute( "COMP_DSREAL=2" );
-    LuaContext::GetInstance()->Execute( "COMP_FLOAT=3" );
-    LuaContext::GetInstance()->Execute( "COMP_DSSTRING=4" );
-    LuaContext::GetInstance()->Execute( "COMP_BOOL=5" );
-    LuaContext::GetInstance()->Execute( "COMP_TEXTDISPLAY=6" );
-
     // args loading shaders
     LuaContext::GetInstance()->Execute( "SHADER_COMPILED=1");
     LuaContext::GetInstance()->Execute( "SHADER_NOT_COMPILED=0");
@@ -157,9 +148,9 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Execute( "eg=EntityNodeGraph('eg')" );
     LuaContext::GetInstance()->Execute( "root_entity=Entity()" );
 
-    LuaContext::GetInstance()->Execute( "root_entity:add_aspect(RENDERING_ASPECT) " );
-    LuaContext::GetInstance()->Execute( "root_entity:add_aspect(TIME_ASPECT) " );
-    LuaContext::GetInstance()->Execute( "root_entity:configure_timemanager(NORMAL_TIME) " );
+    LuaContext::GetInstance()->Execute( "root_entity:add_aspect(RENDERING_ASPECT)" );
+    LuaContext::GetInstance()->Execute( "root_entity:add_aspect(TIME_ASPECT)" );
+    LuaContext::GetInstance()->Execute( "root_entity:configure_timemanager(NORMAL_TIME)" );
 
     LuaContext::GetInstance()->Execute( "root_entity:connect_renderingaspect_rendergraph(rg)" );
     LuaContext::GetInstance()->Execute( "eg:set_root('root', root_entity )" );

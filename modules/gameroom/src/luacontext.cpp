@@ -31,6 +31,7 @@
 #include "luaclass_entity.h"
 #include "luaclass_entitynodegraph.h"
 #include "luaclass_transformationaspectfpsimpl.h"
+#include "luaclass_textrenderingaspectimpl.h"
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -57,6 +58,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Entity>::Register( m_L );
     Luna<LuaClass_EntityNodeGraph>::Register( m_L );
     Luna<LuaClass_TransformationAspectFPSImpl>::Register( m_L );
+    Luna<LuaClass_TextRenderingAspectImpl>::Register( m_L );
 }
 
 void LuaContext::Shutdown( void )

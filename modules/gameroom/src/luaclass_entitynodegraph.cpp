@@ -81,6 +81,10 @@ int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
 
     dsstring entity_id = luaL_checkstring( p_L, 1 );
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 2 );
+    if( NULL == lua_ent )
+    {
+        LUA_ERROR( "EntityNodeGraph::set_root : argument 2 must be of type LuaClass_Entity" );
+    }
     
     m_entities[entity_id] = m_entitygraph.SetRoot( &lua_ent->GetEntity() );
 
