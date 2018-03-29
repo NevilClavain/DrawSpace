@@ -28,10 +28,12 @@
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_renderer.h"
 #include "luaclass_renderstatesset.h"
+#include "luaclass_renderassembly.h"
 #include "luaclass_entity.h"
 #include "luaclass_entitynodegraph.h"
-#include "luaclass_transformationaspectfpsimpl.h"
+#include "luaclass_fpstransformaspectimpl.h"
 #include "luaclass_textrenderingaspectimpl.h"
+#include "luaclass_mesherenderingaspectimpl.h"
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -55,10 +57,12 @@ void LuaContext::Startup( void )
     Luna<LuaClass_RenderPassNodeGraph>::Register( m_L );
     Luna<LuaClass_Renderer>::Register( m_L );
     Luna<LuaClass_RenderStatesSet>::Register( m_L );
+    Luna<LuaClass_RenderAssembly>::Register( m_L );
     Luna<LuaClass_Entity>::Register( m_L );
     Luna<LuaClass_EntityNodeGraph>::Register( m_L );
-    Luna<LuaClass_TransformationAspectFPSImpl>::Register( m_L );
+    Luna<LuaClass_FPSTransformAspectImpl>::Register( m_L );
     Luna<LuaClass_TextRenderingAspectImpl>::Register( m_L );
+    Luna<LuaClass_MesheRenderingAspectImpl>::Register( m_L );
 }
 
 void LuaContext::Shutdown( void )

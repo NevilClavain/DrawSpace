@@ -50,6 +50,12 @@ void TransformAspect::SetImplementation( AspectImplementations::TransformAspectI
     }
 }
 
+void TransformAspect::RemoveImplementation( void )
+{
+    m_impl->SetTimeAspect( NULL );
+    m_impl = NULL;
+}
+
 
 void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 {

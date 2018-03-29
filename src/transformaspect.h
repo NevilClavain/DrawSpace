@@ -52,6 +52,7 @@ public:
     TransformAspect( void );
 
     void SetImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
+    void RemoveImplementation( void );
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
     void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform );

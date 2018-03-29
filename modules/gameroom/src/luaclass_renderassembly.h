@@ -22,62 +22,37 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_ENTITY_H_
-#define _LUACLASS_ENTITY_H_
+#ifndef _LUACLASS_RENDERASSEMBLY_H_
+#define _LUACLASS_RENDERASSEMBLY_H_
 
-#include "entity.h"
 #include "luna.h"
-#include "aspect.h"
 
-class LuaClass_Entity
+#include "renderstatesset.h"
+#include "renderingnode.h"
+
+class LuaClass_RenderAssembly
 {
 protected:
-    DrawSpace::Core::Entity m_entity;
-
-    typedef enum
-    {
-        BODY_ASPECT,
-        CAMERA_ASPECT,
-        PHYSICS_ASPECT,
-        RENDERING_ASPECT,
-        SERVICE_ASPECT,
-        TIME_ASPECT,
-        TRANSFORM_ASPECT,
-
-    } AspectType;
-
-    typedef enum
-    {
-        COMP_INT,
-        COMP_LONG,
-        COMP_DSREAL,
-        COMP_FLOAT,
-        COMP_DSSTRING,
-        COMP_BOOL,
-        COMP_TEXTDISPLAY,
-    
-    } ComponentType;
+    dsstring                                    m_passname;
+    DrawSpace::Core::RenderStatesSet            m_rss;
+    std::vector<std::pair<dsstring,bool>>       m_shaders;
+    dsstring                                    m_textures[DrawSpace::Core::RenderingNode::NbMaxTextures];
 
 public:
-	LuaClass_Entity( lua_State* p_L );
-	~LuaClass_Entity( void );
+	LuaClass_RenderAssembly( lua_State* p_L );
+	~LuaClass_RenderAssembly( void );
 
-    DrawSpace::Core::Entity& GetEntity( void );
+    int LUA_setrenderstatesset( lua_State* p_L );
+    int LUA_addshaderfile( lua_State* p_L );
+    int LUA_settexturefile( lua_State* p_L );
 
-    int LUA_addaspect( lua_State* p_L );
-    int LUA_removeaspect( lua_State* p_L );
-
-    int LUA_configuretimemmanager( lua_State* p_L );
-    int LUA_readtimemmanager( lua_State* p_L );
-
-    int LUA_configurecamera( lua_State* p_L );
-    int LUA_releasecamera( lua_State* p_L );
-
-
-    int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
-
+    DrawSpace::Core::RenderStatesSet GetRenderStatesSet( void ) const;
+    dsstring GetTextureFile( int p_stage ) const;
+    size_t GetNbShaderFiles( void ) const;
+    std::pair<dsstring,bool> GetShaderFile( int p_index ) const;
+    
     static const char className[];
-    static const Luna<LuaClass_Entity>::RegType methods[];
+    static const Luna<LuaClass_RenderAssembly>::RegType methods[];
 };
 
 #endif

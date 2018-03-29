@@ -78,7 +78,6 @@ void EntityNode::Erase(void)
     Entity* entity = m_tree_node->data();
 	m_tree_node->erase();
 
-    //for( size_t i = 0; i < m_nodesevt_handlers->size(); i++ )
     std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
     for( auto it = nodesevt_handlers.begin(); it != nodesevt_handlers.end(); ++it )
     {

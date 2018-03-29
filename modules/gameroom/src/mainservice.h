@@ -113,7 +113,9 @@ public:
     //////////////////////////////////////////////////////////////////////////
 
     void RegisterRenderGraph( const std::string& p_id, LuaClass_RenderPassNodeGraph* p_rg );
+    void UnregisterRenderGraph( const std::string& p_id );
     void RegisterEntityGraph( const std::string& p_id, LuaClass_EntityNodeGraph* p_eg );
+    void UnregisterEntityGraph( const std::string& p_id );
     void RegisterRunCallback( const dsstring& p_id, int p_regindex );
     int UnregisterRunCallback( const dsstring& p_id );
 

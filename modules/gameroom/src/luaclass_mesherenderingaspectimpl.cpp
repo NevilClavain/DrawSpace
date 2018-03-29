@@ -22,62 +22,43 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_ENTITY_H_
-#define _LUACLASS_ENTITY_H_
+#include "luacontext.h"
+#include "luaclass_mesherenderingaspectimpl.h"
 
-#include "entity.h"
-#include "luna.h"
-#include "aspect.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::Aspect;
+using namespace DrawSpace::AspectImplementations;
 
-class LuaClass_Entity
+const char LuaClass_MesheRenderingAspectImpl::className[] = "MesheRenderingAspectImpl";
+const Luna<LuaClass_MesheRenderingAspectImpl>::RegType LuaClass_MesheRenderingAspectImpl::methods[] =
 {
-protected:
-    DrawSpace::Core::Entity m_entity;
-
-    typedef enum
-    {
-        BODY_ASPECT,
-        CAMERA_ASPECT,
-        PHYSICS_ASPECT,
-        RENDERING_ASPECT,
-        SERVICE_ASPECT,
-        TIME_ASPECT,
-        TRANSFORM_ASPECT,
-
-    } AspectType;
-
-    typedef enum
-    {
-        COMP_INT,
-        COMP_LONG,
-        COMP_DSREAL,
-        COMP_FLOAT,
-        COMP_DSSTRING,
-        COMP_BOOL,
-        COMP_TEXTDISPLAY,
-    
-    } ComponentType;
-
-public:
-	LuaClass_Entity( lua_State* p_L );
-	~LuaClass_Entity( void );
-
-    DrawSpace::Core::Entity& GetEntity( void );
-
-    int LUA_addaspect( lua_State* p_L );
-    int LUA_removeaspect( lua_State* p_L );
-
-    int LUA_configuretimemmanager( lua_State* p_L );
-    int LUA_readtimemmanager( lua_State* p_L );
-
-    int LUA_configurecamera( lua_State* p_L );
-    int LUA_releasecamera( lua_State* p_L );
-
-
-    int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
-
-    static const char className[];
-    static const Luna<LuaClass_Entity>::RegType methods[];
+    { "configure", &LuaClass_MesheRenderingAspectImpl::LUA_configure },
+    { "release", &LuaClass_MesheRenderingAspectImpl::LUA_release },
+	{ 0, 0 }
 };
 
-#endif
+LuaClass_MesheRenderingAspectImpl::LuaClass_MesheRenderingAspectImpl( lua_State* p_L ) :
+m_entity_rendering_aspect( NULL ),
+m_meshe_render( NULL )
+{
+}
+
+LuaClass_MesheRenderingAspectImpl::~LuaClass_MesheRenderingAspectImpl( void )
+{
+}
+
+int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
+{
+    return 0;
+}
+
+int LuaClass_MesheRenderingAspectImpl::LUA_release( lua_State* p_L )
+{
+    if( m_meshe_render )
+    {
+        _DRAWSPACE_DELETE_( m_meshe_render );
+    }
+    return 0;
+}

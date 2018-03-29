@@ -108,6 +108,8 @@ bool MainService::Init( void )
 
     LuaContext::GetInstance()->Startup();
 
+    LuaContext::GetInstance()->Execute( "FALSE=0" );
+    LuaContext::GetInstance()->Execute( "TRUE=1" );
 
     // type d'aspect
     LuaContext::GetInstance()->Execute( "BODY_ASPECT=0" );
@@ -460,9 +462,25 @@ void MainService::RegisterRenderGraph( const std::string& p_id, LuaClass_RenderP
     m_rendergraphs[p_id] = p_rg;
 }
 
+void MainService::UnregisterRenderGraph( const std::string& p_id )
+{
+    if( m_rendergraphs.count( p_id ) )
+    {
+        m_rendergraphs.erase( p_id );
+    }
+}
+
 void MainService::RegisterEntityGraph( const std::string& p_id, LuaClass_EntityNodeGraph* p_eg )
 {
     m_entitygraphs[p_id] = p_eg;
+}
+
+void MainService::UnregisterEntityGraph( const std::string& p_id )
+{
+    if( m_entitygraphs.count( p_id ) )
+    {
+        m_entitygraphs.erase( p_id );
+    }
 }
 
 void MainService::RegisterRunCallback( const dsstring& p_id, int p_regindex )

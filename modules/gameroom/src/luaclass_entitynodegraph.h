@@ -33,7 +33,9 @@ class LuaClass_EntityNodeGraph
 protected:
     std::unordered_map<dsstring, DrawSpace::EntityGraph::EntityNode> m_entities;                                   
 
-    DrawSpace::EntityGraph::EntityNodeGraph  m_entitygraph;
+    DrawSpace::EntityGraph::EntityNodeGraph     m_entitygraph;
+    dsstring                                    m_id;
+
 public:
 	LuaClass_EntityNodeGraph( lua_State* p_L );
 	~LuaClass_EntityNodeGraph( void );
@@ -43,6 +45,8 @@ public:
     DrawSpace::EntityGraph::EntityNodeGraph& GetEntityGraph( void );
 
     int LUA_setroot( lua_State* p_L );
+    int LUA_addchild( lua_State* p_L );
+    int LUA_remove( lua_State* p_L );
     int LUA_dumpcontent( lua_State* p_L );
 
     static const char className[];

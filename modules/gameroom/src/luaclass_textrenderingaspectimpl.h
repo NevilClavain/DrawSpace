@@ -44,7 +44,7 @@ public:
 	~LuaClass_TextRenderingAspectImpl( void );
 
     int LUA_configure( lua_State* p_L );
-    int LUA_cleanup( lua_State* p_L );
+    int LUA_release( lua_State* p_L );
 
     int LUA_update( lua_State* p_L );
    

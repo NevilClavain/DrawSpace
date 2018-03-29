@@ -51,13 +51,29 @@ public:
     template<typename T>
     T* AddAspect( void )
     {
-        if( m_aspects.count(typeid(T).hash_code() ) )
+        size_t tid = typeid(T).hash_code();
+        if( m_aspects.count( tid ) )
         {
             _DSEXCEPTION( "Aspect type already exists in this entity : " + dsstring( typeid(T).name() ) );
         }
         T* p = _DRAWSPACE_NEW_( T, T );
-        m_aspects[typeid(T).hash_code()] = p;
+        m_aspects[tid] = p;
         return p;
+    }
+
+    template<typename T>
+    void RemoveAspect( void )
+    {
+        size_t tid = typeid(T).hash_code();
+        if( m_aspects.count( tid ) )
+        {
+            _DRAWSPACE_DELETE_( m_aspects[tid] );
+            m_aspects.erase( tid );
+        }
+        else
+        {
+            _DSEXCEPTION( "Aspect type doesnt exists in this entity : " + dsstring( typeid(T).name() ) );
+        }
     }
 
     template<typename T>

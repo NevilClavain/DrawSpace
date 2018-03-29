@@ -44,11 +44,18 @@ LuaClass_Renderer::~LuaClass_Renderer( void )
 
 int LuaClass_Renderer::LUA_getinfos( lua_State* p_L )
 {
-    //lua_pushstring( p_L, MainService::GetInstance()->RequestRendererInfos().c_str() );
-
     dsstring descr;
     m_renderer->GetDescr( descr );
 
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    m_renderer->GetRenderCharacteristics( characteristics );
+
     lua_pushstring( p_L, descr.c_str() );
-    return 1;
+    lua_pushinteger( p_L, characteristics.width_resol );
+    lua_pushinteger( p_L, characteristics.height_resol );
+    lua_pushinteger( p_L, characteristics.fullscreen );
+    lua_pushnumber( p_L, characteristics.width_viewport );
+    lua_pushnumber( p_L, characteristics.height_viewport );
+
+    return 6;
 }

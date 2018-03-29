@@ -22,62 +22,33 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_ENTITY_H_
-#define _LUACLASS_ENTITY_H_
+#ifndef _LUACLASS_MESHERENDERINGASPECTIMPL_H_
+#define _LUACLASS_MESHERENDERINGASPECTIMPL_H_
 
-#include "entity.h"
 #include "luna.h"
-#include "aspect.h"
+#include "mesherenderingaspectimpl.h"
+#include "luaclass_entity.h"
+#include "renderingaspect.h"
 
-class LuaClass_Entity
+class LuaClass_MesheRenderingAspectImpl
 {
-protected:
-    DrawSpace::Core::Entity m_entity;
+private:
 
-    typedef enum
-    {
-        BODY_ASPECT,
-        CAMERA_ASPECT,
-        PHYSICS_ASPECT,
-        RENDERING_ASPECT,
-        SERVICE_ASPECT,
-        TIME_ASPECT,
-        TRANSFORM_ASPECT,
-
-    } AspectType;
-
-    typedef enum
-    {
-        COMP_INT,
-        COMP_LONG,
-        COMP_DSREAL,
-        COMP_FLOAT,
-        COMP_DSSTRING,
-        COMP_BOOL,
-        COMP_TEXTDISPLAY,
-    
-    } ComponentType;
+    DrawSpace::AspectImplementations::MesheRenderingAspectImpl*  m_meshe_render;
+    DrawSpace::Aspect::RenderingAspect*                          m_entity_rendering_aspect;
+    dsstring                                                     m_id;
 
 public:
-	LuaClass_Entity( lua_State* p_L );
-	~LuaClass_Entity( void );
 
-    DrawSpace::Core::Entity& GetEntity( void );
+	LuaClass_MesheRenderingAspectImpl( lua_State* p_L );
+	~LuaClass_MesheRenderingAspectImpl( void );
 
-    int LUA_addaspect( lua_State* p_L );
-    int LUA_removeaspect( lua_State* p_L );
+    int LUA_configure( lua_State* p_L );
+    int LUA_release( lua_State* p_L );
 
-    int LUA_configuretimemmanager( lua_State* p_L );
-    int LUA_readtimemmanager( lua_State* p_L );
-
-    int LUA_configurecamera( lua_State* p_L );
-    int LUA_releasecamera( lua_State* p_L );
-
-
-    int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
-
+   
     static const char className[];
-    static const Luna<LuaClass_Entity>::RegType methods[];
+    static const Luna<LuaClass_MesheRenderingAspectImpl>::RegType methods[];
 };
 
 #endif

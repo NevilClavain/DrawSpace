@@ -46,6 +46,7 @@ protected:
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl             m_passes_render; // le RenderingAspectImpl associe au m_rendergraph et permettant de lancer les rendus des passes stockees dans m_rendergraph
 
     std::unordered_map<dsstring, Passe>                                     m_passes;
+    dsstring                                                                m_id;
 
 public:
 	LuaClass_RenderPassNodeGraph( lua_State* p_L );

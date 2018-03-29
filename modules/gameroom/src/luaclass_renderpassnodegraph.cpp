@@ -61,10 +61,12 @@ LuaClass_RenderPassNodeGraph::LuaClass_RenderPassNodeGraph( lua_State* p_L )
     dsstring id = luaL_checkstring( p_L, 1 );
     m_passes_render.SetRendergraph( &m_rendergraph );
     MainService::GetInstance()->RegisterRenderGraph( id, this );
+    m_id = id;
 }
 
 LuaClass_RenderPassNodeGraph::~LuaClass_RenderPassNodeGraph( void )
 {
+    MainService::GetInstance()->UnregisterRenderGraph( m_id );
 }
 
 DrawSpace::AspectImplementations::PassesRenderingAspectImpl& LuaClass_RenderPassNodeGraph::GetPassesRenderAspectImpl( void )
@@ -237,11 +239,6 @@ int LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad( lua_State* p_L )
     {
         m_passes[pass_id].m_renderpassnode.CreateViewportQuad( zdepth );
         m_passes[pass_id].m_renderpassnode.GetViewportQuad()->SetFx( &( m_passes[pass_id].m_fx ) );
-
-        /*
-        m_passes[pass_id].m_fx.AddShader( &m_passes[pass_id].m_v_shader );
-        m_passes[pass_id].m_fx.AddShader( &m_passes[pass_id].m_p_shader );
-        */
     }
     else
     {        

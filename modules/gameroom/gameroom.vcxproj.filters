@@ -31,10 +31,16 @@
     <ClCompile Include="src\luaclass_entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\luaclass_transformationaspectfpsimpl.cpp">
+    <ClCompile Include="src\luaclass_textrenderingaspectimpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\luaclass_textrenderingaspectimpl.cpp">
+    <ClCompile Include="src\luaclass_fpstransformaspectimpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\luaclass_mesherenderingaspectimpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\luaclass_renderassembly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,10 +83,16 @@
     <ClInclude Include="src\luaclass_entity.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\luaclass_transformationaspectfpsimpl.h">
+    <ClInclude Include="src\luaclass_textrenderingaspectimpl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\luaclass_textrenderingaspectimpl.h">
+    <ClInclude Include="src\luaclass_fpstransformaspectimpl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_mesherenderingaspectimpl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_renderassembly.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -40,10 +40,22 @@ void RenderingAspect::AddImplementation( AspectImplementations::RenderingAspectI
     p_impl->SetOwner( this );
 }
 
-void RenderingAspect::Draw( Entity* p_owner_entity )
+void RenderingAspect::RemoveImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl )
 {
+    for( auto it = m_impls.begin(); it != m_impls.end(); ++it )
+    {
+        if( *it == p_impl )
+        {
+            m_impls.erase( it );
+            break;
+        }
+    } 
+}
+
+void RenderingAspect::Draw( Entity* p_owner_entity )
+{    
     for( size_t i = 0; i < m_impls.size(); i++ )
     {
         m_impls[i]->Run( p_owner_entity );
-    }
+    }   
 }

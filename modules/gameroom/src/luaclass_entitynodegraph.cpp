@@ -34,6 +34,8 @@ const char LuaClass_EntityNodeGraph::className[] = "EntityNodeGraph";
 const Luna<LuaClass_EntityNodeGraph>::RegType LuaClass_EntityNodeGraph::methods[] =
 {
     { "set_root", &LuaClass_EntityNodeGraph::LUA_setroot },
+    { "add_child", &LuaClass_EntityNodeGraph::LUA_addchild },
+    { "remove", &LuaClass_EntityNodeGraph::LUA_remove },
     { "dump", &LuaClass_EntityNodeGraph::LUA_dumpcontent },
 	{ 0, 0 }
 };
@@ -48,10 +50,13 @@ LuaClass_EntityNodeGraph::LuaClass_EntityNodeGraph( lua_State* p_L )
 
     dsstring id = luaL_checkstring( p_L, 1 );
     MainService::GetInstance()->RegisterEntityGraph( id, this );
+
+    m_id = id;
 }
 
 LuaClass_EntityNodeGraph::~LuaClass_EntityNodeGraph( void )
 {
+    MainService::GetInstance()->UnregisterEntityGraph( m_id );
 }
 
 DrawSpace::EntityGraph::EntityNode& LuaClass_EntityNodeGraph::GetEntityNode( const dsstring& p_id )
@@ -86,8 +91,64 @@ int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
         LUA_ERROR( "EntityNodeGraph::set_root : argument 2 must be of type LuaClass_Entity" );
     }
     
+    if( m_entities.count( entity_id ) )
+    {
+        LUA_ERROR( "EntityNodeGraph::set_root : an entity with same id exists in entities table" );
+    }
+
     m_entities[entity_id] = m_entitygraph.SetRoot( &lua_ent->GetEntity() );
 
+    return 0;
+}
+
+int LuaClass_EntityNodeGraph::LUA_addchild( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 3 )
+	{
+        LUA_ERROR( "EntityNodeGraph::add_child : argument(s) missing" );
+	}
+
+    dsstring parent_entity_id = luaL_checkstring( p_L, 1 );
+    dsstring entity_id = luaL_checkstring( p_L, 2 );
+    LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 3 );
+
+    if( NULL == lua_ent )
+    {
+        LUA_ERROR( "EntityNodeGraph::add_child : argument 2 must be of type LuaClass_Entity" );
+    }
+
+    if( m_entities.count( entity_id ) )
+    {
+        LUA_ERROR( "EntityNodeGraph::add_child : an entity with same id exists in entities table" );
+    }
+
+    if( 0 == m_entities.count( parent_entity_id ) )
+    {
+        LUA_ERROR( "EntityNodeGraph::add_child : id of parent entity doesnt exists in entities table" );
+    }
+
+    m_entities[entity_id] = m_entities[parent_entity_id].AddChild( &lua_ent->GetEntity() );
+
+    return 0;
+}
+
+int LuaClass_EntityNodeGraph::LUA_remove( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "EntityNodeGraph::remove : argument(s) missing" );
+	}
+    dsstring entity_id = luaL_checkstring( p_L, 1 );
+
+    if( 0 == m_entities.count( entity_id ) )
+    {
+        LUA_ERROR( "EntityNodeGraph::remove : id doesnt exists in entities table" );
+    }
+
+    m_entities[entity_id].Erase();
+    m_entities.erase( entity_id );
     return 0;
 }
 

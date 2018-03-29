@@ -35,22 +35,34 @@ using namespace DrawSpace::AspectImplementations;
 const char LuaClass_TextRenderingAspectImpl::className[] = "TextRenderingAspectImpl";
 const Luna<LuaClass_TextRenderingAspectImpl>::RegType LuaClass_TextRenderingAspectImpl::methods[] =
 {
+    { "configure", &LuaClass_TextRenderingAspectImpl::LUA_configure },
     { "update", &LuaClass_TextRenderingAspectImpl::LUA_update },
+    { "release", &LuaClass_TextRenderingAspectImpl::LUA_release },
 	{ 0, 0 }
 };
 
-LuaClass_TextRenderingAspectImpl::LuaClass_TextRenderingAspectImpl( lua_State* p_L )
+LuaClass_TextRenderingAspectImpl::LuaClass_TextRenderingAspectImpl( lua_State* p_L ) :
+m_entity_rendering_aspect( NULL )
+{
+}
+
+LuaClass_TextRenderingAspectImpl::~LuaClass_TextRenderingAspectImpl( void )
+{
+}
+
+
+int LuaClass_TextRenderingAspectImpl::LUA_configure( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 8 )
 	{
-        LUA_ERROR( "TextRenderingAspectImpl::TextRenderingAspectImpl : argument(s) missing" );
+        LUA_ERROR( "TextRenderingAspectImpl::configure : argument(s) missing" );
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
     if( NULL == lua_ent )
     {
-        LUA_ERROR( "TextRenderingAspectImpl::TextRenderingAspectImpl : argument 1 must be of type LuaClass_Entity" );
+        LUA_ERROR( "TextRenderingAspectImpl::configure : argument 1 must be of type LuaClass_Entity" );
     }
 
     dsstring id = luaL_checkstring( p_L, 2 );
@@ -81,31 +93,40 @@ LuaClass_TextRenderingAspectImpl::LuaClass_TextRenderingAspectImpl( lua_State* p
     else
     {
         m_entity_rendering_aspect = NULL;
-        LUA_ERROR( "TextRenderingAspectImpl::TextRenderingAspectImpl : entity passed on arg has no rendering aspect" );
+        LUA_ERROR( "TextRenderingAspectImpl::configure : entity passed on arg has no rendering aspect" );
     }
-}
-
-LuaClass_TextRenderingAspectImpl::~LuaClass_TextRenderingAspectImpl( void )
-{
-}
-
-
-int LuaClass_TextRenderingAspectImpl::LUA_configure( lua_State* p_L )
-{
-    // to be continued...
     return 0;
 }
 
-int LuaClass_TextRenderingAspectImpl::LUA_cleanup( lua_State* p_L )
+int LuaClass_TextRenderingAspectImpl::LUA_release( lua_State* p_L )
 {
-    // to be continued...
+    if( m_entity_rendering_aspect )
+    {
+        LUA_TRY
+        {
+            m_entity_rendering_aspect->RemoveComponent<TextRenderingAspectImpl::TextDisplay>( m_id );
+            m_entity_rendering_aspect->RemoveImplementation( &m_text_render );
+
+        } LUA_CATCH;
+
+        m_id = "";
+        m_entity_rendering_aspect = NULL;
+    }
+    else
+    {
+        LUA_ERROR( "TextRenderingAspectImpl::release : no rendering aspect" );
+    }
     return 0;
 }
 
 int LuaClass_TextRenderingAspectImpl::LUA_update( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
+    if( !m_entity_rendering_aspect )
+    {
+        LUA_ERROR( "TextRenderingAspectImpl::update : no rendering aspect" );
+    }
 
+	int argc = lua_gettop( p_L );
 	if( argc < 6 )
 	{
         LUA_ERROR( "TextRenderingAspectImpl::update : argument(s) missing" );

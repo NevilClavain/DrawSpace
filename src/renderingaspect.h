@@ -42,6 +42,7 @@ public:
     RenderingAspect( void );
 
     void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
+    void RemoveImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
     void Draw( Core::Entity* p_owner_entity );
 };
 }
