@@ -36,8 +36,7 @@ _DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
 
 MainService::MainService( void ) :
 m_console_active( false ),
-m_console_current_line( 0 ),
-m_meshe_import( NULL )
+m_console_current_line( 0 )
 {
     m_console_texts.push_back( "Console: input ready" );
     m_console_texts.push_back( ">" );
@@ -46,10 +45,6 @@ m_meshe_import( NULL )
 
 MainService::~MainService( void )
 {
-    if( m_meshe_import )
-    {
-        _DRAWSPACE_DELETE_( m_meshe_import );
-    }
 }
 
 bool MainService::Init( void )
@@ -101,8 +96,7 @@ bool MainService::Init( void )
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
-
-    m_meshe_import = _DRAWSPACE_NEW_( DrawSpace::Utils::AC3DMesheImport, DrawSpace::Utils::AC3DMesheImport );
+    
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -175,7 +169,7 @@ bool MainService::Init( void )
     LuaContext::GetInstance()->Execute( "print_memsize=function() g:print('Total mem = '..g:totalmem()..' byte(s)') end" );
 
 
-
+    
     
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -497,6 +491,12 @@ int MainService::UnregisterRunCallback( const dsstring& p_id )
         m_run_lua_callbacks.erase( p_id );       
     }
     return index;
+}
+
+
+DrawSpace::Interface::MesheImport* MainService::GetMesheImport( void )
+{
+    return &m_meshe_import;
 }
 
 void MainService::RequestClose( void )

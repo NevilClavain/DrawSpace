@@ -29,14 +29,16 @@
 #include "mesherenderingaspectimpl.h"
 #include "luaclass_entity.h"
 #include "renderingaspect.h"
+#include "mesheimport.h"
 
 class LuaClass_MesheRenderingAspectImpl
 {
 private:
-
+    DrawSpace::Core::Meshe                                       m_meshe;
+    DrawSpace::Core::Fx                                          m_fx;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl*  m_meshe_render;
     DrawSpace::Aspect::RenderingAspect*                          m_entity_rendering_aspect;
-    dsstring                                                     m_id;
+
 
 public:
 
@@ -45,6 +47,8 @@ public:
 
     int LUA_configure( lua_State* p_L );
     int LUA_release( lua_State* p_L );
+
+
 
    
     static const char className[];

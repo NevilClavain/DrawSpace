@@ -45,7 +45,8 @@ protected:
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
 
-    DrawSpace::Interface::MesheImport*                                              m_meshe_import;
+    //DrawSpace::Interface::MesheImport*                                              m_meshe_import;
+    DrawSpace::Utils::AC3DMesheImport                                               m_meshe_import;
 
     std::unordered_map<dsstring, LuaClass_RenderPassNodeGraph*>                     m_rendergraphs; // table des rendergraph
     std::unordered_map<dsstring, LuaClass_EntityNodeGraph*>                         m_entitygraphs;
@@ -119,12 +120,16 @@ public:
     void RegisterRunCallback( const dsstring& p_id, int p_regindex );
     int UnregisterRunCallback( const dsstring& p_id );
 
+    DrawSpace::Interface::MesheImport* GetMesheImport( void );
+
     void RequestClose( void );
     void RequestClearConsole( void );
     void RequestConsolePrint( const dsstring& p_msg );
     void RequestLuaFileExec( const dsstring& p_path );
 
     void RequestMemAllocDump( void );
+
+    
 
     friend class BaseSingleton<MainService>;
 };

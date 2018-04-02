@@ -37,13 +37,6 @@ const Luna<LuaClass_RenderAssembly>::RegType LuaClass_RenderAssembly::methods[] 
 
 LuaClass_RenderAssembly::LuaClass_RenderAssembly( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
-	if( argc < 1 )
-	{		
-        LUA_ERROR( "RenderAssembly::RenderAssembly : argument(s) missing" );
-	}
-
-    m_passname = luaL_checkstring( p_L, 1 );
 }
 
 LuaClass_RenderAssembly::~LuaClass_RenderAssembly( void )
@@ -59,6 +52,10 @@ int LuaClass_RenderAssembly::LUA_setrenderstatesset( lua_State* p_L )
 	}
 
     LuaClass_RenderStatesSet* lua_rss = Luna<LuaClass_RenderStatesSet>::check( p_L, 1 );
+    if( NULL == lua_rss )
+    {
+        LUA_ERROR( "RenderAssembly::set_renderstatesset : argument 1 must be of type LuaClass_RenderStatesSet" );
+    }
 
     m_rss = lua_rss->GetRenderStatesSet();
     return 0;

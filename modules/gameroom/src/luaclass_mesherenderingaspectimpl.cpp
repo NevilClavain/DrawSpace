@@ -24,6 +24,8 @@
 
 #include "luacontext.h"
 #include "luaclass_mesherenderingaspectimpl.h"
+#include "luaclass_renderassembly.h"
+#include "mainservice.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -43,6 +45,7 @@ LuaClass_MesheRenderingAspectImpl::LuaClass_MesheRenderingAspectImpl( lua_State*
 m_entity_rendering_aspect( NULL ),
 m_meshe_render( NULL )
 {
+    m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
 }
 
 LuaClass_MesheRenderingAspectImpl::~LuaClass_MesheRenderingAspectImpl( void )
@@ -51,14 +54,137 @@ LuaClass_MesheRenderingAspectImpl::~LuaClass_MesheRenderingAspectImpl( void )
 
 int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
 {
+	int argc = lua_gettop( p_L );
+	if( argc < 5 )
+	{		
+        LUA_ERROR( "MesheRenderingAspectImpl::configure : argument(s) missing" );
+	}
+
+    LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
+    if( NULL == lua_ent )
+    {
+        LUA_ERROR( "FPSTransformAspectImpl::configure : argument 1 must be of type LuaClass_Entity" );
+    }
+
+    dsstring pass_id = luaL_checkstring( p_L, 2 );
+    LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 3 );
+    if( NULL == lua_renderassembly )
+    {
+        LUA_ERROR( "MesheRenderingAspectImpl::configure : argument 1 must be of type LuaClass_RenderAssembly" );
+    }
+
+    dsstring meshe_path = luaL_checkstring( p_L, 4 );
+    int meshe_index = luaL_checkint( p_L, 5 );
+
+    DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
+
+    // recupere l'aspect rendu s'il existe pour cette entitee
+    RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
+    if( rendering_aspect )
+    {
+        m_meshe_render = _DRAWSPACE_NEW_( DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl );
+        rendering_aspect->AddImplementation( m_meshe_render );
+
+        LUA_TRY
+        {
+            rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
+            RenderingNode* rnode = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
+
+
+            m_entity_rendering_aspect = rendering_aspect;
+
+            // ici completer le passSlot avec les infos du RenderAssembly
+            // to be continued...
+
+            ///////////////////////// les shaders
+            size_t nb_shaders = lua_renderassembly->GetNbShaderFiles();
+
+            for( size_t i = 0; i < nb_shaders; i++ )
+            {
+                std::pair<dsstring,bool> shader_infos = lua_renderassembly->GetShaderFile( i );
+
+                dsstring shader_path = shader_infos.first;
+                bool is_compiled = shader_infos.second;
+
+                bool status;
+
+                Shader* shader = _DRAWSPACE_NEW_( Shader, Shader );
+                status = shader->LoadFromFile( shader_path, is_compiled );
+
+                if( !status )
+                {
+                    // clean tout ce qui a deja ete charge...
+                    //unload_resources( p_L, pass_id );
+
+                    LUA_ERROR( "MesheRenderingAspectImpl::configure : shader loading operation failed" );
+                }
+                else
+                {
+                    m_fx.AddShader( shader );                    
+                }
+            }
+
+            ///////////////////////// les rendestates
+
+            DrawSpace::Core::RenderStatesSet& rss = lua_renderassembly->GetRenderStatesSet();
+            m_fx.SetRenderStates( rss );
+
+            for( size_t i = 0; i < DrawSpace::Core::RenderingNode::NbMaxTextures; i++ )
+            {
+                dsstring texture_path = lua_renderassembly->GetTextureFile( i );
+                if( texture_path != "" )
+                {
+                    bool status;
+                    Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
+                    status = texture->LoadFromFile();
+                    if( !status )
+                    {
+                        // clean tout ce qui a deja ete charge...
+                        //unload_resources( p_L, pass_id );
+                        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_resources : texture loading operation failed" );
+                    }
+                    else
+                    {
+                        rnode->SetTexture( texture, i );
+                    }
+                }
+            }
+
+            ///////
+
+            // et pour finir, le meshe
+            bool status = m_meshe.LoadFromFile( meshe_path, meshe_index );
+            if( !status )
+            {
+                LUA_ERROR( "MesheRenderingAspectImpl::configure : meshe loading operation failed" );
+            }
+            rnode->SetMeshe( &m_meshe );
+            rnode->SetFx( &m_fx );
+
+
+        } LUA_CATCH;
+    }
+    else
+    {
+        m_entity_rendering_aspect = NULL;
+        LUA_ERROR( "FPSTransformAspectImpl::configure : entity passed on arg has no rendering aspect" );    
+    }
+
     return 0;
 }
 
 int LuaClass_MesheRenderingAspectImpl::LUA_release( lua_State* p_L )
 {
-    if( m_meshe_render )
+    if( m_entity_rendering_aspect )
     {
-        _DRAWSPACE_DELETE_( m_meshe_render );
+        if( m_meshe_render )
+        {
+            _DRAWSPACE_DELETE_( m_meshe_render );
+        }
+    }
+    else
+    {
+        LUA_ERROR( "FPSTransformAspectImpl::release : no rendering aspect" );
     }
     return 0;
 }

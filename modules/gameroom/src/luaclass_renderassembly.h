@@ -33,7 +33,6 @@
 class LuaClass_RenderAssembly
 {
 protected:
-    dsstring                                    m_passname;
     DrawSpace::Core::RenderStatesSet            m_rss;
     std::vector<std::pair<dsstring,bool>>       m_shaders;
     dsstring                                    m_textures[DrawSpace::Core::RenderingNode::NbMaxTextures];

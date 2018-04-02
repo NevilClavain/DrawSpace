@@ -48,6 +48,8 @@ protected:
     std::unordered_map<dsstring, Passe>                                     m_passes;
     dsstring                                                                m_id;
 
+    void unload_resources( lua_State* p_L, const dsstring& p_passid );
+
 public:
 	LuaClass_RenderPassNodeGraph( lua_State* p_L );
 	~LuaClass_RenderPassNodeGraph( void );
@@ -63,13 +65,12 @@ public:
     int LUA_setpassdepthclearstate( lua_State* p_L );
     int LUA_createpassviewportquad( lua_State* p_L );
     int LUA_removepassviewportquad( lua_State* p_L );
-    int LUA_loadpassviewportquadshader( lua_State* p_L );
-    int LUA_unloadpassviewportquadshaders( lua_State* p_L );
-    int LUA_loadpassviewportquadtexture( lua_State* p_L );
-    int LUA_unloadpassviewportquadtextures( lua_State* p_L );
-    int LUA_setpassviewportquadrenderstateset( lua_State* p_L );
-    int LUA_updaterenderingqueues( lua_State* p_L );
 
+    int LUA_loadpassviewportquadresources( lua_State* p_L );
+    int LUA_unloadpassviewportquadresources( lua_State* p_L );
+
+    int LUA_updaterenderingqueues( lua_State* p_L );
+    
     static const char className[];
     static const Luna<LuaClass_RenderPassNodeGraph>::RegType methods[];
 
